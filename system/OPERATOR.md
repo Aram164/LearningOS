@@ -50,11 +50,26 @@ total.
 Do not recursively discover the repository. Begin with:
 
 ```bash
-python tools/los.py capabilities --json
+python tools/los.py capabilities --compact --json
 python tools/los.py bootstrap --compact
 ```
 
+The capability index is discovery only. Before using a capability, fetch its
+complete definition with `capabilities NAME --json`; command details include
+the declared payload schema. The complete catalogue remains available through
+`capabilities --json` when the task needs it.
+
 Compact startup preserves complete material access through `inspect ID`.
+Read several known records with `inspect ID1 ID2 ...` (at most 20) to share one
+fresh projection; the batch preserves requested order, includes a snapshot,
+and refuses missing IDs or changes during the read. Use `note-read` for note
+bodies. Full `bootstrap` is an explicit bulk read, not routine agent startup.
+For plan editing, use `plan-edit-context UNIT_ID`; add `--route-id ROUTE_ID`
+for one material and its stage-specific overrides. Shared descriptions occur
+once. Before changing material details, run `route-patch UNIT_ID ROUTE_ID
+--changes JSON --check`, then apply the same changes through `route.patch`
+with the returned snapshot and exact revision guards. Full plan imports are
+for structure, ordering, scope, or resource membership changes.
 Continue a summary page with its returned offset and snapshot. Read saved
 reasoning with `note-read NOTE_ID` (bounded Unicode-character segments) and
 search beyond note summaries with `search QUERY --type note --content`.
@@ -145,7 +160,8 @@ Skills and projects use modules and units without false academic metadata.
     creation templates.
 16. A plan is created **and revised** through the declared capabilities —
     `module.plan.import` for a module's source map and its units,
-    `unit.map.import` for one unit's study map — never by writing the canonical
+    `unit.map.import` for one unit's study map, or `route.patch` for one
+    existing route's descriptive material fields — never by writing the canonical
     file directly. Drafting happens outside the repository
     (`tools/assemble_lecture_study_maps.py --out …`), review happens on the
     draft, and the gateway applies it under a snapshot guard with an
@@ -153,6 +169,9 @@ Skills and projects use modules and units without false academic metadata.
     produces a file the validator accepts while skipping every guarantee the
     path exists for, and leaves nothing behind to say it happened. Migrations
     under `tools/migrations/` are the one exception, because they are recorded.
+    `module.materials.compact` is the governed, lossless conversion to shared
+    material references; it requires the reviewed preflight plan hash. It
+    preserves every expanded map and commits stable route IDs with the references.
 17. `system/CRITIQUE-POINTS.md` is an append-only log of unresolved judgments
     about the system itself. **An open point is not a work item.** It is
     recorded precisely so it can be deferred, and acting on one — fixing it,
@@ -218,5 +237,9 @@ Stage-specific learning belongs in its stage note. Unrelated quick capture goes
 to `work/inbox/`. A deliberately half-formed idea that should gestate goes to
 `knowledge/garden/`. The operator, not the learner, handles filing.
 
-Continue with `system/PHILOSOPHY.md`, `system/ARCHITECTURE.md`,
-`system/WORKFLOWS.md`, and the platform adapter when applicable.
+Read the applicable platform adapter, then the task-relevant sections of
+`system/ARCHITECTURE.md`, `system/WORKFLOWS.md`, and the schemas/contracts they
+reference before acting. Consult `system/PHILOSOPHY.md` for unresolved intent.
+All binding rules still apply; expand the reading scope whenever the task
+crosses an ownership or workflow boundary. A routine lookup does not require
+loading every schema, historical review, or unrelated workflow into context.

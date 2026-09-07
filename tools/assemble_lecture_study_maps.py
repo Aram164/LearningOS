@@ -40,6 +40,7 @@ from learning_os.contracts import (
 )
 from learning_os.genout import build_backlinks, build_manifest
 from learning_os.loader import load_repo
+from learning_os.material_refs import compact_map
 
 REPO = Path(__file__).resolve().parents[1]
 
@@ -592,6 +593,8 @@ def main() -> int:
     parser.add_argument("--root", type=Path, default=REPO)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--unit", action="append", default=[])
+    parser.add_argument("--expanded", action="store_true",
+                        help="export standalone material descriptions instead of shared references")
     args = parser.parse_args()
 
     root = args.root.expanduser().resolve()
@@ -641,6 +644,8 @@ def main() -> int:
         except (PlanTemplateError, ContractValidationError) as exc:
             problems.append(f"{unit_id}: {exc}")
             continue
+        if not args.expanded:
+            record, _ = compact_map(record, source_map, module_id, unit_id)
         path = args.out.expanduser().resolve() / f"{unit_id}.study-map.yaml"
         drafts[path] = yaml.safe_dump(
             record, sort_keys=False, allow_unicode=True, width=100

@@ -25,8 +25,12 @@ stages:
   - concept-probability
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L04 probability and Naive Bayes deck
+  - material_ref:
+      route_id: route-1d4c3d5164052df9c540d079
+      inherit:
+      - label
+      - source_id
+    kind: read
     locator: lecture-slides/04_probability.pdf, PDF pp. 2-5
     angle: The current lecture's focused reading for human probability judgments and framing.
     angle_detail: Read physical PDF pages 2-5 for this stage. Printed slide labels may differ. This slice
@@ -34,7 +38,6 @@ stages:
       menu.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
-    source_id: source-sad-ss26-lectures
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-framing/notes.md
   attachments: []
   source_feedback: []
@@ -54,8 +57,12 @@ stages:
   - concept-probability
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L04 probability and Naive Bayes deck
+  - material_ref:
+      route_id: route-1d4c3d5164052df9c540d079
+      inherit:
+      - label
+      - source_id
+    kind: read
     locator: lecture-slides/04_probability.pdf, PDF pp. 16-21,24-25
     angle: The current lecture's focused reading for random experiments, outcomes, and event spaces.
     angle_detail: Read physical PDF pages 16-21,24-25 for this stage. Printed slide labels may differ.
@@ -63,114 +70,98 @@ stages:
       unit material menu.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
-    source_id: source-sad-ss26-lectures
-  - kind: practise
-    label: Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes
-    locator: exercise-slides/blatt-02.pdf, pp. 1-2, Aufgaben 1-2
-    angle: Combines finite probability, dependence, Bayes inversion and a small classifier in the current
-      assignment format.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
+  - material_ref:
+      route_id: route-a577afe5626f081623095a82
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-a577afe5626f081623095a82
-  - kind: practise
-    label: UE3, slides 15-38 — events, axioms and conditional probability
-    locator: exercise-slides/UE3.pdf, slides 15-38
-    angle: Builds the event algebra and then works the medical-test style base-rate inversion visually.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
+  - material_ref:
+      route_id: route-78ae1df0aa949bb2a8a872dc
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-78ae1df0aa949bb2a8a872dc
-  - kind: reference
-    label: 2025 probability deck with notes
-    locator: 04_probability_with_notes (1).pdf
-    angle: The 2025 deck for the same topic, annotated with the lecturer's spoken notes.
-    angle_detail: Prior-year material is never scope evidence — the 2026 deck decides what is examinable
-      — but the annotated version records explanations that exist only in speech, which is exactly what
-      a PDF of the current deck cannot give you. Use it when a current slide is terse and you want to
-      know what was said around it. Check every claim against the 2026 deck before relying on it.
+  - material_ref:
+      route_id: route-0afeba6c2e9a73159d6ad420
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
     route_id: route-0afeba6c2e9a73159d6ad420
-    source_id: source-sad-2025-recordings
-  - kind: read
-    label: Fahrmeir Chapter 4 — probability foundations
-    locator: Ch 4 §§4.1-4.2 Wahrscheinlichkeitsbegriff, pdf pp. 194-213; §4.4 Bedingte Wahrscheinlichkeiten,
-      pdf pp. 221-223; §4.5 Unabhängigkeit, pdf pp. 224-227; §4.6 Totale Wahrscheinlichkeit, pdf pp. 228-229;
-      §4.7 Satz von Bayes, pdf pp. 230-234; Aufgaben pdf pp. 239-241
-    angle: Splits total probability and Bayes into two separately numbered sections, which is the derivation
-      order L04's slide 46 skips.
-    angle_detail: 'The 2026 deck states Bayes with the total-probability expansion already substituted
-      into the denominator, so the step where the partition enters is invisible. Fahrmeir gives §4.6 (Satz
-      von der totalen Wahrscheinlichkeit) its own statement and proof, then derives §4.7 (Bayes) from
-      it, which is the missing half. It also gives the German phrasing of Unabhängigkeit as a product
-      rule rather than as a conditional statement — worth reading because the Klausur can ask for either.
-      Stops before Naive Bayes: the classifier construction is L04''s own, and no book on this shelf matches
-      it exactly.'
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-e488632c39efaf524b49f243
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-fahrmeir-statistik
     route_id: route-e488632c39efaf524b49f243
-  - kind: read
-    label: OpenIntro — probability foundations
-    locator: Ch 3 §3.1 defining probability, pdf pp. 81-94; §3.2 conditional probability, pdf pp. 95-111
-      (tree diagrams and Bayes' theorem); §3.3 sampling from a small population, pdf pp. 112-114
-    angle: Runs conditional probability entirely through tree diagrams and contingency tables, so Bayes
-      is arithmetic on a table before it is an equation.
-    angle_detail: '§3.2 develops the whole of conditioning pictorially: a two-way table, then a tree with
-      branch probabilities, then Bayes as a ratio read off the tree. Only at the end does the algebraic
-      form appear. For a first pass this is the lowest-friction route available, and it matches how German
-      exams pose the question (Vierfeldertafel). It does not cover Naive Bayes and does not do conditional
-      independence carefully — for those parts of L04 use the deck and Kelleher Ch 6.'
-    vault_path: material://source-openintro-statistics/openintro.pdf
+  - material_ref:
+      route_id: route-66691da3faf6c5780cf0b66d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-openintro-statistics
     route_id: route-66691da3faf6c5780cf0b66d
-  - kind: read
-    label: MIT 18.05 — probability notes and solved problems
-    locator: 'Classes: Reading and In-class Materials: ''Conditional Probability, Independence and Bayes''
-      Theorem'' reading and slides; Problem Set 2 with its published solutions'
-    angle: Reading, in-class problems and solved problem set for the same topic, published together —
-      a complete study loop rather than one artifact.
-    angle_detail: 18.05 publishes, per class, a reading, the slides used on it, the in-class problems
-      and the solutions, plus a problem set with worked answers. That means one topic can be learned,
-      practised and checked without leaving the page — the thing a lecture deck alone cannot give you.
-      Its treatment of the base-rate fallacy is unusually direct and matches L04's opening framing slides.
-      Written for students who have had multivariable calculus, so the register sits above OpenIntro and
-      below Ross.
+  - material_ref:
+      route_id: route-44431ac89d714785b2bab31b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-mit-1805
     route_id: route-44431ac89d714785b2bab31b
-  - kind: practise
-    label: Leuphana-Merz pp. 5-10 — probability and conditional-probability drills
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1
-    angle: A dense German exercise block for finite probability, conditioning and Bayes before the later
-      inference chapters.
-    angle_detail: The block supplies more authentic German stems than the course sheet while remaining
-      at the same foundational level. Select only the event/conditioning items; later pages in this 109-page
-      book belong to estimation and testing and are routed separately.
-    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+  - material_ref:
+      route_id: route-ac99d1d809345a00721a6f99
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-ac99d1d809345a00721a6f99
-  - kind: watch
-    label: Kurzes Tutorium Statistik — Zufallsexperiment and Bayes basics
-    locator: '''Zufallsexperiment und Ereignisse''; ''Bedingte Wahrscheinlichkeit''; ''Satz von Bayes'''
-    angle: Works Bayes through the Vierfeldertafel, in German, which is the presentation German exams
-      use.
-    angle_detail: 'The four-field table is the standard German exam apparatus for conditional probability,
-      and these videos build and read one directly. Combined with the Fahrmeir Arbeitsbuch solutions this
-      covers the format completely. Do not use them for the Naive Bayes construction — that is the lecture''s
-      own and has no German-language equivalent here. Not verified on 2026-09-07: the channel is only
-      reachable through a YouTube consent gate that this session did not accept, so the episode titles
-      below are inherited from the earlier plan and have not been checked against the channel''s own listing.'
+  - material_ref:
+      route_id: route-9a18c8d3ccfb21c3f023b850
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-kurzes-tutorium-statistik
     route_id: route-9a18c8d3ccfb21c3f023b850
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-events/notes.md
   attachments: []
@@ -191,8 +182,12 @@ stages:
   - concept-probability
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L04 probability and Naive Bayes deck
+  - material_ref:
+      route_id: route-1d4c3d5164052df9c540d079
+      inherit:
+      - label
+      - source_id
+    kind: read
     locator: lecture-slides/04_probability.pdf, PDF pp. 22-23,26-30
     angle: The current lecture's focused reading for probability axioms and derived rules.
     angle_detail: Read physical PDF pages 22-23,26-30 for this stage. Printed slide labels may differ.
@@ -200,177 +195,146 @@ stages:
       unit material menu.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
-    source_id: source-sad-ss26-lectures
-  - kind: practise
-    label: Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes
-    locator: exercise-slides/blatt-02.pdf, pp. 1-2, Aufgaben 1-2
-    angle: Combines finite probability, dependence, Bayes inversion and a small classifier in the current
-      assignment format.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
+  - material_ref:
+      route_id: route-a577afe5626f081623095a82
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-a577afe5626f081623095a82
-  - kind: practise
-    label: UE3, slides 15-38 — events, axioms and conditional probability
-    locator: exercise-slides/UE3.pdf, slides 15-38
-    angle: Builds the event algebra and then works the medical-test style base-rate inversion visually.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
+  - material_ref:
+      route_id: route-78ae1df0aa949bb2a8a872dc
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-78ae1df0aa949bb2a8a872dc
-  - kind: reference
-    label: 2025 probability deck with notes
-    locator: 04_probability_with_notes (1).pdf
-    angle: The 2025 deck for the same topic, annotated with the lecturer's spoken notes.
-    angle_detail: Prior-year material is never scope evidence — the 2026 deck decides what is examinable
-      — but the annotated version records explanations that exist only in speech, which is exactly what
-      a PDF of the current deck cannot give you. Use it when a current slide is terse and you want to
-      know what was said around it. Check every claim against the 2026 deck before relying on it.
+  - material_ref:
+      route_id: route-0afeba6c2e9a73159d6ad420
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
     route_id: route-0afeba6c2e9a73159d6ad420
-    source_id: source-sad-2025-recordings
-  - kind: read
-    label: Fahrmeir Chapter 4 — probability foundations
-    locator: Ch 4 §§4.1-4.2 Wahrscheinlichkeitsbegriff, pdf pp. 194-213; §4.4 Bedingte Wahrscheinlichkeiten,
-      pdf pp. 221-223; §4.5 Unabhängigkeit, pdf pp. 224-227; §4.6 Totale Wahrscheinlichkeit, pdf pp. 228-229;
-      §4.7 Satz von Bayes, pdf pp. 230-234; Aufgaben pdf pp. 239-241
-    angle: Splits total probability and Bayes into two separately numbered sections, which is the derivation
-      order L04's slide 46 skips.
-    angle_detail: 'The 2026 deck states Bayes with the total-probability expansion already substituted
-      into the denominator, so the step where the partition enters is invisible. Fahrmeir gives §4.6 (Satz
-      von der totalen Wahrscheinlichkeit) its own statement and proof, then derives §4.7 (Bayes) from
-      it, which is the missing half. It also gives the German phrasing of Unabhängigkeit as a product
-      rule rather than as a conditional statement — worth reading because the Klausur can ask for either.
-      Stops before Naive Bayes: the classifier construction is L04''s own, and no book on this shelf matches
-      it exactly.'
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-e488632c39efaf524b49f243
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-fahrmeir-statistik
     route_id: route-e488632c39efaf524b49f243
-  - kind: practise
-    label: Arbeitsbuch Chapter 4 — conditional probability and Bayes
-    locator: Ch 4 Aufgaben pdf pp. 83-88, Lösungen pdf pp. 89-95
-    angle: Bayes and total probability in Vierfeldertafel form — the exact presentation German exams use.
-    angle_detail: German statistics exams overwhelmingly pose conditional-probability questions as a four-field
-      table or a tree, not as an algebraic identity, and grading follows the table. These solutions show
-      the table being filled and read, which is the mechanical skill worth having automatic before the
-      Klausur. Six pages of problems, seven of solutions — small enough to finish in one sitting.
-    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+  - material_ref:
+      route_id: route-87f36cab308f54f199bc3034
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fahrmeir-arbeitsbuch
     route_id: route-87f36cab308f54f199bc3034
-  - kind: read
-    label: MIT 6.041SC — conditional probability, Bayes and independence lectures
-    locator: Lectures 2-3 (conditioning and Bayes' rule; independence) with their recitations and solved
-      tutorials
-    angle: Every lecture is paired with a recitation and a tutorial whose problems are solved on video
-      — three passes over one topic.
-    angle_detail: 'Tsitsiklis''s course structure is the differentiator: the lecture states the theory,
-      the recitation works standard problems, and the tutorial works harder ones, all recorded. For a
-      topic where the gap between following an explanation and solving a problem is wide — which is exactly
-      conditional probability — that three-pass structure is worth more than a better single explanation.
-      Free on OCW with all materials.'
+  - material_ref:
+      route_id: route-395d30ff10c3ab149d789c7c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-mit-6041sc
     route_id: route-395d30ff10c3ab149d789c7c
-  - kind: practise
-    label: Dekking — probability exercise bank
-    locator: Ch 2 outcomes, events, and probability, pdf pp. 24-35; Ch 3 conditional probability and independence,
-      pdf pp. 36-51 (§3.3 law of total probability and Bayes' rule p. 41; §3.4 independence p. 43; exercises
-      p. 48); answers App C pdf pp. 434-442
-    angle: Quick exercises embedded mid-section with solutions at the chapter end — a self-check every
-      few pages rather than only at the end.
-    angle_detail: 'The structural feature that distinguishes this book: each section plants short ''quick
-      exercises'' in the flow and answers them at §x.5 before the real exercise set. For probability rules,
-      where the failure mode is silent misunderstanding rather than difficulty, that rhythm catches errors
-      within a page instead of after a chapter. The treatment itself is compact and modern; Ch 2 is twelve
-      pages for material Fahrmeir spends twenty on. Ch 1''s Monty Hall opening (p. 16) is the same framing
-      puzzle L04 uses.'
-    vault_path: material://source-dekking-mips/dekking.pdf
+  - material_ref:
+      route_id: route-fa96784fa40036436bf1b2cc
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-dekking-mips
     route_id: route-fa96784fa40036436bf1b2cc
-  - kind: reference
-    label: Pitman — conditional probability selections
-    locator: Ch 1 §1.4 Conditional Probability and Independence, pdf pp. 44-57; §1.5 Bayes' Rule, pdf
-      pp. 58-66; §1.6 Sequences of Events, pdf pp. 67-89
-    angle: Everything through tree diagrams and partitions drawn on the page — the most visual derivation
-      of Bayes on the shelf.
-    angle_detail: Pitman's method is to draw the partition and the tree, label every branch, and read
-      the answer off the picture before writing any algebra; §1.5 derives Bayes' rule as a relabelling
-      of a tree you have already drawn. That makes the role of the partition — the thing L04's slide 46
-      leaves implicit when it states Bayes with the denominator pre-expanded — impossible to miss. §1.6
-      then does sequences of events and the multiplication rule, which is the machinery behind the chain
-      of conditional independence assumptions Naive Bayes rests on. Hundreds of worked examples; the exercises
-      are harder than SaD needs, so pick rather than sweep.
-    vault_path: material://source-pitman-probability/pitman.pdf
+  - material_ref:
+      route_id: route-510e0c869360f72413e11c13
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-pitman-probability
     route_id: route-510e0c869360f72413e11c13
-  - kind: reference
-    label: Ross — formal probability foundations
-    locator: Ch 2 Axioms of Probability, pdf pp. 46-99 (§2.3 axioms; §2.5 sample spaces having equally
-      likely outcomes); Ch 3 Conditional Probability and Independence, pdf pp. 100-197 (§3.3 Bayes's Formula;
-      §3.4 Independent Events; §3.5 P(·|F) is a Probability)
-    angle: 'The reference treatment: axioms stated formally, every derived rule proved from them, and
-      independence given a full section with counterexamples.'
-    angle_detail: 'Ross is the standard rigorous first course, and its value here is completeness rather
-      than gentleness. Two things it has that the softer sources do not: §3.4 works through why pairwise
-      independence does not imply mutual independence, with an explicit counterexample — the distinction
-      L04''s independence node states and the exam can probe; and §3.5 proves that conditioning on a fixed
-      event yields a genuine probability measure, which is the formal fact behind every ''just condition
-      and continue'' move. Use it to settle a question, not to learn the topic from cold.'
-    vault_path: material://source-ross-first-course/ross.pdf
+  - material_ref:
+      route_id: route-8de21f881a829cb3dec1d55d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-ross-first-course
     route_id: route-8de21f881a829cb3dec1d55d
-  - kind: practise
-    label: Schaum — probability and Bayes worked problems
-    locator: Ch 3 Introduction to Probability, pdf pp. 40-55; Ch 4 Conditional Probability and Independence,
-      pdf pp. 56-75 (every problem carries a full worked solution)
-    angle: 'Pure volume: dozens of short solved problems per chapter, sorted by difficulty, with no exposition
-      to read around them.'
-    angle_detail: Schaum's is a problem book with the theory compressed into a two-page summary at each
-      chapter head. That makes it the wrong first exposure and the right thing to open when the concept
-      is understood and the calculation is not yet automatic — the state most students are in a week before
-      the Klausur. The problems are short enough to do in batches of ten, and every one is solved in full.
-      This is a scanned older edition, so notation occasionally differs from the lecture's; treat the
-      deck as authoritative where they disagree.
-    vault_path: material://source-schaums-probability/schaums-probability.pdf
+  - material_ref:
+      route_id: route-f99c92614d78638f193ab4d3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-schaums-probability
     route_id: route-f99c92614d78638f193ab4d3
-  - kind: practise
-    label: Leuphana-Merz pp. 5-10 — probability and conditional-probability drills
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1
-    angle: A dense German exercise block for finite probability, conditioning and Bayes before the later
-      inference chapters.
-    angle_detail: The block supplies more authentic German stems than the course sheet while remaining
-      at the same foundational level. Select only the event/conditioning items; later pages in this 109-page
-      book belong to estimation and testing and are routed separately.
-    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+  - material_ref:
+      route_id: route-ac99d1d809345a00721a6f99
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-ac99d1d809345a00721a6f99
-  - kind: watch
-    label: Kurzes Tutorium Statistik — Zufallsexperiment and Bayes basics
-    locator: '''Zufallsexperiment und Ereignisse''; ''Bedingte Wahrscheinlichkeit''; ''Satz von Bayes'''
-    angle: Works Bayes through the Vierfeldertafel, in German, which is the presentation German exams
-      use.
-    angle_detail: 'The four-field table is the standard German exam apparatus for conditional probability,
-      and these videos build and read one directly. Combined with the Fahrmeir Arbeitsbuch solutions this
-      covers the format completely. Do not use them for the Naive Bayes construction — that is the lecture''s
-      own and has no German-language equivalent here. Not verified on 2026-09-07: the channel is only
-      reachable through a YouTube consent gate that this session did not accept, so the episode titles
-      below are inherited from the earlier plan and have not been checked against the channel''s own listing.'
+  - material_ref:
+      route_id: route-9a18c8d3ccfb21c3f023b850
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-kurzes-tutorium-statistik
     route_id: route-9a18c8d3ccfb21c3f023b850
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-axioms/notes.md
   attachments: []
@@ -392,8 +356,12 @@ stages:
   - concept-probability
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L04 probability and Naive Bayes deck
+  - material_ref:
+      route_id: route-1d4c3d5164052df9c540d079
+      inherit:
+      - label
+      - source_id
+    kind: read
     locator: lecture-slides/04_probability.pdf, PDF pp. 32-39,43
     angle: Conditioning plus the explicitly stated total-probability partition.
     angle_detail: Read physical PDF pages 32-39,43 for this stage. Printed slide labels may differ. This
@@ -401,307 +369,252 @@ stages:
       material menu. PDF p. 43 states the partition and theorem; the proof is omitted.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
-    source_id: source-sad-ss26-lectures
-  - kind: practise
-    label: Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes
-    locator: exercise-slides/blatt-02.pdf, pp. 1-2, Aufgaben 1-2
-    angle: Combines finite probability, dependence, Bayes inversion and a small classifier in the current
-      assignment format.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
+  - material_ref:
+      route_id: route-a577afe5626f081623095a82
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-a577afe5626f081623095a82
-  - kind: practise
-    label: UE3, slides 15-38 — events, axioms and conditional probability
-    locator: exercise-slides/UE3.pdf, slides 15-38
-    angle: Builds the event algebra and then works the medical-test style base-rate inversion visually.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
+  - material_ref:
+      route_id: route-78ae1df0aa949bb2a8a872dc
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-78ae1df0aa949bb2a8a872dc
-  - kind: practise
-    label: UE4, slides 9-12 — Bayes and Naive Bayes solutions
-    locator: exercise-slides/UE4.pdf, slides 9-12
-    angle: Shows exactly where the conditional-independence assumption enters the two-feature classifier.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+  - material_ref:
+      route_id: route-c355ecc8ea7599015a21abfe
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-c355ecc8ea7599015a21abfe
-  - kind: reference
-    label: 2025 probability deck with notes
-    locator: 04_probability_with_notes (1).pdf
-    angle: The 2025 deck for the same topic, annotated with the lecturer's spoken notes.
-    angle_detail: Prior-year material is never scope evidence — the 2026 deck decides what is examinable
-      — but the annotated version records explanations that exist only in speech, which is exactly what
-      a PDF of the current deck cannot give you. Use it when a current slide is terse and you want to
-      know what was said around it. Check every claim against the 2026 deck before relying on it.
+  - material_ref:
+      route_id: route-0afeba6c2e9a73159d6ad420
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
     route_id: route-0afeba6c2e9a73159d6ad420
-    source_id: source-sad-2025-recordings
-  - kind: read
-    label: Fahrmeir Chapter 4 — probability foundations
-    locator: Ch 4 §§4.1-4.2 Wahrscheinlichkeitsbegriff, pdf pp. 194-213; §4.4 Bedingte Wahrscheinlichkeiten,
-      pdf pp. 221-223; §4.5 Unabhängigkeit, pdf pp. 224-227; §4.6 Totale Wahrscheinlichkeit, pdf pp. 228-229;
-      §4.7 Satz von Bayes, pdf pp. 230-234; Aufgaben pdf pp. 239-241
-    angle: Splits total probability and Bayes into two separately numbered sections, which is the derivation
-      order L04's slide 46 skips.
-    angle_detail: 'The 2026 deck states Bayes with the total-probability expansion already substituted
-      into the denominator, so the step where the partition enters is invisible. Fahrmeir gives §4.6 (Satz
-      von der totalen Wahrscheinlichkeit) its own statement and proof, then derives §4.7 (Bayes) from
-      it, which is the missing half. It also gives the German phrasing of Unabhängigkeit as a product
-      rule rather than as a conditional statement — worth reading because the Klausur can ask for either.
-      Stops before Naive Bayes: the classifier construction is L04''s own, and no book on this shelf matches
-      it exactly.'
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-e488632c39efaf524b49f243
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-fahrmeir-statistik
     route_id: route-e488632c39efaf524b49f243
-  - kind: practise
-    label: Arbeitsbuch Chapter 4 — conditional probability and Bayes
-    locator: Ch 4 Aufgaben pdf pp. 83-88, Lösungen pdf pp. 89-95
-    angle: Bayes and total probability in Vierfeldertafel form — the exact presentation German exams use.
-    angle_detail: German statistics exams overwhelmingly pose conditional-probability questions as a four-field
-      table or a tree, not as an algebraic identity, and grading follows the table. These solutions show
-      the table being filled and read, which is the mechanical skill worth having automatic before the
-      Klausur. Six pages of problems, seven of solutions — small enough to finish in one sitting.
-    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+  - material_ref:
+      route_id: route-87f36cab308f54f199bc3034
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fahrmeir-arbeitsbuch
     route_id: route-87f36cab308f54f199bc3034
-  - kind: read
-    label: Grinstead & Snell Ch 4 — conditional probability
-    locator: Official PDF, Ch 4 'Conditional Probability', §§4.1-4.3, PDF pp. 141-190
-    angle: Open-access and legally free to keep, with a paradoxes section that attacks the intuition failures
-      L04 opens on.
-    angle_detail: The AMS releases this under a licence that lets you keep and print it, which matters
-      for a text you will return to across three lectures. §4.3 collects the classic conditional-probability
-      paradoxes — Monty Hall, the two-child problem, the prisoner's dilemma — and resolves each by making
-      the conditioning event explicit. That is the same diagnosis L04's framing slides make, worked out
-      at length rather than asserted. The exercises are plentiful and answers to odd-numbered ones are
-      published.
+  - material_ref:
+      route_id: route-fe8b4fbc40e7e85daf8ef25b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-grinstead-snell
     route_id: route-fe8b4fbc40e7e85daf8ef25b
-  - kind: read
-    label: Blitzstein Chapter 2 — conditioning and Bayes
-    locator: Ch 2 pdf pp. 62-119 (§2.2 definition and intuition p. 63; §2.3 Bayes' rule and the law of
-      total probability p. 69; §2.5 independence of events p. 80; §2.7 conditioning as a problem-solving
-      tool p. 85; §2.8 pitfalls and paradoxes p. 91; exercises §2.11 p. 100)
-    angle: Treats conditioning as the primary object — 'conditioning is the soul of statistics' — so Bayes
-      arrives as a way of thinking rather than a formula to memorise.
-    angle_detail: 'The one book here that opens the chapter by arguing conditional probability is the
-      fundamental notion and unconditional probability the special case. That reframing is why §2.7 exists:
-      a section on conditioning as a deliberate problem-solving move, which no other source on this shelf
-      has. §2.8 catalogues the confusion of the inverse and the prosecutor''s fallacy — the same base-rate
-      error L04''s framing slides open with, but named and dissected. Notation is measure-free and the
-      register is conversational; it is slower than Fahrmeir but far more likely to make the idea stick.
-      60 exercises, many with published solutions on the book''s site.'
-    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
+  - material_ref:
+      route_id: route-b48ac5af55a8c900d68bb0c9
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-blitzstein-hwang
     route_id: route-b48ac5af55a8c900d68bb0c9
-  - kind: read
-    label: MIT 6.041SC — conditional probability, Bayes and independence lectures
-    locator: Lectures 2-3 (conditioning and Bayes' rule; independence) with their recitations and solved
-      tutorials
-    angle: Every lecture is paired with a recitation and a tutorial whose problems are solved on video
-      — three passes over one topic.
-    angle_detail: 'Tsitsiklis''s course structure is the differentiator: the lecture states the theory,
-      the recitation works standard problems, and the tutorial works harder ones, all recorded. For a
-      topic where the gap between following an explanation and solving a problem is wide — which is exactly
-      conditional probability — that three-pass structure is worth more than a better single explanation.
-      Free on OCW with all materials.'
+  - material_ref:
+      route_id: route-395d30ff10c3ab149d789c7c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-mit-6041sc
     route_id: route-395d30ff10c3ab149d789c7c
-  - kind: read
-    label: OpenIntro — probability foundations
-    locator: Ch 3 §3.1 defining probability, pdf pp. 81-94; §3.2 conditional probability, pdf pp. 95-111
-      (tree diagrams and Bayes' theorem); §3.3 sampling from a small population, pdf pp. 112-114
-    angle: Runs conditional probability entirely through tree diagrams and contingency tables, so Bayes
-      is arithmetic on a table before it is an equation.
-    angle_detail: '§3.2 develops the whole of conditioning pictorially: a two-way table, then a tree with
-      branch probabilities, then Bayes as a ratio read off the tree. Only at the end does the algebraic
-      form appear. For a first pass this is the lowest-friction route available, and it matches how German
-      exams pose the question (Vierfeldertafel). It does not cover Naive Bayes and does not do conditional
-      independence carefully — for those parts of L04 use the deck and Kelleher Ch 6.'
-    vault_path: material://source-openintro-statistics/openintro.pdf
+  - material_ref:
+      route_id: route-66691da3faf6c5780cf0b66d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-openintro-statistics
     route_id: route-66691da3faf6c5780cf0b66d
-  - kind: practise
-    label: Dekking — probability exercise bank
-    locator: Ch 2 outcomes, events, and probability, pdf pp. 24-35; Ch 3 conditional probability and independence,
-      pdf pp. 36-51 (§3.3 law of total probability and Bayes' rule p. 41; §3.4 independence p. 43; exercises
-      p. 48); answers App C pdf pp. 434-442
-    angle: Quick exercises embedded mid-section with solutions at the chapter end — a self-check every
-      few pages rather than only at the end.
-    angle_detail: 'The structural feature that distinguishes this book: each section plants short ''quick
-      exercises'' in the flow and answers them at §x.5 before the real exercise set. For probability rules,
-      where the failure mode is silent misunderstanding rather than difficulty, that rhythm catches errors
-      within a page instead of after a chapter. The treatment itself is compact and modern; Ch 2 is twelve
-      pages for material Fahrmeir spends twenty on. Ch 1''s Monty Hall opening (p. 16) is the same framing
-      puzzle L04 uses.'
-    vault_path: material://source-dekking-mips/dekking.pdf
+  - material_ref:
+      route_id: route-fa96784fa40036436bf1b2cc
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-dekking-mips
     route_id: route-fa96784fa40036436bf1b2cc
-  - kind: read
-    label: MIT 18.05 — probability notes and solved problems
-    locator: 'Classes: Reading and In-class Materials: ''Conditional Probability, Independence and Bayes''
-      Theorem'' reading and slides; Problem Set 2 with its published solutions'
-    angle: Reading, in-class problems and solved problem set for the same topic, published together —
-      a complete study loop rather than one artifact.
-    angle_detail: 18.05 publishes, per class, a reading, the slides used on it, the in-class problems
-      and the solutions, plus a problem set with worked answers. That means one topic can be learned,
-      practised and checked without leaving the page — the thing a lecture deck alone cannot give you.
-      Its treatment of the base-rate fallacy is unusually direct and matches L04's opening framing slides.
-      Written for students who have had multivariable calculus, so the register sits above OpenIntro and
-      below Ross.
+  - material_ref:
+      route_id: route-44431ac89d714785b2bab31b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-mit-1805
     route_id: route-44431ac89d714785b2bab31b
-  - kind: practise
-    label: FAU pp. 4 and 22 — total probability, Bayes and independence
-    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 4 Aufgabe 1(3)-(4), solution
-      p. 22
-    angle: Tests conditional probability as a table calculation rather than a definition recital.
-    angle_detail: The same orange-origin item is routed here for its formal Bayes and independence steps.
-      It confirms the German notation and the compact published answer after the course sheet has established
-      the method.
-    vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
+  - material_ref:
+      route_id: route-e3418e502d6ca2dcdf2f2c9d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fau-klausur-ws1415
     route_id: route-e3418e502d6ca2dcdf2f2c9d
-  - kind: reference
-    label: Pitman — conditional probability selections
-    locator: Ch 1 §1.4 Conditional Probability and Independence, pdf pp. 44-57; §1.5 Bayes' Rule, pdf
-      pp. 58-66; §1.6 Sequences of Events, pdf pp. 67-89
-    angle: Everything through tree diagrams and partitions drawn on the page — the most visual derivation
-      of Bayes on the shelf.
-    angle_detail: Pitman's method is to draw the partition and the tree, label every branch, and read
-      the answer off the picture before writing any algebra; §1.5 derives Bayes' rule as a relabelling
-      of a tree you have already drawn. That makes the role of the partition — the thing L04's slide 46
-      leaves implicit when it states Bayes with the denominator pre-expanded — impossible to miss. §1.6
-      then does sequences of events and the multiplication rule, which is the machinery behind the chain
-      of conditional independence assumptions Naive Bayes rests on. Hundreds of worked examples; the exercises
-      are harder than SaD needs, so pick rather than sweep.
-    vault_path: material://source-pitman-probability/pitman.pdf
+  - material_ref:
+      route_id: route-510e0c869360f72413e11c13
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-pitman-probability
     route_id: route-510e0c869360f72413e11c13
-  - kind: reference
-    label: Tijms — simulation-first probability intuition
-    locator: Ch 6 Chance trees and Bayes' rule, pdf pp. 218-234; Ch 8 Conditional probability and Bayes,
-      pdf pp. 255-274
-    angle: 'Two passes over Bayes, deliberately separated: an informal chance-tree chapter in Part One,
-      a formal one in Part Two.'
-    angle_detail: The book is split into 'Probability in action' and 'Essentials of probability', and
-      Bayes appears in both. Ch 6 argues entirely with chance trees and real cases — medical screening,
-      the notorious court cases — with no formal apparatus; Ch 8 restates the same results with the definitions
-      in place. If L04's formal treatment did not land, reading Ch 6 alone and returning to the deck often
-      fixes it, which is a cheaper repair than a full probability chapter. Tijms is also the best source
-      here on why intuition fails on these problems, which is what L04's framing node is about.
-    vault_path: material://source-tijms-understanding-probability/tijms.pdf
+  - material_ref:
+      route_id: route-8c0f35f6c57e551481433291
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-tijms-understanding-probability
     route_id: route-8c0f35f6c57e551481433291
-  - kind: reference
-    label: Ross — formal probability foundations
-    locator: Ch 2 Axioms of Probability, pdf pp. 46-99 (§2.3 axioms; §2.5 sample spaces having equally
-      likely outcomes); Ch 3 Conditional Probability and Independence, pdf pp. 100-197 (§3.3 Bayes's Formula;
-      §3.4 Independent Events; §3.5 P(·|F) is a Probability)
-    angle: 'The reference treatment: axioms stated formally, every derived rule proved from them, and
-      independence given a full section with counterexamples.'
-    angle_detail: 'Ross is the standard rigorous first course, and its value here is completeness rather
-      than gentleness. Two things it has that the softer sources do not: §3.4 works through why pairwise
-      independence does not imply mutual independence, with an explicit counterexample — the distinction
-      L04''s independence node states and the exam can probe; and §3.5 proves that conditioning on a fixed
-      event yields a genuine probability measure, which is the formal fact behind every ''just condition
-      and continue'' move. Use it to settle a question, not to learn the topic from cold.'
-    vault_path: material://source-ross-first-course/ross.pdf
+  - material_ref:
+      route_id: route-8de21f881a829cb3dec1d55d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-ross-first-course
     route_id: route-8de21f881a829cb3dec1d55d
-  - kind: practise
-    label: Schaum — probability and Bayes worked problems
-    locator: Ch 3 Introduction to Probability, pdf pp. 40-55; Ch 4 Conditional Probability and Independence,
-      pdf pp. 56-75 (every problem carries a full worked solution)
-    angle: 'Pure volume: dozens of short solved problems per chapter, sorted by difficulty, with no exposition
-      to read around them.'
-    angle_detail: Schaum's is a problem book with the theory compressed into a two-page summary at each
-      chapter head. That makes it the wrong first exposure and the right thing to open when the concept
-      is understood and the calculation is not yet automatic — the state most students are in a week before
-      the Klausur. The problems are short enough to do in batches of ten, and every one is solved in full.
-      This is a scanned older edition, so notation occasionally differs from the lecture's; treat the
-      deck as authoritative where they disagree.
-    vault_path: material://source-schaums-probability/schaums-probability.pdf
+  - material_ref:
+      route_id: route-f99c92614d78638f193ab4d3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-schaums-probability
     route_id: route-f99c92614d78638f193ab4d3
-  - kind: reference
-    label: Harvard Stat 110 — conditioning and Bayes lectures
-    locator: 'Stat 110 Lectures 4-5: ''independence, conditional probability, Bayes'' rule, and conditional
-      independence''; Strategic Practice 2 with solutions'
-    angle: Blitzstein lecturing his own book — the same argument delivered twice, in print and on video.
-    angle_detail: 'This is the video companion to Blitzstein & Hwang, so choosing between them is a format
-      decision rather than a content decision: the definitions, notation and examples line up section
-      by section. The lectures add the thing the book cannot — hearing which step he considers the difficult
-      one, and watching him refuse to write the algebra until the story is clear. The strategic-practice
-      sheets are graded from routine to hard with full solutions.'
+  - material_ref:
+      route_id: route-de38ce9e78f4dd052d5013b4
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-stat110
     route_id: route-de38ce9e78f4dd052d5013b4
-  - kind: practise
-    label: Leuphana-Merz pp. 5-10 — probability and conditional-probability drills
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1
-    angle: A dense German exercise block for finite probability, conditioning and Bayes before the later
-      inference chapters.
-    angle_detail: The block supplies more authentic German stems than the course sheet while remaining
-      at the same foundational level. Select only the event/conditioning items; later pages in this 109-page
-      book belong to estimation and testing and are routed separately.
-    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+  - material_ref:
+      route_id: route-ac99d1d809345a00721a6f99
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-ac99d1d809345a00721a6f99
-  - kind: watch
-    label: Kurzes Tutorium Statistik — Zufallsexperiment and Bayes basics
-    locator: '''Zufallsexperiment und Ereignisse''; ''Bedingte Wahrscheinlichkeit''; ''Satz von Bayes'''
-    angle: Works Bayes through the Vierfeldertafel, in German, which is the presentation German exams
-      use.
-    angle_detail: 'The four-field table is the standard German exam apparatus for conditional probability,
-      and these videos build and read one directly. Combined with the Fahrmeir Arbeitsbuch solutions this
-      covers the format completely. Do not use them for the Naive Bayes construction — that is the lecture''s
-      own and has no German-language equivalent here. Not verified on 2026-09-07: the channel is only
-      reachable through a YouTube consent gate that this session did not accept, so the episode titles
-      below are inherited from the earlier plan and have not been checked against the channel''s own listing.'
+  - material_ref:
+      route_id: route-9a18c8d3ccfb21c3f023b850
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-kurzes-tutorium-statistik
     route_id: route-9a18c8d3ccfb21c3f023b850
-  - kind: watch
-    label: 3Blue1Brown — the geometry behind conditional probability and Bayes
-    locator: '''Bayes theorem, the geometry of changing beliefs'' (≈15 min); ''The quick proof of Bayes''
-      theorem'' (≈3 min); optionally ''The medical test paradox'''
-    angle: The three-minute proof recovers the formula from the same picture — read it after the geometry,
-      never instead of it.
-    angle_detail: 'The pairing is the point: the long video makes the result obvious geometrically and
-      the short one shows that the algebraic identity is just that picture written down. Doing them in
-      that order means L04''s formula arrives as a summary of something already understood. Reversing
-      the order wastes both. Neither video covers total probability as a separate result — for that, Fahrmeir
-      §4.6.'
+  - material_ref:
+      route_id: route-361d03e96b7b4416138c8def
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+      - url
+    kind: watch
     scope_triage: helpful-now
     route_id: route-361d03e96b7b4416138c8def
-    source_id: source-3b1b-bayes-theorem
-    url: https://www.youtube.com/playlist?list=PLk4N6AFvLWe3xCHuOs0siWp0q2F43Cslh
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-conditional/notes.md
   attachments: []
   source_feedback: []
@@ -722,8 +635,12 @@ stages:
   - concept-conditional-probability
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L04 probability and Naive Bayes deck
+  - material_ref:
+      route_id: route-1d4c3d5164052df9c540d079
+      inherit:
+      - label
+      - source_id
+    kind: read
     locator: lecture-slides/04_probability.pdf, PDF pp. 43-47
     angle: Bayes reasoning with the medical-example prevalence corrected.
     angle_detail: 'Read physical PDF pages 43-47 for this stage. Printed slide labels may differ. This
@@ -733,307 +650,252 @@ stages:
       | positive)=0.01*0.999/(0.99*0.001+0.01*0.999)=0.909836, not approximately 0.99.'
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
-    source_id: source-sad-ss26-lectures
-  - kind: practise
-    label: Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes
-    locator: exercise-slides/blatt-02.pdf, pp. 1-2, Aufgaben 1-2
-    angle: Combines finite probability, dependence, Bayes inversion and a small classifier in the current
-      assignment format.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
+  - material_ref:
+      route_id: route-a577afe5626f081623095a82
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-a577afe5626f081623095a82
-  - kind: practise
-    label: UE3, slides 15-38 — events, axioms and conditional probability
-    locator: exercise-slides/UE3.pdf, slides 15-38
-    angle: Builds the event algebra and then works the medical-test style base-rate inversion visually.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
+  - material_ref:
+      route_id: route-78ae1df0aa949bb2a8a872dc
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-78ae1df0aa949bb2a8a872dc
-  - kind: practise
-    label: UE4, slides 9-12 — Bayes and Naive Bayes solutions
-    locator: exercise-slides/UE4.pdf, slides 9-12
-    angle: Shows exactly where the conditional-independence assumption enters the two-feature classifier.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+  - material_ref:
+      route_id: route-c355ecc8ea7599015a21abfe
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-c355ecc8ea7599015a21abfe
-  - kind: reference
-    label: 2025 probability deck with notes
-    locator: 04_probability_with_notes (1).pdf
-    angle: The 2025 deck for the same topic, annotated with the lecturer's spoken notes.
-    angle_detail: Prior-year material is never scope evidence — the 2026 deck decides what is examinable
-      — but the annotated version records explanations that exist only in speech, which is exactly what
-      a PDF of the current deck cannot give you. Use it when a current slide is terse and you want to
-      know what was said around it. Check every claim against the 2026 deck before relying on it.
+  - material_ref:
+      route_id: route-0afeba6c2e9a73159d6ad420
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
     route_id: route-0afeba6c2e9a73159d6ad420
-    source_id: source-sad-2025-recordings
-  - kind: read
-    label: Fahrmeir Chapter 4 — probability foundations
-    locator: Ch 4 §§4.1-4.2 Wahrscheinlichkeitsbegriff, pdf pp. 194-213; §4.4 Bedingte Wahrscheinlichkeiten,
-      pdf pp. 221-223; §4.5 Unabhängigkeit, pdf pp. 224-227; §4.6 Totale Wahrscheinlichkeit, pdf pp. 228-229;
-      §4.7 Satz von Bayes, pdf pp. 230-234; Aufgaben pdf pp. 239-241
-    angle: Splits total probability and Bayes into two separately numbered sections, which is the derivation
-      order L04's slide 46 skips.
-    angle_detail: 'The 2026 deck states Bayes with the total-probability expansion already substituted
-      into the denominator, so the step where the partition enters is invisible. Fahrmeir gives §4.6 (Satz
-      von der totalen Wahrscheinlichkeit) its own statement and proof, then derives §4.7 (Bayes) from
-      it, which is the missing half. It also gives the German phrasing of Unabhängigkeit as a product
-      rule rather than as a conditional statement — worth reading because the Klausur can ask for either.
-      Stops before Naive Bayes: the classifier construction is L04''s own, and no book on this shelf matches
-      it exactly.'
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-e488632c39efaf524b49f243
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-fahrmeir-statistik
     route_id: route-e488632c39efaf524b49f243
-  - kind: practise
-    label: Arbeitsbuch Chapter 4 — conditional probability and Bayes
-    locator: Ch 4 Aufgaben pdf pp. 83-88, Lösungen pdf pp. 89-95
-    angle: Bayes and total probability in Vierfeldertafel form — the exact presentation German exams use.
-    angle_detail: German statistics exams overwhelmingly pose conditional-probability questions as a four-field
-      table or a tree, not as an algebraic identity, and grading follows the table. These solutions show
-      the table being filled and read, which is the mechanical skill worth having automatic before the
-      Klausur. Six pages of problems, seven of solutions — small enough to finish in one sitting.
-    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+  - material_ref:
+      route_id: route-87f36cab308f54f199bc3034
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fahrmeir-arbeitsbuch
     route_id: route-87f36cab308f54f199bc3034
-  - kind: read
-    label: Grinstead & Snell Ch 4 — conditional probability
-    locator: Official PDF, Ch 4 'Conditional Probability', §§4.1-4.3, PDF pp. 141-190
-    angle: Open-access and legally free to keep, with a paradoxes section that attacks the intuition failures
-      L04 opens on.
-    angle_detail: The AMS releases this under a licence that lets you keep and print it, which matters
-      for a text you will return to across three lectures. §4.3 collects the classic conditional-probability
-      paradoxes — Monty Hall, the two-child problem, the prisoner's dilemma — and resolves each by making
-      the conditioning event explicit. That is the same diagnosis L04's framing slides make, worked out
-      at length rather than asserted. The exercises are plentiful and answers to odd-numbered ones are
-      published.
+  - material_ref:
+      route_id: route-fe8b4fbc40e7e85daf8ef25b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-grinstead-snell
     route_id: route-fe8b4fbc40e7e85daf8ef25b
-  - kind: read
-    label: Blitzstein Chapter 2 — conditioning and Bayes
-    locator: Ch 2 pdf pp. 62-119 (§2.2 definition and intuition p. 63; §2.3 Bayes' rule and the law of
-      total probability p. 69; §2.5 independence of events p. 80; §2.7 conditioning as a problem-solving
-      tool p. 85; §2.8 pitfalls and paradoxes p. 91; exercises §2.11 p. 100)
-    angle: Treats conditioning as the primary object — 'conditioning is the soul of statistics' — so Bayes
-      arrives as a way of thinking rather than a formula to memorise.
-    angle_detail: 'The one book here that opens the chapter by arguing conditional probability is the
-      fundamental notion and unconditional probability the special case. That reframing is why §2.7 exists:
-      a section on conditioning as a deliberate problem-solving move, which no other source on this shelf
-      has. §2.8 catalogues the confusion of the inverse and the prosecutor''s fallacy — the same base-rate
-      error L04''s framing slides open with, but named and dissected. Notation is measure-free and the
-      register is conversational; it is slower than Fahrmeir but far more likely to make the idea stick.
-      60 exercises, many with published solutions on the book''s site.'
-    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
+  - material_ref:
+      route_id: route-b48ac5af55a8c900d68bb0c9
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-blitzstein-hwang
     route_id: route-b48ac5af55a8c900d68bb0c9
-  - kind: read
-    label: MIT 6.041SC — conditional probability, Bayes and independence lectures
-    locator: Lectures 2-3 (conditioning and Bayes' rule; independence) with their recitations and solved
-      tutorials
-    angle: Every lecture is paired with a recitation and a tutorial whose problems are solved on video
-      — three passes over one topic.
-    angle_detail: 'Tsitsiklis''s course structure is the differentiator: the lecture states the theory,
-      the recitation works standard problems, and the tutorial works harder ones, all recorded. For a
-      topic where the gap between following an explanation and solving a problem is wide — which is exactly
-      conditional probability — that three-pass structure is worth more than a better single explanation.
-      Free on OCW with all materials.'
+  - material_ref:
+      route_id: route-395d30ff10c3ab149d789c7c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-mit-6041sc
     route_id: route-395d30ff10c3ab149d789c7c
-  - kind: read
-    label: OpenIntro — probability foundations
-    locator: Ch 3 §3.1 defining probability, pdf pp. 81-94; §3.2 conditional probability, pdf pp. 95-111
-      (tree diagrams and Bayes' theorem); §3.3 sampling from a small population, pdf pp. 112-114
-    angle: Runs conditional probability entirely through tree diagrams and contingency tables, so Bayes
-      is arithmetic on a table before it is an equation.
-    angle_detail: '§3.2 develops the whole of conditioning pictorially: a two-way table, then a tree with
-      branch probabilities, then Bayes as a ratio read off the tree. Only at the end does the algebraic
-      form appear. For a first pass this is the lowest-friction route available, and it matches how German
-      exams pose the question (Vierfeldertafel). It does not cover Naive Bayes and does not do conditional
-      independence carefully — for those parts of L04 use the deck and Kelleher Ch 6.'
-    vault_path: material://source-openintro-statistics/openintro.pdf
+  - material_ref:
+      route_id: route-66691da3faf6c5780cf0b66d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-openintro-statistics
     route_id: route-66691da3faf6c5780cf0b66d
-  - kind: practise
-    label: Dekking — probability exercise bank
-    locator: Ch 2 outcomes, events, and probability, pdf pp. 24-35; Ch 3 conditional probability and independence,
-      pdf pp. 36-51 (§3.3 law of total probability and Bayes' rule p. 41; §3.4 independence p. 43; exercises
-      p. 48); answers App C pdf pp. 434-442
-    angle: Quick exercises embedded mid-section with solutions at the chapter end — a self-check every
-      few pages rather than only at the end.
-    angle_detail: 'The structural feature that distinguishes this book: each section plants short ''quick
-      exercises'' in the flow and answers them at §x.5 before the real exercise set. For probability rules,
-      where the failure mode is silent misunderstanding rather than difficulty, that rhythm catches errors
-      within a page instead of after a chapter. The treatment itself is compact and modern; Ch 2 is twelve
-      pages for material Fahrmeir spends twenty on. Ch 1''s Monty Hall opening (p. 16) is the same framing
-      puzzle L04 uses.'
-    vault_path: material://source-dekking-mips/dekking.pdf
+  - material_ref:
+      route_id: route-fa96784fa40036436bf1b2cc
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-dekking-mips
     route_id: route-fa96784fa40036436bf1b2cc
-  - kind: read
-    label: MIT 18.05 — probability notes and solved problems
-    locator: 'Classes: Reading and In-class Materials: ''Conditional Probability, Independence and Bayes''
-      Theorem'' reading and slides; Problem Set 2 with its published solutions'
-    angle: Reading, in-class problems and solved problem set for the same topic, published together —
-      a complete study loop rather than one artifact.
-    angle_detail: 18.05 publishes, per class, a reading, the slides used on it, the in-class problems
-      and the solutions, plus a problem set with worked answers. That means one topic can be learned,
-      practised and checked without leaving the page — the thing a lecture deck alone cannot give you.
-      Its treatment of the base-rate fallacy is unusually direct and matches L04's opening framing slides.
-      Written for students who have had multivariable calculus, so the register sits above OpenIntro and
-      below Ross.
+  - material_ref:
+      route_id: route-44431ac89d714785b2bab31b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-mit-1805
     route_id: route-44431ac89d714785b2bab31b
-  - kind: practise
-    label: FAU pp. 4 and 22 — total probability, Bayes and independence
-    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 4 Aufgabe 1(3)-(4), solution
-      p. 22
-    angle: Tests conditional probability as a table calculation rather than a definition recital.
-    angle_detail: The same orange-origin item is routed here for its formal Bayes and independence steps.
-      It confirms the German notation and the compact published answer after the course sheet has established
-      the method.
-    vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
+  - material_ref:
+      route_id: route-e3418e502d6ca2dcdf2f2c9d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fau-klausur-ws1415
     route_id: route-e3418e502d6ca2dcdf2f2c9d
-  - kind: reference
-    label: Pitman — conditional probability selections
-    locator: Ch 1 §1.4 Conditional Probability and Independence, pdf pp. 44-57; §1.5 Bayes' Rule, pdf
-      pp. 58-66; §1.6 Sequences of Events, pdf pp. 67-89
-    angle: Everything through tree diagrams and partitions drawn on the page — the most visual derivation
-      of Bayes on the shelf.
-    angle_detail: Pitman's method is to draw the partition and the tree, label every branch, and read
-      the answer off the picture before writing any algebra; §1.5 derives Bayes' rule as a relabelling
-      of a tree you have already drawn. That makes the role of the partition — the thing L04's slide 46
-      leaves implicit when it states Bayes with the denominator pre-expanded — impossible to miss. §1.6
-      then does sequences of events and the multiplication rule, which is the machinery behind the chain
-      of conditional independence assumptions Naive Bayes rests on. Hundreds of worked examples; the exercises
-      are harder than SaD needs, so pick rather than sweep.
-    vault_path: material://source-pitman-probability/pitman.pdf
+  - material_ref:
+      route_id: route-510e0c869360f72413e11c13
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-pitman-probability
     route_id: route-510e0c869360f72413e11c13
-  - kind: reference
-    label: Tijms — simulation-first probability intuition
-    locator: Ch 6 Chance trees and Bayes' rule, pdf pp. 218-234; Ch 8 Conditional probability and Bayes,
-      pdf pp. 255-274
-    angle: 'Two passes over Bayes, deliberately separated: an informal chance-tree chapter in Part One,
-      a formal one in Part Two.'
-    angle_detail: The book is split into 'Probability in action' and 'Essentials of probability', and
-      Bayes appears in both. Ch 6 argues entirely with chance trees and real cases — medical screening,
-      the notorious court cases — with no formal apparatus; Ch 8 restates the same results with the definitions
-      in place. If L04's formal treatment did not land, reading Ch 6 alone and returning to the deck often
-      fixes it, which is a cheaper repair than a full probability chapter. Tijms is also the best source
-      here on why intuition fails on these problems, which is what L04's framing node is about.
-    vault_path: material://source-tijms-understanding-probability/tijms.pdf
+  - material_ref:
+      route_id: route-8c0f35f6c57e551481433291
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-tijms-understanding-probability
     route_id: route-8c0f35f6c57e551481433291
-  - kind: reference
-    label: Ross — formal probability foundations
-    locator: Ch 2 Axioms of Probability, pdf pp. 46-99 (§2.3 axioms; §2.5 sample spaces having equally
-      likely outcomes); Ch 3 Conditional Probability and Independence, pdf pp. 100-197 (§3.3 Bayes's Formula;
-      §3.4 Independent Events; §3.5 P(·|F) is a Probability)
-    angle: 'The reference treatment: axioms stated formally, every derived rule proved from them, and
-      independence given a full section with counterexamples.'
-    angle_detail: 'Ross is the standard rigorous first course, and its value here is completeness rather
-      than gentleness. Two things it has that the softer sources do not: §3.4 works through why pairwise
-      independence does not imply mutual independence, with an explicit counterexample — the distinction
-      L04''s independence node states and the exam can probe; and §3.5 proves that conditioning on a fixed
-      event yields a genuine probability measure, which is the formal fact behind every ''just condition
-      and continue'' move. Use it to settle a question, not to learn the topic from cold.'
-    vault_path: material://source-ross-first-course/ross.pdf
+  - material_ref:
+      route_id: route-8de21f881a829cb3dec1d55d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-ross-first-course
     route_id: route-8de21f881a829cb3dec1d55d
-  - kind: practise
-    label: Schaum — probability and Bayes worked problems
-    locator: Ch 3 Introduction to Probability, pdf pp. 40-55; Ch 4 Conditional Probability and Independence,
-      pdf pp. 56-75 (every problem carries a full worked solution)
-    angle: 'Pure volume: dozens of short solved problems per chapter, sorted by difficulty, with no exposition
-      to read around them.'
-    angle_detail: Schaum's is a problem book with the theory compressed into a two-page summary at each
-      chapter head. That makes it the wrong first exposure and the right thing to open when the concept
-      is understood and the calculation is not yet automatic — the state most students are in a week before
-      the Klausur. The problems are short enough to do in batches of ten, and every one is solved in full.
-      This is a scanned older edition, so notation occasionally differs from the lecture's; treat the
-      deck as authoritative where they disagree.
-    vault_path: material://source-schaums-probability/schaums-probability.pdf
+  - material_ref:
+      route_id: route-f99c92614d78638f193ab4d3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-schaums-probability
     route_id: route-f99c92614d78638f193ab4d3
-  - kind: reference
-    label: Harvard Stat 110 — conditioning and Bayes lectures
-    locator: 'Stat 110 Lectures 4-5: ''independence, conditional probability, Bayes'' rule, and conditional
-      independence''; Strategic Practice 2 with solutions'
-    angle: Blitzstein lecturing his own book — the same argument delivered twice, in print and on video.
-    angle_detail: 'This is the video companion to Blitzstein & Hwang, so choosing between them is a format
-      decision rather than a content decision: the definitions, notation and examples line up section
-      by section. The lectures add the thing the book cannot — hearing which step he considers the difficult
-      one, and watching him refuse to write the algebra until the story is clear. The strategic-practice
-      sheets are graded from routine to hard with full solutions.'
+  - material_ref:
+      route_id: route-de38ce9e78f4dd052d5013b4
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-stat110
     route_id: route-de38ce9e78f4dd052d5013b4
-  - kind: practise
-    label: Leuphana-Merz pp. 5-10 — probability and conditional-probability drills
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1
-    angle: A dense German exercise block for finite probability, conditioning and Bayes before the later
-      inference chapters.
-    angle_detail: The block supplies more authentic German stems than the course sheet while remaining
-      at the same foundational level. Select only the event/conditioning items; later pages in this 109-page
-      book belong to estimation and testing and are routed separately.
-    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+  - material_ref:
+      route_id: route-ac99d1d809345a00721a6f99
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-ac99d1d809345a00721a6f99
-  - kind: watch
-    label: Kurzes Tutorium Statistik — Zufallsexperiment and Bayes basics
-    locator: '''Zufallsexperiment und Ereignisse''; ''Bedingte Wahrscheinlichkeit''; ''Satz von Bayes'''
-    angle: Works Bayes through the Vierfeldertafel, in German, which is the presentation German exams
-      use.
-    angle_detail: 'The four-field table is the standard German exam apparatus for conditional probability,
-      and these videos build and read one directly. Combined with the Fahrmeir Arbeitsbuch solutions this
-      covers the format completely. Do not use them for the Naive Bayes construction — that is the lecture''s
-      own and has no German-language equivalent here. Not verified on 2026-09-07: the channel is only
-      reachable through a YouTube consent gate that this session did not accept, so the episode titles
-      below are inherited from the earlier plan and have not been checked against the channel''s own listing.'
+  - material_ref:
+      route_id: route-9a18c8d3ccfb21c3f023b850
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-kurzes-tutorium-statistik
     route_id: route-9a18c8d3ccfb21c3f023b850
-  - kind: watch
-    label: 3Blue1Brown — the geometry behind conditional probability and Bayes
-    locator: '''Bayes theorem, the geometry of changing beliefs'' (≈15 min); ''The quick proof of Bayes''
-      theorem'' (≈3 min); optionally ''The medical test paradox'''
-    angle: The three-minute proof recovers the formula from the same picture — read it after the geometry,
-      never instead of it.
-    angle_detail: 'The pairing is the point: the long video makes the result obvious geometrically and
-      the short one shows that the algebraic identity is just that picture written down. Doing them in
-      that order means L04''s formula arrives as a summary of something already understood. Reversing
-      the order wastes both. Neither video covers total probability as a separate result — for that, Fahrmeir
-      §4.6.'
+  - material_ref:
+      route_id: route-361d03e96b7b4416138c8def
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+      - url
+    kind: watch
     scope_triage: helpful-now
     route_id: route-361d03e96b7b4416138c8def
-    source_id: source-3b1b-bayes-theorem
-    url: https://www.youtube.com/playlist?list=PLk4N6AFvLWe3xCHuOs0siWp0q2F43Cslh
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-bayes/notes.md
   attachments: []
   source_feedback: []
@@ -1054,8 +916,12 @@ stages:
   - concept-probability
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L04 probability and Naive Bayes deck
+  - material_ref:
+      route_id: route-1d4c3d5164052df9c540d079
+      inherit:
+      - label
+      - source_id
+    kind: read
     locator: lecture-slides/04_probability.pdf, PDF pp. 40-42,49-50
     angle: The current lecture's focused reading for independence and conditional independence.
     angle_detail: Read physical PDF pages 40-42,49-50 for this stage. Printed slide labels may differ.
@@ -1063,266 +929,215 @@ stages:
       unit material menu.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
-    source_id: source-sad-ss26-lectures
-  - kind: practise
-    label: Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes
-    locator: exercise-slides/blatt-02.pdf, pp. 1-2, Aufgaben 1-2
-    angle: Combines finite probability, dependence, Bayes inversion and a small classifier in the current
-      assignment format.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
+  - material_ref:
+      route_id: route-a577afe5626f081623095a82
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-a577afe5626f081623095a82
-  - kind: practise
-    label: UE3, slides 15-38 — events, axioms and conditional probability
-    locator: exercise-slides/UE3.pdf, slides 15-38
-    angle: Builds the event algebra and then works the medical-test style base-rate inversion visually.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
+  - material_ref:
+      route_id: route-78ae1df0aa949bb2a8a872dc
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-78ae1df0aa949bb2a8a872dc
-  - kind: reference
-    label: 2025 probability deck with notes
-    locator: 04_probability_with_notes (1).pdf
-    angle: The 2025 deck for the same topic, annotated with the lecturer's spoken notes.
-    angle_detail: Prior-year material is never scope evidence — the 2026 deck decides what is examinable
-      — but the annotated version records explanations that exist only in speech, which is exactly what
-      a PDF of the current deck cannot give you. Use it when a current slide is terse and you want to
-      know what was said around it. Check every claim against the 2026 deck before relying on it.
+  - material_ref:
+      route_id: route-0afeba6c2e9a73159d6ad420
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
     route_id: route-0afeba6c2e9a73159d6ad420
-    source_id: source-sad-2025-recordings
-  - kind: read
-    label: Fahrmeir Chapter 4 — probability foundations
-    locator: Ch 4 §§4.1-4.2 Wahrscheinlichkeitsbegriff, pdf pp. 194-213; §4.4 Bedingte Wahrscheinlichkeiten,
-      pdf pp. 221-223; §4.5 Unabhängigkeit, pdf pp. 224-227; §4.6 Totale Wahrscheinlichkeit, pdf pp. 228-229;
-      §4.7 Satz von Bayes, pdf pp. 230-234; Aufgaben pdf pp. 239-241
-    angle: Splits total probability and Bayes into two separately numbered sections, which is the derivation
-      order L04's slide 46 skips.
-    angle_detail: 'The 2026 deck states Bayes with the total-probability expansion already substituted
-      into the denominator, so the step where the partition enters is invisible. Fahrmeir gives §4.6 (Satz
-      von der totalen Wahrscheinlichkeit) its own statement and proof, then derives §4.7 (Bayes) from
-      it, which is the missing half. It also gives the German phrasing of Unabhängigkeit as a product
-      rule rather than as a conditional statement — worth reading because the Klausur can ask for either.
-      Stops before Naive Bayes: the classifier construction is L04''s own, and no book on this shelf matches
-      it exactly.'
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-e488632c39efaf524b49f243
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-fahrmeir-statistik
     route_id: route-e488632c39efaf524b49f243
-  - kind: practise
-    label: Arbeitsbuch Chapter 4 — conditional probability and Bayes
-    locator: Ch 4 Aufgaben pdf pp. 83-88, Lösungen pdf pp. 89-95
-    angle: Bayes and total probability in Vierfeldertafel form — the exact presentation German exams use.
-    angle_detail: German statistics exams overwhelmingly pose conditional-probability questions as a four-field
-      table or a tree, not as an algebraic identity, and grading follows the table. These solutions show
-      the table being filled and read, which is the mechanical skill worth having automatic before the
-      Klausur. Six pages of problems, seven of solutions — small enough to finish in one sitting.
-    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+  - material_ref:
+      route_id: route-87f36cab308f54f199bc3034
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fahrmeir-arbeitsbuch
     route_id: route-87f36cab308f54f199bc3034
-  - kind: read
-    label: Grinstead & Snell Ch 4 — conditional probability
-    locator: Official PDF, Ch 4 'Conditional Probability', §§4.1-4.3, PDF pp. 141-190
-    angle: Open-access and legally free to keep, with a paradoxes section that attacks the intuition failures
-      L04 opens on.
-    angle_detail: The AMS releases this under a licence that lets you keep and print it, which matters
-      for a text you will return to across three lectures. §4.3 collects the classic conditional-probability
-      paradoxes — Monty Hall, the two-child problem, the prisoner's dilemma — and resolves each by making
-      the conditioning event explicit. That is the same diagnosis L04's framing slides make, worked out
-      at length rather than asserted. The exercises are plentiful and answers to odd-numbered ones are
-      published.
+  - material_ref:
+      route_id: route-fe8b4fbc40e7e85daf8ef25b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-grinstead-snell
     route_id: route-fe8b4fbc40e7e85daf8ef25b
-  - kind: read
-    label: Blitzstein Chapter 2 — conditioning and Bayes
-    locator: Ch 2 pdf pp. 62-119 (§2.2 definition and intuition p. 63; §2.3 Bayes' rule and the law of
-      total probability p. 69; §2.5 independence of events p. 80; §2.7 conditioning as a problem-solving
-      tool p. 85; §2.8 pitfalls and paradoxes p. 91; exercises §2.11 p. 100)
-    angle: Treats conditioning as the primary object — 'conditioning is the soul of statistics' — so Bayes
-      arrives as a way of thinking rather than a formula to memorise.
-    angle_detail: 'The one book here that opens the chapter by arguing conditional probability is the
-      fundamental notion and unconditional probability the special case. That reframing is why §2.7 exists:
-      a section on conditioning as a deliberate problem-solving move, which no other source on this shelf
-      has. §2.8 catalogues the confusion of the inverse and the prosecutor''s fallacy — the same base-rate
-      error L04''s framing slides open with, but named and dissected. Notation is measure-free and the
-      register is conversational; it is slower than Fahrmeir but far more likely to make the idea stick.
-      60 exercises, many with published solutions on the book''s site.'
-    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
+  - material_ref:
+      route_id: route-b48ac5af55a8c900d68bb0c9
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-blitzstein-hwang
     route_id: route-b48ac5af55a8c900d68bb0c9
-  - kind: read
-    label: Jurafsky & Martin Appendix B — naive Bayes, text classification and sentiment
-    locator: 'Draft of August 19, 2026, Appendix B ''Naive Bayes, Text Classification, and Sentiment'':
-      §B.1 the classifier, §B.2 training, §B.3 the worked example'
-    angle: The clearest published account of the exact classifier L04 builds — bag of words, conditional
-      independence, product of counted likelihoods.
-    angle_detail: L04's spam classifier has no equivalent in the probability books on this shelf, because
-      they stop at Bayes' rule. This appendix is precisely that construction, written as a textbook chapter
-      with the assumptions named — the bag-of-words assumption and the naive conditional-independence
-      assumption stated separately, which the deck merges. §B.3 'Worked example' trains and tests the
-      classifier by hand on a handful of documents with add-one smoothing. Section numbers checked against
-      the 19 August 2026 draft on 2026-09-07; earlier drafts carried this material as Chapter 4, so a
-      §4.x reference to it is stale.
+  - material_ref:
+      route_id: route-878acd203c5603b70539868d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-jurafsky-slp3
     route_id: route-878acd203c5603b70539868d
-  - kind: read
-    label: MIT 6.041SC — conditional probability, Bayes and independence lectures
-    locator: Lectures 2-3 (conditioning and Bayes' rule; independence) with their recitations and solved
-      tutorials
-    angle: Every lecture is paired with a recitation and a tutorial whose problems are solved on video
-      — three passes over one topic.
-    angle_detail: 'Tsitsiklis''s course structure is the differentiator: the lecture states the theory,
-      the recitation works standard problems, and the tutorial works harder ones, all recorded. For a
-      topic where the gap between following an explanation and solving a problem is wide — which is exactly
-      conditional probability — that three-pass structure is worth more than a better single explanation.
-      Free on OCW with all materials.'
+  - material_ref:
+      route_id: route-395d30ff10c3ab149d789c7c
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-mit-6041sc
     route_id: route-395d30ff10c3ab149d789c7c
-  - kind: read
-    label: OpenIntro — probability foundations
-    locator: Ch 3 §3.1 defining probability, pdf pp. 81-94; §3.2 conditional probability, pdf pp. 95-111
-      (tree diagrams and Bayes' theorem); §3.3 sampling from a small population, pdf pp. 112-114
-    angle: Runs conditional probability entirely through tree diagrams and contingency tables, so Bayes
-      is arithmetic on a table before it is an equation.
-    angle_detail: '§3.2 develops the whole of conditioning pictorially: a two-way table, then a tree with
-      branch probabilities, then Bayes as a ratio read off the tree. Only at the end does the algebraic
-      form appear. For a first pass this is the lowest-friction route available, and it matches how German
-      exams pose the question (Vierfeldertafel). It does not cover Naive Bayes and does not do conditional
-      independence carefully — for those parts of L04 use the deck and Kelleher Ch 6.'
-    vault_path: material://source-openintro-statistics/openintro.pdf
+  - material_ref:
+      route_id: route-66691da3faf6c5780cf0b66d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-openintro-statistics
     route_id: route-66691da3faf6c5780cf0b66d
-  - kind: practise
-    label: Dekking — probability exercise bank
-    locator: Ch 2 outcomes, events, and probability, pdf pp. 24-35; Ch 3 conditional probability and independence,
-      pdf pp. 36-51 (§3.3 law of total probability and Bayes' rule p. 41; §3.4 independence p. 43; exercises
-      p. 48); answers App C pdf pp. 434-442
-    angle: Quick exercises embedded mid-section with solutions at the chapter end — a self-check every
-      few pages rather than only at the end.
-    angle_detail: 'The structural feature that distinguishes this book: each section plants short ''quick
-      exercises'' in the flow and answers them at §x.5 before the real exercise set. For probability rules,
-      where the failure mode is silent misunderstanding rather than difficulty, that rhythm catches errors
-      within a page instead of after a chapter. The treatment itself is compact and modern; Ch 2 is twelve
-      pages for material Fahrmeir spends twenty on. Ch 1''s Monty Hall opening (p. 16) is the same framing
-      puzzle L04 uses.'
-    vault_path: material://source-dekking-mips/dekking.pdf
+  - material_ref:
+      route_id: route-fa96784fa40036436bf1b2cc
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-dekking-mips
     route_id: route-fa96784fa40036436bf1b2cc
-  - kind: read
-    label: MIT 18.05 — probability notes and solved problems
-    locator: 'Classes: Reading and In-class Materials: ''Conditional Probability, Independence and Bayes''
-      Theorem'' reading and slides; Problem Set 2 with its published solutions'
-    angle: Reading, in-class problems and solved problem set for the same topic, published together —
-      a complete study loop rather than one artifact.
-    angle_detail: 18.05 publishes, per class, a reading, the slides used on it, the in-class problems
-      and the solutions, plus a problem set with worked answers. That means one topic can be learned,
-      practised and checked without leaving the page — the thing a lecture deck alone cannot give you.
-      Its treatment of the base-rate fallacy is unusually direct and matches L04's opening framing slides.
-      Written for students who have had multivariable calculus, so the register sits above OpenIntro and
-      below Ross.
+  - material_ref:
+      route_id: route-44431ac89d714785b2bab31b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-mit-1805
     route_id: route-44431ac89d714785b2bab31b
-  - kind: practise
-    label: FAU pp. 4 and 22 — total probability, Bayes and independence
-    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 4 Aufgabe 1(3)-(4), solution
-      p. 22
-    angle: Tests conditional probability as a table calculation rather than a definition recital.
-    angle_detail: The same orange-origin item is routed here for its formal Bayes and independence steps.
-      It confirms the German notation and the compact published answer after the course sheet has established
-      the method.
-    vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
+  - material_ref:
+      route_id: route-e3418e502d6ca2dcdf2f2c9d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fau-klausur-ws1415
     route_id: route-e3418e502d6ca2dcdf2f2c9d
-  - kind: reference
-    label: Pitman — conditional probability selections
-    locator: Ch 1 §1.4 Conditional Probability and Independence, pdf pp. 44-57; §1.5 Bayes' Rule, pdf
-      pp. 58-66; §1.6 Sequences of Events, pdf pp. 67-89
-    angle: Everything through tree diagrams and partitions drawn on the page — the most visual derivation
-      of Bayes on the shelf.
-    angle_detail: Pitman's method is to draw the partition and the tree, label every branch, and read
-      the answer off the picture before writing any algebra; §1.5 derives Bayes' rule as a relabelling
-      of a tree you have already drawn. That makes the role of the partition — the thing L04's slide 46
-      leaves implicit when it states Bayes with the denominator pre-expanded — impossible to miss. §1.6
-      then does sequences of events and the multiplication rule, which is the machinery behind the chain
-      of conditional independence assumptions Naive Bayes rests on. Hundreds of worked examples; the exercises
-      are harder than SaD needs, so pick rather than sweep.
-    vault_path: material://source-pitman-probability/pitman.pdf
+  - material_ref:
+      route_id: route-510e0c869360f72413e11c13
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-pitman-probability
     route_id: route-510e0c869360f72413e11c13
-  - kind: reference
-    label: Ross — formal probability foundations
-    locator: Ch 2 Axioms of Probability, pdf pp. 46-99 (§2.3 axioms; §2.5 sample spaces having equally
-      likely outcomes); Ch 3 Conditional Probability and Independence, pdf pp. 100-197 (§3.3 Bayes's Formula;
-      §3.4 Independent Events; §3.5 P(·|F) is a Probability)
-    angle: 'The reference treatment: axioms stated formally, every derived rule proved from them, and
-      independence given a full section with counterexamples.'
-    angle_detail: 'Ross is the standard rigorous first course, and its value here is completeness rather
-      than gentleness. Two things it has that the softer sources do not: §3.4 works through why pairwise
-      independence does not imply mutual independence, with an explicit counterexample — the distinction
-      L04''s independence node states and the exam can probe; and §3.5 proves that conditioning on a fixed
-      event yields a genuine probability measure, which is the formal fact behind every ''just condition
-      and continue'' move. Use it to settle a question, not to learn the topic from cold.'
-    vault_path: material://source-ross-first-course/ross.pdf
+  - material_ref:
+      route_id: route-8de21f881a829cb3dec1d55d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-ross-first-course
     route_id: route-8de21f881a829cb3dec1d55d
-  - kind: practise
-    label: Schaum — probability and Bayes worked problems
-    locator: Ch 3 Introduction to Probability, pdf pp. 40-55; Ch 4 Conditional Probability and Independence,
-      pdf pp. 56-75 (every problem carries a full worked solution)
-    angle: 'Pure volume: dozens of short solved problems per chapter, sorted by difficulty, with no exposition
-      to read around them.'
-    angle_detail: Schaum's is a problem book with the theory compressed into a two-page summary at each
-      chapter head. That makes it the wrong first exposure and the right thing to open when the concept
-      is understood and the calculation is not yet automatic — the state most students are in a week before
-      the Klausur. The problems are short enough to do in batches of ten, and every one is solved in full.
-      This is a scanned older edition, so notation occasionally differs from the lecture's; treat the
-      deck as authoritative where they disagree.
-    vault_path: material://source-schaums-probability/schaums-probability.pdf
+  - material_ref:
+      route_id: route-f99c92614d78638f193ab4d3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-schaums-probability
     route_id: route-f99c92614d78638f193ab4d3
-  - kind: reference
-    label: Harvard Stat 110 — conditioning and Bayes lectures
-    locator: 'Stat 110 Lectures 4-5: ''independence, conditional probability, Bayes'' rule, and conditional
-      independence''; Strategic Practice 2 with solutions'
-    angle: Blitzstein lecturing his own book — the same argument delivered twice, in print and on video.
-    angle_detail: 'This is the video companion to Blitzstein & Hwang, so choosing between them is a format
-      decision rather than a content decision: the definitions, notation and examples line up section
-      by section. The lectures add the thing the book cannot — hearing which step he considers the difficult
-      one, and watching him refuse to write the algebra until the story is clear. The strategic-practice
-      sheets are graded from routine to hard with full solutions.'
+  - material_ref:
+      route_id: route-de38ce9e78f4dd052d5013b4
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-stat110
     route_id: route-de38ce9e78f4dd052d5013b4
-  - kind: practise
-    label: Leuphana-Merz pp. 5-10 — probability and conditional-probability drills
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1
-    angle: A dense German exercise block for finite probability, conditioning and Bayes before the later
-      inference chapters.
-    angle_detail: The block supplies more authentic German stems than the course sheet while remaining
-      at the same foundational level. Select only the event/conditioning items; later pages in this 109-page
-      book belong to estimation and testing and are routed separately.
-    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+  - material_ref:
+      route_id: route-ac99d1d809345a00721a6f99
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-ac99d1d809345a00721a6f99
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-independence/notes.md
   attachments: []
@@ -1344,8 +1159,12 @@ stages:
   - concept-naive-bayes
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L04 probability and Naive Bayes deck
+  - material_ref:
+      route_id: route-1d4c3d5164052df9c540d079
+      inherit:
+      - label
+      - source_id
+    kind: read
     locator: lecture-slides/04_probability.pdf, PDF pp. 49-59
     angle: The current lecture's focused reading for categorical naive bayes classifier.
     angle_detail: Read physical PDF pages 49-59 for this stage. Printed slide labels may differ. This
@@ -1353,71 +1172,63 @@ stages:
       material menu.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
-    source_id: source-sad-ss26-lectures
-  - kind: practise
-    label: Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes
-    locator: exercise-slides/blatt-02.pdf, pp. 1-2, Aufgaben 1-2
-    angle: Combines finite probability, dependence, Bayes inversion and a small classifier in the current
-      assignment format.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
+  - material_ref:
+      route_id: route-a577afe5626f081623095a82
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-a577afe5626f081623095a82
-  - kind: practise
-    label: UE4, slides 9-12 — Bayes and Naive Bayes solutions
-    locator: exercise-slides/UE4.pdf, slides 9-12
-    angle: Shows exactly where the conditional-independence assumption enters the two-feature classifier.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+  - material_ref:
+      route_id: route-c355ecc8ea7599015a21abfe
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-c355ecc8ea7599015a21abfe
-  - kind: read
-    label: Jurafsky & Martin Appendix B — naive Bayes, text classification and sentiment
-    locator: 'Draft of August 19, 2026, Appendix B ''Naive Bayes, Text Classification, and Sentiment'':
-      §B.1 the classifier, §B.2 training, §B.3 the worked example'
-    angle: The clearest published account of the exact classifier L04 builds — bag of words, conditional
-      independence, product of counted likelihoods.
-    angle_detail: L04's spam classifier has no equivalent in the probability books on this shelf, because
-      they stop at Bayes' rule. This appendix is precisely that construction, written as a textbook chapter
-      with the assumptions named — the bag-of-words assumption and the naive conditional-independence
-      assumption stated separately, which the deck merges. §B.3 'Worked example' trains and tests the
-      classifier by hand on a handful of documents with add-one smoothing. Section numbers checked against
-      the 19 August 2026 draft on 2026-09-07; earlier drafts carried this material as Chapter 4, so a
-      §4.x reference to it is stale.
+  - material_ref:
+      route_id: route-878acd203c5603b70539868d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-jurafsky-slp3
     route_id: route-878acd203c5603b70539868d
-  - kind: watch
-    label: StatQuest — Naive Bayes
-    locator: 'StatQuest video index: ''Naive Bayes'' (≈15 min)'
-    angle: Builds the spam classifier from counted word frequencies before writing any probability notation.
-    angle_detail: 'The video''s order is the reverse of the lecture''s: it counts words in example messages,
-      forms the products, and only then names what it has been doing as Naive Bayes with a conditional
-      independence assumption. For a construction that looks arbitrary on slides, seeing the counting
-      first makes the independence assumption''s role obvious — it is what lets the counts be multiplied.
-      Pairs with the deck rather than replacing it; the deck''s notation is what the exam uses.'
+  - material_ref:
+      route_id: route-37c710174c2a5be9353cb154
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-statquest
     route_id: route-37c710174c2a5be9353cb154
-  - kind: reference
-    label: CS229 §4.2 — Naive Bayes event models
-    locator: 'cs229-notes.pdf Part II §4 Generative learning algorithms p. 36: §4.2 Naive Bayes p. 43,
-      §4.2.1 Laplace smoothing p. 46'
-    angle: The compact mathematical statement of the classifier L04 builds informally, in about four pages.
-    angle_detail: 'Four pages that state, in one place, the classifier L04 builds informally over a lecture:
-      the conditional-independence assumption written as a product, the maximum-likelihood estimates for
-      the parameters, and Laplace smoothing as the fix for a zero count. It assumes the probability notation
-      of §§1-3 and does not motivate anything — read it as the compact statement to check your own against,
-      after the deck.'
-    vault_path: material://source-cs229-notes/cs229-notes.pdf
+  - material_ref:
+      route_id: route-c8fc9d587448ab88b808180a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-cs229-notes
     route_id: route-c8fc9d587448ab88b808180a
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-naive-bayes/notes.md
   attachments: []

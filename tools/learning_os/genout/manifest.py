@@ -100,6 +100,7 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
     topics_v2 = project_topics(repo)
     unit_to_projects = unit_to_project_ids(repo)
     unit_material_syntheses_v2 = project_unit_material_syntheses(repo)
+    source_maps_v2 = project_module_source_maps(repo, projected_revision)
 
     # Record order is part of the published file. Each projector owns one
     # domain's shape; this list owns the sequence they appear in.
@@ -116,8 +117,8 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
         *project_learning_paths(repo, projected_revision),
         *project_programs(repo, projected_revision),
         *project_units(repo, projected_revision, unit_to_projects),
-        *project_study_maps(repo, projected_revision),
-        *project_module_source_maps(repo, projected_revision),
+        *project_study_maps(repo, projected_revision, source_maps_v2),
+        *source_maps_v2,
         *unit_material_syntheses_v2,
         *project_coordination(repo),
     ]

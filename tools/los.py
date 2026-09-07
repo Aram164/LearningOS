@@ -50,6 +50,11 @@ from learning_os.commands.capability import cmd_capability  # noqa: E402
 from learning_os.commands.capture import cmd_capture  # noqa: E402
 from learning_os.commands.detour import cmd_detour_create, cmd_detour_resolve  # noqa: E402
 from learning_os.commands.garden import cmd_garden_seed_create  # noqa: E402
+from learning_os.commands.material import (  # noqa: E402
+    cmd_module_materials_compact,
+    cmd_plan_edit_context,
+    cmd_route_patch,
+)
 from learning_os.commands.module import cmd_module_list, cmd_module_plan_import  # noqa: E402
 from learning_os.commands.note import cmd_note_evidence, cmd_note_revise  # noqa: E402
 from learning_os.commands.path import (  # noqa: E402
@@ -136,6 +141,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_status)
 
     p = sub.add_parser("capabilities", help="discover the stable operator contract")
+    p.add_argument("name", nargs="?", help="one public capability, including its declared payload schema")
+    p.add_argument("--compact", action="store_true", help="JSON index of capability names; fetch one name for details")
     p.add_argument("--json", action="store_true", help="machine-readable output")
     p.set_defaults(func=cmd_capabilities)
 
@@ -164,6 +171,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("inspect", help="inspect one record by stable id")
     p.add_argument("id")
+    p.add_argument("more_ids", nargs="*", help="inspect up to 20 records from one fresh snapshot")
     p.set_defaults(func=cmd_inspect)
 
     p = sub.add_parser("related", help="list records related to one stable id")
@@ -495,6 +503,29 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_atlas_question_save)
+
+    p = sub.add_parser("plan-edit-context", help="read compact plan or one material's edit context")
+    p.add_argument("unit_id")
+    p.add_argument("--route-id", default=None)
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_plan_edit_context)
+
+    p = sub.add_parser("route-patch", help="edit one route and synchronize its exact references")
+    p.add_argument("unit_id")
+    p.add_argument("route_id")
+    p.add_argument("--changes", type=json_object, required=True)
+    p.add_argument("--check", action="store_true")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_route_patch)
+
+    p = sub.add_parser("module-materials-compact", help="losslessly share repeated stage material fields")
+    p.add_argument("module_id")
+    p.add_argument("--check", action="store_true")
+    p.add_argument("--plan-sha256", type=sha256_value, default=None)
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_module_materials_compact)
 
     p = sub.add_parser("unit-map-import",
                        help="create/import the single current study map for a unit")

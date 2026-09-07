@@ -17,11 +17,13 @@ from learning_os.contracts import (
     validate_contract,
 )
 from learning_os.loader import load_repo
+from learning_os.material_refs import MaterialReferenceError, expand_map
 from learning_os.routes import route_with_identity
 from learning_os.unit_notes import unit_note_marker
 
 from .support import (
     WriteRefused,
+    _dump_study_map,
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
@@ -339,7 +341,11 @@ def cmd_unit_map_import(args) -> int:
                 data,
                 label="curriculum plan template v1",
             )
-        except (PlanTemplateError, ContractValidationError) as exc:
+            effective = expand_map(data, repo.module_source_maps.get(unit.module_id, {}),
+                                   unit.module_id, unit.id)
+            if effective != data:
+                validate_contract(root, "study-map.schema.json", effective)
+        except (PlanTemplateError, ContractValidationError, MaterialReferenceError) as exc:
             print(f"los: study map creation contract failed: {exc}", file=sys.stderr)
             return 2
         unit_data = dict(unit.data)
@@ -349,7 +355,8 @@ def cmd_unit_map_import(args) -> int:
         if current_data is None or (reset_reason or "").strip():
             unit_data["status"] = "ready"
         diff["unit_status"] = unit_data["status"]
-        writes = {target: _dump_yaml(data), unit.path: _dump_yaml(unit_data)}
+        writes = {target: _dump_study_map(current_map, data) if current_map else _dump_yaml(data),
+                  unit.path: _dump_yaml(unit_data)}
         for stage in data.get("stages", []) or []:
             note_ref = stage.get("working_note") if isinstance(stage, dict) else None
             if note_ref:

@@ -12,7 +12,7 @@ from learning_os.unit_notes import unit_note_sections
 
 from .support import (
     WriteRefused,
-    _dump_yaml,
+    _dump_study_map,
     _expected_ok,
     _expected_revisions_from_args,
     _load_session_paths,
@@ -152,7 +152,7 @@ def cmd_shelving_prepare(args) -> int:
         code, errors, confirmation = _write_transaction(
             root, {
                 proposal_path: "\n".join(lines).rstrip() + "\n",
-                study_map.path: _dump_yaml(data),
+                study_map.path: _dump_study_map(study_map, data),
             },
             capability="review.prepare",
             expected_revisions=_expected_revisions_from_args(args),
@@ -211,7 +211,7 @@ def cmd_shelving_apply(args) -> int:
                 return 2
             writes[target] = content.rstrip() + "\n"
         shelving["state"] = "applied"
-        writes[study_map.path] = _dump_yaml(data)
+        writes[study_map.path] = _dump_study_map(study_map, data)
         code, errors, confirmation = _write_transaction(
             root, writes, capability="review.apply",
             expected_revisions=_expected_revisions_from_args(args),

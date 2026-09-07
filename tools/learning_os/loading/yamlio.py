@@ -22,7 +22,13 @@ class LoaderError(Exception):
     """Raised when a file cannot be parsed at all (structural failure)."""
 
 
-class UniqueKeySafeLoader(yaml.SafeLoader):
+# LibYAML accelerates scanning/composition; safe construction and our duplicate
+# key checks remain the same. Pure Python remains supported on installations
+# where PyYAML was built without the optional C extension.
+_SafeLoader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
+
+class UniqueKeySafeLoader(_SafeLoader):
     """SafeLoader that rejects duplicate explicit keys at every depth.
 
     Merge keys remain supported: an explicit key may intentionally override a

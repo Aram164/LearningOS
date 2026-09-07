@@ -29,7 +29,12 @@ stages:
   - concept-dispatch
   scope_triage: required-now
   resources:
-  - id: resource-stratum-paper-architecture
+  - material_ref:
+      route_id: route-stratum-paper-s09
+      inherit:
+      - vault_path
+      - source_id
+    id: resource-stratum-paper-architecture
     kind: read
     label: stratum paper - architecture
     locator: Sections 4.1-4.3, PDF viewer pages 4-5
@@ -37,8 +42,6 @@ stages:
     angle_detail: Trace the paper's declarative abstraction, operator lowering, and operator selection
       into the current repository; do not infer unimplemented behavior.
     scope_triage: required-now
-    vault_path: material://source-stratum-paper/stratum-paper.pdf
-    source_id: source-stratum-paper
     route_id: route-stratum-paper-s09
   - id: resource-note-extract-dataframe-op
     kind: read
@@ -86,7 +89,12 @@ stages:
   - concept-dataframe-semantics
   scope_triage: required-now
   resources:
-  - id: resource-depth-dispatch
+  - material_ref:
+      route_id: route-python-depth-drills-s09
+      inherit:
+      - vault_path
+      - source_id
+    id: resource-depth-dispatch
     kind: read
     label: Python Depth Drills - interfaces and dispatch
     locator: Stage 8 guide and notebook; especially Q8.10 and Q8.11
@@ -94,8 +102,6 @@ stages:
     angle_detail: Use the two-key Selector drill as a miniature physical implementation registry, then
       compare it with Stratum's current dispatch.
     scope_triage: required-now
-    vault_path: material://source-python-depth-drills/stage-8-interfaces-and-dispatch.md
-    source_id: source-python-depth-drills
     route_id: route-python-depth-drills-s09
   - id: resource-note-joinop-loop
     kind: read

@@ -47,6 +47,8 @@ class ChecksStructure:
             self._schema_check("module-source-map", source_map,
                                self._rel(r.module_source_map_origins[mid]))
         for study_map in r.study_maps.values():
+            if study_map.authored_data is not None and study_map.authored_data != study_map.data:
+                self._schema_check("study-map", study_map.authored_data, self._rel(study_map.path))
             self._schema_check("study-map", study_map.data, self._rel(study_map.path))
         for synthesis_id, synthesis in r.unit_material_syntheses.items():
             self._schema_check(

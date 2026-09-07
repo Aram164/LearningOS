@@ -30,72 +30,47 @@ stages:
   - concept-xor-problem
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L01 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 01-Introduction.pdf
-    angle: The scope authority for 2026. It introduces the historical concept map, ML definitions, learning
-      tasks, dataset notation, course expectations, and the examples the lecturer can examine.
-    angle_detail: 'Contribution: The scope authority for 2026. It introduces the historical concept map,
-      ML definitions, learning tasks, dataset notation, course expectations, and the examples the lecturer
-      can examine. Depth and prerequisites: It assumes the prerequisites declared by the unit and stays
-      at the notation and derivation depth used by the HU course. Discriminator: choose ''Current L01
-      lecture deck'' over ''MIT 6.036 introduction and representations'' when you need this contribution;
-      the neighboring route instead contributes: A structured independent course entry with representations,
-      task families, overfitting, and generalization checks. Course boundary: This is current course evidence
-      and may calibrate examined notation, but the route''s stated locator—not the rest of the source—defines
-      its scope.'
+  - material_ref:
+      route_id: route-5ee4aec41221a1821604773c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 01-Introduction.pdf
     scope_triage: required-now
-  - kind: reference
-    label: Older L01 lecture variant
-    source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf
-    angle: A prior-year version useful only for alternate examples or explanations omitted from the current
-      deck.
-    angle_detail: 'Contribution: A prior-year version useful only for alternate examples or explanations
-      omitted from the current deck. Depth and prerequisites: It assumes the lecture treatment is already
-      secure and deliberately goes beyond exam-first depth for a precise reference or second derivation.
-      Discriminator: choose ''Older L01 lecture variant'' over ''Current L01 lecture deck'' when you need
-      this contribution; the neighboring route instead contributes: The scope authority for 2026. It introduces
-      the historical concept map, ML definitions, learning tasks, dataset notation, course expectations,
-      and the examples the lecturer can examine. Course boundary: This is prior-year evidence: use it
-      only for a second explanation, and let the current deck win wherever examples, notation, or scope
-      differ.'
+  - material_ref:
+      route_id: route-9c80105b5495e5d254b86990
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf
     scope_triage: reference-only
-  - kind: watch
-    label: 3Blue1Brown — What is a neural network?
-    source_id: source-3b1b-neural-networks
-    locator: Video 'But what is a neural network? | Chapter 1, Deep learning', complete video
-    angle: A visual preview that makes the later neural-network milestones concrete; it is not a substitute
-      for the L01 history or formulation sections.
-    angle_detail: 'Contribution: A visual preview that makes the later neural-network milestones concrete;
-      it is not a substitute for the L01 history or formulation sections. Depth and prerequisites: It
-      assumes the unit vocabulary but not a completed proof and is meant to make the mechanism explainable
-      before formal derivation. Discriminator: choose ''3Blue1Brown — What is a neural network?'' over
-      ''Current L01 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The scope authority for 2026. It introduces the historical concept map, ML definitions, learning
-      tasks, dataset notation, course expectations, and the examples the lecturer can examine. Course
-      boundary: It is optional depth: open it for the named gap, then return to the current deck rather
-      than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-bd74661a36fb5ca7273324ec
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: Géron 3rd ed. Ch 10 — from biological to artificial neurons
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf (3rd ed., Oct 2022) Ch 10 'From Biological to Artificial Neurons' pdf pp.
-      380–389, 'The Perceptron' pdf p. 384
-    angle: Retells the deck's landmark chain — perceptron, the XOR objection, backpropagation, the winters
-      — as one causal story, which is what a concept map is for; not a chronology to memorize.
-    angle_detail: 'Contribution: Retells the deck''s landmark chain — perceptron, the XOR objection, backpropagation,
-      the winters — as one causal story, which is what a concept map is for; not a chronology to memorize.
-      Depth and prerequisites: It assumes the unit vocabulary but not a completed proof and is meant to
-      make the mechanism explainable before formal derivation. Discriminator: choose ''Géron 3rd ed. Ch
-      10 — from biological to artificial neurons'' over ''Current L01 lecture deck'' when you need this
-      contribution; the neighboring route instead contributes: The scope authority for 2026. It introduces
-      the historical concept map, ML definitions, learning tasks, dataset notation, course expectations,
-      and the examples the lecturer can examine. Course boundary: It complements the current deck but
-      cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-de995049c1e4ed54a8327621
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-history/notes.md
   attachments: []
@@ -114,186 +89,119 @@ stages:
   - concept-supervised-learning
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L01 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 01-Introduction.pdf
-    angle: The scope authority for 2026. It introduces the historical concept map, ML definitions, learning
-      tasks, dataset notation, course expectations, and the examples the lecturer can examine.
-    angle_detail: 'Contribution: The scope authority for 2026. It introduces the historical concept map,
-      ML definitions, learning tasks, dataset notation, course expectations, and the examples the lecturer
-      can examine. Depth and prerequisites: It assumes the prerequisites declared by the unit and stays
-      at the notation and derivation depth used by the HU course. Discriminator: choose ''Current L01
-      lecture deck'' over ''MIT 6.036 introduction and representations'' when you need this contribution;
-      the neighboring route instead contributes: A structured independent course entry with representations,
-      task families, overfitting, and generalization checks. Course boundary: This is current course evidence
-      and may calibrate examined notation, but the route''s stated locator—not the rest of the source—defines
-      its scope.'
+  - material_ref:
+      route_id: route-5ee4aec41221a1821604773c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 01-Introduction.pdf
     scope_triage: required-now
-  - kind: reference
-    label: Older L01 lecture variant
-    source_id: source-aml-ss26-lectures
-    locator: older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf
-    angle: A prior-year version useful only for alternate examples or explanations omitted from the current
-      deck.
-    angle_detail: 'Contribution: A prior-year version useful only for alternate examples or explanations
-      omitted from the current deck. Depth and prerequisites: It assumes the lecture treatment is already
-      secure and deliberately goes beyond exam-first depth for a precise reference or second derivation.
-      Discriminator: choose ''Older L01 lecture variant'' over ''Current L01 lecture deck'' when you need
-      this contribution; the neighboring route instead contributes: The scope authority for 2026. It introduces
-      the historical concept map, ML definitions, learning tasks, dataset notation, course expectations,
-      and the examples the lecturer can examine. Course boundary: This is prior-year evidence: use it
-      only for a second explanation, and let the current deck win wherever examples, notation, or scope
-      differ.'
+  - material_ref:
+      route_id: route-9c80105b5495e5d254b86990
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     vault_path: material://source-aml-ss26-lectures/older-lecture-slides/01-Introduction_2da1f48f12009c6454c7265ad76c6a19.pdf
     scope_triage: reference-only
-  - kind: read
-    label: ISLP Chapter 2 — statistical learning
-    source_id: source-islp
-    locator: islp.pdf §2.1 What Is Statistical Learning?, pdf pp. 25-36; §2.2 Assessing Model Accuracy,
-      pdf pp. 37-48 (bias-variance §2.2.2 p. 41; classification setting §2.2.3 p. 44)
-    angle: A gentle, example-driven explanation of prediction, inference, supervised/unsupervised tasks,
-      model flexibility, train/test error, and the vocabulary behind problem formulation.
-    angle_detail: 'Contribution: A gentle, example-driven explanation of prediction, inference, supervised/unsupervised
-      tasks, model flexibility, train/test error, and the vocabulary behind problem formulation. Depth
-      and prerequisites: It assumes the unit vocabulary but not a completed proof and is meant to make
-      the mechanism explainable before formal derivation. Discriminator: choose ''ISLP Chapter 2 — statistical
-      learning'' over ''Current L01 lecture deck'' when you need this contribution; the neighboring route
-      instead contributes: The scope authority for 2026. It introduces the historical concept map, ML
-      definitions, learning tasks, dataset notation, course expectations, and the examples the lecturer
-      can examine. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-21f9795d5af805470f6b7aa8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Kroese ML workflow framing
-    source_id: source-kroese-dsml
-    locator: kroese.pdf Statistical Learning, pdf pp. 37-76 (training/test loss p. 41; tradeoffs p. 49;
-      cross-validation p. 55); Classification Metrics, pdf pp. 271-274
-    angle: An independent data-science view of models, data, evaluation, and workflow; useful as a terminology
-      cross-check.
-    angle_detail: 'Contribution: An independent data-science view of models, data, evaluation, and workflow;
-      useful as a terminology cross-check. Depth and prerequisites: It assumes no derivation beyond the
-      current unit''s vocabulary and is for framing the problem before calculation. Discriminator: choose
-      ''Kroese ML workflow framing'' over ''Current L01 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The scope authority for 2026. It introduces the historical
-      concept map, ML definitions, learning tasks, dataset notation, course expectations, and the examples
-      the lecturer can examine. Course boundary: It is optional depth: open it for the named gap, then
-      return to the current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-add32fc5153a4c50969e540d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: MIT 6.036 introduction and representations
-    source_id: source-mit-6036
-    locator: Fall 2020 OCW, Unit 1 'Introduction and Feature Representation'
-    angle: A structured independent course entry with representations, task families, overfitting, and
-      generalization checks.
-    angle_detail: 'Contribution: A structured independent course entry with representations, task families,
-      overfitting, and generalization checks. Depth and prerequisites: It assumes the prerequisites declared
-      by the unit and stays at the notation and derivation depth used by the HU course. Discriminator:
-      choose ''MIT 6.036 introduction and representations'' over ''Current L01 lecture deck'' when you
-      need this contribution; the neighboring route instead contributes: The scope authority for 2026.
-      It introduces the historical concept map, ML definitions, learning tasks, dataset notation, course
-      expectations, and the examples the lecturer can examine. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-3bbe37829f21a1a146a731fe
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Rohrer model workflow and data splitting
-    source_id: source-rohrer-e2eml
-    locator: Chapters 3–4
-    angle: Calm long-form intuition for choosing a loss, splitting data, and seeing ML as an end-to-end
-      workflow.
-    angle_detail: 'Contribution: Calm long-form intuition for choosing a loss, splitting data, and seeing
-      ML as an end-to-end workflow. Depth and prerequisites: It assumes the unit vocabulary but not a
-      completed proof and is meant to make the mechanism explainable before formal derivation. Discriminator:
-      choose ''Rohrer model workflow and data splitting'' over ''Current L01 lecture deck'' when you need
-      this contribution; the neighboring route instead contributes: The scope authority for 2026. It introduces
-      the historical concept map, ML definitions, learning tasks, dataset notation, course expectations,
-      and the examples the lecturer can examine. Course boundary: It complements the current deck but
-      cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-f67178b7b259703513b6e2c5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Géron end-to-end ML project overview
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf Ch 2 End-to-End Machine Learning Project, pdf pp. 70-155 (Frame the Problem
-      p. 73; Create a Test Set p. 92; cross-validation p. 138; final test p. 147)
-    angle: An applied workflow view of framing, data preparation, training, evaluation, and iteration;
-      useful for seeing the introductory vocabulary in practice.
-    angle_detail: 'Contribution: An applied workflow view of framing, data preparation, training, evaluation,
-      and iteration; useful for seeing the introductory vocabulary in practice. Depth and prerequisites:
-      It assumes the mathematical object is already understood and shifts attention to executable behavior,
-      shapes, APIs, or numerical checks. Discriminator: choose ''Géron end-to-end ML project overview''
-      over ''Current L01 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The scope authority for 2026. It introduces the historical concept map, ML definitions,
-      learning tasks, dataset notation, course expectations, and the examples the lecturer can examine.
-      Course boundary: It is optional depth: open it for the named gap, then return to the current deck
-      rather than importing the source''s wider syllabus.'
-    vault_path: material://source-geron-handson/geron-copy2.pdf
+  - material_ref:
+      route_id: route-832a42bb1f63ec6ea43fa373
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Caltech Learning From Data orientation problems
-    source_id: source-caltech-lfd
-    locator: Homework table links 'Homework 1' and 'Solution to Homework 1'
-    angle: Solved learning-theory problems that sharpen hypotheses, generalization, and the distinction
-      between fitting and learning.
-    angle_detail: 'Contribution: Solved learning-theory problems that sharpen hypotheses, generalization,
-      and the distinction between fitting and learning. Depth and prerequisites: It assumes the relevant
-      rule or algorithm has already been introduced and is for an attempted solution, trace, or calculation
-      with feedback. Discriminator: choose ''Caltech Learning From Data orientation problems'' over ''Current
-      L01 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
-      scope authority for 2026. It introduces the historical concept map, ML definitions, learning tasks,
-      dataset notation, course expectations, and the examples the lecturer can examine. Course boundary:
-      It is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-21813de54053a6ef703d848b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Kelleher et al. — predictive-analytics framing
-    source_id: source-kelleher-fmlpda
-    locator: kelleher.pdf Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56 (§1.2 What
-      Is Machine Learning? p. 39; §1.4 What Can Go Wrong? p. 46)
-    angle: An introductory, worked-example view of learning problems and the families of predictive models;
-      useful when the lecture overview feels too compressed.
-    angle_detail: 'Contribution: An introductory, worked-example view of learning problems and the families
-      of predictive models; useful when the lecture overview feels too compressed. Depth and prerequisites:
-      It assumes no derivation beyond the current unit''s vocabulary and is for framing the problem before
-      calculation. Discriminator: choose ''Kelleher et al. — predictive-analytics framing'' over ''Current
-      L01 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
-      scope authority for 2026. It introduces the historical concept map, ML definitions, learning tasks,
-      dataset notation, course expectations, and the examples the lecturer can examine. Course boundary:
-      It complements the current deck but cannot override the deck''s notation, topic boundary, or examination
-      emphasis.'
-    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
+  - material_ref:
+      route_id: route-b7ad49a27ce531882edd8afe
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Domingos — high-level map of machine learning
-    source_id: source-domingos-useful-things
-    locator: CACM PDF pp. 1-9, from 'Learning = Representation + Evaluation + Optimization' through 'Conclusion'
-    angle: A concise practitioner essay on representation, data, generalization, evaluation, and the difference
-      between fitting and learning.
-    angle_detail: 'Contribution: A concise practitioner essay on representation, data, generalization,
-      evaluation, and the difference between fitting and learning. Depth and prerequisites: It assumes
-      no derivation beyond the current unit''s vocabulary and is for framing the problem before calculation.
-      Discriminator: choose ''Domingos — high-level map of machine learning'' over ''Current L01 lecture
-      deck'' when you need this contribution; the neighboring route instead contributes: The scope authority
-      for 2026. It introduces the historical concept map, ML definitions, learning tasks, dataset notation,
-      course expectations, and the examples the lecturer can examine. Course boundary: It is optional
-      depth: open it for the named gap, then return to the current deck rather than importing the source''s
-      wider syllabus.'
+  - material_ref:
+      route_id: route-83c73dd5ea1567d43af88feb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: SaD L11 — data-science workflow and evaluation bridge
-    source_id: source-sad-ss26-lectures
-    locator: lecture-slides/L11 — Data science intro (especially slides 23–38)
-    angle: The neighbouring HU course supplies the practical train/test, loss, metrics, pipeline, inductive-bias,
-      and bias-variance frame assumed by AML.
-    angle_detail: 'Contribution: The neighbouring HU course supplies the practical train/test, loss, metrics,
-      pipeline, inductive-bias, and bias-variance frame assumed by AML. Depth and prerequisites: It assumes
-      the prerequisites declared by the unit and stays at the notation and derivation depth used by the
-      HU course. Discriminator: choose ''SaD L11 — data-science workflow and evaluation bridge'' over
-      ''Current L01 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The scope authority for 2026. It introduces the historical concept map, ML definitions, learning
-      tasks, dataset notation, course expectations, and the examples the lecturer can examine. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-b808ddb8dfc1c928b65feae7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-formulation/notes.md
   attachments: []
@@ -311,137 +219,89 @@ stages:
   - concept-linear-algebra
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L01 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 01-Introduction.pdf
-    angle: The scope authority for 2026. It introduces the historical concept map, ML definitions, learning
-      tasks, dataset notation, course expectations, and the examples the lecturer can examine.
-    angle_detail: 'Contribution: The scope authority for 2026. It introduces the historical concept map,
-      ML definitions, learning tasks, dataset notation, course expectations, and the examples the lecturer
-      can examine. Depth and prerequisites: It assumes the prerequisites declared by the unit and stays
-      at the notation and derivation depth used by the HU course. Discriminator: choose ''Current L01
-      lecture deck'' over ''MIT 6.036 introduction and representations'' when you need this contribution;
-      the neighboring route instead contributes: A structured independent course entry with representations,
-      task families, overfitting, and generalization checks. Course boundary: This is current course evidence
-      and may calibrate examined notation, but the route''s stated locator—not the rest of the source—defines
-      its scope.'
+  - material_ref:
+      route_id: route-5ee4aec41221a1821604773c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 01-Introduction.pdf
     scope_triage: required-now
-  - kind: read
-    label: Linear-algebra primer
-    source_id: source-aml-ss26-lectures
-    locator: Primer_Linear_Algebra.pdf
-    angle: A 36-page diagnostic for vectors, matrices, products, dimensions, and differentiation; use
-      it to identify prerequisite gaps, not as a second full lecture.
-    angle_detail: 'Contribution: A 36-page diagnostic for vectors, matrices, products, dimensions, and
-      differentiation; use it to identify prerequisite gaps, not as a second full lecture. Depth and prerequisites:
-      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
-      used by the HU course. Discriminator: choose ''Linear-algebra primer'' over ''Essence of Linear
-      Algebra — targeted prerequisite repair'' when you need this contribution; the neighboring route
-      instead contributes: Use only the chapters matching primer gaps: vectors, linear combinations, matrix
-      transformations, multiplication, and dot products. Course boundary: This repairs a prerequisite
-      only; it must not expand the current AML deck or become a parallel unit of study.'
+  - material_ref:
+      route_id: route-7449e02fa820ef5534caa5b8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/Primer_Linear_Algebra.pdf
     scope_triage: helpful-now
-  - kind: read
-    label: MIT 6.036 introduction and representations
-    source_id: source-mit-6036
-    locator: Fall 2020 OCW, Unit 1 'Introduction and Feature Representation'
-    angle: A structured independent course entry with representations, task families, overfitting, and
-      generalization checks.
-    angle_detail: 'Contribution: A structured independent course entry with representations, task families,
-      overfitting, and generalization checks. Depth and prerequisites: It assumes the prerequisites declared
-      by the unit and stays at the notation and derivation depth used by the HU course. Discriminator:
-      choose ''MIT 6.036 introduction and representations'' over ''Current L01 lecture deck'' when you
-      need this contribution; the neighboring route instead contributes: The scope authority for 2026.
-      It introduces the historical concept map, ML definitions, learning tasks, dataset notation, course
-      expectations, and the examples the lecturer can examine. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-3bbe37829f21a1a146a731fe
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: watch
-    label: 3Blue1Brown — What is a neural network?
-    source_id: source-3b1b-neural-networks
-    locator: Video 'But what is a neural network? | Chapter 1, Deep learning', complete video
-    angle: A visual preview that makes the later neural-network milestones concrete; it is not a substitute
-      for the L01 history or formulation sections.
-    angle_detail: 'Contribution: A visual preview that makes the later neural-network milestones concrete;
-      it is not a substitute for the L01 history or formulation sections. Depth and prerequisites: It
-      assumes the unit vocabulary but not a completed proof and is meant to make the mechanism explainable
-      before formal derivation. Discriminator: choose ''3Blue1Brown — What is a neural network?'' over
-      ''Current L01 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The scope authority for 2026. It introduces the historical concept map, ML definitions, learning
-      tasks, dataset notation, course expectations, and the examples the lecturer can examine. Course
-      boundary: It is optional depth: open it for the named gap, then return to the current deck rather
-      than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-bd74661a36fb5ca7273324ec
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: watch
-    label: Essence of Linear Algebra — targeted prerequisite repair
-    source_id: source-3b1b-linear-algebra
-    locator: Playlist chapters 'Vectors, what even are they?', 'Linear combinations, span, and basis vectors',
-      and 'Linear transformations and matrices'
-    angle: 'Use only the chapters matching primer gaps: vectors, linear combinations, matrix transformations,
-      multiplication, and dot products.'
-    angle_detail: 'Contribution: Use only the chapters matching primer gaps: vectors, linear combinations,
-      matrix transformations, multiplication, and dot products. Depth and prerequisites: It assumes the
-      unit vocabulary but not a completed proof and is meant to make the mechanism explainable before
-      formal derivation. Discriminator: choose ''Essence of Linear Algebra — targeted prerequisite repair''
-      over ''Linear-algebra primer'' when you need this contribution; the neighboring route instead contributes:
-      A 36-page diagnostic for vectors, matrices, products, dimensions, and differentiation; use it to
-      identify prerequisite gaps, not as a second full lecture. Course boundary: This repairs a prerequisite
-      only; it must not expand the current AML deck or become a parallel unit of study.'
+  - material_ref:
+      route_id: route-5f2ef3144d0180cee8b84c74
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: read
-    label: Géron end-to-end ML project overview
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf Ch 2 End-to-End Machine Learning Project, pdf pp. 70-155 (Frame the Problem
-      p. 73; Create a Test Set p. 92; cross-validation p. 138; final test p. 147)
-    angle: An applied workflow view of framing, data preparation, training, evaluation, and iteration;
-      useful for seeing the introductory vocabulary in practice.
-    angle_detail: 'Contribution: An applied workflow view of framing, data preparation, training, evaluation,
-      and iteration; useful for seeing the introductory vocabulary in practice. Depth and prerequisites:
-      It assumes the mathematical object is already understood and shifts attention to executable behavior,
-      shapes, APIs, or numerical checks. Discriminator: choose ''Géron end-to-end ML project overview''
-      over ''Current L01 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The scope authority for 2026. It introduces the historical concept map, ML definitions,
-      learning tasks, dataset notation, course expectations, and the examples the lecturer can examine.
-      Course boundary: It is optional depth: open it for the named gap, then return to the current deck
-      rather than importing the source''s wider syllabus.'
-    vault_path: material://source-geron-handson/geron-copy2.pdf
+  - material_ref:
+      route_id: route-832a42bb1f63ec6ea43fa373
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Kelleher et al. — predictive-analytics framing
-    source_id: source-kelleher-fmlpda
-    locator: kelleher.pdf Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56 (§1.2 What
-      Is Machine Learning? p. 39; §1.4 What Can Go Wrong? p. 46)
-    angle: An introductory, worked-example view of learning problems and the families of predictive models;
-      useful when the lecture overview feels too compressed.
-    angle_detail: 'Contribution: An introductory, worked-example view of learning problems and the families
-      of predictive models; useful when the lecture overview feels too compressed. Depth and prerequisites:
-      It assumes no derivation beyond the current unit''s vocabulary and is for framing the problem before
-      calculation. Discriminator: choose ''Kelleher et al. — predictive-analytics framing'' over ''Current
-      L01 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
-      scope authority for 2026. It introduces the historical concept map, ML definitions, learning tasks,
-      dataset notation, course expectations, and the examples the lecturer can examine. Course boundary:
-      It complements the current deck but cannot override the deck''s notation, topic boundary, or examination
-      emphasis.'
-    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
+  - material_ref:
+      route_id: route-b7ad49a27ce531882edd8afe
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Domingos — high-level map of machine learning
-    source_id: source-domingos-useful-things
-    locator: CACM PDF pp. 1-9, from 'Learning = Representation + Evaluation + Optimization' through 'Conclusion'
-    angle: A concise practitioner essay on representation, data, generalization, evaluation, and the difference
-      between fitting and learning.
-    angle_detail: 'Contribution: A concise practitioner essay on representation, data, generalization,
-      evaluation, and the difference between fitting and learning. Depth and prerequisites: It assumes
-      no derivation beyond the current unit''s vocabulary and is for framing the problem before calculation.
-      Discriminator: choose ''Domingos — high-level map of machine learning'' over ''Current L01 lecture
-      deck'' when you need this contribution; the neighboring route instead contributes: The scope authority
-      for 2026. It introduces the historical concept map, ML definitions, learning tasks, dataset notation,
-      course expectations, and the examples the lecturer can examine. Course boundary: It is optional
-      depth: open it for the named gap, then return to the current deck rather than importing the source''s
-      wider syllabus.'
+  - material_ref:
+      route_id: route-83c73dd5ea1567d43af88feb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-data/notes.md
   attachments: []
@@ -460,169 +320,108 @@ stages:
   - concept-bias-variance-tradeoff
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Current L01 lecture deck
-    source_id: source-aml-ss26-lectures
-    locator: lecture-slides/VL 01-Introduction.pdf
-    angle: The scope authority for 2026. It introduces the historical concept map, ML definitions, learning
-      tasks, dataset notation, course expectations, and the examples the lecturer can examine.
-    angle_detail: 'Contribution: The scope authority for 2026. It introduces the historical concept map,
-      ML definitions, learning tasks, dataset notation, course expectations, and the examples the lecturer
-      can examine. Depth and prerequisites: It assumes the prerequisites declared by the unit and stays
-      at the notation and derivation depth used by the HU course. Discriminator: choose ''Current L01
-      lecture deck'' over ''MIT 6.036 introduction and representations'' when you need this contribution;
-      the neighboring route instead contributes: A structured independent course entry with representations,
-      task families, overfitting, and generalization checks. Course boundary: This is current course evidence
-      and may calibrate examined notation, but the route''s stated locator—not the rest of the source—defines
-      its scope.'
+  - material_ref:
+      route_id: route-5ee4aec41221a1821604773c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/lecture-slides/VL 01-Introduction.pdf
     scope_triage: required-now
-  - kind: read
-    label: ISLP Chapter 2 — statistical learning
-    source_id: source-islp
-    locator: islp.pdf §2.1 What Is Statistical Learning?, pdf pp. 25-36; §2.2 Assessing Model Accuracy,
-      pdf pp. 37-48 (bias-variance §2.2.2 p. 41; classification setting §2.2.3 p. 44)
-    angle: A gentle, example-driven explanation of prediction, inference, supervised/unsupervised tasks,
-      model flexibility, train/test error, and the vocabulary behind problem formulation.
-    angle_detail: 'Contribution: A gentle, example-driven explanation of prediction, inference, supervised/unsupervised
-      tasks, model flexibility, train/test error, and the vocabulary behind problem formulation. Depth
-      and prerequisites: It assumes the unit vocabulary but not a completed proof and is meant to make
-      the mechanism explainable before formal derivation. Discriminator: choose ''ISLP Chapter 2 — statistical
-      learning'' over ''Current L01 lecture deck'' when you need this contribution; the neighboring route
-      instead contributes: The scope authority for 2026. It introduces the historical concept map, ML
-      definitions, learning tasks, dataset notation, course expectations, and the examples the lecturer
-      can examine. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-21f9795d5af805470f6b7aa8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Kroese ML workflow framing
-    source_id: source-kroese-dsml
-    locator: kroese.pdf Statistical Learning, pdf pp. 37-76 (training/test loss p. 41; tradeoffs p. 49;
-      cross-validation p. 55); Classification Metrics, pdf pp. 271-274
-    angle: An independent data-science view of models, data, evaluation, and workflow; useful as a terminology
-      cross-check.
-    angle_detail: 'Contribution: An independent data-science view of models, data, evaluation, and workflow;
-      useful as a terminology cross-check. Depth and prerequisites: It assumes no derivation beyond the
-      current unit''s vocabulary and is for framing the problem before calculation. Discriminator: choose
-      ''Kroese ML workflow framing'' over ''Current L01 lecture deck'' when you need this contribution;
-      the neighboring route instead contributes: The scope authority for 2026. It introduces the historical
-      concept map, ML definitions, learning tasks, dataset notation, course expectations, and the examples
-      the lecturer can examine. Course boundary: It is optional depth: open it for the named gap, then
-      return to the current deck rather than importing the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-add32fc5153a4c50969e540d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: MIT 6.036 introduction and representations
-    source_id: source-mit-6036
-    locator: Fall 2020 OCW, Unit 1 'Introduction and Feature Representation'
-    angle: A structured independent course entry with representations, task families, overfitting, and
-      generalization checks.
-    angle_detail: 'Contribution: A structured independent course entry with representations, task families,
-      overfitting, and generalization checks. Depth and prerequisites: It assumes the prerequisites declared
-      by the unit and stays at the notation and derivation depth used by the HU course. Discriminator:
-      choose ''MIT 6.036 introduction and representations'' over ''Current L01 lecture deck'' when you
-      need this contribution; the neighboring route instead contributes: The scope authority for 2026.
-      It introduces the historical concept map, ML definitions, learning tasks, dataset notation, course
-      expectations, and the examples the lecturer can examine. Course boundary: It complements the current
-      deck but cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-3bbe37829f21a1a146a731fe
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Rohrer model workflow and data splitting
-    source_id: source-rohrer-e2eml
-    locator: Chapters 3–4
-    angle: Calm long-form intuition for choosing a loss, splitting data, and seeing ML as an end-to-end
-      workflow.
-    angle_detail: 'Contribution: Calm long-form intuition for choosing a loss, splitting data, and seeing
-      ML as an end-to-end workflow. Depth and prerequisites: It assumes the unit vocabulary but not a
-      completed proof and is meant to make the mechanism explainable before formal derivation. Discriminator:
-      choose ''Rohrer model workflow and data splitting'' over ''Current L01 lecture deck'' when you need
-      this contribution; the neighboring route instead contributes: The scope authority for 2026. It introduces
-      the historical concept map, ML definitions, learning tasks, dataset notation, course expectations,
-      and the examples the lecturer can examine. Course boundary: It complements the current deck but
-      cannot override the deck''s notation, topic boundary, or examination emphasis.'
+  - material_ref:
+      route_id: route-f67178b7b259703513b6e2c5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Géron end-to-end ML project overview
-    source_id: source-geron-handson
-    locator: geron-copy2.pdf Ch 2 End-to-End Machine Learning Project, pdf pp. 70-155 (Frame the Problem
-      p. 73; Create a Test Set p. 92; cross-validation p. 138; final test p. 147)
-    angle: An applied workflow view of framing, data preparation, training, evaluation, and iteration;
-      useful for seeing the introductory vocabulary in practice.
-    angle_detail: 'Contribution: An applied workflow view of framing, data preparation, training, evaluation,
-      and iteration; useful for seeing the introductory vocabulary in practice. Depth and prerequisites:
-      It assumes the mathematical object is already understood and shifts attention to executable behavior,
-      shapes, APIs, or numerical checks. Discriminator: choose ''Géron end-to-end ML project overview''
-      over ''Current L01 lecture deck'' when you need this contribution; the neighboring route instead
-      contributes: The scope authority for 2026. It introduces the historical concept map, ML definitions,
-      learning tasks, dataset notation, course expectations, and the examples the lecturer can examine.
-      Course boundary: It is optional depth: open it for the named gap, then return to the current deck
-      rather than importing the source''s wider syllabus.'
-    vault_path: material://source-geron-handson/geron-copy2.pdf
+  - material_ref:
+      route_id: route-832a42bb1f63ec6ea43fa373
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Caltech Learning From Data orientation problems
-    source_id: source-caltech-lfd
-    locator: Homework table links 'Homework 1' and 'Solution to Homework 1'
-    angle: Solved learning-theory problems that sharpen hypotheses, generalization, and the distinction
-      between fitting and learning.
-    angle_detail: 'Contribution: Solved learning-theory problems that sharpen hypotheses, generalization,
-      and the distinction between fitting and learning. Depth and prerequisites: It assumes the relevant
-      rule or algorithm has already been introduced and is for an attempted solution, trace, or calculation
-      with feedback. Discriminator: choose ''Caltech Learning From Data orientation problems'' over ''Current
-      L01 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
-      scope authority for 2026. It introduces the historical concept map, ML definitions, learning tasks,
-      dataset notation, course expectations, and the examples the lecturer can examine. Course boundary:
-      It is optional depth: open it for the named gap, then return to the current deck rather than importing
-      the source''s wider syllabus.'
+  - material_ref:
+      route_id: route-21813de54053a6ef703d848b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Kelleher et al. — predictive-analytics framing
-    source_id: source-kelleher-fmlpda
-    locator: kelleher.pdf Ch 1 Machine Learning for Predictive Data Analytics, pdf pp. 36-56 (§1.2 What
-      Is Machine Learning? p. 39; §1.4 What Can Go Wrong? p. 46)
-    angle: An introductory, worked-example view of learning problems and the families of predictive models;
-      useful when the lecture overview feels too compressed.
-    angle_detail: 'Contribution: An introductory, worked-example view of learning problems and the families
-      of predictive models; useful when the lecture overview feels too compressed. Depth and prerequisites:
-      It assumes no derivation beyond the current unit''s vocabulary and is for framing the problem before
-      calculation. Discriminator: choose ''Kelleher et al. — predictive-analytics framing'' over ''Current
-      L01 lecture deck'' when you need this contribution; the neighboring route instead contributes: The
-      scope authority for 2026. It introduces the historical concept map, ML definitions, learning tasks,
-      dataset notation, course expectations, and the examples the lecturer can examine. Course boundary:
-      It complements the current deck but cannot override the deck''s notation, topic boundary, or examination
-      emphasis.'
-    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
+  - material_ref:
+      route_id: route-b7ad49a27ce531882edd8afe
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Domingos — high-level map of machine learning
-    source_id: source-domingos-useful-things
-    locator: CACM PDF pp. 1-9, from 'Learning = Representation + Evaluation + Optimization' through 'Conclusion'
-    angle: A concise practitioner essay on representation, data, generalization, evaluation, and the difference
-      between fitting and learning.
-    angle_detail: 'Contribution: A concise practitioner essay on representation, data, generalization,
-      evaluation, and the difference between fitting and learning. Depth and prerequisites: It assumes
-      no derivation beyond the current unit''s vocabulary and is for framing the problem before calculation.
-      Discriminator: choose ''Domingos — high-level map of machine learning'' over ''Current L01 lecture
-      deck'' when you need this contribution; the neighboring route instead contributes: The scope authority
-      for 2026. It introduces the historical concept map, ML definitions, learning tasks, dataset notation,
-      course expectations, and the examples the lecturer can examine. Course boundary: It is optional
-      depth: open it for the named gap, then return to the current deck rather than importing the source''s
-      wider syllabus.'
+  - material_ref:
+      route_id: route-83c73dd5ea1567d43af88feb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: SaD L11 — data-science workflow and evaluation bridge
-    source_id: source-sad-ss26-lectures
-    locator: lecture-slides/L11 — Data science intro (especially slides 23–38)
-    angle: The neighbouring HU course supplies the practical train/test, loss, metrics, pipeline, inductive-bias,
-      and bias-variance frame assumed by AML.
-    angle_detail: 'Contribution: The neighbouring HU course supplies the practical train/test, loss, metrics,
-      pipeline, inductive-bias, and bias-variance frame assumed by AML. Depth and prerequisites: It assumes
-      the prerequisites declared by the unit and stays at the notation and derivation depth used by the
-      HU course. Discriminator: choose ''SaD L11 — data-science workflow and evaluation bridge'' over
-      ''Current L01 lecture deck'' when you need this contribution; the neighboring route instead contributes:
-      The scope authority for 2026. It introduces the historical concept map, ML definitions, learning
-      tasks, dataset notation, course expectations, and the examples the lecturer can examine. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
+  - material_ref:
+      route_id: route-b808ddb8dfc1c928b65feae7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-generalization/notes.md
   attachments: []
@@ -643,65 +442,46 @@ stages:
   - concept-python
   scope_triage: required-now
   resources:
-  - kind: read
-    label: Linear-algebra primer
-    source_id: source-aml-ss26-lectures
-    locator: Primer_Linear_Algebra.pdf
-    angle: A 36-page diagnostic for vectors, matrices, products, dimensions, and differentiation; use
-      it to identify prerequisite gaps, not as a second full lecture.
-    angle_detail: 'Contribution: A 36-page diagnostic for vectors, matrices, products, dimensions, and
-      differentiation; use it to identify prerequisite gaps, not as a second full lecture. Depth and prerequisites:
-      It assumes the prerequisites declared by the unit and stays at the notation and derivation depth
-      used by the HU course. Discriminator: choose ''Linear-algebra primer'' over ''Essence of Linear
-      Algebra — targeted prerequisite repair'' when you need this contribution; the neighboring route
-      instead contributes: Use only the chapters matching primer gaps: vectors, linear combinations, matrix
-      transformations, multiplication, and dot products. Course boundary: This repairs a prerequisite
-      only; it must not expand the current AML deck or become a parallel unit of study.'
+  - material_ref:
+      route_id: route-7449e02fa820ef5534caa5b8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     vault_path: material://source-aml-ss26-lectures/Primer_Linear_Algebra.pdf
     scope_triage: helpful-now
-  - kind: watch
-    label: Essence of Linear Algebra — targeted prerequisite repair
-    source_id: source-3b1b-linear-algebra
-    locator: Playlist chapters 'Vectors, what even are they?', 'Linear combinations, span, and basis vectors',
-      and 'Linear transformations and matrices'
-    angle: 'Use only the chapters matching primer gaps: vectors, linear combinations, matrix transformations,
-      multiplication, and dot products.'
-    angle_detail: 'Contribution: Use only the chapters matching primer gaps: vectors, linear combinations,
-      matrix transformations, multiplication, and dot products. Depth and prerequisites: It assumes the
-      unit vocabulary but not a completed proof and is meant to make the mechanism explainable before
-      formal derivation. Discriminator: choose ''Essence of Linear Algebra — targeted prerequisite repair''
-      over ''Linear-algebra primer'' when you need this contribution; the neighboring route instead contributes:
-      A 36-page diagnostic for vectors, matrices, products, dimensions, and differentiation; use it to
-      identify prerequisite gaps, not as a second full lecture. Course boundary: This repairs a prerequisite
-      only; it must not expand the current AML deck or become a parallel unit of study.'
+  - material_ref:
+      route_id: route-5f2ef3144d0180cee8b84c74
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
-  - kind: practise
-    label: Solved Lineare-Algebra Übungen and Klausuren
-    source_id: source-lineare-algebra-archive
-    locator: LA/Übungen mit lösungen.pdf; LA/Übungsblatt mit lösungen.pdf; LA/Klausur31-07-23-Losungen
-      2.pdf; LA/Lösungen zur Probeklausur zur Linearen Algebra WiS.pdf
-    angle: Solution-backed vector, matrix, product and shape drills for whichever primer item came back
-      red; German, and unrelated to AML scope beyond the prerequisite check.
-    angle_detail: 'Contribution: Solution-backed vector, matrix, product and shape drills for whichever
-      primer item came back red; German, and unrelated to AML scope beyond the prerequisite check. Depth
-      and prerequisites: It assumes the relevant rule or algorithm has already been introduced and is
-      for an attempted solution, trace, or calculation with feedback. Discriminator: choose ''Solved Lineare-Algebra
-      Übungen and Klausuren'' over ''MIT 18.06 — targeted linear-algebra prerequisite check'' when you
-      need this contribution; the neighboring route instead contributes: Provides a taught-course fallback
-      for matrix multiplication, subspaces, and change of basis when the primer is insufficient. Course
-      boundary: This repairs a prerequisite only; it must not expand the current AML deck or become a
-      parallel unit of study.'
+  - material_ref:
+      route_id: route-e52061692703bb9ee2044d70
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: MIT 18.06 — targeted linear-algebra prerequisite check
-    source_id: source-mit-1806
-    locator: 'Spring 2010 lecture list: Lectures 3 ''Multiplication and inverse matrices'', 6 ''Column
-      space and nullspace'', and 31 ''Change of basis; image compression'''
-    angle: Provides a taught-course fallback for matrix multiplication, subspaces, and change of basis
-      when the primer is insufficient.
-    angle_detail: 'Use only the lecture whose prerequisite diagnostic failed. This is not a second course
-      assignment: each selected session repairs one named linear-algebra dependency and should be followed
-      immediately by the AML problem that exposed it.'
+  - material_ref:
+      route_id: route-9227586cd65661fc080b8284
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-aml/units/unit-aml-l01/stages/stage-aml-l01-prerequisites/notes.md
   attachments: []

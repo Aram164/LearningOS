@@ -8,6 +8,7 @@ import re
 import sys
 
 from .support import (
+    _dump_study_map,
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
@@ -53,7 +54,7 @@ def cmd_detour_create(args) -> int:
         else:
             unit_data = unit.data
         code, errors, confirmation = _write_transaction(
-            root, {study_map.path: _dump_yaml(data), unit.path: _dump_yaml(unit_data)},
+            root, {study_map.path: _dump_study_map(study_map, data), unit.path: _dump_yaml(unit_data)},
             capability="detour.create",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=[args.unit_id, study_map.id],
@@ -93,7 +94,7 @@ def cmd_detour_resolve(args) -> int:
         unit_data = copy.deepcopy(unit.data)
         unit_data["status"] = "active"
         code, errors, confirmation = _write_transaction(
-            root, {study_map.path: _dump_yaml(data), unit.path: _dump_yaml(unit_data)},
+            root, {study_map.path: _dump_study_map(study_map, data), unit.path: _dump_yaml(unit_data)},
             capability="detour.resolve",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=[args.unit_id, study_map.id],

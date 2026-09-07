@@ -12,7 +12,9 @@
     "resource": {
       "type": "object",
       "additionalProperties": false,
-      "required": ["kind", "label"],
+      "required": [
+        "kind"
+      ],
       "properties": {
         "id": {
           "type": "string",
@@ -24,7 +26,12 @@
           "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"
         },
         "kind": {
-          "enum": ["watch", "read", "practise", "reference"]
+          "enum": [
+            "watch",
+            "read",
+            "practise",
+            "reference"
+          ]
         },
         "label": {
           "$ref": "#/$defs/nonEmptyText"
@@ -55,9 +62,67 @@
           "type": "string"
         },
         "scope_triage": {
-          "enum": ["required-now", "helpful-now", "deferred", "reference-only"]
+          "enum": [
+            "required-now",
+            "helpful-now",
+            "deferred",
+            "reference-only"
+          ]
+        },
+        "material_ref": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "route_id",
+            "inherit"
+          ],
+          "properties": {
+            "route_id": {
+              "type": "string",
+              "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"
+            },
+            "inherit": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "label",
+                  "source_id",
+                  "locator",
+                  "angle",
+                  "angle_detail",
+                  "url",
+                  "vault_path"
+                ]
+              }
+            }
+          }
         }
-      }
+      },
+      "anyOf": [
+        {
+          "required": [
+            "label"
+          ]
+        },
+        {
+          "required": [
+            "material_ref"
+          ],
+          "properties": {
+            "material_ref": {
+              "properties": {
+                "inherit": {
+                  "contains": {
+                    "const": "label"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
     },
     "stageCore": {
       "type": "object",
@@ -88,7 +153,13 @@
           "$ref": "#/$defs/nonEmptyText"
         },
         "status": {
-          "enum": ["pending", "active", "paused", "complete", "skipped"]
+          "enum": [
+            "pending",
+            "active",
+            "paused",
+            "complete",
+            "skipped"
+          ]
         },
         "objective": {
           "$ref": "#/$defs/nonEmptyText"
@@ -116,7 +187,12 @@
           }
         },
         "scope_triage": {
-          "enum": ["required-now", "helpful-now", "deferred", "reference-only"]
+          "enum": [
+            "required-now",
+            "helpful-now",
+            "deferred",
+            "reference-only"
+          ]
         },
         "resources": {
           "type": "array",
@@ -139,7 +215,9 @@
         },
         {
           "type": "object",
-          "required": ["working_note"],
+          "required": [
+            "working_note"
+          ],
           "properties": {
             "working_note": {
               "type": "string",
@@ -149,7 +227,10 @@
               "type": "array",
               "items": {
                 "type": "object",
-                "required": ["path", "label"],
+                "required": [
+                  "path",
+                  "label"
+                ],
                 "additionalProperties": false,
                 "properties": {
                   "path": {
@@ -166,7 +247,11 @@
               "type": "array",
               "items": {
                 "type": "object",
-                "required": ["source_id", "feedback", "recorded"],
+                "required": [
+                  "source_id",
+                  "feedback",
+                  "recorded"
+                ],
                 "additionalProperties": false,
                 "properties": {
                   "source_id": {
@@ -178,7 +263,14 @@
                     "pattern": "^resource-[a-z0-9]+(?:-[a-z0-9]+)*$"
                   },
                   "feedback": {
-                    "enum": ["helpful", "too-advanced", "wrong-perspective", "useful-for-derivation", "useful-for-review", "skipped"]
+                    "enum": [
+                      "helpful",
+                      "too-advanced",
+                      "wrong-perspective",
+                      "useful-for-derivation",
+                      "useful-for-review",
+                      "skipped"
+                    ]
                   },
                   "note": {
                     "type": "string"

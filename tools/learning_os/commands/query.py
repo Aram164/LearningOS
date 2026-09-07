@@ -11,9 +11,10 @@ from learning_os import __version__
 from learning_os.contracts.capability_catalog import load_capability_catalog
 from learning_os.genout import adoption_counts, exam_spine
 from learning_os.loader import load_repo
+from learning_os.pathing import PathBoundaryError, read_text_inside
 from learning_os.rules import validate
 
-from .reads import compact_bootstrap, content_search
+from .reads import compact_bootstrap, content_search, inspect_batch, record_payload
 from .support import _delegate, _fresh_manifest, _operator_lock, _print_rows, _publish, _root
 
 # The OPERATOR contract (system/OPERATOR.md) — what `los.py capabilities`
@@ -142,7 +143,39 @@ def _capabilities(root: Path) -> dict:
 
 
 def cmd_capabilities(args) -> int:
-    payload = _capabilities(_root(args))
+    root = _root(args)
+    payload = _capabilities(root)
+    name = getattr(args, "name", None)
+    compact = getattr(args, "compact", False)
+    if name and compact:
+        print("los: choose --compact or one capability name", file=sys.stderr)
+        return 2
+    if name:
+        section = next((key for key in ("queries", "commands") if name in payload[key]), None)
+        if section is None:
+            print(f"los: unknown or non-public capability: {name}", file=sys.stderr)
+            return 2
+        definition = payload[section][name]
+        for key in ("queries", "commands"):
+            payload[key] = {name: definition} if key == section else {}
+        if section == "commands":
+            relative = f"system/schema/capabilities/{name}.schema.json"
+            try:
+                schema = json.loads(read_text_inside(root, root / relative))
+                if not isinstance(schema, dict):
+                    raise ValueError("payload schema must be an object")
+            except (OSError, PathBoundaryError, ValueError) as exc:
+                print(f"los: cannot read declared payload schema: {exc}", file=sys.stderr)
+                return 2
+            payload["payload_schema_path"] = relative
+            payload["payload_schema"] = schema
+    elif compact:
+        for key in ("queries", "commands"):
+            payload[key] = sorted(payload[key])
+        payload["detail"] = "capabilities NAME --json"
+    if compact or name:
+        print(json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
+        return 0
     print(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False)
           if args.json else "\n".join(
               [f"LearningOS operator contract v{payload['contract_version']}",
@@ -191,15 +224,13 @@ def cmd_search(args) -> int:
 
 
 def cmd_inspect(args) -> int:
+    if getattr(args, "more_ids", None):
+        return inspect_batch(args)
     manifest = _fresh_manifest(_root(args))
-    resolved_id = (manifest.get("project_aliases") or {}).get(args.id, args.id)
-    rec = next((r for r in manifest["records"] if r.get("id") == resolved_id), None)
-    if rec is None:
+    payload = record_payload(manifest, args.id)
+    if payload is None:
         print(f"los: record not found: {args.id}", file=sys.stderr)
         return 2
-    payload = dict(rec)
-    if resolved_id != args.id:
-        payload["resolved_from"] = args.id
     print(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False))
     return 0
 

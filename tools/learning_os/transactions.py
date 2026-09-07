@@ -1044,7 +1044,11 @@ class TransactionService:
             _atomic_write_bytes(inflight_dir / "intent.json", json.dumps(intent).encode("utf-8"))
 
             for path, content in normalized_writes.items():
-                _atomic_write_bytes(path, content)
+                # Compare with the bytes already captured for rollback. Keep
+                # scope/revision checks and receipt evidence for the complete
+                # approved write set, but avoid replacing identical files.
+                if backups[path] != content:
+                    _atomic_write_bytes(path, content)
             for path in delete_paths:
                 if path.is_dir():
                     raise TransactionFailure(f"transaction refuses to delete directory: {path}")

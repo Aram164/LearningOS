@@ -785,6 +785,105 @@ entries:
       unit-m2-sad-l15: 7
     snapshot_before: sha256:685b4321596ed454a26ae975516a5c1f7ebe0c057dc593a3d7667da413a6d083
     snapshot_after: sha256:c17deddbe42a76e836c7d2ae80c3e6ac67e044f4df06de8a7b9944595b894f9b
+  materials-compact-module-hu-aml-21b3c2603dbf4fdc8d214191d34563f9:
+    request_id: request-materials-compact-module-hu-aml-21b3c2603dbf4fdc8d214191d34563f9
+    capability: module.materials.compact
+    channel: operator
+    intent_sha256: sha256:8406ea1d60dca820186426d0feed77df6b105c77650ce71277e977a3220432fb
+    transaction_id: transaction-20260907-142206-001
+    receipt_path: operations/transactions/transaction-20260907-142206-001.yaml
+    revisions:
+      module-hu-aml: 12
+      study-map-aml-l01: 3
+      study-map-aml-l02: 3
+      study-map-aml-l03: 3
+      study-map-aml-l04: 3
+      study-map-aml-l05: 3
+      study-map-aml-l06: 3
+      study-map-aml-l07: 3
+      study-map-aml-l08: 3
+      study-map-aml-l09: 3
+      study-map-aml-l10: 5
+      study-map-aml-l11: 3
+      unit-aml-l01: 6
+      unit-aml-l02: 6
+      unit-aml-l03: 5
+      unit-aml-l04: 5
+      unit-aml-l05: 5
+      unit-aml-l06: 5
+      unit-aml-l07: 6
+      unit-aml-l08: 5
+      unit-aml-l09: 5
+      unit-aml-l10: 8
+      unit-aml-l11: 7
+    snapshot_before: sha256:c15c123dcc1c9d5dcfe81ed3a0e26275f72959bd3f2e5d5e8ccc1701b70fc875
+    snapshot_after: sha256:0ddad232f8a0e7fb8383d19261bdf152fdc8ac0b0c130c6df0bec975f2e5d4f2
+  materials-compact-module-hu-m2-statistik-analysis-0b8874932e884cecb1d2f9676a3d1fbd:
+    request_id: request-materials-compact-module-hu-m2-statistik-analysis-0b8874932e884cecb1d2f9676a3d1fbd
+    capability: module.materials.compact
+    channel: operator
+    intent_sha256: sha256:e0e1bef594bdfee681595f18105acd606b07b619adecf14041e3a128617d98c0
+    transaction_id: transaction-20260907-142304-001
+    receipt_path: operations/transactions/transaction-20260907-142304-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 16
+      study-map-m2-analysis-ch01: 1
+      study-map-m2-analysis-ch02: 1
+      study-map-m2-analysis-exam-prep: 1
+      study-map-m2-sad-clustering: 4
+      study-map-m2-sad-exam-prep: 2
+      study-map-m2-sad-l01: 4
+      study-map-m2-sad-l02: 5
+      study-map-m2-sad-l03: 5
+      study-map-m2-sad-l04: 5
+      study-map-m2-sad-l05: 5
+      study-map-m2-sad-l06: 5
+      study-map-m2-sad-l07: 6
+      study-map-m2-sad-l08: 5
+      study-map-m2-sad-l09: 5
+      study-map-m2-sad-l10: 5
+      study-map-m2-sad-l11: 5
+      study-map-m2-sad-l12: 5
+      study-map-m2-sad-l13: 5
+      study-map-m2-sad-l14: 5
+      study-map-m2-sad-l15: 5
+      unit-m2-analysis-ch01: 4
+      unit-m2-analysis-ch02: 7
+      unit-m2-analysis-exam-prep: 10
+      unit-m2-sad-clustering: 12
+      unit-m2-sad-exam-prep: 10
+      unit-m2-sad-l01: 9
+      unit-m2-sad-l02: 11
+      unit-m2-sad-l03: 15
+      unit-m2-sad-l04: 15
+      unit-m2-sad-l05: 11
+      unit-m2-sad-l06: 15
+      unit-m2-sad-l07: 12
+      unit-m2-sad-l08: 11
+      unit-m2-sad-l09: 11
+      unit-m2-sad-l10: 11
+      unit-m2-sad-l11: 11
+      unit-m2-sad-l12: 11
+      unit-m2-sad-l13: 11
+      unit-m2-sad-l14: 15
+      unit-m2-sad-l15: 15
+    snapshot_before: sha256:0ddad232f8a0e7fb8383d19261bdf152fdc8ac0b0c130c6df0bec975f2e5d4f2
+    snapshot_after: sha256:65f679d2d90b5ed2f006b1b0e5e4a5a2ed322774b24ec0d9747eb0f5976abd7d
+  materials-compact-module-job-polars-01cc89b30600415eb5ab72707ffdfa45:
+    request_id: request-materials-compact-module-job-polars-01cc89b30600415eb5ab72707ffdfa45
+    capability: module.materials.compact
+    channel: operator
+    intent_sha256: sha256:56226856dead17fe329c3c1ab023da0b65d054a4685c69c269689490c73d6e92
+    transaction_id: transaction-20260907-142316-001
+    receipt_path: operations/transactions/transaction-20260907-142316-001.yaml
+    revisions:
+      module-job-polars: 3
+      study-map-job-polars-backend-loop: 1
+      study-map-job-polars-expressions: 13
+      unit-job-polars-backend-loop: 2
+      unit-job-polars-expressions: 14
+    snapshot_before: sha256:65f679d2d90b5ed2f006b1b0e5e4a5a2ed322774b24ec0d9747eb0f5976abd7d
+    snapshot_after: sha256:3be041d58427bd37cdcd334ecd72a4ec07f61050b792d70fbf68416dc442be46
   pl-s4a-ck-20260904:
     request_id: request-pl-s4a-ck-20260904
     capability: stage.attachment.add

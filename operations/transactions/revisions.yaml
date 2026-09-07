@@ -25,11 +25,11 @@ revisions:
   job-quarantine-collapse-v1: 1
   materials-manifest: 1
   module-hu-algo2: 2
-  module-hu-aml: 11
-  module-hu-m2-statistik-analysis: 15
+  module-hu-aml: 12
+  module-hu-m2-statistik-analysis: 16
   module-job-engineering-tools: 1
   module-job-git: 1
-  module-job-polars: 2
+  module-job-polars: 3
   module-job-python-engineering: 1
   module-job-rust-engineering: 1
   module-project-bachelor-thesis: 1
@@ -157,20 +157,21 @@ revisions:
   stage-rust-17-sparse-buffers-numpy-interop-and-performance-evi: 1
   stage-rust-18-capstone-own-a-python-to-rust-feature-end-to-end: 1
   stage-rust-19-pull-based-advanced-clinic-unsafe-macros-and-typ: 1
-  study-map-aml-l01: 2
-  study-map-aml-l02: 2
-  study-map-aml-l03: 2
-  study-map-aml-l04: 2
-  study-map-aml-l05: 2
-  study-map-aml-l06: 2
-  study-map-aml-l07: 2
-  study-map-aml-l08: 2
-  study-map-aml-l09: 2
-  study-map-aml-l10: 4
-  study-map-aml-l11: 2
+  study-map-aml-l01: 3
+  study-map-aml-l02: 3
+  study-map-aml-l03: 3
+  study-map-aml-l04: 3
+  study-map-aml-l05: 3
+  study-map-aml-l06: 3
+  study-map-aml-l07: 3
+  study-map-aml-l08: 3
+  study-map-aml-l09: 3
+  study-map-aml-l10: 5
+  study-map-aml-l11: 3
   study-map-job-engineering-tools-fluency: 2
   study-map-job-git-fluency: 1
-  study-map-job-polars-expressions: 12
+  study-map-job-polars-backend-loop: 1
+  study-map-job-polars-expressions: 13
   study-map-job-polars-joins-reshape: 7
   study-map-job-polars-lazy-udf-interop: 7
   study-map-job-polars-pandas-fluency: 10
@@ -178,42 +179,45 @@ revisions:
   study-map-job-polars-selection-backend: 10
   study-map-job-python-engineering-fluency: 2
   study-map-job-rust-engineering-fluency: 1
-  study-map-m2-sad-clustering: 3
-  study-map-m2-sad-exam-prep: 1
-  study-map-m2-sad-l01: 3
-  study-map-m2-sad-l02: 4
-  study-map-m2-sad-l03: 4
-  study-map-m2-sad-l04: 4
-  study-map-m2-sad-l05: 4
-  study-map-m2-sad-l06: 4
-  study-map-m2-sad-l07: 5
-  study-map-m2-sad-l08: 4
-  study-map-m2-sad-l09: 4
-  study-map-m2-sad-l10: 4
-  study-map-m2-sad-l11: 4
-  study-map-m2-sad-l12: 4
-  study-map-m2-sad-l13: 4
-  study-map-m2-sad-l14: 4
-  study-map-m2-sad-l15: 4
+  study-map-m2-analysis-ch01: 1
+  study-map-m2-analysis-ch02: 1
+  study-map-m2-analysis-exam-prep: 1
+  study-map-m2-sad-clustering: 4
+  study-map-m2-sad-exam-prep: 2
+  study-map-m2-sad-l01: 4
+  study-map-m2-sad-l02: 5
+  study-map-m2-sad-l03: 5
+  study-map-m2-sad-l04: 5
+  study-map-m2-sad-l05: 5
+  study-map-m2-sad-l06: 5
+  study-map-m2-sad-l07: 6
+  study-map-m2-sad-l08: 5
+  study-map-m2-sad-l09: 5
+  study-map-m2-sad-l10: 5
+  study-map-m2-sad-l11: 5
+  study-map-m2-sad-l12: 5
+  study-map-m2-sad-l13: 5
+  study-map-m2-sad-l14: 5
+  study-map-m2-sad-l15: 5
   unit-algo2-exam-prep: 1
   unit-aml-exam-prep: 7
-  unit-aml-l01: 5
-  unit-aml-l02: 5
-  unit-aml-l03: 4
-  unit-aml-l04: 4
-  unit-aml-l05: 4
-  unit-aml-l06: 4
-  unit-aml-l07: 5
-  unit-aml-l08: 4
-  unit-aml-l09: 4
-  unit-aml-l10: 7
-  unit-aml-l11: 6
+  unit-aml-l01: 6
+  unit-aml-l02: 6
+  unit-aml-l03: 5
+  unit-aml-l04: 5
+  unit-aml-l05: 5
+  unit-aml-l06: 5
+  unit-aml-l07: 6
+  unit-aml-l08: 5
+  unit-aml-l09: 5
+  unit-aml-l10: 8
+  unit-aml-l11: 7
   unit-job-engineering-tools-fluency: 2
   unit-job-git-fluency: 1
   unit-job-polars-aggregation-windows: 1
-  unit-job-polars-backend-loop: 1
+  unit-job-polars-backend-loop: 2
   unit-job-polars-capstone-transition: 1
-  unit-job-polars-expressions: 13
+  unit-job-polars-expressions: 14
   unit-job-polars-joins-reshape: 8
   unit-job-polars-lazy-udf-interop: 8
   unit-job-polars-order-text-time: 1
@@ -222,30 +226,30 @@ revisions:
   unit-job-polars-selection-backend: 11
   unit-job-python-engineering-fluency: 2
   unit-job-rust-engineering-fluency: 1
-  unit-m2-analysis-ch01: 3
-  unit-m2-analysis-ch02: 6
+  unit-m2-analysis-ch01: 4
+  unit-m2-analysis-ch02: 7
   unit-m2-analysis-ch03: 4
   unit-m2-analysis-ch04: 4
   unit-m2-analysis-ch05: 4
   unit-m2-analysis-ch06: 4
   unit-m2-analysis-ch07: 4
-  unit-m2-analysis-exam-prep: 9
+  unit-m2-analysis-exam-prep: 10
   unit-m2-combined-exam-rehearsal: 4
-  unit-m2-sad-clustering: 11
-  unit-m2-sad-exam-prep: 9
-  unit-m2-sad-l01: 8
-  unit-m2-sad-l02: 10
-  unit-m2-sad-l03: 14
-  unit-m2-sad-l04: 14
-  unit-m2-sad-l05: 10
-  unit-m2-sad-l06: 14
-  unit-m2-sad-l07: 11
-  unit-m2-sad-l08: 10
-  unit-m2-sad-l09: 10
-  unit-m2-sad-l10: 10
-  unit-m2-sad-l11: 10
-  unit-m2-sad-l12: 10
-  unit-m2-sad-l13: 10
-  unit-m2-sad-l14: 14
-  unit-m2-sad-l15: 14
+  unit-m2-sad-clustering: 12
+  unit-m2-sad-exam-prep: 10
+  unit-m2-sad-l01: 9
+  unit-m2-sad-l02: 11
+  unit-m2-sad-l03: 15
+  unit-m2-sad-l04: 15
+  unit-m2-sad-l05: 11
+  unit-m2-sad-l06: 15
+  unit-m2-sad-l07: 12
+  unit-m2-sad-l08: 11
+  unit-m2-sad-l09: 11
+  unit-m2-sad-l10: 11
+  unit-m2-sad-l11: 11
+  unit-m2-sad-l12: 11
+  unit-m2-sad-l13: 11
+  unit-m2-sad-l14: 15
+  unit-m2-sad-l15: 15
   workspace-thesis-mle-medical: 1

@@ -180,29 +180,23 @@ def project_units(repo: Repo, revision: Revision,
     return records
 
 
-def project_study_maps(repo: Repo, revision: Revision) -> list[dict]:
+def project_study_maps(repo: Repo, revision: Revision,
+                       source_maps: list[dict] | None = None) -> list[dict]:
+    # Resolve routes once in their owning source map and reuse the results.
+    # Pair with the owner's keys rather than trusting a malformed module_id.
+    if source_maps is None:
+        source_maps = project_module_source_maps(repo, revision)
+    routes_by_unit: dict[tuple[str, str], list[dict]] = {}
+    for mid, source_map in zip(sorted(repo.module_source_maps), source_maps, strict=True):
+        for entry in source_map.get("sources", []) or []:
+            if not isinstance(entry, dict):
+                continue
+            for route in entry.get("unit_routes", []) or []:
+                if isinstance(route, dict) and isinstance(route.get("unit_id"), str):
+                    routes_by_unit.setdefault((mid, route["unit_id"]), []).append(route)
     records = []
     for study_map in sorted(repo.study_maps.values(), key=lambda sm: sm.id):
         data = study_map.data
-        source_map = repo.module_source_maps.get(study_map.module_id, {})
-        resource_routes = [
-            _project_material_resource(
-                repo,
-                {
-                    **route_with_identity(
-                        study_map.module_id,
-                        str(entry.get("source_id") or ""),
-                        route,
-                    ),
-                    "source_id": entry.get("source_id"),
-                },
-            )
-            for entry in source_map.get("sources", []) or []
-            if isinstance(entry, dict)
-            for route in entry.get("unit_routes", []) or []
-            if isinstance(route, dict)
-            and route.get("unit_id") == study_map.unit_id
-        ]
         records.append({
             **{k: v for k, v in data.items() if k != "stages"},
             "revision": revision(study_map.id, data),
@@ -212,7 +206,7 @@ def project_study_maps(repo: Repo, revision: Revision) -> list[dict]:
                 repo,
                 data,
                 "working_note",
-                resource_routes,
+                routes_by_unit.get((study_map.module_id, study_map.unit_id), ()),
             ),
         })
     return records

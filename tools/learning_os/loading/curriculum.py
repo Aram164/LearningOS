@@ -11,6 +11,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+from ..material_refs import MaterialReferenceError, expand_map
 from .model import Program, Repo, StudyMap, Unit, _register
 from .yamlio import LoaderError, _load_yaml, _record_id
 
@@ -121,7 +122,12 @@ def _load_study_map(repo: Repo, unit_file: Path, module_id: str, unit_id: str) -
         repo.parse_failures.append(
             (map_file, f"{map_file}: study map with missing or empty id — skipped"))
         return
-    study_map = StudyMap(smid, map_file, map_data, module_id, unit_id)
+    try:
+        expanded = expand_map(map_data, repo.module_source_maps.get(module_id, {}), module_id, unit_id)
+    except MaterialReferenceError as exc:
+        repo.parse_failures.append((map_file, str(exc)))
+        return
+    study_map = StudyMap(smid, map_file, expanded, module_id, unit_id, map_data)
     _register(repo, repo.study_maps, smid, study_map, map_file, "study-map")
 
 

@@ -476,6 +476,12 @@ def _dump_yaml(data: dict) -> str:
                      allow_unicode=True, width=100)
 
 
+def _dump_study_map(study_map, data: dict) -> str:
+    from learning_os.material_refs import preserve_map_refs
+
+    return _dump_yaml(preserve_map_refs(study_map, data))
+
+
 def _render_frontmatter(meta: dict, body: str) -> str:
     return "---\n" + _dump_yaml(meta).rstrip() + "\n---\n\n" + body.lstrip()
 

@@ -29,129 +29,90 @@ stages:
   - concept-real-numbers
   scope_triage: required-now
   resources:
-  - kind: read
-    label: unser skript.pdf Kapitel 1 — the scope authority
-    source_id: source-analysis-skript
-    locator: unser skript.pdf Kapitel 1, printed p. 1 (PDF p. 11)–printed p. 6 (PDF p. 16); §1.1 Zahlenmengen
-      printed p. 2 (PDF p. 12), §1.2 Vollständige Induktion printed p. 2 (PDF p. 12), §1.3 Wichtige Beziehungen
-      in der Analysis printed p. 5 (PDF p. 15)
-    angle: The chapter that defines what 'assumed known' means for this exam, in this examiner's notation.
-    angle_detail: 'Six printed pages, and the whole chapter carries the Wiederholung label — under the
-      course contract (script p. vii) that means the lecture does not re-teach it and expects it to be
-      usable. So this route is read differently from every other spine route in the module: not as instruction
-      but as a checklist of what has to already work. Its practical value is the notation: §1.3''s inequalities
-      are cited by number throughout Chapters 3 to 7, and finding them here once is cheaper than reconstructing
-      them mid-proof.'
-    vault_path: material://source-analysis-skript/unser skript.pdf
+  - material_ref:
+      route_id: route-an-ch01-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: required-now
-  - kind: practise
-    label: Fritzsche §§1.1-1.2 — Mengen von Zahlen, Induktion
-    source_id: source-fritzsche-trainingsbuch
-    locator: fritzsche.pdf §1.1 Mengen von Zahlen p. 9, §1.2 Induktion p. 17; Lösungen in Kap. 5 Anhang
-      from p. 253
-    angle: Explained German solutions at tutorial pace — the gentlest route on this session, and the one
-      that shows the write-up, not just the answer.
-    angle_detail: 'Fritzsche is a Trainingsbuch: each section opens with worked reasoning before the exercises,
-      and the Anhang solutions are written out in full sentences rather than sketched. For a Wiederholung
-      chapter that is the right shape — the risk here is not that induction is unknown but that the written
-      argument is sloppy, and this is the source that models the written argument. §§1.5-1.6 (Vektoren,
-      komplexe Zahlen, Polynome) go past the script and are left closed.'
-    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+  - material_ref:
+      route_id: route-an-ch01-fritzschetrainingsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: Solved German Klausur tasks on logic, sets and induction
-    source_id: source-analysis-klausuren-extern
-    locator: 'Marburg_Analysis-I_3-Klausuren-mit-Loesungen.pdf: 1. Klausur A1 (set identities and inclusion-exclusion),
-      A3 (induction sum formula), A4 (an inequality by completing a square); 2. Klausur A1 (n! ≤ (n/2)^n
-      with proof), A2 (a complex modulus set); Wiederholungsklausur A1 (binomial identity), A2 (a product-to-sum
-      identity by induction). Darmstadt_Analysis-I_Probeklausur_mit-Loesungen.pdf: A1 Aussagenlogik, A5
-      rekursive Folgen und Induktion. Regensburg_...pdf: A1 (tautology, power set, an induction-like principle,
-      transitivity) with its ''Häufige Fehler'' commentary'
-    angle: Real German exam wording for exactly this chapter, with solutions — and the only place the
-      graders' commentary on how it is got wrong is written down.
-    angle_detail: 'This is the substitute for the missing HU sheet, and it is a good one: Chapter 1 material
-      is over-represented in the external bank because most Analysis 1 courses open there. Two cautions.
-      First, spend these on diagnosed gaps rather than as a test — the unsolved papers held for timed
-      work live on the transfer unit, and a solved paper read early cannot be un-read. Second, Marburg''s
-      Aufgabe 2 (ordered rings) and the complex-number tasks sit past this script''s boundary; work the
-      parts that match §§1.1-1.3 and leave the rest. The Regensburg ''Häufige Fehler'' boxes are the single
-      most useful thing in the folder for this chapter: they name the wrong moves rather than the right
-      ones.'
+  - material_ref:
+      route_id: route-an-ch01-analysisklausurenextern
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: TUM Ferienkurs Analysis 1 — Kapitel 1 Grundlagen + Übungsaufgaben
-    source_id: source-analysis-klausuren-extern
-    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 1 Grundlagen PDF p. 5 (§1.1 Aussagenlogik,
-      §1.2 Mengen und Quantoren, §1.4 Beweise PDF p. 9, §1.5 Funktionen und Abbildungen), Übungsaufgaben
-      PDF p. 17; Anhang A ''Wichtige Hinweise zum Beweisen und Rechnen'' PDF p. 82'
-    angle: A compressed German revision script with its own exercise set — built for exactly this situation,
-      revising a whole Analysis 1 quickly.
-    angle_detail: 'This is a Ferienkurs Skriptum, not a Klausur, which is why it is separated from the
-      exam papers: it is meant to be read and worked, not spent once. It compresses Analysis 1 into 88
-      pages, so it is the fastest complete second account available. Two caveats: it is written for physicists,
-      so §1.6 (komplexe Zahlen) and §1.7 (Gruppen und Körper) reach past this script; and it carries QR
-      codes to videos that were not checked. Anhang A is worth reading once regardless of chapter — it
-      is a page on how to write the arguments this exam grades.'
+  - material_ref:
+      route_id: route-an-ch01-analysisklausurentum
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: reference
-    label: Mengen und Abbildungen / Relationen handouts
-    source_id: source-analysis-grundlagen-handouts
-    locator: Mengen-und-Abbildungen.pdf (22 pp), Relationen.pdf (9 pp) — targeted subsection only
-    angle: Prerequisite repair for the set and mapping vocabulary the script assumes from M1 and never
-      restates.
-    angle_detail: 'These are short orientation handouts, not a course. They exist on this session for
-      one reason: the script''s Bezeichnungen section lists the symbols without explaining them, and if
-      image/preimage, injectivity or an equivalence relation is genuinely rusty, that shows up later as
-      an inability to read a theorem statement rather than as a Chapter 1 problem. Open the subsection
-      the diagnostic named and close the file again.'
+  - material_ref:
+      route_id: route-an-ch01-analysisgrundlagenhandou
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: helpful-now
-  - kind: practise
-    label: Deitmar Kap. 1 — Grundlagen
-    source_id: source-deitmar-uebungsbuch
-    locator: deitmar.pdf Kap. 1 Grundlagen p. 12 (§1.1 Aussagen, §1.2 Mengen, §1.3 Abbildungen, §1.4 Vollständige
-      Induktion p. 15); Lösungen Kap. 21 p. 130
-    angle: A third solved bank, held in reserve for when Fritzsche and Forster are spent on this node.
-    angle_detail: Deitmar's Übungsbuch covers far more than this module (Kap. 8-20 run to measure theory
-      and complex analysis) and only Kap. 1-7 are in scope at all. Its value on Chapter 1 is volume of
-      fresh problems with worked Lösungsvorschläge, at a difficulty between Fritzsche and Forster. Nothing
-      here is a new explanation — reach for it when the technique needs more repetitions, not when it
-      needs a different account.
-    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+  - material_ref:
+      route_id: route-an-ch01-deitmaruebungsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: Labs/Schreyer — Logik, Beweismethoden, Mengen und Abbildungen
-    source_id: source-labs-schreyer-mathe-informatiker
-    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf Teil I Grundlagen p. 21: ''Logik und Beweismethoden''
-      p. 25 (Beweis durch Widerspruch p. 29, Vollständige Induktion p. 30, Summen- und Produktzeichen
-      p. 32), ''Mengen und Abbildungen'' p. 39, ''Äquivalenzrelationen und Kongruenzen'' p. 55. Located
-      by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope stay unassessed
-      (CLAUDE.md §4).'
-    angle: A German mathematics-for-CS textbook whose Teil I is precisely the M1 prerequisite block this
-      chapter assumes.
-    angle_detail: 'Its 669 pages were previously the reason it was routed to ''AN.0 prerequisite gap''
-      and nothing more. Opened at chapter level it turns out to be organised the way this script is: Teil
-      I is the Grundlagen, Teil II is one-variable Analysis section by section. For Chapter 1 the relevant
-      span is 30 pages, and it is in German with CS examples, which makes it a closer match to the lecture''s
-      own framing than the English references on this menu.'
-    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+  - material_ref:
+      route_id: route-an-ch01-labsschreyermatheinforma
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Velleman — Mathematical Induction and the proof strategies behind it
-    source_id: source-velleman-how-to-prove-it
-    locator: Velleman_How-To-Prove-It.pdf Ch 6 Mathematical Induction p. 335 (§6.1 Proof by Mathematical
-      Induction, §6.2 More Examples p. 343, §6.3 Recursion p. 359, §6.4 Strong Induction p. 371); Ch 3
-      Proofs p. 118 for the strategies; Ch 1-2 logic and sets p. 21; solutions to selected exercises p.
-      483. Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so its depth
-      and scope are deliberately left unassessed (CLAUDE.md §4).
-    angle: The book that teaches induction as a proof strategy rather than a formula, including the strong-induction
-      and recursion variants the Hanoi task needs.
-    angle_detail: 'Routed here for the first time at chapter level: before this pass it carried `proof-presentation`
-      and a bare page count. §6.3 Recursion is the direct match for HU Serie 05.1, and §6.4 Strong Induction
-      is what a recurrence with two previous terms actually requires — the script''s §3.4 case. It is
-      English, 569 pages, and structured as a course, so it is a reference to enter at a named section,
-      never a book to read through. Nobody has assessed it against this exam, which is recorded rather
-      than guessed.'
-    vault_path: material://source-velleman-how-to-prove-it/Velleman_How-To-Prove-It.pdf
+  - material_ref:
+      route_id: route-an-ch01-vellemanhowtoproveit
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch01/stages/stage-m2-analysis-ch01-zahlenmengen/notes.md
   attachments: []
@@ -174,161 +135,113 @@ stages:
   - concept-proof-technique
   scope_triage: required-now
   resources:
-  - kind: read
-    label: unser skript.pdf Kapitel 1 — the scope authority
-    source_id: source-analysis-skript
-    locator: unser skript.pdf Kapitel 1, printed p. 1 (PDF p. 11)–printed p. 6 (PDF p. 16); §1.1 Zahlenmengen
-      printed p. 2 (PDF p. 12), §1.2 Vollständige Induktion printed p. 2 (PDF p. 12), §1.3 Wichtige Beziehungen
-      in der Analysis printed p. 5 (PDF p. 15)
-    angle: The chapter that defines what 'assumed known' means for this exam, in this examiner's notation.
-    angle_detail: 'Six printed pages, and the whole chapter carries the Wiederholung label — under the
-      course contract (script p. vii) that means the lecture does not re-teach it and expects it to be
-      usable. So this route is read differently from every other spine route in the module: not as instruction
-      but as a checklist of what has to already work. Its practical value is the notation: §1.3''s inequalities
-      are cited by number throughout Chapters 3 to 7, and finding them here once is cheaper than reconstructing
-      them mid-proof.'
-    vault_path: material://source-analysis-skript/unser skript.pdf
+  - material_ref:
+      route_id: route-an-ch01-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: required-now
-  - kind: practise
-    label: HU Serie 05, Aufgabe 5.1(c) — induction inside a recursion
-    source_id: source-analysis-skript
-    locator: 'ana_inf_serie05.pdf, Übungsaufgabe 5.1 ''Rekursionen – am Beispiel der Türme von Hanoi'',
-      part (c): solve the recurrence, or guess the closed form and prove it by induction'
-    angle: The only current HU task that examines induction, and it examines it as a tool rather than
-      as a topic.
-    angle_detail: 'This matters more than its size suggests. The sheet does not set an induction exercise;
-      it sets a modelling problem and then allows induction as the way to finish it — which is how induction
-      actually appears in this course and, on the evidence of the external papers, in the exam. Note the
-      boundary: apart from this part-task there is no current HU practice for Chapter 1 at all, so everything
-      else on this session is a substitute and is labelled as one.'
-    vault_path: material://source-analysis-skript/ana_inf_serie05.pdf
+  - material_ref:
+      route_id: route-an-ch01-analysisskripthu
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: required-now
-  - kind: practise
-    label: Fritzsche §§1.1-1.2 — Mengen von Zahlen, Induktion
-    source_id: source-fritzsche-trainingsbuch
-    locator: fritzsche.pdf §1.1 Mengen von Zahlen p. 9, §1.2 Induktion p. 17; Lösungen in Kap. 5 Anhang
-      from p. 253
-    angle: Explained German solutions at tutorial pace — the gentlest route on this session, and the one
-      that shows the write-up, not just the answer.
-    angle_detail: 'Fritzsche is a Trainingsbuch: each section opens with worked reasoning before the exercises,
-      and the Anhang solutions are written out in full sentences rather than sketched. For a Wiederholung
-      chapter that is the right shape — the risk here is not that induction is unknown but that the written
-      argument is sloppy, and this is the source that models the written argument. §§1.5-1.6 (Vektoren,
-      komplexe Zahlen, Polynome) go past the script and are left closed.'
-    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+  - material_ref:
+      route_id: route-an-ch01-fritzschetrainingsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: Solved German Klausur tasks on logic, sets and induction
-    source_id: source-analysis-klausuren-extern
-    locator: 'Marburg_Analysis-I_3-Klausuren-mit-Loesungen.pdf: 1. Klausur A1 (set identities and inclusion-exclusion),
-      A3 (induction sum formula), A4 (an inequality by completing a square); 2. Klausur A1 (n! ≤ (n/2)^n
-      with proof), A2 (a complex modulus set); Wiederholungsklausur A1 (binomial identity), A2 (a product-to-sum
-      identity by induction). Darmstadt_Analysis-I_Probeklausur_mit-Loesungen.pdf: A1 Aussagenlogik, A5
-      rekursive Folgen und Induktion. Regensburg_...pdf: A1 (tautology, power set, an induction-like principle,
-      transitivity) with its ''Häufige Fehler'' commentary'
-    angle: Real German exam wording for exactly this chapter, with solutions — and the only place the
-      graders' commentary on how it is got wrong is written down.
-    angle_detail: 'This is the substitute for the missing HU sheet, and it is a good one: Chapter 1 material
-      is over-represented in the external bank because most Analysis 1 courses open there. Two cautions.
-      First, spend these on diagnosed gaps rather than as a test — the unsolved papers held for timed
-      work live on the transfer unit, and a solved paper read early cannot be un-read. Second, Marburg''s
-      Aufgabe 2 (ordered rings) and the complex-number tasks sit past this script''s boundary; work the
-      parts that match §§1.1-1.3 and leave the rest. The Regensburg ''Häufige Fehler'' boxes are the single
-      most useful thing in the folder for this chapter: they name the wrong moves rather than the right
-      ones.'
+  - material_ref:
+      route_id: route-an-ch01-analysisklausurenextern
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: TUM Ferienkurs Analysis 1 — Kapitel 1 Grundlagen + Übungsaufgaben
-    source_id: source-analysis-klausuren-extern
-    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 1 Grundlagen PDF p. 5 (§1.1 Aussagenlogik,
-      §1.2 Mengen und Quantoren, §1.4 Beweise PDF p. 9, §1.5 Funktionen und Abbildungen), Übungsaufgaben
-      PDF p. 17; Anhang A ''Wichtige Hinweise zum Beweisen und Rechnen'' PDF p. 82'
-    angle: A compressed German revision script with its own exercise set — built for exactly this situation,
-      revising a whole Analysis 1 quickly.
-    angle_detail: 'This is a Ferienkurs Skriptum, not a Klausur, which is why it is separated from the
-      exam papers: it is meant to be read and worked, not spent once. It compresses Analysis 1 into 88
-      pages, so it is the fastest complete second account available. Two caveats: it is written for physicists,
-      so §1.6 (komplexe Zahlen) and §1.7 (Gruppen und Körper) reach past this script; and it carries QR
-      codes to videos that were not checked. Anhang A is worth reading once regardless of chapter — it
-      is a page on how to write the arguments this exam grades.'
+  - material_ref:
+      route_id: route-an-ch01-analysisklausurentum
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: Forster/Wessoly §1 Vollständige Induktion
-    source_id: source-forster-wessoly
-    locator: forster-wessoly.pdf Aufgaben §1 p. 11; Lösungen §1 p. 68
-    angle: Terse induction problems in Klausur vocabulary, with complete solutions ten pages of exercises
-      later.
-    angle_detail: Forster/Wessoly is the companion volume to the standard German Analysis 1 text, so its
-      wording is the wording German exam setters grew up on. The solutions are correct and compressed
-      — which is a feature once the technique is secure and a liability while it is not. Use it after
-      Fritzsche on this node, not before.
-    vault_path: material://source-forster-wessoly/forster-wessoly.pdf
+  - material_ref:
+      route_id: route-an-ch01-forsterwessoly
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: helpful-now
-  - kind: practise
-    label: Deitmar Kap. 1 — Grundlagen
-    source_id: source-deitmar-uebungsbuch
-    locator: deitmar.pdf Kap. 1 Grundlagen p. 12 (§1.1 Aussagen, §1.2 Mengen, §1.3 Abbildungen, §1.4 Vollständige
-      Induktion p. 15); Lösungen Kap. 21 p. 130
-    angle: A third solved bank, held in reserve for when Fritzsche and Forster are spent on this node.
-    angle_detail: Deitmar's Übungsbuch covers far more than this module (Kap. 8-20 run to measure theory
-      and complex analysis) and only Kap. 1-7 are in scope at all. Its value on Chapter 1 is volume of
-      fresh problems with worked Lösungsvorschläge, at a difficulty between Fritzsche and Forster. Nothing
-      here is a new explanation — reach for it when the technique needs more repetitions, not when it
-      needs a different account.
-    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+  - material_ref:
+      route_id: route-an-ch01-deitmaruebungsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: Labs/Schreyer — Logik, Beweismethoden, Mengen und Abbildungen
-    source_id: source-labs-schreyer-mathe-informatiker
-    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf Teil I Grundlagen p. 21: ''Logik und Beweismethoden''
-      p. 25 (Beweis durch Widerspruch p. 29, Vollständige Induktion p. 30, Summen- und Produktzeichen
-      p. 32), ''Mengen und Abbildungen'' p. 39, ''Äquivalenzrelationen und Kongruenzen'' p. 55. Located
-      by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope stay unassessed
-      (CLAUDE.md §4).'
-    angle: A German mathematics-for-CS textbook whose Teil I is precisely the M1 prerequisite block this
-      chapter assumes.
-    angle_detail: 'Its 669 pages were previously the reason it was routed to ''AN.0 prerequisite gap''
-      and nothing more. Opened at chapter level it turns out to be organised the way this script is: Teil
-      I is the Grundlagen, Teil II is one-variable Analysis section by section. For Chapter 1 the relevant
-      span is 30 pages, and it is in German with CS examples, which makes it a closer match to the lecture''s
-      own framing than the English references on this menu.'
-    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+  - material_ref:
+      route_id: route-an-ch01-labsschreyermatheinforma
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Ohlbach/Eisinger — Beweismuster und vollständige Induktion
-    source_id: source-ohlbach-eisinger-beweise
-    locator: Ohlbach-Eisinger_Design-Patterns-fuer-mathematische-Beweise.pdf Kap. 4 Einfache Beweismuster
-      p. 29 (Fallunterscheidung, Allbeweis, Implikationsbeweis, Existenzbeweis), Kap. 5 Komplexe Beweismuster
-      p. 50 (Kontraposition, Äquivalenzbeweis, Widerspruchsbeweis, Widerlegung durch Gegenbeispiel), Kap.
-      6 Vollständige Induktion p. 71 (Grundmuster p. 73, starke Induktion p. 80, strukturelle Induktion
-      p. 113). Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth
-      and scope stay unassessed (CLAUDE.md §4).
-    angle: The German catalogue of proof shapes, written for computer scientists — it names the pattern
-      a task is asking for, which is the step that usually fails.
-    angle_detail: Chapter-level routing is new here too. The book's premise is that proofs come in a small
-      number of reusable patterns, and it gives each one a name, a skeleton and worked instances in German.
-      That is directly useful for a paper like Regensburg's, whose Aufgabe 1 is four short 'is this true,
-      justify in one to three sentences' items — every one of which is a pattern choice. Kap. 7-11 (transfinite
-      ordinals) are outside anything this module needs.
-    vault_path: material://source-ohlbach-eisinger-beweise/Ohlbach-Eisinger_Design-Patterns-fuer-mathematische-Beweise.pdf
+  - material_ref:
+      route_id: route-an-ch01-ohlbacheisingerbeweise
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Velleman — Mathematical Induction and the proof strategies behind it
-    source_id: source-velleman-how-to-prove-it
-    locator: Velleman_How-To-Prove-It.pdf Ch 6 Mathematical Induction p. 335 (§6.1 Proof by Mathematical
-      Induction, §6.2 More Examples p. 343, §6.3 Recursion p. 359, §6.4 Strong Induction p. 371); Ch 3
-      Proofs p. 118 for the strategies; Ch 1-2 logic and sets p. 21; solutions to selected exercises p.
-      483. Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so its depth
-      and scope are deliberately left unassessed (CLAUDE.md §4).
-    angle: The book that teaches induction as a proof strategy rather than a formula, including the strong-induction
-      and recursion variants the Hanoi task needs.
-    angle_detail: 'Routed here for the first time at chapter level: before this pass it carried `proof-presentation`
-      and a bare page count. §6.3 Recursion is the direct match for HU Serie 05.1, and §6.4 Strong Induction
-      is what a recurrence with two previous terms actually requires — the script''s §3.4 case. It is
-      English, 569 pages, and structured as a course, so it is a reference to enter at a named section,
-      never a book to read through. Nobody has assessed it against this exam, which is recorded rather
-      than guessed.'
-    vault_path: material://source-velleman-how-to-prove-it/Velleman_How-To-Prove-It.pdf
+  - material_ref:
+      route_id: route-an-ch01-vellemanhowtoproveit
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch01/stages/stage-m2-analysis-ch01-induktion/notes.md
   attachments: []
@@ -353,117 +266,80 @@ stages:
   - concept-real-numbers
   scope_triage: required-now
   resources:
-  - kind: read
-    label: unser skript.pdf Kapitel 1 — the scope authority
-    source_id: source-analysis-skript
-    locator: unser skript.pdf Kapitel 1, printed p. 1 (PDF p. 11)–printed p. 6 (PDF p. 16); §1.1 Zahlenmengen
-      printed p. 2 (PDF p. 12), §1.2 Vollständige Induktion printed p. 2 (PDF p. 12), §1.3 Wichtige Beziehungen
-      in der Analysis printed p. 5 (PDF p. 15)
-    angle: The chapter that defines what 'assumed known' means for this exam, in this examiner's notation.
-    angle_detail: 'Six printed pages, and the whole chapter carries the Wiederholung label — under the
-      course contract (script p. vii) that means the lecture does not re-teach it and expects it to be
-      usable. So this route is read differently from every other spine route in the module: not as instruction
-      but as a checklist of what has to already work. Its practical value is the notation: §1.3''s inequalities
-      are cited by number throughout Chapters 3 to 7, and finding them here once is cheaper than reconstructing
-      them mid-proof.'
-    vault_path: material://source-analysis-skript/unser skript.pdf
+  - material_ref:
+      route_id: route-an-ch01-analysisskript
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: required-now
-  - kind: practise
-    label: Fritzsche §§1.1-1.2 — Mengen von Zahlen, Induktion
-    source_id: source-fritzsche-trainingsbuch
-    locator: fritzsche.pdf §1.1 Mengen von Zahlen p. 9, §1.2 Induktion p. 17; Lösungen in Kap. 5 Anhang
-      from p. 253
-    angle: Explained German solutions at tutorial pace — the gentlest route on this session, and the one
-      that shows the write-up, not just the answer.
-    angle_detail: 'Fritzsche is a Trainingsbuch: each section opens with worked reasoning before the exercises,
-      and the Anhang solutions are written out in full sentences rather than sketched. For a Wiederholung
-      chapter that is the right shape — the risk here is not that induction is unknown but that the written
-      argument is sloppy, and this is the source that models the written argument. §§1.5-1.6 (Vektoren,
-      komplexe Zahlen, Polynome) go past the script and are left closed.'
-    vault_path: material://source-fritzsche-trainingsbuch/fritzsche.pdf
+  - material_ref:
+      route_id: route-an-ch01-fritzschetrainingsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: Solved German Klausur tasks on logic, sets and induction
-    source_id: source-analysis-klausuren-extern
-    locator: 'Marburg_Analysis-I_3-Klausuren-mit-Loesungen.pdf: 1. Klausur A1 (set identities and inclusion-exclusion),
-      A3 (induction sum formula), A4 (an inequality by completing a square); 2. Klausur A1 (n! ≤ (n/2)^n
-      with proof), A2 (a complex modulus set); Wiederholungsklausur A1 (binomial identity), A2 (a product-to-sum
-      identity by induction). Darmstadt_Analysis-I_Probeklausur_mit-Loesungen.pdf: A1 Aussagenlogik, A5
-      rekursive Folgen und Induktion. Regensburg_...pdf: A1 (tautology, power set, an induction-like principle,
-      transitivity) with its ''Häufige Fehler'' commentary'
-    angle: Real German exam wording for exactly this chapter, with solutions — and the only place the
-      graders' commentary on how it is got wrong is written down.
-    angle_detail: 'This is the substitute for the missing HU sheet, and it is a good one: Chapter 1 material
-      is over-represented in the external bank because most Analysis 1 courses open there. Two cautions.
-      First, spend these on diagnosed gaps rather than as a test — the unsolved papers held for timed
-      work live on the transfer unit, and a solved paper read early cannot be un-read. Second, Marburg''s
-      Aufgabe 2 (ordered rings) and the complex-number tasks sit past this script''s boundary; work the
-      parts that match §§1.1-1.3 and leave the rest. The Regensburg ''Häufige Fehler'' boxes are the single
-      most useful thing in the folder for this chapter: they name the wrong moves rather than the right
-      ones.'
+  - material_ref:
+      route_id: route-an-ch01-analysisklausurenextern
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: TUM Ferienkurs Analysis 1 — Kapitel 1 Grundlagen + Übungsaufgaben
-    source_id: source-analysis-klausuren-extern
-    locator: 'TUM_Ferienkurs-Analysis-1_Skriptum.pdf: Kap. 1 Grundlagen PDF p. 5 (§1.1 Aussagenlogik,
-      §1.2 Mengen und Quantoren, §1.4 Beweise PDF p. 9, §1.5 Funktionen und Abbildungen), Übungsaufgaben
-      PDF p. 17; Anhang A ''Wichtige Hinweise zum Beweisen und Rechnen'' PDF p. 82'
-    angle: A compressed German revision script with its own exercise set — built for exactly this situation,
-      revising a whole Analysis 1 quickly.
-    angle_detail: 'This is a Ferienkurs Skriptum, not a Klausur, which is why it is separated from the
-      exam papers: it is meant to be read and worked, not spent once. It compresses Analysis 1 into 88
-      pages, so it is the fastest complete second account available. Two caveats: it is written for physicists,
-      so §1.6 (komplexe Zahlen) and §1.7 (Gruppen und Körper) reach past this script; and it carries QR
-      codes to videos that were not checked. Anhang A is worth reading once regardless of chapter — it
-      is a page on how to write the arguments this exam grades.'
+  - material_ref:
+      route_id: route-an-ch01-analysisklausurentum
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
-  - kind: practise
-    label: Deitmar Kap. 1 — Grundlagen
-    source_id: source-deitmar-uebungsbuch
-    locator: deitmar.pdf Kap. 1 Grundlagen p. 12 (§1.1 Aussagen, §1.2 Mengen, §1.3 Abbildungen, §1.4 Vollständige
-      Induktion p. 15); Lösungen Kap. 21 p. 130
-    angle: A third solved bank, held in reserve for when Fritzsche and Forster are spent on this node.
-    angle_detail: Deitmar's Übungsbuch covers far more than this module (Kap. 8-20 run to measure theory
-      and complex analysis) and only Kap. 1-7 are in scope at all. Its value on Chapter 1 is volume of
-      fresh problems with worked Lösungsvorschläge, at a difficulty between Fritzsche and Forster. Nothing
-      here is a new explanation — reach for it when the technique needs more repetitions, not when it
-      needs a different account.
-    vault_path: material://source-deitmar-uebungsbuch/deitmar.pdf
+  - material_ref:
+      route_id: route-an-ch01-deitmaruebungsbuch
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: helpful-now
-  - kind: read
-    label: Labs/Schreyer — Logik, Beweismethoden, Mengen und Abbildungen
-    source_id: source-labs-schreyer-mathe-informatiker
-    locator: 'Labs-Schreyer_Mathematik-fuer-Informatiker.pdf Teil I Grundlagen p. 21: ''Logik und Beweismethoden''
-      p. 25 (Beweis durch Widerspruch p. 29, Vollständige Induktion p. 30, Summen- und Produktzeichen
-      p. 32), ''Mengen und Abbildungen'' p. 39, ''Äquivalenzrelationen und Kongruenzen'' p. 55. Located
-      by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth and scope stay unassessed
-      (CLAUDE.md §4).'
-    angle: A German mathematics-for-CS textbook whose Teil I is precisely the M1 prerequisite block this
-      chapter assumes.
-    angle_detail: 'Its 669 pages were previously the reason it was routed to ''AN.0 prerequisite gap''
-      and nothing more. Opened at chapter level it turns out to be organised the way this script is: Teil
-      I is the Grundlagen, Teil II is one-variable Analysis section by section. For Chapter 1 the relevant
-      span is 30 pages, and it is in German with CS examples, which makes it a closer match to the lecture''s
-      own framing than the English references on this menu.'
-    vault_path: material://source-labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf
+  - material_ref:
+      route_id: route-an-ch01-labsschreyermatheinforma
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
-  - kind: read
-    label: Ohlbach/Eisinger — Beweismuster und vollständige Induktion
-    source_id: source-ohlbach-eisinger-beweise
-    locator: Ohlbach-Eisinger_Design-Patterns-fuer-mathematische-Beweise.pdf Kap. 4 Einfache Beweismuster
-      p. 29 (Fallunterscheidung, Allbeweis, Implikationsbeweis, Existenzbeweis), Kap. 5 Komplexe Beweismuster
-      p. 50 (Kontraposition, Äquivalenzbeweis, Widerspruchsbeweis, Widerlegung durch Gegenbeispiel), Kap.
-      6 Vollständige Induktion p. 71 (Grundmuster p. 73, starke Induktion p. 80, strukturelle Induktion
-      p. 113). Located by the 2026-08-03 coverage audit; no contextual evaluation registered, so depth
-      and scope stay unassessed (CLAUDE.md §4).
-    angle: The German catalogue of proof shapes, written for computer scientists — it names the pattern
-      a task is asking for, which is the step that usually fails.
-    angle_detail: Chapter-level routing is new here too. The book's premise is that proofs come in a small
-      number of reusable patterns, and it gives each one a name, a skeleton and worked instances in German.
-      That is directly useful for a paper like Regensburg's, whose Aufgabe 1 is four short 'is this true,
-      justify in one to three sentences' items — every one of which is a pattern choice. Kap. 7-11 (transfinite
-      ordinals) are outside anything this module needs.
-    vault_path: material://source-ohlbach-eisinger-beweise/Ohlbach-Eisinger_Design-Patterns-fuer-mathematische-Beweise.pdf
+  - material_ref:
+      route_id: route-an-ch01-ohlbacheisingerbeweise
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch01/stages/stage-m2-analysis-ch01-beziehungen/notes.md
   attachments: []

@@ -28,23 +28,23 @@ stages:
   - concept-supervised-learning
   scope_triage: required-now
   resources:
-  - kind: read
-    label: L11 supervised/unsupervised framing
-    source_id: source-sad-ss26-lectures
-    locator: lecture-slides/11_datascience_intro.pdf (49 slides), the supervised/unsupervised framing
-      section
-    angle: Supplies the current lecture definition of unsupervised learning that UE7's clustering topic
-      instantiates; it is a framing bridge, not a missing clustering lecture.
-    angle_detail: 'This is a framing bridge, not the clustering material: L11 defines what unsupervised
-      learning is and where it sits against the supervised tasks the rest of the course teaches, and then
-      the course moves on. The clustering content itself is UE7''s. Read the section to fix the vocabulary
-      — what is being learned when there are no labels, and what ''correct'' can even mean — then work
-      UE7. Nothing here is a method.'
+  - material_ref:
+      route_id: route-56679bcd3c703dc9d18a9cd9
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
     route_id: route-56679bcd3c703dc9d18a9cd9
-  - kind: practise
-    label: UE7 — clustering families and complete k-means trace
-    source_id: source-sad-uebungen
+  - material_ref:
+      route_id: route-448bd2b33e64225d557d6c85
+      inherit:
+      - label
+      - source_id
+    kind: practise
     locator: exercise-slides/UE7.pdf, PDF pp. 32-40
     angle: Describe two plausible groupings of the UE7 example and explain why labels and a unique correct
       cluster count are absent.
@@ -52,27 +52,26 @@ stages:
       once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
     scope_triage: required-now
     route_id: route-448bd2b33e64225d557d6c85
-  - kind: reference
-    label: 2025 L12 clustering deck
-    source_id: source-sad-2025-recordings
-    locator: 12_clustering.pdf (157 slides), prior-year full lecture on clustering
-    angle: A verified same-topic full lecture that deepens UE7's clustering treatment. It is not a source
-      for current L12 trees despite sharing the number 12.
-    angle_detail: 'A verified same-topic full lecture from the 2025 run, and the only place clustering
-      gets lecture-length treatment rather than a tutorial''s. Use it to deepen UE7 after the trace is
-      understood. Two cautions: it is prior-year material, so it is practice and reference and never scope
-      evidence (the current course covers clustering only through UE7); and its number collides with the
-      current L12, which is trees — this deck is not a source for the current L12 despite sharing a number.'
+  - material_ref:
+      route_id: route-0d244a0a83df84591c6685a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
     route_id: route-0d244a0a83df84591c6685a2
-  - kind: read
-    label: Zacharski Ch 8 - k-means and hierarchical clustering traced step by step
-    source_id: source-zacharski-data-mining
-    locator: Chapter 8, pp. 334-395 (k-means and hierarchical clustering from p. 335)
-    angle: An alternative k-means and hierarchical-clustering explanation alongside the worked UE7 trace.
-    angle_detail: UE7 already walks through assignment and centroid updates on PDF pp. 45-74. Zacharski
-      provides another worked representation and a hierarchical alternative; it does not fill an absent
-      UE7 convergence trace.
+  - material_ref:
+      route_id: route-3bcffbb0094d3c764dd01e18
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
     route_id: route-3bcffbb0094d3c764dd01e18
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-unsupervised/notes.md
@@ -94,96 +93,82 @@ stages:
   - concept-data-access-optimization
   scope_triage: required-now
   resources:
-  - kind: practise
-    label: UE7 — clustering families and complete k-means trace
-    source_id: source-sad-uebungen
+  - material_ref:
+      route_id: route-448bd2b33e64225d557d6c85
+      inherit:
+      - label
+      - source_id
+    kind: practise
     locator: exercise-slides/UE7.pdf, PDF pp. 41-43
     angle: Compare hierarchical, partitioning and density-based assumptions using the three UE7 descriptions.
     angle_detail: Use this bounded UE7 section at this stage. The full k-means trace is assigned only
       once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
     scope_triage: required-now
     route_id: route-448bd2b33e64225d557d6c85
-  - kind: reference
-    label: 2025 L12 clustering deck
-    source_id: source-sad-2025-recordings
-    locator: 12_clustering.pdf (157 slides), prior-year full lecture on clustering
-    angle: A verified same-topic full lecture that deepens UE7's clustering treatment. It is not a source
-      for current L12 trees despite sharing the number 12.
-    angle_detail: 'A verified same-topic full lecture from the 2025 run, and the only place clustering
-      gets lecture-length treatment rather than a tutorial''s. Use it to deepen UE7 after the trace is
-      understood. Two cautions: it is prior-year material, so it is practice and reference and never scope
-      evidence (the current course covers clustering only through UE7); and its number collides with the
-      current L12, which is trees — this deck is not a source for the current L12 despite sharing a number.'
+  - material_ref:
+      route_id: route-0d244a0a83df84591c6685a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
     route_id: route-0d244a0a83df84591c6685a2
-  - kind: reference
-    label: ISLP §12.4 — clustering algorithms and validation
-    source_id: source-islp
-    locator: 'islp.pdf §12.4 Clustering Methods p. 526: §12.4.1 K-Means Clustering p. 527, §12.4.2 Hierarchical
-      Clustering p. 531, §12.4.3 Practical Issues in Clustering p. 538; §12.5 Lab: Unsupervised Learning
-      p. 541. (Corrected 2026-08-29: the route previously read ''§12.2'', which is Principal Components
-      Analysis p. 510, not clustering.)'
-    angle: Optional depth on k-means, hierarchical clustering, practical choices, and validation after
-      the UE7 scope; it broadens rather than defines the exam topic.
-    angle_detail: '§12.4.3 is the section that earns this route a place: ''Practical Issues in Clustering''
-      is a short, honest list of the decisions that change the answer — standardisation, the choice of
-      dissimilarity, how many clusters, and whether the clusters mean anything at all. UE7 raises these
-      implicitly by tracing one configuration; ISLP states them. §12.4.1 and §12.4.2 are the algorithms
-      at a gentler level than ESL, and the lab at p. 541 runs them.'
+  - material_ref:
+      route_id: route-1cd59e8e870b504eacfc60a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
     route_id: route-1cd59e8e870b504eacfc60a2
-  - kind: reference
-    label: Kroese — clustering reference
-    source_id: source-kroese-dsml
-    locator: 'kroese.pdf Ch 4 ''Unsupervised Learning'' p. 139: Risk and Loss in Unsupervised Learning
-      p. 140, Clustering via Mixture Models p. 153, Clustering via Vector Quantization p. 160, Hierarchical
-      Clustering p. 165; the supervised/unsupervised distinction is set up at p. 38'
-    angle: Independent data-science treatment of clustering families, objectives, and practical evaluation;
-      optional after the UE7 trace.
-    angle_detail: An independent data-science treatment that arrives at clustering from the risk/loss
-      framing (p. 140) rather than from an algorithm, then splits the families the way UE7 names them.
-      Its mixture-model section (p. 153) is the one genuinely extra idea on this stage — clustering as
-      density estimation rather than as partitioning — and is optional after the UE7 trace. Mathematically
-      heavier than Géron, lighter than ESL.
+  - material_ref:
+      route_id: route-883509bbad7e137305f77039
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
     route_id: route-883509bbad7e137305f77039
-  - kind: read
-    label: Geron Ch 9 - k-means plus the density family and cluster evaluation
-    source_id: source-geron-handson
-    locator: Chapter 9, pp. 263-300 (k-means and DBSCAN p. 264; hierarchical p. 266; inertia p. 270; silhouette
-      score and elbow p. 274)
-    angle: The UE7 topic names hierarchical, partitioning and density families and asks how clustering
-      results are compared; this chapter supplies DBSCAN for the density family and silhouette/elbow for
-      the comparison question, neither of which any other registered source covers at working depth.
-    angle_detail: The chapter answers UE7's two open questions directly. UE7 names the hierarchical, partitioning
-      and density families but only traces k-means; Géron gives DBSCAN (p. 264) and hierarchical (p. 266)
-      working code beside it. UE7 asks how clustering results are compared without saying how; Géron gives
-      inertia (p. 270) and then the silhouette score and the elbow method (p. 274) as the two standard
-      answers, with the plots that make the difference between them visible. It is Python-first and assumes
-      scikit-learn, so read it for the concepts and the comparison criteria rather than as a derivation.
+  - material_ref:
+      route_id: route-5c2a22799618a90354f2cdec
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
     route_id: route-5c2a22799618a90354f2cdec
-  - kind: read
-    label: Zacharski Ch 8 - k-means and hierarchical clustering traced step by step
-    source_id: source-zacharski-data-mining
-    locator: Chapter 8, pp. 334-395 (k-means and hierarchical clustering from p. 335)
-    angle: An alternative k-means and hierarchical-clustering explanation alongside the worked UE7 trace.
-    angle_detail: UE7 already walks through assignment and centroid updates on PDF pp. 45-74. Zacharski
-      provides another worked representation and a hierarchical alternative; it does not fill an absent
-      UE7 convergence trace.
+  - material_ref:
+      route_id: route-3bcffbb0094d3c764dd01e18
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
     route_id: route-3bcffbb0094d3c764dd01e18
-  - kind: reference
-    label: ESL 14.3 - cluster analysis as an objective, not an algorithm
-    source_id: source-esl
-    locator: Section 14.3 cluster analysis, pp. 520-546
-    angle: Frames clustering by its loss function and dissimilarity choice before any algorithm, which
-      is the 'no single true clustering' point the UE7 slides make rhetorically.
-    angle_detail: Read this before any algorithm, not after. ESL §14.3 defines clustering by its loss
-      function and by the dissimilarity measure chosen, and only then derives the algorithms as ways of
-      minimising that loss — which is the argument behind UE7's 'there is no single true clustering'.
-      It is the most demanding route on this stage and assumes comfort with the notation; twenty-six pages,
-      of which the first six carry the framing that matters here.
+  - material_ref:
+      route_id: route-98f4476be143898c5a500b3f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
     route_id: route-98f4476be143898c5a500b3f
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-families/notes.md
@@ -206,9 +191,12 @@ stages:
   - concept-k-means
   scope_triage: required-now
   resources:
-  - kind: practise
-    label: UE7 — clustering families and complete k-means trace
-    source_id: source-sad-uebungen
+  - material_ref:
+      route_id: route-448bd2b33e64225d557d6c85
+      inherit:
+      - label
+      - source_id
+    kind: practise
     locator: exercise-slides/UE7.pdf, PDF pp. 44-74
     angle: Recompute the UE7 assignment/update trace before revealing each next iteration; check centroids
       and termination.
@@ -216,89 +204,70 @@ stages:
       once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
     scope_triage: required-now
     route_id: route-448bd2b33e64225d557d6c85
-  - kind: reference
-    label: 2025 L12 clustering deck
-    source_id: source-sad-2025-recordings
-    locator: 12_clustering.pdf (157 slides), prior-year full lecture on clustering
-    angle: A verified same-topic full lecture that deepens UE7's clustering treatment. It is not a source
-      for current L12 trees despite sharing the number 12.
-    angle_detail: 'A verified same-topic full lecture from the 2025 run, and the only place clustering
-      gets lecture-length treatment rather than a tutorial''s. Use it to deepen UE7 after the trace is
-      understood. Two cautions: it is prior-year material, so it is practice and reference and never scope
-      evidence (the current course covers clustering only through UE7); and its number collides with the
-      current L12, which is trees — this deck is not a source for the current L12 despite sharing a number.'
+  - material_ref:
+      route_id: route-0d244a0a83df84591c6685a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
     route_id: route-0d244a0a83df84591c6685a2
-  - kind: reference
-    label: ISLP §12.4 — clustering algorithms and validation
-    source_id: source-islp
-    locator: 'islp.pdf §12.4 Clustering Methods p. 526: §12.4.1 K-Means Clustering p. 527, §12.4.2 Hierarchical
-      Clustering p. 531, §12.4.3 Practical Issues in Clustering p. 538; §12.5 Lab: Unsupervised Learning
-      p. 541. (Corrected 2026-08-29: the route previously read ''§12.2'', which is Principal Components
-      Analysis p. 510, not clustering.)'
-    angle: Optional depth on k-means, hierarchical clustering, practical choices, and validation after
-      the UE7 scope; it broadens rather than defines the exam topic.
-    angle_detail: '§12.4.3 is the section that earns this route a place: ''Practical Issues in Clustering''
-      is a short, honest list of the decisions that change the answer — standardisation, the choice of
-      dissimilarity, how many clusters, and whether the clusters mean anything at all. UE7 raises these
-      implicitly by tracing one configuration; ISLP states them. §12.4.1 and §12.4.2 are the algorithms
-      at a gentler level than ESL, and the lab at p. 541 runs them.'
+  - material_ref:
+      route_id: route-1cd59e8e870b504eacfc60a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
     route_id: route-1cd59e8e870b504eacfc60a2
-  - kind: reference
-    label: Kroese — clustering reference
-    source_id: source-kroese-dsml
-    locator: 'kroese.pdf Ch 4 ''Unsupervised Learning'' p. 139: Risk and Loss in Unsupervised Learning
-      p. 140, Clustering via Mixture Models p. 153, Clustering via Vector Quantization p. 160, Hierarchical
-      Clustering p. 165; the supervised/unsupervised distinction is set up at p. 38'
-    angle: Independent data-science treatment of clustering families, objectives, and practical evaluation;
-      optional after the UE7 trace.
-    angle_detail: An independent data-science treatment that arrives at clustering from the risk/loss
-      framing (p. 140) rather than from an algorithm, then splits the families the way UE7 names them.
-      Its mixture-model section (p. 153) is the one genuinely extra idea on this stage — clustering as
-      density estimation rather than as partitioning — and is optional after the UE7 trace. Mathematically
-      heavier than Géron, lighter than ESL.
+  - material_ref:
+      route_id: route-883509bbad7e137305f77039
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
     route_id: route-883509bbad7e137305f77039
-  - kind: read
-    label: Geron Ch 9 - k-means plus the density family and cluster evaluation
-    source_id: source-geron-handson
-    locator: Chapter 9, pp. 263-300 (k-means and DBSCAN p. 264; hierarchical p. 266; inertia p. 270; silhouette
-      score and elbow p. 274)
-    angle: The UE7 topic names hierarchical, partitioning and density families and asks how clustering
-      results are compared; this chapter supplies DBSCAN for the density family and silhouette/elbow for
-      the comparison question, neither of which any other registered source covers at working depth.
-    angle_detail: The chapter answers UE7's two open questions directly. UE7 names the hierarchical, partitioning
-      and density families but only traces k-means; Géron gives DBSCAN (p. 264) and hierarchical (p. 266)
-      working code beside it. UE7 asks how clustering results are compared without saying how; Géron gives
-      inertia (p. 270) and then the silhouette score and the elbow method (p. 274) as the two standard
-      answers, with the plots that make the difference between them visible. It is Python-first and assumes
-      scikit-learn, so read it for the concepts and the comparison criteria rather than as a derivation.
+  - material_ref:
+      route_id: route-5c2a22799618a90354f2cdec
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
     route_id: route-5c2a22799618a90354f2cdec
-  - kind: read
-    label: Zacharski Ch 8 - k-means and hierarchical clustering traced step by step
-    source_id: source-zacharski-data-mining
-    locator: Chapter 8, pp. 334-395 (k-means and hierarchical clustering from p. 335)
-    angle: An alternative k-means and hierarchical-clustering explanation alongside the worked UE7 trace.
-    angle_detail: UE7 already walks through assignment and centroid updates on PDF pp. 45-74. Zacharski
-      provides another worked representation and a hierarchical alternative; it does not fill an absent
-      UE7 convergence trace.
+  - material_ref:
+      route_id: route-3bcffbb0094d3c764dd01e18
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
     route_id: route-3bcffbb0094d3c764dd01e18
-  - kind: read
-    label: Marsland Ch 14 - k-means as competitive learning
-    source_id: source-marsland-ml-algorithmic
-    locator: Chapter 14, pp. 302-325 (k-means p. 303; competitive learning p. 307; vector quantisation
-      p. 311)
-    angle: Reframes the k-means update as competitive learning and vector quantisation, which explains
-      why initialisation decides the local optimum the UE7 slides warn about.
-    angle_detail: Reframes the k-means update as competitive learning (p. 307) and vector quantisation
-      (p. 311) rather than as an optimisation procedure. That reframing is the clearest available answer
-      to the question UE7 raises and does not settle — why initialisation decides which local optimum
-      you land in — because under the competitive-learning reading the centroids are units competing for
-      data, and where they start determines what they can ever win. Chapter 14 is short; the surrounding
-      chapters are outside this topic.
+  - material_ref:
+      route_id: route-98b8fba3bc0fa33805b7c050
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
     route_id: route-98b8fba3bc0fa33805b7c050
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-kmeans/notes.md
@@ -321,9 +290,12 @@ stages:
   - concept-k-means
   scope_triage: required-now
   resources:
-  - kind: practise
-    label: UE7 — clustering families and complete k-means trace
-    source_id: source-sad-uebungen
+  - material_ref:
+      route_id: route-448bd2b33e64225d557d6c85
+      inherit:
+      - label
+      - source_id
+    kind: practise
     locator: exercise-slides/UE7.pdf, PDF pp. 75
     angle: Explain how initialization, k and outliers affect k-means; use the completed UE7 trace as the
       reference example.
@@ -331,74 +303,59 @@ stages:
       once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
     scope_triage: required-now
     route_id: route-448bd2b33e64225d557d6c85
-  - kind: reference
-    label: 2025 L12 clustering deck
-    source_id: source-sad-2025-recordings
-    locator: 12_clustering.pdf (157 slides), prior-year full lecture on clustering
-    angle: A verified same-topic full lecture that deepens UE7's clustering treatment. It is not a source
-      for current L12 trees despite sharing the number 12.
-    angle_detail: 'A verified same-topic full lecture from the 2025 run, and the only place clustering
-      gets lecture-length treatment rather than a tutorial''s. Use it to deepen UE7 after the trace is
-      understood. Two cautions: it is prior-year material, so it is practice and reference and never scope
-      evidence (the current course covers clustering only through UE7); and its number collides with the
-      current L12, which is trees — this deck is not a source for the current L12 despite sharing a number.'
+  - material_ref:
+      route_id: route-0d244a0a83df84591c6685a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
     route_id: route-0d244a0a83df84591c6685a2
-  - kind: reference
-    label: ISLP §12.4 — clustering algorithms and validation
-    source_id: source-islp
-    locator: 'islp.pdf §12.4 Clustering Methods p. 526: §12.4.1 K-Means Clustering p. 527, §12.4.2 Hierarchical
-      Clustering p. 531, §12.4.3 Practical Issues in Clustering p. 538; §12.5 Lab: Unsupervised Learning
-      p. 541. (Corrected 2026-08-29: the route previously read ''§12.2'', which is Principal Components
-      Analysis p. 510, not clustering.)'
-    angle: Optional depth on k-means, hierarchical clustering, practical choices, and validation after
-      the UE7 scope; it broadens rather than defines the exam topic.
-    angle_detail: '§12.4.3 is the section that earns this route a place: ''Practical Issues in Clustering''
-      is a short, honest list of the decisions that change the answer — standardisation, the choice of
-      dissimilarity, how many clusters, and whether the clusters mean anything at all. UE7 raises these
-      implicitly by tracing one configuration; ISLP states them. §12.4.1 and §12.4.2 are the algorithms
-      at a gentler level than ESL, and the lab at p. 541 runs them.'
+  - material_ref:
+      route_id: route-1cd59e8e870b504eacfc60a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
     route_id: route-1cd59e8e870b504eacfc60a2
-  - kind: read
-    label: Geron Ch 9 - k-means plus the density family and cluster evaluation
-    source_id: source-geron-handson
-    locator: Chapter 9, pp. 263-300 (k-means and DBSCAN p. 264; hierarchical p. 266; inertia p. 270; silhouette
-      score and elbow p. 274)
-    angle: The UE7 topic names hierarchical, partitioning and density families and asks how clustering
-      results are compared; this chapter supplies DBSCAN for the density family and silhouette/elbow for
-      the comparison question, neither of which any other registered source covers at working depth.
-    angle_detail: The chapter answers UE7's two open questions directly. UE7 names the hierarchical, partitioning
-      and density families but only traces k-means; Géron gives DBSCAN (p. 264) and hierarchical (p. 266)
-      working code beside it. UE7 asks how clustering results are compared without saying how; Géron gives
-      inertia (p. 270) and then the silhouette score and the elbow method (p. 274) as the two standard
-      answers, with the plots that make the difference between them visible. It is Python-first and assumes
-      scikit-learn, so read it for the concepts and the comparison criteria rather than as a derivation.
+  - material_ref:
+      route_id: route-5c2a22799618a90354f2cdec
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
     route_id: route-5c2a22799618a90354f2cdec
-  - kind: read
-    label: Zacharski Ch 8 - k-means and hierarchical clustering traced step by step
-    source_id: source-zacharski-data-mining
-    locator: Chapter 8, pp. 334-395 (k-means and hierarchical clustering from p. 335)
-    angle: An alternative k-means and hierarchical-clustering explanation alongside the worked UE7 trace.
-    angle_detail: UE7 already walks through assignment and centroid updates on PDF pp. 45-74. Zacharski
-      provides another worked representation and a hierarchical alternative; it does not fill an absent
-      UE7 convergence trace.
+  - material_ref:
+      route_id: route-3bcffbb0094d3c764dd01e18
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
     route_id: route-3bcffbb0094d3c764dd01e18
-  - kind: read
-    label: Marsland Ch 14 - k-means as competitive learning
-    source_id: source-marsland-ml-algorithmic
-    locator: Chapter 14, pp. 302-325 (k-means p. 303; competitive learning p. 307; vector quantisation
-      p. 311)
-    angle: Reframes the k-means update as competitive learning and vector quantisation, which explains
-      why initialisation decides the local optimum the UE7 slides warn about.
-    angle_detail: Reframes the k-means update as competitive learning (p. 307) and vector quantisation
-      (p. 311) rather than as an optimisation procedure. That reframing is the clearest available answer
-      to the question UE7 raises and does not settle — why initialisation decides which local optimum
-      you land in — because under the competitive-learning reading the centroids are units competing for
-      data, and where they start determines what they can ever win. Chapter 14 is short; the surrounding
-      chapters are outside this topic.
+  - material_ref:
+      route_id: route-98b8fba3bc0fa33805b7c050
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
     route_id: route-98b8fba3bc0fa33805b7c050
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-initialization/notes.md
@@ -421,9 +378,12 @@ stages:
   - concept-distance-metrics
   scope_triage: required-now
   resources:
-  - kind: practise
-    label: UE7 — clustering families and complete k-means trace
-    source_id: source-sad-uebungen
+  - material_ref:
+      route_id: route-448bd2b33e64225d557d6c85
+      inherit:
+      - label
+      - source_id
+    kind: practise
     locator: exercise-slides/UE7.pdf, PDF pp. 39-40,75,87
     angle: Answer the UE7 clustering retrieval questions and distinguish compactness from evidence of
       useful grouping.
@@ -431,77 +391,59 @@ stages:
       once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
     scope_triage: required-now
     route_id: route-448bd2b33e64225d557d6c85
-  - kind: reference
-    label: 2025 L12 clustering deck
-    source_id: source-sad-2025-recordings
-    locator: 12_clustering.pdf (157 slides), prior-year full lecture on clustering
-    angle: A verified same-topic full lecture that deepens UE7's clustering treatment. It is not a source
-      for current L12 trees despite sharing the number 12.
-    angle_detail: 'A verified same-topic full lecture from the 2025 run, and the only place clustering
-      gets lecture-length treatment rather than a tutorial''s. Use it to deepen UE7 after the trace is
-      understood. Two cautions: it is prior-year material, so it is practice and reference and never scope
-      evidence (the current course covers clustering only through UE7); and its number collides with the
-      current L12, which is trees — this deck is not a source for the current L12 despite sharing a number.'
+  - material_ref:
+      route_id: route-0d244a0a83df84591c6685a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
     route_id: route-0d244a0a83df84591c6685a2
-  - kind: reference
-    label: ISLP §12.4 — clustering algorithms and validation
-    source_id: source-islp
-    locator: 'islp.pdf §12.4 Clustering Methods p. 526: §12.4.1 K-Means Clustering p. 527, §12.4.2 Hierarchical
-      Clustering p. 531, §12.4.3 Practical Issues in Clustering p. 538; §12.5 Lab: Unsupervised Learning
-      p. 541. (Corrected 2026-08-29: the route previously read ''§12.2'', which is Principal Components
-      Analysis p. 510, not clustering.)'
-    angle: Optional depth on k-means, hierarchical clustering, practical choices, and validation after
-      the UE7 scope; it broadens rather than defines the exam topic.
-    angle_detail: '§12.4.3 is the section that earns this route a place: ''Practical Issues in Clustering''
-      is a short, honest list of the decisions that change the answer — standardisation, the choice of
-      dissimilarity, how many clusters, and whether the clusters mean anything at all. UE7 raises these
-      implicitly by tracing one configuration; ISLP states them. §12.4.1 and §12.4.2 are the algorithms
-      at a gentler level than ESL, and the lab at p. 541 runs them.'
+  - material_ref:
+      route_id: route-1cd59e8e870b504eacfc60a2
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
     route_id: route-1cd59e8e870b504eacfc60a2
-  - kind: reference
-    label: Kroese — clustering reference
-    source_id: source-kroese-dsml
-    locator: 'kroese.pdf Ch 4 ''Unsupervised Learning'' p. 139: Risk and Loss in Unsupervised Learning
-      p. 140, Clustering via Mixture Models p. 153, Clustering via Vector Quantization p. 160, Hierarchical
-      Clustering p. 165; the supervised/unsupervised distinction is set up at p. 38'
-    angle: Independent data-science treatment of clustering families, objectives, and practical evaluation;
-      optional after the UE7 trace.
-    angle_detail: An independent data-science treatment that arrives at clustering from the risk/loss
-      framing (p. 140) rather than from an algorithm, then splits the families the way UE7 names them.
-      Its mixture-model section (p. 153) is the one genuinely extra idea on this stage — clustering as
-      density estimation rather than as partitioning — and is optional after the UE7 trace. Mathematically
-      heavier than Géron, lighter than ESL.
+  - material_ref:
+      route_id: route-883509bbad7e137305f77039
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
     route_id: route-883509bbad7e137305f77039
-  - kind: read
-    label: Geron Ch 9 - k-means plus the density family and cluster evaluation
-    source_id: source-geron-handson
-    locator: Chapter 9, pp. 263-300 (k-means and DBSCAN p. 264; hierarchical p. 266; inertia p. 270; silhouette
-      score and elbow p. 274)
-    angle: The UE7 topic names hierarchical, partitioning and density families and asks how clustering
-      results are compared; this chapter supplies DBSCAN for the density family and silhouette/elbow for
-      the comparison question, neither of which any other registered source covers at working depth.
-    angle_detail: The chapter answers UE7's two open questions directly. UE7 names the hierarchical, partitioning
-      and density families but only traces k-means; Géron gives DBSCAN (p. 264) and hierarchical (p. 266)
-      working code beside it. UE7 asks how clustering results are compared without saying how; Géron gives
-      inertia (p. 270) and then the silhouette score and the elbow method (p. 274) as the two standard
-      answers, with the plots that make the difference between them visible. It is Python-first and assumes
-      scikit-learn, so read it for the concepts and the comparison criteria rather than as a derivation.
+  - material_ref:
+      route_id: route-5c2a22799618a90354f2cdec
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
     scope_triage: helpful-now
     route_id: route-5c2a22799618a90354f2cdec
-  - kind: reference
-    label: ESL 14.3 - cluster analysis as an objective, not an algorithm
-    source_id: source-esl
-    locator: Section 14.3 cluster analysis, pp. 520-546
-    angle: Frames clustering by its loss function and dissimilarity choice before any algorithm, which
-      is the 'no single true clustering' point the UE7 slides make rhetorically.
-    angle_detail: Read this before any algorithm, not after. ESL §14.3 defines clustering by its loss
-      function and by the dissimilarity measure chosen, and only then derives the algorithms as ways of
-      minimising that loss — which is the argument behind UE7's 'there is no single true clustering'.
-      It is the most demanding route on this stage and assumes comfort with the notation; twenty-six pages,
-      of which the first six carry the framing that matters here.
+  - material_ref:
+      route_id: route-98f4476be143898c5a500b3f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
     scope_triage: reference-only
     route_id: route-98f4476be143898c5a500b3f
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/stages/stage-sad-clustering-evaluation/notes.md

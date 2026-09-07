@@ -37,252 +37,226 @@ stages:
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
-  - kind: practise
-    label: Übungsblatt 3, Aufgabe 2 — Poisson, Binomial, Hypergeometric and approximation
-    locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
-    angle: Forces model selection from prose before any formula can be substituted.
-    angle_detail: PDF p. 2 asks for Poisson in (a), Binomial in (b), Hypergeometric in (c), and the Hypergeometric-to-Binomial
-      approximation in (d). It contains no Geometric waiting-time exercise. Attempt each part when its
-      model has been introduced.
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
+  - material_ref:
+      route_id: route-475a87b6ec22bf8e77f9de71
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-475a87b6ec22bf8e77f9de71
-  - kind: practise
-    label: UE4, slides 36-49 — distribution conditions and worked cases
-    locator: exercise-slides/UE4.pdf, slides 36-49
-    angle: Works Binomial, Hypergeometric and Poisson examples; this slice does not teach Geometric waiting
-      times.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+  - material_ref:
+      route_id: route-52083707f01a014c3e2c267b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-52083707f01a014c3e2c267b
-  - kind: practise
-    label: UE5, slides 8-11 — official discrete-distribution solutions
-    locator: exercise-slides/UE5.pdf, slides 8-11
-    angle: Checks the model-choice reasoning against the current sheet's official solution.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+  - material_ref:
+      route_id: route-f827266eae5a106a6154442a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-f827266eae5a106a6154442a
-  - kind: reference
-    label: 2025 discrete-distributions deck
-    locator: 07_discrete_distributions.pptx (1).pdf
-    angle: Same-topic prior-year deck with a different set of worked examples.
-    angle_detail: The examples differ from 2026's even where the content matches, which makes this a source
-      of extra worked cases at exactly the right level — closer to the course than any textbook. Verify
-      the formulas against the current deck; notation drifts year to year.
+  - material_ref:
+      route_id: route-6ffaf5d7ec9d500ff4c5286e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-sad-2025-recordings
     route_id: route-6ffaf5d7ec9d500ff4c5286e
-  - kind: read
-    label: Fahrmeir Chapter 5 — discrete distributions
-    locator: Ch 5 §5.3 Spezielle diskrete Verteilungsmodelle, pdf pp. 270-282; Zusammenfassung pdf pp.
-      283-284; Aufgaben pdf pp. 286-287
-    angle: Presents each discrete model as a modelling decision — what generating situation forces this
-      distribution — rather than as a formula sheet.
-    angle_detail: Thirteen pages covering Binomial, Hypergeometrisch, Geometrisch and Poisson, each opened
-      with the Situation that produces it (fixed n and independence; drawing without replacement from
-      a finite urn; waiting for the first success; rare events in continuous time). That is exactly the
-      skill L07's model-selection node is testing, and it is the part a formula sheet cannot give you.
-      The moments are stated without derivation — if you want the E[X] and Var(X) proofs, use Blitzstein
-      §§3.3-3.4 and §4.7 instead. The Zusammenfassung on pp. 283-284 is the single best one-page revision
-      table for this lecture on the shelf.
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-3e560269a42e146f88512ee4
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-fahrmeir-statistik
     route_id: route-3e560269a42e146f88512ee4
-  - kind: practise
-    label: Arbeitsbuch Chapter 5 — distribution drills
-    locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123 (the Verteilungsmodell items)
-    angle: 'Model-identification drill: each item describes a situation and leaves you to name the distribution
-      before computing anything.'
-    angle_detail: The examinable difficulty in L07 is choosing between Binomial, Hypergeometrisch, Geometrisch
-      and Poisson from a word problem — once chosen, the arithmetic is a formula lookup. These items are
-      written so that the choice is the work, and the solutions justify the choice rather than jumping
-      to the formula. Do them mixed rather than in blocks; solving ten Binomial questions in a row trains
-      nothing about identification.
-    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+  - material_ref:
+      route_id: route-488f203b03208f7a1ae5eaff
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fahrmeir-arbeitsbuch
     route_id: route-488f203b03208f7a1ae5eaff
-  - kind: read
-    label: Grinstead & Snell Ch 5 — important distributions
-    locator: Official PDF, Ch 5 'Distributions and Densities', §§5.1-5.2, PDF pp. 191-232
-    angle: Catalogues the discrete families with a simulation for each, so the shape of every distribution
-      is seen before its formula is used.
-    angle_detail: The book's approach throughout is to simulate first and derive second, and for L07 that
-      means each distribution appears as a histogram from a generating process before its PMF is written.
-      Seeing the geometric's decay and the Poisson's shape as outputs of a described experiment is a good
-      defence against choosing the wrong model, which is the actual exam risk here.
+  - material_ref:
+      route_id: route-58f13d47b87582e36563f616
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-grinstead-snell
     route_id: route-58f13d47b87582e36563f616
-  - kind: read
-    label: Blitzstein Chapters 3–4 — distribution-generating stories
-    locator: Ch 3 §3.3 Bernoulli and Binomial, pdf pp. 129-131; §3.4 Hypergeometric, pdf pp. 132-134;
-      §3.9 connections between Binomial and Hypergeometric, pdf pp. 150-152; Ch 4 §4.3 Geometric and Negative
-      Binomial, pdf pp. 174-180; §4.7 Poisson, pdf pp. 191-197; §4.8 connections between Poisson and Binomial,
-      pdf pp. 198-200
-    angle: Gives each distribution a story first, then derives its moments — and devotes whole sections
-      to the relationships between them.
-    angle_detail: L07's relationships node — Binomial to Poisson in the rare-event limit, Hypergeometric
-      to Binomial as the population grows — is stated on a slide as a fact. §3.9 and §4.8 are entire sections
-      that prove those limits and say when the approximation is safe, which is the difference between
-      reciting the relationship and being able to justify an approximation in an exam. The story-first
-      presentation ('a Binomial counts successes in n independent trials with the same p') is also the
-      most reliable way to get the model-selection node right under time pressure.
-    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
+  - material_ref:
+      route_id: route-6522f11efe3a4956621f2692
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-blitzstein-hwang
     route_id: route-6522f11efe3a4956621f2692
-  - kind: read
-    label: OpenIntro Chapter 4 — common distributions
-    locator: Ch 4 §4.2 geometric distribution, pdf pp. 144-148; §4.3 binomial distribution, pdf pp. 149-157;
-      §4.4 negative binomial, pdf pp. 158-162; §4.5 Poisson distribution, pdf pp. 163-167
-    angle: Each distribution gets a stated checklist of conditions before its formula, which is the exact
-      form of L07's model-selection question.
-    angle_detail: §4.3 opens with four numbered conditions a situation must satisfy for a binomial model
-      to apply, and the later sections follow the same pattern. L07's model-selection node is asking precisely
-      for that checklist, and having it in list form is more usable under exam pressure than a prose description.
-      Hypergeometric is thin here (it lives in §3.3 as 'sampling from a small population') — Fahrmeir
-      §5.3 or Blitzstein §3.4 covers it properly.
-    vault_path: material://source-openintro-statistics/openintro.pdf
+  - material_ref:
+      route_id: route-64c6506fd426173a5b124d5a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-openintro-statistics
     route_id: route-64c6506fd426173a5b124d5a
-  - kind: practise
-    label: Dekking — discrete-distribution exercises
-    locator: Ch 4 §4.3 Bernoulli and binomial, pdf pp. 56-58; §4.4 the geometric distribution, pdf pp.
-      59-61; Ch 12 the Poisson process, pdf pp. 176-188 (taking a closer look at random arrivals p. 177;
-      the one-dimensional Poisson process p. 180)
-    angle: Derives the Poisson distribution from the arrival process rather than defining it by its PMF.
-    angle_detail: Everywhere else on this shelf the Poisson distribution is defined by its formula and
-      then motivated. Ch 12 starts from random points on a line, asks what the count in an interval must
-      look like if arrivals are memoryless and non-simultaneous, and the PMF falls out. That is the answer
-      to 'why is this the right model for rare events', which L07's model-selection node assumes. Longer
-      than the alternatives and beyond exam scope in its later sections — read §12.2 and §12.3 and stop.
-    vault_path: material://source-dekking-mips/dekking.pdf
+  - material_ref:
+      route_id: route-9e9215f1bace1b2b1a269f02
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-dekking-mips
     route_id: route-9e9215f1bace1b2b1a269f02
-  - kind: read
-    label: MIT 18.05 — discrete-distribution problems
-    locator: 'Classes: Reading and In-class Materials, the ''Discrete Random Variables'' readings covering
-      Bernoulli, binomial, geometric and Poisson; Problem Set 2 with solutions'
-    angle: Introduces each discrete family with an explicit R function name beside its formula, tying
-      the mathematics to a computation you can run.
-    angle_detail: 'Every distribution arrives with its dbinom/pbinom-style counterpart, so a hand computation
-      can be checked immediately. That is a small thing that removes a large class of silent errors when
-      practising, and it also means the model-selection question can be tested empirically: simulate the
-      described situation, compare the histogram with the candidate PMF.'
+  - material_ref:
+      route_id: route-e325141b8971b65116e08790
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-mit-1805
     route_id: route-e325141b8971b65116e08790
-  - kind: practise
-    label: FAU pp. 5 and 22 — Binomial model and quantile
-    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 5 Aufgabe 1(5), solution p.
-      22
-    angle: Requires both a point probability and a cumulative/quantile decision for a named Binomial variable.
-    angle_detail: The distribution is named, so this is calculation and quantile practice rather than
-      model identification. It is best used after mixed-distribution tasks, as a speed check.
-    vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
+  - material_ref:
+      route_id: route-a9a926efa0d8512eca388e80
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fau-klausur-ws1415
     route_id: route-a9a926efa0d8512eca388e80
-  - kind: reference
-    label: Tijms — discrete-distribution modeling examples
-    locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 4 Rare events and lotteries,
-      pdf pp. 115-152
-    angle: Ch 4 is an entire chapter of rare-event modelling — the Poisson's natural habitat — before
-      the distribution is ever defined formally.
-    angle_detail: Lottery coincidences, near-misses and clusters, worked out with counts and simulations.
-      It is the most convincing answer available to why the Poisson deserves its own model rather than
-      being a Binomial special case, which is what L07's model-selection node needs you to have internalised.
-      Read it for the modelling judgment, not for formulas — the formal statements are in Ch 9.
-    vault_path: material://source-tijms-understanding-probability/tijms.pdf
+  - material_ref:
+      route_id: route-3d9cb15592efe429e13918f5
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-tijms-understanding-probability
     route_id: route-3d9cb15592efe429e13918f5
-  - kind: practise
-    label: Schaum — discrete-distribution drills
-    locator: Ch 6 Binomial, Normal and Poisson Distributions, pdf pp. 107-127
-    angle: Puts the three named distributions in one chapter with mixed problems, so identification is
-      forced rather than given away by the section heading.
-    angle_detail: Because the binomial, Normal and Poisson share a chapter here, the end-of-chapter problems
-      are mixed, and mixed problems are the only ones that actually train L07's model-selection node —
-      a block of ten binomial questions trains substitution, not choice. Includes the binomial-to-Normal
-      and binomial-to-Poisson approximation problems that L08 also needs.
-    vault_path: material://source-schaums-probability/schaums-probability.pdf
+  - material_ref:
+      route_id: route-3d403c071c84fe621ef510a3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-schaums-probability
     route_id: route-3d403c071c84fe621ef510a3
-  - kind: reference
-    label: Harvard Stat 110 Units 3–4 — discrete distributions
-    locator: Lectures 6-8 (Bernoulli, binomial, hypergeometric, geometric, Poisson) plus the published
-      'Table of Distributions' handout
-    angle: Each distribution is given a one-sentence 'story' that determines when it applies — the compressed
-      form of the model-selection skill.
-    angle_detail: Blitzstein's stories ('a hypergeometric counts the successes when you sample without
-      replacement from a finite population containing a known number of successes') are short enough to
-      memorise and complete enough to decide a modelling question. Learning the five stories is a far
-      better use of an hour than learning the five PMFs, because the PMF follows from the story and the
-      identification does not. The published distribution-summary sheet tabulates all of them with moments.
+  - material_ref:
+      route_id: route-1e3e247b8c6240fbc08376a9
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-stat110
     route_id: route-1e3e247b8c6240fbc08376a9
-  - kind: practise
-    label: Leuphana-Merz pp. 11-16 — discrete distribution selection
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2
-    angle: A mixed block where Binomial, Hypergeometric and Poisson models must be identified from context.
-    angle_detail: Unlike a chapter-end single-distribution drill, this block mixes families and therefore
-      tests the L07 decision step. Check each parameterization against the 2026 deck because notation
-      varies across German courses.
-    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+  - material_ref:
+      route_id: route-4e47b0154d49ac739ff3c23e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-4e47b0154d49ac739ff3c23e
-  - kind: watch
-    label: StatQuest — Binomial distribution and sampling
-    locator: '''The Binomial Distribution in 30 Seconds''; ''Sampling from a Distribution, Clearly Explained'''
-    angle: Very short — use as a recall check between practice sets rather than as a first explanation.
-    angle_detail: 'The 30-second binomial video is exactly what it says and is best used as a spaced-repetition
-      prompt: watch it cold and see whether you could have said the same thing. The sampling video is
-      more substantial and explains what ''drawing from a distribution'' means operationally, which matters
-      for L11''s resampling material later.'
+  - material_ref:
+      route_id: route-124b1de843b9b317287c58d2
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-statquest
     route_id: route-124b1de843b9b317287c58d2
-  - kind: watch
-    label: jbstatistics — discrete distributions
-    locator: 'The discrete-distribution playlist: ''The Binomial Distribution'', ''The Geometric Distribution'',
-      ''The Hypergeometric Distribution'', ''The Poisson Distribution'''
-    angle: One video per distribution, each opening with the conditions that must hold before the formula
-      appears.
-    angle_detail: The consistent structure across the series — conditions, then PMF, then a worked example,
-      then the moments — makes the four distributions directly comparable, which is what L07's model-selection
-      node requires. Watching them back to back is more useful than watching any one of them, because
-      the differences between the condition lists are the actual content.
+  - material_ref:
+      route_id: route-48c6ad5e78bcb005c5a15885
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-jbstatistics
     route_id: route-48c6ad5e78bcb005c5a15885
-  - kind: watch
-    label: Kurzes Tutorium Statistik — discrete distributions
-    locator: '''Binomialverteilung''; ''Hypergeometrische Verteilung''; ''Poissonverteilung'''
-    angle: Names the German distribution vocabulary and the Ziehen-mit/ohne-Zurücklegen phrasing that
-      identifies each model in an exam question.
-    angle_detail: German exam questions signal the intended distribution through fixed phrases — 'mit
-      Zurücklegen', 'ohne Zurücklegen', 'in einem festen Zeitintervall'. These videos use exactly those
-      phrases while deriving each model, which turns the phrase into a reliable trigger. That mapping
-      is not available in any of the English sources.
+  - material_ref:
+      route_id: route-4d9c809542ca696a1f19fd49
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-kurzes-tutorium-statistik
     route_id: route-4d9c809542ca696a1f19fd49
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-model-selection/notes.md
   attachments: []
@@ -313,284 +287,250 @@ stages:
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
-  - kind: practise
-    label: Übungsblatt 3, Aufgabe 2 — Poisson, Binomial, Hypergeometric and approximation
-    locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
-    angle: Forces model selection from prose before any formula can be substituted.
-    angle_detail: PDF p. 2 asks for Poisson in (a), Binomial in (b), Hypergeometric in (c), and the Hypergeometric-to-Binomial
-      approximation in (d). It contains no Geometric waiting-time exercise. Attempt each part when its
-      model has been introduced.
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
+  - material_ref:
+      route_id: route-475a87b6ec22bf8e77f9de71
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-475a87b6ec22bf8e77f9de71
-  - kind: practise
-    label: UE4, slides 36-49 — distribution conditions and worked cases
-    locator: exercise-slides/UE4.pdf, slides 36-49
-    angle: Works Binomial, Hypergeometric and Poisson examples; this slice does not teach Geometric waiting
-      times.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+  - material_ref:
+      route_id: route-52083707f01a014c3e2c267b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-52083707f01a014c3e2c267b
-  - kind: practise
-    label: UE5, slides 8-11 — official discrete-distribution solutions
-    locator: exercise-slides/UE5.pdf, slides 8-11
-    angle: Checks the model-choice reasoning against the current sheet's official solution.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+  - material_ref:
+      route_id: route-f827266eae5a106a6154442a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-f827266eae5a106a6154442a
-  - kind: reference
-    label: 2025 discrete-distributions deck
-    locator: 07_discrete_distributions.pptx (1).pdf
-    angle: Same-topic prior-year deck with a different set of worked examples.
-    angle_detail: The examples differ from 2026's even where the content matches, which makes this a source
-      of extra worked cases at exactly the right level — closer to the course than any textbook. Verify
-      the formulas against the current deck; notation drifts year to year.
+  - material_ref:
+      route_id: route-6ffaf5d7ec9d500ff4c5286e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-sad-2025-recordings
     route_id: route-6ffaf5d7ec9d500ff4c5286e
-  - kind: read
-    label: Fahrmeir Chapter 5 — discrete distributions
-    locator: Ch 5 §5.3 Spezielle diskrete Verteilungsmodelle, pdf pp. 270-282; Zusammenfassung pdf pp.
-      283-284; Aufgaben pdf pp. 286-287
-    angle: Presents each discrete model as a modelling decision — what generating situation forces this
-      distribution — rather than as a formula sheet.
-    angle_detail: Thirteen pages covering Binomial, Hypergeometrisch, Geometrisch and Poisson, each opened
-      with the Situation that produces it (fixed n and independence; drawing without replacement from
-      a finite urn; waiting for the first success; rare events in continuous time). That is exactly the
-      skill L07's model-selection node is testing, and it is the part a formula sheet cannot give you.
-      The moments are stated without derivation — if you want the E[X] and Var(X) proofs, use Blitzstein
-      §§3.3-3.4 and §4.7 instead. The Zusammenfassung on pp. 283-284 is the single best one-page revision
-      table for this lecture on the shelf.
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-3e560269a42e146f88512ee4
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-fahrmeir-statistik
     route_id: route-3e560269a42e146f88512ee4
-  - kind: practise
-    label: Arbeitsbuch Chapter 5 — distribution drills
-    locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123 (the Verteilungsmodell items)
-    angle: 'Model-identification drill: each item describes a situation and leaves you to name the distribution
-      before computing anything.'
-    angle_detail: The examinable difficulty in L07 is choosing between Binomial, Hypergeometrisch, Geometrisch
-      and Poisson from a word problem — once chosen, the arithmetic is a formula lookup. These items are
-      written so that the choice is the work, and the solutions justify the choice rather than jumping
-      to the formula. Do them mixed rather than in blocks; solving ten Binomial questions in a row trains
-      nothing about identification.
-    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+  - material_ref:
+      route_id: route-488f203b03208f7a1ae5eaff
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fahrmeir-arbeitsbuch
     route_id: route-488f203b03208f7a1ae5eaff
-  - kind: read
-    label: Grinstead & Snell Ch 5 — important distributions
-    locator: Official PDF, Ch 5 'Distributions and Densities', §§5.1-5.2, PDF pp. 191-232
-    angle: Catalogues the discrete families with a simulation for each, so the shape of every distribution
-      is seen before its formula is used.
-    angle_detail: The book's approach throughout is to simulate first and derive second, and for L07 that
-      means each distribution appears as a histogram from a generating process before its PMF is written.
-      Seeing the geometric's decay and the Poisson's shape as outputs of a described experiment is a good
-      defence against choosing the wrong model, which is the actual exam risk here.
+  - material_ref:
+      route_id: route-58f13d47b87582e36563f616
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-grinstead-snell
     route_id: route-58f13d47b87582e36563f616
-  - kind: read
-    label: Blitzstein Chapters 3–4 — distribution-generating stories
-    locator: Ch 3 §3.3 Bernoulli and Binomial, pdf pp. 129-131; §3.4 Hypergeometric, pdf pp. 132-134;
-      §3.9 connections between Binomial and Hypergeometric, pdf pp. 150-152; Ch 4 §4.3 Geometric and Negative
-      Binomial, pdf pp. 174-180; §4.7 Poisson, pdf pp. 191-197; §4.8 connections between Poisson and Binomial,
-      pdf pp. 198-200
-    angle: Gives each distribution a story first, then derives its moments — and devotes whole sections
-      to the relationships between them.
-    angle_detail: L07's relationships node — Binomial to Poisson in the rare-event limit, Hypergeometric
-      to Binomial as the population grows — is stated on a slide as a fact. §3.9 and §4.8 are entire sections
-      that prove those limits and say when the approximation is safe, which is the difference between
-      reciting the relationship and being able to justify an approximation in an exam. The story-first
-      presentation ('a Binomial counts successes in n independent trials with the same p') is also the
-      most reliable way to get the model-selection node right under time pressure.
-    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
+  - material_ref:
+      route_id: route-6522f11efe3a4956621f2692
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-blitzstein-hwang
     route_id: route-6522f11efe3a4956621f2692
-  - kind: read
-    label: OpenIntro Chapter 4 — common distributions
-    locator: Ch 4 §4.2 geometric distribution, pdf pp. 144-148; §4.3 binomial distribution, pdf pp. 149-157;
-      §4.4 negative binomial, pdf pp. 158-162; §4.5 Poisson distribution, pdf pp. 163-167
-    angle: Each distribution gets a stated checklist of conditions before its formula, which is the exact
-      form of L07's model-selection question.
-    angle_detail: §4.3 opens with four numbered conditions a situation must satisfy for a binomial model
-      to apply, and the later sections follow the same pattern. L07's model-selection node is asking precisely
-      for that checklist, and having it in list form is more usable under exam pressure than a prose description.
-      Hypergeometric is thin here (it lives in §3.3 as 'sampling from a small population') — Fahrmeir
-      §5.3 or Blitzstein §3.4 covers it properly.
-    vault_path: material://source-openintro-statistics/openintro.pdf
+  - material_ref:
+      route_id: route-64c6506fd426173a5b124d5a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-openintro-statistics
     route_id: route-64c6506fd426173a5b124d5a
-  - kind: practise
-    label: Dekking — discrete-distribution exercises
-    locator: Ch 4 §4.3 Bernoulli and binomial, pdf pp. 56-58; §4.4 the geometric distribution, pdf pp.
-      59-61; Ch 12 the Poisson process, pdf pp. 176-188 (taking a closer look at random arrivals p. 177;
-      the one-dimensional Poisson process p. 180)
-    angle: Derives the Poisson distribution from the arrival process rather than defining it by its PMF.
-    angle_detail: Everywhere else on this shelf the Poisson distribution is defined by its formula and
-      then motivated. Ch 12 starts from random points on a line, asks what the count in an interval must
-      look like if arrivals are memoryless and non-simultaneous, and the PMF falls out. That is the answer
-      to 'why is this the right model for rare events', which L07's model-selection node assumes. Longer
-      than the alternatives and beyond exam scope in its later sections — read §12.2 and §12.3 and stop.
-    vault_path: material://source-dekking-mips/dekking.pdf
+  - material_ref:
+      route_id: route-9e9215f1bace1b2b1a269f02
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-dekking-mips
     route_id: route-9e9215f1bace1b2b1a269f02
-  - kind: read
-    label: MIT 18.05 — discrete-distribution problems
-    locator: 'Classes: Reading and In-class Materials, the ''Discrete Random Variables'' readings covering
-      Bernoulli, binomial, geometric and Poisson; Problem Set 2 with solutions'
-    angle: Introduces each discrete family with an explicit R function name beside its formula, tying
-      the mathematics to a computation you can run.
-    angle_detail: 'Every distribution arrives with its dbinom/pbinom-style counterpart, so a hand computation
-      can be checked immediately. That is a small thing that removes a large class of silent errors when
-      practising, and it also means the model-selection question can be tested empirically: simulate the
-      described situation, compare the histogram with the candidate PMF.'
+  - material_ref:
+      route_id: route-e325141b8971b65116e08790
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-mit-1805
     route_id: route-e325141b8971b65116e08790
-  - kind: practise
-    label: FAU pp. 5 and 22 — Binomial model and quantile
-    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 5 Aufgabe 1(5), solution p.
-      22
-    angle: Requires both a point probability and a cumulative/quantile decision for a named Binomial variable.
-    angle_detail: The distribution is named, so this is calculation and quantile practice rather than
-      model identification. It is best used after mixed-distribution tasks, as a speed check.
-    vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
+  - material_ref:
+      route_id: route-a9a926efa0d8512eca388e80
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fau-klausur-ws1415
     route_id: route-a9a926efa0d8512eca388e80
-  - kind: reference
-    label: Pitman Chapters 2–3 — discrete distributions
-    locator: Ch 2 §2.1 The Binomial Distribution, pdf pp. 90-102; §2.4 Poisson Approximation, pdf pp.
-      127-147; Ch 3 §3.4 Discrete Distributions, pdf pp. 217-230; §3.5 The Poisson Distribution, pdf pp.
-      231-245
-    angle: Reaches the Poisson twice — once as a limit of the Binomial, once as a distribution in its
-      own right — several chapters apart.
-    angle_detail: §2.4 derives the Poisson as what the Binomial becomes when n grows and p shrinks with
-      np fixed, with the error of the approximation discussed; §3.5, much later, treats the Poisson as
-      a first-class distribution with its own moments. Meeting it in both roles is the clearest way to
-      hold L07's relationships node, which asserts the limit on one slide. §3.4 collects the discrete
-      families with a comparison of their shapes.
-    vault_path: material://source-pitman-probability/pitman.pdf
+  - material_ref:
+      route_id: route-ebf16644b4d589e5cfa9dc54
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-pitman-probability
     route_id: route-ebf16644b4d589e5cfa9dc54
-  - kind: reference
-    label: Tijms — discrete-distribution modeling examples
-    locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 4 Rare events and lotteries,
-      pdf pp. 115-152
-    angle: Ch 4 is an entire chapter of rare-event modelling — the Poisson's natural habitat — before
-      the distribution is ever defined formally.
-    angle_detail: Lottery coincidences, near-misses and clusters, worked out with counts and simulations.
-      It is the most convincing answer available to why the Poisson deserves its own model rather than
-      being a Binomial special case, which is what L07's model-selection node needs you to have internalised.
-      Read it for the modelling judgment, not for formulas — the formal statements are in Ch 9.
-    vault_path: material://source-tijms-understanding-probability/tijms.pdf
+  - material_ref:
+      route_id: route-3d9cb15592efe429e13918f5
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-tijms-understanding-probability
     route_id: route-3d9cb15592efe429e13918f5
-  - kind: reference
-    label: Ross — named discrete distributions
-    locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.6 the Bernoulli and binomial random variables;
-      §4.7 the Poisson random variable; §4.8.1 geometric; §4.8.3 hypergeometric)
-    angle: Derives every moment rather than tabulating it, so E[X] and Var(X) for each family can be reconstructed
-      instead of recalled.
-    angle_detail: Where Fahrmeir tabulates the moments and OpenIntro states them, Ross computes each one
-      from the PMF, usually with a slick algebraic step worth learning on its own (the index shift in
-      the binomial mean, the derivative trick for the geometric). If the exam permits no formula sheet,
-      being able to rebuild one moment from its PMF is a genuine safety net. §4.7.1 also covers computing
-      the distribution function without overflow, which is a numerical aside but explains the recursive
-      forms that appear in software.
-    vault_path: material://source-ross-first-course/ross.pdf
+  - material_ref:
+      route_id: route-3bd7fda1a5087e4bff5edfbb
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-ross-first-course
     route_id: route-3bd7fda1a5087e4bff5edfbb
-  - kind: practise
-    label: Schaum — discrete-distribution drills
-    locator: Ch 6 Binomial, Normal and Poisson Distributions, pdf pp. 107-127
-    angle: Puts the three named distributions in one chapter with mixed problems, so identification is
-      forced rather than given away by the section heading.
-    angle_detail: Because the binomial, Normal and Poisson share a chapter here, the end-of-chapter problems
-      are mixed, and mixed problems are the only ones that actually train L07's model-selection node —
-      a block of ten binomial questions trains substitution, not choice. Includes the binomial-to-Normal
-      and binomial-to-Poisson approximation problems that L08 also needs.
-    vault_path: material://source-schaums-probability/schaums-probability.pdf
+  - material_ref:
+      route_id: route-3d403c071c84fe621ef510a3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-schaums-probability
     route_id: route-3d403c071c84fe621ef510a3
-  - kind: reference
-    label: Harvard Stat 110 Units 3–4 — discrete distributions
-    locator: Lectures 6-8 (Bernoulli, binomial, hypergeometric, geometric, Poisson) plus the published
-      'Table of Distributions' handout
-    angle: Each distribution is given a one-sentence 'story' that determines when it applies — the compressed
-      form of the model-selection skill.
-    angle_detail: Blitzstein's stories ('a hypergeometric counts the successes when you sample without
-      replacement from a finite population containing a known number of successes') are short enough to
-      memorise and complete enough to decide a modelling question. Learning the five stories is a far
-      better use of an hour than learning the five PMFs, because the PMF follows from the story and the
-      identification does not. The published distribution-summary sheet tabulates all of them with moments.
+  - material_ref:
+      route_id: route-1e3e247b8c6240fbc08376a9
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-stat110
     route_id: route-1e3e247b8c6240fbc08376a9
-  - kind: practise
-    label: Leuphana-Merz pp. 11-16 — discrete distribution selection
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2
-    angle: A mixed block where Binomial, Hypergeometric and Poisson models must be identified from context.
-    angle_detail: Unlike a chapter-end single-distribution drill, this block mixes families and therefore
-      tests the L07 decision step. Check each parameterization against the 2026 deck because notation
-      varies across German courses.
-    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+  - material_ref:
+      route_id: route-4e47b0154d49ac739ff3c23e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-4e47b0154d49ac739ff3c23e
-  - kind: watch
-    label: StatQuest — Binomial distribution and sampling
-    locator: '''The Binomial Distribution in 30 Seconds''; ''Sampling from a Distribution, Clearly Explained'''
-    angle: Very short — use as a recall check between practice sets rather than as a first explanation.
-    angle_detail: 'The 30-second binomial video is exactly what it says and is best used as a spaced-repetition
-      prompt: watch it cold and see whether you could have said the same thing. The sampling video is
-      more substantial and explains what ''drawing from a distribution'' means operationally, which matters
-      for L11''s resampling material later.'
+  - material_ref:
+      route_id: route-124b1de843b9b317287c58d2
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-statquest
     route_id: route-124b1de843b9b317287c58d2
-  - kind: watch
-    label: jbstatistics — discrete distributions
-    locator: 'The discrete-distribution playlist: ''The Binomial Distribution'', ''The Geometric Distribution'',
-      ''The Hypergeometric Distribution'', ''The Poisson Distribution'''
-    angle: One video per distribution, each opening with the conditions that must hold before the formula
-      appears.
-    angle_detail: The consistent structure across the series — conditions, then PMF, then a worked example,
-      then the moments — makes the four distributions directly comparable, which is what L07's model-selection
-      node requires. Watching them back to back is more useful than watching any one of them, because
-      the differences between the condition lists are the actual content.
+  - material_ref:
+      route_id: route-48c6ad5e78bcb005c5a15885
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-jbstatistics
     route_id: route-48c6ad5e78bcb005c5a15885
-  - kind: watch
-    label: Kurzes Tutorium Statistik — discrete distributions
-    locator: '''Binomialverteilung''; ''Hypergeometrische Verteilung''; ''Poissonverteilung'''
-    angle: Names the German distribution vocabulary and the Ziehen-mit/ohne-Zurücklegen phrasing that
-      identifies each model in an exam question.
-    angle_detail: German exam questions signal the intended distribution through fixed phrases — 'mit
-      Zurücklegen', 'ohne Zurücklegen', 'in einem festen Zeitintervall'. These videos use exactly those
-      phrases while deriving each model, which turns the phrase into a reliable trigger. That mapping
-      is not available in any of the English sources.
+  - material_ref:
+      route_id: route-4d9c809542ca696a1f19fd49
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-kurzes-tutorium-statistik
     route_id: route-4d9c809542ca696a1f19fd49
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-bernoulli-binomial/notes.md
   attachments: []
@@ -620,247 +560,215 @@ stages:
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
-  - kind: practise
-    label: Übungsblatt 3, Aufgabe 2 — Poisson, Binomial, Hypergeometric and approximation
-    locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
-    angle: Forces model selection from prose before any formula can be substituted.
-    angle_detail: PDF p. 2 asks for Poisson in (a), Binomial in (b), Hypergeometric in (c), and the Hypergeometric-to-Binomial
-      approximation in (d). It contains no Geometric waiting-time exercise. Attempt each part when its
-      model has been introduced.
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
+  - material_ref:
+      route_id: route-475a87b6ec22bf8e77f9de71
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-475a87b6ec22bf8e77f9de71
-  - kind: practise
-    label: UE4, slides 36-49 — distribution conditions and worked cases
-    locator: exercise-slides/UE4.pdf, slides 36-49
-    angle: Works Binomial, Hypergeometric and Poisson examples; this slice does not teach Geometric waiting
-      times.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+  - material_ref:
+      route_id: route-52083707f01a014c3e2c267b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-52083707f01a014c3e2c267b
-  - kind: practise
-    label: UE5, slides 8-11 — official discrete-distribution solutions
-    locator: exercise-slides/UE5.pdf, slides 8-11
-    angle: Checks the model-choice reasoning against the current sheet's official solution.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+  - material_ref:
+      route_id: route-f827266eae5a106a6154442a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-f827266eae5a106a6154442a
-  - kind: reference
-    label: 2025 discrete-distributions deck
-    locator: 07_discrete_distributions.pptx (1).pdf
-    angle: Same-topic prior-year deck with a different set of worked examples.
-    angle_detail: The examples differ from 2026's even where the content matches, which makes this a source
-      of extra worked cases at exactly the right level — closer to the course than any textbook. Verify
-      the formulas against the current deck; notation drifts year to year.
+  - material_ref:
+      route_id: route-6ffaf5d7ec9d500ff4c5286e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-sad-2025-recordings
     route_id: route-6ffaf5d7ec9d500ff4c5286e
-  - kind: read
-    label: Fahrmeir Chapter 5 — discrete distributions
-    locator: Ch 5 §5.3 Spezielle diskrete Verteilungsmodelle, pdf pp. 270-282; Zusammenfassung pdf pp.
-      283-284; Aufgaben pdf pp. 286-287
-    angle: Presents each discrete model as a modelling decision — what generating situation forces this
-      distribution — rather than as a formula sheet.
-    angle_detail: Thirteen pages covering Binomial, Hypergeometrisch, Geometrisch and Poisson, each opened
-      with the Situation that produces it (fixed n and independence; drawing without replacement from
-      a finite urn; waiting for the first success; rare events in continuous time). That is exactly the
-      skill L07's model-selection node is testing, and it is the part a formula sheet cannot give you.
-      The moments are stated without derivation — if you want the E[X] and Var(X) proofs, use Blitzstein
-      §§3.3-3.4 and §4.7 instead. The Zusammenfassung on pp. 283-284 is the single best one-page revision
-      table for this lecture on the shelf.
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-3e560269a42e146f88512ee4
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-fahrmeir-statistik
     route_id: route-3e560269a42e146f88512ee4
-  - kind: practise
-    label: Arbeitsbuch Chapter 5 — distribution drills
-    locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123 (the Verteilungsmodell items)
-    angle: 'Model-identification drill: each item describes a situation and leaves you to name the distribution
-      before computing anything.'
-    angle_detail: The examinable difficulty in L07 is choosing between Binomial, Hypergeometrisch, Geometrisch
-      and Poisson from a word problem — once chosen, the arithmetic is a formula lookup. These items are
-      written so that the choice is the work, and the solutions justify the choice rather than jumping
-      to the formula. Do them mixed rather than in blocks; solving ten Binomial questions in a row trains
-      nothing about identification.
-    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+  - material_ref:
+      route_id: route-488f203b03208f7a1ae5eaff
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fahrmeir-arbeitsbuch
     route_id: route-488f203b03208f7a1ae5eaff
-  - kind: read
-    label: Grinstead & Snell Ch 5 — important distributions
-    locator: Official PDF, Ch 5 'Distributions and Densities', §§5.1-5.2, PDF pp. 191-232
-    angle: Catalogues the discrete families with a simulation for each, so the shape of every distribution
-      is seen before its formula is used.
-    angle_detail: The book's approach throughout is to simulate first and derive second, and for L07 that
-      means each distribution appears as a histogram from a generating process before its PMF is written.
-      Seeing the geometric's decay and the Poisson's shape as outputs of a described experiment is a good
-      defence against choosing the wrong model, which is the actual exam risk here.
+  - material_ref:
+      route_id: route-58f13d47b87582e36563f616
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-grinstead-snell
     route_id: route-58f13d47b87582e36563f616
-  - kind: read
-    label: Blitzstein Chapters 3–4 — distribution-generating stories
-    locator: Ch 3 §3.3 Bernoulli and Binomial, pdf pp. 129-131; §3.4 Hypergeometric, pdf pp. 132-134;
-      §3.9 connections between Binomial and Hypergeometric, pdf pp. 150-152; Ch 4 §4.3 Geometric and Negative
-      Binomial, pdf pp. 174-180; §4.7 Poisson, pdf pp. 191-197; §4.8 connections between Poisson and Binomial,
-      pdf pp. 198-200
-    angle: Gives each distribution a story first, then derives its moments — and devotes whole sections
-      to the relationships between them.
-    angle_detail: L07's relationships node — Binomial to Poisson in the rare-event limit, Hypergeometric
-      to Binomial as the population grows — is stated on a slide as a fact. §3.9 and §4.8 are entire sections
-      that prove those limits and say when the approximation is safe, which is the difference between
-      reciting the relationship and being able to justify an approximation in an exam. The story-first
-      presentation ('a Binomial counts successes in n independent trials with the same p') is also the
-      most reliable way to get the model-selection node right under time pressure.
-    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
+  - material_ref:
+      route_id: route-6522f11efe3a4956621f2692
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-blitzstein-hwang
     route_id: route-6522f11efe3a4956621f2692
-  - kind: practise
-    label: Dekking — discrete-distribution exercises
-    locator: Ch 4 §4.3 Bernoulli and binomial, pdf pp. 56-58; §4.4 the geometric distribution, pdf pp.
-      59-61; Ch 12 the Poisson process, pdf pp. 176-188 (taking a closer look at random arrivals p. 177;
-      the one-dimensional Poisson process p. 180)
-    angle: Derives the Poisson distribution from the arrival process rather than defining it by its PMF.
-    angle_detail: Everywhere else on this shelf the Poisson distribution is defined by its formula and
-      then motivated. Ch 12 starts from random points on a line, asks what the count in an interval must
-      look like if arrivals are memoryless and non-simultaneous, and the PMF falls out. That is the answer
-      to 'why is this the right model for rare events', which L07's model-selection node assumes. Longer
-      than the alternatives and beyond exam scope in its later sections — read §12.2 and §12.3 and stop.
-    vault_path: material://source-dekking-mips/dekking.pdf
+  - material_ref:
+      route_id: route-9e9215f1bace1b2b1a269f02
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-dekking-mips
     route_id: route-9e9215f1bace1b2b1a269f02
-  - kind: read
-    label: MIT 18.05 — discrete-distribution problems
-    locator: 'Classes: Reading and In-class Materials, the ''Discrete Random Variables'' readings covering
-      Bernoulli, binomial, geometric and Poisson; Problem Set 2 with solutions'
-    angle: Introduces each discrete family with an explicit R function name beside its formula, tying
-      the mathematics to a computation you can run.
-    angle_detail: 'Every distribution arrives with its dbinom/pbinom-style counterpart, so a hand computation
-      can be checked immediately. That is a small thing that removes a large class of silent errors when
-      practising, and it also means the model-selection question can be tested empirically: simulate the
-      described situation, compare the histogram with the candidate PMF.'
+  - material_ref:
+      route_id: route-e325141b8971b65116e08790
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-mit-1805
     route_id: route-e325141b8971b65116e08790
-  - kind: reference
-    label: Pitman Chapters 2–3 — discrete distributions
-    locator: Ch 2 §2.1 The Binomial Distribution, pdf pp. 90-102; §2.4 Poisson Approximation, pdf pp.
-      127-147; Ch 3 §3.4 Discrete Distributions, pdf pp. 217-230; §3.5 The Poisson Distribution, pdf pp.
-      231-245
-    angle: Reaches the Poisson twice — once as a limit of the Binomial, once as a distribution in its
-      own right — several chapters apart.
-    angle_detail: §2.4 derives the Poisson as what the Binomial becomes when n grows and p shrinks with
-      np fixed, with the error of the approximation discussed; §3.5, much later, treats the Poisson as
-      a first-class distribution with its own moments. Meeting it in both roles is the clearest way to
-      hold L07's relationships node, which asserts the limit on one slide. §3.4 collects the discrete
-      families with a comparison of their shapes.
-    vault_path: material://source-pitman-probability/pitman.pdf
+  - material_ref:
+      route_id: route-ebf16644b4d589e5cfa9dc54
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-pitman-probability
     route_id: route-ebf16644b4d589e5cfa9dc54
-  - kind: reference
-    label: Tijms — discrete-distribution modeling examples
-    locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 4 Rare events and lotteries,
-      pdf pp. 115-152
-    angle: Ch 4 is an entire chapter of rare-event modelling — the Poisson's natural habitat — before
-      the distribution is ever defined formally.
-    angle_detail: Lottery coincidences, near-misses and clusters, worked out with counts and simulations.
-      It is the most convincing answer available to why the Poisson deserves its own model rather than
-      being a Binomial special case, which is what L07's model-selection node needs you to have internalised.
-      Read it for the modelling judgment, not for formulas — the formal statements are in Ch 9.
-    vault_path: material://source-tijms-understanding-probability/tijms.pdf
+  - material_ref:
+      route_id: route-3d9cb15592efe429e13918f5
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-tijms-understanding-probability
     route_id: route-3d9cb15592efe429e13918f5
-  - kind: reference
-    label: Ross — named discrete distributions
-    locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.6 the Bernoulli and binomial random variables;
-      §4.7 the Poisson random variable; §4.8.1 geometric; §4.8.3 hypergeometric)
-    angle: Derives every moment rather than tabulating it, so E[X] and Var(X) for each family can be reconstructed
-      instead of recalled.
-    angle_detail: Where Fahrmeir tabulates the moments and OpenIntro states them, Ross computes each one
-      from the PMF, usually with a slick algebraic step worth learning on its own (the index shift in
-      the binomial mean, the derivative trick for the geometric). If the exam permits no formula sheet,
-      being able to rebuild one moment from its PMF is a genuine safety net. §4.7.1 also covers computing
-      the distribution function without overflow, which is a numerical aside but explains the recursive
-      forms that appear in software.
-    vault_path: material://source-ross-first-course/ross.pdf
+  - material_ref:
+      route_id: route-3bd7fda1a5087e4bff5edfbb
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-ross-first-course
     route_id: route-3bd7fda1a5087e4bff5edfbb
-  - kind: practise
-    label: Schaum — discrete-distribution drills
-    locator: Ch 6 Binomial, Normal and Poisson Distributions, pdf pp. 107-127
-    angle: Puts the three named distributions in one chapter with mixed problems, so identification is
-      forced rather than given away by the section heading.
-    angle_detail: Because the binomial, Normal and Poisson share a chapter here, the end-of-chapter problems
-      are mixed, and mixed problems are the only ones that actually train L07's model-selection node —
-      a block of ten binomial questions trains substitution, not choice. Includes the binomial-to-Normal
-      and binomial-to-Poisson approximation problems that L08 also needs.
-    vault_path: material://source-schaums-probability/schaums-probability.pdf
+  - material_ref:
+      route_id: route-3d403c071c84fe621ef510a3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-schaums-probability
     route_id: route-3d403c071c84fe621ef510a3
-  - kind: reference
-    label: Harvard Stat 110 Units 3–4 — discrete distributions
-    locator: Lectures 6-8 (Bernoulli, binomial, hypergeometric, geometric, Poisson) plus the published
-      'Table of Distributions' handout
-    angle: Each distribution is given a one-sentence 'story' that determines when it applies — the compressed
-      form of the model-selection skill.
-    angle_detail: Blitzstein's stories ('a hypergeometric counts the successes when you sample without
-      replacement from a finite population containing a known number of successes') are short enough to
-      memorise and complete enough to decide a modelling question. Learning the five stories is a far
-      better use of an hour than learning the five PMFs, because the PMF follows from the story and the
-      identification does not. The published distribution-summary sheet tabulates all of them with moments.
+  - material_ref:
+      route_id: route-1e3e247b8c6240fbc08376a9
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-stat110
     route_id: route-1e3e247b8c6240fbc08376a9
-  - kind: practise
-    label: Leuphana-Merz pp. 11-16 — discrete distribution selection
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2
-    angle: A mixed block where Binomial, Hypergeometric and Poisson models must be identified from context.
-    angle_detail: Unlike a chapter-end single-distribution drill, this block mixes families and therefore
-      tests the L07 decision step. Check each parameterization against the 2026 deck because notation
-      varies across German courses.
-    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+  - material_ref:
+      route_id: route-4e47b0154d49ac739ff3c23e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-4e47b0154d49ac739ff3c23e
-  - kind: watch
-    label: jbstatistics — discrete distributions
-    locator: 'The discrete-distribution playlist: ''The Binomial Distribution'', ''The Geometric Distribution'',
-      ''The Hypergeometric Distribution'', ''The Poisson Distribution'''
-    angle: One video per distribution, each opening with the conditions that must hold before the formula
-      appears.
-    angle_detail: The consistent structure across the series — conditions, then PMF, then a worked example,
-      then the moments — makes the four distributions directly comparable, which is what L07's model-selection
-      node requires. Watching them back to back is more useful than watching any one of them, because
-      the differences between the condition lists are the actual content.
+  - material_ref:
+      route_id: route-48c6ad5e78bcb005c5a15885
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-jbstatistics
     route_id: route-48c6ad5e78bcb005c5a15885
-  - kind: watch
-    label: Kurzes Tutorium Statistik — discrete distributions
-    locator: '''Binomialverteilung''; ''Hypergeometrische Verteilung''; ''Poissonverteilung'''
-    angle: Names the German distribution vocabulary and the Ziehen-mit/ohne-Zurücklegen phrasing that
-      identifies each model in an exam question.
-    angle_detail: German exam questions signal the intended distribution through fixed phrases — 'mit
-      Zurücklegen', 'ohne Zurücklegen', 'in einem festen Zeitintervall'. These videos use exactly those
-      phrases while deriving each model, which turns the phrase into a reliable trigger. That mapping
-      is not available in any of the English sources.
+  - material_ref:
+      route_id: route-4d9c809542ca696a1f19fd49
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-kurzes-tutorium-statistik
     route_id: route-4d9c809542ca696a1f19fd49
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-hypergeometric/notes.md
   attachments: []
@@ -893,195 +801,173 @@ stages:
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
-  - kind: reference
-    label: Übungsblatt 3, Aufgabe 2 — Poisson, Binomial, Hypergeometric and approximation
-    locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
+  - material_ref:
+      route_id: route-475a87b6ec22bf8e77f9de71
+      inherit:
+      - label
+      - locator
+      - vault_path
+      - source_id
+    kind: reference
     angle: 'Contrast only: this resource covers fixed-sample models, not Geometric waiting times.'
     angle_detail: 'Geometric waiting times are complementary preparation here: L07 has no dedicated section
       and Übungsblatt 3 Aufgabe 2 tests other distributions. The registered Blatt 4 later uses Geometric(p=0.02)
       in Aufgabe 3(a)(4), PDF p. 3; establish whether counts include the successful trial.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
     scope_triage: reference-only
-    source_id: source-sad-uebungen
     route_id: route-475a87b6ec22bf8e77f9de71
-  - kind: reference
-    label: UE4, slides 36-49 — distribution conditions and worked cases
-    locator: exercise-slides/UE4.pdf, slides 36-49
+  - material_ref:
+      route_id: route-52083707f01a014c3e2c267b
+      inherit:
+      - label
+      - locator
+      - vault_path
+      - source_id
+    kind: reference
     angle: 'Contrast only: this resource covers fixed-sample models, not Geometric waiting times.'
     angle_detail: 'Geometric waiting times are complementary preparation here: L07 has no dedicated section
       and Übungsblatt 3 Aufgabe 2 tests other distributions. The registered Blatt 4 later uses Geometric(p=0.02)
       in Aufgabe 3(a)(4), PDF p. 3; establish whether counts include the successful trial.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
     scope_triage: reference-only
-    source_id: source-sad-uebungen
     route_id: route-52083707f01a014c3e2c267b
-  - kind: read
-    label: Fahrmeir Chapter 5 — discrete distributions
-    locator: Ch 5 §5.3 Spezielle diskrete Verteilungsmodelle, pdf pp. 270-282; Zusammenfassung pdf pp.
-      283-284; Aufgaben pdf pp. 286-287
-    angle: Presents each discrete model as a modelling decision — what generating situation forces this
-      distribution — rather than as a formula sheet.
-    angle_detail: Thirteen pages covering Binomial, Hypergeometrisch, Geometrisch and Poisson, each opened
-      with the Situation that produces it (fixed n and independence; drawing without replacement from
-      a finite urn; waiting for the first success; rare events in continuous time). That is exactly the
-      skill L07's model-selection node is testing, and it is the part a formula sheet cannot give you.
-      The moments are stated without derivation — if you want the E[X] and Var(X) proofs, use Blitzstein
-      §§3.3-3.4 and §4.7 instead. The Zusammenfassung on pp. 283-284 is the single best one-page revision
-      table for this lecture on the shelf.
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-3e560269a42e146f88512ee4
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-fahrmeir-statistik
     route_id: route-3e560269a42e146f88512ee4
-  - kind: read
-    label: Grinstead & Snell Ch 5 — important distributions
-    locator: Official PDF, Ch 5 'Distributions and Densities', §§5.1-5.2, PDF pp. 191-232
-    angle: Catalogues the discrete families with a simulation for each, so the shape of every distribution
-      is seen before its formula is used.
-    angle_detail: The book's approach throughout is to simulate first and derive second, and for L07 that
-      means each distribution appears as a histogram from a generating process before its PMF is written.
-      Seeing the geometric's decay and the Poisson's shape as outputs of a described experiment is a good
-      defence against choosing the wrong model, which is the actual exam risk here.
+  - material_ref:
+      route_id: route-58f13d47b87582e36563f616
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-grinstead-snell
     route_id: route-58f13d47b87582e36563f616
-  - kind: read
-    label: Blitzstein Chapters 3–4 — distribution-generating stories
-    locator: Ch 3 §3.3 Bernoulli and Binomial, pdf pp. 129-131; §3.4 Hypergeometric, pdf pp. 132-134;
-      §3.9 connections between Binomial and Hypergeometric, pdf pp. 150-152; Ch 4 §4.3 Geometric and Negative
-      Binomial, pdf pp. 174-180; §4.7 Poisson, pdf pp. 191-197; §4.8 connections between Poisson and Binomial,
-      pdf pp. 198-200
-    angle: Gives each distribution a story first, then derives its moments — and devotes whole sections
-      to the relationships between them.
-    angle_detail: L07's relationships node — Binomial to Poisson in the rare-event limit, Hypergeometric
-      to Binomial as the population grows — is stated on a slide as a fact. §3.9 and §4.8 are entire sections
-      that prove those limits and say when the approximation is safe, which is the difference between
-      reciting the relationship and being able to justify an approximation in an exam. The story-first
-      presentation ('a Binomial counts successes in n independent trials with the same p') is also the
-      most reliable way to get the model-selection node right under time pressure.
-    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
+  - material_ref:
+      route_id: route-6522f11efe3a4956621f2692
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-blitzstein-hwang
     route_id: route-6522f11efe3a4956621f2692
-  - kind: read
-    label: MIT 18.05 — discrete-distribution problems
-    locator: 'Classes: Reading and In-class Materials, the ''Discrete Random Variables'' readings covering
-      Bernoulli, binomial, geometric and Poisson; Problem Set 2 with solutions'
-    angle: Introduces each discrete family with an explicit R function name beside its formula, tying
-      the mathematics to a computation you can run.
-    angle_detail: 'Every distribution arrives with its dbinom/pbinom-style counterpart, so a hand computation
-      can be checked immediately. That is a small thing that removes a large class of silent errors when
-      practising, and it also means the model-selection question can be tested empirically: simulate the
-      described situation, compare the histogram with the candidate PMF.'
+  - material_ref:
+      route_id: route-e325141b8971b65116e08790
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-mit-1805
     route_id: route-e325141b8971b65116e08790
-  - kind: reference
-    label: Pitman Chapters 2–3 — discrete distributions
-    locator: Ch 2 §2.1 The Binomial Distribution, pdf pp. 90-102; §2.4 Poisson Approximation, pdf pp.
-      127-147; Ch 3 §3.4 Discrete Distributions, pdf pp. 217-230; §3.5 The Poisson Distribution, pdf pp.
-      231-245
-    angle: Reaches the Poisson twice — once as a limit of the Binomial, once as a distribution in its
-      own right — several chapters apart.
-    angle_detail: §2.4 derives the Poisson as what the Binomial becomes when n grows and p shrinks with
-      np fixed, with the error of the approximation discussed; §3.5, much later, treats the Poisson as
-      a first-class distribution with its own moments. Meeting it in both roles is the clearest way to
-      hold L07's relationships node, which asserts the limit on one slide. §3.4 collects the discrete
-      families with a comparison of their shapes.
-    vault_path: material://source-pitman-probability/pitman.pdf
+  - material_ref:
+      route_id: route-ebf16644b4d589e5cfa9dc54
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-pitman-probability
     route_id: route-ebf16644b4d589e5cfa9dc54
-  - kind: reference
-    label: Tijms — discrete-distribution modeling examples
-    locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 4 Rare events and lotteries,
-      pdf pp. 115-152
-    angle: Ch 4 is an entire chapter of rare-event modelling — the Poisson's natural habitat — before
-      the distribution is ever defined formally.
-    angle_detail: Lottery coincidences, near-misses and clusters, worked out with counts and simulations.
-      It is the most convincing answer available to why the Poisson deserves its own model rather than
-      being a Binomial special case, which is what L07's model-selection node needs you to have internalised.
-      Read it for the modelling judgment, not for formulas — the formal statements are in Ch 9.
-    vault_path: material://source-tijms-understanding-probability/tijms.pdf
+  - material_ref:
+      route_id: route-3d9cb15592efe429e13918f5
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-tijms-understanding-probability
     route_id: route-3d9cb15592efe429e13918f5
-  - kind: reference
-    label: Ross — named discrete distributions
-    locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.6 the Bernoulli and binomial random variables;
-      §4.7 the Poisson random variable; §4.8.1 geometric; §4.8.3 hypergeometric)
-    angle: Derives every moment rather than tabulating it, so E[X] and Var(X) for each family can be reconstructed
-      instead of recalled.
-    angle_detail: Where Fahrmeir tabulates the moments and OpenIntro states them, Ross computes each one
-      from the PMF, usually with a slick algebraic step worth learning on its own (the index shift in
-      the binomial mean, the derivative trick for the geometric). If the exam permits no formula sheet,
-      being able to rebuild one moment from its PMF is a genuine safety net. §4.7.1 also covers computing
-      the distribution function without overflow, which is a numerical aside but explains the recursive
-      forms that appear in software.
-    vault_path: material://source-ross-first-course/ross.pdf
+  - material_ref:
+      route_id: route-3bd7fda1a5087e4bff5edfbb
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-ross-first-course
     route_id: route-3bd7fda1a5087e4bff5edfbb
-  - kind: practise
-    label: Schaum — discrete-distribution drills
-    locator: Ch 6 Binomial, Normal and Poisson Distributions, pdf pp. 107-127
-    angle: Puts the three named distributions in one chapter with mixed problems, so identification is
-      forced rather than given away by the section heading.
-    angle_detail: Because the binomial, Normal and Poisson share a chapter here, the end-of-chapter problems
-      are mixed, and mixed problems are the only ones that actually train L07's model-selection node —
-      a block of ten binomial questions trains substitution, not choice. Includes the binomial-to-Normal
-      and binomial-to-Poisson approximation problems that L08 also needs.
-    vault_path: material://source-schaums-probability/schaums-probability.pdf
+  - material_ref:
+      route_id: route-3d403c071c84fe621ef510a3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-schaums-probability
     route_id: route-3d403c071c84fe621ef510a3
-  - kind: reference
-    label: Harvard Stat 110 Units 3–4 — discrete distributions
-    locator: Lectures 6-8 (Bernoulli, binomial, hypergeometric, geometric, Poisson) plus the published
-      'Table of Distributions' handout
-    angle: Each distribution is given a one-sentence 'story' that determines when it applies — the compressed
-      form of the model-selection skill.
-    angle_detail: Blitzstein's stories ('a hypergeometric counts the successes when you sample without
-      replacement from a finite population containing a known number of successes') are short enough to
-      memorise and complete enough to decide a modelling question. Learning the five stories is a far
-      better use of an hour than learning the five PMFs, because the PMF follows from the story and the
-      identification does not. The published distribution-summary sheet tabulates all of them with moments.
+  - material_ref:
+      route_id: route-1e3e247b8c6240fbc08376a9
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-stat110
     route_id: route-1e3e247b8c6240fbc08376a9
-  - kind: practise
-    label: Leuphana-Merz pp. 11-16 — discrete distribution selection
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2
-    angle: A mixed block where Binomial, Hypergeometric and Poisson models must be identified from context.
-    angle_detail: Unlike a chapter-end single-distribution drill, this block mixes families and therefore
-      tests the L07 decision step. Check each parameterization against the 2026 deck because notation
-      varies across German courses.
-    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+  - material_ref:
+      route_id: route-4e47b0154d49ac739ff3c23e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-4e47b0154d49ac739ff3c23e
-  - kind: watch
-    label: jbstatistics — discrete distributions
-    locator: 'The discrete-distribution playlist: ''The Binomial Distribution'', ''The Geometric Distribution'',
-      ''The Hypergeometric Distribution'', ''The Poisson Distribution'''
-    angle: One video per distribution, each opening with the conditions that must hold before the formula
-      appears.
-    angle_detail: The consistent structure across the series — conditions, then PMF, then a worked example,
-      then the moments — makes the four distributions directly comparable, which is what L07's model-selection
-      node requires. Watching them back to back is more useful than watching any one of them, because
-      the differences between the condition lists are the actual content.
+  - material_ref:
+      route_id: route-48c6ad5e78bcb005c5a15885
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-jbstatistics
     route_id: route-48c6ad5e78bcb005c5a15885
-  - kind: read
-    label: Blatt 4 Aufgabe 3(a)(4) — Geometric model used later in CLT simulation
-    source_id: source-sad-uebungen
+  - material_ref:
+      route_id: route-sad-l07-geometric-blatt4-clt
+      inherit:
+      - label
+      - source_id
+      - locator
+      - vault_path
+      - angle
+      - angle_detail
+    kind: read
     route_id: route-sad-l07-geometric-blatt4-clt
-    locator: exercise-slides/Statistics_And_Data_Science.pdf, PDF p. 3, Aufgabe 3(a)(4)
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
-    angle: An explicit Geometric(p=0.02) example in the registered course exercise material.
-    angle_detail: Use the model description as a bridge now; the full m=10000, n=50 simulation belongs
-      after CLT in L08. The sheet has a 2026 heading and a sds25 URL, so this establishes content, not
-      an official exam-priority decision.
     scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-geometric/notes.md
   attachments: []
@@ -1112,273 +998,238 @@ stages:
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
-  - kind: practise
-    label: Übungsblatt 3, Aufgabe 2 — Poisson, Binomial, Hypergeometric and approximation
-    locator: exercise-slides/Übung-3.pdf, p. 2, Aufgabe 2(a)-(d)
-    angle: Forces model selection from prose before any formula can be substituted.
-    angle_detail: PDF p. 2 asks for Poisson in (a), Binomial in (b), Hypergeometric in (c), and the Hypergeometric-to-Binomial
-      approximation in (d). It contains no Geometric waiting-time exercise. Attempt each part when its
-      model has been introduced.
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
+  - material_ref:
+      route_id: route-475a87b6ec22bf8e77f9de71
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-475a87b6ec22bf8e77f9de71
-  - kind: practise
-    label: UE4, slides 36-49 — distribution conditions and worked cases
-    locator: exercise-slides/UE4.pdf, slides 36-49
-    angle: Works Binomial, Hypergeometric and Poisson examples; this slice does not teach Geometric waiting
-      times.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+  - material_ref:
+      route_id: route-52083707f01a014c3e2c267b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-52083707f01a014c3e2c267b
-  - kind: practise
-    label: UE5, slides 8-11 — official discrete-distribution solutions
-    locator: exercise-slides/UE5.pdf, slides 8-11
-    angle: Checks the model-choice reasoning against the current sheet's official solution.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+  - material_ref:
+      route_id: route-f827266eae5a106a6154442a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-f827266eae5a106a6154442a
-  - kind: reference
-    label: 2025 discrete-distributions deck
-    locator: 07_discrete_distributions.pptx (1).pdf
-    angle: Same-topic prior-year deck with a different set of worked examples.
-    angle_detail: The examples differ from 2026's even where the content matches, which makes this a source
-      of extra worked cases at exactly the right level — closer to the course than any textbook. Verify
-      the formulas against the current deck; notation drifts year to year.
+  - material_ref:
+      route_id: route-6ffaf5d7ec9d500ff4c5286e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-sad-2025-recordings
     route_id: route-6ffaf5d7ec9d500ff4c5286e
-  - kind: read
-    label: Fahrmeir Chapter 5 — discrete distributions
-    locator: Ch 5 §5.3 Spezielle diskrete Verteilungsmodelle, pdf pp. 270-282; Zusammenfassung pdf pp.
-      283-284; Aufgaben pdf pp. 286-287
-    angle: Presents each discrete model as a modelling decision — what generating situation forces this
-      distribution — rather than as a formula sheet.
-    angle_detail: Thirteen pages covering Binomial, Hypergeometrisch, Geometrisch and Poisson, each opened
-      with the Situation that produces it (fixed n and independence; drawing without replacement from
-      a finite urn; waiting for the first success; rare events in continuous time). That is exactly the
-      skill L07's model-selection node is testing, and it is the part a formula sheet cannot give you.
-      The moments are stated without derivation — if you want the E[X] and Var(X) proofs, use Blitzstein
-      §§3.3-3.4 and §4.7 instead. The Zusammenfassung on pp. 283-284 is the single best one-page revision
-      table for this lecture on the shelf.
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-3e560269a42e146f88512ee4
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-fahrmeir-statistik
     route_id: route-3e560269a42e146f88512ee4
-  - kind: practise
-    label: Arbeitsbuch Chapter 5 — distribution drills
-    locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123 (the Verteilungsmodell items)
-    angle: 'Model-identification drill: each item describes a situation and leaves you to name the distribution
-      before computing anything.'
-    angle_detail: The examinable difficulty in L07 is choosing between Binomial, Hypergeometrisch, Geometrisch
-      and Poisson from a word problem — once chosen, the arithmetic is a formula lookup. These items are
-      written so that the choice is the work, and the solutions justify the choice rather than jumping
-      to the formula. Do them mixed rather than in blocks; solving ten Binomial questions in a row trains
-      nothing about identification.
-    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+  - material_ref:
+      route_id: route-488f203b03208f7a1ae5eaff
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fahrmeir-arbeitsbuch
     route_id: route-488f203b03208f7a1ae5eaff
-  - kind: read
-    label: Grinstead & Snell Ch 5 — important distributions
-    locator: Official PDF, Ch 5 'Distributions and Densities', §§5.1-5.2, PDF pp. 191-232
-    angle: Catalogues the discrete families with a simulation for each, so the shape of every distribution
-      is seen before its formula is used.
-    angle_detail: The book's approach throughout is to simulate first and derive second, and for L07 that
-      means each distribution appears as a histogram from a generating process before its PMF is written.
-      Seeing the geometric's decay and the Poisson's shape as outputs of a described experiment is a good
-      defence against choosing the wrong model, which is the actual exam risk here.
+  - material_ref:
+      route_id: route-58f13d47b87582e36563f616
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-grinstead-snell
     route_id: route-58f13d47b87582e36563f616
-  - kind: read
-    label: Blitzstein Chapters 3–4 — distribution-generating stories
-    locator: Ch 3 §3.3 Bernoulli and Binomial, pdf pp. 129-131; §3.4 Hypergeometric, pdf pp. 132-134;
-      §3.9 connections between Binomial and Hypergeometric, pdf pp. 150-152; Ch 4 §4.3 Geometric and Negative
-      Binomial, pdf pp. 174-180; §4.7 Poisson, pdf pp. 191-197; §4.8 connections between Poisson and Binomial,
-      pdf pp. 198-200
-    angle: Gives each distribution a story first, then derives its moments — and devotes whole sections
-      to the relationships between them.
-    angle_detail: L07's relationships node — Binomial to Poisson in the rare-event limit, Hypergeometric
-      to Binomial as the population grows — is stated on a slide as a fact. §3.9 and §4.8 are entire sections
-      that prove those limits and say when the approximation is safe, which is the difference between
-      reciting the relationship and being able to justify an approximation in an exam. The story-first
-      presentation ('a Binomial counts successes in n independent trials with the same p') is also the
-      most reliable way to get the model-selection node right under time pressure.
-    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
+  - material_ref:
+      route_id: route-6522f11efe3a4956621f2692
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-blitzstein-hwang
     route_id: route-6522f11efe3a4956621f2692
-  - kind: read
-    label: OpenIntro Chapter 4 — common distributions
-    locator: Ch 4 §4.2 geometric distribution, pdf pp. 144-148; §4.3 binomial distribution, pdf pp. 149-157;
-      §4.4 negative binomial, pdf pp. 158-162; §4.5 Poisson distribution, pdf pp. 163-167
-    angle: Each distribution gets a stated checklist of conditions before its formula, which is the exact
-      form of L07's model-selection question.
-    angle_detail: §4.3 opens with four numbered conditions a situation must satisfy for a binomial model
-      to apply, and the later sections follow the same pattern. L07's model-selection node is asking precisely
-      for that checklist, and having it in list form is more usable under exam pressure than a prose description.
-      Hypergeometric is thin here (it lives in §3.3 as 'sampling from a small population') — Fahrmeir
-      §5.3 or Blitzstein §3.4 covers it properly.
-    vault_path: material://source-openintro-statistics/openintro.pdf
+  - material_ref:
+      route_id: route-64c6506fd426173a5b124d5a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-openintro-statistics
     route_id: route-64c6506fd426173a5b124d5a
-  - kind: practise
-    label: Dekking — discrete-distribution exercises
-    locator: Ch 4 §4.3 Bernoulli and binomial, pdf pp. 56-58; §4.4 the geometric distribution, pdf pp.
-      59-61; Ch 12 the Poisson process, pdf pp. 176-188 (taking a closer look at random arrivals p. 177;
-      the one-dimensional Poisson process p. 180)
-    angle: Derives the Poisson distribution from the arrival process rather than defining it by its PMF.
-    angle_detail: Everywhere else on this shelf the Poisson distribution is defined by its formula and
-      then motivated. Ch 12 starts from random points on a line, asks what the count in an interval must
-      look like if arrivals are memoryless and non-simultaneous, and the PMF falls out. That is the answer
-      to 'why is this the right model for rare events', which L07's model-selection node assumes. Longer
-      than the alternatives and beyond exam scope in its later sections — read §12.2 and §12.3 and stop.
-    vault_path: material://source-dekking-mips/dekking.pdf
+  - material_ref:
+      route_id: route-9e9215f1bace1b2b1a269f02
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-dekking-mips
     route_id: route-9e9215f1bace1b2b1a269f02
-  - kind: read
-    label: MIT 18.05 — discrete-distribution problems
-    locator: 'Classes: Reading and In-class Materials, the ''Discrete Random Variables'' readings covering
-      Bernoulli, binomial, geometric and Poisson; Problem Set 2 with solutions'
-    angle: Introduces each discrete family with an explicit R function name beside its formula, tying
-      the mathematics to a computation you can run.
-    angle_detail: 'Every distribution arrives with its dbinom/pbinom-style counterpart, so a hand computation
-      can be checked immediately. That is a small thing that removes a large class of silent errors when
-      practising, and it also means the model-selection question can be tested empirically: simulate the
-      described situation, compare the histogram with the candidate PMF.'
+  - material_ref:
+      route_id: route-e325141b8971b65116e08790
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
     scope_triage: helpful-now
-    source_id: source-mit-1805
     route_id: route-e325141b8971b65116e08790
-  - kind: reference
-    label: Pitman Chapters 2–3 — discrete distributions
-    locator: Ch 2 §2.1 The Binomial Distribution, pdf pp. 90-102; §2.4 Poisson Approximation, pdf pp.
-      127-147; Ch 3 §3.4 Discrete Distributions, pdf pp. 217-230; §3.5 The Poisson Distribution, pdf pp.
-      231-245
-    angle: Reaches the Poisson twice — once as a limit of the Binomial, once as a distribution in its
-      own right — several chapters apart.
-    angle_detail: §2.4 derives the Poisson as what the Binomial becomes when n grows and p shrinks with
-      np fixed, with the error of the approximation discussed; §3.5, much later, treats the Poisson as
-      a first-class distribution with its own moments. Meeting it in both roles is the clearest way to
-      hold L07's relationships node, which asserts the limit on one slide. §3.4 collects the discrete
-      families with a comparison of their shapes.
-    vault_path: material://source-pitman-probability/pitman.pdf
+  - material_ref:
+      route_id: route-ebf16644b4d589e5cfa9dc54
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-pitman-probability
     route_id: route-ebf16644b4d589e5cfa9dc54
-  - kind: reference
-    label: Tijms — discrete-distribution modeling examples
-    locator: Ch 9 Basic rules for discrete random variables, pdf pp. 275-295; Ch 4 Rare events and lotteries,
-      pdf pp. 115-152
-    angle: Ch 4 is an entire chapter of rare-event modelling — the Poisson's natural habitat — before
-      the distribution is ever defined formally.
-    angle_detail: Lottery coincidences, near-misses and clusters, worked out with counts and simulations.
-      It is the most convincing answer available to why the Poisson deserves its own model rather than
-      being a Binomial special case, which is what L07's model-selection node needs you to have internalised.
-      Read it for the modelling judgment, not for formulas — the formal statements are in Ch 9.
-    vault_path: material://source-tijms-understanding-probability/tijms.pdf
+  - material_ref:
+      route_id: route-3d9cb15592efe429e13918f5
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-tijms-understanding-probability
     route_id: route-3d9cb15592efe429e13918f5
-  - kind: reference
-    label: Ross — named discrete distributions
-    locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.6 the Bernoulli and binomial random variables;
-      §4.7 the Poisson random variable; §4.8.1 geometric; §4.8.3 hypergeometric)
-    angle: Derives every moment rather than tabulating it, so E[X] and Var(X) for each family can be reconstructed
-      instead of recalled.
-    angle_detail: Where Fahrmeir tabulates the moments and OpenIntro states them, Ross computes each one
-      from the PMF, usually with a slick algebraic step worth learning on its own (the index shift in
-      the binomial mean, the derivative trick for the geometric). If the exam permits no formula sheet,
-      being able to rebuild one moment from its PMF is a genuine safety net. §4.7.1 also covers computing
-      the distribution function without overflow, which is a numerical aside but explains the recursive
-      forms that appear in software.
-    vault_path: material://source-ross-first-course/ross.pdf
+  - material_ref:
+      route_id: route-3bd7fda1a5087e4bff5edfbb
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-ross-first-course
     route_id: route-3bd7fda1a5087e4bff5edfbb
-  - kind: practise
-    label: Schaum — discrete-distribution drills
-    locator: Ch 6 Binomial, Normal and Poisson Distributions, pdf pp. 107-127
-    angle: Puts the three named distributions in one chapter with mixed problems, so identification is
-      forced rather than given away by the section heading.
-    angle_detail: Because the binomial, Normal and Poisson share a chapter here, the end-of-chapter problems
-      are mixed, and mixed problems are the only ones that actually train L07's model-selection node —
-      a block of ten binomial questions trains substitution, not choice. Includes the binomial-to-Normal
-      and binomial-to-Poisson approximation problems that L08 also needs.
-    vault_path: material://source-schaums-probability/schaums-probability.pdf
+  - material_ref:
+      route_id: route-3d403c071c84fe621ef510a3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-schaums-probability
     route_id: route-3d403c071c84fe621ef510a3
-  - kind: reference
-    label: Harvard Stat 110 Units 3–4 — discrete distributions
-    locator: Lectures 6-8 (Bernoulli, binomial, hypergeometric, geometric, Poisson) plus the published
-      'Table of Distributions' handout
-    angle: Each distribution is given a one-sentence 'story' that determines when it applies — the compressed
-      form of the model-selection skill.
-    angle_detail: Blitzstein's stories ('a hypergeometric counts the successes when you sample without
-      replacement from a finite population containing a known number of successes') are short enough to
-      memorise and complete enough to decide a modelling question. Learning the five stories is a far
-      better use of an hour than learning the five PMFs, because the PMF follows from the story and the
-      identification does not. The published distribution-summary sheet tabulates all of them with moments.
+  - material_ref:
+      route_id: route-1e3e247b8c6240fbc08376a9
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-stat110
     route_id: route-1e3e247b8c6240fbc08376a9
-  - kind: practise
-    label: Leuphana-Merz pp. 11-16 — discrete distribution selection
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2
-    angle: A mixed block where Binomial, Hypergeometric and Poisson models must be identified from context.
-    angle_detail: Unlike a chapter-end single-distribution drill, this block mixes families and therefore
-      tests the L07 decision step. Check each parameterization against the 2026 deck because notation
-      varies across German courses.
-    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+  - material_ref:
+      route_id: route-4e47b0154d49ac739ff3c23e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-4e47b0154d49ac739ff3c23e
-  - kind: watch
-    label: jbstatistics — discrete distributions
-    locator: 'The discrete-distribution playlist: ''The Binomial Distribution'', ''The Geometric Distribution'',
-      ''The Hypergeometric Distribution'', ''The Poisson Distribution'''
-    angle: One video per distribution, each opening with the conditions that must hold before the formula
-      appears.
-    angle_detail: The consistent structure across the series — conditions, then PMF, then a worked example,
-      then the moments — makes the four distributions directly comparable, which is what L07's model-selection
-      node requires. Watching them back to back is more useful than watching any one of them, because
-      the differences between the condition lists are the actual content.
+  - material_ref:
+      route_id: route-48c6ad5e78bcb005c5a15885
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-jbstatistics
     route_id: route-48c6ad5e78bcb005c5a15885
-  - kind: watch
-    label: Kurzes Tutorium Statistik — discrete distributions
-    locator: '''Binomialverteilung''; ''Hypergeometrische Verteilung''; ''Poissonverteilung'''
-    angle: Names the German distribution vocabulary and the Ziehen-mit/ohne-Zurücklegen phrasing that
-      identifies each model in an exam question.
-    angle_detail: German exam questions signal the intended distribution through fixed phrases — 'mit
-      Zurücklegen', 'ohne Zurücklegen', 'in einem festen Zeitintervall'. These videos use exactly those
-      phrases while deriving each model, which turns the phrase into a reliable trigger. That mapping
-      is not available in any of the English sources.
+  - material_ref:
+      route_id: route-4d9c809542ca696a1f19fd49
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-kurzes-tutorium-statistik
     route_id: route-4d9c809542ca696a1f19fd49
-  - kind: watch
-    label: Brandon Foltz — Poisson distribution walkthrough
-    locator: '''Introduction to the Poisson Distribution'' (≈25 min)'
-    angle: A slow, single-topic walkthrough for when the shorter explanations have not worked.
-    angle_detail: 'Foltz''s videos are two to three times longer than StatQuest''s on the same topic,
-      and that is their purpose: he restates each step several ways and works a full example without skipping
-      arithmetic. Routed here as the fallback route for L07''s hardest single distribution — if the short
-      explanations have already landed, skip it, because the length is real.'
+  - material_ref:
+      route_id: route-dfa420ce94420caba7422260
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
     scope_triage: helpful-now
-    source_id: source-brandon-foltz
     route_id: route-dfa420ce94420caba7422260
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-poisson/notes.md
   attachments: []
@@ -1411,66 +1262,65 @@ stages:
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
-  - kind: practise
-    label: UE4, slides 36-49 — distribution conditions and worked cases
-    locator: exercise-slides/UE4.pdf, slides 36-49
-    angle: Works Binomial, Hypergeometric and Poisson examples; this slice does not teach Geometric waiting
-      times.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+  - material_ref:
+      route_id: route-52083707f01a014c3e2c267b
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-52083707f01a014c3e2c267b
-  - kind: practise
-    label: UE5, slides 8-11 — official discrete-distribution solutions
-    locator: exercise-slides/UE5.pdf, slides 8-11
-    angle: Checks the model-choice reasoning against the current sheet's official solution.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
+  - material_ref:
+      route_id: route-f827266eae5a106a6154442a
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: required-now
-    source_id: source-sad-uebungen
     route_id: route-f827266eae5a106a6154442a
-  - kind: practise
-    label: FAU pp. 5 and 22 — Binomial model and quantile
-    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 5 Aufgabe 1(5), solution p.
-      22
-    angle: Requires both a point probability and a cumulative/quantile decision for a named Binomial variable.
-    angle_detail: The distribution is named, so this is calculation and quantile practice rather than
-      model identification. It is best used after mixed-distribution tasks, as a speed check.
-    vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
+  - material_ref:
+      route_id: route-a9a926efa0d8512eca388e80
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-fau-klausur-ws1415
     route_id: route-a9a926efa0d8512eca388e80
-  - kind: reference
-    label: Ross — named discrete distributions
-    locator: Ch 4 Random Variables, pdf pp. 198-305 (§4.6 the Bernoulli and binomial random variables;
-      §4.7 the Poisson random variable; §4.8.1 geometric; §4.8.3 hypergeometric)
-    angle: Derives every moment rather than tabulating it, so E[X] and Var(X) for each family can be reconstructed
-      instead of recalled.
-    angle_detail: Where Fahrmeir tabulates the moments and OpenIntro states them, Ross computes each one
-      from the PMF, usually with a slick algebraic step worth learning on its own (the index shift in
-      the binomial mean, the derivative trick for the geometric). If the exam permits no formula sheet,
-      being able to rebuild one moment from its PMF is a genuine safety net. §4.7.1 also covers computing
-      the distribution function without overflow, which is a numerical aside but explains the recursive
-      forms that appear in software.
-    vault_path: material://source-ross-first-course/ross.pdf
+  - material_ref:
+      route_id: route-3bd7fda1a5087e4bff5edfbb
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
     scope_triage: reference-only
-    source_id: source-ross-first-course
     route_id: route-3bd7fda1a5087e4bff5edfbb
-  - kind: practise
-    label: Leuphana-Merz pp. 11-16 — discrete distribution selection
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2
-    angle: A mixed block where Binomial, Hypergeometric and Poisson models must be identified from context.
-    angle_detail: Unlike a chapter-end single-distribution drill, this block mixes families and therefore
-      tests the L07 decision step. Check each parameterization against the 2026 deck because notation
-      varies across German courses.
-    vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
+  - material_ref:
+      route_id: route-4e47b0154d49ac739ff3c23e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
     scope_triage: helpful-now
-    source_id: source-sad-klausuren-extern
     route_id: route-4e47b0154d49ac739ff3c23e
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-relationships/notes.md
   attachments: []

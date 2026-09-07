@@ -38,42 +38,40 @@ stages:
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
-  - kind: practise
-    label: Blatt 1, Aufgabe 1 — data summaries in the opening dataset
-    source_id: source-sad-uebungen
-    locator: exercise-slides/Blatt1.pdf, pp. 1-2, Aufgabe 1
-    angle: Turns the introductory dataset into an unaided frequency, location and interpretation task.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
+  - material_ref:
+      route_id: route-e4fe4b297a44d7835827d2e7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: required-now
     route_id: route-e4fe4b297a44d7835827d2e7
-  - kind: practise
-    label: UE2, slides 5-18 — feature and data-type walkthrough
-    source_id: source-sad-uebungen
-    locator: exercise-slides/UE2.pdf, slides 5-18
-    angle: Shows how the course translates a raw table into features before any model is chosen.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE2.pdf
+  - material_ref:
+      route_id: route-2dcce50c3bcf099f1f475c2b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: required-now
     route_id: route-2dcce50c3bcf099f1f475c2b
-  - kind: read
-    label: OpenIntro Chapters 1–2 — accessible data summaries
-    source_id: source-openintro-statistics
-    locator: 'Ch 1 introduction to data, pdf pp. 7-38 (case study: stents to prevent strokes p. 9); Ch
-      2 §2.1 examining numerical data, pdf pp. 40-59; §2.3 case study: malaria vaccine, pdf pp. 70-78'
-    angle: Opens with a real study whose result reverses on closer reading — the argument for why descriptive
-      statistics is not decoration.
-    angle_detail: 'The stent case study runs through the whole first chapter: a treatment that looks beneficial
-      at 30 days and harmful at 365, with the data shown both ways. It is the most persuasive answer available
-      to ''why does L01 spend a lecture on summaries'', and it costs twenty minutes. The writing is aimed
-      at first-year undergraduates with no calculus, so this is the gentlest route on the shelf; that
-      is a feature at L01 and a limitation later. Free, open licence, and the same book carries L02-L10,
-      so the notation stays constant across the whole statistics half of the course.'
-    vault_path: material://source-openintro-statistics/openintro.pdf
+  - material_ref:
+      route_id: route-079024df32c7918f47655dfd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
     route_id: route-079024df32c7918f47655dfd
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-data-questions/notes.md
@@ -106,90 +104,75 @@ stages:
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
-  - kind: practise
-    label: Blatt 1, Aufgabe 1 — data summaries in the opening dataset
-    source_id: source-sad-uebungen
-    locator: exercise-slides/Blatt1.pdf, pp. 1-2, Aufgabe 1
-    angle: Turns the introductory dataset into an unaided frequency, location and interpretation task.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
+  - material_ref:
+      route_id: route-e4fe4b297a44d7835827d2e7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: required-now
     route_id: route-e4fe4b297a44d7835827d2e7
-  - kind: read
-    label: Fahrmeir Chapter 2 — descriptive-statistics reference
-    source_id: source-fahrmeir-statistik
-    locator: Ch 2 §2.1 Verteilungen und ihre Darstellungen, pdf pp. 47-66; §2.2 Beschreibung von Verteilungen,
-      pdf pp. 67-90
-    angle: The German textbook vocabulary for exactly the descriptive tools L01 demonstrates, so the exam
-      words and the lecture words match.
-    angle_detail: 'L01 shows mean/median/mode and a histogram on one study-duration dataset and moves
-      on; Fahrmeir gives the same objects their examinable German names and definitions — Häufigkeitsverteilung,
-      Lagemaße, Streuungsmaße, Quantil, Boxplot — with a worked example per definition. Read it for naming
-      and notation, not for new ideas: everything here is L01 content stated more slowly and in the language
-      the Klausur is written in. It assumes no probability at all, so it is safe this early.'
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-0c68f75d11118a811949ead0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
     route_id: route-0c68f75d11118a811949ead0
-  - kind: practise
-    label: Arbeitsbuch Chapter 2 — descriptive warm-ups
-    source_id: source-fahrmeir-arbeitsbuch
-    locator: Ch 2 Aufgaben pdf pp. 12-30, Lösungen pdf pp. 31-56 (start with the Häufigkeits- and Lagemaß
-      items)
-    angle: Solved German drill for the descriptive measures L01 introduces, with every step written out
-      rather than a final answer.
-    angle_detail: The Arbeitsbuch is the companion to the Fahrmeir textbook and shares its numbering exactly,
-      so an exercise here always has a chapter of theory behind it at the same number. Its solutions are
-      full derivations, which makes it the right place to check calculation habits — divisor choice, rounding,
-      how a median is reported for even n — rather than to test yourself. For untimed self-testing prefer
-      the SaD Übungen; for timed self-testing use the Klausur bank.
-    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+  - material_ref:
+      route_id: route-19d82d10ef563326bb01cfed
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: helpful-now
     route_id: route-19d82d10ef563326bb01cfed
-  - kind: read
-    label: OpenIntro Chapters 1–2 — accessible data summaries
-    source_id: source-openintro-statistics
-    locator: 'Ch 1 introduction to data, pdf pp. 7-38 (case study: stents to prevent strokes p. 9); Ch
-      2 §2.1 examining numerical data, pdf pp. 40-59; §2.3 case study: malaria vaccine, pdf pp. 70-78'
-    angle: Opens with a real study whose result reverses on closer reading — the argument for why descriptive
-      statistics is not decoration.
-    angle_detail: 'The stent case study runs through the whole first chapter: a treatment that looks beneficial
-      at 30 days and harmful at 365, with the data shown both ways. It is the most persuasive answer available
-      to ''why does L01 spend a lecture on summaries'', and it costs twenty minutes. The writing is aimed
-      at first-year undergraduates with no calculus, so this is the gentlest route on the shelf; that
-      is a feature at L01 and a limitation later. Free, open licence, and the same book carries L02-L10,
-      so the notation stays constant across the whole statistics half of the course.'
-    vault_path: material://source-openintro-statistics/openintro.pdf
+  - material_ref:
+      route_id: route-079024df32c7918f47655dfd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
     route_id: route-079024df32c7918f47655dfd
-  - kind: practise
-    label: Dekking — descriptive review and answer-backed exercises
-    source_id: source-dekking-mips
-    locator: 'Ch 16 Exploratory data analysis: numerical summaries, pdf pp. 238-250 (centre p. 238; variability
-      p. 240; empirical quantiles and IQR p. 241; boxplot p. 243; exercises p. 247); Ch 15 histograms
-      pdf pp. 216-218; full solutions App D pdf pp. 443-471'
-    angle: Descriptive statistics presented after probability, so mean and variance arrive as estimates
-      of distribution features rather than as summary formulas.
-    angle_detail: 'Dekking deliberately places EDA in Ch 15-16, two thirds of the way through the book,
-      and the consequence is a different reading of the same formulas L01 shows on slide one: the sample
-      mean is introduced as an estimator of E[X], the sample variance as an estimator of Var(X). Coming
-      back to this after L09 is one of the most useful re-reads in the module, because it retroactively
-      explains why L01''s descriptive tools were worth defining. On a first pass through L01, use it only
-      for the exercises — the framing will not land yet.'
-    vault_path: material://source-dekking-mips/dekking.pdf
+  - material_ref:
+      route_id: route-f081f68ca3fa4261de929984
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: helpful-now
     route_id: route-f081f68ca3fa4261de929984
-  - kind: watch
-    label: Kurzes Tutorium Statistik — Lagemaße und Streuung
-    source_id: source-kurzes-tutorium-statistik
-    locator: Die Videos 'Lagemaße' und 'Streuungsmaße' (je ≈10 Min)
-    angle: German-language vocabulary for L01's descriptive measures — the words the Klausur will actually
-      use.
-    angle_detail: The lecture is delivered in English but examined in a German programme, and the exam
-      vocabulary (Lagemaß, Streuungsmaß, Merkmalsausprägung, Häufigkeit) is not always introduced on the
-      slides. These videos are short and use the terms consistently, which is the cheapest way to close
-      that gap. Content is at Abitur/first-semester level — use it for language, not for depth.
+  - material_ref:
+      route_id: route-e7123fb830406d6679364c7f
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
     route_id: route-e7123fb830406d6679364c7f
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-location/notes.md
@@ -222,67 +205,52 @@ stages:
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
-  - kind: read
-    label: Fahrmeir Chapter 2 — descriptive-statistics reference
-    source_id: source-fahrmeir-statistik
-    locator: Ch 2 §2.1 Verteilungen und ihre Darstellungen, pdf pp. 47-66; §2.2 Beschreibung von Verteilungen,
-      pdf pp. 67-90
-    angle: The German textbook vocabulary for exactly the descriptive tools L01 demonstrates, so the exam
-      words and the lecture words match.
-    angle_detail: 'L01 shows mean/median/mode and a histogram on one study-duration dataset and moves
-      on; Fahrmeir gives the same objects their examinable German names and definitions — Häufigkeitsverteilung,
-      Lagemaße, Streuungsmaße, Quantil, Boxplot — with a worked example per definition. Read it for naming
-      and notation, not for new ideas: everything here is L01 content stated more slowly and in the language
-      the Klausur is written in. It assumes no probability at all, so it is safe this early.'
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-0c68f75d11118a811949ead0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
     route_id: route-0c68f75d11118a811949ead0
-  - kind: practise
-    label: Arbeitsbuch Chapter 2 — descriptive warm-ups
-    source_id: source-fahrmeir-arbeitsbuch
-    locator: Ch 2 Aufgaben pdf pp. 12-30, Lösungen pdf pp. 31-56 (start with the Häufigkeits- and Lagemaß
-      items)
-    angle: Solved German drill for the descriptive measures L01 introduces, with every step written out
-      rather than a final answer.
-    angle_detail: The Arbeitsbuch is the companion to the Fahrmeir textbook and shares its numbering exactly,
-      so an exercise here always has a chapter of theory behind it at the same number. Its solutions are
-      full derivations, which makes it the right place to check calculation habits — divisor choice, rounding,
-      how a median is reported for even n — rather than to test yourself. For untimed self-testing prefer
-      the SaD Übungen; for timed self-testing use the Klausur bank.
-    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+  - material_ref:
+      route_id: route-19d82d10ef563326bb01cfed
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: helpful-now
     route_id: route-19d82d10ef563326bb01cfed
-  - kind: read
-    label: OpenIntro Chapters 1–2 — accessible data summaries
-    source_id: source-openintro-statistics
-    locator: 'Ch 1 introduction to data, pdf pp. 7-38 (case study: stents to prevent strokes p. 9); Ch
-      2 §2.1 examining numerical data, pdf pp. 40-59; §2.3 case study: malaria vaccine, pdf pp. 70-78'
-    angle: Opens with a real study whose result reverses on closer reading — the argument for why descriptive
-      statistics is not decoration.
-    angle_detail: 'The stent case study runs through the whole first chapter: a treatment that looks beneficial
-      at 30 days and harmful at 365, with the data shown both ways. It is the most persuasive answer available
-      to ''why does L01 spend a lecture on summaries'', and it costs twenty minutes. The writing is aimed
-      at first-year undergraduates with no calculus, so this is the gentlest route on the shelf; that
-      is a feature at L01 and a limitation later. Free, open licence, and the same book carries L02-L10,
-      so the notation stays constant across the whole statistics half of the course.'
-    vault_path: material://source-openintro-statistics/openintro.pdf
+  - material_ref:
+      route_id: route-079024df32c7918f47655dfd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
     route_id: route-079024df32c7918f47655dfd
-  - kind: practise
-    label: Dekking — descriptive review and answer-backed exercises
-    source_id: source-dekking-mips
-    locator: 'Ch 16 Exploratory data analysis: numerical summaries, pdf pp. 238-250 (centre p. 238; variability
-      p. 240; empirical quantiles and IQR p. 241; boxplot p. 243; exercises p. 247); Ch 15 histograms
-      pdf pp. 216-218; full solutions App D pdf pp. 443-471'
-    angle: Descriptive statistics presented after probability, so mean and variance arrive as estimates
-      of distribution features rather than as summary formulas.
-    angle_detail: 'Dekking deliberately places EDA in Ch 15-16, two thirds of the way through the book,
-      and the consequence is a different reading of the same formulas L01 shows on slide one: the sample
-      mean is introduced as an estimator of E[X], the sample variance as an estimator of Var(X). Coming
-      back to this after L09 is one of the most useful re-reads in the module, because it retroactively
-      explains why L01''s descriptive tools were worth defining. On a first pass through L01, use it only
-      for the exercises — the framing will not land yet.'
-    vault_path: material://source-dekking-mips/dekking.pdf
+  - material_ref:
+      route_id: route-f081f68ca3fa4261de929984
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: helpful-now
     route_id: route-f081f68ca3fa4261de929984
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-distributions/notes.md
@@ -316,74 +284,64 @@ stages:
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
-  - kind: practise
-    label: Blatt 1, Aufgabe 1 — data summaries in the opening dataset
-    source_id: source-sad-uebungen
-    locator: exercise-slides/Blatt1.pdf, pp. 1-2, Aufgabe 1
-    angle: Turns the introductory dataset into an unaided frequency, location and interpretation task.
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
+  - material_ref:
+      route_id: route-e4fe4b297a44d7835827d2e7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: required-now
     route_id: route-e4fe4b297a44d7835827d2e7
-  - kind: practise
-    label: UE2, slides 5-18 — feature and data-type walkthrough
-    source_id: source-sad-uebungen
-    locator: exercise-slides/UE2.pdf, slides 5-18
-    angle: Shows how the course translates a raw table into features before any model is chosen.
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
-    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE2.pdf
+  - material_ref:
+      route_id: route-2dcce50c3bcf099f1f475c2b
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: required-now
     route_id: route-2dcce50c3bcf099f1f475c2b
-  - kind: read
-    label: Fahrmeir Chapter 2 — descriptive-statistics reference
-    source_id: source-fahrmeir-statistik
-    locator: Ch 2 §2.1 Verteilungen und ihre Darstellungen, pdf pp. 47-66; §2.2 Beschreibung von Verteilungen,
-      pdf pp. 67-90
-    angle: The German textbook vocabulary for exactly the descriptive tools L01 demonstrates, so the exam
-      words and the lecture words match.
-    angle_detail: 'L01 shows mean/median/mode and a histogram on one study-duration dataset and moves
-      on; Fahrmeir gives the same objects their examinable German names and definitions — Häufigkeitsverteilung,
-      Lagemaße, Streuungsmaße, Quantil, Boxplot — with a worked example per definition. Read it for naming
-      and notation, not for new ideas: everything here is L01 content stated more slowly and in the language
-      the Klausur is written in. It assumes no probability at all, so it is safe this early.'
-    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - material_ref:
+      route_id: route-0c68f75d11118a811949ead0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
     route_id: route-0c68f75d11118a811949ead0
-  - kind: read
-    label: OpenIntro Chapters 1–2 — accessible data summaries
-    source_id: source-openintro-statistics
-    locator: 'Ch 1 introduction to data, pdf pp. 7-38 (case study: stents to prevent strokes p. 9); Ch
-      2 §2.1 examining numerical data, pdf pp. 40-59; §2.3 case study: malaria vaccine, pdf pp. 70-78'
-    angle: Opens with a real study whose result reverses on closer reading — the argument for why descriptive
-      statistics is not decoration.
-    angle_detail: 'The stent case study runs through the whole first chapter: a treatment that looks beneficial
-      at 30 days and harmful at 365, with the data shown both ways. It is the most persuasive answer available
-      to ''why does L01 spend a lecture on summaries'', and it costs twenty minutes. The writing is aimed
-      at first-year undergraduates with no calculus, so this is the gentlest route on the shelf; that
-      is a feature at L01 and a limitation later. Free, open licence, and the same book carries L02-L10,
-      so the notation stays constant across the whole statistics half of the course.'
-    vault_path: material://source-openintro-statistics/openintro.pdf
+  - material_ref:
+      route_id: route-079024df32c7918f47655dfd
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: read
     scope_triage: helpful-now
     route_id: route-079024df32c7918f47655dfd
-  - kind: practise
-    label: Dekking — descriptive review and answer-backed exercises
-    source_id: source-dekking-mips
-    locator: 'Ch 16 Exploratory data analysis: numerical summaries, pdf pp. 238-250 (centre p. 238; variability
-      p. 240; empirical quantiles and IQR p. 241; boxplot p. 243; exercises p. 247); Ch 15 histograms
-      pdf pp. 216-218; full solutions App D pdf pp. 443-471'
-    angle: Descriptive statistics presented after probability, so mean and variance arrive as estimates
-      of distribution features rather than as summary formulas.
-    angle_detail: 'Dekking deliberately places EDA in Ch 15-16, two thirds of the way through the book,
-      and the consequence is a different reading of the same formulas L01 shows on slide one: the sample
-      mean is introduced as an estimator of E[X], the sample variance as an estimator of Var(X). Coming
-      back to this after L09 is one of the most useful re-reads in the module, because it retroactively
-      explains why L01''s descriptive tools were worth defining. On a first pass through L01, use it only
-      for the exercises — the framing will not land yet.'
-    vault_path: material://source-dekking-mips/dekking.pdf
+  - material_ref:
+      route_id: route-f081f68ca3fa4261de929984
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: helpful-now
     route_id: route-f081f68ca3fa4261de929984
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-sampling-context/notes.md
@@ -416,43 +374,38 @@ stages:
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
-  - kind: practise
-    label: FAU pp. 4 and 22 — origin/base-rate table with solution
-    source_id: source-fau-klausur-ws1415
-    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 4 Aufgabe 1(3)-(4), solution
-      p. 22
-    angle: An authentic German base-rate item showing the amount of working that receives marks.
-    angle_detail: The orange-origin table asks for posterior/origin reasoning in the form that makes sensitivity-versus-posterior
-      mistakes visible. It is a calibration item after L01, not a new explanation of Bayes.
-    vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
+  - material_ref:
+      route_id: route-66d61878473ae7da314c77a8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: helpful-now
     route_id: route-66d61878473ae7da314c77a8
-  - kind: watch
-    label: StatQuest — confusion matrix, sensitivity, and specificity
-    source_id: source-statquest
-    locator: '''The Confusion Matrix, Clearly Explained'' and ''Sensitivity and Specificity, Clearly Explained''
-      (≈10 min each)'
-    angle: Twenty minutes that fix the confusion matrix orientation problem — which axis is truth, which
-      is prediction — for good.
-    angle_detail: Nearly every mistake with precision, recall, sensitivity and specificity is a transposition
-      error made under time pressure, not a conceptual failure. StatQuest's fix is a colour-coded table
-      built up cell by cell, repeated until the layout is memorable. That is worth more for L01 than any
-      written treatment, because the written ones assume you will not transpose it. Stop after these two;
-      the channel's ROC video belongs to L11.
+  - material_ref:
+      route_id: route-e97efca7d5fa214453f7b0d0
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
     route_id: route-e97efca7d5fa214453f7b0d0
-  - kind: watch
-    label: 3Blue1Brown — Bayes' theorem and the medical-test paradox
-    source_id: source-3b1b-bayes-theorem
-    locator: '''Bayes theorem, the geometry of changing beliefs'' (≈15 min); ''The medical test paradox,
-      and redesigning Bayes'' rule'' (≈21 min)'
-    angle: Turns the base-rate problem into an area picture, so the answer is seen before it is computed.
-    angle_detail: L01 introduces base rates through a medical-test example and asserts the counterintuitive
-      answer. The first video builds a rectangle whose areas are the four cells of the joint distribution,
-      and the posterior becomes a visible ratio of two areas — at which point the answer stops being surprising.
-      The second video is the medical-test case itself and argues for thinking in odds and Bayes factors,
-      which is a genuinely different representation from the lecture's. Watch before the algebra in L04,
-      not after.
+  - material_ref:
+      route_id: route-989d14e47fcce3d89ecc119e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
     route_id: route-989d14e47fcce3d89ecc119e
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-classification/notes.md
@@ -485,29 +438,27 @@ stages:
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
-  - kind: practise
-    label: FAU pp. 4 and 22 — origin/base-rate table with solution
-    source_id: source-fau-klausur-ws1415
-    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 4 Aufgabe 1(3)-(4), solution
-      p. 22
-    angle: An authentic German base-rate item showing the amount of working that receives marks.
-    angle_detail: The orange-origin table asks for posterior/origin reasoning in the form that makes sensitivity-versus-posterior
-      mistakes visible. It is a calibration item after L01, not a new explanation of Bayes.
-    vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
+  - material_ref:
+      route_id: route-66d61878473ae7da314c77a8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: practise
     scope_triage: helpful-now
     route_id: route-66d61878473ae7da314c77a8
-  - kind: watch
-    label: 3Blue1Brown — Bayes' theorem and the medical-test paradox
-    source_id: source-3b1b-bayes-theorem
-    locator: '''Bayes theorem, the geometry of changing beliefs'' (≈15 min); ''The medical test paradox,
-      and redesigning Bayes'' rule'' (≈21 min)'
-    angle: Turns the base-rate problem into an area picture, so the answer is seen before it is computed.
-    angle_detail: L01 introduces base rates through a medical-test example and asserts the counterintuitive
-      answer. The first video builds a rectangle whose areas are the four cells of the joint distribution,
-      and the posterior becomes a visible ratio of two areas — at which point the answer stops being surprising.
-      The second video is the medical-test case itself and argues for thinking in odds and Bayes factors,
-      which is a genuinely different representation from the lecture's. Watch before the algebra in L04,
-      not after.
+  - material_ref:
+      route_id: route-989d14e47fcce3d89ecc119e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: watch
     scope_triage: helpful-now
     route_id: route-989d14e47fcce3d89ecc119e
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-base-rates/notes.md

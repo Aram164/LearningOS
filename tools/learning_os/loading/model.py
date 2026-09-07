@@ -124,6 +124,9 @@ class StudyMap:
     data: dict
     module_id: str
     unit_id: str
+    # Raw storage is kept solely for compact editing/serialization. Consumers
+    # continue to use the fully expanded data above.
+    authored_data: dict | None = None
 
 
 @dataclass
