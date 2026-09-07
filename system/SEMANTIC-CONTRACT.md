@@ -55,6 +55,19 @@ Staleness is not completeness: artifacts a claim never read cannot stale
 it, and an unreadable read set is stale rather than trusted. Deleting this
 layer reverts cleanly — canonical data is untouched by every phase.
 
+## Policy queries (Phase 1.5)
+
+Predicates own judgments; `tools/learning_os/semantics/policy.py` owns the
+query surface agents program against: one rule name in, one structured
+`PolicyDecision` out — a normalized verdict (`allow`, `deny`, `defer`,
+`needs-review`) plus the reasons behind it. `defer` is not `deny`: a
+deferred critique point may return with authorization, while a denied
+mutation must not be retried unchanged. Unknown rules fail closed;
+malformed queries deny rather than raise. Seven rules (mutation scope,
+shelving approval, critique gating, mastery, note review, write path,
+workspace scope), each mapped from one predicate with its authority
+attached. Rule composition into a change envelope belongs to Phase 6.
+
 ## Verified Operator Questions
 
 ~20 question/procedure/expected-property triples under

@@ -8,6 +8,7 @@ a canonical writer — see `system/SEMANTIC-CONTRACT.md`.
 
 from __future__ import annotations
 
+from .policy import POLICY_RULES, PolicyDecision, query
 from .predicates import (
     CONTRACT_VERSION,
     PREDICATES,
@@ -18,8 +19,11 @@ from .predicates import (
 
 __all__ = [
     "CONTRACT_VERSION",
+    "POLICY_RULES",
     "PREDICATES",
+    "PolicyDecision",
     "Predicate",
     "evaluate",
     "needs_study_map",
+    "query",
 ]
