@@ -163,10 +163,12 @@ stages:
     locator: '''Zufallsexperiment und Ereignisse''; ''Bedingte Wahrscheinlichkeit''; ''Satz von Bayes'''
     angle: Works Bayes through the Vierfeldertafel, in German, which is the presentation German exams
       use.
-    angle_detail: The four-field table is the standard German exam apparatus for conditional probability,
+    angle_detail: 'The four-field table is the standard German exam apparatus for conditional probability,
       and these videos build and read one directly. Combined with the Fahrmeir Arbeitsbuch solutions this
-      covers the format completely. Do not use them for the Naive Bayes construction — that is the lecture's
-      own and has no German-language equivalent here.
+      covers the format completely. Do not use them for the Naive Bayes construction — that is the lecture''s
+      own and has no German-language equivalent here. Not verified on 2026-09-07: the channel is only
+      reachable through a YouTube consent gate that this session did not accept, so the episode titles
+      below are inherited from the earlier plan and have not been checked against the channel''s own listing.'
     scope_triage: helpful-now
     source_id: source-kurzes-tutorium-statistik
     route_id: route-9a18c8d3ccfb21c3f023b850
@@ -361,10 +363,12 @@ stages:
     locator: '''Zufallsexperiment und Ereignisse''; ''Bedingte Wahrscheinlichkeit''; ''Satz von Bayes'''
     angle: Works Bayes through the Vierfeldertafel, in German, which is the presentation German exams
       use.
-    angle_detail: The four-field table is the standard German exam apparatus for conditional probability,
+    angle_detail: 'The four-field table is the standard German exam apparatus for conditional probability,
       and these videos build and read one directly. Combined with the Fahrmeir Arbeitsbuch solutions this
-      covers the format completely. Do not use them for the Naive Bayes construction — that is the lecture's
-      own and has no German-language equivalent here.
+      covers the format completely. Do not use them for the Naive Bayes construction — that is the lecture''s
+      own and has no German-language equivalent here. Not verified on 2026-09-07: the channel is only
+      reachable through a YouTube consent gate that this session did not accept, so the episode titles
+      below are inherited from the earlier plan and have not been checked against the channel''s own listing.'
     scope_triage: helpful-now
     source_id: source-kurzes-tutorium-statistik
     route_id: route-9a18c8d3ccfb21c3f023b850
@@ -674,10 +678,12 @@ stages:
     locator: '''Zufallsexperiment und Ereignisse''; ''Bedingte Wahrscheinlichkeit''; ''Satz von Bayes'''
     angle: Works Bayes through the Vierfeldertafel, in German, which is the presentation German exams
       use.
-    angle_detail: The four-field table is the standard German exam apparatus for conditional probability,
+    angle_detail: 'The four-field table is the standard German exam apparatus for conditional probability,
       and these videos build and read one directly. Combined with the Fahrmeir Arbeitsbuch solutions this
-      covers the format completely. Do not use them for the Naive Bayes construction — that is the lecture's
-      own and has no German-language equivalent here.
+      covers the format completely. Do not use them for the Naive Bayes construction — that is the lecture''s
+      own and has no German-language equivalent here. Not verified on 2026-09-07: the channel is only
+      reachable through a YouTube consent gate that this session did not accept, so the episode titles
+      below are inherited from the earlier plan and have not been checked against the channel''s own listing.'
     scope_triage: helpful-now
     source_id: source-kurzes-tutorium-statistik
     route_id: route-9a18c8d3ccfb21c3f023b850
@@ -1004,10 +1010,12 @@ stages:
     locator: '''Zufallsexperiment und Ereignisse''; ''Bedingte Wahrscheinlichkeit''; ''Satz von Bayes'''
     angle: Works Bayes through the Vierfeldertafel, in German, which is the presentation German exams
       use.
-    angle_detail: The four-field table is the standard German exam apparatus for conditional probability,
+    angle_detail: 'The four-field table is the standard German exam apparatus for conditional probability,
       and these videos build and read one directly. Combined with the Fahrmeir Arbeitsbuch solutions this
-      covers the format completely. Do not use them for the Naive Bayes construction — that is the lecture's
-      own and has no German-language equivalent here.
+      covers the format completely. Do not use them for the Naive Bayes construction — that is the lecture''s
+      own and has no German-language equivalent here. Not verified on 2026-09-07: the channel is only
+      reachable through a YouTube consent gate that this session did not accept, so the episode titles
+      below are inherited from the earlier plan and have not been checked against the channel''s own listing.'
     scope_triage: helpful-now
     source_id: source-kurzes-tutorium-statistik
     route_id: route-9a18c8d3ccfb21c3f023b850
@@ -1153,16 +1161,18 @@ stages:
     source_id: source-blitzstein-hwang
     route_id: route-b48ac5af55a8c900d68bb0c9
   - kind: read
-    label: Jurafsky & Martin Appendix B — naive Bayes classification
-    locator: 'August 19, 2026 release, Appendix B ''Naive Bayes Classification'': classifier, training,
-      and worked-example sections'
+    label: Jurafsky & Martin Appendix B — naive Bayes, text classification and sentiment
+    locator: 'Draft of August 19, 2026, Appendix B ''Naive Bayes, Text Classification, and Sentiment'':
+      §B.1 the classifier, §B.2 training, §B.3 the worked example'
     angle: The clearest published account of the exact classifier L04 builds — bag of words, conditional
       independence, product of counted likelihoods.
     angle_detail: L04's spam classifier has no equivalent in the probability books on this shelf, because
-      they stop at Bayes' rule. This chapter is precisely that construction, written as a textbook chapter
+      they stop at Bayes' rule. This appendix is precisely that construction, written as a textbook chapter
       with the assumptions named — the bag-of-words assumption and the naive conditional-independence
-      assumption stated separately, which the deck merges. §4.3 works a complete numeric example on a
-      handful of documents. Free draft PDF from Stanford.
+      assumption stated separately, which the deck merges. §B.3 'Worked example' trains and tests the
+      classifier by hand on a handful of documents with add-one smoothing. Section numbers checked against
+      the 19 August 2026 draft on 2026-09-07; earlier drafts carried this material as Chapter 4, so a
+      §4.x reference to it is stale.
     scope_triage: helpful-now
     source_id: source-jurafsky-slp3
     route_id: route-878acd203c5603b70539868d
@@ -1368,22 +1378,24 @@ stages:
     source_id: source-sad-uebungen
     route_id: route-c355ecc8ea7599015a21abfe
   - kind: read
-    label: Jurafsky & Martin Appendix B — naive Bayes classification
-    locator: 'August 19, 2026 release, Appendix B ''Naive Bayes Classification'': classifier, training,
-      and worked-example sections'
+    label: Jurafsky & Martin Appendix B — naive Bayes, text classification and sentiment
+    locator: 'Draft of August 19, 2026, Appendix B ''Naive Bayes, Text Classification, and Sentiment'':
+      §B.1 the classifier, §B.2 training, §B.3 the worked example'
     angle: The clearest published account of the exact classifier L04 builds — bag of words, conditional
       independence, product of counted likelihoods.
     angle_detail: L04's spam classifier has no equivalent in the probability books on this shelf, because
-      they stop at Bayes' rule. This chapter is precisely that construction, written as a textbook chapter
+      they stop at Bayes' rule. This appendix is precisely that construction, written as a textbook chapter
       with the assumptions named — the bag-of-words assumption and the naive conditional-independence
-      assumption stated separately, which the deck merges. §4.3 works a complete numeric example on a
-      handful of documents. Free draft PDF from Stanford.
+      assumption stated separately, which the deck merges. §B.3 'Worked example' trains and tests the
+      classifier by hand on a handful of documents with add-one smoothing. Section numbers checked against
+      the 19 August 2026 draft on 2026-09-07; earlier drafts carried this material as Chapter 4, so a
+      §4.x reference to it is stale.
     scope_triage: helpful-now
     source_id: source-jurafsky-slp3
     route_id: route-878acd203c5603b70539868d
   - kind: watch
     label: StatQuest — Naive Bayes
-    locator: '''Naive Bayes, Clearly Explained'' (≈15 min)'
+    locator: 'StatQuest video index: ''Naive Bayes'' (≈15 min)'
     angle: Builds the spam classifier from counted word frequencies before writing any probability notation.
     angle_detail: 'The video''s order is the reverse of the lecture''s: it counts words in example messages,
       forms the products, and only then names what it has been doing as Naive Bayes with a conditional
