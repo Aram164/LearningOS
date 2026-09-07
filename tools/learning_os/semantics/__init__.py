@@ -63,6 +63,8 @@ from .lineage import (
     load_ledger,
     record_claim,
     refresh,
+    retraction_impact,
+    withdraw,
 )
 from .policy import POLICY_RULES, PolicyDecision, query
 from .predicates import (
@@ -153,6 +155,7 @@ __all__ = [
     "query",
     "record_claim",
     "refresh",
+    "retraction_impact",
     "rewrite_cheapest_evidence_first",
     "rewrite_dedup",
     "rewrite_late_materialization",
@@ -162,4 +165,5 @@ __all__ = [
     "transition",
     "validate_ir",
     "verify_postconditions",
+    "withdraw",
 ]

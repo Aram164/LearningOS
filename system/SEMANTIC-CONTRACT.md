@@ -68,16 +68,21 @@ shelving approval, critique gating, mastery, note review, write path,
 workspace scope), each mapped from one predicate with its authority
 attached. Rule composition into a change envelope belongs to Phase 6.
 
-## Lineage (Phase 2)
+## Lineage (Phase 2, retraction in Phase 10)
 
 A predicate answers; lineage remembers the answer's basis. Each high-value
 claim — route `covers` edges, scope-authority judgments, dossier freshness,
 and nothing else — carries what it read (artifact revisions, source hashes,
 evidence locators), the contract version judged under, its judge and
-reviewer, and a status: `supported`, `stale`, or `contested`. Refresh
-delegates staleness to `ClaimStale`, so the system holds one definition of
-stale; contest needs a reviewer, never a recompute; the impact query
-reports exactly the claims a revision or hash move touches.
+reviewer, and a status: `supported`, `stale`, `contested`, or `withdrawn`.
+Refresh delegates staleness to `ClaimStale`, so the system holds one
+definition of stale; contest needs a reviewer, never a recompute; the
+impact query reports exactly the claims a revision or hash move touches.
+Retraction tracks assumptions between derived claims: invalidating one
+withdraws everything that assumed it, recursively, in the sidecar only —
+`retraction_impact` answers the blast radius before `withdraw` applies it,
+withdrawn claims return only through fresh judgment, and pre-Phase-10
+records carry no assumptions so they cascade only to themselves.
 
 Storage is a receipt-adjacent sidecar (`operations/transactions/lineage.yaml`,
 schema beside the other contracts), never a canonical edit and never a

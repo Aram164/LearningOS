@@ -26,6 +26,8 @@ from learning_os.semantics import (
     load_ledger,
     record_claim,
     refresh,
+    retraction_impact,
+    withdraw,
 )
 from learning_os.semantics.lineage import (
     LEDGER_RELATIVE,
@@ -231,3 +233,107 @@ def test_a_renamed_claim_id_is_refused(tmp_path):
 def test_from_dict_rejects_garbage():
     with pytest.raises(LineageError):
         from_dict({"claim_id": "x"})
+
+
+def _chain():
+    """A → X → Y → Z, plus an unrelated W. Forward-only assumptions."""
+    def make(cid, *assumes):
+        return record_claim(
+            claim_id=cid, claim_kind="route-covers", statement=cid,
+            judged_by="t", assumes=list(assumes),
+        )
+    return (
+        make("A"),
+        make("X", "A"),
+        make("Y", "X"),
+        make("Z", "Y"),
+        make("W"),
+    )
+
+
+def test_retraction_impact_reports_the_blast_radius_without_marking():
+    chain = _chain()
+    assert retraction_impact(chain, "A") == ("A", "X", "Y", "Z")
+    assert retraction_impact(chain, "X") == ("X", "Y", "Z")
+    assert retraction_impact(chain, "W") == ("W",)
+    # Read-only: nothing was marked.
+    assert all(lineage.status == "supported" for lineage in chain)
+    with pytest.raises(LineageError):
+        retraction_impact(chain, "ghost")
+
+
+def test_withdraw_cascades_recursively_and_spares_the_unrelated():
+    chain = _chain()
+    marked = {lineage.claim_id: lineage.status
+              for lineage in withdraw(chain, "A")}
+    assert marked == {
+        "A": "withdrawn", "X": "withdrawn", "Y": "withdrawn",
+        "Z": "withdrawn", "W": "supported",
+    }
+    # Every other field survives the marking.
+    after = {lineage.claim_id: lineage for lineage in withdraw(chain, "A")}
+    assert after["Z"].statement == "Z"
+    assert after["Z"].derived_from.assumes == ("Y",)
+    assert after["Z"].judged_by == "t"
+
+
+def test_withdraw_is_idempotent_and_monotonic():
+    chain = _chain()
+    once = withdraw(chain, "A")
+    assert withdraw(once, "A") == once
+    assert withdraw(withdraw(chain, "A"), "X") == once
+    assert withdraw(withdraw(chain, "X"), "A") == once
+
+
+def test_old_records_without_assumptions_cascade_only_to_themselves():
+    legacy = to_dict(_chain()[0])
+    del legacy["derived_from"]["assumes"]  # pre-Phase-10 sidecar shape
+    loaded = from_dict(legacy)
+    assert loaded.derived_from.assumes == ()
+    assert retraction_impact((loaded,), loaded.claim_id) == (
+        loaded.claim_id,)
+
+
+def test_assumes_round_trip_through_the_sidecar_shape():
+    lineage = record_claim(
+        claim_id="Y", claim_kind="route-covers", statement="Y",
+        judged_by="t", assumes=["X"],
+    )
+    assert from_dict(to_dict(lineage)) == lineage
+
+
+def test_withdrawn_claims_need_fresh_judgment():
+    chain = _chain()
+    (lost,) = [lineage for lineage in withdraw(chain, "A")
+               if lineage.claim_id == "X"]
+    assert lost.status == "withdrawn"
+    # No recompute, endorsement, or contest lifts it.
+    assert refresh(
+        lost, CONTRACT_VERSION, {}, {},
+    ).status == "withdrawn"
+    with pytest.raises(LineageError):
+        endorse(lost, reviewer="Aram")
+    with pytest.raises(LineageError):
+        contest(lost, contested_by="Aram", reason="r")
+    # The impact query still reports it: it needs a human.
+    assert "X" in impacted(
+        withdraw(chain, "A"), CONTRACT_VERSION, {}, {},
+    )
+
+
+def test_assumptions_must_name_other_claims():
+    with pytest.raises(LineageError):
+        record_claim(
+            claim_id="S", claim_kind="route-covers", statement="S",
+            judged_by="t", assumes=["S"],
+        )
+    with pytest.raises(LineageError):
+        record_claim(
+            claim_id="S", claim_kind="route-covers", statement="S",
+            judged_by="t", assumes=[" "],
+        )
+    with pytest.raises(LineageError):
+        record_claim(
+            claim_id="S", claim_kind="route-covers", statement="S",
+            judged_by="t", assumes="X",
+        )
