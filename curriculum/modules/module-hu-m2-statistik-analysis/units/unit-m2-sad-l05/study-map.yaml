@@ -30,131 +30,142 @@ stages:
   - kind: read
     label: Current L05 combinatorics deck
     locator: lecture-slides/05_combinatorics.pdf, PDF pp. 4-6,26
-    angle: The current lecture's focused reading for the combinatorics decision grid.
-    angle_detail: Read physical PDF pages 4-6,26 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Classifies whether order, repeated types and selection size change the outcome being counted.
+    angle_detail: Read physical pp. 4–6 and 26. Fixed multiplicities of indistinguishable objects are
+      different from independently drawing with replacement.
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
   - material_ref:
       route_id: route-cdaab7b53820cd4672754a63
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-cdaab7b53820cd4672754a63
+    locator: exercise-slides/blatt-02.pdf, physical p. 1, Aufgabe 1(a)–(e)
+    angle: Requires a separate outcome model for each verbal problem.
+    angle_detail: Identify ordered draws, replacement and the event before choosing a formula; parts (d)–(e)
+      additionally change independence assumptions.
   - material_ref:
       route_id: route-9dca93bd8f5f1512981461eb
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: practise
+    kind: read
     scope_triage: required-now
     route_id: route-9dca93bd8f5f1512981461eb
+    locator: exercise-slides/UE4.pdf, physical PDF pp. 4–8
+    angle: Compares the outcome models in five worked examples; explicitly check the card-order inconsistency.
+    angle_detail: 'UE4 uses four die rolls, all red number cards, three further coin rounds and loss probability
+      0.5 below 10%. These differ from Blatt 2. On p. 5, “first smaller” requires denominator 52·51 for
+      the displayed favorable count 180: probability 15/221, not 30/221.'
   - material_ref:
       route_id: route-4a454762daa4af4208f8fcc6
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-4a454762daa4af4208f8fcc6
+    locator: §4.3, physical PDF pp. 214–220
+    angle: Organizes urn samples by replacement and whether draw order is retained.
+    angle_detail: Translate the experiment into a sequence or an unordered sample before selecting a count.
   - material_ref:
       route_id: route-57b1bc90a80f412d744265c2
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-57b1bc90a80f412d744265c2
+    locator: Aufgabe 4.3, physical PDF p. 84; solution p. 90
+    angle: Lists size-two samples from four numbered objects with and without replacement.
+    angle_detail: Compare the 16 and 12 ordered outcomes before computing any probability.
   - material_ref:
       route_id: route-b3ad0cc1e399ea8846c4e397
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-b3ad0cc1e399ea8846c4e397
+    locator: §1.4, physical PDF pp. 25–37
+    angle: Builds the sampling cases from multiplication and adjustment for overcounting.
+    angle_detail: The four counting formulas describe outcomes, not automatically the probability of those
+      outcomes.
   - material_ref:
       route_id: route-8e138ce268087ded3bdb73a4
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: practise
+    kind: read
     scope_triage: helpful-now
     route_id: route-8e138ce268087ded3bdb73a4
+    locator: §2.4, physical PDF pp. 29–30
+    angle: Uses pairs of outcomes to build the product sample space of repeated experiments.
+    angle_detail: A Cartesian product specifies possible pairs; it does not itself imply probabilistic
+      independence.
   - material_ref:
       route_id: route-151d89dbc0e7a30ed1076221
       inherit:
       - label
       - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-151d89dbc0e7a30ed1076221
+    angle: Collects a compact written counting lesson and its associated practice with separate answers.
+    angle_detail: Open goes to the official reading index. Under Class 1 choose the Counting and Sets
+      PDF or In-class Problems and Solutions. This pass verified the collection and titles; it does not
+      claim that every problem or a whole video lecture was reviewed.
   - material_ref:
       route_id: route-338021e21a64b0b32a68eb86
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: reference
-    scope_triage: reference-only
+    kind: read
+    scope_triage: helpful-now
     route_id: route-338021e21a64b0b32a68eb86
+    locator: §7.1, Example 7.5, physical PDF p. 239
+    angle: Compares group sizes by enumerating the underlying birth-order sequences.
+    angle_detail: The five possible numbers of children of one sex are not five equally likely outcomes.
   - material_ref:
       route_id: route-35b2bda446c6fc49b74e3535
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: practise
+    kind: read
     scope_triage: helpful-now
     route_id: route-35b2bda446c6fc49b74e3535
+    locator: Ch 2, physical PDF pp. 18–24
+    angle: Contrasts permutations, ordered samples and combinations in one compact chapter.
+    angle_detail: Name the outcome type before choosing among the formulas.
   - material_ref:
       route_id: route-1c9301d9a29d6dc3920ca232
       inherit:
       - label
       - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: reference
     scope_triage: reference-only
     route_id: route-1c9301d9a29d6dc3920ca232
+    angle: Offers the course companion to Blitzstein’s written counting and story-proof sections.
+    angle_detail: Open goes to the official course homepage. The individual lecture options retain their
+      known destinations, without reviewed timestamps. Prefer the inspected textbook slices; full video
+      and practice review is deferred under the book-first budget.
   - kind: watch
     label: 'Harvard Stat 110 — Lecture 1: Probability and Counting'
     source_id: source-stat110
@@ -163,6 +174,8 @@ stages:
     url: https://www.youtube.com/watch?v=KbB0FjPg0mw
     angle: The individual lecture for counting rules and the sampling cases in this reference route.
     scope_triage: reference-only
+    angle_detail: Optional full lecture; no reviewed timestamp or end-to-end playback claim. Use the stage’s
+      verified Blitzstein reading first.
   - kind: watch
     label: 'Harvard Stat 110 — Lecture 2: Story Proofs, Axioms of Probability'
     source_id: source-stat110
@@ -173,29 +186,21 @@ stages:
     angle: The individual lecture for counting with repetition and the story-proof method in this reference
       route.
     scope_triage: reference-only
+    angle_detail: Optional full lecture; no reviewed timestamp or end-to-end playback claim. Use the stage’s
+      verified Blitzstein reading first.
   - material_ref:
       route_id: route-9f444ac53a8abc5d1bc9108a
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-9f444ac53a8abc5d1bc9108a
-  - material_ref:
-      route_id: route-d21223e3854f8c37ce2de2f4
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: reference-only
-    route_id: route-d21223e3854f8c37ce2de2f4
+    locator: §1.2.2(a)–(e), physical PDF pp. 5–6; answers pp. 8–9
+    angle: Makes the formula choice vary across five short German word problems.
+    angle_detail: Classify each case before reading the answer labels; do not infer order from the order
+      in which the question mentions objects.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-decision-grid/notes.md
   attachments: []
   source_feedback: []
@@ -217,71 +222,89 @@ stages:
   - kind: read
     label: Current L05 combinatorics deck
     locator: lecture-slides/05_combinatorics.pdf, PDF pp. 7-12
-    angle: The current lecture's focused reading for permutations and indistinguishable objects.
-    angle_detail: Read physical PDF pages 7-12 for this stage. Printed slide labels may differ. This slice
-      focuses the existing deck route; the complete lecture remains accessible through the unit material
-      menu.
+    angle: Divides away arrangements of indistinguishable objects, then applies the multinomial count
+      to dealing Skat.
+    angle_detail: 'Read physical pp. 7–12. The heading “with replacement” here describes fixed repeated
+      types: the denominator removes permutations within each indistinguishable group.'
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
   - material_ref:
       route_id: route-fa2f72cfc8de281124afb34d
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-fa2f72cfc8de281124afb34d
+    locator: §3.1, physical PDF pp. 87–89
+    angle: Derives n! by assigning one distinct object to each position.
+    angle_detail: Use the exact factorial table before the adjacent Stirling comparison.
+    url: https://math.dartmouth.edu/~prob/prob/prob.pdf#page=87
   - material_ref:
       route_id: route-b3ad0cc1e399ea8846c4e397
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-b3ad0cc1e399ea8846c4e397
+    locator: §1.4, physical PDF pp. 29,31–33
+    angle: Uses ordered samples and equal overcounting to explain factorial divisions.
+    angle_detail: Check how many ordered representations each outcome has before dividing.
   - material_ref:
       route_id: route-b08add0fb6ed042a770114eb
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: reference
-    scope_triage: reference-only
+    kind: read
+    scope_triage: helpful-now
     route_id: route-b08add0fb6ed042a770114eb
+    locator: §1.3, physical PDF pp. 17–20
+    angle: Contrasts distinct rankings with arrangements containing repeated letters.
+    angle_detail: Divide only by exchanges that leave the resulting arrangement unchanged.
   - material_ref:
       route_id: route-35b2bda446c6fc49b74e3535
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: practise
+    kind: read
     scope_triage: helpful-now
     route_id: route-35b2bda446c6fc49b74e3535
+    locator: Ch 2, physical PDF pp. 19–20, DADDY and flag examples
+    angle: Shows explicitly how indistinguishable letters collapse several labelled arrangements into
+      one.
+    angle_detail: The DADDY example divides by 3! for the three Ds; the flag example has more than one
+      repeated group.
   - material_ref:
-      route_id: route-d21223e3854f8c37ce2de2f4
+      route_id: route-4a454762daa4af4208f8fcc6
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
-    kind: watch
-    scope_triage: reference-only
-    route_id: route-d21223e3854f8c37ce2de2f4
+      - vault_path
+    route_id: route-4a454762daa4af4208f8fcc6
+    kind: read
+    scope_triage: helpful-now
+    locator: §4.3.2, physical PDF pp. 217–218
+    angle: Explains permutations through arrangements of children in seats.
+    angle_detail: Use the all-objects case to relate a falling factorial to N!; repeated indistinguishable
+      types need a separate adjustment.
+  - material_ref:
+      route_id: route-9f444ac53a8abc5d1bc9108a
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-9f444ac53a8abc5d1bc9108a
+    kind: practise
+    scope_triage: helpful-now
+    locator: §1.2.2(a)–(b), physical PDF p. 5; answers p. 8
+    angle: Contrasts ordering five topics with planting seven flowers in three repeated colors.
+    angle_detail: Use 5! for distinct topics and 7!/(2!3!2!) for the fixed color multiplicities.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-permutations/notes.md
   attachments: []
   source_feedback: []
@@ -304,95 +327,127 @@ stages:
   - kind: read
     label: Current L05 combinatorics deck
     locator: lecture-slides/05_combinatorics.pdf, PDF pp. 14-18
-    angle: The current lecture's focused reading for ordered selections (variations).
-    angle_detail: Read physical PDF pages 14-18 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Contrasts three ranked race places with ordered draws that may repeat.
+    angle_detail: Read physical pp. 14–18. A variation is an ordered tuple, even where p. 17 says “subsets”;
+      distinguish the falling factorial from n^k.
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
   - material_ref:
       route_id: route-cdaab7b53820cd4672754a63
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-cdaab7b53820cd4672754a63
+    locator: exercise-slides/blatt-02.pdf, physical p. 1, Aufgabe 1(a)–(b)
+    angle: Uses ordered sequences for five die rolls and two successive card draws.
+    angle_detail: In (b), keep the order condition “first smaller than second” and the odd-number restriction;
+      do not use an unordered denominator with an ordered favorable count.
   - material_ref:
       route_id: route-9dca93bd8f5f1512981461eb
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: practise
+    kind: read
     scope_triage: required-now
     route_id: route-9dca93bd8f5f1512981461eb
+    locator: exercise-slides/UE4.pdf, physical PDF pp. 4–5
+    angle: Counts four-roll sequences and two ordered card draws; useful for diagnosing denominator order.
+    angle_detail: 'UE4 uses four die rolls, all red number cards, three further coin rounds and loss probability
+      0.5 below 10%. These differ from Blatt 2. On p. 5, “first smaller” requires denominator 52·51 for
+      the displayed favorable count 180: probability 15/221, not 30/221.'
   - material_ref:
       route_id: route-fa2f72cfc8de281124afb34d
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-fa2f72cfc8de281124afb34d
+    locator: §3.1, physical PDF pp. 83–86
+    angle: Builds sequential choices as a tree and applies them to distinct birthdays.
+    angle_detail: The number of choices at a step must be correct for every preceding path.
+    url: https://math.dartmouth.edu/~prob/prob/prob.pdf#page=83
   - material_ref:
       route_id: route-b3ad0cc1e399ea8846c4e397
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-b3ad0cc1e399ea8846c4e397
+    locator: §1.4, physical PDF pp. 25–30
+    angle: Uses trees and sampling to derive products of available choices.
+    angle_detail: The birthday complement is a direct application of without-replacement counts inside
+      a with-replacement experiment.
   - material_ref:
       route_id: route-b08add0fb6ed042a770114eb
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: reference
-    scope_triage: reference-only
+    kind: read
+    scope_triage: helpful-now
     route_id: route-b08add0fb6ed042a770114eb
+    locator: §1.2, physical PDF pp. 16–17, Examples 2c and 2e
+    angle: Compares licence plates with and without repeated letters or digits.
+    angle_detail: Different position types have different choice counts; a single n^k is not appropriate
+      for the mixed alphabet.
   - material_ref:
       route_id: route-35b2bda446c6fc49b74e3535
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: practise
+    kind: read
     scope_triage: helpful-now
     route_id: route-35b2bda446c6fc49b74e3535
+    locator: Ch 2, Ordered Samples, physical PDF pp. 20–21
+    angle: Compares three-card ordered samples with and without replacement.
+    angle_detail: Use a constant 52 choices for replacement and decreasing 52·51·50 choices without it.
   - material_ref:
-      route_id: route-d21223e3854f8c37ce2de2f4
+      route_id: route-4a454762daa4af4208f8fcc6
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
-    kind: watch
-    scope_triage: reference-only
-    route_id: route-d21223e3854f8c37ce2de2f4
+      - vault_path
+    route_id: route-4a454762daa4af4208f8fcc6
+    kind: read
+    scope_triage: helpful-now
+    locator: §§4.3.1–4.3.2, physical PDF pp. 215–217
+    angle: Derives N^n versus a product of decreasing choices using the same urn.
+    angle_detail: Keep population size N and sample size n distinct; the book’s letters differ from some
+      lecture formulas.
+  - material_ref:
+      route_id: route-57b1bc90a80f412d744265c2
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-57b1bc90a80f412d744265c2
+    kind: practise
+    scope_triage: helpful-now
+    locator: Aufgabe 4.3, physical PDF p. 84; solution p. 90
+    angle: Makes repeated and nonrepeated ordered samples small enough to enumerate.
+    angle_detail: Reproduce the sample lists to check the multiplication rule.
+  - material_ref:
+      route_id: route-9f444ac53a8abc5d1bc9108a
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-9f444ac53a8abc5d1bc9108a
+    kind: practise
+    scope_triage: helpful-now
+    locator: §1.2.2(c), physical PDF p. 5; answer p. 9
+    angle: Chooses three ranked podium places from twenty teams.
+    angle_detail: The roles first, second and third are distinct, giving 20·19·18 outcomes.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-variations/notes.md
   attachments: []
   source_feedback: []
@@ -415,154 +470,168 @@ stages:
   - kind: read
     label: Current L05 combinatorics deck
     locator: lecture-slides/05_combinatorics.pdf, PDF pp. 20-22
-    angle: The current lecture's focused reading for unordered selections and binomial coefficients.
-    angle_detail: Read physical PDF pages 20-22 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Derives unordered selections by dividing ordered selections by the k! orders of each chosen
+      set.
+    angle_detail: Read physical pp. 20–22. The division works because each set of distinct selected objects
+      has exactly k! orderings.
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
   - material_ref:
       route_id: route-cdaab7b53820cd4672754a63
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-cdaab7b53820cd4672754a63
+    locator: exercise-slides/blatt-02.pdf, physical p. 1, Aufgabe 1(b)–(c)
+    angle: Selects distinct odd ranks or the positions of the partner’s wins.
+    angle_detail: 'For (c), after your initial win there are five further rounds: a final tie requires
+      the partner to win three of those five rounds.'
   - material_ref:
       route_id: route-9dca93bd8f5f1512981461eb
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: practise
+    kind: read
     scope_triage: required-now
     route_id: route-9dca93bd8f5f1512981461eb
+    locator: exercise-slides/UE4.pdf, physical PDF pp. 5–6
+    angle: Contrasts choosing ranks with choosing two winning positions among three further coin rounds.
+    angle_detail: 'UE4 uses four die rolls, all red number cards, three further coin rounds and loss probability
+      0.5 below 10%. These differ from Blatt 2. On p. 5, “first smaller” requires denominator 52·51 for
+      the displayed favorable count 180: probability 15/221, not 30/221.'
   - material_ref:
       route_id: route-4a454762daa4af4208f8fcc6
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-4a454762daa4af4208f8fcc6
+    locator: §4.3.3, physical PDF pp. 218–219
+    angle: Removes draw order from the without-replacement model.
+    angle_detail: Each sample of distinct elements is counted n! times by ordered draws.
   - material_ref:
       route_id: route-57b1bc90a80f412d744265c2
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-57b1bc90a80f412d744265c2
+    locator: Aufgabe 4.5, physical PDF p. 85; solutions pp. 91–92
+    angle: Counts choices of representatives from three men and four women.
+    angle_detail: State whether positions are distinct and whether one person may fill more than one position
+      before using a binomial coefficient.
   - material_ref:
       route_id: route-fa2f72cfc8de281124afb34d
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-fa2f72cfc8de281124afb34d
+    locator: §3.2, physical PDF pp. 101–103
+    angle: Derives the subset count and symmetry through ordered selections.
+    angle_detail: Track the constant multiplicity of each subset in the ordered count.
+    url: https://math.dartmouth.edu/~prob/prob/prob.pdf#page=101
   - material_ref:
       route_id: route-b3ad0cc1e399ea8846c4e397
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-b3ad0cc1e399ea8846c4e397
+    locator: §1.4, physical PDF pp. 31–34
+    angle: Contrasts committees and teams to derive the binomial coefficient.
+    angle_detail: Decide whether members have named roles; only unlabelled membership permits division
+      by k!.
   - material_ref:
       route_id: route-8e138ce268087ded3bdb73a4
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: practise
+    kind: read
     scope_triage: helpful-now
     route_id: route-8e138ce268087ded3bdb73a4
+    locator: §4.3, physical PDF pp. 57–58
+    angle: Counts which question positions are answered correctly in ten trials.
+    angle_detail: Separate the number of success patterns from the probability of one pattern.
   - material_ref:
       route_id: route-151d89dbc0e7a30ed1076221
       inherit:
       - label
       - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-151d89dbc0e7a30ed1076221
+    angle: Collects a compact written counting lesson and its associated practice with separate answers.
+    angle_detail: Open goes to the official reading index. Under Class 1 choose the Counting and Sets
+      PDF or In-class Problems and Solutions. This pass verified the collection and titles; it does not
+      claim that every problem or a whole video lecture was reviewed.
   - material_ref:
       route_id: route-eaf0195e1f1439482508bdd8
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: reference
-    scope_triage: reference-only
+    kind: read
+    scope_triage: helpful-now
     route_id: route-eaf0195e1f1439482508bdd8
+    locator: §2.1, physical PDF pp. 90–93
+    angle: Counts binary paths with exactly k successes to derive the binomial coefficient.
+    angle_detail: Read the coefficient as a count of success positions before treating it as factorial
+      notation.
   - material_ref:
       route_id: route-b08add0fb6ed042a770114eb
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: reference
-    scope_triage: reference-only
+    kind: read
+    scope_triage: helpful-now
     route_id: route-b08add0fb6ed042a770114eb
+    locator: §1.4, physical PDF pp. 20–22
+    angle: Derives unlabelled groups and counts committees with an excluded pair.
+    angle_detail: Count the forbidden pair cases using the same group model before subtracting.
   - material_ref:
       route_id: route-35b2bda446c6fc49b74e3535
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: practise
+    kind: read
     scope_triage: helpful-now
     route_id: route-35b2bda446c6fc49b74e3535
+    locator: Ch 2, Combinations, physical PDF pp. 23–24
+    angle: Displays the six permutations corresponding to each three-element subset.
+    angle_detail: This table makes the constant r! overcount visible before deriving C(n,r).
   - material_ref:
       route_id: route-1c9301d9a29d6dc3920ca232
       inherit:
       - label
       - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: reference
     scope_triage: reference-only
     route_id: route-1c9301d9a29d6dc3920ca232
+    angle: Offers the course companion to Blitzstein’s written counting and story-proof sections.
+    angle_detail: Open goes to the official course homepage. The individual lecture options retain their
+      known destinations, without reviewed timestamps. Prefer the inspected textbook slices; full video
+      and practice review is deferred under the book-first budget.
   - kind: watch
     label: 'Harvard Stat 110 — Lecture 1: Probability and Counting'
     source_id: source-stat110
@@ -571,6 +640,8 @@ stages:
     url: https://www.youtube.com/watch?v=KbB0FjPg0mw
     angle: The individual lecture for counting rules and the sampling cases in this reference route.
     scope_triage: reference-only
+    angle_detail: Optional full lecture; no reviewed timestamp or end-to-end playback claim. Use the stage’s
+      verified Blitzstein reading first.
   - kind: watch
     label: 'Harvard Stat 110 — Lecture 2: Story Proofs, Axioms of Probability'
     source_id: source-stat110
@@ -581,29 +652,20 @@ stages:
     angle: The individual lecture for counting with repetition and the story-proof method in this reference
       route.
     scope_triage: reference-only
+    angle_detail: Optional full lecture; no reviewed timestamp or end-to-end playback claim. Use the stage’s
+      verified Blitzstein reading first.
   - material_ref:
       route_id: route-9f444ac53a8abc5d1bc9108a
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-9f444ac53a8abc5d1bc9108a
-  - material_ref:
-      route_id: route-d21223e3854f8c37ce2de2f4
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: reference-only
-    route_id: route-d21223e3854f8c37ce2de2f4
+    locator: §1.2.2(e), physical PDF p. 6; answer p. 9
+    angle: Chooses three distinct prizes from ten without named positions.
+    angle_detail: Compare C(10,3) with the ordered podium problem; choosing prizes does not create ranks.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-combinations/notes.md
   attachments: []
   source_feedback: []
@@ -624,25 +686,54 @@ stages:
   - kind: read
     label: Current L05 combinatorics deck
     locator: lecture-slides/05_combinatorics.pdf, PDF pp. 23-25
-    angle: The current lecture's focused reading for combinations with repetition and stars and bars.
-    angle_detail: Read physical PDF pages 23-25 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Encodes repeated candy types as objects separated into labelled bins.
+    angle_detail: Read physical pp. 23–25. Page 25 gives the stars-and-bars bijection. Counting multisets
+      does not make them equiprobable under independent draws; compare Blitzstein pp. 36–37.
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
   - material_ref:
       route_id: route-b3ad0cc1e399ea8846c4e397
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-b3ad0cc1e399ea8846c4e397
+    locator: §1.4 Bose–Einstein counting, physical PDF pp. 35–37
+    angle: Derives stars and bars, then explains why these multisets are not equally likely in independent
+      sampling.
+    angle_detail: Repeated birthdays have fewer distinct orderings than all-distinct birthdays; no single
+      factorial division corrects all cases.
+  - material_ref:
+      route_id: route-b08add0fb6ed042a770114eb
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-b08add0fb6ed042a770114eb
+    kind: read
+    scope_triage: helpful-now
+    locator: §1.6, physical PDF pp. 30–31
+    angle: Counts positive integer allocations with gaps, then converts nonnegative allocations by adding
+      one to each variable.
+    angle_detail: Distinguish occupied bins from bins allowed to be empty; the shift changes the total
+      and the resulting binomial coefficient.
+  - material_ref:
+      route_id: route-9f444ac53a8abc5d1bc9108a
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-9f444ac53a8abc5d1bc9108a
+    kind: practise
+    scope_triage: helpful-now
+    locator: §1.2.2(d), physical PDF p. 6; answer p. 9
+    angle: Chooses three ice-cream scoops from fifteen types with repeated types permitted.
+    angle_detail: The task counts type multisets, giving C(17,3); it does not assign these multisets equal
+      sampling probabilities.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-repetition/notes.md
   attachments: []
   source_feedback: []
@@ -667,198 +758,209 @@ stages:
   - kind: read
     label: Current L05 combinatorics deck
     locator: lecture-slides/05_combinatorics.pdf, PDF pp. 28-31
-    angle: The current lecture's focused reading for laplace probability, complements, and hypergeometric
-      counting.
-    angle_detail: Read physical PDF pages 28-31 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Uses a no-collision complement and a ratio of combinations for sampling without replacement.
+    angle_detail: Read physical pp. 28–31. Page 29 mixes five/six draws and uses six instead of 43 nonwinning
+      balls. For six draws and exactly five matches use C(6,5)C(43,1)/C(49,6), consistently with p. 30.
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
   - material_ref:
       route_id: route-cdaab7b53820cd4672754a63
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-cdaab7b53820cd4672754a63
+    locator: exercise-slides/blatt-02.pdf, physical p. 1, Aufgabe 1(a)–(e)
+    angle: Combines complement counting, success-position counts and an explicit dependence comparison.
+    angle_detail: The five-roll complement uses 1−(6·5·4·3·2)/6^5. In (d) use 0.4^n<0.02; in (e), two
+      perfectly dependent securities count as one independent loss unit.
   - material_ref:
       route_id: route-9dca93bd8f5f1512981461eb
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: practise
+    kind: read
     scope_triage: required-now
     route_id: route-9dca93bd8f5f1512981461eb
+    locator: exercise-slides/UE4.pdf, physical PDF pp. 4–8
+    angle: Shows complement and repeated-trial methods with parameters different from the current sheet.
+    angle_detail: 'UE4 uses four die rolls, all red number cards, three further coin rounds and loss probability
+      0.5 below 10%. These differ from Blatt 2. On p. 5, “first smaller” requires denominator 52·51 for
+      the displayed favorable count 180: probability 15/221, not 30/221.'
   - material_ref:
       route_id: route-15ce623882a5c644af47a3e6
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
     kind: reference
     scope_triage: reference-only
     route_id: route-15ce623882a5c644af47a3e6
+    locator: 05_random_variables.pdf
+    angle: Groups elementary dice outcomes by their sum to introduce a probability mass function.
+    angle_detail: 'Read physical pp. 14–19 only as a bridge to L06: sums are not equiprobable even when
+      elementary dice outcomes are. This 52-page file does not provide the current combinatorics grid.'
   - material_ref:
       route_id: route-4a454762daa4af4208f8fcc6
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-4a454762daa4af4208f8fcc6
+    locator: §4.3.3, physical PDF pp. 219–220
+    angle: Calculates lottery probabilities from favorable and total unordered samples.
+    angle_detail: Use a consistent draw size in numerator and denominator; this is a useful check on current
+      slide 29.
   - material_ref:
       route_id: route-57b1bc90a80f412d744265c2
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-57b1bc90a80f412d744265c2
+    locator: Aufgaben 4.3 and 4.5, physical PDF pp. 84–85; solutions pp. 90–92
+    angle: Turns sample-space and representative counts into event probabilities.
+    angle_detail: Separate at-least and at-most conditions; use the matching denominator for the stated
+      selection mechanism.
   - material_ref:
       route_id: route-fa2f72cfc8de281124afb34d
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-fa2f72cfc8de281124afb34d
+    locator: §3.1, physical PDF pp. 85–87; §3.2, pp. 104–106
+    angle: Contrasts birthday complements with counting success paths in repeated trials.
+    angle_detail: Binomial path counts assume independent trials with the same success probability; sampling
+      without replacement is a different model.
+    url: https://math.dartmouth.edu/~prob/prob/prob.pdf#page=85
   - material_ref:
       route_id: route-b3ad0cc1e399ea8846c4e397
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-b3ad0cc1e399ea8846c4e397
+    locator: §1.4, physical PDF pp. 29–30,34–37
+    angle: Pairs no-match/no-six complements with a warning about nonuniform unordered samples.
+    angle_detail: Establish equally likely elementary outcomes before applying favorable over total.
   - material_ref:
       route_id: route-ce45e9e22ec95775e2560218
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-ce45e9e22ec95775e2560218
+    locator: §3.3, physical PDF pp. 112–114, including exercises 3.23 onward
+    angle: Compares repeated student selection and marble draws using conditional products.
+    angle_detail: Without replacement, update both the population and the relevant favorable count after
+      each draw; compare with the fixed-denominator replacement case.
   - material_ref:
       route_id: route-8e138ce268087ded3bdb73a4
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: practise
+    kind: read
     scope_triage: helpful-now
     route_id: route-8e138ce268087ded3bdb73a4
+    locator: §4.3, physical PDF pp. 57–58
+    angle: Multiplies a success-pattern count by its common probability.
+    angle_detail: The random-answer example assumes independent answers with success probability one quarter;
+      arbitrary outcomes need not share that probability.
   - material_ref:
       route_id: route-151d89dbc0e7a30ed1076221
       inherit:
       - label
       - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-151d89dbc0e7a30ed1076221
+    angle: Collects a compact written counting lesson and its associated practice with separate answers.
+    angle_detail: Open goes to the official reading index. Under Class 1 choose the Counting and Sets
+      PDF or In-class Problems and Solutions. This pass verified the collection and titles; it does not
+      claim that every problem or a whole video lecture was reviewed.
   - material_ref:
       route_id: route-eaf0195e1f1439482508bdd8
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: reference
-    scope_triage: reference-only
+    kind: read
+    scope_triage: helpful-now
     route_id: route-eaf0195e1f1439482508bdd8
+    locator: §1.1, physical PDF pp. 14–16; §2.1, pp. 90–93
+    angle: Contrasts counting equally likely dice outcomes with weighted success paths.
+    angle_detail: Fair-coin paths allow favorable over total; general Bernoulli paths require their probability
+      weights.
   - material_ref:
       route_id: route-338021e21a64b0b32a68eb86
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: reference
-    scope_triage: reference-only
+    kind: read
+    scope_triage: helpful-now
     route_id: route-338021e21a64b0b32a68eb86
+    locator: §7.1, physical PDF pp. 238–239, especially Example 7.5
+    angle: Calculates a grouped event by counting the equally likely sequences inside it.
+    angle_detail: The model assumes independent outcomes with equal probabilities; state those assumptions
+      rather than applying them to real populations implicitly.
   - material_ref:
       route_id: route-b08add0fb6ed042a770114eb
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-b08add0fb6ed042a770114eb
-  - material_ref:
-      route_id: route-35b2bda446c6fc49b74e3535
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
+    kind: read
     scope_triage: helpful-now
-    route_id: route-35b2bda446c6fc49b74e3535
+    route_id: route-b08add0fb6ed042a770114eb
+    locator: §1.1, physical PDF pp. 14–15
+    angle: Introduces a finite-probability count through arrangements of defective antennas.
+    angle_detail: Separate which configurations satisfy the no-adjacent-defect condition from the assumption
+      that configurations are equally likely.
   - material_ref:
       route_id: route-1c9301d9a29d6dc3920ca232
       inherit:
       - label
       - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: reference
     scope_triage: reference-only
     route_id: route-1c9301d9a29d6dc3920ca232
-  - kind: watch
+    angle: Offers the course companion to Blitzstein’s written counting and story-proof sections.
+    angle_detail: Open goes to the official course homepage. The individual lecture options retain their
+      known destinations, without reviewed timestamps. Prefer the inspected textbook slices; full video
+      and practice review is deferred under the book-first budget.
+  - material_ref:
+      route_id: route-1c9301d9a29d6dc3920ca232
+      inherit:
+      - source_id
+    kind: watch
     label: 'Harvard Stat 110 — Lecture 1: Probability and Counting'
-    source_id: source-stat110
     route_id: route-1c9301d9a29d6dc3920ca232
     locator: 'Lecture 1: Probability and Counting; individual video, no reviewed timestamp segment'
     url: https://www.youtube.com/watch?v=KbB0FjPg0mw
     angle: The individual lecture for counting rules and the sampling cases in this reference route.
     scope_triage: reference-only
+    angle_detail: Optional full lecture; no reviewed timestamp or end-to-end playback claim. Use the stage’s
+      verified Blitzstein reading first.
   - kind: watch
     label: 'Harvard Stat 110 — Lecture 2: Story Proofs, Axioms of Probability'
     source_id: source-stat110
@@ -869,29 +971,49 @@ stages:
     angle: The individual lecture for counting with repetition and the story-proof method in this reference
       route.
     scope_triage: reference-only
+    angle_detail: Optional full lecture; no reviewed timestamp or end-to-end playback claim. Use the stage’s
+      verified Blitzstein reading first.
   - material_ref:
       route_id: route-9f444ac53a8abc5d1bc9108a
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-9f444ac53a8abc5d1bc9108a
+    locator: §1.2.4(a)–(c), physical PDF p. 6; answers p. 9
+    angle: Combines coins, without-replacement marble draws and ranked mouse races.
+    angle_detail: For the repeated-race item, use the complement of all different and all the same; state
+      the uniform independent-race model.
   - material_ref:
       route_id: route-cd51e8e2a06b4d82da11c18e
       inherit:
       - label
       - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: watch
     scope_triage: reference-only
     route_id: route-cd51e8e2a06b4d82da11c18e
+    angle: Offers an applied hypergeometric example in enrichment analysis rather than a general counting
+      primer.
+    angle_detail: The exact title and destination are verified in the official index. This is an optional
+      return after discrete distributions and hypothesis testing; full playback is deferred. Use the written
+      counting materials for L05’s basic ratio.
+  - material_ref:
+      route_id: route-d21223e3854f8c37ce2de2f4
+      inherit:
+      - label
+      - source_id
+      - url
+    route_id: route-d21223e3854f8c37ce2de2f4
+    kind: watch
+    scope_triage: reference-only
+    locator: 'Lesson 1.8: An Introduction to the Hypergeometric Distribution'
+    angle: Offers a focused optional video bridge from the ratio of combinations to a named distribution.
+    angle_detail: The author describes the model conditions and two examples. Prefer the written readings
+      first; defer distribution approximations to L07.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-counting-probability/notes.md
   attachments: []
   source_feedback: []
@@ -912,34 +1034,50 @@ stages:
   - kind: read
     label: Current L05 combinatorics deck
     locator: lecture-slides/05_combinatorics.pdf, PDF pp. 33-34
-    angle: The current lecture's focused reading for binomial identities and stirling approximation.
-    angle_detail: Read physical PDF pages 33-34 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Collects binomial identities and an asymptotic estimate of factorial growth.
+    angle_detail: Read physical pp. 33–34. Use Blitzstein for double-counting proofs and Grinstead–Snell
+      pp. 88–89 for a numerical comparison of Stirling with exact factorials; an asymptotic approximation
+      is not an equality at finite n.
     scope_triage: required-now
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
   - material_ref:
       route_id: route-fa2f72cfc8de281124afb34d
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-fa2f72cfc8de281124afb34d
+    locator: §3.1, physical PDF pp. 88–89; §3.2, pp. 111–112
+    angle: Compares Stirling with exact factorials and derives binomial-sum identities from expansion.
+    angle_detail: 'The approximation table and the binomial theorem answer different questions: size of
+      a factorial versus exact identities.'
+    url: https://math.dartmouth.edu/~prob/prob/prob.pdf#page=88
   - id: resource-blitzstein-l05-identities
     route_id: route-b3ad0cc1e399ea8846c4e397
     kind: read
     label: Blitzstein §1.5 story proofs
     source_id: source-blitzstein-hwang
-    locator: §1.5, PDF pp. 37-38
-    angle: Story proofs for counting identities.
-    angle_detail: Count the same set in two ways to explain symmetry and Vandermonde; this slice does
-      not supply Stirling approximation.
+    locator: §1.5, physical PDF pp. 37–38
+    angle: Counts teams with a captain and committees drawn from two groups in two ways.
+    angle_detail: Identify the same finite set on both sides of an identity before doing algebra; the
+      second example gives Vandermonde’s identity.
     scope_triage: helpful-now
+    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
+  - material_ref:
+      route_id: route-35b2bda446c6fc49b74e3535
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-35b2bda446c6fc49b74e3535
+    kind: read
+    scope_triage: helpful-now
+    locator: Ch 2, Binomial Coefficients and Theorem, physical PDF pp. 21–22
+    angle: Connects symmetry of coefficients to the expansion and Pascal triangle.
+    angle_detail: Use this compact algebraic companion to Blitzstein’s story-proof perspective.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-identities/notes.md
   attachments: []
   source_feedback: []

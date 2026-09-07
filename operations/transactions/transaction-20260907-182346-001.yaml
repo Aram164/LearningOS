@@ -1,0 +1,56 @@
+schema_version: 2
+id: transaction-20260907-182346-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-09-07T18:23:46+02:00'
+snapshot_before: sha256:04b36446b753c789d7b631edf290530ef78f013f8110a1e9fcd3af9e34cb0b80
+snapshot_after: sha256:8212040256452e3969185d1bcb9653858800eb5033178ad7211c48cd66b132f5
+expected_revisions:
+  module-hu-m2-statistik-analysis: 17
+  unit-m2-sad-l04: 15
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 17
+    after: 18
+  unit-m2-sad-l04:
+    before: 15
+    after: 16
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/module.yaml
+  sha256_before: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  sha256_after: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: 47f8af5c485c166a3a98f5c7832e34355e0e947d10dbc12505c802464c6cdf8f
+  sha256_after: b055f8446190e739f9644ef9f4837bcf30dac879620467eb7d4749e49a4a259c
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/study-map.yaml
+  sha256_before: 7bb5065510e02bdd1551cead6db81f1106fc7566db968e921d53d21e64728051
+  sha256_after: bddc0912061456e9c4c9d3914caa9831028e0e4c640a496a453a1f31955e2626
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/unit.yaml
+  sha256_before: 0caa7f022f6a11e1273497f2c27a68a10a36d26838c840f02ab6cbb27c135ed2
+  sha256_after: 0caa7f022f6a11e1273497f2c27a68a10a36d26838c840f02ab6cbb27c135ed2
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+request:
+  channel: codex
+  request_id: 953a62d7-ac1b-446e-b6b3-53f9cede3802
+  idempotency_key: aae07485-c712-4bb7-aac8-59f08070976f
+  intent_sha256: sha256:4484825b786d8648015f39e48e8dd64345068501fd2382d1a78b3c1f0fc0d2ff
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:4484825b786d8648015f39e48e8dd64345068501fd2382d1a78b3c1f0fc0d2ff

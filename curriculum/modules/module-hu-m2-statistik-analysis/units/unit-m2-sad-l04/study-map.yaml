@@ -32,10 +32,9 @@ stages:
       - source_id
     kind: read
     locator: lecture-slides/04_probability.pdf, PDF pp. 2-5
-    angle: The current lecture's focused reading for human probability judgments and framing.
-    angle_detail: Read physical PDF pages 2-5 for this stage. Printed slide labels may differ. This slice
-      focuses the existing deck route; the complete lecture remains accessible through the unit material
-      menu.
+    angle: Compares gain and loss wording for choices with the same expected number of survivors.
+    angle_detail: Use the paired quiz framings and explanation on p. 5 to separate expected value from
+      how risk is perceived; the online quiz is not required to read the example.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-framing/notes.md
@@ -64,94 +63,85 @@ stages:
       - source_id
     kind: read
     locator: lecture-slides/04_probability.pdf, PDF pp. 16-21,24-25
-    angle: The current lecture's focused reading for random experiments, outcomes, and event spaces.
-    angle_detail: Read physical PDF pages 16-21,24-25 for this stage. Printed slide labels may differ.
-      This slice focuses the existing deck route; the complete lecture remains accessible through the
-      unit material menu.
+    angle: Builds an outcome space from combinations of email attributes, then defines events as subsets.
+    angle_detail: Distinguish possible attribute combinations from the eight observed training emails
+      and their relative frequencies.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
   - material_ref:
       route_id: route-a577afe5626f081623095a82
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-a577afe5626f081623095a82
+    locator: exercise-slides/blatt-02.pdf, physical PDF p. 1, Aufgabe 1(a)–(b)
+    angle: Requires explicit sample spaces for repeated die rolls and ordered card draws.
+    angle_detail: Describe the event and sampling mechanism before counting favorable outcomes.
   - material_ref:
       route_id: route-78ae1df0aa949bb2a8a872dc
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-78ae1df0aa949bb2a8a872dc
+    locator: exercise-slides/UE3.pdf, physical PDF pp. 15–19
+    angle: Uses a light-bulb experiment to distinguish outcomes, events and the event collection.
+    angle_detail: Track an outcome versus its singleton event; do not confuse Ω with the collection of
+      its subsets.
   - material_ref:
       route_id: route-0afeba6c2e9a73159d6ad420
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
-    kind: reference
+    kind: read
     scope_triage: reference-only
     route_id: route-0afeba6c2e9a73159d6ad420
+    locator: 04_probability_with_notes (1).pdf
+    angle: Separates outcome space, events, relative frequency and a probability space in German.
+    angle_detail: Read physical PDF pp. 19–23. Use the prior-year wording as a comparison; the current
+      2026 terminology remains the course authority.
   - material_ref:
       route_id: route-e488632c39efaf524b49f243
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-e488632c39efaf524b49f243
+    locator: §4.1.1–4.1.2, physical PDF pp. 195–201
+    angle: Turns set operations into concrete die events.
+    angle_detail: Connect union, intersection and complement to verbal statements before assigning probabilities.
   - material_ref:
       route_id: route-66691da3faf6c5780cf0b66d
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-66691da3faf6c5780cf0b66d
-  - material_ref:
-      route_id: route-44431ac89d714785b2bab31b
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-44431ac89d714785b2bab31b
+    locator: §3.1.1–3.1.4, physical PDF pp. 81–86
+    angle: Contrasts disjoint outcomes with events that overlap.
+    angle_detail: Translate each verbal event into its possible outcomes before applying an addition rule.
   - material_ref:
       route_id: route-ac99d1d809345a00721a6f99
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-ac99d1d809345a00721a6f99
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, physical PDF p. 5, 1.1.1–1.1.3; solutions
+      p. 8
+    angle: Checks disjointness and the equal-likelihood assumption of Laplace probability.
+    angle_detail: Explain why each statement is true or false; do not stop at a one-word answer.
   - material_ref:
       route_id: route-9a18c8d3ccfb21c3f023b850
       inherit:
@@ -160,9 +150,23 @@ stages:
       - angle
       - angle_detail
       - source_id
-    kind: watch
-    scope_triage: helpful-now
+      - url
+    kind: read
+    scope_triage: reference-only
     route_id: route-9a18c8d3ccfb21c3f023b850
+  - material_ref:
+      route_id: route-87f36cab308f54f199bc3034
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-87f36cab308f54f199bc3034
+    kind: practise
+    scope_triage: helpful-now
+    locator: Aufgabe 4.1, physical PDF p. 83; solution p. 89
+    angle: Builds the outcome space of a die-and-coin experiment.
+    angle_detail: List the twelve elementary outcomes before assigning the probability of the recorded
+      number being even.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-events/notes.md
   attachments: []
   source_feedback: []
@@ -189,142 +193,125 @@ stages:
       - source_id
     kind: read
     locator: lecture-slides/04_probability.pdf, PDF pp. 22-23,26-30
-    angle: The current lecture's focused reading for probability axioms and derived rules.
-    angle_detail: Read physical PDF pages 22-23,26-30 for this stage. Printed slide labels may differ.
-      This slice focuses the existing deck route; the complete lecture remains accessible through the
-      unit material menu.
+    angle: Derives the union rule by disjoint decomposition and uses a complement for the birthday problem.
+    angle_detail: For the birthday calculation, state the uniform-day and independent-birthday assumptions
+      before multiplying the no-match probabilities.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
   - material_ref:
       route_id: route-a577afe5626f081623095a82
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-a577afe5626f081623095a82
+    locator: exercise-slides/blatt-02.pdf, physical PDF p. 1, Aufgabe 1(a)
+    angle: Uses the complement of no repeated face to calculate at least one repeated die result.
+    angle_detail: The five rolls are independent; the no-repeat event is the easier event to count.
   - material_ref:
       route_id: route-78ae1df0aa949bb2a8a872dc
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-78ae1df0aa949bb2a8a872dc
+    locator: exercise-slides/UE3.pdf, physical PDF pp. 21–28
+    angle: Applies the probability rules to a repeated double-six dice game.
+    angle_detail: Try p. 25 before the worked complement calculation; keep one trial’s event distinct
+      from the repeated experiment.
   - material_ref:
       route_id: route-0afeba6c2e9a73159d6ad420
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
-    kind: reference
+    kind: read
     scope_triage: reference-only
     route_id: route-0afeba6c2e9a73159d6ad420
+    locator: 04_probability_with_notes (1).pdf
+    angle: Puts the axioms and the derived union rule on adjacent slides.
+    angle_detail: Read physical PDF pp. 24–25. Identify which displayed statements are assumptions and
+      which are consequences.
   - material_ref:
       route_id: route-e488632c39efaf524b49f243
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-e488632c39efaf524b49f243
+    locator: §4.1.3, physical PDF pp. 201–206
+    angle: States the axioms and develops their calculation rules in German notation.
+    angle_detail: Distinguish axioms from the extra assumption of equiprobable elementary outcomes.
   - material_ref:
       route_id: route-87f36cab308f54f199bc3034
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-87f36cab308f54f199bc3034
-  - material_ref:
-      route_id: route-395d30ff10c3ab149d789c7c
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-395d30ff10c3ab149d789c7c
+    locator: Aufgabe 4.2, physical PDF p. 83; solution p. 89
+    angle: Reconstructs a 2×4 student contingency table and computes event probabilities from its cells.
+    angle_detail: Use disjoint cells for intersections and complements; check the denominator is the full
+      group of 150.
   - material_ref:
       route_id: route-fa96784fa40036436bf1b2cc
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: practise
+    kind: read
     scope_triage: helpful-now
     route_id: route-fa96784fa40036436bf1b2cc
-  - material_ref:
-      route_id: route-510e0c869360f72413e11c13
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-510e0c869360f72413e11c13
+    locator: Ch 2 §§2.1–2.4, physical PDF pp. 24–31
+    angle: Starts with sample spaces and events before assigning probability and deriving rules.
+    angle_detail: Use the embedded checks to test whether an outcome, event and probability assignment
+      are distinct.
   - material_ref:
       route_id: route-8de21f881a829cb3dec1d55d
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: reference
-    scope_triage: reference-only
+    kind: read
+    scope_triage: helpful-now
     route_id: route-8de21f881a829cb3dec1d55d
+    locator: Ch 2 §§2.3–2.4, physical PDF pp. 54–58
+    angle: Derives complements, monotonicity and the two-event union rule from the axioms.
+    angle_detail: Notice the countable-additivity formulation, which goes beyond the finite sample spaces
+      used in the course.
   - material_ref:
       route_id: route-f99c92614d78638f193ab4d3
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-f99c92614d78638f193ab4d3
+    locator: Ch 3, physical PDF pp. 40–43, axioms and Theorem 3.5
+    angle: Gives a compact derivation of the union formula using disjoint parts.
+    angle_detail: Reproduce the decomposition in Theorem 3.5 and compare it with the course proof.
   - material_ref:
       route_id: route-ac99d1d809345a00721a6f99
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-ac99d1d809345a00721a6f99
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, physical PDF p. 5, 1.1.4; solution
+      p. 8
+    angle: Asks for the axioms and their meanings in words.
+    angle_detail: Compare the finite-event formulation with the course and distinguish the normalization
+      rule from additivity.
   - material_ref:
       route_id: route-9a18c8d3ccfb21c3f023b850
       inherit:
@@ -333,8 +320,9 @@ stages:
       - angle
       - angle_detail
       - source_id
-    kind: watch
-    scope_triage: helpful-now
+      - url
+    kind: read
+    scope_triage: reference-only
     route_id: route-9a18c8d3ccfb21c3f023b850
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-axioms/notes.md
   attachments: []
@@ -363,235 +351,258 @@ stages:
       - source_id
     kind: read
     locator: lecture-slides/04_probability.pdf, PDF pp. 32-39,43
-    angle: Conditioning plus the explicitly stated total-probability partition.
-    angle_detail: Read physical PDF pages 32-39,43 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu. PDF p. 43 states the partition and theorem; the proof is omitted.
+    angle: Shrinks the reference population and counts class-conditional email features.
+    angle_detail: Keep P(feature|class) distinct from P(class|feature). The partition on p. 43 is pairwise
+      disjoint for i≠j; the printed unrestricted index condition is too strong.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
   - material_ref:
       route_id: route-a577afe5626f081623095a82
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-a577afe5626f081623095a82
+    locator: exercise-slides/blatt-02.pdf, physical PDF p. 2, Aufgabe 2(a)
+    angle: Combines age-group-specific basketball rates with the 3:2 group proportions.
+    angle_detail: Use a total-probability sum; the conditional rates are not the group sizes.
   - material_ref:
       route_id: route-78ae1df0aa949bb2a8a872dc
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-78ae1df0aa949bb2a8a872dc
+    locator: exercise-slides/UE3.pdf, physical PDF pp. 31–33
+    angle: Uses a restricted sample space to explain conditional probability and independence.
+    angle_detail: On p. 32 the only denominator condition needed is P(B)>0; disjoint A and B give conditional
+      probability zero.
   - material_ref:
       route_id: route-c355ecc8ea7599015a21abfe
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-c355ecc8ea7599015a21abfe
+    locator: exercise-slides/UE4.pdf, physical PDF pp. 9
+    angle: Calculates the overall basketball rate as a weighted sum across age groups.
+    angle_detail: UE4 uses basketball rates 75%/40%, a youth:adult ratio of 5:4 and swimming rates 60%/30%.
+      The current Blatt 2 instead uses 70%/35%, 3:2 and 50%/25%. Follow the method, not these numerical
+      answers, when checking Blatt 2. The scores on p. 11 are proportional to posteriors, not normalized
+      probabilities.
   - material_ref:
       route_id: route-0afeba6c2e9a73159d6ad420
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
-    kind: reference
+    kind: read
     scope_triage: reference-only
     route_id: route-0afeba6c2e9a73159d6ad420
+    locator: 04_probability_with_notes (1).pdf
+    angle: Builds a conditional-probability comparison gradually on a ten-point diagram.
+    angle_detail: Read physical PDF pp. 35–43. Follow which points remain in the conditioning subset;
+      do not confuse the conditional proportion with the original 0.6.
   - material_ref:
       route_id: route-e488632c39efaf524b49f243
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-e488632c39efaf524b49f243
+    locator: §4.4, physical PDF pp. 221–224; §4.6, pp. 228–230
+    angle: Moves from restricted relative frequencies to a partition-based total-probability calculation.
+    angle_detail: Use the die and study-duration examples for the denominator, then the tournament example
+      for the weighted sum.
   - material_ref:
       route_id: route-87f36cab308f54f199bc3034
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-87f36cab308f54f199bc3034
+    locator: Aufgabe 4.7(a)–(c), physical PDF p. 85; solution p. 93
+    angle: Translates subgroup rates into joint events, a marginal total and a reversed conditional.
+    angle_detail: Keep the population of 60 and the conditioning group distinct in every denominator.
   - material_ref:
       route_id: route-fe8b4fbc40e7e85daf8ef25b
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-fe8b4fbc40e7e85daf8ef25b
+    locator: §4.1, physical PDF pp. 141–143
+    angle: Reassigns probability after restricting possible die or urn outcomes.
+    angle_detail: Compute the conditional denominator from the event that was actually observed.
+    url: https://math.dartmouth.edu/~prob/prob/prob.pdf#page=141
   - material_ref:
       route_id: route-b48ac5af55a8c900d68bb0c9
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-b48ac5af55a8c900d68bb0c9
+    locator: §2.2, physical PDF pp. 63–66; §2.3, pp. 69–72
+    angle: Makes conditioning a removal of impossible pebbles followed by renormalization.
+    angle_detail: Compare the restricted sample space with a tree-based calculation; then use the partition
+      picture for total probability.
   - material_ref:
       route_id: route-395d30ff10c3ab149d789c7c
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: read
     scope_triage: helpful-now
     route_id: route-395d30ff10c3ab149d789c7c
+    locator: 'Lecture 2, "Conditioning and Bayes’ Rule": lesson page, Slides and Recitation 2'
+    angle: Collects the multiplication rule, total probability and conditioning practice on one lesson
+      page.
+    angle_detail: Use the written slide and problem links. This is a collection entry, not a direct exercise-PDF
+      target.
   - material_ref:
       route_id: route-66691da3faf6c5780cf0b66d
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-66691da3faf6c5780cf0b66d
+    locator: §3.2.1–3.2.3, physical PDF pp. 95–98
+    angle: Calculates joint, marginal and conditional probabilities from the same photo-classification
+      table.
+    angle_detail: Changing the conditioning event changes the denominator; identify the relevant row or
+      column explicitly.
   - material_ref:
       route_id: route-fa96784fa40036436bf1b2cc
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: practise
+    kind: read
     scope_triage: helpful-now
     route_id: route-fa96784fa40036436bf1b2cc
+    locator: §§3.1–3.2, physical PDF pp. 36–40
+    angle: Treats new information as a change to the probability model’s conditioning.
+    angle_detail: Identify the observed event before applying the ratio definition; use the immediate
+      quick exercises as checks.
   - material_ref:
       route_id: route-44431ac89d714785b2bab31b
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-44431ac89d714785b2bab31b
+    locator: Class 3 §§2–5, physical PDF pp. 1–6
+    angle: Builds conditional probabilities from restricted areas and organizes repeated draws in a tree.
+    angle_detail: Multiply along branches, add compatible paths, and identify the conditioning event before
+      normalizing.
+    url: https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/mit18_05_s22_class03-prep.pdf#page=1
   - material_ref:
       route_id: route-e3418e502d6ca2dcdf2f2c9d
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-e3418e502d6ca2dcdf2f2c9d
+    locator: physical PDF p. 4, Aufgabe 1 item 2; solution p. 22 item 2
+    angle: Distinguishes the overall bad-orange rate from the bad-orange rate conditional on Brazilian
+      origin.
+    angle_detail: Translate 0.30 and 0.35 into the corresponding probabilities before comparing them.
   - material_ref:
       route_id: route-510e0c869360f72413e11c13
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: reference
-    scope_triage: reference-only
+    kind: read
+    scope_triage: helpful-now
     route_id: route-510e0c869360f72413e11c13
+    locator: §1.4, physical PDF pp. 44–52
+    angle: Uses colored capsules and branches to distinguish joint probabilities from conditional ones.
+    angle_detail: Multiply down branches, then sum the paths representing the event; total probability
+      is a weighted average.
   - material_ref:
       route_id: route-8c0f35f6c57e551481433291
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: reference
-    scope_triage: reference-only
+    kind: read
+    scope_triage: helpful-now
     route_id: route-8c0f35f6c57e551481433291
+    locator: §6.1, physical PDF pp. 219–224; §8.1, pp. 255–258
+    angle: Shows why the way information is obtained changes a conditional probability.
+    angle_detail: Compare the host’s rule in Monty Hall with knowing at least one die is six; state the
+      observation process.
   - material_ref:
       route_id: route-8de21f881a829cb3dec1d55d
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: reference
-    scope_triage: reference-only
+    kind: read
+    scope_triage: helpful-now
     route_id: route-8de21f881a829cb3dec1d55d
+    locator: Ch 3 §3.2, physical PDF pp. 101–103
+    angle: Contrasts first-toss-heads evidence with at-least-one-heads evidence.
+    angle_detail: The two statements leave different possible outcomes, so they give different conditional
+      probabilities.
   - material_ref:
       route_id: route-f99c92614d78638f193ab4d3
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-f99c92614d78638f193ab4d3
+    locator: Ch 4, physical PDF pp. 56–58; solved problems 4.1–4.3, pp. 61–62
+    angle: Combines a reduced-sample-space picture with short coin and dice calculations.
+    angle_detail: Attempt the numbered solved problems before uncovering their immediately following explanations.
   - material_ref:
       route_id: route-de38ce9e78f4dd052d5013b4
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: reference
     scope_triage: reference-only
     route_id: route-de38ce9e78f4dd052d5013b4
+    locator: Stat 110 Lecture 4; Strategic Practice 2, "Conditional Probability"
+    angle: Provides a course/practice alternative to the book’s conditioning explanation.
+    angle_detail: Use the already linked course collection to find Lectures 4–5 and Strategic Practice
+      2. This pass verified the textbook slices; full lecture playback and every practice problem were
+      deferred under the video budget.
   - material_ref:
       route_id: route-ac99d1d809345a00721a6f99
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-ac99d1d809345a00721a6f99
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, physical PDF p. 6, 1.2.3; solution
+      p. 9
+    angle: Combines city/rural proportions with the corresponding regular-voter rates.
+    angle_detail: Compute the total regular-voter proportion before attempting the inverse conditional.
   - material_ref:
       route_id: route-9a18c8d3ccfb21c3f023b850
       inherit:
@@ -600,21 +611,22 @@ stages:
       - angle
       - angle_detail
       - source_id
-    kind: watch
-    scope_triage: helpful-now
+      - url
+    kind: read
+    scope_triage: reference-only
     route_id: route-9a18c8d3ccfb21c3f023b850
   - material_ref:
       route_id: route-361d03e96b7b4416138c8def
       inherit:
       - label
       - locator
-      - angle
-      - angle_detail
       - source_id
       - url
-    kind: watch
+    kind: read
     scope_triage: helpful-now
     route_id: route-361d03e96b7b4416138c8def
+    angle: Makes conditioning a restriction to the region consistent with the evidence.
+    angle_detail: Identify the evidence region before comparing the relative areas inside it.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-conditional/notes.md
   attachments: []
   source_feedback: []
@@ -642,237 +654,249 @@ stages:
       - source_id
     kind: read
     locator: lecture-slides/04_probability.pdf, PDF pp. 43-47
-    angle: Bayes reasoning with the medical-example prevalence corrected.
-    angle_detail: 'Read physical PDF pages 43-47 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu. Source correction: PDF p. 44 (printed 47) states prevalence 0.1% but substitutes
-      0.0001. Use 0.001 for the stated prevalence: with sensitivity and specificity both 0.99, P(healthy
-      | positive)=0.01*0.999/(0.99*0.001+0.01*0.999)=0.909836, not approximately 0.99.'
+    angle: Uses total probability to normalize an inverse probability, followed by an optimal-stopping
+      example.
+    angle_detail: On physical p. 44, 0.1% means 0.001, not the displayed 0.0001. Use that prevalence consistently.
+      Pages 45–47 illustrate a separate secretary problem; they are not another diagnostic-test calculation.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
   - material_ref:
       route_id: route-a577afe5626f081623095a82
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-a577afe5626f081623095a82
+    locator: exercise-slides/blatt-02.pdf, physical PDF p. 2, Aufgabe 2(b)
+    angle: Inverts the basketball conditioning to ask for the youth share among players.
+    angle_detail: Use the denominator from part (a) with the current sheet’s numbers, not UE4’s different
+      table.
   - material_ref:
       route_id: route-78ae1df0aa949bb2a8a872dc
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-78ae1df0aa949bb2a8a872dc
+    locator: exercise-slides/UE3.pdf, physical PDF pp. 34–38
+    angle: Works a diagnostic-test inversion with sensitivity 80%, false-positive rate 15% and prevalence
+      10%.
+    angle_detail: Attempt pp. 35 and 37 before reading the following answer slides. These parameters differ
+      from the lecture example.
   - material_ref:
       route_id: route-c355ecc8ea7599015a21abfe
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-c355ecc8ea7599015a21abfe
+    locator: exercise-slides/UE4.pdf, physical PDF pp. 10
+    angle: Uses the overall rate to normalize the probability of youth given basketball.
+    angle_detail: UE4 uses basketball rates 75%/40%, a youth:adult ratio of 5:4 and swimming rates 60%/30%.
+      The current Blatt 2 instead uses 70%/35%, 3:2 and 50%/25%. Follow the method, not these numerical
+      answers, when checking Blatt 2. The scores on p. 11 are proportional to posteriors, not normalized
+      probabilities.
   - material_ref:
       route_id: route-0afeba6c2e9a73159d6ad420
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
-    kind: reference
+    kind: read
     scope_triage: reference-only
     route_id: route-0afeba6c2e9a73159d6ad420
+    locator: 04_probability_with_notes (1).pdf
+    angle: Separates the total-probability formula from the inversion formula and its motivation.
+    angle_detail: Read physical PDF pp. 48–54. Compare the direction that is easy to estimate with the
+      direction needed for prediction.
   - material_ref:
       route_id: route-e488632c39efaf524b49f243
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-e488632c39efaf524b49f243
+    locator: §4.7, physical PDF pp. 230–233
+    angle: Checks a rare-condition posterior with a table of 100,000 hypothetical people.
+    angle_detail: Compare the true-positive and false-positive counts; the table and equation should give
+      the same result.
   - material_ref:
       route_id: route-87f36cab308f54f199bc3034
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-87f36cab308f54f199bc3034
+    locator: Aufgabe 4.11, physical PDF p. 87; solution p. 95
+    angle: Uses rare counterfeit banknotes to expose the difference between detection rate and posterior
+      probability.
+    angle_detail: Work from the 15-in-10,000 base rate; compare the result with the much higher base-rate
+      test in Aufgabe 4.10.
   - material_ref:
       route_id: route-fe8b4fbc40e7e85daf8ef25b
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-fe8b4fbc40e7e85daf8ef25b
+    locator: §4.1, physical PDF pp. 143–147
+    angle: Draws both forward and reversed urn trees, then models the host’s choices in Monty Hall.
+    angle_detail: The branch weights encode the observation protocol; a revealed goat is not independent
+      of the hidden prize location.
+    url: https://math.dartmouth.edu/~prob/prob/prob.pdf#page=143
   - material_ref:
       route_id: route-b48ac5af55a8c900d68bb0c9
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-b48ac5af55a8c900d68bb0c9
+    locator: §2.3, physical PDF pp. 70–73
+    angle: Derives Bayes in probability and odds forms and updates which coin was chosen.
+    angle_detail: The random-coin example separates the prior over models from the likelihood of the observed
+      tosses; the odds form is optional.
   - material_ref:
       route_id: route-395d30ff10c3ab149d789c7c
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: read
     scope_triage: helpful-now
     route_id: route-395d30ff10c3ab149d789c7c
+    locator: 'Lecture 2, "Conditioning and Bayes’ Rule": Recitation 2, problem 4 "The Monty Hall Problem"'
+    angle: Provides a named Monty Hall practice option alongside the conditioning lesson.
+    angle_detail: The question and solution links are separate; the accompanying help video is optional
+      and unreviewed.
   - material_ref:
       route_id: route-66691da3faf6c5780cf0b66d
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-66691da3faf6c5780cf0b66d
+    locator: §3.2.7–3.2.8, physical PDF pp. 102–108
+    angle: Uses trees to organize the joint paths needed for Bayes inversion.
+    angle_detail: Multiply along each path and sum all paths compatible with the evidence before normalizing.
   - material_ref:
       route_id: route-fa96784fa40036436bf1b2cc
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: practise
+    kind: read
     scope_triage: helpful-now
     route_id: route-fa96784fa40036436bf1b2cc
+    locator: §3.3, physical PDF pp. 41–43; exercise 3.4, p. 48; answer p. 434
+    angle: Uses a cattle-testing example to connect false positives, total probability and Bayes.
+    angle_detail: Exercise 3.4 changes the prevalence; it is a separate numerical check with an Appendix
+      C answer.
   - material_ref:
       route_id: route-44431ac89d714785b2bab31b
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-44431ac89d714785b2bab31b
-  - material_ref:
-      route_id: route-e3418e502d6ca2dcdf2f2c9d
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-e3418e502d6ca2dcdf2f2c9d
+    locator: Class 3 §7–7.1, physical PDF pp. 8–11
+    angle: Checks the base-rate calculation using equations, a tree and area rectangles.
+    angle_detail: Compare true-positive and false-positive contributions rather than substituting sensitivity
+      for a posterior.
+    url: https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/mit18_05_s22_class03-prep.pdf#page=8
   - material_ref:
       route_id: route-510e0c869360f72413e11c13
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: reference
-    scope_triage: reference-only
+    kind: read
+    scope_triage: helpful-now
     route_id: route-510e0c869360f72413e11c13
+    locator: §1.5, physical PDF pp. 58–62
+    angle: Updates which of three boxes was chosen after observing a white ball.
+    angle_detail: Keep the prior box probabilities separate from the within-box color probabilities; derive
+      the normalization rather than memorizing it.
   - material_ref:
       route_id: route-8c0f35f6c57e551481433291
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: reference
-    scope_triage: reference-only
+    kind: read
+    scope_triage: helpful-now
     route_id: route-8c0f35f6c57e551481433291
+    locator: §6.2–6.2.1, physical PDF pp. 224–228
+    angle: Compares test-result trees in a high-risk subgroup and a low-prevalence population.
+    angle_detail: Keep test characteristics fixed while tracking how the prior changes the proportion
+      of positives that are true positives.
   - material_ref:
       route_id: route-8de21f881a829cb3dec1d55d
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: reference
-    scope_triage: reference-only
+    kind: read
+    scope_triage: helpful-now
     route_id: route-8de21f881a829cb3dec1d55d
+    locator: Ch 3 §3.3, physical PDF pp. 120–122
+    angle: Uses failure to find a missing plane as evidence that updates probabilities across search regions.
+    angle_detail: A failed search is not proof of absence; the detection chance enters the likelihood.
   - material_ref:
       route_id: route-f99c92614d78638f193ab4d3
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-f99c92614d78638f193ab4d3
+    locator: Ch 4, physical PDF p. 59, Example 4.6 and Bayes theorem; problem 4.15, p. 65
+    angle: Uses machines with different production shares and defect rates to set up inverse attribution.
+    angle_detail: Compute the total defect probability before attributing a defective item to a machine;
+      read the problem’s actual rates.
   - material_ref:
       route_id: route-de38ce9e78f4dd052d5013b4
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: reference
     scope_triage: reference-only
     route_id: route-de38ce9e78f4dd052d5013b4
+    locator: Stat 110 Lectures 4–5; Strategic Practice 2, "Conditional Probability"
+    angle: Provides optional practice in the course’s Bayes and conditioning sequence.
+    angle_detail: Use the already linked course collection to find Lectures 4–5 and Strategic Practice
+      2. This pass verified the textbook slices; full lecture playback and every practice problem were
+      deferred under the video budget.
   - material_ref:
       route_id: route-ac99d1d809345a00721a6f99
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-ac99d1d809345a00721a6f99
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, physical PDF p. 6, 1.2.3; solution
+      p. 9
+    angle: Asks whether a regular voter comes from the city.
+    angle_detail: Use the weighted city contribution over the total; the solution is separate from the
+      question.
   - material_ref:
       route_id: route-9a18c8d3ccfb21c3f023b850
       inherit:
@@ -881,21 +905,36 @@ stages:
       - angle
       - angle_detail
       - source_id
-    kind: watch
-    scope_triage: helpful-now
+      - url
+    kind: read
+    scope_triage: reference-only
     route_id: route-9a18c8d3ccfb21c3f023b850
   - material_ref:
       route_id: route-361d03e96b7b4416138c8def
       inherit:
       - label
       - locator
-      - angle
-      - angle_detail
       - source_id
       - url
-    kind: watch
+    kind: read
     scope_triage: helpful-now
     route_id: route-361d03e96b7b4416138c8def
+    angle: Shows the posterior as the relevant part of the evidence region divided by all of it.
+    angle_detail: Track how the prior area and evidence likelihood jointly determine that region; compare
+      this picture with the tree calculation.
+  - material_ref:
+      route_id: route-sad-l04-kelleher-bayes
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-sad-l04-kelleher-bayes
+    kind: read
+    scope_triage: helpful-now
+    locator: §6.2.1, physical PDF pp. 287–289
+    angle: Shows why the evidence probability normalizes the class-specific numerator.
+    angle_detail: The shorthand opening sentence suppresses this denominator; use the full equations.
+      Conditional probability need not express a causal mechanism.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-bayes/notes.md
   attachments: []
   source_feedback: []
@@ -923,222 +962,256 @@ stages:
       - source_id
     kind: read
     locator: lecture-slides/04_probability.pdf, PDF pp. 40-42,49-50
-    angle: The current lecture's focused reading for independence and conditional independence.
-    angle_detail: Read physical PDF pages 40-42,49-50 for this stage. Printed slide labels may differ.
-      This slice focuses the existing deck route; the complete lecture remains accessible through the
-      unit material menu.
+    angle: Contrasts marginal independence with independence after conditioning on a third event.
+    angle_detail: Use the two-coin counterexample on p. 50. Unrelated-looking mechanisms alone do not
+      prove independence, and conditional formulas require a positive-probability conditioning event.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
   - material_ref:
       route_id: route-a577afe5626f081623095a82
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-a577afe5626f081623095a82
+    locator: exercise-slides/blatt-02.pdf, physical PDF p. 1, Aufgabe 1(d)–(e); p. 2, Aufgabe 2(d)
+    angle: Contrasts independent portfolio losses with two perfectly dependent securities.
+    angle_detail: Compare how the product changes in (e). For 2(d), the supplied marginal sports rates
+      do not establish conditional independence.
   - material_ref:
       route_id: route-78ae1df0aa949bb2a8a872dc
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-78ae1df0aa949bb2a8a872dc
+    locator: exercise-slides/UE3.pdf, physical PDF pp. 32–33
+    angle: Collects equivalent independence statements beside the conditional-probability definition.
+    angle_detail: Apply conditional forms only when their denominators are positive; otherwise use P(A∩B)=P(A)P(B).
   - material_ref:
       route_id: route-0afeba6c2e9a73159d6ad420
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
-    kind: reference
+    kind: read
     scope_triage: reference-only
     route_id: route-0afeba6c2e9a73159d6ad420
+    locator: 04_probability_with_notes (1).pdf
+    angle: Tests independence on the same small diagram and then states the conditional product used by
+      Naive Bayes.
+    angle_detail: Read physical PDF pp. 44–47,55–56. Compare the conditioning context in each product;
+      ordinary and conditional independence are separate statements.
   - material_ref:
       route_id: route-e488632c39efaf524b49f243
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-e488632c39efaf524b49f243
+    locator: §4.5, physical PDF pp. 224–228
+    angle: Derives the product criterion and relates it to unchanged conditional probabilities.
+    angle_detail: Use the two-roll example; distinguish a property of specified events from a blanket
+      causal assertion.
   - material_ref:
       route_id: route-87f36cab308f54f199bc3034
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-87f36cab308f54f199bc3034
+    locator: Aufgabe 4.6, physical PDF p. 85, solution p. 92; Aufgabe 4.9(d), pp. 86–87, solution p. 94
+    angle: Pairs an independence proof with a check using a finite Venn-diagram dataset.
+    angle_detail: Use the complement rule in 4.6; in 4.9 compare a joint probability with the product
+      of its marginals.
   - material_ref:
       route_id: route-fe8b4fbc40e7e85daf8ef25b
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-fe8b4fbc40e7e85daf8ef25b
+    locator: §4.1, physical PDF pp. 147–149
+    angle: Proves the product test for two events and checks it on coin events.
+    angle_detail: Conditional equalities require positive event probabilities; the product test handles
+      zero-probability cases too.
+    url: https://math.dartmouth.edu/~prob/prob/prob.pdf#page=147
   - material_ref:
       route_id: route-b48ac5af55a8c900d68bb0c9
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-b48ac5af55a8c900d68bb0c9
+    locator: §2.5, physical PDF pp. 80–84
+    angle: Gives examples where conditional and unconditional independence disagree.
+    angle_detail: Use the random-coin and phone-call examples to see why neither kind of independence
+      implies the other; pairwise independence also needs care.
   - material_ref:
       route_id: route-878acd203c5603b70539868d
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: read
     scope_triage: helpful-now
     route_id: route-878acd203c5603b70539868d
+    locator: Appendix B §B.1, physical PDF pp. 3–5
+    angle: Separates the bag-of-words representation from the conditional-independence assumption.
+    angle_detail: Ignoring word order does not by itself prove independence of evidence given the class.
   - material_ref:
       route_id: route-395d30ff10c3ab149d789c7c
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-395d30ff10c3ab149d789c7c
+    locator: 'Lecture 3, "Independence": slides, Recitation 3 and Tutorial 1'
+    angle: Collects two-event and collection-of-events independence with written practice.
+    angle_detail: Use the Lecture 3 page rather than the conditioning page; it also links Problem Set
+      2 and its solutions.
+    url: https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/pages/unit-i/lecture-3/
   - material_ref:
       route_id: route-66691da3faf6c5780cf0b66d
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-66691da3faf6c5780cf0b66d
+    locator: §3.1.7, physical PDF pp. 89–91; §3.2.6, pp. 101–102
+    angle: Checks independence using both the multiplication rule and conditional probabilities.
+    angle_detail: Keep mutually exclusive events separate from independent events; neither term means
+      the other.
   - material_ref:
       route_id: route-fa96784fa40036436bf1b2cc
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: practise
+    kind: read
     scope_triage: helpful-now
     route_id: route-fa96784fa40036436bf1b2cc
+    locator: §3.4, physical PDF pp. 43–46
+    angle: Tests independence through joint probabilities and the product rule.
+    angle_detail: Apply the formula to specified events rather than assuming everyday unrelatedness is
+      a proof.
   - material_ref:
       route_id: route-44431ac89d714785b2bab31b
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
     kind: read
     scope_triage: helpful-now
     route_id: route-44431ac89d714785b2bab31b
+    locator: Class 3 §6, physical PDF pp. 6–8
+    angle: Checks independence on cards and warns that experimental carryover can violate it.
+    angle_detail: The coin-in-honey example explains why repeated trials are not automatically independent.
+    url: https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/mit18_05_s22_class03-prep.pdf#page=6
   - material_ref:
       route_id: route-e3418e502d6ca2dcdf2f2c9d
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-e3418e502d6ca2dcdf2f2c9d
+    locator: physical PDF p. 4, Aufgabe 1 item 2; solution p. 22 item 2
+    angle: Refutes independence by comparing a conditional probability with its marginal.
+    angle_detail: Since 0.35 differs from 0.30, the specified events are dependent. No posterior inversion
+      is asked.
   - material_ref:
       route_id: route-510e0c869360f72413e11c13
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: reference
-    scope_triage: reference-only
+    kind: read
+    scope_triage: helpful-now
     route_id: route-510e0c869360f72413e11c13
+    locator: §1.4, physical PDF pp. 53–55
+    angle: Connects unchanged conditional probabilities with system-reliability calculations.
+    angle_detail: 'Read the warning about common-cause failures: independence is a modeling assumption
+      that can fail in practice.'
   - material_ref:
       route_id: route-8de21f881a829cb3dec1d55d
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: reference
-    scope_triage: reference-only
+    kind: read
+    scope_triage: helpful-now
     route_id: route-8de21f881a829cb3dec1d55d
+    locator: Ch 3 §3.4, physical PDF pp. 128–132
+    angle: Uses card and dice events to distinguish pairwise checks from independence of a collection.
+    angle_detail: Check the joint event as well as each pair; marginal pairwise equalities do not settle
+      a higher-order product.
   - material_ref:
       route_id: route-f99c92614d78638f193ab4d3
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-f99c92614d78638f193ab4d3
+    locator: Ch 4, physical PDF pp. 59–61, independence and Examples 4.8–4.11
+    angle: Checks independence numerically and applies it to repeated trials.
+    angle_detail: Separate the independence assumption for trials from properties of events within one
+      trial.
   - material_ref:
       route_id: route-de38ce9e78f4dd052d5013b4
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: reference
     scope_triage: reference-only
     route_id: route-de38ce9e78f4dd052d5013b4
+    locator: Stat 110 Lectures 4–5, independence and conditional independence
+    angle: Offers the spoken companion for the book’s contrasting independence examples.
+    angle_detail: Use the already linked course collection to find Lectures 4–5 and Strategic Practice
+      2. This pass verified the textbook slices; full lecture playback and every practice problem were
+      deferred under the video budget.
   - material_ref:
       route_id: route-ac99d1d809345a00721a6f99
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: helpful-now
     route_id: route-ac99d1d809345a00721a6f99
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, physical PDF p. 5, 1.1.5; solution
+      p. 8
+    angle: Tests the meaning of an unchanged conditional probability.
+    angle_detail: State the positive-denominator conditions for conditional forms of independence.
+  - material_ref:
+      route_id: route-sad-l04-kelleher-bayes
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-sad-l04-kelleher-bayes
+    kind: read
+    scope_triage: helpful-now
+    locator: §6.2.3, physical PDF pp. 295–298
+    angle: Compares a full joint table with a smaller set of conditional factors.
+    angle_detail: The reduction in stored probabilities depends on the conditional-independence assumption;
+      it does not establish that assumption from the data.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-independence/notes.md
   attachments: []
   source_feedback: []
@@ -1166,47 +1239,53 @@ stages:
       - source_id
     kind: read
     locator: lecture-slides/04_probability.pdf, PDF pp. 49-59
-    angle: The current lecture's focused reading for categorical naive bayes classifier.
-    angle_detail: Read physical PDF pages 49-59 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Turns counted email attributes into class scores through a conditional-independence assumption.
+    angle_detail: 'Keep the feature model explicit: pp. 55–57 discard repeated words, unlike a token-count
+      multinomial model. Unnormalized class scores suffice for argmax; normalize them before calling them
+      posterior probabilities.'
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
   - material_ref:
       route_id: route-a577afe5626f081623095a82
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-a577afe5626f081623095a82
+    locator: exercise-slides/blatt-02.pdf, physical PDF p. 2, Aufgabe 2(c)–(d)
+    angle: Classifies a basketball-and-swimming participant using two within-age-group likelihoods.
+    angle_detail: Multiply the prior by both conditional rates for each class, compare scores, and state
+      the independence assumption.
   - material_ref:
       route_id: route-c355ecc8ea7599015a21abfe
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
     kind: practise
     scope_triage: required-now
     route_id: route-c355ecc8ea7599015a21abfe
+    locator: exercise-slides/UE4.pdf, physical PDF pp. 11–12
+    angle: Compares two unnormalized age-class scores and discusses the modeling assumption.
+    angle_detail: UE4 uses basketball rates 75%/40%, a youth:adult ratio of 5:4 and swimming rates 60%/30%.
+      The current Blatt 2 instead uses 70%/35%, 3:2 and 50%/25%. Follow the method, not these numerical
+      answers, when checking Blatt 2. The scores on p. 11 are proportional to posteriors, not normalized
+      probabilities.
   - material_ref:
       route_id: route-878acd203c5603b70539868d
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
+      - url
     kind: read
     scope_triage: helpful-now
     route_id: route-878acd203c5603b70539868d
+    locator: Appendix B §§B.1–B.3, physical PDF pp. 3–7; binary variant §B.4, p. 8
+    angle: Shows how class-document counts and class-token counts enter different estimates.
+    angle_detail: Track document counts in the prior and token counts in the likelihood. The binary variant
+      clips counts; defer smoothing details to L14 if they interrupt the first classifier pass.
   - material_ref:
       route_id: route-37c710174c2a5be9353cb154
       inherit:
@@ -1215,21 +1294,49 @@ stages:
       - angle
       - angle_detail
       - source_id
+      - url
     kind: watch
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-37c710174c2a5be9353cb154
   - material_ref:
       route_id: route-c8fc9d587448ab88b808180a
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
       - source_id
-    kind: reference
-    scope_triage: reference-only
+    kind: read
+    scope_triage: helpful-now
     route_id: route-c8fc9d587448ab88b808180a
+    locator: cs229-notes.pdf §4.2, physical PDF pp. 43–45; §4.2.1 begins p. 46
+    angle: Makes the independence assumption and indicator-based estimates explicit for binary word features.
+    angle_detail: Use the displayed model and class scores now. The likelihood derivation is a return
+      reading after L08; Laplace smoothing starts the later L14 extension.
+  - material_ref:
+      route_id: route-0afeba6c2e9a73159d6ad420
+      inherit:
+      - label
+      - source_id
+    route_id: route-0afeba6c2e9a73159d6ad420
+    kind: read
+    scope_triage: reference-only
+    locator: 04_probability_with_notes (1).pdf
+    angle: Counts repeated words explicitly before summarizing classifier training and inference.
+    angle_detail: Read physical PDF pp. 61–68,85–91. The example gives Geld count 3 for Geld Geld Geld.
+      Contrast this with the current deck’s binary presence representation before copying probability
+      estimates.
+  - material_ref:
+      route_id: route-sad-l04-kelleher-bayes
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-sad-l04-kelleher-bayes
+    kind: read
+    scope_triage: helpful-now
+    locator: §6.3–6.3.1, physical PDF pp. 300–304
+    angle: Builds class priors and categorical likelihoods from a twenty-row loan dataset.
+    angle_detail: Trace the counts for credit history, guarantor/coapplicant and accommodation. Stop before
+      §6.4 smoothing; this example is available without external code or a missing CSV.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-naive-bayes/notes.md
   attachments: []
   source_feedback: []

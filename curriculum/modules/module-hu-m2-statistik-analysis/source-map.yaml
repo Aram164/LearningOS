@@ -605,8 +605,8 @@ sources:
     unit_id: unit-m2-sad-l05
     title: Current L05 combinatorics deck
     format: course-material
-    angle: The decision grid — order × replacement × selection size — which is the organising device the
-      exam expects you to apply.
+    angle: Builds the counting grid through race rankings, card dealing and an explicit stars-and-bars
+      construction.
     covers:
     - knowledge-sad-l05-decision-grid
     - knowledge-sad-l05-permutations
@@ -618,16 +618,16 @@ sources:
     depth: course-aligned
     scope: current
     locator: lecture-slides/05_combinatorics.pdf, 34 slides
-    angle_detail: 'The deck''s contribution is the grid itself rather than the individual formulas, which
-      are standard. Read it as a classification procedure: identify the cell, then apply the formula that
-      cell names. The identities and Stirling slides at the end are stated without justification; Blitzstein
-      §1.5''s story proofs are where they become memorable rather than memorised.'
+    angle_detail: The grid classifies order, repetition and selection size. The Gummibärchen argument
+      on p. 25 derives combinations with repetition; p. 29 has an inconsistent lottery calculation, so
+      use the coherent general formula on p. 30.
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
   - id: route-a2e6fc0559d93d22efbe732a
     unit_id: unit-m2-sad-l06
     title: Current L06 random-variables deck
     format: course-material
-    angle: The scope authority for random-variable language, and the deck that introduces PMF, density
-      and CDF in a single pass.
+    angle: Connects outcome mappings, distribution functions and moments to the random sample mean and
+      its concentration.
     covers:
     - knowledge-sad-l06-random-variable
     - knowledge-sad-l06-distribution-functions
@@ -639,11 +639,11 @@ sources:
     depth: course-aligned
     scope: current
     locator: lecture-slides/06_random_variables.pdf, 60 slides
-    angle_detail: Sixty slides covering random variables, all three distribution functions, transformations,
-      expectation, variance, covariance, the sample mean, Chebyshev and the law of large numbers. The
-      single-pass treatment of PMF versus density is where most confusion starts — Fahrmeir separates
-      them by chapter and is the standard repair. Chebyshev and the LLN at the end are the bridge into
-      L08 and are examinable in their own right.
+    angle_detail: 'The current 60-page deck supplies the taught sequence. Use the stage-specific page
+      guidance and formula caveats: pp. 15, 20–21, 29–30, 40–42 contain notation or interpretation problems.
+      Covariance requires a complementary written derivation; the deck does not derive it here. No independent
+      claim about examination scope is made.'
+    vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
   - id: route-66b70c94de7bc040921d186c
     unit_id: unit-m2-sad-l07
     title: Current L07 discrete-distributions deck
@@ -1084,8 +1084,7 @@ sources:
     unit_id: unit-m2-sad-l03
     title: Blatt 1, Aufgabe 2 — correlation and simple regression
     format: exercise
-    angle: Asks for both the coefficient and its interpretation on a real price pair, the closest current
-      exam-style L03 task.
+    angle: Computes corrected covariance and Pearson r, then fits gold price from silver price.
     covers:
     - knowledge-sad-l03-paired-data
     - knowledge-sad-l03-covariance
@@ -1094,35 +1093,33 @@ sources:
     depth: practice
     scope: current
     locator: exercise-slides/Blatt1.pdf, p. 3, Aufgabe 2
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+    angle_detail: The current sheet’s Tabelle 2 starts at gold 1885 and silver 21.80. In (b), Y is silver
+      and X is gold, so the requested prediction is X=f(Y); reversing the regression is not the same as
+      inverting a fit of Y on X. UE3 uses different prices and is a method example, not an exact numerical
+      answer key.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
   - id: route-6b78db21b974a13178ff0860
     unit_id: unit-m2-sad-l03
     title: Blatt 1, Aufgabe 3 — multivariate regression
     format: exercise
-    angle: Moves from the scalar line to a real feature matrix and prediction problem.
+    angle: Implements the matrix least-squares solution for three housing features and evaluates training
+      RMSE.
     covers:
     - knowledge-sad-l03-multivariate
     - knowledge-sad-l03-scaling-weights
     depth: practice
     scope: current
     locator: exercise-slides/Blatt1.pdf, p. 4, Aufgabe 3
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation. Unresolved local assets: Blatt 1 Aufgabe
-      3 names seattle_house_prices.csv and its aufgabe3.py; Übungsblatt 3 Aufgabe 3 names insurance_payouts.csv
-      and its template; Blatt 4 Aufgabe 3(b) names International_Education_Costs.csv and its template.
-      No matching files were found in the registered materials inventory or bounded materials/workbench
-      filename search. Exact Moodle assets are required for those data-dependent implementations; do not
-      substitute unrelated datasets. Paper-only parts remain usable.'
+    angle_detail: Part (a) predicts sale price from year built, lot area and living area; (b) computes
+      RMSE in euros. The named seattle_house_prices.csv and matching aufgabe3.py are absent from the inspected
+      holdings, so the programming task remains blocked on those assets. The PDF instructions and the
+      design-matrix discussion are still readable.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Blatt1.pdf
   - id: route-f7249a8bba66bc3ac7724629
     unit_id: unit-m2-sad-l03
     title: UE2, slides 20-28 — covariance and Pearson correlation
-    format: exercise
-    angle: Works the covariance-to-correlation normalization one line at a time in course notation.
+    format: solutions
+    angle: Works covariance, correlation and a contextual interpretation on five age–income pairs.
     covers:
     - knowledge-sad-l03-paired-data
     - knowledge-sad-l03-covariance
@@ -1130,15 +1127,16 @@ sources:
     depth: practice
     scope: current
     locator: exercise-slides/UE2.pdf, slides 20-28
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
+    angle_detail: Attempt the questions on pp. 22–23, 25 and 27 before exposing the answers on pp. 24,
+      26 and 28. This is a separate tutorial dataset, not Blatt 1’s gold–silver table. Page 20 explicitly
+      distinguishes zero correlation from independence and correlation from causality.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE2.pdf
   - id: route-3331bd0f1465151518d0d323
     unit_id: unit-m2-sad-l03
     title: UE2, slides 30-35 — regression prediction and RMSE
-    format: exercise
-    angle: Connects fitted coefficients to predictions and an explicit residual error measure.
+    format: solutions
+    angle: Builds an intercept-augmented matrix from age and work experience, predicts income and calculates
+      RMSE.
     covers:
     - knowledge-sad-l03-simple-regression
     - knowledge-sad-l03-multivariate
@@ -1146,16 +1144,16 @@ sources:
     depth: practice
     scope: current
     locator: exercise-slides/UE2.pdf, slides 30-35
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
+    angle_detail: Use the five-row task on p. 32, matrix and weights on p. 33, and error calculation on
+      p. 35. It is a complete small worked example that can be reproduced without the missing Seattle
+      dataset.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE2.pdf
   - id: route-adde7a7fe7cf2ed16214142c
     unit_id: unit-m2-sad-l03
-    title: UE3, slides 5-14 — Blatt 1 regression solutions
-    format: exercise
-    angle: Provides the official solution path for the two regression questions after the independent
-      attempt.
+    title: UE3 — regression worked examples; gold–silver data differs from Blatt 1
+    format: solutions
+    angle: Shows a complete gold-from-silver fit and a housing-regression output using the tutorial’s
+      own data.
     covers:
     - knowledge-sad-l03-covariance
     - knowledge-sad-l03-interpretation
@@ -1163,48 +1161,48 @@ sources:
     - knowledge-sad-l03-multivariate
     depth: practice
     scope: current
-    locator: exercise-slides/UE3.pdf, slides 5-14
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
+    locator: exercise-slides/UE3.pdf, PDF pp. 7–11
+    angle_detail: UE3’s gold/silver table begins 1900/22.00, whereas the stored Blatt 1 begins 1885/21.80.
+      Follow the method on pp. 7–9 but do not use its numerical answers to mark the current sheet. Pages
+      10–11 illustrate the housing implementation and RMSE; reproducing its output still requires the
+      missing original dataset.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
   - id: route-aa8a395d2936e94fd38796e0
     unit_id: unit-m2-sad-l03
     title: Blatt 2, Aufgabe 3 — gradient descent and loss curve
     format: exercise
-    angle: The only current assignment that makes the optimizer and normalization executable rather than
-      symbolic.
+    angle: Requests a gradient-descent regression and its MSE history for used-car prices.
     covers:
     - knowledge-sad-l03-gradient-descent
-    - knowledge-sad-l03-scaling-weights
     depth: practice
     scope: current
     locator: exercise-slides/blatt-02.pdf, p. 3, Aufgabe 3(a)-(b)
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+    angle_detail: Blatt 2 Aufgabe 3 uses honda_city.csv with year, mileage and sale price. Part (a) returns
+      fitted weights and all iteration errors; (b) plots the MSE history. The dataset and matching aufgabe3.py
+      are absent from the inspected holdings. UE3’s two-point worked example can practise the update mechanics
+      while those assets are unavailable.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
   - id: route-9858d63c791d015034a2641f
     unit_id: unit-m2-sad-l03
     title: UE3, slides 40-45 — gradient descent and normalization walkthrough
-    format: exercise
-    angle: Explains why scaling changes the descent geometry and how the MSE curve diagnoses the update.
+    format: solutions
+    angle: Calculates successive weight updates for two points and then motivates feature standardization.
     covers:
     - knowledge-sad-l03-gradient-descent
     - knowledge-sad-l03-scaling-weights
     depth: practice
     scope: current
     locator: exercise-slides/UE3.pdf, slides 40-45
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
+    angle_detail: Use pp. 40–42 to reproduce the gradient and the two-parameter update; p. 43 compares
+      learning rates and iteration counts. Pages 44–45 explain the scale imbalance. Standardization gives
+      common units but does not guarantee equal predictive influence or identical gradient contributions.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
   - id: route-a577afe5626f081623095a82
     unit_id: unit-m2-sad-l04
     title: Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes
     format: exercise
-    angle: Combines finite probability, dependence, Bayes inversion and a small classifier in the current
-      assignment format.
+    angle: Combines finite sampling and explicit dependence assumptions with a two-feature sports-club
+      classifier.
     covers:
     - knowledge-sad-l04-events
     - knowledge-sad-l04-axioms
@@ -1215,15 +1213,14 @@ sources:
     depth: practice
     scope: current
     locator: exercise-slides/blatt-02.pdf, pp. 1-2, Aufgaben 1-2
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+    angle_detail: 'Use the stored Blatt 2 numbers: basketball 70%/35%, age-group ratio 3:2, swimming 50%/25%.
+      UE4 uses 75%/40%, 5:4 and 60%/30%, so its numerical answers are not the answer key for this sheet.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
   - id: route-78ae1df0aa949bb2a8a872dc
     unit_id: unit-m2-sad-l04
     title: UE3, slides 15-38 — events, axioms and conditional probability
-    format: exercise
-    angle: Builds the event algebra and then works the medical-test style base-rate inversion visually.
+    format: solutions
+    angle: Combines event examples, a dice-game complement and a worked sensitivity/specificity calculation.
     covers:
     - knowledge-sad-l04-events
     - knowledge-sad-l04-axioms
@@ -1233,15 +1230,14 @@ sources:
     depth: practice
     scope: current
     locator: exercise-slides/UE3.pdf, slides 15-38
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
+    angle_detail: 'Use the task slides before their answer slides. UE3 p. 32 incorrectly adds a nonempty-intersection
+      requirement: P(A|B) remains defined and equals zero when A∩B is empty and P(B)>0.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE3.pdf
   - id: route-c355ecc8ea7599015a21abfe
     unit_id: unit-m2-sad-l04
-    title: UE4, slides 9-12 — Bayes and Naive Bayes solutions
-    format: exercise
-    angle: Shows exactly where the conditional-independence assumption enters the two-feature classifier.
+    title: UE4 — sports-club worked example with different numbers from Blatt 2
+    format: solutions
+    angle: Works total probability, Bayes inversion and two-feature classification consecutively.
     covers:
     - knowledge-sad-l04-conditional
     - knowledge-sad-l04-bayes
@@ -1249,16 +1245,16 @@ sources:
     depth: practice
     scope: current
     locator: exercise-slides/UE4.pdf, slides 9-12
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
+    angle_detail: UE4 uses basketball rates 75%/40%, a youth:adult ratio of 5:4 and swimming rates 60%/30%.
+      The current Blatt 2 instead uses 70%/35%, 3:2 and 50%/25%. Follow the method, not these numerical
+      answers, when checking Blatt 2.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
   - id: route-cdaab7b53820cd4672754a63
     unit_id: unit-m2-sad-l05
     title: Blatt 2, Aufgabe 1 — counting inside finite probability
     format: exercise
-    angle: Hides the counting case inside cards, repeated dice and dependent portfolio events, which tests
-      identification rather than formula recall.
+    angle: Requires the sampling model before counting repeated dice, ordered odd-number cards and coin
+      outcomes.
     covers:
     - knowledge-sad-l05-decision-grid
     - knowledge-sad-l05-variations
@@ -1267,16 +1263,16 @@ sources:
     depth: practice
     scope: current
     locator: exercise-slides/blatt-02.pdf, p. 1, Aufgabe 1(a)-(e)
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+    angle_detail: Current Blatt 2 uses five die rolls, red odd number cards, five further coin rounds,
+      and independent loss probability 0.4 with a 2% threshold. UE4 uses different parameters; it is not
+      this sheet’s numerical answer key.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/blatt-02.pdf
   - id: route-9dca93bd8f5f1512981461eb
     unit_id: unit-m2-sad-l05
-    title: UE4, slides 4-8 — worked finite-counting solutions
-    format: exercise
-    angle: Makes the numerator/denominator counting decisions explicit for the current sheet's disguised
-      cases.
+    title: UE4 pp. 4–8 — different-number examples; card-count correction
+    format: solutions
+    angle: Works analogous finite-counting problems with different parameters and a card-order mismatch
+      to diagnose.
     covers:
     - knowledge-sad-l05-decision-grid
     - knowledge-sad-l05-variations
@@ -1285,15 +1281,16 @@ sources:
     depth: practice
     scope: current
     locator: exercise-slides/UE4.pdf, slides 4-8
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
+    angle_detail: 'UE4 uses four die rolls, all red number cards, three further coin rounds and loss probability
+      0.5 below 10%. These differ from Blatt 2. On p. 5, “first smaller” requires denominator 52·51 for
+      the displayed favorable count 180: probability 15/221, not 30/221.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
   - id: route-2da0864f340f4e794158cc61
     unit_id: unit-m2-sad-l06
     title: Übungsblatt 3, Aufgabe 1 — PMF, transformation, expectation and variance
     format: exercise
-    angle: Compresses the four core random-variable operations into one exact current assignment.
+    angle: Practises interval endpoints, moments and a many-to-one absolute-value mapping on one symmetric
+      PMF.
     covers:
     - knowledge-sad-l06-distribution-functions
     - knowledge-sad-l06-transformations
@@ -1302,16 +1299,16 @@ sources:
     depth: practice
     scope: current
     locator: exercise-slides/Übung-3.pdf, p. 1, Aufgabe 1(a)-(c)
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation.'
+    angle_detail: Current Blatt 3 p. 1 has values -4,-2,0,2,4 and masses 0.1,0.3,0.2,0.3,0.1. Attempt
+      (a) the half-open interval, (b) expectation and variance, and (c) combine ±2 and ±4 under Z=|X|.
+      UE5 uses a different PMF and is a method comparison, not this sheet’s numeric answer key.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
   - id: route-e7975557941ab093de08152e
     unit_id: unit-m2-sad-l06
     title: Übungsblatt 3, Aufgabe 3 — mixture moments and the LLN
     format: exercise
-    angle: Turns expectation and the law of large numbers into a cumulative-mean simulation with a distribution
-      change.
+    angle: Distinguishes a point mass at zero, an exponential payout component and a change in the data-generating
+      process.
     covers:
     - knowledge-sad-l06-expectation
     - knowledge-sad-l06-variance-covariance
@@ -1320,21 +1317,18 @@ sources:
     depth: practice
     scope: current
     locator: exercise-slides/Übung-3.pdf, p. 3, Aufgabe 3(a)-(d)
-    angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
-      It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation. It assumes basic Python/pandas and
-      is therefore a worked application, not the first explanation. Unresolved local assets: Blatt 1 Aufgabe
-      3 names seattle_house_prices.csv and its aufgabe3.py; Übungsblatt 3 Aufgabe 3 names insurance_payouts.csv
-      and its template; Blatt 4 Aufgabe 3(b) names International_Education_Costs.csv and its template.
-      No matching files were found in the registered materials inventory or bounded materials/workbench
-      filename search. Exact Moodle assets are required for those data-dependent implementations; do not
-      substitute unrelated datasets. Paper-only parts remain usable.'
+    angle_detail: Current Blatt 3 p. 3 uses 94% zero payouts and 6% exponential payouts of mean €9,000;
+      the moments are E[X]=540 and Var(X)=9,428,400. Part (c) uses a 120-observation rolling window; part
+      (d) uses a cumulative mean. A regime change breaks an identical-distribution assumption across the
+      combined sample. insurance_payouts.csv and the named Moodle template remain unavailable in the verified
+      inventory; data-dependent parts cannot be reproduced from the local holdings. UE5 instead uses 95%/5%,
+      €10,000 and a 100-observation window.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Übung-3.pdf
   - id: route-25ae05c5bd133243f7bf98aa
     unit_id: unit-m2-sad-l06
-    title: UE4, slides 18-34 — random variables, moments and LLN
+    title: UE4 pp. 18–34 — PMF, uniform fish lengths, mixed revenue and running averages
     format: exercise
-    angle: Uses one discrete and one mixed random variable to connect the definitions to empirical convergence.
+    angle: Moves from a two-dice count to uniform lengths and a zero-inflated shop-revenue example.
     covers:
     - knowledge-sad-l06-random-variable
     - knowledge-sad-l06-distribution-functions
@@ -1346,28 +1340,34 @@ sources:
     depth: practice
     scope: current
     locator: exercise-slides/UE4.pdf, slides 18-34
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
+    angle_detail: PDF pp. 18–25 count even outcomes in two dice throws (mean 1, variance 1/2); pp. 26–27
+      use fish lengths U(10,30); pp. 28–31 mix 90% zero revenue with 10% exponential revenue of mean €50
+      (overall mean 5, variance 475); pp. 32–34 distinguish cumulative and rolling averages under drift.
+      These are different examples from current Blatt 3. On p. 25 standard deviation is RMS deviation,
+      not mean absolute deviation; on p. 19 a discrete mass function is commonly called PMF, not density.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
   - id: route-64aa48498fe151c8b1c69305
     unit_id: unit-m2-sad-l06
-    title: UE5, slides 4-17 — official Blatt 3 solutions
+    title: UE5 pp. 4–7,12–17 — analogous RV and payout solutions with different parameters
     format: exercise
-    angle: Provides the complete official solution and implementation trace for Blatt 3 after it has been
-      attempted.
+    angle: Shows a worked absolute-value PMF and mixture-moment calculation, with explicit differences
+      from the current sheet.
     covers:
     - knowledge-sad-l06-distribution-functions
     - knowledge-sad-l06-transformations
     - knowledge-sad-l06-expectation
     - knowledge-sad-l06-variance-covariance
     - knowledge-sad-l06-concentration
+    - knowledge-sad-l06-sample-mean
     depth: practice
     scope: current
-    locator: exercise-slides/UE5.pdf, slides 4-17
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
+    locator: exercise-slides/UE5.pdf, PDF pp. 4-7,12-17
+    angle_detail: 'Pages 4–7 use values -3,-2,0,2,3 and masses 1/8,1/4,1/4,1/4,1/8: mean 0, variance 17/4;
+      current Blatt 3 has variance 28/5. For Z=|X| the zero mass is counted once, not twice. Pages 12–17
+      use 95% zeros and 5% exponential payouts of mean €10,000, yielding mean 500 and variance 9,750,000.
+      The rolling window is 100 instead of the sheet’s 120. Derive the change-point index from the stated
+      timestamp rather than copying 6200; show zero payouts separately when plotting a logarithmic payout
+      axis. This is not an exact current-sheet answer key.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
   - id: route-475a87b6ec22bf8e77f9de71
     unit_id: unit-m2-sad-l07
@@ -1813,20 +1813,17 @@ sources:
   unit_routes:
   - id: route-ced0625bb9bbca4add20f4f3
     unit_id: unit-m2-sad-l03
-    title: 3Blue1Brown — what a derivative is, before gradient descent uses one
-    format: video
+    title: 3Blue1Brown — derivative as a limiting slope (illustrated lesson)
+    format: website
     depth: intuition
     scope: prerequisite
-    locator: Essence of Calculus episodes 2 ('The paradox of the derivative') and 3 ('Derivative formulas
-      through geometry')
+    locator: '"The paradox of the derivative — illustrated author lesson with embedded video"'
     covers:
     - knowledge-sad-l03-gradient-descent
-    angle: Restores the derivative as a slope you can see, which gradient descent's update rule silently
-      assumes you still hold.
-    angle_detail: 'L03''s optimiser takes a step proportional to the negative derivative, and that rule
-      is only obvious if the derivative is still a slope in your mind rather than a differentiation rule
-      you once memorised. Two episodes restore the picture. Routed as a prerequisite rather than a supplement:
-      if the derivative is solid, skip it entirely.'
+    angle: Builds instantaneous velocity from shrinking changes in distance and time.
+    angle_detail: Use this prerequisite only if the meaning of a derivative is unclear. It explains the
+      slope used by an update, not multivariable gradient descent itself.
+    url: https://www.3blue1brown.com/lessons/derivatives/
   - id: route-dd5f555433ae41e4cd19802b
     unit_id: unit-m2-sad-l15
     title: 3Blue1Brown — the chain rule, which is all backpropagation is
@@ -1926,50 +1923,54 @@ sources:
     unit_id: unit-m2-sad-l04
     title: 2025 probability deck with notes
     format: course-material
-    angle: The 2025 deck for the same topic, annotated with the lecturer's spoken notes.
+    angle: Uses staged German diagrams and a token-count text example in the 2025 annotated PDF.
     covers:
     - knowledge-sad-l04-events
     - knowledge-sad-l04-axioms
     - knowledge-sad-l04-conditional
     - knowledge-sad-l04-bayes
     - knowledge-sad-l04-independence
+    - knowledge-sad-l04-naive-bayes
     depth: advanced-reference
     scope: prior-year
     locator: 04_probability_with_notes (1).pdf
-    angle_detail: Prior-year material is never scope evidence — the 2026 deck decides what is examinable
-      — but the annotated version records explanations that exist only in speech, which is exactly what
-      a PDF of the current deck cannot give you. Use it when a current slide is terse and you want to
-      know what was said around it. Check every claim against the 2026 deck before relying on it.
+    angle_detail: Prior-year 99-page Alan Akbik PDF. Open starts at the document; each stage gives its
+      physical reading pages. Its token-count text model differs from the current lecture’s duplicate-removal
+      example.
   - id: route-15ce623882a5c644af47a3e6
     unit_id: unit-m2-sad-l05
-    title: 2025 probability deck — counting context
+    title: 2025 random variables — dice-sum bridge to L06
     format: course-material
-    angle: Prior-year treatment of the same material at a different pace; note that the 2025 numbering
-      does not match 2026.
+    angle: Groups elementary dice outcomes by their sum to introduce a probability mass function.
     covers:
     - knowledge-sad-l05-counting-probability
     depth: advanced-reference
     scope: prior-year
     locator: 05_random_variables.pdf
-    angle_detail: The 2025 sequence numbers this deck as random variables where 2026 has combinatorics,
-      so the file names cannot be used to align lectures. Compare by topic, never by number. Useful as
-      a second explanation, dangerous as a scope guide.
+    angle_detail: 'Read physical pp. 14–19 only as a bridge to L06: sums are not equiprobable even when
+      elementary dice outcomes are. This 52-page file does not provide the current combinatorics grid.'
   - id: route-571bc192e073618471ea3070
     unit_id: unit-m2-sad-l06
-    title: 2025 random-variables and expected-values pair
+    title: 2025 expected-values and LLN deck — recap and slower worked sequence
     format: course-material
-    angle: A prior-year deck devoted specifically to expected values, in more detail than the 2026 pass.
+    angle: Adds an introductory quiz, salary examples and repeated-sample intuition before moments and
+      LLN.
     covers:
     - knowledge-sad-l06-random-variable
     - knowledge-sad-l06-distribution-functions
     - knowledge-sad-l06-expectation
     - knowledge-sad-l06-variance-covariance
+    - knowledge-sad-l06-sample-mean
+    - knowledge-sad-l06-concentration
     depth: advanced-reference
     scope: prior-year
     locator: 06_expected_values.pptx-1.pdf
-    angle_detail: Because 2025 split this material differently, expectation gets a whole deck rather than
-      a section, which makes it a slower and more worked-through treatment of L06's central node. One
-      of the more useful prior-year files for that reason.
+    angle_detail: This is one 73-page prior-year deck, not a pair of files. Physical pp. 3–6 quiz random
+      variables and distribution functions; pp. 35–48 cover expectation and salary/repair-cost examples;
+      pp. 50–57 variance; pp. 59–71 IID and the random sample mean. Use as a prior-year comparison, with
+      the same caution about per-error versus total repair cost. Its final theorem label must not replace
+      the precise current-stage convergence statement.
+    vault_path: material://source-sad-2025-recordings/06_expected_values.pptx-1.pdf
   - id: route-6ffaf5d7ec9d500ff4c5286e
     unit_id: unit-m2-sad-l07
     title: 2025 discrete-distributions deck
@@ -2142,8 +2143,8 @@ sources:
     unit_id: unit-m2-sad-l03
     title: Fahrmeir Chapter 3 — multivariate description and regression
     format: book
-    angle: Correlation and least squares derived from the descriptive side only — no random variables,
-      no inference, which is exactly L03's standpoint.
+    angle: Explains covariance through signed quadrants and uses third-variable examples to challenge
+      causal readings of correlation.
     covers:
     - knowledge-sad-l03-paired-data
     - knowledge-sad-l03-covariance
@@ -2151,21 +2152,19 @@ sources:
     - knowledge-sad-l03-simple-regression
     depth: derivation
     scope: complementary
-    locator: Ch 3 §3.4 Zusammenhangsmaße bei metrischen Merkmalen, pdf pp. 151-163; §3.5 Korrelation und
-      Kausalität, pdf pp. 164-167; §3.6 Regression, pdf pp. 168-182; Aufgaben pdf pp. 189-192
-    angle_detail: Most books introduce regression after probability and immediately talk about errors
-      as random variables. Fahrmeir Ch 3 is still in the descriptive half of the book, so the Kleinste-Quadrate
-      line is derived as a purely geometric fit to a scatterplot — the same standpoint as L03, which also
-      has no probability yet. §3.5 is the short, sharp treatment of Scheinkorrelation and confounding
-      that the lecture states in one slide. It does NOT cover multivariate regression in matrix form or
-      gradient descent; for those parts of L03 use ISLP §3.2 and Géron Ch 4.
+    locator: §3.4.1, PDF pp. 151–158; §3.5, pp. 164–168; §3.6.1–3.6.2, pp. 169–174
+    angle_detail: The centered scatterplot explains the sign of covariance, and the German regression
+      section minimizes squared vertical deviations. The book introduces an error term; the previous claim
+      that it uses no random-variable language was too strong. Its descriptive covariance uses divisor
+      n, whereas Blatt 1 explicitly requests the corrected divisor n−1. Use consistent divisors in both
+      covariance and standard deviations when calculating Pearson r.
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
   - id: route-e488632c39efaf524b49f243
     unit_id: unit-m2-sad-l04
     title: Fahrmeir Chapter 4 — probability foundations
     format: book
-    angle: Splits total probability and Bayes into two separately numbered sections, which is the derivation
-      order L04's slide 46 skips.
+    angle: Derives the rules in German and calculates Bayes both algebraically and with a hypothetical
+      population table.
     covers:
     - knowledge-sad-l04-events
     - knowledge-sad-l04-axioms
@@ -2174,36 +2173,27 @@ sources:
     - knowledge-sad-l04-independence
     depth: derivation
     scope: complementary
-    locator: Ch 4 §§4.1-4.2 Wahrscheinlichkeitsbegriff, pdf pp. 194-213; §4.4 Bedingte Wahrscheinlichkeiten,
-      pdf pp. 221-223; §4.5 Unabhängigkeit, pdf pp. 224-227; §4.6 Totale Wahrscheinlichkeit, pdf pp. 228-229;
-      §4.7 Satz von Bayes, pdf pp. 230-234; Aufgaben pdf pp. 239-241
-    angle_detail: 'The 2026 deck states Bayes with the total-probability expansion already substituted
-      into the denominator, so the step where the partition enters is invisible. Fahrmeir gives §4.6 (Satz
-      von der totalen Wahrscheinlichkeit) its own statement and proof, then derives §4.7 (Bayes) from
-      it, which is the missing half. It also gives the German phrasing of Unabhängigkeit as a product
-      rule rather than as a conditional statement — worth reading because the Klausur can ask for either.
-      Stops before Naive Bayes: the classifier construction is L04''s own, and no book on this shelf matches
-      it exactly.'
+    locator: §4.1, PDF pp. 195–206; §§4.4–4.7, pp. 221–233
+    angle_detail: Total probability has a partition diagram and a tournament example; the following test
+      example shows how base rates change the inverse probability. These are alternative explanations,
+      not evidence of exam format.
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
   - id: route-4a454762daa4af4208f8fcc6
     unit_id: unit-m2-sad-l05
     title: Fahrmeir Chapter 4 — combinatorics and finite probability
     format: book
-    angle: Six pages that put counting where SaD puts it — inside sampling — instead of treating combinatorics
-      as its own subject.
+    angle: Derives counts from urn sampling, then removes order to obtain combinations.
     covers:
     - knowledge-sad-l05-decision-grid
+    - knowledge-sad-l05-variations
+    - knowledge-sad-l05-permutations
     - knowledge-sad-l05-combinations
     - knowledge-sad-l05-counting-probability
     depth: derivation
     scope: complementary
-    locator: Ch 4 §4.3 Zufallsstichproben und Kombinatorik, pdf pp. 214-220; Aufgaben pdf pp. 239-241
-    angle_detail: 'This is deliberately the shortest combinatorics treatment on the shelf, and that is
-      its value: Fahrmeir introduces the counting cases only as the sizes of sample spaces for Ziehen
-      mit/ohne Zurücklegen and mit/ohne Berücksichtigung der Reihenfolge, which is precisely how L05''s
-      decision grid is organised. If the grid is what will not stick, read this rather than a full combinatorics
-      chapter, because it never leaves the sampling frame. For volume of drill and the harder identity
-      questions go to Blitzstein Ch 1 or Schaum''s Ch 2 instead.'
+    locator: §4.3, physical PDF pp. 214–220
+    angle_detail: The German sampling model connects the counting rule to the experiment; the lottery
+      example is a direct finite-probability application.
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
   - id: route-0374705a29ffc770fc54d9b5
     unit_id: unit-m2-sad-l06
@@ -2217,6 +2207,7 @@ sources:
     - knowledge-sad-l06-expectation
     - knowledge-sad-l06-variance-covariance
     - knowledge-sad-l06-concentration
+    - knowledge-sad-l06-sample-mean
     depth: derivation
     scope: complementary
     locator: Ch 5 §5.1 Zufallsvariablen, pdf pp. 243-246; §5.2 Verteilungen und Parameter diskreter ZV,
@@ -2510,21 +2501,23 @@ sources:
   unit_routes:
   - id: route-62f0ce97ea80883abf322143
     unit_id: unit-m2-sad-l03
-    title: Kelleher Chapter 7 — error surfaces and gradient descent
+    title: Kelleher §§7.2–7.3 — office rentals, loss surfaces and weight updates
     format: book
-    angle: Draws the error surface as a landscape and walks gradient descent across it, which is the picture
-      L03's optimiser slides assume.
+    angle: Carries one office-rental example from the fitted line through the error surface to multivariable
+      weight updates.
     covers:
+    - knowledge-sad-l03-paired-data
+    - knowledge-sad-l03-simple-regression
+    - knowledge-sad-l03-multivariate
     - knowledge-sad-l03-gradient-descent
     - knowledge-sad-l03-scaling-weights
     depth: intuition
     scope: complementary
-    locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the error surface and gradient-descent sections)
-    angle_detail: Kelleher's treatment of least squares is unusual in starting from the shape of the error
-      function over the parameter space — a bowl, with the fitted line at its bottom — before any update
-      rule. Once that surface is in view, gradient descent is obviously a descent and the learning rate
-      is obviously a step size, which is the intuition L03 states in words. The chapter also covers multivariable
-      weights consistently with the deck's notation.
+    locator: §7.2, PDF pp. 353–361; §7.3, pp. 362–375
+    angle_detail: The same rental dataset links prediction errors, the sum of squares, contour plots and
+      gradient descent. Section 7.3.4 works the first two iterations, and pp. 374–375 discuss why scale
+      forces a small learning rate. Use this for a detailed numerical trace and weight interpretation;
+      use a matrix-calculus source for the normal-equation derivation.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
   - id: route-ef56936eca783d424d37e8f9
     unit_id: unit-m2-sad-l11
@@ -2666,6 +2659,22 @@ sources:
       means and variances, evaluate densities and compare class scores. The assigned PDF contains the
       question, not a verified complete worked solution. Solution access remains unresolved; do not treat
       this resource as a step-by-step answer key.
+    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
+  - id: route-sad-l04-kelleher-bayes
+    unit_id: unit-m2-sad-l04
+    title: Kelleher §§6.2–6.3 — factorization and a categorical loan example
+    format: book
+    depth: intuition
+    scope: complementary
+    covers:
+    - knowledge-sad-l04-bayes
+    - knowledge-sad-l04-independence
+    - knowledge-sad-l04-naive-bayes
+    locator: §6.2.1, physical PDF pp. 287–289; §6.2.3–6.3.1, pp. 295–304
+    angle: Connects posterior normalization, factorization and a fully tabulated categorical classifier.
+    angle_detail: The loan example uses credit history, guarantor/coapplicant and accommodation categories,
+      making it a closer comparison to the course’s categorical feature table than a token-count text
+      model.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
 - source_id: source-analysis-drill-blaetter-extern
   role: practice
@@ -3061,55 +3070,57 @@ sources:
     unit_id: unit-m2-sad-l03
     title: Arbeitsbuch Chapter 3 — correlation and regression drills
     format: exercise
-    angle: Correlation and regression by hand, including the contingency-table measures the lecture mentions
-      but never drills.
+    angle: Provides distinct tasks for hidden subgroup relationships, a fitted line, an influential point
+      and Anscombe’s quartet.
     covers:
+    - knowledge-sad-l03-paired-data
     - knowledge-sad-l03-covariance
+    - knowledge-sad-l03-interpretation
     - knowledge-sad-l03-simple-regression
+    - knowledge-sad-l03-scaling-weights
     depth: practice
     scope: complementary
-    locator: Ch 3 Aufgaben pdf pp. 57-66, Lösungen pdf pp. 67-82
-    angle_detail: Computing r and a least-squares line from a small table by hand is a distinct skill
-      from understanding them, and it is the one the Klausur can test under time pressure. These items
-      are sized for that. The chapter also drills the Kontingenztafel association measures from Fahrmeir
-      §3.2, which L03 does not cover but the exam's descriptive half occasionally reaches — treat those
-      as optional unless a past paper shows otherwise.
+    locator: Aufgabe 3.6, PDF p. 59, solutions pp. 72–74; 3.7, p. 60, solution p. 75; 3.9, p. 62, solutions
+      pp. 77–78; 3.11, pp. 63–64, solutions pp. 78–79
+    angle_detail: Use the named task for its specific purpose rather than assigning the whole chapter
+      at every stage. Task 3.7 supplies sums for hand calculation; 3.9 changes one observation; 3.11 contrasts
+      almost identical summaries with different scatterplots. The Spearman parts are optional contrasts
+      to Pearson, not required L03 calculations.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
   - id: route-87f36cab308f54f199bc3034
     unit_id: unit-m2-sad-l04
     title: Arbeitsbuch Chapter 4 — conditional probability and Bayes
     format: exercise
-    angle: Bayes and total probability in Vierfeldertafel form — the exact presentation German exams use.
+    angle: Provides separate tasks for event construction, a contingency table, conditional inversion
+      and independence.
     covers:
+    - knowledge-sad-l04-events
     - knowledge-sad-l04-axioms
     - knowledge-sad-l04-conditional
     - knowledge-sad-l04-bayes
     - knowledge-sad-l04-independence
     depth: practice
     scope: complementary
-    locator: Ch 4 Aufgaben pdf pp. 83-88, Lösungen pdf pp. 89-95
-    angle_detail: German statistics exams overwhelmingly pose conditional-probability questions as a four-field
-      table or a tree, not as an algebraic identity, and grading follows the table. These solutions show
-      the table being filled and read, which is the mechanical skill worth having automatic before the
-      Klausur. Six pages of problems, seven of solutions — small enough to finish in one sitting.
+    locator: Aufgaben 4.1–4.2, PDF p. 83, solutions p. 89; 4.6–4.7, p. 85, solutions pp. 92–93; 4.9, pp.
+      86–87, solution p. 94; 4.11, p. 87, solution p. 95
+    angle_detail: Choose the named task; solutions are at separate physical pages. This workbook is not
+      a guarantee of any particular SaD exam presentation.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
   - id: route-57b1bc90a80f412d744265c2
     unit_id: unit-m2-sad-l05
     title: Arbeitsbuch Chapter 4 — combinatorics applications
     format: exercise
-    angle: Counting embedded in probability questions rather than as pure counting exercises — which is
-      how L05 is examined.
+    angle: Provides explicit small sample spaces and committee choices with separate solutions.
     covers:
     - knowledge-sad-l05-decision-grid
+    - knowledge-sad-l05-variations
     - knowledge-sad-l05-combinations
     - knowledge-sad-l05-counting-probability
     depth: practice
     scope: complementary
-    locator: Ch 4 Aufgaben pdf pp. 83-88, Lösungen pdf pp. 89-95 (the Ziehen mit/ohne Zurücklegen items)
-    angle_detail: 'The exam rarely asks ''how many arrangements'' on its own; it asks for a probability
-      whose computation happens to require a count. These items are all of that second kind, so they train
-      the step students actually lose marks on: deciding whether order and replacement matter before reaching
-      for a formula. Thin on pure identities and Stirling — Blitzstein §1.4 covers those.'
+    locator: Aufgaben 4.3,4.5, physical PDF pp. 84–85; solutions pp. 90–92
+    angle_detail: The useful items are 4.3 and 4.5, not the whole probability chapter. Neither exercise
+      establishes what will be examined.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
   - id: route-dc5505c84e252627c48530c2
     unit_id: unit-m2-sad-l06
@@ -3242,38 +3253,32 @@ sources:
     format: book
     depth: course-aligned
     scope: complementary
-    locator: Official PDF, Ch 4 'Conditional Probability', §§4.1-4.3, PDF pp. 141-190
+    locator: §4.1 Discrete Conditional Probability, physical PDF pp. 141–149
     covers:
     - knowledge-sad-l04-conditional
     - knowledge-sad-l04-bayes
     - knowledge-sad-l04-independence
-    angle: Open-access and legally free to keep, with a paradoxes section that attacks the intuition failures
-      L04 opens on.
-    angle_detail: The AMS releases this under a licence that lets you keep and print it, which matters
-      for a text you will return to across three lectures. §4.3 collects the classic conditional-probability
-      paradoxes — Monty Hall, the two-child problem, the prisoner's dilemma — and resolves each by making
-      the conditioning event explicit. That is the same diagnosis L04's framing slides make, worked out
-      at length rather than asserted. The exercises are plentiful and answers to odd-numbered ones are
-      published.
+    angle: Reverses an urn-selection tree and makes the observation process explicit in Monty Hall.
+    angle_detail: Use the discrete section now. The former whole §§4.1–4.3 assignment also included continuous
+      conditioning and material beyond this lecture.
+    url: https://math.dartmouth.edu/~prob/prob/prob.pdf#page=141
   - id: route-fa2f72cfc8de281124afb34d
     unit_id: unit-m2-sad-l05
     title: Grinstead & Snell Ch 3 — combinatorics
     format: book
     depth: course-aligned
     scope: complementary
-    locator: Official PDF, Ch 3 'Combinatorics', §§3.1-3.3, PDF pp. 83-140
+    locator: §3.1, PDF pp. 83–89; §3.2, pp. 101–106,111–112
     covers:
     - knowledge-sad-l05-permutations
     - knowledge-sad-l05-variations
     - knowledge-sad-l05-combinations
-    - knowledge-sad-l05-identities
     - knowledge-sad-l05-counting-probability
-    angle: Proves the binomial identities L05 lists, and uses card shuffling as a running example that
-      makes the counting concrete.
-    angle_detail: '§3.2 does not merely state Pascal''s identity and the binomial theorem — it proves
-      them and then uses them, which is what L05''s identities node needs and does not supply. The card-shuffling
-      section is unusual and useful: it applies the counting machinery to a physical process, so the abstractions
-      acquire a referent. Free and open-access, with a large exercise set.'
+    - knowledge-sad-l05-identities
+    angle: Builds counting from trees, compares Stirling numerically and proves the binomial theorem.
+    angle_detail: The assigned slices are in §§3.1–3.2. The separate card-shuffling section is optional
+      additional material, not required to obtain these results.
+    url: https://math.dartmouth.edu/~prob/prob/prob.pdf#page=83
   - id: route-30bde2200182449152e8a76a
     unit_id: unit-m2-sad-l06
     title: Grinstead & Snell Ch 6 — expected value and variance
@@ -3285,12 +3290,11 @@ sources:
     - knowledge-sad-l06-expectation
     - knowledge-sad-l06-variance-covariance
     - knowledge-sad-l06-transformations
-    angle: Separates the discrete and continuous cases into their own sections while keeping one chapter,
-      so the parallel between sum and integral stays visible.
-    angle_detail: Splitting by chapter (as Fahrmeir does) makes the PMF/PDF distinction unmissable but
-      hides the analogy; merging them (as L06 does) shows the analogy but blurs the distinction. This
-      chapter's three-section structure gets both — the definitions are stated separately and then compared
-      directly. Good middle route if Fahrmeir felt slow and the deck felt fast.
+    angle: Provides separate discrete and continuous moment treatments in an extended written chapter.
+    angle_detail: The official Chapter 6 PDF range remains available as a reference. This forward pass
+      verifies the destination but defers a full exercise-by-exercise chapter audit; use the newly narrowed
+      Dekking or MIT readings for the immediate gaps.
+    url: https://math.dartmouth.edu/~prob/prob/prob.pdf
   - id: route-58f13d47b87582e36563f616
     unit_id: unit-m2-sad-l07
     title: Grinstead & Snell Ch 5 — important distributions
@@ -3338,23 +3342,19 @@ sources:
     unit_id: unit-m2-sad-l03
     title: ISLP Chapter 3 — statistical regression bridge
     format: book
-    angle: 'Adds the inferential layer L03 omits: standard errors, t-statistics and confidence intervals
-      for the fitted coefficients.'
+    angle: Uses advertising data to show how a coefficient’s meaning changes when other predictors enter
+      the model.
     covers:
     - knowledge-sad-l03-simple-regression
     - knowledge-sad-l03-multivariate
     - knowledge-sad-l03-scaling-weights
     depth: derivation
     scope: complementary
-    locator: Ch 3 Linear Regression, pdf pp. 78-143 (§3.1 simple linear regression p. 79; §3.2 multiple
-      linear regression p. 87; §3.3 other considerations p. 98); read alongside the repository's Regression
-      Bridge note §§2, 4 and 7
-    angle_detail: L03 fits a line and stops; ISLP fits the same line and then asks whether the slope is
-      distinguishable from zero. That question is not examinable in L03 — it belongs to L10 — but knowing
-      it exists changes how you read a regression output, and it is the bridge between the module's two
-      halves. §3.3 covers the practical issues (collinearity, non-linearity, outliers) that L03's model-limits
-      node names without elaborating. The Regression Bridge note in this repository already maps which
-      ISLP sections correspond to which SaD slides.
+    locator: §3.1.1, PDF pp. 80–82; §3.2–3.2.1, pp. 89–92; §3.3.3, pp. 109–117
+    angle_detail: The newspaper coefficient changes after accounting for correlated radio spending. The
+      same chapter explains residual plots, outliers, leverage and collinearity. Use coefficient estimation
+      and interpretation now; the standard-error, t-test and interval sections are a later inference bridge.
+      These references use physical PDF pages, not printed page numbers.
     vault_path: material://source-islp/islp.pdf
   - id: route-15a92bbc0ec66bf68eb86eac
     unit_id: unit-m2-sad-l11
@@ -3914,14 +3914,11 @@ sources:
     covers:
     - knowledge-sad-l03-multivariate
     - knowledge-sad-l03-simple-regression
-    angle: Shows where the closed form comes from — differentiate the squared-error objective, set it
-      to zero, solve — instead of stating it.
-    angle_detail: 'L03 states the normal equation and moves on to gradient descent. This article does
-      the derivation the deck skips: write the squared error in matrix form, take the derivative with
-      respect to the parameter vector, set it to zero and solve. Checked 2026-09-07: it is a calculus
-      derivation only. It does not give the projection/column-space argument, so it is one justification
-      rather than two, and the geometric reading of least squares has to come from elsewhere. Assumes
-      matrix notation, so watch 3Blue1Brown''s linear-algebra episodes 1-4 and 9 first if that is shaky.'
+    angle: Differentiates the matrix squared-error objective to obtain the normal equations.
+    angle_detail: Follow the expansion of the squared norm, differentiate with respect to the parameter
+      vector and set the gradient to zero. The inverse formula assumes XᵀX is invertible. This is a matrix-calculus
+      derivation; it does not supply the orthogonal-projection proof.
+    url: https://eli.thegreenplace.net/2014/derivation-of-the-normal-equation-for-linear-regression/
 - source_id: source-blitzstein-hwang
   role: derivation
   why: Story-proof explanations for random variables, expectation, distributions, Normal/CLT, and conditional
@@ -3932,31 +3929,24 @@ sources:
     unit_id: unit-m2-sad-l04
     title: Blitzstein Chapter 2 — conditioning and Bayes
     format: book
-    angle: Treats conditioning as the primary object — 'conditioning is the soul of statistics' — so Bayes
-      arrives as a way of thinking rather than a formula to memorise.
+    angle: Explains conditioning by restricting and renormalizing pebble masses, then tests the idea with
+      counterexamples.
     covers:
     - knowledge-sad-l04-conditional
     - knowledge-sad-l04-bayes
     - knowledge-sad-l04-independence
     depth: intuition
     scope: complementary
-    locator: Ch 2 pdf pp. 62-119 (§2.2 definition and intuition p. 63; §2.3 Bayes' rule and the law of
-      total probability p. 69; §2.5 independence of events p. 80; §2.7 conditioning as a problem-solving
-      tool p. 85; §2.8 pitfalls and paradoxes p. 91; exercises §2.11 p. 100)
-    angle_detail: 'The one book here that opens the chapter by arguing conditional probability is the
-      fundamental notion and unconditional probability the special case. That reframing is why §2.7 exists:
-      a section on conditioning as a deliberate problem-solving move, which no other source on this shelf
-      has. §2.8 catalogues the confusion of the inverse and the prosecutor''s fallacy — the same base-rate
-      error L04''s framing slides open with, but named and dissected. Notation is measure-free and the
-      register is conversational; it is slower than Fahrmeir but far more likely to make the idea stick.
-      60 exercises, many with published solutions on the book''s site.'
+    locator: §§2.2–2.3, PDF pp. 63–73; §2.5, pp. 80–84
+    angle_detail: Its useful distinction here is between event independence, conditional independence
+      and successive updating. The extra first-step and gambler’s-ruin material is not required for L04.
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
   - id: route-b3ad0cc1e399ea8846c4e397
     unit_id: unit-m2-sad-l05
     title: Blitzstein Chapter 1 — strategic counting
     format: book
-    angle: 'Story proofs: counting identities argued by describing two ways to count the same set, with
-      no algebra at all.'
+    angle: Derives sampling counts, exposes unequal probabilities of multisets and proves identities by
+      counting twice.
     covers:
     - knowledge-sad-l05-decision-grid
     - knowledge-sad-l05-permutations
@@ -3967,39 +3957,33 @@ sources:
     - knowledge-sad-l05-identities
     depth: intuition
     scope: complementary
-    locator: Ch 1 pdf pp. 18-61 (§1.3 naive definition of probability p. 23; §1.4 how to count p. 25;
-      §1.5 story proofs p. 37; §1.6 non-naive definition p. 38; exercises §1.9 p. 50)
-    angle_detail: §1.5 is the reason to come here for L05 rather than to any German text. A story proof
-      establishes an identity — the symmetry of binomial coefficients, Vandermonde, the hockey stick —
-      by naming a set and counting it twice, and once seen the identities stop being things to memorise.
-      That directly serves L05's identities node, which the deck states without justification. §1.4 also
-      makes the sampling table (ordered/unordered × with/without replacement) explicit, which is the same
-      four-way grid the lecture draws. The strongest exercise set on the shelf for this material.
+    locator: §1.4, physical PDF pp. 25–37; §1.5, pp. 37–38
+    angle_detail: Its distinctive contribution is the explicit warning that unordered replacement outcomes
+      are not uniformly likely under ordinary independent sampling. The story proofs include team captains
+      and Vandermonde, not an asserted full list of every identity.
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
   - id: route-a336d6454947c097344796b8
     unit_id: unit-m2-sad-l06
-    title: Blitzstein Chapters 3–4 and 10 — RVs and expectation
+    title: Blitzstein Chapters 3–4 and §7.3 — RVs, LOTUS and covariance
     format: book
-    angle: Insists on the distinction between a random variable and its distribution, and proves linearity
-      of expectation without independence.
+    angle: Uses outcome groupings for expectation and covariance algebra for sums.
     covers:
     - knowledge-sad-l06-random-variable
     - knowledge-sad-l06-transformations
     - knowledge-sad-l06-expectation
     - knowledge-sad-l06-variance-covariance
+    - knowledge-sad-l06-sample-mean
+    - knowledge-sad-l06-distribution-functions
     depth: intuition
     scope: complementary
     locator: Ch 3 pdf pp. 120-165 (§3.2 distributions and PMFs p. 123; §3.6 CDFs p. 137; §3.7 functions
       of random variables p. 140; §3.8 independence of r.v.s p. 146); Ch 4 pdf pp. 166-229 (§4.1 definition
       of expectation p. 166; §4.2 linearity p. 169; §4.5 LOTUS p. 187; §4.6 variance p. 188); Ch 7 §7.3
       covariance and correlation, pdf pp. 343-348
-    angle_detail: Two things here are worth the reading time. First, §3.1-3.2 hammer that a random variable
-      is a function on the sample space while its distribution is a separate object — the confusion behind
-      most wrong answers about transformations, and something L06 states once. Second, §4.2 proves that
-      E[X+Y] = E[X] + E[Y] holds whether or not X and Y are independent, and shows why that is surprising;
-      the lecture asserts linearity, and knowing it needs no independence is what makes it a tool. §4.5
-      (LOTUS) is the rule for E[g(X)] that the transformations node depends on. Skip the MGF sections
-      in Ch 6 — out of scope.
+    angle_detail: Chapter 3 distinguishes the random variable from its distribution. Physical pp. 187–188
+      state and prove LOTUS, which the current deck also states. Pages 188–191 derive variance, and pp.
+      343–348 distinguish independence from zero covariance and derive the variance-of-sums rule. These
+      fill the covariance derivation absent from the current L06 deck without changing its stages.
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
   - id: route-6522f11efe3a4956621f2692
     unit_id: unit-m2-sad-l07
@@ -4115,23 +4099,19 @@ sources:
   - id: route-878acd203c5603b70539868d
     unit_id: unit-m2-sad-l04
     title: Jurafsky & Martin Appendix B — naive Bayes, text classification and sentiment
-    format: website
+    format: book
     depth: course-aligned
     scope: complementary
-    locator: 'Draft of August 19, 2026, Appendix B ''Naive Bayes, Text Classification, and Sentiment'':
-      §B.1 the classifier, §B.2 training, §B.3 the worked example'
+    locator: August 19, 2026 Appendix B §§B.1–B.4, physical PDF pp. 3–8
     covers:
-    - knowledge-sad-l04-naive-bayes
     - knowledge-sad-l04-independence
-    angle: The clearest published account of the exact classifier L04 builds — bag of words, conditional
-      independence, product of counted likelihoods.
-    angle_detail: L04's spam classifier has no equivalent in the probability books on this shelf, because
-      they stop at Bayes' rule. This appendix is precisely that construction, written as a textbook chapter
-      with the assumptions named — the bag-of-words assumption and the naive conditional-independence
-      assumption stated separately, which the deck merges. §B.3 'Worked example' trains and tests the
-      classifier by hand on a handful of documents with add-one smoothing. Section numbers checked against
-      the 19 August 2026 draft on 2026-09-07; earlier drafts carried this material as Chapter 4, so a
-      §4.x reference to it is stale.
+    - knowledge-sad-l04-naive-bayes
+    angle: Gives a token-count text-classification model, explicit training equations and a small sentiment
+      example.
+    angle_detail: The August 19, 2026 Appendix B is a separate PDF. Its multinomial model retains repeated
+      words; the current L04 text illustration removes duplicates. Smoothing and log-space details anticipate
+      L14.
+    url: https://web.stanford.edu/~jurafsky/slp3/B.pdf#page=3
   - id: route-c6ef21e8e56052473f0d7cef
     unit_id: unit-m2-sad-l14
     title: Jurafsky & Martin Appendix B — smoothing and evaluation
@@ -4238,15 +4218,12 @@ sources:
     - knowledge-sad-l03-simple-regression
     - knowledge-sad-l03-paired-data
     - knowledge-sad-l03-interpretation
-    angle: Lets you move a point and watch the fitted line respond, which shows leverage and influence
-      in seconds rather than in prose.
-    angle_detail: 'The page draws the squared residuals as actual squares and asks you to choose the betas
-      that minimise their total area, so ''least squares'' becomes a visible minimisation rather than
-      a name. Its points are draggable, so moving one and watching the fitted line swing is the fastest
-      demonstration of how a single observation moves the fit — the effect OpenIntro §8.3 describes in
-      text and that L03''s model-limits node states abstractly. Checked 2026-09-07: the page never uses
-      the words leverage, outlier or influence, so read it as a demonstration rather than as a treatment
-      of those terms. Ten minutes, no installation.'
+    - knowledge-sad-l03-scaling-weights
+    angle: Draws residual squares and lets you change the points and fitted line interactively.
+    angle_detail: Use the controls to connect a residual’s length with its squared area and the total
+      least-squares objective. Moving one point can illustrate how the fit changes. This is visual exploration,
+      not a formal treatment of leverage or a proof of causality.
+    url: https://setosa.io/ev/ordinary-least-squares-regression/
 - source_id: source-berkeley-cs189
   role: exam-preparation
   why: Berkeley CS189 past exams with solutions — the closest English-language equivalent to a written
@@ -4375,20 +4352,17 @@ sources:
     format: course
     depth: course-aligned
     scope: complementary
-    locator: Lectures 2-3 (conditioning and Bayes' rule; independence) with their recitations and solved
-      tutorials
+    locator: Lecture 2 "Conditioning and Bayes’ Rule" and Lecture 3 "Independence", lesson pages with
+      written PDFs
     covers:
     - knowledge-sad-l04-conditional
     - knowledge-sad-l04-bayes
     - knowledge-sad-l04-independence
-    - knowledge-sad-l04-axioms
-    angle: Every lecture is paired with a recitation and a tutorial whose problems are solved on video
-      — three passes over one topic.
-    angle_detail: 'Tsitsiklis''s course structure is the differentiator: the lecture states the theory,
-      the recitation works standard problems, and the tutorial works harder ones, all recorded. For a
-      topic where the gap between following an explanation and solving a problem is wide — which is exactly
-      conditional probability — that three-pass structure is worth more than a better single explanation.
-      Free on OCW with all materials.'
+    angle: Pairs the named lesson pages with downloadable slides, recitation questions and separate solutions.
+    angle_detail: Open goes to a lesson page. Prefer its written slides and problem PDFs; video playback
+      and every linked solution were not re-audited. Lecture 2 and Lecture 3 expose different recitation
+      collections.
+    url: https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/pages/unit-i/lecture-2/
   - id: route-17d9d905adfee01ec54791b3
     unit_id: unit-m2-sad-l06
     title: MIT 6.041SC — random variables, expectation and variance lectures
@@ -4404,10 +4378,10 @@ sources:
     - knowledge-sad-l06-distribution-functions
     angle: Insists on the distinction between a random variable and a numerical value throughout, with
       notation discipline the deck does not enforce.
-    angle_detail: The course is unusually strict about writing X for the variable and x for a value, and
-      about what it means to condition a random variable on an event. That discipline is what makes later
-      manipulations safe, and it is the habit most often missing when students find transformations confusing.
-      Recorded lectures make it easy to see the distinction being applied rather than merely stated.
+    angle_detail: Optional registered course/channel collection. Individual episode coverage and full
+      playback remain deferred in this written-first repair; this target does not certify the inherited
+      episode suggestions.
+    url: https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/
   - id: route-c4a8afb529925b777fde9628
     unit_id: unit-m2-sad-l08
     title: MIT 6.041SC — limit theorems lectures
@@ -4437,21 +4411,16 @@ sources:
     format: book
     depth: derivation
     scope: complementary
-    locator: 'mml-book.pdf Ch 9 Linear Regression p. 295: §9.1 Problem Formulation p. 297, §9.2 Parameter
-      Estimation p. 298 (maximum likelihood and MAP); read with Ch 5 Vector Calculus p. 145, §5.2 Partial
-      Differentiation and Gradients p. 152, for the notation'
+    locator: §9.1–9.2.1, physical PDF pp. 297–303; §7.1–7.1.1, pp. 233–236
     covers:
     - knowledge-sad-l03-multivariate
     - knowledge-sad-l03-gradient-descent
     - knowledge-sad-l03-simple-regression
-    angle: Derives least squares as maximum likelihood under Gaussian noise from the start, so L03 and
-      L08 are one derivation rather than two lectures.
-    angle_detail: 'Derives least squares as maximum likelihood under Gaussian noise from the first page
-      of §9.2, rather than presenting the squared-error objective and justifying it later. That matters
-      across two lectures: L03 introduces the objective and L08 introduces the Gaussian likelihood, and
-      this makes them one derivation instead of two facts. It is the most mathematically demanding route
-      on this stage and assumes the linear algebra of Ch 2-3; §5.2 is the minimum notation to read it
-      with.'
+    angle: Derives the matrix least-squares fit from an explicit independent Gaussian-noise model.
+    angle_detail: The design matrix and nonlinear feature map are explicit; the inverse solution requires
+      independent columns. Read this as a probability bridge after L08. For the optimization stage, use
+      §7.1 separately.
+    url: https://mml-book.github.io/book/mml-book.pdf#page=297
   - id: route-3afec9d94d803b94257c2dfa
     unit_id: unit-m2-sad-l15
     title: MML Ch 5 — vector calculus and backpropagation
@@ -4526,31 +4495,27 @@ sources:
     unit_id: unit-m2-sad-l03
     title: OpenIntro — correlation and linear regression
     format: book
-    angle: Makes residual plots a first-class diagnostic, so a fitted line is something you check rather
-      than something you report.
+    angle: Introduces residuals before least squares and uses plots to distinguish outliers, leverage
+      and influence.
     covers:
     - knowledge-sad-l03-paired-data
     - knowledge-sad-l03-covariance
     - knowledge-sad-l03-interpretation
     - knowledge-sad-l03-simple-regression
+    - knowledge-sad-l03-scaling-weights
     depth: orientation
     scope: complementary
-    locator: Ch 8 introduction to linear regression, pdf pp. 303-340 (§8.1 fitting a line, residuals,
-      and correlation p. 305; §8.2 least squares regression p. 317; §8.3 types of outliers p. 328; §8.4
-      inference for linear regression p. 331)
-    angle_detail: §8.1 introduces residuals before it introduces the least-squares criterion, and §8.3
-      catalogues the ways a single point can dominate a fit — leverage, influence, outliers — with pictures.
-      L03 derives the line and stops; the model-limits node at the end of the lecture is exactly this
-      material, unelaborated. Reading §8.3 is the cheapest protection against the exam question that shows
-      a scatterplot and asks whether the reported r is trustworthy. §8.4's inference is L10 material —
-      leave it until then.
+    locator: §8.1, PDF pp. 305–314; §8.2, pp. 317–325; §8.3, pp. 328–330
+    angle_detail: The first section connects the observed point, predicted value and residual. The outlier
+      section compares how particular points affect a fitted line. Use these pictures for model checking;
+      coefficient inference in §8.4 is a later reading. No claim about specific exam questions is needed.
     vault_path: material://source-openintro-statistics/openintro.pdf
   - id: route-66691da3faf6c5780cf0b66d
     unit_id: unit-m2-sad-l04
     title: OpenIntro — probability foundations
     format: book
-    angle: Runs conditional probability entirely through tree diagrams and contingency tables, so Bayes
-      is arithmetic on a table before it is an equation.
+    angle: Uses a photo-classification contingency table and branching diagrams to turn probability into
+      concrete denominators.
     covers:
     - knowledge-sad-l04-events
     - knowledge-sad-l04-conditional
@@ -4558,35 +4523,26 @@ sources:
     - knowledge-sad-l04-independence
     depth: orientation
     scope: complementary
-    locator: Ch 3 §3.1 defining probability, pdf pp. 81-94; §3.2 conditional probability, pdf pp. 95-111
-      (tree diagrams and Bayes' theorem); §3.3 sampling from a small population, pdf pp. 112-114
-    angle_detail: '§3.2 develops the whole of conditioning pictorially: a two-way table, then a tree with
-      branch probabilities, then Bayes as a ratio read off the tree. Only at the end does the algebraic
-      form appear. For a first pass this is the lowest-friction route available, and it matches how German
-      exams pose the question (Vierfeldertafel). It does not cover Naive Bayes and does not do conditional
-      independence carefully — for those parts of L04 use the deck and Kelleher Ch 6.'
+    locator: §3.1, PDF pp. 81–91; §3.2, pp. 95–108
+    angle_detail: The book includes both symbolic definitions and pictures; the previous claim that it
+      works entirely through tables was too strong.
     vault_path: material://source-openintro-statistics/openintro.pdf
   - id: route-ce45e9e22ec95775e2560218
     unit_id: unit-m2-sad-l05
     title: OpenIntro — finite counting inside probability
     format: book
-    angle: 'Almost no combinatorics on purpose: it shows which L05 results survive when counting is replaced
-      by simulation and tables.'
+    angle: Calculates small-population sampling probabilities sequentially, with and without replacement.
     covers:
     - knowledge-sad-l05-counting-probability
     depth: orientation
     scope: complementary
-    locator: Ch 3 §3.3 sampling from a small population, pdf pp. 112-114; Ch 4 §4.3 binomial distribution,
-      pdf pp. 149-157
-    angle_detail: 'OpenIntro reaches the binomial coefficient in a single paragraph inside §4.3 and never
-      builds a counting apparatus. Routed here as an honest boundary marker rather than as study material:
-      it tells you which of L05''s machinery an applied statistics course considers optional. If the aim
-      is to pass L05''s counting questions, this is the wrong source — use Blitzstein Ch 1 or Schaum''s
-      Ch 2. Kept on the menu so the absence is visible rather than an accidental gap.'
+    locator: §3.3 Sampling from a small population, physical PDF pp. 112–114
+    angle_detail: This is useful written practice in changing denominators; it is not merely a marker
+      for absent combinatorics coverage.
     vault_path: material://source-openintro-statistics/openintro.pdf
   - id: route-bf37d8f974813af543f007f3
     unit_id: unit-m2-sad-l06
-    title: OpenIntro Chapter 4 — distribution bridge
+    title: OpenIntro §3.4–3.5 — introductory random variables and continuous distributions
     format: book
     angle: Ten pages on random variables with expectation and variance introduced through an expected-profit
       calculation rather than through a definition.
@@ -4917,31 +4873,29 @@ sources:
   - id: route-1d5ebe1552e3c9bdb2923b53
     unit_id: unit-m2-sad-l03
     title: Dekking — correlation and regression exercises
-    format: exercise
-    angle: 'Contains the derivation L03 does not do: least squares is exactly maximum likelihood when
-      the errors are Normal.'
+    format: book
+    angle: Solves least squares by two partial derivatives, then states the additional assumptions that
+      make it maximum likelihood.
     covers:
     - knowledge-sad-l03-covariance
     - knowledge-sad-l03-interpretation
     - knowledge-sad-l03-simple-regression
-    depth: practice
+    depth: derivation
     scope: complementary
     locator: Ch 10 covariance and correlation, pdf pp. 144-159 (covariance p. 147; correlation coefficient
       p. 150; exercises p. 153); Ch 22 the method of least squares, pdf pp. 332-343 (§22.3 relation with
       maximum likelihood p. 338; exercises p. 340); Ch 17 §17.4 the linear regression model, pdf pp. 262-264
-    angle_detail: §22.3 is a two-page proof that minimising the sum of squared residuals and maximising
-      the likelihood under Normal errors are the same optimisation. L03 presents least squares as a reasonable
-      choice and L08 presents MLE separately; this is the join between them, and it answers the question
-      the lecture invites but never asks — why squares and not absolute deviations. Requires L08's likelihood
-      material to read, so this is a return visit, not a first pass. Ch 10 is the probabilistic covariance
-      to set beside L03's descriptive one.
+    angle_detail: Section 22.1 derives intercept and slope from the vertical residual sum of squares.
+      Section 22.3 adds independent Normal errors and derives the equivalent likelihood objective. The
+      latter is a return reading after L08. Chapter 10 treats covariance of random variables, so distinguish
+      it from the descriptive sample covariance used at the start of L03.
     vault_path: material://source-dekking-mips/dekking.pdf
   - id: route-fa96784fa40036436bf1b2cc
     unit_id: unit-m2-sad-l04
     title: Dekking — probability exercise bank
-    format: exercise
-    angle: Quick exercises embedded mid-section with solutions at the chapter end — a self-check every
-      few pages rather than only at the end.
+    format: book
+    angle: Places short quick exercises inside a probability derivation and supplies their answers at
+      chapter end.
     covers:
     - knowledge-sad-l04-axioms
     - knowledge-sad-l04-conditional
@@ -4949,58 +4903,46 @@ sources:
     - knowledge-sad-l04-independence
     depth: practice
     scope: complementary
-    locator: Ch 2 outcomes, events, and probability, pdf pp. 24-35; Ch 3 conditional probability and independence,
-      pdf pp. 36-51 (§3.3 law of total probability and Bayes' rule p. 41; §3.4 independence p. 43; exercises
-      p. 48); answers App C pdf pp. 434-442
-    angle_detail: 'The structural feature that distinguishes this book: each section plants short ''quick
-      exercises'' in the flow and answers them at §x.5 before the real exercise set. For probability rules,
-      where the failure mode is silent misunderstanding rather than difficulty, that rhythm catches errors
-      within a page instead of after a chapter. The treatment itself is compact and modern; Ch 2 is twelve
-      pages for material Fahrmeir spends twenty on. Ch 1''s Monty Hall opening (p. 16) is the same framing
-      puzzle L04 uses.'
+    locator: Ch 2, PDF pp. 24–31; Ch 3, pp. 36–46; exercise 3.4, p. 48, answer p. 434
+    angle_detail: Quick-exercise solutions differ from Appendix C’s answers to selected end-of-chapter
+      exercises. The reading is a textbook, not a complete solutions manual.
     vault_path: material://source-dekking-mips/dekking.pdf
   - id: route-8e138ce268087ded3bdb73a4
     unit_id: unit-m2-sad-l05
     title: Dekking — counting and finite-probability exercises
-    format: exercise
-    angle: Deliberately thin on counting — read it to see how far you can get with product sample spaces
-      instead of combinatorial formulas.
+    format: book
+    angle: Derives a binomial coefficient by counting success patterns in a multiple-choice example.
     covers:
     - knowledge-sad-l05-decision-grid
     - knowledge-sad-l05-combinations
     - knowledge-sad-l05-counting-probability
     depth: practice
     scope: complementary
-    locator: Ch 4 §4.3 the Bernoulli and binomial distributions, pdf pp. 56-58; Ch 2 §2.4 products of
-      sample spaces, pdf pp. 29-30; exercises pdf pp. 62-66
-    angle_detail: 'This book barely has a combinatorics section, and knowing that is useful: it builds
-      the binomial coefficient where it is needed, out of the product sample space in §2.4, rather than
-      teaching counting as a prerequisite subject. If L05''s grid feels like arbitrary memorisation, seeing
-      a serious book do without most of it reframes the grid as a shortcut rather than as the content.
-      For actual counting practice go to Blitzstein §1.4 or Schaum''s Ch 2 — this route is orientation.'
+    locator: §2.4, physical PDF pp. 29–30; §4.3, pp. 57–58
+    angle_detail: The product sample space and the success-position count are useful bridges to L07; this
+      is a book explanation, not a full six-case counting workbook.
     vault_path: material://source-dekking-mips/dekking.pdf
   - id: route-676e8ea98543e3a7b4f466aa
     unit_id: unit-m2-sad-l06
-    title: Dekking — random-variable exercises
+    title: Dekking Chapters 4–7,9,13 — distributions, LOTUS and concentration
     format: exercise
-    angle: States the change-of-variable formula as its own numbered result, which is the rule L06's transformation
-      node needs and states only in passing.
+    angle: Builds from transformed moments to an explicit variance-of-the-average calculation and Chebyshev
+      proof.
     covers:
     - knowledge-sad-l06-distribution-functions
     - knowledge-sad-l06-transformations
     - knowledge-sad-l06-expectation
     - knowledge-sad-l06-variance-covariance
+    - knowledge-sad-l06-sample-mean
+    - knowledge-sad-l06-concentration
     depth: practice
     scope: complementary
-    locator: Ch 4 discrete random variables, pdf pp. 52-66; Ch 5 continuous random variables, pdf pp.
-      67-80; Ch 7 expectation and variance, pdf pp. 98-111 (change-of-variable formula p. 103; variance
-      p. 105; exercises p. 108); Ch 9 joint distributions, pdf pp. 124-143; Ch 13 §13.2 Chebyshev's inequality,
-      pdf pp. 191-192
-    angle_detail: §7.3 gives E[g(X)] = Σ g(x)p(x) the status of a named theorem with a proof sketch, and
-      every later expectation computation in the book cites it. L06 uses the same rule when it computes
-      moments of transformed variables but never isolates it, so it is easy to treat each computation
-      as a new trick. Ch 13's Chebyshev section is three pages and directly serves the concentration node,
-      with the LLN following immediately in §13.3 so the connection is visible.
+    locator: Ch 4-5 PDF pp. 52-80; §7.3-7.4 PDF pp. 103-107; Ch 9 PDF pp. 124-143; §13.1-13.3 PDF pp.
+      189-194
+    angle_detail: Physical pp. 103–105 give the change-of-variable expectation rule; pp. 105–107 variance.
+      The current deck already states LOTUS on p. 28, so this is a second derivation, not a missing theorem.
+      Pages 189–190 derive average moments, pp. 191–193 develop Chebyshev and the LLN, and p. 194 illustrates
+      why a realized running average need not improve monotonically.
     vault_path: material://source-dekking-mips/dekking.pdf
   - id: route-9e9215f1bace1b2b1a269f02
     unit_id: unit-m2-sad-l07
@@ -5175,7 +5117,7 @@ sources:
   unit_routes:
   - id: route-b2cb82ed2840a70e81bfbaa5
     unit_id: unit-m2-sad-l03
-    title: Ng — linear regression and gradient descent lectures
+    title: Ng — regression course, Weeks 1–2 (course entry)
     format: course
     depth: intuition
     scope: complementary
@@ -5186,13 +5128,11 @@ sources:
     - knowledge-sad-l03-gradient-descent
     - knowledge-sad-l03-scaling-weights
     - knowledge-sad-l03-simple-regression
-    angle: Spends a whole lecture on the learning rate alone — too large, too small, and how to tell which
-      you have.
-    angle_detail: L03 introduces gradient descent with the update rule and a remark that the step size
-      matters. Ng devotes separate segments to diagnosing a bad learning rate from the cost curve, and
-      to why feature scaling changes how many steps are needed. Those are the two practical facts that
-      make gradient descent usable rather than merely definable, and they are the content of L03's scaling-weights
-      node.
+    angle: Offers separate short lessons on the regression objective, learning rate, scaling and convergence.
+    angle_detail: Open goes to the course syllabus, not an individual lesson. Access to videos or labs
+      may require enrollment. The current syllabus verifies the named segments; playback and full video
+      content were not re-audited under the requested video budget.
+    url: https://www.coursera.org/learn/machine-learning
   - id: route-3779cdc11dbbbbe4d52b87ee
     unit_id: unit-m2-sad-l11
     title: Ng — bias, variance and the evaluation workflow lectures
@@ -5376,47 +5316,39 @@ sources:
   - id: route-44431ac89d714785b2bab31b
     unit_id: unit-m2-sad-l04
     title: MIT 18.05 — probability notes and solved problems
-    format: course
-    angle: Reading, in-class problems and solved problem set for the same topic, published together —
-      a complete study loop rather than one artifact.
+    format: course-material
+    angle: Uses a compact written handout to connect restricted areas, trees, independence and base rates.
     covers:
-    - knowledge-sad-l04-events
     - knowledge-sad-l04-conditional
     - knowledge-sad-l04-bayes
     - knowledge-sad-l04-independence
     depth: practice
     scope: complementary
-    locator: 'Classes: Reading and In-class Materials: ''Conditional Probability, Independence and Bayes''
-      Theorem'' reading and slides; Problem Set 2 with its published solutions'
-    angle_detail: 18.05 publishes, per class, a reading, the slides used on it, the in-class problems
-      and the solutions, plus a problem set with worked answers. That means one topic can be learned,
-      practised and checked without leaving the page — the thing a lecture deck alone cannot give you.
-      Its treatment of the base-rate fallacy is unusually direct and matches L04's opening framing slides.
-      Written for students who have had multivariable calculus, so the register sits above OpenIntro and
-      below Ross.
+    locator: '"Conditional Probability, Independence and Bayes’ Theorem", Class 3, physical PDF pp. 1–11'
+    angle_detail: The direct target is the twelve-page Class 3 PDF. Lecture videos and a bundled problem
+      set are not needed to read these examples.
+    url: https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/mit18_05_s22_class03-prep.pdf
   - id: route-151d89dbc0e7a30ed1076221
     unit_id: unit-m2-sad-l05
     title: MIT 18.05 — counting and finite probability
-    format: course
-    angle: Treats counting as one week of prerequisite technique, which is a useful calibration of how
-      much of L05 is genuinely hard.
+    format: course-material
+    angle: Collects a compact written counting lesson and its associated practice with separate answers.
     covers:
     - knowledge-sad-l05-decision-grid
     - knowledge-sad-l05-combinations
     - knowledge-sad-l05-counting-probability
     depth: practice
     scope: complementary
-    locator: 'Classes: Reading and In-class Materials, Class 1 ''Counting and Sets'' reading and slides;
-      Problem Set 1 with solutions'
-    angle_detail: 18.05 spends a single class on counting before moving to probability, and its problem
-      set is correspondingly compact. Reading it tells you which parts of L05's grid a strong applied
-      course considers routine and which it considers worth practising — helpful when deciding how much
-      time this lecture deserves. Not a substitute for Blitzstein Ch 1 if the grid itself is the problem.
+    locator: 'Class 1: "Counting and Sets" reading, slides, in-class problems and separate solutions'
+    angle_detail: Open goes to the official reading index. Under Class 1 choose the Counting and Sets
+      PDF or In-class Problems and Solutions. This pass verified the collection and titles; it does not
+      claim that every problem or a whole video lecture was reviewed.
+    url: https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/pages/classes-reading-and-in-class-materials/
   - id: route-faf05b9239ca317a12713779
     unit_id: unit-m2-sad-l06
-    title: MIT 18.05 — random variables, expectation, and variance
+    title: MIT 18.05 — written random-variable reading collection
     format: course
-    angle: Uses R simulations alongside the algebra, so every claimed identity is also demonstrated numerically.
+    angle: Offers short written readings separated by PMF, expectation, variance and continuous distributions.
     covers:
     - knowledge-sad-l06-distribution-functions
     - knowledge-sad-l06-transformations
@@ -5424,13 +5356,12 @@ sources:
     - knowledge-sad-l06-variance-covariance
     depth: practice
     scope: complementary
-    locator: 'Classes: Reading and In-class Materials: the ''Discrete Random Variables; Expectation and
-      Variance'' and ''Continuous Random Variables'' readings; Problem Sets 2-3 with solutions'
-    angle_detail: The course's design principle is that a probabilistic claim should be checked by simulation
-      before it is trusted, and the R code is published. For L06's rules — linearity, variance under scaling,
-      the behaviour of a sample mean — running the simulation is a fast way to find out whether you have
-      remembered the rule correctly, and it takes minutes. Also introduces quantiles carefully, which
-      the lecture uses without defining.
+    locator: '"Classes: Reading and In-class Materials", Classes 4-7'
+    angle_detail: This target is the official reading collection. The separate transformation and covariance
+      routes below have inspected PDFs and exact page guidance. Other Class 4–7 readings and problem sets
+      remain optional collection-level candidates; their every example and R implementation have not been
+      audited in this bounded pass.
+    url: https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/pages/classes-reading-and-in-class-materials/
   - id: route-e325141b8971b65116e08790
     unit_id: unit-m2-sad-l07
     title: MIT 18.05 — discrete-distribution problems
@@ -5533,6 +5464,33 @@ sources:
       instance of a topic — a confidence interval, a test decision — when every German equivalent has
       already been seen. Taking more than one at a time would start drifting the notation the exam actually
       grades.
+  - id: route-sad-l06-transformations
+    unit_id: unit-m2-sad-l06
+    title: MIT 18.05 Reading 5d — transforming a continuous random variable
+    format: course-material
+    depth: derivation
+    scope: complementary
+    covers:
+    - knowledge-sad-l06-transformations
+    locator: '"MIT 18.05 Reading 5d — transforming a continuous random variable", PDF pp. 1-3'
+    angle: Derives a transformed CDF step by step, then checks it by changing variables in the density.
+    angle_detail: The worked X² example has nonnegative support. Begin from P(g(X)≤y) and its support;
+      do not apply a one-branch inverse to a many-to-one map on both signs.
+    url: https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/mit18_05_s22_class05-prep-d.pdf
+  - id: route-sad-l06-covariance
+    unit_id: unit-m2-sad-l06
+    title: MIT 18.05 Reading 7b — covariance and correlation
+    format: course-material
+    depth: derivation
+    scope: complementary
+    covers:
+    - knowledge-sad-l06-variance-covariance
+    - knowledge-sad-l06-sample-mean
+    locator: '"MIT 18.05 Reading 7b — covariance and correlation", PDF pp. 1-4,9'
+    angle: Uses overlapping coin counts to expose the covariance term in a sum.
+    angle_detail: Pages 1–3 give the definition, sum rule and two computations of the covariance of overlapping
+      counts; pp. 3–4 show zero covariance without independence; p. 9 proves the algebraic rules.
+    url: https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/mit18_05_s22_class07-prep-b.pdf
 - source_id: source-fau-klausur-ws1415
   role: exam-preparation
   why: Best local full German solved exam match for the statistics half.
@@ -5629,18 +5587,16 @@ sources:
     unit_id: unit-m2-sad-l04
     title: FAU pp. 4 and 22 — total probability, Bayes and independence
     format: exercise
-    angle: Tests conditional probability as a table calculation rather than a definition recital.
+    angle: Checks whether an origin-specific defect rate differs from the overall defect rate.
     covers:
     - knowledge-sad-l04-conditional
-    - knowledge-sad-l04-bayes
     - knowledge-sad-l04-independence
     depth: practice
     scope: complementary
-    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, p. 4 Aufgabe 1(3)-(4), solution
-      p. 22
-    angle_detail: The same orange-origin item is routed here for its formal Bayes and independence steps.
-      It confirms the German notation and the compact published answer after the course sheet has established
-      the method.
+    locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, physical PDF p. 4, Aufgabe 1 item
+      2; solution p. 22 item 2
+    angle_detail: Aufgabe 1 item 2 is the relevant question. Items 3–4 concern a confidence interval and
+      a single Bernoulli experiment; they are not Bayes-table exercises.
     vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
   - id: route-a9a926efa0d8512eca388e80
     unit_id: unit-m2-sad-l07
@@ -5863,43 +5819,30 @@ sources:
     unit_id: unit-m2-sad-l04
     title: Pitman — conditional probability selections
     format: book
-    angle: Everything through tree diagrams and partitions drawn on the page — the most visual derivation
-      of Bayes on the shelf.
+    angle: Builds probability calculations from paths in trees and then reverses the direction of inference.
     covers:
-    - knowledge-sad-l04-axioms
     - knowledge-sad-l04-conditional
     - knowledge-sad-l04-bayes
     - knowledge-sad-l04-independence
     depth: advanced-reference
     scope: complementary
-    locator: Ch 1 §1.4 Conditional Probability and Independence, pdf pp. 44-57; §1.5 Bayes' Rule, pdf
-      pp. 58-66; §1.6 Sequences of Events, pdf pp. 67-89
-    angle_detail: Pitman's method is to draw the partition and the tree, label every branch, and read
-      the answer off the picture before writing any algebra; §1.5 derives Bayes' rule as a relabelling
-      of a tree you have already drawn. That makes the role of the partition — the thing L04's slide 46
-      leaves implicit when it states Bayes with the denominator pre-expanded — impossible to miss. §1.6
-      then does sequences of events and the multiplication rule, which is the machinery behind the chain
-      of conditional independence assumptions Naive Bayes rests on. Hundreds of worked examples; the exercises
-      are harder than SaD needs, so pick rather than sweep.
+    locator: §1.4, PDF pp. 44–55; §1.5, pp. 58–62
+    angle_detail: The box-selection example makes the prior and likelihood roles visible. This is an example-led
+      alternative; claims that it is the most visual source are unnecessary.
     vault_path: material://source-pitman-probability/pitman.pdf
   - id: route-eaf0195e1f1439482508bdd8
     unit_id: unit-m2-sad-l05
     title: Pitman — counting foundations
     format: book
-    angle: Counting introduced only as the way to compute equally-likely probabilities, never as an independent
-      topic.
+    angle: Uses equally likely outcomes and repeated-trial trees to motivate counting.
     covers:
     - knowledge-sad-l05-combinations
     - knowledge-sad-l05-counting-probability
     depth: advanced-reference
     scope: complementary
-    locator: Ch 1 §1.1 Equally Likely Outcomes, pdf pp. 14-32; Ch 2 §2.1 The Binomial Distribution, pdf
-      pp. 90-102
-    angle_detail: §1.1 sets up the Laplace model first — probability as a ratio of counts — so every counting
-      technique that follows arrives as an answer to 'how do I get that numerator'. That is the same motivation
-      L05 uses when it moves from the decision grid to Laplace probability, and it is a better frame than
-      treating combinatorics as prerequisite algebra. Thin on stars-and-bars and repetition cases; Blitzstein
-      §1.4 covers those properly.
+    locator: §1.1, physical PDF pp. 14–16; §2.1, pp. 90–93
+    angle_detail: Use the finite-space example first; the later binomial derivation connects a coefficient
+      to the number of success paths.
     vault_path: material://source-pitman-probability/pitman.pdf
   - id: route-e6e54c18328cf55e09658980
     unit_id: unit-m2-sad-l06
@@ -6128,39 +6071,29 @@ sources:
     unit_id: unit-m2-sad-l04
     title: Tijms — simulation-first probability intuition
     format: book
-    angle: 'Two passes over Bayes, deliberately separated: an informal chance-tree chapter in Part One,
-      a formal one in Part Two.'
+    angle: Contrasts intuitive chance trees with a later formal definition of conditioning.
     covers:
     - knowledge-sad-l04-conditional
     - knowledge-sad-l04-bayes
     depth: advanced-reference
     scope: complementary
-    locator: Ch 6 Chance trees and Bayes' rule, pdf pp. 218-234; Ch 8 Conditional probability and Bayes,
-      pdf pp. 255-274
-    angle_detail: The book is split into 'Probability in action' and 'Essentials of probability', and
-      Bayes appears in both. Ch 6 argues entirely with chance trees and real cases — medical screening,
-      the notorious court cases — with no formal apparatus; Ch 8 restates the same results with the definitions
-      in place. If L04's formal treatment did not land, reading Ch 6 alone and returning to the deck often
-      fixes it, which is a cheaper repair than a full probability chapter. Tijms is also the best source
-      here on why intuition fails on these problems, which is what L04's framing node is about.
+    locator: §§6.1–6.2.1, PDF pp. 219–228; §8.1, pp. 255–258
+    angle_detail: The Monty Hall tree makes the host’s information and protocol part of the model; the
+      test example isolates the effect of a changed base rate.
     vault_path: material://source-tijms-understanding-probability/tijms.pdf
   - id: route-338021e21a64b0b32a68eb86
     unit_id: unit-m2-sad-l05
     title: Tijms — counting through probability models
     format: book
-    angle: Counting kept subordinate to the sample-space model, with birthday- and lottery-style problems
-      as the worked cases.
+    angle: Uses a four-child example to distinguish elementary sequences from grouped outcomes.
     covers:
     - knowledge-sad-l05-decision-grid
     - knowledge-sad-l05-counting-probability
     depth: advanced-reference
     scope: complementary
-    locator: Ch 7 Foundations of probability theory, pdf pp. 235-254 (finite sample spaces and the Laplace
-      model)
-    angle_detail: Tijms treats combinatorial questions as questions about the size of a well-chosen sample
-      space, and his worked cases — coincidences, lotteries, matching problems — are the ones whose answers
-      are counterintuitive enough to be memorable. Useful as a second pass after the mechanics are in
-      place from L05's grid, less useful as a first exposure because he does not tabulate the cases.
+    locator: §7.1, physical PDF pp. 238–239, Example 7.5
+    angle_detail: The old whole-chapter birthday/lottery description was too broad. This specific example
+      addresses the equal-likelihood assumption behind the counting ratio.
     vault_path: material://source-tijms-understanding-probability/tijms.pdf
   - id: route-6c6e7ac821cf1bae2d53a9a8
     unit_id: unit-m2-sad-l06
@@ -6375,8 +6308,7 @@ sources:
     unit_id: unit-m2-sad-l04
     title: Ross — formal probability foundations
     format: book
-    angle: 'The reference treatment: axioms stated formally, every derived rule proved from them, and
-      independence given a full section with counterexamples.'
+    angle: Proves probability rules and uses carefully contrasted events to challenge informal reasoning.
     covers:
     - knowledge-sad-l04-axioms
     - knowledge-sad-l04-conditional
@@ -6384,37 +6316,27 @@ sources:
     - knowledge-sad-l04-independence
     depth: advanced-reference
     scope: complementary
-    locator: Ch 2 Axioms of Probability, pdf pp. 46-99 (§2.3 axioms; §2.5 sample spaces having equally
-      likely outcomes); Ch 3 Conditional Probability and Independence, pdf pp. 100-197 (§3.3 Bayes's Formula;
-      §3.4 Independent Events; §3.5 P(·|F) is a Probability)
-    angle_detail: 'Ross is the standard rigorous first course, and its value here is completeness rather
-      than gentleness. Two things it has that the softer sources do not: §3.4 works through why pairwise
-      independence does not imply mutual independence, with an explicit counterexample — the distinction
-      L04''s independence node states and the exam can probe; and §3.5 proves that conditioning on a fixed
-      event yields a genuine probability measure, which is the formal fact behind every ''just condition
-      and continue'' move. Use it to settle a question, not to learn the topic from cold.'
+    locator: Ch 2 §§2.3–2.4, PDF pp. 54–58; Ch 3 §§3.2–3.4, pp. 101–103,120–122,128–132
+    angle_detail: The stored copy is an 848-page reflowed PDF. Its viewer pages differ from printed editions;
+      use these narrow physical ranges instead of the old entire-chapter assignments.
     vault_path: material://source-ross-first-course/ross.pdf
   - id: route-b08add0fb6ed042a770114eb
     unit_id: unit-m2-sad-l05
     title: Ross — combinatorial analysis
     format: book
-    angle: The multinomial coefficient and the integer-solutions problem, both of which L05's grid implies
-      but does not develop.
+    angle: Connects repeated-letter arrangements, mixed-position sequences and integer allocations.
     covers:
     - knowledge-sad-l05-permutations
     - knowledge-sad-l05-variations
     - knowledge-sad-l05-combinations
+    - knowledge-sad-l05-repetition
     - knowledge-sad-l05-counting-probability
     depth: advanced-reference
     scope: complementary
-    locator: Ch 1 Combinatorial Analysis, pdf pp. 14-45 (§1.2 the basic principle of counting; §1.3 permutations;
-      §1.4 combinations; §1.5 multinomial coefficients; §1.6 the number of integer solutions of equations)
-    angle_detail: §1.5 generalises the binomial coefficient to partitions into more than two groups —
-      the case that appears when a question asks for arrangements of a word with repeated letters, which
-      L05's 'permutations with indistinguishable objects' node is exactly about. §1.6 is the stars-and-bars
-      argument stated as counting integer solutions, which is the honest form of the 'combinations with
-      repetition' cell in the grid. Together these two sections cover the two grid cells that most often
-      go wrong, in about fifteen pages.
+    locator: §§1.1–1.4, physical PDF pp. 14–22; §1.6, pp. 30–31
+    angle_detail: The positive-to-nonnegative integer-solution transformation gives another derivation
+      of the lecture’s stars-and-bars formula. This supplements the derivation already present in the
+      current deck.
     vault_path: material://source-ross-first-course/ross.pdf
   - id: route-72c1b94d7d00068b9f8e041c
     unit_id: unit-m2-sad-l06
@@ -6619,8 +6541,8 @@ sources:
     unit_id: unit-m2-sad-l04
     title: Schaum — probability and Bayes worked problems
     format: exercise
-    angle: 'Pure volume: dozens of short solved problems per chapter, sorted by difficulty, with no exposition
-      to read around them.'
+    angle: Pairs short statements and proofs with worked calculations that can be covered and attempted
+      first.
     covers:
     - knowledge-sad-l04-axioms
     - knowledge-sad-l04-conditional
@@ -6628,35 +6550,26 @@ sources:
     - knowledge-sad-l04-independence
     depth: practice
     scope: complementary
-    locator: Ch 3 Introduction to Probability, pdf pp. 40-55; Ch 4 Conditional Probability and Independence,
-      pdf pp. 56-75 (every problem carries a full worked solution)
-    angle_detail: Schaum's is a problem book with the theory compressed into a two-page summary at each
-      chapter head. That makes it the wrong first exposure and the right thing to open when the concept
-      is understood and the calculation is not yet automatic — the state most students are in a week before
-      the Klausur. The problems are short enough to do in batches of ten, and every one is solved in full.
-      This is a scanned older edition, so notation occasionally differs from the lecture's; treat the
-      deck as authoritative where they disagree.
+    locator: Ch 3, PDF pp. 40–43; Ch 4, pp. 56–62 and 65, named examples and solved problems
+    angle_detail: This is not exposition-free and not every supplementary problem carries a full solution.
+      The named slices below distinguish theory, examples and solved problems.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
   - id: route-35b2bda446c6fc49b74e3535
     unit_id: unit-m2-sad-l05
     title: Schaum — combinatorics drills
-    format: exercise
-    angle: Twenty-two pages that are almost entirely solved counting problems — the highest drill density
-      for L05 on the shelf.
+    format: book
+    angle: Pairs compact counting rules with repeated-letter, card-sampling and committee examples.
     covers:
     - knowledge-sad-l05-decision-grid
     - knowledge-sad-l05-permutations
     - knowledge-sad-l05-variations
     - knowledge-sad-l05-combinations
-    - knowledge-sad-l05-counting-probability
+    - knowledge-sad-l05-identities
     depth: practice
     scope: complementary
-    locator: Ch 2 Techniques of Counting, pdf pp. 18-39
-    angle_detail: L05 is the lecture where practice volume beats explanation, because the difficulty is
-      pattern recognition across many superficially different word problems. This chapter supplies that
-      volume and nothing else. Work them in mixed order and force yourself to name the grid cell (ordered/unordered,
-      with/without replacement) before computing — the chapter is organised by technique, which otherwise
-      gives the answer away.
+    locator: Ch 2 Techniques of Counting, physical PDF pp. 18–24
+    angle_detail: The chapter contains explanations and proofs as well as solved problems. The named slices
+      avoid unsupported claims about being the highest-volume drill source.
     vault_path: material://source-schaums-probability/schaums-probability.pdf
   - id: route-50eef5af02021332775370be
     unit_id: unit-m2-sad-l06
@@ -6863,38 +6776,34 @@ sources:
     unit_id: unit-m2-sad-l04
     title: Harvard Stat 110 — conditioning and Bayes lectures
     format: course
-    angle: Blitzstein lecturing his own book — the same argument delivered twice, in print and on video.
+    angle: Offers the course companion to Blitzstein’s written conditioning and independence chapters.
     covers:
     - knowledge-sad-l04-conditional
     - knowledge-sad-l04-bayes
     - knowledge-sad-l04-independence
     depth: advanced-reference
     scope: complementary
-    locator: 'Stat 110 Lectures 4-5: ''independence, conditional probability, Bayes'' rule, and conditional
-      independence''; Strategic Practice 2 with solutions'
-    angle_detail: 'This is the video companion to Blitzstein & Hwang, so choosing between them is a format
-      decision rather than a content decision: the definitions, notation and examples line up section
-      by section. The lectures add the thing the book cannot — hearing which step he considers the difficult
-      one, and watching him refuse to write the algebra until the story is clear. The strategic-practice
-      sheets are graded from routine to hard with full solutions.'
+    locator: 'Stat 110 course homepage: Lectures 4–5; Strategic Practice 2, "Conditional Probability"'
+    angle_detail: Open goes to the official course homepage. Find Lectures 4–5 or Strategic Practice 2
+      there. The textbook slices were verified; full video and practice review remains deferred under
+      the book-first budget.
+    url: https://projects.iq.harvard.edu/stat110
   - id: route-1c9301d9a29d6dc3920ca232
     unit_id: unit-m2-sad-l05
     title: Harvard Stat 110 — strategic counting
     format: course
-    angle: Contains the story-proof demonstrations performed live, which is where that technique is easiest
-      to pick up.
+    angle: Offers the course companion to Blitzstein’s written counting and story-proof sections.
     covers:
     - knowledge-sad-l05-decision-grid
     - knowledge-sad-l05-combinations
     - knowledge-sad-l05-counting-probability
     depth: advanced-reference
     scope: complementary
-    locator: Lecture 1 (sample spaces, naive definition, counting) and Lecture 2 (story proofs, non-naive
-      definition); Strategic Practice 1 with solutions
-    angle_detail: A story proof is a way of arguing, and watching one being constructed is more instructive
-      than reading a finished one — the moment where he chooses what set to count twice is the whole method.
-      Two lectures cover all of L05's counting content at a level above the lecture's own, with the identities
-      node handled properly.
+    locator: 'Course homepage: Lectures 1–2 and Strategic Practice 1'
+    angle_detail: Open goes to the official course homepage. The individual lecture options retain their
+      known destinations, without reviewed timestamps. Prefer the inspected textbook slices; full video
+      and practice review is deferred under the book-first budget.
+    url: https://projects.iq.harvard.edu/stat110
   - id: route-ed70c98ed67d50954e43222f
     unit_id: unit-m2-sad-l06
     title: Harvard Stat 110 Units 3–4 — RVs and expectation
@@ -6910,12 +6819,10 @@ sources:
     scope: complementary
     locator: Lectures 5-9 (random variables and their distributions, expectation, indicator random variables,
       LOTUS, variance)
-    angle_detail: The 'fundamental bridge' — that the expectation of an indicator is the probability of
-      its event — plus linearity without independence lets you compute means of complicated counts by
-      decomposition. L06 never mentions it, but once seen it is the fastest route through a large class
-      of exercises, and it makes linearity feel like a tool rather than an identity. Lectures run 45-50
-      minutes each; this is a five-lecture commitment, so choose it only if L06 is a topic you intend
-      to be strong on.
+    angle_detail: Optional registered course/channel collection. Individual episode coverage and full
+      playback remain deferred in this written-first repair; this target does not certify the inherited
+      episode suggestions.
+    url: https://projects.iq.harvard.edu/stat110
   - id: route-1e3e247b8c6240fbc08376a9
     unit_id: unit-m2-sad-l07
     title: Harvard Stat 110 Units 3–4 — discrete distributions
@@ -7381,11 +7288,11 @@ sources:
     - knowledge-sad-l03-simple-regression
     depth: practice
     scope: complementary
-    locator: HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf, pp. 6-7, Aufgabenteile IV-V
-    angle_detail: This is the strongest external L03 item because the prompt, computation and interpretation
-      are visible together and the solution is printed immediately below. Kendall's tau itself is outside
-      the current lecture; use that part only as an association contrast, then work the linear-regression
-      section in full.
+    locator: HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf, physical pp. 6–7, Aufgabenteil V; p.
+      6 also concludes IV
+    angle_detail: The tenure–salary table, fitted-line calculation and R² solution are printed together.
+      Cover the worked solution before attempting V. Page 6 only concludes the Kendall calculation from
+      IV; Kendall is an optional association contrast, not Pearson practice.
     vault_path: material://source-sad-klausuren-extern/HS-Harz_Statistik-I_Probeklausur_mit-Loesungen.pdf
   - id: route-31ee3e63a209ca409054dda3
     unit_id: unit-m2-sad-l03
@@ -7407,8 +7314,7 @@ sources:
     unit_id: unit-m2-sad-l04
     title: Leuphana-Merz pp. 5-10 — probability and conditional-probability drills
     format: exercise
-    angle: A dense German exercise block for finite probability, conditioning and Bayes before the later
-      inference chapters.
+    angle: Offers brief German rule questions and a worked urban/rural voter Bayes calculation.
     covers:
     - knowledge-sad-l04-events
     - knowledge-sad-l04-axioms
@@ -7417,44 +7323,45 @@ sources:
     - knowledge-sad-l04-independence
     depth: practice
     scope: complementary
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1
-    angle_detail: The block supplies more authentic German stems than the course sheet while remaining
-      at the same foundational level. Select only the event/conditioning items; later pages in this 109-page
-      book belong to estimation and testing and are routed separately.
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, PDF pp. 5–6, §§1.1–1.2; solutions
+      pp. 8–9
+    angle_detail: Use Aufgabenblatt 1 §§1.1–1.2 and the corresponding solutions. Section 1.3 concerns
+      random variables and distributions, so it is not an L04 assignment.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
   - id: route-9f444ac53a8abc5d1bc9108a
     unit_id: unit-m2-sad-l05
-    title: Leuphana-Merz pp. 5-10 — combinatorial probability items
+    title: Leuphana–Merz §1.2.2 — counting cases; §1.2.4 — finite probability
     format: exercise
-    angle: Uses counting as the hidden first step of a probability problem rather than naming the formula.
+    angle: Offers five distinct counting cases with short separate answers, plus finite-probability practice.
     covers:
     - knowledge-sad-l05-decision-grid
+    - knowledge-sad-l05-permutations
+    - knowledge-sad-l05-variations
     - knowledge-sad-l05-combinations
+    - knowledge-sad-l05-repetition
     - knowledge-sad-l05-counting-probability
     depth: practice
     scope: complementary
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1 counting
-      items
-    angle_detail: 'This is identification practice: decide the finite sample space and the relevant count
-      before computing a probability. It does not replace the lecture''s complete order/replacement decision
-      grid, so use it only after that grid can be reproduced.'
+    locator: §1.2.2 and §1.2.4, physical PDF pp. 5–6; answers pp. 8–9
+    angle_detail: The named §1.2.2 tasks cover permutations, repeated colors, ordered podium places, repeated
+      ice-cream types and unlabelled prizes. The later random-variable section is not part of this assignment.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
   - id: route-e5bf24802d93851f78b83c03
     unit_id: unit-m2-sad-l06
-    title: Leuphana-Merz pp. 5-10 — random-variable and moment items
+    title: Leuphana–Merz §1.3 — discrete game and density-normalization practice
     format: exercise
-    angle: Adds short expectation and variance calculations in German exam notation.
+    angle: Contrasts a discrete payoff table with a polynomial density that must first be normalized.
     covers:
     - knowledge-sad-l06-distribution-functions
     - knowledge-sad-l06-expectation
     - knowledge-sad-l06-variance-covariance
     depth: practice
     scope: complementary
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 5-10, Aufgabenblatt 1 random-variable
-      items
-    angle_detail: Use these for speed only after PMF/CDF and moment definitions are stable. The book's
-      theoretical framing is broader than L06, so the locator intentionally limits the route to the first
-      exercise block.
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, PDF pp. 6-7,10-11, Aufgaben 1.3.1-1.3.2
+    angle_detail: Physical pp. 6–7 contain §1.3 tasks, and pp. 10–11 their worked solutions. Task 1.3.2
+      asks for the upper support endpoint that normalizes 2x², then moments, an interval probability and
+      a point probability. It directly exercises the mass-versus-density distinction; it is complementary
+      practice, not current examination evidence.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
   - id: route-1eef53180bda2e4604a22a8b
     unit_id: unit-m2-sad-l06
@@ -7781,64 +7688,52 @@ sources:
       the channel's ROC video belongs to L11.
   - id: route-13f3ebff8cc9534c96100502
     unit_id: unit-m2-sad-l03
-    title: StatQuest — Pearson correlation, least squares, and gradient descent
+    title: StatQuest — Pearson’s correlation
     format: video
-    angle: Steps a gradient-descent run through by hand, one iteration at a time, with the numbers on
-      screen.
+    angle: A dedicated video option for interpreting Pearson correlation.
     covers:
     - knowledge-sad-l03-covariance
-    - knowledge-sad-l03-simple-regression
-    - knowledge-sad-l03-gradient-descent
     depth: orientation
     scope: complementary
-    locator: 'StatQuest video index: ''Pearson''s Correlation, Clearly Explained''; ''Linear Models Part
-      0: Fitting a line to data, aka Least Squares, aka Linear Regression''; ''Gradient Descent'''
-    angle_detail: L03 introduces gradient descent as an alternative optimiser and shows the update rule.
-      The gradient-descent video performs the iterations on a two-parameter regression, so the abstract
-      rule becomes a visible sequence of numbers converging, and it shows what too large a learning rate
-      does — the intuition behind every later discussion of step size. The correlation video is the one
-      to watch if the difference between covariance and correlation is what is unclear. Titles taken from
-      StatQuest's own index on 2026-09-07; the channel's uploads carry '!!!' suffixes on some of them.
+    locator: '"Pearson’s Correlation, Clearly Explained"'
+    angle_detail: The exact title and destination are verified in the official index. Use this when the
+      correlation coefficient needs a verbal visual explanation; the video was not reviewed end to end
+      in this book-first pass.
+    url: https://youtu.be/xZ_z8KWkhXE
   - id: route-37c710174c2a5be9353cb154
     unit_id: unit-m2-sad-l04
     title: StatQuest — Naive Bayes
     format: video
-    angle: Builds the spam classifier from counted word frequencies before writing any probability notation.
+    angle: Offers a dedicated narrated Naive Bayes explanation for learners who prefer a video.
     covers:
     - knowledge-sad-l04-naive-bayes
     depth: orientation
     scope: complementary
-    locator: 'StatQuest video index: ''Naive Bayes'' (≈15 min)'
-    angle_detail: 'The video''s order is the reverse of the lecture''s: it counts words in example messages,
-      forms the products, and only then names what it has been doing as Naive Bayes with a conditional
-      independence assumption. For a construction that looks arbitrary on slides, seeing the counting
-      first makes the independence assumption''s role obvious — it is what lets the counts be multiplied.
-      Pairs with the deck rather than replacing it; the deck''s notation is what the exam uses.'
+    locator: '"Naive Bayes"'
+    angle_detail: Exact title and destination checked in StatQuest’s official index. End-to-end playback
+      review is deferred under the user’s book-first budget; use Kelleher or CS229 for the verified written
+      model distinctions.
+    url: https://youtu.be/O2L2Uv9pdDA
   - id: route-cd51e8e2a06b4d82da11c18e
     unit_id: unit-m2-sad-l05
-    title: StatQuest — no hypergeometric explainer; unresolved
+    title: StatQuest — hypergeometric enrichment example (later extension)
     format: video
-    angle: 'Recorded as unavailable: the video this route described does not exist in the channel index.'
+    angle: Offers an applied hypergeometric example in enrichment analysis rather than a general counting
+      primer.
     covers:
     - knowledge-sad-l05-counting-probability
-    depth: orientation
+    depth: advanced-reference
     scope: optional
-    locator: StatQuest's published video index lists one hypergeometric title, 'Enrichment Analysis using
-      Fisher's Exact Test and the Hypergeometric Distribution', which is an enrichment-analysis lesson
-      rather than a counting explainer
-    angle_detail: Checked against statquest.org's own video index on 2026-09-07. The route previously
-      named 'Unresolved StatQuest hypergeometric-distribution video reference' and described it drawing
-      the urn and building the ratio of combinations. No such video is listed; the only hypergeometric
-      entry is the Fisher's-exact enrichment-analysis lesson, which is a different task at a different
-      level. The route is kept visible and unavailable rather than deleted, so the gap stays recorded.
-      jbstatistics §1.8 'An Introduction to the Hypergeometric Distribution' exists and may serve this
-      role, but assigning it is a content decision for review, not a repair.
+    locator: '"Enrichment Analysis using Fisher’s Exact Test and the Hypergeometric Distribution"'
+    angle_detail: The exact title and destination are verified in the official index. This is an optional
+      return after discrete distributions and hypothesis testing; full playback is deferred. Use the written
+      counting materials for L05’s basic ratio.
+    url: https://youtu.be/udyAvvaMjfM
   - id: route-37cd5e058977f4aa2f38ee19
     unit_id: unit-m2-sad-l06
     title: StatQuest — expected values and probability distributions
     format: video
-    angle: Handles the discrete-to-continuous transition visually — the histogram narrowing into a density
-      — which is where L06's PMF/PDF distinction is usually lost.
+    angle: Optional discrete and continuous expected-value videos, identified by the author’s index.
     covers:
     - knowledge-sad-l06-distribution-functions
     - knowledge-sad-l06-expectation
@@ -7847,10 +7742,10 @@ sources:
     locator: 'StatQuest video index: ''Expected Values Part 1, Main Ideas!!! (Expected Values for Discrete
       Variables)''; ''Expected Values Part 2, Continuous Variables''; ''The Main Ideas behind Probability
       Distributions'''
-    angle_detail: 'The two expected-value videos are deliberately a pair: the same quantity computed as
-      a weighted sum, then as an integral, with the bars of the histogram shrinking on screen between
-      them. That animation is the single most useful thing here, because it makes the sum-to-integral
-      move a continuous change rather than two unrelated formulas. Watch them in order.'
+    angle_detail: The official saved index verifies the exact titles and destinations. Full playback and
+      the previously claimed histogram animation have not been audited. Use the written readings first;
+      choose the separate episode matching the stage.
+    url: https://youtu.be/KLs_7b7SKi4
   - id: route-124b1de843b9b317287c58d2
     unit_id: unit-m2-sad-l07
     title: StatQuest — Binomial distribution and sampling
@@ -7995,6 +7890,32 @@ sources:
       one to know exists: L08''s likelihood derivation is the intellectual centre of the statistics half,
       and the probability/likelihood conflation is the single most common way it fails to land. Ten minutes
       each, no notation to carry away — this is repair, not study.'
+  - id: route-sad-l03-statquest-ols
+    unit_id: unit-m2-sad-l03
+    title: 'StatQuest — Linear Models Part 0: Fitting a line to data, aka Least Squares, aka Linear Regression'
+    format: video
+    depth: intuition
+    scope: complementary
+    covers:
+    - knowledge-sad-l03-simple-regression
+    locator: '"Linear Models Part 0: Fitting a line to data, aka Least Squares, aka Linear Regression"'
+    angle: A dedicated visual explanation of fitting a line by least squares.
+    angle_detail: Exact title and destination verified in the official index. Optional video; full playback/content
+      review deferred to prioritize the written materials.
+    url: https://youtu.be/PaFPbb66DxQ
+  - id: route-sad-l03-statquest-gd
+    unit_id: unit-m2-sad-l03
+    title: StatQuest — Gradient Descent
+    format: video
+    depth: intuition
+    scope: complementary
+    covers:
+    - knowledge-sad-l03-gradient-descent
+    locator: '"Gradient Descent"'
+    angle: A dedicated video option for understanding gradient descent.
+    angle_detail: Exact title and destination verified in the official index. Optional video; full playback/content
+      review deferred to prioritize the written materials.
+    url: https://youtu.be/sDv4f4s2SB8
 - source_id: source-jbstatistics
   role: intuition
   why: Short calculation-exact probability and inference refreshers.
@@ -8021,31 +7942,23 @@ sources:
       grouped-data mean are both worked explicitly. Playlists are ordered to be watched in sequence.'
   - id: route-d21223e3854f8c37ce2de2f4
     unit_id: unit-m2-sad-l05
-    title: jbstatistics — no permutations/combinations series; unresolved
+    title: jbstatistics 1.8 — introduction to the hypergeometric distribution
     format: video
-    angle: 'Recorded as unavailable: the video series this route described does not exist on the channel.'
+    angle: Introduces sampling without replacement and the hypergeometric model in a dedicated lesson.
     covers:
-    - knowledge-sad-l05-decision-grid
-    - knowledge-sad-l05-permutations
-    - knowledge-sad-l05-variations
-    - knowledge-sad-l05-combinations
+    - knowledge-sad-l05-counting-probability
     depth: orientation
     scope: optional
-    locator: jbstatistics' published index has thirteen chapters, from discrete distributions through
-      regression; none covers counting, permutations or combinations
-    angle_detail: Checked against the full jbstatistics table of contents on 2026-09-07. The route previously
-      named a three-video 'Permutations and Combinations' series and credited it with deriving nCr from
-      nPr on screen. The site's index runs Discrete Probability Distributions, Continuous Random Variables,
-      Tables, Sampling Distributions, Confidence Intervals, Hypothesis Testing, Two Means, Proportions,
-      Chi-square, Variances, ANOVA, Regression, and the Jimmy and Mr. Snoothouse series — no counting
-      content anywhere. L05's counting nodes keep Blitzstein Ch 1, Ross, Pitman, Schaum's, Stat 110 and
-      MIT 18.05; nothing is stranded. Kept visible and unavailable rather than deleted.
+    locator: 'Lesson 1.8: "An Introduction to the Hypergeometric Distribution"'
+    angle_detail: The author’s page describes two examples and a comparison with binomial sampling. The
+      lesson page and description were verified; playback and timestamp review are deferred. This replaces
+      the nonexistent general permutations/combinations series.
+    url: https://www.jbstatistics.com/the-hypergeometric-distribution-introduction/
   - id: route-765e4fe569b646edb22ebb28
     unit_id: unit-m2-sad-l06
     title: jbstatistics — expected value and variance calculations
     format: video
-    angle: Computes E[X] and Var(X) from a probability table step by step, in the layout an exam answer
-      uses.
+    angle: One optional lesson covering both moments of a discrete random variable.
     covers:
     - knowledge-sad-l06-expectation
     - knowledge-sad-l06-variance-covariance
@@ -8053,11 +7966,10 @@ sources:
     scope: complementary
     locator: jbstatistics §1.2 'The Expected Value and Variance of Discrete Random Variables' — one video
       covering both moments
-    angle_detail: 'The video builds the working column by column — x, P(x), x·P(x), x²·P(x) — which is
-      exactly the table you should be drawing under exam conditions. Copying that layout is a small procedural
-      habit that reliably prevents arithmetic slips, and no book on the shelf shows it as clearly. Checked
-      against the jbstatistics index on 2026-09-07: this is one video covering expectation and variance
-      together, not a pair, so budget one sitting rather than two.'
+    angle_detail: The official saved index verifies lesson 1.2 and its title. Full playback and the previously
+      asserted column-by-column presentation remain unverified; no comparative claim about the books is
+      warranted.
+    url: https://www.jbstatistics.com/expected-value-and-variance-of-discrete-random-variables/
   - id: route-48c6ad5e78bcb005c5a15885
     unit_id: unit-m2-sad-l07
     title: jbstatistics — discrete distributions
@@ -8317,10 +8229,9 @@ sources:
       These videos give the hierarchy and the rule in the exact terms used, in under half an hour total.
   - id: route-9a18c8d3ccfb21c3f023b850
     unit_id: unit-m2-sad-l04
-    title: Kurzes Tutorium Statistik — Zufallsexperiment and Bayes basics
-    format: video
-    angle: Works Bayes through the Vierfeldertafel, in German, which is the presentation German exams
-      use.
+    title: Kurzes Tutorium Statistik — channel index; exact episodes unverified
+    format: website
+    angle: Provides a German-language channel entry point; no exact probability episode is verified here.
     covers:
     - knowledge-sad-l04-events
     - knowledge-sad-l04-axioms
@@ -8328,13 +8239,11 @@ sources:
     - knowledge-sad-l04-bayes
     depth: orientation
     scope: complementary
-    locator: '''Zufallsexperiment und Ereignisse''; ''Bedingte Wahrscheinlichkeit''; ''Satz von Bayes'''
-    angle_detail: 'The four-field table is the standard German exam apparatus for conditional probability,
-      and these videos build and read one directly. Combined with the Fahrmeir Arbeitsbuch solutions this
-      covers the format completely. Do not use them for the Naive Bayes construction — that is the lecture''s
-      own and has no German-language equivalent here. Not verified on 2026-09-07: the channel is only
-      reachable through a YouTube consent gate that this session did not accept, so the episode titles
-      below are inherited from the earlier plan and have not been checked against the channel''s own listing.'
+    locator: '"Kurzes Tutorium Statistik" channel index; probability episode links unresolved'
+    angle_detail: The channel identity is verified. The previously named probability, event and Bayes
+      episodes lack verified destinations in this pass. This is reference-only discovery, not evidence
+      that a particular lesson teaches the claimed table method.
+    url: https://www.youtube.com/@pdmb
   - id: route-e802263b373da3ed751ef42c
     unit_id: unit-m2-sad-l06
     title: Kurzes Tutorium Statistik — Zufallsvariablen and Erwartungswert
@@ -8347,12 +8256,10 @@ sources:
     depth: orientation
     scope: complementary
     locator: '''Zufallsvariablen''; ''Erwartungswert''; ''Varianz'''
-    angle_detail: 'E(X) versus μ, Var(X) versus σ², and the German phrasing of the linearity rules. Short
-      and purely terminological — the concepts should come from Blitzstein or Dekking, but the words should
-      come from here if the exam wording has ever cost you time. Not verified on 2026-09-07: the channel
-      is only reachable through a YouTube consent gate that this session did not accept, so the episode
-      titles below are inherited from the earlier plan and have not been checked against the channel''s
-      own listing.'
+    angle_detail: Optional registered course/channel collection. Individual episode coverage and full
+      playback remain deferred in this written-first repair; this target does not certify the inherited
+      episode suggestions.
+    url: https://www.youtube.com/@pdmb
   - id: route-4d9c809542ca696a1f19fd49
     unit_id: unit-m2-sad-l07
     title: Kurzes Tutorium Statistik — discrete distributions
@@ -8664,6 +8571,20 @@ sources:
       Its mixture-model section (p. 153) is the one genuinely extra idea on this stage — clustering as
       density estimation rather than as partitioning — and is optional after the UE7 trace. Mathematically
       heavier than Géron, lighter than ESL.
+  - id: route-sad-l03-kroese-regression
+    unit_id: unit-m2-sad-l03
+    title: Kroese §§5.2–5.3.1 — model, observed fit and training loss
+    format: book
+    depth: derivation
+    scope: complementary
+    covers:
+    - knowledge-sad-l03-simple-regression
+    - knowledge-sad-l03-multivariate
+    locator: §5.2–5.3.1, physical PDF pp. 187–190
+    angle: Separates a response model with random errors from the observed points near a line.
+    angle_detail: A probability-oriented return reading after L06; compare a random response with its
+      observed realization.
+    vault_path: material://source-kroese-dsml/kroese.pdf
 - source_id: source-ross-elementary-analysis
   role: reference
   why: Proof-oriented alternate text, shelved during the exam-first pass.
@@ -8812,18 +8733,15 @@ sources:
     unit_id: unit-m2-sad-l04
     title: CS229 §4.2 — Naive Bayes event models
     format: course-material
-    angle: The compact mathematical statement of the classifier L04 builds informally, in about four pages.
+    angle: Writes the Bernoulli word-presence model and its class-conditional parameter estimates compactly.
     covers:
     - knowledge-sad-l04-naive-bayes
     depth: advanced-reference
     scope: complementary
-    locator: 'cs229-notes.pdf Part II §4 Generative learning algorithms p. 36: §4.2 Naive Bayes p. 43,
-      §4.2.1 Laplace smoothing p. 46'
-    angle_detail: 'Four pages that state, in one place, the classifier L04 builds informally over a lecture:
-      the conditional-independence assumption written as a product, the maximum-likelihood estimates for
-      the parameters, and Laplace smoothing as the fix for a zero count. It assumes the probability notation
-      of §§1-3 and does not motivate anything — read it as the compact statement to check your own against,
-      after the deck.'
+    locator: cs229-notes.pdf §4.2, physical PDF pp. 43–45; §4.2.1 starts p. 46
+    angle_detail: It uses a binary feature for each vocabulary item, unlike a token-count multinomial
+      model. Absent-word probabilities matter in the Bernoulli model; do not silently multiply only present-word
+      terms.
     vault_path: material://source-cs229-notes/cs229-notes.pdf
   - id: route-2ecd41a999e0fd49db64c0c0
     unit_id: unit-m2-sad-l12
@@ -8881,6 +8799,21 @@ sources:
       is the most useful ordering available for checking that the matrix shapes are right. Compact and
       unmotivated by design: it is the reference to verify a derivation against once L15''s own account
       has been followed.'
+    vault_path: material://source-cs229-notes/cs229-notes.pdf
+  - id: route-sad-l03-cs229-regression
+    unit_id: unit-m2-sad-l03
+    title: CS229 notes — LMS and normal-equation derivations
+    format: book
+    depth: derivation
+    scope: complementary
+    covers:
+    - knowledge-sad-l03-simple-regression
+    - knowledge-sad-l03-multivariate
+    - knowledge-sad-l03-gradient-descent
+    locator: Chapter 1, physical PDF pp. 9–16; §1.3 Gaussian bridge, pp. 16–18
+    angle: Derives the scalar update first, extends it to a whole sample and then derives the matrix solution.
+    angle_detail: The same housing model supports both algorithms. Section 1.2 checks the matrix differentiation;
+      §1.3 is a later probability bridge. The inverse formula assumes XᵀX is invertible.
     vault_path: material://source-cs229-notes/cs229-notes.pdf
 - source_id: source-thomas-calculus
   role: reference
@@ -9206,6 +9139,20 @@ sources:
       many parameters and one scalar loss. That connection between the hand derivation and what PyTorch
       does is worth having, especially given the thesis workstream. Well beyond exam scope.
     vault_path: material://source-murphy-pml1/pml1.pdf
+  - id: route-sad-l03-murphy-regression
+    unit_id: unit-m2-sad-l03
+    title: Murphy §11.2.2 — projection, uniqueness and numerical solvers
+    format: book
+    depth: derivation
+    scope: complementary
+    covers:
+    - knowledge-sad-l03-multivariate
+    - knowledge-sad-l03-scaling-weights
+    locator: §11.2.2.1–11.2.2.3, physical PDF pp. 403–406
+    angle: Connects a positive-definite least-squares Hessian with uniqueness and gives a projection proof.
+    angle_detail: Start at the residual objective in (11.6); the Gaussian likelihood that introduces it
+      is a later bridge. The geometric proof works directly with the observed matrix and vector.
+    vault_path: material://source-murphy-pml1/pml1.pdf
 - source_id: source-csc411-notes
   role: reference
   why: Compact independent treatment of classifiers and neural networks.
@@ -9250,6 +9197,22 @@ sources:
       output layer and a different loss, which is precisely the pairing L15 asserts. Every step carries
       explicit matrix shapes, so this is the reference to reach for when a derivation is right in principle
       and does not conform.'
+    vault_path: material://source-csc411-notes/csc411.pdf
+  - id: route-sad-l03-csc411-regression
+    unit_id: unit-m2-sad-l03
+    title: CSC411 notes — scalar fit, design matrix and gradient checks
+    format: book
+    depth: derivation
+    scope: complementary
+    covers:
+    - knowledge-sad-l03-simple-regression
+    - knowledge-sad-l03-multivariate
+    - knowledge-sad-l03-gradient-descent
+    locator: Chapter 2 §§2.1–2.2, physical PDF pp. 10–12; Chapter 9, pp. 58–60
+    angle: Eliminates the intercept in the one-dimensional derivation, then shows exactly how to fold
+      it into a feature vector.
+    angle_detail: Chapter 9 complements the regression algebra with a line-search algorithm and finite
+      differences for checking a gradient implementation.
     vault_path: material://source-csc411-notes/csc411.pdf
 - source_id: source-aml-ss26-lectures
   role: reference
@@ -9690,24 +9653,23 @@ sources:
     vault_path: material://source-geron-handson/geron.pdf
   - id: route-8535a338657698b9de4791a8
     unit_id: unit-m2-sad-l03
-    title: Geron Ch 4 - the normal equation and gradient descent side by side
+    title: Géron Ch 4 — normal equation, descent code and feature scaling
     format: book
-    angle: L03 presents the closed-form normal equation and gradient descent as two routes to the same
-      fit; this chapter runs both on the same data, shows what the learning rate does to convergence and
-      why unscaled features distort the descent path - the two claims the deck makes without demonstration.
+    angle: Implements the closed-form fit and gradient descent, with contour plots explaining learning-rate
+      and scaling effects.
     covers:
+    - knowledge-sad-l03-simple-regression
     - knowledge-sad-l03-multivariate
     - knowledge-sad-l03-gradient-descent
+    - knowledge-sad-l03-scaling-weights
     depth: implementation
     scope: complementary
-    locator: Chapter 4, pp. 139-180 (closed-form solution p. 139; gradient descent p. 140; normal equation
-      p. 142; learning rate p. 146; feature scaling p. 148)
-    angle_detail: 'Ch 4 is where L03''s two optimisation routes stop being abstract. The closed-form normal
-      equation and gradient descent are implemented on the same data, and the chapter then shows what
-      actually differs between them in practice: the normal equation''s cubic cost in the number of features
-      against gradient descent''s sensitivity to feature scaling and learning rate. The scaling demonstration
-      on p. 148 is the concrete version of L03''s scaling-weights node — two elongated and two circular
-      contour plots, with the descent paths drawn on them.'
+    locator: 'Training Models, physical PDF pp. 140–151: linear model pp. 140–142; normal equation pp.
+      142–145; gradient descent and scaling pp. 146–151'
+    angle_detail: The stored file is an early-release edition. Its NumPy example makes the intercept column,
+      predictions and gradient calculation concrete. Figure 4-7 compares scaled and unscaled feature geometry.
+      The course deck also includes numeric descent updates; this book adds executable code and a fuller
+      comparison of the methods.
     vault_path: material://source-geron-handson/geron.pdf
 - source_id: source-eecs498
   role: optional-depth
@@ -9874,23 +9836,18 @@ sources:
       not after.
   - id: route-361d03e96b7b4416138c8def
     unit_id: unit-m2-sad-l04
-    title: 3Blue1Brown — the geometry behind conditional probability and Bayes
-    format: video
-    angle: The three-minute proof recovers the formula from the same picture — read it after the geometry,
-      never instead of it.
+    title: 3Blue1Brown — Bayes as changing areas (illustrated lesson)
+    format: website
+    angle: Uses areas to make prior proportions and evidence likelihoods visible.
     covers:
     - knowledge-sad-l04-conditional
     - knowledge-sad-l04-bayes
     depth: intuition
     scope: complementary
-    locator: '''Bayes theorem, the geometry of changing beliefs'' (≈15 min); ''The quick proof of Bayes''
-      theorem'' (≈3 min); optionally ''The medical test paradox'''
-    url: https://www.youtube.com/playlist?list=PLk4N6AFvLWe3xCHuOs0siWp0q2F43Cslh
-    angle_detail: 'The pairing is the point: the long video makes the result obvious geometrically and
-      the short one shows that the algebraic identity is just that picture written down. Doing them in
-      that order means L04''s formula arrives as a summary of something already understood. Reversing
-      the order wastes both. Neither video covers total probability as a separate result — for that, Fahrmeir
-      §4.6.'
+    locator: '"Bayes theorem, the geometry of changing beliefs" — illustrated author lesson'
+    url: https://www.3blue1brown.com/lessons/bayes-theorem/
+    angle_detail: Open the author’s readable illustrated lesson, which also embeds the video. This replaces
+      the former multi-video bundle; no full playback review is required to use the written area argument.
 - source_id: source-marsland-ml-algorithmic
   role: implementation
   why: The only registered source outside the deck that treats Bayesian networks and Markov blankets,
@@ -10121,6 +10078,20 @@ sources:
       minimising that loss — which is the argument behind UE7's 'there is no single true clustering'.
       It is the most demanding route on this stage and assumes comfort with the notation; twenty-six pages,
       of which the first six carry the framing that matters here.
+  - id: route-sad-l03-esl-projection
+    unit_id: unit-m2-sad-l03
+    title: ESL §3.2 — least squares as orthogonal projection
+    format: book
+    depth: derivation
+    scope: complementary
+    covers:
+    - knowledge-sad-l03-multivariate
+    - knowledge-sad-l03-scaling-weights
+    locator: §3.2, physical PDF pp. 63–65; §3.2.3, pp. 73–74
+    angle: Moves from the residual objective to projection onto the columns of the design matrix.
+    angle_detail: Compare feature space with the N-dimensional observation-space picture; the residual
+      is orthogonal to every fitted column.
+    vault_path: material://source-esl/esl.pdf
 - source_id: source-3b1b-linear-algebra
   role: intuition
   why: Targeted visual support for vector, matrix, and covariance geometry already selected by L01 and
@@ -10129,22 +10100,18 @@ sources:
   unit_routes:
   - id: route-a4e1a4e84bb805c906d73d1f
     unit_id: unit-m2-sad-l03
-    title: 3Blue1Brown — vectors, dot products, and matrix transformations
-    format: video
-    angle: Makes the design matrix a transformation rather than a table, which is what L03's multivariate
-      notation assumes.
+    title: 3Blue1Brown — dot products and duality (illustrated lesson)
+    format: website
+    angle: Connects a dot product with a projection and a linear map to a scalar.
     covers:
     - knowledge-sad-l03-multivariate
-    - knowledge-sad-l03-gradient-descent
     depth: orientation
     scope: complementary
-    locator: Essence of Linear Algebra, episodes 1-4 (vectors, linear combinations, linear transformations,
-      matrix multiplication) and episode 9 (dot products)
-    angle_detail: L03 moves from a single predictor to a design matrix and a normal equation in a few
-      slides, and that jump silently assumes matrix-vector multiplication is a familiar operation with
-      a geometric meaning. These episodes supply exactly that meaning — a matrix as a transformation,
-      multiplication as composition, the dot product as projection. The projection reading of the dot
-      product in episode 9 is what later makes least squares recognisable as an orthogonal projection.
+    locator: '"Dot products and duality — illustrated author lesson with embedded video"'
+    angle_detail: Use this prerequisite to understand one feature-vector/weight-vector prediction. This
+      lesson does not derive the least-squares projection onto an entire design-matrix column space; ESL
+      and Murphy provide that argument.
+    url: https://www.3blue1brown.com/lessons/dot-products/
 - source_id: source-rudin-principles
   role: reference
   why: Too proof-dense for this exam plan and explicitly not selected; retained for future depth.
