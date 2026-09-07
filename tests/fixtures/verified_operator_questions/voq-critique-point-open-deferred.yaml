@@ -1,0 +1,12 @@
+id: voq-critique-point-open-deferred
+split: example
+class: critique-point
+question: "Is critique point 1 actionable work right now?"
+procedure:
+  predicate: CritiquePointActionable
+  inputs:
+    status: open
+    authorized_in_session: false
+expected:
+  equals: deferred
+notes: "CRITIQUE-POINTS rule 2: an open point is not a work item without Aram's say-so in that session."

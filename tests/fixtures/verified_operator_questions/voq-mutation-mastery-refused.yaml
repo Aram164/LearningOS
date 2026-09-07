@@ -1,0 +1,11 @@
+id: voq-mutation-mastery-refused
+split: example
+class: mutation
+question: "Does recording an exam pass as a statement declare mastery?"
+procedure:
+  predicate: MasteryDeclared
+  inputs:
+    statement_kind: exam-passed
+expected:
+  is_true: true
+notes: "OPERATOR.md rule 10 holds for mutations too: report evidence or its absence, never mastery."

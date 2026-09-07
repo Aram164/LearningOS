@@ -1,0 +1,11 @@
+id: voq-route-dossier-unevaluated-scope
+split: example
+class: route-dossier
+question: "Does an unevaluated route belong in a validity dossier as assessed?"
+procedure:
+  predicate: RouteEvaluated
+  inputs:
+    scope: unevaluated
+expected:
+  is_false: true
+notes: "Unevaluated is visibility debt: routed but never judged, repayable on use."

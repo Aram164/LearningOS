@@ -1,0 +1,14 @@
+id: voq-mutation-cross-scope-denied
+split: example
+class: mutation
+question: "May unit.source-selection.set write a study map?"
+procedure:
+  predicate: AllowedMutation
+  inputs:
+    capability: unit.source-selection.set
+    target_path: curriculum/modules/module-hu-aml/units/unit-aml-l01/study-map.yaml
+    scopes:
+      - curriculum/modules/*/units/*/unit.yaml
+expected:
+  is_false: true
+notes: "Selections change the learner's choice list, never the study path file."

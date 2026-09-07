@@ -1,0 +1,14 @@
+id: voq-route-dossier-valid-route
+split: example
+class: route-dossier
+question: "Is the L01 deck route structurally valid for a dossier?"
+procedure:
+  predicate: RouteValid
+  inputs:
+    route_id: route-5ee4aec41221a1821604773c
+    unit_id: unit-aml-l01
+    source_id: source-aml-ss26-lectures
+    locator: lecture-slides/VL 01-Introduction.pdf
+expected:
+  is_true: true
+notes: "Validity is addressability by id plus unit, source, and locator — not evaluation."

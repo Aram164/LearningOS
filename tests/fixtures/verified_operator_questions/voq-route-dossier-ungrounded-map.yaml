@@ -1,0 +1,16 @@
+id: voq-route-dossier-ungrounded-map
+split: heldout
+class: route-dossier
+question: "Is a study map grounded when one stage row reaches outside the menu?"
+procedure:
+  predicate: StudyMapGrounded
+  inputs:
+    template_version: 1
+    resource_pairs:
+      - [source-aml-ss26-lectures, lecture-slides/VL 02.pdf]
+      - [source-outside-menu, chapter-9.pdf]
+    menu_pairs:
+      - [source-aml-ss26-lectures, lecture-slides/VL 02.pdf]
+expected:
+  is_false: true
+notes: "A map projects over the complete menu; no row may reach outside it."

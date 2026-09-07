@@ -1,0 +1,14 @@
+id: voq-route-dossier-bad-id
+split: example
+class: route-dossier
+question: "Is a route addressed by its display title valid?"
+procedure:
+  predicate: RouteValid
+  inputs:
+    route_id: Current L01 lecture deck
+    unit_id: unit-aml-l01
+    source_id: source-aml-ss26-lectures
+    locator: lecture-slides/VL 01-Introduction.pdf
+expected:
+  is_false: true
+notes: "Titles are learner prose and may change; nothing resolves by title alone."

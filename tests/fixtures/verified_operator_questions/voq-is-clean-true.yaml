@@ -1,0 +1,12 @@
+id: voq-is-clean-true
+split: example
+class: is-clean
+question: "Is the repository clean with zero errors and no new warnings?"
+procedure:
+  predicate: RepoClean
+  inputs:
+    error_count: 0
+    new_or_grown_warnings: 0
+expected:
+  is_true: true
+notes: "OPERATOR.md clean: zero errors plus no new or grown warning signature."
