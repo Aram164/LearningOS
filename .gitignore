@@ -23,4 +23,3 @@ operations/ai-actions/deliveries/*
 # Quarantine for untrusted provider output awaiting validation; a leftover
 # directory here only ever means an import was interrupted.
 operations/ai-actions/incoming/
-.jules/

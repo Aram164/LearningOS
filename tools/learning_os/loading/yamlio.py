@@ -22,13 +22,7 @@ class LoaderError(Exception):
     """Raised when a file cannot be parsed at all (structural failure)."""
 
 
-try:
-    # ⚡ Bolt: Use C-based loader for ~6x faster YAML parsing.
-    from yaml import CSafeLoader as _SafeLoader
-except ImportError:
-    from yaml import SafeLoader as _SafeLoader
-
-class UniqueKeySafeLoader(_SafeLoader):
+class UniqueKeySafeLoader(yaml.SafeLoader):
     """SafeLoader that rejects duplicate explicit keys at every depth.
 
     Merge keys remain supported: an explicit key may intentionally override a
