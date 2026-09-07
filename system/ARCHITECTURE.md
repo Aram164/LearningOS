@@ -157,7 +157,7 @@ authored repository and interface as independent Git repositories.
 ```text
 repository/
 ├── system/                normative prose, contracts, schemas, skills and templates
-│   ├── *.md               15 documents — indexed in system/contracts/normative-corpus.yaml
+│   ├── *.md               16 documents — indexed in system/contracts/normative-corpus.yaml
 │   ├── adr/               decision records — indexed in the same file
 │   ├── contracts/         machine-checked declarations — see contract-register.yaml
 │   ├── schema/            stored-record schemas — fingerprinted by data-contract.yaml
@@ -190,7 +190,8 @@ repository/
 │   └── curriculum-v2/     the module-first conversion — map, report and originals
 ├── work/                  the coordination layer and its queues
 │   ├── inbox/             the drop-anything home; the operator routes what lands here
-│   └── active/            one folder per active workspace, each with a CONTEXT.md
+│   ├── active/            one folder per active workspace, each with a CONTEXT.md
+│   └── proposals/         approved proposals and their phase records; nothing here authorizes itself
 ├── archive/               completed workspaces, retained and never deleted
 │   └── workspaces/        one folder per year
 ├── generated/             gitignored, rebuildable; shape declared by manifest-contract.yaml

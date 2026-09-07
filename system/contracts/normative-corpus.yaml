@@ -132,6 +132,16 @@ documents:
       The acceptance criteria the rebuild is measured against; producer-owned
       contracts outrank any version named here.
 
+  - path: system/SEMANTIC-CONTRACT.md
+    class: reference
+    status: current
+    authority: binding
+    owner: semantics
+    summary: >-
+      The derived semantic layer (Intelligence Plane): pure predicates over
+      existing records, interpretation rather than stored truth; never a
+      canonical writer.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so

@@ -144,6 +144,8 @@ directories:
         purpose: the drop-anything home; the operator routes what lands here
       - path: work/active
         purpose: one folder per active workspace, each with a CONTEXT.md
+      - path: work/proposals
+        purpose: approved proposals and their phase records; nothing here authorizes itself
 
   - path: archive
     owner: archive
