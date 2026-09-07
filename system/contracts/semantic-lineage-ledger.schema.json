@@ -42,12 +42,16 @@
               "evidence": {
                 "type": "array",
                 "items": {"type": "string", "minLength": 1}
+              },
+              "assumes": {
+                "type": "array",
+                "items": {"type": "string", "minLength": 1}
               }
             }
           },
           "judged_by": {"type": "string", "minLength": 1},
           "reviewed_by": {"type": "string"},
-          "status": {"enum": ["supported", "stale", "contested"]},
+          "status": {"enum": ["supported", "stale", "contested", "withdrawn"]},
           "contest": {
             "type": "object",
             "additionalProperties": false,
