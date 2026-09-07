@@ -8,6 +8,18 @@ a canonical writer — see `system/SEMANTIC-CONTRACT.md`.
 
 from __future__ import annotations
 
+from .dossiers import (
+    DEPENDENCIES,
+    DOSSIERS_RELATIVE,
+    Dossier,
+    DossierError,
+    build_dossier,
+    cache_path,
+    compute_hashes,
+    is_fresh,
+    load_dossier,
+    store_dossier,
+)
 from .goals import (
     AUTHORIZER,
     STATES,
@@ -91,7 +103,11 @@ __all__ = [
     "TRANSITIONS",
     "CandidateGoal",
     "ClaimLineage",
+    "DEPENDENCIES",
+    "DOSSIERS_RELATIVE",
     "DerivedFrom",
+    "Dossier",
+    "DossierError",
     "GoalError",
     "LineageError",
     "PlannedStep",
@@ -103,6 +119,9 @@ __all__ = [
     "TaskStep",
     "TelemetryRecord",
     "append_telemetry",
+    "build_dossier",
+    "cache_path",
+    "compute_hashes",
     "contest",
     "detect_covering_routes_stale",
     "detect_inspection_without_dossier",
@@ -118,6 +137,8 @@ __all__ = [
     "goal_from_dict",
     "goal_to_dict",
     "impacted",
+    "is_fresh",
+    "load_dossier",
     "load_ledger",
     "needs_study_map",
     "plan_task",
@@ -132,6 +153,7 @@ __all__ = [
     "rewrite_pushdown",
     "route_step",
     "step_cost",
+    "store_dossier",
     "telemetry_from_dict",
     "telemetry_to_dict",
     "transition",
