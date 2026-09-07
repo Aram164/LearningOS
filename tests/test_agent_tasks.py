@@ -1,10 +1,10 @@
 """Agent tasks: logical plans validate, rewrites preserve meaning,
-the router obeys policy before price, and telemetry appends honestly.
+and the router dispatches under policy vetoes with no prices.
 
-The plan's Phase 4 validation in executable form: IR schema validation,
-router unit tests on fixtures, telemetry append tests. Rewrite tests pin
-that cheaper never means different — order and cache marks change, steps
-do not.
+The plan's Phase 4 validation in executable form, as amended: IR schema
+validation, router unit tests on fixtures, no telemetry, no cost
+function. Rewrite tests pin that cheaper never means different — order
+and cache marks change, steps do not.
 """
 
 from __future__ import annotations
@@ -12,20 +12,15 @@ from __future__ import annotations
 import pytest
 
 from learning_os.semantics import (
-    COST_MODEL_VERSION,
     TaskError,
     TaskIR,
     TaskStep,
-    append_telemetry,
     plan_task,
-    read_telemetry,
-    record_telemetry,
     rewrite_cheapest_evidence_first,
     rewrite_dedup,
     rewrite_late_materialization,
     rewrite_pushdown,
     route_step,
-    step_cost,
     validate_ir,
 )
 
@@ -144,25 +139,25 @@ def test_late_materialization_without_consumer_parks_at_end():
     assert [step.detail for step in rewritten.steps] == ["a", "heavy-deck.pdf"]
 
 
-def _option(executor: str, external: bool, **profile) -> dict:
-    base = {"tokens": 100, "latency_ms": 50, "semantic_risk": 0.1,
-            "privacy_risk": 0.0, "expected_repair": 0.0, "cache_prob": 0.0}
-    base.update(profile)
-    return {"executor": executor, "external": external, **base}
+def _option(executor: str, external: bool) -> dict:
+    return {"executor": executor, "external": external}
 
 
-def test_the_router_picks_the_cheapest_feasible_executor():
+def test_the_router_picks_the_first_feasible_executor():
+    """No prices: caller order decides among feasible executors."""
     decision = route_step(
         step_kind="review-evidence",
         unpublished=False,
-        options=[_option("muse", False, tokens=500),
-                 _option("claude", False, tokens=100)],
+        options=[_option("muse", False), _option("claude", False)],
     )
-    assert decision.executor == "claude"
+    assert decision.executor == "muse"
     assert decision.vetoed == ()
-    assert decision.cost == step_cost(
-        tokens=100, latency_ms=50, semantic_risk=0.1, privacy_risk=0.0,
-        expected_repair=0.0, cache_prob=0.0)
+    flipped = route_step(
+        step_kind="review-evidence",
+        unpublished=False,
+        options=[_option("claude", False), _option("muse", False)],
+    )
+    assert flipped.executor == "claude"
 
 
 def test_unpublished_material_vetoes_external_models():
@@ -170,8 +165,8 @@ def test_unpublished_material_vetoes_external_models():
     decision = route_step(
         step_kind="review-evidence",
         unpublished=True,
-        options=[_option("external-model", True, tokens=1),
-                 _option("local-model", False, tokens=900)],
+        options=[_option("external-model", True),
+                 _option("local-model", False)],
     )
     assert decision.executor == "local-model"
     assert decision.vetoed == ("external-model",)
@@ -181,9 +176,7 @@ def test_model_only_steps_refuse_deterministic_executors():
     decision = route_step(
         step_kind="generate-candidate-change",
         unpublished=False,
-        options=[_option("deterministic", False, tokens=0, latency_ms=0,
-                         semantic_risk=0.0),
-                 _option("muse", False)],
+        options=[_option("deterministic", False), _option("muse", False)],
     )
     assert decision.executor == "muse"
     assert decision.vetoed == ("deterministic",)
@@ -195,21 +188,7 @@ def test_model_only_steps_refuse_deterministic_executors():
         )
 
 
-def test_cache_probability_lowers_cost():
-    plain = step_cost(tokens=100, latency_ms=50, semantic_risk=0.1,
-                      privacy_risk=0.0, expected_repair=0.0, cache_prob=0.0)
-    cached = step_cost(tokens=100, latency_ms=50, semantic_risk=0.1,
-                       privacy_risk=0.0, expected_repair=0.0, cache_prob=0.9)
-    assert cached < plain
-
-
-def test_cost_and_routing_refuse_nonsense():
-    with pytest.raises(TaskError):
-        step_cost(tokens=-1, latency_ms=0, semantic_risk=0, privacy_risk=0,
-                  expected_repair=0, cache_prob=0)
-    with pytest.raises(TaskError):
-        step_cost(tokens=0, latency_ms=0, semantic_risk=2, privacy_risk=0,
-                  expected_repair=0, cache_prob=0)
+def test_routing_refuses_nonsense():
     with pytest.raises(TaskError):
         route_step(step_kind="ponder", unpublished=False,
                    options=[_option("m", False)])
@@ -218,45 +197,3 @@ def test_cost_and_routing_refuse_nonsense():
     with pytest.raises(TaskError):
         route_step(step_kind="review-evidence", unpublished=False,
                    options=[{"executor": "m"}])
-
-
-def test_telemetry_appends_and_reads_back(tmp_path):
-    assert read_telemetry(tmp_path) == ()
-    first = record_telemetry(
-        task_id="task-001", task_type="route-revalidation",
-        steps=["read-existing-route", "review-evidence"],
-        model="claude", tokens=800, latency_ms=1200.5,
-        tool_calls=["los.py inspect"], corrections=1, accepted=True)
-    second = record_telemetry(
-        task_id="task-002", task_type="route-revalidation",
-        steps=["read-existing-route"], model="deterministic",
-        tokens=0, latency_ms=30.0, accepted=False)
-    append_telemetry(tmp_path, first)
-    append_telemetry(tmp_path, second)
-    assert read_telemetry(tmp_path) == (first, second)
-    assert first.cost_model_version == COST_MODEL_VERSION
-
-
-def test_telemetry_refuses_unmeasurable_rows():
-    with pytest.raises(TaskError):
-        record_telemetry(
-            task_id="t", task_type="t", steps=["read-existing-route"],
-            model="m", tokens=-5, latency_ms=0.0, accepted=True)
-    with pytest.raises(TaskError):
-        record_telemetry(
-            task_id="t", task_type="t", steps=["ponder"],
-            model="m", tokens=0, latency_ms=0.0, accepted=True)
-    with pytest.raises(TaskError):
-        record_telemetry(
-            task_id="t", task_type="t", steps=["read-existing-route"],
-            model="m", tokens=0, latency_ms=0.0, corrections=-1,
-            accepted=True)
-
-
-def test_telemetry_refuses_a_corrupt_log(tmp_path):
-    log = tmp_path / "operations" / "telemetry"
-    log.mkdir(parents=True)
-    (log / "log.jsonl").write_text(
-        '{"task_id": "broken"}\n', encoding="utf-8")
-    with pytest.raises(TaskError):
-        read_telemetry(tmp_path)
