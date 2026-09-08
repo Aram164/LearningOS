@@ -50,6 +50,7 @@ from learning_os.commands.capability import cmd_capability  # noqa: E402
 from learning_os.commands.capture import cmd_capture  # noqa: E402
 from learning_os.commands.detour import cmd_detour_create, cmd_detour_resolve  # noqa: E402
 from learning_os.commands.garden import cmd_garden_seed_create  # noqa: E402
+from learning_os.commands.intelligence import cmd_intelligence_scan  # noqa: E402
 from learning_os.commands.material import (  # noqa: E402
     cmd_module_materials_compact,
     cmd_plan_edit_context,
@@ -161,6 +162,11 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--offset", type=int, default=0)
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_search)
+
+    p = sub.add_parser("intelligence-scan", help="read-only observation loop: propose candidate investigations")
+    p.add_argument("--days", type=int, default=30, help="recency window for changed files (default: 30)")
+    p.add_argument("--json", action="store_true", help="machine-readable output")
+    p.set_defaults(func=cmd_intelligence_scan)
 
     p = sub.add_parser("note-read", help="read a bounded segment of a durable note by stable ID")
     p.add_argument("note_id")

@@ -163,6 +163,22 @@ is preflight, and the snapshot guard stays the final word. Readers:
 `tools/learning_os/semantics/changes.py`, proven by
 `tests/test_proof_carrying_change.py`.
 
+## Intelligence scan
+
+OBSERVE → INTERPRET → PROPOSE, then Aram decides queue entry: `los
+intelligence-scan` reads the current world, runs the Phase-3 detectors
+over what it finds, prints candidate investigations, and exits. No
+daemon, no background process, no telemetry database, no automatic
+writes. v1 observes only what the repository already records — changed
+files in a stateless recency window joined to knowledge nodes and
+source definitions, lineage staleness against the revision ledger, and
+derived study-map obligations. Critique points are deliberately
+excluded (an open point is not a work item); question, inspection, and
+correction counts have no observable source and those detectors stay
+caller-fed; dossier freshness has no live-key registry. Readers:
+`tools/learning_os/semantics/scan.py`, proven by
+`tests/test_intelligence_scan.py`.
+
 ## Verified Operator Questions
 
 ~20 question/procedure/expected-property triples under
