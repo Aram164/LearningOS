@@ -125,10 +125,13 @@ nothing here tracks what tasks cost or how models perform. Readers:
 
 Agents rebuild the same context per task; dossiers materialize it once.
 The builder hashes every dependency separately — knowledge map, source
-map, routes, evidence, both contract versions — and addresses the bundle
-as `context://<unit-id>/semantic-dossier@<digest>`: same inputs always
-hit the same key, any move changes exactly its hash plus the digest, and
-a cache file whose content fails its hashes is refused, never served.
+map, routes, evidence content digests, both contract versions — and
+addresses the bundle as `context://<unit-id>/semantic-dossier@<digest>`:
+same inputs always hit the same key, any move changes exactly its hash
+plus the digest, and a cache file whose content fails its hashes is
+refused, never served. Evidence is content-addressed: callers resolve
+each locator to the digest behind it (materials manifest checksums), so
+changed bytes invalidate even when the URI never moves.
 Freshness delegates to `DossierFresh`. Dossiers live under
 `generated/dossiers/`, covered by the existing no-hand-edit path — no
 canonical file may reference them, and the builder plus the store take

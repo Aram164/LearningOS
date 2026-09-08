@@ -32,13 +32,16 @@ ROUTES = [
 ]
 
 
+EVIDENCE = {"material://demo/deck.pdf": "sha256:abc"}
+
+
 def _dossier(**overrides):
     inputs = {
         "unit_id": "unit-aml-l01",
         "knowledge_map": NODES,
         "source_map": MENU,
         "routes": ROUTES,
-        "evidence": ["material://demo/deck.pdf"],
+        "evidence": dict(EVIDENCE),
         "contract_versions": VERSIONS,
     }
     inputs.update(overrides)
@@ -61,6 +64,20 @@ def test_a_cache_hit_returns_the_identical_dossier(tmp_path):
     path = store_dossier(tmp_path, dossier)
     assert path.parent == tmp_path / "generated" / "dossiers"
     assert load_dossier(path) == dossier
+
+
+def test_changed_bytes_invalidate_even_when_the_uri_never_moves():
+    """Content-addressed evidence: the digest, not the locator, is hashed."""
+    before = _dossier()
+    after = _dossier(
+        evidence={"material://demo/deck.pdf": "sha256:def"})
+    assert after.key != before.key
+    changed = {
+        name for name, digest in after.hashes
+        if dict(before.hashes)[name] != digest
+    }
+    assert changed == {"evidence"}
+    assert is_fresh(before, dict(after.hashes)) is False
 
 
 def test_one_route_change_invalidates_exactly_its_hash():
@@ -115,7 +132,7 @@ def test_building_and_storing_touch_no_canonical_inputs(tmp_path):
         knowledge_map={"nodes": []},
         source_map={"routes": []},
         routes=[],
-        evidence=[],
+        evidence={},
         contract_versions=VERSIONS,
     )
     store_dossier(tmp_path, dossier)
@@ -138,8 +155,18 @@ def test_malformed_inputs_refuse():
             contract_versions={"semantic-contract": "2"})
     with pytest.raises(DossierError):
         compute_hashes(
-            knowledge_map={}, source_map={}, routes=[], evidence=[],
+            knowledge_map={}, source_map={}, routes=[], evidence={},
             contract_versions={})
+    with pytest.raises(DossierError):
+        build_dossier(
+            unit_id="u", knowledge_map={}, source_map={}, routes=[],
+            evidence=["material://demo/deck.pdf"],
+            contract_versions=VERSIONS)
+    with pytest.raises(DossierError):
+        build_dossier(
+            unit_id="u", knowledge_map={}, source_map={}, routes=[],
+            evidence={"material://demo/deck.pdf": ""},
+            contract_versions=VERSIONS)
 
 
 def test_cache_filenames_carry_the_digest_not_just_the_unit(tmp_path):
