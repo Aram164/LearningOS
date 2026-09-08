@@ -5,7 +5,9 @@ exits. Filing anything into the proposal queue is the operator's job."""
 from __future__ import annotations
 
 import json
+import sys
 
+from learning_os.githistory import GitHistoryError
 from learning_os.semantics.goals import goal_to_dict
 from learning_os.semantics.scan import intelligence_scan
 
@@ -18,7 +20,11 @@ def cmd_intelligence_scan(args) -> int:
         print("intelligence scan: --days is never negative")
         return 2
     root = _root(args)
-    goals = intelligence_scan(root, days=args.days)
+    try:
+        goals = intelligence_scan(root, days=args.days)
+    except GitHistoryError as exc:
+        print(f"intelligence scan: cannot read Git history: {exc}", file=sys.stderr)
+        return 2
     if args.json:
         print(json.dumps(
             {"goals": [goal_to_dict(goal) for goal in goals]},

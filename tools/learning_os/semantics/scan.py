@@ -11,9 +11,11 @@ v1 observes what the repository already records and nothing else:
   knowledge nodes (changed unit files) and source definitions (changed
   source-map files), fed to the covering-routes and changed-source
   detectors;
-- lineage staleness via the revision ledger, with moved keys as
-  evidence (hash moves have no oracle yet: records are compared
-  against their own hashes, so only revision and contract moves flag);
+- lineage staleness via the revision ledger plus live evidence bytes,
+  with moved keys as evidence (manifest digests and repo-file bytes are
+  re-resolved; a hash compared to itself is not validation, so missing
+  or unreadable evidence fails closed while unrelated claims stay
+  unchanged);
 - study-map obligations derived per unit, one definition with the
   producer.
 
@@ -27,6 +29,8 @@ Phase 5 left serving as operator wiring).
 
 from __future__ import annotations
 
+import hashlib
+import math
 import time
 from collections.abc import Sequence
 from dataclasses import dataclass
@@ -34,15 +38,16 @@ from pathlib import Path
 
 import yaml
 
-from ..githistory import GitHistoryError, last_commit_timestamps
+from ..githistory import last_commit_timestamps
 from ..loader import load_repo
+from ..pathing import PathBoundaryError, resolve_symlinks_inside
 from .goals import (
     CandidateGoal,
     detect_covering_routes_stale,
     detect_source_changed_under_claim,
 )
-from .lineage import load_ledger
-from .predicates import CONTRACT_VERSION, claim_stale, needs_study_map
+from .lineage import load_ledger, refresh
+from .predicates import CONTRACT_VERSION, needs_study_map
 
 #: Revision ledger: the current-revisions source for staleness.
 REVISIONS_RELATIVE = "operations/transactions/revisions.yaml"
@@ -97,7 +102,7 @@ def scan_observations(observations: ScanInput) -> tuple[CandidateGoal, ...]:
         goals.append(_emit(
             goal_id, "lineage-stale",
             f"Re-judge {claim_id}: lineage reads moved",
-            f"Revision moves under {claim_id} ({', '.join(moved)}); "
+            f"Dependencies changed or cannot be verified for {claim_id} ({', '.join(moved)}); "
             "the claim is stale until re-judged.",
             [f"claim:{claim_id}",
              *(f"moved:{key}" for key in moved)],
@@ -124,19 +129,50 @@ def _read_yaml(path: Path):
         return None
 
 
+def _normalize_timestamp(value: object) -> float | None:
+    """Normalize one Git timestamp to epoch seconds.
+
+    The history provider returns integer strings; legitimate numeric
+    inputs are accepted as well. Booleans, malformed strings,
+    non-finite values and other types are rejected explicitly — never
+    coerced to zero — so a bad value cannot masquerade as an old change.
+    """
+    if isinstance(value, bool):
+        return None
+    if isinstance(value, (int, float)):
+        candidate = float(value)
+    elif isinstance(value, str):
+        text = value.strip()
+        if not text:
+            return None
+        try:
+            candidate = float(text)
+        except ValueError:
+            return None
+    else:
+        return None
+    if not math.isfinite(candidate):
+        return None
+    return candidate
+
+
 def _changed_files(root: Path, *, days: int) -> tuple[str, ...]:
-    """Canonical files moved in the window. Git history is the only
-    change feed; a repository without readable history observes nothing
-    rather than failing."""
-    try:
-        stamps = last_commit_timestamps(str(root))
-    except GitHistoryError:
-        return ()
+    """Canonical files moved in the window.
+
+    Git history is the only change feed. A repository without history
+    (plain export, unborn branch, empty log) observes nothing. An
+    unreadable history raises ``GitHistoryError`` so the caller can
+    report unavailable observations instead of presenting them as no
+    changes.
+    """
+    stamps = last_commit_timestamps(str(root))
     cutoff = time.time() - max(days, 0) * 86400
-    return tuple(sorted(
-        rel for rel, stamp in stamps.items()
-        if isinstance(stamp, (int, float)) and stamp >= cutoff
-    ))
+    recent: list[str] = []
+    for rel, stamp in stamps.items():
+        normalized = _normalize_timestamp(stamp)
+        if normalized is not None and normalized >= cutoff:
+            recent.append(rel)
+    return tuple(sorted(recent))
 
 
 def _nodes_in_unit_file(root: Path, rel: str) -> tuple[str, ...]:
@@ -199,6 +235,48 @@ def _route_covers(repo) -> dict[str, list[str]]:
     return covers
 
 
+def _route_sources(repo) -> dict[str, str]:
+    """Route id to owning source id, from the loaded source maps.
+
+    Only exact, unambiguous ownership counts: a route id claimed by
+    zero sources — or by more than one — resolves to no owner, so the
+    scan never invents source ownership from filename or digest-key
+    spelling.
+    """
+    owners: dict[str, str] = {}
+    ambiguous: set[str] = set()
+    maps = getattr(repo, "module_source_maps", {}) or {}
+    for smap in maps.values():
+        if not isinstance(smap, dict):
+            continue
+        sources = smap.get("sources")
+        if not isinstance(sources, list):
+            continue
+        for src in sources:
+            if not isinstance(src, dict):
+                continue
+            sid = src.get("source_id")
+            if not isinstance(sid, str) or not sid.strip():
+                continue
+            routes = src.get("unit_routes")
+            if not isinstance(routes, list):
+                continue
+            for route in routes:
+                if not isinstance(route, dict):
+                    continue
+                rid = route.get("id")
+                if not isinstance(rid, str) or not rid:
+                    continue
+                if rid in ambiguous:
+                    continue
+                if rid in owners and owners[rid] != sid:
+                    del owners[rid]
+                    ambiguous.add(rid)
+                else:
+                    owners[rid] = sid
+    return owners
+
+
 def _current_revisions(root: Path) -> dict[str, int]:
     data = _read_yaml(root / REVISIONS_RELATIVE)
     if not isinstance(data, dict):
@@ -212,9 +290,46 @@ def _current_revisions(root: Path) -> dict[str, int]:
         return {}
 
 
+def _scan_manifest_files(root: Path) -> dict:
+    """Live materials-manifest files map, or {} when unreadable."""
+    data = _read_yaml(root / "records" / "materials-manifest.yaml")
+    files = data.get("files") if isinstance(data, dict) else None
+    return files if isinstance(files, dict) else {}
+
+
+def live_evidence_digest(root: Path, key: str, manifest_files: dict) -> str | None:
+    """Resolve one stored source-hash key against live bytes.
+
+    Mirrors the Phase B digest binding in ``commands.module``: manifest keys
+    read the registered checksum, file keys hash current bytes inside the
+    repository. Returns ``None`` when the dependency is missing, escapes,
+    unreadable, or in an unknown namespace. Callers treat ``None`` as
+    stale: an unsupported namespace has no trustworthy live value.
+    """
+    if key.startswith("manifest:"):
+        ref = key[len("manifest:"):]
+        entry = manifest_files.get(ref)
+        digest = entry.get("sha256") if isinstance(entry, dict) else None
+        return digest if isinstance(digest, str) and digest.strip() else None
+    if key.startswith("file:"):
+        ref = key[len("file:"):]
+        try:
+            candidate = resolve_symlinks_inside(root, root / ref)
+            return "sha256:" + hashlib.sha256(
+                candidate.read_bytes()).hexdigest()
+        except (OSError, PathBoundaryError):
+            return None
+    return None
+
+
 def collect_observations(root: Path | str, *,
                          days: int = DEFAULT_DAYS) -> ScanInput:
-    """OBSERVE: read the current world. No writes, no queue, no memory."""
+    """OBSERVE: read the current world. No writes, no queue, no memory.
+
+    Raises ``GitHistoryError`` when Git history is unreadable, so the
+    caller can report unavailable observations instead of presenting
+    them as no changes.
+    """
     root = Path(root)
     changed = _changed_files(root, days=days)
     nodes: set[str] = set()
@@ -222,26 +337,46 @@ def collect_observations(root: Path | str, *,
     for rel in changed:
         nodes.update(_nodes_in_unit_file(root, rel))
         sources.update(_sources_in_source_map(root, rel))
+    repo = load_repo(root)
+    route_sources = _route_sources(repo)
     records = load_ledger(root)
     current = _current_revisions(root)
+    manifest_files = _scan_manifest_files(root)
     claim_sources: dict[str, list[str]] = {}
     stale: list[tuple[str, tuple[str, ...]]] = []
     for claim_id, lineage in records.items():
         reads = dict(lineage.derived_from.revisions)
-        claim_sources[claim_id] = sorted(
-            str(key) for key, _ in lineage.derived_from.source_hashes)
+        stored_hashes = dict(lineage.derived_from.source_hashes)
+        # Source ownership comes from exact route identity in the loaded
+        # source maps — never from intersecting source ids with file: or
+        # manifest: digest keys. Only route-covers claims earn ownership;
+        # every other family (or an unresolved route) pins nothing, while
+        # the independent revision/hash staleness path below still applies.
+        if claim_id.startswith("covers:"):
+            owner = route_sources.get(claim_id[len("covers:"):])
+            claim_sources[claim_id] = [owner] if owner else []
+        else:
+            claim_sources[claim_id] = []
+        # Live evidence bytes: resolve manifest/file hashes the same way
+        # Phase B bound them. Missing or unreadable evidence fails closed;
+        # unknown namespaces also have no verifiable live value.
+        live_hashes: dict[str, str] = {}
+        for key in stored_hashes:
+            live = live_evidence_digest(root, key, manifest_files)
+            if live is not None:
+                live_hashes[key] = live
         moved = sorted(
             key for key, rev in reads.items() if current.get(key) != rev)
+        moved = sorted(set(moved) | {
+            key for key, old in stored_hashes.items()
+            if live_hashes.get(key) != old
+        })
         if lineage.derived_from.contract_version != CONTRACT_VERSION:
             moved = sorted(set(moved) | {"contract-version"})
-        if claim_stale(
-            read_contract_version=lineage.derived_from.contract_version,
-            current_contract_version=CONTRACT_VERSION,
-            read_revisions=reads,
-            current_revisions=current,
-        ):
+        if refresh(
+            lineage, CONTRACT_VERSION, current, live_hashes,
+        ).status == "stale":
             stale.append((claim_id, tuple(moved)))
-    repo = load_repo(root)
     study_map_units = set()
     for smap in (getattr(repo, "study_maps", {}) or {}).values():
         unit_id = getattr(smap, "unit_id", None)
