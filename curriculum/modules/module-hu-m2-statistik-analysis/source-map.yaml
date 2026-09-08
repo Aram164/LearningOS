@@ -684,8 +684,8 @@ sources:
     angle_detail: The Gaussian-error derivation at the end is the intellectual centre of the statistics
       half — it is where L03's least-squares choice is finally justified — and it arrives after the CLT
       material when attention is lowest. Budget a separate session for the likelihood slides. The LLN-versus-CLT
-      slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14 and Ch 21 cover
-      both halves in the same notation.
+      slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14, Ch 21, and §22.3
+      cover both halves in the same notation.
   - id: route-86a1ed6bed9d05cc93b50bad
     unit_id: unit-m2-sad-l09
     title: Current L09 estimation deck
@@ -4967,9 +4967,10 @@ sources:
     unit_id: unit-m2-sad-l08
     title: Dekking — Normal and CLT exercises
     format: exercise
-    angle: The one route that covers both halves of L08 — the limit theorems and maximum likelihood —
-      in the same book and notation.
+    angle: Covers both halves of L08 — the limit theorems and maximum likelihood — in the same book and
+      notation.
     covers:
+    - knowledge-sad-l08-normal
     - knowledge-sad-l08-standardization
     - knowledge-sad-l08-transform-sum
     - knowledge-sad-l08-clt
@@ -5389,6 +5390,8 @@ sources:
     - knowledge-sad-l08-standardization
     - knowledge-sad-l08-clt
     - knowledge-sad-l08-approximation
+    - knowledge-sad-l08-likelihood
+    - knowledge-sad-l08-mle
     depth: practice
     scope: complementary
     locator: 'Classes: Reading and In-class Materials: the ''Central Limit Theorem and the Law of Large
@@ -6612,8 +6615,6 @@ sources:
       problem by problem.
     covers:
     - knowledge-sad-l08-standardization
-    - knowledge-sad-l08-transform-sum
-    - knowledge-sad-l08-clt
     - knowledge-sad-l08-approximation
     depth: practice
     scope: complementary
