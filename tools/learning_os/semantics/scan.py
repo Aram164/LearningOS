@@ -46,7 +46,7 @@ from .goals import (
     detect_covering_routes_stale,
     detect_source_changed_under_claim,
 )
-from .lineage import load_ledger, refresh
+from .lineage import effective_statuses, load_ledger
 from .predicates import CONTRACT_VERSION, needs_study_map
 
 #: Revision ledger: the current-revisions source for staleness.
@@ -344,6 +344,19 @@ def collect_observations(root: Path | str, *,
     manifest_files = _scan_manifest_files(root)
     claim_sources: dict[str, list[str]] = {}
     stale: list[tuple[str, tuple[str, ...]]] = []
+    # Each stored evidence key is resolved against live bytes once per
+    # collection: shared evidence is read once no matter how many
+    # dependent claims pin it. Unresolvable keys stay absent and fail
+    # closed downstream, exactly as before.
+    live_all: dict[str, str] = {}
+    for lineage in records.values():
+        for key in dict(lineage.derived_from.source_hashes):
+            if key not in live_all:
+                live = live_evidence_digest(root, key, manifest_files)
+                if live is not None:
+                    live_all[key] = live
+    effective = effective_statuses(
+        records, CONTRACT_VERSION, current, dict(live_all))
     for claim_id, lineage in records.items():
         reads = dict(lineage.derived_from.revisions)
         stored_hashes = dict(lineage.derived_from.source_hashes)
@@ -360,11 +373,9 @@ def collect_observations(root: Path | str, *,
         # Live evidence bytes: resolve manifest/file hashes the same way
         # Phase B bound them. Missing or unreadable evidence fails closed;
         # unknown namespaces also have no verifiable live value.
-        live_hashes: dict[str, str] = {}
-        for key in stored_hashes:
-            live = live_evidence_digest(root, key, manifest_files)
-            if live is not None:
-                live_hashes[key] = live
+        live_hashes = {
+            key: live_all[key] for key in stored_hashes if key in live_all
+        }
         moved = sorted(
             key for key, rev in reads.items() if current.get(key) != rev)
         moved = sorted(set(moved) | {
@@ -373,10 +384,12 @@ def collect_observations(root: Path | str, *,
         })
         if lineage.derived_from.contract_version != CONTRACT_VERSION:
             moved = sorted(set(moved) | {"contract-version"})
-        if refresh(
-            lineage, CONTRACT_VERSION, current, live_hashes,
-        ).status == "stale":
-            stale.append((claim_id, tuple(moved)))
+        verdict = effective[claim_id]
+        if verdict.status == "stale":
+            stale.append((
+                claim_id,
+                tuple(sorted(set(moved) | set(verdict.blocked_by))),
+            ))
     study_map_units = set()
     for smap in (getattr(repo, "study_maps", {}) or {}).values():
         unit_id = getattr(smap, "unit_id", None)

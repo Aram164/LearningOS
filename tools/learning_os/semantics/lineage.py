@@ -100,6 +100,21 @@ class ClaimLineage:
     supersedes: Mapping[str, object] | None = None
 
 
+@dataclass(frozen=True)
+class EffectiveStatus:
+    """One claim's ledger-wide verdict, computed never stored.
+
+    In-memory only: ``status`` reuses the existing lineage states and
+    ``blocked_by`` names the nearest assumed claims that are not
+    effectively supported (empty when the claim stands on its own reads
+    or carries its own explicit state).
+    """
+
+    claim_id: str
+    status: str
+    blocked_by: tuple[str, ...] = ()
+
+
 def _reads(lineage: ClaimLineage) -> dict[str, int]:
     return dict(lineage.derived_from.revisions)
 
@@ -266,6 +281,10 @@ def refresh(
     judgment, and only a fresh judgment lifts it. Otherwise the status
     follows the reads: supported while everything matches, stale the
     moment anything moved.
+
+    Single-claim scope: only this claim's own reads are examined. A claim
+    that is fresh here can still be stale ledger-wide through its
+    assumptions — use ``effective_statuses`` for the transitive verdict.
     """
     if lineage.status in ("contested", "withdrawn"):
         return lineage
@@ -275,6 +294,81 @@ def refresh(
     )
     status = "supported" if fresh else "stale"
     return replace(lineage, status=status)
+
+
+def _assumption_order(records: Mapping[str, ClaimLineage]) -> tuple[str, ...]:
+    """Claim ids with assumptions before dependents, deterministic.
+
+    Kahn's algorithm over validated edges — ``check_assumptions`` has
+    already refused missing references and cycles — drawing from a sorted
+    ready set so the order, and everything computed from it, is stable.
+    """
+    remaining = {
+        claim_id: sorted(lineage.derived_from.assumes)
+        for claim_id, lineage in records.items()
+    }
+    dependents: dict[str, list[str]] = {}
+    for claim_id, deps in remaining.items():
+        for dep in deps:
+            dependents.setdefault(dep, []).append(claim_id)
+    ready = sorted(
+        claim_id for claim_id, deps in remaining.items() if not deps)
+    order: list[str] = []
+    while ready:
+        node = ready.pop(0)
+        order.append(node)
+        for dependent in sorted(dependents.get(node, ())):
+            remaining[dependent].remove(node)
+            if not remaining[dependent]:
+                ready.append(dependent)
+        ready.sort()
+    return tuple(order)
+
+
+def effective_statuses(
+    records: Mapping[str, ClaimLineage],
+    current_contract_version: int,
+    current_revisions: Mapping[str, int],
+    current_source_hashes: Mapping[str, str] | None = None,
+) -> dict[str, EffectiveStatus]:
+    """Ledger-wide freshness over the validated assumption DAG. Pure.
+
+    Direct freshness comes from the existing single-claim logic; a claim
+    whose required assumptions are not effectively supported is stale no
+    matter what its own reads say, with the blocking assumptions named.
+    Explicit ``contested``/``withdrawn`` states are preserved as-is — this
+    never withdraws anything and changes no canonical data. Recomputed
+    from scratch on every call, so a fresh root restores a merely derived
+    stale verdict while explicit withdrawal still needs fresh judgment.
+    Missing references and cycles raise ``LineageError`` through
+    ``check_assumptions``.
+    """
+    check_assumptions(records)
+    hashes = current_source_hashes or {}
+    direct = {
+        claim_id: refresh(
+            lineage, current_contract_version, current_revisions, hashes,
+        ).status
+        for claim_id, lineage in records.items()
+    }
+    verdicts: dict[str, EffectiveStatus] = {}
+    for claim_id in _assumption_order(records):
+        lineage = records[claim_id]
+        if lineage.status in ("contested", "withdrawn"):
+            verdicts[claim_id] = EffectiveStatus(
+                claim_id, lineage.status, ())
+            continue
+        blockers = sorted(
+            dep for dep in lineage.derived_from.assumes
+            if verdicts[dep].status != "supported"
+        )
+        if blockers:
+            verdicts[claim_id] = EffectiveStatus(
+                claim_id, "stale", tuple(blockers))
+        else:
+            verdicts[claim_id] = EffectiveStatus(
+                claim_id, direct[claim_id], ())
+    return verdicts
 
 
 def contest(

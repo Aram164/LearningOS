@@ -328,3 +328,76 @@ def test_scan_recency_and_source_join_use_real_git_history(mini_repo, monkeypatc
     finally:
         githistory.last_commit_dates.cache_clear()
         githistory.last_commit_timestamps.cache_clear()
+
+
+def test_scan_proposes_dependent_revalidation_after_evidence_moves(
+    mini_repo, monkeypatch,
+):
+    """Phase 2: B assumes A; A's evidence moves; both are proposed.
+
+    B's own reads never move, so its proposal proves transitive
+    evaluation rather than direct staleness. Both claims pin evidence
+    through the shared resolver exactly once per key.
+    """
+    import hashlib
+
+    from learning_os.semantics import scan as scan_module
+    from learning_os.semantics.lineage import dump_ledger, record_claim
+    from learning_os.semantics.scan import collect_observations
+
+    for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR"):
+        monkeypatch.delenv(name, raising=False)
+    evidence = mini_repo / "work/evidence.md"
+    stable = mini_repo / "work/stable.md"
+    evidence.write_text("v1", encoding="utf-8")
+    stable.write_text("constant", encoding="utf-8")
+
+    def digest(path):
+        return "sha256:" + hashlib.sha256(
+            path.read_bytes()).hexdigest()
+
+    admission = {"request_id": "dep", "idempotency_key": "dep"}
+    moving = record_claim(
+        claim_id="scope:proof:a", claim_kind="scope-authority",
+        statement="A holds.", source_hashes={"file:work/evidence.md": digest(evidence)},
+        judged_by="fixture", admitted_by=admission,
+    )
+    dependent = record_claim(
+        claim_id="scope:proof:b", claim_kind="scope-authority",
+        statement="B holds given A.",
+        source_hashes={"file:work/stable.md": digest(stable)},
+        judged_by="fixture", admitted_by=admission,
+        assumes=["scope:proof:a"],
+    )
+    ledger = mini_repo / "operations/transactions/lineage.yaml"
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    ledger.write_text(
+        dump_ledger({moving.claim_id: moving, dependent.claim_id: dependent}),
+        encoding="utf-8")
+    assert collect_observations(mini_repo, days=0).stale_claims == ()
+
+    calls: list[str] = []
+    real_digest = scan_module.live_evidence_digest
+
+    def counting(root, key, manifest):
+        calls.append(key)
+        return real_digest(root, key, manifest)
+
+    monkeypatch.setattr(scan_module, "live_evidence_digest", counting)
+    evidence.write_text("v2", encoding="utf-8")
+    obs = collect_observations(mini_repo, days=0)
+    assert sorted(calls) == ["file:work/evidence.md", "file:work/stable.md"]
+    assert dict(obs.stale_claims) == {
+        "scope:proof:a": ("file:work/evidence.md",),
+        "scope:proof:b": ("scope:proof:a",),
+    }
+    assert {goal.goal_id for goal in scan_observations(obs)} == {
+        "lineage-stale:scope:proof:a", "lineage-stale:scope:proof:b"}
+
+    proc = subprocess.run(
+        [sys.executable, str(LOS), "--root", str(mini_repo),
+         "intelligence-scan", "--json"],
+        capture_output=True, text=True, timeout=180)
+    assert proc.returncode == 0, proc.stderr
+    assert {goal["goal_id"] for goal in json.loads(proc.stdout)["goals"]} == {
+        "lineage-stale:scope:proof:a", "lineage-stale:scope:proof:b"}
