@@ -8,6 +8,12 @@ same key (cache hit); any dependency move changes exactly its hash and the
 overall digest (invalidation); a cache file whose content no longer matches
 its hashes is refused rather than served (poisoning guard).
 
+Evidence is content-addressed: the caller resolves each locator to the
+content digest behind it (via the materials manifest checksums, never by
+the builder — this module takes explicit inputs and never walks the
+repository), so changed bytes invalidate even when the URI never moves.
+Hashing locator strings alone would miss exactly that.
+
 Dossiers live under ``generated/dossiers/`` — rebuilt views, never
 hand-edited, covered by the existing no-hand-edit path: no canonical file
 may reference them, and the builder plus the store take explicit paths and
@@ -74,33 +80,41 @@ def compute_hashes(
     knowledge_map: Mapping[str, object],
     source_map: Mapping[str, object],
     routes: Sequence[Mapping[str, object]],
-    evidence: Sequence[str],
+    evidence: Mapping[str, str],
     contract_versions: Mapping[str, str],
 ) -> dict[str, str]:
-    """Hash every dossier dependency separately. Total shape, hashed parts."""
+    """Hash every dossier dependency separately. Total shape, hashed parts.
+
+    ``evidence`` maps each locator to the content digest behind it,
+    resolved by the caller: same URI with changed bytes must hash
+    differently, which locator strings alone cannot do.
+    """
     if not isinstance(knowledge_map, Mapping) \
             or not isinstance(source_map, Mapping):
         raise DossierError("knowledge map and source map come as mappings")
     if isinstance(routes, str) or not isinstance(routes, Sequence):
         raise DossierError("routes come as a list of mappings")
-    if isinstance(evidence, str) or not isinstance(evidence, Sequence):
-        raise DossierError("evidence comes as a list of locators")
+    if not isinstance(evidence, Mapping):
+        raise DossierError("evidence comes as a locator-to-digest mapping")
     if not isinstance(contract_versions, Mapping) or not contract_versions:
         raise DossierError("contract versions come as a non-empty mapping")
     try:
         route_rows = [dict(route) for route in routes]
-        trails = [str(locator) for locator in evidence]
+        trails = {str(locator): str(digest)
+                  for locator, digest in evidence.items()}
         versions = {str(key): str(value)
                     for key, value in contract_versions.items()}
     except (TypeError, ValueError) as exc:
         raise DossierError(f"malformed dossier inputs: {exc}") from exc
+    if any(not digest for digest in trails.values()):
+        raise DossierError("evidence digests are never blank")
     if any(not version for version in versions.values()):
         raise DossierError("contract versions are never blank")
     hashes = {
         "knowledge-map": _digest(knowledge_map),
         "source-map": _digest(source_map),
         "routes": _digest(route_rows),
-        "evidence": _digest(trails),
+        "evidence": _digest(sorted(trails.items())),
     }
     for name in ("semantic-contract", "operator-contract"):
         if name not in versions:
@@ -119,7 +133,7 @@ def build_dossier(
     knowledge_map: Mapping[str, object],
     source_map: Mapping[str, object],
     routes: Sequence[Mapping[str, object]],
-    evidence: Sequence[str] = (),
+    evidence: Mapping[str, str] | None = None,
     contract_versions: Mapping[str, str] | None = None,
 ) -> Dossier:
     """Assemble and hash one dossier. Pure: same inputs, same key."""
@@ -127,11 +141,17 @@ def build_dossier(
         raise DossierError("a dossier needs a non-empty unit id")
     versions = dict(contract_versions or {})
     versions.setdefault("semantic-contract", str(CONTRACT_VERSION))
+    if evidence is None:
+        trails: Mapping[str, str] = {}
+    elif not isinstance(evidence, Mapping):
+        raise DossierError("evidence comes as a locator-to-digest mapping")
+    else:
+        trails = evidence
     hashes = compute_hashes(
         knowledge_map=knowledge_map,
         source_map=source_map,
         routes=routes,
-        evidence=evidence,
+        evidence=trails,
         contract_versions=versions,
     )
     content = (
@@ -139,7 +159,8 @@ def build_dossier(
         ("knowledge-map", json.loads(_canonical(knowledge_map))),
         ("source-map", json.loads(_canonical(source_map))),
         ("routes", json.loads(_canonical([dict(route) for route in routes]))),
-        ("evidence", [str(locator) for locator in evidence]),
+        ("evidence", {str(locator): str(digest)
+                      for locator, digest in trails.items()}),
         ("contracts", versions),
     )
     digest = _overall_digest(hashes)
