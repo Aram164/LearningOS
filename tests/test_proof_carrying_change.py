@@ -48,17 +48,30 @@ def _envelope(**overrides):
         "expected_snapshot": SNAPSHOT,
         "postconditions": [{
             "predicate": "StudyMapGrounded",
-            "inputs": {
-                "template_version": 1,
-                "resource_pairs": [["source-a", "ch 1"]],
-                "menu_pairs": [["source-a", "ch 1"]],
-            },
+            "selector": "study-map:unit-aml-l01",
             "op": "is_true",
         }],
         "validation_plan": ["make check", "warning-baseline"],
     }
     fields.update(overrides)
     return build_envelope(**fields)
+
+
+GROUNDED_MAP = {
+    "template_version": 1,
+    "resource_pairs": [["source-a", "ch 1"]],
+    "menu_pairs": [["source-a", "ch 1"]],
+}
+CLEAN_REPO = {"error_count": 0, "new_or_grown_warnings": 0}
+
+
+def _live(**overrides):
+    world = {
+        "study-map:unit-aml-l01": dict(GROUNDED_MAP),
+        "validation": dict(CLEAN_REPO),
+    }
+    world.update(overrides)
+    return world
 
 
 def _context(**overrides):
@@ -81,7 +94,7 @@ def test_a_good_envelope_admits_with_one_receipt_worth_of_reasons():
     decision = admit(_envelope(), _context())
     assert decision.verdict == "admit"
     assert len(decision.reasons) == 1
-    results = verify_postconditions(_envelope())
+    results = verify_postconditions(_envelope(), _live())
     assert [(result.predicate, result.passed) for result in results] == [
         ("StudyMapGrounded", True)]
 
@@ -184,37 +197,44 @@ def test_ledger_lineage_decides_not_envelope_claims():
 
 def test_uncheckable_postconditions_replan():
     envelope = _envelope(postconditions=[{
-        "predicate": "Nope", "inputs": {}, "op": "is_true",
+        "predicate": "Nope", "selector": "validation", "op": "is_true",
     }])
     decision = admit(envelope, _context())
     assert decision.verdict == "replan"
     envelope = _envelope(postconditions=[{
-        "predicate": "RepoClean", "inputs": {}, "op": "eventually",
+        "predicate": "RepoClean", "selector": "validation", "op": "eventually",
     }])
     assert admit(envelope, _context()).verdict == "replan"
 
 
-def test_failing_postconditions_report_per_check():
+def test_postconditions_read_the_live_world_not_the_promise():
+    """The reviewer's scenario: a promised RepoClean fails on a dirty repo.
+
+    The envelope fixes nothing — the same envelope passes against a
+    clean post-apply world and fails against a dirty one. Predetermined
+    inputs cannot fake it because there are no predetermined inputs.
+    """
     envelope = _envelope(postconditions=[
-        {
-            "predicate": "StudyMapGrounded",
-            "inputs": {
-                "template_version": 1,
-                "resource_pairs": [["source-a", "ch 1"]],
-                "menu_pairs": [["source-a", "ch 1"]],
-            },
-            "op": "is_true",
-        },
-        {
-            "predicate": "RepoClean",
-            "inputs": {"error_count": 3, "new_or_grown_warnings": 0},
-            "op": "is_true",
-        },
+        {"predicate": "StudyMapGrounded",
+         "selector": "study-map:unit-aml-l01", "op": "is_true"},
+        {"predicate": "RepoClean",
+         "selector": "validation", "op": "is_true"},
     ])
     assert admit(envelope, _context()).verdict == "admit"
     assert [(result.predicate, result.passed)
-            for result in verify_postconditions(envelope)] == [
+            for result in verify_postconditions(envelope, _live())] == [
+        ("StudyMapGrounded", True), ("RepoClean", True)]
+    dirty = _live(validation={"error_count": 3, "new_or_grown_warnings": 0})
+    assert [(result.predicate, result.passed)
+            for result in verify_postconditions(envelope, dirty)] == [
         ("StudyMapGrounded", True), ("RepoClean", False)]
+
+
+def test_unobserved_selectors_raise_instead_of_passing():
+    """A promised observation the harness never made is a harness bug."""
+    envelope = _envelope()
+    with pytest.raises(ChangeError):
+        verify_postconditions(envelope, {})
 
 
 def test_malformed_envelopes_refuse_at_construction():
@@ -230,6 +250,10 @@ def test_malformed_envelopes_refuse_at_construction():
         _envelope(evidence="material://demo/deck.pdf")
     with pytest.raises(ChangeError):
         _envelope(postconditions=[{"predicate": "RepoClean"}])
+    with pytest.raises(ChangeError):
+        _envelope(postconditions=[{
+            "predicate": "RepoClean", "selector": "  ", "op": "is_true",
+        }])
 
 
 def test_malformed_contexts_refuse_at_construction():

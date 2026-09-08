@@ -140,14 +140,18 @@ explicit paths and never walk the repository. Readers:
 
 Every semantic mutation arrives with its proof: intent, scope, read set
 with revisions, claim ids, bare evidence references, the write set with
-its capability, the snapshot read, promised postconditions, and a
-validation plan. The envelope carries no approval, no lineage verdicts,
-no digests — those are structurally unstatable in it. Deterministic
-admission runs before any gateway apply against a trusted context the
-agent never touches: session authorization, the capability contract
-(declared scopes ground every write scope), the live lineage ledger,
-harness-resolved evidence, current revisions, and the current snapshot.
-Anything else returns conflict, replan, or deny, never an overwrite.
+its capability, the snapshot read, postconditions bound to harness
+observations, and a validation plan. The envelope carries no approval,
+no lineage verdicts, no digests, no predicate inputs — those are
+structurally unstatable in it. Deterministic admission runs before any
+gateway apply against a trusted context the agent never touches:
+session authorization, the capability contract (declared scopes ground
+every write scope), the live lineage ledger, harness-resolved evidence,
+current revisions, and the current snapshot. After the gateway applies,
+postconditions evaluate against live observations the harness supplies —
+a promised RepoClean passes only when the actual repository validates
+clean. Anything else returns conflict, replan, or deny, never an
+overwrite.
 Conflicting writes cannot both succeed: the second read loses its
 snapshot race by construction. The gateway still applies; the envelope
 is preflight, and the snapshot guard stays the final word. Readers:
