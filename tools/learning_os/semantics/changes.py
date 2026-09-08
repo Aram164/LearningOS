@@ -1,15 +1,20 @@
 """Phase-6 proof-carrying change: every mutation arrives with its proof.
 
-An envelope states intent, scope, the reads it depended on, the claims it
-believes with their evidence, the writes it wants (capability plus target),
-the snapshot it read, the postconditions it promises, and the validation
-it will run. Admission is deterministic and runs before any gateway
-apply: evidence must resolve, reads must be fresh, the snapshot must
-match, every claim must carry supported lineage, every write must sit
-inside an Aram-approved scope, and every postcondition must be
-well-formed. Anything else returns conflict, replan, or deny — never an
-overwrite. The gateway still applies; the envelope is preflight, not an
-alternative path, and the snapshot guard stays the final word.
+An envelope states claims, not verdicts about those claims: intent,
+scope, the reads it depended on, the claim ids it relies on, bare
+evidence references, the writes it wants (capability plus target), the
+snapshot it read, the postconditions it promises, and the validation it
+will run. Admission is deterministic and runs before any gateway apply,
+against a trusted context the agent never touches: session
+authorization, the capability contract, the live lineage ledger,
+harness-resolved evidence, current revisions, and the current snapshot.
+Evidence must resolve, reads must be fresh, the snapshot must match,
+every claim must read supported in the live ledger, every write must sit
+inside an Aram-approved scope grounded in the capability contract, and
+every postcondition must be well-formed. Anything else returns conflict,
+replan, or deny — never an overwrite. The gateway still applies; the
+envelope is preflight, not an alternative path, and the snapshot guard
+stays the final word.
 """
 
 from __future__ import annotations
@@ -17,6 +22,7 @@ from __future__ import annotations
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 
+from ..contracts.write_scopes import WriteScopeError, scope_matches
 from .predicates import (
     CONTRACT_VERSION,
     PREDICATES,
@@ -65,19 +71,21 @@ class Postcondition:
 
 @dataclass(frozen=True)
 class ChangeEnvelope:
-    """The preflight envelope around one governed mutation."""
+    """The preflight envelope around one governed mutation.
+
+    Claims only: no approval, no lineage verdicts, no digests. Anything
+    the agent asserts about authorization, lineage, or evidence is
+    structurally unstatable here — admission reads those from context.
+    """
 
     intent: str
     scope: tuple[str, ...]
     read_contract_version: int
     read_revisions: tuple[tuple[str, int], ...]
     claims: tuple[str, ...]
-    claim_statuses: tuple[tuple[str, str], ...]
-    evidence: tuple[tuple[str, str | None], ...]
+    evidence: tuple[str, ...]
     writes: tuple[WriteOp, ...]
     expected_snapshot: str
-    approved_by: str
-    approved_capabilities: tuple[str, ...]
     postconditions: tuple[Postcondition, ...]
     validation_plan: tuple[str, ...]
 
@@ -88,6 +96,27 @@ class AdmissionDecision:
 
     verdict: str
     reasons: tuple[str, ...] = ()
+
+
+@dataclass(frozen=True)
+class TrustedContext:
+    """What admission trusts: everything the agent never touches.
+
+    The harness builds this from the live session (who approved, which
+    capabilities), the capability contract (each capability's granted
+    write scopes), the live lineage ledger (claim statuses), resolved
+    evidence digests, and the current revisions, contract version, and
+    snapshot. Tuples throughout, like the envelope.
+    """
+
+    approved_by: str
+    approved_capabilities: tuple[str, ...]
+    capability_scopes: tuple[tuple[str, tuple[str, ...]], ...]
+    claim_statuses: tuple[tuple[str, str], ...]
+    evidence_digests: tuple[tuple[str, str | None], ...]
+    current_contract_version: int
+    current_revisions: tuple[tuple[str, int], ...]
+    current_snapshot: str
 
 
 def _refuse(verdict: str, *reasons: str) -> AdmissionDecision:
@@ -101,30 +130,29 @@ def build_envelope(
     scope: Sequence[str],
     read_revisions: Mapping[str, int],
     claims: Sequence[str],
-    claim_statuses: Mapping[str, str],
-    evidence: Mapping[str, str | None],
+    evidence: Sequence[str],
     writes: Sequence[Mapping[str, object]],
     expected_snapshot: str,
-    approved_by: str,
-    approved_capabilities: Sequence[str],
     postconditions: Sequence[Mapping[str, object]],
     validation_plan: Sequence[str],
     read_contract_version: int = CONTRACT_VERSION,
 ) -> ChangeEnvelope:
-    """Assemble an envelope. Malformed envelopes refuse at construction."""
+    """Assemble an envelope. Malformed envelopes refuse at construction.
+
+    Evidence travels as bare references — locators the harness resolves,
+    never digests the agent asserts.
+    """
     if not isinstance(intent, str) or not intent.strip():
         raise ChangeError("a change needs a stated intent")
     if isinstance(scope, str) or not isinstance(scope, Sequence) or not scope:
         raise ChangeError("a change needs a non-empty scope")
+    if isinstance(evidence, str) or not isinstance(evidence, Sequence):
+        raise ChangeError("change evidence comes as a list of locators")
     try:
         revisions = tuple(sorted(
             (str(key), int(value)) for key, value in read_revisions.items()))
         claim_ids = tuple(str(claim) for claim in claims)
-        statuses = tuple(sorted(
-            (str(key), str(value)) for key, value in claim_statuses.items()))
-        trails = tuple(sorted(
-            (str(locator), (None if digest is None else str(digest)))
-            for locator, digest in evidence.items()))
+        trails = tuple(sorted(str(locator) for locator in evidence))
         ops = tuple(
             WriteOp(
                 capability=str(op["capability"]),
@@ -160,42 +188,122 @@ def build_envelope(
         read_contract_version=read_contract_version,
         read_revisions=revisions,
         claims=claim_ids,
-        claim_statuses=statuses,
         evidence=trails,
         writes=ops,
         expected_snapshot=expected_snapshot,
-        approved_by=str(approved_by),
-        approved_capabilities=tuple(
-            str(name) for name in approved_capabilities),
         postconditions=checks,
         validation_plan=plan,
     )
 
 
-def admit(
-    envelope: ChangeEnvelope,
+def build_trusted_context(
+    *,
+    approved_by: str,
+    approved_capabilities: Sequence[str],
+    capability_scopes: Mapping[str, Sequence[str]],
+    claim_statuses: Mapping[str, str],
+    evidence_digests: Mapping[str, str | None],
     current_contract_version: int,
     current_revisions: Mapping[str, int],
     current_snapshot: str,
-) -> AdmissionDecision:
-    """Run the deterministic admission check. Order is fixed: authority,
-    freshness, evidence, lineage, scope, shape — the first failure wins,
-    because a forbidden change needs no freshness verdict and a stale one
-    needs no scope debate.
+) -> TrustedContext:
+    """Assemble the trusted context. The harness builds this, never the
+    agent: malformed context refuses at construction, like envelopes."""
+    if not isinstance(approved_by, str) or not approved_by:
+        raise ChangeError("trusted context names who approved")
+    if not isinstance(current_snapshot, str) or not current_snapshot:
+        raise ChangeError("trusted context names the current snapshot")
+    if isinstance(current_contract_version, bool) \
+            or not isinstance(current_contract_version, int):
+        raise ChangeError("trusted context versions the contract it read")
+    try:
+        capabilities = tuple(str(name) for name in approved_capabilities)
+        scopes = tuple(sorted(
+            (str(capability), tuple(str(pattern) for pattern in patterns))
+            for capability, patterns in capability_scopes.items()))
+        statuses = tuple(sorted(
+            (str(key), str(value)) for key, value in claim_statuses.items()))
+        digests = tuple(sorted(
+            (str(locator), (None if digest is None else str(digest)))
+            for locator, digest in evidence_digests.items()))
+        revisions = tuple(sorted(
+            (str(key), int(value)) for key, value in current_revisions.items()))
+    except (TypeError, ValueError, AttributeError) as exc:
+        raise ChangeError(f"malformed trusted context: {exc}") from exc
+    return TrustedContext(
+        approved_by=approved_by,
+        approved_capabilities=capabilities,
+        capability_scopes=scopes,
+        claim_statuses=statuses,
+        evidence_digests=digests,
+        current_contract_version=current_contract_version,
+        current_revisions=revisions,
+        current_snapshot=current_snapshot,
+    )
+
+
+def _scope_covered(scope: str, granted: Sequence[str]) -> bool:
+    """Whether a declared write scope stays inside the granted contract.
+
+    Verbatim contract patterns always hold. A concrete path holds when it
+    matches a granted pattern. Anything else — a wider glob the contract
+    never granted — fails closed: declare narrower concrete scopes.
     """
-    if envelope.approved_by != APPROVER:
+    if scope in granted:
+        return True
+    if "*" in scope:
+        return False
+    try:
+        return any(scope_matches(scope, pattern) for pattern in granted)
+    except WriteScopeError:
+        return False
+
+
+def admit(
+    envelope: ChangeEnvelope,
+    context: TrustedContext,
+) -> AdmissionDecision:
+    """Run the deterministic admission check against trusted context.
+
+    Order is fixed: authority, scope grounding, freshness, evidence,
+    lineage, shape — the first failure wins, because a forbidden change
+    needs no freshness verdict and a stale one needs no scope debate.
+    Every verdict field comes from the context, never the envelope: the
+    agent can assert anything in its proposal and it changes nothing.
+    A malformed context is a harness bug and raises, never admits.
+    """
+    try:
+        approved_capabilities = tuple(context.approved_capabilities)
+        granted_scopes = {
+            str(capability): tuple(patterns)
+            for capability, patterns in context.capability_scopes
+        }
+        ledger_statuses = dict(context.claim_statuses)
+        resolved = dict(context.evidence_digests)
+        current_revisions = dict(context.current_revisions)
+    except (TypeError, ValueError, AttributeError) as exc:
+        raise ChangeError(f"malformed trusted context: {exc}") from exc
+    if context.approved_by != APPROVER:
         return _refuse(
             "deny",
             f"Change scope needs {APPROVER}'s explicit approval; "
-            f"carries {envelope.approved_by!r}.",
+            f"context carries {context.approved_by!r}.",
         )
     for op in envelope.writes:
-        if op.capability not in envelope.approved_capabilities:
+        if op.capability not in approved_capabilities:
             return _refuse(
                 "deny",
                 f"One approval, one scope: {op.capability!r} is outside "
                 "the approved capabilities.",
             )
+        granted = granted_scopes.get(op.capability, ())
+        for scope in op.scopes:
+            if not _scope_covered(scope, granted):
+                return _refuse(
+                    "deny",
+                    f"{op.capability!r} claims scope {scope!r} outside "
+                    "its capability contract: narrow the declared scopes.",
+                )
         if not allowed_mutation(
             capability=op.capability,
             target_path=op.target_path,
@@ -208,7 +316,7 @@ def admit(
             )
     if claim_stale(
         read_contract_version=envelope.read_contract_version,
-        current_contract_version=current_contract_version,
+        current_contract_version=context.current_contract_version,
         read_revisions=dict(envelope.read_revisions),
         current_revisions=current_revisions,
     ):
@@ -218,27 +326,26 @@ def admit(
         )
     if not snapshot_fresh(
         expected_snapshot=envelope.expected_snapshot,
-        current_snapshot=current_snapshot,
+        current_snapshot=context.current_snapshot,
     ):
         return _refuse(
             "conflict",
             "Snapshot mismatch: another write landed first; reload, never "
             "overwrite.",
         )
-    statuses = dict(envelope.claim_statuses)
-    for locator, digest in envelope.evidence:
-        if digest is None:
+    for locator in envelope.evidence:
+        if resolved.get(locator) is None:
             return _refuse(
                 "replan",
                 f"Evidence {locator!r} does not resolve: a claim without "
                 "resolvable evidence is not a claim to apply.",
             )
     for claim_id in envelope.claims:
-        if statuses.get(claim_id) != "supported":
+        if ledger_statuses.get(claim_id) != "supported":
             return _refuse(
                 "conflict",
-                f"Claim {claim_id!r} carries no supported lineage: "
-                "re-judge it first.",
+                f"Claim {claim_id!r} reads no supported lineage in the "
+                "live ledger: re-judge it first.",
             )
     for check in envelope.postconditions:
         if check.predicate not in PREDICATES:
