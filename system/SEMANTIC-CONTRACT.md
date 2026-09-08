@@ -89,7 +89,12 @@ refuse (LINEAGE-ASSUMPTION-MISSING / -CYCLE) before real data accumulates.
 Storage is a receipt-adjacent sidecar (`operations/transactions/lineage.yaml`,
 schema beside the other contracts), never a canonical edit and never a
 projection — lineage must survive a rebuild. Backfill is lazy: records are
-created when a claim is judged, never bulk-migrated. Readers:
+created when a claim is judged, never bulk-migrated. Since Phase B,
+prospective claims are bound at admission: a `module.plan.import` that
+creates, repairs, or removes a covers edge carries per-claim evidence or
+refuses before apply, and the gateway persists the admitted records
+(`admitted_by` request binding, `supersedes` repair chain) in the same
+transaction as the canonical mutation. Readers:
 `tools/learning_os/semantics/lineage.py`, proven by
 `tests/test_semantic_lineage.py`.
 

@@ -24,6 +24,24 @@ module_patch:
 
 source_patches: []
 
+# Prospective lineage (Phase B): every route-covers edge this package
+# creates, repairs, or removes names its admitted evidence here, or the
+# import refuses before apply. Prose-only edits and untouched routes
+# carry no entry; history stays lazy, never backfilled.
+claim_evidence: []
+# - claim_id: covers:route-example-l01-deck
+#   evidence:
+#   - kind: route-locator
+#     ref: "Ch 1, pdf pp. 10-12"
+#   - kind: manifest
+#     ref: mathematics/example/book.pdf
+#   - kind: repo-file
+#     ref: work/active/workspace-example/outputs/coverage-audit.md
+#   - kind: external
+#     ref: https://example.edu/reading
+#     note: opened 2026-09-08; goals name X; no Y coverage
+#   reads: {module-example: 3}  # optional; refused when stale
+
 source_map:
   type: module-source-map
   module_id: module-example

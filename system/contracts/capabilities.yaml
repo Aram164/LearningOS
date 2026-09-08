@@ -163,10 +163,12 @@ commands:
     - sources/registry/**
     - curriculum/quarantine/masters-planning/catalog.yaml
     - curriculum/quarantine/masters-planning/promotions/**
+    - operations/transactions/lineage.yaml
     invariants:
     - bounded to one module
     - preflight required
     - external plan files are bound to their exact bytes by SHA-256 before use
+    - changed route-covers edges carry admitted evidence or refuse; admitted records persist atomically
   route.identity.migrate:
     handler: route_identity_migrate
     cli_command: route-identity-migrate
