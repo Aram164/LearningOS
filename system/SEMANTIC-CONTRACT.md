@@ -82,7 +82,9 @@ Retraction tracks assumptions between derived claims: invalidating one
 withdraws everything that assumed it, recursively, in the sidecar only —
 `retraction_impact` answers the blast radius before `withdraw` applies it,
 withdrawn claims return only through fresh judgment, and pre-Phase-10
-records carry no assumptions so they cascade only to themselves.
+records carry no assumptions so they cascade only to themselves. Ledger
+load validates assumption integrity: dangling references and cycles
+refuse (LINEAGE-ASSUMPTION-MISSING / -CYCLE) before real data accumulates.
 
 Storage is a receipt-adjacent sidecar (`operations/transactions/lineage.yaml`,
 schema beside the other contracts), never a canonical edit and never a

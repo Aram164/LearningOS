@@ -467,6 +467,43 @@ def _schema(root: Path) -> dict:
         raise LineageError(f"cannot read {SCHEMA_RELATIVE}: {exc}") from exc
 
 
+def check_assumptions(records: Mapping[str, ClaimLineage]) -> None:
+    """Validate cross-record assumption integrity. Raises LineageError.
+
+    Every assumption must name a claim in the same ledger
+    (LINEAGE-ASSUMPTION-MISSING), and the assumption graph must be
+    acyclic (LINEAGE-ASSUMPTION-CYCLE) — a cycle would make every
+    cascade infinite and every blast radius the whole ledger.
+    Single-record construction cannot check this; the ledger load must.
+    """
+    for claim_id, lineage in records.items():
+        for assumption in lineage.derived_from.assumes:
+            if assumption not in records:
+                raise LineageError(
+                    f"LINEAGE-ASSUMPTION-MISSING: claim {claim_id!r} "
+                    f"assumes unknown {assumption!r}")
+    visiting: set[str] = set()
+    settled: set[str] = set()
+
+    def visit(node: str) -> bool:
+        if node in settled:
+            return False
+        if node in visiting:
+            return True
+        visiting.add(node)
+        if any(visit(dep) for dep in records[node].derived_from.assumes):
+            return True
+        visiting.discard(node)
+        settled.add(node)
+        return False
+
+    for claim_id in records:
+        if visit(claim_id):
+            raise LineageError(
+                "LINEAGE-ASSUMPTION-CYCLE: assumption edges cycle; "
+                f"no order satisfies them (at {claim_id!r})")
+
+
 def load_ledger(root: Path) -> dict[str, ClaimLineage]:
     """Read the sidecar. A missing ledger is an empty one — lazy backfill."""
     path = root / LEDGER_RELATIVE
@@ -498,6 +535,7 @@ def load_ledger(root: Path) -> dict[str, ClaimLineage]:
                 f"to {lineage.claim_id!r}"
             )
         records[claim_id] = lineage
+    check_assumptions(records)
     return records
 
 
