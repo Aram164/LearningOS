@@ -244,6 +244,21 @@ Each rich `unit_routes` entry is one source-to-lecture edge and must contain:
 Legacy string routes remain readable for backward compatibility, but a newly
 mapped lecture must use rich routes so the interface can explain the choice.
 
+### Prospective lineage for changed covers edges (Phase B)
+
+Every route-`covers` edge the package creates, repairs, or removes names
+its admitted evidence in top-level `claim_evidence` (claim id, evidence
+entries, optional read revisions), or the import refuses before apply —
+including its no-write preflight. Evidence kinds: `route-locator`
+(substring of the recorded locator), `manifest` (materials-manifest path,
+digest bound by the gateway), `repo-file` (in-repo path, hashed by the
+gateway), `external` (http(s) URL plus its verification trail in `note`).
+Declared read revisions must equal current ones. Prose-only edits and
+untouched routes carry no entry: lineage is prospective only, never
+backfill. The gateway persists the admitted records into
+`operations/transactions/lineage.yaml` in the same transaction as the
+canonical mutation, or neither commits.
+
 ### What "exact" means for a locator
 
 "Chapter 9" of a 700-page book is a direction, not a locator: it does not say

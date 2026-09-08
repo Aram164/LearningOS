@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import hashlib
 import json
 import shutil
 import sys
@@ -22,7 +23,17 @@ from learning_os.masters_planning import (
 )
 from learning_os.material_refs import MaterialReferenceError, expand_map
 from learning_os.render import replace_h2_section as _replace_h2_section
+from learning_os.revisions import load_revisions
 from learning_os.rules import validate
+from learning_os.semantics.lineage import (
+    LEDGER_RELATIVE,
+    LineageError,
+    dump_ledger,
+    emit_route_covers,
+    load_ledger,
+    to_dict,
+    withdraw,
+)
 from learning_os.warning_baseline import delta, load_baseline, signatures_from_issues
 
 from .support import (
@@ -60,6 +71,220 @@ def cmd_module_list(args) -> int:
     if args.status:
         rows = [row for row in rows if row.get("status") == args.status]
     return _print_rows(rows)
+
+
+_LINEAGE_EVIDENCE_KINDS = ("route-locator", "manifest", "repo-file", "external")
+
+
+def _materials_files(root: Path) -> dict:
+    try:
+        raw = yaml.safe_load(
+            (root / "records" / "materials-manifest.yaml").read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError):
+        return {}
+    files = raw.get("files") if isinstance(raw, dict) else None
+    return files if isinstance(files, dict) else {}
+
+
+def _source_map_routes(source_map) -> dict:
+    routes = {}
+    if not isinstance(source_map, dict):
+        return routes
+    for source in source_map.get("sources", []) or []:
+        if not isinstance(source, dict):
+            continue
+        for route in source.get("unit_routes") or []:
+            if isinstance(route, dict) and route.get("id"):
+                routes[str(route["id"])] = route
+    return routes
+
+
+def _phaseB_validate(root: Path, repo, module_id: str, package: dict):
+    problems = []
+    live_map = (repo.module_source_maps or {}).get(module_id) or {}
+    live_routes = _source_map_routes(live_map)
+    package_map = package.get("source_map")
+    package_routes = _source_map_routes(package_map) if package_map is not None else {}
+    changed = {}
+    if package_map is not None:
+        for rid, route in sorted(package_routes.items()):
+            old = live_routes.get(rid)
+            new_covers = [str(node) for node in (route.get("covers") or [])]
+            if old is None:
+                if new_covers:
+                    changed[rid] = new_covers
+            elif sorted(str(node) for node in (old.get("covers") or [])) != sorted(new_covers):
+                changed[rid] = new_covers
+    raw_evidence = package.get("claim_evidence", [])
+    if raw_evidence is None:
+        raw_evidence = []
+    if not isinstance(raw_evidence, list):
+        return (["claim_evidence must be a list of per-claim evidence maps"], {}, {}, live_routes)
+    evidence_by_claim = {}
+    for index, entry in enumerate(raw_evidence):
+        label = f"claim_evidence[{index}]"
+        if not isinstance(entry, dict):
+            problems.append(f"{label} must be a mapping")
+            continue
+        claim_id = entry.get("claim_id")
+        if not isinstance(claim_id, str) or not claim_id.strip():
+            problems.append(f"{label} needs a non-empty claim_id")
+            continue
+        if claim_id in evidence_by_claim:
+            problems.append(f"{label} repeats claim {claim_id!r}")
+            continue
+        items = entry.get("evidence")
+        if not isinstance(items, list) or not items:
+            problems.append(f"{label} needs a non-empty evidence list")
+            continue
+        reads = entry.get("reads", {})
+        if reads is None:
+            reads = {}
+        if not isinstance(reads, dict):
+            problems.append(f"{label} reads must be a mapping")
+            continue
+        evidence_by_claim[claim_id] = {"evidence": items, "reads": reads}
+    for rid in sorted(changed):
+        claim_id = "covers:" + rid
+        if claim_id not in evidence_by_claim:
+            problems.append(
+                f"route {rid} changes covers without claim evidence; Phase B "
+                f"requires admitted evidence for {claim_id}")
+    for claim_id in sorted(evidence_by_claim):
+        if not claim_id.startswith("covers:") or claim_id[7:] not in changed:
+            problems.append(
+                f"claim evidence names {claim_id!r}, which this package does not "
+                "change; lineage is prospective only, never backfill")
+    if problems:
+        return (problems, {}, {}, live_routes)
+    try:
+        current_revisions = load_revisions(root)
+    except (OSError, ValueError) as exc:
+        return ([f"cannot read revision ledger: {exc}"], {}, {}, live_routes)
+    manifest_files = _materials_files(root)
+    for claim_id in sorted(evidence_by_claim):
+        rid = claim_id[7:]
+        route = package_routes.get(rid, live_routes.get(rid)) or {}
+        locator = str(route.get("locator") or "")
+        for item in evidence_by_claim[claim_id]["evidence"]:
+            problems.extend(_phaseB_check_item(claim_id, item, locator, manifest_files, root))
+        for artifact, revision in sorted(evidence_by_claim[claim_id]["reads"].items()):
+            try:
+                declared = int(revision)
+            except (TypeError, ValueError):
+                problems.append(f"{claim_id} declares malformed revision for {artifact!r}")
+                continue
+            if artifact not in current_revisions:
+                problems.append(f"{claim_id} reads unknown artifact {artifact!r}")
+            elif current_revisions[artifact] != declared:
+                problems.append(
+                    f"{claim_id} reads stale revision of {artifact!r}: package saw "
+                    f"{declared}, current is {current_revisions[artifact]}")
+    if problems:
+        return (problems, {}, {}, live_routes)
+    return ([], changed, evidence_by_claim, live_routes)
+
+
+def _phaseB_check_item(claim_id, item, locator, manifest_files, root):
+    if not isinstance(item, dict):
+        return [f"{claim_id} evidence entries must be mappings"]
+    kind = item.get("kind")
+    ref = item.get("ref")
+    if kind not in _LINEAGE_EVIDENCE_KINDS:
+        return [f"{claim_id} cites unknown evidence kind {kind!r}"]
+    if not isinstance(ref, str) or not ref.strip():
+        return [f"{claim_id} evidence needs a non-empty ref"]
+    if kind == "route-locator":
+        if ref not in locator:
+            return [f"{claim_id} cites route-locator text absent from the recorded locator"]
+    elif kind == "manifest":
+        if ref not in manifest_files:
+            return [f"{claim_id} cites unregistered manifest path {ref!r}"]
+    elif kind == "repo-file":
+        try:
+            candidate = (root / ref).resolve()
+            inside = candidate == root.resolve() or root.resolve() in candidate.parents
+        except (OSError, ValueError):
+            inside = False
+        if not inside or not candidate.is_file():
+            return [f"{claim_id} cites unreadable repo file {ref!r}"]
+    elif kind == "external":
+        if not ref.startswith(("http://", "https://")):
+            return [f"{claim_id} external evidence must be an http(s) URL"]
+        if not isinstance(item.get("note"), str) or not str(item.get("note")).strip():
+            return [f"{claim_id} external evidence needs its verification trail in note"]
+    return []
+
+
+def _phaseB_ledger_text(root, repo, module_id, package, changed, evidence_by_claim, live_routes):
+    request = current_gateway_request()
+    if request is None:
+        raise LineageError("prospective lineage needs gateway admission context")
+    judged_by = f"{request.channel}/{request.approval_kind}"
+    admitted = {"request_id": request.request_id, "idempotency_key": request.idempotency_key}
+    try:
+        current_revisions = load_revisions(root)
+    except (OSError, ValueError) as exc:
+        raise LineageError(f"cannot read revision ledger: {exc}") from exc
+    manifest_files = _materials_files(root)
+    records = dict(load_ledger(root))
+    package_routes = _source_map_routes(package.get("source_map"))
+    touched_units = set()
+    for rid in sorted(changed):
+        unit_id = str((package_routes.get(rid) or {}).get("unit_id") or "")
+        if unit_id:
+            touched_units.add(unit_id)
+    stamped = {module_id: current_revisions.get(module_id, 0)}
+    for unit_id in sorted(touched_units):
+        stamped[unit_id] = current_revisions.get(unit_id, 0)
+    for rid in sorted(changed):
+        claim_id = "covers:" + rid
+        trails = []
+        digests = {}
+        for item in evidence_by_claim[claim_id]["evidence"]:
+            ref = str(item["ref"])
+            trail = "{}:{}".format(item["kind"], ref)
+            note = item.get("note")
+            if isinstance(note, str) and note.strip():
+                trail += f" -- trail: {note.strip()}"
+            trails.append(trail)
+            if item["kind"] == "manifest":
+                entry = manifest_files.get(ref)
+                digests["manifest:" + ref] = str(
+                    entry.get("sha256") or "") if isinstance(entry, dict) else ""
+            elif item["kind"] == "repo-file":
+                content = (root / ref).read_bytes()
+                digests["file:" + ref] = "sha256:" + hashlib.sha256(content).hexdigest()
+        try:
+            declared = {
+                str(artifact): int(revision)
+                for artifact, revision
+                in dict(evidence_by_claim[claim_id].get("reads") or {}).items()
+            }
+        except (TypeError, ValueError) as exc:
+            raise LineageError(
+                f"{claim_id} declares malformed revision: {exc}") from exc
+        read_revisions = dict(stamped)
+        read_revisions.update(declared)
+        prior = records.get(claim_id)
+        records[claim_id] = emit_route_covers(
+            route_id=rid,
+            covers=changed[rid],
+            read_revisions=read_revisions,
+            judged_by=judged_by,
+            admitted_by=admitted,
+            evidence=trails,
+            supersedes=to_dict(prior) if prior is not None else None,
+            source_hashes=digests,
+        )
+    live_ids = set(live_routes)
+    package_ids = set(package_routes)
+    for rid in sorted(live_ids - package_ids):
+        claim_id = "covers:" + rid
+        if claim_id in records:
+            for lineage in withdraw(list(records.values()), claim_id):
+                records[lineage.claim_id] = lineage
+    return dump_ledger(records)
 
 
 def _module_plan_contract_problems(root: Path, package: dict) -> list[str]:
@@ -707,6 +932,24 @@ def cmd_module_plan_import(args) -> int:
             for problem in routing_problems:
                 print(f"- {problem}", file=sys.stderr)
             return 1
+        lineage_problems, changed_claims, claim_evidence, live_routes = _phaseB_validate(
+            root, repo, args.module_id, package)
+        if lineage_problems:
+            print("los: module plan lineage preflight failed; no canonical files were written",
+                  file=sys.stderr)
+            for problem in lineage_problems:
+                print(f"- {problem}", file=sys.stderr)
+            return 1
+        if not args.check and changed_claims:
+            try:
+                writes[root / LEDGER_RELATIVE] = _phaseB_ledger_text(
+                    root, repo, args.module_id, package,
+                    changed_claims, claim_evidence, live_routes)
+            except LineageError as exc:
+                print("los: module plan lineage admission failed; no canonical files were written",
+                      file=sys.stderr)
+                print(f"- {exc}", file=sys.stderr)
+                return 2
         try:
             errors = _module_plan_validation_errors(root, writes)
         except ValueError as exc:

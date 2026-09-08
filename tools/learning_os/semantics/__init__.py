@@ -52,6 +52,7 @@ from .goals import (
     transition,
 )
 from .lineage import (
+    AdmittedBy,
     ClaimLineage,
     DerivedFrom,
     LineageError,
@@ -67,6 +68,7 @@ from .lineage import (
     record_claim,
     refresh,
     retraction_impact,
+    supersede,
     withdraw,
 )
 from .policy import POLICY_RULES, PolicyDecision, query
@@ -168,8 +170,10 @@ __all__ = [
     "plan_task",
     "query",
     "record_claim",
+    "AdmittedBy",
     "refresh",
     "retraction_impact",
+    "supersede",
     "rewrite_cheapest_evidence_first",
     "rewrite_dedup",
     "rewrite_late_materialization",

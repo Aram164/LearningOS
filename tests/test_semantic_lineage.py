@@ -27,6 +27,7 @@ from learning_os.semantics import (
     record_claim,
     refresh,
     retraction_impact,
+    supersede,
     withdraw,
 )
 from learning_os.semantics.lineage import (
@@ -36,12 +37,17 @@ from learning_os.semantics.lineage import (
 )
 
 
+def _admission():
+    return {"request_id": "request-demo", "idempotency_key": "demo-key"}
+
+
 def _covers(revisions=None, hashes=None):
     return emit_route_covers(
         route_id="route-abc",
         covers=["knowledge-x", "knowledge-y"],
         read_revisions=revisions if revisions is not None else {"unit-aml-l01": 4},
         judged_by="Muse 2026-09-07",
+        admitted_by=_admission(),
         evidence=["material://demo/deck.pdf"],
     )
 
@@ -58,7 +64,7 @@ def test_only_high_value_kinds_earn_lineage():
     with pytest.raises(LineageError):
         record_claim(
             claim_id="x", claim_kind="vibes",
-            statement="s", judged_by="j",
+            statement="s", judged_by="j", admitted_by=_admission(),
         )
 
 
@@ -66,13 +72,55 @@ def test_constructors_need_their_fields():
     with pytest.raises(LineageError):
         record_claim(
             claim_id=" ", claim_kind="route-covers",
-            statement="s", judged_by="j",
+            statement="s", judged_by="j", admitted_by=_admission(),
         )
     with pytest.raises(LineageError):
         record_claim(
             claim_id="x", claim_kind="route-covers",
-            statement="s", judged_by="",
+            statement="s", judged_by="", admitted_by=_admission(),
         )
+
+
+def test_records_need_their_admission():
+    with pytest.raises(LineageError):
+        record_claim(
+            claim_id="x", claim_kind="route-covers",
+            statement="s", judged_by="j", admitted_by={},
+        )
+    with pytest.raises(LineageError):
+        record_claim(
+            claim_id="x", claim_kind="route-covers",
+            statement="s", judged_by="j",
+            admitted_by={"request_id": "r", "idempotency_key": " "},
+        )
+
+
+def test_admission_binding_round_trips():
+    lineage = _covers()
+    assert lineage.admitted_by.request_id == "request-demo"
+    assert lineage.admitted_by.idempotency_key == "demo-key"
+    rebuilt = from_dict(to_dict(lineage))
+    assert rebuilt == lineage
+
+
+def test_supersede_preserves_the_prior_record():
+    first = _covers()
+    second = supersede(
+        first,
+        statement="route-abc covers knowledge-x",
+        revisions={"unit-aml-l01": 5},
+        judged_by="Aram",
+        admitted_by={"request_id": "request-two", "idempotency_key": "two"},
+        evidence=["material://demo/errata.pdf"],
+    )
+    assert second.claim_id == first.claim_id
+    assert second.status == "supported"
+    assert second.supersedes is not None
+    assert second.supersedes["statement"] == first.statement
+    assert second.supersedes["admitted_by"]["request_id"] == "request-demo"
+    assert to_dict(second)["supersedes"]["claim_id"] == first.claim_id
+    rebuilt = from_dict(to_dict(second))
+    assert rebuilt == second
 
 
 def test_a_fixture_mutation_stales_exactly_its_dependents():
@@ -113,6 +161,7 @@ def test_source_hash_moves_stale_dossier_claims():
         dossier_key="context://unit-aml-l01/semantic-dossier",
         hashes={"unit": "h1", "menu": "h2"},
         judged_by="Muse 2026-09-07",
+        admitted_by=_admission(),
     )
     assert refresh(
         lineage, CONTRACT_VERSION, {}, {"unit": "h1", "menu": "h2"},
@@ -157,6 +206,7 @@ def test_scope_authority_emission():
         owner="curriculum/modules/module-hu-aml/module.yaml",
         read_revisions={"module-hu-aml": 7},
         judged_by="Muse 2026-09-07",
+        admitted_by=_admission(),
     )
     assert lineage.claim_kind == "scope-authority"
     assert lineage.claim_id == (
@@ -198,7 +248,7 @@ def test_a_schema_violating_ledger_is_refused(tmp_path):
         _live_schema_text(), encoding="utf-8")
     (tmp_path / LEDGER_RELATIVE).write_text(
         yaml.safe_dump({
-            "schema_version": 1,
+            "schema_version": 2,
             "type": "semantic-lineage-ledger",
             "records": {
                 "x": {"claim_id": "x"},
@@ -220,7 +270,7 @@ def test_a_renamed_claim_id_is_refused(tmp_path):
     record["claim_id"] = "covers:something-else"
     (tmp_path / LEDGER_RELATIVE).write_text(
         yaml.safe_dump({
-            "schema_version": 1,
+            "schema_version": 2,
             "type": "semantic-lineage-ledger",
             "records": {lineage.claim_id: record},
         }),
@@ -248,7 +298,7 @@ def _write_ledger(tmp_path, records):
 def _judged(cid, *assumes):
     return record_claim(
         claim_id=cid, claim_kind="route-covers", statement=cid,
-        judged_by="t", assumes=list(assumes),
+        judged_by="t", admitted_by=_admission(), assumes=list(assumes),
     )
 
 
@@ -286,7 +336,7 @@ def test_self_assumption_refuses_on_load(tmp_path):
         _live_schema_text(), encoding="utf-8")
     (tmp_path / LEDGER_RELATIVE).write_text(
         yaml.safe_dump({
-            "schema_version": 1,
+            "schema_version": 2,
             "type": "semantic-lineage-ledger",
             "records": {"S": record},
         }),
@@ -301,7 +351,7 @@ def _chain():
     def make(cid, *assumes):
         return record_claim(
             claim_id=cid, claim_kind="route-covers", statement=cid,
-            judged_by="t", assumes=list(assumes),
+            judged_by="t", admitted_by=_admission(), assumes=list(assumes),
         )
     return (
         make("A"),
@@ -358,7 +408,7 @@ def test_old_records_without_assumptions_cascade_only_to_themselves():
 def test_assumes_round_trip_through_the_sidecar_shape():
     lineage = record_claim(
         claim_id="Y", claim_kind="route-covers", statement="Y",
-        judged_by="t", assumes=["X"],
+        judged_by="t", admitted_by=_admission(), assumes=["X"],
     )
     assert from_dict(to_dict(lineage)) == lineage
 
@@ -386,15 +436,15 @@ def test_assumptions_must_name_other_claims():
     with pytest.raises(LineageError):
         record_claim(
             claim_id="S", claim_kind="route-covers", statement="S",
-            judged_by="t", assumes=["S"],
+            judged_by="t", admitted_by=_admission(), assumes=["S"],
         )
     with pytest.raises(LineageError):
         record_claim(
             claim_id="S", claim_kind="route-covers", statement="S",
-            judged_by="t", assumes=[" "],
+            judged_by="t", admitted_by=_admission(), assumes=[" "],
         )
     with pytest.raises(LineageError):
         record_claim(
             claim_id="S", claim_kind="route-covers", statement="S",
-            judged_by="t", assumes="X",
+            judged_by="t", admitted_by=_admission(), assumes="X",
         )

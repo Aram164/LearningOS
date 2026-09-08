@@ -9,7 +9,7 @@
   "properties": {
     "schema_version": {
       "type": "integer",
-      "const": 1
+      "const": 2
     },
     "type": {
       "type": "string",
@@ -20,7 +20,7 @@
       "additionalProperties": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["claim_id", "claim_kind", "statement", "derived_from", "judged_by", "status"],
+        "required": ["claim_id", "claim_kind", "statement", "derived_from", "judged_by", "admitted_by", "status"],
         "properties": {
           "claim_id": {"type": "string", "minLength": 1},
           "claim_kind": {"enum": ["route-covers", "scope-authority", "dossier-freshness"]},
@@ -50,6 +50,16 @@
             }
           },
           "judged_by": {"type": "string", "minLength": 1},
+          "admitted_by": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["request_id", "idempotency_key"],
+            "properties": {
+              "request_id": {"type": "string", "minLength": 1},
+              "idempotency_key": {"type": "string", "minLength": 1}
+            }
+          },
+          "supersedes": {"type": ["object", "null"]},
           "reviewed_by": {"type": "string"},
           "status": {"enum": ["supported", "stale", "contested", "withdrawn"]},
           "contest": {

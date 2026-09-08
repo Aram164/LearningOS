@@ -42,7 +42,7 @@ from .predicates import CONTRACT_VERSION, claim_stale
 LEDGER_RELATIVE = "operations/transactions/lineage.yaml"
 SCHEMA_RELATIVE = "system/contracts/semantic-lineage-ledger.schema.json"
 
-LEDGER_SCHEMA_VERSION = 1
+LEDGER_SCHEMA_VERSION = 2
 LEDGER_TYPE = "semantic-lineage-ledger"
 
 #: The only claim families that earn lineage. Everything else is either
@@ -70,6 +70,20 @@ class DerivedFrom:
 
 
 @dataclass(frozen=True)
+class AdmittedBy:
+    """Which admitted gesture this record rides on.
+
+    Both halves are known before apply and stable across idempotent
+    replay, unlike the time-based transaction id the service mints
+    inside the commit — so the binding survives a replayed apply while
+    the receipt still ties it to the concrete transaction.
+    """
+
+    request_id: str
+    idempotency_key: str
+
+
+@dataclass(frozen=True)
 class ClaimLineage:
     """Why one derived claim is believed, and whether it still is."""
 
@@ -78,10 +92,12 @@ class ClaimLineage:
     statement: str
     derived_from: DerivedFrom
     judged_by: str
+    admitted_by: AdmittedBy
     status: str = "supported"
     reviewed_by: str = ""
     contested_by: str = ""
     contest_reason: str = ""
+    supersedes: Mapping[str, object] | None = None
 
 
 def _reads(lineage: ClaimLineage) -> dict[str, int]:
@@ -129,8 +145,16 @@ def record_claim(
     evidence: Sequence[str] = (),
     assumes: Sequence[str] = (),
     judged_by: str,
+    admitted_by: Mapping[str, str],
+    supersedes: Mapping[str, object] | None = None,
 ) -> ClaimLineage:
-    """Judge a claim now: record what was read, by whom, as supported."""
+    """Judge a claim now: record what was read, by whom, as supported.
+
+    Prospective records always name their admission — an unbound record
+    cannot enter the ledger through a gateway, so construction refuses
+    one. Repairs pass the prior record as ``supersedes``; the old state
+    rides along instead of being erased.
+    """
     if not isinstance(claim_id, str) or not claim_id.strip():
         raise LineageError("a lineage record needs a non-empty claim id")
     if claim_kind not in CLAIM_KINDS:
@@ -142,6 +166,27 @@ def record_claim(
         raise LineageError("a lineage record needs the claim in words")
     if not isinstance(judged_by, str) or not judged_by.strip():
         raise LineageError("a lineage record needs its judge")
+    try:
+        admission = AdmittedBy(
+            request_id=str(admitted_by["request_id"]),
+            idempotency_key=str(admitted_by["idempotency_key"]),
+        )
+    except (KeyError, TypeError, ValueError, AttributeError) as exc:
+        raise LineageError(
+            f"a lineage record needs its admission (request_id + "
+            f"idempotency_key): {exc}"
+        ) from exc
+    if not admission.request_id.strip() or not admission.idempotency_key.strip():
+        raise LineageError("a lineage record needs a non-empty admission")
+    prior: Mapping[str, object] | None = None
+    if supersedes is not None:
+        if not isinstance(supersedes, Mapping):
+            raise LineageError("supersedes must be the prior record mapping")
+        for key in ("claim_id", "claim_kind", "statement"):
+            if not isinstance(supersedes.get(key), str) or not str(supersedes[key]).strip():
+                raise LineageError(
+                    f"supersedes names no prior {key} for {claim_id!r}")
+        prior = dict(supersedes)
     try:
         revision_pairs = tuple(
             sorted((str(key), int(value)) for key, value in (revisions or {}).items())
@@ -171,7 +216,40 @@ def record_claim(
             assumes=dependencies,
         ),
         judged_by=judged_by,
+        admitted_by=admission,
         status="supported",
+        supersedes=prior,
+    )
+
+
+def supersede(
+    prior: ClaimLineage,
+    *,
+    statement: str,
+    revisions: Mapping[str, int] | None = None,
+    source_hashes: Mapping[str, str] | None = None,
+    evidence: Sequence[str] = (),
+    assumes: Sequence[str] = (),
+    judged_by: str,
+    admitted_by: Mapping[str, str],
+) -> ClaimLineage:
+    """Repair a claim without destroying why the old state existed.
+
+    The fresh judgment carries the prior record as ``supersedes``; the
+    prior fields are preserved, not withdrawn — withdrawal stays for
+    genuine invalidation with its assumption cascade.
+    """
+    return record_claim(
+        claim_id=prior.claim_id,
+        claim_kind=prior.claim_kind,
+        statement=statement,
+        revisions=revisions,
+        source_hashes=source_hashes,
+        evidence=evidence,
+        assumes=assumes,
+        judged_by=judged_by,
+        admitted_by=admitted_by,
+        supersedes=to_dict(prior),
     )
 
 
@@ -196,17 +274,7 @@ def refresh(
         current_revisions, current_source_hashes or {},
     )
     status = "supported" if fresh else "stale"
-    return ClaimLineage(
-        claim_id=lineage.claim_id,
-        claim_kind=lineage.claim_kind,
-        statement=lineage.statement,
-        derived_from=lineage.derived_from,
-        judged_by=lineage.judged_by,
-        status=status,
-        reviewed_by=lineage.reviewed_by,
-        contested_by=lineage.contested_by,
-        contest_reason=lineage.contest_reason,
-    )
+    return replace(lineage, status=status)
 
 
 def contest(
@@ -219,14 +287,9 @@ def contest(
         raise LineageError("a contest needs its reviewer")
     if not isinstance(reason, str) or not reason.strip():
         raise LineageError("a contest needs its reason")
-    return ClaimLineage(
-        claim_id=lineage.claim_id,
-        claim_kind=lineage.claim_kind,
-        statement=lineage.statement,
-        derived_from=lineage.derived_from,
-        judged_by=lineage.judged_by,
+    return replace(
+        lineage,
         status="contested",
-        reviewed_by=lineage.reviewed_by,
         contested_by=contested_by,
         contest_reason=reason,
     )
@@ -239,12 +302,8 @@ def endorse(lineage: ClaimLineage, *, reviewer: str) -> ClaimLineage:
             "a withdrawn claim needs re-judgment, not endorsement")
     if not isinstance(reviewer, str) or not reviewer.strip():
         raise LineageError("an endorsement needs its reviewer")
-    return ClaimLineage(
-        claim_id=lineage.claim_id,
-        claim_kind=lineage.claim_kind,
-        statement=lineage.statement,
-        derived_from=lineage.derived_from,
-        judged_by=lineage.judged_by,
+    return replace(
+        lineage,
         status="supported",
         reviewed_by=reviewer,
         contested_by="",
@@ -337,8 +396,11 @@ def emit_route_covers(
     covers: Sequence[str],
     read_revisions: Mapping[str, int],
     judged_by: str,
+    admitted_by: Mapping[str, str],
     evidence: Sequence[str] = (),
     assumes: Sequence[str] = (),
+    supersedes: Mapping[str, object] | None = None,
+    source_hashes: Mapping[str, str] | None = None,
 ) -> ClaimLineage:
     """Lineage for a route `covers` edge: which nodes, read from what."""
     try:
@@ -350,9 +412,12 @@ def emit_route_covers(
         claim_kind="route-covers",
         statement=f"{route_id} covers {nodes}" if nodes else f"{route_id} covers nothing",
         revisions=read_revisions,
+        source_hashes=source_hashes,
         judged_by=judged_by,
+        admitted_by=admitted_by,
         evidence=evidence,
         assumes=assumes,
+        supersedes=supersedes,
     )
 
 
@@ -362,8 +427,10 @@ def emit_scope_authority(
     owner: str,
     read_revisions: Mapping[str, int],
     judged_by: str,
+    admitted_by: Mapping[str, str],
     evidence: Sequence[str] = (),
     assumes: Sequence[str] = (),
+    supersedes: Mapping[str, object] | None = None,
 ) -> ClaimLineage:
     """Lineage for a scope-authority judgment: who owns this fact."""
     return record_claim(
@@ -372,8 +439,10 @@ def emit_scope_authority(
         statement=f"{fact_kind} is owned by {owner}",
         revisions=read_revisions,
         judged_by=judged_by,
+        admitted_by=admitted_by,
         evidence=evidence,
         assumes=assumes,
+        supersedes=supersedes,
     )
 
 
@@ -382,7 +451,9 @@ def emit_dossier_freshness(
     dossier_key: str,
     hashes: Mapping[str, str],
     judged_by: str,
+    admitted_by: Mapping[str, str],
     assumes: Sequence[str] = (),
+    supersedes: Mapping[str, object] | None = None,
 ) -> ClaimLineage:
     """Lineage for a dossier-freshness judgment: fresh at these hashes."""
     return record_claim(
@@ -391,7 +462,9 @@ def emit_dossier_freshness(
         statement=f"{dossier_key} is fresh",
         source_hashes=hashes,
         judged_by=judged_by,
+        admitted_by=admitted_by,
         assumes=assumes,
+        supersedes=supersedes,
     )
 
 
@@ -412,9 +485,15 @@ def to_dict(lineage: ClaimLineage) -> dict:
             "assumes": list(lineage.derived_from.assumes),
         },
         "judged_by": lineage.judged_by,
+        "admitted_by": {
+            "request_id": lineage.admitted_by.request_id,
+            "idempotency_key": lineage.admitted_by.idempotency_key,
+        },
         "reviewed_by": lineage.reviewed_by,
         "status": lineage.status,
     }
+    if lineage.supersedes is not None:
+        record["supersedes"] = dict(lineage.supersedes)
     if lineage.status == "contested":
         record["contest"] = {
             "by": lineage.contested_by,
@@ -428,6 +507,14 @@ def from_dict(record: dict) -> ClaimLineage:
     try:
         derived = record["derived_from"]
         contest = record.get("contest") or {}
+        admission = record["admitted_by"]
+        prior = record.get("supersedes")
+        if prior is not None:
+            if not isinstance(prior, dict):
+                raise LineageError("supersedes must be the prior record mapping")
+            for key in ("claim_id", "claim_kind", "statement"):
+                if not isinstance(prior.get(key), str) or not str(prior[key]).strip():
+                    raise LineageError(f"supersedes names no prior {key}")
         return ClaimLineage(
             claim_id=str(record["claim_id"]),
             claim_kind=str(record["claim_kind"]),
@@ -450,10 +537,15 @@ def from_dict(record: dict) -> ClaimLineage:
                 ),
             ),
             judged_by=str(record["judged_by"]),
+            admitted_by=AdmittedBy(
+                request_id=str(admission["request_id"]),
+                idempotency_key=str(admission["idempotency_key"]),
+            ),
             status=str(record.get("status") or "supported"),
             reviewed_by=str(record.get("reviewed_by") or ""),
             contested_by=str(contest.get("by") or ""),
             contest_reason=str(contest.get("reason") or ""),
+            supersedes=dict(prior) if prior is not None else None,
         )
     except (KeyError, TypeError, ValueError) as exc:
         raise LineageError(f"malformed lineage record: {exc}") from exc
