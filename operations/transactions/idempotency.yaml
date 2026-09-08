@@ -768,6 +768,29 @@ entries:
       unit-m2-sad-l07: 13
     snapshot_before: sha256:afb2cee6690216983e556bbbd9b065e679f993e90f60b093d415a35aff9f91cf
     snapshot_after: sha256:20ba17ac61fa3afc847c955aaa7822c1f17b6a5e622137bff2862112ef55bd7e
+  l08-repair-map-20260908:
+    request_id: l08-repair-map-20260908-001
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:b666e0414cc1869a3302879f8635ce4e3c4c807dbc10fee57d02e2530c1d7452
+    transaction_id: transaction-20260908-051105-001
+    receipt_path: operations/transactions/transaction-20260908-051105-001.yaml
+    revisions:
+      study-map-m2-sad-l08: 6
+      unit-m2-sad-l08: 12
+    snapshot_before: sha256:326abc52cdc47f526e706b79a5ec0e166e1918f8e1afb2687cbad64a19006171
+    snapshot_after: sha256:bae6cc80831a2458b53af4f38ad788762c02686307abd28bcced1d3519fdd1e4
+  l08-repair-module-20260908:
+    request_id: l08-repair-module-20260908-001
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:0d621d1e200a13866f18aa3da8ed8fb19537da6dc1b54fb70574f9e490a90dd4
+    transaction_id: transaction-20260908-051053-001
+    receipt_path: operations/transactions/transaction-20260908-051053-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 24
+    snapshot_before: sha256:740c9f5ba3cf690f5ebe1104cd8b90b31ad2a4c6c4b0da675c0762a9a9945f9c
+    snapshot_after: sha256:326abc52cdc47f526e706b79a5ec0e166e1918f8e1afb2687cbad64a19006171
   m2-exact-locator-20260901-001:
     request_id: request-m2-exact-locator-20260901-001
     capability: module.plan.import
