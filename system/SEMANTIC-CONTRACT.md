@@ -112,7 +112,8 @@ one step at a time; only Aram authorizes. The queue lives under
 A Task IR states what a task needs — eight logical step kinds from
 knowledge reads to governed mutation — with no model bound to any step.
 Every step carries an id, its dependencies, and a fixed effect class
-(pure | judgment | mutation): mutations never reorder, judgments never
+(pure | judgment | mutation): the tuple order itself must satisfy every
+edge, mutations are barriers no rewrite may move past, judgments never
 deduplicate, and the four rewrites (predicate pushdown, dossier dedup,
 cheapest evidence first, late materialization) cheapen plans only when
 they prove the partial order survives — otherwise they refuse. Static
