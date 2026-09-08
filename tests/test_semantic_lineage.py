@@ -235,6 +235,67 @@ def test_from_dict_rejects_garbage():
         from_dict({"claim_id": "x"})
 
 
+def _write_ledger(tmp_path, records):
+    (tmp_path / "operations" / "transactions").mkdir(parents=True)
+    (tmp_path / "system" / "contracts").mkdir(parents=True)
+    (tmp_path / "system" / "contracts" / "semantic-lineage-ledger.schema.json").write_text(
+        _live_schema_text(), encoding="utf-8")
+    (tmp_path / LEDGER_RELATIVE).write_text(
+        dump_ledger(records), encoding="utf-8")
+    return tmp_path
+
+
+def _judged(cid, *assumes):
+    return record_claim(
+        claim_id=cid, claim_kind="route-covers", statement=cid,
+        judged_by="t", assumes=list(assumes),
+    )
+
+
+def test_a_valid_assumption_chain_loads(tmp_path):
+    records = {
+        record.claim_id: record
+        for record in (_judged("A"), _judged("X", "A"), _judged("Y", "X"))
+    }
+    loaded = load_ledger(_write_ledger(tmp_path, records))
+    assert set(loaded) == {"A", "X", "Y"}
+    assert loaded["Y"].derived_from.assumes == ("X",)
+
+
+def test_dangling_assumptions_refuse_on_load(tmp_path):
+    records = {"X": _judged("X", "ghost")}
+    _write_ledger(tmp_path, records)
+    with pytest.raises(LineageError, match="LINEAGE-ASSUMPTION-MISSING"):
+        load_ledger(tmp_path)
+
+
+def test_cyclic_assumptions_refuse_on_load(tmp_path):
+    records = {"A": _judged("A", "B"), "B": _judged("B", "A")}
+    _write_ledger(tmp_path, records)
+    with pytest.raises(LineageError, match="LINEAGE-ASSUMPTION-CYCLE"):
+        load_ledger(tmp_path)
+
+
+def test_self_assumption_refuses_on_load(tmp_path):
+    lineage = _judged("S")
+    record = to_dict(lineage)
+    record["derived_from"]["assumes"] = ["S"]
+    (tmp_path / "operations" / "transactions").mkdir(parents=True)
+    (tmp_path / "system" / "contracts").mkdir(parents=True)
+    (tmp_path / "system" / "contracts" / "semantic-lineage-ledger.schema.json").write_text(
+        _live_schema_text(), encoding="utf-8")
+    (tmp_path / LEDGER_RELATIVE).write_text(
+        yaml.safe_dump({
+            "schema_version": 1,
+            "type": "semantic-lineage-ledger",
+            "records": {"S": record},
+        }),
+        encoding="utf-8",
+    )
+    with pytest.raises(LineageError, match="LINEAGE-ASSUMPTION-CYCLE"):
+        load_ledger(tmp_path)
+
+
 def _chain():
     """A → X → Y → Z, plus an unrelated W. Forward-only assumptions."""
     def make(cid, *assumes):
