@@ -77,6 +77,7 @@ from .predicates import (
     evaluate,
     needs_study_map,
 )
+from .scan import DEFAULT_DAYS, ScanInput, intelligence_scan, scan_observations
 from .tasks import (
     EFFECTS,
     MODEL_ONLY_STEPS,
@@ -136,6 +137,8 @@ __all__ = [
     "TrustedContext",
     "WriteOp",
     "admit",
+    "DEFAULT_DAYS",
+    "ScanInput",
     "build_dossier",
     "build_envelope",
     "build_trusted_context",
@@ -144,6 +147,7 @@ __all__ = [
     "check_assumptions",
     "contest",
     "detect_covering_routes_stale",
+    "intelligence_scan",
     "detect_inspection_without_dossier",
     "detect_repeated_question_gap",
     "detect_reviewer_correction_pattern",
@@ -171,6 +175,7 @@ __all__ = [
     "rewrite_late_materialization",
     "rewrite_pushdown",
     "route_step",
+    "scan_observations",
     "store_dossier",
     "transition",
     "validate_ir",
