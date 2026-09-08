@@ -75,7 +75,9 @@ from .predicates import (
     needs_study_map,
 )
 from .tasks import (
+    EFFECTS,
     MODEL_ONLY_STEPS,
+    STEP_EFFECTS,
     STEP_EXECUTORS,
     STEP_KINDS,
     PlannedStep,
@@ -100,6 +102,7 @@ __all__ = [
     "POLICY_RULES",
     "PREDICATES",
     "STATES",
+    "STEP_EFFECTS",
     "STEP_EXECUTORS",
     "STEP_KINDS",
     "TERMINAL_STATES",
@@ -115,6 +118,7 @@ __all__ = [
     "DerivedFrom",
     "Dossier",
     "DossierError",
+    "EFFECTS",
     "GoalError",
     "LineageError",
     "PlannedStep",
