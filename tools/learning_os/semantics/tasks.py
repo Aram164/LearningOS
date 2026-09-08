@@ -5,7 +5,8 @@ generate a candidate — with no model bound to any step. The physical
 planner maps each step to deterministic tooling or to model work; the
 static router dispatches each step under policy vetoes. Every step
 carries an id, its dependencies, and a fixed effect class
-(pure | judgment | mutation): mutations never reorder, judgments never
+(pure | judgment | mutation): the tuple order itself must satisfy every
+edge, mutations are barriers no rewrite may move past, judgments never
 deduplicate, and the four rewrites cheapen plans only when they prove
 the partial order survives — otherwise they refuse. Nothing here
 tracks, measures, or learns: no telemetry, no costs, no fitted weights.
@@ -108,12 +109,18 @@ class TaskIR:
 
 @dataclass(frozen=True)
 class PlannedStep:
-    """One physical step: logical content plus its executor class."""
+    """One physical step: logical content plus its executor class.
+
+    Dependencies and effects travel with the plan: execution order is
+    meaningless without them, and no consumer may reorder blind.
+    """
 
     id: str
     kind: str
     detail: str
     executor: str
+    depends_on: tuple[str, ...] = ()
+    effect: str = ""
     uses_dossier: bool = False
 
 
@@ -144,7 +151,9 @@ def validate_ir(task_ir: TaskIR) -> TaskIR:
     Beyond shapes, every step needs an id (order is meaningless without
     identity), a declared effect matching its kind (purity is not
     self-asserted), and dependencies that exist, never loop back, and
-    never cycle.
+    never cycle. Finally the tuple order itself must satisfy every edge:
+    the tuple is the execution order, and an edge pointing forward is a
+    plan that cannot run.
     """
     if not isinstance(task_ir.task_type, str) or not task_ir.task_type.strip():
         raise TaskError("a task plan needs a non-empty task type")
@@ -181,6 +190,9 @@ def validate_ir(task_ir: TaskIR) -> TaskIR:
                     f"step {step.id!r} depends on unknown {dep!r}")
     if _has_cycle(task_ir):
         raise TaskError("plan dependencies cycle: no order satisfies them")
+    if not _respects_dependencies(task_ir):
+        raise TaskError(
+            "plan order violates dependencies: declare the order that runs")
     return task_ir
 
 
@@ -193,6 +205,8 @@ def plan_task(task_ir: TaskIR) -> tuple[PlannedStep, ...]:
             kind=step.kind,
             detail=step.detail,
             executor=STEP_EXECUTORS[step.kind],
+            depends_on=step.depends_on,
+            effect=step.effect,
             uses_dossier=step.uses_dossier,
         )
         for step in task_ir.steps
@@ -212,22 +226,58 @@ def _respects_dependencies(task_ir: TaskIR) -> bool:
 # ---- rewrites: cheaper plans, same meaning ----------------------------------
 
 
+def _mutation_barriers_hold(before: TaskIR, after: TaskIR) -> bool:
+    """True when no mutation changed its ordinal relationships.
+
+    For every surviving mutation, the set of steps before it must be
+    unchanged (dropped steps are pure duplicates by construction, so
+    only surviving ids compare). A mutation that moved past anything —
+    or anything moved past it — fails.
+    """
+    before_ids = [step.id for step in before.steps]
+    after_ids = [step.id for step in after.steps]
+    surviving = set(after_ids)
+    for step in after.steps:
+        if step.effect != "mutation":
+            continue
+        was_before = {i for i in before_ids if i in surviving
+                      and before_ids.index(i) < before_ids.index(step.id)}
+        is_before = {i for i in after_ids
+                     if after_ids.index(i) < after_ids.index(step.id)}
+        if was_before != is_before:
+            return False
+    return True
+
+
 def rewrite_pushdown(task_ir: TaskIR) -> TaskIR:
     """Predicate pushdown: deterministic steps run before model steps.
 
     Cheap checks first — a failed locator or an empty comparison aborts
-    before any model spend. Dependencies are never violated: a step moves
-    earlier only past steps it does not depend on, directly or
-    transitively. Stable otherwise: class priority first, original order
+    before any model spend. Dependencies are never violated, and
+    mutations are barriers: a mutation emits only after everything
+    originally before it, and nothing originally after it emits before
+    it does. Stable otherwise: class priority first, original order
     among the ready.
     """
     validate_ir(task_ir)
+    position = {step.id: at for at, step in enumerate(task_ir.steps)}
     remaining = list(task_ir.steps)
     emitted: set[str] = set()
     ordered: list[TaskStep] = []
     while remaining:
-        ready = [step for step in remaining
-                 if all(dep in emitted for dep in step.depends_on)]
+        ready = []
+        for step in remaining:
+            if any(dep not in emitted for dep in step.depends_on):
+                continue
+            preceding = [other for other in task_ir.steps
+                         if position[other.id] < position[step.id]]
+            if step.effect == "mutation":
+                if any(other.id not in emitted for other in preceding):
+                    continue
+            elif any(other.id not in emitted
+                     and other.effect == "mutation" for other in preceding):
+                continue
+            ready.append(step)
         ready.sort(key=lambda step: (
             0 if STEP_EXECUTORS[step.kind] == "deterministic" else 1,
             task_ir.steps.index(step),
@@ -321,7 +371,11 @@ def rewrite_cheapest_evidence_first(
     for step in acquires:
         if step.detail not in priced:
             raise TaskError(f"no cost estimate for {step.detail!r}")
-    return _cheapest_first(task_ir, priced)
+    candidate = _cheapest_first(task_ir, priced)
+    if not _mutation_barriers_hold(task_ir, candidate):
+        raise TaskError(
+            "cheapest-first refuses: the reorder crosses a mutation")
+    return candidate
 
 
 def _cheapest_first(task_ir: TaskIR, priced: Mapping[str, float]) -> TaskIR:
@@ -382,6 +436,9 @@ def rewrite_late_materialization(
     if not _respects_dependencies(candidate):
         raise TaskError(
             "late materialization refuses: the move breaks dependencies")
+    if not _mutation_barriers_hold(task_ir, candidate):
+        raise TaskError(
+            "late materialization refuses: the move crosses a mutation")
     return candidate
 
 

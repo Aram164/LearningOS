@@ -251,6 +251,57 @@ def test_late_materialization_refuses_a_breaking_move():
         rewrite_late_materialization(task_ir, ["heavy-deck.pdf"])
 
 
+def test_tuple_order_must_satisfy_every_edge():
+    """An edge pointing forward is a plan that cannot run."""
+    ordered = TaskIR(task_type="t", steps=(
+        _read("a", "s0"), _read("b", "s1", deps=["s0"])))
+    validate_ir(ordered)
+    flipped = TaskIR(task_type="t", steps=(
+        _read("b", "s1", deps=["s0"]), _read("a", "s0")))
+    with pytest.raises(TaskError):
+        validate_ir(flipped)
+    with pytest.raises(TaskError):
+        plan_task(flipped)
+
+
+def test_mutations_are_barriers_pushdown_cannot_jump_them():
+    """Deterministic apply waits behind model generate: no reorder."""
+    task_ir = TaskIR(task_type="t", steps=(
+        _judge("generate-candidate-change", "g", "s0"),
+        _apply("m", "s1"),
+    ))
+    assert [step.id for step in rewrite_pushdown(task_ir).steps] == [
+        "s0", "s1"]
+
+
+def test_rewrites_refuse_to_cross_a_mutation():
+    """An acquisition may not move past a mutation it never knew."""
+    task_ir = TaskIR(task_type="t", steps=(
+        _acquire("cheap.md", "s0"),
+        _apply("m", "s1"),
+        _acquire("pricey-deck.pdf", "s2"),
+    ))
+    with pytest.raises(TaskError):
+        rewrite_cheapest_evidence_first(
+            task_ir, {"cheap.md": 90.0, "pricey-deck.pdf": 1.0})
+    with pytest.raises(TaskError):
+        rewrite_late_materialization(task_ir, ["pricey-deck.pdf"])
+
+
+def test_planned_steps_keep_dependencies_and_effects():
+    task_ir = TaskIR(task_type="t", steps=(
+        _read("a", "s0"),
+        _judge("generate-candidate-change", "g", "s1", deps=["s0"]),
+        _apply("m", "s2", deps=["s1"]),
+    ))
+    planned = plan_task(task_ir)
+    assert [(step.id, step.depends_on, step.effect) for step in planned] == [
+        ("s0", (), "pure"),
+        ("s1", ("s0",), "judgment"),
+        ("s2", ("s1",), "mutation"),
+    ]
+
+
 def _option(executor: str, external: bool) -> dict:
     return {"executor": executor, "external": external}
 

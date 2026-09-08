@@ -64,6 +64,16 @@ excluded by boundary 17; count-based detectors stay caller-fed (no
 observable source, and building one would be telemetry); dossier
 freshness waits on a live-key registry.
 
+## Addendum — H1 closure (review follow-up)
+
+The H1 review found tuple order unenforced and mutations still
+jumpable: `validate_ir` now requires tuple order to satisfy every edge
+(the tuple is the execution order), mutations are barriers in pushdown
+(a mutation emits only after everything originally before it; nothing
+after it emits first) with barrier preservation verified in
+cheapest-first and late materialization, and `PlannedStep` retains
+`depends_on` plus `effect`. Four adversarial tests pin it.
+
 ## Explicit non-changes
 
 - No Phase 7/8/9/11/12 work (see the deferred-phases record — still
