@@ -61,10 +61,17 @@ class WriteOp:
 
 @dataclass(frozen=True)
 class Postcondition:
-    """One promised check, evaluated after the gateway applies."""
+    """One promised check, evaluated after the gateway applies.
+
+    ``selector`` names the post-apply observation the harness must
+    supply (e.g. ``validation`` for the validator summary) — predicate
+    inputs are derived from the live world, never fixed at envelope
+    time. A check that promises about state the harness never observed
+    is not a check.
+    """
 
     predicate: str
-    inputs: tuple[tuple[str, object], ...]
+    selector: str
     op: str
     value: object = None
 
@@ -165,9 +172,7 @@ def build_envelope(
         checks = tuple(
             Postcondition(
                 predicate=str(check["predicate"]),
-                inputs=tuple(sorted(
-                    (str(key), value)
-                    for key, value in dict(check["inputs"]).items())),
+                selector=str(check["selector"]),
                 op=str(check["op"]),
                 value=check.get("value"),
             )
@@ -180,6 +185,8 @@ def build_envelope(
         raise ChangeError("a change with no writes changes nothing")
     if not plan:
         raise ChangeError("a change with no validation plan proves nothing")
+    if any(not check.selector.strip() for check in checks):
+        raise ChangeError("a postcondition names the observation it reads")
     if not isinstance(expected_snapshot, str) or not expected_snapshot:
         raise ChangeError("a change names the snapshot it read")
     return ChangeEnvelope(
@@ -376,18 +383,31 @@ class PostconditionResult:
 
 def verify_postconditions(
     envelope: ChangeEnvelope,
+    live: Mapping[str, Mapping[str, object]],
 ) -> tuple[PostconditionResult, ...]:
-    """Evaluate every postcondition. The harness calls this after the
-    gateway applies, with the world the envelope promised about.
+    """Evaluate every postcondition against the post-apply world.
 
-    Predicate inputs are fixed at envelope time, so this replays exactly
-    what admission checked for shape. Unknown predicates raise KeyError:
-    admission refuses malformed envelopes first, so anything reaching here
-    malformed is a harness bug, not a judgment call.
+    The harness calls this after the gateway applies, with observations
+    keyed by selector — validator summaries, re-read route pairs, and
+    whatever else a postcondition promised about. Predicate inputs come
+    from those live observations, never from the envelope: a promised
+    ``RepoClean`` passes only when the actual repository validates
+    clean. A promised observation the harness never made raises
+    ChangeError: that is a harness bug, not a passing check. Unknown
+    predicates raise KeyError: admission refuses malformed envelopes
+    first, so anything reaching here malformed is a harness bug, not a
+    judgment call.
     """
     results = []
     for check in envelope.postconditions:
-        verdict = evaluate(check.predicate, **dict(check.inputs))
+        try:
+            observed = dict(live[check.selector])
+        except (KeyError, TypeError) as exc:
+            raise ChangeError(
+                f"postcondition on {check.predicate!r} names unobserved "
+                f"{check.selector!r}: read the post-apply world first",
+            ) from exc
+        verdict = evaluate(check.predicate, **observed)
         if check.op == "equals":
             passed = verdict == check.value
         elif check.op == "is_true":
