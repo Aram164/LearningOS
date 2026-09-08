@@ -38,7 +38,8 @@ def _ir(*kinds: str) -> TaskIR:
 def _effect(kind: str) -> str:
     if kind == "apply-governed-mutation":
         return "mutation"
-    if kind in ("generate-candidate-change", "review-evidence"):
+    if kind in ("compare-coverage", "generate-candidate-change",
+                "review-evidence"):
         return "judgment"
     return "pure"
 
@@ -116,8 +117,8 @@ def test_the_planner_binds_no_model_and_keeps_ids():
     ))
     assert [(step.id, step.kind, step.executor) for step in planned] == [
         ("s0", "read-knowledge-node", "deterministic"),
-        ("s1", "acquire-source-evidence", "model"),
-        ("s2", "compare-coverage", "deterministic"),
+        ("s1", "acquire-source-evidence", "deterministic"),
+        ("s2", "compare-coverage", "model"),
         ("s3", "generate-candidate-change", "model"),
         ("s4", "apply-governed-mutation", "deterministic"),
     ]
@@ -145,7 +146,7 @@ def test_pushdown_never_moves_a_step_past_its_dependencies():
         _read("route", "s0"),
         _acquire("deck.pdf", "s1", deps=["s0"]),
         TaskStep(id="s2", kind="compare-coverage", detail="c",
-                 depends_on=("s1",), effect="pure"),
+                 depends_on=("s1",), effect="judgment"),
         _judge("generate-candidate-change", "g", "s3", deps=["s2"]),
         _judge("review-evidence", "r", "s4", deps=["s3"]),
         _apply("m", "s5", deps=["s4"]),
@@ -182,7 +183,7 @@ def test_dedup_remaps_dependencies_onto_the_survivor():
     task_ir = TaskIR(task_type="t", steps=(
         _read("a", "s0"), _read("a", "s1"),
         TaskStep(id="s2", kind="compare-coverage", detail="c",
-                 depends_on=("s1",), effect="pure"),
+                 depends_on=("s1",), effect="judgment"),
     ))
     rewritten = rewrite_dedup(task_ir)
     compare = [step for step in rewritten.steps if step.id == "s2"][0]
@@ -193,7 +194,7 @@ def test_cheapest_evidence_first_orders_acquires_only():
     task_ir = TaskIR(task_type="t", steps=(
         _acquire("heavy-deck.pdf", "s0"),
         TaskStep(id="s1", kind="compare-coverage",
-                 detail="compare-coverage", effect="pure"),
+                 detail="compare-coverage", effect="judgment"),
         _acquire("note.md", "s2"),
     ))
     rewritten = rewrite_cheapest_evidence_first(
@@ -211,7 +212,7 @@ def test_cheapest_evidence_first_refuses_priced_dependencies():
     task_ir = TaskIR(task_type="t", steps=(
         _acquire("heavy-deck.pdf", "s0"),
         TaskStep(id="s1", kind="compare-coverage", detail="c",
-                 depends_on=("s0",), effect="pure"),
+                 depends_on=("s0",), effect="judgment"),
         _acquire("note.md", "s2"),
     ))
     with pytest.raises(TaskError):
@@ -360,3 +361,86 @@ def test_routing_refuses_nonsense():
     with pytest.raises(TaskError):
         route_step(step_kind="review-evidence", unpublished=False,
                    options=[{"executor": "m"}])
+
+
+def test_dedup_keeps_the_post_mutation_read():
+    """The counterexample: a mutation sits between two identical reads
+    with no dependency edge expressing the barrier — tuple order does."""
+    task_ir = TaskIR(task_type="read-write-read", steps=(
+        TaskStep(id="before", kind="read-existing-route", detail="route-X",
+                 effect="pure"),
+        TaskStep(id="write", kind="apply-governed-mutation",
+                 detail="route-X", depends_on=("before",),
+                 effect="mutation"),
+        TaskStep(id="after", kind="read-existing-route", detail="route-X",
+                 effect="pure"),
+        TaskStep(id="review", kind="review-evidence",
+                 detail="post-write route",
+                 depends_on=("write", "after"), effect="judgment"),
+    ))
+    rewritten = rewrite_dedup(task_ir)
+    assert [step.id for step in rewritten.steps] == [
+        "before", "write", "after", "review"]
+    review = [step for step in rewritten.steps if step.id == "review"][0]
+    assert review.depends_on == ("write", "after")
+
+
+def test_dedup_refuses_an_order_inverting_merge():
+    """Collapsing onto a survivor that would wait on a later step refuses
+    instead of reordering."""
+    task_ir = TaskIR(task_type="t", steps=(
+        _read("a", "s0"),
+        _read("b", "s1"),
+        _read("a", "s2", deps=["s1"]),
+    ))
+    with pytest.raises(TaskError):
+        rewrite_dedup(task_ir)
+
+
+def test_dedup_keeps_acquisitions_and_judgments_distinct():
+    """Identical acquisitions have no proved content identity and
+    identical judgments are never interchangeable: both survive."""
+    task_ir = TaskIR(task_type="t", steps=(
+        _acquire("deck.pdf", "s0"), _acquire("deck.pdf", "s1"),
+        _judge("compare-coverage", "c", "s2"),
+        _judge("compare-coverage", "c", "s3"),
+        _judge("review-evidence", "r", "s4"),
+        _judge("review-evidence", "r", "s5"),
+    ))
+    rewritten = rewrite_dedup(task_ir)
+    assert [step.id for step in rewritten.steps] == [
+        "s0", "s1", "s2", "s3", "s4", "s5"]
+
+
+def test_compare_coverage_needs_a_model_executor():
+    """Semantic support judgment refuses deterministic-only routing."""
+    with pytest.raises(TaskError):
+        route_step(
+            step_kind="compare-coverage", unpublished=False,
+            options=[_option("deterministic", False)],
+        )
+    decision = route_step(
+        step_kind="compare-coverage", unpublished=False,
+        options=[_option("deterministic", False), _option("muse", False)],
+    )
+    assert decision.executor == "muse"
+    assert decision.vetoed == ("deterministic",)
+
+
+def test_acquire_permits_deterministic_retrieval():
+    """Evidence retrieval is no longer model-only."""
+    decision = route_step(
+        step_kind="acquire-source-evidence", unpublished=False,
+        options=[_option("deterministic", False)],
+    )
+    assert decision.executor == "deterministic"
+    assert decision.vetoed == ()
+
+
+def test_private_external_dispatch_stays_refused():
+    """Unpublished material with only external executors fails closed."""
+    with pytest.raises(TaskError):
+        route_step(
+            step_kind="review-evidence", unpublished=True,
+            options=[_option("external-model", True)],
+        )

@@ -98,6 +98,15 @@ transaction as the canonical mutation. Readers:
 `tools/learning_os/semantics/lineage.py`, proven by
 `tests/test_semantic_lineage.py`.
 
+For prospective covers claims, stored revisions describe post-apply
+validity: only artifacts incremented by that transaction advance. Declared
+reads are checked against pre-apply state; the original guarded revisions
+remain in the package and receipt. A deletion-only import also carries
+evidence and withdraws the removed claim and its explicit dependents.
+The gateway's `judged_by` channel/approval label records admission context;
+it is not proof of an independent semantic review. The evidence trail must
+identify the actual review and its limits.
+
 ## Candidate goals (Phase 3)
 
 The engine surfaces what is worth investigating and never mutates meaning
@@ -121,9 +130,15 @@ Every step carries an id, its dependencies, and a fixed effect class
 edge, mutations are barriers no rewrite may move past, judgments never
 deduplicate, and the four rewrites (predicate pushdown, dossier dedup,
 cheapest evidence first, late materialization) cheapen plans only when
-they prove the partial order survives — otherwise they refuse. Static
-dispatch applies policy vetoes — unpublished material never leaves the
-repository, model-only steps refuse deterministic executors — and the
+they prove the partial order survives — otherwise they refuse. Coverage
+comparison is a semantic-support judgment that runs on a model;
+acquiring evidence retrieves identified records and may run
+deterministically, with interpretation left to the judgment step that
+consumes it. Dedup collapses only exact-duplicate reads of clearly
+identified records within one mutation-free segment — never across a
+mutation, and never for acquisitions whose content identity is unproved.
+Static dispatch applies policy vetoes — unpublished material never leaves
+the repository, model-only steps refuse deterministic executors — and the
 first feasible executor wins. No prices, no telemetry, no learning:
 nothing here tracks what tasks cost or how models perform. Readers:
 `tools/learning_os/semantics/tasks.py`, proven by
@@ -148,6 +163,12 @@ explicit paths and never walk the repository. Readers:
 `tests/test_context_dossiers.py`.
 
 ## Proof-carrying change (Phase 6, hardened: claims, not verdicts)
+
+Integration status: the generic `admit` and `verify_postconditions` APIs are
+library machinery, not a universal wrapper around all live commands.
+The live module-plan import uses the bounded Phase B preflight and atomic
+lineage path described above. The envelope guarantees below apply when
+that API is invoked; they do not establish coverage of every gateway path.
 
 Every semantic mutation arrives with its proof: intent, scope, read set
 with revisions, claim ids, bare evidence references, the write set with
@@ -184,6 +205,14 @@ correction counts have no observable source and those detectors stay
 caller-fed; dossier freshness has no live-key registry. Readers:
 `tools/learning_os/semantics/scan.py`, proven by
 `tests/test_intelligence_scan.py`.
+
+The scan also checks declared `file:` evidence against current in-repository
+bytes and `manifest:` evidence against the current registered checksum.
+Missing, unreadable, escaping, or unknown evidence references cannot be
+verified and therefore stale the claim. Registered checksums do not detect
+changed external material bytes until the materials inventory is refreshed;
+remote URLs without a local digest dependency still need a fresh source
+review. Scanning reports candidates; it never rewrites the lineage ledger.
 
 ## Verified Operator Questions
 

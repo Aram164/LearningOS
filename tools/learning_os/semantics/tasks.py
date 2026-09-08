@@ -37,13 +37,17 @@ STEP_KINDS = (
 
 #: Physical mapping. Deterministic steps are pure computation over loaded
 #: records (projection reads, predicate evaluation, set joins, gateway
-#: applies); model steps need interpretation. No step names a model —
-#: models stay interchangeable executors behind this mapping.
+#: applies) or retrieval of identified evidence; model steps need
+#: interpretation. Coverage comparison judges semantic support, so it
+#: runs on a model; acquiring evidence retrieves it, so deterministic
+#: tooling may run that — interpretation belongs to the judgment step
+#: that consumes the evidence. No step names a model: models stay
+#: interchangeable executors behind this mapping.
 STEP_EXECUTORS = {
     "read-knowledge-node": "deterministic",
     "read-existing-route": "deterministic",
-    "acquire-source-evidence": "model",
-    "compare-coverage": "deterministic",
+    "acquire-source-evidence": "deterministic",
+    "compare-coverage": "model",
     "verify-locator": "deterministic",
     "generate-candidate-change": "model",
     "review-evidence": "model",
@@ -52,7 +56,7 @@ STEP_EXECUTORS = {
 
 #: Steps no deterministic tool may take: each needs judgment, not lookup.
 MODEL_ONLY_STEPS = frozenset({
-    "acquire-source-evidence",
+    "compare-coverage",
     "generate-candidate-change",
     "review-evidence",
 })
@@ -67,12 +71,22 @@ STEP_EFFECTS = {
     "read-knowledge-node": "pure",
     "read-existing-route": "pure",
     "acquire-source-evidence": "pure",
-    "compare-coverage": "pure",
+    "compare-coverage": "judgment",
     "verify-locator": "pure",
     "generate-candidate-change": "judgment",
     "review-evidence": "judgment",
     "apply-governed-mutation": "mutation",
 }
+
+#: Pure steps whose duplicates may collapse: reads of clearly identified
+#: records with immutable identity. Acquisitions are excluded on purpose —
+#: fetching external evidence has no proved content identity, so two
+#: identical-looking acquisitions are not interchangeable without one.
+DEDUPABLE_READ_KINDS = frozenset({
+    "read-knowledge-node",
+    "read-existing-route",
+    "verify-locator",
+})
 
 #: Steps whose surviving duplicates the dossier cache may serve.
 DOSSIER_SERVABLE = frozenset({
@@ -292,25 +306,67 @@ def rewrite_pushdown(task_ir: TaskIR) -> TaskIR:
 def rewrite_dedup(task_ir: TaskIR) -> TaskIR:
     """Dedup via dossiers: repeated pure reads serve from cache, not re-read.
 
-    Exact-duplicate pure (kind, detail) steps collapse to their first
+    Collapse is scoped to mutation-free segments: the tuple splits at
+    every mutation, because a read after a mutation observes a different
+    world than the same read before it even when no dependency edge says
+    so — tuple order is the barrier. Within one segment, exact-duplicate
+    reads of clearly identified records collapse to their first
     occurrence; a surviving read that lost a duplicate is marked
     dossier-served, which is what the Phase 5 cache will honor.
-    Mutations and judgments never deduplicate — two identical-looking
-    operations are not interchangeable without a purity proof, and this
-    rewrite does not invent one. Dependencies pointing at a dropped
-    duplicate re-point at its survivor; the survivor waits for the union
-    of both dependency sets, and the rebuilt plan revalidates.
+    Acquisitions never collapse, nor do mutations or judgments — two
+    identical-looking operations are not interchangeable without a purity
+    proof, and this rewrite does not invent one. Dependencies pointing at
+    a dropped duplicate re-point at its survivor in that segment; merging
+    that would invert dependency order refuses instead of reordering, and
+    the rebuilt plan revalidates.
     """
     validate_ir(task_ir)
-    survivor: dict[tuple[str, str], TaskStep] = {}
-    remap: dict[str, str] = {}
-    kept: list[TaskStep] = []
-    collapsed: set[tuple[str, str]] = set()
+    position = {step.id: at for at, step in enumerate(task_ir.steps)}
+    segments: list[list[TaskStep]] = [[]]
     for step in task_ir.steps:
+        segments[-1].append(step)
+        if step.effect == "mutation":
+            segments.append([])
+    remap: dict[str, str] = {}
+    collapsed: set[tuple[str, str]] = set()
+    kept: list[TaskStep] = []
+    for segment in segments:
+        kept.extend(_dedup_segment(segment, position, remap, collapsed))
+    steps = []
+    for step in kept:
+        deps = tuple(remap.get(dep, dep) for dep in step.depends_on)
+        if deps != step.depends_on:
+            step = TaskStep(
+                id=step.id, kind=step.kind, detail=step.detail,
+                depends_on=deps, effect=step.effect,
+                uses_dossier=step.uses_dossier,
+            )
+        steps.append(step)
+    return validate_ir(TaskIR(task_type=task_ir.task_type, steps=tuple(steps)))
+
+
+def _dedup_segment(
+    segment: Sequence[TaskStep],
+    position: Mapping[str, int],
+    remap: dict[str, str],
+    collapsed: set[tuple[str, str]],
+) -> list[TaskStep]:
+    """Collapse one mutation-free segment; shared remap/collapsed grow."""
+    survivor: dict[tuple[str, str], TaskStep] = {}
+    kept: list[TaskStep] = []
+    for step in segment:
         key = (step.kind, step.detail)
-        if key in survivor and step.effect == "pure":
+        if key in survivor and step.effect == "pure" \
+                and step.kind in DEDUPABLE_READ_KINDS:
             first = survivor[key]
             merged = tuple(dict.fromkeys(first.depends_on + step.depends_on))
+            late = [dep for dep in merged
+                    if position[dep] >= position[first.id]]
+            if late:
+                raise TaskError(
+                    f"dedup refuses: collapsing {step.id!r} into "
+                    f"{first.id!r} would wait on "
+                    f"{', '.join(late)} ordered after the survivor")
             survivor[key] = TaskStep(
                 id=first.id, kind=first.kind, detail=first.detail,
                 depends_on=merged, effect="pure",
@@ -319,23 +375,25 @@ def rewrite_dedup(task_ir: TaskIR) -> TaskIR:
             collapsed.add(key)
             remap[step.id] = first.id
             continue
-        if step.effect == "pure":
+        if step.effect == "pure" and step.kind in DEDUPABLE_READ_KINDS:
             survivor[key] = step
         kept.append(step)
-    steps = []
+    out = []
     for step in kept:
         key = (step.kind, step.detail)
-        current = survivor[key] if step.effect == "pure" else step
-        deps = tuple(remap.get(dep, dep) for dep in current.depends_on)
-        served = key in collapsed and current.kind in DOSSIER_SERVABLE
-        if served or deps != current.depends_on:
-            current = TaskStep(
-                id=current.id, kind=current.kind, detail=current.detail,
-                depends_on=deps, effect=current.effect,
-                uses_dossier=True if served else current.uses_dossier,
-            )
-        steps.append(current)
-    return validate_ir(TaskIR(task_type=task_ir.task_type, steps=tuple(steps)))
+        if key in survivor:
+            current = survivor[key]
+            served = key in collapsed and current.kind in DOSSIER_SERVABLE
+            if served and not current.uses_dossier:
+                current = TaskStep(
+                    id=current.id, kind=current.kind, detail=current.detail,
+                    depends_on=current.depends_on, effect=current.effect,
+                    uses_dossier=True,
+                )
+            out.append(current)
+        else:
+            out.append(step)
+    return out
 
 
 def rewrite_cheapest_evidence_first(
