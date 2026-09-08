@@ -1,9 +1,12 @@
 """Proof-carrying change: admission is deterministic, refusal is exact.
 
-The plan's highest-risk validation in executable form: a good envelope
-admits with exactly one decision; a stale read, missing evidence, or
-out-of-scope write is refused without mutation; two conflicting writes
-cannot both succeed; one approval covers exactly its scope. The gateway
+The plan's highest-risk validation in executable form, hardened: the
+envelope carries claims, never verdicts — authorization, lineage, and
+evidence come from a trusted context the agent never touches. A good
+envelope admits with exactly one decision; a stale read, unresolvable
+evidence, or out-of-scope write is refused without mutation; two
+conflicting writes cannot both succeed; one approval covers exactly its
+scope; widened scopes fail against the capability contract. The gateway
 still applies — this suite pins the preflight that stands in front of it.
 """
 
@@ -15,12 +18,23 @@ from learning_os.semantics import (
     ChangeError,
     admit,
     build_envelope,
+    build_trusted_context,
     verify_postconditions,
 )
 
 SCOPES = ("curriculum/modules/*/units/*/study-map.yaml",)
+CONTRACT_SCOPES = {
+    "route.patch": list(SCOPES),
+    "unit.map.import": ["curriculum/modules/*/units/*/study-map.yaml"],
+}
 REVISIONS = {"study-map-aml-l01": 6}
 SNAPSHOT = "sha256:abc"
+WRITE = {
+    "capability": "route.patch",
+    "target_path": "curriculum/modules/module-hu-aml/units/unit-aml-l01/study-map.yaml",
+    "summary": "re-point one stage row",
+    "scopes": list(SCOPES),
+}
 
 
 def _envelope(**overrides):
@@ -29,17 +43,9 @@ def _envelope(**overrides):
         "scope": ["study-map-aml-l01"],
         "read_revisions": dict(REVISIONS),
         "claims": ["covers:route-1"],
-        "claim_statuses": {"covers:route-1": "supported"},
-        "evidence": {"material://demo/deck.pdf": "h1"},
-        "writes": [{
-            "capability": "route.patch",
-            "target_path": "curriculum/modules/module-hu-aml/units/unit-aml-l01/study-map.yaml",
-            "summary": "re-point one stage row",
-            "scopes": list(SCOPES),
-        }],
+        "evidence": ["material://demo/deck.pdf"],
+        "writes": [dict(WRITE)],
         "expected_snapshot": SNAPSHOT,
-        "approved_by": "Aram",
-        "approved_capabilities": ["route.patch"],
         "postconditions": [{
             "predicate": "StudyMapGrounded",
             "inputs": {
@@ -55,16 +61,24 @@ def _envelope(**overrides):
     return build_envelope(**fields)
 
 
-def _world(revisions=None, snapshot=None):
-    return {
+def _context(**overrides):
+    fields = {
+        "approved_by": "Aram",
+        "approved_capabilities": ["route.patch"],
+        "capability_scopes": {key: list(value)
+                              for key, value in CONTRACT_SCOPES.items()},
+        "claim_statuses": {"covers:route-1": "supported"},
+        "evidence_digests": {"material://demo/deck.pdf": "h1"},
         "current_contract_version": 2,
-        "current_revisions": dict(REVISIONS if revisions is None else revisions),
-        "current_snapshot": SNAPSHOT if snapshot is None else snapshot,
+        "current_revisions": dict(REVISIONS),
+        "current_snapshot": SNAPSHOT,
     }
+    fields.update(overrides)
+    return build_trusted_context(**fields)
 
 
 def test_a_good_envelope_admits_with_one_receipt_worth_of_reasons():
-    decision = admit(_envelope(), **_world())
+    decision = admit(_envelope(), _context())
     assert decision.verdict == "admit"
     assert len(decision.reasons) == 1
     results = verify_postconditions(_envelope())
@@ -72,53 +86,79 @@ def test_a_good_envelope_admits_with_one_receipt_worth_of_reasons():
         ("StudyMapGrounded", True)]
 
 
+def test_verdicts_are_structurally_unstatable_in_envelopes():
+    """Smuggling trust has no field to ride in on."""
+    with pytest.raises(TypeError):
+        _envelope(approved_by="Aram")
+    with pytest.raises(TypeError):
+        _envelope(claim_statuses={"covers:route-1": "supported"})
+
+
 def test_a_stale_read_never_commits():
     """Highest risk, first half: the world moved under the envelope."""
-    decision = admit(
-        _envelope(), **_world(revisions={"study-map-aml-l01": 7}))
+    context = _context(current_revisions={"study-map-aml-l01": 7})
+    decision = admit(_envelope(), context)
     assert decision.verdict == "conflict"
     assert any("stale" in reason.lower() for reason in decision.reasons)
 
 
 def test_a_moved_snapshot_is_a_conflict_not_an_overwrite():
-    decision = admit(_envelope(), **_world(snapshot="sha256:def"))
+    context = _context(current_snapshot="sha256:def")
+    decision = admit(_envelope(), context)
     assert decision.verdict == "conflict"
 
 
-def test_missing_evidence_replans():
-    decision = admit(
-        _envelope(evidence={"material://demo/deck.pdf": None}), **_world())
-    assert decision.verdict == "replan"
+def test_unresolvable_evidence_replans():
+    context = _context(evidence_digests={"material://demo/deck.pdf": None})
+    assert admit(_envelope(), context).verdict == "replan"
+    context = _context(evidence_digests={})
+    assert admit(_envelope(), context).verdict == "replan"
 
 
 def test_an_out_of_scope_write_is_denied():
-    envelope = _envelope(writes=[{
-        "capability": "route.patch",
-        "target_path": "knowledge/notes/note-x.md",
-        "summary": "out of scope",
-        "scopes": list(SCOPES),
-    }])
-    decision = admit(envelope, **_world())
+    envelope = _envelope(writes=[dict(
+        WRITE,
+        target_path="knowledge/notes/note-x.md",
+    )])
+    decision = admit(envelope, _context())
     assert decision.verdict == "deny"
+
+
+def test_scopes_wider_than_the_contract_are_denied():
+    """The envelope cannot widen its own scopes past the contract."""
+    envelope = _envelope(writes=[dict(
+        WRITE,
+        target_path="knowledge/notes/note-x.md",
+        scopes=["knowledge/**"],
+    )])
+    decision = admit(envelope, _context())
+    assert decision.verdict == "deny"
+    assert any("capability contract" in reason for reason in decision.reasons)
+
+
+def test_a_concrete_path_inside_the_contract_admits():
+    """Narrower is fine: a concrete path the contract covers."""
+    envelope = _envelope(writes=[dict(
+        WRITE,
+        scopes=["curriculum/modules/module-hu-aml/units/unit-aml-l01/study-map.yaml"],
+    )])
+    assert admit(envelope, _context()).verdict == "admit"
 
 
 def test_one_approval_covers_one_scope():
     """An approval for route.patch never admits a unit.map.import write."""
-    envelope = _envelope(
-        approved_capabilities=["route.patch"],
-        writes=[{
-            "capability": "unit.map.import",
-            "target_path": "curriculum/modules/module-hu-aml/units/unit-aml-l01/study-map.yaml",
-            "summary": "wrong capability",
-            "scopes": list(SCOPES),
-        }],
+    write = dict(
+        WRITE,
+        capability="unit.map.import",
     )
-    assert admit(envelope, **_world()).verdict == "deny"
+    envelope = _envelope(writes=[write])
+    assert admit(envelope, _context()).verdict == "deny"
 
 
 def test_anything_but_aram_is_not_approval():
-    envelope = _envelope(approved_by="Muse")
-    decision = admit(envelope, **_world())
+    """The envelope is well-formed; the session did not approve."""
+    context = _context(approved_by="Muse")
+    decision = admit(_envelope(), context)
     assert decision.verdict == "deny"
 
 
@@ -129,26 +169,29 @@ def test_conflicting_writes_cannot_both_succeed():
     second, read under the old snapshot, conflicts instead of overwriting.
     """
     first, second = _envelope(), _envelope()
-    assert admit(first, **_world()).verdict == "admit"
-    applied_snapshot = "sha256:applied"
-    assert admit(second, **_world(snapshot=applied_snapshot)).verdict == "conflict"
+    assert admit(first, _context()).verdict == "admit"
+    applied = _context(current_snapshot="sha256:applied")
+    assert admit(second, applied).verdict == "conflict"
 
 
-def test_unsupported_lineage_conflicts():
-    envelope = _envelope(claim_statuses={"covers:route-1": "stale"})
-    assert admit(envelope, **_world()).verdict == "conflict"
+def test_ledger_lineage_decides_not_envelope_claims():
+    """A claim the live ledger stopped supporting conflicts."""
+    context = _context(claim_statuses={"covers:route-1": "stale"})
+    assert admit(_envelope(), context).verdict == "conflict"
+    context = _context(claim_statuses={})
+    assert admit(_envelope(), context).verdict == "conflict"
 
 
 def test_uncheckable_postconditions_replan():
     envelope = _envelope(postconditions=[{
         "predicate": "Nope", "inputs": {}, "op": "is_true",
     }])
-    decision = admit(envelope, **_world())
+    decision = admit(envelope, _context())
     assert decision.verdict == "replan"
     envelope = _envelope(postconditions=[{
         "predicate": "RepoClean", "inputs": {}, "op": "eventually",
     }])
-    assert admit(envelope, **_world()).verdict == "replan"
+    assert admit(envelope, _context()).verdict == "replan"
 
 
 def test_failing_postconditions_report_per_check():
@@ -168,7 +211,7 @@ def test_failing_postconditions_report_per_check():
             "op": "is_true",
         },
     ])
-    assert admit(envelope, **_world()).verdict == "admit"
+    assert admit(envelope, _context()).verdict == "admit"
     assert [(result.predicate, result.passed)
             for result in verify_postconditions(envelope)] == [
         ("StudyMapGrounded", True), ("RepoClean", False)]
@@ -184,4 +227,17 @@ def test_malformed_envelopes_refuse_at_construction():
     with pytest.raises(ChangeError):
         _envelope(expected_snapshot="")
     with pytest.raises(ChangeError):
+        _envelope(evidence="material://demo/deck.pdf")
+    with pytest.raises(ChangeError):
         _envelope(postconditions=[{"predicate": "RepoClean"}])
+
+
+def test_malformed_contexts_refuse_at_construction():
+    with pytest.raises(ChangeError):
+        _context(approved_by="")
+    with pytest.raises(ChangeError):
+        _context(current_snapshot="")
+    with pytest.raises(ChangeError):
+        _context(current_contract_version="2")
+    with pytest.raises(ChangeError):
+        _context(current_revisions={"study-map-aml-l01": "six"})

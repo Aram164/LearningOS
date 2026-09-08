@@ -136,18 +136,21 @@ explicit paths and never walk the repository. Readers:
 `tools/learning_os/semantics/dossiers.py`, proven by
 `tests/test_context_dossiers.py`.
 
-## Proof-carrying change (Phase 6)
+## Proof-carrying change (Phase 6, hardened: claims, not verdicts)
 
 Every semantic mutation arrives with its proof: intent, scope, read set
-with revisions, claims plus resolvable evidence, the write set with its
-capability, the snapshot read, promised postconditions, and a validation
-plan. Deterministic admission runs before any gateway apply — Aram's
-approval, in-scope writes, fresh reads, matching snapshot, resolvable
-evidence, supported lineage, checkable postconditions — and anything else
-returns conflict, replan, or deny, never an overwrite. Conflicting writes
-cannot both succeed: the second read loses its snapshot race by
-construction. The gateway still applies; the envelope is preflight, and
-the snapshot guard stays the final word. Readers:
+with revisions, claim ids, bare evidence references, the write set with
+its capability, the snapshot read, promised postconditions, and a
+validation plan. The envelope carries no approval, no lineage verdicts,
+no digests — those are structurally unstatable in it. Deterministic
+admission runs before any gateway apply against a trusted context the
+agent never touches: session authorization, the capability contract
+(declared scopes ground every write scope), the live lineage ledger,
+harness-resolved evidence, current revisions, and the current snapshot.
+Anything else returns conflict, replan, or deny, never an overwrite.
+Conflicting writes cannot both succeed: the second read loses its
+snapshot race by construction. The gateway still applies; the envelope
+is preflight, and the snapshot guard stays the final word. Readers:
 `tools/learning_os/semantics/changes.py`, proven by
 `tests/test_proof_carrying_change.py`.
 
