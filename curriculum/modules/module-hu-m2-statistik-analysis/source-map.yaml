@@ -648,8 +648,8 @@ sources:
     unit_id: unit-m2-sad-l07
     title: Current L07 discrete-distributions deck
     format: course-material
-    angle: Defines the identification conditions for the four discrete families, which is what the exam
-      tests rather than the formulas.
+    angle: Defines the identifying assumptions for the discrete models taught in the current deck and
+      connects those assumptions to their PMFs, moments, examples, and relationships.
     covers:
     - knowledge-sad-l07-model-selection
     - knowledge-sad-l07-bernoulli-binomial
@@ -659,12 +659,11 @@ sources:
     depth: course-aligned
     scope: current
     locator: lecture-slides/07_discrete_distributions.pdf, 33 slides
-    angle_detail: 'Short deck, high exam density. Each distribution gets its conditions, PMF, moments
-      and a worked example, and the final slides state the limit relationships between them. The relationships
-      are asserted; Blitzstein §3.9 and §4.8 prove them. If time is short before the exam, the conditions
-      slides are the ones to know cold — the formulas are recoverable, the identification is not. Scope
-      note: the current deck has no dedicated Geometric section; its PDF p. 14 sketches related negative-binomial/beta
-      models. The Geometric stage is a complementary bridge to the explicitly routed Blatt 4 CLT simulation.'
+    angle_detail: 'The deck presents model assumptions, PMFs, moments, worked examples, and relationships
+      between its discrete models. The relationships are asserted; Blitzstein §3.9 and §4.8 provide complementary
+      derivations. Use the condition statements as a model-selection checklist. Scope note: the current
+      deck has no dedicated Geometric section; the Geometric stage is a complementary bridge to the explicitly
+      routed Blatt 4 work. This route makes no independent claim about exam weighting.'
   - id: route-a82f4016ebbdab30e0351c91
     unit_id: unit-m2-sad-l08
     title: Current L08 Normal, CLT, and likelihood deck
@@ -3157,11 +3156,10 @@ sources:
     depth: practice
     scope: complementary
     locator: Ch 5 Aufgaben pdf pp. 96-104, Lösungen pdf pp. 105-123 (the Verteilungsmodell items)
-    angle_detail: The examinable difficulty in L07 is choosing between Binomial, Hypergeometrisch, Geometrisch
-      and Poisson from a word problem — once chosen, the arithmetic is a formula lookup. These items are
-      written so that the choice is the work, and the solutions justify the choice rather than jumping
-      to the formula. Do them mixed rather than in blocks; solving ten Binomial questions in a row trains
-      nothing about identification.
+    angle_detail: Use these items as mixed model-identification practice for the Binomial, Hypergeometric
+      and Poisson cases represented by this route. The solutions justify the model choice rather than
+      jumping directly to the formula. Work them mixed rather than in single-family blocks. Geometric
+      coverage in this workbook slice remains unverified and is not claimed here.
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
   - id: route-b40645f2cd94ca740d4201ca
     unit_id: unit-m2-sad-l08
@@ -4952,7 +4950,7 @@ sources:
     covers:
     - knowledge-sad-l07-model-selection
     - knowledge-sad-l07-bernoulli-binomial
-    - knowledge-sad-l07-hypergeometric
+    - knowledge-sad-l07-geometric
     - knowledge-sad-l07-poisson
     depth: practice
     scope: complementary
@@ -5366,22 +5364,20 @@ sources:
     unit_id: unit-m2-sad-l07
     title: MIT 18.05 — discrete-distribution problems
     format: course
-    angle: Introduces each discrete family with an explicit R function name beside its formula, tying
-      the mathematics to a computation you can run.
+    angle: Contrasts fixed-trial Bernoulli/Binomial counts with Geometric waiting times through explicit
+      modelling examples.
     covers:
     - knowledge-sad-l07-model-selection
     - knowledge-sad-l07-bernoulli-binomial
-    - knowledge-sad-l07-hypergeometric
     - knowledge-sad-l07-geometric
-    - knowledge-sad-l07-poisson
     depth: practice
     scope: complementary
-    locator: 'Classes: Reading and In-class Materials, the ''Discrete Random Variables'' readings covering
-      Bernoulli, binomial, geometric and Poisson; Problem Set 2 with solutions'
-    angle_detail: 'Every distribution arrives with its dbinom/pbinom-style counterpart, so a hand computation
-      can be checked immediately. That is a small thing that removes a large class of silent errors when
-      practising, and it also means the model-selection question can be tested empirically: simulate the
-      described situation, compare the histogram with the candidate PMF.'
+    locator: MIT 18.05 Reading 4a 'Discrete Random Variables', §§3.1-3.4 (Bernoulli, Binomial, Geometric);
+      Problem Set 2, Problem 6 only for its separate R coin-flip simulation using rbinom
+    angle_detail: Reading 4a teaches Bernoulli/Binomial and Geometric and uses examples to distinguish
+      fixed-trial counts from waiting-time counts. Hypergeometric appears only in §3.7 "Other Distributions"
+      as a look-up example, and Poisson is not taught in this reading. Problem Set 2, Problem 6 uses rbinom
+      for coin-flip simulation; this route does not claim per-distribution R-function coverage.
   - id: route-cdc87014dbc983f542c2d601
     unit_id: unit-m2-sad-l08
     title: MIT 18.05 — Normal and CLT notes/exams
@@ -6599,8 +6595,6 @@ sources:
     covers:
     - knowledge-sad-l07-model-selection
     - knowledge-sad-l07-bernoulli-binomial
-    - knowledge-sad-l07-hypergeometric
-    - knowledge-sad-l07-geometric
     - knowledge-sad-l07-poisson
     depth: practice
     scope: complementary
@@ -7384,7 +7378,8 @@ sources:
     unit_id: unit-m2-sad-l07
     title: Leuphana-Merz pp. 11-16 — discrete distribution selection
     format: exercise
-    angle: A mixed block where Binomial, Hypergeometric and Poisson models must be identified from context.
+    angle: A mixed block where Binomial, Hypergeometric, Geometric and Poisson models must be identified
+      from context.
     covers:
     - knowledge-sad-l07-model-selection
     - knowledge-sad-l07-bernoulli-binomial

@@ -5,9 +5,10 @@ component_id: component-m2-sad
 kind: lecture
 title: SaD Lecture 07 — Discrete Distributions
 order: 7
-scope: Current 2026 L07 deck; Bernoulli, Binomial, Hypergeometric, Geometric, and Poisson distributions,
-  their experiment assumptions, PMFs, expectation and variance, and relationships or approximations between
-  the models.
+scope: Current 2026 L07 deck; Bernoulli, Binomial, Hypergeometric, and Poisson distributions, their experiment
+  assumptions, PMFs, expectation and variance, and relationships or approximations between those models.
+  Geometric waiting times are complementary preparation for later work; the current L07 deck has no dedicated
+  Geometric section.
 status: ready
 knowledge_map:
   summary: 'The lecture replaces formula matching with experiment matching: each named distribution is

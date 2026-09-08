@@ -744,6 +744,30 @@ entries:
       unit-job-polars-pandas-fluency: 2
     snapshot_before: sha256:2e63f0de9cc636019b2299d80e40d80d38fe0a82222be91230332932502a11d3
     snapshot_after: sha256:e7a1cfa243cbcc0f1f87df0711165f82df77ee273aee2c89d881e06e7eb308f3
+  l07-repair-map-20260908:
+    request_id: l07-repair-map-20260908-001
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:812945374b109841c261cce07c39ba822b4b3c6a71633a3b00e8874244a1620f
+    transaction_id: transaction-20260908-045026-001
+    receipt_path: operations/transactions/transaction-20260908-045026-001.yaml
+    revisions:
+      study-map-m2-sad-l07: 7
+      unit-m2-sad-l07: 14
+    snapshot_before: sha256:20ba17ac61fa3afc847c955aaa7822c1f17b6a5e622137bff2862112ef55bd7e
+    snapshot_after: sha256:f09d475251bbd88911353984eb47394879ced4aadfcf57494e76f2b9af163dc2
+  l07-repair-module-20260908:
+    request_id: l07-repair-module-20260908-001
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:e6d610a457e514fe4712b6c173f8085935566a7220ec8b0ce6f6b548198f6bb9
+    transaction_id: transaction-20260908-045007-001
+    receipt_path: operations/transactions/transaction-20260908-045007-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 23
+      unit-m2-sad-l07: 13
+    snapshot_before: sha256:afb2cee6690216983e556bbbd9b065e679f993e90f60b093d415a35aff9f91cf
+    snapshot_after: sha256:20ba17ac61fa3afc847c955aaa7822c1f17b6a5e622137bff2862112ef55bd7e
   m2-exact-locator-20260901-001:
     request_id: request-m2-exact-locator-20260901-001
     capability: module.plan.import
