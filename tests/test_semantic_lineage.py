@@ -18,6 +18,7 @@ from learning_os.semantics import (
     LineageError,
     contest,
     dump_ledger,
+    effective_statuses,
     emit_dossier_freshness,
     emit_route_covers,
     emit_scope_authority,
@@ -448,3 +449,125 @@ def test_assumptions_must_name_other_claims():
             claim_id="S", claim_kind="route-covers", statement="S",
             judged_by="t", admitted_by=_admission(), assumes="X",
         )
+
+
+def _stale_chain():
+    """A → B → C with A's revision moved, plus branching B → D and an
+    unrelated E. Every claim's own reads are otherwise fresh."""
+    def make(cid, rev, *assumes):
+        return record_claim(
+            claim_id=cid, claim_kind="route-covers", statement=cid,
+            revisions={rev: 1}, judged_by="t",
+            admitted_by=_admission(), assumes=list(assumes),
+        )
+    records = {
+        lineage.claim_id: lineage for lineage in (
+            make("A", "unit-a"),
+            make("B", "unit-b", "A"),
+            make("C", "unit-c", "B"),
+            make("D", "unit-d", "B"),
+            make("E", "unit-e"),
+        )
+    }
+    current = {"unit-a": 2, "unit-b": 1, "unit-c": 1, "unit-d": 1,
+               "unit-e": 1}
+    return records, current
+
+
+def test_effective_status_propagates_staleness_and_names_blockers():
+    records, current = _stale_chain()
+    verdicts = effective_statuses(records, CONTRACT_VERSION, current)
+    assert verdicts["A"].status == "stale"
+    assert verdicts["A"].blocked_by == ()
+    assert verdicts["B"].status == "stale"
+    assert verdicts["B"].blocked_by == ("A",)
+    assert verdicts["C"].status == "stale"
+    assert verdicts["C"].blocked_by == ("B",)
+    assert verdicts["D"].status == "stale"
+    assert verdicts["D"].blocked_by == ("B",)
+    assert verdicts["E"].status == "supported"
+    assert verdicts["E"].blocked_by == ()
+
+
+def test_effective_status_preserves_contested_and_withdrawn_roots():
+    records, current = _stale_chain()
+    disputed = contest(
+        records["A"], contested_by="Aram", reason="reread the deck")
+    verdicts = effective_statuses(
+        {**records, "A": disputed}, CONTRACT_VERSION, current)
+    assert verdicts["A"].status == "contested"
+    assert verdicts["B"].status == "stale"
+    assert verdicts["B"].blocked_by == ("A",)
+    # A dependent that is still supported itself goes stale on a
+    # withdrawn assumption; an explicit cascade marking is preserved.
+    lone = record_claim(
+        claim_id="A", claim_kind="route-covers", statement="A",
+        revisions={"unit-a": 2}, judged_by="t",
+        admitted_by=_admission(),
+    )
+    (withdrawn_a,) = withdraw((lone,), "A")
+    supported_b = record_claim(
+        claim_id="B", claim_kind="route-covers", statement="B",
+        revisions={"unit-b": 1}, judged_by="t",
+        admitted_by=_admission(), assumes=["A"],
+    )
+    verdicts = effective_statuses(
+        {"A": withdrawn_a, "B": supported_b}, CONTRACT_VERSION,
+        {"unit-a": 2, "unit-b": 1})
+    assert verdicts["A"].status == "withdrawn"
+    assert verdicts["B"].status == "stale"
+    assert verdicts["B"].blocked_by == ("A",)
+    cascaded = {lineage.claim_id: lineage
+                for lineage in withdraw(tuple(records.values()), "A")}
+    verdicts = effective_statuses(cascaded, CONTRACT_VERSION, current)
+    assert verdicts["A"].status == "withdrawn"
+    assert verdicts["B"].status == "withdrawn"
+    assert verdicts["E"].status == "supported"
+
+
+def test_effective_status_recovers_when_the_root_is_fresh_again():
+    records, _ = _stale_chain()
+    fresh = {"unit-a": 1, "unit-b": 1, "unit-c": 1, "unit-d": 1,
+             "unit-e": 1}
+    verdicts = effective_statuses(records, CONTRACT_VERSION, fresh)
+    assert all(v.status == "supported" for v in verdicts.values())
+    # A recompute, not a sticky marking: withdrawing still needs judgment.
+    assert verdicts["B"].blocked_by == ()
+
+
+def test_effective_status_names_the_assumption_when_reads_also_moved():
+    records, _ = _stale_chain()
+    current = {"unit-a": 2, "unit-b": 2, "unit-c": 1, "unit-d": 1,
+               "unit-e": 1}
+    verdicts = effective_statuses(records, CONTRACT_VERSION, current)
+    assert verdicts["B"].status == "stale"
+    assert verdicts["B"].blocked_by == ("A",)
+
+
+def test_effective_status_refuses_missing_and_cyclic_assumptions():
+    records, current = _stale_chain()
+    stray = record_claim(
+        claim_id="S", claim_kind="route-covers", statement="S",
+        judged_by="t", admitted_by=_admission(), assumes=["ghost"],
+    )
+    with pytest.raises(LineageError, match="LINEAGE-ASSUMPTION-MISSING"):
+        effective_statuses(
+            {**records, "S": stray}, CONTRACT_VERSION, current)
+    loop = {
+        lineage.claim_id: lineage
+        for lineage in (_judged("X", "Y"), _judged("Y", "X"))
+    }
+    with pytest.raises(LineageError, match="LINEAGE-ASSUMPTION-CYCLE"):
+        effective_statuses(loop, CONTRACT_VERSION, {})
+
+
+def test_effective_status_is_deterministic_and_leaves_inputs_untouched():
+    records, current = _stale_chain()
+    before = {cid: to_dict(lineage) for cid, lineage in records.items()}
+    first = effective_statuses(records, CONTRACT_VERSION, current)
+    shuffled = dict(reversed(list(records.items())))
+    second = effective_statuses(shuffled, CONTRACT_VERSION, current)
+    assert first == second
+    assert [v.claim_id for v in first.values()] == sorted(first)
+    assert {cid: to_dict(lineage) for cid, lineage in records.items()} == before
+    assert {cid: to_dict(lineage) for cid, lineage in shuffled.items()} == before
