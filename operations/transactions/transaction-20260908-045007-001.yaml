@@ -1,0 +1,52 @@
+schema_version: 2
+id: transaction-20260908-045007-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-09-08T04:50:07+02:00'
+snapshot_before: sha256:afb2cee6690216983e556bbbd9b065e679f993e90f60b093d415a35aff9f91cf
+snapshot_after: sha256:20ba17ac61fa3afc847c955aaa7822c1f17b6a5e622137bff2862112ef55bd7e
+expected_revisions:
+  module-hu-m2-statistik-analysis: 22
+  unit-m2-sad-l07: 12
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 22
+    after: 23
+  unit-m2-sad-l07:
+    before: 12
+    after: 13
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/module.yaml
+  sha256_before: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  sha256_after: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: 77b8efafb8bb65bff7fb6f75930c0d29a239ddbef7493c8d9acb902f012d2fa0
+  sha256_after: 6182c5b4bb0a02a2a8719a934a4da800aea0ec2f832df2a6e83d4812bfbd9f94
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/unit.yaml
+  sha256_before: 6e9af8f6d95f046ffdc02841d019c125224f09ac4364c07ace888a3e13e82bac
+  sha256_after: 7608966f01dfda65e568c253aceb8602e2ae59483b0f299a1a537b0e270f154b
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+request:
+  channel: operator
+  request_id: l07-repair-module-20260908-001
+  idempotency_key: l07-repair-module-20260908
+  intent_sha256: sha256:e6d610a457e514fe4712b6c173f8085935566a7220ec8b0ce6f6b548198f6bb9
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:e6d610a457e514fe4712b6c173f8085935566a7220ec8b0ce6f6b548198f6bb9
