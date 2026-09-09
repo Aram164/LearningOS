@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/compiled-sessions.schema.json",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["_generated", "sessions"],
+  "properties": {
+    "_generated": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["generated_at", "warning"],
+      "properties": {
+        "generated_at": { "type": "string" },
+        "warning": { "type": "string" }
+      }
+    },
+    "sessions": {
+      "type": "array",
+      "items": {
+        "$ref": "https://learningos.local/schema/session-plan.schema.json"
+      }
+    }
+  }
+}
