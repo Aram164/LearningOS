@@ -60,6 +60,8 @@ the declared payload schema. The complete catalogue remains available through
 `capabilities --json` when the task needs it.
 
 Compact startup preserves complete material access through `inspect ID`.
+Its `domain_atlas` glance summarizes all projected notes and shelves across
+domains, independently of pagination; open the domain atlas for the full map.
 Read several known records with `inspect ID1 ID2 ...` (at most 20) to share one
 fresh projection; the batch preserves requested order, includes a snapshot,
 and refuses missing IDs or changes during the read. Use `note-read` for note

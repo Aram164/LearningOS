@@ -1,0 +1,41 @@
+schema_version: 2
+id: transaction-20260909-044639-001
+type: transaction-receipt
+status: committed
+capability: route.patch
+committed_at: '2026-09-09T04:46:39+02:00'
+snapshot_before: sha256:bbc6fefdef99dac15b94e728ae3167e93fd76793ca2b2555473e7f26b0dc34cf
+snapshot_after: sha256:d82e92d1469579b3558511a83ee524706106bd4ef815700323e0373bead27c46
+expected_revisions:
+  module-hu-m2-statistik-analysis: 36
+  unit-m2-sad-l07: 16
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 36
+    after: 37
+  unit-m2-sad-l07:
+    before: 16
+    after: 17
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: fd594d63a3f83881a31c6b53ae5b98aad3fb52134a7ae95e474fd3fa3e05aa15
+  sha256_after: 65a4e6a11bf67e6d1b2ab452f782fe19dd3683c42313702039dd47b24610ce3f
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: route.patch
+    declared_writes:
+    - curriculum/modules/*/source-map.yaml
+    - curriculum/modules/*/units/*/unit.yaml
+    - curriculum/modules/*/units/*/study-map.yaml
+request:
+  channel: operator
+  request_id: codex-sad-closeout-e88486a51a884099aa8dc956d60daea7
+  idempotency_key: codex-sad-closeout-e88486a51a884099aa8dc956d60daea7
+  intent_sha256: sha256:8c25b09ebacc413785edea9205f0387883283b7514fbc3e325df1c209959a474
+  approval:
+    kind: direct-user-gesture
+    subject_sha256: sha256:8c25b09ebacc413785edea9205f0387883283b7514fbc3e325df1c209959a474

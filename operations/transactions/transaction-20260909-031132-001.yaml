@@ -1,0 +1,41 @@
+schema_version: 2
+id: transaction-20260909-031132-001
+type: transaction-receipt
+status: committed
+capability: route.patch
+committed_at: '2026-09-09T03:11:32+02:00'
+snapshot_before: sha256:373fc61c8ab16a57a00d738932861847cdf3b41730a41e7ca9a7a46735dcdc38
+snapshot_after: sha256:98d7c5308838a60b133fae8945321be0dd277c70afda51fc495402f00c45fd23
+expected_revisions:
+  module-hu-m2-statistik-analysis: 25
+  unit-m2-sad-l05: 12
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 25
+    after: 26
+  unit-m2-sad-l05:
+    before: 12
+    after: 13
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: 8775ae059e0b9699eea2e968df43c82cde7cfe268daa2e504f5cf1a68dadf71f
+  sha256_after: 17efff9baf12aea1bf50f2e1df378b9456d91b01af97e8372833b92d1b3225f4
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: route.patch
+    declared_writes:
+    - curriculum/modules/*/source-map.yaml
+    - curriculum/modules/*/units/*/unit.yaml
+    - curriculum/modules/*/units/*/study-map.yaml
+request:
+  channel: operator
+  request_id: op-20260909-ross-l05-001
+  idempotency_key: op-20260909-ross-l05-001
+  intent_sha256: sha256:70dbc0cab0b76a574bda9034f9cbb1bbbebdd5b5c27a63102097f1db37f6c033
+  approval:
+    kind: direct-user-gesture
+    subject_sha256: sha256:70dbc0cab0b76a574bda9034f9cbb1bbbebdd5b5c27a63102097f1db37f6c033

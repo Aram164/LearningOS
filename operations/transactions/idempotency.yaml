@@ -312,6 +312,32 @@ entries:
       unit-m2-sad-l05: 12
     snapshot_before: sha256:6aa8942881dc442c2b4d87985ea7ec82c75628fecc8c7aca80e159305b07bbea
     snapshot_after: sha256:c621fa79edd7944973cbb71c3db7a2b4c964060b2dade1cbbbc7fa97d7022d54
+  codex-sad-closeout-e88486a51a884099aa8dc956d60daea7:
+    request_id: codex-sad-closeout-e88486a51a884099aa8dc956d60daea7
+    capability: route.patch
+    channel: operator
+    intent_sha256: sha256:8c25b09ebacc413785edea9205f0387883283b7514fbc3e325df1c209959a474
+    transaction_id: transaction-20260909-044639-001
+    receipt_path: operations/transactions/transaction-20260909-044639-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 37
+      unit-m2-sad-l07: 17
+    snapshot_before: sha256:bbc6fefdef99dac15b94e728ae3167e93fd76793ca2b2555473e7f26b0dc34cf
+    snapshot_after: sha256:d82e92d1469579b3558511a83ee524706106bd4ef815700323e0373bead27c46
+  codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a:
+    request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:0eee5bca5ff25141c68006f04c956d0dff70a1e3f1c762d68bfc5f43dc9acf30
+    transaction_id: transaction-20260909-103629-001
+    receipt_path: operations/transactions/transaction-20260909-103629-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 38
+      unit-m2-sad-l08: 18
+      unit-m2-sad-l09: 14
+      unit-m2-sad-l10: 12
+    snapshot_before: sha256:05e3799be58b908125832aae70e1776ae0e804430810ed9df730421b0ade270d
+    snapshot_after: sha256:7b7ca7b2b4ef6e1c0270c9828742fb7547615cba07f3c84d9b34094f5e9b8721
   de0b5870-9853-4a40-bf86-f7009e342b2f:
     request_id: 2c1636a1-b03c-451a-ba4d-47247e7b5a07
     capability: module.plan.import
@@ -530,6 +556,17 @@ entries:
       unit-m2-sad-l15: 3
     snapshot_before: sha256:97af3aabad7d320e38c70ad40e068656a4ab816a7a6719fd1b953e155f227521
     snapshot_after: sha256:6c1d4b140f95d0df7ed9459e6dfaf318a28eb317339fc1a1249bde4a9d02c1b9
+  intelligence-e2e-l09-mit-bootstrap-20260908:
+    request_id: request-intelligence-e2e-l09-mit-bootstrap-20260908
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:32b2c2e493eec91218f6cdbc53b43d9c4460295dc83bada812965c330381135d
+    transaction_id: transaction-20260908-213610-001
+    receipt_path: operations/transactions/transaction-20260908-213610-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 25
+    snapshot_before: sha256:a7e0e150a6c01552720e739dfba35d9a154c3e238a2c0ec77aea7aeb40c7d334
+    snapshot_after: sha256:59b5ef71f2183f39a65d9dc0cd4a9337cb3b95b62dadb1d75f32f38945b0128c
   job-engineering-tools-url-repair-20260901-001:
     request_id: request-job-engineering-tools-url-repair-20260901-001
     capability: unit.map.import
@@ -1003,6 +1040,203 @@ entries:
       unit-job-polars-expressions: 14
     snapshot_before: sha256:65f679d2d90b5ed2f006b1b0e5e4a5a2ed322774b24ec0d9747eb0f5976abd7d
     snapshot_after: sha256:3be041d58427bd37cdcd334ecd72a4ec07f61050b792d70fbf68416dc442be46
+  op-20260909-blatt4-001:
+    request_id: op-20260909-blatt4-001
+    capability: route.patch
+    channel: operator
+    intent_sha256: sha256:f2328e6619cd9be9b6efe770ad3cd3241f470b80fde071b19871be195ba43181
+    transaction_id: transaction-20260909-032832-001
+    receipt_path: operations/transactions/transaction-20260909-032832-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 36
+      study-map-m2-sad-l08: 10
+      unit-m2-sad-l08: 17
+    snapshot_before: sha256:9aff8d010967d542cacfd5d8e73db3bf4a095c1cf6fe503e96d17b382059aee7
+    snapshot_after: sha256:bbc6fefdef99dac15b94e728ae3167e93fd76793ca2b2555473e7f26b0dc34cf
+  op-20260909-grin-l08-002:
+    request_id: op-20260909-grin-l08-002
+    capability: route.patch
+    channel: operator
+    intent_sha256: sha256:da1a5df1d6301f08744618c9383971074f02a4cdf7c32c6663c5be82a5455684
+    transaction_id: transaction-20260909-032816-001
+    receipt_path: operations/transactions/transaction-20260909-032816-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 35
+      unit-m2-sad-l08: 16
+    snapshot_before: sha256:e64a947a5d99bb1081137b6330d986ec47e10dff6959da89d2a2d7cd25732abb
+    snapshot_after: sha256:9aff8d010967d542cacfd5d8e73db3bf4a095c1cf6fe503e96d17b382059aee7
+  op-20260909-harv-l08-001:
+    request_id: op-20260909-harv-l08-001
+    capability: route.patch
+    channel: operator
+    intent_sha256: sha256:c46cf8476b4b441f11fd655491cee741ac1d1c2fc2b08e54da618411ebc57a96
+    transaction_id: transaction-20260909-032153-001
+    receipt_path: operations/transactions/transaction-20260909-032153-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 31
+      study-map-m2-sad-l08: 7
+      unit-m2-sad-l08: 13
+    snapshot_before: sha256:560b82598ceb417ba7d91464d05b829acd785fc7b19becf0ff2ab4d50e6b6777
+    snapshot_after: sha256:f69feb90fce057b71b44f5c0f92d10b5bb4873def21f6c0f1cca86e0483dfefc
+  op-20260909-harvard-l06-001:
+    request_id: op-20260909-harvard-l06-001
+    capability: route.patch
+    channel: operator
+    intent_sha256: sha256:bcfc622719005ae469e5508a8ba7352d359c6a4377e4b89dcf93dd2b22ba9700
+    transaction_id: transaction-20260909-031214-001
+    receipt_path: operations/transactions/transaction-20260909-031214-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 28
+      study-map-m2-sad-l06: 7
+      unit-m2-sad-l06: 19
+    snapshot_before: sha256:520b8ecebbbe234976e25ae3769704e8e300a056a1481fd7b708252b7f1e6bbf
+    snapshot_after: sha256:e42c575517fa0e13a84e19bf45be7eec9f64e86f034a9e539a05f3ae46dfde34
+  op-20260909-l05map-001:
+    request_id: op-20260909-l05map-001
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:9dfd50806a2dd938f484a2727c1e7414fb9046d9497d3c36436ea5b3003af8d7
+    transaction_id: transaction-20260909-031440-001
+    receipt_path: operations/transactions/transaction-20260909-031440-001.yaml
+    revisions:
+      study-map-m2-sad-l05: 6
+      unit-m2-sad-l05: 14
+    snapshot_before: sha256:1b5439e2cc4a79c664514f950a74661d0601a21339142b4b34b16c53149785bb
+    snapshot_after: sha256:dd5d2ebb22f342ae84f8419fcd03ef17dffade5f65554a4d7e1ef13f948a28d6
+  op-20260909-l06map-002:
+    request_id: op-20260909-l06map-002
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:d0d641d76a03e090ebc6eb0249030d0322f5f12d8a0e35f7b7a8e627eb014528
+    transaction_id: transaction-20260909-031331-001
+    receipt_path: operations/transactions/transaction-20260909-031331-001.yaml
+    revisions:
+      study-map-m2-sad-l06: 8
+      unit-m2-sad-l06: 20
+    snapshot_before: sha256:108842b10a1de1399ad641263f560969123fb676a5298a40646a590bd5ecafc4
+    snapshot_after: sha256:a4f21e78a30d5e173a60234c45b6ab4126ba51d51ff952334a07f82e866d64d9
+  op-20260909-l07map-001:
+    request_id: op-20260909-l07map-001
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:e62cd011ba5da8c613e7bb5fde9e50a6960744ed2a2bdd1d7bbe59c3e53c7ab9
+    transaction_id: transaction-20260909-031410-001
+    receipt_path: operations/transactions/transaction-20260909-031410-001.yaml
+    revisions:
+      study-map-m2-sad-l07: 9
+      unit-m2-sad-l07: 16
+    snapshot_before: sha256:a4f21e78a30d5e173a60234c45b6ab4126ba51d51ff952334a07f82e866d64d9
+    snapshot_after: sha256:1b5439e2cc4a79c664514f950a74661d0601a21339142b4b34b16c53149785bb
+  op-20260909-l09map-002:
+    request_id: op-20260909-l09map-002
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:69bacd288658588a332a328eef19a2803c1380e3ea24063cc7e2ad54c94125b8
+    transaction_id: transaction-20260909-032300-001
+    receipt_path: operations/transactions/transaction-20260909-032300-001.yaml
+    revisions:
+      study-map-m2-sad-l09: 7
+      unit-m2-sad-l09: 13
+    snapshot_before: sha256:c567789aff9636ffa013b6ccb9da59489bbb46812c732f3725f0fcaa9f1d6189
+    snapshot_after: sha256:587d1434f4a1f9f67fa881fb2f40a00bac261a64f776359515502e40666fb16d
+  op-20260909-leuphana-l06-001:
+    request_id: op-20260909-leuphana-l06-001
+    capability: route.patch
+    channel: operator
+    intent_sha256: sha256:e480339f7c3f4245a18d8c47aa6550c934227109d204394aa691aa79431ecfee
+    transaction_id: transaction-20260909-031159-001
+    receipt_path: operations/transactions/transaction-20260909-031159-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 27
+      study-map-m2-sad-l06: 6
+      unit-m2-sad-l06: 18
+    snapshot_before: sha256:98d7c5308838a60b133fae8945321be0dd277c70afda51fc495402f00c45fd23
+    snapshot_after: sha256:520b8ecebbbe234976e25ae3769704e8e300a056a1481fd7b708252b7f1e6bbf
+  op-20260909-mod0809-001:
+    request_id: op-20260909-mod0809-001
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:04539cfc0730d99beab6286175fb0dd8dc3e4e78db16fb582294ac8bce887dd7
+    transaction_id: transaction-20260909-032328-001
+    receipt_path: operations/transactions/transaction-20260909-032328-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 34
+    snapshot_before: sha256:f9c69f8d54042623301a14e41337f617da25a8e828a02a4acf534e110ccf8d54
+    snapshot_after: sha256:e64a947a5d99bb1081137b6330d986ec47e10dff6959da89d2a2d7cd25732abb
+  op-20260909-modplan-002:
+    request_id: op-20260909-modplan-002
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:773fe6e31741369d13c31d47f997a837ca6f9d3ce1711d29e7a8cb9a6f43c163
+    transaction_id: transaction-20260909-031832-001
+    receipt_path: operations/transactions/transaction-20260909-031832-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 30
+    snapshot_before: sha256:df7a307069e03bbc07bab437114cf29e5a457621b905c85be2a995b64d460246
+    snapshot_after: sha256:560b82598ceb417ba7d91464d05b829acd785fc7b19becf0ff2ab4d50e6b6777
+  op-20260909-ross-l05-001:
+    request_id: op-20260909-ross-l05-001
+    capability: route.patch
+    channel: operator
+    intent_sha256: sha256:70dbc0cab0b76a574bda9034f9cbb1bbbebdd5b5c27a63102097f1db37f6c033
+    transaction_id: transaction-20260909-031132-001
+    receipt_path: operations/transactions/transaction-20260909-031132-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 26
+      unit-m2-sad-l05: 13
+    snapshot_before: sha256:373fc61c8ab16a57a00d738932861847cdf3b41730a41e7ca9a7a46735dcdc38
+    snapshot_after: sha256:98d7c5308838a60b133fae8945321be0dd277c70afda51fc495402f00c45fd23
+  op-20260909-study-map-m2-sad-l08-001:
+    request_id: op-20260909-study-map-m2-sad-l08-001
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:171b00d0e21a63760e624595648800936c5d11ab70a06a66cd671d284449c6d4
+    transaction_id: transaction-20260909-032249-001
+    receipt_path: operations/transactions/transaction-20260909-032249-001.yaml
+    revisions:
+      study-map-m2-sad-l08: 9
+      unit-m2-sad-l08: 15
+    snapshot_before: sha256:12d70351ba8c05ef7f56c642e84bde400bc4c3a72794bcd79bf229a5f2018611
+    snapshot_after: sha256:c567789aff9636ffa013b6ccb9da59489bbb46812c732f3725f0fcaa9f1d6189
+  op-20260909-ue5-l07-001:
+    request_id: op-20260909-ue5-l07-001
+    capability: route.patch
+    channel: operator
+    intent_sha256: sha256:be4fec687a245f67e08d8835f53ba3405aa026935f9767b300f66fded22ff13b
+    transaction_id: transaction-20260909-031231-001
+    receipt_path: operations/transactions/transaction-20260909-031231-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 29
+      study-map-m2-sad-l07: 8
+      unit-m2-sad-l07: 15
+    snapshot_before: sha256:e42c575517fa0e13a84e19bf45be7eec9f64e86f034a9e539a05f3ae46dfde34
+    snapshot_after: sha256:108842b10a1de1399ad641263f560969123fb676a5298a40646a590bd5ecafc4
+  op-20260909-ue5l08-001:
+    request_id: op-20260909-ue5l08-001
+    capability: route.patch
+    channel: operator
+    intent_sha256: sha256:37e499aa3f13b40dfacb1f3b945833908b5b0ed56573e411a1554ac9e5bc3738
+    transaction_id: transaction-20260909-032209-001
+    receipt_path: operations/transactions/transaction-20260909-032209-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 32
+      study-map-m2-sad-l08: 8
+      unit-m2-sad-l08: 14
+    snapshot_before: sha256:f69feb90fce057b71b44f5c0f92d10b5bb4873def21f6c0f1cca86e0483dfefc
+    snapshot_after: sha256:ebfdd709f3d4ed8c70a8fa2be5573b0a9d3a0fee0237549b9902fd278e192a16
+  op-20260909-ue5l09-001:
+    request_id: op-20260909-ue5l09-001
+    capability: route.patch
+    channel: operator
+    intent_sha256: sha256:bd9562621e91c8d5db02baa264a314475470129e21ccdf857929ceebc8fd82b8
+    transaction_id: transaction-20260909-032227-001
+    receipt_path: operations/transactions/transaction-20260909-032227-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 33
+      study-map-m2-sad-l09: 6
+      unit-m2-sad-l09: 12
+    snapshot_before: sha256:ebfdd709f3d4ed8c70a8fa2be5573b0a9d3a0fee0237549b9902fd278e192a16
+    snapshot_after: sha256:12d70351ba8c05ef7f56c642e84bde400bc4c3a72794bcd79bf229a5f2018611
   pl-s4a-ck-20260904:
     request_id: request-pl-s4a-ck-20260904
     capability: stage.attachment.add

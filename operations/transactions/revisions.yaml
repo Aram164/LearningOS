@@ -26,7 +26,7 @@ revisions:
   materials-manifest: 1
   module-hu-algo2: 2
   module-hu-aml: 12
-  module-hu-m2-statistik-analysis: 24
+  module-hu-m2-statistik-analysis: 38
   module-job-engineering-tools: 1
   module-job-git: 1
   module-job-polars: 3
@@ -188,11 +188,11 @@ revisions:
   study-map-m2-sad-l02: 5
   study-map-m2-sad-l03: 5
   study-map-m2-sad-l04: 5
-  study-map-m2-sad-l05: 5
-  study-map-m2-sad-l06: 5
-  study-map-m2-sad-l07: 7
-  study-map-m2-sad-l08: 6
-  study-map-m2-sad-l09: 5
+  study-map-m2-sad-l05: 6
+  study-map-m2-sad-l06: 8
+  study-map-m2-sad-l07: 9
+  study-map-m2-sad-l08: 10
+  study-map-m2-sad-l09: 7
   study-map-m2-sad-l10: 5
   study-map-m2-sad-l11: 5
   study-map-m2-sad-l12: 5
@@ -241,12 +241,12 @@ revisions:
   unit-m2-sad-l02: 11
   unit-m2-sad-l03: 16
   unit-m2-sad-l04: 17
-  unit-m2-sad-l05: 12
-  unit-m2-sad-l06: 17
-  unit-m2-sad-l07: 14
-  unit-m2-sad-l08: 12
-  unit-m2-sad-l09: 11
-  unit-m2-sad-l10: 11
+  unit-m2-sad-l05: 14
+  unit-m2-sad-l06: 20
+  unit-m2-sad-l07: 17
+  unit-m2-sad-l08: 18
+  unit-m2-sad-l09: 14
+  unit-m2-sad-l10: 12
   unit-m2-sad-l11: 11
   unit-m2-sad-l12: 11
   unit-m2-sad-l13: 11

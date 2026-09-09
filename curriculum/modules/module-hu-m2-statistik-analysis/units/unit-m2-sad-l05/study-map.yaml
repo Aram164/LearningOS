@@ -734,6 +734,18 @@ stages:
     angle: Chooses three ice-cream scoops from fifteen types with repeated types permitted.
     angle_detail: The task counts type multisets, giving C(17,3); it does not assign these multisets equal
       sampling probabilities.
+  - kind: watch
+    label: 'Harvard Stat 110 — Lecture 2: Story Proofs, Axioms of Probability'
+    source_id: source-stat110
+    route_id: route-1c9301d9a29d6dc3920ca232
+    locator: 'Lecture 2: Story Proofs, Axioms of Probability; individual video, no reviewed timestamp
+      segment'
+    url: https://www.youtube.com/watch?v=FJd_1H3rZGg
+    angle: The individual lecture for counting with repetition and the story-proof method in this reference
+      route.
+    scope_triage: reference-only
+    angle_detail: Optional full lecture; no reviewed timestamp or end-to-end playback claim. Use the stage’s
+      verified Blitzstein reading first.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-repetition/notes.md
   attachments: []
   source_feedback: []
@@ -1078,6 +1090,31 @@ stages:
     locator: Ch 2, Binomial Coefficients and Theorem, physical PDF pp. 21–22
     angle: Connects symmetry of coefficients to the expansion and Pascal triangle.
     angle_detail: Use this compact algebraic companion to Blitzstein’s story-proof perspective.
+  - kind: read
+    scope_triage: helpful-now
+    route_id: route-b08add0fb6ed042a770114eb
+    locator: §1.5, physical PDF pp. 22–24
+    angle: Proves Pascal’s identity and the binomial theorem by induction and by combinatorial argument.
+    angle_detail: Use the inductive proof for the algebra and the committee story for Vandermonde-type
+      identities — a distinct angle from the deck’s collection.
+    material_ref:
+      route_id: route-b08add0fb6ed042a770114eb
+      inherit:
+      - label
+      - source_id
+      - vault_path
+  - kind: watch
+    label: 'Harvard Stat 110 — Lecture 2: Story Proofs, Axioms of Probability'
+    source_id: source-stat110
+    route_id: route-1c9301d9a29d6dc3920ca232
+    locator: 'Lecture 2: Story Proofs, Axioms of Probability; individual video, no reviewed timestamp
+      segment'
+    url: https://www.youtube.com/watch?v=FJd_1H3rZGg
+    angle: The individual lecture for counting with repetition and the story-proof method in this reference
+      route.
+    scope_triage: reference-only
+    angle_detail: Optional full lecture; no reviewed timestamp or end-to-end playback claim. Use the stage’s
+      verified Blitzstein reading first.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-identities/notes.md
   attachments: []
   source_feedback: []

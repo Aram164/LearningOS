@@ -57,6 +57,33 @@ def test_compact_startup_has_explicit_totals_and_keeps_details(mini_repo):
             assert detail.returncode == 0
             assert json.loads(detail.stdout)["id"] == row["id"]
     assert len(compact.stdout.encode()) < 65536
+    domains = {row["domain"]: row for row in data["domain_atlas"]}
+    assert len(domains) >= 7
+    repo = load_repo(mini_repo)
+    assert sum(row["notes"] for row in domains.values()) == len(repo.notes)
+    assert sum(row["shelves"] for row in domains.values()) == len(repo.collections)
+
+
+def test_domain_glance_keeps_empty_future_and_unbucketed_domains():
+    from learning_os.commands.reads import _domain_glance
+
+    records = [
+        {"type": "note", "domain": "future", "role": "crosswalk"},
+        {"type": "note", "domain": ""},
+        {"type": "collection", "domain": "cross-domain", "entries": [{}, {}]},
+        {"type": "topic-pack", "domain": "cross-domain", "entries": [{}]},
+        {"type": "note", "domain": "nested", "path": "knowledge/notes/data-systems/nested/note.md"},
+        {"type": "source", "domain": "future"},
+    ]
+    glance = _domain_glance({"records": records})
+    assert glance == _domain_glance({"records": records[::-1]})
+    domains = {row["domain"]: row for row in glance}
+    assert domains["mathematics"]["notes"] == 0
+    assert domains["future"]["notes"] == domains["future"]["crosswalks"] == 1
+    assert domains["data-systems"]["notes"] == 1
+    assert "nested" not in domains
+    assert domains["cross-domain"] == {"domain": "cross-domain", "notes": 1,
+                                       "crosswalks": 0, "shelves": 2, "entries": 3}
 
 
 def test_bounded_reads_reject_bad_windows_and_unknown_ids(mini_repo):

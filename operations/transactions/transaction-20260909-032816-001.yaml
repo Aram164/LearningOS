@@ -1,0 +1,41 @@
+schema_version: 2
+id: transaction-20260909-032816-001
+type: transaction-receipt
+status: committed
+capability: route.patch
+committed_at: '2026-09-09T03:28:16+02:00'
+snapshot_before: sha256:e64a947a5d99bb1081137b6330d986ec47e10dff6959da89d2a2d7cd25732abb
+snapshot_after: sha256:9aff8d010967d542cacfd5d8e73db3bf4a095c1cf6fe503e96d17b382059aee7
+expected_revisions:
+  module-hu-m2-statistik-analysis: 34
+  unit-m2-sad-l08: 15
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 34
+    after: 35
+  unit-m2-sad-l08:
+    before: 15
+    after: 16
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: ef186ca573ac987a27b881d7a4365c6d972fc505ca468bb9d3e9d84013a67e84
+  sha256_after: 797dfc4d30c33d4a1264a6fb024c876847db283fdb1ca38315aff2d4fdb3190a
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: route.patch
+    declared_writes:
+    - curriculum/modules/*/source-map.yaml
+    - curriculum/modules/*/units/*/unit.yaml
+    - curriculum/modules/*/units/*/study-map.yaml
+request:
+  channel: operator
+  request_id: op-20260909-grin-l08-002
+  idempotency_key: op-20260909-grin-l08-002
+  intent_sha256: sha256:da1a5df1d6301f08744618c9383971074f02a4cdf7c32c6663c5be82a5455684
+  approval:
+    kind: direct-user-gesture
+    subject_sha256: sha256:da1a5df1d6301f08744618c9383971074f02a4cdf7c32c6663c5be82a5455684

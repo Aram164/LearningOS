@@ -1406,9 +1406,10 @@ sources:
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
   - id: route-f827266eae5a106a6154442a
     unit_id: unit-m2-sad-l07
-    title: UE5, slides 8-11 — official discrete-distribution solutions
+    title: UE5, slides 8-11 — analogous discrete-distribution worked examples
     format: exercise
-    angle: Checks the model-choice reasoning against the current sheet's official solution.
+    angle: Checks model-choice reasoning against analogous worked examples with different parameters,
+      not the current sheet.
     covers:
     - knowledge-sad-l07-model-selection
     - knowledge-sad-l07-bernoulli-binomial
@@ -1416,11 +1417,12 @@ sources:
     - knowledge-sad-l07-poisson
     - knowledge-sad-l07-relationships
     depth: practice
-    scope: current
+    scope: complementary
     locator: exercise-slides/UE5.pdf, slides 8-11
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
+    angle_detail: Analogous prior-year tutorial for the same task type with different parameters (Poisson
+      λ8 X≥12 vs current λ9 X≥13; Binomial n12 p.30 X≤2 vs n14 p.28 X≤3; Hypergeometric N1200 K48 n75
+      vs N1500 K60 n80). Use after an unaided attempt for calculation order and notation; it does not
+      supply the current sheet answers.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
   - id: route-b7f7718273784bbb7843acbd
     unit_id: unit-m2-sad-l08
@@ -1439,8 +1441,8 @@ sources:
     locator: exercise-slides/Statistics_And_Data_Science.pdf, pp. 1 and 3, Aufgaben 1 and 3
     angle_detail: 'This is a current assessed sheet: attempt it before opening the tutorial solution.
       It is scope evidence because it shows the chair''s own wording, data size and expected amount of
-      working; it is not a replacement for the lecture derivation. The file''s printed sheet number is
-      absent; content identifies it as the current Blatt 4, and that naming uncertainty remains recorded.'
+      working; it is not a replacement for the lecture derivation. The file is explicitly headed Übungsblatt
+      4, dated 10.06.2026 with submission via Moodle.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
   - id: route-58469c78c740278168aea71a
     unit_id: unit-m2-sad-l08
@@ -1454,11 +1456,11 @@ sources:
     - knowledge-sad-l08-clt
     - knowledge-sad-l08-approximation
     depth: practice
-    scope: current
+    scope: complementary
     locator: exercise-slides/UE5.pdf, slides 20-38
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
+    angle_detail: Prior-year walkthrough from z-scores to sample-mean normality with the course's calculation
+      order and notation. Use after an unaided attempt on the current Blatt 4 tasks; it does not supply
+      the current sheet answers.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
   - id: route-25e51301ba03eb362122df35
     unit_id: unit-m2-sad-l08
@@ -1511,11 +1513,11 @@ sources:
     - knowledge-sad-l09-t-interval
     - knowledge-sad-l09-bootstrap
     depth: practice
-    scope: current
+    scope: complementary
     locator: exercise-slides/UE5.pdf, slides 40-77
-    angle_detail: 'This is the current worked tutorial for the named task. Use it after an unaided attempt:
-      its value is the course''s calculation order and notation, while reading it first would turn an
-      exam-relevant retrieval task into passive recognition.'
+    angle_detail: Prior-year walkthrough of the inferential chain with one repeated dataset, including
+      what the bootstrap estimates. Use after an unaided attempt on the current Blatt 4 Aufgabe 2; it
+      does not supply the current sheet answers.
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE5.pdf
   - id: route-cdfc3800327de87be7846b02
     unit_id: unit-m2-sad-l09
@@ -2307,6 +2309,7 @@ sources:
     - knowledge-sad-l10-z-t
     - knowledge-sad-l10-chi-square
     - knowledge-sad-l10-nonparametric
+    - knowledge-sad-l10-multiple
     depth: derivation
     scope: complementary
     locator: Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429; §10.2 Prinzipien des Testens,
@@ -2345,6 +2348,23 @@ sources:
       it by chapter against the deck that exposed the gap — Kap. 9 after an estimation error, Kap. 10-11
       after a testing error — never linearly; it is 665 pages and reading it through would consume the
       lane.'
+  - unit_id: unit-m2-sad-l08
+    title: Fahrmeir §9.3.1 — likelihood and Normal MLE
+    format: book
+    angle: Build the likelihood with fixed observations, then differentiate its logarithm in German course
+      notation.
+    angle_detail: The definition on p. 395 fixes the observations and varies the parameter. Pages 396-398
+      work through log-likelihood and the Normal mean/variance estimators. This supplies L08’s estimation
+      derivation before L09 compares estimator properties; it is separate from Fahrmeir’s Normal-table
+      chapters.
+    locator: §9.3.1 Maximum Likelihood-Schätzung, physical PDF pp. 395-398
+    covers:
+    - knowledge-sad-l08-likelihood
+    - knowledge-sad-l08-mle
+    depth: derivation
+    scope: complementary
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+    id: route-1e60df494cdea8d7b689066e
 - source_id: source-fritzsche-trainingsbuch
   role: practice
   why: Gentle German worked companion after current HU tasks; Chapters 1-4 match the script sequence and
@@ -2675,6 +2695,22 @@ sources:
       making it a closer comparison to the course’s categorical feature table than a token-count text
       model.
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
+  - unit_id: unit-m2-sad-l08
+    title: Kelleher — the probability interpretation of squared error
+    format: book
+    angle: A short conceptual reminder of why squared-error fitting can have a likelihood interpretation.
+    angle_detail: The summary contrasts prior-based prediction with likelihood and states the squared-error
+      connection on p. 341. It does not derive the Gaussian-error result here; use CS229 pp. 16-18 for
+      the algebra. Keep this as a reference for the broader predictive-modeling context, not as an independent
+      proof.
+    locator: Probabilistic models summary, physical PDF pp. 340-341
+    covers:
+    - knowledge-sad-l08-likelihood
+    - knowledge-sad-l08-mle
+    depth: orientation
+    scope: complementary
+    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
+    id: route-ea5b4ef7bbb182677102ed38
 - source_id: source-analysis-drill-blaetter-extern
   role: practice
   why: 'Topic-specific solved drills fill the local exercise gap. Routed file by file since 2026-08-22,
@@ -3312,6 +3348,7 @@ sources:
       means each distribution appears as a histogram from a generating process before its PMF is written.
       Seeing the geometric's decay and the Poisson's shape as outputs of a described experiment is a good
       defence against choosing the wrong model, which is the actual exam risk here.
+    url: https://math.dartmouth.edu/~prob/prob/prob.pdf#page=191
   - id: route-c58e4eb43dc4c166ca3c4822
     unit_id: unit-m2-sad-l08
     title: Grinstead & Snell Ch 8-9 — law of large numbers and the central limit theorem
@@ -3330,6 +3367,7 @@ sources:
       law from Chebyshev; Ch 9 states the CLT for the Bernoulli case first, where it can be checked numerically,
       then generalises. Ch 9's discrete-case treatment includes the continuity correction with its justification,
       which most texts state as a rule.
+    url: https://math.dartmouth.edu/~prob/prob/prob.pdf#page=313
 - source_id: source-islp
   role: reference
   why: Ch 2 for workflow/evaluation, Ch 8 for trees/ensembles, Ch 4 for Naive Bayes, Ch 10 for neural
@@ -3470,10 +3508,13 @@ sources:
       FDR, and ends with a lab and exercise set - the only registered practice for the node.
     covers:
     - knowledge-sad-l10-multiple
+    - knowledge-sad-l10-nonparametric
+    - knowledge-sad-l10-tails-pvalue
     depth: practice
     scope: complementary
     locator: Chapter 13, pp. 563-602 (false discovery rate p. 564; family-wise error rate p. 571; Bonferroni
-      and Holm p. 573; Benjamini-Hochberg p. 581; lab section 13.6 p. 589; exercises section 13.7 p. 599)
+      and Holm p. 573; Benjamini-Hochberg p. 581; lab section 13.6 p. 589; exercises section 13.7 p. 599);
+      §13.5.1 resampling a two-sample test, physical PDF pp. 584-586
     angle_detail: 'The most complete multiple-testing treatment on the shelf, and L10''s multiplicity
       node is one slide. The page map matters: family-wise error rate (p. 571) and Bonferroni/Holm (p.
       573) are the conservative classical corrections; false discovery rate (p. 564) and Benjamini-Hochberg
@@ -4018,6 +4059,7 @@ sources:
     - knowledge-sad-l08-normal
     - knowledge-sad-l08-transform-sum
     - knowledge-sad-l08-clt
+    - knowledge-sad-l08-standardization
     depth: intuition
     scope: complementary
     locator: Ch 5 §5.1 probability density functions, pdf pp. 230-236; §5.4 Normal, pdf pp. 248-254; Ch
@@ -4610,10 +4652,13 @@ sources:
     - knowledge-sad-l09-standard-error
     - knowledge-sad-l09-z-interval
     - knowledge-sad-l09-t-interval
+    - knowledge-sad-l09-data-bias
+    - knowledge-sad-l09-estimator
     depth: orientation
     scope: complementary
     locator: Ch 5 §5.1 point estimates and sampling variability, pdf pp. 170-180; §5.2 confidence intervals
-      for a proportion, pdf pp. 181-188; Ch 7 §7.1 one-sample means with the t-distribution, pdf pp. 251-261
+      for a proportion, pdf pp. 181-188; Ch 7 §7.1 one-sample means with the t-distribution, pdf pp. 251-261;
+      §1.3 sampling and selection bias, physical PDF pp. 22-31
     angle_detail: By starting with a proportion, §5.2 gets to a complete interval before the reader has
       to deal with an unknown sigma, so the interpretation of 'confident' can be discussed on its own.
       Then §7.1 introduces the t-distribution specifically as the correction needed once sigma is estimated
@@ -4632,6 +4677,7 @@ sources:
     - knowledge-sad-l10-tails-pvalue
     - knowledge-sad-l10-z-t
     - knowledge-sad-l10-chi-square
+    - knowledge-sad-l10-errors-power
     depth: orientation
     scope: complementary
     locator: Ch 5 §5.3 hypothesis testing for a proportion, pdf pp. 189-205; Ch 6 §6.3 testing for goodness
@@ -5026,6 +5072,8 @@ sources:
     - knowledge-sad-l10-tails-pvalue
     - knowledge-sad-l10-z-t
     - knowledge-sad-l10-chi-square
+    - knowledge-sad-l10-errors-power
+    - knowledge-sad-l10-ci-duality
     depth: practice
     scope: complementary
     locator: 'Ch 25 testing hypotheses: essentials, pdf pp. 375-384 (null hypothesis and test statistic
@@ -5413,6 +5461,7 @@ sources:
     - knowledge-sad-l09-standard-error
     - knowledge-sad-l09-z-interval
     - knowledge-sad-l09-t-interval
+    - knowledge-sad-l09-bootstrap
     depth: practice
     scope: complementary
     locator: 'Classes: Reading and In-class Materials, the ''Bootstrapping'' reading and the ''Confidence
@@ -5632,6 +5681,23 @@ sources:
       a correlation hypothesis test make it L10 work. Use it to practise a complete one-sided decision;
       the specialized correlation-test formula may be beyond the exact 2026 formula sheet.
     vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
+  - unit_id: unit-m2-sad-l08
+    title: FAU — Normal tail probabilities and inverse quantiles
+    format: exam
+    angle: Practise both directions of Normal standardization in a financial-return example.
+    angle_detail: The task fixes mean 0.0006 and variance 0.0005, asks for an upper-tail probability and
+      a lower 1% quantile, and supplies numerical answers on p. 25. Use the square root of the stated
+      variance in the z-score. The repeated 10-ECTS version is an alternative copy, not additional work;
+      Part III is a later testing task.
+    locator: Physical PDF p. 18, Aufgabe 4 Teil II 4(a)-(b); solutions p. 25; duplicate tasks/solutions
+      pp. 43/50
+    covers:
+    - knowledge-sad-l08-normal
+    - knowledge-sad-l08-standardization
+    depth: practice
+    scope: complementary
+    vault_path: material://source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf
+    id: route-deaaba021bfaafb4d0aa6bd8
 - source_id: source-mit-18100a
   role: optional-depth
   why: Mapped rigorous lectures repair one blocked theorem or pointwise/uniform-convergence distinction;
@@ -5897,6 +5963,7 @@ sources:
     - knowledge-sad-l08-normal
     - knowledge-sad-l08-standardization
     - knowledge-sad-l08-clt
+    - knowledge-sad-l08-approximation
     depth: advanced-reference
     scope: complementary
     locator: 'Ch 2 §2.2 Normal Approximation: Method, pdf pp. 103-118; §2.3 Normal Approximation: Derivation
@@ -6330,12 +6397,14 @@ sources:
     - knowledge-sad-l05-combinations
     - knowledge-sad-l05-repetition
     - knowledge-sad-l05-counting-probability
+    - knowledge-sad-l05-identities
     depth: advanced-reference
     scope: complementary
-    locator: §§1.1–1.4, physical PDF pp. 14–22; §1.6, pp. 30–31
+    locator: §§1.1–1.4, physical PDF pp. 14–22; §1.5, pp. 22–24; §1.6, pp. 30–31
     angle_detail: The positive-to-nonnegative integer-solution transformation gives another derivation
       of the lecture’s stars-and-bars formula. This supplements the derivation already present in the
-      current deck.
+      current deck. §1.5 proves Pascal’s identity and the binomial theorem by induction and by combinatorial
+      argument, a distinct teaching angle from the deck’s collection.
     vault_path: material://source-ross-first-course/ross.pdf
   - id: route-72c1b94d7d00068b9f8e041c
     unit_id: unit-m2-sad-l06
@@ -6792,6 +6861,8 @@ sources:
     - knowledge-sad-l05-decision-grid
     - knowledge-sad-l05-combinations
     - knowledge-sad-l05-counting-probability
+    - knowledge-sad-l05-repetition
+    - knowledge-sad-l05-identities
     depth: advanced-reference
     scope: complementary
     locator: 'Course homepage: Lectures 1–2 and Strategic Practice 1'
@@ -6812,11 +6883,12 @@ sources:
     - knowledge-sad-l06-variance-covariance
     depth: advanced-reference
     scope: complementary
-    locator: Lectures 5-9 (random variables and their distributions, expectation, indicator random variables,
-      LOTUS, variance)
-    angle_detail: Optional registered course/channel collection. Individual episode coverage and full
-      playback remain deferred in this written-first repair; this target does not certify the inherited
-      episode suggestions.
+    locator: Lectures 12 (variance), 14 (LOTUS), 21 (covariance, variance of a sum); Lectures 5-6 cover
+      conditional probability, not LOTUS/variance
+    angle_detail: Optional registered course/channel collection verified against the official syllabus
+      and lecture titles. Variance is Lecture 12, LOTUS is Lecture 14, covariance and variance of a sum
+      is Lecture 21; Lectures 5-6 concern conditional probability. Individual episode playback remains
+      deferred in this written-first repair; prefer the written derivations first.
     url: https://projects.iq.harvard.edu/stat110
   - id: route-1e3e247b8c6240fbc08376a9
     unit_id: unit-m2-sad-l07
@@ -6850,13 +6922,12 @@ sources:
     - knowledge-sad-l08-clt
     depth: advanced-reference
     scope: complementary
-    locator: Lectures 14-16 (continuous distributions and the Normal) and Lectures 19-20 (law of large
-      numbers, central limit theorem)
+    locator: 'Course homepage: continuous-distribution and Normal lectures (syllabus Lectures 13-14) and
+      the LLN/CLT lectures (see official index; numbering varies by year)'
     angle_detail: The Gaussian integral trick and the change of variables that turns any Normal into a
-      standard Normal are both done on the board. Neither is examinable in SaD, but the second one is
-      the reason the z-table works for every Normal, and knowing that removes the temptation to memorise
-      separate procedures. The LLN/CLT lectures compare the two theorems explicitly, in the same framing
-      the book uses in Ch 10.
+      standard Normal are done on the board in the Normal lectures. Neither is examinable in SaD, but
+      the second one is the reason the z-table works for every Normal. Prefer the written derivations
+      first; full video playback is deferred under the book-first budget.
 - source_id: source-grieser-analysis1
   role: reference
   why: German second voice for a blocked concept when matching Klausur vocabulary matters.
@@ -7352,11 +7423,12 @@ sources:
     - knowledge-sad-l06-variance-covariance
     depth: practice
     scope: complementary
-    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, PDF pp. 6-7,10-11, Aufgaben 1.3.1-1.3.2
-    angle_detail: Physical pp. 6–7 contain §1.3 tasks, and pp. 10–11 their worked solutions. Task 1.3.2
-      asks for the upper support endpoint that normalizes 2x², then moments, an interval probability and
-      a point probability. It directly exercises the mass-versus-density distinction; it is complementary
-      practice, not current examination evidence.
+    locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, PDF pp. 6-7,9-10, Aufgaben 1.3.1-1.3.2
+    angle_detail: Physical pp. 6–7 contain §1.3 tasks, and pp. 9–10 their worked solutions; p. 9 holds
+      the 1.3.1(a) PMF/CDF table and p. 11 starts Aufgabenblatt 2. Task 1.3.2 asks for the upper support
+      endpoint that normalizes 2x², then moments, an interval probability and a point probability. It
+      directly exercises the mass-versus-density distinction; it is complementary practice, not current
+      examination evidence.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
   - id: route-1eef53180bda2e4604a22a8b
     unit_id: unit-m2-sad-l06
@@ -7407,10 +7479,12 @@ sources:
     - knowledge-sad-l08-transform-sum
     - knowledge-sad-l08-clt
     - knowledge-sad-l08-approximation
+    - knowledge-sad-l08-likelihood
+    - knowledge-sad-l08-mle
     depth: practice
     scope: complementary
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16, Aufgabenblatt 2 Normal/CLT
-      items
+      items; §3.4 tasks, physical PDF pp. 18-19, and worked MLE solution pp. 21-22
     angle_detail: The benefit is transfer between distribution recognition and calculation. It is not
       the source for L08 likelihood or MLE; those nodes remain with the deck, MIT 18.650 and the dedicated
       derivation sources.
@@ -7485,6 +7559,40 @@ sources:
       a t statistic and construct a confidence interval. It is a good bridge between regression interpretation
       and test mechanics, but regression-slope inference is an extension beyond the core L03 scope.'
     vault_path: material://source-sad-klausuren-extern/Koeln_Statistik-Klausur_Musterloesung.pdf
+  - unit_id: unit-m2-sad-l09
+    title: Cologne — a solved confidence interval for a regression coefficient
+    format: exam
+    angle: Transfer estimate ± critical value × standard error from a mean to a fitted coefficient.
+    angle_detail: The printed solution forms a coefficient interval using estimate 21.1 and standard error
+      3.8. It uses 1.96 as an approximation to the t quantile with 94 degrees of freedom, not an exact
+      t value. Treat this as optional transfer; ordinary one-sample intervals remain the course priority.
+    locator: Koeln_Statistik-Klausur_Musterloesung.pdf, physical PDF p. 7, Aufgabe 5(b)
+    covers:
+    - knowledge-sad-l09-standard-error
+    - knowledge-sad-l09-t-interval
+    depth: practice
+    scope: complementary
+    vault_path: material://source-sad-klausuren-extern/Koeln_Statistik-Klausur_Musterloesung.pdf
+    id: route-83c5d83dd034abfedd3153bf
+  - unit_id: unit-m2-sad-l10
+    title: Cologne — Gaussian test, Type II error and sample-mean scale
+    format: exam
+    angle: Use one worked problem to connect hypotheses, a critical mean, a p-value decision and Type
+      II error.
+    angle_detail: The bread-weight example uses known standard deviation 1.5 g, n=25 and a 1% one-sided
+      test. The solution computes the rejection threshold and then the non-rejection probability at a
+      specified alternative mean. Reproduce the standard error 1.5/sqrt(25) before consulting the numbers;
+      a non-rejection is not proof of the null.
+    locator: Koeln_Statistik-Klausur_Musterloesung.pdf, physical PDF pp. 5-6, Aufgabe 4
+    covers:
+    - knowledge-sad-l10-test-model
+    - knowledge-sad-l10-tails-pvalue
+    - knowledge-sad-l10-errors-power
+    - knowledge-sad-l10-z-t
+    depth: practice
+    scope: complementary
+    vault_path: material://source-sad-klausuren-extern/Koeln_Statistik-Klausur_Musterloesung.pdf
+    id: route-d808f7046587125f077155a3
 - source_id: source-labs-schreyer-mathe-informatiker
   role: reference
   why: Broad mathematics-for-computer-science backup; use only for a named prerequisite gap.
@@ -8581,6 +8689,22 @@ sources:
     angle_detail: A probability-oriented return reading after L06; compare a random response with its
       observed realization.
     vault_path: material://source-kroese-dsml/kroese.pdf
+  - unit_id: unit-m2-sad-l08
+    title: Kroese — likelihood as empirical model fitting
+    format: book
+    angle: Connect fitting a density to empirical log loss, with an exponential-rate calculation.
+    angle_detail: Pages 60-61 start from a model class and logarithmic discrepancy, then replace population
+      expectation by a sample average to obtain maximum likelihood. The worked exponential model gives
+      the rate estimate 1/sample mean. The risk and score notation is optional depth, not a prerequisite
+      for the course’s Gaussian calculation.
+    locator: Chapter 2, Modeling Data, physical PDF pp. 60-61
+    covers:
+    - knowledge-sad-l08-likelihood
+    - knowledge-sad-l08-mle
+    depth: advanced-reference
+    scope: complementary
+    vault_path: material://source-kroese-dsml/kroese.pdf
+    id: route-943f2cdc8ce62e3a7c894fec
 - source_id: source-ross-elementary-analysis
   role: reference
   why: Proof-oriented alternate text, shelved during the exam-first pass.
@@ -8811,6 +8935,22 @@ sources:
     angle_detail: The same housing model supports both algorithms. Section 1.2 checks the matrix differentiation;
       §1.3 is a later probability bridge. The inverse formula assumes XᵀX is invertible.
     vault_path: material://source-cs229-notes/cs229-notes.pdf
+  - unit_id: unit-m2-sad-l08
+    title: CS229 §1.3 — Gaussian errors justify least squares
+    format: book
+    angle: Derive the squared-error objective from independent Gaussian residuals.
+    angle_detail: Read the assumptions at the end of p. 16, the likelihood as a function of the parameter
+      on p. 17, and the log-likelihood simplification on p. 18. Hold the data fixed and identify the constants
+      discarded during optimization. This is the direct bridge back to L03; the matrix normal equations
+      above §1.3 are optional.
+    locator: §1.3 Probabilistic interpretation, physical PDF pp. 16-18
+    covers:
+    - knowledge-sad-l08-likelihood
+    - knowledge-sad-l08-mle
+    depth: derivation
+    scope: complementary
+    vault_path: material://source-cs229-notes/cs229-notes.pdf
+    id: route-3c30c32cc585a9450ea0cb62
 - source_id: source-thomas-calculus
   role: reference
   why: Large computational calculus reference; local targeted drills only if selected banks are exhausted.
@@ -9149,6 +9289,38 @@ sources:
     angle_detail: Start at the residual objective in (11.6); the Gaussian likelihood that introduces it
       is a later bridge. The geometric proof works directly with the observed matrix and vector.
     vault_path: material://source-murphy-pml1/pml1.pdf
+  - unit_id: unit-m2-sad-l08
+    title: Murphy §4.2 — MLE, negative log-likelihood and Gaussian estimates
+    format: book
+    angle: Translate likelihood maximization into the loss-minimization language used in machine learning.
+    angle_detail: Pages 137-138 define MLE and negative log-likelihood under iid sampling. Pages 141-142
+      give the univariate Gaussian estimates and distinguish division by N from the unbiased N−1 variance
+      estimate. The KL argument on p. 139 is optional depth; the multivariate extension beginning on p.
+      142 is outside this reading.
+    locator: §§4.2.1-4.2.5, physical PDF pp. 137-142
+    covers:
+    - knowledge-sad-l08-likelihood
+    - knowledge-sad-l08-mle
+    depth: derivation
+    scope: complementary
+    vault_path: material://source-murphy-pml1/pml1.pdf
+    id: route-bba255d06939fee0964e7711
+  - unit_id: unit-m2-sad-l09
+    title: Murphy — Gaussian estimates and the N versus N−1 distinction
+    format: book
+    angle: Compare a maximum-likelihood estimate with an unbiased variance estimate on the same data.
+    angle_detail: The Gaussian example produces the sample mean and variance with denominator N, then
+      explicitly contrasts the unbiased N−1 estimate. Use that difference to explain why maximizing likelihood
+      and requiring unbiasedness are separate criteria. Stop before the multivariate derivation; no claim
+      of minimum MSE follows just from this example.
+    locator: '§4.2.5 Example: MLE for the univariate Gaussian, physical PDF pp. 141-142'
+    covers:
+    - knowledge-sad-l09-estimator
+    - knowledge-sad-l09-properties
+    depth: derivation
+    scope: complementary
+    vault_path: material://source-murphy-pml1/pml1.pdf
+    id: route-602a7c97b64cbe82ff7782a8
 - source_id: source-csc411-notes
   role: reference
   why: Compact independent treatment of classifiers and neural networks.
@@ -9210,6 +9382,22 @@ sources:
     angle_detail: Chapter 9 complements the regression algebra with a line-search algorithm and finite
       differences for checking a gradient implementation.
     vault_path: material://source-csc411-notes/csc411.pdf
+  - unit_id: unit-m2-sad-l08
+    title: CSC411 — MLE versus MAP and learning Gaussians
+    format: book
+    angle: Separate maximum likelihood from adding a prior, then fit a Gaussian model.
+    angle_detail: Page 43 separates likelihood, prior and posterior, including the one-head coin example
+      that exposes overconfident point estimates. Page 44 writes the Gaussian negative log-likelihood
+      and fitted mean/covariance. In equation (140), the product must use each observation x_i, not repeat
+      the whole data vector inside every factor. Multivariate covariance differentiation is optional.
+    locator: §7.3.1 and §7.4, physical PDF pp. 43-44
+    covers:
+    - knowledge-sad-l08-likelihood
+    - knowledge-sad-l08-mle
+    depth: advanced-reference
+    scope: complementary
+    vault_path: material://source-csc411-notes/csc411.pdf
+    id: route-d74a33b5dc1ddb179eb252f8
 - source_id: source-aml-ss26-lectures
   role: reference
   why: AML L02 deepens k-NN and AML L08–L09 deepen SaD L15; use after the SaD-scoped pass.
@@ -10088,6 +10276,23 @@ sources:
     angle_detail: Compare feature space with the N-dimensional observation-space picture; the residual
       is orthogonal to every fitted column.
     vault_path: material://source-esl/esl.pdf
+  - unit_id: unit-m2-sad-l08
+    title: ESL §2.6 — likelihood and squared-error loss
+    format: book
+    angle: See the Gaussian-loss connection for a general fitted function, not only a straight line.
+    angle_detail: Page 50 holds the inputs fixed, writes the conditional Gaussian model and reduces its
+      log-likelihood to a constant plus a negative multiple of residual sum of squares. Stop before the
+      multinomial example; that belongs to classification. This is an optional compact generalization
+      after CS229 or the course derivation.
+    locator: §2.6 Statistical Models, Supervised Learning and Function Approximation, physical PDF pp.
+      49-50
+    covers:
+    - knowledge-sad-l08-likelihood
+    - knowledge-sad-l08-mle
+    depth: derivation
+    scope: complementary
+    vault_path: material://source-esl/esl.pdf
+    id: route-dcca2fcb9c954793598be2ee
 - source_id: source-3b1b-linear-algebra
   role: intuition
   why: Targeted visual support for vector, matrix, and covariance geometry already selected by L01 and

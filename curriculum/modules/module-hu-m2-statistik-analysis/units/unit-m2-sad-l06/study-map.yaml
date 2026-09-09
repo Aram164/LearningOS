@@ -870,8 +870,9 @@ stages:
     angle: Derives the second-moment identity and squared affine scaling.
     angle_detail: Read physical PDF pages 34-42. Pages 36 and 39 derive Var(X)=E[X²]-E[X]² and Var(aX+b)=a²Var(X).
       Pages 40–42 repeat the malformed uniform/exponential CDF notation; the stated moments require U(a,b)
-      and normalized Exp(k). Page 41’s uniform density slope is 1/(b-a), not generally 1. Covariance and
-      the general sum rule are supplied by Blitzstein and MIT below.
+      and normalized Exp(k). Page 41’s “Slope is 1” annotation is wrong — inside [a,b] the uniform density
+      has height 1/(b-a) and slope zero, while 1/(b-a) is the CDF’s slope. The slide integration already
+      normalizes correctly. Covariance and the general sum rule are supplied by Blitzstein and MIT below.
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
