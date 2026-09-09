@@ -237,3 +237,6 @@ pending_disposition:
 # stray found at either level is declared here rather than silently tolerated,
 # and `tests/test_perimeter.py` keeps the list honest by failing when an entry
 # names a path that is no longer on disk.
+  - path: tpcx-ai-v2.0.0
+    disposition: tpcx-ai dataset generator tool
+

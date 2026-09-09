@@ -1,0 +1,17 @@
+- id: req-sad-l08-clt-distinguish
+  concept: knowledge-sad-l08-clt
+  capability:
+    kind: distinguish
+    operands:
+      - original-variable-normality
+      - asymptotic-normality-of-sample-mean
+  conditions:
+    - unfamiliar-example
+    - no-explicit-clt-cue
+  evidence_spec:
+    - correctly-classify
+    - explain-reason
+  source_stage:
+    module_id: module-hu-m2-statistik-analysis
+    unit_id: unit-m2-sad-l08
+    stage_id: stage-sad-l08-clt
