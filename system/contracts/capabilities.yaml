@@ -9,6 +9,7 @@ queries:
     invariants:
     - one unit's compact authored plan or one exact route and its stage overrides
     - snapshot-bound; shared descriptions occur once and expected revisions are explicit
+    - an ordered batch of 1 to 20 distinct routes of one unit shares the unit snapshot and revision guards, preserves request order, and refuses atomically without a partial payload
   atlas.context:
     handler: atlas_context
     result: atlas-context

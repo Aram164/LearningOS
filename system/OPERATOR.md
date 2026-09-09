@@ -65,8 +65,11 @@ fresh projection; the batch preserves requested order, includes a snapshot,
 and refuses missing IDs or changes during the read. Use `note-read` for note
 bodies. Full `bootstrap` is an explicit bulk read, not routine agent startup.
 For plan editing, use `plan-edit-context UNIT_ID`; add `--route-id ROUTE_ID`
-for one material and its stage-specific overrides. Shared descriptions occur
-once. Before changing material details, run `route-patch UNIT_ID ROUTE_ID
+for one material and its stage-specific overrides. Read several known routes
+with `--route-ids A B ...` (1 to 20 distinct routes of one unit, in order) to
+share one snapshot and load; the batch preserves requested order and refuses
+missing, duplicate, or out-of-bounds ids without a partial payload. Shared
+descriptions occur once. Before changing material details, run `route-patch UNIT_ID ROUTE_ID
 --changes JSON --check`, then apply the same changes through `route.patch`
 with the returned snapshot and exact revision guards. Full plan imports are
 for structure, ordering, scope, or resource membership changes.

@@ -512,7 +512,11 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("plan-edit-context", help="read compact plan or one material's edit context")
     p.add_argument("unit_id")
-    p.add_argument("--route-id", default=None)
+    route = p.add_mutually_exclusive_group()
+    route.add_argument("--route-id", default=None,
+                       help="one exact route and its stage overrides")
+    route.add_argument("--route-ids", nargs="+", default=None, metavar="ROUTE_ID",
+                       help="1 to 20 distinct routes of this unit, in requested order")
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_plan_edit_context)
 
