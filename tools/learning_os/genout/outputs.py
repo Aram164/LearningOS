@@ -20,6 +20,7 @@ from .concepts import (
 from .coordination import build_coordination_view, build_health
 from .garden import build_nebula
 from .learning_runtime import build_learning_requirements_json, build_learning_requirements_md
+from .learner_interpreter import build_learner_interpretations_json, build_learner_interpretations_md
 from .library import build_library
 from .manifest import build_manifest
 from .modules_view import build_module_view
@@ -44,6 +45,8 @@ def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
         "backlinks.json": json.dumps(backlinks, separators=(",", ":"), sort_keys=True, ensure_ascii=False) + "\n",
         "learning-requirements.json": build_learning_requirements_json(repo, generated_at) + "\n",
         "learning-requirements.md": build_learning_requirements_md(repo),
+        "learner-interpretations.json": build_learner_interpretations_json(repo, generated_at) + "\n",
+        "learner-interpretations.md": build_learner_interpretations_md(repo),
         "concept-index.md": build_concept_index(repo, backlinks, generated_at) + "\n",
         "source-index.md": build_source_index(repo, generated_at) + "\n",
         "library.md": build_library(repo, generated_at) + "\n",
