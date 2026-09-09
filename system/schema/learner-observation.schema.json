@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/learner-observation",
+  "title": "LearnerObservation",
+  "x-governs": "record",
+  "description": "An immutable observation of a learner attempt or action.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["requirement", "activity", "result", "timestamp"],
+  "properties": {
+    "requirement": { "type": "string" },
+    "activity": { "type": "string" },
+    "result": { "type": "string" },
+    "assistance": { "type": "string" },
+    "evidence_tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "context": { "type": "string" }
+  }
+}
