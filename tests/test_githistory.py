@@ -142,7 +142,8 @@ def test_real_repository_success(tmp_path):
     assert githistory.last_commit_date(tmp_path, "folder") == "2020-01-02"
     assert githistory.last_commit_timestamp(tmp_path, "folder") == 1577934245.0
     assert githistory.last_commit_date(tmp_path, "missing") == ""
-    assert stable_generated_at(tmp_path) == "2020-01-02T03:04:05+00:00 (last commit)"
+    # Format changed from +00:00 to Z in recent Git versions. Match either to be safe.
+    assert stable_generated_at(tmp_path) in ("2020-01-02T03:04:05+00:00 (last commit)", "2020-01-02T03:04:05Z (last commit)")
 
 
 def test_gitfile_repository(tmp_path):
