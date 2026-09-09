@@ -602,6 +602,7 @@ stages:
       - label
       - source_id
     kind: read
+    affordance: intervention
     locator: lecture-slides/08_normal_distribution.pdf, PDF pp. 20-22
     angle: The current lecture's focused reading for law of large numbers versus central limit theorem.
     angle_detail: Read physical PDF pages 20-22 for this stage. Printed slide labels may differ. This
@@ -619,6 +620,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
+    affordance: mixed
     scope_triage: required-now
     route_id: route-b7f7718273784bbb7843acbd
   - material_ref:
@@ -631,6 +633,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
+    affordance: evidence
     scope_triage: helpful-now
     route_id: route-58469c78c740278168aea71a
   - material_ref:
@@ -643,6 +646,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
+    affordance: evidence
     scope_triage: required-now
     route_id: route-25e51301ba03eb362122df35
   - material_ref:
@@ -654,6 +658,7 @@ stages:
       - angle_detail
       - source_id
     kind: reference
+    affordance: intervention
     scope_triage: reference-only
     route_id: route-e574e054435be2cb7eb76dcd
   - material_ref:
@@ -666,6 +671,7 @@ stages:
       - vault_path
       - source_id
     kind: read
+    affordance: intervention
     scope_triage: helpful-now
     route_id: route-51d0b459da178808c6b7b545
   - material_ref:
@@ -678,6 +684,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
+    affordance: evidence
     scope_triage: helpful-now
     route_id: route-b40645f2cd94ca740d4201ca
   - material_ref:
@@ -689,6 +696,7 @@ stages:
       - angle_detail
       - source_id
     kind: read
+    affordance: intervention
     scope_triage: helpful-now
     route_id: route-c58e4eb43dc4c166ca3c4822
   - material_ref:
@@ -701,6 +709,7 @@ stages:
       - vault_path
       - source_id
     kind: read
+    affordance: intervention
     scope_triage: helpful-now
     route_id: route-f6444d2615cac483d2060e85
   - material_ref:
@@ -712,6 +721,7 @@ stages:
       - angle_detail
       - source_id
     kind: read
+    affordance: intervention
     scope_triage: helpful-now
     route_id: route-c4a8afb529925b777fde9628
   - material_ref:
@@ -724,6 +734,7 @@ stages:
       - vault_path
       - source_id
     kind: read
+    affordance: intervention
     scope_triage: helpful-now
     route_id: route-ca94fdcfeca67be1c4c0bc4d
   - material_ref:
@@ -736,6 +747,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
+    affordance: evidence
     scope_triage: helpful-now
     route_id: route-8f48d8d7623a4b01aac9348f
   - material_ref:
@@ -747,6 +759,7 @@ stages:
       - angle_detail
       - source_id
     kind: read
+    affordance: intervention
     scope_triage: helpful-now
     route_id: route-cdc87014dbc983f542c2d601
   - material_ref:
@@ -759,6 +772,7 @@ stages:
       - vault_path
       - source_id
     kind: reference
+    affordance: intervention
     scope_triage: reference-only
     route_id: route-b255b45da1a3190feb0ed9e8
   - material_ref:
@@ -771,6 +785,7 @@ stages:
       - vault_path
       - source_id
     kind: reference
+    affordance: intervention
     scope_triage: reference-only
     route_id: route-da63f6bf53a890934f68330a
   - material_ref:
@@ -783,6 +798,7 @@ stages:
       - vault_path
       - source_id
     kind: reference
+    affordance: intervention
     scope_triage: reference-only
     route_id: route-30e6dacfe64cff3a4b173767
   - material_ref:
@@ -794,6 +810,7 @@ stages:
       - angle_detail
       - source_id
     kind: reference
+    affordance: intervention
     scope_triage: reference-only
     route_id: route-ab04cdce370d74cb0570a3d6
   - material_ref:
@@ -806,6 +823,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
+    affordance: evidence
     scope_triage: helpful-now
     route_id: route-1c01e7c903e30083cbe3009f
   - material_ref:
@@ -818,6 +836,7 @@ stages:
       - vault_path
       - source_id
     kind: reference
+    affordance: intervention
     scope_triage: reference-only
     route_id: route-0bb4d41d9c7165917c14e2e5
   - material_ref:
@@ -829,6 +848,7 @@ stages:
       - angle_detail
       - source_id
     kind: watch
+    affordance: intervention
     scope_triage: helpful-now
     route_id: route-42f96974c9b07097dceeb4a8
   - material_ref:
@@ -840,6 +860,7 @@ stages:
       - angle_detail
       - source_id
     kind: watch
+    affordance: intervention
     scope_triage: helpful-now
     route_id: route-d7771b00bdbdbb54115a9c8f
   - material_ref:
@@ -851,6 +872,7 @@ stages:
       - angle_detail
       - source_id
     kind: watch
+    affordance: intervention
     scope_triage: helpful-now
     route_id: route-59a625c0ac07d2a63c127f57
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-clt/notes.md

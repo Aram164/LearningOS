@@ -4,85 +4,224 @@
   "title": "One current study script for a curriculum unit",
   "x-governs": "record",
   "type": "object",
-  "required": ["id", "type", "unit_id", "status", "current_stage", "source_plan", "stages", "shelving"],
+  "required": [
+    "id",
+    "type",
+    "unit_id",
+    "status",
+    "current_stage",
+    "source_plan",
+    "stages",
+    "shelving"
+  ],
   "additionalProperties": false,
   "properties": {
-    "id": {"type": "string", "pattern": "^study-map-[a-z0-9]+(?:-[a-z0-9]+)*$"},
-    "type": {"const": "study-map"},
-    "plan_template_version": {"const": 1},
-    "unit_id": {"type": "string", "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$"},
-    "status": {"enum": ["not-started", "ready", "active", "paused", "ready-to-shelve", "complete"]},
-    "current_stage": {"type": "string", "pattern": "^stage-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "id": {
+      "type": "string",
+      "pattern": "^study-map-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "type": {
+      "const": "study-map"
+    },
+    "plan_template_version": {
+      "const": 1
+    },
+    "unit_id": {
+      "type": "string",
+      "pattern": "^unit-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "status": {
+      "enum": [
+        "not-started",
+        "ready",
+        "active",
+        "paused",
+        "ready-to-shelve",
+        "complete"
+      ]
+    },
+    "current_stage": {
+      "type": "string",
+      "pattern": "^stage-[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
     "source_plan": {
       "type": "object",
-      "required": ["path", "provenance"],
+      "required": [
+        "path",
+        "provenance"
+      ],
       "additionalProperties": false,
       "properties": {
-        "path": {"type": "string", "minLength": 1},
-        "provenance": {"enum": ["migrated-mini-plan", "learner", "ai-proposed", "operator", "durable-note"]}
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "provenance": {
+          "enum": [
+            "migrated-mini-plan",
+            "learner",
+            "ai-proposed",
+            "operator",
+            "durable-note"
+          ]
+        }
       }
     },
     "detours": {
       "type": "array",
       "items": {
         "type": "object",
-        "required": ["id", "title", "spawned_by_stage", "classification", "status", "return_to_stage"],
+        "required": [
+          "id",
+          "title",
+          "spawned_by_stage",
+          "classification",
+          "status",
+          "return_to_stage"
+        ],
         "additionalProperties": false,
         "properties": {
-          "id": {"type": "string", "pattern": "^detour-[a-z0-9]+(?:-[a-z0-9]+)*$"},
-          "title": {"type": "string", "minLength": 1},
-          "spawned_by_stage": {"type": "string", "pattern": "^stage-[a-z0-9]+(?:-[a-z0-9]+)*$"},
-          "classification": {"enum": ["required-now", "helpful-now", "deferred", "reference-only"]},
-          "status": {"enum": ["open", "resolved", "deferred"]},
-          "return_to_stage": {"type": "string", "pattern": "^stage-[a-z0-9]+(?:-[a-z0-9]+)*$"},
-          "resolution": {"type": "string"}
+          "id": {
+            "type": "string",
+            "pattern": "^detour-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "spawned_by_stage": {
+            "type": "string",
+            "pattern": "^stage-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "classification": {
+            "enum": [
+              "required-now",
+              "helpful-now",
+              "deferred",
+              "reference-only"
+            ]
+          },
+          "status": {
+            "enum": [
+              "open",
+              "resolved",
+              "deferred"
+            ]
+          },
+          "return_to_stage": {
+            "type": "string",
+            "pattern": "^stage-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "resolution": {
+            "type": "string"
+          }
         }
       }
     },
     "shelving": {
       "type": "object",
-      "required": ["state"],
+      "required": [
+        "state"
+      ],
       "additionalProperties": false,
       "properties": {
-        "state": {"enum": ["none", "draft", "proposed", "approved", "applied"]},
-        "proposal_path": {"type": "string"},
-        "summary": {"type": "string"},
+        "state": {
+          "enum": [
+            "none",
+            "draft",
+            "proposed",
+            "approved",
+            "applied"
+          ]
+        },
+        "proposal_path": {
+          "type": "string"
+        },
+        "summary": {
+          "type": "string"
+        },
         "items": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["id", "kind", "title", "destination", "rationale"],
+            "required": [
+              "id",
+              "kind",
+              "title",
+              "destination",
+              "rationale"
+            ],
             "additionalProperties": false,
             "properties": {
-              "id": {"type": "string", "pattern": "^proposal-[a-z0-9]+(?:-[a-z0-9]+)*$"},
-              "kind": {"enum": ["durable-note", "garden", "concept-relation", "archive-map"]},
-              "title": {"type": "string", "minLength": 1},
-              "destination": {"type": "string", "minLength": 1},
-              "rationale": {"type": "string", "minLength": 1},
-              "diff": {"type": "string"},
-              "content": {"type": "string"},
-              "metadata": {"type": "object"},
-              "selected": {"type": "boolean"}
+              "id": {
+                "type": "string",
+                "pattern": "^proposal-[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "kind": {
+                "enum": [
+                  "durable-note",
+                  "garden",
+                  "concept-relation",
+                  "archive-map"
+                ]
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "destination": {
+                "type": "string",
+                "minLength": 1
+              },
+              "rationale": {
+                "type": "string",
+                "minLength": 1
+              },
+              "diff": {
+                "type": "string"
+              },
+              "content": {
+                "type": "string"
+              },
+              "metadata": {
+                "type": "object"
+              },
+              "selected": {
+                "type": "boolean"
+              }
             }
           }
         }
       }
     },
-    "stages": {"type": "array", "minItems": 1}
+    "stages": {
+      "type": "array",
+      "minItems": 1
+    }
   },
   "allOf": [
     {
-      "if": {"required": ["plan_template_version"]},
+      "if": {
+        "required": [
+          "plan_template_version"
+        ]
+      },
       "then": {
         "properties": {
           "stages": {
-            "items": {"$ref": "https://learningos.local/schema/learning-plan-v1#/$defs/curriculumStage"}
+            "items": {
+              "$ref": "https://learningos.local/schema/learning-plan-v1#/$defs/curriculumStage"
+            }
           }
         }
       },
       "else": {
         "properties": {
-          "stages": {"items": {"$ref": "#/$defs/legacyStage"}}
+          "stages": {
+            "items": {
+              "$ref": "#/$defs/legacyStage"
+            }
+          }
         }
       }
     }
@@ -90,49 +229,219 @@
   "$defs": {
     "legacyResource": {
       "type": "object",
-      "required": ["kind"],
+      "required": [
+        "kind"
+      ],
       "additionalProperties": false,
-      "anyOf": [{"required": ["label"]}, {"required": ["material_ref"], "properties": {"material_ref": {"properties": {"inherit": {"contains": {"const": "label"}}}}}}],
+      "anyOf": [
+        {
+          "required": [
+            "label"
+          ]
+        },
+        {
+          "required": [
+            "material_ref"
+          ],
+          "properties": {
+            "material_ref": {
+              "properties": {
+                "inherit": {
+                  "contains": {
+                    "const": "label"
+                  }
+                }
+              }
+            }
+          }
+        }
+      ],
       "properties": {
-        "material_ref": {"type": "object", "additionalProperties": false, "required": ["route_id", "inherit"], "properties": {"route_id": {"type": "string", "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"}, "inherit": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"enum": ["label", "source_id", "locator", "angle", "angle_detail", "url", "vault_path"]}}}},
-        "id": {"type": "string", "pattern": "^resource-[a-z0-9]+(?:-[a-z0-9]+)*$"},
-        "route_id": {"type": "string", "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"},
-        "kind": {"enum": ["watch", "read", "practise", "reference"]},
-        "label": {"type": "string", "minLength": 1},
-        "source_id": {"type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"},
-        "locator": {"type": "string"},
-        "angle": {"type": "string", "pattern": "\\S"},
-        "angle_detail": {"type": "string", "pattern": "\\S"},
-        "url": {"type": "string", "format": "uri"},
-        "vault_path": {"type": "string"},
-        "scope_triage": {"enum": ["required-now", "helpful-now", "deferred", "reference-only"]}
+        "material_ref": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "route_id",
+            "inherit"
+          ],
+          "properties": {
+            "route_id": {
+              "type": "string",
+              "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"
+            },
+            "inherit": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "label",
+                  "source_id",
+                  "locator",
+                  "angle",
+                  "angle_detail",
+                  "url",
+                  "vault_path"
+                ]
+              }
+            }
+          }
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^resource-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "route_id": {
+          "type": "string",
+          "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "kind": {
+          "enum": [
+            "watch",
+            "read",
+            "practise",
+            "reference"
+          ]
+        },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "locator": {
+          "type": "string"
+        },
+        "angle": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "angle_detail": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "vault_path": {
+          "type": "string"
+        },
+        "scope_triage": {
+          "enum": [
+            "required-now",
+            "helpful-now",
+            "deferred",
+            "reference-only"
+          ]
+        },
+        "affordance": {
+          "enum": [
+            "intervention",
+            "evidence",
+            "mixed"
+          ]
+        }
       }
     },
     "legacyStage": {
       "type": "object",
-      "required": ["id", "title", "status", "objective", "done_when", "resources", "working_note", "attachments", "source_feedback", "scope_triage"],
+      "required": [
+        "id",
+        "title",
+        "status",
+        "objective",
+        "done_when",
+        "resources",
+        "working_note",
+        "attachments",
+        "source_feedback",
+        "scope_triage"
+      ],
       "additionalProperties": false,
       "properties": {
-        "id": {"type": "string", "pattern": "^stage-[a-z0-9]+(?:-[a-z0-9]+)*$"},
-        "title": {"type": "string", "minLength": 1},
-        "status": {"enum": ["pending", "active", "paused", "complete", "skipped"]},
-        "objective": {"type": "string", "minLength": 1},
-        "done_when": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
-        "estimate_minutes": {"type": "integer", "minimum": 1},
-        "exam_critical": {"type": "boolean"},
-        "concepts": {"type": "array", "items": {"type": "string", "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"}, "uniqueItems": true},
-        "scope_triage": {"enum": ["required-now", "helpful-now", "deferred", "reference-only"]},
-        "resources": {"type": "array", "items": {"$ref": "#/$defs/legacyResource"}},
-        "working_note": {"type": "string", "pattern": "^curriculum/modules/.+/stages/.+/notes\\.md$"},
+        "id": {
+          "type": "string",
+          "pattern": "^stage-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "enum": [
+            "pending",
+            "active",
+            "paused",
+            "complete",
+            "skipped"
+          ]
+        },
+        "objective": {
+          "type": "string",
+          "minLength": 1
+        },
+        "done_when": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "estimate_minutes": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "exam_critical": {
+          "type": "boolean"
+        },
+        "concepts": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "uniqueItems": true
+        },
+        "scope_triage": {
+          "enum": [
+            "required-now",
+            "helpful-now",
+            "deferred",
+            "reference-only"
+          ]
+        },
+        "resources": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/legacyResource"
+          }
+        },
+        "working_note": {
+          "type": "string",
+          "pattern": "^curriculum/modules/.+/stages/.+/notes\\.md$"
+        },
         "attachments": {
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["path", "label"],
+            "required": [
+              "path",
+              "label"
+            ],
             "additionalProperties": false,
             "properties": {
-              "path": {"type": "string", "pattern": "^curriculum/modules/.+/stages/.+/attachments/.+"},
-              "label": {"type": "string", "minLength": 1}
+              "path": {
+                "type": "string",
+                "pattern": "^curriculum/modules/.+/stages/.+/attachments/.+"
+              },
+              "label": {
+                "type": "string",
+                "minLength": 1
+              }
             }
           }
         },
@@ -140,19 +449,49 @@
           "type": "array",
           "items": {
             "type": "object",
-            "required": ["source_id", "feedback", "recorded"],
+            "required": [
+              "source_id",
+              "feedback",
+              "recorded"
+            ],
             "additionalProperties": false,
             "properties": {
-              "source_id": {"type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"},
-              "resource_id": {"type": "string", "pattern": "^resource-[a-z0-9]+(?:-[a-z0-9]+)*$"},
-              "feedback": {"enum": ["helpful", "too-advanced", "wrong-perspective", "useful-for-derivation", "useful-for-review", "skipped"]},
-              "note": {"type": "string"},
-              "recorded": {"type": "string", "format": "date"}
+              "source_id": {
+                "type": "string",
+                "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "resource_id": {
+                "type": "string",
+                "pattern": "^resource-[a-z0-9]+(?:-[a-z0-9]+)*$"
+              },
+              "feedback": {
+                "enum": [
+                  "helpful",
+                  "too-advanced",
+                  "wrong-perspective",
+                  "useful-for-derivation",
+                  "useful-for-review",
+                  "skipped"
+                ]
+              },
+              "note": {
+                "type": "string"
+              },
+              "recorded": {
+                "type": "string",
+                "format": "date"
+              }
             }
           }
         },
-        "detour_id": {"type": "string", "pattern": "^detour-[a-z0-9]+(?:-[a-z0-9]+)*$"},
-        "completed": {"type": "string", "format": "date"}
+        "detour_id": {
+          "type": "string",
+          "pattern": "^detour-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "completed": {
+          "type": "string",
+          "format": "date"
+        }
       }
     }
   }

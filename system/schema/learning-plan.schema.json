@@ -41,11 +41,11 @@
           "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"
         },
         "locator": {
-          "description": "Where to start, exactly. For a book, paper or course this means the numbered chapter or section AND a page range in PDF pages (the number a viewer's page box takes, cover counted as 1) — see system/PLAN-CREATION-SOP.md. \"Chapter 9\" of a 700-page book is a direction, not a locator.",
+          "description": "Where to start, exactly. For a book, paper or course this means the numbered chapter or section AND a page range in PDF pages (the number a viewer's page box takes, cover counted as 1) \u2014 see system/PLAN-CREATION-SOP.md. \"Chapter 9\" of a 700-page book is a direction, not a locator.",
           "type": "string"
         },
         "angle": {
-          "description": "What this material does for THIS stage that the others on it do not — one line, rendered beside the label. It is a field rather than a suffix on `locator` so an interface can show it, sort by it, and check that it is there.",
+          "description": "What this material does for THIS stage that the others on it do not \u2014 one line, rendered beside the label. It is a field rather than a suffix on `locator` so an interface can show it, sort by it, and check that it is there.",
           "type": "string",
           "pattern": "\\S"
         },
@@ -98,6 +98,13 @@
               }
             }
           }
+        },
+        "affordance": {
+          "enum": [
+            "intervention",
+            "evidence",
+            "mixed"
+          ]
         }
       },
       "anyOf": [

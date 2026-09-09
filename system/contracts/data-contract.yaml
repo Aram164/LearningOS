@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 21
-schema_fingerprint: sha256:400903ec7b02e4b7389e0332a2cba66aefa79a3ed6552421e9fa5951714471f1
+contract_version: 23
+schema_fingerprint: sha256:e9f99f026b08a1a21a77df5b2c0b3e7af4b7380ef5b1503bba670e4350f6004b
 record_schemas: 32
 history:
 - version: 1
@@ -184,5 +184,15 @@ history:
 - version: 21
   adopted: '2026-09-09'
   note: Phase 2 LearnerObservation schema
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 22
+  adopted: '2026-09-09'
+  note: Phase 4 affordance vocabulary
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 23
+  adopted: '2026-09-09'
+  note: Phase 4 affordance vocabulary in learning-plan
   migration: null
   fixture: tests/fixtures/formats/v12/
