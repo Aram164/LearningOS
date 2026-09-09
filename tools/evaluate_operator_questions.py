@@ -1,15 +1,52 @@
-"""Offline per-model scoring for held-out operator questions.
+"""Offline question-to-procedure evaluation for held-out operator questions.
 
-The suite proves predicates answer; this tool scores a *model* outside the
-suite without leaking the answer key. ``prepare`` emits a model context
-built from the held-out trial set — question text, procedure inputs, and
-notes, but never the ``expected`` mapping, which is the key. ``score``
-executes the same predicates over the same inputs (answers score from
-evidence alone) and compares the model's stated verdicts against the
-computed ones.
+Replacement specification (research examination 2026-09-09, required
+correction for the original model-conformance lesson): the model derives
+HOW LearningOS answers a natural-language question — which predicate,
+bound to which inputs — and states the answer. Format 1 published the
+reference procedure in the model package, reducing the task to following
+a supplied recipe; format 2 separates task facts from reference.
 
-Reports carry per-question verdicts, counts, the exact input digest, and
-the addressed VOQ ids. Counts are bookkeeping, not competence labels:
+Trial record (authored, evaluator-side). Public task facts the model may
+see: ``id``, ``split``, ``class``, ``question``, ``notes``. Reference
+material the model must never see, under ``reference``: the ``procedure``
+(``predicate`` + ``inputs``), the ``expected`` answer key (exactly one
+known op), and ``accepted`` — additional adjudicated-equivalent
+procedures (may be empty; the reference procedure is always accepted).
+
+``notes`` is public task context. Anything the model must not see lives
+under ``reference``; ``prepare`` physically cannot emit it (pinned by
+test: the serialized package contains no ``procedure``, ``expected``,
+or ``accepted`` token).
+
+Model submission per trial id::
+
+    {"procedure": {"predicate": name, "inputs": {...}}, "answer": scalar|null}
+
+Scoring (evaluator-side, key in hand), per trial:
+
+- submission malformed -> the whole batch refuses (shape violation,
+  like an unknown trial id — fail closed, never a partial score);
+- fixture unhealthy (reference predicate unexecutable, or computed
+  truth contradicts the key) -> ``fixture-rot`` (fixture debt, never
+  model signal);
+- answer null or missing -> ``unanswered``;
+- well-formed procedure outside the adjudicated set -> ``unadjudicated``
+  (needs a human adjudication; never a pass, never a fail);
+- accepted procedure + stated answer matches executed truth -> ``pass``;
+- accepted procedure + mismatch -> ``fail``.
+
+Digests: ``package_digest`` covers the public package alone — changing
+only hidden key material leaves the model-visible package byte-identical
+(pinned by test). ``key_digest`` binds the full keyed records and lives
+only in the evaluator-side report, never in the package.
+
+Decoding is strict on both sides: repeated keys refuse in answers JSON
+and in trial YAML, before any conversion — shape validation after
+decoding is too late (examination finding 2).
+
+Reports carry per-trial verdicts, counts, both digests, and the
+addressed VOQ ids. Counts are bookkeeping, not competence labels:
 nothing here declares what a model understands.
 
 Usage:
@@ -34,11 +71,13 @@ DEFAULT_TRIALS = ROOT / "tests/fixtures/verified_operator_questions"
 
 EXPECTED_OPS = ("equals", "is_true", "is_false", "contains")
 
-VERDICTS = ("pass", "fail", "unanswered", "fixture-rot")
+PACKAGE_FORMAT = 2
+
+VERDICTS = ("pass", "fail", "unanswered", "unadjudicated", "fixture-rot")
 
 
 class EvalError(Exception):
-    """A refused evaluation package: malformed trials or answers."""
+    """A refused evaluation package: malformed trials or submissions."""
 
 
 def _canonical(value: object) -> str:
@@ -51,16 +90,45 @@ def _digest(value: object) -> str:
         _canonical(value).encode("utf-8")).hexdigest()
 
 
+class _NoDupLoader(yaml.SafeLoader):
+    """YAML loader that refuses repeated mapping keys during decoding."""
+
+
+def _no_dup_mapping(loader: _NoDupLoader, node: yaml.MappingNode,
+                    deep: bool = False) -> dict:
+    keys = [loader.construct_object(key_node, deep=True)
+            for key_node, _ in node.value]
+    repeated = sorted({str(key) for key in keys if keys.count(key) > 1})
+    if repeated:
+        raise EvalError(f"repeated mapping key(s): {', '.join(repeated)}")
+    return loader.construct_mapping(node, deep=deep)
+
+
+_NoDupLoader.add_constructor(
+    yaml.resolver.BaseResolver.DEFAULT_MAPPING_TAG, _no_dup_mapping)
+
+
+def _check_procedure(name: str, procedure: object, what: str) -> dict:
+    if not isinstance(procedure, dict) or set(procedure) != {
+            "predicate", "inputs"}:
+        raise EvalError(f"trial {name} has a malformed {what}")
+    if procedure["predicate"] not in PREDICATES:
+        raise EvalError(f"trial {name} names an unregistered predicate")
+    if not isinstance(procedure["inputs"], dict):
+        raise EvalError(f"trial {name} has malformed {what} inputs")
+    return procedure
+
+
 def load_trials(trials_dir: Path | str) -> list[dict]:
     """Load the directory and return its held-out trials. Refuses the rest.
 
-    Every file must be a well-formed VOQ record: exact keys, a known
-    split, an id matching its filename, a registered predicate, mapping
-    inputs, and an answer key holding exactly one known op. Duplicate ids
-    refuse before per-file detail checks so every documented refusal is
-    reachable. Examples are validated like everything else but never
-    admitted — illustrations are not eval material — and a directory with
-    no held-out trials refuses.
+    Every file must be a well-formed trial record: exact keys, a known
+    split, an id matching its filename, and a ``reference`` holding the
+    procedure, the single-op answer key, and the adjudicated-equivalent
+    procedures (possibly none). Duplicate ids refuse before per-file
+    detail checks so every documented refusal is reachable. Examples are
+    validated like everything else but never admitted — illustrations are
+    not eval material — and a directory with no held-out trials refuses.
     """
     root = Path(trials_dir)
     if not root.is_dir():
@@ -68,9 +136,13 @@ def load_trials(trials_dir: Path | str) -> list[dict]:
     parsed: list[tuple[str, dict]] = []
     for path in sorted(root.glob("*.yaml")):
         try:
-            record = yaml.safe_load(path.read_text(encoding="utf-8"))
+            record = yaml.load(
+                path.read_text(encoding="utf-8"), Loader=_NoDupLoader)
         except yaml.YAMLError as exc:
-            raise EvalError(f"trial {path.name} is not valid YAML: {exc}") from None
+            raise EvalError(
+                f"trial {path.name} is not valid YAML: {exc}") from None
+        except EvalError as exc:
+            raise EvalError(f"trial {path.name} {exc}") from None
         if not isinstance(record, dict):
             raise EvalError(f"trial {path.name} is not a mapping")
         parsed.append((path.name, record))
@@ -79,27 +151,29 @@ def load_trials(trials_dir: Path | str) -> list[dict]:
         raise EvalError(f"duplicate trial ids in {root}")
     records = []
     for name, record in parsed:
-        if set(record) != {"id", "split", "class", "question", "procedure",
-                           "expected", "notes"}:
+        if set(record) != {"id", "split", "class", "question", "notes",
+                           "reference"}:
             raise EvalError(f"trial {name} has unexpected keys")
         if record["split"] not in ("example", "heldout"):
             raise EvalError(f"trial {name} has an unknown split")
         if record["id"] != Path(name).stem:
             raise EvalError(
                 f"trial {name} id {record['id']!r} does not match its filename")
-        procedure = record["procedure"]
-        if not isinstance(procedure, dict) or set(procedure) != {
-                "predicate", "inputs"}:
-            raise EvalError(f"trial {name} has a malformed procedure")
-        if procedure["predicate"] not in PREDICATES:
-            raise EvalError(
-                f"trial {name} names an unregistered predicate")
-        if not isinstance(procedure["inputs"], dict):
-            raise EvalError(f"trial {name} has malformed inputs")
-        expected = record["expected"]
+        reference = record["reference"]
+        if not isinstance(reference, dict) or set(reference) != {
+                "procedure", "expected", "accepted"}:
+            raise EvalError(f"trial {name} has a malformed reference")
+        _check_procedure(name, reference["procedure"], "procedure")
+        expected = reference["expected"]
         if not isinstance(expected, dict) or len(expected) != 1 \
                 or next(iter(expected)) not in EXPECTED_OPS:
             raise EvalError(f"trial {name} has a malformed answer key")
+        accepted = reference["accepted"]
+        if not isinstance(accepted, list):
+            raise EvalError(
+                f"trial {name} has a malformed accepted-procedure list")
+        for variant in accepted:
+            _check_procedure(name, variant, "accepted procedure")
         records.append(record)
     heldout = sorted(
         (record for record in records if record["split"] == "heldout"),
@@ -109,54 +183,115 @@ def load_trials(trials_dir: Path | str) -> list[dict]:
     return heldout
 
 
-def trial_set_digest(records: list[dict]) -> str:
-    """Digest over the full keyed records: binds a package to its keys."""
+def _public_entries(records: list[dict]) -> list[dict]:
+    """The model-visible projection: task facts only, never reference."""
+    return [{key: record[key] for key in ("id", "class", "question", "notes")}
+            for record in records]
+
+
+def package_digest(public_trials: list[dict]) -> str:
+    """Digest over the public package alone: hidden key changes must not
+    move it (examination finding 1 — hidden-key separation gate)."""
+    return _digest(public_trials)
+
+
+def key_digest(records: list[dict]) -> str:
+    """Evaluator-side binding of a package to its full keyed records.
+
+    Never ships in the model package; recorded in the score report so an
+    audit can re-derive exactly which key scored which submission.
+    """
     return _digest(records)
 
 
 def prepare_package(records: list[dict]) -> dict:
-    """Model context for the trials: everything except the answer key.
+    """Model context for the trials: public task facts, no reference.
 
-    The ``expected`` mapping never leaves this function; ``split`` is
-    answering-irrelevant metadata and stays out too.
+    Neither ``procedure`` nor ``expected`` nor ``accepted`` can leave
+    this function — the projection keys are enumerated, not subtracted.
     """
+    public = _public_entries(records)
     return {
-        "trial_set_digest": trial_set_digest(records),
-        "trials": [
-            {key: record[key] for key in (
-                "id", "class", "question", "procedure", "notes")}
-            for record in records
-        ],
+        "package_format": PACKAGE_FORMAT,
+        "package_digest": package_digest(public),
+        "trials": public,
     }
 
 
-def _check_answers(answers: object) -> dict[str, object]:
-    """Shape-check stated verdicts: a mapping of single JSON scalars.
+def _check_submission(trial_id: object, submission: object) -> dict:
+    """Shape-check one structured submission: procedure plus answer.
 
-    A missing key or an explicit null means the trial goes unanswered;
-    anything else malformed refuses — a score never silently advances on
-    bad input, however the answers arrived.
+    A missing key or an explicit null answer means the trial goes
+    unanswered; anything else malformed refuses — a score never silently
+    advances on bad input, however the submission arrived.
     """
-    if not isinstance(answers, dict):
-        raise EvalError("answers are not a JSON object")
-    for key, value in answers.items():
-        if value is None:
-            continue
-        if isinstance(value, (str, int, float)):
-            if isinstance(value, str) and not value:
-                raise EvalError(f"answer for {key!r} is an empty string")
-            continue
-        raise EvalError(f"answer for {key!r} is not a single stated verdict")
-    return answers
+    if not isinstance(submission, dict) or set(submission) != {
+            "procedure", "answer"}:
+        raise EvalError(
+            f"submission for {trial_id!r} must hold exactly procedure "
+            "and answer")
+    procedure = submission["procedure"]
+    if not isinstance(procedure, dict) or set(procedure) != {
+            "predicate", "inputs"}:
+        raise EvalError(
+            f"submission for {trial_id!r} has a malformed procedure")
+    if not isinstance(procedure["predicate"], str) \
+            or not procedure["predicate"]:
+        raise EvalError(
+            f"submission for {trial_id!r} names no predicate")
+    if not isinstance(procedure["inputs"], dict):
+        raise EvalError(
+            f"submission for {trial_id!r} has malformed procedure inputs")
+    answer = submission["answer"]
+    if answer is None:
+        return submission
+    if isinstance(answer, str) and not answer:
+        raise EvalError(f"submission for {trial_id!r} has an empty answer")
+    if not isinstance(answer, (str, int, float)):
+        raise EvalError(
+            f"submission for {trial_id!r} has no single stated answer")
+    return submission
+
+
+def _check_submissions(submissions: object) -> dict:
+    if not isinstance(submissions, dict):
+        raise EvalError("submissions are not a JSON object")
+    return {trial_id: _check_submission(trial_id, submission)
+            for trial_id, submission in submissions.items()}
+
+
+def _no_dup_object(pairs: list[tuple[str, object]]) -> dict:
+    for key, _ in pairs:
+        if sum(1 for other, _ in pairs if other == key) > 1:
+            raise EvalError(f"answers file repeats key {key!r}")
+    return dict(pairs)
 
 
 def load_answers(path: Path | str) -> dict[str, object]:
-    """Load the model's stated verdicts keyed by trial id."""
+    """Load the model's structured submissions keyed by trial id.
+
+    Repeated keys refuse during decoding, before any conversion — a
+    decoded dictionary can no longer tell that a conflict existed.
+    """
     try:
-        return _check_answers(
-            json.loads(Path(path).read_text(encoding="utf-8")))
+        parsed = json.loads(Path(path).read_text(encoding="utf-8"),
+                            object_pairs_hook=_no_dup_object)
     except (OSError, ValueError) as exc:
         raise EvalError(f"answers file is unreadable: {exc}") from None
+    return _check_submissions(parsed)
+
+
+def _procedure_identity(procedure: dict) -> tuple[str, str]:
+    return (procedure["predicate"], _canonical(procedure["inputs"]))
+
+
+def _accepted_identities(record: dict) -> set[tuple[str, str]]:
+    reference = record["reference"]["procedure"]
+    accepted = {_procedure_identity(reference)}
+    accepted.update(
+        _procedure_identity(variant)
+        for variant in record["reference"]["accepted"])
+    return accepted
 
 
 def _model_matches(op: str, wanted: object, model: object, truth: object) -> bool:
@@ -180,45 +315,61 @@ def _fixture_holds(expected: dict, truth: object) -> bool:
     return wanted in truth if isinstance(truth, (str, list, tuple)) else False
 
 
-def score_trials(records: list[dict], answers: dict[str, object]) -> dict:
-    """Score stated verdicts against executed predicates. Pure.
+def score_trials(records: list[dict], submissions: dict) -> dict:
+    """Score structured submissions against executed predicates. Pure.
 
-    Unknown answer ids refuse. A trial the predicates cannot execute, or
-    whose computed verdict contradicts its own key, is ``fixture-rot`` —
-    fixture debt, never model signal. Everything else is ``pass``,
-    ``fail``, or ``unanswered``. The report pins the exact inputs it was
-    computed from.
+    Unknown submission ids refuse. A trial the reference predicate
+    cannot execute, or whose computed verdict contradicts its own key,
+    is ``fixture-rot`` — fixture debt, never model signal. Everything
+    else is ``pass``, ``fail``, ``unanswered``, or ``unadjudicated``.
+    The report pins the exact inputs it was computed from.
     """
-    answers = _check_answers(answers)
+    submissions = _check_submissions(submissions)
     known = {record["id"] for record in records}
-    strange = sorted(set(answers) - known)
+    strange = sorted(set(submissions) - known)
     if strange:
-        raise EvalError(f"answers address unknown trials: {', '.join(strange)}")
+        raise EvalError(
+            f"submissions address unknown trials: {', '.join(strange)}")
+    public = _public_entries(records)
+    digest = package_digest(public)
     verdicts = []
     for record in records:
         trial_id = record["id"]
+        reference = record["reference"]["procedure"]
         try:
-            truth = evaluate(
-                record["procedure"]["predicate"],
-                **record["procedure"]["inputs"])
-            healthy = _fixture_holds(record["expected"], truth)
+            truth = evaluate(reference["predicate"],
+                             **reference["inputs"])
+            healthy = _fixture_holds(record["reference"]["expected"], truth)
         except Exception:
             healthy, truth = False, None
         if not healthy:
-            verdicts.append({"id": trial_id, "verdict": "fixture-rot"})
+            verdicts.append({"id": trial_id, "verdict": "fixture-rot",
+                             "procedure_accepted": False})
             continue
-        if trial_id not in answers or answers[trial_id] is None:
-            verdicts.append({"id": trial_id, "verdict": "unanswered"})
+        submission = submissions.get(trial_id)
+        if submission is None or submission["answer"] is None:
+            verdicts.append({"id": trial_id, "verdict": "unanswered",
+                             "procedure_accepted": False})
             continue
-        op, wanted = next(iter(record["expected"].items()))
+        accepted = _procedure_identity(
+            submission["procedure"]) in _accepted_identities(record)
+        if not accepted:
+            verdicts.append({"id": trial_id, "verdict": "unadjudicated",
+                             "procedure_accepted": False})
+            continue
+        op, wanted = next(iter(record["reference"]["expected"].items()))
         verdict = "pass" if _model_matches(
-            op, wanted, answers[trial_id], truth) else "fail"
-        verdicts.append({"id": trial_id, "verdict": verdict})
+            op, wanted, submission["answer"], truth) else "fail"
+        verdicts.append({"id": trial_id, "verdict": verdict,
+                         "procedure_accepted": True})
     counts = {verdict: sum(1 for row in verdicts if row["verdict"] == verdict)
               for verdict in VERDICTS}
     return {
-        "trial_set_digest": trial_set_digest(records),
-        "input_digest": _digest({"trials": records, "answers": answers}),
+        "package_format": PACKAGE_FORMAT,
+        "package_digest": digest,
+        "key_digest": key_digest(records),
+        "input_digest": _digest({"package_digest": digest,
+                                 "submissions": submissions}),
         "addressed_voq_ids": sorted(known),
         "verdicts": verdicts,
         "counts": counts,
@@ -236,7 +387,7 @@ def cmd_prepare(args: argparse.Namespace) -> int:
     package = prepare_package(records)
     _write_json(Path(args.out), package)
     print(f"prepared {len(package['trials'])} trials, "
-          f"digest {package['trial_set_digest']}")
+          f"digest {package['package_digest']}")
     return 0
 
 
@@ -247,19 +398,22 @@ def cmd_score(args: argparse.Namespace) -> int:
     counts = report["counts"]
     print(f"score {counts['pass']}/{len(report['verdicts'])} "
           f"({counts['unanswered']} unanswered, "
+          f"{counts['unadjudicated']} unadjudicated, "
           f"{counts['fixture-rot']} fixture-rot)")
     return 0
 
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        description="Offline per-model scoring for held-out operator questions")
+        description="Offline question-to-procedure scoring for held-out "
+                    "operator questions")
     sub = parser.add_subparsers(dest="command", required=True)
     prep = sub.add_parser("prepare", help="emit the model context package")
     prep.add_argument("--trials", default=str(DEFAULT_TRIALS))
     prep.add_argument("--out", required=True)
     prep.set_defaults(func=cmd_prepare)
-    score = sub.add_parser("score", help="score stated verdicts from evidence")
+    score = sub.add_parser("score", help="score submitted procedures "
+                                        "and stated answers from evidence")
     score.add_argument("--trials", default=str(DEFAULT_TRIALS))
     score.add_argument("--answers", required=True)
     score.add_argument("--out", required=True)

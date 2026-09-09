@@ -2,15 +2,17 @@ id: voq-evidence-stale-claim
 split: heldout
 class: evidence
 question: "Is a claim stale when an artifact it read moves to a newer revision?"
-procedure:
-  predicate: ClaimStale
-  inputs:
-    read_contract_version: 2
-    current_contract_version: 2
-    read_revisions:
-      note-aml-l05-reference: 4
-    current_revisions:
-      note-aml-l05-reference: 5
-expected:
-  is_true: true
+reference:
+  procedure:
+    predicate: ClaimStale
+    inputs:
+      read_contract_version: 2
+      current_contract_version: 2
+      read_revisions:
+        note-aml-l05-reference: 4
+      current_revisions:
+        note-aml-l05-reference: 5
+  expected:
+    is_true: true
+  accepted: []
 notes: "Lineage precursor: read sets decide staleness; unread artifacts cannot stale a claim."

@@ -2,15 +2,17 @@ id: voq-mutation-in-scope-allowed
 split: example
 class: mutation
 question: "May route.patch write the AML source map?"
-procedure:
-  predicate: AllowedMutation
-  inputs:
-    capability: route.patch
-    target_path: curriculum/modules/module-hu-aml/source-map.yaml
-    scopes:
-      - curriculum/modules/*/source-map.yaml
-      - curriculum/modules/*/units/*/unit.yaml
-      - curriculum/modules/*/units/*/study-map.yaml
-expected:
-  is_true: true
+reference:
+  procedure:
+    predicate: AllowedMutation
+    inputs:
+      capability: route.patch
+      target_path: curriculum/modules/module-hu-aml/source-map.yaml
+      scopes:
+        - curriculum/modules/*/source-map.yaml
+        - curriculum/modules/*/units/*/unit.yaml
+        - curriculum/modules/*/units/*/study-map.yaml
+  expected:
+    is_true: true
+  accepted: []
 notes: "Authority is the capability contract's writes entry; matching is exact segments, never prefixes."
