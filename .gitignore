@@ -30,4 +30,3 @@ operations/ai-actions/incoming/
 operations/transactions/.inflight/
 .pytest_cache/
 .ruff_cache/
-.venv/

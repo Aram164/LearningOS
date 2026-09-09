@@ -158,10 +158,13 @@ def _inside(authority: Path, relative: str) -> Path:
     cursor = authority
     for part in (() if relative == "." else rel.parts):
         cursor = cursor / part
-        if cursor.is_symlink():
-            raise BackupManifestError(
-                f"backup declaration traverses a symlink: {relative}"
-            )
+        try:
+            if cursor.is_symlink():
+                raise BackupManifestError(
+                    f"backup declaration traverses a symlink: {relative}"
+                )
+        except OSError as exc:
+            raise BackupManifestError(f"unreadable path component in backup declaration: {cursor}") from exc
     try:
         resolved = lexical.resolve(strict=False)
         resolved.relative_to(authority)
