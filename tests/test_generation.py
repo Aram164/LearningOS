@@ -263,6 +263,24 @@ def test_health_reports_wiring_debt(mini_repo):
     assert "Wire on use" in health
 
 
+def test_health_flags_shelves_missing_an_explicit_atlas_domain(mini_repo):
+    """Review 2026-09-09: a collection the shelf→domain map does not name
+    renders as cross-domain. The health report names it so the fallback
+    never fires silently; explicitly mapped shelves stay out of the signal."""
+    import yaml as _yaml
+    coll = mini_repo / "sources" / "collections"
+    (coll / "shelf-unmapped.yaml").write_text(
+        _yaml.safe_dump({"title": "Unmapped shelf", "entries": []}),
+        encoding="utf-8")
+    (coll / "math-bookshelf.yaml").write_text(
+        _yaml.safe_dump({"title": "Mapped shelf", "entries": []}),
+        encoding="utf-8")
+    health = generate_all(load_repo(mini_repo), generated_at="T1")["reports/health.md"]
+    assert "## Atlas shelf placement" in health
+    assert "`shelf-unmapped`" in health
+    assert "`math-bookshelf`" not in health
+
+
 
 @pytest.mark.parametrize("failure", ["revision", "status", "revision-timeout", "status-timeout", "missing-git"])
 def test_git_failure_does_not_publish_manifest(mini_repo, monkeypatch, failure):

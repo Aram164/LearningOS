@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from ..loader import Repo
+from .atlas import ATLAS_COLLECTION_DOMAIN
 from .common import _first_para, _git_last_commit, _md_header
 from .materials import _materials_queue_rows
 from .modules_view import _exam_spine_lines
@@ -197,6 +198,24 @@ def build_health(repo: Repo, generated_at: str) -> str:
     lines.append("*Wire on use (WORKFLOWS §6a): when one of these actually comes "
                  "up in a session, add the minimal evaluation stub — concepts + "
                  "roles + one strengths line. Never bulk-backfill.*")
+    lines.append("")
+
+    # Atlas shelf placement (review 2026-09-09). A collection the shelf→domain
+    # map does not name renders under `cross-domain`: counts stay right,
+    # placement is wrong, and nothing else flags it. A maintenance SIGNAL,
+    # never a backlog: give the shelf an explicit domain in
+    # ATLAS_COLLECTION_DOMAIN (genout/atlas.py).
+    unmapped = sorted(name for name in repo.collections
+                      if name not in ATLAS_COLLECTION_DOMAIN)
+    lines.append("## Atlas shelf placement")
+    lines.append("")
+    if unmapped:
+        lines.append("- shelves without an explicit atlas domain "
+                     f"(shown as cross-domain): {len(unmapped)}")
+        lines.extend(f"  - `{name}`" for name in unmapped)
+    else:
+        lines.append("- every shelf has an explicit atlas domain "
+                     "(none falling back to cross-domain)")
     lines.append("")
 
     # Review & evidence adoption (2026-08-03). The fields (`reviewed`,
