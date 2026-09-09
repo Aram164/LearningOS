@@ -1,10 +1,12 @@
 """Verified Operator Questions: the fixture suite that measures understanding.
 
-~20 question/procedure/expected triples over the semantic contract. Examples
-prove the predicates answer; the held-out set is eval only — scored here,
-never used as illustrations in docs, examples, or other tests. A held-out
-question whose id leaks into any of those places stops being held out, and
-`test_heldout_ids_stay_held_out` fails the suite on exactly that.
+~20 trial records over the semantic contract: public task facts plus an
+evaluator-side reference (procedure, answer key, adjudicated
+equivalents). Examples prove the predicates answer; the held-out set is
+eval only — scored here, never used as illustrations in docs, examples,
+or other tests. A held-out question whose id leaks into any of those
+places stops being held out, and `test_heldout_ids_stay_held_out` fails
+the suite on exactly that.
 """
 
 from __future__ import annotations
@@ -46,18 +48,24 @@ def voqs() -> list[dict]:
 
 def _check_shape(voq: dict) -> None:
     assert set(voq) == {
-        "id", "split", "class", "question", "procedure", "expected", "notes",
+        "id", "split", "class", "question", "notes", "reference",
     }, f"unexpected keys in {voq.get('id')}"
     assert voq["split"] in {"example", "heldout"}
     assert voq["id"].startswith("voq-")
-    procedure = voq["procedure"]
+    reference = voq["reference"]
+    assert set(reference) == {"procedure", "expected", "accepted"}
+    procedure = reference["procedure"]
     assert set(procedure) == {"predicate", "inputs"}
     assert procedure["predicate"] in PREDICATES, (
         f"{voq['id']} names an unregistered predicate")
     assert isinstance(procedure["inputs"], dict)
-    expected = voq["expected"]
+    expected = reference["expected"]
     assert isinstance(expected, dict) and len(expected) == 1
     assert next(iter(expected)) in EXPECTED_OPS
+    for variant in reference["accepted"]:
+        assert set(variant) == {"predicate", "inputs"}
+        assert variant["predicate"] in PREDICATES
+        assert isinstance(variant["inputs"], dict)
 
 
 def _apply(expected: dict, verdict: object, voq_id: str) -> None:
@@ -89,9 +97,9 @@ def test_examples_are_green(voqs):
     examples = [voq for voq in voqs if voq["split"] == "example"]
     assert len(examples) == 15
     for voq in examples:
-        verdict = evaluate(
-            voq["procedure"]["predicate"], **voq["procedure"]["inputs"])
-        _apply(voq["expected"], verdict, voq["id"])
+        procedure = voq["reference"]["procedure"]
+        verdict = evaluate(procedure["predicate"], **procedure["inputs"])
+        _apply(voq["reference"]["expected"], verdict, voq["id"])
 
 
 def test_heldout_eval_scores_five_of_five(voqs, capsys):
@@ -105,10 +113,10 @@ def test_heldout_eval_scores_five_of_five(voqs, capsys):
     assert len(heldout) == 5
     passed = 0
     for voq in heldout:
-        verdict = evaluate(
-            voq["procedure"]["predicate"], **voq["procedure"]["inputs"])
+        procedure = voq["reference"]["procedure"]
+        verdict = evaluate(procedure["predicate"], **procedure["inputs"])
         try:
-            _apply(voq["expected"], verdict, voq["id"])
+            _apply(voq["reference"]["expected"], verdict, voq["id"])
         except AssertionError:
             print(f"HELDOUT FAIL {voq['id']}: {verdict!r}")
         else:

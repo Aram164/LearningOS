@@ -2,11 +2,13 @@ id: voq-critique-point-resolved-closed
 split: heldout
 class: critique-point
 question: "Is a resolved point actionable work?"
-procedure:
-  predicate: CritiquePointActionable
-  inputs:
-    status: resolved
-    authorized_in_session: true
-expected:
-  equals: closed
+reference:
+  procedure:
+    predicate: CritiquePointActionable
+    inputs:
+      status: resolved
+      authorized_in_session: true
+  expected:
+    equals: closed
+  accepted: []
 notes: "Closed points stay closed; only Aram closes, and closing keeps the original text."

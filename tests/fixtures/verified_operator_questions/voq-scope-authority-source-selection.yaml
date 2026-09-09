@@ -2,12 +2,14 @@ id: voq-scope-authority-source-selection
 split: heldout
 class: scope-authority
 question: "Where does a learner's L02 source choice live authoritatively?"
-procedure:
-  predicate: ScopeAuthority
-  inputs:
-    fact_kind: source_selection
-    module_id: module-hu-aml
-    unit_id: unit-aml-l02
-expected:
-  equals: curriculum/modules/module-hu-aml/units/unit-aml-l02/unit.yaml
+reference:
+  procedure:
+    predicate: ScopeAuthority
+    inputs:
+      fact_kind: source_selection
+      module_id: module-hu-aml
+      unit_id: unit-aml-l02
+  expected:
+    equals: curriculum/modules/module-hu-aml/units/unit-aml-l02/unit.yaml
+  accepted: []
 notes: "Choices live in source_selections on the unit; the menu and the map never record them."

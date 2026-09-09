@@ -216,11 +216,18 @@ review. Scanning reports candidates; it never rewrites the lineage ledger.
 
 ## Verified Operator Questions
 
-~20 question/procedure/expected-property triples under
-`tests/fixtures/verified_operator_questions/` (15 examples, 5 held out),
-run by `tests/test_verified_operator_questions.py`. Examples prove the
-predicates answer; held-out questions score as eval and are never
-illustrated — a leaked held-out id fails the suite.
+~20 trial records under `tests/fixtures/verified_operator_questions/`
+(15 examples, 5 held out), run by
+`tests/test_verified_operator_questions.py`. Each record carries public
+task facts (`id`, `class`, `question`, `notes`) plus an evaluator-side
+`reference` (the `procedure`, the single-op answer key, and the
+adjudicated-equivalent procedures). Examples prove the predicates
+answer; held-out questions score as eval and are never illustrated — a
+leaked held-out id fails the suite. Per-model question-to-procedure
+scoring (format 2: the model submits a structured procedure and answer
+against the public package only) runs outside the suite via
+`tools/evaluate_operator_questions.py`, proven by
+`tests/test_model_question_scoring.py`.
 
 ## Contract version
 

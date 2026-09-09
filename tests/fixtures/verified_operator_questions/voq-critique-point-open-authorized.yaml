@@ -2,11 +2,13 @@ id: voq-critique-point-open-authorized
 split: example
 class: critique-point
 question: "Is an open point actionable once Aram authorizes it this session?"
-procedure:
-  predicate: CritiquePointActionable
-  inputs:
-    status: open
-    authorized_in_session: true
-expected:
-  equals: actionable
+reference:
+  procedure:
+    predicate: CritiquePointActionable
+    inputs:
+      status: open
+      authorized_in_session: true
+  expected:
+    equals: actionable
+  accepted: []
 notes: "Authorization is per-session; a past say-so does not carry forward."

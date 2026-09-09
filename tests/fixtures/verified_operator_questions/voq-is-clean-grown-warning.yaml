@@ -2,11 +2,13 @@ id: voq-is-clean-grown-warning
 split: heldout
 class: is-clean
 question: "Is the repository clean when one warning signature grows?"
-procedure:
-  predicate: RepoClean
-  inputs:
-    error_count: 0
-    new_or_grown_warnings: 1
-expected:
-  is_false: true
+reference:
+  procedure:
+    predicate: RepoClean
+    inputs:
+      error_count: 0
+      new_or_grown_warnings: 1
+  expected:
+    is_false: true
+  accepted: []
 notes: "A total that stays level while one warning trades for another still fails the baseline gate."
