@@ -316,15 +316,16 @@ def test_score_marks_fixture_rot_not_model_failure(tmp_path):
                                 "unadjudicated": 0, "fixture-rot": 2}
 
 
-def test_adjudicated_variant_procedure_passes(tmp_path):
+@pytest.mark.parametrize("answer, verdict", [(False, "pass"), (True, "fail")])
+def test_adjudicated_variant_procedure_scores(tmp_path, answer, verdict):
     """An accepted equivalent is creditable; the reference is not the
     only licit way to derive the answer."""
     trials = tmp_path / "trials"
     trials.mkdir()
     _write_trial(
         trials, "trial-variant",
-        inputs={"error_count": 0, "new_or_grown_warnings": 0},
-        expected={"is_true": True},
+        inputs={"error_count": 1, "new_or_grown_warnings": 0},
+        expected={"is_false": True},
         accepted=[{"predicate": "RepoClean",
                    "inputs": {"error_count": 0,
                               "new_or_grown_warnings": 1}}],
@@ -333,8 +334,44 @@ def test_adjudicated_variant_procedure_passes(tmp_path):
     report = evalq.score_trials(records, {
         "trial-variant": _submit(
             inputs={"error_count": 0, "new_or_grown_warnings": 1},
-            answer=True)})
-    assert [row["verdict"] for row in report["verdicts"]] == ["pass"]
+            answer=answer)})
+    assert [row["verdict"] for row in report["verdicts"]] == [verdict]
+
+
+@pytest.mark.parametrize("inputs", [
+    {"error_count": 0, "new_or_grown_warnings": 1},
+    {"error_count": 0},
+], ids=["contradictory", "unexecutable"])
+def test_unhealthy_accepted_variant_is_fixture_rot_through_cli(tmp_path, inputs):
+    import subprocess
+    import sys
+
+    trials = tmp_path / "trials"
+    trials.mkdir()
+    _write_trial(
+        trials, "trial-variant",
+        inputs={"error_count": 0, "new_or_grown_warnings": 0},
+        expected={"is_true": True},
+        accepted=[{"predicate": "RepoClean", "inputs": inputs}],
+    )
+    answers = tmp_path / "answers.json"
+    answers.write_text(json.dumps({
+        "trial-variant": _submit(inputs=inputs, answer=True)}))
+    output = tmp_path / "report.json"
+    tool = Path(__file__).resolve().parent.parent / "tools" / (
+        "evaluate_operator_questions.py")
+    result = subprocess.run(
+        [sys.executable, str(tool), "score", "--trials", str(trials),
+         "--answers", str(answers), "--out", str(output)],
+        capture_output=True, text=True, timeout=120)
+    assert result.returncode == 0, result.stderr
+    report = json.loads(output.read_text())
+    assert report["verdicts"] == [{
+        "id": "trial-variant", "verdict": "fixture-rot",
+        "procedure_accepted": False}]
+    assert report["counts"] == {
+        "pass": 0, "fail": 0, "unanswered": 0,
+        "unadjudicated": 0, "fixture-rot": 1}
 
 
 def test_score_handles_equals_and_contains_ops(tmp_path, monkeypatch):

@@ -27,9 +27,9 @@ Scoring (evaluator-side, key in hand), per trial:
 
 - submission malformed -> the whole batch refuses (shape violation,
   like an unknown trial id — fail closed, never a partial score);
-- fixture unhealthy (reference predicate unexecutable, or computed
-  truth contradicts the key) -> ``fixture-rot`` (fixture debt, never
-  model signal);
+- fixture unhealthy (reference predicate or submitted accepted alternative
+  unexecutable, or its computed truth contradicts the key) -> ``fixture-rot``
+  (fixture debt, never model signal);
 - answer null or missing -> ``unanswered``;
 - well-formed procedure outside the adjudicated set -> ``unadjudicated``
   (needs a human adjudication; never a pass, never a fail);
@@ -318,9 +318,9 @@ def _fixture_holds(expected: dict, truth: object) -> bool:
 def score_trials(records: list[dict], submissions: dict) -> dict:
     """Score structured submissions against executed predicates. Pure.
 
-    Unknown submission ids refuse. A trial the reference predicate
-    cannot execute, or whose computed verdict contradicts its own key,
-    is ``fixture-rot`` — fixture debt, never model signal. Everything
+    Unknown submission ids refuse. A reference or submitted accepted
+    alternative that cannot execute or contradicts the key is
+    ``fixture-rot`` — fixture debt, never model signal. Everything
     else is ``pass``, ``fail``, ``unanswered``, or ``unadjudicated``.
     The report pins the exact inputs it was computed from.
     """
@@ -357,6 +357,19 @@ def score_trials(records: list[dict], submissions: dict) -> dict:
             verdicts.append({"id": trial_id, "verdict": "unadjudicated",
                              "procedure_accepted": False})
             continue
+        procedure = submission["procedure"]
+        if _procedure_identity(procedure) != _procedure_identity(reference):
+            # Adjudication can rot too. Reuse the already executed reference
+            # only for the same procedure; alternatives must prove their key.
+            try:
+                truth = evaluate(procedure["predicate"], **procedure["inputs"])
+                healthy = _fixture_holds(record["reference"]["expected"], truth)
+            except Exception:
+                healthy = False
+            if not healthy:
+                verdicts.append({"id": trial_id, "verdict": "fixture-rot",
+                                 "procedure_accepted": False})
+                continue
         op, wanted = next(iter(record["reference"]["expected"].items()))
         verdict = "pass" if _model_matches(
             op, wanted, submission["answer"], truth) else "fail"

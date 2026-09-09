@@ -229,6 +229,12 @@ against the public package only) runs outside the suite via
 `tools/evaluate_operator_questions.py`, proven by
 `tests/test_model_question_scoring.py`.
 
+Before scoring an accepted alternative's answer, the evaluator executes
+that procedure and checks its result against the key. An unexecutable or
+contradictory accepted alternative is `fixture-rot`, never model credit
+or failure. The identical reference procedure reuses its checked result;
+procedures outside the adjudicated set remain `unadjudicated`.
+
 ## Contract version
 
 `CONTRACT_VERSION` in `tools/learning_os/semantics/predicates.py` is

@@ -115,6 +115,11 @@ def _phaseB_validate(root: Path, repo, module_id: str, package: dict):
                     changed[rid] = new_covers
             elif sorted(str(node) for node in (old.get("covers") or [])) != sorted(new_covers):
                 changed[rid] = new_covers
+        # Deleting the route deletes its covers claim too. Include removals
+        # even when there is no added/edited route to trigger ledger handling.
+        for rid in sorted(set(live_routes) - set(package_routes)):
+            if live_routes[rid].get("covers"):
+                changed[rid] = []
     raw_evidence = package.get("claim_evidence", [])
     if raw_evidence is None:
         raw_evidence = []
@@ -200,6 +205,10 @@ def _phaseB_check_item(claim_id, item, locator, manifest_files, root):
     elif kind == "manifest":
         if ref not in manifest_files:
             return [f"{claim_id} cites unregistered manifest path {ref!r}"]
+        entry = manifest_files[ref]
+        digest = entry.get("sha256") if isinstance(entry, dict) else None
+        if not isinstance(digest, str) or not digest.strip():
+            return [f"{claim_id} cites manifest path {ref!r} with no digest"]
     elif kind == "repo-file":
         try:
             candidate = (root / ref).resolve()
@@ -231,12 +240,31 @@ def _phaseB_ledger_text(root, repo, module_id, package, changed, evidence_by_cla
     package_routes = _source_map_routes(package.get("source_map"))
     touched_units = set()
     for rid in sorted(changed):
-        unit_id = str((package_routes.get(rid) or {}).get("unit_id") or "")
+        unit_id = str((package_routes.get(rid) or live_routes.get(rid) or {}).get("unit_id") or "")
         if unit_id:
             touched_units.add(unit_id)
-    stamped = {module_id: current_revisions.get(module_id, 0)}
+    # Post-apply stamping: the gateway increments exactly module_id and the
+    # units supplied in the package (see cmd_module_plan_import artifact_ids).
+    # Stamping pre-commit values leaves every new claim immediately stale
+    # after its own commit. Touched units absent from the package are not
+    # incremented, so they stay at current.
+    package_unit_ids = set()
+    for entry in package.get("units", []) or []:
+        unit_data = entry.get("unit") if isinstance(entry, dict) else None
+        uid = unit_data.get("id") if isinstance(unit_data, dict) else None
+        if isinstance(uid, str) and uid \
+                and unit_data.get("module_id") == module_id:
+            package_unit_ids.add(uid)
+    incremented = {module_id} | package_unit_ids
+
+    def _post_apply(artifact: str) -> int:
+        base = current_revisions.get(artifact, 0)
+        return base + 1 if artifact in incremented else base
+
+    stamped = {module_id: _post_apply(module_id)}
     for unit_id in sorted(touched_units):
-        stamped[unit_id] = current_revisions.get(unit_id, 0)
+        if unit_id not in stamped:
+            stamped[unit_id] = _post_apply(unit_id)
     for rid in sorted(changed):
         claim_id = "covers:" + rid
         trails = []
@@ -250,11 +278,31 @@ def _phaseB_ledger_text(root, repo, module_id, package, changed, evidence_by_cla
             trails.append(trail)
             if item["kind"] == "manifest":
                 entry = manifest_files.get(ref)
-                digests["manifest:" + ref] = str(
-                    entry.get("sha256") or "") if isinstance(entry, dict) else ""
+                digest = str(entry.get("sha256") or "") \
+                    if isinstance(entry, dict) else ""
+                if not digest:
+                    raise LineageError(
+                        f"{claim_id} cites manifest path {ref!r} with no digest")
+                digests["manifest:" + ref] = digest
             elif item["kind"] == "repo-file":
-                content = (root / ref).read_bytes()
-                digests["file:" + ref] = "sha256:" + hashlib.sha256(content).hexdigest()
+                try:
+                    candidate = (root / ref).resolve()
+                    inside = candidate == root.resolve() \
+                        or root.resolve() in candidate.parents
+                except (OSError, ValueError):
+                    inside = False
+                    candidate = None
+                if not inside or candidate is None or not candidate.is_file():
+                    raise LineageError(
+                        f"{claim_id} cites unreadable repo file {ref!r}")
+                try:
+                    content = candidate.read_bytes()
+                except OSError as exc:
+                    raise LineageError(
+                        f"{claim_id} cites unreadable repo file {ref!r}: "
+                        f"{exc}") from exc
+                digests["file:" + ref] = "sha256:" + hashlib.sha256(
+                    content).hexdigest()
         try:
             declared = {
                 str(artifact): int(revision)
@@ -265,7 +313,14 @@ def _phaseB_ledger_text(root, repo, module_id, package, changed, evidence_by_cla
             raise LineageError(
                 f"{claim_id} declares malformed revision: {exc}") from exc
         read_revisions = dict(stamped)
-        read_revisions.update(declared)
+        for artifact, revision in declared.items():
+            # Declared reads were validated fresh against pre-commit state;
+            # store post-apply validity for incremented artifacts so the new
+            # claim is supported immediately after its own commit.
+            if artifact in incremented:
+                read_revisions[artifact] = current_revisions.get(artifact, 0) + 1
+            else:
+                read_revisions[artifact] = revision
         prior = records.get(claim_id)
         records[claim_id] = emit_route_covers(
             route_id=rid,
