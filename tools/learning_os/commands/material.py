@@ -66,6 +66,63 @@ def _map_for_unit(repo, unit_id):
     return maps[0] if maps else None
 
 
+#: Batch reads serve at most this many routes: one snapshot, one load,
+#: and a payload an operator can still review. Mirrors inspect's batch cap.
+MAX_BATCH_ROUTES = 20
+
+
+def _route_entry(routes, study_map, source_map, unit, route_id):
+    """One exact route plus its stage uses: the scalar and batch shape.
+
+    Both selectors build on this so their per-route fields cannot drift.
+    Raises WriteRefused for a missing, cross-unit or ambiguous route id.
+    """
+    route = _route(routes, route_id)
+    uses = []
+    if study_map:
+        raw_stages = {s["id"]: s for s in (study_map.authored_data or study_map.data)["stages"]}
+        for stage in study_map.data.get("stages", []):
+            for i, resource in enumerate(stage.get("resources", [])):
+                if not isinstance(resource, dict):
+                    continue
+                raw = raw_stages[stage["id"]]["resources"][i]
+                ref = raw.get("material_ref", {}) if isinstance(raw, dict) else {}
+                matches = matching_routes(resource, routes)
+                if ref.get("route_id") == route["id"] or (
+                    len(matches) == 1 and matches[0]["id"] == route["id"]
+                ):
+                    uses.append({"stage_id": stage["id"], "resource_index": i,
+                                 "scope_triage": resource.get("scope_triage"),
+                                 "overrides": {k: v for k, v in resource.items()
+                                               if k in MATERIAL_FIELDS
+                                               and (k in raw if ref else
+                                                    v != route.get(MATERIAL_FIELDS[k]))}})
+    return {"route": route, "uses": uses,
+            "patch_fields": sorted(PATCH_FIELDS),
+            "patch_capability": "route.patch"}
+
+
+def _batch_entries(routes, study_map, source_map, unit, route_ids):
+    """Ordered route entries for 1-20 distinct routes of one unit.
+
+    Every id is resolved before any entry is built, so a missing,
+    cross-unit, duplicate or out-of-bounds request refuses the whole
+    batch — never a partial payload.
+    """
+    ids = list(route_ids or [])
+    if not ids:
+        raise WriteRefused("plan-edit-context batch needs at least one route id")
+    if len(ids) > MAX_BATCH_ROUTES:
+        raise WriteRefused(
+            f"plan-edit-context accepts at most {MAX_BATCH_ROUTES} routes per batch")
+    if len(set(ids)) != len(ids):
+        raise WriteRefused("plan-edit-context batch route ids are distinct")
+    for route_id in ids:
+        _route(routes, route_id)
+    return [_route_entry(routes, study_map, source_map, unit, route_id)
+            for route_id in ids]
+
+
 def cmd_plan_edit_context(args) -> int:
     root = _root(args)
     with _operator_lock(root):
@@ -82,30 +139,18 @@ def cmd_plan_edit_context(args) -> int:
                    "module_id": unit.module_id,
                    "artifact_revisions": _guard_rows(root, artifacts),
                    "preflight": "route-patch UNIT_ID ROUTE_ID --changes JSON --check returns exact write guards"}
+        if args.route_id and getattr(args, "route_ids", None):
+            raise WriteRefused(
+                "plan-edit-context takes --route-id or --route-ids, never both")
         if args.route_id:
-            route = _route(routes, args.route_id)
-            uses = []
-            if study_map:
-                raw_stages = {s["id"]: s for s in (study_map.authored_data or study_map.data)["stages"]}
-                for stage in study_map.data.get("stages", []):
-                    for i, resource in enumerate(stage.get("resources", [])):
-                        if not isinstance(resource, dict):
-                            continue
-                        raw = raw_stages[stage["id"]]["resources"][i]
-                        ref = raw.get("material_ref", {}) if isinstance(raw, dict) else {}
-                        matches = matching_routes(resource, routes)
-                        if ref.get("route_id") == route["id"] or (
-                            len(matches) == 1 and matches[0]["id"] == route["id"]
-                        ):
-                            uses.append({"stage_id": stage["id"], "resource_index": i,
-                                         "scope_triage": resource.get("scope_triage"),
-                                         "overrides": {k: v for k, v in resource.items()
-                                                       if k in MATERIAL_FIELDS
-                                                       and (k in raw if ref else
-                                                            v != route.get(MATERIAL_FIELDS[k]))}})
-            payload.update({"route": route, "uses": uses,
-                            "patch_fields": sorted(PATCH_FIELDS),
-                            "patch_capability": "route.patch"})
+            payload.update(_route_entry(
+                routes, study_map, source_map, unit, args.route_id))
+        elif getattr(args, "route_ids", None) is not None:
+            entries = _batch_entries(
+                routes, study_map, source_map, unit, args.route_ids)
+            payload.update({"contract": "plan-edit-context-batch",
+                            "requested_route_ids": list(args.route_ids),
+                            "routes": entries})
         else:
             # Present the compact form even before an existing map is migrated.
             # Expansion inputs are included once, never separately per stage.

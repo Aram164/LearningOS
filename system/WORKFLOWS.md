@@ -501,7 +501,9 @@ extended.
 For one existing material's title, locator, angle, angle detail, URL or vault
 path, use the bounded `route.patch` capability. Read `plan-edit-context UNIT_ID
 --route-id ROUTE_ID`, then run `route-patch UNIT_ID ROUTE_ID --changes JSON
---check`. The preflight returns the concrete field diff, affected files,
+--check`. To read several routes at once, pass `--route-ids` with 1 to 20
+exact route ids: the batch shares the unit snapshot and revision guards,
+preserves request order, and refuses atomically. The preflight returns the concrete field diff, affected files,
 snapshot, and exact expected revisions. Apply those same changes through a
 GatewayEnvelopeV2 for `route.patch`. Core retains full shadow validation,
 warning checks, conflict guards, publication and receipts. It synchronizes
