@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/session-plan.schema.json",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "target_requirement_id",
+    "current_status",
+    "steps",
+    "rejected_alternatives",
+    "assumptions",
+    "replan_conditions"
+  ],
+  "properties": {
+    "target_requirement_id": {
+      "type": "string"
+    },
+    "current_status": {
+      "enum": ["unseen", "uncertain", "fragile", "demonstrated"]
+    },
+    "steps": {
+      "type": "array",
+      "items": {
+        "x-governs": "artifact",
+  "type": "object",
+        "additionalProperties": false,
+        "required": ["resource_id", "role", "reason"],
+        "properties": {
+          "resource_id": { "type": "string" },
+          "role": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "rejected_alternatives": {
+      "type": "array",
+      "items": {
+        "x-governs": "artifact",
+  "type": "object",
+        "additionalProperties": false,
+        "required": ["resource_id", "reason"],
+        "properties": {
+          "resource_id": { "type": "string" },
+          "reason": { "type": "string" }
+        }
+      }
+    },
+    "assumptions": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "replan_conditions": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

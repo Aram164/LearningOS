@@ -37,6 +37,8 @@ GENERATED_ALLOWED = {
     "learning-requirements.md", "learning-requirements.json",
     "learner-interpretations.json",
     "learner-interpretations.md",
+    "compiled-sessions.json",
+    "compiled-sessions.md",
     ".gitkeep",
     ".DS_Store",  # OS metadata noise, gitignored — not an agent artifact
 }
