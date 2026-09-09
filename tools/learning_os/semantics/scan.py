@@ -349,9 +349,11 @@ def collect_observations(root: Path | str, *,
     # dependent claims pin it. Unresolvable keys stay absent and fail
     # closed downstream, exactly as before.
     live_all: dict[str, str] = {}
+    attempted: set[str] = set()
     for lineage in records.values():
         for key in dict(lineage.derived_from.source_hashes):
-            if key not in live_all:
+            if key not in live_all and key not in attempted:
+                attempted.add(key)
                 live = live_evidence_digest(root, key, manifest_files)
                 if live is not None:
                     live_all[key] = live

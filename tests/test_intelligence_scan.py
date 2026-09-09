@@ -401,3 +401,41 @@ def test_scan_proposes_dependent_revalidation_after_evidence_moves(
     assert proc.returncode == 0, proc.stderr
     assert {goal["goal_id"] for goal in json.loads(proc.stdout)["goals"]} == {
         "lineage-stale:scope:proof:a", "lineage-stale:scope:proof:b"}
+
+
+def test_missing_evidence_resolves_once_for_all_claims_sharing_it(
+    mini_repo, monkeypatch,
+):
+    """Examination finding 3: three claims pinning one missing key attempt
+    the resolver once per collection — and all three still go stale, so
+    the collection stays fail-closed."""
+    from learning_os.semantics import scan as scan_module
+    from learning_os.semantics.lineage import dump_ledger, record_claim
+    from learning_os.semantics.scan import collect_observations
+
+    for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR"):
+        monkeypatch.delenv(name, raising=False)
+    admission = {"request_id": "missing", "idempotency_key": "missing"}
+    made = {}
+    for n in range(3):
+        claim = record_claim(
+            claim_id=f"scope:proof:ghost-{n}", claim_kind="scope-authority",
+            statement="Ghost holds.",
+            source_hashes={"file:work/gone.md": "sha256:" + "0" * 64},
+            judged_by="fixture", admitted_by=admission)
+        made[claim.claim_id] = claim
+    ledger = mini_repo / "operations/transactions/lineage.yaml"
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    ledger.write_text(dump_ledger(made), encoding="utf-8")
+
+    calls: list[str] = []
+    real_digest = scan_module.live_evidence_digest
+
+    def counting(root, key, manifest):
+        calls.append(key)
+        return real_digest(root, key, manifest)
+
+    monkeypatch.setattr(scan_module, "live_evidence_digest", counting)
+    obs = collect_observations(mini_repo, days=0)
+    assert calls == ["file:work/gone.md"]
+    assert sorted(claim for claim, _keys in obs.stale_claims) == sorted(made)

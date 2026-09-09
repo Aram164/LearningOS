@@ -328,10 +328,12 @@ def rewrite_dedup(task_ir: TaskIR) -> TaskIR:
         if step.effect == "mutation":
             segments.append([])
     remap: dict[str, str] = {}
-    collapsed: set[tuple[str, str]] = set()
     kept: list[TaskStep] = []
     for segment in segments:
-        kept.extend(_dedup_segment(segment, position, remap, collapsed))
+        # `remap` stays shared so dependencies re-point across mutations,
+        # but `collapsed` is fresh per segment: a dossier mark must never
+        # cross a mutation barrier (examination finding 4, 2026-09-09).
+        kept.extend(_dedup_segment(segment, position, remap, set()))
     steps = []
     for step in kept:
         deps = tuple(remap.get(dep, dep) for dep in step.depends_on)
@@ -351,7 +353,11 @@ def _dedup_segment(
     remap: dict[str, str],
     collapsed: set[tuple[str, str]],
 ) -> list[TaskStep]:
-    """Collapse one mutation-free segment; shared remap/collapsed grow."""
+    """Collapse one mutation-free segment; the shared remap grows.
+
+    `collapsed` must arrive empty and stays segment-local — the caller
+    passes a fresh set per segment.
+    """
     survivor: dict[tuple[str, str], TaskStep] = {}
     kept: list[TaskStep] = []
     for step in segment:

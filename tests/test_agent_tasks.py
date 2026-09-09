@@ -169,6 +169,21 @@ def test_dedup_collapses_pure_reads_into_dossier_marks():
     ]
 
 
+def test_dossier_marks_do_not_cross_a_mutation():
+    """Examination finding 4: two identical reads collapse before a
+    mutation (the survivor is dossier-served), but a singleton read of
+    the same detail after the mutation lost no duplicate and stays
+    unmarked."""
+    task_ir = TaskIR(task_type="t", steps=(
+        _read("a", "s0"), _read("a", "s1"),
+        _apply("m", "s2"),
+        _read("a", "s3"),
+    ))
+    rewritten = rewrite_dedup(task_ir)
+    assert [(step.id, step.uses_dossier) for step in rewritten.steps] == [
+        ("s0", True), ("s2", False), ("s3", False)]
+
+
 def test_dedup_never_collapses_mutations_or_judgments():
     task_ir = TaskIR(task_type="t", steps=(
         _apply("m", "s0"), _apply("m", "s1"),
