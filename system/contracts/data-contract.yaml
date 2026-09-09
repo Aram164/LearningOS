@@ -19,7 +19,7 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 18
+contract_version: 20
 schema_fingerprint: sha256:518ed64a99601b5b79738c69c6e73302668e3af9b0f4404920ad2075adaefae3
 record_schemas: 31
 history:
@@ -169,5 +169,15 @@ history:
   note: Add explicit shared material references to study-map resources; loaded records
     and manifest v9 remain fully expanded. Inline resources and older formats remain
     valid. Governed module.materials.compact preserves every effective field.
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 19
+  adopted: '2026-09-09'
+  note: Add Phase 1 experimental LearningRequirement schema
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 20
+  adopted: '2026-09-09'
+  note: Added x-governs to learning-requirement schema
   migration: null
   fixture: tests/fixtures/formats/v12/
