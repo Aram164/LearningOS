@@ -29,6 +29,7 @@ ENTRYPOINTS = (
     "build_materials_tree.py",
     "code_reachability.py",
     "codex_obsidian.py",
+    "evaluate_operator_questions.py",
     "generate.py",
     "generate_capability_schemas.py",
     "legacy_exit_review.py",
