@@ -19,9 +19,9 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 20
-schema_fingerprint: sha256:518ed64a99601b5b79738c69c6e73302668e3af9b0f4404920ad2075adaefae3
-record_schemas: 31
+contract_version: 21
+schema_fingerprint: sha256:400903ec7b02e4b7389e0332a2cba66aefa79a3ed6552421e9fa5951714471f1
+record_schemas: 32
 history:
 - version: 1
   adopted: '2026-08-07'
@@ -179,5 +179,10 @@ history:
 - version: 20
   adopted: '2026-09-09'
   note: Added x-governs to learning-requirement schema
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 21
+  adopted: '2026-09-09'
+  note: Phase 2 LearnerObservation schema
   migration: null
   fixture: tests/fixtures/formats/v12/

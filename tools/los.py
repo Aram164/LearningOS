@@ -58,6 +58,7 @@ from learning_os.commands.material import (  # noqa: E402
 )
 from learning_os.commands.module import cmd_module_list, cmd_module_plan_import  # noqa: E402
 from learning_os.commands.note import cmd_note_evidence, cmd_note_revise  # noqa: E402
+from learning_os.commands.observation import cmd_observation_append  # noqa: E402
 from learning_os.commands.path import (  # noqa: E402
     cmd_path_attach,
     cmd_path_note,
@@ -628,6 +629,17 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_note_evidence)
+
+
+    p = sub.add_parser('observation-append', help='append an immutable learner observation')
+    p.add_argument('--workspace', required=True)
+    p.add_argument('--requirement', required=True)
+    p.add_argument('--activity', required=True)
+    p.add_argument('--result', required=True)
+    p.add_argument('--assistance', default=None)
+    p.add_argument('--tags', default=None)
+    p.add_argument('--context', default=None)
+    p.set_defaults(func=cmd_observation_append)
 
 
     p = sub.add_parser("unit-note", help="append one session-level section to a unit working note")
