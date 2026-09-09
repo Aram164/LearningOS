@@ -246,6 +246,18 @@ stages:
     kind: watch
     scope_triage: helpful-now
     route_id: route-95a74dc976d705b6c78350b8
+  - material_ref:
+      route_id: route-d808f7046587125f077155a3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-d808f7046587125f077155a3
+    kind: practise
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-test-model/notes.md
   attachments: []
   source_feedback: []
@@ -476,6 +488,33 @@ stages:
     kind: watch
     scope_triage: helpful-now
     route_id: route-95a74dc976d705b6c78350b8
+  - material_ref:
+      route_id: route-da4850b15834791b4688a767
+      inherit:
+      - label
+      - source_id
+      - angle
+      - vault_path
+    route_id: route-da4850b15834791b4688a767
+    kind: read
+    scope_triage: helpful-now
+    locator: §13.5.1 and Algorithm 13.3, physical PDF pp. 584-586
+    angle_detail: Use the two-sample resampling example to construct a null distribution and compare its
+      tail probability with the theoretical t approximation. The contrasting examples show when the two
+      methods agree and when model assumptions change the conclusion. This is a test under the null, not
+      L09’s ordinary estimator bootstrap.
+  - material_ref:
+      route_id: route-d808f7046587125f077155a3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-d808f7046587125f077155a3
+    kind: practise
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-tails-pvalue/notes.md
   attachments: []
   source_feedback: []
@@ -609,6 +648,46 @@ stages:
     kind: practise
     scope_triage: helpful-now
     route_id: route-431abda7307c32a597e47e16
+  - material_ref:
+      route_id: route-335f1041911c33391d4a59b8
+      inherit:
+      - label
+      - source_id
+      - angle
+      - vault_path
+    route_id: route-335f1041911c33391d4a59b8
+    kind: read
+    scope_triage: helpful-now
+    locator: §7.4 Power calculations for a difference of means, physical PDF pp. 278-284
+    angle_detail: Draw the null and alternative sampling distributions, identify the rejection region,
+      and compute the chance of detecting a specified mean difference. The worked example changes sample
+      size, making the distinction between significance level and power concrete.
+  - material_ref:
+      route_id: route-ef9dc248b7aa19966667451e
+      inherit:
+      - label
+      - source_id
+      - angle
+      - vault_path
+    route_id: route-ef9dc248b7aa19966667451e
+    kind: practise
+    scope_triage: helpful-now
+    locator: Chapter 26, physical PDF pp. 392-394
+    angle_detail: Calculate Type II error at a specified alternative, then move that alternative toward
+      the null. The exercise shows why power is a function of the actual parameter, not a single guarantee
+      attached to the test.
+  - material_ref:
+      route_id: route-d808f7046587125f077155a3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-d808f7046587125f077155a3
+    kind: practise
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-errors-power/notes.md
   attachments: []
   source_feedback: []
@@ -830,6 +909,18 @@ stages:
     kind: watch
     scope_triage: helpful-now
     route_id: route-95a74dc976d705b6c78350b8
+  - material_ref:
+      route_id: route-d808f7046587125f077155a3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-d808f7046587125f077155a3
+    kind: practise
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-z-t/notes.md
   attachments: []
   source_feedback: []
@@ -883,6 +974,20 @@ stages:
     kind: read
     scope_triage: helpful-now
     route_id: route-311488decc0768464dd8385e
+  - material_ref:
+      route_id: route-ef9dc248b7aa19966667451e
+      inherit:
+      - label
+      - source_id
+      - angle
+      - vault_path
+    route_id: route-ef9dc248b7aa19966667451e
+    kind: practise
+    scope_triage: helpful-now
+    locator: §26.4 Relation with confidence intervals, physical PDF pp. 394-395
+    angle_detail: Rearrange the rejection inequality into exclusion from a confidence interval. Match
+      the one-sided test to a one-sided bound at the same level; do not silently substitute a two-sided
+      interval.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-ci-duality/notes.md
   attachments: []
   source_feedback: []
@@ -1109,6 +1214,21 @@ stages:
     kind: practise
     scope_triage: helpful-now
     route_id: route-431abda7307c32a597e47e16
+  - material_ref:
+      route_id: route-da4850b15834791b4688a767
+      inherit:
+      - label
+      - source_id
+      - angle
+      - vault_path
+    route_id: route-da4850b15834791b4688a767
+    kind: read
+    scope_triage: helpful-now
+    locator: §13.5.1 and Algorithm 13.3, physical PDF pp. 584-586
+    angle_detail: Use the two-sample resampling example to construct a null distribution and compare its
+      tail probability with the theoretical t approximation. The contrasting examples show when the two
+      methods agree and when model assumptions change the conclusion. This is a test under the null, not
+      L09’s ordinary estimator bootstrap.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-nonparametric/notes.md
   attachments: []
   source_feedback: []
@@ -1149,6 +1269,19 @@ stages:
     kind: read
     scope_triage: helpful-now
     route_id: route-da4850b15834791b4688a767
+  - material_ref:
+      route_id: route-5a22fa30b9f32f4c3d92f2b9
+      inherit:
+      - label
+      - source_id
+      - angle
+      - vault_path
+    route_id: route-5a22fa30b9f32f4c3d92f2b9
+    kind: read
+    scope_triage: helpful-now
+    locator: §10.3 Multiple Testprobleme, physical PDF pp. 445-446
+    angle_detail: Work through why repeating tests inflates the chance of at least one false rejection,
+      then apply Bonferroni. This gives a short German foundation before ISLP’s broader FWER/FDR treatment.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-multiple/notes.md
   attachments: []
   source_feedback: []

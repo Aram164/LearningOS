@@ -62,7 +62,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: required-now
+    scope_triage: helpful-now
     route_id: route-23f516ac8b071207600e7094
   - material_ref:
       route_id: route-b2d9fca6647fba5c03976147
@@ -121,6 +121,32 @@ stages:
     kind: practise
     scope_triage: helpful-now
     route_id: route-7e7b3a34bfd217be831561d1
+  - material_ref:
+      route_id: route-c53fea2ffaf7c83506f57ba8
+      inherit:
+      - label
+      - source_id
+      - angle
+      - vault_path
+    route_id: route-c53fea2ffaf7c83506f57ba8
+    kind: read
+    scope_triage: helpful-now
+    locator: §5.1, physical PDF pp. 170-180
+    angle_detail: Construct the sampling distribution by repeatedly drawing samples and calculating a
+      statistic. Separate the fixed population parameter, the estimator as a random variable, and the
+      estimate calculated from this sample.
+  - material_ref:
+      route_id: route-602a7c97b64cbe82ff7782a8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-602a7c97b64cbe82ff7782a8
+    kind: read
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-estimator/notes.md
   attachments: []
   source_feedback: []
@@ -174,7 +200,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: required-now
+    scope_triage: helpful-now
     route_id: route-23f516ac8b071207600e7094
   - material_ref:
       route_id: route-b2d9fca6647fba5c03976147
@@ -246,6 +272,18 @@ stages:
     kind: practise
     scope_triage: helpful-now
     route_id: route-7e7b3a34bfd217be831561d1
+  - material_ref:
+      route_id: route-602a7c97b64cbe82ff7782a8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-602a7c97b64cbe82ff7782a8
+    kind: read
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-properties/notes.md
   attachments: []
   source_feedback: []
@@ -299,7 +337,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: required-now
+    scope_triage: helpful-now
     route_id: route-23f516ac8b071207600e7094
   - material_ref:
       route_id: route-cdfc3800327de87be7846b02
@@ -461,6 +499,18 @@ stages:
     kind: watch
     scope_triage: helpful-now
     route_id: route-747ea93b061275149005b318
+  - material_ref:
+      route_id: route-83c5d83dd034abfedd3153bf
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-83c5d83dd034abfedd3153bf
+    kind: practise
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-standard-error/notes.md
   attachments: []
   source_feedback: []
@@ -514,7 +564,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: required-now
+    scope_triage: helpful-now
     route_id: route-23f516ac8b071207600e7094
   - material_ref:
       route_id: route-cdfc3800327de87be7846b02
@@ -704,7 +754,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: required-now
+    scope_triage: helpful-now
     route_id: route-23f516ac8b071207600e7094
   - material_ref:
       route_id: route-b2d9fca6647fba5c03976147
@@ -832,6 +882,18 @@ stages:
     kind: watch
     scope_triage: helpful-now
     route_id: route-747ea93b061275149005b318
+  - material_ref:
+      route_id: route-83c5d83dd034abfedd3153bf
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-83c5d83dd034abfedd3153bf
+    kind: practise
+    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-t-interval/notes.md
   attachments: []
   source_feedback: []
@@ -885,7 +947,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: required-now
+    scope_triage: helpful-now
     route_id: route-23f516ac8b071207600e7094
   - material_ref:
       route_id: route-cdfc3800327de87be7846b02
@@ -932,6 +994,17 @@ stages:
     angle_detail: Distinguish observations, resamples and the distribution of the resampled statistic
       before constructing a standard error or interval.
     scope_triage: helpful-now
+  - material_ref:
+      route_id: route-b574283601c1e7562e4f5071
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-b574283601c1e7562e4f5071
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-bootstrap/notes.md
   attachments: []
   source_feedback: []
@@ -960,6 +1033,21 @@ stages:
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
+  - material_ref:
+      route_id: route-c53fea2ffaf7c83506f57ba8
+      inherit:
+      - label
+      - source_id
+      - angle
+      - vault_path
+    route_id: route-c53fea2ffaf7c83506f57ba8
+    kind: read
+    scope_triage: helpful-now
+    locator: §1.3, physical PDF pp. 22-31 (sampling, nonresponse and convenience samples)
+    angle_detail: Distinguish estimator bias under a model from collecting an unrepresentative sample.
+      Pages 23-24 show selection, nonresponse and convenience-sample failure modes; pp. 29-31 provide
+      questions. Resampling the observed sample cannot by itself restore people or cases that the collection
+      process excluded.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-data-bias/notes.md
   attachments: []
   source_feedback: []

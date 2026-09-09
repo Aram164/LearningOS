@@ -71,7 +71,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: required-now
+    scope_triage: helpful-now
     route_id: route-f827266eae5a106a6154442a
   - material_ref:
       route_id: route-6ffaf5d7ec9d500ff4c5286e
@@ -321,7 +321,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: required-now
+    scope_triage: helpful-now
     route_id: route-f827266eae5a106a6154442a
   - material_ref:
       route_id: route-6ffaf5d7ec9d500ff4c5286e
@@ -594,7 +594,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: required-now
+    scope_triage: helpful-now
     route_id: route-f827266eae5a106a6154442a
   - material_ref:
       route_id: route-6ffaf5d7ec9d500ff4c5286e
@@ -655,29 +655,6 @@ stages:
     scope_triage: helpful-now
     route_id: route-6522f11efe3a4956621f2692
   - material_ref:
-      route_id: route-9e9215f1bace1b2b1a269f02
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-9e9215f1bace1b2b1a269f02
-  - material_ref:
-      route_id: route-e325141b8971b65116e08790
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-e325141b8971b65116e08790
-  - material_ref:
       route_id: route-ebf16644b4d589e5cfa9dc54
       inherit:
       - label
@@ -713,18 +690,6 @@ stages:
     kind: reference
     scope_triage: reference-only
     route_id: route-3bd7fda1a5087e4bff5edfbb
-  - material_ref:
-      route_id: route-3d403c071c84fe621ef510a3
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-3d403c071c84fe621ef510a3
   - material_ref:
       route_id: route-1e3e247b8c6240fbc08376a9
       inherit:
@@ -912,18 +877,6 @@ stages:
     scope_triage: reference-only
     route_id: route-3bd7fda1a5087e4bff5edfbb
   - material_ref:
-      route_id: route-3d403c071c84fe621ef510a3
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-3d403c071c84fe621ef510a3
-  - material_ref:
       route_id: route-1e3e247b8c6240fbc08376a9
       inherit:
       - label
@@ -969,6 +922,18 @@ stages:
     kind: read
     route_id: route-sad-l07-geometric-blatt4-clt
     scope_triage: helpful-now
+  - material_ref:
+      route_id: route-9e9215f1bace1b2b1a269f02
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-9e9215f1bace1b2b1a269f02
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-geometric/notes.md
   attachments: []
   source_feedback: []
@@ -992,9 +957,10 @@ stages:
     label: Current L07 discrete-distributions deck
     locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 24-30
     angle: The current lecture's focused reading for poisson event counts.
-    angle_detail: Read physical PDF pages 24-30 for this stage. Printed slide labels may differ. This
+    angle_detail: 'Read physical PDF pages 24-30 for this stage. Printed slide labels may differ. This
       slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+      material menu. — Correction for PDF p. 30 (printed slide 34): the λ=1 example writes e⁻² and ≈0.67,
+      but the correct Poisson value is P(X=2)=e⁻¹/2≈0.18394, close to the exact Binomial 0.18403.'
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
@@ -1032,7 +998,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: required-now
+    scope_triage: helpful-now
     route_id: route-f827266eae5a106a6154442a
   - material_ref:
       route_id: route-6ffaf5d7ec9d500ff4c5286e
@@ -1116,17 +1082,6 @@ stages:
     kind: practise
     scope_triage: helpful-now
     route_id: route-9e9215f1bace1b2b1a269f02
-  - material_ref:
-      route_id: route-e325141b8971b65116e08790
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-e325141b8971b65116e08790
   - material_ref:
       route_id: route-ebf16644b4d589e5cfa9dc54
       inherit:
@@ -1256,9 +1211,10 @@ stages:
     label: Current L07 discrete-distributions deck
     locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 18,22,26,29-30
     angle: The current lecture's focused reading for limits, approximations, and moment signatures.
-    angle_detail: Read physical PDF pages 18,22,26,29-30 for this stage. Printed slide labels may differ.
+    angle_detail: 'Read physical PDF pages 18,22,26,29-30 for this stage. Printed slide labels may differ.
       This slice focuses the existing deck route; the complete lecture remains accessible through the
-      unit material menu.
+      unit material menu. — Correction for PDF p. 30 (printed slide 34): the λ=1 example writes e⁻² and
+      ≈0.67, but the correct Poisson value is P(X=2)=e⁻¹/2≈0.18394, close to the exact Binomial 0.18403.'
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
@@ -1284,7 +1240,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: required-now
+    scope_triage: helpful-now
     route_id: route-f827266eae5a106a6154442a
   - material_ref:
       route_id: route-a9a926efa0d8512eca388e80

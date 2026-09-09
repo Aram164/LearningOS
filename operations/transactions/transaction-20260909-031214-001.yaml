@@ -1,0 +1,45 @@
+schema_version: 2
+id: transaction-20260909-031214-001
+type: transaction-receipt
+status: committed
+capability: route.patch
+committed_at: '2026-09-09T03:12:14+02:00'
+snapshot_before: sha256:520b8ecebbbe234976e25ae3769704e8e300a056a1481fd7b708252b7f1e6bbf
+snapshot_after: sha256:e42c575517fa0e13a84e19bf45be7eec9f64e86f034a9e539a05f3ae46dfde34
+expected_revisions:
+  module-hu-m2-statistik-analysis: 27
+  study-map-m2-sad-l06: 6
+  unit-m2-sad-l06: 18
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 27
+    after: 28
+  study-map-m2-sad-l06:
+    before: 6
+    after: 7
+  unit-m2-sad-l06:
+    before: 18
+    after: 19
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: 4c3c2c2c46a4ffb5e511e9af041a8a2bcea0db708a3a4e04aa6ab67a063a0c5e
+  sha256_after: 9acc820cc3d21ace25e756d2003c661d446d5723417b5151f2df068e1c5fd36c
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: route.patch
+    declared_writes:
+    - curriculum/modules/*/source-map.yaml
+    - curriculum/modules/*/units/*/unit.yaml
+    - curriculum/modules/*/units/*/study-map.yaml
+request:
+  channel: operator
+  request_id: op-20260909-harvard-l06-001
+  idempotency_key: op-20260909-harvard-l06-001
+  intent_sha256: sha256:bcfc622719005ae469e5508a8ba7352d359c6a4377e4b89dcf93dd2b22ba9700
+  approval:
+    kind: direct-user-gesture
+    subject_sha256: sha256:bcfc622719005ae469e5508a8ba7352d359c6a4377e4b89dcf93dd2b22ba9700

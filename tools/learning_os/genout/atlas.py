@@ -22,6 +22,8 @@ ATLAS_COLLECTION_DOMAIN = {
     "algorithms-bookshelf": "algorithms", "algorithms-lecture-series": "algorithms",
     "programming-bookshelf": "programming", "programming-video-courses": "programming",
     "python-internals-shelf": "programming", "project-toolbox": "programming",
+    # Solved banks span mathematics, ML, algorithms and systems.
+    "exam-practice-banks": "cross-domain",
 }
 
 

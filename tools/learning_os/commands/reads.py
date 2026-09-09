@@ -6,9 +6,11 @@ import hashlib
 import json
 import re
 import sys
+from pathlib import PurePosixPath
 
 from learning_os.errors import unreadable_refusal
 from learning_os.fingerprint import canonical_fingerprint
+from learning_os.genout.atlas import ATLAS_DOMAINS
 from learning_os.loading import Repo, load_notes
 
 from .support import (
@@ -81,6 +83,36 @@ def inspect_batch(args) -> int:
         return _refusal(exc)
 
 
+def _domain_glance(manifest):
+    """Summarize the complete projection, independently of record pagination."""
+    domains = {domain: {"domain": domain, "notes": 0, "crosswalks": 0,
+                        "shelves": 0, "entries": 0}
+               for domain in ATLAS_DOMAINS}
+    for record in manifest.get("records", []):
+        kind = record.get("type")
+        if kind not in {"note", "collection", "topic-pack"}:
+            continue
+        domain = record.get("domain") or "cross-domain"
+        if kind == "note" and record.get("path"):
+            # The Domain atlas groups by the first directory under notes;
+            # a record's domain can instead name a deeper subject folder.
+            try:
+                parts = PurePosixPath(record["path"]).relative_to("knowledge/notes").parts
+                domain = parts[0] if len(parts) > 1 else "cross-domain"
+            except ValueError:
+                domain = "cross-domain"
+        row = domains.setdefault(domain, {"domain": domain, "notes": 0,
+                                         "crosswalks": 0, "shelves": 0, "entries": 0})
+        if kind == "note":
+            row["notes"] += 1
+            row["crosswalks"] += record.get("role") == "crosswalk"
+        else:
+            row["shelves"] += 1
+            row["entries"] += len(record.get("entries") or [])
+    order = [*ATLAS_DOMAINS, *sorted(set(domains) - set(ATLAS_DOMAINS))]
+    return [domains[domain] for domain in order]
+
+
 def compact_bootstrap(args) -> int:
     root = _root(args)
     try:
@@ -101,6 +133,7 @@ def compact_bootstrap(args) -> int:
                 "contract": "bootstrap-summary", "collections": collections,
                 "resume_pointer": manifest.get("resume_pointer", {}),
                 "counts": manifest.get("counts", {}),
+                "domain_atlas": _domain_glance(manifest),
                 "detail": {"record": "inspect ID", "notes": "note-read NOTE_ID",
                            "content_search": "search QUERY --type note --content",
                            "capabilities": "capabilities --compact --json",

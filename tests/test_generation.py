@@ -275,10 +275,14 @@ def test_health_flags_shelves_missing_an_explicit_atlas_domain(mini_repo):
     (coll / "math-bookshelf.yaml").write_text(
         _yaml.safe_dump({"title": "Mapped shelf", "entries": []}),
         encoding="utf-8")
+    (coll / "exam-practice-banks.yaml").write_text(
+        _yaml.safe_dump({"title": "Mixed exam banks", "entries": []}),
+        encoding="utf-8")
     health = generate_all(load_repo(mini_repo), generated_at="T1")["reports/health.md"]
     assert "## Atlas shelf placement" in health
     assert "`shelf-unmapped`" in health
     assert "`math-bookshelf`" not in health
+    assert "`exam-practice-banks`" not in health
 
 
 

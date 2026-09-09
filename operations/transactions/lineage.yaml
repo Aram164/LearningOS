@@ -1,0 +1,581 @@
+schema_version: 2
+type: semantic-lineage-ledger
+records:
+  covers:route-1c01e7c903e30083cbe3009f:
+    claim_id: covers:route-1c01e7c903e30083cbe3009f
+    claim_kind: route-covers
+    statement: route-1c01e7c903e30083cbe3009f covers knowledge-sad-l08-approximation,
+      knowledge-sad-l08-clt, knowledge-sad-l08-likelihood, knowledge-sad-l08-mle,
+      knowledge-sad-l08-normal, knowledge-sad-l08-standardization, knowledge-sad-l08-transform-sum
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - route-locator:Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, pp. 11-16,
+        Aufgabenblatt 2 Normal/CLT items; §3.4 tasks, physical PDF pp. 18-19, and
+        worked MLE solution pp. 21-22
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-1c9301d9a29d6dc3920ca232:
+    claim_id: covers:route-1c9301d9a29d6dc3920ca232
+    claim_kind: route-covers
+    statement: route-1c9301d9a29d6dc3920ca232 covers knowledge-sad-l05-combinations,
+      knowledge-sad-l05-counting-probability, knowledge-sad-l05-decision-grid, knowledge-sad-l05-identities,
+      knowledge-sad-l05-repetition
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 30
+        unit-m2-sad-l05: 14
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/coverage-audit-l05-l07-covers-2026-09-09.md: sha256:0894bf9e5ffa3245936de94b32546c7e338ac7203e022a1915852d7a8f880659
+      evidence:
+      - route-locator:Lectures 1–2
+      - 'external:https://www.youtube.com/watch?v=FJd_1H3rZGg -- trail: Opened 2026-09-09
+        via search snippet of official Stat 110 channel: fills Bose-Einstein sampling-table
+        entry, story proofs including Vandermonde identity, then axioms.'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/coverage-audit-l05-l07-covers-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: op-20260909-modplan-002
+      idempotency_key: op-20260909-modplan-002
+    reviewed_by: ''
+    status: supported
+  covers:route-1e60df494cdea8d7b689066e:
+    claim_id: covers:route-1e60df494cdea8d7b689066e
+    claim_kind: route-covers
+    statement: route-1e60df494cdea8d7b689066e covers knowledge-sad-l08-likelihood,
+      knowledge-sad-l08-mle
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - route-locator:§9.3.1 Maximum Likelihood-Schätzung, physical PDF pp. 395-398
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-335f1041911c33391d4a59b8:
+    claim_id: covers:route-335f1041911c33391d4a59b8
+    claim_kind: route-covers
+    statement: route-335f1041911c33391d4a59b8 covers knowledge-sad-l10-chi-square,
+      knowledge-sad-l10-errors-power, knowledge-sad-l10-tails-pvalue, knowledge-sad-l10-test-model,
+      knowledge-sad-l10-z-t
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - route-locator:Ch 5 §5.3 hypothesis testing for a proportion, pdf pp. 189-205;
+        Ch 6 §6.3 testing for goodness of fit using chi-square, pdf pp. 229-239; §6.4
+        testing for independence in two-way tables, pdf pp. 240-248; Ch 7 §7.1 one-sample
+        means with the t-distribution, pdf pp. 251-261; §7.4 power calculations, pdf
+        pp. 278-284
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-3c30c32cc585a9450ea0cb62:
+    claim_id: covers:route-3c30c32cc585a9450ea0cb62
+    claim_kind: route-covers
+    statement: route-3c30c32cc585a9450ea0cb62 covers knowledge-sad-l08-likelihood,
+      knowledge-sad-l08-mle
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - route-locator:§1.3 Probabilistic interpretation, physical PDF pp. 16-18
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-5a22fa30b9f32f4c3d92f2b9:
+    claim_id: covers:route-5a22fa30b9f32f4c3d92f2b9
+    claim_kind: route-covers
+    statement: route-5a22fa30b9f32f4c3d92f2b9 covers knowledge-sad-l10-chi-square,
+      knowledge-sad-l10-errors-power, knowledge-sad-l10-multiple, knowledge-sad-l10-nonparametric,
+      knowledge-sad-l10-tails-pvalue, knowledge-sad-l10-test-model, knowledge-sad-l10-z-t
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - route-locator:Ch 10 §10.1 Der Binomial- und der Gauß-Test, pdf pp. 417-429;
+        §10.2 Prinzipien des Testens, pdf pp. 430-444; §10.3 Multiple Testprobleme,
+        pdf pp. 445-446; Ch 11 §11.2 Ein-Stichproben-Fall, pdf pp. 452-469; §11.5
+        Zusammenhangsanalyse, pdf pp. 482-485
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-602a7c97b64cbe82ff7782a8:
+    claim_id: covers:route-602a7c97b64cbe82ff7782a8
+    claim_kind: route-covers
+    statement: route-602a7c97b64cbe82ff7782a8 covers knowledge-sad-l09-estimator,
+      knowledge-sad-l09-properties
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - 'route-locator:§4.2.5 Example: MLE for the univariate Gaussian, physical PDF
+        pp. 141-142'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-83c5d83dd034abfedd3153bf:
+    claim_id: covers:route-83c5d83dd034abfedd3153bf
+    claim_kind: route-covers
+    statement: route-83c5d83dd034abfedd3153bf covers knowledge-sad-l09-standard-error,
+      knowledge-sad-l09-t-interval
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - route-locator:Koeln_Statistik-Klausur_Musterloesung.pdf, physical PDF p. 7,
+        Aufgabe 5(b)
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-943f2cdc8ce62e3a7c894fec:
+    claim_id: covers:route-943f2cdc8ce62e3a7c894fec
+    claim_kind: route-covers
+    statement: route-943f2cdc8ce62e3a7c894fec covers knowledge-sad-l08-likelihood,
+      knowledge-sad-l08-mle
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - route-locator:Chapter 2, Modeling Data, physical PDF pp. 60-61
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-b08add0fb6ed042a770114eb:
+    claim_id: covers:route-b08add0fb6ed042a770114eb
+    claim_kind: route-covers
+    statement: route-b08add0fb6ed042a770114eb covers knowledge-sad-l05-combinations,
+      knowledge-sad-l05-counting-probability, knowledge-sad-l05-identities, knowledge-sad-l05-permutations,
+      knowledge-sad-l05-repetition, knowledge-sad-l05-variations
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 30
+        unit-m2-sad-l05: 14
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/coverage-audit-l05-l07-covers-2026-09-09.md: sha256:0894bf9e5ffa3245936de94b32546c7e338ac7203e022a1915852d7a8f880659
+        manifest:mathematics/probability-statistics/ross-first-course/ross.pdf: e9377336bf485e9ddbde51ce2078489a52561149d1adb353c4b3d643896cb67d
+      evidence:
+      - route-locator:§1.5, pp. 22–24
+      - manifest:mathematics/probability-statistics/ross-first-course/ross.pdf
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/coverage-audit-l05-l07-covers-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: op-20260909-modplan-002
+      idempotency_key: op-20260909-modplan-002
+    reviewed_by: ''
+    status: supported
+  covers:route-b255b45da1a3190feb0ed9e8:
+    claim_id: covers:route-b255b45da1a3190feb0ed9e8
+    claim_kind: route-covers
+    statement: route-b255b45da1a3190feb0ed9e8 covers knowledge-sad-l08-approximation,
+      knowledge-sad-l08-clt, knowledge-sad-l08-normal, knowledge-sad-l08-standardization
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - 'route-locator:Ch 2 §2.2 Normal Approximation: Method, pdf pp. 103-118; §2.3
+        Normal Approximation: Derivation (optional), pdf pp. 119-126; Ch 4 Continuous
+        Distributions, pdf pp. 269-330'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-b574283601c1e7562e4f5071:
+    claim_id: covers:route-b574283601c1e7562e4f5071
+    claim_kind: route-covers
+    statement: route-b574283601c1e7562e4f5071 covers knowledge-sad-l09-bootstrap,
+      knowledge-sad-l09-estimator, knowledge-sad-l09-standard-error, knowledge-sad-l09-t-interval,
+      knowledge-sad-l09-z-interval
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 25
+        unit-m2-sad-l09: 11
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/L09-MIT-bootstrap-evidence-2026-09-08.md: sha256:7c5890cfc103974ae7e3817e12888fc0b3a2142e3162bb6a65879cbf541e725e
+      evidence:
+      - 'repo-file:work/active/workspace-m2-exam-prep/outputs/L09-MIT-bootstrap-evidence-2026-09-08.md
+        -- trail: Codex source acquisition/review and independent Muse-AI review of
+        supplied pages, 2026-09-08: MIT 18.05 Spring 2022 Reading 24, physical PDF
+        p.3 section 5 defines resampling with replacement; p.4 sections 6 and 6.1
+        recompute the statistic on equal-size resamples and use its variation to approximate
+        original estimator variation. Supports addition of knowledge-sad-l09-bootstrap.
+        PDF SHA-256 5c757d6af2063e99c2db14197ea53b19e1e2674eb935a02d84bd446b358e5b3f.
+        Existing four covers entries are preserved, not rejudged by this delta review.'
+      - 'external:https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/mit18_05_s22_class24-prep.pdf
+        -- trail: Codex source acquisition/review and independent Muse-AI review of
+        supplied pages, 2026-09-08: MIT 18.05 Spring 2022 Reading 24, physical PDF
+        p.3 section 5 defines resampling with replacement; p.4 sections 6 and 6.1
+        recompute the statistic on equal-size resamples and use its variation to approximate
+        original estimator variation. Supports addition of knowledge-sad-l09-bootstrap.
+        PDF SHA-256 5c757d6af2063e99c2db14197ea53b19e1e2674eb935a02d84bd446b358e5b3f.
+        Existing four covers entries are preserved, not rejudged by this delta review.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-intelligence-e2e-l09-mit-bootstrap-20260908
+      idempotency_key: intelligence-e2e-l09-mit-bootstrap-20260908
+    reviewed_by: ''
+    status: supported
+  covers:route-bba255d06939fee0964e7711:
+    claim_id: covers:route-bba255d06939fee0964e7711
+    claim_kind: route-covers
+    statement: route-bba255d06939fee0964e7711 covers knowledge-sad-l08-likelihood,
+      knowledge-sad-l08-mle
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - route-locator:§§4.2.1-4.2.5, physical PDF pp. 137-142
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-c53fea2ffaf7c83506f57ba8:
+    claim_id: covers:route-c53fea2ffaf7c83506f57ba8
+    claim_kind: route-covers
+    statement: route-c53fea2ffaf7c83506f57ba8 covers knowledge-sad-l09-data-bias,
+      knowledge-sad-l09-estimator, knowledge-sad-l09-standard-error, knowledge-sad-l09-t-interval,
+      knowledge-sad-l09-z-interval
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - route-locator:Ch 5 §5.1 point estimates and sampling variability, pdf pp.
+        170-180; §5.2 confidence intervals for a proportion, pdf pp. 181-188; Ch 7
+        §7.1 one-sample means with the t-distribution, pdf pp. 251-261; §1.3 sampling
+        and selection bias, physical PDF pp. 22-31
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-d74a33b5dc1ddb179eb252f8:
+    claim_id: covers:route-d74a33b5dc1ddb179eb252f8
+    claim_kind: route-covers
+    statement: route-d74a33b5dc1ddb179eb252f8 covers knowledge-sad-l08-likelihood,
+      knowledge-sad-l08-mle
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - route-locator:§7.3.1 and §7.4, physical PDF pp. 43-44
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-d808f7046587125f077155a3:
+    claim_id: covers:route-d808f7046587125f077155a3
+    claim_kind: route-covers
+    statement: route-d808f7046587125f077155a3 covers knowledge-sad-l10-errors-power,
+      knowledge-sad-l10-tails-pvalue, knowledge-sad-l10-test-model, knowledge-sad-l10-z-t
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - route-locator:Koeln_Statistik-Klausur_Musterloesung.pdf, physical PDF pp.
+        5-6, Aufgabe 4
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-da4850b15834791b4688a767:
+    claim_id: covers:route-da4850b15834791b4688a767
+    claim_kind: route-covers
+    statement: route-da4850b15834791b4688a767 covers knowledge-sad-l10-multiple, knowledge-sad-l10-nonparametric,
+      knowledge-sad-l10-tails-pvalue
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - route-locator:Chapter 13, pp. 563-602 (false discovery rate p. 564; family-wise
+        error rate p. 571; Bonferroni and Holm p. 573; Benjamini-Hochberg p. 581;
+        lab section 13.6 p. 589; exercises section 13.7 p. 599); §13.5.1 resampling
+        a two-sample test, physical PDF pp. 584-586
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-dcca2fcb9c954793598be2ee:
+    claim_id: covers:route-dcca2fcb9c954793598be2ee
+    claim_kind: route-covers
+    statement: route-dcca2fcb9c954793598be2ee covers knowledge-sad-l08-likelihood,
+      knowledge-sad-l08-mle
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - route-locator:§2.6 Statistical Models, Supervised Learning and Function Approximation,
+        physical PDF pp. 49-50
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-deaaba021bfaafb4d0aa6bd8:
+    claim_id: covers:route-deaaba021bfaafb4d0aa6bd8
+    claim_kind: route-covers
+    statement: route-deaaba021bfaafb4d0aa6bd8 covers knowledge-sad-l08-normal, knowledge-sad-l08-standardization
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - route-locator:Physical PDF p. 18, Aufgabe 4 Teil II 4(a)-(b); solutions p.
+        25; duplicate tasks/solutions pp. 43/50
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-ea5b4ef7bbb182677102ed38:
+    claim_id: covers:route-ea5b4ef7bbb182677102ed38
+    claim_kind: route-covers
+    statement: route-ea5b4ef7bbb182677102ed38 covers knowledge-sad-l08-likelihood,
+      knowledge-sad-l08-mle
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - route-locator:Probabilistic models summary, physical PDF pp. 340-341
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-ef9dc248b7aa19966667451e:
+    claim_id: covers:route-ef9dc248b7aa19966667451e
+    claim_kind: route-covers
+    statement: route-ef9dc248b7aa19966667451e covers knowledge-sad-l10-chi-square,
+      knowledge-sad-l10-ci-duality, knowledge-sad-l10-errors-power, knowledge-sad-l10-tails-pvalue,
+      knowledge-sad-l10-test-model, knowledge-sad-l10-z-t
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - 'route-locator:Ch 25 testing hypotheses: essentials, pdf pp. 375-384 (null
+        hypothesis and test statistic p. 375; tail probabilities p. 378; type I and
+        II errors p. 379; exercises p. 382); Ch 26 testing hypotheses: elaboration,
+        pdf pp. 385-399 (significance level p. 385; critical region p. 388; type II
+        error p. 392; relation with confidence intervals p. 394); Ch 27 the t-test,
+        pdf pp. 400-414'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-f6444d2615cac483d2060e85:
+    claim_id: covers:route-f6444d2615cac483d2060e85
+    claim_kind: route-covers
+    statement: route-f6444d2615cac483d2060e85 covers knowledge-sad-l08-clt, knowledge-sad-l08-normal,
+      knowledge-sad-l08-standardization, knowledge-sad-l08-transform-sum
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 38
+        unit-m2-sad-l08: 18
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md: sha256:035559d58aaba3bb5576b135e44e266d5344cec5883b806b889a5911d3fc1d85
+      evidence:
+      - route-locator:Ch 5 §5.1 probability density functions, pdf pp. 230-236; §5.4
+        Normal, pdf pp. 248-254; Ch 10 §10.1 inequalities, pdf pp. 475-483; §10.2
+        law of large numbers, pdf pp. 484-487; §10.3 central limit theorem, pdf pp.
+        488-493; exercises §10.7 pdf pp. 503-513
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/SaD-L08-L10-completion-2026-09-09.md
+      assumes: []
+    judged_by: operator/direct-user-gesture
+    admitted_by:
+      request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+      idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported

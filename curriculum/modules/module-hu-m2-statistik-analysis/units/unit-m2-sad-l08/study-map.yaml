@@ -62,7 +62,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: required-now
+    scope_triage: helpful-now
     route_id: route-58469c78c740278168aea71a
   - material_ref:
       route_id: route-25e51301ba03eb362122df35
@@ -214,6 +214,18 @@ stages:
     kind: read
     scope_triage: helpful-now
     route_id: route-8f48d8d7623a4b01aac9348f
+  - material_ref:
+      route_id: route-deaaba021bfaafb4d0aa6bd8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-deaaba021bfaafb4d0aa6bd8
+    kind: practise
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-normal/notes.md
   attachments: []
   source_feedback: []
@@ -268,7 +280,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: required-now
+    scope_triage: helpful-now
     route_id: route-58469c78c740278168aea71a
   - material_ref:
       route_id: route-25e51301ba03eb362122df35
@@ -410,6 +422,32 @@ stages:
     kind: watch
     scope_triage: helpful-now
     route_id: route-59a625c0ac07d2a63c127f57
+  - material_ref:
+      route_id: route-deaaba021bfaafb4d0aa6bd8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-deaaba021bfaafb4d0aa6bd8
+    kind: practise
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-f6444d2615cac483d2060e85
+      inherit:
+      - label
+      - source_id
+      - angle
+      - vault_path
+    route_id: route-f6444d2615cac483d2060e85
+    kind: read
+    scope_triage: helpful-now
+    locator: §5.4 Normal, physical PDF pp. 248-254
+    angle_detail: Derive the standardization identity and use it to move between a general Normal and
+      the standard Normal. This supplies the reason for the z-score, while Fahrmeir and the workbook supply
+      table practice.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-standardization/notes.md
   attachments: []
   source_feedback: []
@@ -465,7 +503,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: required-now
+    scope_triage: helpful-now
     route_id: route-58469c78c740278168aea71a
   - material_ref:
       route_id: route-51d0b459da178808c6b7b545
@@ -515,18 +553,6 @@ stages:
     kind: reference
     scope_triage: reference-only
     route_id: route-30e6dacfe64cff3a4b173767
-  - material_ref:
-      route_id: route-4b2bb29fc4326732f09f4cb5
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-4b2bb29fc4326732f09f4cb5
   - material_ref:
       route_id: route-ab04cdce370d74cb0570a3d6
       inherit:
@@ -605,7 +631,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: required-now
+    scope_triage: helpful-now
     route_id: route-58469c78c740278168aea71a
   - material_ref:
       route_id: route-25e51301ba03eb362122df35
@@ -759,18 +785,6 @@ stages:
     kind: reference
     scope_triage: reference-only
     route_id: route-30e6dacfe64cff3a4b173767
-  - material_ref:
-      route_id: route-4b2bb29fc4326732f09f4cb5
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-4b2bb29fc4326732f09f4cb5
   - material_ref:
       route_id: route-ab04cdce370d74cb0570a3d6
       inherit:
@@ -894,7 +908,7 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: required-now
+    scope_triage: helpful-now
     route_id: route-58469c78c740278168aea71a
   - material_ref:
       route_id: route-25e51301ba03eb362122df35
@@ -1048,6 +1062,19 @@ stages:
     kind: watch
     scope_triage: helpful-now
     route_id: route-d7771b00bdbdbb54115a9c8f
+  - material_ref:
+      route_id: route-b255b45da1a3190feb0ed9e8
+      inherit:
+      - label
+      - source_id
+      - angle
+      - vault_path
+    route_id: route-b255b45da1a3190feb0ed9e8
+    kind: read
+    scope_triage: helpful-now
+    locator: '§2.2 Normal Approximation: Method, physical PDF pp. 103-118'
+    angle_detail: Apply the Normal approximation with the continuity correction using the method section.
+      The separate derivation in §2.3 is optional; attempt a worked lookup before comparing the argument.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-approximation/notes.md
   attachments: []
   source_feedback: []
@@ -1124,6 +1151,105 @@ stages:
     kind: read
     scope_triage: helpful-now
     route_id: route-cdc87014dbc983f542c2d601
+  - material_ref:
+      route_id: route-1e60df494cdea8d7b689066e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-1e60df494cdea8d7b689066e
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-3c30c32cc585a9450ea0cb62
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-3c30c32cc585a9450ea0cb62
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-bba255d06939fee0964e7711
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-bba255d06939fee0964e7711
+    kind: read
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-dcca2fcb9c954793598be2ee
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-dcca2fcb9c954793598be2ee
+    kind: read
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-943f2cdc8ce62e3a7c894fec
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-943f2cdc8ce62e3a7c894fec
+    kind: read
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-d74a33b5dc1ddb179eb252f8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-d74a33b5dc1ddb179eb252f8
+    kind: read
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-ea5b4ef7bbb182677102ed38
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-ea5b4ef7bbb182677102ed38
+    kind: read
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-1c01e7c903e30083cbe3009f
+      inherit:
+      - label
+      - source_id
+      - angle
+      - vault_path
+    route_id: route-1c01e7c903e30083cbe3009f
+    kind: practise
+    scope_triage: helpful-now
+    locator: §3.4, physical PDF pp. 18-19 (task) and pp. 21-22 (solution)
+    angle_detail: Build the exponential likelihood, take logs, and solve for the rate 1/sample mean before
+      reading the solution. The worked numbers use observations 4, 8, 3, 6, 4. For a continuous model,
+      the likelihood is a product of densities, not the probability of observing those exact values; retain
+      this distinction when reading the solution’s informal wording.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-likelihood/notes.md
   attachments: []
   source_feedback: []
@@ -1200,6 +1326,105 @@ stages:
     kind: read
     scope_triage: helpful-now
     route_id: route-cdc87014dbc983f542c2d601
+  - material_ref:
+      route_id: route-1e60df494cdea8d7b689066e
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-1e60df494cdea8d7b689066e
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-3c30c32cc585a9450ea0cb62
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-3c30c32cc585a9450ea0cb62
+    kind: read
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-bba255d06939fee0964e7711
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-bba255d06939fee0964e7711
+    kind: read
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-dcca2fcb9c954793598be2ee
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-dcca2fcb9c954793598be2ee
+    kind: read
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-943f2cdc8ce62e3a7c894fec
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-943f2cdc8ce62e3a7c894fec
+    kind: read
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-d74a33b5dc1ddb179eb252f8
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-d74a33b5dc1ddb179eb252f8
+    kind: read
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-ea5b4ef7bbb182677102ed38
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    route_id: route-ea5b4ef7bbb182677102ed38
+    kind: read
+    scope_triage: reference-only
+  - material_ref:
+      route_id: route-1c01e7c903e30083cbe3009f
+      inherit:
+      - label
+      - source_id
+      - angle
+      - vault_path
+    route_id: route-1c01e7c903e30083cbe3009f
+    kind: practise
+    scope_triage: helpful-now
+    locator: §3.4, physical PDF pp. 18-19 (task) and pp. 21-22 (solution)
+    angle_detail: Build the exponential likelihood, take logs, and solve for the rate 1/sample mean before
+      reading the solution. The worked numbers use observations 4, 8, 3, 6, 4. For a continuous model,
+      the likelihood is a product of densities, not the probability of observing those exact values; retain
+      this distinction when reading the solution’s informal wording.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-mle/notes.md
   attachments: []
   source_feedback: []

@@ -1,0 +1,45 @@
+schema_version: 2
+id: transaction-20260909-032832-001
+type: transaction-receipt
+status: committed
+capability: route.patch
+committed_at: '2026-09-09T03:28:32+02:00'
+snapshot_before: sha256:9aff8d010967d542cacfd5d8e73db3bf4a095c1cf6fe503e96d17b382059aee7
+snapshot_after: sha256:bbc6fefdef99dac15b94e728ae3167e93fd76793ca2b2555473e7f26b0dc34cf
+expected_revisions:
+  module-hu-m2-statistik-analysis: 35
+  study-map-m2-sad-l08: 9
+  unit-m2-sad-l08: 16
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 35
+    after: 36
+  study-map-m2-sad-l08:
+    before: 9
+    after: 10
+  unit-m2-sad-l08:
+    before: 16
+    after: 17
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: 797dfc4d30c33d4a1264a6fb024c876847db283fdb1ca38315aff2d4fdb3190a
+  sha256_after: fd594d63a3f83881a31c6b53ae5b98aad3fb52134a7ae95e474fd3fa3e05aa15
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: route.patch
+    declared_writes:
+    - curriculum/modules/*/source-map.yaml
+    - curriculum/modules/*/units/*/unit.yaml
+    - curriculum/modules/*/units/*/study-map.yaml
+request:
+  channel: operator
+  request_id: op-20260909-blatt4-001
+  idempotency_key: op-20260909-blatt4-001
+  intent_sha256: sha256:f2328e6619cd9be9b6efe770ad3cd3241f470b80fde071b19871be195ba43181
+  approval:
+    kind: direct-user-gesture
+    subject_sha256: sha256:f2328e6619cd9be9b6efe770ad3cd3241f470b80fde071b19871be195ba43181
