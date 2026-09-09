@@ -128,8 +128,12 @@ def build_domain_atlas(repo: Repo, generated_at: str) -> str:
         bits = []
         noun = "note" if len(notes) == 1 else "notes"
         bits.append(f"{len(notes)} {noun}" + (f" ({n_cross} crosswalk)" if n_cross else ""))
-        bits.append(f"{len(shelves)} shelves ({n_entries} entries)" if shelves
-                    else "no shelves yet")
+        if shelves:
+            shelf_noun = "shelf" if len(shelves) == 1 else "shelves"
+            entry_noun = "entry" if n_entries == 1 else "entries"
+            bits.append(f"{len(shelves)} {shelf_noun} ({n_entries} {entry_noun})")
+        else:
+            bits.append("no shelves yet")
         lines.append(f"- **{dom}** — " + " · ".join(bits))
     lines.append(
         "- **Outside this map (deliberate):** Foundations archive (unregistered; "
