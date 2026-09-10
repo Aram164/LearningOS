@@ -312,6 +312,18 @@ entries:
       unit-m2-sad-l05: 12
     snapshot_before: sha256:6aa8942881dc442c2b4d87985ea7ec82c75628fecc8c7aca80e159305b07bbea
     snapshot_after: sha256:c621fa79edd7944973cbb71c3db7a2b4c964060b2dade1cbbbc7fa97d7022d54
+  clt-runtime-target-v0:
+    request_id: request-clt-runtime-target-v0
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:1bd0a13b698b80cc04a7569a6e59cae02c81d1098d949c6833f1da76f30a16b1
+    transaction_id: transaction-20260910-072528-001
+    receipt_path: operations/transactions/transaction-20260910-072528-001.yaml
+    revisions:
+      study-map-m2-sad-l08: 11
+      unit-m2-sad-l08: 19
+    snapshot_before: sha256:1d3a827afd62eac3402847fb14187b44f040baeb6812e59f282272b80012abcd
+    snapshot_after: sha256:8d66441fdba60fafdea32dcfbe208cafad5b11ae7142c477472806b4ec219f60
   codex-sad-closeout-e88486a51a884099aa8dc956d60daea7:
     request_id: codex-sad-closeout-e88486a51a884099aa8dc956d60daea7
     capability: route.patch
