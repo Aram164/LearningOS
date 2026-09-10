@@ -53,6 +53,34 @@ def requirement_fingerprint(requirement: dict) -> str:
     return "sha256:" + hashlib.sha256(data.encode()).hexdigest()
 
 
+RUNTIME_REVIEW_VERSION = "runtime-review-v1"
+
+
+def runtime_review_fingerprint(stage: dict) -> str:
+    """Bind a review attestation to one stage's exact runtime payload.
+
+    Covers the version tag, the stage id, the ``runtime_target`` block, and
+    the sorted ``(route_id, affordance)`` pairs of its resources — and nothing
+    else, so unrelated edits (titles, notes, locators) leave a review valid.
+    Canonicalized with sorted keys over parsed structures, never raw text, so
+    the value survives YAML dump/load round-trips.
+    """
+    resources = stage.get("resources") or []
+    pairs = sorted(
+        (str(resource.get("route_id") or ""), str(resource.get("affordance") or ""))
+        for resource in resources
+        if isinstance(resource, dict)
+    )
+    payload = {
+        "version": RUNTIME_REVIEW_VERSION,
+        "stage_id": stage.get("id"),
+        "runtime_target": stage.get("runtime_target"),
+        "affordances": pairs,
+    }
+    data = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
+    return "sha256:" + hashlib.sha256(data.encode()).hexdigest()
+
+
 def requirement_id_for(unit_id: str, stage_id: str) -> str:
     """Deterministic IR id derived from the owning unit and stage only."""
     unit_suffix = unit_id[len("unit-"):] if unit_id.startswith("unit-") else unit_id

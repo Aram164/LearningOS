@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 20
-schema_fingerprint: sha256:e78eaa52946bcde41212a1bc2a5f2eaa66cffda4fd203242e45de6d4d34d3770
+contract_version: 21
+schema_fingerprint: sha256:b3aac52d489fb7379aeedf09cc083412325ba06260866d573a49ebf7e5ce4833
 record_schemas: 32
 history:
 - version: 1
@@ -182,5 +182,11 @@ history:
   adopted: '2026-09-10'
   note: 'Learning Runtime V0: study-map legacy stage/resource shapes accept canonical
     runtime_target and affordance (LearningRequirement compiles from the owning stage)'
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 21
+  adopted: '2026-09-10'
+  note: Add optional stage runtime_review attestation (reviewed_by/reviewed_on/fingerprint)
+    for §19.6 first slice; no existing data required to change
   migration: null
   fixture: tests/fixtures/formats/v12/

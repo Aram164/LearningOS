@@ -26,7 +26,9 @@ _OPEN_TARGET_KEYS = (
 # Runtime V0 fields live on canonical stages for the loader only. The v9
 # manifest pair has no consumer for them, so the projection strips them to
 # keep the strict v9 contract valid until a real UI need reintroduces them.
-_RUNTIME_ONLY_STAGE_KEYS = ("runtime_target",)
+# runtime_review joins them: review accountability is validator state, and no
+# interface reads it yet (an Open Learner Model UI would be the v10 case).
+_RUNTIME_ONLY_STAGE_KEYS = ("runtime_target", "runtime_review")
 _RUNTIME_ONLY_RESOURCE_KEYS = ("affordance",)
 
 

@@ -13,7 +13,12 @@ import jsonschema
 from referencing import Registry
 
 from ..contracts.json_schema import ContractValidationError, schema_registry
-from ..learning_runtime import RuntimeInputError, collect_requirements, read_observations
+from ..learning_runtime import (
+    RuntimeInputError,
+    collect_requirements,
+    read_observations,
+    runtime_review_fingerprint,
+)
 from ..loader import Repo
 from .common import Issue
 from .contract import ChecksContract
@@ -177,6 +182,46 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
             read_observations(self.repo, collect_requirements(self.repo))
         except RuntimeInputError as exc:
             self.err("LEARNING-RUNTIME", str(exc))
+        self.check_runtime_review()
+
+    def check_runtime_review(self) -> None:
+        """Review accountability for runtime annotations (§19.6, first slice).
+
+        Warnings only: a stage with runtime semantics but no ``runtime_review``
+        attestation, or one whose payload changed since review, is reported but
+        never blocks a write. This proves attestation plus an unchanged
+        payload — never pedagogical correctness.
+        """
+        for map_id in sorted(self.repo.study_maps):
+            study_map = self.repo.study_maps[map_id]
+            data = study_map.data or {}
+            stages = data.get("stages") or []
+            for stage in stages:
+                if not isinstance(stage, dict):
+                    continue
+                resources = stage.get("resources") or []
+                has_semantics = "runtime_target" in stage or any(
+                    isinstance(resource, dict) and "affordance" in resource
+                    for resource in resources
+                )
+                if not has_semantics:
+                    continue
+                where = self._rel(study_map.path)
+                review = stage.get("runtime_review")
+                if not isinstance(review, dict):
+                    self.warn(
+                        "RUNTIME-REVIEW-MISSING",
+                        f"stage {stage.get('id', '?')} carries runtime semantics "
+                        "but no runtime_review attestation",
+                        where,
+                    )
+                elif review.get("fingerprint") != runtime_review_fingerprint(stage):
+                    self.warn(
+                        "RUNTIME-REVIEW-STALE",
+                        f"stage {stage.get('id', '?')} runtime semantics changed "
+                        "since runtime_review; re-review and refresh the fingerprint",
+                        where,
+                    )
 
 def validate(repo: Repo, online: bool = False) -> list[Issue]:
     return Validator(repo, online=online).run()
