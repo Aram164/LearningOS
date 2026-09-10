@@ -891,6 +891,10 @@ stages:
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-clt/notes.md
   attachments: []
   source_feedback: []
+  runtime_review:
+    reviewed_by: Aram
+    reviewed_on: '2026-09-10'
+    fingerprint: sha256:7446a4d570720ec01f8144e8bf7a4177561a4353bbf9d26966b9da69ec3a933a
 - id: stage-sad-l08-approximation
   number: 5
   title: Normal approximation and continuity correction

@@ -1885,6 +1885,18 @@ entries:
       unit-job-python-engineering-fluency: 2
     snapshot_before: sha256:6792fb14a9e076465928b9fa4967ff58353d76d83b2f13a91dce7034ab752d17
     snapshot_after: sha256:c466c65a64d18970ae5b63b50dde88daeda2b71a1a6bcc442db8482f7fa30769
+  runtime-review-backfill-clt-v1:
+    request_id: request-runtime-review-backfill-clt-v1
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:c06734ab922e4b90529eb5e069a3df2d872755e7a76973b9f22ebbfe91dff25a
+    transaction_id: transaction-20260910-155858-001
+    receipt_path: operations/transactions/transaction-20260910-155858-001.yaml
+    revisions:
+      study-map-m2-sad-l08: 13
+      unit-m2-sad-l08: 21
+    snapshot_before: sha256:5c69d4f18b9665bcd2c9d67a4e802a6b090850df1555802fad7fc6e68f5f19e0
+    snapshot_after: sha256:bdc9c347ada9e3406368b7d02d2fb66e08a0e7556401e1609e2edbcec44b4b2c
   sad-identity-recovery-unit-m2-sad-clustering-20260907:
     request_id: request-sad-identity-recovery-unit-m2-sad-clustering-20260907
     capability: unit.map.import

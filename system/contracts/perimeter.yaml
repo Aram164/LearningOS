@@ -207,6 +207,10 @@ pending_disposition:
       it to a declared wrapper entry. Already proved not a duplicate: sha256
       4345cf71…a27483 differs from the workbench RESEARCH.txt (53f66bdf…bbe4),
       so it must not be disposed of as a shadow.
+  # 2026-09-10: the consolidated research/autonomy/runtime dossier moved to
+  # LearningOS/workbench/ per Aram (active handoff artifact, explicitly
+  # non-canonical) and this entry was removed; workbench/ is a declared
+  # directory so no per-file declaration is needed.
 #
 # 2026-09-08: original_research.txt (31,901 bytes at the wrapper root) is the
 # commissioning brief — the user request that launched the intelligence-plane

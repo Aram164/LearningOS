@@ -266,6 +266,33 @@
             }
           }
         },
+        "runtime_review": {
+          "description": "Declared human-review attestation for this stage's runtime semantics (runtime_target plus resource affordances). Not authenticated proof of review; the transaction history proves when this metadata was written, not the cognitive act itself. The fingerprint binds the attestation to this exact stage payload (see tools/learning_os/learning_runtime.py).",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "reviewed_by",
+            "reviewed_on",
+            "fingerprint"
+          ],
+          "properties": {
+            "reviewed_by": {
+              "description": "Declared reviewer identity — an attestation, not an authenticated fact.",
+              "type": "string",
+              "pattern": "\\S"
+            },
+            "reviewed_on": {
+              "description": "Review date, informational only; never a staleness signal.",
+              "type": "string",
+              "format": "date"
+            },
+            "fingerprint": {
+              "description": "sha256 over the reviewed runtime payload; the validator warns when it no longer matches.",
+              "type": "string",
+              "pattern": "^sha256:[0-9a-f]{64}$"
+            }
+          }
+        },
         "resources": {
           "type": "array",
           "items": {

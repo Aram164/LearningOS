@@ -164,6 +164,24 @@ blocked every commit until 2,268 rows were rewritten would be switched off
 rather than satisfied. The counts are the point: they are the measured size of
 the debt, reported in `generated/study-plans.md`.
 
+## Runtime review (§19.6, first slice)
+
+A stage carrying runtime semantics (`runtime_target`, or any resource with an
+`affordance`) must carry a `runtime_review` attestation naming the declared
+reviewer and a fingerprint over the reviewed payload (`runtime-review-v1` +
+stage id + `runtime_target` + sorted `(route_id, affordance)` pairs).
+
+- **W** `RUNTIME-REVIEW-MISSING` — runtime semantics present, no attestation.
+- **W** `RUNTIME-REVIEW-STALE` — the payload no longer matches the fingerprint;
+  re-review and refresh it.
+
+Warnings, never errors: the invariant is being introduced into existing
+authored state. `reviewed_by` is a declared attestation, not authenticated
+proof — the transaction history proves when the metadata was written, not the
+cognitive act of review. Review provenance is not pedagogical validity: a
+current attestation says the payload was reviewed and is unchanged, never that
+the underlying activity validly elicits the claimed evidence.
+
 ## Operating contract
 
 - The operating contract is a single canonical file, `system/CLAUDE.md`. Root `CLAUDE.md` and the `LearningOS/` project-root entry are symlinks to it, so the copies cannot drift — the former hand-maintained `CLAUDE-SYNC` warning is retired (2026-07-17).
