@@ -2,10 +2,11 @@
 
 Fresh proposals select one intervention and one independent-evidence step from
 the owning stage's eligible resources. Bounded repair covers two V0 cases and
-nothing more: failed prerequisites prepend one repair intervention before the
-normal target pair, and an unsuitable selected resource is structurally
-replaced by a same-intent alternative while unaffected steps are preserved
-verbatim. Anything else is a feasibility failure, stated as a blocker.
+nothing more: failed prerequisites prepend explicitly mapped repair steps
+before the normal target pair, and an unsuitable selected resource is
+structurally replaced by a same-intent alternative while unaffected steps are
+preserved verbatim. Anything else is a feasibility failure, stated as a
+blocker.
 """
 
 from __future__ import annotations
@@ -152,7 +153,7 @@ def compile_session(repo: Repo, req: dict, interpretation: dict, context: dict |
     repair_mode = status != "demonstrated" and bool(failed)
     if repair_mode:
         selected, blockers = _repair_with_prerequisites(
-            repo, req, status, intervention, evidence, rejected, failed, budget, durations)
+            repo, req, status, intervention, evidence, rejected, eligible, failed, budget, durations, context)
     elif status != "demonstrated":
         if not evidence:
             blockers.append("no accessible, in-scope independent evidence activity")
@@ -170,38 +171,58 @@ def compile_session(repo: Repo, req: dict, interpretation: dict, context: dict |
                 blockers.append("no evidence-producing candidate fits the available time")
     if repair_mode and selected:
         steps = _repair_steps(selected, status)
+        extra = ("bounded repair uses explicitly mapped repair resources; target evidence still required",)
     else:
         steps = [_step_for(resource, status) for resource in selected]
-    return _assemble(repo.root, req, interpretation, status, steps, rejected, blockers, eligible, context, budget)
+        extra = ()
+    return _assemble(repo.root, req, interpretation, status, steps, rejected, blockers, eligible, context, budget,
+                     extra_assumptions=extra)
 
 
-def _repair_with_prerequisites(repo, req, status, intervention, evidence, rejected, failed, budget, durations):
-    """Bounded prerequisite repair: one repair intervention, then the target pair."""
-    names = ", ".join(failed)
-    if not intervention:
-        return [], [f"prerequisite repair impossible: no eligible intervention resource to repair {names}"]
-    repair = None
-    for candidate in intervention:
-        if budget is not None and not _fits([candidate], budget, durations):
-            continue
-        repair = candidate
-        break
-    if repair is None:
-        return [], [f"prerequisite repair impossible: no repair resource fits the available time (failed: {names})"]
-    rest = [r for r in intervention if r["route_id"] != repair["route_id"]]
-    candidates = [[a, b] for a in rest for b in evidence]
-    if not rest:
-        candidates = [[b] for b in evidence]
-    target: list = []
-    for candidate in candidates:
-        if _fits([repair, *candidate], budget, durations):
-            target = candidate
-            break
+def _repair_with_prerequisites(repo, req, status, intervention, evidence, rejected, eligible, failed, budget, durations, context):
+    """Bounded prerequisite repair: explicitly mapped repair steps, then the target pair.
+
+    The caller maps every failed prerequisite to an eligible intervention
+    resource via ``prerequisite_repairs``. The compiler validates the mapping
+    but never invents it: an unmapped, ineligible, or non-intervention repair
+    resource is a feasibility failure, and a repair that leaves no target
+    intervention is blocked rather than relabelled.
+    """
+    mapping = context.get("prerequisite_repairs", {}) or {}
+    unmapped = [name for name in failed if name not in mapping]
+    if unmapped:
+        return [], [f"failed prerequisite(s) {', '.join(unmapped)} name no repair resource; "
+                    "prerequisite repair needs an explicit prerequisite-to-resource mapping"]
+    by_id = {resource["route_id"]: resource for resource in eligible}
+    repairs: list[tuple[str, dict]] = []
+    seen_routes: dict[str, list[str]] = {}
+    for name in failed:
+        rid = mapping[name]
+        resource = by_id.get(rid)
+        if resource is None:
+            return [], [f"repair resource {rid} for failed prerequisite '{name}' is not eligible "
+                        "(out of scope, inaccessible, or missing duration)"]
+        if resource.get("affordance") not in {"intervention", "mixed"}:
+            return [], [f"repair resource {rid} for failed prerequisite '{name}' is not an intervention resource"]
+        seen_routes.setdefault(rid, []).append(name)
+    for rid, names in seen_routes.items():
+        repairs.append((", ".join(names), by_id[rid]))
+    repair_ids = set(seen_routes)
+    rest = [r for r in intervention if r["route_id"] not in repair_ids]
     if not evidence:
         return [], ["no accessible, in-scope independent evidence activity; prerequisite repair alone cannot produce target evidence"]
+    if not rest:
+        reserved = ", ".join(sorted(repair_ids))
+        return [], [f"prerequisite repair reserves {reserved}; no target intervention remains"]
+    target: list = []
+    fixed = [resource for _, resource in repairs]
+    for candidate in ([a, b] for a in rest for b in evidence):
+        if _fits([*fixed, *candidate], budget, durations):
+            target = candidate
+            break
     if not target:
         return [], ["no evidence-producing candidate fits the available time after prerequisite repair"]
-    return [{"_repair": True, **repair}, *target], []
+    return [{**resource, "_repair": names} for names, resource in repairs] + target, []
 
 
 def _repair_steps(selected: list, status: str) -> list:
@@ -211,7 +232,7 @@ def _repair_steps(selected: list, status: str) -> list:
             steps.append({
                 "resource_id": resource["route_id"], "role": "prerequisite repair",
                 "intent": "intervention",
-                "reason": "repair failed prerequisites before target practice",
+                "reason": f"repair failed prerequisite(s) ({resource['_repair']}) before target practice",
             })
         else:
             steps.append(_step_for(resource, status))
@@ -238,7 +259,8 @@ def _structural_replacement(repo, previous: dict, req: dict, interpretation: dic
         if swap is None:
             blockers = [f"no same-intent alternative for unsuitable step {step['resource_id']} ({flagged[step['resource_id']]})"]
             return _assemble(repo.root, req, interpretation, status, [], rejected, blockers, eligible, context, budget,
-                             extra_assumptions=("structural repair attempted; unaffected steps preserved",))
+                             extra_assumptions=("no executable plan: structural repair failed, "
+                                                "so the previous proposal is withdrawn rather than partially preserved",))
         used.add(swap["route_id"])
         new_step = _step_for(swap, status)
         new_step["reason"] = (f"structural replacement for {step['resource_id']}: {flagged[step['resource_id']]}")
@@ -258,9 +280,22 @@ def _structural_replacement(repo, previous: dict, req: dict, interpretation: dic
                      extra_assumptions=("structural repair: unaffected steps preserved verbatim",))
 
 
-def replan_session(repo: Repo, previous: dict, req: dict, interpretation: dict,
-                   context: dict, event: str) -> dict:
-    """Repair one proposal only after an explicit material execution event."""
+def replan_session(repo: Repo, previous_packet: dict, req: dict, interpretation: dict,
+                   context: dict, event: str, current_snapshot: str) -> dict:
+    """Repair one proposal only after an explicit material execution event.
+
+    The previous proposal travels as the full runtime-session-v1 packet it
+    was issued in, never as a bare session: the replan is bound to the
+    packet's originating snapshot and refused when the tree has moved on.
+    """
+    validate_contract(repo.root, "runtime-session.schema.json", previous_packet)
+    try:
+        previous = previous_packet["session"]
+    except (TypeError, KeyError, AttributeError) as exc:
+        raise RuntimeInputError("previous proposal must be a runtime-session-v1 packet") from exc
+    if previous_packet.get("snapshot_id") != current_snapshot:
+        raise RuntimeInputError(f"previous proposal is bound to snapshot {previous_packet.get('snapshot_id')}; "
+                                "snapshot changed, propose a fresh session")
     validate_contract(repo.root, "session-plan.schema.json", previous)
     validate_contract(repo.root, "session-context.schema.json", context)
     if req["id"] == previous["target_requirement_id"] and req["source_stage"] != previous["source_stage"]:

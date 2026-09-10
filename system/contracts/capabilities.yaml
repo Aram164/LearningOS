@@ -9,7 +9,7 @@ queries:
     schema: system/schema/runtime-session.schema.json
     invariants:
     - read-only snapshot-bound proposal for one explicit requirement
-    - sticky repair requires an explicit material event and previous proposal
+    - sticky repair requires an explicit material event and the previous runtime packet, bound to its snapshot
     - target evidence and feasibility failures stay visible
   plan.edit-context:
     handler: plan_edit_context

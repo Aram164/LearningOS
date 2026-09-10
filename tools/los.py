@@ -635,7 +635,7 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser('runtime-session', help='propose or locally repair one evidence-based session without writing')
     p.add_argument('--requirement', required=True)
     p.add_argument('--context-json', default='{}')
-    p.add_argument('--previous-json', default=None)
+    p.add_argument('--previous-json', default=None, help='previous runtime-session-v1 packet (with snapshot_id), not the bare session')
     p.add_argument('--event', default=None)
     p.add_argument('--expected-snapshot', default=None)
     p.set_defaults(func=cmd_runtime_session)

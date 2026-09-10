@@ -12,6 +12,7 @@ import yaml
 from gateway_helpers import approved_v2_envelope, run_v2_capability
 from test_curriculum_v2 import _add_material_overview, add_curriculum, run_los, write_yaml
 
+from learning_os.contracts.json_schema import ContractValidationError
 from learning_os.genout import generate_all
 from learning_os.genout.learner_interpreter import _collect_and_interpret, interpret_observations
 from learning_os.genout.session_compiler import compile_session, replan_session
@@ -188,26 +189,63 @@ def test_budget_filters_and_unknown_durations(runtime_root):
     assert compile_session(repo, req, {}, {"available_minutes": 100})["plan_status"] == "blocked"
 
 
+SNAP = "sha256:" + "0" * 64
+
+
+def packet(session, snapshot=SNAP):
+    return {"contract": "runtime-session-v1", "schema_version": 1, "snapshot_id": snapshot, "session": session}
+
+
+def replan(repo, previous, req, interpretation, context, event, snapshot=SNAP):
+    return replan_session(repo, packet(previous, snapshot), req, interpretation, context, event, snapshot)
+
+
+REPAIR_CTX = {"failed_prerequisites": ["standardization"],
+              "prerequisite_repairs": {"standardization": "route-demo-2"}}
+
+
 def test_prerequisite_failure_repairs_then_returns_to_target(runtime_root):
     repo, req = inputs(runtime_root)
-    plan = compile_session(repo, req, {}, {"failed_prerequisites": ["standardization"]})
+    plan = compile_session(repo, req, {}, REPAIR_CTX)
     assert plan["plan_status"] == "ready"
-    assert [s["intent"] for s in plan["steps"]] == ["intervention", "evidence"]
-    assert plan["steps"][0]["role"] == "prerequisite repair"
-    assert plan["steps"][1]["role"] == "independent evidence"
-    assert "prerequisite assumption invalidated" in plan["assumptions"]
+    assert [s["resource_id"] for s in plan["steps"]] == ["route-demo-2", "route-demo-0", "route-demo-1"]
+    assert [s["role"] for s in plan["steps"]] == ["prerequisite repair", "explanation", "independent evidence"]
+    assert "standardization" in plan["steps"][0]["reason"]
+    assert "explicitly mapped repair resources" in plan["assumptions"][-1]
     previous = compile_session(repo, req, {})
-    repaired = replan_session(repo, previous, req, {}, {"failed_prerequisites": ["standardization"]}, "prerequisite-failure")
+    repaired = replan(repo, previous, req, {}, REPAIR_CTX, "prerequisite-failure")
     assert repaired["plan_status"] == "ready"
-    assert repaired["steps"][0]["role"] == "prerequisite repair"
+    assert [s["resource_id"] for s in repaired["steps"]] == ["route-demo-2", "route-demo-0", "route-demo-1"]
     assert repaired["replan"] == {"action": "local", "reason": "prerequisite-failure"}
     assert previous == compile_session(repo, req, {})
+
+
+def test_prerequisite_repair_without_mapping_is_blocked(runtime_root):
+    repo, req = inputs(runtime_root)
+    plan = compile_session(repo, req, {}, {"failed_prerequisites": ["standardization"]})
+    assert plan["plan_status"] == "blocked"
+    assert not plan["steps"]
+    assert "explicit prerequisite-to-resource mapping" in plan["blockers"][0]
+
+
+@pytest.mark.parametrize("repairs, reason", [
+    ({"standardization": "route-demo-0"}, "no target intervention remains"),
+    ({"standardization": "route-missing"}, "not eligible"),
+    ({"standardization": "route-demo-1"}, "not an intervention resource"),
+])
+def test_prerequisite_repair_rejects_unusable_mapping(runtime_root, repairs, reason):
+    repo, req = inputs(runtime_root)
+    plan = compile_session(repo, req, {}, {"failed_prerequisites": ["standardization"],
+                                           "prerequisite_repairs": repairs})
+    assert plan["plan_status"] == "blocked"
+    assert not plan["steps"]
+    assert reason in plan["blockers"][0]
 
 
 def test_prerequisite_repair_without_evidence_stays_blocked(runtime_root):
     repo, req = inputs(runtime_root)
     repo.study_maps["study-map-demo-l01"].data["stages"][0]["resources"][1]["scope_triage"] = "reference-only"
-    plan = compile_session(repo, req, {}, {"failed_prerequisites": ["standardization"]})
+    plan = compile_session(repo, req, {}, REPAIR_CTX)
     assert plan["plan_status"] == "blocked"
     assert not plan["steps"]
     assert plan["replan_conditions"]
@@ -217,14 +255,23 @@ def test_sticky_replanning_preserves_minor_events(runtime_root):
     repo, req = inputs(runtime_root)
     original = compile_session(repo, req, {})
     saved = copy.deepcopy(original)
-    minor = replan_session(repo, original, req, {"status": "fragile"}, {}, "hint-request")
+    minor = replan(repo, original, req, {"status": "fragile"}, {}, "hint-request")
     assert minor["steps"] == original["steps"]
     assert minor["replan"]["action"] == "none"
-    complete = replan_session(repo, original, req, {"status": "demonstrated"}, {}, "target-evidence-obtained-early")
+    complete = replan(repo, original, req, {"status": "demonstrated"}, {}, "target-evidence-obtained-early")
     assert complete["plan_status"] == "satisfied" and not complete["steps"]
     assert original == saved
     with pytest.raises(RuntimeInputError):
-        replan_session(repo, original, req, {}, {}, "target-evidence-obtained-early")
+        replan(repo, original, req, {}, {}, "target-evidence-obtained-early")
+
+
+def test_replan_requires_the_previous_packet_snapshot(runtime_root):
+    repo, req = inputs(runtime_root)
+    previous = compile_session(repo, req, {})
+    with pytest.raises(RuntimeInputError, match="bound to snapshot"):
+        replan_session(repo, packet(previous), req, {}, {}, "hint-request", "sha256:" + "1" * 64)
+    with pytest.raises(ContractValidationError):
+        replan_session(repo, previous, req, {}, {}, "hint-request", SNAP)
 
 
 def test_material_replan_rejects_changed_definition(runtime_root):
@@ -232,7 +279,7 @@ def test_material_replan_rejects_changed_definition(runtime_root):
     previous = compile_session(repo, req, {})
     req["capability"]["operands"] = ["a-different-target"]
     with pytest.raises(RuntimeInputError, match="definition snapshot"):
-        replan_session(repo, previous, req, {}, {"available_minutes": 30}, "material-time-change")
+        replan(repo, previous, req, {}, {"available_minutes": 30}, "material-time-change")
 
 
 def envelope(root, req_id, **payload):
@@ -308,21 +355,33 @@ def test_runtime_cli_proposal_and_sticky_repair_are_read_only(runtime_root):
     _, req = inputs(runtime_root)
     result = run_los(runtime_root, "runtime-session", "--requirement", req["id"])
     assert result.returncode == 0, result.stderr
-    packet = json.loads(result.stdout)
-    proposal = packet["session"]
-    assert proposal["plan_status"] == "ready"
+    issued = json.loads(result.stdout)
+    assert issued["session"]["plan_status"] == "ready"
     repaired = run_los(runtime_root, "runtime-session", "--requirement", req["id"],
-        "--previous-json", json.dumps(proposal), "--event", "hint-request",
-        "--expected-snapshot", packet["snapshot_id"])
+        "--previous-json", json.dumps(issued), "--event", "hint-request",
+        "--expected-snapshot", issued["snapshot_id"])
     assert repaired.returncode == 0, repaired.stderr
-    assert json.loads(repaired.stdout)["session"]["steps"] == proposal["steps"]
+    assert json.loads(repaired.stdout)["session"]["steps"] == issued["session"]["steps"]
     assert not (runtime_root / "work/active/workspace-demo/observations.jsonl").exists()
     assert not (runtime_root / "operations/transactions").exists()
     invalid = run_los(runtime_root, "runtime-session", "--requirement", req["id"], "--context-json", '{"available_minutes":0}')
     assert invalid.returncode == 2
     (runtime_root / "work/inbox/changed.md").write_text("new state")
-    stale = run_los(runtime_root, "runtime-session", "--requirement", req["id"], "--expected-snapshot", packet["snapshot_id"])
+    stale = run_los(runtime_root, "runtime-session", "--requirement", req["id"], "--expected-snapshot", issued["snapshot_id"])
     assert stale.returncode == 3
+
+
+def test_runtime_cli_rejects_stale_previous_packet(runtime_root):
+    _, req = inputs(runtime_root)
+    issued = json.loads(run_los(runtime_root, "runtime-session", "--requirement", req["id"]).stdout)
+    (runtime_root / "work/inbox/changed.md").write_text("new state")
+    fresh = json.loads(run_los(runtime_root, "runtime-session", "--requirement", req["id"]).stdout)
+    assert fresh["snapshot_id"] != issued["snapshot_id"]
+    replay = run_los(runtime_root, "runtime-session", "--requirement", req["id"],
+        "--previous-json", json.dumps(issued), "--event", "hint-request",
+        "--expected-snapshot", fresh["snapshot_id"])
+    assert replay.returncode == 3
+    assert "different snapshot" in replay.stderr
 
 
 def test_gateway_rejects_stale_revision_and_outside_workspace_scope(runtime_root):
@@ -368,7 +427,7 @@ def test_local_repair_replaces_only_the_unsuitable_step(runtime_root):
     repo, req = inputs(runtime_root)
     previous = compile_session(repo, req, {})
     assert [s["resource_id"] for s in previous["steps"]] == ["route-demo-0", "route-demo-1"]
-    repaired = replan_session(repo, previous, req, {}, {"unsuitable_resources": ["route-demo-0"]}, "selected-resource-unsuitable")
+    repaired = replan(repo, previous, req, {}, {"unsuitable_resources": ["route-demo-0"]}, "selected-resource-unsuitable")
     assert repaired["plan_status"] == "ready"
     assert repaired["replan"] == {"action": "local", "reason": "selected-resource-unsuitable"}
     assert repaired["steps"][0]["resource_id"] == "route-demo-3"
@@ -382,7 +441,7 @@ def test_local_repair_separates_access_failure_from_pedagogy(runtime_root):
     _with_spare_intervention(runtime_root)
     repo, req = inputs(runtime_root)
     previous = compile_session(repo, req, {})
-    repaired = replan_session(repo, previous, req, {}, {"unavailable_resources": ["route-demo-0"]}, "selected-resource-unsuitable")
+    repaired = replan(repo, previous, req, {}, {"unavailable_resources": ["route-demo-0"]}, "selected-resource-unsuitable")
     assert repaired["plan_status"] == "ready"
     assert repaired["steps"][0]["resource_id"] == "route-demo-3"
     assert "access failed" in repaired["steps"][0]["reason"]
@@ -392,25 +451,27 @@ def test_local_repair_separates_access_failure_from_pedagogy(runtime_root):
 def test_local_repair_without_alternative_is_blocked_not_recompiled(runtime_root):
     repo, req = inputs(runtime_root)
     previous = compile_session(repo, req, {})
-    repaired = replan_session(repo, previous, req, {}, {"unsuitable_resources": ["route-demo-0"]}, "selected-resource-unsuitable")
+    repaired = replan(repo, previous, req, {}, {"unsuitable_resources": ["route-demo-0"]}, "selected-resource-unsuitable")
     assert repaired["plan_status"] == "blocked"
     assert not repaired["steps"]
     assert repaired["replan"] == {"action": "local", "reason": "selected-resource-unsuitable"}
     assert "no same-intent alternative" in repaired["blockers"][0]
+    assert "withdrawn rather than partially preserved" in repaired["assumptions"][-1]
+    assert all("preserved verbatim" not in assumption for assumption in repaired["assumptions"])
 
 
 def test_local_repair_must_identify_a_selected_resource(runtime_root):
     repo, req = inputs(runtime_root)
     previous = compile_session(repo, req, {})
     with pytest.raises(RuntimeInputError, match="must identify a selected resource"):
-        replan_session(repo, previous, req, {}, {"unsuitable_resources": ["route-unused"]}, "selected-resource-unsuitable")
+        replan(repo, previous, req, {}, {"unsuitable_resources": ["route-unused"]}, "selected-resource-unsuitable")
 
 
 def test_time_change_still_recompiles_with_new_budget(runtime_root):
     repo, req = inputs(runtime_root)
     previous = compile_session(repo, req, {})
     durations = {"route-demo-0": 10, "route-demo-1": 10, "route-demo-2": 10}
-    short = replan_session(repo, previous, req, {}, {"available_minutes": 15, "resource_minutes": durations}, "material-time-change")
+    short = replan(repo, previous, req, {}, {"available_minutes": 15, "resource_minutes": durations}, "material-time-change")
     assert short["plan_status"] == "blocked" and short["replan"]["action"] == "local"
 
 
@@ -462,12 +523,12 @@ def test_sticky_replan_does_not_trust_previous_completion_or_foreign_steps(runti
     repo, req = inputs(runtime_root)
     previous = compile_session(repo, req, {"status": "demonstrated"})
     with pytest.raises(RuntimeInputError, match="completion claim"):
-        replan_session(repo, previous, req, {"status": "uncertain"}, {}, "hint-request")
+        replan(repo, previous, req, {"status": "uncertain"}, {}, "hint-request")
     previous = compile_session(repo, req, {})
     previous["steps"][0]["resource_id"] = "route-foreign"
     with pytest.raises(RuntimeInputError, match="no longer eligible"):
-        replan_session(repo, previous, req, {}, {}, "hint-request")
+        replan(repo, previous, req, {}, {}, "hint-request")
     previous = compile_session(repo, req, {})
     req["capability"]["operands"] = ["changed-target"]
     with pytest.raises(RuntimeInputError, match="definition changed"):
-        replan_session(repo, previous, req, {}, {}, "hint-request")
+        replan(repo, previous, req, {}, {}, "hint-request")
