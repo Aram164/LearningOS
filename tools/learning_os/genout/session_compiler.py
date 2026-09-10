@@ -80,22 +80,40 @@ def _eligible_resources(repo: Repo, stage: dict, context: dict, unavailable: set
 
 
 def _pools(eligible: list, status: str) -> tuple[list, list]:
-    evidence = [r for r in eligible if r["affordance"] == "evidence"]
+    # Mixed resources are genuinely dual-use: they compete as evidence
+    # alongside pure evidence, and as intervention per status below.
+    evidence = [r for r in eligible if r["affordance"] in {"evidence", "mixed"}]
     intervention = [r for r in eligible if r["affordance"] == ("mixed" if status == "fragile" else "intervention")]
     if not intervention:
         intervention = [r for r in eligible if r["affordance"] == "mixed"]
     return intervention, evidence
 
 
-def _step_for(resource: dict, status: str) -> dict:
-    intent = "evidence" if resource["affordance"] == "evidence" else "intervention"
-    role = "independent evidence" if intent == "evidence" else (
-        "guided practice" if resource["affordance"] == "mixed" else "explanation")
+def _step_for(resource: dict, status: str, *, as_evidence: bool = False) -> dict:
+    intent = "evidence" if (resource["affordance"] == "evidence" or as_evidence) else "intervention"
+    if intent == "evidence":
+        role = "independent evidence"
+        reason = ("obtain the target evidence under the declared conditions without assistance"
+                  if resource["affordance"] == "evidence"
+                  else "obtain the target evidence under the declared conditions without assistance "
+                       "(mixed resource serving as evidence)")
+    else:
+        role = "guided practice" if resource["affordance"] == "mixed" else "explanation"
+        reason = f"address the current {status} evidence state"
     return {
         "resource_id": resource["route_id"], "role": role, "intent": intent,
-        "reason": ("obtain the target evidence under the declared conditions without assistance"
-                   if intent == "evidence" else f"address the current {status} evidence state"),
+        "reason": reason,
     }
+
+
+def _target_steps(candidate: list, status: str) -> list:
+    """Build evidence/intent steps: the last pick always comes from the evidence pool."""
+    if len(candidate) == 2:
+        first, last = candidate
+        return [_step_for(first, status),
+                _step_for(last, status, as_evidence=last["affordance"] == "mixed")]
+    (only,) = candidate
+    return [_step_for(only, status, as_evidence=only["affordance"] == "mixed")]
 
 
 def _fits(selected: list, budget, durations: dict) -> bool:
@@ -160,7 +178,9 @@ def compile_session(repo: Repo, req: dict, interpretation: dict, context: dict |
         if not blockers:
             # Consider alternatives when the preferred pair cannot fit. A
             # finite budget with missing durations never becomes unconstrained.
-            candidates = [[a, b] for a in intervention for b in evidence]
+            # Pools overlap on mixed resources, so a pair never uses one twice.
+            candidates = [[a, b] for a in intervention for b in evidence
+                          if a["route_id"] != b["route_id"]]
             if not intervention:
                 candidates = [[b] for b in evidence]
             for candidate in candidates:
@@ -173,7 +193,7 @@ def compile_session(repo: Repo, req: dict, interpretation: dict, context: dict |
         steps = _repair_steps(selected, status)
         extra = ("bounded repair uses explicitly mapped repair resources; target evidence still required",)
     else:
-        steps = [_step_for(resource, status) for resource in selected]
+        steps = _target_steps(selected, status) if selected else []
         extra = ()
     return _assemble(repo.root, req, interpretation, status, steps, rejected, blockers, eligible, context, budget,
                      extra_assumptions=extra)
@@ -209,20 +229,27 @@ def _repair_with_prerequisites(repo, req, status, intervention, evidence, reject
         repairs.append((", ".join(names), by_id[rid]))
     repair_ids = set(seen_routes)
     rest = [r for r in intervention if r["route_id"] not in repair_ids]
+    evidence_rest = [r for r in evidence if r["route_id"] not in repair_ids]
     if not evidence:
         return [], ["no accessible, in-scope independent evidence activity; prerequisite repair alone cannot produce target evidence"]
+    if not evidence_rest:
+        reserved = ", ".join(sorted(repair_ids))
+        return [], [f"prerequisite repair reserves {reserved}; no target evidence remains"]
     if not rest:
         reserved = ", ".join(sorted(repair_ids))
         return [], [f"prerequisite repair reserves {reserved}; no target intervention remains"]
     target: list = []
     fixed = [resource for _, resource in repairs]
-    for candidate in ([a, b] for a in rest for b in evidence):
+    for candidate in ([a, b] for a in rest for b in evidence_rest if a["route_id"] != b["route_id"]):
         if _fits([*fixed, *candidate], budget, durations):
             target = candidate
             break
     if not target:
         return [], ["no evidence-producing candidate fits the available time after prerequisite repair"]
-    return [{**resource, "_repair": names} for names, resource in repairs] + target, []
+    marked = [{**resource, "_repair": names} for names, resource in repairs]
+    marked += [{**resource, "_as_evidence": resource["affordance"] == "mixed"} if i == len(target) - 1 else resource
+               for i, resource in enumerate(target)]
+    return marked, []
 
 
 def _repair_steps(selected: list, status: str) -> list:
@@ -235,7 +262,7 @@ def _repair_steps(selected: list, status: str) -> list:
                 "reason": f"repair failed prerequisite(s) ({resource['_repair']}) before target practice",
             })
         else:
-            steps.append(_step_for(resource, status))
+            steps.append(_step_for(resource, status, as_evidence=bool(resource.get("_as_evidence"))))
     return steps
 
 
@@ -262,7 +289,8 @@ def _structural_replacement(repo, previous: dict, req: dict, interpretation: dic
                              extra_assumptions=("no executable plan: structural repair failed, "
                                                 "so the previous proposal is withdrawn rather than partially preserved",))
         used.add(swap["route_id"])
-        new_step = _step_for(swap, status)
+        new_step = _step_for(swap, status,
+                             as_evidence=step["intent"] == "evidence" and swap["affordance"] == "mixed")
         new_step["reason"] = (f"structural replacement for {step['resource_id']}: {flagged[step['resource_id']]}")
         repaired.append(new_step)
     if budget is not None:
