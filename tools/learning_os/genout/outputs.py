@@ -24,11 +24,11 @@ from .learner_interpreter import (
     build_learner_interpretations_md,
 )
 from .learning_runtime import build_learning_requirements_json, build_learning_requirements_md
-from .session_compiler import build_compiled_sessions_json, build_compiled_sessions_md
 from .library import build_library
 from .manifest import build_manifest
 from .modules_view import build_module_view
 from .reading_room import build_reading_room
+from .session_compiler import build_compiled_sessions_json, build_compiled_sessions_md
 from .sources import build_collection_view, build_source_index
 from .study_plan import build_study_plan_view
 

@@ -87,6 +87,7 @@ from learning_os.commands.review import (  # noqa: E402
     cmd_shelving_apply,
     cmd_shelving_prepare,
 )
+from learning_os.commands.runtime import cmd_runtime_session  # noqa: E402
 from learning_os.commands.source import cmd_source_feedback  # noqa: E402
 from learning_os.commands.stage import (  # noqa: E402
     cmd_stage_attach,
@@ -631,14 +632,26 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_note_evidence)
 
 
+    p = sub.add_parser('runtime-session', help='propose or locally repair one evidence-based session without writing')
+    p.add_argument('--requirement', required=True)
+    p.add_argument('--context-json', default='{}')
+    p.add_argument('--previous-json', default=None)
+    p.add_argument('--event', default=None)
+    p.add_argument('--expected-snapshot', default=None)
+    p.set_defaults(func=cmd_runtime_session)
+
     p = sub.add_parser('observation-append', help='append an immutable learner observation')
     p.add_argument('--workspace', required=True)
     p.add_argument('--requirement', required=True)
     p.add_argument('--activity', required=True)
-    p.add_argument('--result', required=True)
+    p.add_argument('--result', required=True, choices=['correct', 'incorrect', 'partial', 'abandoned'])
     p.add_argument('--assistance', default=None)
     p.add_argument('--tags', default=None)
     p.add_argument('--context', default=None)
+    p.add_argument('--condition', action='append', default=[])
+    p.add_argument('--supersedes', default=None, help='explicitly correct one earlier observation; preserves its bytes')
+    p.add_argument('--expected-snapshot', default=None)
+    _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_observation_append)
 
 

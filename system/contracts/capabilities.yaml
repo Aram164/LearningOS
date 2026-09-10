@@ -3,6 +3,14 @@ schema_version: 1
 contract_version: 2
 cli_protocol: 6
 queries:
+  runtime.session:
+    handler: runtime_session
+    result: runtime-session-v1
+    schema: system/schema/runtime-session.schema.json
+    invariants:
+    - read-only snapshot-bound proposal for one explicit requirement
+    - sticky repair requires an explicit material event and previous proposal
+    - target evidence and feasibility failures stay visible
   plan.edit-context:
     handler: plan_edit_context
     result: plan-edit-context
@@ -84,6 +92,16 @@ queries:
     - reads only the sanitized catalog and approved comparisons
     - absent from normal manifest, search, workload, deadlines, recommendations, and ordinary AI
 commands:
+  learner.observation.append:
+    handler: observation_append
+    cli_command: observation-append
+    writes:
+    - work/active/*/observations.jsonl
+    invariants:
+    - append only to the registered active workspace's evidence ledger
+    - requirement resolves within the workspace's declared module or unit scope
+    - exact snapshot and workspace revision guarded; receipt and retry preserve historical evidence
+    - learner observations never update concept or source semantics
   route.patch:
     handler: route_patch
     cli_command: route-patch
@@ -392,6 +410,7 @@ commands:
     - id and type remain stable
     - revision guarded
     - external project files are bound to their exact bytes by SHA-256 before use
+
 internal_commands:
   project.migrate:
     handler: projects_migration_apply
