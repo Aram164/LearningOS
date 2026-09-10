@@ -126,6 +126,30 @@ def test_a_declared_directory_that_is_absent_is_an_error(tmp_path):
     assert any("records" in i.message for i in issues if i.code == "MISSING")
 
 
+def test_an_absent_but_ignored_directory_is_not_an_error(tmp_path):
+    """Rebuildable content (generated/, bases/) is absent on a fresh checkout
+    and returns with setup/generate. Only unignored structure must exist."""
+    import subprocess
+
+    directories = _simple() + [{"path": "genout", "owner": "generated",
+                                "purpose": "rebuildable views"}]
+    root = _repo(tmp_path, directories=directories, tree=["tools"])
+    subprocess.run(["git", "init", "-q"], cwd=root, check=True)
+    (root / ".gitignore").write_text("genout/*\n", encoding="utf-8")
+    issues = tc.check(root)
+    assert "MISSING" not in _codes(issues)
+
+
+def test_an_absent_ephemeral_entry_is_not_an_error(tmp_path):
+    """Caches belong to whoever ran a tool: a fresh checkout never ran
+    pytest, so absence is normal. Presence unignored stays a violation."""
+    root = _repo(
+        tmp_path, directories=_simple(), tree=["tools"],
+        hidden={"ephemeral": [{"path": ".cache", "purpose": "a cache"}]},
+    )
+    assert "MISSING" not in _codes(tc.check(root))
+
+
 def test_a_declared_directory_with_no_purpose_is_an_error(tmp_path):
     directories = _simple() + [{"path": "mystery", "owner": "nobody"}]
     root = _repo(tmp_path, directories=directories, tree=["tools", "mystery"])

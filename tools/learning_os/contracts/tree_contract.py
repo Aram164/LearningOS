@@ -261,6 +261,11 @@ def _check_level(root: Path, base: Path, entries: tuple[Entry, ...] | list[Entry
             continue
         target = root / entry.path
         if not target.is_dir():
+            if _git_ignored(root, entry.path):
+                # Rebuildable or environment-owned content (generated/,
+                # bases/) is absent on a fresh checkout and returns with
+                # setup/generate. Only unignored structure must exist.
+                continue
             issues.append(TreeIssue(
                 "MISSING", f"declared but not on disk: '{entry.path}'", TREE_RELATIVE))
             continue
@@ -291,12 +296,20 @@ def check(root: Path) -> list[TreeIssue]:
     hidden_ok = contract.hidden_names()
     _check_level(root, root, contract.directories, contract, issues, hidden_ok)
 
-    for row in contract.tracked_hidden + contract.ephemeral_hidden:
+    for row in contract.tracked_hidden:
         relative = str(row["path"])
         if not (root / relative).exists():
             issues.append(TreeIssue(
                 "MISSING", f"declared hidden entry not on disk: '{relative}'",
                 TREE_RELATIVE))
+
+    for row in contract.ephemeral_hidden:
+        # Caches belong to whoever ran a tool: absence is normal (a fresh
+        # checkout never ran pytest), presence unignored is the violation,
+        # checked below.
+        relative = str(row["path"])
+        if not (root / relative).exists():
+            continue
 
     for row in contract.ephemeral_hidden:
         if row.get("must_be_ignored") is False:
