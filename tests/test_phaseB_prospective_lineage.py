@@ -247,7 +247,7 @@ def _source_routes(source_map):
 
 
 def _write_demo_plan(mini_repo, tmp_path):
-    from test_curriculum_v2 import add_curriculum, write_yaml
+    from repo_builders import add_curriculum, write_yaml
 
     add_curriculum(mini_repo)
     unit_path = (mini_repo / "curriculum/modules/module-demo/units"
@@ -304,7 +304,7 @@ def test_end_to_end_apply_persists_lineage_atomically(mini_repo, tmp_path):
     import json as _json
 
     from gateway_helpers import approved_v2_cli, file_sha256
-    from test_curriculum_v2 import run_los, write_yaml
+    from repo_builders import run_los, write_yaml
 
     package, package_data = _write_demo_plan(mini_repo, tmp_path)
 
@@ -695,7 +695,7 @@ def test_post_commit_supported_end_to_end_via_gateway(mini_repo, tmp_path):
     # A deletion-only package must not bypass the lineage handler. The
     # previous test of its private writer combined deletion with addition,
     # which never exercised the handler's empty-changed-claims branch.
-    from test_curriculum_v2 import run_los, write_yaml
+    from repo_builders import run_los, write_yaml
 
     package_data = yaml.safe_load(package.read_text(encoding="utf-8"))
     package_data["source_map"]["sources"][0]["unit_routes"] = ["unit-demo-l01"]

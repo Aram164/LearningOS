@@ -20,7 +20,7 @@ from migrations.job_quarantine_collapse import (
     plan_sha256,
     verify_plan_inputs,
 )
-from test_curriculum_v2 import add_curriculum
+from repo_builders import add_curriculum
 
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.loader import load_repo

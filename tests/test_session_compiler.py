@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 import yaml
 from gateway_helpers import approved_v2_envelope, run_v2_capability
-from test_curriculum_v2 import _add_material_overview, add_curriculum, run_los, write_yaml
+from repo_builders import _add_material_overview, add_curriculum, run_los, write_yaml
 
 from learning_os.contracts.json_schema import ContractValidationError
 from learning_os.genout import generate_all

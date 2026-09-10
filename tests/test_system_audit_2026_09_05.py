@@ -15,7 +15,7 @@ from pathlib import Path
 import pytest
 import yaml
 from gateway_helpers import approved_v2_cli, file_sha256
-from test_curriculum_v2 import _add_material_overview, add_curriculum, write_yaml
+from repo_builders import _add_material_overview, add_curriculum, write_yaml
 
 TOOLS = Path(__file__).resolve().parents[1] / "tools"
 

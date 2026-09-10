@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 import yaml
-from test_curriculum_v2 import add_curriculum, write_yaml
+from repo_builders import add_curriculum, write_yaml
 
 from learning_os.ai_actions import AIActionService
 from learning_os.backup_manifest import (

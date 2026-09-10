@@ -17,7 +17,7 @@ that *introduces* a warning, which is the part worth keeping.
 from __future__ import annotations
 
 import yaml
-from test_curriculum_v2 import _add_material_overview, add_curriculum
+from repo_builders import _add_material_overview, add_curriculum
 
 from learning_os.commands.module import _module_plan_validation_errors
 from learning_os.warning_baseline import collect, write_baseline

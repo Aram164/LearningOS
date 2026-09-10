@@ -18,7 +18,7 @@ from __future__ import annotations
 import json
 
 import yaml
-from test_curriculum_v2 import _add_material_overview, add_curriculum
+from repo_builders import _add_material_overview, add_curriculum
 
 from learning_os.genout import generate_all
 from learning_os.genout.projection import module_lifecycle

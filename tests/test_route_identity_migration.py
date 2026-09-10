@@ -9,7 +9,7 @@ from pathlib import Path
 
 import yaml
 from migrations.route_identity_v13 import plan_migration, plan_sha256
-from test_curriculum_v2 import _add_material_overview, add_curriculum, write_yaml
+from repo_builders import _add_material_overview, add_curriculum, write_yaml
 
 from learning_os.contracts.gateway import intent_sha256
 from learning_os.fingerprint import canonical_fingerprint
