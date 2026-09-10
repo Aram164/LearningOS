@@ -6,7 +6,7 @@ import json
 
 import pytest
 import yaml
-from test_curriculum_v2 import _add_material_overview, add_curriculum, write_yaml
+from repo_builders import _add_material_overview, add_curriculum, write_yaml
 
 from learning_os.contracts.manifest_contract import check
 from learning_os.genout.manifest import build_manifest

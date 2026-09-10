@@ -199,7 +199,7 @@ def test_scan_recency_and_source_join_use_real_git_history(mini_repo, monkeypatc
     import os
 
     import yaml
-    from test_curriculum_v2 import _add_material_overview, add_curriculum, write_yaml
+    from repo_builders import _add_material_overview, add_curriculum, write_yaml
 
     from learning_os import githistory
     from learning_os.githistory import GitHistoryError

@@ -9,7 +9,7 @@ from pathlib import Path
 import pytest
 import yaml
 from gateway_helpers import approved_v2_envelope
-from test_curriculum_v2 import add_curriculum
+from repo_builders import add_curriculum
 
 import learning_os.ai_actions.projection as ai_projection
 import learning_os.commands.support as command_support

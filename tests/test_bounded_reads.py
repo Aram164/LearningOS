@@ -121,7 +121,7 @@ def test_search_refuses_malformed_note_and_returns_after_repair(mini_repo):
 def _two_route_context(mini_repo):
     """One unit with two resolvable routes, the first fully stage-wired."""
     import yaml
-    from test_curriculum_v2 import write_yaml
+    from repo_builders import write_yaml
     from test_material_editing import material_fixture
 
     from learning_os.material_refs import unit_routes
@@ -254,7 +254,7 @@ def test_route_batch_refuses_a_cross_unit_route(mini_repo):
     """A route that exists in the module but under another unit is
     refused for this unit — per-unit scoping, same path as missing."""
     import yaml
-    from test_curriculum_v2 import write_yaml
+    from repo_builders import write_yaml
     from test_material_editing import material_fixture
 
     from learning_os.material_refs import unit_routes

@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 import yaml
-from test_curriculum_v2 import add_curriculum, write_yaml
+from repo_builders import add_curriculum, write_yaml
 
 from learning_os.commands.module import cmd_module_plan_import
 from learning_os.contracts.gateway import (

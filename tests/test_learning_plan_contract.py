@@ -66,6 +66,7 @@ def test_curriculum_import_refuses_the_unreplaced_source_plan_placeholder():
     ]
 
 
+@pytest.mark.full_repo
 def test_every_active_curriculum_plan_uses_current_template(repo_root):
     repo = load_repo(repo_root)
     assert repo.study_maps

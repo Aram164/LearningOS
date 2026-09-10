@@ -14,8 +14,8 @@ from gateway_helpers import (
     file_sha256,
     run_v2_capability,
 )
+from repo_builders import write_yaml
 from test_cli import run_los
-from test_curriculum_v2 import write_yaml
 from test_manifest_v7_routes import _rich_fixture
 
 from learning_os.commands.material import compaction_plan, route_patch_plan

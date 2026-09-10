@@ -13,7 +13,7 @@ from pathlib import Path
 
 import pytest
 import yaml
-from test_curriculum_v2 import _add_material_overview, add_curriculum, write_yaml
+from repo_builders import _add_material_overview, add_curriculum, write_yaml
 
 from learning_os.learning_runtime import runtime_review_fingerprint
 from learning_os.loader import load_repo
