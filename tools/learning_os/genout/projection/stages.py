@@ -23,6 +23,12 @@ _OPEN_TARGET_KEYS = (
     "vault_path",
 )
 
+# Runtime V0 fields live on canonical stages for the loader only. The v9
+# manifest pair has no consumer for them, so the projection strips them to
+# keep the strict v9 contract valid until a real UI need reintroduces them.
+_RUNTIME_ONLY_STAGE_KEYS = ("runtime_target",)
+_RUNTIME_ONLY_RESOURCE_KEYS = ("affordance",)
+
 
 def _has_direct_open_target(resource: dict) -> bool:
     """Whether a projected row names one usable file or website.
@@ -77,7 +83,8 @@ def _route_target(resource: dict, routes: Iterable[dict]) -> dict | None:
 
 def _project_stage_resource(repo: Repo, resource: dict,
                             routes: Iterable[dict]) -> dict:
-    projected = _project_material_resource(repo, resource)
+    projected = _without_runtime_keys(
+        _project_material_resource(repo, resource), _RUNTIME_ONLY_RESOURCE_KEYS)
     if _has_direct_open_target(projected):
         return projected
     route = _route_target(projected, routes)
@@ -94,6 +101,12 @@ def _project_stage_resource(repo: Repo, resource: dict,
     }
 
 
+def _without_runtime_keys(record: dict, keys: tuple[str, ...]) -> dict:
+    if not isinstance(record, dict) or not any(key in record for key in keys):
+        return record
+    return {k: v for k, v in record.items() if k not in keys}
+
+
 def project_stages(repo: Repo, data: dict, note_key: str,
                    resource_routes: Iterable[dict] = ()) -> list[dict]:
     """Project ``data['stages']`` with resources resolved and notes inlined.
@@ -103,7 +116,7 @@ def project_stages(repo: Repo, data: dict, note_key: str,
     """
     projected_stages: list[dict] = []
     for stage in data.get("stages", []) or []:
-        projected = dict(stage)
+        projected = _without_runtime_keys(dict(stage), _RUNTIME_ONLY_STAGE_KEYS)
         if isinstance(stage, dict) and isinstance(stage.get("resources"), list):
             projected["resources"] = [
                 _project_stage_resource(repo, resource, resource_routes)

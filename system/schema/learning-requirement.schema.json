@@ -1,0 +1,94 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/learning-requirement",
+  "title": "LearningRequirement",
+  "description": "Compiled runtime IR derived deterministically from one canonical study-map stage's runtime_target. Never authored directly; there is no requirements.yaml sidecar channel.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "concept",
+    "capability",
+    "evidence_spec",
+    "source_stage"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^req-[a-z0-9-]+$"
+    },
+    "concept": {
+      "type": "string",
+      "pattern": "^(concept|knowledge)-[a-z0-9-]+$"
+    },
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "operands"
+      ],
+      "properties": {
+        "kind": {
+          "enum": [
+            "recognize",
+            "compute",
+            "explain",
+            "distinguish",
+            "diagnose",
+            "transfer",
+            "derive",
+            "apply",
+            "classify"
+          ]
+        },
+        "operands": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "minItems": 1
+        }
+      }
+    },
+    "conditions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "\\S"
+      },
+      "uniqueItems": true
+    },
+    "evidence_spec": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "\\S"
+      },
+      "minItems": 1,
+      "uniqueItems": true
+    },
+    "source_stage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "module_id",
+        "unit_id",
+        "stage_id"
+      ],
+      "properties": {
+        "module_id": {
+          "type": "string"
+        },
+        "unit_id": {
+          "type": "string"
+        },
+        "stage_id": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "x-governs": "artifact"
+}
