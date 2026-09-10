@@ -182,6 +182,8 @@ hidden:
   tracked:
     - path: .github
       purpose: CI workflows
+    - path: .jules
+      purpose: Jules Code project configuration
     - path: .claude
       purpose: Claude Code project configuration
     - path: .codex
