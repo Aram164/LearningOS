@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 23
-schema_fingerprint: sha256:e9f99f026b08a1a21a77df5b2c0b3e7af4b7380ef5b1503bba670e4350f6004b
+contract_version: 25
+schema_fingerprint: sha256:879ae06a70f26cd44996b6f9f511cf03d2a776765668e1433eec362c1e792804
 record_schemas: 32
 history:
 - version: 1
@@ -194,5 +194,18 @@ history:
 - version: 23
   adopted: '2026-09-09'
   note: Phase 4 affordance vocabulary in learning-plan
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 24
+  adopted: '2026-09-09'
+  note: Validate learner evidence outcomes and optional stable IDs and target conditions;
+    existing records remain readable
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 25
+  adopted: '2026-09-09'
+  note: Bind new observations to exact requirement definitions and support append-only
+    explicit corrections; unbound legacy evidence stays readable without demonstration
+    credit
   migration: null
   fixture: tests/fixtures/formats/v12/

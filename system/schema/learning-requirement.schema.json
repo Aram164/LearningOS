@@ -9,7 +9,8 @@
     "id",
     "concept",
     "capability",
-    "evidence_spec"
+    "evidence_spec",
+    "source_stage"
   ],
   "properties": {
     "id": {
@@ -18,7 +19,7 @@
     },
     "concept": {
       "type": "string",
-      "pattern": "^knowledge-[a-z0-9-]+$"
+      "pattern": "^(concept|knowledge)-[a-z0-9-]+$"
     },
     "capability": {
       "type": "object",
@@ -29,12 +30,23 @@
       ],
       "properties": {
         "kind": {
-          "type": "string"
+          "enum": [
+            "recognize",
+            "compute",
+            "explain",
+            "distinguish",
+            "diagnose",
+            "transfer",
+            "derive",
+            "apply",
+            "classify"
+          ]
         },
         "operands": {
           "type": "array",
           "items": {
-            "type": "string"
+            "type": "string",
+            "pattern": "\\S"
           },
           "minItems": 1
         }
@@ -43,15 +55,19 @@
     "conditions": {
       "type": "array",
       "items": {
-        "type": "string"
-      }
+        "type": "string",
+        "pattern": "\\S"
+      },
+      "uniqueItems": true
     },
     "evidence_spec": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "pattern": "\\S"
       },
-      "minItems": 1
+      "minItems": 1,
+      "uniqueItems": true
     },
     "source_stage": {
       "type": "object",

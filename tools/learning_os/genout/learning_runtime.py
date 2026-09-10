@@ -1,7 +1,6 @@
 import json
 
-import yaml
-
+from ..learning_runtime import collect_requirements
 from ..loader import Repo
 
 
@@ -23,7 +22,8 @@ def build_learning_requirements_md(repo: Repo) -> str:
         lines.append("No learning requirements found.")
     for req in requirements:
         lines.append(f"## {req.get('id', 'Unknown')}")
-        lines.append(f"- **Concept**: `{req.get('concept')}`")
+        namespace = "unit knowledge-map entry" if req["concept"].startswith("knowledge-") else "global concept"
+        lines.append(f"- **Target**: `{req['concept']}` ({namespace})")
         cap = req.get('capability', {})
         lines.append(f"- **Capability**: {cap.get('kind')} ({', '.join(cap.get('operands', []))})")
         lines.append(f"- **Conditions**: {', '.join(req.get('conditions', []))}")
@@ -34,16 +34,4 @@ def build_learning_requirements_md(repo: Repo) -> str:
     return "\n".join(lines) + "\n"
 
 def _collect_requirements(repo: Repo) -> list[dict]:
-    requirements = []
-    curriculum_dir = repo.root / "curriculum" / "modules"
-    for req_file in curriculum_dir.rglob("stages/*/requirements.yaml"):
-        try:
-            with open(req_file) as f:
-                data = yaml.safe_load(f)
-                if isinstance(data, list):
-                    requirements.extend(data)
-                elif isinstance(data, dict):
-                    requirements.append(data)
-        except Exception:
-            pass
-    return sorted(requirements, key=lambda x: x.get("id", ""))
+    return collect_requirements(repo)

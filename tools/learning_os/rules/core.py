@@ -13,6 +13,7 @@ import jsonschema
 from referencing import Registry
 
 from ..contracts.json_schema import ContractValidationError, schema_registry
+from ..learning_runtime import RuntimeInputError, collect_requirements, read_observations
 from ..loader import Repo
 from .common import Issue
 from .contract import ChecksContract
@@ -152,6 +153,10 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         self.check_ownership()
         self.check_modules()
         self.check_curriculum()
+        try:
+            read_observations(self.repo, collect_requirements(self.repo))
+        except RuntimeInputError as exc:
+            self.err("LEARNING-RUNTIME", str(exc))
         self.check_lifecycle_coherence()
         self.check_projects()
         self.check_transaction_receipts()
