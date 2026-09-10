@@ -32,8 +32,13 @@ def cmd_runtime_session(args) -> int:
             if bool(args.previous_json) != bool(args.event):
                 raise RuntimeInputError("bounded repair requires both --previous-json and --event")
             if args.previous_json:
-                session = replan_session(repo, json.loads(args.previous_json), requirement,
-                                         interpretation, context, args.event)
+                previous_packet = json.loads(args.previous_json)
+                validate_contract(root, "runtime-session.schema.json", previous_packet)
+                if previous_packet.get("snapshot_id") != before:
+                    print("los: previous proposal belongs to a different snapshot; propose a fresh session", file=sys.stderr)
+                    return 3
+                session = replan_session(repo, previous_packet, requirement,
+                                         interpretation, context, args.event, before)
             else:
                 session = compile_session(repo, requirement, interpretation, context)
             result = {"contract": "runtime-session-v1", "schema_version": 1,

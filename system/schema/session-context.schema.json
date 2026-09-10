@@ -41,6 +41,14 @@
         "type": "string",
         "pattern": "\\S"
       }
+    },
+    "prerequisite_repairs": {
+      "description": "Explicit repair mapping: failed prerequisite name to the route_id of the eligible intervention resource that repairs it. Prerequisite repair never invents this mapping.",
+      "type": "object",
+      "additionalProperties": {
+        "type": "string",
+        "pattern": "^route-"
+      }
     }
   }
 }
