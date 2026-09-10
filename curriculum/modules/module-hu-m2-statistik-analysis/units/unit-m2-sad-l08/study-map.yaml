@@ -634,7 +634,7 @@ stages:
       - source_id
     kind: practise
     scope_triage: required-now
-    affordance: mixed
+    affordance: evidence
     route_id: route-b7f7718273784bbb7843acbd
   - material_ref:
       route_id: route-58469c78c740278168aea71a
@@ -647,7 +647,7 @@ stages:
       - source_id
     kind: practise
     scope_triage: helpful-now
-    affordance: evidence
+    affordance: intervention
     route_id: route-58469c78c740278168aea71a
   - material_ref:
       route_id: route-25e51301ba03eb362122df35
@@ -660,7 +660,7 @@ stages:
       - source_id
     kind: practise
     scope_triage: required-now
-    affordance: evidence
+    affordance: intervention
     route_id: route-25e51301ba03eb362122df35
   - material_ref:
       route_id: route-e574e054435be2cb7eb76dcd
@@ -837,7 +837,7 @@ stages:
       - source_id
     kind: practise
     scope_triage: helpful-now
-    affordance: evidence
+    affordance: intervention
     route_id: route-1c01e7c903e30083cbe3009f
   - material_ref:
       route_id: route-0bb4d41d9c7165917c14e2e5
