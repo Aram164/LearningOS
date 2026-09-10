@@ -174,11 +174,23 @@ def test_compiler_uses_current_map_binding_and_emits_target_evidence(runtime_roo
 @pytest.mark.parametrize("change", [{"scope_triage": "reference-only"}, {"affordance": "intervention"}, {"vault_path": "missing.md"}])
 def test_no_evidence_means_blocked_not_complete(runtime_root, change):
     repo, req = inputs(runtime_root)
-    repo.study_maps["study-map-demo-l01"].data["stages"][0]["resources"][1].update(change)
+    stage = repo.study_maps["study-map-demo-l01"].data["stages"][0]
+    stage["resources"][1].update(change)
+    stage["resources"][2]["scope_triage"] = "reference-only"
     proposal = compile_session(repo, req, {"status": "unseen"})
     assert proposal["plan_status"] == "blocked"
     assert not proposal["steps"]
     assert "independent evidence" in proposal["blockers"][0]
+
+
+def test_mixed_serves_as_evidence_when_no_pure_evidence(runtime_root):
+    repo, req = inputs(runtime_root)
+    repo.study_maps["study-map-demo-l01"].data["stages"][0]["resources"][1]["scope_triage"] = "reference-only"
+    proposal = compile_session(repo, req, {"status": "unseen"})
+    assert proposal["plan_status"] == "ready"
+    assert [s["resource_id"] for s in proposal["steps"]] == ["route-demo-0", "route-demo-2"]
+    assert proposal["steps"][1]["intent"] == "evidence"
+    assert "mixed resource serving as evidence" in proposal["steps"][1]["reason"]
 
 
 def test_budget_filters_and_unknown_durations(runtime_root):
@@ -248,6 +260,7 @@ def test_prerequisite_repair_without_evidence_stays_blocked(runtime_root):
     plan = compile_session(repo, req, {}, REPAIR_CTX)
     assert plan["plan_status"] == "blocked"
     assert not plan["steps"]
+    assert "no target evidence remains" in plan["blockers"][0]
     assert plan["replan_conditions"]
 
 
