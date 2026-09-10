@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/learner-observation",
+  "title": "LearnerObservation",
+  "x-governs": "record",
+  "description": "An immutable observation of a learner attempt or action.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "requirement",
+    "activity",
+    "result",
+    "timestamp"
+  ],
+  "properties": {
+    "requirement": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "activity": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "result": {
+      "enum": [
+        "correct",
+        "incorrect",
+        "partial",
+        "abandoned"
+      ]
+    },
+    "assistance": {
+      "type": "string"
+    },
+    "evidence_tags": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "\\S"
+      }
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "context": {
+      "type": "string"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^observation-[a-z0-9-]+$"
+    },
+    "conditions": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "\\S"
+      }
+    },
+    "requirement_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "supersedes": {
+      "type": "string",
+      "pattern": "^observation-[a-z0-9-]+$"
+    }
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "$id": "https://learningos.local/schema/session-context.schema.json",
+  "properties": {
+    "available_minutes": {
+      "type": "number",
+      "exclusiveMinimum": 0
+    },
+    "resource_minutes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "number",
+        "exclusiveMinimum": 0
+      }
+    },
+    "unavailable_resources": {
+      "description": "Access failures: exact resources verified unreachable. Distinct from pedagogical unsuitability.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^route-"
+      }
+    },
+    "unsuitable_resources": {
+      "description": "Pedagogical unsuitability: selected resources judged wrong for the learner, though still accessible. Drives structural replacement, not access filtering.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^route-"
+      }
+    },
+    "failed_prerequisites": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "\\S"
+      }
+    }
+  }
+}

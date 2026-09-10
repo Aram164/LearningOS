@@ -34,6 +34,9 @@ GENERATED_ALLOWED = {
     "coordination-view.md", "dependency-report.md", "concept-map.md",
     "backlinks.json", "nebula.md", "domain-atlas.md", "reading-room.md",
     "concept-canvas.canvas", "library.md", "study-plans.md",
+    "learning-requirements.md", "learning-requirements.json",
+    "learner-interpretations.json",
+    "learner-interpretations.md",
     ".gitkeep",
     ".DS_Store",  # OS metadata noise, gitignored — not an agent artifact
 }

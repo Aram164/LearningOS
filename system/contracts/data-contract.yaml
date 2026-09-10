@@ -19,9 +19,9 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 18
-schema_fingerprint: sha256:518ed64a99601b5b79738c69c6e73302668e3af9b0f4404920ad2075adaefae3
-record_schemas: 31
+contract_version: 20
+schema_fingerprint: sha256:e78eaa52946bcde41212a1bc2a5f2eaa66cffda4fd203242e45de6d4d34d3770
+record_schemas: 32
 history:
 - version: 1
   adopted: '2026-08-07'
@@ -169,5 +169,18 @@ history:
   note: Add explicit shared material references to study-map resources; loaded records
     and manifest v9 remain fully expanded. Inline resources and older formats remain
     valid. Governed module.materials.compact preserves every effective field.
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 19
+  adopted: '2026-09-10'
+  note: 'Learning Runtime V0: LearnerObservation record schema; learning-plan affordance
+    vocabulary and canonical stage runtime_target (LearningRequirement compiles from
+    the owning stage, no sidecar channel)'
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 20
+  adopted: '2026-09-10'
+  note: 'Learning Runtime V0: study-map legacy stage/resource shapes accept canonical
+    runtime_target and affordance (LearningRequirement compiles from the owning stage)'
   migration: null
   fixture: tests/fixtures/formats/v12/

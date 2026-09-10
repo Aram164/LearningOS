@@ -13,6 +13,7 @@ import jsonschema
 from referencing import Registry
 
 from ..contracts.json_schema import ContractValidationError, schema_registry
+from ..learning_runtime import RuntimeInputError, collect_requirements, read_observations
 from ..loader import Repo
 from .common import Issue
 from .contract import ChecksContract
@@ -152,6 +153,7 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         self.check_ownership()
         self.check_modules()
         self.check_curriculum()
+        self.check_learning_runtime()
         self.check_lifecycle_coherence()
         self.check_projects()
         self.check_transaction_receipts()
@@ -167,6 +169,14 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         if self.online:
             self.check_external_urls()
         return self.issues
+
+    def check_learning_runtime(self) -> None:
+        for sidecar in sorted(self.repo.root.glob("curriculum/modules/*/units/*/stages/*/requirements.yaml")):
+            self.err("LEARNING-RUNTIME", f"{sidecar}: independently authored requirement sidecars are retired; author runtime_target on the owning stage")
+        try:
+            read_observations(self.repo, collect_requirements(self.repo))
+        except RuntimeInputError as exc:
+            self.err("LEARNING-RUNTIME", str(exc))
 
 def validate(repo: Repo, online: bool = False) -> list[Issue]:
     return Validator(repo, online=online).run()

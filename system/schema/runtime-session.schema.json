@@ -1,0 +1,28 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "x-governs": "artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "$id": "https://learningos.local/schema/runtime-session.schema.json",
+  "required": [
+    "contract",
+    "schema_version",
+    "snapshot_id",
+    "session"
+  ],
+  "properties": {
+    "contract": {
+      "const": "runtime-session-v1"
+    },
+    "schema_version": {
+      "const": 1
+    },
+    "snapshot_id": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "session": {
+      "$ref": "https://learningos.local/schema/session-plan.schema.json"
+    }
+  }
+}
