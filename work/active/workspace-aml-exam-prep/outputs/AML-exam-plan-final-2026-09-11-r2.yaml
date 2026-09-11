@@ -21,8 +21,9 @@ stages:
     the exam outright. Nothing below is worth an hour until the registration is confirmed and the second-sitting
     duration and permitted aids are read from a current notice instead of inferred from the first sitting.
   done_when:
-  - Confirm in AGNES that the 2. Termin registration completed inside the window that closed 2026-09-10,
-    and record the confirmation — or the exact failure — in this stage's working note.
+  - Confirm in AGNES that the 2. Termin registration completed inside its window (window dates live
+    in the owning module record), and record the confirmation — or the exact failure — in this stage's
+    working note.
   - 'Reconcile the two durations now on record: the owning module record books 09:00-12:00 and the Übung
     10 first-sitting rule says 120 minutes. Record which one a current second-sitting notice confirms,
     and keep 120 minutes as the rehearsal baseline only while the question stays open.'
