@@ -30,7 +30,7 @@ from learning_os.warning_baseline import collect, write_baseline
 
 
 def material_fixture(root):
-    route_id, _ = _rich_fixture(root)
+    route_id, _ = rich_fixture(root)
     source_path = root / "curriculum/modules/module-demo/source-map.yaml"
     source_map = yaml.safe_load(source_path.read_text())
     route = source_map["sources"][0]["unit_routes"][0]

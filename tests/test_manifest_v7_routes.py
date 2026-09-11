@@ -6,37 +6,17 @@ import json
 
 import pytest
 import yaml
-from repo_builders import _add_material_overview, add_curriculum, write_yaml
+from repo_builders import add_curriculum, rich_fixture, write_yaml
 
 from learning_os.contracts.manifest_contract import check
 from learning_os.genout.manifest import build_manifest
 from learning_os.loader import load_repo
 from learning_os.material_synthesis import current_unit_material_basis
-from learning_os.routes import deterministic_route_id
 from learning_os.rules import validate
 
 
-def _rich_fixture(root):
-    add_curriculum(root)
-    _add_material_overview(root)
-    source_map_path = root / "curriculum/modules/module-demo/source-map.yaml"
-    source_map = yaml.safe_load(source_map_path.read_text(encoding="utf-8"))
-    route = source_map["sources"][0]["unit_routes"][0]
-    route_id = deterministic_route_id(
-        "module-demo", "source-demo-book", route
-    )
-    unit_path = root / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
-    unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
-    unit["source_selections"][0]["locator"] = route["locator"]
-    unit["knowledge_map"]["nodes"][1]["concept_ids"] = [
-        "concept-expected-value"
-    ]
-    write_yaml(unit_path, unit)
-    return route_id, route
-
-
 def test_v7_projects_stable_route_and_guarded_selection(mini_repo):
-    route_id, _route = _rich_fixture(mini_repo)
+    route_id, _route = rich_fixture(mini_repo)
     manifest = build_manifest(load_repo(mini_repo), "T1")
 
     projected_route = manifest["module_source_maps"][0]["sources"][0][
@@ -160,7 +140,7 @@ def test_v7_exact_schema_hash_drift_fails_closed(mini_repo):
 
 
 def test_route_references_reject_duplicate_dangling_and_guard_drift(mini_repo):
-    _route_id, _route = _rich_fixture(mini_repo)
+    _route_id, _route = rich_fixture(mini_repo)
     source_map_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
     source_map = yaml.safe_load(source_map_path.read_text(encoding="utf-8"))
     route = source_map["sources"][0]["unit_routes"][0]
@@ -264,7 +244,7 @@ def test_route_selection_must_stay_on_its_owning_unit(mini_repo):
 
 
 def test_approved_synthesis_projects_strictly_and_indexes_by_unit(mini_repo):
-    route_id, route = _rich_fixture(mini_repo)
+    route_id, route = rich_fixture(mini_repo)
     source_map_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
     source_map = yaml.safe_load(source_map_path.read_text(encoding="utf-8"))
     source_map["sources"][0]["unit_routes"][0]["id"] = route_id
