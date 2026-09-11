@@ -1,4 +1,4 @@
-from tools.learning_os.rules.plan_rigor import _has_unquoted_hedge
+from learning_os.rules.plan_rigor import _has_unquoted_hedge
 
 
 def test_exact_title_may_contain_selection_word():

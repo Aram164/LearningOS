@@ -12,7 +12,7 @@ VENV   := .venv
 # Homebrew "externally-managed-environment" errors on macOS.
 PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYTHON))
 
-.PHONY: help check warnings views materials inventory verify-materials contract test test-fast lint code-check all setup hooks garden status system-check stress
+.PHONY: help check warnings views materials inventory verify-materials contract test test-fast bench lint code-check all setup hooks garden status system-check stress
 
 help:
 	@echo "make check  - validate the repository (schemas + semantic rules)"
@@ -30,6 +30,7 @@ help:
 	@echo "                (manifest_contract.py) - different contracts, different consumers"
 	@echo "make garden - rebuild views, then point at the Nebula (Garden index)"
 	@echo "make test-fast - run tests that do not load the checked-in repository state"
+	@echo "make bench    - run the read-only benchmark scripts (never a gate, no thresholds)"
 	@echo "make test   - run the complete test suite, including full-repository checks"
 	@echo "make lint   - run the defect-oriented static checks used by CI"
 	@echo "make code-check - verify Core reachability, dependency cycles, and entrypoint direction"
@@ -72,6 +73,12 @@ test:
 
 test-fast:
 	$(PY) -m pytest -q -m "not full_repo"
+
+# Discoverability only: the read-only benchmark scripts are noisy by nature,
+# so they are runnable but never a gate and never part of check/CI.
+bench:
+	$(PY) tests/benchmark_runtime.py
+	$(PY) tests/benchmark_agent_reads.py
 
 lint:
 	$(PY) -m ruff check tools tests
