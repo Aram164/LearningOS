@@ -34,6 +34,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `build_materials_tree.py` | bounded materials maintenance | Maintains the physical topic tree and `.flat` compatibility links. |
 | `material_toc.py` | bounded authoring tool | Reads local material structure while authoring or checking exact locators. |
 | `materials_manifest.py` | bounded integrity tool | Builds/verifies the external-material checksum inventory. |
+| `ingest_transcript.py` | bounded materials maintenance | Fetches third-party video captions into the managed materials tree as timestamp-addressable transcripts; writes only under `LearningOS/materials/`, never canonical state. |
 | `refresh_amls_fixture.py` | bounded fixture maintenance | Refreshes the checked-in AMLS paper inventory when its external source changes. |
 | `legacy_exit_review.py` | read-only diagnostic | Reviews the frozen legacy tree without moving or deleting it. |
 | `plan_write_audit.py` | read-only diagnostic | Reports plan changes without same-commit gateway receipts. |

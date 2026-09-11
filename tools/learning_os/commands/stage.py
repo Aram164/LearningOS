@@ -7,6 +7,8 @@ import datetime as _dt
 import json
 import sys
 
+from learning_os.learning_runtime import requirement_id_for
+
 from .support import (
     WriteRefused,
     _allocate_attachment_path,
@@ -67,6 +69,24 @@ def cmd_stage_note(args) -> int:
                       **confirmation},
                      ensure_ascii=False))
     return 0
+
+
+def _observe_offer(unit_id: str, stage: dict) -> dict:
+    """The observation verb for one stage's requirement, or nothing.
+
+    Pure and read-only: when the stage authors a runtime requirement, name
+    the exact ``los observe`` invocation that would record evidence against
+    it. Otherwise return no keys. Suggesting never writes — the ledger
+    still moves only through ``los observe``.
+    """
+    if not isinstance(stage.get("runtime_target"), dict):
+        return {}
+    requirement_id = requirement_id_for(unit_id, str(stage.get("id", "")))
+    return {
+        "observe_requirement": requirement_id,
+        "observe_next": f"los observe {requirement_id} --activity <what-you-did> "
+                        "--result <correct|incorrect|partial|abandoned>",
+    }
 
 
 def cmd_stage_progress(args) -> int:
@@ -131,6 +151,7 @@ def cmd_stage_progress(args) -> int:
     print(json.dumps({"ok": True, "unit_id": args.unit_id, "stage_id": args.stage_id,
                       "status": action, "map_status": data["status"],
                       "current_stage": data["current_stage"],
+                      **_observe_offer(args.unit_id, stage),
                       **confirmation}, ensure_ascii=False))
     return 0
 

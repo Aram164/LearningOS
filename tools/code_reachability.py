@@ -32,6 +32,7 @@ ENTRYPOINTS = (
     "evaluate_operator_questions.py",
     "generate.py",
     "generate_capability_schemas.py",
+    "ingest_transcript.py",
     "legacy_exit_review.py",
     "lift_angle_out_of_locator.py",
     "los.py",

@@ -1,0 +1,862 @@
+id: study-map-aml-exam-prep
+type: study-map
+plan_template_version: 1
+unit_id: unit-aml-exam-prep
+status: active
+current_stage: stage-aml-sitting-gate
+source_plan:
+  path: work/active/workspace-aml-exam-prep/outputs/AML-exam-plan-final-2026-09-11-r2.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-aml-sitting-gate
+  number: 1
+  title: 'AML.G — sitting gate: registration, duration and permitted aids (11 September)'
+  status: active
+  estimate_minutes: 45
+  objective: Close the administrative gate the old plan never carried. The 2.-PZ Anmeldung window closed
+    on 10 September, one day before this plan begins, and COORDINATION.md records missing it as costing
+    the exam outright. Nothing below is worth an hour until the registration is confirmed and the second-sitting
+    duration and permitted aids are read from a current notice instead of inferred from the first sitting.
+  done_when:
+  - Confirm in AGNES that the 2. Termin registration completed inside the window that closed 2026-09-10,
+    and record the confirmation — or the exact failure — in this stage's working note.
+  - 'Reconcile the two durations now on record: the owning module record books 09:00-12:00 and the Übung
+    10 first-sitting rule says 120 minutes. Record which one a current second-sitting notice confirms,
+    and keep 120 minutes as the rehearsal baseline only while the question stays open.'
+  - 'Record the permitted aids for the second sitting from a current notice: handwritten A4 sheet and
+    calculator are first-sitting facts until re-confirmed.'
+  - If the registration did not complete, stop this plan the same day and escalate. The Ruecktritt deadline
+    is 2026-09-23 and every stage below is void without the sitting.
+  exam_critical: true
+  concepts: []
+  scope_triage: required-now
+  runtime_target:
+    concept: knowledge-aml-exam-logistics
+    capability:
+      kind: recognize
+      operands:
+      - confirmed-second-sitting-registration
+      - confirmed-sitting-duration
+      - confirmed-permitted-aids
+    conditions:
+    - current-notice-only
+    - no-inference-from-the-first-sitting
+    evidence_spec:
+    - cite-the-agnes-registration-confirmation
+    - name-the-source-that-confirms-the-duration
+    - name-the-source-that-confirms-the-permitted-aids
+  resources:
+  - material_ref:
+      route_id: route-5f890476996a6d9847807cc6
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: required-now
+    affordance: intervention
+    route_id: route-5f890476996a6d9847807cc6
+  - kind: reference
+    label: Owning module record — sittings, registration window and attempt state
+    locator: curriculum/modules/module-hu-aml/module.yaml, examination and attempts blocks
+    angle: The single truth for every administrative fact; this stage reads it and writes any correction
+      back into it, never into the plan.
+    scope_triage: required-now
+    affordance: intervention
+    vault_path: curriculum/modules/module-hu-aml/module.yaml
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-sitting-gate/notes.md
+  runtime_review:
+    reviewed_by: Aram Aljanadi (operator-assisted, Claude Opus 5)
+    reviewed_on: '2026-09-11'
+    fingerprint: sha256:d5b4643b5b9a11952d10bbcff3a8431edb7b3b17764a30751965653e81913df8
+- id: stage-aml-calibration
+  number: 2
+  title: AML.0 — cold L01-L11 calibration and error ledger (11-13 September)
+  status: pending
+  estimate_minutes: 300
+  objective: Buy the triage before spending any repair time. Eleven topics are unworked and nineteen days
+    remain against a parallel M2 track, so the plan cannot promise all of L02-L11 and must not pretend
+    to. One 120-minute closed-book pass over every announced topic produces the error ledger, and the
+    ledger — not the calendar — decides how deep each later stage goes and what is deliberately left.
+  done_when:
+  - Inside one 120-minute sitting, attempt at least one representative unseen item from every L02-L11
+    mock closed-book, plus the L01 problem-formulation vocabulary from memory.
+  - Classify every miss as definition, model-or-method choice, derivation, arithmetic-or-shape, interpretation,
+    or time.
+  - Mark each of L02-L04, L05-L07 and L08-L11 full-pass, repair-only or cold-skip from recorded evidence.
+    A clean gate permits a recorded skip and is never called mastery.
+  - Record the baseline score, the slowest three question types, and the ranked repair order that stages
+    3-5 will follow.
+  - Append one LearnerObservation per attempted topic to work/active/workspace-aml-exam-prep/observations.jsonl,
+    so the triage is carried by the runtime rather than by memory.
+  exam_critical: true
+  concepts:
+  - concept-logistic-regression
+  - concept-gradient-descent
+  - concept-perceptron
+  - concept-neural-network
+  - concept-backpropagation
+  - concept-convolutional-networks
+  - concept-transformer
+  scope_triage: required-now
+  runtime_target:
+    concept: knowledge-aml-exam-calibration
+    capability:
+      kind: diagnose
+      operands:
+      - per-topic-readiness-across-l01-l11
+      - error-class-of-each-miss
+    conditions:
+    - closed-book
+    - unseen-items
+    - one-timed-sitting
+    evidence_spec:
+    - classify-each-topic-full-pass-repair-only-or-cold-skip
+    - name-the-error-class-of-every-miss
+    - record-the-baseline-score-and-the-slowest-three-question-types
+  resources:
+  - material_ref:
+      route_id: route-5f890476996a6d9847807cc6
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: required-now
+    affordance: intervention
+    route_id: route-5f890476996a6d9847807cc6
+  - kind: practise
+    label: Representative unseen items from the ten per-lecture mocks
+    locator: note-aml-l02-mock-exam through note-aml-l11-mock-exam, unopened questions only
+    angle: 'The calibration instrument: one item per lecture, answer keys closed until the sitting ends.'
+    scope_triage: required-now
+    affordance: evidence
+  - material_ref:
+      route_id: route-b3c9cda951cabf0f92743436
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+    affordance: evidence
+    route_id: route-b3c9cda951cabf0f92743436
+  - material_ref:
+      route_id: route-9be11f4c735b1fab72ff7fd5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    affordance: intervention
+    route_id: route-9be11f4c735b1fab72ff7fd5
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-calibration/notes.md
+  runtime_review:
+    reviewed_by: Aram Aljanadi (operator-assisted, Muse Code; r2 route-fit revision)
+    reviewed_on: '2026-09-11'
+    fingerprint: sha256:e4e41ed1554b4fc18bac4d82b7d6c2d3929b8534530f80c541e79be97a327c92
+- id: stage-aml-foundations-repair
+  number: 3
+  title: AML.1 — L02-L04 foundations, ledger-selected (14-16 September)
+  status: pending
+  estimate_minutes: 420
+  objective: Repair only the k-NN, regression, vectorization, basis-expansion and regularization nodes
+    the calibration ledger marked repair-only. Topics the ledger marked full-pass are skipped with the
+    evidence attached; topics it marked cold-skip are recorded as accepted residual risk and are not quietly
+    reinstated here.
+  done_when:
+  - For every L02-L04 node the ledger marked repair-only, reproduce the deck calculation or derivation
+    and complete the matching exercise-bank item without notes.
+  - Compute a k-NN prediction, solve the normal equation, and show the effect of the Ridge and Lasso penalties
+    on a worked design matrix.
+  - State model, objective, fitted parameters, validation choice and characteristic failure mode for k-NN,
+    linear regression, polynomial regression, Ridge and Lasso.
+  - Move recurring formulas and decision rules — not whole explanations — to the A4-sheet ledger.
+  - Append a LearnerObservation per repaired node, and record every full-pass skip and cold-skip acceptance
+    explicitly.
+  exam_critical: true
+  concepts:
+  - concept-k-nearest-neighbors
+  - concept-linear-regression
+  - concept-regularization
+  - concept-bias-variance-tradeoff
+  - concept-gradient-descent
+  scope_triage: required-now
+  runtime_target:
+    concept: knowledge-aml-exam-classical
+    capability:
+      kind: compute
+      operands:
+      - knn-prediction-and-validation-choice
+      - normal-equation-solution
+      - ridge-and-lasso-penalty-effect
+      - basis-expansion-design-matrix
+    conditions:
+    - closed-book
+    - ledger-selected-nodes-only
+    evidence_spec:
+    - produce-the-correct-numeric-result
+    - state-the-validation-choice
+    - name-the-characteristic-failure-mode
+  resources:
+  - kind: practise
+    label: L02-L04 artifact sets — reference, exercise bank, mock
+    locator: note-aml-l02-knn-bias-variance, note-aml-l03-linear-regression and note-aml-l04-nonlinear-regression
+      with their exercise-bank and mock-exam notes
+    angle: The already-built repair surface for this cluster; the exercise banks carry the items and the
+      mocks carry the timed retest.
+    scope_triage: required-now
+    affordance: evidence
+  - material_ref:
+      route_id: route-b3c9cda951cabf0f92743436
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: required-now
+    affordance: evidence
+    route_id: route-b3c9cda951cabf0f92743436
+  - material_ref:
+      route_id: route-f426a3cf4e1b48b8f1c408d3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: reference
+    scope_triage: helpful-now
+    affordance: intervention
+    route_id: route-f426a3cf4e1b48b8f1c408d3
+  - kind: reference
+    label: Murphy §11 — least squares, Ridge and Lasso for L02-L04 misses
+    source_id: source-murphy-pml1
+    locator: pml1.pdf §11.2 Least squares linear regression, pdf pp. 401-410; §11.3
+      Ridge regression, pdf pp. 411-414; §11.4 Lasso regression, pdf pp. 415-428
+    angle: Derivation-first backup for basis-expansion and regularization misses when the
+      shared §8/§15 bank does not serve; consulted by section after a diagnosed L02-L04
+      miss, never read linearly. No exam-unit route pins this span, so it is carried
+      as an explicit locator rather than a route reference.
+    scope_triage: helpful-now
+    affordance: intervention
+  - material_ref:
+      route_id: route-53277505603f22eedc9d81b7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+    affordance: intervention
+    route_id: route-53277505603f22eedc9d81b7
+  - material_ref:
+      route_id: route-9be11f4c735b1fab72ff7fd5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    affordance: intervention
+    route_id: route-9be11f4c735b1fab72ff7fd5
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-foundations-repair/notes.md
+  runtime_review:
+    reviewed_by: Aram Aljanadi (operator-assisted, Muse Code; r2 route-fit revision)
+    reviewed_on: '2026-09-11'
+    fingerprint: sha256:95c9d42d6b5da89c87197729abb77e1774b253c26f5da7d225c07b9f6b917457
+- id: stage-aml-linear-optimization-repair
+  number: 4
+  title: AML.2 — L05-L07 classification and optimization (17-19 September)
+  status: pending
+  estimate_minutes: 420
+  objective: Make the logistic-loss derivation, optimizer mechanics, perceptron updates and kernel calculations
+    executable on paper before the neural arc opens. This is the cluster the exam rewards for derivation
+    rather than recall, so the evidence here is written from a blank page.
+  done_when:
+  - Derive binary cross-entropy from the Bernoulli likelihood and write the vectorized logistic gradient
+    from memory.
+  - Trace batch, stochastic and mini-batch updates, and explain learning-rate, scaling, convexity, Adam
+    and Newton tradeoffs at the lecture's depth.
+  - Run primal and dual perceptron updates, compute a Gram or kernel value, and explain XOR, RBF bandwidth
+    and one-vs-rest without importing SVM concepts, which L07 does not cover.
+  - Complete the ledger-selected bank items and mocks for L05-L07, then update the error ledger and the
+    A4-sheet ledger.
+  - Append a LearnerObservation per derivation attempted, recording assistance used.
+  exam_critical: true
+  concepts:
+  - concept-logistic-regression
+  - concept-cross-entropy
+  - concept-gradient-descent
+  - concept-perceptron
+  - concept-kernel-trick
+  - concept-xor-problem
+  scope_triage: required-now
+  runtime_target:
+    concept: knowledge-aml-exam-classical
+    capability:
+      kind: derive
+      operands:
+      - binary-cross-entropy-from-the-bernoulli-likelihood
+      - vectorized-logistic-gradient
+      - primal-and-dual-perceptron-update
+      - gram-or-kernel-value
+    conditions:
+    - closed-book
+    - from-a-blank-page
+    - no-svm-import
+    evidence_spec:
+    - reproduce-the-derivation-without-notes
+    - complete-one-fresh-isomorphic-item
+    - explain-the-optimizer-tradeoff-at-lecture-depth
+  resources:
+  - kind: practise
+    label: L05-L07 artifact sets — references, exercise banks, mocks
+    locator: note-aml-l05-logistic-regression, note-aml-l06-gradient-descent and note-aml-l07-linear-classifiers
+      with their exercise-bank and mock-exam notes
+    angle: The built repair surface for the derivation cluster; work the banks before the mocks.
+    scope_triage: required-now
+    affordance: evidence
+  - kind: practise
+    label: Uebung 08 — the lecturer's worked bridge from kernel perceptrons into MLPs
+    locator: exercise-slides/Übung 08.pdf, 48 pp., dual-perceptron pages worked in full
+    angle: The only course-native worked dual perceptron; it also sets the notation L08 inherits.
+    scope_triage: required-now
+    affordance: evidence
+  - material_ref:
+      route_id: route-f426a3cf4e1b48b8f1c408d3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: reference
+    scope_triage: helpful-now
+    affordance: intervention
+    route_id: route-f426a3cf4e1b48b8f1c408d3
+  - material_ref:
+      route_id: route-53277505603f22eedc9d81b7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+    affordance: intervention
+    route_id: route-53277505603f22eedc9d81b7
+  - material_ref:
+      route_id: route-3b882741367c5188a82656eb
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+    affordance: evidence
+    route_id: route-3b882741367c5188a82656eb
+  - material_ref:
+      route_id: route-9be11f4c735b1fab72ff7fd5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    affordance: intervention
+    route_id: route-9be11f4c735b1fab72ff7fd5
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-linear-optimization-repair/notes.md
+  runtime_review:
+    reviewed_by: Aram Aljanadi (operator-assisted, Claude Opus 5)
+    reviewed_on: '2026-09-11'
+    fingerprint: sha256:e1c8d382594b4ac63b5864f621abe7c5249e9f4f748a9f29ea363a4e1af4821c
+- id: stage-aml-neural-transformer-loop
+  number: 5
+  title: AML.3 — L08 to L09 to L10 to L11 in dependency order (20-23 September)
+  status: pending
+  estimate_minutes: 540
+  objective: 'Work the late-course arc in strict dependency order: forward pass, backpropagation, CNNs,
+    then Transformers. These four lectures carry the operator-drafted artifacts, which become evidence
+    only through learner calculations and closed-book mocks — never by being read.'
+  done_when:
+  - 'L08: compute a complete forward pass with shapes and parameter counts, choose correct output heads,
+    and calculate binary and multiclass metrics.'
+  - 'L09: backpropagate through the shared example, explain regularization and gradient pathologies, and
+    verify one hand gradient against the deck''s autograd example. L09 owns neural-network regularization
+    and does not cover batch normalization.'
+  - 'L10: compute convolution outputs, padding, stride and channel shapes and parameter counts, then state
+    the course-level contribution of LeNet, AlexNet, GoogLeNet and ResNet.'
+  - 'L11: compute simplified and Q/K/V attention, trace the Transformer block, connect language-model
+    cross-entropy back to L05, and treat slides 73-81 as learn-anyway safety material while their scope
+    stays unresolved.'
+  - For each lecture, work the exercise bank and sit the mock closed-book; open the material menu only
+    on a miss and record the source choice before use.
+  - Append a LearnerObservation per lecture, tagging which of the four the ledger still leaves red.
+  exam_critical: true
+  concepts:
+  - concept-neural-network
+  - concept-softmax
+  - concept-backpropagation
+  - concept-convolutional-networks
+  - concept-residual-connection
+  - concept-attention
+  - concept-transformer
+  - concept-positional-encoding
+  scope_triage: required-now
+  runtime_target:
+    concept: knowledge-aml-exam-neural
+    capability:
+      kind: compute
+      operands:
+      - forward-pass-shapes-and-parameter-counts
+      - backpropagated-gradients
+      - convolution-output-shapes-and-parameter-counts
+      - qkv-attention-values
+    conditions:
+    - closed-book
+    - strict-dependency-order
+    - unfamiliar-example
+    evidence_spec:
+    - produce-the-correct-numeric-result
+    - state-the-shape-at-every-step
+    - verify-one-hand-gradient-against-the-decks-autograd-example
+  resources:
+  - kind: practise
+    label: L08-L11 artifact sets — references, exercise banks, mocks
+    locator: note-aml-l08-feedforward-networks, note-aml-l09-backpropagation, note-aml-l10-cnn and note-aml-l11-transformers
+      with their exercise-bank and mock-exam notes
+    angle: 'Operator-drafted and still unverified: these become evidence only once the calculations are
+      worked by hand.'
+    scope_triage: required-now
+    affordance: evidence
+  - kind: practise
+    label: Uebung 09-11 — worked forward passes, computation graphs and CNN arithmetic
+    locator: exercise-slides/Übung 09.pdf, Übung 10.pdf and Übung 11.pdf
+    angle: The course's own worked arithmetic for this arc. There is no Transformer Uebung, which is why
+      D2L Chapter 11 stands in for L11 practice.
+    scope_triage: required-now
+    affordance: evidence
+  - material_ref:
+      route_id: route-9b89cb595b8b44604cd30acf
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    kind: practise
+    scope_triage: helpful-now
+    affordance: evidence
+    route_id: route-9b89cb595b8b44604cd30acf
+  - material_ref:
+      route_id: route-53277505603f22eedc9d81b7
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: practise
+    scope_triage: helpful-now
+    affordance: intervention
+    route_id: route-53277505603f22eedc9d81b7
+  - material_ref:
+      route_id: route-f426a3cf4e1b48b8f1c408d3
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+    kind: reference
+    scope_triage: helpful-now
+    affordance: intervention
+    route_id: route-f426a3cf4e1b48b8f1c408d3
+  - material_ref:
+      route_id: route-913d0ca70d700148f5f1d69c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    kind: reference
+    scope_triage: helpful-now
+    affordance: intervention
+    route_id: route-913d0ca70d700148f5f1d69c
+  - kind: read
+    label: 'L11 slides 73-81, ''BONUS: Parallelizing'' — scope-ambiguous, learn anyway'
+    locator: lecture-slides/VL 11-transformers.pdf, slides 73-81
+    angle: Scaled matrix attention and causal masking, labelled Bonus by the lecturer and unresolved since
+      2026-08-19; cheap enough to learn rather than gamble on.
+    scope_triage: helpful-now
+    affordance: intervention
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-neural-transformer-loop/notes.md
+  runtime_review:
+    reviewed_by: Aram Aljanadi (operator-assisted, Claude Opus 5)
+    reviewed_on: '2026-09-11'
+    fingerprint: sha256:8e87a3496588232e5ea15e5af29dc07a96d66994e48f4d12f0fe0f3d0444c829
+- id: stage-aml-integration-sheet
+  number: 6
+  title: AML.4 — cross-lecture integration and A4 sheet v1 (24-25 September)
+  status: pending
+  estimate_minutes: 300
+  objective: Compress L01-L11 into a retrieval map and a usable handwritten sheet built from decisions
+    and recurring errors, not from transcribed references. The exam mixes topics without naming the method,
+    so the capability this stage builds is choosing the family under no cue.
+  done_when:
+  - Produce one page linking model to hypothesis, loss, optimizer or closed-form solution, validation
+    and characteristic failure for every L02-L11 model family.
+  - 'Complete two cross-lecture chains from memory: likelihood to cross-entropy to gradient descent to
+    backpropagation, and perceptron or XOR to MLP to CNN to Transformer.'
+  - Write A4 sheet version 1 by hand on both sides, using only formulas, shape rules, decision checks
+    and errors that were actually needed in stages 2-5.
+  - Run a 45-minute mixed retrieval test with no method cues and revise only the items that were missing
+    or too slow.
+  exam_critical: true
+  concepts:
+  - concept-cross-entropy
+  - concept-gradient-descent
+  - concept-backpropagation
+  - concept-transformer
+  - concept-logistic-regression
+  - concept-convolutional-networks
+  scope_triage: required-now
+  runtime_target:
+    concept: knowledge-aml-exam-integration
+    capability:
+      kind: distinguish
+      operands:
+      - model-family-by-hypothesis-objective-optimizer-validation-and-failure-mode
+    conditions:
+    - no-explicit-method-cue
+    - mixed-topic-order
+    - closed-book
+    evidence_spec:
+    - select-the-correct-model-family
+    - justify-the-choice-by-objective-and-validation
+    - complete-two-cross-lecture-chains-from-memory
+  resources:
+  - kind: read
+    label: AML x SaD master wiring and the AML book crosswalk
+    locator: note-aml-sad-master-wiring and note-aml-book-crosswalk
+    angle: The two cross-cutting notes; the wiring note is also the shared spine with the parallel M2
+      track.
+    scope_triage: required-now
+    affordance: intervention
+  - kind: practise
+    label: Every per-lecture reference note, read only for its decision lines
+    locator: note-aml-l02-knn-bias-variance through note-aml-l11-transformers, reference notes only
+    angle: Take formulas, shape rules and failure modes onto the sheet; leave the explanations behind.
+    scope_triage: required-now
+    affordance: evidence
+  - material_ref:
+      route_id: route-9be11f4c735b1fab72ff7fd5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    affordance: intervention
+    route_id: route-9be11f4c735b1fab72ff7fd5
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-integration-sheet/notes.md
+  runtime_review:
+    reviewed_by: Aram Aljanadi (operator-assisted, Claude Opus 5)
+    reviewed_on: '2026-09-11'
+    fingerprint: sha256:be0e56695eca5733e3663743a37c2c070ebee2edb299e7c822f2b288c76e1ace
+- id: stage-aml-mock-one
+  number: 7
+  title: AML.5 — mixed mock 1, sat and repaired (26-27 September)
+  status: pending
+  estimate_minutes: 330
+  objective: Sit the first full-course paper under the confirmed sitting conditions, then repair it the
+    same weekend. Scoring and repair are one stage because a mock graded but not repaired has bought nothing,
+    and there is no longer room for a separate repair window.
+  done_when:
+  - Assemble the paper only from still-unseen per-lecture mock questions and current exercise tasks, representing
+    L01-L11 and mixing calculation with explanation.
+  - Work for the duration the sitting gate confirmed, closed book except the handwritten A4 sheet, without
+    extending the clock while solving.
+  - Self-grade the same day, recording raw points by lecture and by error class, and photograph the answer
+    script and A4 sheet before changing either.
+  - For each lost point, write the smallest corrective rule, link it to one exact lecture node, and rework
+    the missed calculation from a blank page.
+  - Name the three highest-yield repairs and produce A4 sheet version 2 from repeated errors only.
+  exam_critical: true
+  concepts:
+  - concept-logistic-regression
+  - concept-gradient-descent
+  - concept-backpropagation
+  - concept-convolutional-networks
+  - concept-transformer
+  - concept-kernel-trick
+  scope_triage: required-now
+  runtime_target:
+    concept: knowledge-aml-exam-error-control
+    capability:
+      kind: diagnose
+      operands:
+      - points-lost-by-lecture
+      - points-lost-by-error-class
+      - time-spent-per-section
+    conditions:
+    - timed
+    - closed-book-except-the-handwritten-a4-sheet
+    - all-eleven-topics-eligible
+    evidence_spec:
+    - score-by-lecture-and-by-error-class
+    - write-the-smallest-corrective-rule-per-lost-point
+    - name-the-three-highest-yield-repairs
+  resources:
+  - kind: practise
+    label: Unseen mixed items from the L02-L11 mocks and current exercises
+    locator: per-lecture mock-exam notes plus Übung and Bonusblatt tasks not used in calibration
+    angle: Keep the answer keys closed until grading; questions already burned in stage 2 are not reusable
+      here.
+    scope_triage: required-now
+    affordance: evidence
+  - material_ref:
+      route_id: route-7c1fd67d3ac916f39165bb1d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    kind: practise
+    scope_triage: helpful-now
+    affordance: evidence
+    route_id: route-7c1fd67d3ac916f39165bb1d
+  - material_ref:
+      route_id: route-5f890476996a6d9847807cc6
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: read
+    scope_triage: required-now
+    affordance: intervention
+    route_id: route-5f890476996a6d9847807cc6
+  - material_ref:
+      route_id: route-9b89cb595b8b44604cd30acf
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    kind: practise
+    scope_triage: helpful-now
+    affordance: evidence
+    route_id: route-9b89cb595b8b44604cd30acf
+  - material_ref:
+      route_id: route-9be11f4c735b1fab72ff7fd5
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+    kind: reference
+    scope_triage: reference-only
+    affordance: intervention
+    route_id: route-9be11f4c735b1fab72ff7fd5
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-one/notes.md
+  runtime_review:
+    reviewed_by: Aram Aljanadi (operator-assisted, Claude Opus 5)
+    reviewed_on: '2026-09-11'
+    fingerprint: sha256:23abc4a7806ad2769b04be3f3583f70f5489351a01a30bef44f03016429dffb0
+- id: stage-aml-mock-two
+  number: 8
+  title: AML.6 — mixed mock 2 and final repair (28-29 September)
+  status: pending
+  estimate_minutes: 330
+  objective: Run a second independent full-course paper to test whether the mock-1 repairs transfer under
+    time pressure and whether the A4 sheet is actually usable, then close or explicitly accept every remaining
+    red topic. This is the last stage that may open a source.
+  done_when:
+  - Use a fresh mix of unseen questions across L01-L11 at the same confirmed duration, with no question
+    repeated from mock 1.
+  - Reserve at least the final ten minutes for shape, sign and unit checks and for unanswered-item triage.
+  - Score by lecture and error class and compare directly against mock 1; require that no red topic is
+    hidden by a strong aggregate score.
+  - Give every remaining red topic either one cold successful retest or an explicit written acceptance
+    as residual risk.
+  - Freeze A4 sheet version 3 except for corrections found during grading, and verify it can be navigated
+    within seconds under pressure.
+  exam_critical: true
+  concepts:
+  - concept-logistic-regression
+  - concept-kernel-trick
+  - concept-neural-network
+  - concept-transformer
+  - concept-backpropagation
+  scope_triage: required-now
+  runtime_target:
+    concept: knowledge-aml-exam-error-control
+    capability:
+      kind: transfer
+      operands:
+      - mock-one-repairs-under-a-fresh-paper
+      - a4-sheet-usability-under-time
+    conditions:
+    - timed
+    - unseen-questions-only
+    - no-question-repeated-from-mock-one
+    evidence_spec:
+    - compare-scores-by-lecture-against-mock-one
+    - show-no-red-topic-hidden-by-the-aggregate
+    - record-every-remaining-red-topic-as-repaired-or-accepted-residual-risk
+  resources:
+  - kind: practise
+    label: A second unseen mixed paper
+    locator: unused per-lecture mock-exam and course-exercise items, disjoint from mock 1
+    angle: 'Independence is the point: a repeated question measures recall of the repair, not transfer.'
+    scope_triage: required-now
+    affordance: evidence
+  - material_ref:
+      route_id: route-7c1fd67d3ac916f39165bb1d
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    kind: practise
+    scope_triage: helpful-now
+    affordance: evidence
+    route_id: route-7c1fd67d3ac916f39165bb1d
+  - kind: reference
+    label: A4 sheet version 2 and the mock 1 error ledger
+    locator: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-one/notes.md
+    angle: The comparison baseline; read it after scoring, never before sitting.
+    scope_triage: reference-only
+    affordance: intervention
+    vault_path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-one/notes.md
+  - material_ref:
+      route_id: route-913d0ca70d700148f5f1d69c
+      inherit:
+      - label
+      - source_id
+      - locator
+      - angle
+      - angle_detail
+      - url
+    kind: reference
+    scope_triage: reference-only
+    affordance: intervention
+    route_id: route-913d0ca70d700148f5f1d69c
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-two/notes.md
+  runtime_review:
+    reviewed_by: Aram Aljanadi (operator-assisted, Claude Opus 5)
+    reviewed_on: '2026-09-11'
+    fingerprint: sha256:68fcce35aac1984fc10d034c799d258ae9ec4ec8c209ad4e728c36601749d61d
+- id: stage-aml-taper
+  number: 9
+  title: AML.7 — taper and exam-day execution (29-30 September)
+  status: pending
+  estimate_minutes: 90
+  objective: Protect recall and sleep in the final hours. Only the A4 sheet, the error ledger and short
+    retrieval are open; no new source, no full mock, and no optional topic added at the end.
+  done_when:
+  - Complete one 30-minute formula, shape and decision retrieval pass and stop when the planned time ends.
+  - Read only the final error ledger and A4 sheet; do not reopen full references.
+  - Confirm start time, room and permitted materials from the owning module record, and pack documents,
+    CampusCard, calculator, pens and the sheet.
+  - Set the departure and sleep plan for the 09:00 sitting.
+  exam_critical: true
+  concepts:
+  - concept-gradient-descent
+  - concept-backpropagation
+  - concept-transformer
+  scope_triage: required-now
+  runtime_target:
+    concept: knowledge-aml-exam-logistics
+    capability:
+      kind: apply
+      operands:
+      - final-retrieval-pass
+      - exam-day-execution
+    conditions:
+    - no-new-sources
+    - no-full-mock
+    evidence_spec:
+    - complete-one-thirty-minute-formula-shape-and-decision-pass
+    - confirm-room-start-time-and-permitted-materials-from-the-owning-module-record
+    - record-the-departure-and-sleep-plan
+  resources:
+  - kind: reference
+    label: Final A4 sheet and error ledger
+    locator: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-two/notes.md
+    angle: The only materials open in the last 24 hours.
+    scope_triage: required-now
+    affordance: intervention
+    vault_path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-mock-two/notes.md
+  - kind: read
+    label: Exam-day facts from the owning module record
+    locator: curriculum/modules/module-hu-aml/module.yaml, examination block
+    angle: Room, start time and permitted aids as confirmed at the sitting gate; no new source is opened
+      at this stage.
+    scope_triage: required-now
+    affordance: intervention
+    vault_path: curriculum/modules/module-hu-aml/module.yaml
+  attachments: []
+  source_feedback: []
+  working_note: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/stages/stage-aml-taper/notes.md
+  runtime_review:
+    reviewed_by: Aram Aljanadi (operator-assisted, Claude Opus 5)
+    reviewed_on: '2026-09-11'
+    fingerprint: sha256:a0bbce7e4ebe4aaa7d93e1ff3a6e27ae8722904bab827108017aa15d143254b5

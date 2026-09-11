@@ -160,6 +160,34 @@ def _resolve_stage(repo):
                   "touched — start any stage to set one")
 
 
+def _top_cluster(root: Path) -> dict | None:
+    """The single highest-ranked goal cluster, or None.
+
+    Best-effort read-only: a scan that cannot run (no Git history, bad
+    input) leaves the screen unchanged rather than refusing it. Bounded
+    to one cluster with countdown-free fields, so the dossier digest
+    moves when the top cluster moves and never with the clock.
+    """
+    try:
+        from .intelligence import ranked_scan
+
+        _, ranked, _ = ranked_scan(root, days=30)
+    except (GitHistoryError, OSError, ValueError):
+        return None
+    if not ranked:
+        return None
+    row = ranked[0]
+    cluster = row.cluster
+    return {
+        "cluster_id": cluster.cluster_id,
+        "detector": cluster.detector,
+        "title": cluster.title,
+        "tier": row.tier,
+        "nearest_sitting": row.nearest_sitting,
+        "member_count": len(cluster.member_ids),
+    }
+
+
 def _open_items(root: Path, repo, unit_id: str, stage_id: str,
                 requirement_id: str | None) -> tuple[str, ...]:
     """Workspace Deferred bullets plus deferred-item lines naming this unit."""
@@ -254,12 +282,13 @@ def cmd_resume(args) -> int:
          "context": obs.get("context", "")}
         for obs in observations
     ]
+    top_cluster = _top_cluster(root)
     try:
         dossier = build_resume_dossier(
             unit_id=unit_id, module_id=module_id, stage_id=stage_id,
             study_map_id=study_map_id, via=via, requirement=requirement,
             observations=obs_rows, open_items=open_items, sittings=sittings,
-            titles=titles)
+            titles=titles, top_cluster=top_cluster)
     except ResumeDossierError as exc:
         print(f"los: {exc}", file=sys.stderr)
         return 2
@@ -274,7 +303,7 @@ def cmd_resume(args) -> int:
             indent=2, sort_keys=True, ensure_ascii=False))
         return 0
     print(_render(dossier, requirement, observations, open_items, sittings,
-                  titles, via_detail, len(stale_here)))
+                  titles, via_detail, len(stale_here), top_cluster))
     return 0
 
 
@@ -294,7 +323,8 @@ def _ago(day: str) -> str:
 
 
 def _render(dossier, requirement, observations, open_items, sittings,
-            titles, via_detail: str, stale_count: int = 0) -> str:
+            titles, via_detail: str, stale_count: int = 0,
+            top_cluster: dict | None = None) -> str:
     today = _dt.date.today()
     lines = [f"{titles['module']} · {titles['unit']} · {dossier.stage_id}",
              f"  ({via_detail})", ""]
@@ -326,6 +356,23 @@ def _render(dossier, requirement, observations, open_items, sittings,
     else:
         lines.append("  Open here    —")
     lines.append("")
+    if isinstance(top_cluster, dict) and top_cluster.get("cluster_id"):
+        count = top_cluster.get("member_count", 0)
+        noun = "goal" if count == 1 else "goals"
+        lines.append(f"  Top goal     {top_cluster.get('title', '?')} ({count} {noun})")
+        sitting = top_cluster.get("nearest_sitting") or ""
+        when = ""
+        if isinstance(sitting, str) and sitting:
+            try:
+                days = (_dt.date.fromisoformat(sitting) - today).days
+                when = f" — {sitting} ({days} days)" if days >= 0 else f" — {sitting}"
+            except ValueError:
+                when = f" — {sitting}"
+        lines.append(f"               tier {top_cluster.get('tier', '?')}{when}; "
+                     "seeing it files nothing")
+        lines.append("               decide per goal id: "
+                     "los goal <id> --reject|--defer|--close")
+        lines.append("")
     if isinstance(requirement, dict):
         lines.append(f"  Next         los observe {requirement['id']} --activity <what-you-did> "
                      "--result <correct|incorrect|partial|abandoned>")

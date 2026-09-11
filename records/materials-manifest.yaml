@@ -9,10 +9,10 @@
 # Excludes symlinks (.flat/), .DS_Store, the generated catalogue
 # (README.md, FILES.txt, INDEX.html) and the per-folder SOURCES.md indexes.
 schema_version: 1
-captured: '2026-09-07'
+captured: '2026-09-11'
 totals:
-  files: 1135
-  bytes: 2096471129
+  files: 1198
+  bytes: 2097924707
 files:
   ? _unsorted/Das gelbe Rechenbuch. Für Ingenieure, Naturwissenschaftler und Mathematiker. Rechenverfahren
     der Höheren Mathematik in... (Peter Furlan) (z-lib.org).pdf
@@ -72,6 +72,9 @@ files:
   _unsorted/primitive_node_map.txt:
     size: 38903
     sha256: 3410d3563d48dcac252f207d1ea3f548711f727a796c61f30f3859250915f0e7
+  algorithms/complexity/reducible-fft/transcript/h7apO7q16V0.md:
+    size: 27173
+    sha256: 9f1c93a4eb0de7dab43a761175d5f7cb401cfeadde8bbba5f18c52398367b057
   algorithms/complexity/theoinfo-hu-archive/Grundbegriffe der theoretischen Info.pdf:
     size: 31392144
     sha256: 3555e16e82fbffaaa816f5939ae2eb8c02e26ea15af9a2f3a37074dc4abb89fc
@@ -377,6 +380,30 @@ files:
   data-systems/databases/kleppmann-ddia/Designing Data Intensive Applications - Martin Kleppmann.pdf:
     size: 24975901
     sha256: 3480da3ae9a353067c574924e296bee55b63adfb4af43cbb852a98fdd91e0394
+  machine-learning/classical/3b1b-neural-networks/transcript/9-Jl0dxWQs8.md:
+    size: 26124
+    sha256: 191339d7107810d6811b512f6c0370e3dc5083a0ceff39df46e9923f1b4051f8
+  machine-learning/classical/3b1b-neural-networks/transcript/IHZwWFHWa-w.md:
+    size: 23153
+    sha256: c7bf2c7f01a01aeb564a1fde222a7631e6d8514d5c5e86986f3318a46fba78bc
+  machine-learning/classical/3b1b-neural-networks/transcript/Ilg3gGewQ5U.md:
+    size: 14780
+    sha256: 286dee9cadc6deb76be5ad4c70d876f92f45851f739367eae69458ea49d336d2
+  machine-learning/classical/3b1b-neural-networks/transcript/LPZh9BOjkQs.md:
+    size: 8248
+    sha256: 621556c8baee2b89e7350260fc135d90a6ed009e32b1480a22da1d96c3d5aa87
+  machine-learning/classical/3b1b-neural-networks/transcript/aircAruvnKk.md:
+    size: 20816
+    sha256: b8ded3230ac9ce731fb8e0bb0f07ec60a6f8d66d7a60c910bad9e485f1bd7d35
+  machine-learning/classical/3b1b-neural-networks/transcript/eMlx5fFNoYc.md:
+    size: 31914
+    sha256: fb32da89a360d8b6ca5495de07b9163f35d8ae71cda4dc1f93d916f3a1ab1e8f
+  machine-learning/classical/3b1b-neural-networks/transcript/tIeHLnjs5U8.md:
+    size: 10620
+    sha256: 8b9ed11a9b8a959f614ebe81c47f5a54d70303feb0a8c08987fe8ceff81de018
+  machine-learning/classical/3b1b-neural-networks/transcript/wjZofJX0v4M.md:
+    size: 32005
+    sha256: cee692b1983e7da6255551302e21c7e2958601273ec92b36d4c2cfbe6d126311
   machine-learning/classical/aml-ss26-lectures/Primer_Linear_Algebra.pdf:
     size: 534719
     sha256: 26dd4a53d52d6c04e4f0f68ea132c87d3770474f6ade9b7e1e97261ff1849313
@@ -488,6 +515,30 @@ files:
   machine-learning/classical/aml-ss26-lectures/older-lecture-slides/11-rnn_dcf4e38afab7f0a5b8b543f98a43238d.pdf:
     size: 3565539
     sha256: 884cc0407870aa53cb047f1cbc99517b04af8098c1f574f69a7ab671e824fa9a
+  machine-learning/classical/cs229-2022-videos/transcript/ADj95edZc0w.md:
+    size: 70289
+    sha256: 8679cdd05aca4484baab49ba1f17fb20a0100672a6200d4e0d0caafbf3e9e8ce
+  machine-learning/classical/cs229-2022-videos/transcript/Bl4Feh_Mjvo.md:
+    size: 68557
+    sha256: 30319c1983ab3371e5839e81a506a75673b099c150ce73a300f3689387b4f979
+  machine-learning/classical/cs229-2022-videos/transcript/RMy_1mO4HLk.md:
+    size: 73206
+    sha256: 3f260d280cda836f7891934d915556baa6930d3ba661377de5d74e40e19c1cea
+  machine-learning/classical/cs229-2022-videos/transcript/ZMxfDWPXmjc.md:
+    size: 47552
+    sha256: 933c256aed4efd8433054b479192b2c3bbb5d056586060572110e798522cef0d
+  machine-learning/classical/cs229-2022-videos/transcript/dzDOqrac9Ks.md:
+    size: 71881
+    sha256: dcb9c2dca8f010f4390d277b660a31dba69c18b440773ad9cf269bf69200bab3
+  machine-learning/classical/cs229-2022-videos/transcript/goDDnBbJQ4g.md:
+    size: 89323
+    sha256: 740f8bd39b4cd89d3ec58e71a17f697fd89b50bd2e19ea79e88c8ff625dd2422
+  machine-learning/classical/cs229-2022-videos/transcript/gqKaVgQxEJ0.md:
+    size: 76214
+    sha256: a565ddc247866f58aae5e88807382db7bbf4726de07a5bcbb52187918eaa63d8
+  machine-learning/classical/cs229-2022-videos/transcript/k_pDh_68K6c.md:
+    size: 72755
+    sha256: b1674621060c19335c8fedaf078c08999957568fa2fc0f93c928428773c16316
   machine-learning/classical/cs229-notes/cs229-notes.pdf:
     size: 3253492
     sha256: d04183987f49330d3b4f260f4062fe7713efc4aac827f49d781263786f1f544d
@@ -878,6 +929,9 @@ files:
   machine-learning/classical/islp/islp.pdf:
     size: 20053984
     sha256: 278d3bdd49a8a480c2ff8e03245822caad8a3a48e81afd6d039c52c8fc13ad60
+  machine-learning/classical/karpathy-micrograd/transcript/VMj-3S1tku0.md:
+    size: 126373
+    sha256: 27de7a69d1d3a3aec659d48220e1294ff0bb887d65405084a886a77aa80dc5ec
   machine-learning/classical/kelleher-fmlpda/kelleher.pdf:
     size: 14347482
     sha256: f63e0c8a76517fef8df937e1bc3cd8f6df77af124af398f011117c83464fab60
@@ -903,6 +957,42 @@ files:
   machine-learning/rl/sutton-barto-rl/Sutton-Barto_Reinforcement-Learning_2ed.pdf:
     size: 89436529
     sha256: 27315c19a012518bf483bcb1c00e0768bd9047bb61d36f79e036e202c1fca8dc
+  mathematics/analysis/3b1b-essence-of-calculus/transcript/3d6DsjIBzJ4.md:
+    size: 20150
+    sha256: 8373b6c45993f517d3ebd041c89ced4506dffdc712957bf99745efbe8ab68327
+  mathematics/analysis/3b1b-essence-of-calculus/transcript/9vKqVkMQHKk.md:
+    size: 17094
+    sha256: 0280efd03d3aeac19b4518d1fa2845531f31d04e41d44e41b9fadd0bc71c49aa
+  mathematics/analysis/3b1b-essence-of-calculus/transcript/BLkz5LGWihw.md:
+    size: 5682
+    sha256: 0bb446d39e1397ac985ba42cd09c67a48941f0ad9ec3da3d28b6bc1f90217c27
+  mathematics/analysis/3b1b-essence-of-calculus/transcript/CfW845LNObM.md:
+    size: 16500
+    sha256: 02821972ad0d0a6ba955eef4ce9b2eb7774d23682745773be4a5753123462d10
+  mathematics/analysis/3b1b-essence-of-calculus/transcript/FnJqaIESC2s.md:
+    size: 12849
+    sha256: d1706fb813bd5c74d0a62b8cbb58e0ea2ebc88465940d19b6f5350ca8dd5edcf
+  mathematics/analysis/3b1b-essence-of-calculus/transcript/S0_qX4VJhMQ.md:
+    size: 18223
+    sha256: 6c1ca43432312331fcc5f9631cc7a24d856018b383b67a3201b5aa195208c1e4
+  mathematics/analysis/3b1b-essence-of-calculus/transcript/WUvTyaaNkzM.md:
+    size: 19692
+    sha256: a22a23b42c5e1b7fc6bae306826d4fac4971d882afd827d231b8b4d87f1b90d0
+  mathematics/analysis/3b1b-essence-of-calculus/transcript/YG15m2VwSjA.md:
+    size: 13924
+    sha256: 47f9c7dd5f0e643ac2e9d69f90c2ff55ec54a7c261b684cd532bb3e1d9173cb1
+  mathematics/analysis/3b1b-essence-of-calculus/transcript/kfF40MiS7zA.md:
+    size: 18221
+    sha256: c3e69663cb028b76676085c900ae532e2eae3754d7020efc6897f43781049044
+  mathematics/analysis/3b1b-essence-of-calculus/transcript/m2MIpDrF7Es.md:
+    size: 13672
+    sha256: a20eda22e4527d273127aa1a6fa83f8b797446ea9442630a6cfd50f1318da8a0
+  mathematics/analysis/3b1b-essence-of-calculus/transcript/qb40J4N1fa4.md:
+    size: 14387
+    sha256: 20b010223b1be944ceeec98b7cebb277146f8fbe67fb50c3ceca480f8125f54b
+  mathematics/analysis/3b1b-essence-of-calculus/transcript/rfG8ce4nNh0.md:
+    size: 20205
+    sha256: 1fb71e23d56268e98e0278a9a3b9ba82c51e9f1d61fc854926aa480b7390313f
   mathematics/analysis/abbott-understanding-analysis/abbott.pdf:
     size: 4228218
     sha256: 2f615ab26601ef8642bb5d91c8f9fcc68130d4a0bd7a4bc490beb2c8da1a2a70
@@ -2394,6 +2484,54 @@ files:
   mathematics/general/vorkurs-mathe-2022/vkma2022_AgB19.pdf:
     size: 309912
     sha256: bf8fae339416baa76377c6770b3b0b51117b26b90b367a7c63142d86950dc3b4
+  mathematics/linear-algebra/3b1b-linear-algebra/transcript/BaM7OCEm3G0.md:
+    size: 13451
+    sha256: d6ab10b4226800446de62227a31965857239d1a2b912d3948a61a8bd74c71c63
+  mathematics/linear-algebra/3b1b-linear-algebra/transcript/Ip3X9LOh2dk.md:
+    size: 10753
+    sha256: 858a082e5a6ce086d7a3dc8ccd02342355c68e97e88dfea6b6bbea4d97b8a04f
+  mathematics/linear-algebra/3b1b-linear-algebra/transcript/LyGKycYT2v0.md:
+    size: 15567
+    sha256: bf1ef31a6c71525926862ab0cddb47abbf14ed47f5db6f2e980bd9c10040dcab
+  mathematics/linear-algebra/3b1b-linear-algebra/transcript/P2LTAUO1TdA.md:
+    size: 12856
+    sha256: 2af8ececa9e904d1a8fbb79860a37d4fd16a54f142afadc87ca822dc34d45316
+  mathematics/linear-algebra/3b1b-linear-algebra/transcript/PFDu9oVAE-g.md:
+    size: 15753
+    sha256: e7ecf730431edc1da56861e6959121653040a1c89f61d4b30f5093fd04ee56b3
+  mathematics/linear-algebra/3b1b-linear-algebra/transcript/TgKwz5Ikpc8.md:
+    size: 16499
+    sha256: eacb9f8611a2cd0950d49e3b869c4a558b99535f9902d0b213f7f958789d5d0e
+  mathematics/linear-algebra/3b1b-linear-algebra/transcript/XkY2DOUCWMU.md:
+    size: 10240
+    sha256: 6fbbd3f04beb8dd1e315e7667a0b520c393e9c6549277492f64bf2ede96079cc
+  mathematics/linear-algebra/3b1b-linear-algebra/transcript/e50Bj7jn9IQ.md:
+    size: 14579
+    sha256: 1d5a0b140fe89819d9eac82dfe8fc842fe128bc99d62112973fbe0e726b79daf
+  mathematics/linear-algebra/3b1b-linear-algebra/transcript/eu6i7WJeinw.md:
+    size: 9424
+    sha256: d3dd2024941c4650bc40212331d004a429e56ed04476a6e2275666a8c55d4a50
+  mathematics/linear-algebra/3b1b-linear-algebra/transcript/fNk_zzaMoSs.md:
+    size: 12233
+    sha256: c64a17ea0f40c174e20875be7806f9c9df34a0e8cd9e8d3313b2ffb60f74bb45
+  mathematics/linear-algebra/3b1b-linear-algebra/transcript/jBsC34PxzoM.md:
+    size: 13658
+    sha256: 14b729356908e8ff81adbb87f74ec24794730119ce907e268b6281de13fd58e6
+  mathematics/linear-algebra/3b1b-linear-algebra/transcript/k7RM-ot2NWY.md:
+    size: 11418
+    sha256: d86753807acd7e35ad526557e25d6c20342cceb5f9633801a044557172cacffc
+  mathematics/linear-algebra/3b1b-linear-algebra/transcript/kYB8IZa5AuE.md:
+    size: 12011
+    sha256: 90250755853541b834b6f9909386e3e77e0a703d54046de857e5be01a23487eb
+  mathematics/linear-algebra/3b1b-linear-algebra/transcript/rHLEWRxRGiM.md:
+    size: 5188
+    sha256: 6713de22acb6f43424a4e538046777b06e3101492e16459cf01293ec5111e15a
+  mathematics/linear-algebra/3b1b-linear-algebra/transcript/uQhTuRlWMxw.md:
+    size: 12886
+    sha256: 6bb50398443cf007b4a0d8ddbacdd8d2474c6c5a353d0a3d76df0d31fa4a1c32
+  mathematics/linear-algebra/3b1b-linear-algebra/transcript/v8VSDg_WQlA.md:
+    size: 5418
+    sha256: fc4d07545e7ed2006dd72abf655b6c18c16b791b557008c407acb4d5df9368c2
   mathematics/linear-algebra/lineare-algebra-archive/LA/ KLAUSUR ZUR LINEAREN ALGEBRA I .pdf:
     size: 214103
     sha256: ee87190a4db7711c5c4e646441ce1cc54c2194ddffae776030c121bfd19aef8a
@@ -2519,9 +2657,42 @@ files:
   ? mathematics/linear-algebra/lineare-algebra-archive/lineare-algebra-fr-informatiker-i-grundlagen-diskrete-mathematik-ii-lineare-algebra_compress.pdf
   : size: 8657701
     sha256: 43c098c235b85555a30eb32e4b701b9789673d39fd8c0a2a3652ad32d181de4e
+  mathematics/probability-statistics/3b1b-bayes-theorem/transcript/HZGCoVF3YvM.md:
+    size: 19692
+    sha256: 9ed41eb8f3c9f3d25ccd5f4a9fe2d9b434033c59544a9140146016fe2a0e3c5c
+  mathematics/probability-statistics/3b1b-bayes-theorem/transcript/U_85TaXbeIo.md:
+    size: 4738
+    sha256: 9251947a17caf395cb6e340f7cac6ca7df219b7ca4db768f21bdacbb03bc97b3
+  mathematics/probability-statistics/3b1b-bayes-theorem/transcript/lG4VkPoG3ko.md:
+    size: 26884
+    sha256: 6a209e64776d1670e3af66cfcc55145b5831a72759bb61ddf77909cf24d51657
   mathematics/probability-statistics/blitzstein-hwang/blitzstein.pdf:
     size: 9624399
     sha256: 822330478af77872cf83f1ecd5f8a3b3e2b7796124a229af0a2aa53028525daf
+  mathematics/probability-statistics/brandon-foltz/transcript/CgsU_j96IbY.md:
+    size: 2819
+    sha256: 8b2db5bbf83883eed3c289779acd0cec8a7a0231823d05126244465c92087936
+  mathematics/probability-statistics/brandon-foltz/transcript/cMK32CE6qpM.md:
+    size: 3877
+    sha256: 6ac3b1803286fd10618f9be2f174af06ef1e9c56851c79028d42d5e5115c0e29
+  mathematics/probability-statistics/brandon-foltz/transcript/dXeIVR1hbHI.md:
+    size: 3946
+    sha256: 74bf0601ed5a2e4506aa0015dd328f09e520849d1ad749f2ec1725ea6b363348
+  mathematics/probability-statistics/brandon-foltz/transcript/i9fjUZ71T5g.md:
+    size: 2811
+    sha256: 412a14c1d4101b55a5139e65bb893abb8c7798e68911e4d252c504f78f85bf30
+  mathematics/probability-statistics/brandon-foltz/transcript/iBmTKxYKhpg.md:
+    size: 20037
+    sha256: afba13d67752d5e4981748df8a057c6379e825cd4f82873664e9fc2b46e3e015
+  mathematics/probability-statistics/brandon-foltz/transcript/lBQlzDvsvqE.md:
+    size: 3433
+    sha256: 8ff816377effa73bea69d10a8edf7bd3d476cb6ecf701abf51c1c8bbe9668957
+  mathematics/probability-statistics/brandon-foltz/transcript/r8npwZNHipU.md:
+    size: 2745
+    sha256: 9a96ea52366c9af949521758f6fec4fbbd7a7fe15f7879150399fa53420007c4
+  mathematics/probability-statistics/brandon-foltz/transcript/uK8PMXXdolo.md:
+    size: 5299
+    sha256: bafb4b631f7f5b10cb1e621d836bcb70e310629bb11e0077bae6467594e4c95f
   mathematics/probability-statistics/dekking-mips/dekking.pdf:
     size: 5010240
     sha256: b334aedac636d94bc89807e81d7ee838c67edb0c5304c492c139d6cb5d65f7e8
@@ -2875,6 +3046,24 @@ files:
   software/python/automate-boring-stuff/Sweigart_Automate-the-Boring-Stuff.pdf:
     size: 17838192
     sha256: 5a7d3a89f2e0a02668da97e2bd6975ee83db2326458e5ce8853959a2790c3338
+  software/python/corey-schafer-oop/transcript/3ohzBxoFHAY.md:
+    size: 14198
+    sha256: cecf17adce19f34aca573af850d40366cbce842a29dfd8e3109c258490b91fea
+  software/python/corey-schafer-oop/transcript/BJ-VvGyQxho.md:
+    size: 10985
+    sha256: ad2eeac4e71a0d5ba148803544e9ee01ad6987b7457948823e6942659f9b2c9c
+  software/python/corey-schafer-oop/transcript/RSl87lqOXDE.md:
+    size: 18706
+    sha256: 2dce4ab232f817cf6d6651e2052f684380d2f262c0f0895ef84fa3b5b7a33e36
+  software/python/corey-schafer-oop/transcript/ZDa-Z5JzLYM.md:
+    size: 15115
+    sha256: 862e5fe22bf83aecf57816e73f3eef1b82bd7e2ddd5dc91a91424499a0d1ab97
+  software/python/corey-schafer-oop/transcript/jCzT9XFZ5bw.md:
+    size: 9930
+    sha256: 83f264abc75096e3786257e5217fced22d1f8134a03609b4fa3abba625ca8b59
+  software/python/corey-schafer-oop/transcript/rq8cL2XMM5M.md:
+    size: 14847
+    sha256: 83a661b08f82ae98b4acdd751cdded3c1c9dabbaff04cedbd0ddceef731020cb
   software/python/fluent-python/fluent-python.pdf:
     size: 16456139
     sha256: db97c77518c68ce3db19da8f65e9f8dd8f9494fcbba59dddb0ed1796973f7e35

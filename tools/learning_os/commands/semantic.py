@@ -12,6 +12,7 @@ import json
 import sys
 
 from learning_os.semantics.predicates import PREDICATES, evaluate
+from learning_os.semantics.recipes import RecipeError, recipes_for
 
 
 def _coerce(raw: str) -> object:
@@ -26,7 +27,16 @@ def _coerce(raw: str) -> object:
 
 
 def cmd_semantic(args) -> int:
-    """Evaluate one predicate, or list the registry."""
+    """Evaluate one predicate, list the registry, or serve a recipe."""
+    if getattr(args, "recipe", None):
+        try:
+            rows = recipes_for(args.recipe)
+        except RecipeError as exc:
+            print(f"los: {exc}", file=sys.stderr)
+            return 2
+        print(json.dumps({"class": args.recipe, "recipes": rows},
+                         indent=2, sort_keys=True, ensure_ascii=False))
+        return 0
     if args.list:
         print(json.dumps(
             [{"name": name,

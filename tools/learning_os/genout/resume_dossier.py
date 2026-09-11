@@ -5,7 +5,8 @@ route — it is Aram re-deriving where he was (PHILOSOPHY §3.5). The global
 resume pointer is a five-field bookmark: the address without the context.
 This builder compiles the context instead: the stage, its requirement,
 the evidence spec against what was actually recorded, open items, the
-last result, and the exam sitting it all serves.
+last result, the exam sitting it all serves, and the top-ranked goal
+cluster (one row, best-effort, read-only — seeing it files nothing).
 
 Same content-addressed discipline as the semantic dossiers, different
 subject: one hash per section plus an overall digest, addressed as
@@ -76,14 +77,24 @@ def build_resume_dossier(
     open_items: Sequence[str],
     sittings: Sequence[Mapping[str, object]],
     titles: Mapping[str, str],
+    top_cluster: Mapping[str, object] | None = None,
 ) -> ResumeDossier:
-    """Compile one resume screen. Pure: same inputs, same key."""
+    """Compile one resume screen. Pure: same inputs, same key.
+
+    ``top_cluster`` is the single highest-ranked goal cluster, or None
+    when the scan found nothing or could not run. It carries countdown-free
+    fields only (no days-until: render-time countdowns never enter the
+    hashed content), so the digest moves when the top cluster moves and
+    never with the clock.
+    """
     for label, value in (("unit", unit_id), ("module", module_id),
                          ("stage", stage_id), ("study map", study_map_id)):
         if not isinstance(value, str) or not value.strip():
             raise ResumeDossierError(f"a resume dossier needs a non-empty {label} id")
     if not isinstance(via, str) or not via.strip():
         raise ResumeDossierError("a resume dossier names how its stage was resolved")
+    if top_cluster is not None and not isinstance(top_cluster, Mapping):
+        raise ResumeDossierError("a resume dossier's top cluster is a mapping or nothing")
     try:
         sections = {
             "requirement": dict(requirement) if requirement is not None else None,
@@ -92,6 +103,7 @@ def build_resume_dossier(
             "sittings": [dict(sitting) for sitting in sittings],
             "titles": {str(key): str(value) for key, value in titles.items()},
             "via": via,
+            "top-cluster": dict(top_cluster) if top_cluster is not None else None,
         }
     except (TypeError, ValueError) as exc:
         raise ResumeDossierError(f"malformed resume inputs: {exc}") from exc
@@ -106,6 +118,7 @@ def build_resume_dossier(
         ("open-items", sections["open-items"]),
         ("sittings", sections["sittings"]),
         ("titles", sections["titles"]),
+        ("top-cluster", sections["top-cluster"]),
     )
     return ResumeDossier(
         key=f"context://{unit_id}/resume-dossier@{digest[:16]}",
@@ -190,6 +203,7 @@ def load_resume_dossier(path: Path) -> ResumeDossier:
             open_items=content["open-items"],
             sittings=content["sittings"],
             titles=content["titles"],
+            top_cluster=content.get("top-cluster"),
         )
     except (KeyError, TypeError, ValueError) as exc:
         raise ResumeDossierError(
