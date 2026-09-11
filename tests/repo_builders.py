@@ -160,3 +160,28 @@ def _add_material_overview(root: Path, *, covers=None, builds_on=None) -> None:
     registry = yaml.safe_load(registry_path.read_text(encoding="utf-8"))
     registry["sources"][0]["material"] = "material://source-demo-book/book.pdf"
     write_yaml(registry_path, registry)
+
+
+def rich_fixture(root):
+    """Curriculum plus one rich route, with the selection wired to it.
+
+    Returns the deterministic route id and the route dict. Public because
+    several test modules share it; behaviour is unchanged from the helper
+    that lived in `test_manifest_v7_routes.py`.
+    """
+    add_curriculum(root)
+    _add_material_overview(root)
+    source_map_path = root / "curriculum/modules/module-demo/source-map.yaml"
+    source_map = yaml.safe_load(source_map_path.read_text(encoding="utf-8"))
+    route = source_map["sources"][0]["unit_routes"][0]
+    route_id = deterministic_route_id(
+        "module-demo", "source-demo-book", route
+    )
+    unit_path = root / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+    unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
+    unit["source_selections"][0]["locator"] = route["locator"]
+    unit["knowledge_map"]["nodes"][1]["concept_ids"] = [
+        "concept-expected-value"
+    ]
+    write_yaml(unit_path, unit)
+    return route_id, route

@@ -113,12 +113,12 @@ def test_identical_canonical_write_preserves_inode_but_checks_revisions(tmp_path
 
 
 def test_routes_resolve_once_per_build_and_refresh_material_existence(mini_repo, monkeypatch):
-    from test_manifest_v7_routes import _rich_fixture
+    from repo_builders import rich_fixture
 
     from learning_os.genout.manifest import build_manifest
     from learning_os.genout.projection import records_curriculum
 
-    route_id, route = _rich_fixture(mini_repo)
+    route_id, route = rich_fixture(mini_repo)
     repo = load_repo(mini_repo)
     study_map = next(iter(repo.study_maps.values()))
     study_map.data["stages"][0]["resources"] = [{
