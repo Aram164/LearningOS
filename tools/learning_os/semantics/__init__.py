@@ -89,6 +89,7 @@ from .predicates import (
     evaluate,
     needs_study_map,
 )
+from .recipes import RecipeError, recipe_classes, recipes_for
 from .scan import DEFAULT_DAYS, ScanInput, intelligence_scan, scan_observations
 from .tasks import (
     EFFECTS,
@@ -187,6 +188,9 @@ __all__ = [
     "plan_task",
     "query",
     "rank_clusters",
+    "RecipeError",
+    "recipe_classes",
+    "recipes_for",
     "record_claim",
     "AdmittedBy",
     "StaleEvidence",

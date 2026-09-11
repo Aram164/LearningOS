@@ -710,6 +710,7 @@ sources:
     type: video
     authors: [Andrej Karpathy]
     url: https://www.youtube.com/watch?v=VMj-3S1tku0
+    material: material://source-karpathy-micrograd
     evaluations:
       - concepts: [concept-backpropagation, concept-chain-rule]
         roles: [implementation]

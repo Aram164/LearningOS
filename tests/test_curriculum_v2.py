@@ -287,6 +287,44 @@ def test_stage_feedback_detour_and_progress_are_unit_scoped(mini_repo):
     assert repo.units["unit-demo-l01"].data["status"] == "ready-to-shelve"
 
 
+def test_stage_progress_offers_the_observation_verb(mini_repo):
+    """Completing a stage with an authored requirement names the exact
+    ``los observe`` invocation — a suggestion in the receipt, never a
+    second write."""
+    from learning_os.commands.stage import _observe_offer
+
+    add_curriculum(mini_repo)
+    assert _observe_offer("unit-demo-l01", {"id": "stage-demo"}) == {}
+    staged = yaml.safe_load(
+        (mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml")
+        .read_text(encoding="utf-8"))
+    staged["stages"][0]["concepts"] = ["concept-expected-value"]
+    staged["stages"][0]["runtime_target"] = {
+        "concept": "concept-expected-value",
+        "capability": {"kind": "explain", "operands": ["expectation"]},
+        "conditions": ["unfamiliar-example"],
+        "evidence_spec": ["explain-reason"],
+    }
+    write_yaml(mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
+               staged)
+    assert _observe_offer("unit-demo-l01", staged["stages"][0]) == {
+        "observe_requirement": "req-demo-l01-demo",
+        "observe_next": "los observe req-demo-l01-demo --activity <what-you-did> "
+                        "--result <correct|incorrect|partial|abandoned>",
+    }
+    completed = approved_v2_cli(
+        mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "complete",
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="curriculum-stage-complete-offers-observe",
+    )
+    assert completed.returncode == 0, completed.stderr
+    result = gateway_result(completed)
+    assert result["observe_requirement"] == "req-demo-l01-demo"
+    assert result["observe_next"].startswith("los observe req-demo-l01-demo ")
+    observations = list((mini_repo).glob("**/observations.jsonl"))
+    assert observations == []
+
+
 def test_stage_note_snapshot_guard_and_german_search(mini_repo):
     add_curriculum(mini_repo)
     write_outputs(load_repo(mini_repo), generate_all(load_repo(mini_repo), "T1"))

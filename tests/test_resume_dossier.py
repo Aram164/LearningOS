@@ -68,6 +68,48 @@ def test_builder_refuses_empty_ids():
         build_resume_dossier(**_inputs(unit_id="  "))
 
 
+def _cluster(**overrides):
+    row = {
+        "cluster_id": "covering-routes-stale:cluster:abc12345",
+        "detector": "covering-routes-stale",
+        "title": "3 routes cover moved nodes in unit:unit-demo-l01",
+        "tier": 2,
+        "nearest_sitting": "2026-10-09",
+        "member_count": 3,
+    }
+    row.update(overrides)
+    return row
+
+
+def test_top_cluster_section_is_bounded_to_one_row():
+    dossier = build_resume_dossier(**_inputs(top_cluster=_cluster()))
+    content = dict(dossier.content)
+    assert content["top-cluster"]["cluster_id"] == "covering-routes-stale:cluster:abc12345"
+    assert content["top-cluster"]["member_count"] == 3
+    assert "member_ids" not in content["top-cluster"]
+    assert "days_until" not in content["top-cluster"]
+
+
+def test_top_cluster_moves_the_digest():
+    first = build_resume_dossier(**_inputs(top_cluster=_cluster()))
+    changed = build_resume_dossier(**_inputs(top_cluster=_cluster(member_count=4)))
+    assert changed.key != first.key
+    missing = build_resume_dossier(**_inputs(top_cluster=None))
+    assert missing.key != first.key
+    assert build_resume_dossier(**_inputs(top_cluster=None)) == missing
+
+
+def test_top_cluster_round_trips_through_the_cache(tmp_path: Path):
+    dossier = build_resume_dossier(**_inputs(top_cluster=_cluster()))
+    path = store_resume_dossier(tmp_path, dossier)
+    assert load_resume_dossier(path) == dossier
+
+
+def test_builder_refuses_a_non_mapping_top_cluster():
+    with pytest.raises(ResumeDossierError):
+        build_resume_dossier(**_inputs(top_cluster="cluster-abc"))
+
+
 def test_cache_round_trips_and_refuses_poison(tmp_path: Path):
     dossier = build_resume_dossier(**_inputs())
     path = store_resume_dossier(tmp_path, dossier)
@@ -107,6 +149,38 @@ def test_resume_renders_the_pointer_stage(mini_repo: Path):
     assert "req-demo-l01-demo" in text.stdout
     assert "los observe req-demo-l01-demo" in text.stdout
     assert "2026-10-09" in text.stdout
+
+
+def test_resume_json_carries_the_top_cluster_section(mini_repo: Path):
+    """The screen files nothing, but the top cluster rides along when the
+    scan can run — and degrades to an explicit null when it cannot."""
+    payload = json.loads(run_los(_runtime_repo(mini_repo), "resume", "--json").stdout)
+    assert "top-cluster" in payload["content"]
+
+
+def test_render_shows_one_top_goal_row_and_files_nothing():
+    from learning_os.commands.resume import _render
+    from learning_os.genout.resume_dossier import build_resume_dossier as build
+
+    top = _cluster()
+    dossier = build(**_inputs(top_cluster=top))
+    text = _render(dossier, {"id": "req-x"}, [], [], [], {"module": "M", "unit": "U", "stage": "S"},
+                   "via resume pointer", 0, top)
+    assert "Top goal" in text
+    assert top["title"] in text
+    assert "seeing it files nothing" in text
+    assert "los goal <id> --reject|--defer|--close" in text
+    assert text.count("Top goal") == 1
+
+
+def test_render_omits_the_section_without_a_cluster():
+    from learning_os.commands.resume import _render
+    from learning_os.genout.resume_dossier import build_resume_dossier as build
+
+    dossier = build(**_inputs())
+    text = _render(dossier, None, [], [], [], {"module": "M", "unit": "U", "stage": "S"},
+                   "via resume pointer", 0, None)
+    assert "Top goal" not in text
 
 
 def test_resume_shows_recorded_evidence(mini_repo: Path):

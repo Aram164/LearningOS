@@ -374,6 +374,36 @@ def test_unhealthy_accepted_variant_is_fixture_rot_through_cli(tmp_path, inputs)
         "unadjudicated": 0, "fixture-rot": 1}
 
 
+def test_score_headline_names_every_verdict_class(tmp_path):
+    """The headline never prints a bare fraction: unadjudicated rows are
+    adjudication debt, and no outcome may hide inside a ratio."""
+    import subprocess
+    import sys
+
+    trials = tmp_path / "trials"
+    trials.mkdir()
+    _write_trial(trials, "trial-held",
+                 inputs={"error_count": 0, "new_or_grown_warnings": 0},
+                 expected={"is_true": True})
+    answers = tmp_path / "answers.json"
+    answers.write_text(json.dumps({
+        "trial-held": _submit(
+            inputs={"error_count": 0, "new_or_grown_warnings": 0},
+            answer=True)}))
+    output = tmp_path / "report.json"
+    tool = Path(__file__).resolve().parent.parent / "tools" / (
+        "evaluate_operator_questions.py")
+    result = subprocess.run(
+        [sys.executable, str(tool), "score", "--trials", str(trials),
+         "--answers", str(answers), "--out", str(output)],
+        capture_output=True, text=True, timeout=120)
+    assert result.returncode == 0, result.stderr
+    assert result.stdout.strip() == (
+        "1 pass · 0 fail · 0 awaiting adjudication · "
+        "0 unanswered · 0 rot — of 1")
+    assert "/" not in result.stdout.split("—")[0]
+
+
 def test_score_handles_equals_and_contains_ops(tmp_path, monkeypatch):
     import types
 

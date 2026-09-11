@@ -123,6 +123,23 @@ def _batch_entries(routes, study_map, source_map, unit, route_ids):
             for route_id in ids]
 
 
+def _stage_entry(study_map, stage_id):
+    """One stage's own flags and placements, without the whole map.
+
+    Returns the stage row as stored (effective, expanded): identity,
+    status, triage and exam flags, objective, concepts, runtime target,
+    and resource placements. Raises WriteRefused for a missing stage or
+    a unit with no study map — never a partial payload.
+    """
+    if study_map is None:
+        raise WriteRefused("plan-edit-context --stage-id needs a unit with a study map")
+    stages = [s for s in study_map.data.get("stages", []) if isinstance(s, dict)]
+    matches = [s for s in stages if s.get("id") == stage_id]
+    if len(matches) != 1:
+        raise WriteRefused(f"stage {stage_id} is missing or ambiguous in this unit")
+    return dict(matches[0])
+
+
 def cmd_plan_edit_context(args) -> int:
     root = _root(args)
     with _operator_lock(root):
@@ -139,9 +156,11 @@ def cmd_plan_edit_context(args) -> int:
                    "module_id": unit.module_id,
                    "artifact_revisions": _guard_rows(root, artifacts),
                    "preflight": "route-patch UNIT_ID ROUTE_ID --changes JSON --check returns exact write guards"}
-        if args.route_id and getattr(args, "route_ids", None):
+        selectors = [bool(args.route_id), getattr(args, "route_ids", None) is not None,
+                     bool(getattr(args, "stage_id", None))]
+        if sum(selectors) > 1:
             raise WriteRefused(
-                "plan-edit-context takes --route-id or --route-ids, never both")
+                "plan-edit-context takes one of --route-id, --route-ids, --stage-id")
         if args.route_id:
             payload.update(_route_entry(
                 routes, study_map, source_map, unit, args.route_id))
@@ -151,6 +170,12 @@ def cmd_plan_edit_context(args) -> int:
             payload.update({"contract": "plan-edit-context-batch",
                             "requested_route_ids": list(args.route_ids),
                             "routes": entries})
+        elif getattr(args, "stage_id", None):
+            payload.update({"contract": "plan-edit-context-stage",
+                            "requested_stage_id": args.stage_id,
+                            "stage": _stage_entry(study_map, args.stage_id),
+                            "scope": "one stage only — universe questions "
+                                     "(e.g. no source covers X) need the full unit context"})
         else:
             # Present the compact form even before an existing map is migrated.
             # Expansion inputs are included once, never separately per stage.

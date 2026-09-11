@@ -156,7 +156,12 @@ def target_folder(slug: str) -> tuple[Path, bool]:
         raise IngestError(
             f"{slug} has no materials folder and no placement hint — add it to "
             "PLACEMENT_HINT here and to PLACEMENT in build_materials_tree.py")
-    return MATERIALS / parent / slug, True
+    hinted = MATERIALS / parent / slug
+    # Already placed by an earlier run, just not yet linked into `.flat/`
+    # (that is `build_materials_tree.py`'s job, and it may not have run since).
+    # Reporting it as new a second time would ask for a PLACEMENT entry that
+    # is already there.
+    return hinted, not hinted.is_dir()
 
 
 # ---------------------------------------------------------------- conversion
@@ -251,8 +256,27 @@ def ytdlp() -> str:
         "`.venv/bin/python -m pip install yt-dlp`")
 
 
-def fetch(url: str, into: Path, *, limit: int | None) -> list[tuple[dict, Path]]:
-    """Download captions for one video or playlist. Returns (meta, vtt) pairs."""
+def listed_ids(url: str, *, limit: int | None) -> list[str]:
+    """The video ids behind a URL, in order, without fetching any captions.
+
+    `--flat-playlist` costs one request for a whole playlist, which is what
+    makes the skip cheap: the ids are known before anything is downloaded, so
+    a video already on disk never becomes a request at all. A single-video URL
+    prints its own id, so both shapes take the same path.
+    """
+    argv = [ytdlp(), "--flat-playlist", "--print", "%(id)s",
+            "--ignore-errors", "--no-warnings"]
+    if limit:
+        argv += ["--playlist-items", f"1-{limit * 4}"]
+    argv.append(url)
+    done = subprocess.run(argv, check=False, capture_output=True, text=True)
+    return [line.strip() for line in done.stdout.splitlines() if line.strip()]
+
+
+def fetch(video_ids: list[str], into: Path) -> list[tuple[dict, Path]]:
+    """Download captions for exactly these videos. Returns (meta, vtt) pairs."""
+    if not video_ids:
+        return []
     argv = [
         ytdlp(), "--skip-download", "--write-auto-subs", "--write-subs",
         "--sub-langs", "en.*,de.*", "--sub-format", "vtt",
@@ -260,9 +284,7 @@ def fetch(url: str, into: Path, *, limit: int | None) -> list[tuple[dict, Path]]
         "--sleep-requests", "1",
         "-o", str(into / "%(id)s"),
     ]
-    if limit:
-        argv += ["--playlist-items", f"1-{limit}"]
-    argv.append(url)
+    argv += [f"https://www.youtube.com/watch?v={vid}" for vid in video_ids]
     subprocess.run(argv, check=False, capture_output=True, text=True)
 
     pairs = []
@@ -281,23 +303,35 @@ def fetch(url: str, into: Path, *, limit: int | None) -> list[tuple[dict, Path]]
 
 
 def ingest(source_id: str, urls: list[str], *, window: int,
-           limit: int | None, dry_run: bool) -> tuple[int, Path | None]:
+           limit: int | None, dry_run: bool) -> tuple[int, int, Path | None]:
+    """Fetch what is missing for one source. Returns (written, skipped, new folder).
+
+    Existing transcripts are never re-fetched: the ids are listed first and
+    filtered against what is already on disk, so widening `--limit` later costs
+    only the new videos. `--limit` therefore bounds *new* work rather than
+    re-counting from the top of the playlist every run.
+    """
     slug = source_id.removeprefix("source-")
     folder, is_new = target_folder(slug)
     out_dir = folder / "transcript"
-    written = 0
+    have = {path.stem for path in out_dir.glob("*.md")} if out_dir.is_dir() else set()
+    written = skipped = 0
+
     for url in urls:
         if CHANNEL.search(url) and not limit:
             print(f"    skipped channel {url} — pass --limit to bound it",
                   file=sys.stderr)
             continue
+        ids = listed_ids(url, limit=limit)
+        fresh = [vid for vid in ids if vid not in have]
+        skipped += len(ids) - len(fresh)
+        if limit:
+            fresh = fresh[:limit]
+        if not fresh:
+            continue
         with tempfile.TemporaryDirectory(prefix="los-transcript-") as tmp:
             staging = Path(tmp)
-            pairs = fetch(url, staging, limit=limit)
-            if not pairs:
-                print(f"    no captions returned for {url}", file=sys.stderr)
-                continue
-            for meta, vtt in pairs:
+            for meta, vtt in fetch(fresh, staging):
                 segments = normalise_vtt(
                     vtt.read_text(encoding="utf-8", errors="replace"),
                     window=window)
@@ -305,11 +339,12 @@ def ingest(source_id: str, urls: list[str], *, window: int,
                     continue
                 text = render(meta, segments, source_id=source_id, window=window)
                 written += 1
+                have.add(meta["id"])
                 if dry_run:
                     continue
                 out_dir.mkdir(parents=True, exist_ok=True)
                 (out_dir / f"{meta['id']}.md").write_text(text, encoding="utf-8")
-    return written, (folder if is_new and written and not dry_run else None)
+    return written, skipped, (folder if is_new and written and not dry_run else None)
 
 
 # ---------------------------------------------------------------- entry point
@@ -325,7 +360,8 @@ def main() -> int:
     parser.add_argument("--window", type=int, default=30,
                         help="seconds per addressable span (default 30)")
     parser.add_argument("--limit", type=int, default=None,
-                        help="cap playlist items per URL")
+                        help="cap NEW videos fetched per URL (already-held ones "
+                             "are skipped before they count)")
     parser.add_argument("--dry-run", action="store_true",
                         help="fetch and convert, write nothing")
     args = parser.parse_args()
@@ -362,15 +398,16 @@ def main() -> int:
     for sid, urls in targets.items():
         print(f"  {sid} ...", flush=True)
         try:
-            count, created = ingest(sid, urls, window=args.window,
-                                    limit=args.limit, dry_run=args.dry_run)
+            count, skipped, created = ingest(sid, urls, window=args.window,
+                                             limit=args.limit, dry_run=args.dry_run)
         except IngestError as exc:
             print(f"    refused: {exc}", file=sys.stderr)
             continue
         total += count
         if created:
             new_folders.append(sid.removeprefix("source-"))
-        print(f"    {count} transcript(s)")
+        note = f", {skipped} already held" if skipped else ""
+        print(f"    {count} transcript(s){note}", flush=True)
 
     print(f"\n{total} transcript(s) {'converted' if args.dry_run else 'written'}")
     if new_folders:

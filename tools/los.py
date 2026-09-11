@@ -197,6 +197,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--input", action="append", default=[], metavar="k=v",
                    help="one predicate input; repeatable (values parse as JSON, else strings)")
     p.add_argument("--list", action="store_true", help="the registry, with inputs and authority")
+    p.add_argument("--recipe", default=None, metavar="CLASS",
+                   help="worked example procedures for one question class (examples only)")
     p.set_defaults(func=cmd_semantic)
 
     p = sub.add_parser("note-read", help="read a bounded segment of a durable note by stable ID")
@@ -548,6 +550,8 @@ def build_parser() -> argparse.ArgumentParser:
                        help="one exact route and its stage overrides")
     route.add_argument("--route-ids", nargs="+", default=None, metavar="ROUTE_ID",
                        help="1 to 20 distinct routes of this unit, in requested order")
+    route.add_argument("--stage-id", default=None,
+                       help="one stage's own flags and placements, without the whole map")
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_plan_edit_context)
 

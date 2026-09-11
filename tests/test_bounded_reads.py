@@ -192,6 +192,47 @@ def test_route_batch_refuses_bad_requests_without_partial_payload(mini_repo):
     assert "at most 20" in oversized.stderr
 
 
+def test_stage_scoped_read_returns_flags_without_the_map(mini_repo):
+    """One stage's own flags and placements, not the 127 KB map inspect."""
+    import yaml
+    from repo_builders import add_curriculum, write_yaml
+
+    add_curriculum(mini_repo)
+    staged = yaml.safe_load(
+        (mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml")
+        .read_text(encoding="utf-8"))
+    staged["stages"][0]["scope_triage"] = "required-now"
+    staged["stages"][0]["exam_critical"] = True
+    write_yaml(mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
+               staged)
+    proc = run_los(mini_repo, "plan-edit-context", "unit-demo-l01",
+                   "--stage-id", "stage-demo")
+    assert proc.returncode == 0, proc.stderr
+    payload = json.loads(proc.stdout)
+    assert payload["contract"] == "plan-edit-context-stage"
+    assert payload["requested_stage_id"] == "stage-demo"
+    assert payload["stage"]["scope_triage"] == "required-now"
+    assert payload["stage"]["exam_critical"] is True
+    assert payload["stage"]["id"] == "stage-demo"
+    assert "full unit context" in payload["scope"]
+    assert len(proc.stdout.encode()) < 65536
+
+
+def test_stage_scoped_read_refuses_missing_stage_and_mixed_selectors(mini_repo):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    missing = run_los(mini_repo, "plan-edit-context", "unit-demo-l01",
+                      "--stage-id", "stage-missing")
+    assert missing.returncode != 0
+    assert not missing.stdout
+    assert "missing or ambiguous" in missing.stderr
+    unit_id, (first, _) = _two_route_context(mini_repo)
+    mixed = run_los(mini_repo, "plan-edit-context", unit_id,
+                    "--stage-id", "stage-demo", "--route-id", first)
+    assert mixed.returncode == 2
+
+
 def test_route_batch_cli_parsing_rejects_empty_and_mixed_selectors(mini_repo):
     unit_id, (first, _) = _two_route_context(mini_repo)
     bare = run_los(mini_repo, "plan-edit-context", unit_id, "--route-ids")

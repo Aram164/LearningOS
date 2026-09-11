@@ -163,9 +163,11 @@ each locator to the digest behind it (materials manifest checksums), so
 changed bytes invalidate even when the URI never moves.
 Freshness delegates to `DossierFresh`. The same content-addressed
 discipline compiles the per-session resume screen (`los resume`):
-stage, requirement, recorded evidence, open items, last result, and exam
-sitting as `context://<unit-id>/resume-dossier@<digest>`, resolved from
-the pointer, the last result, or the last touch, in that labeled order.
+stage, requirement, recorded evidence, open items, last result, exam
+sitting, and the single top-ranked goal cluster (best-effort, read-only;
+seeing it files nothing) as `context://<unit-id>/resume-dossier@<digest>`,
+resolved from the pointer, the last result, or the last touch, in that
+labeled order.
 Readers: `tools/learning_os/genout/resume_dossier.py`, proven by
 `tests/test_resume_dossier.py`. Dossiers live under
 `generated/dossiers/`, covered by the existing no-hand-edit path — no
