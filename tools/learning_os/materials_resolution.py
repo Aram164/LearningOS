@@ -94,6 +94,68 @@ def safe_material_locator(value) -> str | None:
     return locator_path.as_posix()
 
 
+def leading_material_locator(value) -> str | None:
+    """The file path a prose locator *begins* with, or None.
+
+    ``safe_material_locator`` answers "is this locator exactly one file path".
+    The authored house style is a path followed by prose — ``lecture-slides/
+    10_testing.pdf, PDF pp. 5-9`` — so that stricter question answers None for
+    a row whose target is unambiguous and sitting at the front of the string.
+    This answers the weaker question and is tried only after the strict one
+    declines.
+
+    Weaker is not loose. Every guard that prevents resolving to a file nobody
+    asked for is kept: exactly one material-suffix token in the whole locator
+    (so ``a.pdf through b.pdf`` stays ambiguous and is refused), no absolute
+    path, no ``.`` or ``..`` component, no backslash or newline. Nothing is
+    scanned or basename-matched — the head either names a real file under the
+    source, or the caller's existence check reports it missing, exactly as an
+    unresolvable locator does today.
+    """
+    if not isinstance(value, str):
+        return None
+
+    text = PAGE_COUNT_SUFFIX.sub("", value.strip())
+
+    if "\\" in text or "\n" in text:
+        return None
+    if len(MATERIAL_SUFFIX_TOKEN.findall(text)) != 1:
+        return None
+
+    match = MATERIAL_SUFFIX_TOKEN.search(text)
+    if match is None:  # pragma: no cover - findall just proved one exists
+        return None
+    head = text[:match.end()].strip()
+    if not head:
+        return None
+
+    head_path = PurePosixPath(head)
+    if head_path.is_absolute() or any(
+            part in {"", ".", ".."} for part in head_path.parts):
+        return None
+    if head_path.suffix.lower() not in MATERIAL_RESOURCE_SUFFIXES:
+        return None
+
+    return head_path.as_posix()
+
+
+def single_file_material(source_material) -> str | None:
+    """A source's own ``material://`` URI when it names one concrete file.
+
+    A source whose material is a directory (a lecture-slides folder) cannot
+    stand in for a row: which file the row meant is exactly what the locator
+    carries. A source whose material *is* the file has no such ambiguity, so a
+    row that names it without repeating the path resolves to the one thing it
+    could mean.
+    """
+    if material_uri_authority(source_material) is None:
+        return None
+    payload = str(source_material)[len(MATERIAL_SCHEME):]
+    if PurePosixPath(payload).suffix.lower() not in MATERIAL_RESOURCE_SUFFIXES:
+        return None
+    return str(source_material)
+
+
 def resolve_material_target(
     ref: str,
     *,
@@ -149,6 +211,7 @@ def project_material_resource(repo: Repo, resource: dict) -> dict:
         return projected
 
     material_uri = None
+    derived = False
     vault_path = projected.get("vault_path")
 
     if isinstance(vault_path, str) and vault_path:
@@ -166,12 +229,31 @@ def project_material_resource(repo: Repo, resource: dict) -> dict:
         )
         authority = material_uri_authority(source_material)
 
+        if locator is None:
+            locator = leading_material_locator(projected.get("locator"))
+            derived = locator is not None
+
         if locator and authority:
             material_uri = f"material://{authority}/{locator}"
+        elif authority:
+            material_uri = single_file_material(source_material)
+            derived = material_uri is not None
 
     if not material_uri:
         return projected
 
+    location = material_location(repo, material_uri)
+
+    # An authored `vault_path` is an assertion: if it names nothing, that is a
+    # defect and the interface must say so. A locator-derived target is a
+    # reading of prose — when the path it reads out is not there, the reading
+    # was wrong, and offering a target that does not exist is worse than
+    # offering none. So a derivation publishes only what it can resolve, which
+    # also keeps the projection's standing invariant intact: every exposed
+    # `material_path` is a real file whenever the materials tree is mounted.
+    if derived and location.get("material_exists") is not True:
+        return projected
+
     projected["material_uri"] = material_uri
-    projected.update(material_location(repo, material_uri))
+    projected.update(location)
     return projected
