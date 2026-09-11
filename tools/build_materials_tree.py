@@ -143,6 +143,43 @@ PLACEMENT = {
     "systems-architecture-shelf":        "data-systems/architecture",
     "theoinfo-hu-archive":               "algorithms/complexity",
     "vorkurs-mathe-2022":                "mathematics/general",
+
+    # ------------------------------------------- video sources (2026-09-11)
+    #
+    # Added when transcripts gave video a material layer for the first time
+    # (tools/ingest_transcript.py). These folders hold `transcript/<id>.md`,
+    # not the videos themselves: the captions are the addressable artifact,
+    # the bytes are not ours and are not worth 2 GB of tree.
+    #
+    # Placement follows the source's subject exactly as a book's does — ADR-007
+    # makes the tree the taxonomy, so a lecture series on linear algebra sits
+    # beside the linear-algebra books, not in a "videos" bucket.
+    "reducible-fft":                       "algorithms/complexity",
+    "fiset-graph-theory":                  "algorithms/structures",
+    "kit-algorithmen2":                    "algorithms/structures",
+    "3b1b-neural-networks":                "machine-learning/classical",
+    "cs229-2022-videos":                   "machine-learning/classical",
+    "cs231n-2017-videos":                  "machine-learning/classical",
+    "cs4780":                              "machine-learning/classical",
+    "data-school-sklearn":                 "machine-learning/classical",
+    "eecs498":                             "machine-learning/classical",
+    "hinton-nnml":                         "machine-learning/classical",
+    "karpathy-micrograd":                  "machine-learning/classical",
+    "mit-6s191":                           "machine-learning/classical",
+    "patrick-loeber-pytorch-cnn":          "machine-learning/classical",
+    "3b1b-essence-of-calculus":            "mathematics/analysis",
+    "professor-leonard":                   "mathematics/analysis",
+    "3b1b-linear-algebra":                 "mathematics/linear-algebra",
+    "3b1b-bayes-theorem":                  "mathematics/probability-statistics",
+    "brandon-foltz":                       "mathematics/probability-statistics",
+    "jbstatistics":                        "mathematics/probability-statistics",
+    "kurzes-tutorium-statistik":           "mathematics/probability-statistics",
+    "statquest":                           "mathematics/probability-statistics",
+    "zedstatistics":                       "mathematics/probability-statistics",
+    "corey-schafer-oop":                   "software/python",
+    "guo-cpython-internals":               "software/python",
+    "hettinger-class-toolkit":             "software/python",
+    "powell-python-expert":                "software/python",
 }
 
 # Cross-subject reading pointers for each folder's SOURCES.md.
