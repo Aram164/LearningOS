@@ -15,8 +15,9 @@ from pathlib import Path
 
 import yaml
 
-from learning_os.loader import parse_frontmatter
+from learning_os.loader import load_repo, parse_frontmatter
 from learning_os.routes import deterministic_route_id
+from learning_os.warning_baseline import collect, write_baseline
 
 LOS = Path(__file__).resolve().parent.parent / "tools" / "los.py"
 
@@ -185,3 +186,41 @@ def rich_fixture(root):
     ]
     write_yaml(unit_path, unit)
     return route_id, route
+
+
+def material_fixture(root):
+    """Rich route plus a fully-specified first stage and baselined warnings.
+
+    Public because two test modules share it; behaviour is unchanged from
+    the helper that lived in `test_material_editing.py`. Returns the loaded
+    repo, the route id, and the study-map id.
+    """
+    route_id, _ = rich_fixture(root)
+    source_path = root / "curriculum/modules/module-demo/source-map.yaml"
+    source_map = yaml.safe_load(source_path.read_text())
+    route = source_map["sources"][0]["unit_routes"][0]
+    route["angle_detail"] = "Überprüfung: a fully preserved explanation. " * 30
+    write_yaml(source_path, source_map)
+    repo = load_repo(root)
+    sm = next(iter(repo.study_maps.values()))
+    sm.data["plan_template_version"] = 1
+    for number, stage in enumerate(sm.data["stages"], 1):
+        stage["number"] = number
+        stage.setdefault("exam_critical", False)
+        stage.setdefault("concepts", ["concept-expected-value"])
+    row = {"kind": "read", "label": route["title"], "source_id": "source-demo-book",
+           "locator": route["locator"], "angle": route["angle"],
+           "angle_detail": route["angle_detail"], "scope_triage": "required-now"}
+    sm.data["stages"][0]["resources"] = [
+        row, {**row, "angle": "This stage needs a distinct treatment.", "scope_triage": "helpful-now"},
+        {"kind": "read", "label": "An independent resource", "source_id": "source-demo-book",
+         "locator": "Independent chapter", "scope_triage": "reference-only"},
+    ]
+    write_yaml(sm.path, sm.data)
+    material = repo.materials_root / "source-demo-book/lecture-01.pdf"
+    material.parent.mkdir(parents=True, exist_ok=True)
+    material.write_text("synthetic lecture")
+    signatures, errors = collect(root)
+    assert not errors, errors
+    write_baseline(root, signatures, "Pre-existing warnings in this synthetic fixture")
+    return load_repo(root), route_id, sm.id
