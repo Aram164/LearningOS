@@ -49,6 +49,7 @@ from learning_os.commands.atlas import (  # noqa: E402
 from learning_os.commands.capability import cmd_capability  # noqa: E402
 from learning_os.commands.capture import cmd_capture  # noqa: E402
 from learning_os.commands.detour import cmd_detour_create, cmd_detour_resolve  # noqa: E402
+from learning_os.commands.dossier import cmd_dossier  # noqa: E402
 from learning_os.commands.garden import cmd_garden_seed_create  # noqa: E402
 from learning_os.commands.goal import cmd_goal  # noqa: E402
 from learning_os.commands.intelligence import cmd_intelligence_scan  # noqa: E402
@@ -185,6 +186,11 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("resume", help="one-screen return to study: stage, requirement, evidence, exam")
     p.add_argument("--json", action="store_true", help="machine-readable dossier")
     p.set_defaults(func=cmd_resume)
+
+    p = sub.add_parser("dossier", help="serve one unit's materialized context bundle")
+    p.add_argument("unit_id", help="unit whose semantic dossier to build or serve")
+    p.add_argument("--json", action="store_true", help="include the full dossier content")
+    p.set_defaults(func=cmd_dossier)
 
     p = sub.add_parser("semantic", help="evaluate one semantic predicate; the query surface over the semantic layer")
     p.add_argument("predicate", nargs="?", default=None, help="registered predicate name")
