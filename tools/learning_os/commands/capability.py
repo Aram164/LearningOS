@@ -47,6 +47,28 @@ _CONTENT_BOUND_V2 = frozenset({
     "unit.material-synthesis.publish",
 })
 
+#: Capabilities admitted to ``direct-user-gesture`` approval (Finding 0:
+#: asymmetric admission). The gesture kind means "the user herself acted":
+#: `capture.create` and `garden.seed.create` are the pre-existing
+#: UI-originated writers (their envelopes arrive over channel "ui" with this
+#: kind, pinned by ``test_gateway_v2.py``); `learner.observation.append` is
+#: admitted for Aram's own evidence — append-only ledger, tested
+#: ``--supersedes`` correction path, one JSONL line of blast radius, and a
+#: local `los observe` command where the terminal session is the approval.
+#: Agent-authored writes, including every canonical-semantics capability,
+#: are never on this list: a remote envelope claiming a gesture it does
+#: not hold is the untrusted producer claiming to be the trusted one.
+GESTURE_ALLOWLIST = frozenset({
+    "learner.observation.append",
+    "capture.create",
+    "garden.seed.create",
+})
+
+
+def gesture_allowed(capability: str) -> bool:
+    """Whether a capability admits ``direct-user-gesture`` approval."""
+    return capability in GESTURE_ALLOWLIST
+
 # Older human-facing commands intentionally keep path forms for shell use and
 # no-write preflights. A V2 approval must additionally name the digest of every
 # external file. Each named handler uses the shared single-read helper and
@@ -561,6 +583,25 @@ def cmd_capability(args) -> int:
                 envelope,
                 ok=False,
                 error=_gateway_error("UNCONFIRMED", str(exc)),
+            )
+            _validate_capability_envelope(root, response, kind="result")
+            print(json.dumps(response, indent=2, ensure_ascii=False))
+            return 2
+        if context.approval_kind == "direct-user-gesture" \
+                and not gesture_allowed(context.capability):
+            # The gesture kind means the user herself acted, so it is
+            # admitted only for the closed user-originated allowlist above.
+            # Anything else claiming it — notably any canonical-semantics
+            # capability — is the untrusted producer claiming to be the
+            # trusted one, and fails closed here before the snapshot check.
+            response = _v2_response(
+                envelope,
+                ok=False,
+                error=_gateway_error(
+                    "UNCONFIRMED",
+                    f"direct-user-gesture is not admitted for "
+                    f"{context.capability}",
+                ),
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))

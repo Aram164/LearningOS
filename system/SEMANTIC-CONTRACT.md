@@ -117,9 +117,15 @@ rationale and evidence, thresholded and deduplicated. Each goal then walks
 `detected → formulated → eligible → proposed → authorized → planned →
 executing → verified → closed` (plus `deferred/rejected/stale/superseded`),
 one step at a time; only Aram authorizes. The queue lives under
-`work/proposals/goals/`, one file per goal. Readers:
+`work/proposals/goals/`, one file per goal. Aram's explicit
+reject/defer/close decisions live separately in
+`operations/goal-ledger.yaml` (written only by `los goal`) and feed the
+detectors' `known_ids` dedup, so decided goals stop re-emitting. Goals
+sharing one cause print as one cluster (`cluster_goals`), ordered by a
+hand-written exam-proximity sort (`rank_clusters`) — a Select step, not a
+learned cost model. Readers:
 `tools/learning_os/semantics/goals.py`, proven by
-`tests/test_goal_proposals.py`.
+`tests/test_goal_proposals.py` and `tests/test_goal_select.py`.
 
 ## Agent tasks (Phase 4, amended: no tracking, no costs)
 
@@ -155,7 +161,13 @@ plus the digest, and a cache file whose content fails its hashes is
 refused, never served. Evidence is content-addressed: callers resolve
 each locator to the digest behind it (materials manifest checksums), so
 changed bytes invalidate even when the URI never moves.
-Freshness delegates to `DossierFresh`. Dossiers live under
+Freshness delegates to `DossierFresh`. The same content-addressed
+discipline compiles the per-session resume screen (`los resume`):
+stage, requirement, recorded evidence, open items, last result, and exam
+sitting as `context://<unit-id>/resume-dossier@<digest>`, resolved from
+the pointer, the last result, or the last touch, in that labeled order.
+Readers: `tools/learning_os/genout/resume_dossier.py`, proven by
+`tests/test_resume_dossier.py`. Dossiers live under
 `generated/dossiers/`, covered by the existing no-hand-edit path — no
 canonical file may reference them, and the builder plus the store take
 explicit paths and never walk the repository. Readers:
@@ -189,6 +201,19 @@ snapshot race by construction. The gateway still applies; the envelope
 is preflight, and the snapshot guard stays the final word. Readers:
 `tools/learning_os/semantics/changes.py`, proven by
 `tests/test_proof_carrying_change.py`.
+
+Asymmetric admission: proof-carrying assumes an *untrusted* producer, so
+the envelope ceremony binds agent-authored writes uniformly — except the
+one write where the producer is the ground truth. Aram recording his own
+results (`learner.observation.append` via `los observe`) carries
+`approval.kind == "direct-user-gesture"`: the snapshot is taken under the
+operator lock rather than asserted, over the same intent subject, into a
+byte-identical receipt. The gesture kind stays admitted only for the
+closed user-originated allowlist (this entry plus the two pre-existing
+UI-originated writers, `capture.create` and `garden.seed.create`); a
+remote envelope claiming it for anything else fails closed, and an
+allowlisted remote envelope still asserts its full snapshot and intent.
+Proven by `tests/test_observation_gesture.py`.
 
 ## Intelligence scan
 

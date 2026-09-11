@@ -50,6 +50,7 @@ from learning_os.commands.capability import cmd_capability  # noqa: E402
 from learning_os.commands.capture import cmd_capture  # noqa: E402
 from learning_os.commands.detour import cmd_detour_create, cmd_detour_resolve  # noqa: E402
 from learning_os.commands.garden import cmd_garden_seed_create  # noqa: E402
+from learning_os.commands.goal import cmd_goal  # noqa: E402
 from learning_os.commands.intelligence import cmd_intelligence_scan  # noqa: E402
 from learning_os.commands.material import (  # noqa: E402
     cmd_module_materials_compact,
@@ -58,7 +59,7 @@ from learning_os.commands.material import (  # noqa: E402
 )
 from learning_os.commands.module import cmd_module_list, cmd_module_plan_import  # noqa: E402
 from learning_os.commands.note import cmd_note_evidence, cmd_note_revise  # noqa: E402
-from learning_os.commands.observation import cmd_observation_append  # noqa: E402
+from learning_os.commands.observation import cmd_observation_append, cmd_observe  # noqa: E402
 from learning_os.commands.path import (  # noqa: E402
     cmd_path_attach,
     cmd_path_note,
@@ -82,12 +83,14 @@ from learning_os.commands.query import (  # noqa: E402
     cmd_validate,
 )
 from learning_os.commands.reads import cmd_note_read  # noqa: E402
+from learning_os.commands.resume import cmd_resume  # noqa: E402
 from learning_os.commands.review import (  # noqa: E402
     cmd_session_end,
     cmd_shelving_apply,
     cmd_shelving_prepare,
 )
 from learning_os.commands.runtime import cmd_runtime_session  # noqa: E402
+from learning_os.commands.semantic import cmd_semantic  # noqa: E402
 from learning_os.commands.source import cmd_source_feedback  # noqa: E402
 from learning_os.commands.stage import (  # noqa: E402
     cmd_stage_attach,
@@ -169,6 +172,26 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--days", type=int, default=30, help="recency window for changed files (default: 30)")
     p.add_argument("--json", action="store_true", help="machine-readable output")
     p.set_defaults(func=cmd_intelligence_scan)
+
+    p = sub.add_parser("goal", help="record Aram's explicit decision on a proposed goal")
+    p.add_argument("goal_id", help="candidate goal id from intelligence-scan")
+    g = p.add_mutually_exclusive_group(required=True)
+    g.add_argument("--reject", action="store_true")
+    g.add_argument("--defer", action="store_true")
+    g.add_argument("--close", action="store_true")
+    p.add_argument("--note", default=None, help="why this decision, in Aram's words")
+    p.set_defaults(func=cmd_goal)
+
+    p = sub.add_parser("resume", help="one-screen return to study: stage, requirement, evidence, exam")
+    p.add_argument("--json", action="store_true", help="machine-readable dossier")
+    p.set_defaults(func=cmd_resume)
+
+    p = sub.add_parser("semantic", help="evaluate one semantic predicate; the query surface over the semantic layer")
+    p.add_argument("predicate", nargs="?", default=None, help="registered predicate name")
+    p.add_argument("--input", action="append", default=[], metavar="k=v",
+                   help="one predicate input; repeatable (values parse as JSON, else strings)")
+    p.add_argument("--list", action="store_true", help="the registry, with inputs and authority")
+    p.set_defaults(func=cmd_semantic)
 
     p = sub.add_parser("note-read", help="read a bounded segment of a durable note by stable ID")
     p.add_argument("note_id")
@@ -653,6 +676,18 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument('--expected-snapshot', default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_observation_append)
+
+    p = sub.add_parser('observe', help="record Aram's own evidence directly; the terminal session is the approval")
+    p.add_argument('requirement', help='requirement id from the current study-map stages')
+    p.add_argument('--workspace', default=None, help='active workspace owning the ledger; resolved when omitted')
+    p.add_argument('--activity', required=True)
+    p.add_argument('--result', required=True, choices=['correct', 'incorrect', 'partial', 'abandoned'])
+    p.add_argument('--assistance', default=None)
+    p.add_argument('--tags', default=None)
+    p.add_argument('--note', default=None, help='free-text note stored as the observation context')
+    p.add_argument('--condition', action='append', default=[])
+    p.add_argument('--supersedes', default=None, help='explicitly correct one earlier observation; preserves its bytes')
+    p.set_defaults(func=cmd_observe)
 
 
     p = sub.add_parser("unit-note", help="append one session-level section to a unit working note")

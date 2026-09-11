@@ -1,0 +1,47 @@
+{
+  "addressed_voq_ids": [
+    "voq-critique-point-resolved-closed",
+    "voq-evidence-stale-claim",
+    "voq-is-clean-grown-warning",
+    "voq-route-dossier-ungrounded-map",
+    "voq-scope-authority-source-selection"
+  ],
+  "counts": {
+    "fail": 0,
+    "fixture-rot": 0,
+    "pass": 1,
+    "unadjudicated": 4,
+    "unanswered": 0
+  },
+  "input_digest": "sha256:97fc5db8bc09dba61685c6a614bfa6a6db5b7b2fc84cd0750b478b0ded629224",
+  "key_digest": "sha256:fe18229bce3ecd0ef001653052899dac7d49298e9f5a43fd83fb51734f2ab2ab",
+  "package_digest": "sha256:e3b3ae985790412d6c36b9730fb9529765e450bfeb421134991241d6d525f4d9",
+  "package_format": 2,
+  "verdicts": [
+    {
+      "id": "voq-critique-point-resolved-closed",
+      "procedure_accepted": false,
+      "verdict": "unadjudicated"
+    },
+    {
+      "id": "voq-evidence-stale-claim",
+      "procedure_accepted": false,
+      "verdict": "unadjudicated"
+    },
+    {
+      "id": "voq-is-clean-grown-warning",
+      "procedure_accepted": true,
+      "verdict": "pass"
+    },
+    {
+      "id": "voq-route-dossier-ungrounded-map",
+      "procedure_accepted": false,
+      "verdict": "unadjudicated"
+    },
+    {
+      "id": "voq-scope-authority-source-selection",
+      "procedure_accepted": false,
+      "verdict": "unadjudicated"
+    }
+  ]
+}

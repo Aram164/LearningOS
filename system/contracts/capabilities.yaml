@@ -95,6 +95,7 @@ commands:
   learner.observation.append:
     handler: observation_append
     cli_command: observation-append
+    admission: direct-user-gesture
     writes:
     - work/active/*/observations.jsonl
     invariants:
@@ -146,6 +147,7 @@ commands:
   capture.create:
     handler: capture
     cli_command: capture
+    admission: direct-user-gesture
     writes:
     - work/inbox/**
     invariants:
@@ -166,6 +168,7 @@ commands:
   garden.seed.create:
     handler: garden_seed_create
     cli_command: garden-seed-create
+    admission: direct-user-gesture
     writes:
     - knowledge/garden/**
     invariants:
