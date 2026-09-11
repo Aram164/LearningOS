@@ -2,7 +2,7 @@
 import json
 
 import pytest
-from test_cli import run_los
+from repo_builders import run_los
 
 from learning_os.loader import load_repo
 

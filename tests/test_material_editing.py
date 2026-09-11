@@ -14,9 +14,7 @@ from gateway_helpers import (
     file_sha256,
     run_v2_capability,
 )
-from repo_builders import write_yaml
-from test_cli import run_los
-from test_manifest_v7_routes import _rich_fixture
+from repo_builders import rich_fixture, run_los, write_yaml
 
 from learning_os.commands.material import compaction_plan, route_patch_plan
 from learning_os.fingerprint import canonical_fingerprint

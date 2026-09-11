@@ -4,23 +4,13 @@ and the reading-room / adoption additions to the generator."""
 from __future__ import annotations
 
 import json
-import subprocess
-import sys
-from pathlib import Path
 
 import yaml
 from gateway_helpers import approved_v2_call, file_sha256, request_artifact_id
+from repo_builders import run_los
 
 from learning_os.genout import adoption_counts, generate_all
 from learning_os.loader import load_repo
-
-LOS = Path(__file__).resolve().parent.parent / "tools" / "los.py"
-
-
-def run_los(root: Path, *args: str, stdin: str | None = None):
-    return subprocess.run(
-        [sys.executable, str(LOS), "--root", str(root), *args],
-        capture_output=True, text=True, input=stdin, timeout=120)
 
 
 # ----------------------------------------------------------------- status
