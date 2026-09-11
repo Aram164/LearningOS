@@ -172,7 +172,9 @@ Readers: `tools/learning_os/genout/resume_dossier.py`, proven by
 canonical file may reference them, and the builder plus the store take
 explicit paths and never walk the repository. Readers:
 `tools/learning_os/semantics/dossiers.py`, proven by
-`tests/test_context_dossiers.py`.
+`tests/test_context_dossiers.py`. Served by the read-only
+`los dossier UNIT_ID` caller (`tools/learning_os/commands/dossier.py`,
+proven by `tests/test_unit_dossier_command.py`).
 
 ## Proof-carrying change (Phase 6, hardened: claims, not verdicts)
 
