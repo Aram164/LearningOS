@@ -65,7 +65,10 @@ domains, independently of pagination; open the domain atlas for the full map.
 Read several known records with `inspect ID1 ID2 ...` (at most 20) to share one
 fresh projection; the batch preserves requested order, includes a snapshot,
 and refuses missing IDs or changes during the read. Use `note-read` for note
-bodies. Full `bootstrap` is an explicit bulk read, not routine agent startup.
+bodies. Ask governance questions through `semantic PREDICATE --input k=v`
+(`semantic --list` names the 23 registered predicates) instead of
+re-deriving meaning from scattered YAML. Full `bootstrap` is an explicit
+bulk read, not routine agent startup.
 For plan editing, use `plan-edit-context UNIT_ID`; add `--route-id ROUTE_ID`
 for one material and its stage-specific overrides. Read several known routes
 with `--route-ids A B ...` (1 to 20 distinct routes of one unit, in order) to

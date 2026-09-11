@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learning-os/goal-ledger.schema.json",
+  "title": "Goal decision ledger",
+  "x-governs": "artifact",
+  "description": "Aram's explicit decisions on proposed goals (reject/defer/close), read back as scan dedup input. Operational state, not a canonical record: a missing ledger means no decisions yet.",
+  "type": "object",
+  "required": ["schema_version", "type", "decisions"],
+  "additionalProperties": false,
+  "properties": {
+    "schema_version": { "const": 1 },
+    "type": { "const": "goal-ledger" },
+    "decisions": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["state"],
+        "additionalProperties": false,
+        "properties": {
+          "state": { "enum": ["rejected", "deferred", "closed"] },
+          "decided_at": { "type": "string", "format": "date" },
+          "note": { "type": "string" }
+        }
+      }
+    }
+  }
+}

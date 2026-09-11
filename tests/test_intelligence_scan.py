@@ -48,6 +48,26 @@ def test_changed_nodes_reach_covering_routes():
     assert goals[0].state == "detected"
 
 
+def test_covering_routes_evidence_names_the_moved_unit():
+    goals = scan_observations(_input(
+        changed_nodes=("knowledge-a",),
+        route_covers=(("route-1", ("knowledge-a",)),),
+        node_units=(("knowledge-a", "unit-x"),),
+    ))
+    (goal,) = goals
+    assert goal.evidence == (
+        "route:route-1", "node:knowledge-a", "unit:unit-x")
+
+
+def test_covering_routes_emit_without_a_unit_map():
+    goals = scan_observations(_input(
+        changed_nodes=("knowledge-a",),
+        route_covers=(("route-1", ("knowledge-a",)),),
+    ))
+    (goal,) = goals
+    assert goal.evidence == ("route:route-1", "node:knowledge-a")
+
+
 def test_changed_sources_reach_dependent_claims():
     goals = scan_observations(_input(
         changed_sources=("source-x",),

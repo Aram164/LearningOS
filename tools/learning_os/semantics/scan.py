@@ -39,12 +39,18 @@ from pathlib import Path
 import yaml
 
 from ..githistory import last_commit_timestamps
+from ..learning_runtime import (
+    RuntimeInputError,
+    collect_requirements,
+    read_observations,
+)
 from ..loader import load_repo
 from ..pathing import PathBoundaryError, resolve_symlinks_inside
 from .goals import (
     CandidateGoal,
     detect_covering_routes_stale,
     detect_source_changed_under_claim,
+    stale_observations,
 )
 from .lineage import effective_statuses, load_ledger
 from .predicates import CONTRACT_VERSION, needs_study_map
@@ -54,6 +60,47 @@ REVISIONS_RELATIVE = "operations/transactions/revisions.yaml"
 
 #: Default recency window. Stateless by design: see the module docstring.
 DEFAULT_DAYS = 30
+
+#: Aram's explicit goal decisions, written only by `los goal`.
+GOAL_LEDGER_RELATIVE = "operations/goal-ledger.yaml"
+
+#: Ledger states that suppress re-emission: each one is Aram having
+#: decided, which is exactly what ``detected`` is not.
+DECIDED_GOAL_STATES = ("rejected", "deferred", "closed")
+
+
+def _unit_ids_by_path(root: Path, repo) -> dict[str, str]:
+    """Unit file rel to unit id. A changed unit file is the unit that
+    moved — the covering-routes clustering key. Unresolvable paths stay
+    absent; those goals simply cluster alone, never wrongly."""
+    owners: dict[str, str] = {}
+    for unit_id, unit in (getattr(repo, "units", {}) or {}).items():
+        path = getattr(unit, "path", None)
+        if not isinstance(path, Path):
+            continue
+        try:
+            rel = path.relative_to(root) if path.is_absolute() else path
+        except (OSError, ValueError):
+            continue
+        owners[rel.as_posix()] = unit_id
+    return owners
+
+
+def _read_goal_ledger(root: Path) -> tuple[str, ...]:
+    """Goal ids Aram already decided. Tolerant: missing or malformed input
+    reads as no decisions, so the scan never crashes on operational state
+    and never invents a decision nobody recorded."""
+    data = _read_yaml(root / GOAL_LEDGER_RELATIVE)
+    if not isinstance(data, dict):
+        return ()
+    decisions = data.get("decisions")
+    if not isinstance(decisions, dict):
+        return ()
+    return tuple(sorted(
+        goal_id for goal_id, row in decisions.items()
+        if isinstance(goal_id, str) and goal_id
+        and isinstance(row, dict) and row.get("state") in DECIDED_GOAL_STATES
+    ))
 
 
 @dataclass(frozen=True)
@@ -66,6 +113,8 @@ class ScanInput:
     claim_sources: tuple[tuple[str, tuple[str, ...]], ...] = ()
     stale_claims: tuple[tuple[str, tuple[str, ...]], ...] = ()
     obligations: tuple[str, ...] = ()
+    evidence_stale: tuple[tuple[str, str], ...] = ()
+    node_units: tuple[tuple[str, str], ...] = ()
     known_ids: tuple[str, ...] = ()
 
 
@@ -88,6 +137,7 @@ def scan_observations(observations: ScanInput) -> tuple[CandidateGoal, ...]:
         route_covers={rid: list(covers)
                       for rid, covers in observations.route_covers},
         known_ids=list(observations.known_ids),
+        node_units=dict(observations.node_units),
     ))
     goals.extend(detect_source_changed_under_claim(
         changed_sources=list(observations.changed_sources),
@@ -118,6 +168,19 @@ def scan_observations(observations: ScanInput) -> tuple[CandidateGoal, ...]:
             "a path. The obligation is derived, one definition with the "
             "producer.",
             [f"unit:{unit_id}"],
+        ))
+    for observation_id, requirement_id in observations.evidence_stale:
+        goal_id = f"evidence-superseded:{observation_id}"
+        if goal_id in known:
+            continue
+        goals.append(_emit(
+            goal_id, "evidence-superseded",
+            f"Re-check {observation_id}: its requirement moved",
+            f"Recorded against {requirement_id}, whose fingerprint no "
+            "longer matches — the result may no longer prove what it "
+            "proved. Re-run the requirement or supersede the result.",
+            [f"observation:{observation_id}",
+             f"requirement:{requirement_id}"],
         ))
     return tuple(sorted(goals, key=lambda goal: goal.goal_id))
 
@@ -332,12 +395,18 @@ def collect_observations(root: Path | str, *,
     """
     root = Path(root)
     changed = _changed_files(root, days=days)
+    repo = load_repo(root)
+    unit_of = _unit_ids_by_path(root, repo)
     nodes: set[str] = set()
+    node_units: dict[str, str] = {}
     sources: set[str] = set()
     for rel in changed:
-        nodes.update(_nodes_in_unit_file(root, rel))
+        unit_id = unit_of.get(rel)
+        for node_id in _nodes_in_unit_file(root, rel):
+            nodes.add(node_id)
+            if unit_id is not None:
+                node_units[node_id] = unit_id
         sources.update(_sources_in_source_map(root, rel))
-    repo = load_repo(root)
     route_sources = _route_sources(repo)
     records = load_ledger(root)
     current = _current_revisions(root)
@@ -408,8 +477,29 @@ def collect_observations(root: Path | str, *,
             has_study_map=unit_id in study_map_units,
         ):
             obligations.append(unit_id)
+    # Decided goals stay decided: Aram's explicit reject/defer/close feeds
+    # the detectors' `known_ids` dedup, so every scan stops re-emitting
+    # what he already judged. The write side lives in
+    # `commands/goal.py`; this read stays tolerant on purpose — a missing
+    # ledger means no decisions yet, and a malformed row is skipped rather
+    # than trusted, so the scan degrades to re-emitting, never to lying.
+    decided = _read_goal_ledger(root)
+    # Learning-side truth maintenance: results held against requirements
+    # that moved since. An unreadable runtime degrades to no evidence
+    # goals — the scan reports the world, never a traceback.
+    try:
+        runtime_requirements = collect_requirements(repo)
+        runtime_observations = read_observations(repo, runtime_requirements)
+        evidence_stale = tuple(
+            (row.observation_id, row.requirement)
+            for row in stale_observations(
+                runtime_requirements, runtime_observations)
+        )
+    except RuntimeInputError:
+        evidence_stale = ()
     return ScanInput(
         changed_nodes=tuple(sorted(nodes)),
+        node_units=tuple(sorted(node_units.items())),
         route_covers=tuple(sorted(
             (rid, tuple(covers)) for rid, covers in _route_covers(repo).items()
         )),
@@ -418,6 +508,8 @@ def collect_observations(root: Path | str, *,
             (cid, tuple(srcs)) for cid, srcs in claim_sources.items())),
         stale_claims=tuple(sorted(stale)),
         obligations=tuple(sorted(obligations)),
+        evidence_stale=evidence_stale,
+        known_ids=decided,
     )
 
 

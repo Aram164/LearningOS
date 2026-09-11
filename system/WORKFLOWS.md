@@ -161,6 +161,18 @@ Temporary → workspace `Open Questions`; durable local → section in a note; d
 
 ## 8. Record evidence
 
+Learner evidence (Aram's own results) is append-only and takes the direct
+path: `los observe <requirement> --activity exercise --result partial
+--condition unfamiliar-example --note "..."`. The terminal session is the
+approval — snapshot and revision guard are taken under the operator lock,
+never asserted by the caller — because the author is the ground truth
+about himself and the ledger carries a tested `--supersedes` correction
+path. Agent-authored writes keep the full GatewayEnvelopeV2 ceremony, and
+`direct-user-gesture` stays admitted only for the closed user-originated
+allowlist (this entry plus the two UI-originated writers). The allowlist
+lives in `system/contracts/capabilities.yaml` (`admission:`) and
+`tools/learning_os/commands/capability.py` (`GESTURE_ALLOWLIST`).
+
 Use note metadata or prose references:
 
 ```yaml
