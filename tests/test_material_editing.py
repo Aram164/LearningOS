@@ -6,7 +6,6 @@ import copy
 import json
 
 import pytest
-import yaml
 from gateway_helpers import (
     approved_v2_call,
     approved_v2_cli,
@@ -14,7 +13,7 @@ from gateway_helpers import (
     file_sha256,
     run_v2_capability,
 )
-from repo_builders import rich_fixture, run_los, write_yaml
+from repo_builders import material_fixture, run_los, write_yaml
 
 from learning_os.commands.material import compaction_plan, route_patch_plan
 from learning_os.fingerprint import canonical_fingerprint
@@ -26,39 +25,6 @@ from learning_os.material_refs import (
     expand_map,
     preserve_map_refs,
 )
-from learning_os.warning_baseline import collect, write_baseline
-
-
-def material_fixture(root):
-    route_id, _ = rich_fixture(root)
-    source_path = root / "curriculum/modules/module-demo/source-map.yaml"
-    source_map = yaml.safe_load(source_path.read_text())
-    route = source_map["sources"][0]["unit_routes"][0]
-    route["angle_detail"] = "Überprüfung: a fully preserved explanation. " * 30
-    write_yaml(source_path, source_map)
-    repo = load_repo(root)
-    sm = next(iter(repo.study_maps.values()))
-    sm.data["plan_template_version"] = 1
-    for number, stage in enumerate(sm.data["stages"], 1):
-        stage["number"] = number
-        stage.setdefault("exam_critical", False)
-        stage.setdefault("concepts", ["concept-expected-value"])
-    row = {"kind": "read", "label": route["title"], "source_id": "source-demo-book",
-           "locator": route["locator"], "angle": route["angle"],
-           "angle_detail": route["angle_detail"], "scope_triage": "required-now"}
-    sm.data["stages"][0]["resources"] = [
-        row, {**row, "angle": "This stage needs a distinct treatment.", "scope_triage": "helpful-now"},
-        {"kind": "read", "label": "An independent resource", "source_id": "source-demo-book",
-         "locator": "Independent chapter", "scope_triage": "reference-only"},
-    ]
-    write_yaml(sm.path, sm.data)
-    material = repo.materials_root / "source-demo-book/lecture-01.pdf"
-    material.parent.mkdir(parents=True, exist_ok=True)
-    material.write_text("synthetic lecture")
-    signatures, errors = collect(root)
-    assert not errors, errors
-    write_baseline(root, signatures, "Pre-existing warnings in this synthetic fixture")
-    return load_repo(root), route_id, sm.id
 
 
 def compact_via_gateway(root):
