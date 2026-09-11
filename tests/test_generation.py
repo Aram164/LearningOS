@@ -355,7 +355,7 @@ def test_note_summary_prefers_prose_with_list_fallback(mini_repo, marker, contin
 
 
 def test_malformed_frontmatter_prevents_publication(mini_repo):
-    from test_cli import run_los
+    from repo_builders import run_los
 
     # ensure it is generated first
     run_los(mini_repo, "generate")

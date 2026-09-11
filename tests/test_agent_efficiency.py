@@ -6,7 +6,7 @@ import json
 from types import SimpleNamespace
 
 import pytest
-from test_cli import run_los
+from repo_builders import run_los
 
 from learning_os.commands import query, reads
 from learning_os.loader import load_repo

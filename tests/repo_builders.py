@@ -16,13 +16,14 @@ from pathlib import Path
 import yaml
 
 from learning_os.loader import parse_frontmatter
+from learning_os.routes import deterministic_route_id
 
 LOS = Path(__file__).resolve().parent.parent / "tools" / "los.py"
 
 
-def run_los(root: Path, *args: str):
+def run_los(root: Path, *args: str, stdin: str | None = None):
     return subprocess.run([sys.executable, str(LOS), "--root", str(root), *args],
-                          capture_output=True, text=True, timeout=120)
+                          capture_output=True, text=True, input=stdin, timeout=120)
 
 
 def write_yaml(path: Path, data: dict) -> None:

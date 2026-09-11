@@ -3,7 +3,7 @@ import json
 
 import yaml
 from gateway_helpers import approved_v2_call
-from test_cli import run_los
+from repo_builders import run_los
 
 OLD = {"from": "concept-variance", "type": "builds-on", "to": "concept-expected-value"}
 REGISTRY = "registry-concept-relations"
