@@ -1,0 +1,3 @@
+## 2025-02-18 - Fast Exact Type Matching in Recursive AST Visitors
+**Learning:** For highly recursive tree-visitor-like functions, such as recursively parsing nested YAML objects, using `type(value) is dict` instead of `isinstance(value, dict)` for common primitive types reduces overhead significantly (e.g. up to 40% in micro-benchmarks) since `isinstance` performs complex inheritance checks.
+**Action:** When implementing or optimizing highly recursive Python functions that process standard collections (lists, dicts) or primitive types, prioritize exact type matching (`type(value) is X`) to bypass `isinstance()` overhead.
