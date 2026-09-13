@@ -70,13 +70,12 @@ sources:
     format: course-material
     angle: The chapter that installs the one axiom the rest of the script cannot do without, in the form
       this examiner states it.
-    angle_detail: 'Read what the task actually asks: not ''compute the supremum'' but ''determine it and
-      prove your answer'', with maximum and minimum asked separately so the sup-versus-max distinction
-      has to be argued rather than assumed. Its own Tipp routes the solution through monotonicity and
-      convergence of two auxiliary sequences — that is, it answers a Chapter 2 question with Chapter 3
-      machinery, which is the dependency this session should leave in place. Beyond this one Hausaufgabe
-      there is no current HU practice for Chapter 2; that gap has been open and unowned since the 2026-08-03
-      audit.'
+    angle_detail: Read §2.3 as the chapter and the rest as its setting. Completeness is stated here in
+      the supremum form, and every convergence theorem from Chapter 3 onward is either a direct consequence
+      or reaches it through Bolzano-Weierstraß — so the exact statement, including which sets it applies
+      to, is worth more than any amount of practice on §2.1. The §2.4 Ausflug on machine numbers is the
+      chapter's Informatik payoff; the contract puts it at overview depth, and no other source on this
+      menu covers it at all.
     covers:
     - knowledge-m2-analysis-ch02-koerperaxiome
     - knowledge-m2-analysis-ch02-anordnung
@@ -88,9 +87,12 @@ sources:
     - knowledge-m2-analysis-ch02-maschinenzahlen
     depth: course-aligned
     scope: current
-    locator: 'ana_inf_serie05.pdf, Hausaufgabe 5.4 (HA, 10 Punkte): decide boundedness of B = {1/2^n +
-      (-1)^m : n, m ∈ N_0} and determine sup, inf, max, min with proof; ana_inf_serie07.pdf, Übungsaufgabe
-      7.1 (Heron) reaches §2.3.6'
+    locator: unser skript.pdf Kapitel 2, printed p. 7 (PDF p. 17)–printed p. 40 (PDF p. 50); §2.1 Körperaxiome
+      (Wiederholung) printed p. 8 (PDF p. 18), §2.2 Anordnung printed p. 9 (PDF p. 19), §2.3.1 Intervalle
+      und Betrag printed p. 13 (PDF p. 23), §2.3.2 Supremum und Infimum printed p. 15 (PDF p. 25), §2.3.3
+      Vollständigkeitsaxiom printed p. 16 (PDF p. 26), §2.3.4 Folgerungen printed p. 18 (PDF p. 28), §2.3.5
+      Potenzen printed p. 22 (PDF p. 32), §2.3.6 Wurzeln printed p. 23 (PDF p. 33), §2.4 Ausflug – Maschinenzahlen
+      printed p. 26 (PDF p. 36)
     vault_path: material://source-analysis-skript/unser skript.pdf
   - id: route-an-ch02-analysisskripthu
     unit_id: unit-m2-analysis-ch02
@@ -460,18 +462,20 @@ sources:
     format: exercise
     angle: The only current HU material that states its own exam conditions — the closest available simulation
       of the Analysis half of the paper.
-    angle_detail: 'Read pp. iv-vii once, deliberately, before Chapter 1. Three claims there govern the
-      whole plan: Wiederholung sections are assumed known and are not re-taught; Ausflug sections should
-      be understood and applied but are not an exam focus; Exkurs sections are explicitly outside the
-      exam. And the sentence that shapes everything else — ''Die Beweise müssen Sie nicht können'' — with
-      the positive form beside it: definitions, results and their application in concrete problems are
-      what the exam asks for. Every ''reference-only'' label in this module traces back to that page.'
+    angle_detail: 'This is the set to protect. It is named on the Chapter 3, 4 and 5 sessions so those
+      sessions know what they are preparing for, but it is worked here, cold and timed, not there. Its
+      own framing is unusually explicit: exam-format questions, 30-45 minutes each, covering Chapters
+      1 to 5 only. That coverage boundary is also the honest limit of this rehearsal — there is no HU-format
+      material for Chapters 6 and 7 at all, so a full Analysis mock has to be assembled from external
+      papers and labelled as an assembly.'
     covers:
     - knowledge-m2-analysis-anx
     depth: practice
     scope: current
-    locator: 'unser skript.pdf: Vorwort and the three-label contract pp. iv-vii; Inhaltsverzeichnis pp.
-      ii-iii; Bezeichnungen p. viii; Kapitel 8 Exkurse printed p. 226 (PDF p. 236) onward'
+    locator: 'ana_inf_serieWV.pdf: WV1.1 Folgen, WV1.2 Stetigkeit, WV1.3 Konvergenzkriterien, WV1.4 Bisektionsverfahren
+      — 20 points each, and the sheet''s own instruction: these cover Kapitel 1 to 5 (up to §5.5), ''die
+      so auch in einer Klausur enthalten sein könnten'', to be attempted first under exam conditions at
+      about 30-45 minutes per task'
     vault_path: material://source-analysis-skript/ana_inf_serieWV.pdf
   - id: route-an-exam-prep-analysisskriptbeweise
     unit_id: unit-m2-analysis-exam-prep
@@ -479,19 +483,20 @@ sources:
     format: course-material
     angle: One page that answers the question the course contract leaves open — if proofs need not be
       reproduced, which ones are still worth understanding.
-    angle_detail: 'Read pp. iv-vii once, deliberately, before Chapter 1. Three claims there govern the
-      whole plan: Wiederholung sections are assumed known and are not re-taught; Ausflug sections should
-      be understood and applied but are not an exam focus; Exkurs sections are explicitly outside the
-      exam. And the sentence that shapes everything else — ''Die Beweise müssen Sie nicht können'' — with
-      the positive form beside it: definitions, results and their application in concrete problems are
-      what the exam asks for. Every ''reference-only'' label in this module traces back to that page.'
+    angle_detail: 'Read once at calibration to see the shape of the answer: twenty results for a 225-page
+      script, concentrated in Chapters 3 and 6. Then use it per chapter, where it is routed individually,
+      to repair a failed application. The disclaimer is real and is why this is a calibration input rather
+      than an authority — it is an experienced reader''s shortlist, not exam intelligence, and the plan
+      treats it as the former.'
     covers:
     - knowledge-m2-analysis-calibrate
     - knowledge-m2-analysis-anx
     depth: course-aligned
     scope: current
-    locator: 'unser skript.pdf: Vorwort and the three-label contract pp. iv-vii; Inhaltsverzeichnis pp.
-      ii-iii; Bezeichnungen p. viii; Kapitel 8 Exkurse printed p. 226 (PDF p. 236) onward'
+    locator: 'kleine_beweise.pdf (2 pp, SoSe 2025 Tutorium zur Prüfungsvorbereitung, Hannah Shorten and
+      Noah-Joël Seegert): twenty results across Kapitel 3 to 7, with the printed caveat that the list
+      was compiled by student assistants and ''steht in keinem uns bekannten Zusammenhang mit den Inhalten
+      der Klausur'''
     vault_path: material://source-analysis-skript/kleine_beweise.pdf
   - id: route-an-exam-prep-analysisskript-2
     unit_id: unit-m2-analysis-exam-prep
@@ -499,18 +504,24 @@ sources:
     format: course-material
     angle: One list of everything the course contract puts outside the exam, so a deferred section is
       never re-discovered as a gap.
-    angle_detail: 'Read pp. iv-vii once, deliberately, before Chapter 1. Three claims there govern the
-      whole plan: Wiederholung sections are assumed known and are not re-taught; Ausflug sections should
-      be understood and applied but are not an exam focus; Exkurs sections are explicitly outside the
-      exam. And the sentence that shapes everything else — ''Die Beweise müssen Sie nicht können'' — with
-      the positive form beside it: definitions, results and their application in concrete problems are
-      what the exam asks for. Every ''reference-only'' label in this module traces back to that page.'
+    angle_detail: 'Handled lightly and deliberately: the script states that Exkurse are not exam-relevant,
+      so none of these sections gets a session, a stage or a material menu, and none of the chapter sessions
+      spends time on them. They are written down once, here, for two reasons only — so that meeting a
+      power-series or Newton-method task in an external bank is recognised as out-of-scope rather than
+      as a hole, and so that the decision is reversible in one place if the lecturer ever says otherwise.
+      One of them has value elsewhere: §3.2''s Landau notation is the same O-notation Algorithmen 2 uses,
+      and Labs/Schreyer p. 94 covers it if it is ever wanted for that reason rather than this one.'
     covers:
     - knowledge-m2-analysis-exkurse
     depth: course-aligned
     scope: current
-    locator: 'unser skript.pdf: Vorwort and the three-label contract pp. iv-vii; Inhaltsverzeichnis pp.
-      ii-iii; Bezeichnungen p. viii; Kapitel 8 Exkurse printed p. 226 (PDF p. 236) onward'
+    locator: 'unser skript.pdf Kapitel 8 Exkurse printed p. 226 (PDF p. 236) to the end; and the Exkurs
+      sections in Chapters 3-7: §3.2 Landau-Notation printed p. 46 (PDF p. 56), §3.4 Lösung homogener
+      Rekursionsgleichungen printed p. 52 (PDF p. 62), §4.5 Produktreihen printed p. 95 (PDF p. 105),
+      §5.8 Potenzreihen printed p. 130 (PDF p. 140), §6.2 Ableitung von Potenzreihen printed p. 144 (PDF
+      p. 154), §6.6 Numerisches Lösen von Gleichungen printed p. 153 (PDF p. 163), §6.9 Potenzreihen und
+      Taylorentwicklungen printed p. 173 (PDF p. 183), §7.4 Numerische Integration printed p. 215 (PDF
+      p. 225)'
     vault_path: material://source-analysis-skript/unser skript.pdf
 - source_id: source-sad-ss26-lectures
   role: course-material
@@ -1848,13 +1859,18 @@ sources:
     angle_detail: Ten to fifteen minutes, watched once, before rather than instead of the script. It shows
       the ε-δ picture geometrically, which is the one thing a written definition cannot do. It is not
       a source of rigour and should never be the thing an exam answer is reconstructed from. The l'Hôpital
-      half of the same episode belongs to Chapter 6.
+      half of the same episode belongs to Chapter 6. A German transcript of this episode is now a managed
+      material (fetched 2026-09-11), so the epsilon-delta passage can be read and quoted at [06:00]-[10:30]
+      without watching the video.
     covers:
     - knowledge-m2-analysis-ch05-funktionsgrenzwerte
     - knowledge-m2-analysis-ch05-einseitige-grenzwerte
     depth: intuition
     scope: complementary
-    locator: 'Chapter 7, Essence of calculus: ''Limits, L''Hôpital''s rule, and epsilon delta definitions'''
+    locator: 'transcript/kfF40MiS7zA.md (Kapitel 7, Essence of calculus: ''Limits, L''Hopital''s rule,
+      and epsilon delta definitions'', 18:26). The epsilon-delta passage runs [06:00]-[10:30]; everything
+      from [11:00] is l''Hospital and belongs to Chapter 6.'
+    vault_path: material://source-3b1b-essence-of-calculus/transcript/kfF40MiS7zA.md
   - id: route-an-ch06-3b1bessenceofcalculus
     unit_id: unit-m2-analysis-ch06
     title: 3Blue1Brown — the derivative, chain rule and Taylor series episodes
@@ -1864,7 +1880,9 @@ sources:
     angle_detail: 'Short, watched once, before the script rather than instead of it. The Taylor episode
       is the one worth the time on this chapter: §6.8 introduces the polynomial and the remainder as formulas,
       and the visual account of why matching derivatives at a point produces a good local approximation
-      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.'
+      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.
+      All four episodes are now managed German transcripts (fetched 2026-09-11); the Taylor construction
+      at [08:30]-[12:30] is the span this chapter needs.'
     covers:
     - knowledge-m2-analysis-ch06-differenzierbarkeit
     - knowledge-m2-analysis-ch06-mittelwertsatz
@@ -1875,8 +1893,11 @@ sources:
     - knowledge-m2-analysis-ch06-interpolation
     depth: intuition
     scope: complementary
-    locator: Chapter 2 'The paradox of the derivative'; Chapter 4 'Chain rule and product rule'; Chapter
-      7 'Limits, L'Hôpital's rule, and epsilon delta definitions'; Chapter 11 'Taylor series'
+    locator: transcript/3d6DsjIBzJ4.md (Kapitel 11 'Taylor series', 22:19), where the coefficients are
+      built at [08:30]-[12:30]; also transcript/9vKqVkMQHKk.md (Kapitel 2 'The paradox of the derivative',
+      16:50), transcript/YG15m2VwSjA.md (Kapitel 4 'Visualizing the chain rule and product rule', 15:56),
+      and the l'Hospital half of transcript/kfF40MiS7zA.md (Kapitel 7, [11:00]-[17:00]).
+    vault_path: material://source-3b1b-essence-of-calculus/transcript/3d6DsjIBzJ4.md
   - id: route-an-ch07-3b1bessenceofcalculus
     unit_id: unit-m2-analysis-ch07
     title: 3Blue1Brown — integration and the fundamental theorem
@@ -1886,14 +1907,17 @@ sources:
     angle_detail: Fifteen minutes, watched once, before the script. The fundamental theorem is the single
       most surprising statement in the module and the one most often held as a rule rather than understood;
       this is the cheapest available fix for that. No rigour, and not a source to reconstruct an answer
-      from.
+      from. A German transcript is now a managed material (fetched 2026-09-11); the inverse-relationship
+      argument is at [07:30]-[11:30].
     covers:
     - knowledge-m2-analysis-ch07-riemann-integral
     - knowledge-m2-analysis-ch07-hauptsatz
     - knowledge-m2-analysis-ch07-uneigentliche-integrale
     depth: intuition
     scope: complementary
-    locator: 'Chapter 8, Essence of calculus: ''Integration and the fundamental theorem of calculus'''
+    locator: 'transcript/rfG8ce4nNh0.md (Kapitel 8, Essence of calculus: ''Integration and the fundamental
+      theorem of calculus'', 20:46). The argument that area and slope are inverse runs [07:30]-[11:30].'
+    vault_path: material://source-3b1b-essence-of-calculus/transcript/rfG8ce4nNh0.md
 - source_id: source-sad-2025-recordings
   role: reference
   why: Same-course older decks and UE1–UE7 are used only where topic alignment was verified; numbering
@@ -5734,7 +5758,10 @@ sources:
       never read through. What changed on 2026-08-29 is that the lectures are named rather than numbered,
       so the right one can be found without paging. Note that p. 35 spans the Chapter 3/Chapter 4 boundary
       — it derives the basic series facts from completeness, which is the join the script makes at the
-      start of its Chapter 4.'
+      start of its Chapter 4. Checked against the notes on 2026-09-12 rather than against the lecture
+      titles: 17 of the 20 kleine Beweise are numbered theorems in this PDF, with proofs, at page granularity
+      a 70-minute video cannot match. Read the theorem, then watch the lecture only if the written proof
+      does not land.'
     covers:
     - knowledge-m2-analysis-ch03-konvergenzkriterien
     - knowledge-m2-analysis-ch03-rechenregeln
@@ -5743,16 +5770,23 @@ sources:
     locator: 'mit18_100af20_lec_full2.pdf: ''Convergent Sequences of Real Numbers'' p. 24, ''The Squeeze
       Theorem and Operations Involving Convergent Sequences'' p. 27, ''Limsup, Liminf, and the Bolzano-Weierstrass
       Theorem'' p. 31, ''The Completeness of the Real Numbers and Basic Properties of Infinite Series''
-      p. 35'
+      p. 35; the Kapitel 3 kleine Beweise are numbered results here: Theorem 72 (convergent implies bounded)
+      p. 24, Theorem 75 (monotone and bounded iff convergent) p. 25, Theorem 79 (subsequences of a convergent
+      sequence) p. 26, Theorem 89 (the limit laws) p. 28, Theorem 110 (Cauchy implies bounded) p. 35,
+      Theorem 112 (Cauchy iff convergent) p. 36. Uniqueness of the limit (Lemma 3.21, first half) is not
+      stated here.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
   - id: route-an-ch04-mit18100a
     unit_id: unit-m2-analysis-ch04
     title: MIT 18.100A — absolute convergence, comparison, and the ratio/root/alternating tests
     format: course
     angle: The criteria derived rather than listed, for the case where a hypothesis makes no sense.
-    angle_detail: Three consecutive lectures covering exactly §§4.1-4.3. The distinctive thing is p. 35,
-      which derives the basic series facts *from completeness* — making explicit the dependency the script
-      carries implicitly from Chapter 2. Still one blocked idea at a time, not a course to follow.
+    angle_detail: 'Three consecutive lectures covering exactly §§4.1-4.3. The distinctive thing is p.
+      35, which derives the basic series facts *from completeness* — making explicit the dependency the
+      script carries implicitly from Chapter 2. Still one blocked idea at a time, not a course to follow.
+      Checked against the notes on 2026-09-12 rather than against the lecture titles: 17 of the 20 kleine
+      Beweise are numbered theorems in this PDF, with proofs, at page granularity a 70-minute video cannot
+      match. Read the theorem, then watch the lecture only if the written proof does not land.'
     covers:
     - knowledge-m2-analysis-ch04-reihen
     - knowledge-m2-analysis-ch04-konvergenzkriterien
@@ -5761,7 +5795,8 @@ sources:
     scope: optional
     locator: 'mit18_100af20_lec_full2.pdf: ''The Completeness of the Real Numbers and Basic Properties
       of Infinite Series'' p. 35, ''Absolute Convergence and the Comparison Test for Series'' p. 39, ''The
-      Ratio, Root, and Alternating Series Tests'' p. 43'
+      Ratio, Root, and Alternating Series Tests'' p. 43; Theorem 135 (Comparison Test) p. 41 is Satz 4.12
+      and Theorem 142 (Root test) p. 44 is Satz 4.15, both with proofs.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
   - id: route-an-ch05-mit18100a
     unit_id: unit-m2-analysis-ch05
@@ -5769,11 +5804,14 @@ sources:
     format: course
     angle: The permitted window for this chapter, named lecture by lecture — including the two lectures
       that are the whole of §5.7.
-    angle_detail: The p. 50 lecture is the sequence criterion for function limits, which is the script's
-      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet's function directly,
-      which is WV1.2's construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
-      the pre-2026-08-29 record said 'lectures 23-24' without saying what they were. Still one blocked
-      idea at a time.
+    angle_detail: 'The p. 50 lecture is the sequence criterion for function limits, which is the script''s
+      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet''s function directly,
+      which is WV1.2''s construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
+      the pre-2026-08-29 record said ''lectures 23-24'' without saying what they were. Still one blocked
+      idea at a time. Checked against the notes on 2026-09-12 rather than against the lecture titles:
+      17 of the 20 kleine Beweise are numbered theorems in this PDF, with proofs, at page granularity
+      a 70-minute video cannot match. Read the theorem, then watch the lecture only if the written proof
+      does not land.'
     covers:
     - knowledge-m2-analysis-ch05-funktionsgrenzwerte
     - knowledge-m2-analysis-ch05-einseitige-grenzwerte
@@ -5789,7 +5827,9 @@ sources:
       of Dirichlet''s Function'' p. 53, ''The Min/Max Theorem and Bolzano''s Intermediate Value Theorem''
       p. 56, ''Uniform Continuity and the Definition of the Derivative'' p. 59; ''Pointwise and Uniform
       Convergence of Sequences of Functions'' p. 81, ''Uniform Convergence, the Weierstrass M-Test, and
-      Interchanging Limits'' p. 84'
+      Interchanging Limits'' p. 84; Theorem 149 (x is a cluster point of S iff a sequence in S minus {x}
+      converges to x) p. 47 is Lemma 5.3, and Theorem 174 (f+g, f*g and the quotient continuous at c)
+      p. 54 is Satz 5.20. Satz 5.21, continuity of a composition, is not stated here.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
   - id: route-an-ch06-mit18100a
     unit_id: unit-m2-analysis-ch06
@@ -5799,7 +5839,10 @@ sources:
     angle_detail: 'The p. 69 lecture is the boundary between this chapter and the next: Taylor''s theorem
       and then the definition of Riemann sums, which is exactly how the script moves from §6.8 to §7.1.
       Reading it once makes that transition deliberate rather than incidental. Rule unchanged: one definition
-      at a time, not a course.'
+      at a time, not a course. Checked against the notes on 2026-09-12 rather than against the lecture
+      titles: 17 of the 20 kleine Beweise are numbered theorems in this PDF, with proofs, at page granularity
+      a 70-minute video cannot match. Read the theorem, then watch the lecture only if the written proof
+      does not land.'
     covers:
     - knowledge-m2-analysis-ch06-differenzierbarkeit
     - knowledge-m2-analysis-ch06-mittelwertsatz
@@ -5809,7 +5852,11 @@ sources:
     depth: derivation
     scope: optional
     locator: 'mit18_100af20_lec_full2.pdf: ''Differentiation Rules, Rolle''s Theorem, and the Mean Value
-      Theorem'' p. 65, ''Taylor''s Theorem and the Definition of Riemann Sums'' p. 69'
+      Theorem'' p. 65, ''Taylor''s Theorem and the Definition of Riemann Sums'' p. 69; every Kapitel 6
+      kleine Beweis is a numbered result in Lecture 19 and its run-up: Theorem 202 (differentiable implies
+      continuous) p. 62, Theorem 212 (linearity, product, quotient, chain) p. 65, Theorem 215 (relative
+      extremum implies f''(c) = 0) p. 66, Theorem 216 (Rolle) p. 67, Theorem 220 (f'' identically 0 implies
+      constant) p. 68, Theorem 221 (increasing iff f'' >= 0) p. 68.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
   - id: route-an-ch07-mit18100a
     unit_id: unit-m2-analysis-ch07
@@ -5820,7 +5867,10 @@ sources:
     angle_detail: 'The p. 76 lecture is the one to know about: it treats integration by parts and the
       change of variable formula as consequences of the fundamental theorem rather than as separate techniques,
       which is both the script''s §7.2 arrangement and the exact argument the Regensburg paper asks to
-      be reproduced. One blocked idea at a time, as always.'
+      be reproduced. One blocked idea at a time, as always. Checked against the notes on 2026-09-12 rather
+      than against the lecture titles: 17 of the 20 kleine Beweise are numbered theorems in this PDF,
+      with proofs, at page granularity a 70-minute video cannot match. Read the theorem, then watch the
+      lecture only if the written proof does not land.'
     covers:
     - knowledge-m2-analysis-ch07-riemann-integral
     - knowledge-m2-analysis-ch07-hauptsatz
@@ -5829,7 +5879,9 @@ sources:
     scope: optional
     locator: 'mit18_100af20_lec_full2.pdf: ''Taylor''s Theorem and the Definition of Riemann Sums'' p.
       69, ''The Riemann Integral of a Continuous Function'' p. 72, ''The Fundamental Theorem of Calculus,
-      Integration by Parts, and Change of Variable Formula'' p. 76'
+      Integration by Parts, and Change of Variable Formula'' p. 76; Theorem 252 (Integration by Parts)
+      p. 79 is Satz 7.20. Satz 7.24, the Mittelwertsatz der Integralrechnung, is not stated as a theorem
+      here; the MVT is used inside the FTC proof on p. 78 instead.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
 - source_id: source-teschl-mathe-informatiker
   role: candidate
@@ -10324,3 +10376,188 @@ sources:
     or source evaluation is inferred.
   when: Reference-only workspace option carried forward from the reviewed pre-Gemini context.
   priority: 3
+- source_id: source-henning-dierks
+  role: derivation
+  why: 'The German proof layer for kleine_beweise.pdf: one named result per video, in the language the
+    Klausur is written in. 18 of the 20 tutor-named proofs have a video whose stated subject is that result.'
+  priority: 3
+  unit_routes:
+  - id: route-an-ch03-henningdierks
+    unit_id: unit-m2-analysis-ch03
+    title: Dierks — die kleinen Beweise aus Kapitel 3, einzeln
+    format: video
+    angle: Five of this chapter's seven tutor-named proofs verified on transcript, one video each, in
+      German.
+    angle_detail: 'The reason to open this rather than a textbook is that each video is the proof and
+      nothing else, so a single failed step costs ten minutes instead of a chapter. Verified 2026-09-12
+      against transcripts: 3.21a/b, 3.25 (three videos jointly), 3.30 and 3.43 are proved; #05-22 asserts
+      the 3.49 rules without proving them and #07-03 proves neither the Teilfolgenkriterium nor Lemma
+      5.3, so 3.40, 3.42 and 3.49 are not carried here — for 3.40 the Wrath of Math route below is the
+      address, 3.42 lives only in the MIT notes, and 3.49 has no verified proof anywhere yet.'
+    covers:
+    - knowledge-m2-analysis-ch03-konvergenzkriterien
+    - knowledge-m2-analysis-ch03-rechenregeln
+    - knowledge-m2-analysis-ch03-bestimmte-divergenz
+    depth: derivation
+    scope: complementary
+    locator: 'Playlist ''Analysis 1 - Folgen und Konvergenzen'': #05-07 ''Grenzwerte sind eindeutig''
+      13:43 (65bMgATj_cg, Beweis [06:30-11:30]) for Lemma 3.21 first half; ''Aufg. 5.8 Konvergente Folgen
+      sind beschraenkt'' 8:06 (uomK6mgdUTI, Beweis [04:30-07:30]) for its second; #05-08 25:03 (ZlAt8sMMfks,
+      [02:30-10:30]), #05-09 24:11 (2XTBBHI9ODE, [11:00-19:30]) and #05-10 15:56 (SSghzbB6154, [07:00-14:30])
+      jointly for Satz 3.25; #05-16 14:42 (baGiNGdvKXM, Beweis [04:00-13:00]) for Satz 3.30; #05-20 27:17
+      (_QjL5Bu1DHg, [02:30-07:30] and [08:00-24:30]) for Satz 3.43. #05-22 (W-MN5CDs23E) disqualified
+      2026-09-12: asserts the 3.49 rules, proves indeterminacy instead — Satz 3.49 has no verified video
+      proof; #07-03 (-WFcUvR2Qdc) proves neither 3.40 nor 5.3.'
+    url: https://www.youtube.com/playlist?list=PLKACPrU0Thj-glqd1KYurRLWkdBKxZIPh
+  - id: route-an-ch04-henningdierks
+    unit_id: unit-m2-analysis-ch04
+    title: Dierks — Majorantenkriterium und Wurzelkriterium, mit Beweis
+    format: video
+    angle: Both of this chapter's tutor-named proofs, and the Wurzelkriterium gets a video that is only
+      its proof.
+    angle_detail: 'Kapitel 4 names exactly two small proofs and this route carries both. #06-18 is titled
+      ''Beweis'' and is separate from the example video, which is the split worth having: the criterion''s
+      proof and its application are different skills and the exam asks for the second. The Minoranten
+      video is included because Satz 4.12''s contrapositive is what a divergence argument actually uses.'
+    covers:
+    - knowledge-m2-analysis-ch04-konvergenzkriterien
+    depth: derivation
+    scope: complementary
+    locator: 'Playlist ''Analysis 1 - Unendliche Reihen'': #06-09 ''Comparison Test for Series'' 10:26
+      (mvOTUcTF1qk) and #06-11 ''Minoranten-Kriterium fuer Reihen mit Beispiel'' 10:00 (FV1mUh2UKw8) for
+      Satz 4.12; #06-18 ''Wurzelkriterium fuer Reihen - Beweis'' 10:02 (1otGChJnFbA) for Satz 4.15, with
+      #06-17 10:56 (IJEEtUlFfzk) stating it first'
+    url: https://www.youtube.com/playlist?list=PLKACPrU0Thj8zdZTyv9499-ON3vxBaShx
+  - id: route-an-ch05-henningdierks
+    unit_id: unit-m2-analysis-ch05
+    title: Dierks — Rechenregeln und Verkettung stetiger Funktionen, mit Beweis
+    format: video
+    angle: Satz 5.20 and Satz 5.21 proved separately, and 5.21 is the one MIT does not state at all.
+    angle_detail: 'Satz 5.21 is the gap worth knowing about: the MIT notes use continuity of a composition
+      without stating it, so this 16:35 video is the only worked proof of it on the shelf. #08-13 is the
+      arithmetic half, which the handout says to write out via Satz 3.25, so watch it next to the Kapitel
+      3 limit-law videos rather than on its own. Lemma 5.3 is not served here: the shared #07-03 video
+      proves neither direction (verified 2026-09-12) — take the Wrath of Math route below for it.'
+    covers:
+    - knowledge-m2-analysis-ch05-funktionsgrenzwerte
+    - knowledge-m2-analysis-ch05-stetigkeit
+    depth: derivation
+    scope: complementary
+    locator: 'Playlist ''Analysis 1 - Stetigkeit'': #08-13 ''Stetigkeit bleibt erhalten bei arithmetischen
+      Operationen'' 7:32 (y1J-27SqDS0) for Satz 5.20; #08-16 ''Verschachtelte stetige Funktionen bleiben
+      stetig - Beweis'' 16:35 (kSqVzSClJD4) for Satz 5.21; #07-03 ''Teilfolgen und Haeufungspunkte'' 7:36
+      (-WFcUvR2Qdc) touches Lemma 5.3 without proving the equivalence'
+    url: https://www.youtube.com/playlist?list=PLKACPrU0Thj-3mMhf7qpfOAGcrtezLkbi
+  - id: route-an-ch06-henningdierks
+    unit_id: unit-m2-analysis-ch06
+    title: Dierks — alle sechs kleinen Beweise aus Kapitel 6, einzeln
+    format: video
+    angle: The whole Kapitel 6 list, one proof per video, and the only place all six are separated.
+    angle_detail: 'This is the route that earns the source. Kapitel 6 carries six of the twenty and no
+      other video source proves more than one of them: Wrath of Math''s Real Analysis playlist has no
+      differentiation section at all, and Professor Leonard proves neither rule in-video (quotient refused,
+      product deferred to the book). Here each of 6.3, 6.4, 6.11, 6.13, 6.14 and 6.15 has its own short
+      video, three of them titled ''Beweis''. #10-11 is the counterexample to the naive reading of 6.15
+      and is worth the extra twelve minutes.'
+    covers:
+    - knowledge-m2-analysis-ch06-differenzierbarkeit
+    - knowledge-m2-analysis-ch06-mittelwertsatz
+    depth: derivation
+    scope: complementary
+    locator: 'Playlists ''Analysis 1 - Differenzierbarkeit'' and ''Analysis 1 - Mittelwertsaetze und Extremwerte'':
+      #09-09 ''Differenzierbare Funktionen sind stetig'' 12:21 (yBiBNqvjYaA, Beweis [02:30-11:30]) for
+      Lemma 6.3; #09-10 Linearitaet (UQw143h_hk0, [04:30-07:00]), #09-12 ''Beweis der Produktregel'' 7:09
+      (R2T1aizH15M, [01:30-06:00]), #09-14 ''Quotientenregel'' 10:33 (wpyVmyhPtUI, [03:00-06:00]) and
+      #09-16 ''Proof of the Chain Rule'' 17:15 (gNc1IN6gzhU, [01:00-13:30]) for Satz 6.4; #10-02 ''Proof
+      of the Necessary Criterion for Extreme Values'' 9:02 (hxkQk2dVdxQ, [02:30-08:00]) for Lemma 6.11;
+      #10-03 ''Rolle''s Theorem'' 6:10 (Lc-kcNT91KY, [03:30-05:30]) for Korollar 6.13; #10-07 ''Konstante
+      Funktionen und Ableitungen'' 4:10 (TFEz7S70baQ, [01:00-03:30]) for Korollar 6.14; #10-10 ''Beweis
+      des Zusammenhangs Monotonie und Ableitung'' 9:20 (gO0g7PKkJIU, [01:30-08:30]) with the counterexample
+      #10-11 11:45 (qpho9TwLM6s) for Satz 6.15'
+    url: https://www.youtube.com/playlist?list=PLKACPrU0Thj-TdcFg3pBoHsahNVjXQ8Gs
+  - id: route-an-ch07-henningdierks
+    unit_id: unit-m2-analysis-ch07
+    title: Dierks — partielle Integration und der Mittelwertsatz der Integralrechnung
+    format: video
+    angle: The only titled proof of Satz 7.24 found anywhere, and it is in German.
+    angle_detail: 'Satz 7.24 is the single result on the whole handout with one good video and no second
+      opinion: the MIT notes use the MVT inside the FTC proof without stating the integral form, and neither
+      English channel has a titled video for it. That makes #13-42 the route of record for this proof
+      rather than an alternative to something. #13-22 derives partielle Integration from the product rule,
+      which is the derivation the script compresses.'
+    covers:
+    - knowledge-m2-analysis-ch07-hauptsatz
+    depth: derivation
+    scope: complementary
+    locator: 'Playlist ''Analysis 2 - Integrale'': #13-22 ''Partielle Integrationsregel mit Herleitung''
+      11:43 (5W8Jf4MeHxI) for Satz 7.20; #13-42 ''Beweis des Mittelwertsatzes der Integralrechnung'' 9:14
+      (cXVoFGeXFj4) for Satz 7.24'
+    url: https://www.youtube.com/playlist?list=PLKACPrU0Thj_qQnom44t0iCzD9qSC6rOW
+- source_id: source-wrath-of-math
+  role: derivation
+  why: The shortest proof-per-result source on the shelf, 3 to 10 minutes a theorem. Carries the three
+    sequence lemmas no other source proves on its own.
+  priority: 4
+  unit_routes:
+  - id: route-an-ch03-wrathofmath
+    unit_id: unit-m2-analysis-ch03
+    title: Wrath of Math — the two Kapitel 3 lemmas nobody else proves alone
+    format: video
+    angle: Short proofs for the Kapitel 3 lemmas other sources fold into longer videos — with one title-only
+      leg.
+    angle_detail: 'Open this for the rows it proves on transcript: 3.40 gets the full iff in 8:54 where
+      Dierks proves nothing, the limit laws one per video, plus 3.30, 3.21b and the 3.21a/3.25 companions.
+      Two legs are title-only pending a watch: Satz 3.42 (5:33, English ASR broken at source) and 1xsIpCa961w
+      (3.21a, no captions at all). It does not reach Satz 3.49, which has no verified proof anywhere —
+      not Dierks either.'
+    covers:
+    - knowledge-m2-analysis-ch03-konvergenzkriterien
+    - knowledge-m2-analysis-ch03-rechenregeln
+    depth: derivation
+    scope: complementary
+    locator: 'Playlist ''Real Analysis'': ''Proof: Cauchy Sequences are Bounded'' 5:33 (GulH7nS_65c, transcript-unverifiable
+      2026-09-12, title only) for Satz 3.42; ''Sequence Converges iff Every Subsequence Converges to the
+      Same Limit'' 8:54 (0oRN_pxq2IM, Beweis [00:30-08:00]) for Satz 3.40; ''Proof: The Limit of a Sequence
+      is Unique'' 13:22 (1xsIpCa961w, no captions, title only) and ''Proof: Convergent Sequence is Bounded''
+      5:47 (7N-4XZlxBho, [00:00-05:00]) for Lemma 3.21; the limit laws one per video from ''Limit Law
+      for Sum'' 7:56 (Max7ZPWnV1Q, [00:30-07:00]) to ''Limit Law for Quotient'' 16:31 (wBNKbQ-xNiw, [01:30-16:00])
+      for Satz 3.25; ''Detailed Proof of the Monotone Convergence Theorem'' 13:44 (4NURDmE79VU, [04:00-06:30]
+      and [07:00-12:30]) for Satz 3.30'
+    url: https://www.youtube.com/playlist?list=PLztBpqftvzxWo4HxUYV58ENhxHV32Wxli
+  - id: route-an-ch05-wrathofmath
+    unit_id: unit-m2-analysis-ch05
+    title: Wrath of Math — Lemma 5.3 as its own theorem, plus the continuity laws
+    format: video
+    angle: The cluster-point equivalence stated and proved on its own, which is what Lemma 5.3 asks for.
+    angle_detail: 'Lemma 5.3 is an iff and the handout names it as one, so a video that proves both directions
+      in 11:36 is a closer match than a passage inside a lecture. The two continuity videos are four and
+      seven minutes and overlap the Dierks route above; take whichever language is not currently the obstacle.
+      Note the road difference: Sbk-DDhuEvc proves the continuity laws via functional limit laws, while
+      the handout asks for them explicitly via Satz 3.25 — that road is the Dierks #08-13 video. Nothing
+      here reaches the Kapitel 6 list.'
+    covers:
+    - knowledge-m2-analysis-ch05-funktionsgrenzwerte
+    - knowledge-m2-analysis-ch05-stetigkeit
+    depth: derivation
+    scope: complementary
+    locator: 'Playlist ''Real Analysis'': ''Limit Points (Sequence and Neighborhood Definition)'' 11:36
+      (RmsvftFNMtE) for Lemma 5.3; ''Proving the Algebraic Continuity Laws'' 6:55 (Sbk-DDhuEvc) for Satz
+      5.20; ''Composition of Continuous Functions is Continuous'' 4:53 (-n4cnyDkd6A) for Satz 5.21'
+    url: https://www.youtube.com/playlist?list=PLztBpqftvzxWo4HxUYV58ENhxHV32Wxli
+  - id: route-an-ch06-wrathofmath
+    unit_id: unit-m2-analysis-ch06
+    title: Wrath of Math — Rolle only, and from the Calculus 1 playlist
+    format: video
+    angle: One of this chapter's six, and it is not even in the Real Analysis playlist.
+    angle_detail: Recorded so the boundary is explicit rather than rediscovered. The Real Analysis playlist
+      runs sequences, series, topology, continuity and integration and never covers differentiation, so
+      five of this chapter's six proofs are absent from this source entirely. The Rolle video that does
+      exist sits in Calculus 1 and is proved there. For 6.3, 6.4, 6.11, 6.14 and 6.15 the route is Dierks
+      or the MIT notes, not this.
+    covers:
+    - knowledge-m2-analysis-ch06-mittelwertsatz
+    depth: derivation
+    scope: complementary
+    locator: 'Playlist ''Calculus 1'': ''Rolle''s Theorem Explained (with proof)'' 11:11 (uuGDahLA2Rk)
+      for Korollar 6.13. The ''Real Analysis'' playlist has no differentiation section'
+    url: https://www.youtube.com/playlist?list=PLztBpqftvzxWVDpl8oaz_Co6CW50KtGJy

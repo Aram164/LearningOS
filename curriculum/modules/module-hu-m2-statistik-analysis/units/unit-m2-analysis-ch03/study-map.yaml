@@ -568,14 +568,21 @@ stages:
     locator: 'mit18_100af20_lec_full2.pdf: ''Convergent Sequences of Real Numbers'' p. 24, ''The Squeeze
       Theorem and Operations Involving Convergent Sequences'' p. 27, ''Limsup, Liminf, and the Bolzano-Weierstrass
       Theorem'' p. 31, ''The Completeness of the Real Numbers and Basic Properties of Infinite Series''
-      p. 35'
+      p. 35; the Kapitel 3 kleine Beweise are numbered results here: Theorem 72 (convergent implies bounded)
+      p. 24, Theorem 75 (monotone and bounded iff convergent) p. 25, Theorem 79 (subsequences of a convergent
+      sequence) p. 26, Theorem 89 (the limit laws) p. 28, Theorem 110 (Cauchy implies bounded) p. 35,
+      Theorem 112 (Cauchy iff convergent) p. 36. Uniqueness of the limit (Lemma 3.21, first half) is not
+      stated here.'
     angle: Full rigour for one blocked definition — the permitted window for this chapter, named lecture
       by lecture.
     angle_detail: 'The record''s rule stands: opened for a single definition that refuses to make sense,
       never read through. What changed on 2026-08-29 is that the lectures are named rather than numbered,
       so the right one can be found without paging. Note that p. 35 spans the Chapter 3/Chapter 4 boundary
       — it derives the basic series facts from completeness, which is the join the script makes at the
-      start of its Chapter 4.'
+      start of its Chapter 4. Checked against the notes on 2026-09-12 rather than against the lecture
+      titles: 17 of the 20 kleine Beweise are numbered theorems in this PDF, with proofs, at page granularity
+      a 70-minute video cannot match. Read the theorem, then watch the lecture only if the written proof
+      does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise
@@ -872,14 +879,21 @@ stages:
     locator: 'mit18_100af20_lec_full2.pdf: ''Convergent Sequences of Real Numbers'' p. 24, ''The Squeeze
       Theorem and Operations Involving Convergent Sequences'' p. 27, ''Limsup, Liminf, and the Bolzano-Weierstrass
       Theorem'' p. 31, ''The Completeness of the Real Numbers and Basic Properties of Infinite Series''
-      p. 35'
+      p. 35; the Kapitel 3 kleine Beweise are numbered results here: Theorem 72 (convergent implies bounded)
+      p. 24, Theorem 75 (monotone and bounded iff convergent) p. 25, Theorem 79 (subsequences of a convergent
+      sequence) p. 26, Theorem 89 (the limit laws) p. 28, Theorem 110 (Cauchy implies bounded) p. 35,
+      Theorem 112 (Cauchy iff convergent) p. 36. Uniqueness of the limit (Lemma 3.21, first half) is not
+      stated here.'
     angle: Full rigour for one blocked definition — the permitted window for this chapter, named lecture
       by lecture.
     angle_detail: 'The record''s rule stands: opened for a single definition that refuses to make sense,
       never read through. What changed on 2026-08-29 is that the lectures are named rather than numbered,
       so the right one can be found without paging. Note that p. 35 spans the Chapter 3/Chapter 4 boundary
       — it derives the basic series facts from completeness, which is the join the script makes at the
-      start of its Chapter 4.'
+      start of its Chapter 4. Checked against the notes on 2026-09-12 rather than against the lecture
+      titles: 17 of the 20 kleine Beweise are numbered theorems in this PDF, with proofs, at page granularity
+      a 70-minute video cannot match. Read the theorem, then watch the lecture only if the written proof
+      does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise

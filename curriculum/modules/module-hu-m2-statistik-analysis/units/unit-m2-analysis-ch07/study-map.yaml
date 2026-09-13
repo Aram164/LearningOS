@@ -59,14 +59,17 @@ stages:
     scope_triage: helpful-now
   - kind: watch
     label: 3Blue1Brown — integration and the fundamental theorem
-    locator: 'Chapter 8, Essence of calculus: ''Integration and the fundamental theorem of calculus'''
+    locator: 'transcript/rfG8ce4nNh0.md (Kapitel 8, Essence of calculus: ''Integration and the fundamental
+      theorem of calculus'', 20:46). The argument that area and slope are inverse runs [07:30]-[11:30].'
     angle: The visual argument for why differentiation and integration are inverse — the claim §7.2 states
       and does not motivate.
     angle_detail: Fifteen minutes, watched once, before the script. The fundamental theorem is the single
       most surprising statement in the module and the one most often held as a rule rather than understood;
       this is the cheapest available fix for that. No rigour, and not a source to reconstruct an answer
-      from.
+      from. A German transcript is now a managed material (fetched 2026-09-11); the inverse-relationship
+      argument is at [07:30]-[11:30].
     scope_triage: helpful-now
+    vault_path: material://source-3b1b-essence-of-calculus/transcript/rfG8ce4nNh0.md
   - kind: practise
     label: Fritzsche §3.3, §3.4 und §4.4 — Stammfunktionen, Integrationsmethoden, uneigentliche Integrale
     locator: fritzsche.pdf §3.3 Stammfunktionen und Integrale p. 148, §3.4 Integrationsmethoden p. 159,
@@ -140,13 +143,18 @@ stages:
     label: MIT 18.100A — the Riemann integral of a continuous function, and the FTC with its corollaries
     locator: 'mit18_100af20_lec_full2.pdf: ''Taylor''s Theorem and the Definition of Riemann Sums'' p.
       69, ''The Riemann Integral of a Continuous Function'' p. 72, ''The Fundamental Theorem of Calculus,
-      Integration by Parts, and Change of Variable Formula'' p. 76'
+      Integration by Parts, and Change of Variable Formula'' p. 76; Theorem 252 (Integration by Parts)
+      p. 79 is Satz 7.20. Satz 7.24, the Mittelwertsatz der Integralrechnung, is not stated as a theorem
+      here; the MVT is used inside the FTC proof on p. 78 instead.'
     angle: Three lectures, and the last one derives parts and substitution from the fundamental theorem
       — which is Regensburg's Aufgabe 4.
     angle_detail: 'The p. 76 lecture is the one to know about: it treats integration by parts and the
       change of variable formula as consequences of the fundamental theorem rather than as separate techniques,
       which is both the script''s §7.2 arrangement and the exact argument the Regensburg paper asks to
-      be reproduced. One blocked idea at a time, as always.'
+      be reproduced. One blocked idea at a time, as always. Checked against the notes on 2026-09-12 rather
+      than against the lecture titles: 17 of the 20 kleine Beweise are numbered theorems in this PDF,
+      with proofs, at page granularity a 70-minute video cannot match. Read the theorem, then watch the
+      lecture only if the written proof does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise
@@ -341,14 +349,17 @@ stages:
     scope_triage: helpful-now
   - kind: watch
     label: 3Blue1Brown — integration and the fundamental theorem
-    locator: 'Chapter 8, Essence of calculus: ''Integration and the fundamental theorem of calculus'''
+    locator: 'transcript/rfG8ce4nNh0.md (Kapitel 8, Essence of calculus: ''Integration and the fundamental
+      theorem of calculus'', 20:46). The argument that area and slope are inverse runs [07:30]-[11:30].'
     angle: The visual argument for why differentiation and integration are inverse — the claim §7.2 states
       and does not motivate.
     angle_detail: Fifteen minutes, watched once, before the script. The fundamental theorem is the single
       most surprising statement in the module and the one most often held as a rule rather than understood;
       this is the cheapest available fix for that. No rigour, and not a source to reconstruct an answer
-      from.
+      from. A German transcript is now a managed material (fetched 2026-09-11); the inverse-relationship
+      argument is at [07:30]-[11:30].
     scope_triage: helpful-now
+    vault_path: material://source-3b1b-essence-of-calculus/transcript/rfG8ce4nNh0.md
   - kind: practise
     label: Fritzsche §3.3, §3.4 und §4.4 — Stammfunktionen, Integrationsmethoden, uneigentliche Integrale
     locator: fritzsche.pdf §3.3 Stammfunktionen und Integrale p. 148, §3.4 Integrationsmethoden p. 159,
@@ -432,13 +443,18 @@ stages:
     label: MIT 18.100A — the Riemann integral of a continuous function, and the FTC with its corollaries
     locator: 'mit18_100af20_lec_full2.pdf: ''Taylor''s Theorem and the Definition of Riemann Sums'' p.
       69, ''The Riemann Integral of a Continuous Function'' p. 72, ''The Fundamental Theorem of Calculus,
-      Integration by Parts, and Change of Variable Formula'' p. 76'
+      Integration by Parts, and Change of Variable Formula'' p. 76; Theorem 252 (Integration by Parts)
+      p. 79 is Satz 7.20. Satz 7.24, the Mittelwertsatz der Integralrechnung, is not stated as a theorem
+      here; the MVT is used inside the FTC proof on p. 78 instead.'
     angle: Three lectures, and the last one derives parts and substitution from the fundamental theorem
       — which is Regensburg's Aufgabe 4.
     angle_detail: 'The p. 76 lecture is the one to know about: it treats integration by parts and the
       change of variable formula as consequences of the fundamental theorem rather than as separate techniques,
       which is both the script''s §7.2 arrangement and the exact argument the Regensburg paper asks to
-      be reproduced. One blocked idea at a time, as always.'
+      be reproduced. One blocked idea at a time, as always. Checked against the notes on 2026-09-12 rather
+      than against the lecture titles: 17 of the 20 kleine Beweise are numbered theorems in this PDF,
+      with proofs, at page granularity a 70-minute video cannot match. Read the theorem, then watch the
+      lecture only if the written proof does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise
@@ -631,14 +647,17 @@ stages:
     scope_triage: helpful-now
   - kind: watch
     label: 3Blue1Brown — integration and the fundamental theorem
-    locator: 'Chapter 8, Essence of calculus: ''Integration and the fundamental theorem of calculus'''
+    locator: 'transcript/rfG8ce4nNh0.md (Kapitel 8, Essence of calculus: ''Integration and the fundamental
+      theorem of calculus'', 20:46). The argument that area and slope are inverse runs [07:30]-[11:30].'
     angle: The visual argument for why differentiation and integration are inverse — the claim §7.2 states
       and does not motivate.
     angle_detail: Fifteen minutes, watched once, before the script. The fundamental theorem is the single
       most surprising statement in the module and the one most often held as a rule rather than understood;
       this is the cheapest available fix for that. No rigour, and not a source to reconstruct an answer
-      from.
+      from. A German transcript is now a managed material (fetched 2026-09-11); the inverse-relationship
+      argument is at [07:30]-[11:30].
     scope_triage: helpful-now
+    vault_path: material://source-3b1b-essence-of-calculus/transcript/rfG8ce4nNh0.md
   - kind: practise
     label: Fritzsche §3.3, §3.4 und §4.4 — Stammfunktionen, Integrationsmethoden, uneigentliche Integrale
     locator: fritzsche.pdf §3.3 Stammfunktionen und Integrale p. 148, §3.4 Integrationsmethoden p. 159,
@@ -712,13 +731,18 @@ stages:
     label: MIT 18.100A — the Riemann integral of a continuous function, and the FTC with its corollaries
     locator: 'mit18_100af20_lec_full2.pdf: ''Taylor''s Theorem and the Definition of Riemann Sums'' p.
       69, ''The Riemann Integral of a Continuous Function'' p. 72, ''The Fundamental Theorem of Calculus,
-      Integration by Parts, and Change of Variable Formula'' p. 76'
+      Integration by Parts, and Change of Variable Formula'' p. 76; Theorem 252 (Integration by Parts)
+      p. 79 is Satz 7.20. Satz 7.24, the Mittelwertsatz der Integralrechnung, is not stated as a theorem
+      here; the MVT is used inside the FTC proof on p. 78 instead.'
     angle: Three lectures, and the last one derives parts and substitution from the fundamental theorem
       — which is Regensburg's Aufgabe 4.
     angle_detail: 'The p. 76 lecture is the one to know about: it treats integration by parts and the
       change of variable formula as consequences of the fundamental theorem rather than as separate techniques,
       which is both the script''s §7.2 arrangement and the exact argument the Regensburg paper asks to
-      be reproduced. One blocked idea at a time, as always.'
+      be reproduced. One blocked idea at a time, as always. Checked against the notes on 2026-09-12 rather
+      than against the lecture titles: 17 of the 20 kleine Beweise are numbered theorems in this PDF,
+      with proofs, at page granularity a 70-minute video cannot match. Read the theorem, then watch the
+      lecture only if the written proof does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise

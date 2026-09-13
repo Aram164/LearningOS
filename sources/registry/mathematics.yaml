@@ -346,6 +346,34 @@ sources:
         strengths:
           - "The gentle, computation-flavored free book — lots of worked examples + simulation; completes the softer-probability set. ❌ Download never landed (the one missing from the Jul 14 batch) — still an open pull"
 
+  - id: source-henning-dierks
+    thematic_group_ids: [thematic-group-mathematics]
+    title: "Henning Dierks — Analysis 1 (YouTube)"
+    type: video
+    authors: [Henning Dierks]
+    url: https://www.youtube.com/@henningdierks
+    identifiers:
+      channel: https://www.youtube.com/@henningdierks
+      folgen: https://www.youtube.com/playlist?list=PLKACPrU0Thj-glqd1KYurRLWkdBKxZIPh
+      reihen: https://www.youtube.com/playlist?list=PLKACPrU0Thj8zdZTyv9499-ON3vxBaShx
+      stetigkeit: https://www.youtube.com/playlist?list=PLKACPrU0Thj-3mMhf7qpfOAGcrtezLkbi
+      differenzierbarkeit: https://www.youtube.com/playlist?list=PLKACPrU0Thj8dyak7m1NJEQdWWZr_bwM1
+      mittelwertsaetze: https://www.youtube.com/playlist?list=PLKACPrU0Thj-TdcFg3pBoHsahNVjXQ8Gs
+      integrale: https://www.youtube.com/playlist?list=PLKACPrU0Thj_qQnom44t0iCzD9qSC6rOW
+    evaluations:
+      - concepts: [concept-sequences-convergence, concept-series, concept-limits-continuity,
+                   concept-differentiation, concept-riemann-integral]
+        roles: [derivation]
+        level: intermediate
+        audience: [German readers]
+        strengths:
+          - "The German proof layer for kleine_beweise.pdf: one named result per video, 4-27 min, in the language the Klausur is written in. Checked 2026-09-12 against the tutor list — 18 of the 20 have a video whose stated subject is that result, several titled '... - Beweis'. Its playlist split (Folgen / Reihen / Stetigkeit / Differenzierbarkeit / Mittelwertsätze / Integrale) tracks the script's Kapitel 3-7 closely enough to navigate by chapter."
+          - "Only source on the shelf with a titled proof of Satz 7.24, the Mittelwertsatz der Integralrechnung (#13-42, 9:14)"
+        weaknesses:
+          - "No standalone video for Satz 3.42 (Cauchy-Folgen sind beschränkt) — folded into the 27-minute #05-20; Lemma 5.3 and Satz 3.40 share one 7:36 video instead of a proof each. Use Wrath of Math for those three."
+          - "His own numbering (#05-07, #09-12) is not the script's — a route must carry both, and the equivalence was established by reading the video title, not by matching numbers"
+        reviewed: "2026-09-12"
+
   - id: source-henze-stochastik
     thematic_group_ids: [thematic-group-mathematics]
     title: Henze — Stochastik für Einsteiger (Springer, DE)
@@ -905,6 +933,30 @@ sources:
         level: advanced
         strengths:
           - "THE text for concentration inequalities + suprema of empirical processes; Ch 10 covers compressive sensing — two MathML blocks from one free source"
+
+  - id: source-wrath-of-math
+    thematic_group_ids: [thematic-group-mathematics]
+    title: "Wrath of Math — Real Analysis (YouTube)"
+    type: video
+    authors: [Sean Ferree]
+    url: https://www.youtube.com/playlist?list=PLztBpqftvzxWo4HxUYV58ENhxHV32Wxli
+    identifiers:
+      channel: https://www.youtube.com/c/WrathofMath
+      real-analysis: https://www.youtube.com/playlist?list=PLztBpqftvzxWo4HxUYV58ENhxHV32Wxli
+      real-analysis-exercises: https://www.youtube.com/playlist?list=PLztBpqftvzxXAN05Gm3iNmpz9SkVfLNqC
+      calculus-1: https://www.youtube.com/playlist?list=PLztBpqftvzxWVDpl8oaz_Co6CW50KtGJy
+    evaluations:
+      - concepts: [concept-sequences-convergence, concept-series, concept-limits-continuity,
+                   concept-riemann-integral]
+        roles: [derivation]
+        level: intermediate
+        strengths:
+          - "The shortest proof-per-result source on the shelf: 105 videos, one theorem each, mostly 3-10 min. Checked 2026-09-12 against kleine_beweise.pdf — 13 of the 20, and it is the only source anywhere with a standalone proof of Satz 3.42 (Cauchy sequences are bounded, 5:33) and of the Teilfolgenkriterium Satz 3.40 (8:54)"
+          - "Strongest on Kapitel 3 and 5, where it gives each limit law its own short video rather than one long omnibus"
+        weaknesses:
+          - "The Real Analysis playlist runs sequences, series, topology, continuity, integration and never covers differentiation: all six Kapitel 6 proofs and both Kapitel 4 series tests are absent. Rolle exists only in the separate Calculus 1 playlist."
+          - "English only, so the vocabulary is not the exam's"
+        reviewed: "2026-09-12"
 
   - id: source-zedstatistics
     thematic_group_ids: [thematic-group-mathematics]

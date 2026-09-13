@@ -9,10 +9,10 @@
 # Excludes symlinks (.flat/), .DS_Store, the generated catalogue
 # (README.md, FILES.txt, INDEX.html) and the per-folder SOURCES.md indexes.
 schema_version: 1
-captured: '2026-09-11'
+captured: '2026-09-12'
 totals:
-  files: 1198
-  bytes: 2097924707
+  files: 1517
+  bytes: 2102526383
 files:
   ? _unsorted/Das gelbe Rechenbuch. Für Ingenieure, Naturwissenschaftler und Mathematiker. Rechenverfahren
     der Höheren Mathematik in... (Peter Furlan) (z-lib.org).pdf
@@ -1122,6 +1122,822 @@ files:
   mathematics/analysis/grieser-analysis1/grieser.pdf:
     size: 5214676
     sha256: dd5a0e82dbcd4b0dbfc9bfd40f941e93d2c6e5049b3e5f93e9e4202a28f1f739
+  mathematics/analysis/henning-dierks/transcript/-4YVPPOxJgw.md:
+    size: 7136
+    sha256: 1e0e409b7fea46aa32fd76e256767536fac7a8b8d897d86f1cf0aaea041625f6
+  mathematics/analysis/henning-dierks/transcript/-Ar1Dkb7uEU.md:
+    size: 8705
+    sha256: 204a26d5772fd97fd1e7c52b3f269ec432ee873152c810dd31b172fdaabd9e5f
+  mathematics/analysis/henning-dierks/transcript/-LAp1xuKpoM.md:
+    size: 5369
+    sha256: 81eaef0c13eec8b94be2ebc6b0fe10c439764d094c898c019b296c39c804f0c4
+  mathematics/analysis/henning-dierks/transcript/-WFcUvR2Qdc.md:
+    size: 6327
+    sha256: b1a25ead2662e0c041e88f2423338ae898cb639111b5c74c8cf6c9dc519d7940
+  mathematics/analysis/henning-dierks/transcript/-YA9v-mExYc.md:
+    size: 18862
+    sha256: 4946cd5d46dd41a661f549a3ce4927732e68dfc0d9585a03d4b7af04b5388e6c
+  mathematics/analysis/henning-dierks/transcript/-dKogS69x30.md:
+    size: 10295
+    sha256: 907549ac895b28048b58ff1c3075b5d9377825c9337a182068eedfb38ad219bb
+  mathematics/analysis/henning-dierks/transcript/-lRkHUDLAp0.md:
+    size: 8094
+    sha256: 3e8a9ed6696169bfa23f4461a7dd57cfb799650b5014bb2db140f5ab6c7109c3
+  mathematics/analysis/henning-dierks/transcript/-uI4VUPubQo.md:
+    size: 10201
+    sha256: 804cf9967a099de636d860fde1c85a1d541c644264343b33975658c26a293c1f
+  mathematics/analysis/henning-dierks/transcript/01djfBUjw5c.md:
+    size: 8959
+    sha256: e3549b15d50e3f8b4ac32c8b55505176c9a34b4c5532be4dca514dc5fa4f6b4e
+  mathematics/analysis/henning-dierks/transcript/0E1vlB3wsSQ.md:
+    size: 12855
+    sha256: 8c74f61fc009cd3dd7d9f9ea72a0ef1c480c32e0a874dc9e67c7cb00ee4a426e
+  mathematics/analysis/henning-dierks/transcript/0ND1kLWw3l0.md:
+    size: 7589
+    sha256: 0f73233b46eddaa4e17681a79daf5b7e68cb7a5a7d76ee826031fbe20bf59506
+  mathematics/analysis/henning-dierks/transcript/0TDsNPZYBlk.md:
+    size: 7566
+    sha256: e5114fd6ded6767df28b9d05a79df2f4e5d62741286bd7840820e1295962e548
+  mathematics/analysis/henning-dierks/transcript/0TQggzZfW3c.md:
+    size: 24133
+    sha256: 51d355f538f95ce760992527af9ff5957f1eeb89b02fed5a551af38ccbfee1f2
+  mathematics/analysis/henning-dierks/transcript/0W3hypGRBcc.md:
+    size: 8691
+    sha256: 7bdf87bcf362fec18fd1d36cd1fec521679f3015199f89523db0e0019f1536cb
+  mathematics/analysis/henning-dierks/transcript/0Zwam-gu8rA.md:
+    size: 11935
+    sha256: cc2a6d3414874806ab7ef743b68ed33e579b973c675858defe9cf85b74853cd8
+  mathematics/analysis/henning-dierks/transcript/0vxEs3qWT2s.md:
+    size: 4150
+    sha256: fef9966d71ff0a023b76352a4d8c0f085768d97b237f0aee2c1acefc24719ddc
+  mathematics/analysis/henning-dierks/transcript/1NHvYzDWfjA.md:
+    size: 13071
+    sha256: d3d24118db5ce55e11629f370895dd7e09e32976a7e0cff296722ca14f046b02
+  mathematics/analysis/henning-dierks/transcript/1NgpR96Mpkw.md:
+    size: 11647
+    sha256: 2ca915510fffe43709e5680bb46556595ef1a15d41144d078e414f419472a9ec
+  mathematics/analysis/henning-dierks/transcript/1gxicIL8zmU.md:
+    size: 7958
+    sha256: ee393f5ff6a9f57e80f8d6d620bd708b8266f1d42c8647c34ea4bbacd632ad23
+  mathematics/analysis/henning-dierks/transcript/1otGChJnFbA.md:
+    size: 8533
+    sha256: e39dafaaecb839f8da395006445757459f5ae86ddc0180eb48d0cfcacf786635
+  mathematics/analysis/henning-dierks/transcript/1t3MpKhqiFI.md:
+    size: 15225
+    sha256: 96ab20c3888a6475e9ec4769133dff2c07230651f77a13dba638a50572e7c223
+  mathematics/analysis/henning-dierks/transcript/2-IoK9SUOb8.md:
+    size: 7892
+    sha256: b82a32029a489b49841bbd1e8e36c971bfc20030a901cf01a6e1ce2a6e0745be
+  mathematics/analysis/henning-dierks/transcript/2Aarb1Q2ac0.md:
+    size: 6931
+    sha256: 2077d6410e3f28627004ecab94b88ffbc3b4d398ba18df849afd2b47061153be
+  mathematics/analysis/henning-dierks/transcript/2XTBBHI9ODE.md:
+    size: 18920
+    sha256: 032d2c43aaf5059a9dadcd3927219ce41035b3b6ad4d11ee11441344843d77d8
+  mathematics/analysis/henning-dierks/transcript/2XdX3uEFiJA.md:
+    size: 8692
+    sha256: 506500f769d72f7956c2add605b4b41a5e7bc9dfcda9bf99416fc43ce10eab1c
+  mathematics/analysis/henning-dierks/transcript/2gEVfLSDdUo.md:
+    size: 12643
+    sha256: f565e4b7f30fb33a3ca73d0ccb5e5b838284090ce540305bc73cba1ea67d016b
+  mathematics/analysis/henning-dierks/transcript/2w3yPerep8o.md:
+    size: 9722
+    sha256: f8498892051a5451cb0d944e6910305d607444991ef8c15f57531e870f0e3b0d
+  mathematics/analysis/henning-dierks/transcript/313b4Wl26PA.md:
+    size: 9289
+    sha256: fdfb0045c24fc79c96f98af15125ce963d144bfa55b143614c11c3a110238fa7
+  mathematics/analysis/henning-dierks/transcript/3CEteU6clo8.md:
+    size: 3627
+    sha256: 7893ee30ab8d54704977946b0ec666095241712d2b9d4d0b61d0bcb3f3fab053
+  mathematics/analysis/henning-dierks/transcript/3GdDXuuW0zI.md:
+    size: 5925
+    sha256: d05f954eef6a901b0e7d6f57307726496b1f208a31d73fdebde6edcaf0825400
+  mathematics/analysis/henning-dierks/transcript/3MG7MYsdb4s.md:
+    size: 21418
+    sha256: 9b1d9d43f273055f8983fd9012fcf5c6dd97a52397ab7afc0ee4ddfa95abfa0d
+  mathematics/analysis/henning-dierks/transcript/3jpBtTIWDOw.md:
+    size: 4635
+    sha256: 9c990920395a8681644c3a43d5a45b4a99d9987fbec221fc1b04e03989d020c4
+  mathematics/analysis/henning-dierks/transcript/3vLXcdjXT-w.md:
+    size: 14347
+    sha256: fb134d1bad61e3d9f23327034681ecedd28f20941cb29c188129c76d4fc26093
+  mathematics/analysis/henning-dierks/transcript/3vxqGdzcYJI.md:
+    size: 6845
+    sha256: 61c5c70a06a80e3c13ba645665896e24b58c7a39dda7b73ef3bc9965bc981861
+  mathematics/analysis/henning-dierks/transcript/4Iq06BXWw-s.md:
+    size: 4221
+    sha256: 87b7be964f6865be0b15cb5608f2a54fc05b55106be79abadae33679769fbbc4
+  mathematics/analysis/henning-dierks/transcript/55LZLDtf7Gk.md:
+    size: 8494
+    sha256: 86d96b0877ed9aef7433ac8117ad92b443bdddc80791da95931eb1ad9aa4e93b
+  mathematics/analysis/henning-dierks/transcript/5MYFOigvAUU.md:
+    size: 10741
+    sha256: 08a8f43947aedf2f2dc87cdd8c75d090a88f02a2998c6de3036ea6b595266223
+  mathematics/analysis/henning-dierks/transcript/5W8Jf4MeHxI.md:
+    size: 9805
+    sha256: 0a2fb66a77ba4cd84cb3397bdf4c6fe600f6d8453bcbb6c7308f4f96b6efed88
+  mathematics/analysis/henning-dierks/transcript/5lLc8aZqzgI.md:
+    size: 13792
+    sha256: ca10886ee55690f74bb6a38ba39805f7e19c876c3d171e4bf3d6c1d8406ecaa6
+  mathematics/analysis/henning-dierks/transcript/5y_ocuEfcqM.md:
+    size: 7628
+    sha256: 050808be84ed2968aa0391c2381fc6f83e5bbba2256aba01277b98e043939386
+  mathematics/analysis/henning-dierks/transcript/65bMgATj_cg.md:
+    size: 11144
+    sha256: 5bae682411f83d218d8b30919408c4c347b70a65cebf6f940617a3717cc4cf5a
+  mathematics/analysis/henning-dierks/transcript/6UT25Cc9xFc.md:
+    size: 8542
+    sha256: 1c26a809eb258d265f8b8cbd42c2bdf0d77af9968b22a4b8f5cb704e1f5a0d55
+  mathematics/analysis/henning-dierks/transcript/6bNz6FgePWU.md:
+    size: 13022
+    sha256: 9dededbb81975749de6125f4c88a1b3cdefba4f987660c7fc0e00e0cc537b924
+  mathematics/analysis/henning-dierks/transcript/6fUQmXZA0xk.md:
+    size: 10880
+    sha256: 2ea4709ef3535dcd4b6214cdd6133f96b1f277f3ec7ac217ac1bf57d672e7554
+  mathematics/analysis/henning-dierks/transcript/7KzYfbQ3ljA.md:
+    size: 9203
+    sha256: 2e3f6af728ed58f7669d26db20f91df6b608f08dccfce05f732f04cf0addc6d8
+  mathematics/analysis/henning-dierks/transcript/88jaQD4hUng.md:
+    size: 17121
+    sha256: 7a391dcad2eae94229423728c1aed5a932932383d1bfc7a0f10ffa3ae5b41fc1
+  mathematics/analysis/henning-dierks/transcript/8A2I-6Z_8TM.md:
+    size: 15638
+    sha256: 287b89904fc9ea9be84ce6c61104b2e39a5d41b5518357ebda8f429afe21b2e8
+  mathematics/analysis/henning-dierks/transcript/8BoJlwAIVc8.md:
+    size: 5847
+    sha256: 687a633e5716e4ee29abde9a7fa5cdcbe550dc3a256874118e00a7e4a0157b8e
+  mathematics/analysis/henning-dierks/transcript/8SrXOvJCjpQ.md:
+    size: 7649
+    sha256: d809336a081eeefa70dc7cdc16fb9642990f9ede6c8c175c6cd535310d247d29
+  mathematics/analysis/henning-dierks/transcript/8VvHyTibH8U.md:
+    size: 6189
+    sha256: 4f53becb17e8b57b37b1e315c245aa11c24efee42b4fa2234a05c1fd40c41785
+  mathematics/analysis/henning-dierks/transcript/8i6KtWTec6c.md:
+    size: 8744
+    sha256: 6ffa52ab9ef0bb8ad4b5b4e4fbc4905c0e7dfc2538f284622c98bbcbf3da99cb
+  mathematics/analysis/henning-dierks/transcript/8o72zbNvqw8.md:
+    size: 6336
+    sha256: de6f35c382a78814010066f30aa2ca12b24c6cdbbd0a9c8f6362fd80345d1034
+  mathematics/analysis/henning-dierks/transcript/9U05NYXy-Z8.md:
+    size: 6363
+    sha256: 11228ac9d7eac87d056766ab21902b997402dad52e5132f8efe2c1b68e493a92
+  mathematics/analysis/henning-dierks/transcript/AZDKfwrnWcw.md:
+    size: 6464
+    sha256: 95357e73a3f5f398d013fb1a58c7b0835a6ced1a80efaa560349b1168dfa780a
+  mathematics/analysis/henning-dierks/transcript/AeV7lyquQeo.md:
+    size: 4647
+    sha256: 7392315234167f7875ae04d8ef9a362791d4c2995592629d09e6f487686e1511
+  mathematics/analysis/henning-dierks/transcript/B1x_a3TrIpI.md:
+    size: 11928
+    sha256: dedb264a577e6e68eed217f690dd198e281109dba51648d4db662e168f637b86
+  mathematics/analysis/henning-dierks/transcript/B89biyI8Ggg.md:
+    size: 10341
+    sha256: 7aa20392f92a6c492cde7abac3394c6869aab28c1e1992dd6e694892448802be
+  mathematics/analysis/henning-dierks/transcript/BW9mtg4smZU.md:
+    size: 12172
+    sha256: 01f7aeff6b46bb6f33f7b16663ee8d257398219ddc54ca106ad7e576a4484e9a
+  mathematics/analysis/henning-dierks/transcript/Bk7R0qj9x4w.md:
+    size: 9651
+    sha256: 9bbcb18f0f37f4a56520a5bc71a3e395192b501e5306d9d13982ec0c16aa857a
+  mathematics/analysis/henning-dierks/transcript/BrixzLvyY3w.md:
+    size: 9944
+    sha256: c8639e9cbeb313b403ea48f7182483468543888b5994d2cb86ef5bcc138c0497
+  mathematics/analysis/henning-dierks/transcript/CQ1ub4POAK4.md:
+    size: 12326
+    sha256: 2cc7f90fc056670c84670cbe141121bb77739d323a365f685724d09e8a2c5fb8
+  mathematics/analysis/henning-dierks/transcript/Crpj-Pofons.md:
+    size: 12493
+    sha256: 3a85926f63bb3683992444ee7de906a8ddd8fc2efaa5ea62f5fddf308cf84d88
+  mathematics/analysis/henning-dierks/transcript/D7goleSOAF4.md:
+    size: 4887
+    sha256: 59e19ff7997c530ed6d5598513e087c993e18e41c54fedee69af8d5726e76265
+  mathematics/analysis/henning-dierks/transcript/DBU1_sRijXc.md:
+    size: 7588
+    sha256: cce5e8e9153e5740a2f6a29bb0746e8ef74688c62e3e45295d684994715482e6
+  mathematics/analysis/henning-dierks/transcript/E50CzafnUD8.md:
+    size: 12377
+    sha256: 39d8c206c303ce88e2a0b872c0e9279a422af45259f2851fcdb7e1d5ecf9a85f
+  mathematics/analysis/henning-dierks/transcript/EC7HQrQHGcs.md:
+    size: 8081
+    sha256: b41c4be808e0e7530077454705342843437c0223171729e83f3e42ef26759c00
+  mathematics/analysis/henning-dierks/transcript/EWVREhG4NbY.md:
+    size: 8121
+    sha256: 10560296ded8f886347b27dae35ceddbdd15713217d65ac667bbe203401d2f94
+  mathematics/analysis/henning-dierks/transcript/ExPBzxk8PH8.md:
+    size: 15762
+    sha256: 0a5fcc0ec5069a5a28e0a056f54ab14cb68ca1df8cdbebaaa1f8367e30c3ced6
+  mathematics/analysis/henning-dierks/transcript/ExV7a9rbogs.md:
+    size: 5769
+    sha256: d90894a7903ad0eb199ae9d3eedaf2f423d20a4b54a99e676f50f005761f7d89
+  mathematics/analysis/henning-dierks/transcript/F8SmBXlmSuQ.md:
+    size: 5874
+    sha256: 6c50febc5f209125e1a280d094535846b99ce53aae8efa5b1f736ebb3a983efb
+  mathematics/analysis/henning-dierks/transcript/FV1mUh2UKw8.md:
+    size: 7047
+    sha256: c646faa6973c774132e370750501821b51b4b2701c91fde0051c77c820e9789e
+  mathematics/analysis/henning-dierks/transcript/FVjeWdhrgXE.md:
+    size: 9967
+    sha256: 8d77c74049639c62e3cd437e4301c3292c978e2aeeff2b9c28ba961c9abcf289
+  mathematics/analysis/henning-dierks/transcript/G9DrDXrnQ7g.md:
+    size: 12728
+    sha256: 30b74dae04e92849705d60b82b5fc7175fb37dcb139725a3db9587d21fa6a669
+  mathematics/analysis/henning-dierks/transcript/GcCRXkjwVIs.md:
+    size: 11871
+    sha256: 27e35b3ae5a0f87dd77beef8698292f5a3173efb423189a325e97a071f70c69c
+  mathematics/analysis/henning-dierks/transcript/GqajuV3r0Rk.md:
+    size: 4980
+    sha256: b40f98b89949c322a59e7dcad059f33004153d2d7680268a0d0ae12e47253727
+  mathematics/analysis/henning-dierks/transcript/H3CyVE-wl8M.md:
+    size: 8443
+    sha256: ebcd02b331aaa4d897fbbc3813e68c98dcc135a06990ad4ce19a5a761653f1f6
+  mathematics/analysis/henning-dierks/transcript/HDji3CXW44k.md:
+    size: 5823
+    sha256: 76832d63969e67d9656c999aa523e5ab0510fbc95a80aa3d50069873cb3fcce2
+  mathematics/analysis/henning-dierks/transcript/HRtiqmYaOyU.md:
+    size: 7049
+    sha256: b4e75049af55cdcbfda679680f1122bfe32105e7bde071301bf55cc87e145d4b
+  mathematics/analysis/henning-dierks/transcript/Hi-cwxi3jLI.md:
+    size: 14068
+    sha256: b75cf2cd3df54ff05d6b48fd8e886db29597068cf38701c47c7a4a80de808ba6
+  mathematics/analysis/henning-dierks/transcript/HmTtpZTUouY.md:
+    size: 17549
+    sha256: f6b8e6cb3a516f43a04ea4485f3358ce2851fd4e8fc69993430dbd6bf057a961
+  mathematics/analysis/henning-dierks/transcript/I0DMzeQ1sLc.md:
+    size: 6813
+    sha256: 85dcd51b3273bbe42479822bc310798e7a5578061df99e74140eb7ae95f8c45f
+  mathematics/analysis/henning-dierks/transcript/IH0DiNZO9ps.md:
+    size: 6722
+    sha256: 3b80a77d78166d8d2698cb8793110349025cb1eb8e0721e3c766459ebb2855a0
+  mathematics/analysis/henning-dierks/transcript/IJEEtUlFfzk.md:
+    size: 9044
+    sha256: 76e388254b71978aaf0c7ebececcb2c58dd1810d7ad723b80fda3e3b5877a071
+  mathematics/analysis/henning-dierks/transcript/IQdZqCKC-9U.md:
+    size: 10177
+    sha256: 03838a51fd286fb9fbc95420fe7c6b4a1f8d55758a9af6fb47645445b378f153
+  mathematics/analysis/henning-dierks/transcript/IWuzdfqwpjI.md:
+    size: 15786
+    sha256: 500aff2af8ce4064f2a5ffa454ab098393df24295783b5493be0c7ee0b94539a
+  mathematics/analysis/henning-dierks/transcript/IaD9-ReGfRY.md:
+    size: 5270
+    sha256: 33f51c53aae937094643adde7207e29a7ea73286e49f97277adc6ec1254d7d6c
+  mathematics/analysis/henning-dierks/transcript/IbFtIqY6GWs.md:
+    size: 7175
+    sha256: bf55b9d4fa7ce947940a814129d87a28f555366bf988edc883cac45d5e4f4857
+  mathematics/analysis/henning-dierks/transcript/IqP83sXyU38.md:
+    size: 11326
+    sha256: 4c52a6ec2863a9a7b6d77d6392705d394e1ec696913787aef3abf6b330f76eef
+  mathematics/analysis/henning-dierks/transcript/Ixq83dKn7_M.md:
+    size: 16529
+    sha256: fb50fb82febefa80d4b2bcb6ef5f5e2b1e736b87aac325e8db998a7f37755567
+  mathematics/analysis/henning-dierks/transcript/J1xZSYX0SUY.md:
+    size: 15277
+    sha256: 6d6ba7c4f249c7fb36cabeaf82d6475f531463f9aca109d0343761ffc16c3393
+  mathematics/analysis/henning-dierks/transcript/Km_IthX14Yw.md:
+    size: 11047
+    sha256: 53f56f8f8cc465d4fb28d41962f8b43dbead2dc42281c6c4143e08a3b685b561
+  mathematics/analysis/henning-dierks/transcript/KrIwFhf0t7k.md:
+    size: 7632
+    sha256: 5201cea3404a553277b5caba8a7bc6ca1f129600cc2293fd7f30f5cd39820b11
+  mathematics/analysis/henning-dierks/transcript/LWlNa-959xg.md:
+    size: 7256
+    sha256: b042644278630387094f287663d5515f70f229b6cb6cec22f1c0edc785dd97f8
+  mathematics/analysis/henning-dierks/transcript/Lc-kcNT91KY.md:
+    size: 5295
+    sha256: 3429b00446b565659ace907f4d716ba417070817b1b1b6e6a9c56f28a3da67cf
+  mathematics/analysis/henning-dierks/transcript/Lq3C1T2udcU.md:
+    size: 6435
+    sha256: 3af12194f79b894cf18a6cc1a187887467b01425bfcc7428f5d8279d29ecbb91
+  mathematics/analysis/henning-dierks/transcript/LwmHPtscGKk.md:
+    size: 12172
+    sha256: 16051e1d8e7c7da96ae1331434f730c9a3dd016ccaf45cb4cbd94f74c21d5d62
+  mathematics/analysis/henning-dierks/transcript/LyYho_fPTy0.md:
+    size: 4914
+    sha256: ea6fff026001cb17bd6a87b7e179c5b69028ea04b444f804dcaba2f0ae6d7f55
+  mathematics/analysis/henning-dierks/transcript/MB43mzRGq3M.md:
+    size: 6101
+    sha256: a56cb6c54aceda2d324ebf612f9bdfd3a350e8f0490999406f67bd86baec4dc9
+  mathematics/analysis/henning-dierks/transcript/MloRo4Q21CI.md:
+    size: 6624
+    sha256: f0a58ee3c1c9395fac8016435a1f2aae96c09b847d8b88b103153cb995f780bc
+  mathematics/analysis/henning-dierks/transcript/N1BA3ufaiFI.md:
+    size: 9431
+    sha256: 08d72aa2f2d7bee28c148f9b2dcf3543c86d5db4afc236de9e93b5140c9d1ad2
+  mathematics/analysis/henning-dierks/transcript/N5uX6H3bI-8.md:
+    size: 3108
+    sha256: 78cdd42c61ee9d57c093e7e29dabd6e69020864cef2946a1e8f7dad76d8c9d23
+  mathematics/analysis/henning-dierks/transcript/NTAbZvuTvug.md:
+    size: 4647
+    sha256: fc5995867ffdd7f8125a17ac9bd1c5618ada1ad86620926ce0bdbf4b4353fb30
+  mathematics/analysis/henning-dierks/transcript/NYQ0SxgbM6M.md:
+    size: 10619
+    sha256: b9f8964a08ce91fd3943a201dfbc758d14f9e602eed07be40ee2df7548543343
+  mathematics/analysis/henning-dierks/transcript/NcBob1VMjB8.md:
+    size: 21568
+    sha256: 64bab38df74f7cfa34a4ccc3ef4d28e6f964f62e75fdb63cea8d184d87dd8704
+  mathematics/analysis/henning-dierks/transcript/NrO7YL6RZAw.md:
+    size: 4495
+    sha256: 036e37db063d53f6d97639792f9c69062241753e2bacb4781f2c799b32dea0db
+  mathematics/analysis/henning-dierks/transcript/NzD0j2xf4Lo.md:
+    size: 11459
+    sha256: aa083bfd80d84ed8f8b76ebd246b2f9e2c9f4f163c58a4d8fe248ace28b90efc
+  mathematics/analysis/henning-dierks/transcript/O06UDpANkYk.md:
+    size: 9984
+    sha256: 13186aa926bcd87f8503377bda97bcf75938a268e8b6455ef3c86d5423dccc67
+  mathematics/analysis/henning-dierks/transcript/OLDncnuNchA.md:
+    size: 9540
+    sha256: 8aa7db37dfe7c2f63aa04a0d7d47203c0a8561ba6ce85aa858c8ce62539e18f9
+  mathematics/analysis/henning-dierks/transcript/OMSiuI9BEvM.md:
+    size: 4883
+    sha256: 424bd87a7f6ea819d325e646110ba55837a843011fe6929b4e3c3f4adb77f3fd
+  mathematics/analysis/henning-dierks/transcript/OpKXgv2p2eU.md:
+    size: 8132
+    sha256: 9ebf1160410a48f529a71d30c7e5e0ed704b943330a0126203f5e72241c15929
+  mathematics/analysis/henning-dierks/transcript/P9T7Nm2GHmc.md:
+    size: 5431
+    sha256: e81992855d179bad0c22f81badcc517c2bd876b6462e38f73b0d67d1b52a3cc4
+  mathematics/analysis/henning-dierks/transcript/PHMYjaKqElA.md:
+    size: 14235
+    sha256: edbd68e72d86b70b485daec1ac1e0041a5670c2c71e2cfafe52fd2ea64087e40
+  mathematics/analysis/henning-dierks/transcript/PQ9O2gpnm1k.md:
+    size: 7273
+    sha256: 603f2439bcffa07ae1bba79102a8ac546c2667901d54e47a3a5c2a781f961067
+  mathematics/analysis/henning-dierks/transcript/PR5bwscxDzQ.md:
+    size: 7722
+    sha256: 9c93edba4cd8d51be1137a6425b9f38d2f5ad92f2b610047ba2f931be60244b6
+  mathematics/analysis/henning-dierks/transcript/PifHwEaUxoo.md:
+    size: 5284
+    sha256: e5115cb0efb96cde45fde8c89cf825d8d7dfcf905ade8b173f51f668a6b06cf6
+  mathematics/analysis/henning-dierks/transcript/Pin1_GBhlWE.md:
+    size: 6601
+    sha256: 4359d389c587c11b6e54bb08924245db615baaa534321fd8a68b2db62335e725
+  mathematics/analysis/henning-dierks/transcript/PuXAHgtQ_o8.md:
+    size: 3236
+    sha256: 8a791f27ecab2b547775c152b81970d16fbcdbca6909a71aa3c5fb292bec5820
+  mathematics/analysis/henning-dierks/transcript/Q8iVn39fSiw.md:
+    size: 20927
+    sha256: 620586fae1397a5278f5e707f2fb634099f62f074a3ccbb69d82f4c2b56d288a
+  mathematics/analysis/henning-dierks/transcript/QCJpEUuwD3M.md:
+    size: 7142
+    sha256: fe465173ef31b683ec86c14840a49f39084ea913bbb9e546a8478a8e3edc6ff1
+  mathematics/analysis/henning-dierks/transcript/QRzkC-ypxbc.md:
+    size: 5348
+    sha256: ce2cb8983b661d787ac929d50b0ef6d387bc846361e6e50750a953ff4d020186
+  mathematics/analysis/henning-dierks/transcript/QUX1lEu6CVU.md:
+    size: 6866
+    sha256: 52113219bd6f7732dfe13fcc939d1794889faf230af1a0aa0f1c16a04d052109
+  mathematics/analysis/henning-dierks/transcript/Qhcgm3YBUQE.md:
+    size: 13125
+    sha256: f1b29b223c0561f2bd0804e0ad01d43facb53914a8f7a967832eda53c9afb6f5
+  mathematics/analysis/henning-dierks/transcript/R2T1aizH15M.md:
+    size: 5707
+    sha256: 43551891f53d6f835ab0798c09c196a72a0a76d65f2f501f553abcd57e1714b6
+  mathematics/analysis/henning-dierks/transcript/RSrX6zMKaWE.md:
+    size: 8750
+    sha256: 2cdab9fae26fb8bc7e276bc08423e3ba9537b8b002146ae7a1abb385066dd299
+  mathematics/analysis/henning-dierks/transcript/RZMQ9WvnzeI.md:
+    size: 7053
+    sha256: 498ac23da5d0595a57ddffa3c8ec280e535b86df45bf0fb2386562b4bceeb638
+  mathematics/analysis/henning-dierks/transcript/SSghzbB6154.md:
+    size: 11940
+    sha256: 3b49b2bfbf882f413ff204b787b2c443aa709a7dee1a5f27f1c73118e2b009df
+  mathematics/analysis/henning-dierks/transcript/STYa2x964pg.md:
+    size: 12308
+    sha256: 761ee3391483c88b3a711ce042ff8d7421dc11b131d61622418173ec206c8b6a
+  mathematics/analysis/henning-dierks/transcript/SiPT9IrVnkE.md:
+    size: 6273
+    sha256: ec9c54b469c64cff7d3964ad435d8553fb01c21562ef9d512627323bfc796e84
+  mathematics/analysis/henning-dierks/transcript/T4qWbsBUfdw.md:
+    size: 7525
+    sha256: 8f1cb468037d84253ff2db37f6999bcd43c20bf99e76ecdc79ea90a876e91e2c
+  mathematics/analysis/henning-dierks/transcript/TFEz7S70baQ.md:
+    size: 3094
+    sha256: f4fb9df6f7dee019bb512c1f0e7101aac2a68ed1e606ae474054ac4d2e0b25a0
+  mathematics/analysis/henning-dierks/transcript/Tt00Yl9f1gc.md:
+    size: 13415
+    sha256: 228286c78630c15177bcf8332f58a9afaffdd02e1720d7be0c84e59284264ca1
+  mathematics/analysis/henning-dierks/transcript/UQw143h_hk0.md:
+    size: 7507
+    sha256: 457f2f4b1a591301189a8d7d2f0021b19e387a52d08fc1292c9d04e0975e5d27
+  mathematics/analysis/henning-dierks/transcript/UsyNxNiys-k.md:
+    size: 10801
+    sha256: ddbf4000ea0029fbad148c525a2b71bf2b97bc4e5cf520b393df9ad1ff45976a
+  mathematics/analysis/henning-dierks/transcript/UtMaWfsGm38.md:
+    size: 22949
+    sha256: 69d5bad8563e0a89ccaf379685e98e834ec10e741df16bbec23071bcdd52cc6a
+  mathematics/analysis/henning-dierks/transcript/UxLZQ0pmguc.md:
+    size: 14899
+    sha256: 03bce003d056cc26d5257d5ecb5da7d22cb84e61066b6536fe62e770760182d4
+  mathematics/analysis/henning-dierks/transcript/V7MXXYa2oVk.md:
+    size: 19082
+    sha256: b716de68106d7df61b149ca223762ef54bcfe4f1e3d5853e1831996407646dee
+  mathematics/analysis/henning-dierks/transcript/VUVOuIYUyec.md:
+    size: 13182
+    sha256: 8f8987fea5c9c6f55e9939d9e515063b4ac08c41ac3c1f2a29bab48710787df1
+  mathematics/analysis/henning-dierks/transcript/VXIu4ePJ7gA.md:
+    size: 8415
+    sha256: e796eb386e188cef9d9e901554a39edf928a19076fb200b52c6ca4ee45f26985
+  mathematics/analysis/henning-dierks/transcript/VgbVPp_zoP0.md:
+    size: 8198
+    sha256: cd9b358686884c59ae679fbfdd76b59b75e1360d2f73220ff54322e5cc69cc5a
+  mathematics/analysis/henning-dierks/transcript/VkpaGMRSA_w.md:
+    size: 11412
+    sha256: 8bdb66c39e449c8a1307d4bf3fd3d7cb97ae989ff2ab8bff07d01689205c4007
+  mathematics/analysis/henning-dierks/transcript/W-MN5CDs23E.md:
+    size: 14201
+    sha256: 2ba5e5aabefae998d6054963659a3136ff599615c277b1d2527287fb130b7583
+  mathematics/analysis/henning-dierks/transcript/W-WrVqYoqiw.md:
+    size: 14731
+    sha256: 7188920be5e1da87c984cbf353c16f3b2dadbf2bb4cb8883fdc178ef44ed7566
+  mathematics/analysis/henning-dierks/transcript/W6oUnGOBxrY.md:
+    size: 8339
+    sha256: 31f99368bb7c1f931bfbb24ef55e4ba45c1819ab386a61b629ce571a35b3d207
+  mathematics/analysis/henning-dierks/transcript/W74Z1GNtfxg.md:
+    size: 12038
+    sha256: 76cd1aac5c6cdb073fd582fb7f43bd6fe3093be8d31cd649b87d613a323f7c74
+  mathematics/analysis/henning-dierks/transcript/WBT0bo0hm08.md:
+    size: 13136
+    sha256: 28c83dd4e73e0be6796b10b55f4d8c03aacf7b52cc6459ad220db26ab2986318
+  mathematics/analysis/henning-dierks/transcript/WT5ss-4wJAQ.md:
+    size: 8065
+    sha256: fd0ac6c128a755728a9122223b8701c41170f306655c9002c00b2065db8cefeb
+  mathematics/analysis/henning-dierks/transcript/WZKc2LhGyqU.md:
+    size: 7174
+    sha256: ca77fa7b9c5780e7e6e913e805adf8857be87d7697039f042d793e2745b3b989
+  mathematics/analysis/henning-dierks/transcript/Waxfn5LsVAY.md:
+    size: 9764
+    sha256: ce5d6f55befc825fcf29bd4b15e9ab5a98e3d4b329edf0b8a59e6f13787938a6
+  mathematics/analysis/henning-dierks/transcript/WjEaR6ny_G4.md:
+    size: 8703
+    sha256: b63450280e220c9c099b1e5264bbb55c0013ba9db0c10d7e1d6c26534db59bb9
+  mathematics/analysis/henning-dierks/transcript/Ws4uhcOPAuY.md:
+    size: 10891
+    sha256: da86a19b76aa3ba96e7906648b17c6e81501299a680aa2318998d4f1da569ed1
+  mathematics/analysis/henning-dierks/transcript/X-KIbAL-0UU.md:
+    size: 5042
+    sha256: 497e1f0e8154c878ff671ae39989800a6d0d85ace15cf9be1aa2f5870a4355a6
+  mathematics/analysis/henning-dierks/transcript/X3rMYWvco8I.md:
+    size: 11401
+    sha256: 97a3f2dc54245b0f7f8425a59495a8ac2f04b26779048d487b63b9295675a4d2
+  mathematics/analysis/henning-dierks/transcript/XH2-VVw2zok.md:
+    size: 9477
+    sha256: 46ff4b203360edf5ee96f430b2d9c87b4cadb5557d08bf5a02848246a1aa3287
+  mathematics/analysis/henning-dierks/transcript/XJcMo_5lXiM.md:
+    size: 7212
+    sha256: 9ca0dda05bd8afaaacd197ef0973af308a37ba368b507e7f85394672f03d9cf7
+  mathematics/analysis/henning-dierks/transcript/XmK5nwGQTiQ.md:
+    size: 12652
+    sha256: e332176efd8b897ef146bbe46d8729e2480e94a1ecc805da337536e3dc218afd
+  mathematics/analysis/henning-dierks/transcript/XuujFTGTAJY.md:
+    size: 3720
+    sha256: 901d908f29b23722df848f1b9b6833b34d9c37b1f2adc5ee837e267548c90e55
+  mathematics/analysis/henning-dierks/transcript/YJp8t2a87Pc.md:
+    size: 12244
+    sha256: 294cb88f76f9e710975cb6e97bd9aa1342709c573a4b7869dfd205af948b2165
+  mathematics/analysis/henning-dierks/transcript/YOIKeYbJpQM.md:
+    size: 15398
+    sha256: e038a79d4a492174958b2253b4ce3630af7b43a2c181dde9c518d4341d6e6bab
+  mathematics/analysis/henning-dierks/transcript/YdiqREuh4vM.md:
+    size: 4021
+    sha256: 569be26c0c5131d103e0c2dced2953b4aa34b5c863218c622c582b96ad5b502f
+  mathematics/analysis/henning-dierks/transcript/YircSGO36Bc.md:
+    size: 10138
+    sha256: 0791092f0b5c12f5e44fa61dc5db1d0e7d18fc4546753419c19aa1278457e568
+  mathematics/analysis/henning-dierks/transcript/YvHnwcUubFg.md:
+    size: 4084
+    sha256: f6099d9860b345e04a10320ee6a3a529703143838d520a06e88ed32da86d90a5
+  mathematics/analysis/henning-dierks/transcript/Z50-QlFFMxI.md:
+    size: 10445
+    sha256: 6aac1fc59d47283fabb643feef3cfea07d927be89fba4a61474c12503a03bf0d
+  mathematics/analysis/henning-dierks/transcript/ZlAt8sMMfks.md:
+    size: 18024
+    sha256: a55863532e778266a42a12d96eadbe37174a0d63fd807c4701273668de02a8da
+  mathematics/analysis/henning-dierks/transcript/_QBfq0JA1W0.md:
+    size: 12621
+    sha256: c5998f1b7ddcf31f50badff3bea59be6ec639a9868261c3626613d170865424a
+  mathematics/analysis/henning-dierks/transcript/_QjL5Bu1DHg.md:
+    size: 20425
+    sha256: 6b5f9d3a4bc883b7919816ce16da8fc3f94c9fd9e0d4b8dfcf67acb66be346bb
+  mathematics/analysis/henning-dierks/transcript/__WWH_V8qao.md:
+    size: 8391
+    sha256: 3390d0f2d6c05a07daf64be2733305b3d6cc93dad58bd584a14944e4a994092c
+  mathematics/analysis/henning-dierks/transcript/_h5m8_Nmjt8.md:
+    size: 11166
+    sha256: e91f205a75721941a90960311a1189d25b6d0060c35522348269d3d9471a532a
+  mathematics/analysis/henning-dierks/transcript/aDkC4aoONQI.md:
+    size: 9331
+    sha256: 58b9f8c455a52c6a8578ac196d232a5e244ab3a18c526816d8f5152fe8624869
+  mathematics/analysis/henning-dierks/transcript/aQr7CxCnKj8.md:
+    size: 8785
+    sha256: f747fb78bcb2c8a2492c49419af1d7ea6168f372ae36b39961a062eb40b8ee34
+  mathematics/analysis/henning-dierks/transcript/aR0Uqojhf2A.md:
+    size: 9752
+    sha256: 679734874b5bcaf674dc9eb146d11d3f1d0b4e2b3059ceb6150677fde910c43c
+  mathematics/analysis/henning-dierks/transcript/aksTfIJ3wXw.md:
+    size: 11020
+    sha256: 84f0a0dc7ada534b608673ff53a532456b63a9cc0a46eaa4bdee6a441e5a5bce
+  mathematics/analysis/henning-dierks/transcript/b2lfwqWiGT4.md:
+    size: 10266
+    sha256: 1815c56ce606f341d736867a499a9191006a3e581f15f78bab67d03241a0c147
+  mathematics/analysis/henning-dierks/transcript/b6EUrwbbcTo.md:
+    size: 4789
+    sha256: 60acb8b70b921f444b9e1b735590976afbc4d72f2dedb60d710304f1645c4160
+  mathematics/analysis/henning-dierks/transcript/bEIyaEFuVlQ.md:
+    size: 4478
+    sha256: ff724f390917c56df5642134071a35cdaf13347e5c647b6403fef51dc14d14bd
+  mathematics/analysis/henning-dierks/transcript/bMlJDUOuLJE.md:
+    size: 6018
+    sha256: ec66381b4e1970c52a819a7b76b630f3c7aeb11c757d475c127fbb399f585342
+  mathematics/analysis/henning-dierks/transcript/bMxJoA0kQ1U.md:
+    size: 10048
+    sha256: dc80227cb5aabd610f7194f367a00e16ee7bdabedfb051204b533d359c4a86c4
+  mathematics/analysis/henning-dierks/transcript/bWgkUlRh5Ig.md:
+    size: 5303
+    sha256: 45575e5978edf9f49d63ffb99867088b498c1569ef805476b248348d70da07ff
+  mathematics/analysis/henning-dierks/transcript/baGiNGdvKXM.md:
+    size: 11786
+    sha256: fee096dd6fa23d5db7e888210e4c89066691e05b4fd4652fb79742474bf06dde
+  mathematics/analysis/henning-dierks/transcript/bcisZE2wU6g.md:
+    size: 6636
+    sha256: d46b0b7146286d4cea3a5c09d810dd28d1dc2242dd0177de29f14f3e3418e08e
+  mathematics/analysis/henning-dierks/transcript/bj74_0vQFHs.md:
+    size: 9148
+    sha256: c278b017196b3a832631b9a66cbb25b8291fc1d95f4fda7f6a94bf37b6b67c10
+  mathematics/analysis/henning-dierks/transcript/bzrQhh8GcyY.md:
+    size: 7269
+    sha256: f99ec3bcce89b6cad3374b97da129560e8ad1747b4680bf1de225dba60aabaae
+  mathematics/analysis/henning-dierks/transcript/cXVoFGeXFj4.md:
+    size: 7532
+    sha256: 602bafd65b50c2eb73285dc407d7c05cf2ea5eff59ebf32fcd78e81e782367e1
+  mathematics/analysis/henning-dierks/transcript/cXnpF64rLZA.md:
+    size: 9996
+    sha256: ecc1f1990da173833deab8770c6063eba2caa93e6d06954e5d3bea472281d99e
+  mathematics/analysis/henning-dierks/transcript/ct7DULxkS0Q.md:
+    size: 7224
+    sha256: 39427c0916928d93dca1a09f6c490ff7658ecb95787bed114e16c61cdd494b0a
+  mathematics/analysis/henning-dierks/transcript/dQ9rNAgh9B8.md:
+    size: 4675
+    sha256: 476a4c9cca8c8974571bb059eea595391a613433df8d962afab06ef2e98ae4e5
+  mathematics/analysis/henning-dierks/transcript/dXlto4ALpZg.md:
+    size: 11061
+    sha256: 2829ca98126938ca7a34e3b4686d5dc55ce013367539e9a9129d88cfcfd0ce84
+  mathematics/analysis/henning-dierks/transcript/d_HBTdzYC9o.md:
+    size: 2032
+    sha256: 6e6a7feb383b6e92215bcfb4c8ad981cbca87525062292660c1cb83cec9d5448
+  mathematics/analysis/henning-dierks/transcript/dvmSh-X9CpA.md:
+    size: 6347
+    sha256: a42aa19cf0ee2d973aa5f8dbe2cd13aa4146e32949b1e656a94ed53213454815
+  mathematics/analysis/henning-dierks/transcript/dzVYy0j9x1c.md:
+    size: 11277
+    sha256: ecee6a8414ad964ac05341ea129057592d5100816e9d28c5967a5431fa75bc30
+  mathematics/analysis/henning-dierks/transcript/e3ljmzdycqs.md:
+    size: 5932
+    sha256: a605be36c0e13db551cc924a2a5af5c1c6790a0da32a050f30ff5ac4dbff296b
+  mathematics/analysis/henning-dierks/transcript/eTaz8Grg_SA.md:
+    size: 9841
+    sha256: beb474e6919efdf30e9d7944d6547ef17353b3b294495fdf9f6f1d5ddc0fa4ad
+  mathematics/analysis/henning-dierks/transcript/ehsEanYOF4A.md:
+    size: 13771
+    sha256: 40203cdd1e7cec9d1667a85e430214adc8c121fed0d036cc5b2dd62f63165b37
+  mathematics/analysis/henning-dierks/transcript/fFFyFl8uVW8.md:
+    size: 10567
+    sha256: e2716a532ab06b6907f6e04d5eac63c7b75c9c3dc9fdcf9b055bc03e7e159576
+  mathematics/analysis/henning-dierks/transcript/gKE7rGzxc58.md:
+    size: 8170
+    sha256: 86aee6bd2c4db5bf76b4afad5a8bd56ababcbe7c98c2025e055ab19778b55685
+  mathematics/analysis/henning-dierks/transcript/gKtiQFPnbMA.md:
+    size: 6149
+    sha256: 6a0d9dec1424d3b211c0f96043910f15987ca8536cfd4cf12f4e81799d27b74c
+  mathematics/analysis/henning-dierks/transcript/gNc1IN6gzhU.md:
+    size: 13139
+    sha256: e8724ccefa9e7424ca44cb6478cf11b3d001994f8162308585940b4f8a973645
+  mathematics/analysis/henning-dierks/transcript/gNel3OkRZmU.md:
+    size: 4739
+    sha256: 35250134d6bfbcfd75cb8a0d675de9b4417c89935a04e59b84010d1fad3e1dc0
+  mathematics/analysis/henning-dierks/transcript/gO0g7PKkJIU.md:
+    size: 7718
+    sha256: 84556b797d9b67521f8ae12f5162ecd642535f2f07122ac90ccd79f07b7ef493
+  mathematics/analysis/henning-dierks/transcript/gpgBfHrcZtA.md:
+    size: 7616
+    sha256: 1adcca8f8b66a46d7ec6e435d0431be6b4d2c5aa2bbd37b1216955595b8b7e6c
+  mathematics/analysis/henning-dierks/transcript/gwwAMHIazU4.md:
+    size: 9813
+    sha256: a381d4678cae3903443fce0766ba69c62b35b7545b89737d0d5d8ab593c55e28
+  mathematics/analysis/henning-dierks/transcript/hAxas3bj6pQ.md:
+    size: 6752
+    sha256: b962110c7edd27107d3391abd47ce5b27f4d6a7482c9811cc39a42c94d10c7af
+  mathematics/analysis/henning-dierks/transcript/hxkQk2dVdxQ.md:
+    size: 8172
+    sha256: fad44b09597c1cf1db0ded10b6dfe9f8b0e5f58faa9c8f884bd455b9643505d5
+  mathematics/analysis/henning-dierks/transcript/i9sbRThppcY.md:
+    size: 6975
+    sha256: 64e62989850cfd624a059e8cc89c9f3d209ffb29c82e7861e70312388021c00e
+  mathematics/analysis/henning-dierks/transcript/ighp8pFIaFE.md:
+    size: 6361
+    sha256: 240d1bbc0ba7ed645ffa9efee8483949b6d7b03ccb3ffb94d77abc80e3d65ed8
+  mathematics/analysis/henning-dierks/transcript/ioSpM8c_wI4.md:
+    size: 20903
+    sha256: ce3a1e7e59d4ad5adf252c836f9623803882cc86a0d75075aa305bfa01b0a320
+  mathematics/analysis/henning-dierks/transcript/k3HRxz98nIc.md:
+    size: 15255
+    sha256: 689bbbf07b49936befc8d7fa94189cde90995c0e11f94fb8cc6e05097710a2dd
+  mathematics/analysis/henning-dierks/transcript/kSqVzSClJD4.md:
+    size: 11103
+    sha256: f4b712f1de505feb7be5986831088f1421c9151a965959ae80b4b1b5e306ca86
+  mathematics/analysis/henning-dierks/transcript/kYWsSt_zWus.md:
+    size: 6253
+    sha256: 0260389c8c95ea6693d0198a6a8c5356a33d2c9702c93f1956a3ec40837e0d0c
+  mathematics/analysis/henning-dierks/transcript/kzEHoF6LNhw.md:
+    size: 5815
+    sha256: 4442826322e1f4717d254d460bbce21f5c8e103b099798c2b3af012d3c92f4c8
+  mathematics/analysis/henning-dierks/transcript/l5DZlyJwgqY.md:
+    size: 7677
+    sha256: 02bdb67c233f91e34e81124ab5c5bf82eb51cf1a79923925885363c99dd59e7f
+  mathematics/analysis/henning-dierks/transcript/lUdN4Su2pt4.md:
+    size: 14998
+    sha256: c7ef906c83e1335fcf6f135a0db6c9ad7802cbce3a9796a4b7067e9660fff57b
+  mathematics/analysis/henning-dierks/transcript/lfCzkvJ3oRU.md:
+    size: 14509
+    sha256: 6ba74c8fbb71f70fc57c21ad814df5b0174e08857ea295f4193f2a213da3b4d8
+  mathematics/analysis/henning-dierks/transcript/lvIZawJBtzI.md:
+    size: 3727
+    sha256: 66f9339c9f7c20a0a05b4c315e4cd0f01d0b32358f44792459940495fca240cf
+  mathematics/analysis/henning-dierks/transcript/m4zQRad8Rs4.md:
+    size: 7821
+    sha256: f8e103eaa77b88bdf28791431c70d579a613ded2233172cc8778ba1978f5e2ce
+  mathematics/analysis/henning-dierks/transcript/m77sQE-fuTw.md:
+    size: 4430
+    sha256: d8d4d62c9efd6e0431402cc5229c6264db25eab7e4a6deb9f600834a5adb2266
+  mathematics/analysis/henning-dierks/transcript/mJyFh2rOSkQ.md:
+    size: 4021
+    sha256: d446920219b5df3a76445071ffe7b2127990bde71812ce2d3d986ff6fdf2fd12
+  mathematics/analysis/henning-dierks/transcript/mclq9oPM_Os.md:
+    size: 10065
+    sha256: 8852cb43ce388a502afaac3a8ef9ff0d12462076f68dfaed0b63c0269bcc8348
+  mathematics/analysis/henning-dierks/transcript/md0ISvFGh-o.md:
+    size: 5945
+    sha256: 11062d48c782eca677841a160d8c10757ea357cc2f4cb4613e16daa929f5d3b0
+  mathematics/analysis/henning-dierks/transcript/mvOTUcTF1qk.md:
+    size: 7716
+    sha256: 173e1d1e8c5fe8dc4850a0ecf6ec41af7d497521c1638c9cc31b64aaf3ba5a6c
+  mathematics/analysis/henning-dierks/transcript/nNRrEBKnd7s.md:
+    size: 18511
+    sha256: 5200796b7955318e5f25b0778b9b734e9fff20668a63b122fc8a765a58848f08
+  mathematics/analysis/henning-dierks/transcript/nO0PWsknNao.md:
+    size: 5629
+    sha256: 8777455bd5850cce414f579cf4e0e5d0c35217a2ce78aeeacc48a6bf2a38230a
+  mathematics/analysis/henning-dierks/transcript/ng5Cx6ZXQ1s.md:
+    size: 8290
+    sha256: 44591ab376972c3eba6bdcd0bca6513442772aba4cd42c4f9f69d0afb32849f7
+  mathematics/analysis/henning-dierks/transcript/o7d_kumskUk.md:
+    size: 4193
+    sha256: 2fd26129724824cbf4f8ae500efdc0b274ded7839d16aa723bf7090f59e781c1
+  mathematics/analysis/henning-dierks/transcript/oNjL54a9lf0.md:
+    size: 4522
+    sha256: 0fc9fbdc393ab14e53456f2bd37380c147cbdb60e7297c8f899f293ce0cf5d51
+  mathematics/analysis/henning-dierks/transcript/oh3IBFd4ysA.md:
+    size: 4900
+    sha256: 8ff2b19c5a0a12e8ffd34600de2fb245afc340f89d5234f375415f89d0b8e4bf
+  mathematics/analysis/henning-dierks/transcript/p51A_GClQKE.md:
+    size: 11754
+    sha256: 2f20b4848d36ed6d2a3a2f74c389f3777167ea0f5ed4e2d6aed5368dcd00f0b4
+  mathematics/analysis/henning-dierks/transcript/pEiLwjhfYac.md:
+    size: 11925
+    sha256: a23ba4a30f562d024b007ca3f989d950b9c382402136362a7027606bdde67f44
+  mathematics/analysis/henning-dierks/transcript/pHJgKk_9N0w.md:
+    size: 16079
+    sha256: 401f49cfbe18db4b2e77ad1d7bb1b6fda8eae11b551cd120e51beb35fcef5ac2
+  mathematics/analysis/henning-dierks/transcript/pjCGTBQLUik.md:
+    size: 13480
+    sha256: 226f8ff80f2e827d480427cb7c6b12e4324b097978e3e098b3a763f1432fd13d
+  mathematics/analysis/henning-dierks/transcript/potI8zhgEoc.md:
+    size: 7143
+    sha256: 084c65664583f429784a75dc29f2e464a1e505b4552a7c7c2ab6a8dfdd63e657
+  mathematics/analysis/henning-dierks/transcript/pxeGdfym6mI.md:
+    size: 8070
+    sha256: 30a7da9329de8e977b5560808b868f2e25025710f2a0917023e15dac220f80e4
+  mathematics/analysis/henning-dierks/transcript/q1CfCn9fRMU.md:
+    size: 7196
+    sha256: c1cef2e6271343ae338ee57ef63219231d887966b2dfc16eac49af541643e50c
+  mathematics/analysis/henning-dierks/transcript/qVs4EKulsI8.md:
+    size: 11508
+    sha256: 39a0c0a6a4791389decc7f4e4ee4c2b1be2bd6b2c5231bde6ead1fd9695f9086
+  mathematics/analysis/henning-dierks/transcript/qe9dqxFfadI.md:
+    size: 6243
+    sha256: b68bb35957300eb1e8af95deb6b84d2bebe0ce7cbf9517b0eb46af21903b0cdc
+  mathematics/analysis/henning-dierks/transcript/qoDOe2mdjo0.md:
+    size: 8115
+    sha256: cbf931afbd10c45040319b880c7f3574a7acb073b60fd82b2d7dd8fef93a4233
+  mathematics/analysis/henning-dierks/transcript/qpho9TwLM6s.md:
+    size: 9621
+    sha256: 05a47916190899126c6de6dbcc174086427a6fdf5427ccb0bb019df14b14d4ea
+  mathematics/analysis/henning-dierks/transcript/r0k43wCRYO4.md:
+    size: 5509
+    sha256: 1b9e6e42beb31c428969fed4c144892bdf302216ff0ad8bd80ba43f1d50b346d
+  mathematics/analysis/henning-dierks/transcript/s-ltGCWp65o.md:
+    size: 12528
+    sha256: 1a6b364fb14c4b77815105d06a8727daa947ff742a53095fe7a6c8075dd13a22
+  mathematics/analysis/henning-dierks/transcript/s54a3APAJ6o.md:
+    size: 5219
+    sha256: 9f6c90d5fa04128962f248863c9194b5e566cbee963b503121d9b2d27522ec59
+  mathematics/analysis/henning-dierks/transcript/smY7hH0o7fs.md:
+    size: 11627
+    sha256: 5f672c67d4bd1fa3c38674ca46b7e88716db8f213b4e4b06efc3fa18e07f1294
+  mathematics/analysis/henning-dierks/transcript/szUf9GNHepY.md:
+    size: 8257
+    sha256: eac0f5c9b358f0b006427be2cfbb7591b492b7a4d37a3c8080e3a60b837f4965
+  mathematics/analysis/henning-dierks/transcript/t4Q53CmHPic.md:
+    size: 6147
+    sha256: 96269f9243e57f148c7b40a0868884fbf5ad8131488fdeb19f06578b8cd929d4
+  mathematics/analysis/henning-dierks/transcript/tGogdahDqeg.md:
+    size: 6161
+    sha256: 21df5c15cd065aea0c131507fda8914bd0db455ec679e4d1eafce1646f80781e
+  mathematics/analysis/henning-dierks/transcript/tJJ0iVbaIQ8.md:
+    size: 9479
+    sha256: b6b2620ff184ee505307093c28c3e27480c1549a26e2f8527174fa4089d6f956
+  mathematics/analysis/henning-dierks/transcript/tNIp9bFAB44.md:
+    size: 3844
+    sha256: 9b196dd12ab87c271e4340531c51a038fa083d6610d7f9584ddd19fad8ee8eaa
+  mathematics/analysis/henning-dierks/transcript/tjSYEOJ8nFs.md:
+    size: 10151
+    sha256: b08897e3c9507ddc458008fd74fff16e10dbdca62b85afc8a8f8a03761f586e2
+  mathematics/analysis/henning-dierks/transcript/u3QK_sjQd7M.md:
+    size: 12842
+    sha256: dd0e219c095a7f18e99e10b961f3554e3f5cc6e919827e54050ea1ac91567eb3
+  mathematics/analysis/henning-dierks/transcript/uNrbpBGnYoI.md:
+    size: 3891
+    sha256: d7cd8dd31fd07509d08844410744800fc329646fadf054cab7bb8f2fe638fedd
+  mathematics/analysis/henning-dierks/transcript/uoRMuoNBsiQ.md:
+    size: 12229
+    sha256: c3b3bddcb0b932fbed7c45ee838fd6a1bcdcbd0b101a67395189c99da954b31b
+  mathematics/analysis/henning-dierks/transcript/uomK6mgdUTI.md:
+    size: 5848
+    sha256: 27d0e81c472ca4b6e0e4ae3d11ba16d29fdf334140545eae4b0b570e03ad4b3c
+  mathematics/analysis/henning-dierks/transcript/v5ykajUCffc.md:
+    size: 5251
+    sha256: d52425dde9b29ea801225d935258a2b31fb412a4aba316f551720ba0cca876bb
+  mathematics/analysis/henning-dierks/transcript/vfgk6fcbERc.md:
+    size: 12136
+    sha256: 5b088c145876c6e92c9b6a3484a007b75bb62b4fccdfc7195881a9ce9643abc6
+  mathematics/analysis/henning-dierks/transcript/vu5P_3OutS4.md:
+    size: 8430
+    sha256: 4550d3d0e6ce143c0cc806ddb841af2d582805dd4f408dc46c7da58f63a35476
+  mathematics/analysis/henning-dierks/transcript/w7Z6VfMPuW8.md:
+    size: 13363
+    sha256: cf9554aad9564848780f79b67072f782611b664f676446c921e1c6af91361bc4
+  mathematics/analysis/henning-dierks/transcript/wjdsyTAxIm0.md:
+    size: 12810
+    sha256: 0394bc112e970ab33fdaa315cade06b0d26c32b7a876b843a036c3833bab6a42
+  mathematics/analysis/henning-dierks/transcript/wpyVmyhPtUI.md:
+    size: 10117
+    sha256: 64ac5c76864b9cde570d56b9bf47d20421cea4314bc9e4d36336504922870ba5
+  mathematics/analysis/henning-dierks/transcript/wqqakNZrfI4.md:
+    size: 14033
+    sha256: b7fddb541bb2dbf85dd5655fb9ca7121f9112ea27fc87311f92bec8df4ed859a
+  mathematics/analysis/henning-dierks/transcript/x5iLbMXmvPQ.md:
+    size: 14068
+    sha256: b65f1bab7e8bce697f3c847880efae7aa57b83e40dffb7c0558676ba46d5dbcc
+  mathematics/analysis/henning-dierks/transcript/xvPzKqscTMU.md:
+    size: 10925
+    sha256: bfdd9f9c2ff553fe8f320541df5ac79704cb4e934e1c4f9d14ff2f9ffdd2fc5b
+  mathematics/analysis/henning-dierks/transcript/y1J-27SqDS0.md:
+    size: 6386
+    sha256: 3495e73e93b9d3bc7a0a28183f2fa5ac3737efb4d6a24df29768d64b211ffd2c
+  mathematics/analysis/henning-dierks/transcript/y5KFi-nhETc.md:
+    size: 15931
+    sha256: 35a406b42906d192a4c0b7750f20bcb65c95660af7275b1b670836dd5a5c67ad
+  mathematics/analysis/henning-dierks/transcript/yBiBNqvjYaA.md:
+    size: 10071
+    sha256: 274e8fe3bd1e1a9060f2ebbfa5840c0629a59f56db059c1124a1ae1e429f91ba
+  mathematics/analysis/henning-dierks/transcript/yXUwZZbOnS0.md:
+    size: 5545
+    sha256: 660f97284466c525d1e2e5fc1d1127eea76887779a1910e9331d76a266fe1783
+  mathematics/analysis/henning-dierks/transcript/ydRQgKYUFA4.md:
+    size: 10421
+    sha256: fc9cc617357d6c59607d38b4a5dcced8c2331cf027a9a7c611eeb24a69ff20d2
+  mathematics/analysis/henning-dierks/transcript/yrg0ZY6pwPA.md:
+    size: 8753
+    sha256: 730d1b6ff1ea190af14abe7cd6ef92244f91b8aa8fa988870bdc0bc985185611
+  mathematics/analysis/henning-dierks/transcript/ywAxPlBFnvY.md:
+    size: 11155
+    sha256: 2ad09e5f639fa40b14451a685d345fc8b3a037cb52b289876084775cf77a0d4c
+  mathematics/analysis/henning-dierks/transcript/ywM-K3E-Gzw.md:
+    size: 3667
+    sha256: aa672864fe8751a863faa264a008000f2e01d16f4fbd24d3803d9572111c2e47
+  mathematics/analysis/henning-dierks/transcript/z-Ge6igYQwo.md:
+    size: 16179
+    sha256: 768876fc60b61b95aed829916375bd4229207baec813ed52550ed31668f2b23c
+  mathematics/analysis/henning-dierks/transcript/z-H7dAWzPiE.md:
+    size: 25594
+    sha256: fe934814e5c852edcd16f113d986e4f57318035b5f237c28c834bdbb31e1581d
+  mathematics/analysis/henning-dierks/transcript/zMWqRdyeeV4.md:
+    size: 10102
+    sha256: 67fa063695b7d5518c4e75fcdf43039c1b5ee303b838e6be58ccd64f221cf0c9
+  mathematics/analysis/henning-dierks/transcript/zN2gVmDRscU.md:
+    size: 7658
+    sha256: 5cffc01409136b5acc3912927c54ea330d5aaf402047ce985bcb2f503d90acc7
+  mathematics/analysis/henning-dierks/transcript/zTnCBgZdBJA.md:
+    size: 4125
+    sha256: ee41d82c877847e77e52a246bf762a37ce3bfea70edb23dd727a83c9f1553bf2
   mathematics/analysis/lebl-basic-analysis/realanal.pdf:
     size: 1896716
     sha256: a8c9bcf8a7e8a5f9a2e07b2848d1bcd5de5e7006f782ffd6c019037e4c13425c
@@ -1134,6 +1950,99 @@ files:
   mathematics/analysis/mit-18100a/mit18_100af20_lec_full2.pdf:
     size: 819033
     sha256: 87299a0378491695c6e9e632e914d93f6ae628c68ee1bf20566e269748a105e8
+  mathematics/analysis/professor-leonard/transcript/-PYebK8DKPc.md:
+    size: 57144
+    sha256: e2a8c93bee660aee7d490426cd54001b9d53de762fcb5d4dcdd87fc81c6e8afb
+  mathematics/analysis/professor-leonard/transcript/1EGFSefe5II.md:
+    size: 79041
+    sha256: 1b7c13fe18ba134ff26e639faf1f6ba7b5caf1625fe8fe4bcfbfa8de88174bf5
+  mathematics/analysis/professor-leonard/transcript/29GbRaQxtzY.md:
+    size: 24106
+    sha256: 43a6f3854e9157d4bf63186f597e9c3aff2fc549d6b224e4ea9fc0fb078542bc
+  mathematics/analysis/professor-leonard/transcript/43Qt6wc44To.md:
+    size: 41494
+    sha256: 60f598d18daed3dd852dbbf78829d6cf28b024d6771df0c042507feeefb3286f
+  mathematics/analysis/professor-leonard/transcript/54_XRjHhZzI.md:
+    size: 65464
+    sha256: 073875de9b51e7f5a31f6ab9dc93ab13433edf6f865590dc05f20ed96b87c94a
+  mathematics/analysis/professor-leonard/transcript/8dr1dZjfhmc.md:
+    size: 69585
+    sha256: d1bcaaaf86d2796c4f1622b5c33ebba81de9c8437b973287e24c6c865f723536
+  mathematics/analysis/professor-leonard/transcript/8u6woY05aL0.md:
+    size: 64972
+    sha256: ab9b9dd699cfb2c6e3272f9263d46a26e3d455c2b1b68ab3a21fbf7630b2ddf0
+  mathematics/analysis/professor-leonard/transcript/962lLfW-8Jo.md:
+    size: 52663
+    sha256: 518e4eea72af8da54cd46b52b027dc1b39745289c0d95448d1735396913baab9
+  mathematics/analysis/professor-leonard/transcript/AvCQQ3X4Nuc.md:
+    size: 49165
+    sha256: 511b81fcf794b71b8edb5bdce7ca1378998974ede300c3c6c44145e445cee1b5
+  mathematics/analysis/professor-leonard/transcript/BDmlottZVd4.md:
+    size: 40965
+    sha256: 550e8da88dd2bf2bfca239581647b99e4f26d44eef3e1d51aa0629db328a7e0f
+  mathematics/analysis/professor-leonard/transcript/EY6FHX6asU0.md:
+    size: 55845
+    sha256: bca531cda4dcac6d07c0ff4d85e44cfbf1d87e00c993bbac66892d5cc93e3b7a
+  mathematics/analysis/professor-leonard/transcript/F0uuW-I6icY.md:
+    size: 87062
+    sha256: ae8ab3ce0ce2c9b75dbd04543e988cde80fd9768cc62b5428eeb2bd102b83cbd
+  mathematics/analysis/professor-leonard/transcript/GJOJl47l2_4.md:
+    size: 115441
+    sha256: d03fd2dc3324afe0e829a586855e0831ac0d5fc8492abf31c37b6f0fa446b1b4
+  mathematics/analysis/professor-leonard/transcript/K0ORDCt5Ig0.md:
+    size: 22182
+    sha256: 64ae7fc1d0c75b0d66f518adf7a96e5b42b536172e08ec6ce984aa806c87bc9f
+  mathematics/analysis/professor-leonard/transcript/Mx39JbbzEAo.md:
+    size: 69703
+    sha256: b7207f116e23c176669ad8c421148f67ca60e264719f1fcc665ce007ce7ecb40
+  mathematics/analysis/professor-leonard/transcript/OEE5-M4aY4k.md:
+    size: 59852
+    sha256: 2be4fea0ae7b05026e13188eb043010e529b346f7bd5f8167c363c163a9d8de5
+  mathematics/analysis/professor-leonard/transcript/PqQ5v94_NGM.md:
+    size: 81875
+    sha256: cb0c42a5beda72bc9dd2830df660d0358a84a4c328cf46d2381f483c5581d5c5
+  mathematics/analysis/professor-leonard/transcript/RJJSiNz5oto.md:
+    size: 34083
+    sha256: 39eb71453290bb34461359d28eeaea7dd71385033e3cd6c37a3c23ab03ff4d21
+  mathematics/analysis/professor-leonard/transcript/RUS4mKo9tBk.md:
+    size: 50319
+    sha256: 64dbcda9a0564da9845eee04f9f6bec46d36f2c1fa9d94e0cc765f69cd842790
+  mathematics/analysis/professor-leonard/transcript/SWZcq_biZLw.md:
+    size: 66110
+    sha256: b2e5aef8abdce117c65de6d63938bca57073a90195eb0534f0397880a9102d41
+  mathematics/analysis/professor-leonard/transcript/SzLF-wLZF_I.md:
+    size: 64632
+    sha256: 5f757731c9fef21cc51b95567522713328ad6d6e2027259d3dcdbd990eee22a7
+  mathematics/analysis/professor-leonard/transcript/VSqOZNULRjQ.md:
+    size: 135016
+    sha256: c3c1367a3e3ace5b0a24ee9bc6a1f6d289f5719c267f4408edd63e7ae30d5ef6
+  mathematics/analysis/professor-leonard/transcript/aiBD9aI69C8.md:
+    size: 69825
+    sha256: 05e810d7f516ec3f09faf849ce8f9c5022ad034ce3be1161631bdf3614ca0176
+  mathematics/analysis/professor-leonard/transcript/b2ZFpE_yrLg.md:
+    size: 120733
+    sha256: abb4fa46c0c278faf81a2d4a779c2a50601c3daa4838df612d1cf708c750a575
+  mathematics/analysis/professor-leonard/transcript/c7wur9Lixb0.md:
+    size: 66317
+    sha256: 2241d63107c158a9de8f81fdfeba7db1d4b18a3ef048a58158b3a66b5fca2559
+  mathematics/analysis/professor-leonard/transcript/f-_UsIP5jyA.md:
+    size: 11818
+    sha256: 752e1dea83b544150b0ffdb22c7f97cfb8efa95e8bf4d06a8f071cc6c6bcf3bb
+  mathematics/analysis/professor-leonard/transcript/fYyARMqiaag.md:
+    size: 39085
+    sha256: 4ca89c0f0d706d23730d81c20128c1f170761060fa0dbf3e4cc8276370e9b919
+  mathematics/analysis/professor-leonard/transcript/nQ6tOORDQ3I.md:
+    size: 23185
+    sha256: 9a4eb87334bc73d9fa6a721faeb46ebcdebbf555db581bd3834684d6c3b5b313
+  mathematics/analysis/professor-leonard/transcript/qW89xdGfSzw.md:
+    size: 5058
+    sha256: d2297c825508d37493cd24cc661149307dc09f2c85ff800f6ddfb19469a8781b
+  mathematics/analysis/professor-leonard/transcript/qr1WXiq3S3k.md:
+    size: 31233
+    sha256: 9ca4495af0cddd643ddd03b6dd72a3ba9d91f6589826de94d63ef1bc5d92ca25
+  mathematics/analysis/professor-leonard/transcript/xjtEfS0vY2o.md:
+    size: 125229
+    sha256: 3f995a2d2b274b685d0823d04627dd2535743479f41d4ce5a2da829b71b120d6
   mathematics/analysis/ross-elementary-analysis/Ross_Elementary-Analysis_2ed.pdf:
     size: 3321812
     sha256: 0a60fe09efb2900b7fa026bfa65e5e1edd3fbac32ac1a7e3a40c4ff3bd56bd8b
@@ -2343,6 +3252,54 @@ files:
   mathematics/analysis/thomas-calculus/Thomas-Calculus_Early-Transcendentals.pdf:
     size: 23127181
     sha256: 3eb3573bd1874ddcdd92ddc788c6e3fd6fec7630530bb5af4abcadfb385ddf83
+  mathematics/analysis/wrath-of-math/transcript/-n4cnyDkd6A.md:
+    size: 4411
+    sha256: f0a4ac1a6dbb29d46269fffe999ba6fb6388284804fbb74e4646175e2a03aecf
+  mathematics/analysis/wrath-of-math/transcript/0oRN_pxq2IM.md:
+    size: 7031
+    sha256: 0efea575d463cf9d12425900237bfc9609db3f38bea8386a1235302425b2ebb8
+  mathematics/analysis/wrath-of-math/transcript/1h_CErk0NFs.md:
+    size: 17904
+    sha256: 7b6cf7627ce5270d473147100e455fb75c1798a9f912d793059d22c027aea233
+  mathematics/analysis/wrath-of-math/transcript/4NURDmE79VU.md:
+    size: 12054
+    sha256: 90bee992600f82a2cd1ff56406a7197fe67d689f476dc6f4d188c713bf0971d1
+  mathematics/analysis/wrath-of-math/transcript/7N-4XZlxBho.md:
+    size: 5129
+    sha256: 3080b9d3552ba186ddb21e38c5c5bd73462972b93def2f281bea5ddc59b22719
+  mathematics/analysis/wrath-of-math/transcript/GulH7nS_65c.md:
+    size: 4341
+    sha256: 6562b0fc7847ed493402963bee171c66620cf4e5577b04bc07bc184c5b4ec8f8
+  mathematics/analysis/wrath-of-math/transcript/Max7ZPWnV1Q.md:
+    size: 6647
+    sha256: bb8606e012cd761269b97fbae26201134fe1b48fff7e911e3da8d2ee8ec136aa
+  mathematics/analysis/wrath-of-math/transcript/RmsvftFNMtE.md:
+    size: 10310
+    sha256: fdfb4e31a96465cfe5234d54458761a6b2e1a0de547a63c91bcf0b898383c452
+  mathematics/analysis/wrath-of-math/transcript/Sbk-DDhuEvc.md:
+    size: 6394
+    sha256: e440ff263ef2760d7d9d681a6f9bd10438196d6db5dae8b8c7d781edb3513f2e
+  mathematics/analysis/wrath-of-math/transcript/SubZMuVBajM.md:
+    size: 4956
+    sha256: 5184e4b28973b2b0ea0fe57ada8f0000872d948b106f9aa2b80a923e86c09679
+  mathematics/analysis/wrath-of-math/transcript/W3EWjNSoxqE.md:
+    size: 4642
+    sha256: fe0f2d3ca4adda129b92b6cc7badd321450361af71bfb7f2c17f945b257bdd30
+  mathematics/analysis/wrath-of-math/transcript/ZlAT0_W4yP0.md:
+    size: 6253
+    sha256: 98063767dff7566485277b5fc7b104b6616246f9b166e31e984d776db8ddbdb4
+  mathematics/analysis/wrath-of-math/transcript/Zvy860EOlVk.md:
+    size: 12336
+    sha256: 9610f95e790ecbb10ff3a5429a218576d23c98394f6082bd6b26f3ab069e2468
+  mathematics/analysis/wrath-of-math/transcript/uuGDahLA2Rk.md:
+    size: 11393
+    sha256: d41984d99324f7e6222c2abdb28bb332da4be7ed8ec1e474f7d6e8baa3bd0ecc
+  mathematics/analysis/wrath-of-math/transcript/wBNKbQ-xNiw.md:
+    size: 14027
+    sha256: 943174b708d6d5e91febc32c62c771bac099d01668a77dd9340c4bfbf3726d63
+  mathematics/analysis/wrath-of-math/transcript/xhBfPoSjAR0.md:
+    size: 10129
+    sha256: 03fc1b880857570c327996afc5a89cb5eca82937dc586f87547c35a5a8fe7955
   mathematics/general/labs-schreyer-mathe-informatiker/Labs-Schreyer_Mathematik-fuer-Informatiker.pdf:
     size: 16665465
     sha256: c1b73537a1e75ae6fb710b7e9d8ee13fb574ba8fbc9095e2975fe05dfd0e6450

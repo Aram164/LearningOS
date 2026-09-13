@@ -85,7 +85,9 @@ PLACEMENT_HINT = {
     "reducible-fft": "algorithms/complexity",
     "3b1b-linear-algebra": "mathematics/linear-algebra",
     "3b1b-essence-of-calculus": "mathematics/analysis",
+    "henning-dierks": "mathematics/analysis",
     "professor-leonard": "mathematics/analysis",
+    "wrath-of-math": "mathematics/analysis",
     "3b1b-bayes-theorem": "mathematics/probability-statistics",
     "brandon-foltz": "mathematics/probability-statistics",
     "jbstatistics": "mathematics/probability-statistics",
@@ -106,6 +108,18 @@ PLACEMENT_HINT = {
     "guo-cpython-internals": "software/python",
     "hettinger-class-toolkit": "software/python",
     "powell-python-expert": "software/python",
+}
+
+#: Speech language per source, used to prefer the original-language caption
+#: track. Without this, sorted-first picks the German auto-translation on
+#: English channels (measured 2026-09-12: Wrath/Leonard artifacts landed in
+#: German, machine-translated twice over for math terms). Sources absent here
+#: keep the old sorted-first behaviour.
+SOURCE_LANG = {
+    "3b1b-essence-of-calculus": "en",
+    "henning-dierks": "de",
+    "wrath-of-math": "en",
+    "professor-leonard": "en",
 }
 
 
@@ -233,6 +247,7 @@ def render(meta: dict, segments: list[tuple[int, str]], *, source_id: str,
         f"- video_id: `{meta['id']}`",
         f"- duration: {stamp(int(meta.get('duration') or 0))}",
         f"- captions: {meta.get('_caption_kind', 'auto')}",
+        f"- track: {meta.get('_track_lang', '?')}",
         f"- window: {window}s",
         f"- fetched: {datetime.now(UTC).date().isoformat()}",
         "",
@@ -273,7 +288,25 @@ def listed_ids(url: str, *, limit: int | None) -> list[str]:
     return [line.strip() for line in done.stdout.splitlines() if line.strip()]
 
 
-def fetch(video_ids: list[str], into: Path) -> list[tuple[dict, Path]]:
+def pick_track(vid: str, into: Path, *, lang: str | None) -> Path | None:
+    """The caption file to keep: original-language track when known."""
+    tracks = ([t for t in sorted(into.glob(f"{vid}.*.vtt"))
+               if ".en-orig." not in t.name]
+              or sorted(into.glob(f"{vid}.*.vtt")))
+    if lang:
+        preferred = [t for t in tracks if f".{lang}" in t.name]
+        tracks = preferred or tracks
+    return tracks[0] if tracks else None
+
+
+def track_lang(vid: str, track: Path) -> str:
+    """The language tag carried in the chosen track's filename."""
+    rest = track.name[len(vid) + 1:]
+    return rest.split(".")[0]
+
+
+def fetch(video_ids: list[str], into: Path, *,
+          lang: str | None = None) -> list[tuple[dict, Path]]:
     """Download captions for exactly these videos. Returns (meta, vtt) pairs."""
     if not video_ids:
         return []
@@ -293,12 +326,12 @@ def fetch(video_ids: list[str], into: Path) -> list[tuple[dict, Path]]:
         vid = meta.get("id")
         if not vid:
             continue
-        tracks = [t for t in sorted(into.glob(f"{vid}.*.vtt"))
-                  if ".en-orig." not in t.name] or sorted(into.glob(f"{vid}.*.vtt"))
-        if not tracks:
+        track = pick_track(vid, into, lang=lang)
+        if track is None:
             continue
         meta["_caption_kind"] = "manual" if meta.get("subtitles") else "auto"
-        pairs.append((meta, tracks[0]))
+        meta["_track_lang"] = track_lang(vid, track)
+        pairs.append((meta, track))
     return pairs
 
 
@@ -331,7 +364,8 @@ def ingest(source_id: str, urls: list[str], *, window: int,
             continue
         with tempfile.TemporaryDirectory(prefix="los-transcript-") as tmp:
             staging = Path(tmp)
-            for meta, vtt in fetch(fresh, staging):
+            for meta, vtt in fetch(fresh, staging,
+                                   lang=SOURCE_LANG.get(slug)):
                 segments = normalise_vtt(
                     vtt.read_text(encoding="utf-8", errors="replace"),
                     window=window)

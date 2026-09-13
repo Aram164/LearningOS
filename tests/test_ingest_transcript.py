@@ -163,3 +163,36 @@ def test_the_rendered_header_declares_what_the_file_is(tmp_path: Path):
     assert "- source: `source-demo`" in text
     assert "- duration: 30:00" in text
     assert "[00:00] first span" in text and "[00:30] second span" in text
+
+
+def _tracks(directory: Path, vid: str, *suffixes: str) -> None:
+    for suffix in suffixes:
+        (directory / f"{vid}.{suffix}.vtt").write_text(
+            "WEBVTT\n", encoding="utf-8")
+
+
+def test_track_choice_prefers_the_hinted_speech_language(tmp_path: Path):
+    """Sorted-first once picked the German auto-translation on English
+    channels; the hint recovers the video's own words."""
+    _tracks(tmp_path, "abc12345678", "de", "en")
+    chosen = ingest.pick_track("abc12345678", tmp_path, lang="en")
+    assert chosen is not None and chosen.name == "abc12345678.en.vtt"
+
+
+def test_track_choice_falls_back_without_a_hint(tmp_path: Path):
+    """Sources absent from SOURCE_LANG keep the old sorted-first order."""
+    _tracks(tmp_path, "abc12345678", "de", "en")
+    chosen = ingest.pick_track("abc12345678", tmp_path, lang=None)
+    assert chosen is not None and chosen.name == "abc12345678.de.vtt"
+
+
+def test_track_choice_falls_back_when_the_hint_matches_nothing(tmp_path: Path):
+    _tracks(tmp_path, "abc12345678", "de")
+    chosen = ingest.pick_track("abc12345678", tmp_path, lang="en")
+    assert chosen is not None and chosen.name == "abc12345678.de.vtt"
+
+
+def test_track_language_is_read_from_the_filename(tmp_path: Path):
+    track = tmp_path / "abc12345678.en-GB.vtt"
+    track.write_text("WEBVTT\n", encoding="utf-8")
+    assert ingest.track_lang("abc12345678", track) == "en-GB"

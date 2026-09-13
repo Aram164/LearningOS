@@ -233,6 +233,243 @@ records:
       idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
     reviewed_by: ''
     status: supported
+  covers:route-an-ch03-henningdierks:
+    claim_id: covers:route-an-ch03-henningdierks
+    claim_kind: route-covers
+    statement: route-an-ch03-henningdierks covers knowledge-m2-analysis-ch03-bestimmte-divergenz,
+      knowledge-m2-analysis-ch03-konvergenzkriterien, knowledge-m2-analysis-ch03-rechenregeln
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 40
+        unit-m2-analysis-ch03: 6
+        unit-m2-analysis-ch04: 6
+        unit-m2-analysis-ch05: 6
+        unit-m2-analysis-ch06: 6
+        unit-m2-analysis-ch07: 6
+      source_hashes:
+        manifest:mathematics/analysis/analysis-skript/kleine_beweise.pdf: ed8a5d1462993c3c653f29a204771c0d6d89bdfbe3eb2b3ffec5fdfd9d4557e8
+      evidence:
+      - route-locator:W-MN5CDs23E
+      - 'external:https://www.youtube.com/playlist?list=PLKACPrU0Thj-glqd1KYurRLWkdBKxZIPh
+        -- trail: playlist listing and every video title, id and duration read from
+        YouTube on 2026-09-12 via yt-dlp --flat-playlist; each named video was matched
+        to its kleine_beweise.pdf result by its own stated title, not by topic guess'
+      - manifest:mathematics/analysis/analysis-skript/kleine_beweise.pdf
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: 58248434-af9e-44cd-99f1-56d8d054b642
+      idempotency_key: ce174d04-b0fe-4371-b8c7-fa77ddc1aaf7
+    reviewed_by: ''
+    status: supported
+  covers:route-an-ch03-wrathofmath:
+    claim_id: covers:route-an-ch03-wrathofmath
+    claim_kind: route-covers
+    statement: route-an-ch03-wrathofmath covers knowledge-m2-analysis-ch03-konvergenzkriterien,
+      knowledge-m2-analysis-ch03-rechenregeln
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 40
+        unit-m2-analysis-ch03: 6
+        unit-m2-analysis-ch04: 6
+        unit-m2-analysis-ch05: 6
+        unit-m2-analysis-ch06: 6
+        unit-m2-analysis-ch07: 6
+      source_hashes:
+        manifest:mathematics/analysis/analysis-skript/kleine_beweise.pdf: ed8a5d1462993c3c653f29a204771c0d6d89bdfbe3eb2b3ffec5fdfd9d4557e8
+      evidence:
+      - route-locator:GulH7nS_65c
+      - 'external:https://www.youtube.com/playlist?list=PLztBpqftvzxWo4HxUYV58ENhxHV32Wxli
+        -- trail: playlist listing and every video title, id and duration read from
+        YouTube on 2026-09-12 via yt-dlp --flat-playlist; each named video was matched
+        to its kleine_beweise.pdf result by its own stated title, not by topic guess'
+      - manifest:mathematics/analysis/analysis-skript/kleine_beweise.pdf
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: 58248434-af9e-44cd-99f1-56d8d054b642
+      idempotency_key: ce174d04-b0fe-4371-b8c7-fa77ddc1aaf7
+    reviewed_by: ''
+    status: supported
+  covers:route-an-ch04-henningdierks:
+    claim_id: covers:route-an-ch04-henningdierks
+    claim_kind: route-covers
+    statement: route-an-ch04-henningdierks covers knowledge-m2-analysis-ch04-konvergenzkriterien
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 40
+        unit-m2-analysis-ch03: 6
+        unit-m2-analysis-ch04: 6
+        unit-m2-analysis-ch05: 6
+        unit-m2-analysis-ch06: 6
+        unit-m2-analysis-ch07: 6
+      source_hashes:
+        manifest:mathematics/analysis/analysis-skript/kleine_beweise.pdf: ed8a5d1462993c3c653f29a204771c0d6d89bdfbe3eb2b3ffec5fdfd9d4557e8
+      evidence:
+      - route-locator:1otGChJnFbA
+      - 'external:https://www.youtube.com/playlist?list=PLKACPrU0Thj8zdZTyv9499-ON3vxBaShx
+        -- trail: playlist listing and every video title, id and duration read from
+        YouTube on 2026-09-12 via yt-dlp --flat-playlist; each named video was matched
+        to its kleine_beweise.pdf result by its own stated title, not by topic guess'
+      - manifest:mathematics/analysis/analysis-skript/kleine_beweise.pdf
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: 58248434-af9e-44cd-99f1-56d8d054b642
+      idempotency_key: ce174d04-b0fe-4371-b8c7-fa77ddc1aaf7
+    reviewed_by: ''
+    status: supported
+  covers:route-an-ch05-henningdierks:
+    claim_id: covers:route-an-ch05-henningdierks
+    claim_kind: route-covers
+    statement: route-an-ch05-henningdierks covers knowledge-m2-analysis-ch05-funktionsgrenzwerte,
+      knowledge-m2-analysis-ch05-stetigkeit
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 40
+        unit-m2-analysis-ch03: 6
+        unit-m2-analysis-ch04: 6
+        unit-m2-analysis-ch05: 6
+        unit-m2-analysis-ch06: 6
+        unit-m2-analysis-ch07: 6
+      source_hashes:
+        manifest:mathematics/analysis/analysis-skript/kleine_beweise.pdf: ed8a5d1462993c3c653f29a204771c0d6d89bdfbe3eb2b3ffec5fdfd9d4557e8
+      evidence:
+      - route-locator:kSqVzSClJD4
+      - 'external:https://www.youtube.com/playlist?list=PLKACPrU0Thj-3mMhf7qpfOAGcrtezLkbi
+        -- trail: playlist listing and every video title, id and duration read from
+        YouTube on 2026-09-12 via yt-dlp --flat-playlist; each named video was matched
+        to its kleine_beweise.pdf result by its own stated title, not by topic guess'
+      - manifest:mathematics/analysis/analysis-skript/kleine_beweise.pdf
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: 58248434-af9e-44cd-99f1-56d8d054b642
+      idempotency_key: ce174d04-b0fe-4371-b8c7-fa77ddc1aaf7
+    reviewed_by: ''
+    status: supported
+  covers:route-an-ch05-wrathofmath:
+    claim_id: covers:route-an-ch05-wrathofmath
+    claim_kind: route-covers
+    statement: route-an-ch05-wrathofmath covers knowledge-m2-analysis-ch05-funktionsgrenzwerte,
+      knowledge-m2-analysis-ch05-stetigkeit
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 40
+        unit-m2-analysis-ch03: 6
+        unit-m2-analysis-ch04: 6
+        unit-m2-analysis-ch05: 6
+        unit-m2-analysis-ch06: 6
+        unit-m2-analysis-ch07: 6
+      source_hashes:
+        manifest:mathematics/analysis/analysis-skript/kleine_beweise.pdf: ed8a5d1462993c3c653f29a204771c0d6d89bdfbe3eb2b3ffec5fdfd9d4557e8
+      evidence:
+      - route-locator:RmsvftFNMtE
+      - 'external:https://www.youtube.com/playlist?list=PLztBpqftvzxWo4HxUYV58ENhxHV32Wxli
+        -- trail: playlist listing and every video title, id and duration read from
+        YouTube on 2026-09-12 via yt-dlp --flat-playlist; each named video was matched
+        to its kleine_beweise.pdf result by its own stated title, not by topic guess'
+      - manifest:mathematics/analysis/analysis-skript/kleine_beweise.pdf
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: 58248434-af9e-44cd-99f1-56d8d054b642
+      idempotency_key: ce174d04-b0fe-4371-b8c7-fa77ddc1aaf7
+    reviewed_by: ''
+    status: supported
+  covers:route-an-ch06-henningdierks:
+    claim_id: covers:route-an-ch06-henningdierks
+    claim_kind: route-covers
+    statement: route-an-ch06-henningdierks covers knowledge-m2-analysis-ch06-differenzierbarkeit,
+      knowledge-m2-analysis-ch06-mittelwertsatz
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 40
+        unit-m2-analysis-ch03: 6
+        unit-m2-analysis-ch04: 6
+        unit-m2-analysis-ch05: 6
+        unit-m2-analysis-ch06: 6
+        unit-m2-analysis-ch07: 6
+      source_hashes:
+        manifest:mathematics/analysis/analysis-skript/kleine_beweise.pdf: ed8a5d1462993c3c653f29a204771c0d6d89bdfbe3eb2b3ffec5fdfd9d4557e8
+      evidence:
+      - route-locator:hxkQk2dVdxQ
+      - 'external:https://www.youtube.com/playlist?list=PLKACPrU0Thj-TdcFg3pBoHsahNVjXQ8Gs
+        -- trail: playlist listing and every video title, id and duration read from
+        YouTube on 2026-09-12 via yt-dlp --flat-playlist; each named video was matched
+        to its kleine_beweise.pdf result by its own stated title, not by topic guess'
+      - manifest:mathematics/analysis/analysis-skript/kleine_beweise.pdf
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: 58248434-af9e-44cd-99f1-56d8d054b642
+      idempotency_key: ce174d04-b0fe-4371-b8c7-fa77ddc1aaf7
+    reviewed_by: ''
+    status: supported
+  covers:route-an-ch06-wrathofmath:
+    claim_id: covers:route-an-ch06-wrathofmath
+    claim_kind: route-covers
+    statement: route-an-ch06-wrathofmath covers knowledge-m2-analysis-ch06-mittelwertsatz
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 40
+        unit-m2-analysis-ch03: 6
+        unit-m2-analysis-ch04: 6
+        unit-m2-analysis-ch05: 6
+        unit-m2-analysis-ch06: 6
+        unit-m2-analysis-ch07: 6
+      source_hashes:
+        manifest:mathematics/analysis/analysis-skript/kleine_beweise.pdf: ed8a5d1462993c3c653f29a204771c0d6d89bdfbe3eb2b3ffec5fdfd9d4557e8
+      evidence:
+      - route-locator:uuGDahLA2Rk
+      - 'external:https://www.youtube.com/playlist?list=PLztBpqftvzxWVDpl8oaz_Co6CW50KtGJy
+        -- trail: playlist listing and every video title, id and duration read from
+        YouTube on 2026-09-12 via yt-dlp --flat-playlist; each named video was matched
+        to its kleine_beweise.pdf result by its own stated title, not by topic guess'
+      - manifest:mathematics/analysis/analysis-skript/kleine_beweise.pdf
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: 58248434-af9e-44cd-99f1-56d8d054b642
+      idempotency_key: ce174d04-b0fe-4371-b8c7-fa77ddc1aaf7
+    reviewed_by: ''
+    status: supported
+  covers:route-an-ch07-henningdierks:
+    claim_id: covers:route-an-ch07-henningdierks
+    claim_kind: route-covers
+    statement: route-an-ch07-henningdierks covers knowledge-m2-analysis-ch07-hauptsatz
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 40
+        unit-m2-analysis-ch03: 6
+        unit-m2-analysis-ch04: 6
+        unit-m2-analysis-ch05: 6
+        unit-m2-analysis-ch06: 6
+        unit-m2-analysis-ch07: 6
+      source_hashes:
+        manifest:mathematics/analysis/analysis-skript/kleine_beweise.pdf: ed8a5d1462993c3c653f29a204771c0d6d89bdfbe3eb2b3ffec5fdfd9d4557e8
+      evidence:
+      - route-locator:cXVoFGeXFj4
+      - 'external:https://www.youtube.com/playlist?list=PLKACPrU0Thj_qQnom44t0iCzD9qSC6rOW
+        -- trail: playlist listing and every video title, id and duration read from
+        YouTube on 2026-09-12 via yt-dlp --flat-playlist; each named video was matched
+        to its kleine_beweise.pdf result by its own stated title, not by topic guess'
+      - manifest:mathematics/analysis/analysis-skript/kleine_beweise.pdf
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: 58248434-af9e-44cd-99f1-56d8d054b642
+      idempotency_key: ce174d04-b0fe-4371-b8c7-fa77ddc1aaf7
+    reviewed_by: ''
+    status: supported
   covers:route-b08add0fb6ed042a770114eb:
     claim_id: covers:route-b08add0fb6ed042a770114eb
     claim_kind: route-covers

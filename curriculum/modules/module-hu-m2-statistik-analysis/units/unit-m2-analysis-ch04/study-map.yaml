@@ -147,11 +147,15 @@ stages:
     label: MIT 18.100A — absolute convergence, comparison, and the ratio/root/alternating tests
     locator: 'mit18_100af20_lec_full2.pdf: ''The Completeness of the Real Numbers and Basic Properties
       of Infinite Series'' p. 35, ''Absolute Convergence and the Comparison Test for Series'' p. 39, ''The
-      Ratio, Root, and Alternating Series Tests'' p. 43'
+      Ratio, Root, and Alternating Series Tests'' p. 43; Theorem 135 (Comparison Test) p. 41 is Satz 4.12
+      and Theorem 142 (Root test) p. 44 is Satz 4.15, both with proofs.'
     angle: The criteria derived rather than listed, for the case where a hypothesis makes no sense.
-    angle_detail: Three consecutive lectures covering exactly §§4.1-4.3. The distinctive thing is p. 35,
-      which derives the basic series facts *from completeness* — making explicit the dependency the script
-      carries implicitly from Chapter 2. Still one blocked idea at a time, not a course to follow.
+    angle_detail: 'Three consecutive lectures covering exactly §§4.1-4.3. The distinctive thing is p.
+      35, which derives the basic series facts *from completeness* — making explicit the dependency the
+      script carries implicitly from Chapter 2. Still one blocked idea at a time, not a course to follow.
+      Checked against the notes on 2026-09-12 rather than against the lecture titles: 17 of the 20 kleine
+      Beweise are numbered theorems in this PDF, with proofs, at page granularity a 70-minute video cannot
+      match. Read the theorem, then watch the lecture only if the written proof does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise
@@ -428,11 +432,15 @@ stages:
     label: MIT 18.100A — absolute convergence, comparison, and the ratio/root/alternating tests
     locator: 'mit18_100af20_lec_full2.pdf: ''The Completeness of the Real Numbers and Basic Properties
       of Infinite Series'' p. 35, ''Absolute Convergence and the Comparison Test for Series'' p. 39, ''The
-      Ratio, Root, and Alternating Series Tests'' p. 43'
+      Ratio, Root, and Alternating Series Tests'' p. 43; Theorem 135 (Comparison Test) p. 41 is Satz 4.12
+      and Theorem 142 (Root test) p. 44 is Satz 4.15, both with proofs.'
     angle: The criteria derived rather than listed, for the case where a hypothesis makes no sense.
-    angle_detail: Three consecutive lectures covering exactly §§4.1-4.3. The distinctive thing is p. 35,
-      which derives the basic series facts *from completeness* — making explicit the dependency the script
-      carries implicitly from Chapter 2. Still one blocked idea at a time, not a course to follow.
+    angle_detail: 'Three consecutive lectures covering exactly §§4.1-4.3. The distinctive thing is p.
+      35, which derives the basic series facts *from completeness* — making explicit the dependency the
+      script carries implicitly from Chapter 2. Still one blocked idea at a time, not a course to follow.
+      Checked against the notes on 2026-09-12 rather than against the lecture titles: 17 of the 20 kleine
+      Beweise are numbered theorems in this PDF, with proofs, at page granularity a 70-minute video cannot
+      match. Read the theorem, then watch the lecture only if the written proof does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise
@@ -719,11 +727,15 @@ stages:
     label: MIT 18.100A — absolute convergence, comparison, and the ratio/root/alternating tests
     locator: 'mit18_100af20_lec_full2.pdf: ''The Completeness of the Real Numbers and Basic Properties
       of Infinite Series'' p. 35, ''Absolute Convergence and the Comparison Test for Series'' p. 39, ''The
-      Ratio, Root, and Alternating Series Tests'' p. 43'
+      Ratio, Root, and Alternating Series Tests'' p. 43; Theorem 135 (Comparison Test) p. 41 is Satz 4.12
+      and Theorem 142 (Root test) p. 44 is Satz 4.15, both with proofs.'
     angle: The criteria derived rather than listed, for the case where a hypothesis makes no sense.
-    angle_detail: Three consecutive lectures covering exactly §§4.1-4.3. The distinctive thing is p. 35,
-      which derives the basic series facts *from completeness* — making explicit the dependency the script
-      carries implicitly from Chapter 2. Still one blocked idea at a time, not a course to follow.
+    angle_detail: 'Three consecutive lectures covering exactly §§4.1-4.3. The distinctive thing is p.
+      35, which derives the basic series facts *from completeness* — making explicit the dependency the
+      script carries implicitly from Chapter 2. Still one blocked idea at a time, not a course to follow.
+      Checked against the notes on 2026-09-12 rather than against the lecture titles: 17 of the 20 kleine
+      Beweise are numbered theorems in this PDF, with proofs, at page granularity a 70-minute video cannot
+      match. Read the theorem, then watch the lecture only if the written proof does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise
