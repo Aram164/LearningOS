@@ -1,0 +1,41 @@
+schema_version: 2
+id: transaction-20260912-060733-001
+type: transaction-receipt
+status: committed
+capability: route.patch
+committed_at: '2026-09-12T06:07:33+02:00'
+snapshot_before: sha256:568d64dd76a3fbac1d5cdf921d5237497a7771d952d62bd405a5d74ea7135f14
+snapshot_after: sha256:6f373c8e4b5200b2ad1f54084d2f643a3f2f5cb9094788f3ea20a1a268955de4
+expected_revisions:
+  module-hu-m2-statistik-analysis: 40
+  unit-m2-analysis-ch03: 6
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 40
+    after: 41
+  unit-m2-analysis-ch03:
+    before: 6
+    after: 7
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: 8d8af6bf59d6e5d2a9731918baab9834e21843b164e2d334a88c6e6a3d048ead
+  sha256_after: 62077b19820f17a217727039f1c2e53e4d6748b088f05ee49e036631f28521d4
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: route.patch
+    declared_writes:
+    - curriculum/modules/*/source-map.yaml
+    - curriculum/modules/*/units/*/unit.yaml
+    - curriculum/modules/*/units/*/study-map.yaml
+request:
+  channel: operator
+  request_id: request-kleine-beweise-20260912-ch03-dierks
+  idempotency_key: kleine-beweise-20260912-ch03-dierks
+  intent_sha256: sha256:a3eac49f5d7b12fcde3e36e1afd3afcf4255c06bb5bbf3232bb8558ca4088511
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:a3eac49f5d7b12fcde3e36e1afd3afcf4255c06bb5bbf3232bb8558ca4088511

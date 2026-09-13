@@ -75,15 +75,20 @@ stages:
     scope_triage: helpful-now
   - kind: watch
     label: 3Blue1Brown — the derivative, chain rule and Taylor series episodes
-    locator: Chapter 2 'The paradox of the derivative'; Chapter 4 'Chain rule and product rule'; Chapter
-      7 'Limits, L'Hôpital's rule, and epsilon delta definitions'; Chapter 11 'Taylor series'
+    locator: transcript/3d6DsjIBzJ4.md (Kapitel 11 'Taylor series', 22:19), where the coefficients are
+      built at [08:30]-[12:30]; also transcript/9vKqVkMQHKk.md (Kapitel 2 'The paradox of the derivative',
+      16:50), transcript/YG15m2VwSjA.md (Kapitel 4 'Visualizing the chain rule and product rule', 15:56),
+      and the l'Hospital half of transcript/kfF40MiS7zA.md (Kapitel 7, [11:00]-[17:00]).
     angle: The Taylor episode in particular gives the picture — successive derivatives matching at a point
       — that the formula alone does not.
     angle_detail: 'Short, watched once, before the script rather than instead of it. The Taylor episode
       is the one worth the time on this chapter: §6.8 introduces the polynomial and the remainder as formulas,
       and the visual account of why matching derivatives at a point produces a good local approximation
-      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.'
+      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.
+      All four episodes are now managed German transcripts (fetched 2026-09-11); the Taylor construction
+      at [08:30]-[12:30] is the span this chapter needs.'
     scope_triage: helpful-now
+    vault_path: material://source-3b1b-essence-of-calculus/transcript/3d6DsjIBzJ4.md
   - kind: practise
     label: Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung
     locator: fritzsche.pdf §3.1 Differenzierbare Funktionen p. 116, §3.2 Der Mittelwertsatz p. 126, §4.2
@@ -161,12 +166,19 @@ stages:
   - kind: read
     label: MIT 18.100A — differentiation rules, Rolle, the mean value theorem, Taylor
     locator: 'mit18_100af20_lec_full2.pdf: ''Differentiation Rules, Rolle''s Theorem, and the Mean Value
-      Theorem'' p. 65, ''Taylor''s Theorem and the Definition of Riemann Sums'' p. 69'
+      Theorem'' p. 65, ''Taylor''s Theorem and the Definition of Riemann Sums'' p. 69; every Kapitel 6
+      kleine Beweis is a numbered result in Lecture 19 and its run-up: Theorem 202 (differentiable implies
+      continuous) p. 62, Theorem 212 (linearity, product, quotient, chain) p. 65, Theorem 215 (relative
+      extremum implies f''(c) = 0) p. 66, Theorem 216 (Rolle) p. 67, Theorem 220 (f'' identically 0 implies
+      constant) p. 68, Theorem 221 (increasing iff f'' >= 0) p. 68.'
     angle: Two lectures covering the chapter's spine and its endpoint, for one blocked idea.
     angle_detail: 'The p. 69 lecture is the boundary between this chapter and the next: Taylor''s theorem
       and then the definition of Riemann sums, which is exactly how the script moves from §6.8 to §7.1.
       Reading it once makes that transition deliberate rather than incidental. Rule unchanged: one definition
-      at a time, not a course.'
+      at a time, not a course. Checked against the notes on 2026-09-12 rather than against the lecture
+      titles: 17 of the 20 kleine Beweise are numbered theorems in this PDF, with proofs, at page granularity
+      a 70-minute video cannot match. Read the theorem, then watch the lecture only if the written proof
+      does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise
@@ -388,15 +400,20 @@ stages:
     scope_triage: helpful-now
   - kind: watch
     label: 3Blue1Brown — the derivative, chain rule and Taylor series episodes
-    locator: Chapter 2 'The paradox of the derivative'; Chapter 4 'Chain rule and product rule'; Chapter
-      7 'Limits, L'Hôpital's rule, and epsilon delta definitions'; Chapter 11 'Taylor series'
+    locator: transcript/3d6DsjIBzJ4.md (Kapitel 11 'Taylor series', 22:19), where the coefficients are
+      built at [08:30]-[12:30]; also transcript/9vKqVkMQHKk.md (Kapitel 2 'The paradox of the derivative',
+      16:50), transcript/YG15m2VwSjA.md (Kapitel 4 'Visualizing the chain rule and product rule', 15:56),
+      and the l'Hospital half of transcript/kfF40MiS7zA.md (Kapitel 7, [11:00]-[17:00]).
     angle: The Taylor episode in particular gives the picture — successive derivatives matching at a point
       — that the formula alone does not.
     angle_detail: 'Short, watched once, before the script rather than instead of it. The Taylor episode
       is the one worth the time on this chapter: §6.8 introduces the polynomial and the remainder as formulas,
       and the visual account of why matching derivatives at a point produces a good local approximation
-      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.'
+      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.
+      All four episodes are now managed German transcripts (fetched 2026-09-11); the Taylor construction
+      at [08:30]-[12:30] is the span this chapter needs.'
     scope_triage: helpful-now
+    vault_path: material://source-3b1b-essence-of-calculus/transcript/3d6DsjIBzJ4.md
   - kind: practise
     label: Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung
     locator: fritzsche.pdf §3.1 Differenzierbare Funktionen p. 116, §3.2 Der Mittelwertsatz p. 126, §4.2
@@ -474,12 +491,19 @@ stages:
   - kind: read
     label: MIT 18.100A — differentiation rules, Rolle, the mean value theorem, Taylor
     locator: 'mit18_100af20_lec_full2.pdf: ''Differentiation Rules, Rolle''s Theorem, and the Mean Value
-      Theorem'' p. 65, ''Taylor''s Theorem and the Definition of Riemann Sums'' p. 69'
+      Theorem'' p. 65, ''Taylor''s Theorem and the Definition of Riemann Sums'' p. 69; every Kapitel 6
+      kleine Beweis is a numbered result in Lecture 19 and its run-up: Theorem 202 (differentiable implies
+      continuous) p. 62, Theorem 212 (linearity, product, quotient, chain) p. 65, Theorem 215 (relative
+      extremum implies f''(c) = 0) p. 66, Theorem 216 (Rolle) p. 67, Theorem 220 (f'' identically 0 implies
+      constant) p. 68, Theorem 221 (increasing iff f'' >= 0) p. 68.'
     angle: Two lectures covering the chapter's spine and its endpoint, for one blocked idea.
     angle_detail: 'The p. 69 lecture is the boundary between this chapter and the next: Taylor''s theorem
       and then the definition of Riemann sums, which is exactly how the script moves from §6.8 to §7.1.
       Reading it once makes that transition deliberate rather than incidental. Rule unchanged: one definition
-      at a time, not a course.'
+      at a time, not a course. Checked against the notes on 2026-09-12 rather than against the lecture
+      titles: 17 of the 20 kleine Beweise are numbered theorems in this PDF, with proofs, at page granularity
+      a 70-minute video cannot match. Read the theorem, then watch the lecture only if the written proof
+      does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise
@@ -676,15 +700,20 @@ stages:
     scope_triage: helpful-now
   - kind: watch
     label: 3Blue1Brown — the derivative, chain rule and Taylor series episodes
-    locator: Chapter 2 'The paradox of the derivative'; Chapter 4 'Chain rule and product rule'; Chapter
-      7 'Limits, L'Hôpital's rule, and epsilon delta definitions'; Chapter 11 'Taylor series'
+    locator: transcript/3d6DsjIBzJ4.md (Kapitel 11 'Taylor series', 22:19), where the coefficients are
+      built at [08:30]-[12:30]; also transcript/9vKqVkMQHKk.md (Kapitel 2 'The paradox of the derivative',
+      16:50), transcript/YG15m2VwSjA.md (Kapitel 4 'Visualizing the chain rule and product rule', 15:56),
+      and the l'Hospital half of transcript/kfF40MiS7zA.md (Kapitel 7, [11:00]-[17:00]).
     angle: The Taylor episode in particular gives the picture — successive derivatives matching at a point
       — that the formula alone does not.
     angle_detail: 'Short, watched once, before the script rather than instead of it. The Taylor episode
       is the one worth the time on this chapter: §6.8 introduces the polynomial and the remainder as formulas,
       and the visual account of why matching derivatives at a point produces a good local approximation
-      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.'
+      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.
+      All four episodes are now managed German transcripts (fetched 2026-09-11); the Taylor construction
+      at [08:30]-[12:30] is the span this chapter needs.'
     scope_triage: helpful-now
+    vault_path: material://source-3b1b-essence-of-calculus/transcript/3d6DsjIBzJ4.md
   - kind: practise
     label: Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung
     locator: fritzsche.pdf §3.1 Differenzierbare Funktionen p. 116, §3.2 Der Mittelwertsatz p. 126, §4.2
@@ -926,15 +955,20 @@ stages:
     scope_triage: helpful-now
   - kind: watch
     label: 3Blue1Brown — the derivative, chain rule and Taylor series episodes
-    locator: Chapter 2 'The paradox of the derivative'; Chapter 4 'Chain rule and product rule'; Chapter
-      7 'Limits, L'Hôpital's rule, and epsilon delta definitions'; Chapter 11 'Taylor series'
+    locator: transcript/3d6DsjIBzJ4.md (Kapitel 11 'Taylor series', 22:19), where the coefficients are
+      built at [08:30]-[12:30]; also transcript/9vKqVkMQHKk.md (Kapitel 2 'The paradox of the derivative',
+      16:50), transcript/YG15m2VwSjA.md (Kapitel 4 'Visualizing the chain rule and product rule', 15:56),
+      and the l'Hospital half of transcript/kfF40MiS7zA.md (Kapitel 7, [11:00]-[17:00]).
     angle: The Taylor episode in particular gives the picture — successive derivatives matching at a point
       — that the formula alone does not.
     angle_detail: 'Short, watched once, before the script rather than instead of it. The Taylor episode
       is the one worth the time on this chapter: §6.8 introduces the polynomial and the remainder as formulas,
       and the visual account of why matching derivatives at a point produces a good local approximation
-      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.'
+      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.
+      All four episodes are now managed German transcripts (fetched 2026-09-11); the Taylor construction
+      at [08:30]-[12:30] is the span this chapter needs.'
     scope_triage: helpful-now
+    vault_path: material://source-3b1b-essence-of-calculus/transcript/3d6DsjIBzJ4.md
   - kind: practise
     label: Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung
     locator: fritzsche.pdf §3.1 Differenzierbare Funktionen p. 116, §3.2 Der Mittelwertsatz p. 126, §4.2
@@ -1012,12 +1046,19 @@ stages:
   - kind: read
     label: MIT 18.100A — differentiation rules, Rolle, the mean value theorem, Taylor
     locator: 'mit18_100af20_lec_full2.pdf: ''Differentiation Rules, Rolle''s Theorem, and the Mean Value
-      Theorem'' p. 65, ''Taylor''s Theorem and the Definition of Riemann Sums'' p. 69'
+      Theorem'' p. 65, ''Taylor''s Theorem and the Definition of Riemann Sums'' p. 69; every Kapitel 6
+      kleine Beweis is a numbered result in Lecture 19 and its run-up: Theorem 202 (differentiable implies
+      continuous) p. 62, Theorem 212 (linearity, product, quotient, chain) p. 65, Theorem 215 (relative
+      extremum implies f''(c) = 0) p. 66, Theorem 216 (Rolle) p. 67, Theorem 220 (f'' identically 0 implies
+      constant) p. 68, Theorem 221 (increasing iff f'' >= 0) p. 68.'
     angle: Two lectures covering the chapter's spine and its endpoint, for one blocked idea.
     angle_detail: 'The p. 69 lecture is the boundary between this chapter and the next: Taylor''s theorem
       and then the definition of Riemann sums, which is exactly how the script moves from §6.8 to §7.1.
       Reading it once makes that transition deliberate rather than incidental. Rule unchanged: one definition
-      at a time, not a course.'
+      at a time, not a course. Checked against the notes on 2026-09-12 rather than against the lecture
+      titles: 17 of the 20 kleine Beweise are numbered theorems in this PDF, with proofs, at page granularity
+      a 70-minute video cannot match. Read the theorem, then watch the lecture only if the written proof
+      does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise
@@ -1227,15 +1268,20 @@ stages:
     scope_triage: helpful-now
   - kind: watch
     label: 3Blue1Brown — the derivative, chain rule and Taylor series episodes
-    locator: Chapter 2 'The paradox of the derivative'; Chapter 4 'Chain rule and product rule'; Chapter
-      7 'Limits, L'Hôpital's rule, and epsilon delta definitions'; Chapter 11 'Taylor series'
+    locator: transcript/3d6DsjIBzJ4.md (Kapitel 11 'Taylor series', 22:19), where the coefficients are
+      built at [08:30]-[12:30]; also transcript/9vKqVkMQHKk.md (Kapitel 2 'The paradox of the derivative',
+      16:50), transcript/YG15m2VwSjA.md (Kapitel 4 'Visualizing the chain rule and product rule', 15:56),
+      and the l'Hospital half of transcript/kfF40MiS7zA.md (Kapitel 7, [11:00]-[17:00]).
     angle: The Taylor episode in particular gives the picture — successive derivatives matching at a point
       — that the formula alone does not.
     angle_detail: 'Short, watched once, before the script rather than instead of it. The Taylor episode
       is the one worth the time on this chapter: §6.8 introduces the polynomial and the remainder as formulas,
       and the visual account of why matching derivatives at a point produces a good local approximation
-      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.'
+      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.
+      All four episodes are now managed German transcripts (fetched 2026-09-11); the Taylor construction
+      at [08:30]-[12:30] is the span this chapter needs.'
     scope_triage: helpful-now
+    vault_path: material://source-3b1b-essence-of-calculus/transcript/3d6DsjIBzJ4.md
   - kind: practise
     label: Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung
     locator: fritzsche.pdf §3.1 Differenzierbare Funktionen p. 116, §3.2 Der Mittelwertsatz p. 126, §4.2
@@ -1313,12 +1359,19 @@ stages:
   - kind: read
     label: MIT 18.100A — differentiation rules, Rolle, the mean value theorem, Taylor
     locator: 'mit18_100af20_lec_full2.pdf: ''Differentiation Rules, Rolle''s Theorem, and the Mean Value
-      Theorem'' p. 65, ''Taylor''s Theorem and the Definition of Riemann Sums'' p. 69'
+      Theorem'' p. 65, ''Taylor''s Theorem and the Definition of Riemann Sums'' p. 69; every Kapitel 6
+      kleine Beweis is a numbered result in Lecture 19 and its run-up: Theorem 202 (differentiable implies
+      continuous) p. 62, Theorem 212 (linearity, product, quotient, chain) p. 65, Theorem 215 (relative
+      extremum implies f''(c) = 0) p. 66, Theorem 216 (Rolle) p. 67, Theorem 220 (f'' identically 0 implies
+      constant) p. 68, Theorem 221 (increasing iff f'' >= 0) p. 68.'
     angle: Two lectures covering the chapter's spine and its endpoint, for one blocked idea.
     angle_detail: 'The p. 69 lecture is the boundary between this chapter and the next: Taylor''s theorem
       and then the definition of Riemann sums, which is exactly how the script moves from §6.8 to §7.1.
       Reading it once makes that transition deliberate rather than incidental. Rule unchanged: one definition
-      at a time, not a course.'
+      at a time, not a course. Checked against the notes on 2026-09-12 rather than against the lecture
+      titles: 17 of the 20 kleine Beweise are numbered theorems in this PDF, with proofs, at page granularity
+      a 70-minute video cannot match. Read the theorem, then watch the lecture only if the written proof
+      does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise
@@ -1515,15 +1568,20 @@ stages:
     scope_triage: helpful-now
   - kind: watch
     label: 3Blue1Brown — the derivative, chain rule and Taylor series episodes
-    locator: Chapter 2 'The paradox of the derivative'; Chapter 4 'Chain rule and product rule'; Chapter
-      7 'Limits, L'Hôpital's rule, and epsilon delta definitions'; Chapter 11 'Taylor series'
+    locator: transcript/3d6DsjIBzJ4.md (Kapitel 11 'Taylor series', 22:19), where the coefficients are
+      built at [08:30]-[12:30]; also transcript/9vKqVkMQHKk.md (Kapitel 2 'The paradox of the derivative',
+      16:50), transcript/YG15m2VwSjA.md (Kapitel 4 'Visualizing the chain rule and product rule', 15:56),
+      and the l'Hospital half of transcript/kfF40MiS7zA.md (Kapitel 7, [11:00]-[17:00]).
     angle: The Taylor episode in particular gives the picture — successive derivatives matching at a point
       — that the formula alone does not.
     angle_detail: 'Short, watched once, before the script rather than instead of it. The Taylor episode
       is the one worth the time on this chapter: §6.8 introduces the polynomial and the remainder as formulas,
       and the visual account of why matching derivatives at a point produces a good local approximation
-      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.'
+      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.
+      All four episodes are now managed German transcripts (fetched 2026-09-11); the Taylor construction
+      at [08:30]-[12:30] is the span this chapter needs.'
     scope_triage: helpful-now
+    vault_path: material://source-3b1b-essence-of-calculus/transcript/3d6DsjIBzJ4.md
   - kind: practise
     label: Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung
     locator: fritzsche.pdf §3.1 Differenzierbare Funktionen p. 116, §3.2 Der Mittelwertsatz p. 126, §4.2
@@ -1584,12 +1642,19 @@ stages:
   - kind: read
     label: MIT 18.100A — differentiation rules, Rolle, the mean value theorem, Taylor
     locator: 'mit18_100af20_lec_full2.pdf: ''Differentiation Rules, Rolle''s Theorem, and the Mean Value
-      Theorem'' p. 65, ''Taylor''s Theorem and the Definition of Riemann Sums'' p. 69'
+      Theorem'' p. 65, ''Taylor''s Theorem and the Definition of Riemann Sums'' p. 69; every Kapitel 6
+      kleine Beweis is a numbered result in Lecture 19 and its run-up: Theorem 202 (differentiable implies
+      continuous) p. 62, Theorem 212 (linearity, product, quotient, chain) p. 65, Theorem 215 (relative
+      extremum implies f''(c) = 0) p. 66, Theorem 216 (Rolle) p. 67, Theorem 220 (f'' identically 0 implies
+      constant) p. 68, Theorem 221 (increasing iff f'' >= 0) p. 68.'
     angle: Two lectures covering the chapter's spine and its endpoint, for one blocked idea.
     angle_detail: 'The p. 69 lecture is the boundary between this chapter and the next: Taylor''s theorem
       and then the definition of Riemann sums, which is exactly how the script moves from §6.8 to §7.1.
       Reading it once makes that transition deliberate rather than incidental. Rule unchanged: one definition
-      at a time, not a course.'
+      at a time, not a course. Checked against the notes on 2026-09-12 rather than against the lecture
+      titles: 17 of the 20 kleine Beweise are numbered theorems in this PDF, with proofs, at page granularity
+      a 70-minute video cannot match. Read the theorem, then watch the lecture only if the written proof
+      does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise
@@ -1770,15 +1835,20 @@ stages:
     scope_triage: helpful-now
   - kind: watch
     label: 3Blue1Brown — the derivative, chain rule and Taylor series episodes
-    locator: Chapter 2 'The paradox of the derivative'; Chapter 4 'Chain rule and product rule'; Chapter
-      7 'Limits, L'Hôpital's rule, and epsilon delta definitions'; Chapter 11 'Taylor series'
+    locator: transcript/3d6DsjIBzJ4.md (Kapitel 11 'Taylor series', 22:19), where the coefficients are
+      built at [08:30]-[12:30]; also transcript/9vKqVkMQHKk.md (Kapitel 2 'The paradox of the derivative',
+      16:50), transcript/YG15m2VwSjA.md (Kapitel 4 'Visualizing the chain rule and product rule', 15:56),
+      and the l'Hospital half of transcript/kfF40MiS7zA.md (Kapitel 7, [11:00]-[17:00]).
     angle: The Taylor episode in particular gives the picture — successive derivatives matching at a point
       — that the formula alone does not.
     angle_detail: 'Short, watched once, before the script rather than instead of it. The Taylor episode
       is the one worth the time on this chapter: §6.8 introduces the polynomial and the remainder as formulas,
       and the visual account of why matching derivatives at a point produces a good local approximation
-      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.'
+      is the missing motivation. No rigour, and nothing here should be reconstructed into an exam answer.
+      All four episodes are now managed German transcripts (fetched 2026-09-11); the Taylor construction
+      at [08:30]-[12:30] is the span this chapter needs.'
     scope_triage: helpful-now
+    vault_path: material://source-3b1b-essence-of-calculus/transcript/3d6DsjIBzJ4.md
   - kind: practise
     label: Fritzsche §3.1, §3.2 und §4.2 — Differenzierbarkeit, Mittelwertsatz, Taylorentwicklung
     locator: fritzsche.pdf §3.1 Differenzierbare Funktionen p. 116, §3.2 Der Mittelwertsatz p. 126, §4.2

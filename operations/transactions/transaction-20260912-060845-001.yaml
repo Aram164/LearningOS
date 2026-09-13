@@ -1,0 +1,41 @@
+schema_version: 2
+id: transaction-20260912-060845-001
+type: transaction-receipt
+status: committed
+capability: route.patch
+committed_at: '2026-09-12T06:08:45+02:00'
+snapshot_before: sha256:dabf2137bc3ab9d427246d116c62c2e503f6cc228bb7e9dfb58c03ec000242a8
+snapshot_after: sha256:cbf8688cbad83703bacd421bd39dcb6ccff26dd107d6fa6b4c09b643f7436646
+expected_revisions:
+  module-hu-m2-statistik-analysis: 44
+  unit-m2-analysis-ch05: 7
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 44
+    after: 45
+  unit-m2-analysis-ch05:
+    before: 7
+    after: 8
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: 0ad76d826343ae2a2a8330803a45c802d9e7ec03d54932e7473386c13cf87e6c
+  sha256_after: 42fb219b1105b23e0e09b9021b8de3ef3011deab494f121e28a5d9a5674489bf
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: route.patch
+    declared_writes:
+    - curriculum/modules/*/source-map.yaml
+    - curriculum/modules/*/units/*/unit.yaml
+    - curriculum/modules/*/units/*/study-map.yaml
+request:
+  channel: operator
+  request_id: request-kleine-beweise-20260912-ch05-wrath
+  idempotency_key: kleine-beweise-20260912-ch05-wrath
+  intent_sha256: sha256:74aeed88af36aeca479b093778a49395499fa98859a3bf65e838d78ef9063fe4
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:74aeed88af36aeca479b093778a49395499fa98859a3bf65e838d78ef9063fe4

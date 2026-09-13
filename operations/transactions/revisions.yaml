@@ -26,7 +26,7 @@ revisions:
   materials-manifest: 1
   module-hu-algo2: 2
   module-hu-aml: 12
-  module-hu-m2-statistik-analysis: 38
+  module-hu-m2-statistik-analysis: 45
   module-job-engineering-tools: 1
   module-job-git: 1
   module-job-polars: 3
@@ -226,14 +226,14 @@ revisions:
   unit-job-polars-selection-backend: 11
   unit-job-python-engineering-fluency: 2
   unit-job-rust-engineering-fluency: 1
-  unit-m2-analysis-ch01: 4
-  unit-m2-analysis-ch02: 7
-  unit-m2-analysis-ch03: 4
-  unit-m2-analysis-ch04: 4
-  unit-m2-analysis-ch05: 4
-  unit-m2-analysis-ch06: 4
-  unit-m2-analysis-ch07: 4
-  unit-m2-analysis-exam-prep: 10
+  unit-m2-analysis-ch01: 6
+  unit-m2-analysis-ch02: 9
+  unit-m2-analysis-ch03: 8
+  unit-m2-analysis-ch04: 6
+  unit-m2-analysis-ch05: 8
+  unit-m2-analysis-ch06: 7
+  unit-m2-analysis-ch07: 6
+  unit-m2-analysis-exam-prep: 12
   unit-m2-combined-exam-rehearsal: 4
   unit-m2-sad-clustering: 12
   unit-m2-sad-exam-prep: 10
