@@ -851,6 +851,33 @@ def test_backup_manifest_is_allowlisted_and_verifies_new_roots(mini_repo, tmp_pa
     assert not result["ok"]
     assert any(row["issue"] == "checksum-mismatch" for row in result["issues"])
 
+    # Found by synthetic use: verification walked only the manifest, so it could
+    # say "is everything we saved still here" and never "is anything here that
+    # we did not save". A canonical note the backup never contained passed, and
+    # `load_repo` then read it as real curriculum.
+    (restored_ui / "src/app.ts").write_text(
+        (ui / "src/app.ts").read_text(encoding="utf-8"), encoding="utf-8")
+    planted = restored_core / "knowledge/notes/planted.md"
+    planted.parent.mkdir(parents=True, exist_ok=True)
+    planted.write_text("---\nid: note-planted\n---\nnever backed up\n", encoding="utf-8")
+    extra = verify_backup_manifest(
+        mini_repo, manifest,
+        restored_core=restored_core,
+        restored_ui=restored_ui,
+        restored_materials=restored_materials,
+    )
+    assert not extra["ok"]
+    assert {"root": "core", "path": "knowledge/notes/planted.md",
+            "issue": "unaccounted"} in extra["issues"]
+    assert planted.exists(), "an unexplained file is named, never removed"
+    planted.unlink()
+    assert verify_backup_manifest(
+        mini_repo, manifest,
+        restored_core=restored_core,
+        restored_ui=restored_ui,
+        restored_materials=restored_materials,
+    )["ok"], "the clean restore must not trip the unaccounted check"
+
 
 @contextlib.contextmanager
 def _unreadable(directory: Path):

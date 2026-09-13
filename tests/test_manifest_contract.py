@@ -214,3 +214,29 @@ def test_missing_contract_is_a_clear_failure_not_a_silent_pass(mini_repo):
     with pytest.raises(ManifestContractError) as excinfo:
         enforce({}, mini_repo)
     assert "no declared version" in str(excinfo.value)
+
+
+def test_a_contract_mismatch_reaches_the_cli_as_one_line(mini_repo):
+    """Found by synthetic use: `unit-list` answered with a 120KB stack trace.
+
+    Adding an undeclared key to a study map is an ordinary authoring slip, and
+    the contract check catches it with a message that names the mismatch, says
+    why an added key is still an interface change, and gives the two commands
+    that resolve it. `ManifestContractError` was missing from the CLI's handled
+    tuple, so `unit-list` and `health-report` raised it uncaught and buried
+    that message under the traceback, while `inspect` and `search` — which
+    reach the same check by another path — answered in one line.
+    """
+    from repo_builders import add_curriculum, run_los, write_yaml
+
+    add_curriculum(mini_repo)
+    path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    data = yaml.safe_load(path.read_text())
+    data["stages"][0]["resources"][0]["note"] = "a key the published shape does not declare"
+    write_yaml(path, data)
+
+    for command in ("unit-list", "health-report"):
+        proc = run_los(mini_repo, command)
+        assert proc.returncode == 2, f"{command}: {proc.stdout}{proc.stderr}"
+        assert "Traceback" not in proc.stderr, f"{command} raised instead of reporting"
+        assert proc.stderr.startswith("los: the published manifest no longer matches")
