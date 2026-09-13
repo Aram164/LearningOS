@@ -188,6 +188,8 @@ hidden:
       purpose: Codex project configuration
     - path: .gitignore
       purpose: ignores generated/*, bases/, and the local environment
+    - path: .jules
+      purpose: Jules agent memories and journals
 
   ephemeral:
     - path: .git
