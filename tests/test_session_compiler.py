@@ -737,6 +737,82 @@ def test_a_review_that_covers_the_conditions_removes_the_qualifier(runtime_root)
     assert "nobody has checked" not in step["reason"]
 
 
+# A gate that fails closed still has to say which side of the door the work is
+# on. Every one of these blockages printed the same sentence, and one of them
+# is not a task at all: the live CLT stage carries exactly two activities able
+# to satisfy a two-distinct-unfamiliar-tasks criterion, so a single honest
+# assessment spends the pool and no further study reopens it.
+
+def test_a_spent_evidence_pool_is_named_as_a_dead_end(runtime_root):
+    """Attempted and solution-exposed activities are gone, not pending."""
+    repo, req = inputs(runtime_root)
+    session = compile_session(repo, req, {"status": "uncertain"},
+                              {"exposed_resources": ["route-demo-1", "route-demo-2"]})
+    assert session["plan_status"] == "blocked"
+    assert any("is spent" in blocker for blocker in session["blockers"])
+    assert any("Register a new activity for this target" in note
+               for note in session["assumptions"])
+    assert not any("what would clear it" in note for note in session["assumptions"])
+
+
+def test_a_recoverable_block_names_what_would_clear_it(runtime_root):
+    """A review that needs re-running is work, and the proposal says which work."""
+    _review(runtime_root, "route-demo-1", [])
+    _review(runtime_root, "route-demo-2", [])
+    repo, req = inputs(runtime_root)
+    session = compile_session(repo, req, {"status": "uncertain"})
+    assert session["plan_status"] == "blocked"
+    assert "no accessible, in-scope independent evidence activity" in session["blockers"]
+    assert any("what would clear it" in note and "review whether it can test" in note
+               for note in session["assumptions"])
+    assert not any("Register a new activity" in note for note in session["assumptions"])
+
+
+def test_a_mixed_block_separates_the_spent_activities_from_the_pending_work(runtime_root):
+    _review(runtime_root, "route-demo-1", [])
+    repo, req = inputs(runtime_root)
+    session = compile_session(repo, req, {"status": "uncertain"},
+                              {"exposed_resources": ["route-demo-2"]})
+    assert session["plan_status"] == "blocked"
+    assert any("what would clear it" in note for note in session["assumptions"])
+    assert any("spent for this target and not reusable: route-demo-2" in note
+               for note in session["assumptions"])
+
+
+def test_answers_inside_the_same_material_are_named_before_the_attempt(runtime_root):
+    """Route separation is not page separation when both live in one book."""
+    _expose(runtime_root, "route-demo-2", "route-demo-1")
+    repo, req = inputs(runtime_root)
+    session = compile_session(repo, req, {"status": "uncertain"})
+    step = next(s for s in session["steps"] if s["intent"] == "evidence")
+    assert step["resource_id"] == "route-demo-1"
+    assert any("are in the same material as the task" in note and "route-demo-2" in note
+               for note in session["assumptions"])
+
+
+def test_an_evidence_step_names_the_review_it_rests_on(runtime_root):
+    repo, req = inputs(runtime_root)
+    session = compile_session(repo, req, {"status": "uncertain"})
+    step = next(s for s in session["steps"] if s["intent"] == "evidence")
+    assert "content review by aram of 2026-09-13" in step["reason"]
+    assert "not re-examined while they hold" in step["reason"]
+
+
+def test_blocked_assessment_still_offers_a_partly_runnable_activity(runtime_root):
+    """Practice survives a blocked assessment even when an asset is missing."""
+    source_path = runtime_root / "curriculum/modules/module-demo/source-map.yaml"
+    source_map = yaml.safe_load(source_path.read_text())
+    for route in source_map["sources"][0]["unit_routes"]:
+        route["requires_assets"] = [{"name": "template.py", "needed_for": "part (b)",
+                                     "obtain_from": "Moodle"}]
+    write_yaml(source_path, source_map)
+    repo, req = inputs(runtime_root)
+    session = compile_session(repo, req, {"status": "uncertain"})
+    assert session["plan_status"] == "blocked"
+    assert session["steps"] and all(s["role"] == "practice" for s in session["steps"])
+    assert any("needs template.py for part (b)" in note for note in session["assumptions"])
+
+
 def test_a_review_that_falls_short_disqualifies_the_activity(runtime_root):
     """Someone opened it and said it does not test this; that is not advice."""
     _review(runtime_root, "route-demo-1", [])

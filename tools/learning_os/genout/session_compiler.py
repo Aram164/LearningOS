@@ -52,28 +52,92 @@ def _known_exposures(repo: Repo, context: dict) -> set[str]:
     return exposed
 
 
-def _evidence_shortfall(repo: Repo, resource: dict, req: dict, exposed: set[str]) -> str | None:
-    """Suitability of content is separate from qualification of an actual attempt."""
+#: Shortfalls that no further study, review or download can clear, because the
+#: activity is spent for this target: it was attempted, or its answers were
+#: read. Only registering a new activity restores an assessment route.
+_EXHAUSTING_SHORTFALLS = frozenset({"already-familiar", "solutions-seen"})
+
+#: What would clear each recoverable shortfall, in the learner's terms.
+_SHORTFALL_REMEDIES = {
+    "unreviewed": "review its suitability for this target",
+    "requirement-drift": "review it against the current requirement",
+    "activity-drift": "review it again against the current activity bytes",
+    "conditions-unverified": "review whether it can test the missing conditions",
+    "assets-missing": "obtain the missing asset it needs",
+}
+
+
+def _evidence_shortfall(repo: Repo, resource: dict, req: dict,
+                        exposed: set[str]) -> tuple[str, str] | None:
+    """Suitability of content is separate from qualification of an actual attempt.
+
+    Returns ``(code, reason)``. The reason is what the learner reads; the code
+    is what ``_evidence_gap`` needs in order to tell a blockage that is waiting
+    for work from one that is waiting for material that does not exist.
+    """
     rid = resource["route_id"]
     conditions = set(req.get("conditions", []))
     if rid in exposed and "unfamiliar-example" in conditions:
-        return "a previous attempt or explicit exposure report makes this activity familiar"
+        return ("already-familiar",
+                "a previous attempt or explicit exposure report makes this activity familiar")
     if any(rid in _exposes_solutions(repo, {"route_id": source}) for source in exposed):
-        return "the learner reported exposure to this activity's solutions in an earlier session"
+        return ("solutions-seen",
+                "the learner reported exposure to this activity's solutions in an earlier session")
     if _missing_assets(repo, resource):
-        return "assigned activity is not runnable in full: " + "; ".join(_asset_notes(repo, [resource]))
+        return ("assets-missing",
+                "assigned activity is not runnable in full: " + "; ".join(_asset_notes(repo, [resource])))
     review = resource.get("independent_evidence")
     if not isinstance(review, dict):
-        return "assessment suitability has not been reviewed; available for practice"
+        return ("unreviewed",
+                "assessment suitability has not been reviewed; available for practice")
     if review.get("requirement_sha256") != requirement_fingerprint(req):
-        return "suitability review is not bound to the current requirement; review again"
+        return ("requirement-drift",
+                "suitability review is not bound to the current requirement; review again")
     fingerprint = activity_fingerprint(repo, resource)
     if fingerprint is None or review.get("activity_sha256") != fingerprint:
-        return "activity content or scope differs from its suitability review; review again"
+        return ("activity-drift",
+                "activity content or scope differs from its suitability review; review again")
     missing = sorted(conditions - set(review.get("verified_conditions", [])))
     if missing:
-        return "review does not establish an activity suitable for: " + ", ".join(missing)
+        return ("conditions-unverified",
+                "review does not establish an activity suitable for: " + ", ".join(missing))
     return None
+
+
+def _evidence_gap(shortfalls: list[tuple[str, str]]) -> tuple[str, tuple[str, ...]]:
+    """Why no assessment activity remains — and whether working will change it.
+
+    ``no accessible, in-scope independent evidence activity`` was true of a
+    stage that declares none, of one whose only review needs re-running, and of
+    one where every reviewed activity has already been attempted. The first two
+    are work; the third is a dead end that no amount of studying clears, and
+    saying them in the same sentence sends the learner looking for a task that
+    is not there. This is F04's lesson — state plainly when no repair exists
+    rather than proposing one more round — applied on the evidence side, where
+    it was missing: the CLT stage ships exactly two activities able to satisfy
+    its two-distinct-unfamiliar-tasks criterion, so one honest assessment
+    consumes the entire pool.
+    """
+    if not shortfalls:
+        return "no accessible, in-scope independent evidence activity", ()
+    codes = {code for _, code in shortfalls}
+    if codes <= _EXHAUSTING_SHORTFALLS:
+        return (
+            "every reviewed assessment activity for this target is spent: "
+            "already attempted, or its solutions already seen",
+            ("no unfamiliar activity remains for this target, so it cannot be "
+             "assessed again from the material registered now. Register a new "
+             "activity for this target; repeating an earlier one cannot "
+             "establish it, and waiting will not make one appear.",),
+        )
+    remedies = sorted({_SHORTFALL_REMEDIES[code] for code in codes
+                       if code in _SHORTFALL_REMEDIES})
+    notes = ("no assessment activity is admissible yet; what would clear it: "
+             + "; ".join(remedies) + ".",) if remedies else ()
+    spent = sorted(rid for rid, code in shortfalls if code in _EXHAUSTING_SHORTFALLS)
+    if spent:
+        notes = (*notes, "spent for this target and not reusable: " + ", ".join(spent) + ".")
+    return "no accessible, in-scope independent evidence activity", notes
 
 
 def _exposes_solutions(repo: Repo, resource: dict) -> set[str]:
@@ -106,6 +170,50 @@ def _routes_by_id(repo: Repo) -> dict[str, dict]:
         except AttributeError:  # a Repo that refuses attributes still works
             pass
     return cached
+
+
+def _route_sources(repo: Repo) -> dict[str, str]:
+    """The source each route belongs to, by route id."""
+    from ..routes import iter_route_references
+
+    cached = getattr(repo, "_session_route_sources", None)
+    if cached is None:
+        cached = {ref.route_id: ref.source_id for ref in iter_route_references(repo)}
+        try:
+            repo._session_route_sources = cached
+        except AttributeError:  # a Repo that refuses attributes still works
+            pass
+    return cached
+
+
+def _same_source_answer_notes(repo: Repo, evidence_ids: list[str]) -> tuple[str, ...]:
+    """Say when the answers to an assessment sit inside the same material.
+
+    Route separation is a property of the map, not of the object in the
+    learner's hands. Both CLT transfer tasks live in the Arbeitsbuch at
+    physical pages 132 and 158; their answers are in that same book at 155 and
+    161. `exposes_solutions_for` keeps them apart as routes and `_reveals`
+    keeps them out of one proposal, but turning twenty pages is not a route
+    transition and `_known_exposures` reports exposure rather than inferring
+    it — so nothing downstream can notice. What the proposal can honestly do
+    is say the answers are within arm's reach, before the attempt rather than
+    after it.
+    """
+    sources = _route_sources(repo)
+    routes = _routes_by_id(repo)
+    notes = []
+    for rid in evidence_ids:
+        for other_id, other in sorted(routes.items()):
+            declared = other.get("exposes_solutions_for")
+            if not isinstance(declared, list) or rid not in declared or other_id == rid:
+                continue
+            if sources.get(other_id) != sources.get(rid) or sources.get(rid) is None:
+                continue
+            notes.append(
+                f"the answers to {rid} are in the same material as the task "
+                f"({other_id}); opening them is not observable, so report the "
+                f"exposure yourself if you read them before the attempt is done")
+    return tuple(dict.fromkeys(notes))
 
 
 def _missing_assets(repo: Repo, resource: dict) -> list[dict]:
@@ -216,7 +324,8 @@ def _eligible_resources(repo: Repo, stage: dict, context: dict, unavailable: set
 
 
 def _pools(repo: Repo, req: dict, context: dict, eligible: list, status: str,
-           rejected: list | None = None) -> tuple[list, list]:
+           rejected: list | None = None,
+           shortfalls: list[tuple[str, str]] | None = None) -> tuple[list, list]:
     # Mixed resources are genuinely dual-use: they compete as evidence
     # alongside pure evidence, and as intervention per status below.
     #
@@ -237,8 +346,12 @@ def _pools(repo: Repo, req: dict, context: dict, eligible: list, status: str,
         shortfall = _evidence_shortfall(repo, resource, req, exposed)
         if shortfall is None:
             evidence.append(resource)
-        elif rejected is not None:
-            rejected.append({"resource_id": resource["route_id"], "reason": shortfall})
+            continue
+        code, reason = shortfall
+        if shortfalls is not None:
+            shortfalls.append((resource["route_id"], code))
+        if rejected is not None:
+            rejected.append({"resource_id": resource["route_id"], "reason": reason})
     preferred, fallback = (("mixed", "intervention") if status == "fragile"
                            else ("intervention", "mixed"))
     intervention = [r for r in eligible if r["affordance"] == preferred]
@@ -253,6 +366,17 @@ def _step_for(resource: dict, status: str, *, as_evidence: bool = False) -> dict
         role = "independent evidence"
         reason = ("reviewed prompt suitable for the target; record whether this actual attempt "
                   "was unfamiliar, uncued and unassisted — the content review does not establish those facts")
+        # Who judged this prompt suitable, and when, is the thing the whole
+        # gate rests on. The fingerprints below it prove the review still
+        # describes these bytes; they cannot prove the judgment was right, and
+        # nothing re-opens it while the bytes hold still. Name it, so a review
+        # nobody would stand behind is visible at the moment it is relied on.
+        review = resource.get("independent_evidence")
+        if isinstance(review, dict) and review.get("reviewed_by"):
+            when = review.get("reviewed_on")
+            reason += (f". Admitted on a content review by {review['reviewed_by']}"
+                       + (f" of {when}" if when else "")
+                       + ", bound to these exact bytes and not re-examined while they hold")
     else:
         role = "guided practice" if resource["affordance"] == "mixed" else "explanation"
         reason = f"address the current {status} evidence state"
@@ -335,17 +459,21 @@ def compile_session(repo: Repo, req: dict, interpretation: dict, context: dict |
     budget = context.get("available_minutes")
     unavailable, durations = _check_context_numbers(context)
     eligible, rejected = _eligible_resources(repo, stage, context, unavailable, durations, budget)
-    intervention, evidence = _pools(repo, req, context, eligible, status, rejected)
+    shortfalls: list[tuple[str, str]] = []
+    intervention, evidence = _pools(repo, req, context, eligible, status, rejected, shortfalls)
     blockers = []
+    evidence_notes: tuple[str, ...] = ()
     selected: list[dict] = []
     failed = list(context.get("failed_prerequisites", []))
     repair_mode = status != "demonstrated" and bool(failed)
     if repair_mode:
         selected, blockers = _repair_with_prerequisites(
-            repo, req, status, intervention, evidence, rejected, eligible, failed, budget, durations, context)
+            repo, req, status, intervention, evidence, rejected, eligible, failed, budget, durations,
+            context, shortfalls)
     elif status != "demonstrated":
         if not evidence:
-            blockers.append("no accessible, in-scope independent evidence activity")
+            blocker, evidence_notes = _evidence_gap(shortfalls)
+            blockers.append(blocker)
         if not blockers:
             # Consider alternatives when the preferred pair cannot fit. A
             # finite budget with missing durations never becomes unconstrained.
@@ -381,11 +509,21 @@ def compile_session(repo: Repo, req: dict, interpretation: dict, context: dict |
         extra = _no_repair_note(status, selected, intervention, eligible) if selected else ()
     if blockers and not steps:
         # Assessment can be blocked while useful reading/practice remains reachable.
+        #
+        # Fully runnable resources come first, but a partially runnable one is
+        # offered rather than dropped. This branch used to skip anything with a
+        # missing asset outright, while the ordinary path selected the same
+        # resource and merely annotated it — one resource, two policies, and
+        # the stricter of them applied exactly where the learner had least
+        # left. Decision 5 of the repair is that practice survives a blocked
+        # assessment; `_asset_notes` below still says which parts cannot be
+        # attempted, which is what F06 actually asked for.
+        pool = [*intervention, *eligible]
+        runnable = [r for r in pool if not _missing_assets(repo, r)]
+        partial = [r for r in pool if _missing_assets(repo, r)]
         selected = []
-        for resource in [*intervention, *eligible]:
+        for resource in [*runnable, *partial]:
             if resource in selected or not _fits([*selected, resource], budget, durations):
-                continue
-            if _missing_assets(repo, resource):
                 continue
             selected.append(resource)
             if len(selected) == 2:
@@ -393,10 +531,13 @@ def compile_session(repo: Repo, req: dict, interpretation: dict, context: dict |
         steps = [{"resource_id": resource["route_id"], "role": "practice", "intent": "intervention",
                   "reason": "available practice; does not count as independent assessment"}
                  for resource in selected]
-        extra = (*extra, "assessment is blocked; the listed practice remains available")
+        extra = (*extra, *evidence_notes,
+                 "assessment is blocked; the listed practice remains available")
     # Reachable is not the same as doable, and the proposal says which parts of
     # a selected activity cannot be attempted here (F06).
     extra = (*extra, *_asset_notes(repo, selected))
+    extra = (*extra, *_same_source_answer_notes(
+        repo, [step["resource_id"] for step in steps if step["intent"] == "evidence"]))
     return _assemble(repo, req, interpretation, status, steps, rejected, blockers, eligible, context, budget,
                      extra_assumptions=extra)
 
@@ -426,7 +567,7 @@ def _no_repair_note(status: str, selected: list, intervention: list,
             "without repairing",)
 
 
-def _repair_with_prerequisites(repo, req, status, intervention, evidence, rejected, eligible, failed, budget, durations, context):
+def _repair_with_prerequisites(repo, req, status, intervention, evidence, rejected, eligible, failed, budget, durations, context, shortfalls=None):
     """Bounded prerequisite repair: explicitly mapped repair steps, then the target pair.
 
     The caller maps every failed prerequisite to an eligible intervention
@@ -458,7 +599,8 @@ def _repair_with_prerequisites(repo, req, status, intervention, evidence, reject
     rest = [r for r in intervention if r["route_id"] not in repair_ids]
     evidence_rest = [r for r in evidence if r["route_id"] not in repair_ids]
     if not evidence:
-        return [], ["no accessible, in-scope independent evidence activity; prerequisite repair alone cannot produce target evidence"]
+        blocker, _ = _evidence_gap(shortfalls or [])
+        return [], [f"{blocker}; prerequisite repair alone cannot produce target evidence"]
     if not evidence_rest:
         reserved = ", ".join(sorted(repair_ids))
         return [], [f"prerequisite repair reserves {reserved}; no target evidence remains"]
