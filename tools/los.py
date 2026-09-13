@@ -119,6 +119,7 @@ from learning_os.commands.vnext import (  # noqa: E402
     cmd_route_identity_migrate,
     cmd_unit_material_synthesis_publish,
 )
+from learning_os.contracts.manifest_contract import ManifestContractError  # noqa: E402
 from learning_os.contracts.payloads import json_object, sha256_value  # noqa: E402
 from learning_os.health import HealthReportError  # noqa: E402
 from learning_os.legacy_archive import LegacyArchiveError  # noqa: E402
@@ -885,6 +886,15 @@ def main() -> int:
         return 2
     except (MaterialSynthesisError, LegacyArchiveError, MastersPlanningError,
             BackupManifestError, HealthReportError) as exc:
+        print(f"los: {exc}", file=sys.stderr)
+        return 2
+    except ManifestContractError as exc:
+        # Adding an undeclared key to a study map is an ordinary authoring slip,
+        # and the contract check catches it with a genuinely good message: what
+        # mismatched, why an added key is still an interface change, and the two
+        # commands that resolve it. Missing from this tuple, that message
+        # arrived at the end of a 120KB stack trace from `unit-list` and
+        # `health-report`, while `inspect` and `search` answered in one line.
         print(f"los: {exc}", file=sys.stderr)
         return 2
 
