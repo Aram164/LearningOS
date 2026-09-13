@@ -1,0 +1,1 @@
+{"id": "observation-v25-familiar", "requirement": "req-demo-l01-demo", "activity": "route-demo-v25-task", "result": "partial", "assistance": "none", "conditions": [], "conditions_not_met": ["unfamiliar-example"], "evidence_tags": [], "timestamp": "2026-09-13T10:00:00Z"}

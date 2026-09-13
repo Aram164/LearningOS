@@ -71,6 +71,7 @@ class ChecksReferences:
                 + ", ".join(owners),
                 "curriculum/modules",
             )
+        self.check_solution_exposure(routes_by_id)
         for synthesis_id, synthesis in r.unit_material_syntheses.items():
             where = self._rel(r.unit_material_synthesis_origins[synthesis_id])
             synthesis_unit = synthesis.get("unit_id")
@@ -561,6 +562,37 @@ class ChecksReferences:
         elif parsed.scheme == "project":
             if not (r.projects_root / parsed.target).exists():
                 self.warn("URI-PROJECT", f"'{ref}' does not resolve on disk", where)
+
+    def check_solution_exposure(self, routes_by_id: dict) -> None:
+        """`exposes_solutions_for` must name real routes, and never itself.
+
+        The session compiler refuses to place a route in the same proposal as
+        an evidence step it answers (audit F03). A dangling id silently
+        protects nothing, which is the worst outcome available here: the
+        proposal looks guarded and is not.
+        """
+        for route_id, matches in sorted(routes_by_id.items()):
+            for match in matches:
+                declared = match.route.get("exposes_solutions_for")
+                if declared is None:
+                    continue
+                where = self._rel(
+                    self.repo.module_source_map_origins[match.module_id])
+                for answered in declared:
+                    if answered == route_id:
+                        self.err(
+                            "ROUTE-SOLUTION-SELF",
+                            f"route '{route_id}' declares that it exposes its "
+                            "own solutions",
+                            where,
+                        )
+                    elif str(answered) not in routes_by_id:
+                        self.err(
+                            "ROUTE-SOLUTION-UNKNOWN",
+                            f"route '{route_id}' declares solutions for unknown "
+                            f"route '{answered}'",
+                            where,
+                        )
 
     def check_links(self):
         r = self.repo

@@ -167,11 +167,119 @@ path: `los observe <requirement> --activity exercise --result partial
 approval — snapshot and revision guard are taken under the operator lock,
 never asserted by the caller — because the author is the ground truth
 about himself and the ledger carries a tested `--supersedes` correction
-path. Agent-authored writes keep the full GatewayEnvelopeV2 ceremony, and
-`direct-user-gesture` stays admitted only for the closed user-originated
-allowlist (this entry plus the two UI-originated writers). The allowlist
-lives in `system/contracts/capabilities.yaml` (`admission:`) and
-`tools/learning_os/commands/capability.py` (`GESTURE_ALLOWLIST`).
+path.
+
+**Conditions are claims, and an absent one is never a quiet yes.** A condition
+can be recorded three ways and they are three different facts:
+`--condition X` says X held, `--condition-not-met X` says X did not, and
+saying neither leaves it *unknown*. The two lists are disjoint, and intake
+refuses a record that claims both.
+
+The interpreter reads a negative result four ways, and keeping them apart is
+the point. Carrying every condition the target declares makes it a *failure of
+this target*, which resets the successes before it. Naming one of them as
+not met makes it *a different situation* — it bears on something else, so it
+resets nothing and leaves nothing open. A different `requirement_sha256` makes
+it *stale*, about a question that has since changed. Anything else is
+**unresolved**: a report of difficulty against this target that does not say
+whether the target's conditions held. An unresolved result withholds the
+satisfied verdict and asks; it does not infer "unfamiliar", "uncued" or
+"unassisted" from a missing flag, and it does not call the work fragile
+either, because that would assert a breakdown nobody recorded.
+
+**A difficulty resets the evidence basis; it never deletes the history.** The
+successes that produced the previous conclusion stop counting toward it, and
+the activities among them are *spent*: redoing one is consistent with the
+difficulty rather than an answer to it. Settle a difficulty by superseding the
+record with the conditions stated either way, or by recording **two distinct
+qualified activities afterwards that were not already credited** — which
+establishes a new basis without pretending the missing facts were ever known.
+The original report stays on the record, and the `demonstrated` reason then
+names the exact later activities that justified moving on. Attempts that could
+not count are listed rather than silently dropped. This applies to a qualified
+failure as well as to an unresolved report: the defect is evidence that
+predates the difficulty answering it, and that is the same either way.
+
+`los observe` names the unstated conditions, both ways to state them, and the
+exact `--supersedes` line; the session output carries the same sentence.
+Until 2026-09-13 the unresolved case was discarded in silence — a partial
+result filed through this very command without `--condition` flags left the
+requirement reading `demonstrated`, `satisfied`, no next steps (audit
+`workbench/audits/synthetic-learner-2026-09-12`, F02) — and until the review
+that followed, repeating one already-credited activity cleared the report
+(review `workbench/audits/repair-review-2026-09-13`, R1/D4).
+
+Assessment proposals distinguish reviewed content from the learner's actual attempt.
+A stage resource's `independent_evidence` review must match the current
+`requirement_sha256` and `activity_sha256` returned by `runtime-session` in
+`session.resource_reviews`. The activity binding hashes the exact local file
+and its route identity, locator and authored prompt. A changed target, file or
+scope requires review again. Both current-template and legacy maps accept the
+same review shape. Unbound older records remain readable as practice.
+
+For example, a reviewed resource carries `reviewed_by: codex`,
+`reviewed_on: '2026-09-13'`, `verified_conditions: [unfamiliar-example,
+no-explicit-clt-cue]` and the two exact SHA-256 values from the current proposal.
+Those condition names mean the prompt *can support* such an attempt, not that
+this learner was unfamiliar or unassisted. Record actual conditions separately.
+A reviewed empty condition list is an explicit negative suitability verdict.
+
+Without a current suitable assessment, `plan_status` is `blocked`, but usable
+reading and practice remain in `steps`, labelled as practice. A required missing
+asset disqualifies the whole assigned activity as assessment; its precise part
+and source are named. It does not imply all paper work is impossible.
+
+Use exact route IDs as observation activities when working on mapped tasks.
+Recorded attempts establish familiarity; explicit prior exposure can also be
+supplied as `--context-json '{"exposed_resources":["route-example-solutions"]}'`.
+The runtime checks the material-owned `exposes_solutions_for` relationship
+across those reports and the proposed steps, including structural replacements
+in either direction. Merely opening a file records no reading or exposure.
+The operator must carry forward reported exposure or record the actual attempt;
+an unreported encounter remains unknown, never a verified lack of exposure.
+
+`direct-user-gesture` is admitted for a closed, named set, and the test is
+what the write *is*, not which process sent it: **the learner's own study
+activity, or his own choice among material someone already authored** —
+progress, his prose, his files, his experience of a resource, his questions,
+his selections — bounded to one unit, stage or workspace and guarded by exact
+artifact revisions.
+
+A second, narrower set carries the same approval kind **only over the `ui`
+channel**: the four workflows where the application shows the exact change
+before a deliberate Save or Apply — `concept.relations.change` (ADR-017's
+hand-authored connections), `review.prepare`, `review.apply`, and
+`unit.map.import` after its no-write `--check` preflight. That Save is the
+explicit approval those contracts already required. It is not a second
+approval protocol and not an extra confirmation dialog, and the `ui` label is
+provenance inside this trusted local application rather than proof a human was
+present; the guards that actually protect canonical state — exact previous
+rows, registry and artifact revisions, the snapshot, duplicate/endpoint/cycle
+checks, exact-byte binding, the preflight — are unchanged. Choosing a file is
+not approval to import it; running the preflight and then applying those exact
+bytes is.
+
+Everything else is admitted from no channel at all: module plans, route
+patches, note revision and evidence, material synthesis, AI-action delivery,
+identity migrations. Those keep the full GatewayEnvelopeV2 ceremony through an
+approved operator request, and an agent-origin envelope claiming a gesture for
+*any* capability — including the four reviewed-UI ones — fails closed.
+
+Both sets live in `system/contracts/capabilities.yaml` (`admission:` and
+`admission_channels:`) and `tools/learning_os/commands/capability.py`
+(`GESTURE_ALLOWLIST`, `UI_REVIEWED_ALLOWLIST`); the contract describes the
+policy, the Python sets enforce it, and `tests/test_observation_gesture.py`
+fails when they disagree. An interface keeps its own copy — the Obsidian UI's
+is `UI_GESTURE_CAPABILITIES`, checked against this one by its
+`scripts/check-contract.mjs`. Refusals name the route back to a permitted
+write rather than the approval kind: until 2026-09-13 the list held only the
+three writers that existed when it was introduced, while the installed UI
+drove eleven more through the same gesture, and four ordinary study actions
+died in front of the learner with
+`direct-user-gesture is not admitted for detour.create` (audit
+`workbench/audits/synthetic-learner-2026-09-12`, F01); the reviewed-UI set was
+added after that repair refused the Atlas connection editor a current ADR
+requires (review `workbench/audits/repair-review-2026-09-13`, D1).
 
 Use note metadata or prose references:
 
@@ -602,6 +710,30 @@ Use `source-feedback` for lightweight personal evidence (`helpful`,
 `too-advanced`, `wrong-perspective`, `useful-for-derivation`,
 `useful-for-review`, or `skipped`). Feedback remains on that stage. If it
 suggests a global evaluation change, prepare a separate reviewable proposal.
+
+**Locator page grammar.** A locator that names pages says which numbering it
+means, because a deck's printed slide number routinely differs from its
+position in the file. Write `PDF pp. 20-22` or `physical PDF pp. 214–220` or
+`physical pp. 14–19` when you mean positions in the file; interfaces open at
+that page, or carry it as an instruction when the viewer cannot be positioned.
+A bare `pp. 20-22`, a `§4.3` and `slides 5-20` are printed labels or section
+numbers, and are deliberately *not* read as file positions: an interface that
+guesses lands the learner confidently on the wrong page, which is worse than
+landing on page 1. The consumer is `pageDestination` in the Obsidian UI's
+`src/infrastructure/resource-target.ts`; until 2026-09-13 nothing carried the
+page at all, and opening a stage's lecture showed page 1 of 38 (audit
+`workbench/audits/synthetic-learner-2026-09-12`, F07).
+
+**Two kinds of readiness.** That a material opens is not that its activity can
+be done. A route whose task needs supplied files — a dataset to analyse, a code
+template to fill in — declares them in `requires_assets`, each with the part it
+belongs to and where the exact file comes from. The session then keeps the
+route and names the parts that cannot be attempted, instead of reporting the
+whole assignment ready: Blatt 4 Aufgabe 3(b) needs
+`International_Education_Costs.csv` and an `aufgabe3.py` template from Moodle,
+the source map had already recorded their absence in prose, and the proposal
+still said ready (F06). Register the exact files through this workflow when you
+have them; never substitute a different dataset or template for a named one.
 
 ## 27. Promote a future Master's module
 

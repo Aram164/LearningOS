@@ -1,0 +1,32 @@
+id: unit-demo-l01
+type: unit
+module_id: module-demo
+kind: lecture
+title: Expected value
+order: 1
+scope: The lecture as taught.
+status: active
+knowledge_map:
+  summary: The lecture connects a random variable to its probability-weighted long-run average.
+  nodes:
+  - id: knowledge-demo-random-variable
+    title: Random-variable outcomes
+    summary: A random variable assigns a numerical value to each outcome.
+  - id: knowledge-demo-expectation
+    title: Expected value
+    summary: The expectation is the probability-weighted average of those values.
+    builds_on:
+    - knowledge-demo-random-variable
+scope_sources:
+- source_id: source-demo-book
+  authority: slides
+  locator: Lecture 1
+source_selections:
+- source_id: source-demo-book
+  locator: §1 Erwartungswert
+  purpose: Current derivation
+current_study_map: study-map-demo-l01
+artifacts:
+  ultimate_reference: note-demo
+workspace_ids:
+- workspace-demo

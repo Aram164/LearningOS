@@ -8,6 +8,7 @@ from pathlib import Path
 
 import yaml
 
+from .gateway import GATEWAY_CHANNELS
 from .write_scopes import WriteScopeError, normalize_scope_pattern
 
 
@@ -23,6 +24,15 @@ class CapabilityDefinition:
     writes: tuple[str, ...]
     invariants: tuple[str, ...]
     internal: bool = False
+    #: ``direct-user-gesture`` when the learner's own action is sufficient
+    #: authority for this write; ``None`` when it is not. This is the declared
+    #: mirror of ``commands.capability.GESTURE_ALLOWLIST``, which stays the
+    #: enforcing copy — the contract describes the policy, it does not grant it.
+    admission: str | None = None
+    #: Channels that admission accepts, when it is narrower than "any". The
+    #: four reviewed-UI workflows declare ``("ui",)``: the same approval kind,
+    #: available only to the application that shows the exact change first.
+    admission_channels: tuple[str, ...] = ()
 
 
 @dataclass(frozen=True)
@@ -114,6 +124,33 @@ def load_capability_catalog(root: Path) -> dict:
                     row.get("writes"), label=f"capability {name} writes", required=True
                 )
                 _validate_write_scopes(writes, label=f"capability {name}")
+                admission = row.get("admission")
+                if admission is not None and admission != "direct-user-gesture":
+                    # The only admission a capability may declare is the one
+                    # that widens authority; a typo here would otherwise read
+                    # as "no gesture admitted" and silently stay closed, or
+                    # read as a second approval kind the gateway never checks.
+                    raise CapabilityCatalogError(
+                        f"capability {name} declares an unknown admission "
+                        f"{admission!r}; the only declarable value is "
+                        f"direct-user-gesture"
+                    )
+                channels = row.get("admission_channels")
+                if channels is not None:
+                    if admission is None:
+                        raise CapabilityCatalogError(
+                            f"capability {name} restricts admission channels "
+                            f"without declaring an admission"
+                        )
+                    channels = _string_list(
+                        channels, label=f"capability {name} admission_channels",
+                        required=True)
+                    unknown = sorted(set(channels) - GATEWAY_CHANNELS)
+                    if unknown:
+                        raise CapabilityCatalogError(
+                            f"capability {name} restricts admission to unknown "
+                            f"channel(s): {', '.join(unknown)}"
+                        )
                 cli_command = row.get("cli_command")
                 if section == "commands" and (
                     not isinstance(cli_command, str) or not cli_command.strip()
@@ -158,8 +195,34 @@ def command_definitions(root: Path, *, include_internal: bool = False) -> dict[s
                 writes=tuple(row.get("writes", []) or []),
                 invariants=tuple(row.get("invariants", []) or []),
                 internal=internal,
+                admission=row.get("admission"),
+                admission_channels=tuple(row.get("admission_channels") or ()),
             )
     return definitions
+
+
+def gesture_admitted_capabilities(root: Path) -> frozenset[str]:
+    """Capabilities the contract admits to a user gesture from any channel."""
+    return frozenset(
+        name
+        for name, definition in command_definitions(
+            root, include_internal=True
+        ).items()
+        if definition.admission == "direct-user-gesture"
+        and not definition.admission_channels
+    )
+
+
+def ui_reviewed_capabilities(root: Path) -> frozenset[str]:
+    """Capabilities the contract admits to a gesture only over the UI channel."""
+    return frozenset(
+        name
+        for name, definition in command_definitions(
+            root, include_internal=True
+        ).items()
+        if definition.admission == "direct-user-gesture"
+        and definition.admission_channels == ("ui",)
+    )
 
 
 def query_definitions(root: Path) -> dict[str, QueryDefinition]:

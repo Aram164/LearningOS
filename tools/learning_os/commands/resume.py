@@ -56,12 +56,28 @@ def _live_observations(observations: list[dict]) -> list[dict]:
 def _resolve_stage(repo):
     """Return ``(via, module_id, unit_id, study_map_id, stage_id)``.
 
-    The pointer wins when it resolves; a stale or missing pointer falls
-    through to the last recorded result, then to the most recently
-    touched study map. Every fallback is labeled in the output.
+    The pointer wins when it resolves. It is the learner's own last explicit
+    study action — `stage.progress.update` writes it in the same transaction
+    as the records that moved — so nothing derived may outrank it. What
+    follows is *recovery* for a pointer that is missing or no longer resolves,
+    labeled as such on the screen: the last recorded result, then the most
+    recently touched study map.
+
+    Recovery guesses, and it should look like a guess. It reads commit
+    timestamps and evidence chronology, neither of which is a statement of
+    intent: a result recorded against one subject says nothing about which
+    subject he chose to sit down with next. Before 2026-09-13 nothing wrote
+    the pointer at all, so this fallback *was* the destination, and activating
+    an Analysis stage still sent him back to Statistics (audit
+    `workbench/audits/synthetic-learner-2026-09-12`, F05).
     """
     pointer = repo.resume_pointer if isinstance(repo.resume_pointer, dict) else {}
-    stale = bool(pointer)
+    # Reaching past this point at all is recovery, and the screen says so
+    # either way. A pointer that exists but no longer resolves and a pointer
+    # that was never written are the same thing to the learner — both mean
+    # "nobody recorded where you were, so this is a guess" — and labelling
+    # only the first left the second reading like an answer.
+    stale = True
     if pointer:
         unit = repo.units.get(str(pointer.get("unit_id") or ""))
         study_map = repo.study_maps.get(str(pointer.get("study_map_id") or ""))
@@ -115,16 +131,15 @@ def _resolve_stage(repo):
         except (TypeError, ValueError):
             continue
         touched.append((when, rel))
-    # Newest touch wins — unless it points at a stage with no requirement,
-    # in which case the screen would open on "none authored". A stage you
-    # can record evidence against demos the feature and resumes the work.
-    required = set()
-    for req in requirements:
-        if not isinstance(req, dict):
-            continue
-        source = req.get("source_stage", {})
-        if isinstance(source, dict):
-            required.add((source.get("unit_id"), source.get("stage_id")))
+    # Newest touch wins, and only that. This used to skip past the newest map
+    # to find one whose stage had an authored runtime requirement — so the
+    # recovered destination preferred a stage the evidence loop could be
+    # demonstrated on over the stage most recently worked. One authored
+    # requirement exists today, which made "prefer a runtime stage" and
+    # "always return to that one stage" the same rule. A screen honestly
+    # reporting "none authored" for the map he actually touched is the
+    # truthful answer; steering him somewhere else to have something to show
+    # is not (audit `synthetic-learner-2026-09-12`, F05).
     maps = {}
     for study_map in repo.study_maps.values():
         try:
@@ -147,12 +162,9 @@ def _resolve_stage(repo):
         label = "recently touched stage"
         if stale:
             label += " (resume pointer missing or stale)"
-        resolved = (label, study_map.module_id, study_map.unit_id,
+        fallback = (label, study_map.module_id, study_map.unit_id,
                     study_map.id, str(stage["id"]))
-        if fallback is None:
-            fallback = resolved
-        if (study_map.unit_id, stage.get("id")) in required:
-            return resolved
+        break
     if fallback is not None:
         return fallback
     return (None, "no resumable stage: the resume pointer is missing or stale, "

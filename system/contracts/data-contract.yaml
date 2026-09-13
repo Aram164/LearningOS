@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 21
-schema_fingerprint: sha256:b3aac52d489fb7379aeedf09cc083412325ba06260866d573a49ebf7e5ce4833
+contract_version: 25
+schema_fingerprint: sha256:4f52f0d2c676bb36b85147ad29efea31bc8f9c81dfc1936a4877d9ef3c4ea3fa
 record_schemas: 32
 history:
 - version: 1
@@ -190,3 +190,33 @@ history:
     for §19.6 first slice; no existing data required to change
   migration: null
   fixture: tests/fixtures/formats/v12/
+- version: 22
+  adopted: '2026-09-13'
+  note: study-map resources gained independent_evidence (per-activity review of which
+    target conditions an activity actually tests) and source-map routes gained exposes_solutions_for
+    (which activities a material answers); both are optional and additive — audit
+    synthetic-learner-2026-09-12 F03
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 23
+  adopted: '2026-09-13'
+  note: 'source-map routes gained requires_assets: the files an activity itself needs
+    (dataset, code template), distinct from the material being reachable — audit synthetic-learner-2026-09-12
+    F06'
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 24
+  adopted: '2026-09-13'
+  note: 'learner observations gained conditions_not_met: conditions the learner states
+    did NOT hold, disjoint from conditions and distinct from silence, so ''a different
+    situation'' is actionable — review repair-review-2026-09-13 D4'
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 25
+  adopted: '2026-09-13'
+  note: Bind assessment suitability to exact requirement and activity bytes/scope;
+    accept reviews on both current-template and legacy resources. Explicit prior exposure
+    can exclude assessment while practice remains available. Optional additions; no
+    migration.
+  migration: null
+  fixture: tests/fixtures/formats/v25/

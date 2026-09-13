@@ -51,6 +51,16 @@
       "pattern": "^observation-[a-z0-9-]+$"
     },
     "conditions": {
+      "description": "Conditions the learner states DID hold for this attempt. Absence is not a denial: a target condition named in neither this list nor conditions_not_met is unknown, and is never read as met.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "\\S"
+      }
+    },
+    "conditions_not_met": {
+      "description": "Conditions the learner states did NOT hold — 'I had seen this one before', 'the prompt named the theorem'. Disjoint from conditions, and a different fact from silence: it makes the attempt a statement about a different situation rather than an unresolved report about this one. Without it, 'state that it was a different situation' was advice with no way to act on it (review workbench/audits/repair-review-2026-09-13, D4).",
       "type": "array",
       "uniqueItems": true,
       "items": {

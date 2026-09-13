@@ -9,10 +9,10 @@
 # Excludes symlinks (.flat/), .DS_Store, the generated catalogue
 # (README.md, FILES.txt, INDEX.html) and the per-folder SOURCES.md indexes.
 schema_version: 1
-captured: '2026-09-12'
+captured: '2026-09-13'
 totals:
   files: 1517
-  bytes: 2102526383
+  bytes: 2102513721
 files:
   ? _unsorted/Das gelbe Rechenbuch. Für Ingenieure, Naturwissenschaftler und Mathematiker. Rechenverfahren
     der Höheren Mathematik in... (Peter Furlan) (z-lib.org).pdf
@@ -958,41 +958,41 @@ files:
     size: 89436529
     sha256: 27315c19a012518bf483bcb1c00e0768bd9047bb61d36f79e036e202c1fca8dc
   mathematics/analysis/3b1b-essence-of-calculus/transcript/3d6DsjIBzJ4.md:
-    size: 20150
-    sha256: 8373b6c45993f517d3ebd041c89ced4506dffdc712957bf99745efbe8ab68327
+    size: 19658
+    sha256: ff1a52e1ef50fbe80a39fec9e32402ff86f40d1122c51193bc32e2d3dc2b6898
   mathematics/analysis/3b1b-essence-of-calculus/transcript/9vKqVkMQHKk.md:
-    size: 17094
-    sha256: 0280efd03d3aeac19b4518d1fa2845531f31d04e41d44e41b9fadd0bc71c49aa
+    size: 16485
+    sha256: db46bc048332dc1a720fbcb436297971b446f3e2aa70bb1e2aedd2788ee7dde1
   mathematics/analysis/3b1b-essence-of-calculus/transcript/BLkz5LGWihw.md:
-    size: 5682
-    sha256: 0bb446d39e1397ac985ba42cd09c67a48941f0ad9ec3da3d28b6bc1f90217c27
+    size: 5099
+    sha256: efb6b7eb80f79d33a8c79c7c5220d23ca2315fd96ae229134d4bc0b30cf7253e
   mathematics/analysis/3b1b-essence-of-calculus/transcript/CfW845LNObM.md:
-    size: 16500
-    sha256: 02821972ad0d0a6ba955eef4ce9b2eb7774d23682745773be4a5753123462d10
+    size: 14001
+    sha256: dcb2560ad9437385bfd7f40697242218460e313188a84e50359fa484ff9a3e17
   mathematics/analysis/3b1b-essence-of-calculus/transcript/FnJqaIESC2s.md:
-    size: 12849
-    sha256: d1706fb813bd5c74d0a62b8cbb58e0ea2ebc88465940d19b6f5350ca8dd5edcf
+    size: 11499
+    sha256: 17f629c6b2f5e72ea7ee2aabca5f4cd1664118998dc854be136ed49e228e54d6
   mathematics/analysis/3b1b-essence-of-calculus/transcript/S0_qX4VJhMQ.md:
-    size: 18223
-    sha256: 6c1ca43432312331fcc5f9631cc7a24d856018b383b67a3201b5aa195208c1e4
+    size: 17135
+    sha256: 98746d6d5b4069350306902128c8eed1c4fe4deb46041f59f70885832971c2af
   mathematics/analysis/3b1b-essence-of-calculus/transcript/WUvTyaaNkzM.md:
-    size: 19692
-    sha256: a22a23b42c5e1b7fc6bae306826d4fac4971d882afd827d231b8b4d87f1b90d0
+    size: 16607
+    sha256: 2b21523d7978008a76acf162b88c98c648cc0ca7f6f9eb17521a3fb3e90ac7dc
   mathematics/analysis/3b1b-essence-of-calculus/transcript/YG15m2VwSjA.md:
-    size: 13924
-    sha256: 47f9c7dd5f0e643ac2e9d69f90c2ff55ec54a7c261b684cd532bb3e1d9173cb1
+    size: 14232
+    sha256: 357bd74aaabf4db273d59660962c518b95ba8a28bb4a202f09ef8a997b81d335
   mathematics/analysis/3b1b-essence-of-calculus/transcript/kfF40MiS7zA.md:
-    size: 18221
-    sha256: c3e69663cb028b76676085c900ae532e2eae3754d7020efc6897f43781049044
+    size: 17741
+    sha256: 2ebdd35cfb852118965cb19ee606ed4254d582a009a618933a8e74044b7e216e
   mathematics/analysis/3b1b-essence-of-calculus/transcript/m2MIpDrF7Es.md:
-    size: 13672
-    sha256: a20eda22e4527d273127aa1a6fa83f8b797446ea9442630a6cfd50f1318da8a0
+    size: 12221
+    sha256: 4c21bf38c56e3e6babe4f2db5461db89f25212d7b4339f6cbb0c8aaeaf4c2790
   mathematics/analysis/3b1b-essence-of-calculus/transcript/qb40J4N1fa4.md:
-    size: 14387
-    sha256: 20b010223b1be944ceeec98b7cebb277146f8fbe67fb50c3ceca480f8125f54b
+    size: 13842
+    sha256: 6826b4d94ff5f7b62d5fd0f4d421c74f030a98e981cf24e6abca426bb7bcc2e8
   mathematics/analysis/3b1b-essence-of-calculus/transcript/rfG8ce4nNh0.md:
-    size: 20205
-    sha256: 1fb71e23d56268e98e0278a9a3b9ba82c51e9f1d61fc854926aa480b7390313f
+    size: 19417
+    sha256: a02354a30c76ad5dd7f0366388ea70e7fc40f1ed9255d69367a6a5edfbeeb76a
   mathematics/analysis/abbott-understanding-analysis/abbott.pdf:
     size: 4228218
     sha256: 2f615ab26601ef8642bb5d91c8f9fcc68130d4a0bd7a4bc490beb2c8da1a2a70

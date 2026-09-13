@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import datetime as _dt
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -16,8 +17,10 @@ from learning_os.contracts import (
     require_current_template,
     validate_contract,
 )
+from learning_os.fingerprint import canonical_fingerprint
 from learning_os.loader import load_repo
 from learning_os.material_refs import MaterialReferenceError, expand_map
+from learning_os.revisions import artifact_revision
 from learning_os.routes import route_with_identity
 from learning_os.unit_notes import unit_note_marker
 
@@ -355,6 +358,27 @@ def cmd_unit_map_import(args) -> int:
         if current_data is None or (reset_reason or "").strip():
             unit_data["status"] = "ready"
         diff["unit_status"] = unit_data["status"]
+        diff.setdefault("stages_after", _stage_id_list(data))
+        # Stage membership alone does not describe changed teaching content.
+        # Show every changed authored field, including changes on surviving
+        # stages, before a UI user approves these exact bytes.
+        before_stages = {s["id"]: s for s in (current_data or {}).get("stages", [])}
+        content_changes = []
+        for stage in effective.get("stages", []):
+            before = before_stages.get(stage["id"], {})
+            for field in sorted(set(before) | set(stage)):
+                if field in {"id", *_PRESERVED_STAGE_STATE}:
+                    continue
+                if before.get(field) != stage.get(field):
+                    content_changes.append({"stage_id": stage["id"], "field": field,
+                                            "before": before.get(field), "after": stage.get(field)})
+        diff["content_changes"] = content_changes
+        diff["map_changes"] = [
+            {"field": field, "before": (current_data or {}).get(field), "after": effective.get(field)}
+            for field in sorted(set(current_data or {}) | set(effective))
+            if field not in {"id", "stages", *_PRESERVED_MAP_STATE}
+            and (current_data or {}).get(field) != effective.get(field)
+        ]
         writes = {target: _dump_study_map(current_map, data) if current_map else _dump_yaml(data),
                   unit.path: _dump_yaml(unit_data)}
         for stage in data.get("stages", []) or []:
@@ -368,6 +392,12 @@ def cmd_unit_map_import(args) -> int:
                               "study_map_id": data.get("id"),
                               "files_checked": len(writes),
                               "canonical_files_written": 0,
+                              "file_sha256": "sha256:" + hashlib.sha256(map_bytes).hexdigest(),
+                              "snapshot_id": "sha256:" + canonical_fingerprint(root),
+                              "expected_revisions": {
+                                  key: artifact_revision(root, key)
+                                  for key in [args.unit_id, str(data["id"])]
+                              },
                               "diff": diff}, ensure_ascii=False))
             return 0
         code, errors, confirmation = _write_transaction(

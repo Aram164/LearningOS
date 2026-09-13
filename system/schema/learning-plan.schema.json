@@ -106,6 +106,9 @@
               }
             }
           }
+        },
+        "independent_evidence": {
+          "$ref": "#/$defs/independentEvidenceReview"
         }
       },
       "anyOf": [
@@ -393,6 +396,47 @@
         }
       ],
       "unevaluatedProperties": false
+    },
+    "independentEvidenceReview": {
+      "description": "Declared content suitability, bound to an exact requirement and prompt scope/bytes. Legacy unbound reviews remain readable but cannot establish assessment readiness. Actual learner familiarity and assistance must be reported for each attempt.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewed_by",
+        "reviewed_on",
+        "verified_conditions"
+      ],
+      "properties": {
+        "reviewed_by": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "reviewed_on": {
+          "type": "string",
+          "format": "date"
+        },
+        "verified_conditions": {
+          "description": "Conditions this prompt permits an attempt to test. This is content suitability, never proof that the conditions held for a learner.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "\\S"
+          }
+        },
+        "note": {
+          "type": "string",
+          "pattern": "\\S"
+        },
+        "requirement_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        },
+        "activity_sha256": {
+          "type": "string",
+          "pattern": "^sha256:[a-f0-9]{64}$"
+        }
+      }
     }
   }
 }

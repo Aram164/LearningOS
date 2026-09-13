@@ -49,6 +49,15 @@
         "type": "string",
         "pattern": "^route-"
       }
+    },
+    "exposed_resources": {
+      "description": "Explicit learner report of previously seen activities or solution resources, using their route IDs. Opening a resource alone does not populate this list. Recorded attempts also count as familiarity.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "^route-"
+      }
     }
   }
 }

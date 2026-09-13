@@ -28,6 +28,7 @@
         "unseen",
         "uncertain",
         "fragile",
+        "unresolved",
         "demonstrated"
       ]
     },
@@ -167,6 +168,35 @@
     "requirement_sha256": {
       "type": "string",
       "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "resource_reviews": {
+      "description": "Current exact review bindings for accessible assessment candidates; these values do not themselves attest suitability.",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "resource_id",
+          "requirement_sha256",
+          "activity_sha256"
+        ],
+        "properties": {
+          "resource_id": {
+            "type": "string"
+          },
+          "requirement_sha256": {
+            "type": "string",
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          },
+          "activity_sha256": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "pattern": "^sha256:[a-f0-9]{64}$"
+          }
+        }
+      }
     }
   }
 }

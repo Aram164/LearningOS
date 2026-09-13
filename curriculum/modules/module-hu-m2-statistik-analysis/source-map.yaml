@@ -1455,6 +1455,13 @@ sources:
       working; it is not a replacement for the lecture derivation. The file is explicitly headed Übungsblatt
       4, dated 10.06.2026 with submission via Moodle.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/Statistics_And_Data_Science.pdf
+    requires_assets:
+    - name: aufgabe3.py
+      needed_for: Aufgabe 3(a) and 3(b)
+      obtain_from: the Moodle course linked by the sheet (hu.berlin/sds25)
+    - name: International_Education_Costs.csv
+      needed_for: Aufgabe 3(b)
+      obtain_from: the Moodle course linked by the sheet (hu.berlin/sds25)
   - id: route-58469c78c740278168aea71a
     unit_id: unit-m2-sad-l08
     title: UE5, slides 20-38 — Normal, standardization and CLT walkthrough
@@ -1490,6 +1497,8 @@ sources:
       its value is the course''s calculation order and notation, while reading it first would turn an
       exam-relevant retrieval task into passive recognition.'
     vault_path: material://source-sad-ss26-lectures/exercise-slides/UE6.pdf
+    exposes_solutions_for:
+    - route-b7f7718273784bbb7843acbd
   - id: route-1396da832b2294453043b59b
     unit_id: unit-m2-sad-l09
     title: Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval
@@ -3239,6 +3248,9 @@ sources:
       are drilled here with full arithmetic, so a wrong answer can be traced to the exact step. Ch 7''s
       approximation items are the ones to prioritise if time is short.'
     vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+    exposes_solutions_for:
+    - route-sad-l08-arbeitsbuch-619-transfer
+    - route-sad-l08-arbeitsbuch-71c-transfer
   - id: route-2d7de4d5907b92c4b2068e88
     unit_id: unit-m2-sad-l09
     title: Arbeitsbuch Chapter 9 — estimation drills
@@ -3299,6 +3311,63 @@ sources:
       in German, so it is the one place in this lane where a German write-up can be compared against a
       model rather than only checked for its answer. Deliberately second in order: open it after a current
       exercise has exposed a gap, not as a first pass.'
+  - unit_id: unit-m2-sad-l08
+    format: exercise
+    covers:
+    - knowledge-sad-l08-clt
+    depth: practice
+    scope: current
+    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+    id: route-sad-l08-arbeitsbuch-619-transfer
+    title: Arbeitsbuch 6.19(a–b) — individual values and averages
+    locator: Physical PDF p. 132 (printed p. 127), Aufgabe 6.19(a–b) only; stop before any solutions.
+    angle: 'Solve 6.19(a–b). Also classify a single observation and the sample mean: which distribution
+      statements are exact, which need an approximation, and why?'
+    angle_detail: Use the assumptions printed in Aufgabe 6.19. Give a reason for each classification,
+      including whether taking a larger sample changes the distribution of one original observation. This
+      comparison prompt is authored for LearningOS; the task data and parts (a–b) are from the Arbeitsbuch.
+      Work before reading the separate answer route. Report whether the example and its solutions were
+      already familiar, any theorem cue, and any help used.
+  - unit_id: unit-m2-sad-l08
+    format: exercise
+    covers:
+    - knowledge-sad-l08-clt
+    depth: practice
+    scope: current
+    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+    id: route-sad-l08-arbeitsbuch-71c-transfer
+    title: Arbeitsbuch 7.1(c) — one outcome and a batch
+    locator: Physical PDF p. 158 (printed p. 153), Aufgabe 7.1(c) only; stop before any solutions.
+    angle: Solve 7.1(c), assuming independent plays with the stated probabilities. Compare one play, the
+      total over 100 plays and the mean per play; classify their distributions and explain your reasoning.
+    angle_detail: State which conclusions are exact and which are approximations, and whether repeating
+      the experiment with more plays changes the possible outcomes of an individual play. The independence
+      assumption and comparison prompt are authored for LearningOS; the probabilities are from Aufgabe
+      7.1(c). Work before reading the separate answer route. Report prior familiarity, theorem cues and
+      assistance for this actual attempt.
+  - unit_id: unit-m2-sad-l08
+    format: solutions
+    covers:
+    - knowledge-sad-l08-clt
+    depth: practice
+    scope: current
+    vault_path: material://source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf
+    id: route-sad-l08-arbeitsbuch-transfer-solutions
+    title: Arbeitsbuch 6.19 and 7.1(c) — answers after the attempts
+    locator: Physical PDF p. 155 (printed p. 150), Lösung 6.19(a–b); physical PDF p. 161 (printed p. 156),
+      Lösung 7.1(c).
+    angle: Compare the book answers only after recording the attempts. Opening these answers ends the
+      unfamiliar, unaided assessment opportunity for both tasks if their solutions are read.
+    angle_detail: 'Rubric for 6.19: an original observation is N(mu,sigma²), the mean is exactly N(mu,sigma²/n),
+      and its standardized version is exactly N(0,1), because independent normal variables are closed
+      under linear combinations. Rubric for 7.1(c): one play stays discrete with mean -0.1 and variance
+      0.34; the 100-play sum is approximately N(-10,34) and the mean approximately N(-0.1,0.0034), using
+      independence and finite variance. Increasing the sample size concerns the aggregate approximation
+      and does not make one play normal. These comparison explanations extend the book answers; a result
+      without reasons does not meet the target.'
+    exposes_solutions_for:
+    - route-sad-l08-arbeitsbuch-619-transfer
+    - route-sad-l08-arbeitsbuch-71c-transfer
 - source_id: source-grinstead-snell
   role: first-exposure
   why: Open-access probability text whose chapter boundaries line up almost exactly with SaD L04-L08,

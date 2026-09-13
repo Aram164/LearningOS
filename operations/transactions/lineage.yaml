@@ -816,3 +816,69 @@ records:
       idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
     reviewed_by: ''
     status: supported
+  covers:route-sad-l08-arbeitsbuch-619-transfer:
+    claim_id: covers:route-sad-l08-arbeitsbuch-619-transfer
+    claim_kind: route-covers
+    statement: route-sad-l08-arbeitsbuch-619-transfer covers knowledge-sad-l08-clt
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 46
+        unit-m2-sad-l08: 22
+      source_hashes:
+        file:work/active/repair-content-review-2026-09-13.md: sha256:27c2831ac4b9a85f295c05a89ce8b04426df7d6191850a487d94e640d3a59090
+      evidence:
+      - route-locator:Physical PDF p. 132 (printed p. 127), Aufgabe 6.19(a–b) only;
+        stop before any solutions.
+      - repo-file:work/active/repair-content-review-2026-09-13.md
+      assumes: []
+    judged_by: codex/operator-approval
+    admitted_by:
+      request_id: repair-clt-652f4642affe40a5a3fe42e7238f7766
+      idempotency_key: repair-clt-652f4642affe40a5a3fe42e7238f7766
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l08-arbeitsbuch-71c-transfer:
+    claim_id: covers:route-sad-l08-arbeitsbuch-71c-transfer
+    claim_kind: route-covers
+    statement: route-sad-l08-arbeitsbuch-71c-transfer covers knowledge-sad-l08-clt
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 46
+        unit-m2-sad-l08: 22
+      source_hashes:
+        file:work/active/repair-content-review-2026-09-13.md: sha256:27c2831ac4b9a85f295c05a89ce8b04426df7d6191850a487d94e640d3a59090
+      evidence:
+      - route-locator:Physical PDF p. 158 (printed p. 153), Aufgabe 7.1(c) only; stop
+        before any solutions.
+      - repo-file:work/active/repair-content-review-2026-09-13.md
+      assumes: []
+    judged_by: codex/operator-approval
+    admitted_by:
+      request_id: repair-clt-652f4642affe40a5a3fe42e7238f7766
+      idempotency_key: repair-clt-652f4642affe40a5a3fe42e7238f7766
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l08-arbeitsbuch-transfer-solutions:
+    claim_id: covers:route-sad-l08-arbeitsbuch-transfer-solutions
+    claim_kind: route-covers
+    statement: route-sad-l08-arbeitsbuch-transfer-solutions covers knowledge-sad-l08-clt
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 46
+        unit-m2-sad-l08: 22
+      source_hashes:
+        file:work/active/repair-content-review-2026-09-13.md: sha256:27c2831ac4b9a85f295c05a89ce8b04426df7d6191850a487d94e640d3a59090
+      evidence:
+      - route-locator:Physical PDF p. 155 (printed p. 150), Lösung 6.19(a–b); physical
+        PDF p. 161 (printed p. 156), Lösung 7.1(c).
+      - repo-file:work/active/repair-content-review-2026-09-13.md
+      assumes: []
+    judged_by: codex/operator-approval
+    admitted_by:
+      request_id: repair-clt-652f4642affe40a5a3fe42e7238f7766
+      idempotency_key: repair-clt-652f4642affe40a5a3fe42e7238f7766
+    reviewed_by: ''
+    status: supported

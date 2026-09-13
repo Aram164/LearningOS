@@ -57,6 +57,7 @@ def _append_observation(
     activity: str,
     result: str,
     conditions,
+    conditions_not_met,
     tags: str | None,
     assistance: str | None,
     context_note: str | None,
@@ -95,6 +96,14 @@ def _append_observation(
             "conditions": list(conditions or []),
             "evidence_tags": [tag.strip() for tag in (tags or "").split(",") if tag.strip()],
         }
+        refuted = list(conditions_not_met or [])
+        if refuted:
+            both = sorted(set(obs["conditions"]) & set(refuted))
+            if both:
+                raise RuntimeInputError(
+                    "a condition cannot be recorded as both met and not met: "
+                    + ", ".join(both))
+            obs["conditions_not_met"] = refuted
         if assistance is not None:
             obs["assistance"] = assistance
         if context_note is not None:
@@ -125,7 +134,54 @@ def _append_observation(
         print(f"los: {exc}", file=sys.stderr)
         return 2, {}
     return 0, {"ok": True, "observation_id": obs["id"],
-               "workspace_id": workspace.id, **confirmation}
+               "workspace_id": workspace.id,
+               **_condition_notice(requirement, obs), **confirmation}
+
+
+def _condition_notice(requirement: dict, obs: dict) -> dict:
+    """Say what this record does and does not establish, while he can still fix it.
+
+    The write succeeded either way — the ledger is his, and refusing a report
+    of difficulty because it lacked flags would be worse than accepting it.
+    But a report that cannot be read as a failure of the current target needs
+    to say so at the moment it is filed. It used to persist silently and leave
+    the requirement reading `demonstrated`, `satisfied`, no next steps: the
+    successful save was the only feedback, and it concealed that the report
+    had no effect (audit `synthetic-learner-2026-09-12`, F02).
+    """
+    if obs["result"] not in {"incorrect", "partial"}:
+        return {}
+    declared = set(requirement.get("conditions", []))
+    refuted = sorted(declared & set(obs.get("conditions_not_met", [])))
+    if refuted:
+        return {"refuted_conditions": refuted,
+                "interpretation_notice": (
+                    f"recorded as a different situation ({', '.join(refuted)} "
+                    f"did not hold), so it is not read as a failure of this "
+                    f"target and resets nothing")}
+    missing = sorted(declared - set(obs.get("conditions", [])))
+    if not missing:
+        return {"interpretation_notice":
+                "recorded under every condition this target declares; it is "
+                "read as a failure of this target"}
+    flags = " ".join(f"--condition {name}" for name in missing)
+    not_met = " ".join(f"--condition-not-met {name}" for name in missing)
+    return {
+        "unstated_conditions": missing,
+        "interpretation_notice": (
+            f"this result does not say whether the target's conditions held "
+            f"({', '.join(missing)}), so it is held as unresolved: it is not "
+            f"read as a failure of this target, and the successes recorded "
+            f"before it stop counting toward a current conclusion until this "
+            f"is settled. Settle it by superseding this record — "
+            f"los observe {requirement['id']} --activity {obs['activity']} "
+            f"--result {obs['result']} --supersedes {obs['id']} — adding "
+            f"{flags} for the conditions that held, or {not_met} for the ones "
+            f"that did not. Two distinct qualified activities recorded after "
+            f"this also establish a new basis, without claiming the missing "
+            f"facts were ever known."
+        ),
+    }
 
 
 def cmd_observation_append(args) -> int:
@@ -141,6 +197,7 @@ def cmd_observation_append(args) -> int:
             activity=args.activity,
             result=args.result,
             conditions=args.condition,
+            conditions_not_met=args.condition_not_met,
             tags=args.tags,
             assistance=args.assistance,
             context_note=args.context,
@@ -230,6 +287,8 @@ def cmd_observe(args) -> int:
             payload["context"] = args.note
         if args.condition:
             payload["condition"] = list(args.condition)
+        if args.condition_not_met:
+            payload["condition_not_met"] = list(args.condition_not_met)
         if args.supersedes:
             payload["supersedes"] = args.supersedes
         expected_revisions = {workspace.id: artifact_revision(root, workspace.id)}
@@ -260,6 +319,7 @@ def cmd_observe(args) -> int:
                 activity=args.activity,
                 result=args.result,
                 conditions=args.condition,
+                conditions_not_met=args.condition_not_met,
                 tags=args.tags,
                 assistance=args.assistance,
                 context_note=args.note,

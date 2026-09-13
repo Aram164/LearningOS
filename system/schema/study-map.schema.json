@@ -106,7 +106,8 @@
         "url": {"type": "string", "format": "uri"},
         "vault_path": {"type": "string"},
         "scope_triage": {"enum": ["required-now", "helpful-now", "deferred", "reference-only"]},
-        "affordance": {"description": "What the resource is a candidate for: guided work (intervention), independent target evidence (evidence), or either depending on learner state (mixed). A candidate annotation, not a suitability verdict.", "enum": ["intervention", "evidence", "mixed"]}
+        "affordance": {"description": "What the resource is a candidate for: guided work (intervention), independent target evidence (evidence), or either depending on learner state (mixed). A candidate annotation, not a suitability verdict.", "enum": ["intervention", "evidence", "mixed"]},
+        "independent_evidence": {"$ref": "https://learningos.local/schema/learning-plan-v1#/$defs/independentEvidenceReview"}
       }
     },
     "legacyStage": {

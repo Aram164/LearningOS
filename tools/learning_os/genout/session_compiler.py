@@ -17,6 +17,9 @@ import math
 from ..contracts.json_schema import validate_contract
 from ..learning_runtime import (
     RuntimeInputError,
+    activity_fingerprint,
+    collect_requirements,
+    read_observations,
     requirement_fingerprint,
     requirement_stage,
     runtime_path,
@@ -37,6 +40,137 @@ def _resource_available(repo: Repo, resource: dict) -> bool:
             return False
     # A URL or prose locator alone is not evidence of accessibility.
     return False
+
+
+def _known_exposures(repo: Repo, context: dict) -> set[str]:
+    """Explicit exposure reports and recorded attempts; opening a file is not a report."""
+    observations = read_observations(repo, collect_requirements(repo))
+    superseded = {obs["supersedes"] for obs in observations if obs.get("supersedes")}
+    exposed = set(context.get("exposed_resources", []))
+    exposed.update(obs["activity"] for obs in observations
+                   if obs["id"] not in superseded and obs["activity"].startswith("route-"))
+    return exposed
+
+
+def _evidence_shortfall(repo: Repo, resource: dict, req: dict, exposed: set[str]) -> str | None:
+    """Suitability of content is separate from qualification of an actual attempt."""
+    rid = resource["route_id"]
+    conditions = set(req.get("conditions", []))
+    if rid in exposed and "unfamiliar-example" in conditions:
+        return "a previous attempt or explicit exposure report makes this activity familiar"
+    if any(rid in _exposes_solutions(repo, {"route_id": source}) for source in exposed):
+        return "the learner reported exposure to this activity's solutions in an earlier session"
+    if _missing_assets(repo, resource):
+        return "assigned activity is not runnable in full: " + "; ".join(_asset_notes(repo, [resource]))
+    review = resource.get("independent_evidence")
+    if not isinstance(review, dict):
+        return "assessment suitability has not been reviewed; available for practice"
+    if review.get("requirement_sha256") != requirement_fingerprint(req):
+        return "suitability review is not bound to the current requirement; review again"
+    fingerprint = activity_fingerprint(repo, resource)
+    if fingerprint is None or review.get("activity_sha256") != fingerprint:
+        return "activity content or scope differs from its suitability review; review again"
+    missing = sorted(conditions - set(review.get("verified_conditions", [])))
+    if missing:
+        return "review does not establish an activity suitable for: " + ", ".join(missing)
+    return None
+
+
+def _exposes_solutions(repo: Repo, resource: dict) -> set[str]:
+    """Route ids whose answers this material hands over.
+
+    Read from the owning route in the module source map, not from the stage
+    resource. "This file contains the worked solutions to that task" is a fact
+    about the material, so it belongs with the material and holds in every
+    stage that routes to it — a stage-local copy would be one more place for
+    the guard to be absent exactly where it matters.
+    """
+    route_id = resource.get("route_id")
+    if not route_id:
+        return set()
+    declared = _routes_by_id(repo).get(str(route_id), {}).get("exposes_solutions_for")
+    if not isinstance(declared, list):
+        return set()
+    return {str(value) for value in declared if str(value).strip()}
+
+
+def _routes_by_id(repo: Repo) -> dict[str, dict]:
+    """Every rich route in the repository, by its stable identity."""
+    from ..routes import iter_route_references
+
+    cached = getattr(repo, "_session_routes_by_id", None)
+    if cached is None:
+        cached = {ref.route_id: ref.route for ref in iter_route_references(repo)}
+        try:
+            repo._session_routes_by_id = cached
+        except AttributeError:  # a Repo that refuses attributes still works
+            pass
+    return cached
+
+
+def _missing_assets(repo: Repo, resource: dict) -> list[dict]:
+    """Assets the activity needs that are not registered and resolvable here.
+
+    ``_resource_available`` answers "can he open the worksheet". This answers
+    "can he do what the worksheet asks", and the two were the same answer:
+    Blatt 4 Aufgabe 3(b) needs `International_Education_Costs.csv` and an
+    `aufgabe3.py` template from Moodle, neither of which exists in the
+    registered materials, and the proposal reported the route ready with
+    Aufgabe 3 included and part (b) not excluded (audit
+    `workbench/audits/synthetic-learner-2026-09-12`, F06). The source map had
+    already recorded the absence in prose; nothing carried it to the runtime.
+    """
+    route_id = resource.get("route_id")
+    if not route_id:
+        return []
+    declared = _routes_by_id(repo).get(str(route_id), {}).get("requires_assets")
+    if not isinstance(declared, list):
+        return []
+    missing = []
+    for asset in declared:
+        if not isinstance(asset, dict) or not asset.get("name"):
+            continue
+        uri = asset.get("material_uri")
+        if isinstance(uri, str) and uri:
+            probe = {"vault_path": uri, "route_id": route_id}
+            if project_material_resource(repo, probe).get("material_exists") is True:
+                continue
+        missing.append(asset)
+    return missing
+
+
+def _asset_notes(repo: Repo, selected: list) -> tuple[str, ...]:
+    """One line per selected activity that cannot be done in full."""
+    notes = []
+    for resource in selected:
+        missing = _missing_assets(repo, resource)
+        if not missing:
+            continue
+        for asset in missing:
+            part = asset.get("needed_for")
+            where = asset.get("obtain_from")
+            notes.append(
+                f"{resource['route_id']} needs {asset['name']}"
+                + (f" for {part}" if part else "")
+                + ", which is not registered locally"
+                + (f" — get the exact file from {where}" if where else "")
+                + ". Use only parts that do not require the missing asset; do not substitute "
+                  "another dataset or template and call it the supplied assignment."
+            )
+    return tuple(notes)
+
+
+def _reveals(repo: Repo, step: dict, evidence: dict) -> bool:
+    """Whether reading ``step`` hands over the answers to ``evidence``.
+
+    A session that explains with the worked solutions and then asks for
+    unaided transfer on the very task those solutions answer is not measuring
+    transfer. This is not hypothetical: rejecting the CLT lecture as unhelpful
+    replaced it with UE6 — the official Blatt 4 solutions — while Blatt 4
+    itself stayed on as the independent-evidence step, solutions and
+    assessment in the same proposal (audit F03).
+    """
+    return evidence.get("route_id") in _exposes_solutions(repo, step)
 
 
 def _check_context_numbers(context: dict) -> tuple[set, dict]:
@@ -62,6 +196,8 @@ def _eligible_resources(repo: Repo, stage: dict, context: dict, unavailable: set
             reason = "resource is outside the current study scope"
         elif resource.get("affordance") not in {"intervention", "evidence", "mixed"}:
             reason = "no suitable intervention/evidence affordance is declared"
+        elif rid in context.get("unsuitable_resources", []):
+            reason = "learner reported this resource pedagogically unsuitable"
         elif rid in unavailable or not _resource_available(repo, resource):
             reason = "exact resource access is unavailable or unverified"
         elif budget is not None and (
@@ -79,13 +215,35 @@ def _eligible_resources(repo: Repo, stage: dict, context: dict, unavailable: set
     return eligible, rejected
 
 
-def _pools(eligible: list, status: str) -> tuple[list, list]:
+def _pools(repo: Repo, req: dict, context: dict, eligible: list, status: str,
+           rejected: list | None = None) -> tuple[list, list]:
     # Mixed resources are genuinely dual-use: they compete as evidence
     # alongside pure evidence, and as intervention per status below.
-    evidence = [r for r in eligible if r["affordance"] in {"evidence", "mixed"}]
-    intervention = [r for r in eligible if r["affordance"] == ("mixed" if status == "fragile" else "intervention")]
+    #
+    # The preference flips with status and the fallback never does. Something
+    # that broke down after working is usually better served by guided
+    # practice than by another explanation of what he already understood once,
+    # so `fragile` asks for `mixed` first — but "prefer" is not "only". Both
+    # branches used to fall back to `mixed`, which for `fragile` meant falling
+    # back to the pool that had just come up empty, excluding every pure
+    # explanation in the stage. The learner whose understanding had just
+    # collapsed was then handed one more assessment and nothing to repair it
+    # with (audit `synthetic-learner-2026-09-12`, F04).
+    evidence = []
+    exposed = _known_exposures(repo, context)
+    for resource in eligible:
+        if resource["affordance"] not in {"evidence", "mixed"}:
+            continue
+        shortfall = _evidence_shortfall(repo, resource, req, exposed)
+        if shortfall is None:
+            evidence.append(resource)
+        elif rejected is not None:
+            rejected.append({"resource_id": resource["route_id"], "reason": shortfall})
+    preferred, fallback = (("mixed", "intervention") if status == "fragile"
+                           else ("intervention", "mixed"))
+    intervention = [r for r in eligible if r["affordance"] == preferred]
     if not intervention:
-        intervention = [r for r in eligible if r["affordance"] == "mixed"]
+        intervention = [r for r in eligible if r["affordance"] == fallback]
     return intervention, evidence
 
 
@@ -93,10 +251,8 @@ def _step_for(resource: dict, status: str, *, as_evidence: bool = False) -> dict
     intent = "evidence" if (resource["affordance"] == "evidence" or as_evidence) else "intervention"
     if intent == "evidence":
         role = "independent evidence"
-        reason = ("obtain the target evidence under the declared conditions without assistance"
-                  if resource["affordance"] == "evidence"
-                  else "obtain the target evidence under the declared conditions without assistance "
-                       "(mixed resource serving as evidence)")
+        reason = ("reviewed prompt suitable for the target; record whether this actual attempt "
+                  "was unfamiliar, uncued and unassisted — the content review does not establish those facts")
     else:
         role = "guided practice" if resource["affordance"] == "mixed" else "explanation"
         reason = f"address the current {status} evidence state"
@@ -122,7 +278,7 @@ def _fits(selected: list, budget, durations: dict) -> bool:
     return sum(durations[r["route_id"]] for r in selected) <= budget
 
 
-def _assemble(root, req, interpretation, status, steps, rejected, blockers, eligible, context, budget, extra_assumptions=()) -> dict:
+def _assemble(repo, req, interpretation, status, steps, rejected, blockers, eligible, context, budget, extra_assumptions=()) -> dict:
     selected_ids = {step["resource_id"] for step in steps}
     for resource in eligible:
         if resource["route_id"] not in selected_ids:
@@ -143,14 +299,29 @@ def _assemble(root, req, interpretation, status, steps, rejected, blockers, elig
         "steps": steps,
         "rejected_alternatives": rejected,
         "assumptions": [
-            "authored affordances are candidate annotations; activity suitability still needs learner-facing review",
+            "only a current content review can establish assessment suitability; actual attempt conditions remain learner-reported",
             "no prerequisite failure has been reported" if not context.get("failed_prerequisites") else "prerequisite assumption invalidated",
             "no time budget was supplied" if budget is None else f"available time: {budget} minutes; supplied resource duration estimates are assumed",
+            # A difficulty nobody can interpret yet is the most important thing
+            # on this screen, and it has to arrive with the remedy attached.
+            # Reporting it and leaving him to guess which flags were missing is
+            # how the report got filed unqualified in the first place.
+            #
+            # Shown whenever one exists, not only when it displaced a
+            # `demonstrated` verdict. An unresolved report against an
+            # `uncertain` target changes no conclusion — `uncertain` was
+            # already honest — but it is still a thing he said that the system
+            # could not read, and silence about it is the defect either way.
+            *_unresolved_note(interpretation),
             *extra_assumptions,
         ],
+        "resource_reviews": [{"resource_id": resource["route_id"],
+                              "activity_sha256": activity_fingerprint(repo, resource),
+                              "requirement_sha256": requirement_fingerprint(req)}
+                             for resource in eligible if resource.get("affordance") in {"evidence", "mixed"}],
         "replan_conditions": ["prerequisite-failure", "target-evidence-obtained-early", "selected-resource-unsuitable", "material-time-change", "target-changed"],
     }
-    validate_contract(root, "session-plan.schema.json", session)
+    validate_contract(repo.root, "session-plan.schema.json", session)
     return session
 
 
@@ -159,12 +330,12 @@ def compile_session(repo: Repo, req: dict, interpretation: dict, context: dict |
     validate_contract(repo.root, "session-context.schema.json", context)
     _, _, stage = requirement_stage(repo, req)
     status = interpretation.get("status", "unseen")
-    if status not in {"unseen", "uncertain", "fragile", "demonstrated"}:
+    if status not in {"unseen", "uncertain", "fragile", "unresolved", "demonstrated"}:
         raise RuntimeInputError(f"unknown learner interpretation: {status}")
     budget = context.get("available_minutes")
     unavailable, durations = _check_context_numbers(context)
     eligible, rejected = _eligible_resources(repo, stage, context, unavailable, durations, budget)
-    intervention, evidence = _pools(eligible, status)
+    intervention, evidence = _pools(repo, req, context, eligible, status, rejected)
     blockers = []
     selected: list[dict] = []
     failed = list(context.get("failed_prerequisites", []))
@@ -179,8 +350,9 @@ def compile_session(repo: Repo, req: dict, interpretation: dict, context: dict |
             # Consider alternatives when the preferred pair cannot fit. A
             # finite budget with missing durations never becomes unconstrained.
             # Pools overlap on mixed resources, so a pair never uses one twice.
-            candidates = [[a, b] for a in intervention for b in evidence
-                          if a["route_id"] != b["route_id"]]
+            distinct = [[a, b] for a in intervention for b in evidence
+                        if a["route_id"] != b["route_id"]]
+            candidates = [pair for pair in distinct if not _reveals(repo, *pair)]
             if not intervention:
                 candidates = [[b] for b in evidence]
             for candidate in candidates:
@@ -188,15 +360,70 @@ def compile_session(repo: Repo, req: dict, interpretation: dict, context: dict |
                     selected = candidate
                     break
             if not selected:
-                blockers.append("no evidence-producing candidate fits the available time")
+                # Say which constraint emptied the list. "No candidate fits the
+                # available time" would be a plain untruth when the pairs were
+                # ruled out for handing over the assessment's answers, and the
+                # learner would go looking for time he does not need.
+                blockers.append(
+                    "every explanation available here exposes the solutions to "
+                    "the independent-evidence activity; no unaided pairing "
+                    "remains" if distinct and not candidates else
+                    "no evidence-producing candidate fits the available time")
     if repair_mode and selected:
         steps = _repair_steps(selected, status)
         extra = ("bounded repair uses explicitly mapped repair resources; target evidence still required",)
     else:
         steps = _target_steps(selected, status) if selected else []
-        extra = ()
-    return _assemble(repo.root, req, interpretation, status, steps, rejected, blockers, eligible, context, budget,
+        # A proposal that assesses without explaining has to say so. Handing a
+        # learner whose understanding just broke down one more assessment and
+        # calling it a session is defensible only if he can see that no repair
+        # was available and decide for himself (audit F04).
+        extra = _no_repair_note(status, selected, intervention, eligible) if selected else ()
+    if blockers and not steps:
+        # Assessment can be blocked while useful reading/practice remains reachable.
+        selected = []
+        for resource in [*intervention, *eligible]:
+            if resource in selected or not _fits([*selected, resource], budget, durations):
+                continue
+            if _missing_assets(repo, resource):
+                continue
+            selected.append(resource)
+            if len(selected) == 2:
+                break
+        steps = [{"resource_id": resource["route_id"], "role": "practice", "intent": "intervention",
+                  "reason": "available practice; does not count as independent assessment"}
+                 for resource in selected]
+        extra = (*extra, "assessment is blocked; the listed practice remains available")
+    # Reachable is not the same as doable, and the proposal says which parts of
+    # a selected activity cannot be attempted here (F06).
+    extra = (*extra, *_asset_notes(repo, selected))
+    return _assemble(repo, req, interpretation, status, steps, rejected, blockers, eligible, context, budget,
                      extra_assumptions=extra)
+
+
+def _unresolved_note(interpretation: dict) -> tuple[str, ...]:
+    """The interpreter's own sentence about a difficulty it could not read."""
+    reason = interpretation.get("unresolved_reason")
+    return (reason,) if isinstance(reason, str) and reason else ()
+
+
+def _no_repair_note(status: str, selected: list, intervention: list,
+                    eligible: list) -> tuple[str, ...]:
+    """Explain an evidence-only proposal, in the terms that produced it."""
+    if status == "demonstrated" or any(
+            step["affordance"] in {"intervention", "mixed"} for step in selected):
+        return ()
+    repairs = [r for r in eligible if r["affordance"] in {"intervention", "mixed"}]
+    if not repairs:
+        return ("this stage has no accessible explanation or guided-practice "
+                "resource, so the session can only assess; it offers no repair",)
+    if not intervention:
+        return ("every explanation and guided-practice resource in this stage "
+                "was ruled out as inaccessible, out of scope, or unaffordable "
+                "in the available time; see rejected_alternatives",)
+    return ("no explanation or guided-practice resource fits alongside the "
+            "evidence activity in the available time, so the session assesses "
+            "without repairing",)
 
 
 def _repair_with_prerequisites(repo, req, status, intervention, evidence, rejected, eligible, failed, budget, durations, context):
@@ -241,11 +468,16 @@ def _repair_with_prerequisites(repo, req, status, intervention, evidence, reject
     target: list = []
     fixed = [resource for _, resource in repairs]
     for candidate in ([a, b] for a in rest for b in evidence_rest if a["route_id"] != b["route_id"]):
+        # The repair steps are read before the evidence step, so they are as
+        # capable of handing over its answers as the intervention is.
+        if any(_reveals(repo, step, candidate[-1]) for step in [*fixed, candidate[0]]):
+            continue
         if _fits([*fixed, *candidate], budget, durations):
             target = candidate
             break
     if not target:
-        return [], ["no evidence-producing candidate fits the available time after prerequisite repair"]
+        return [], ["no evidence-producing candidate fits the available time after prerequisite repair "
+                    "without exposing its solutions"]
     marked = [{**resource, "_repair": names} for names, resource in repairs]
     marked += [{**resource, "_as_evidence": resource["affordance"] == "mixed"} if i == len(target) - 1 else resource
                for i, resource in enumerate(target)]
@@ -274,21 +506,48 @@ def _structural_replacement(repo, previous: dict, req: dict, interpretation: dic
     budget = context.get("available_minutes")
     unavailable, durations = _check_context_numbers(context)
     eligible, rejected = _eligible_resources(repo, stage, context, unavailable, durations, budget)
-    intervention, evidence = _pools(eligible, status)
+    intervention, evidence = _pools(repo, req, context, eligible, status, rejected)
     used = {s["resource_id"] for s in previous["steps"]} - set(flagged)
+    # The steps this repair preserves verbatim are the constraint a replacement
+    # has to respect. Preserving the assessment and swapping the explanation
+    # for its answer key is a "structural" replacement that destroys exactly
+    # what the preserved step was for (audit F03).
+    by_id = {r["route_id"]: r for r in eligible}
+    kept_evidence = [by_id[s["resource_id"]] for s in previous["steps"]
+                     if s["intent"] == "evidence" and s["resource_id"] not in flagged
+                     and s["resource_id"] in by_id]
+    valid_evidence = {r["route_id"] for r in evidence}
+    if any(s["resource_id"] not in by_id or
+           (s["intent"] == "evidence" and s["resource_id"] not in valid_evidence)
+           for s in previous["steps"] if s["resource_id"] not in flagged):
+        return compile_session(repo, req, interpretation, {**context,
+            "unavailable_resources": sorted(unavailable | set(flagged))})
+    kept_interventions = [by_id[s["resource_id"]] for s in previous["steps"]
+                          if s["intent"] == "intervention" and s["resource_id"] not in flagged]
     repaired = []
     for step in previous["steps"]:
         if step["resource_id"] not in flagged:
             repaired.append(copy.deepcopy(step))
             continue
         pool = evidence if step["intent"] == "evidence" else intervention
-        swap = next((r for r in pool if r["route_id"] not in used and r["route_id"] not in flagged), None)
+        swap = next((r for r in pool
+                     if r["route_id"] not in used and r["route_id"] not in flagged
+                     and not any(_reveals(repo, r, kept) for kept in kept_evidence)
+                     and not (step["intent"] == "evidence" and
+                              any(_reveals(repo, kept, r) for kept in kept_interventions))),
+                    None)
         if swap is None:
             blockers = [f"no same-intent alternative for unsuitable step {step['resource_id']} ({flagged[step['resource_id']]})"]
-            return _assemble(repo.root, req, interpretation, status, [], rejected, blockers, eligible, context, budget,
-                             extra_assumptions=("no executable plan: structural repair failed, "
+            if any(_reveals(repo, candidate, kept)
+                   for candidate in pool for kept in kept_evidence):
+                blockers = [f"no same-intent alternative for unsuitable step "
+                            f"{step['resource_id']} ({flagged[step['resource_id']]}) "
+                            "that does not expose the preserved assessment's solutions"]
+            return _assemble(repo, req, interpretation, status, [], rejected, blockers, eligible, context, budget,
+                             extra_assumptions=("no executable assessment: structural repair failed, "
                                                 "so the previous proposal is withdrawn rather than partially preserved",))
         used.add(swap["route_id"])
+        (kept_evidence if step["intent"] == "evidence" else kept_interventions).append(swap)
         new_step = _step_for(swap, status,
                              as_evidence=step["intent"] == "evidence" and swap["affordance"] == "mixed")
         new_step["reason"] = (f"structural replacement for {step['resource_id']}: {flagged[step['resource_id']]}")
@@ -297,14 +556,14 @@ def _structural_replacement(repo, previous: dict, req: dict, interpretation: dic
         try:
             total = sum(durations[s["resource_id"]] for s in repaired)
         except KeyError:
-            return _assemble(repo.root, req, interpretation, status, [], rejected,
+            return _assemble(repo, req, interpretation, status, [], rejected,
                              ["no evidence-producing candidate fits the available time after structural repair"],
                              eligible, context, budget)
         if total > budget:
-            return _assemble(repo.root, req, interpretation, status, [], rejected,
+            return _assemble(repo, req, interpretation, status, [], rejected,
                              ["no evidence-producing candidate fits the available time after structural repair"],
                              eligible, context, budget)
-    return _assemble(repo.root, req, interpretation, status, repaired, rejected, [], eligible, context, budget,
+    return _assemble(repo, req, interpretation, status, repaired, rejected, [], eligible, context, budget,
                      extra_assumptions=("structural repair: unaffected steps preserved verbatim",))
 
 
@@ -337,13 +596,20 @@ def replan_session(repo: Repo, previous_packet: dict, req: dict, interpretation:
             raise RuntimeInputError("requirement definition changed; an explicit material replan is required")
         _, _, stage = requirement_stage(repo, req)
         resources = {resource.get("route_id"): resource for resource in stage.get("resources", [])}
+        exposed = _known_exposures(repo, context)
         for step in previous["steps"]:
             resource = resources.get(step["resource_id"])
             if (resource is None or resource.get("scope_triage") in {"reference-only", "deferred", "out-of-scope"}
                     or not _resource_available(repo, resource)
-                    or (step["intent"] == "evidence" and resource.get("affordance") != "evidence")
+                    or (step["intent"] == "evidence" and resource.get("affordance") not in {"evidence", "mixed"})
                     or (step["intent"] == "intervention" and resource.get("affordance") not in {"intervention", "mixed"})):
                 raise RuntimeInputError("previous steps are no longer eligible; an explicit material replan is required")
+            if step["intent"] == "evidence" and _evidence_shortfall(repo, resource, req, exposed):
+                raise RuntimeInputError("assessment suitability or exposure changed; propose a fresh session")
+        evidence_steps = [resources[s["resource_id"]] for s in previous["steps"] if s["intent"] == "evidence"]
+        if any(_reveals(repo, resources[s["resource_id"]], evidence)
+               for s in previous["steps"] if s["intent"] == "intervention" for evidence in evidence_steps):
+            raise RuntimeInputError("previous explanation exposes assessment solutions; propose a fresh session")
         current_status = interpretation.get("status", "unseen")
         if previous["plan_status"] == "satisfied" and current_status != "demonstrated":
             raise RuntimeInputError("current evidence does not support the previous completion claim")

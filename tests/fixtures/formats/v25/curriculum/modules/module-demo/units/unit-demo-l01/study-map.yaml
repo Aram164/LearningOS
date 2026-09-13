@@ -1,0 +1,90 @@
+id: study-map-demo-l01
+type: study-map
+plan_template_version: 1
+unit_id: unit-demo-l01
+status: active
+current_stage: stage-demo
+source_plan:
+  path: work/active/workspace-demo/CONTEXT.md
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-demo
+  number: 1
+  exam_critical: false
+  concepts:
+  - concept-expected-value
+  title: Derive expected value
+  status: active
+  objective: Derive and explain expected value.
+  done_when:
+  - Explain the derivation.
+  scope_triage: required-now
+  resources:
+  - id: resource-demo-book-ch01
+    kind: read
+    label: Demo Book §1
+    source_id: source-demo-book
+    locator: §1 Erwartungswert, pdf pp. 12-19
+    angle: Derives the probability-weighted sum and works one discrete example.
+    angle_detail: The v12 shape — the angle is a field of its own rather than prose
+      appended to the locator after an em dash, so an interface can render it, sort
+      by it, and check that it is there.
+    scope_triage: required-now
+    route_id: route-demo-v25-reading
+    affordance: intervention
+  - kind: practise
+    label: Synthetic assessment prompt
+    source_id: source-demo-book
+    locator: Task 1
+    scope_triage: helpful-now
+    route_id: route-demo-v25-task
+    affordance: evidence
+    independent_evidence:
+      reviewed_by: fixture-author
+      reviewed_on: '2026-09-13'
+      verified_conditions:
+      - unfamiliar-example
+      requirement_sha256: sha256:0000000000000000000000000000000000000000000000000000000000000000
+      activity_sha256: sha256:1111111111111111111111111111111111111111111111111111111111111111
+  - id: resource-demo-book-appendix-a
+    kind: read
+    label: Demo Book Appendix A — depth, not needed for this stage
+    source_id: source-demo-book
+    locator: Appendix A
+    scope_triage: deferred
+  - kind: reference
+    label: Demo Book full bibliography — preserved, do not read for this stage
+    source_id: source-demo-book
+    scope_triage: reference-only
+  - kind: read
+    label: Demo Book §2 — no id and no rank, as every v1 record is
+    source_id: source-demo-book
+    locator: §2
+  working_note: curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md
+  attachments: []
+  source_feedback:
+  - source_id: source-demo-book
+    resource_id: resource-demo-book-ch01
+    feedback: helpful
+    note: The worked derivation in §1 is what made it click.
+    recorded: '2026-08-08'
+  - source_id: source-demo-book
+    resource_id: resource-demo-book-appendix-a
+    feedback: too-advanced
+    recorded: '2026-08-08'
+  - source_id: source-demo-book
+    feedback: useful-for-review
+    recorded: '2026-08-08'
+  runtime_target:
+    concept: concept-expected-value
+    capability:
+      kind: explain
+      operands:
+      - expectation
+    conditions:
+    - unfamiliar-example
+    evidence_spec:
+    - explain-reason

@@ -24,6 +24,12 @@
         "type": "string"
       }
     },
+    "condition_not_met": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
     "context": {
       "type": "string"
     },

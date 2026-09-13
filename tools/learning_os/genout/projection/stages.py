@@ -29,7 +29,7 @@ _OPEN_TARGET_KEYS = (
 # runtime_review joins them: review accountability is validator state, and no
 # interface reads it yet (an Open Learner Model UI would be the v10 case).
 _RUNTIME_ONLY_STAGE_KEYS = ("runtime_target", "runtime_review")
-_RUNTIME_ONLY_RESOURCE_KEYS = ("affordance",)
+_RUNTIME_ONLY_RESOURCE_KEYS = ("affordance", "independent_evidence")
 
 
 def _has_direct_open_target(resource: dict) -> bool:

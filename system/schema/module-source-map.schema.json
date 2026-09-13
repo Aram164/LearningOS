@@ -69,7 +69,29 @@
                     },
                     "locator": { "type": "string", "minLength": 1 },
                     "url": { "type": "string", "format": "uri" },
-                    "vault_path": { "type": "string", "minLength": 1 }
+                    "vault_path": { "type": "string", "minLength": 1 },
+                    "requires_assets": {
+                      "description": "Files the activity itself needs before it can be done — a dataset it analyses, a code template it fills in. Distinct from the material being reachable: `_resource_available` answers 'can he open the worksheet', and this answers 'can he do what the worksheet asks'. Blatt 4 Aufgabe 3(b) needs International_Education_Costs.csv and aufgabe3.py from Moodle, neither registered here, and the session still reported the route ready (audit workbench/audits/synthetic-learner-2026-09-12, F06). An entry with no `material_uri` is by definition unregistered; the session keeps the route and names the parts that cannot be attempted, rather than dropping the runnable work or inventing a substitute dataset.",
+                      "type": "array",
+                      "minItems": 1,
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "required": ["name"],
+                        "properties": {
+                          "name": { "type": "string", "minLength": 1 },
+                          "material_uri": { "type": "string", "pattern": "^material://" },
+                          "needed_for": { "description": "Which part of the activity, in the sheet's own numbering.", "type": "string", "minLength": 1 },
+                          "obtain_from": { "description": "Where the exact file comes from. Never a substitute.", "type": "string", "minLength": 1 }
+                        }
+                      }
+                    },
+                    "exposes_solutions_for": {
+                      "description": "Route ids whose activities this material answers — a verifiable claim about content, that opening this hands over the worked solutions to those tasks, never a judgment of quality. The session compiler refuses to put such a route in the same proposal as an evidence step it answers: explaining with the answer key and then asking for unaided transfer on that same task measures nothing (audit workbench/audits/synthetic-learner-2026-09-12, F03).",
+                      "type": "array",
+                      "uniqueItems": true,
+                      "items": { "type": "string", "pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$" }
+                    }
                   }
                 }
               ]

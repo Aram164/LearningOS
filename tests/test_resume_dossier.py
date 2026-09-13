@@ -212,9 +212,18 @@ def test_resume_refuses_without_anything_to_resume(mini_repo: Path):
     assert "no resumable stage" in proc.stderr
 
 
-def test_resume_prefers_a_stage_with_a_requirement(mini_repo: Path, monkeypatch):
-    """The fallback opens on work, not on "none authored": among touched
-    study maps it prefers the newest stage carrying a requirement."""
+def test_recovery_follows_the_newest_touch_even_with_no_requirement(
+        mini_repo: Path, monkeypatch):
+    """Recovery reports where he was, not where the feature demos best.
+
+    This used to skip past the most recently touched map to find one whose
+    stage carried an authored runtime requirement, so the screen would not
+    open on "none authored". With one authored requirement in the whole
+    repository, that preference and "always return to that one stage" were
+    the same rule, and it outranked the subject he had actually chosen
+    (audit `synthetic-learner-2026-09-12`, F05). A truthful "none authored"
+    for the right stage beats a complete screen for the wrong one.
+    """
     root = _runtime_repo(mini_repo)
     # l01 keeps its stage but loses its requirement: only l02 offers work.
     lapsed = yaml.safe_load((root / MAP).read_text(encoding="utf-8"))
@@ -258,5 +267,11 @@ def test_resume_prefers_a_stage_with_a_requirement(mini_repo: Path, monkeypatch)
                         lambda _root: {old_map: "200", new_map: "100"})
     via, module_id, unit_id, study_map_id, stage_id = _resolve_stage(
         load_repo(root))
-    assert via == "recently touched stage"
+    assert via == "recently touched stage (resume pointer missing or stale)"
+    assert (unit_id, stage_id) == ("unit-demo-l01", "stage-demo")
+    # And the other way round, so this pins the ordering rather than a
+    # constant: make the requirement-bearing map the newer one and it wins.
+    monkeypatch.setattr(_git, "last_commit_timestamps",
+                        lambda _root: {old_map: "100", new_map: "200"})
+    _, _, unit_id, _, stage_id = _resolve_stage(load_repo(root))
     assert (unit_id, stage_id) == ("unit-demo-l02", "stage-demo2")
