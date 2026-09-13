@@ -157,3 +157,55 @@ def test_routes_resolve_once_per_build_and_refresh_material_existence(mini_repo,
             assert resource.get("material_exists") is not True
             assert "route_id" not in resource
         assert repo.module_source_maps == original
+
+
+def test_one_validator_per_schema_is_built_and_reused(mini_repo):
+    """Reuse is the optimization; the reported errors must not change.
+
+    Building a Draft202012Validator re-resolves every `$ref` against the
+    registry, and a full run checks hundreds of instances against a few dozen
+    schemas. One validator per schema is the documented pattern — `iter_errors`
+    does not mutate it — but only if the cache is keyed by schema name and a
+    *missing* schema is never cached, because that is reported per instance.
+    """
+    from learning_os.rules.core import Validator
+
+    repo = load_repo(mini_repo)
+    validator = Validator(repo, online=False)
+    assert validator._validators == {}
+
+    validator._schema_check("note", {"id": "note-x"}, "first.md")
+    first = validator._validators["note"]
+    validator._schema_check("note", {"id": "note-y"}, "second.md")
+    assert validator._validators["note"] is first, "the validator was rebuilt"
+
+    before = len(validator.issues)
+    validator._schema_check("no-such-schema", {}, "a.yaml")
+    validator._schema_check("no-such-schema", {}, "b.yaml")
+    missing = [i for i in validator.issues[before:] if i.code == "SCHEMA-MISSING"]
+    assert len(missing) == 2, "a missing schema must be reported for every instance"
+    assert "no-such-schema" not in validator._validators
+
+
+def test_transaction_receipts_read_through_the_shared_yaml_loader(mini_repo):
+    """The receipts are parsed by the loader the rest of the repository uses.
+
+    `yaml.safe_load` is the pure-Python loader, and 214 receipts cost about a
+    second of parsing on every validate — which every canonical write runs.
+    The shared loader is LibYAML-backed where the C extension exists and
+    applies the same duplicate-key rule; a file it refuses must surface as a
+    reported unparseable receipt, not as an exception out of `validate`.
+    """
+    from learning_os.rules.core import Validator
+
+    directory = mini_repo / "operations/transactions"
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / "transaction-20260101-000000-001.yaml").write_text(
+        "id: transaction-20260101-000000-001\nid: transaction-duplicated\n",
+        encoding="utf-8",
+    )
+    repo = load_repo(mini_repo)
+    validator = Validator(repo, online=False)
+    validator.check_transaction_receipts()
+    reported = [i for i in validator.issues if i.code == "TRANSACTION-RECEIPT"]
+    assert any("cannot parse receipt" in i.message for i in reported), reported
