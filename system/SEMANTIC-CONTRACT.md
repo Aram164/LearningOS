@@ -207,17 +207,39 @@ is preflight, and the snapshot guard stays the final word. Readers:
 `tests/test_proof_carrying_change.py`.
 
 Asymmetric admission: proof-carrying assumes an *untrusted* producer, so
-the envelope ceremony binds agent-authored writes uniformly — except the
-one write where the producer is the ground truth. Aram recording his own
-results (`learner.observation.append` via `los observe`) carries
+the envelope ceremony binds agent-authored writes uniformly — except
+where the producer is the ground truth. Aram recording his own results
+(`learner.observation.append` via `los observe`) carries
 `approval.kind == "direct-user-gesture"`: the snapshot is taken under the
 operator lock rather than asserted, over the same intent subject, into a
-byte-identical receipt. The gesture kind stays admitted only for the
-closed user-originated allowlist (this entry plus the two pre-existing
-UI-originated writers, `capture.create` and `garden.seed.create`); a
-remote envelope claiming it for anything else fails closed, and an
-allowlisted remote envelope still asserts its full snapshot and intent.
-Proven by `tests/test_observation_gesture.py`.
+byte-identical receipt.
+
+Two closed sets carry that kind, and the difference between them is the
+producer, never the capability. **`GESTURE_ALLOWLIST`** admits it from any
+channel, for writes that are the learner's own study record or his own
+choice among authored material — his evidence, captures and Garden seeds,
+progress, session notes, attachments, detours, resource feedback, Atlas
+questions, source selections. **`UI_REVIEWED_ALLOWLIST`** admits it only
+over `channel == "ui"`, for the four workflows where the application shows
+the exact change before a deliberate Save or Apply: `concept.relations.change`
+(ADR-017's hand-authored connections), `review.prepare`, `review.apply`,
+and `unit.map.import` after its no-write preflight. That Save *is* the
+explicit approval these contracts already required; the review was
+happening on screen and the envelope had no way to say so. It is not a
+second approval protocol, and a `ui` channel label is provenance inside
+this trusted local application — not cryptographic proof that a human was
+present, and not treated as more than that. What actually protects
+canonical state is unchanged: exact previous rows, registry and artifact
+revisions, the snapshot, duplicate/endpoint/cycle checks, exact-byte
+binding of reviewed files, the import preflight.
+
+Everything else fails closed, from every channel, and any agent-origin
+envelope claiming a gesture for a reviewed-UI capability fails closed too.
+An admitted remote envelope still asserts its full snapshot and intent.
+Until 2026-09-13 this paragraph described a three-capability allowlist
+that the code and WORKFLOWS had already outgrown; a contract that
+disagrees with its enforcement is the failure this document exists to
+prevent. Proven by `tests/test_observation_gesture.py`.
 
 ## Intelligence scan
 
@@ -280,3 +302,14 @@ lineage above. Full vision and work plan:
 `work/proposals/intelligence-plane-plan.md`; phase records:
 `work/proposals/intelligence-plane-phase0-record.md`,
 `work/proposals/intelligence-plane-phase1-record.md`.
+
+
+### Assessment suitability and learner evidence
+
+A runtime content review is bound to the requirement and exact activity content/scope,
+not just to a stable route ID. It establishes that an activity permits the target
+assessment; unfamiliarity and assistance remain facts about each reported attempt.
+Unreviewed, stale or asset-incomplete activities may support practice but cannot
+produce a ready independent-assessment claim. Explicit prior exposure and mapped
+attempt history constrain future proposals. Full intake and correction semantics
+are owned by WORKFLOWS §8 and the shared independentEvidenceReview schema.

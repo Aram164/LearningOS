@@ -681,7 +681,11 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument('--assistance', default=None)
     p.add_argument('--tags', default=None)
     p.add_argument('--context', default=None)
-    p.add_argument('--condition', action='append', default=[])
+    p.add_argument('--condition', action='append', default=[],
+                   help='a condition that DID hold for this attempt')
+    p.add_argument('--condition-not-met', action='append', default=[],
+                   help='a condition that did NOT hold; a different fact from '
+                        'silence, which stays unknown')
     p.add_argument('--supersedes', default=None, help='explicitly correct one earlier observation; preserves its bytes')
     p.add_argument('--expected-snapshot', default=None)
     _add_expected_revision_argument(p)
@@ -695,7 +699,11 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument('--assistance', default=None)
     p.add_argument('--tags', default=None)
     p.add_argument('--note', default=None, help='free-text note stored as the observation context')
-    p.add_argument('--condition', action='append', default=[])
+    p.add_argument('--condition', action='append', default=[],
+                   help='a condition that DID hold for this attempt')
+    p.add_argument('--condition-not-met', action='append', default=[],
+                   help='a condition that did NOT hold; a different fact from '
+                        'silence, which stays unknown')
     p.add_argument('--supersedes', default=None, help='explicitly correct one earlier observation; preserves its bytes')
     p.set_defaults(func=cmd_observe)
 

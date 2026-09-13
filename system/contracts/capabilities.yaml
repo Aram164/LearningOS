@@ -129,6 +129,9 @@ commands:
   concept.relations.change:
     handler: concept_relations_change
     cli_command: concept-relations-change
+    admission: direct-user-gesture
+    admission_channels:
+    - ui
     writes:
     - knowledge/concept-relations.yaml
     - knowledge/concept-relations/**
@@ -139,6 +142,7 @@ commands:
   atlas.question.save:
     handler: atlas_question_save
     cli_command: atlas-question-save
+    admission: direct-user-gesture
     writes:
     - knowledge/notes/**
     invariants:
@@ -247,6 +251,9 @@ commands:
   unit.map.import:
     handler: unit_map_import
     cli_command: unit-map-import
+    admission: direct-user-gesture
+    admission_channels:
+    - ui
     writes:
     - curriculum/modules/**/units/**
     invariants:
@@ -255,6 +262,7 @@ commands:
   unit.note.append:
     handler: unit_note
     cli_command: unit-note
+    admission: direct-user-gesture
     writes:
     - curriculum/modules/**/units/**
     invariants:
@@ -265,6 +273,7 @@ commands:
   unit.source-selection.set:
     handler: unit_source_selection
     cli_command: unit-source-selection
+    admission: direct-user-gesture
     writes:
     - curriculum/modules/**/units/**/unit.yaml
     invariants:
@@ -317,13 +326,18 @@ commands:
   stage.progress.update:
     handler: stage_progress
     cli_command: stage-progress
+    admission: direct-user-gesture
     writes:
     - curriculum/modules/**/units/**
+    - curriculum/resume.yaml
     invariants:
     - one active stage
+    - the resume pointer names the stage this action made current and commits in the same transaction
+    - other units keep their own active study maps
   stage.attachment.add:
     handler: stage_attach
     cli_command: stage-attach
+    admission: direct-user-gesture
     writes:
     - curriculum/modules/**/units/**
     invariants:
@@ -333,6 +347,7 @@ commands:
   source.feedback.record:
     handler: source_feedback
     cli_command: source-feedback
+    admission: direct-user-gesture
     writes:
     - curriculum/modules/**/units/**
     invariants:
@@ -341,6 +356,7 @@ commands:
   detour.create:
     handler: detour_create
     cli_command: detour-create
+    admission: direct-user-gesture
     writes:
     - curriculum/modules/**/units/**
     invariants:
@@ -348,6 +364,7 @@ commands:
   detour.resolve:
     handler: detour_resolve
     cli_command: detour-resolve
+    admission: direct-user-gesture
     writes:
     - curriculum/modules/**/units/**
     invariants:
@@ -355,6 +372,9 @@ commands:
   review.prepare:
     handler: shelving_prepare
     cli_command: shelving-prepare
+    admission: direct-user-gesture
+    admission_channels:
+    - ui
     writes:
     - curriculum/modules/**/units/**
     invariants:
@@ -363,6 +383,9 @@ commands:
   review.apply:
     handler: shelving_apply
     cli_command: shelving-apply
+    admission: direct-user-gesture
+    admission_channels:
+    - ui
     writes:
     - knowledge/notes/**
     - knowledge/garden/**

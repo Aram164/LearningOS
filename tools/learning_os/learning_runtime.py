@@ -46,11 +46,37 @@ def validate_runtime_record(repo: Repo, name: str, value: dict) -> None:
     errors = sorted(Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(value), key=str)
     if errors:
         raise RuntimeInputError(f"{name}: {errors[0].message}")
+    if name == "learner-observation" and set(value.get("conditions", ())) & set(value.get("conditions_not_met", ())):
+        raise RuntimeInputError("learner-observation: conditions and conditions_not_met must be disjoint")
 
 
 def requirement_fingerprint(requirement: dict) -> str:
     data = json.dumps(requirement, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
     return "sha256:" + hashlib.sha256(data.encode()).hexdigest()
+
+
+def activity_fingerprint(repo: Repo, resource: dict) -> str | None:
+    """Bind suitability to the exact local prompt bytes and authored scope.
+
+    Materials use the shared boundary-checked resolver. Hashes attest identity,
+    not correctness or the learner's familiarity with the activity.
+    """
+    from .materials_resolution import project_material_resource
+
+    projected = project_material_resource(repo, resource)
+    try:
+        if projected.get("material_exists") is True and projected.get("material_path"):
+            path = repo.learningos_root / projected["material_path"]
+        elif resource.get("vault_path") and not resource["vault_path"].startswith("material://"):
+            path = runtime_path(repo.root, repo.root / resource["vault_path"])
+        else:
+            return None
+        payload = {key: resource.get(key) for key in (
+            "route_id", "source", "source_id", "vault_path", "locator", "label", "angle", "angle_detail")}
+        payload["content_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+        return requirement_fingerprint(payload)
+    except (RuntimeInputError, OSError):
+        return None
 
 
 RUNTIME_REVIEW_VERSION = "runtime-review-v1"

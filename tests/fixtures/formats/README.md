@@ -107,3 +107,5 @@ v12 fixture remains the applicable compatibility snapshot.
 The project family is the only one whose records already carry their own
 `schema_version`; everything else is versioned collectively by
 `system/contracts/data-contract.yaml`.
+
+`v25` freezes the optional runtime target, bound activity suitability review, named task dependency, solution exposure, and explicitly unmet observation condition. Its example digests are deliberately stale: the shape remains readable without pretending that an old review qualifies a current assessment. Earlier fixtures remain untouched.

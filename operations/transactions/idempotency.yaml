@@ -1983,6 +1983,18 @@ entries:
       unit-job-python-engineering-fluency: 2
     snapshot_before: sha256:6792fb14a9e076465928b9fa4967ff58353d76d83b2f13a91dce7034ab752d17
     snapshot_after: sha256:c466c65a64d18970ae5b63b50dde88daeda2b71a1a6bcc442db8482f7fa30769
+  repair-clt-652f4642affe40a5a3fe42e7238f7766:
+    request_id: repair-clt-652f4642affe40a5a3fe42e7238f7766
+    capability: module.plan.import
+    channel: codex
+    intent_sha256: sha256:f8352055367c79c7fff719b580f2a91df24f7b301fe249d2e0fa8f6d97107139
+    transaction_id: transaction-20260913-155528-001
+    receipt_path: operations/transactions/transaction-20260913-155528-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 46
+      unit-m2-sad-l08: 22
+    snapshot_before: sha256:c95c2b4ca90818855a6049b029a9db3943e0e0d6f770273b1e9e6e8e9bdd6385
+    snapshot_after: sha256:77da4ecb9ef762ed7a6027b1f2ef8075ec87cec440b5a7adc0312cfa2f5b5eca
   runtime-review-backfill-clt-v1:
     request_id: request-runtime-review-backfill-clt-v1
     capability: unit.map.import

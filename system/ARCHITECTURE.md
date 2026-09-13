@@ -567,8 +567,9 @@ evaluation. A later evaluation change is an approval-gated proposal.
 
 Workspaces retain their independent lifecycle and coordinate curriculum work
 with explicit `program_ids`, `module_ids`, and `unit_ids`. Naming and prose are
-never used to infer v2 relationships. The current resume pointer is generated
-as a convenience and cannot hide any module, unit, or map.
+never used to infer v2 relationships. The current resume pointer is written by
+the learner's own explicit progress action (§22b) and cannot hide any module,
+unit, or map.
 
 `curriculum/quarantine/index.yaml` is the only normally loadable record at the
 Master's boundary. The loader, validator's normal scan, manifest, bootstrap,
@@ -617,6 +618,23 @@ Chats are transient; workspaces are persistent. A chat operates on one primary w
     labels both with one word ("Continue") destroys a distinction the core is
     careful to keep: show "Resume where you left off" and "Planned next"
     separately, and let them disagree, because they legitimately do.
+22b. It is nevertheless **authoritative about where you stopped**, and there is
+    exactly one of it. `stage.progress.update` writes it, naming the stage that
+    action made current, inside the same transaction as the records that moved —
+    same operator lock, same declared write scope, same receipt, same post-action
+    scope check, same republished projection. Activating or revisiting selects
+    the work; pausing keeps the destination on what you paused, because that is
+    what pausing means; completing or skipping follows to whatever stage became
+    current, or stays on the finished one when the map has run out. Other units
+    keep their own active maps: this records where *he* is, not what is open.
+    Every interface starts here, and what any of them does when it is missing is
+    *recovery* — labelled as such, never presented as the answer. Evidence
+    chronology and commit timestamps are recovery inputs, never a statement of
+    intent: recording a result against one subject says nothing about which
+    subject he chose to sit down with next. Until 2026-09-13 nothing wrote this
+    file, so recovery *was* the destination and both interfaces disagreed with
+    the learner and with each other (audit
+    `workbench/audits/synthetic-learner-2026-09-12`, F05).
 22a. `unit_order` is an ordering, not a claim that every entry is the same kind
     of thing. Each unit carries `kind` (`lecture`, `topic`, `lecture-cluster`,
     `milestone`, `exam-block`, `bridge`), the manifest projects it, and

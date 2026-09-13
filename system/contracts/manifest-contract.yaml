@@ -41,7 +41,7 @@
 # Keys that were once published and must never come back under this name.
 # `exam_spine` was a strict subset of `academic_deadlines` — a second shape for
 # the same facts (ADR-006, 2026-08-03).
-contract_version: 9
+contract_version: 10
 top_level_keys:
 - _generated
 - academic_deadlines
@@ -98,8 +98,8 @@ index_keys:
 - unit_to_study_map
 - workspace_to_modules
 - workspace_to_units
-schema_path: system/contracts/manifest-v9.schema.json
-schema_sha256: sha256:09f1b5d492a32d387cc942fe6c9ae5a17b48e5e3b02f325320c3070667642ddb
+schema_path: system/contracts/manifest-v10.schema.json
+schema_sha256: sha256:1209c4d49ec4ae7c826e9893c66490830f9a838d524a72278d45d33ad096acdd
 forbidden_top_level_keys:
 - exam_spine
 history:
@@ -162,3 +162,8 @@ history:
   note: 'note records carry atlas_question: a learner''s recorded question against
     a concept or an authored relation (ADR-017)'
   mirrored_in_ui: contracts/manifest-v9.lock.json
+- version: 10
+  adopted: '2026-09-13'
+  note: Publish material-owned solution exposure and required activity assets; mirror
+    optional fields in the UI reader.
+  mirrored_in_ui: contracts/manifest-v10.lock.json

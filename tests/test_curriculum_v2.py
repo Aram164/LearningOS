@@ -309,8 +309,17 @@ def test_stage_progress_offers_the_observation_verb(mini_repo):
                staged)
     assert _observe_offer("unit-demo-l01", staged["stages"][0]) == {
         "observe_requirement": "req-demo-l01-demo",
+        # The offer names the conditions this target declares. Stopping at
+        # activity and result taught a command that could not produce evidence
+        # the interpreter credits, and whose negative result could not be read
+        # as a failure of this target at all (audit
+        # `workbench/audits/synthetic-learner-2026-09-12`, F02).
         "observe_next": "los observe req-demo-l01-demo --activity <what-you-did> "
-                        "--result <correct|incorrect|partial|abandoned>",
+                        "--result <correct|incorrect|partial|abandoned> "
+                        "--condition unfamiliar-example",
+        "observe_conditions": ["unfamiliar-example"],
+        "observe_note": "keep only the conditions that actually held; an "
+                        "omitted one is read as unknown, never as met",
     }
     completed = approved_v2_cli(
         mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "complete",

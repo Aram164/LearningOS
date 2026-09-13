@@ -21,7 +21,15 @@ import yaml
 from gateway_helpers import run_v2_capability
 from repo_builders import _add_material_overview, add_curriculum, run_los, write_yaml
 
-from learning_os.commands.capability import GESTURE_ALLOWLIST
+from learning_os.commands.capability import (
+    GESTURE_ALLOWLIST,
+    UI_REVIEWED_ALLOWLIST,
+    gesture_allowed,
+)
+from learning_os.contracts.capability_catalog import (
+    gesture_admitted_capabilities,
+    ui_reviewed_capabilities,
+)
 from learning_os.contracts.gateway import intent_sha256
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.transactions import artifact_revision
@@ -156,23 +164,110 @@ def test_allowlisted_gesture_envelope_keeps_the_full_ceremony(
     assert response["result"]["artifact_revisions"] == {"workspace-demo": 1}
 
 
-def test_canonical_semantics_can_never_take_the_gesture_path(observe_repo: Path):
-    envelope = _gesture_envelope(
-        observe_repo, "concept.relations.change", {"op": "add"}, "gesture-canonical-001")
-    proc = run_v2_capability(observe_repo, envelope)
-    assert proc.returncode == 2
-    response = json.loads(proc.stdout)
-    assert response["ok"] is False
-    assert response["error"]["code"] == "UNCONFIRMED"
+def test_an_agent_origin_semantic_request_is_still_refused(observe_repo: Path):
+    """The boundary the old "never" was reaching for, stated precisely.
+
+    This asserted that canonical semantics could never take the gesture path
+    at all, which made a *current, binding* architecture decision unbuildable:
+    ADR-017 designed the Atlas for Aram to author connections by hand in the
+    app, and a readable refusal is still a refusal (review
+    `workbench/audits/repair-review-2026-09-13`, D1). What actually protects
+    canonical state is the producer, not the capability — so the four reviewed
+    UI workflows are admitted over the `ui` channel, and every other origin
+    claiming a gesture for them still fails closed, as here.
+    """
+    for channel in ("operator", "codex", "system-task"):
+        envelope = _gesture_envelope(
+            observe_repo, "concept.relations.change", {"op": "add"},
+            f"gesture-canonical-{channel}")
+        envelope["channel"] = channel
+        envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+        proc = run_v2_capability(observe_repo, envelope)
+        assert proc.returncode == 2, channel
+        response = json.loads(proc.stdout)
+        assert response["ok"] is False
+        assert response["error"]["code"] == "UNCONFIRMED"
+        assert "reviewed action in the LearningOS app" in response["error"]["message"]
+
+
+def test_a_write_with_no_admission_at_all_is_refused_from_every_channel(
+        observe_repo: Path):
+    for channel in ("ui", "operator", "codex"):
+        envelope = _gesture_envelope(
+            observe_repo, "note.revise", {"note_id": "note-demo"},
+            f"gesture-unadmitted-{channel}")
+        envelope["channel"] = channel
+        envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+        proc = run_v2_capability(observe_repo, envelope)
+        assert proc.returncode == 2, channel
+        assert json.loads(proc.stdout)["error"]["code"] == "UNCONFIRMED"
 
 
 def test_allowlist_matches_the_capability_contract(repo_root: Path):
     contract = yaml.safe_load(
         (repo_root / "system/contracts/capabilities.yaml").read_text(encoding="utf-8"))
-    admitted = {name for name, row in contract["commands"].items()
-                if row.get("admission") == "direct-user-gesture"}
+    rows = contract["commands"]
+    admitted = {name for name, row in rows.items()
+                if row.get("admission") == "direct-user-gesture"
+                and not row.get("admission_channels")}
     assert admitted == set(GESTURE_ALLOWLIST) == {
-        "learner.observation.append", "capture.create", "garden.seed.create"}
+        # Aram's own evidence, and the two unrouted inbox/Garden writers.
+        "learner.observation.append", "capture.create", "garden.seed.create",
+        # His own study record for one stage or unit, his own experience of a
+        # resource, his own question, his own selection among authored routes.
+        # Added 2026-09-13 for the installed UI's actual write paths; the
+        # audit's F01 was Core refusing exactly these in the learner's face.
+        "stage.progress.update", "unit.note.append", "stage.attachment.add",
+        "detour.create", "detour.resolve", "source.feedback.record",
+        "atlas.question.save", "unit.source-selection.set"}
+    reviewed = {name for name, row in rows.items()
+                if row.get("admission_channels") == ["ui"]}
+    assert reviewed == set(UI_REVIEWED_ALLOWLIST) == {
+        "concept.relations.change", "review.prepare", "review.apply",
+        "unit.map.import"}
+
+
+def test_contract_admission_is_readable_through_the_catalogue(repo_root: Path):
+    """The loader's view and the enforcing sets are the same sets."""
+    assert gesture_admitted_capabilities(repo_root) == GESTURE_ALLOWLIST
+    assert ui_reviewed_capabilities(repo_root) == UI_REVIEWED_ALLOWLIST
+    assert not (GESTURE_ALLOWLIST & UI_REVIEWED_ALLOWLIST)
+
+
+def test_plan_content_and_note_semantics_stay_off_every_gesture_path():
+    """Widening four reviewed workflows widened nothing else (D1)."""
+    for capability in (
+        "module.plan.import", "route.patch", "note.revise", "note.evidence.add",
+        "unit.material-synthesis.publish", "ai-action.delivery.apply",
+        "route.identity.migrate", "module.materials.compact",
+    ):
+        assert capability not in GESTURE_ALLOWLIST
+        assert capability not in UI_REVIEWED_ALLOWLIST
+        assert not gesture_allowed(capability, "ui")
+
+
+def test_a_reviewed_workflow_is_admitted_only_over_the_ui_channel():
+    for capability in UI_REVIEWED_ALLOWLIST:
+        assert gesture_allowed(capability, "ui")
+        for channel in ("operator", "codex", "system-task", None):
+            assert not gesture_allowed(capability, channel), (capability, channel)
+    # The learner's own study record is not channel-bound: `los observe` runs
+    # over "operator" from his terminal.
+    for capability in GESTURE_ALLOWLIST:
+        assert gesture_allowed(capability, "operator")
+        assert gesture_allowed(capability, "ui")
+
+
+def test_gesture_refusal_says_what_to_do_instead(observe_repo: Path):
+    """A refusal a learner can act on, not the name of an approval kind."""
+    envelope = _gesture_envelope(
+        observe_repo, "module.plan.import", {"module_id": "module-demo"},
+        "gesture-recovery-001")
+    proc = run_v2_capability(observe_repo, envelope)
+    assert proc.returncode == 2
+    message = json.loads(proc.stdout)["error"]["message"]
+    assert "preflight" in message and "operator request" in message
+    assert "is not admitted for" not in message
 
 
 def test_observation_append_still_requires_the_gateway(observe_repo: Path):
@@ -181,3 +276,39 @@ def test_observation_append_still_requires_the_gateway(observe_repo: Path):
                    "--activity", "exercise", "--result", "partial")
     assert proc.returncode == 2
     assert "GatewayEnvelopeV2" in proc.stderr
+
+
+def test_a_condition_recorded_both_ways_is_refused_at_intake(observe_repo: Path):
+    """`--condition X --condition-not-met X` is a contradiction, not an input."""
+    proc = run_los(observe_repo, "observe", REQUIREMENT, "--activity", "exercise",
+                   "--result", "partial", "--condition", "unfamiliar-example",
+                   "--condition-not-met", "unfamiliar-example")
+    assert proc.returncode == 2
+    assert "both met and not met" in proc.stderr
+
+
+def test_stating_a_condition_did_not_hold_is_recorded_and_explained(observe_repo: Path):
+    proc = run_los(observe_repo, "observe", REQUIREMENT, "--activity", "exercise",
+                   "--result", "partial",
+                   "--condition-not-met", "unfamiliar-example",
+                   "--note", "I had already worked this exact example")
+    assert proc.returncode == 0, proc.stderr
+    result = json.loads(proc.stdout)
+    assert result["refuted_conditions"] == ["unfamiliar-example"]
+    assert "different situation" in result["interpretation_notice"]
+    assert "resets nothing" in result["interpretation_notice"]
+    ledger = (observe_repo / "work/active/workspace-demo/observations.jsonl")
+    recorded = json.loads(ledger.read_text(encoding="utf-8").strip().splitlines()[-1])
+    assert recorded["conditions_not_met"] == ["unfamiliar-example"]
+    assert recorded["conditions"] == []
+
+
+def test_the_unqualified_notice_offers_both_ways_to_settle_it(observe_repo: Path):
+    proc = run_los(observe_repo, "observe", REQUIREMENT, "--activity", "exercise",
+                   "--result", "partial", "--note", "still get this wrong")
+    assert proc.returncode == 0, proc.stderr
+    notice = json.loads(proc.stdout)["interpretation_notice"]
+    assert "--condition unfamiliar-example" in notice
+    assert "--condition-not-met unfamiliar-example" in notice
+    assert "Two distinct qualified activities recorded after this" in notice
+    assert "stop counting toward a current conclusion" in notice

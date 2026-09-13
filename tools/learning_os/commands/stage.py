@@ -18,6 +18,7 @@ from .support import (
     _expected_revisions_from_args,
     _operator_lock,
     _read_content_bound_file,
+    _resume_pointer_write,
     _root,
     _stage,
     _unit_map_or_error,
@@ -79,14 +80,32 @@ def _observe_offer(unit_id: str, stage: dict) -> dict:
     it. Otherwise return no keys. Suggesting never writes — the ledger
     still moves only through ``los observe``.
     """
-    if not isinstance(stage.get("runtime_target"), dict):
+    target = stage.get("runtime_target")
+    if not isinstance(target, dict):
         return {}
     requirement_id = requirement_id_for(unit_id, str(stage.get("id", "")))
-    return {
+    # Name the conditions this target actually declares. The offer used to
+    # stop at activity and result, so the command it taught could not produce
+    # evidence the interpreter would credit, and a difficulty reported through
+    # it could not be read as a failure of this target at all (audit
+    # `synthetic-learner-2026-09-12`, F02). The flags are prompts to state what
+    # happened, never defaults to accept — an unmet condition is dropped, not
+    # asserted.
+    conditions = [str(name) for name in (target.get("conditions") or [])
+                  if str(name).strip()]
+    flags = "".join(f" --condition {name}" for name in conditions)
+    offer = {
         "observe_requirement": requirement_id,
         "observe_next": f"los observe {requirement_id} --activity <what-you-did> "
-                        "--result <correct|incorrect|partial|abandoned>",
+                        f"--result <correct|incorrect|partial|abandoned>{flags}",
     }
+    if conditions:
+        offer["observe_conditions"] = conditions
+        offer["observe_note"] = (
+            "keep only the conditions that actually held; an omitted one is "
+            "read as unknown, never as met"
+        )
+    return offer
 
 
 def cmd_stage_progress(args) -> int:
@@ -138,8 +157,21 @@ def cmd_stage_progress(args) -> int:
                 data["status"] = "ready-to-shelve"
                 data.setdefault("shelving", {})["state"] = "draft"
                 unit_data["status"] = "ready-to-shelve"
+        # One rule for every branch: the destination is the stage this action
+        # just made current. Activate or revisit and you return to it; pause it
+        # and you return to the thing you paused, which is what pausing means;
+        # complete or skip and you return to the stage that became current
+        # after it, or — when the map has run out of stages — to the finished
+        # one, where `resume` can honestly say it is ready to shelve. Other
+        # units keep their own active maps; this names where *he* is, not what
+        # is open.
+        resume_stage = str(data.get("current_stage") or stage["id"])
         code, errors, confirmation = _write_transaction(
-            root, {study_map.path: _dump_study_map(study_map, data), unit.path: _dump_yaml(unit_data)},
+            root, {study_map.path: _dump_study_map(study_map, data),
+                   unit.path: _dump_yaml(unit_data),
+                   **_resume_pointer_write(
+                       root, module_id=unit.module_id, unit_id=args.unit_id,
+                       study_map_id=study_map.id, stage_id=resume_stage)},
             capability="stage.progress.update",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=[args.unit_id, study_map.id],

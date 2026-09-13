@@ -482,6 +482,43 @@ def _dump_study_map(study_map, data: dict) -> str:
     return _dump_yaml(preserve_map_refs(study_map, data))
 
 
+#: The one return-to-work record. `los resume` and the app's Home both start
+#: here, so they cannot disagree about where the learner left off.
+RESUME_POINTER_PATH = "curriculum/resume.yaml"
+
+
+def _resume_pointer_write(root: Path, *, module_id: str, unit_id: str,
+                          study_map_id: str, stage_id: str) -> dict[Path, str]:
+    """The resume-pointer file for one explicit study action.
+
+    Returned as a ``{path: text}`` fragment to merge into the *same*
+    ``_write_transaction`` as the records that moved. That is the whole point:
+    the pointer is written under the operator lock the caller already holds,
+    inside the capability's declared write scope, covered by the same receipt,
+    the same post-action scope check, the same validation and the same
+    republished projection. A separate write after the transaction would be an
+    untracked side effect that could survive a rolled-back change, or be lost
+    while the change committed — and the destination would then be lying about
+    where the work actually is.
+
+    Until 2026-09-13 nothing wrote this file at all. `curriculum/resume.yaml`
+    did not exist; `los resume` silently recovered through "last recorded
+    result", and the app's Home, which reads only this pointer, said "Nothing
+    to resume yet". Activating a stage in another subject therefore left both
+    interfaces pointing at the old one (audit
+    `workbench/audits/synthetic-learner-2026-09-12`, F05).
+    """
+    pointer = {
+        "type": "resume-pointer",
+        "module_id": str(module_id),
+        "unit_id": str(unit_id),
+        "study_map_id": str(study_map_id),
+        "stage_id": str(stage_id),
+        "updated": _dt.date.today().isoformat(),
+    }
+    return {root / RESUME_POINTER_PATH: _dump_yaml(pointer)}
+
+
 def _render_frontmatter(meta: dict, body: str) -> str:
     return "---\n" + _dump_yaml(meta).rstrip() + "\n---\n\n" + body.lstrip()
 
