@@ -4,8 +4,11 @@ from __future__ import annotations
 
 import time
 
+import yaml
+
 from ..errors import TransactionFailure
 from ..githistory import GitHistoryError
+from ..loading.yamlio import UniqueKeySafeLoader
 from ..revisions import load_revisions
 from .common import REQUIRED_WORKSPACE_SECTIONS
 
@@ -139,8 +142,16 @@ class ChecksProjects:
         seen: set[str] = set()
         for path in sorted(directory.glob("transaction-*.yaml")):
             try:
-                import yaml
-                data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
+                # `yaml.safe_load` is the pure-Python loader: 214 receipts cost
+                # about a second of parsing on every validate, and every
+                # canonical write validates. This is the loader the rest of the
+                # repository already reads through — LibYAML when the C
+                # extension is present, and the same duplicate-key rule, which
+                # no current receipt trips. A file it refuses is reported below
+                # as an unparseable receipt rather than raised.
+                data = yaml.load(
+                    path.read_text(encoding="utf-8"), Loader=UniqueKeySafeLoader,
+                ) or {}
             except Exception as exc:  # noqa: BLE001 - report as validation issue
                 self.err("TRANSACTION-RECEIPT", f"cannot parse receipt: {exc}", self._rel(path))
                 continue

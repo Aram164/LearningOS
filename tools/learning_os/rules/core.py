@@ -40,6 +40,17 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         self.online = online
         self.issues: list[Issue] = []
         self.schemas = self._load_schemas()
+        # One validator per schema, not one per instance checked. Building a
+        # Draft202012Validator re-resolves every `$ref` against the registry,
+        # and a full run checks 578 instances against ~40 schemas — so that
+        # resolution was repeated more than an order of magnitude more often
+        # than there are schemas to resolve. Reuse is the documented pattern;
+        # `iter_errors` does not mutate the validator.
+        self._validators: dict[str, jsonschema.Draft202012Validator] = {}
+        # Without a format checker jsonschema ignores "format" entirely, so
+        # `2026-13-45` validated clean on the most operationally critical field
+        # in the repository — exam dates. One checker serves every validator.
+        self._format_checker = jsonschema.FormatChecker()
         try:
             self.schema_registry = schema_registry(
                 self.repo.root / "system" / "schema"
@@ -79,18 +90,20 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         return schemas
 
     def _schema_check(self, name: str, instance, where: str):
-        schema = self.schemas.get(name)
-        if schema is None:
-            self.err("SCHEMA-MISSING", f"no schema '{name}' in system/schema/", where)
-            return
-        # Without a format checker jsonschema ignores "format" entirely, so
-        # `2026-13-45` validated clean on the most operationally critical field
-        # in the repository — exam dates.
-        validator = jsonschema.Draft202012Validator(
-            schema,
-            registry=self.schema_registry,
-            format_checker=jsonschema.FormatChecker(),
-        )
+        validator = self._validators.get(name)
+        if validator is None:
+            schema = self.schemas.get(name)
+            if schema is None:
+                # Deliberately not cached: a missing schema is reported for
+                # every instance that needed it, exactly as before.
+                self.err("SCHEMA-MISSING", f"no schema '{name}' in system/schema/", where)
+                return
+            validator = jsonschema.Draft202012Validator(
+                schema,
+                registry=self.schema_registry,
+                format_checker=self._format_checker,
+            )
+            self._validators[name] = validator
         for e in sorted(validator.iter_errors(instance), key=str):
             locator = "/".join(str(p) for p in e.absolute_path)
             self.err("SCHEMA", f"{name}: {e.message} (at {locator or 'root'})", where)
