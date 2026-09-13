@@ -156,6 +156,19 @@ def _expected_ok(root: Path, expected: str | None) -> bool:
     actual = f"sha256:{canonical_fingerprint(root)}"
     if actual == expected:
         return True
+    if current_gateway_request() is None:
+        # Found by synthetic use: a direct CLI write with a current snapshot is
+        # refused by `_write_transaction` as "use GatewayEnvelopeV2", but the
+        # same write with a stale or invented one was refused here first, as a
+        # projection conflict telling the caller to reload and try again. It
+        # cannot succeed on any snapshot, so "reload before writing" sends a
+        # script into a loop against a door that is closed for another reason.
+        # Both facts are true; the one that decides the outcome goes first.
+        print("los: canonical writes must use GatewayEnvelopeV2; direct CLI "
+              "application is disabled — reloading will not change this. The "
+              "supplied snapshot is also out of date.", file=sys.stderr)
+        print(json.dumps({"expected": expected, "actual": actual}), file=sys.stderr)
+        return False
     print("los: projection conflict — authored files changed since the app loaded; "
           "reload before writing", file=sys.stderr)
     print(json.dumps({"expected": expected, "actual": actual}), file=sys.stderr)

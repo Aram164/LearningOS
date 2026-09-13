@@ -17,6 +17,7 @@ import argparse
 from pathlib import Path
 
 from learning_os.genout import generate_all, write_outputs  # noqa: E402
+from learning_os.learning_runtime import RuntimeInputError  # noqa: E402
 from learning_os.loader import load_repo  # noqa: E402
 from learning_os.transactions import TransactionFailure  # noqa: E402
 
@@ -34,6 +35,13 @@ def main() -> int:
     except TransactionFailure as exc:
         print(f"generation refused: {exc}")
         return 2
+    except RuntimeInputError as exc:
+        # Hard rule 1 sends every canonical repair through this command, so it
+        # is the one place a runtime inconsistency must not arrive as a stack
+        # trace. `los` already answers these as one handled line; the rebuild
+        # printed forty and left the projection unwritten.
+        print(f"generation refused: {exc}")
+        return 1
     write_outputs(repo, outputs)
     for rel in sorted(outputs):
         print(f"wrote generated/{rel}")

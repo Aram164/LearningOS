@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import copy
 import json
+import subprocess
+import sys
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 
@@ -756,27 +758,117 @@ def test_a_spent_evidence_pool_is_named_as_a_dead_end(runtime_root):
 
 
 def test_a_recoverable_block_names_what_would_clear_it(runtime_root):
-    """A review that needs re-running is work, and the proposal says which work."""
-    _review(runtime_root, "route-demo-1", [])
-    _review(runtime_root, "route-demo-2", [])
+    """A review nobody has run yet is work, and the proposal says which work."""
     repo, req = inputs(runtime_root)
+    for resource in repo.study_maps["study-map-demo-l01"].data["stages"][0]["resources"]:
+        resource.pop("independent_evidence", None)
     session = compile_session(repo, req, {"status": "uncertain"})
     assert session["plan_status"] == "blocked"
     assert "no accessible, in-scope independent evidence activity" in session["blockers"]
-    assert any("what would clear it" in note and "review whether it can test" in note
+    assert any("what would clear it" in note and "review its suitability" in note
                for note in session["assumptions"])
     assert not any("Register a new activity" in note for note in session["assumptions"])
 
 
 def test_a_mixed_block_separates_the_spent_activities_from_the_pending_work(runtime_root):
-    _review(runtime_root, "route-demo-1", [])
     repo, req = inputs(runtime_root)
+    for resource in repo.study_maps["study-map-demo-l01"].data["stages"][0]["resources"]:
+        if resource["route_id"] == "route-demo-1":
+            resource.pop("independent_evidence", None)
     session = compile_session(repo, req, {"status": "uncertain"},
                               {"exposed_resources": ["route-demo-2"]})
     assert session["plan_status"] == "blocked"
-    assert any("what would clear it" in note for note in session["assumptions"])
+    assert any("what would clear it" in note and "review its suitability" in note
+               for note in session["assumptions"])
     assert any("spent for this target and not reusable: route-demo-2" in note
                for note in session["assumptions"])
+
+
+def test_a_negative_review_outranks_a_missing_asset(runtime_root):
+    """Found by synthetic use: 'obtain the missing asset' was offered for Blatt 4.
+
+    A current review of the exact content had already judged it unable to test
+    the target, so no download could ever unblock it. Reporting the transient
+    obstacle in front of the permanent one turned a dead end into a chore.
+    """
+    source_path = runtime_root / "curriculum/modules/module-demo/source-map.yaml"
+    source_map = yaml.safe_load(source_path.read_text())
+    for route in source_map["sources"][0]["unit_routes"]:
+        if route["id"] == "route-demo-1":
+            route["requires_assets"] = [{"name": "template.py", "needed_for": "part (b)",
+                                         "obtain_from": "Moodle"}]
+    write_yaml(source_path, source_map)
+    _review(runtime_root, "route-demo-1", [])
+    _review(runtime_root, "route-demo-2", [])
+    repo, req = inputs(runtime_root)
+    session = compile_session(repo, req, {"status": "uncertain"})
+    assert any("is spent or already judged unsuitable" in b for b in session["blockers"])
+    assert any("reviewed and found unable to test this target" in note
+               and "route-demo-1" in note for note in session["assumptions"])
+    assert not any("obtain the missing asset" in note for note in session["assumptions"])
+    assert any("does not establish an activity suitable for" in row["reason"]
+               for row in session["rejected_alternatives"]
+               if row["resource_id"] == "route-demo-1")
+
+
+# Found by synthetic use: retiring a stage's runtime_target is an ordinary plan
+# edit, but every attempt already recorded against it is then orphaned. The
+# reader pointed at observations.jsonl — the one file that was still correct —
+# and `tools/generate.py`, the rebuild hard rule 1 sends every canonical repair
+# through, answered with an uncaught traceback and no projection.
+
+def _orphan_the_requirement(root: Path, req_id: str) -> None:
+    """Record one attempt, then stop declaring the target it belongs to."""
+    ledger = root / "work/active/workspace-demo/observations.jsonl"
+    ledger.write_text(json.dumps({
+        "id": "observation-orphan", "requirement": req_id, "activity": "task-demo",
+        "result": "correct", "assistance": "none", "conditions": ["unfamiliar-example"],
+        "evidence_tags": ["explain-reason"],
+        "timestamp": datetime(2026, 1, 1, tzinfo=UTC).isoformat(),
+    }) + "\n", encoding="utf-8")
+    path = root / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    data = yaml.safe_load(path.read_text())
+    del data["stages"][0]["runtime_target"]
+    write_yaml(path, data)
+
+
+def test_an_orphaned_attempt_names_the_stage_not_the_ledger(runtime_root):
+    _, req = inputs(runtime_root)
+    _orphan_the_requirement(runtime_root, req["id"])
+    repo = load_repo(runtime_root)
+    with pytest.raises(RuntimeInputError) as caught:
+        read_observations(repo, collect_requirements(repo))
+    message = str(caught.value)
+    assert "runtime_target" in message
+    assert "The ledger line itself is not the fault." in message
+
+
+def test_the_rebuild_refuses_an_orphaned_attempt_without_a_traceback(runtime_root):
+    _, req = inputs(runtime_root)
+    _orphan_the_requirement(runtime_root, req["id"])
+    generate = Path(__file__).resolve().parent.parent / "tools/generate.py"
+    proc = subprocess.run([sys.executable, str(generate), "--root", str(runtime_root)],
+                          capture_output=True, text=True)
+    assert proc.returncode == 1
+    assert "generation refused" in proc.stdout
+    assert "Traceback" not in proc.stderr
+
+
+def test_a_session_with_nothing_left_does_not_promise_practice(runtime_root):
+    """Found by synthetic use against the real vault.
+
+    A finite budget with no duration estimates rules out every resource, so the
+    proposal carried an empty step list under the sentence "the listed practice
+    remains available". There was no list.
+    """
+    repo, req = inputs(runtime_root)
+    session = compile_session(repo, req, {"status": "uncertain"}, {"available_minutes": 5})
+    assert session["plan_status"] == "blocked"
+    assert session["steps"] == []
+    assert any("no practice resource is reachable either" in note
+               for note in session["assumptions"])
+    assert not any("the listed practice remains available" in note
+                   for note in session["assumptions"])
 
 
 def test_answers_inside_the_same_material_are_named_before_the_attempt(runtime_root):
@@ -820,7 +912,8 @@ def test_a_review_that_falls_short_disqualifies_the_activity(runtime_root):
     repo, req = inputs(runtime_root)
     session = compile_session(repo, req, {"status": "uncertain"})
     assert session["plan_status"] == "blocked"
-    assert "no accessible, in-scope independent evidence activity" in session["blockers"]
+    # Not the generic "none available": a current review looked and said no.
+    assert any("is spent or already judged unsuitable" in b for b in session["blockers"])
     assert any("does not establish an activity suitable for: unfamiliar-example" in row["reason"]
                for row in session["rejected_alternatives"])
 
