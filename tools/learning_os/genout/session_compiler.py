@@ -57,12 +57,20 @@ def _known_exposures(repo: Repo, context: dict) -> set[str]:
 #: read. Only registering a new activity restores an assessment route.
 _EXHAUSTING_SHORTFALLS = frozenset({"already-familiar", "solutions-seen"})
 
-#: What would clear each recoverable shortfall, in the learner's terms.
+#: A bound, current review that verifies none of the required conditions is not
+#: missing work — someone looked at this exact content against this exact
+#: requirement and said it cannot test the target. Blatt 4 names the theorem;
+#: the broad Arbeitsbuch scope contains the answers. Neither becomes suitable
+#: by being reviewed again, so this belongs with the dead ends, not with the
+#: to-do list, even though nobody has attempted it.
+_JUDGED_UNSUITABLE = frozenset({"judged-unsuitable"})
+
+#: What would clear each recoverable shortfall, in the learner's terms. Only
+#: shortfalls a named action actually clears appear here.
 _SHORTFALL_REMEDIES = {
     "unreviewed": "review its suitability for this target",
     "requirement-drift": "review it against the current requirement",
     "activity-drift": "review it again against the current activity bytes",
-    "conditions-unverified": "review whether it can test the missing conditions",
     "assets-missing": "obtain the missing asset it needs",
 }
 
@@ -83,9 +91,12 @@ def _evidence_shortfall(repo: Repo, resource: dict, req: dict,
     if any(rid in _exposes_solutions(repo, {"route_id": source}) for source in exposed):
         return ("solutions-seen",
                 "the learner reported exposure to this activity's solutions in an earlier session")
-    if _missing_assets(repo, resource):
-        return ("assets-missing",
-                "assigned activity is not runnable in full: " + "; ".join(_asset_notes(repo, [resource])))
+    # Review first, assets second. Reversed, an activity that a current review
+    # has already judged unable to test this target reported only its missing
+    # download, and the proposal offered "obtain the missing asset" as the way
+    # to unblock assessment — work that cannot succeed, because the review
+    # behind it disqualifies the activity however many files arrive. Blatt 4 is
+    # exactly that resource.
     review = resource.get("independent_evidence")
     if not isinstance(review, dict):
         return ("unreviewed",
@@ -99,8 +110,12 @@ def _evidence_shortfall(repo: Repo, resource: dict, req: dict,
                 "activity content or scope differs from its suitability review; review again")
     missing = sorted(conditions - set(review.get("verified_conditions", [])))
     if missing:
-        return ("conditions-unverified",
-                "review does not establish an activity suitable for: " + ", ".join(missing))
+        return ("judged-unsuitable",
+                "a current review of this exact content does not establish an activity "
+                "suitable for: " + ", ".join(missing))
+    if _missing_assets(repo, resource):
+        return ("assets-missing",
+                "assigned activity is not runnable in full: " + "; ".join(_asset_notes(repo, [resource])))
     return None
 
 
@@ -121,22 +136,35 @@ def _evidence_gap(shortfalls: list[tuple[str, str]]) -> tuple[str, tuple[str, ..
     if not shortfalls:
         return "no accessible, in-scope independent evidence activity", ()
     codes = {code for _, code in shortfalls}
-    if codes <= _EXHAUSTING_SHORTFALLS:
+    spent = sorted(rid for rid, code in shortfalls if code in _EXHAUSTING_SHORTFALLS)
+    unsuitable = sorted(rid for rid, code in shortfalls if code in _JUDGED_UNSUITABLE)
+    if codes <= (_EXHAUSTING_SHORTFALLS | _JUDGED_UNSUITABLE):
+        # Nothing here is waiting to be done. Every activity was either used up
+        # or already examined and found unable to test this target.
+        detail = []
+        if spent:
+            detail.append("already attempted or solution-exposed: " + ", ".join(spent))
+        if unsuitable:
+            detail.append("reviewed and found unable to test this target: "
+                          + ", ".join(unsuitable))
         return (
-            "every reviewed assessment activity for this target is spent: "
-            "already attempted, or its solutions already seen",
-            ("no unfamiliar activity remains for this target, so it cannot be "
-             "assessed again from the material registered now. Register a new "
-             "activity for this target; repeating an earlier one cannot "
-             "establish it, and waiting will not make one appear.",),
+            "every assessment activity for this target is spent or already "
+            "judged unsuitable",
+            ("no admissible activity remains for this target, so it cannot be "
+             "assessed from the material registered now. Register a new "
+             "activity for this target — repeating an earlier one cannot "
+             "establish it, and no review or download changes the rest. "
+             + "; ".join(detail) + ".",),
         )
     remedies = sorted({_SHORTFALL_REMEDIES[code] for code in codes
                        if code in _SHORTFALL_REMEDIES})
     notes = ("no assessment activity is admissible yet; what would clear it: "
              + "; ".join(remedies) + ".",) if remedies else ()
-    spent = sorted(rid for rid, code in shortfalls if code in _EXHAUSTING_SHORTFALLS)
     if spent:
         notes = (*notes, "spent for this target and not reusable: " + ", ".join(spent) + ".")
+    if unsuitable:
+        notes = (*notes, "reviewed and found unable to test this target: "
+                 + ", ".join(unsuitable) + ".")
     return "no accessible, in-scope independent evidence activity", notes
 
 
@@ -531,8 +559,14 @@ def compile_session(repo: Repo, req: dict, interpretation: dict, context: dict |
         steps = [{"resource_id": resource["route_id"], "role": "practice", "intent": "intervention",
                   "reason": "available practice; does not count as independent assessment"}
                  for resource in selected]
+        # Found by synthetic use: this sentence was unconditional, so a session
+        # with nothing left at all still promised "the listed practice" beside
+        # an empty step list. Consoling a learner with a list that is not there
+        # is the same unearned confidence the rest of this file exists to stop.
         extra = (*extra, *evidence_notes,
-                 "assessment is blocked; the listed practice remains available")
+                 "assessment is blocked; the listed practice remains available" if steps else
+                 "assessment is blocked, and no practice resource is reachable either; "
+                 "rejected_alternatives says what ruled each one out")
     # Reachable is not the same as doable, and the proposal says which parts of
     # a selected activity cannot be attempted here (F06).
     extra = (*extra, *_asset_notes(repo, selected))

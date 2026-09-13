@@ -207,7 +207,19 @@ def read_observations(repo: Repo, requirements: list[dict]) -> list[dict]:
                 obs = json.loads(line)
                 validate_runtime_record(repo, "learner-observation", obs)
                 if obs["requirement"] not in known:
-                    raise RuntimeInputError(f"{relative}:{line_number}: unknown requirement {obs['requirement']}")
+                    # The ledger line is where this is noticed, not where it went
+                    # wrong. A requirement exists only while its stage declares a
+                    # `runtime_target`, so retiring or re-homing that stage orphans
+                    # every attempt already recorded against it — and the reader
+                    # then pointed at observations.jsonl, which is the one file
+                    # that is still correct. Say which stage stopped declaring it.
+                    raise RuntimeInputError(
+                        f"{relative}:{line_number}: no stage declares requirement "
+                        f"{obs['requirement']} any more, but this recorded attempt "
+                        f"still refers to it. A requirement exists only while its "
+                        f"study-map stage carries a runtime_target: restore that "
+                        f"target, or supersede/relocate the attempts recorded "
+                        f"against it. The ledger line itself is not the fault.")
                 # Legacy records have no ID. Bind a reproducible ID to their
                 # exact ledger location and bytes, rather than a timestamp.
                 identity = obs.get("id") or "observation-" + hashlib.sha256(

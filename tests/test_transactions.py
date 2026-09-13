@@ -336,6 +336,23 @@ def test_snapshot_check_does_not_parse_the_repository(
     assert command_support._expected_ok(mini_repo, expected) is True
 
 
+def test_a_disabled_cli_write_is_not_reported_as_a_reload_conflict(mini_repo: Path, capsys):
+    """Found by synthetic use against the real vault.
+
+    `detour-create` with a current snapshot was refused as "use
+    GatewayEnvelopeV2"; the same command with a stale or invented one was
+    refused first as a projection conflict, telling the caller to reload and
+    retry. No snapshot makes a direct CLI write succeed, so that advice sends a
+    script into a loop against a door closed for another reason.
+    """
+    assert command_support.current_gateway_request() is None
+    assert command_support._expected_ok(mini_repo, "sha256:" + "0" * 64) is False
+    err = capsys.readouterr().err
+    assert "direct CLI application is disabled" in err
+    assert "reloading will not change this" in err
+    assert "projection conflict" not in err
+
+
 def test_session_ledger_excludes_every_canvas_filename(mini_repo: Path):
     canvas = mini_repo / "Untitled 37.canvas"
     regular = mini_repo / "work/inbox/kept.md"
