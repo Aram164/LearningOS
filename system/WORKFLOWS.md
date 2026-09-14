@@ -194,6 +194,8 @@ difficulty rather than an answer to it. Settle a difficulty by superseding the
 record with the conditions stated either way, or by recording **two distinct
 qualified activities afterwards that were not already credited** — which
 establishes a new basis without pretending the missing facts were ever known.
+Recovering once does not make earlier credited activities available to establish
+a new basis after a later difficulty.
 The original report stays on the record, and the `demonstrated` reason then
 names the exact later activities that justified moving on. Attempts that could
 not count are listed rather than silently dropped. This applies to a qualified

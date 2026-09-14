@@ -270,6 +270,16 @@ def test_prerequisite_repair_without_evidence_stays_blocked(runtime_root):
     assert plan["replan_conditions"]
 
 
+def test_prerequisite_repair_without_evidence_keeps_the_gap_remedy(runtime_root):
+    repo, req = inputs(runtime_root)
+    plan = compile_session(repo, req, {}, {"exposed_resources": ["route-demo-1", "route-demo-2"],
+                                           "failed_prerequisites": ["standardization"],
+                                           "prerequisite_repairs": {"standardization": "route-demo-0"}})
+    assert plan["plan_status"] == "blocked"
+    assert "prerequisite repair alone cannot produce target evidence" in plan["blockers"][0]
+    assert any("no admissible activity remains" in note for note in plan["assumptions"])
+
+
 def test_sticky_replanning_preserves_minor_events(runtime_root):
     repo, req = inputs(runtime_root)
     original = compile_session(repo, req, {})
@@ -1151,21 +1161,87 @@ def test_a_credited_activity_is_spent_and_cannot_rebuild_the_basis(runtime_root)
     assert "already credited" in result["not_counted_evidence"][0]["reason"]
 
 
-def test_spent_activities_count_again_once_a_new_basis_exists(runtime_root):
-    """Spending is scoped to the open difficulty, not a permanent penalty."""
-    _, _, result = _after(
+@pytest.mark.parametrize("failure_conditions, expected_status", [
+    ([], "unresolved"),
+    (["unfamiliar-example"], "fragile"),
+])
+def test_old_credit_cannot_clear_a_second_difficulty(runtime_root, failure_conditions, expected_status):
+    """Recovering once does not make the first pair new evidence again."""
+    req, obs, result = _after(
         runtime_root,
         {"activity": "task-a"},
         {"activity": "task-b"},
         {"activity": "task-c", "result": "partial", "conditions": [], "evidence_tags": []},
         {"activity": "task-d"},
-        {"activity": "task-e"},   # new basis; the slate is clean again
-        {"activity": "task-f", "result": "incorrect"},
+        {"activity": "task-e"},   # a valid new basis
+        {"activity": "task-f", "result": "incorrect", "conditions": failure_conditions},
         {"activity": "task-a"},
         {"activity": "task-b"},
     )
-    assert result["status"] == "demonstrated"
-    assert result["not_counted_evidence"] == []
+    assert result["status"] == expected_status
+    assert {row["activity"] for row in result["not_counted_evidence"]} == {"task-a", "task-b"}
+    assert result["qualifying_evidence_ids"] == []
+    for i, activity in enumerate(["task-g", "task-h"], start=9):
+        obs.append(observation(req["id"], i, activity=activity,
+                               requirement_sha256=requirement_fingerprint(req)))
+    recovered = interpret_observations(obs, req)
+    assert recovered["status"] == "demonstrated"
+    assert recovered["qualifying_evidence_ids"] == ["observation-9", "observation-10"]
+
+
+@pytest.mark.parametrize("blockage", ["unreviewed", "exposed"])
+def test_replacing_practice_cannot_erase_an_assessment_blocker(runtime_root, blockage):
+    repo, req = inputs(runtime_root)
+    resources = repo.study_maps["study-map-demo-l01"].data["stages"][0]["resources"]
+    resources.append({**resources[0], "route_id": "route-demo-alternative"})
+    context = {}
+    if blockage == "unreviewed":
+        for resource in resources:
+            resource.pop("independent_evidence", None)
+    else:
+        context["exposed_resources"] = ["route-demo-1", "route-demo-2"]
+    previous = compile_session(repo, req, {}, context)
+    assert previous["plan_status"] == "blocked"
+    flagged = previous["steps"][0]["resource_id"]
+    result = replan(repo, previous, req, {},
+                    {**context, "unsuitable_resources": [flagged]},
+                    "selected-resource-unsuitable")
+    assert result["plan_status"] == "blocked"
+    assert result["blockers"]
+    assert result["steps"] and all(step["intent"] == "intervention" for step in result["steps"])
+    assert flagged not in {step["resource_id"] for step in result["steps"]}
+
+
+def test_replacement_keeps_asset_limits_and_same_material_answer_notice(runtime_root):
+    source_path = runtime_root / "curriculum/modules/module-demo/source-map.yaml"
+    source_map = yaml.safe_load(source_path.read_text())
+    routes = source_map["sources"][0]["unit_routes"]
+    routes[2]["requires_assets"] = [{"name": "template.py", "needed_for": "part (b)",
+                                     "obtain_from": "Moodle"}]
+    routes.append({**routes[0], "id": "route-demo-answers", "locator": "Answers",
+                   "exposes_solutions_for": ["route-demo-1"]})
+    write_yaml(source_path, source_map)
+    repo, req = inputs(runtime_root)
+    previous = compile_session(repo, req, {})
+    result = replan(repo, previous, req, {}, {"unsuitable_resources": ["route-demo-0"]},
+                    "selected-resource-unsuitable")
+    assert result["plan_status"] == "ready"
+    assert [step["resource_id"] for step in result["steps"]] == ["route-demo-2", "route-demo-1"]
+    assert result["steps"][1] == previous["steps"][1]
+    assert any("template.py" in note and "part (b)" in note for note in result["assumptions"])
+    assert any("same material as the task" in note for note in result["assumptions"])
+
+
+def test_replacement_evidence_keeps_its_review_provenance(runtime_root):
+    repo, req = inputs(runtime_root)
+    previous = compile_session(repo, req, {})
+    result = replan(repo, previous, req, {}, {"unsuitable_resources": ["route-demo-1"]},
+                    "selected-resource-unsuitable")
+    assert result["plan_status"] == "ready"
+    evidence = next(step for step in result["steps"] if step["intent"] == "evidence")
+    assert evidence["resource_id"] == "route-demo-2"
+    assert "Admitted on a content review by aram of 2026-09-13" in evidence["reason"]
+    assert "structural replacement" in evidence["reason"]
 
 
 def test_a_qualified_failure_spends_its_credit_too(runtime_root):
