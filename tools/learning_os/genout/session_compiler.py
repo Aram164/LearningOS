@@ -432,6 +432,8 @@ def _fits(selected: list, budget, durations: dict) -> bool:
 
 def _assemble(repo, req, interpretation, status, steps, rejected, blockers, eligible, context, budget, extra_assumptions=()) -> dict:
     selected_ids = {step["resource_id"] for step in steps}
+    by_id = {resource["route_id"]: resource for resource in eligible}
+    selected = [by_id[step["resource_id"]] for step in steps]
     for resource in eligible:
         if resource["route_id"] not in selected_ids:
             reason = ("target evidence already demonstrated" if status == "demonstrated" else
@@ -466,6 +468,11 @@ def _assemble(repo, req, interpretation, status, steps, rejected, blockers, elig
             # could not read, and silence about it is the defect either way.
             *_unresolved_note(interpretation),
             *extra_assumptions,
+            # Every proposal, including a structural replacement, carries the
+            # current limits of the resources it actually asks the learner to use.
+            *_asset_notes(repo, selected),
+            *_same_source_answer_notes(
+                repo, [step["resource_id"] for step in steps if step["intent"] == "evidence"]),
         ],
         "resource_reviews": [{"resource_id": resource["route_id"],
                               "activity_sha256": activity_fingerprint(repo, resource),
@@ -494,8 +501,9 @@ def compile_session(repo: Repo, req: dict, interpretation: dict, context: dict |
     selected: list[dict] = []
     failed = list(context.get("failed_prerequisites", []))
     repair_mode = status != "demonstrated" and bool(failed)
+    repair_notes: tuple[str, ...] = ()
     if repair_mode:
-        selected, blockers = _repair_with_prerequisites(
+        selected, blockers, repair_notes = _repair_with_prerequisites(
             repo, req, status, intervention, evidence, rejected, eligible, failed, budget, durations,
             context, shortfalls)
     elif status != "demonstrated":
@@ -528,6 +536,12 @@ def compile_session(repo: Repo, req: dict, interpretation: dict, context: dict |
     if repair_mode and selected:
         steps = _repair_steps(selected, status)
         extra = ("bounded repair uses explicitly mapped repair resources; target evidence still required",)
+    elif repair_mode:
+        # A repair that ends blocked still owes the evidence-gap remedy: the
+        # blocker names the dead end, but without these notes the learner never
+        # hears what would actually clear it.
+        steps = []
+        extra = repair_notes
     else:
         steps = _target_steps(selected, status) if selected else []
         # A proposal that assesses without explaining has to say so. Handing a
@@ -567,11 +581,6 @@ def compile_session(repo: Repo, req: dict, interpretation: dict, context: dict |
                  "assessment is blocked; the listed practice remains available" if steps else
                  "assessment is blocked, and no practice resource is reachable either; "
                  "rejected_alternatives says what ruled each one out")
-    # Reachable is not the same as doable, and the proposal says which parts of
-    # a selected activity cannot be attempted here (F06).
-    extra = (*extra, *_asset_notes(repo, selected))
-    extra = (*extra, *_same_source_answer_notes(
-        repo, [step["resource_id"] for step in steps if step["intent"] == "evidence"]))
     return _assemble(repo, req, interpretation, status, steps, rejected, blockers, eligible, context, budget,
                      extra_assumptions=extra)
 
@@ -609,12 +618,16 @@ def _repair_with_prerequisites(repo, req, status, intervention, evidence, reject
     but never invents it: an unmapped, ineligible, or non-intervention repair
     resource is a feasibility failure, and a repair that leaves no target
     intervention is blocked rather than relabelled.
+
+    Returns ``(selected, blockers, notes)``: the third element carries the
+    evidence-gap remedy when the repair ends blocked for lack of evidence, so
+    the proposal still says what would clear the dead end.
     """
     mapping = context.get("prerequisite_repairs", {}) or {}
     unmapped = [name for name in failed if name not in mapping]
     if unmapped:
         return [], [f"failed prerequisite(s) {', '.join(unmapped)} name no repair resource; "
-                    "prerequisite repair needs an explicit prerequisite-to-resource mapping"]
+                    "prerequisite repair needs an explicit prerequisite-to-resource mapping"], []
     by_id = {resource["route_id"]: resource for resource in eligible}
     repairs: list[tuple[str, dict]] = []
     seen_routes: dict[str, list[str]] = {}
@@ -623,9 +636,9 @@ def _repair_with_prerequisites(repo, req, status, intervention, evidence, reject
         resource = by_id.get(rid)
         if resource is None:
             return [], [f"repair resource {rid} for failed prerequisite '{name}' is not eligible "
-                        "(out of scope, inaccessible, or missing duration)"]
+                        "(out of scope, inaccessible, or missing duration)"], []
         if resource.get("affordance") not in {"intervention", "mixed"}:
-            return [], [f"repair resource {rid} for failed prerequisite '{name}' is not an intervention resource"]
+            return [], [f"repair resource {rid} for failed prerequisite '{name}' is not an intervention resource"], []
         seen_routes.setdefault(rid, []).append(name)
     for rid, names in seen_routes.items():
         repairs.append((", ".join(names), by_id[rid]))
@@ -633,14 +646,14 @@ def _repair_with_prerequisites(repo, req, status, intervention, evidence, reject
     rest = [r for r in intervention if r["route_id"] not in repair_ids]
     evidence_rest = [r for r in evidence if r["route_id"] not in repair_ids]
     if not evidence:
-        blocker, _ = _evidence_gap(shortfalls or [])
-        return [], [f"{blocker}; prerequisite repair alone cannot produce target evidence"]
+        blocker, notes = _evidence_gap(shortfalls or [])
+        return [], [f"{blocker}; prerequisite repair alone cannot produce target evidence"], list(notes)
     if not evidence_rest:
         reserved = ", ".join(sorted(repair_ids))
-        return [], [f"prerequisite repair reserves {reserved}; no target evidence remains"]
+        return [], [f"prerequisite repair reserves {reserved}; no target evidence remains"], []
     if not rest:
         reserved = ", ".join(sorted(repair_ids))
-        return [], [f"prerequisite repair reserves {reserved}; no target intervention remains"]
+        return [], [f"prerequisite repair reserves {reserved}; no target intervention remains"], []
     target: list = []
     fixed = [resource for _, resource in repairs]
     for candidate in ([a, b] for a in rest for b in evidence_rest if a["route_id"] != b["route_id"]):
@@ -653,11 +666,11 @@ def _repair_with_prerequisites(repo, req, status, intervention, evidence, reject
             break
     if not target:
         return [], ["no evidence-producing candidate fits the available time after prerequisite repair "
-                    "without exposing its solutions"]
+                    "without exposing its solutions"], []
     marked = [{**resource, "_repair": names} for names, resource in repairs]
     marked += [{**resource, "_as_evidence": resource["affordance"] == "mixed"} if i == len(target) - 1 else resource
                for i, resource in enumerate(target)]
-    return marked, []
+    return marked, [], []
 
 
 def _repair_steps(selected: list, status: str) -> list:
@@ -677,6 +690,11 @@ def _repair_steps(selected: list, status: str) -> list:
 def _structural_replacement(repo, previous: dict, req: dict, interpretation: dict,
                             context: dict, flagged: dict[str, str]) -> dict:
     """Replace flagged steps with same-intent alternatives; preserve the rest verbatim."""
+    if previous["plan_status"] == "blocked":
+        # These steps are practice retained around an assessment blocker.
+        # Swapping one cannot clear that blocker or create an evidence step.
+        # Re-evaluate feasibility with the reported exclusions still in force.
+        return compile_session(repo, req, interpretation, context)
     _, _, stage = requirement_stage(repo, req)
     status = interpretation.get("status", "unseen")
     budget = context.get("available_minutes")
@@ -726,7 +744,7 @@ def _structural_replacement(repo, previous: dict, req: dict, interpretation: dic
         (kept_evidence if step["intent"] == "evidence" else kept_interventions).append(swap)
         new_step = _step_for(swap, status,
                              as_evidence=step["intent"] == "evidence" and swap["affordance"] == "mixed")
-        new_step["reason"] = (f"structural replacement for {step['resource_id']}: {flagged[step['resource_id']]}")
+        new_step["reason"] += (f"; structural replacement for {step['resource_id']}: {flagged[step['resource_id']]}")
         repaired.append(new_step)
     if budget is not None:
         try:

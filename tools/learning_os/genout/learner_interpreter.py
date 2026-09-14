@@ -139,7 +139,10 @@ def interpret_observations(observations: list[dict], requirement: dict | None = 
                 for row in unresolved:
                     resolved.append({**row, "resolved_by": list(qualified)})
                 unresolved.clear()
-                spent.clear()
+                # Recovery does not make earlier credited activities new.
+                # Keep them spent if another difficulty opens later; otherwise
+                # A/B -> difficulty -> C/D -> difficulty -> A/B restores the
+                # conclusion using precisely the old credit D4 excludes.
     status = "unseen" if not ordered else "uncertain"
     if len(successes) >= 2 and not recent_failure:
         status = "demonstrated"
