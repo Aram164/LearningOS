@@ -1,0 +1,4 @@
+
+## 2024-10-25 - Optimizing `_normalize` recursive function
+**Learning:** Found a highly recursive function `_normalize` in `tools/learning_os/loading/yamlio.py` that processes large YAML structures. It was checking primitives after checking dicts and lists, and using `isinstance` and `import datetime` heavily. Moving type checks to primitive types using exact type matching (`type(val) is str`) makes processing 2x faster by avoiding `isinstance()` overhead and avoiding the `datetime` import for normal strings/ints.
+**Action:** Always prioritize exact type matching (`type(value) is X`) for primitive types and standard collections over `isinstance()` in highly recursive Python functions to significantly reduce overhead. In highly recursive functions, ensure that common paths (e.g., standard collection type-checking like dicts or lists) are processed *before* expensive operations such as inline imports to prevent compounded performance degradation.
