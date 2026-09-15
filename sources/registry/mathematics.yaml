@@ -983,3 +983,29 @@ sources:
     title: "Vorkurs Mathematik 2022 — daily handouts and exercise groups"
     type: other
     material: material://source-vorkurs-mathe-2022
+  # DRAFT 2026-09-15: two single-video sources for the SaD video-routes import.
+  # Uncommitted proposal — reviews with video-routes-plan.yaml, applies only
+  # through the gateway together with it.
+  - id: source-3b1b-central-limit-theorem
+    thematic_group_ids: [thematic-group-mathematics]
+    title: 3Blue1Brown — But what is the Central Limit Theorem? (video)
+    type: video
+    authors: [Grant Sanderson]
+    url: https://www.youtube.com/watch?v=zeJD6dqJ5lo
+    evaluations:
+      - concepts: [concept-central-limit-theorem, concept-normal-distribution]
+        roles: [intuition]
+        level: introductory
+        strengths:
+          - "Derives why the Normal appears at all by rescaling sums until the starting distribution stops mattering; states the three assumptions late, so do not stop early"
+  - id: source-iain-gaussian-distribution
+    thematic_group_ids: [thematic-group-mathematics]
+    title: Iain Explains Signals, Systems, and Digital Comms — What is a Gaussian Distribution? (video)
+    type: video
+    url: https://www.youtube.com/watch?v=RNmDyzYw7aQ
+    evaluations:
+      - concepts: [concept-normal-distribution]
+        roles: [intuition]
+        level: introductory
+        strengths:
+          - "Builds the Gaussian from signal-domain intuition rather than the density formula"
