@@ -82,14 +82,14 @@ def _normalize(value):
     # Fast path for primitives to avoid expensive isinstance/import
     if val_type is str or val_type is int or val_type is bool or value is None or val_type is float:
         return value
+    import datetime as _dt
+    if isinstance(value, (_dt.date, _dt.datetime)):
+        return value.isoformat()
     # Use isinstance for collections to support subclasses
     if isinstance(value, dict):
         return {k: _normalize(v) for k, v in value.items()}
     if isinstance(value, list):
         return [_normalize(v) for v in value]
-    import datetime as _dt
-    if isinstance(value, (_dt.date, _dt.datetime)):
-        return value.isoformat()
     return value
 
 
