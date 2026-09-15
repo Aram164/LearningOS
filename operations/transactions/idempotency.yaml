@@ -1995,6 +1995,18 @@ entries:
       unit-m2-sad-l08: 22
     snapshot_before: sha256:c95c2b4ca90818855a6049b029a9db3943e0e0d6f770273b1e9e6e8e9bdd6385
     snapshot_after: sha256:77da4ecb9ef762ed7a6027b1f2ef8075ec87cec440b5a7adc0312cfa2f5b5eca
+  route-patch-leuphana-locator-2026-09-16:
+    request_id: request-leuphana-locator-2026-09-16
+    capability: route.patch
+    channel: operator
+    intent_sha256: sha256:ae77aada73afc28389e30198ea2871c354b0046cdf42af2bcdfb9a964b856c0a
+    transaction_id: transaction-20260916-001340-001
+    receipt_path: operations/transactions/transaction-20260916-001340-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 48
+      unit-m2-sad-l05: 15
+    snapshot_before: sha256:9f7f018b8388fd83e3b789e8e40fbc586c03064e632459baee07dfc0748e4fcd
+    snapshot_after: sha256:446e5fd14ec3658bf793899722723b7b35a28a1c7d6736b37f7d9eb6c210dd93
   runtime-review-backfill-clt-v1:
     request_id: request-runtime-review-backfill-clt-v1
     capability: unit.map.import
