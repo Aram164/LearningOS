@@ -1,0 +1,1 @@
+{"verdicts":[{"evidence":"[02:25] \"means are normally distributed\"; [04:03] \"normally distributed\"; [06:18] \"sample size must be\"","knowledge_node":"knowledge-sad-l08-clt","reason":"Twin batch-mean demos (uniform, exponential) show normality emerging; n=30 rule and Cauchy exception stated.","recorded_confidence":"high","verdict":"confirm"}],"video_id":"YAlJCEDH2uY"}

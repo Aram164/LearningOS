@@ -1,0 +1,282 @@
+# SaD knowledge nodes — the ONLY valid values for `covers`.
+# Copy ids exactly. Do not invent, abbreviate or reword them.
+
+unit-m2-sad-clustering  —  SaD Auxiliary Topic — Clustering & k-Means (UE7-defined scope)
+    knowledge-sad-clustering-unsupervised
+        Exploratory unsupervised learning
+    knowledge-sad-clustering-families
+        Hierarchical, partitioning, and density families
+    knowledge-sad-clustering-kmeans
+        k-means objective and iterations
+    knowledge-sad-clustering-initialization
+        Initialization, convergence, and local optima
+    knowledge-sad-clustering-evaluation
+        Comparing clustering results
+
+unit-m2-sad-exam-prep  —  Statistik und Datenanalyse — independent exam preparation
+    knowledge-sad-exam-calibration
+        Scope calibration and error ledger
+    knowledge-sad-exam-descriptive
+        Descriptive statistics and data quality
+    knowledge-sad-exam-regression
+        Correlation and regression
+    knowledge-sad-exam-probability
+        Probability, Bayes, and combinatorics
+    knowledge-sad-exam-random-variables
+        Random variables and distributions
+    knowledge-sad-exam-inference
+        Estimation and testing
+    knowledge-sad-exam-workflow
+        Data-science workflow and evaluation
+    knowledge-sad-exam-trees
+        Trees and ensembles
+    knowledge-sad-exam-similarity
+        Similarity and clustering
+    knowledge-sad-exam-probabilistic-ml
+        Probability-based learning
+    knowledge-sad-exam-neural
+        Neural networks
+    knowledge-sad-exam-transfer
+        Statistics-only retrieval and timed transfer
+
+unit-m2-sad-l01  —  SaD Lecture 01 — Introduction
+    knowledge-sad-l01-data-questions
+        One dataset, several legitimate questions
+    knowledge-sad-l01-location
+        Mean, median, mode, and robustness
+    knowledge-sad-l01-distributions
+        Frequencies, histograms, and empirical distributions
+    knowledge-sad-l01-sampling-context
+        Samples, populations, and context
+    knowledge-sad-l01-classification
+        Confusion matrices and classification metrics
+    knowledge-sad-l01-base-rates
+        Base rates and Bayes by counting
+    knowledge-sad-l01-course-map
+        From description to inference and prediction
+
+unit-m2-sad-l02  —  SaD Lecture 02 — Basic Concepts
+    knowledge-sad-l02-vocabulary
+        Population, sample, object, feature, and realization
+    knowledge-sad-l02-scales
+        Feature types and measurement scales
+    knowledge-sad-l02-frequencies
+        Frequency distributions and histograms
+    knowledge-sad-l02-location
+        Location, quantiles, and boxplots
+    knowledge-sad-l02-dispersion
+        Range, variance, standard deviation, and divisors
+    knowledge-sad-l02-simpson
+        Aggregation and Simpson's paradox
+    knowledge-sad-l02-sampling
+        Representative samples and sampling bias
+
+unit-m2-sad-l03  —  SaD Lecture 03 — Correlation & Regression
+    knowledge-sad-l03-paired-data
+        Paired data and scatterplots
+    knowledge-sad-l03-covariance
+        Covariance and Pearson correlation
+    knowledge-sad-l03-interpretation
+        Correlation is not causation
+    knowledge-sad-l03-simple-regression
+        Simple linear regression and least squares
+    knowledge-sad-l03-multivariate
+        Multivariate linear regression and the design matrix
+    knowledge-sad-l03-gradient-descent
+        Gradient descent as an alternative optimizer
+    knowledge-sad-l03-scaling-weights
+        Scaling, coefficient interpretation, and model limits
+
+unit-m2-sad-l04  —  SaD Lecture 04 — Probability & Naïve Bayes
+    knowledge-sad-l04-framing
+        Human probability judgments and framing
+    knowledge-sad-l04-events
+        Random experiments, outcomes, and event spaces
+    knowledge-sad-l04-axioms
+        Probability axioms and derived rules
+    knowledge-sad-l04-conditional
+        Conditional probability and total probability
+    knowledge-sad-l04-bayes
+        Bayes' law and posterior reasoning
+    knowledge-sad-l04-independence
+        Independence and conditional independence
+    knowledge-sad-l04-naive-bayes
+        Categorical Naive Bayes classifier
+
+unit-m2-sad-l05  —  SaD Lecture 05 — Combinatorics
+    knowledge-sad-l05-decision-grid
+        The combinatorics decision grid
+    knowledge-sad-l05-permutations
+        Permutations and indistinguishable objects
+    knowledge-sad-l05-variations
+        Ordered selections (variations)
+    knowledge-sad-l05-combinations
+        Unordered selections and binomial coefficients
+    knowledge-sad-l05-repetition
+        Combinations with repetition and stars and bars
+    knowledge-sad-l05-counting-probability
+        Laplace probability, complements, and hypergeometric counting
+    knowledge-sad-l05-identities
+        Binomial identities and Stirling approximation
+
+unit-m2-sad-l06  —  SaD Lecture 06 — Random Variables, Expectation & Variance
+    knowledge-sad-l06-random-variable
+        Random variables and realizations
+    knowledge-sad-l06-distribution-functions
+        PMF, density, and CDF
+    knowledge-sad-l06-transformations
+        Functions and transformations of random variables
+    knowledge-sad-l06-expectation
+        Expected value and linearity
+    knowledge-sad-l06-variance-covariance
+        Variance, standard deviation, and covariance
+    knowledge-sad-l06-sample-mean
+        IID samples and the random sample mean
+    knowledge-sad-l06-concentration
+        Chebyshev bounds and the law of large numbers
+
+unit-m2-sad-l07  —  SaD Lecture 07 — Discrete Distributions
+    knowledge-sad-l07-model-selection
+        Distribution choice from assumptions
+    knowledge-sad-l07-bernoulli-binomial
+        Bernoulli trials and the Binomial distribution
+    knowledge-sad-l07-hypergeometric
+        Hypergeometric sampling without replacement
+    knowledge-sad-l07-geometric
+        Geometric waiting times
+    knowledge-sad-l07-poisson
+        Poisson event counts
+    knowledge-sad-l07-relationships
+        Limits, approximations, and moment signatures
+
+unit-m2-sad-l08  —  SaD Lecture 08 — Normal Distribution, CLT & Likelihood
+    knowledge-sad-l08-normal
+        The Normal family and its parameters
+    knowledge-sad-l08-standardization
+        Standardization, CDFs, and quantiles
+    knowledge-sad-l08-transform-sum
+        Linear transforms and sums of independent Normals
+    knowledge-sad-l08-clt
+        Law of large numbers versus central limit theorem
+    knowledge-sad-l08-approximation
+        Normal approximation and continuity correction
+    knowledge-sad-l08-likelihood
+        Probability versus likelihood
+    knowledge-sad-l08-mle
+        Maximum likelihood and the MSE bridge
+
+unit-m2-sad-l09  —  SaD Lecture 09 — Point & Interval Estimation
+    knowledge-sad-l09-estimator
+        Statistics, estimators, and estimates
+    knowledge-sad-l09-properties
+        Bias, consistency, efficiency, and mean squared error
+    knowledge-sad-l09-standard-error
+        Sampling distributions and standard errors
+    knowledge-sad-l09-z-interval
+        z confidence intervals
+    knowledge-sad-l09-t-interval
+        t confidence intervals
+    knowledge-sad-l09-bootstrap
+        Bootstrap estimation
+    knowledge-sad-l09-data-bias
+        Statistical uncertainty versus data bias
+
+unit-m2-sad-l10  —  SaD Lecture 10 — Statistical Hypothesis Testing
+    knowledge-sad-l10-test-model
+        Null model, alternative, statistic, and reference distribution
+    knowledge-sad-l10-tails-pvalue
+        Tails, critical regions, and p-values
+    knowledge-sad-l10-errors-power
+        Type I error, Type II error, and power
+    knowledge-sad-l10-z-t
+        z and t tests for means
+    knowledge-sad-l10-ci-duality
+        Confidence intervals and test duality
+    knowledge-sad-l10-chi-square
+        Chi-square tests for categorical data
+    knowledge-sad-l10-nonparametric
+        Rank and permutation tests
+    knowledge-sad-l10-multiple
+        Multiple testing and false discoveries
+
+unit-m2-sad-l11  —  SaD Lecture 11 — Data Science & Machine Learning Workflow
+    knowledge-sad-l11-pipeline
+        The data-science pipeline
+    knowledge-sad-l11-tasks
+        Supervised and unsupervised tasks
+    knowledge-sad-l11-representation
+        Data types, features, and representation
+    knowledge-sad-l11-resampling
+        Train, validation, test, cross-validation, and bootstrap
+    knowledge-sad-l11-objectives
+        Loss functions, hypotheses, and inductive bias
+    knowledge-sad-l11-evaluation
+        Evaluation metrics and class imbalance
+    knowledge-sad-l11-generalization
+        Underfitting, overfitting, and bias-variance
+
+unit-m2-sad-l12  —  SaD Lecture 12 — Tree-Based Learning & Ensembles
+    knowledge-sad-l12-tree-model
+        Decision trees, rules, and preference bias
+    knowledge-sad-l12-entropy-id3
+        Entropy, information gain, and ID3
+    knowledge-sad-l12-regression
+        Regression trees and variance reduction
+    knowledge-sad-l12-pruning
+        Tree growth, stopping, and pruning
+    knowledge-sad-l12-bagging-forest
+        Bagging and random forests
+    knowledge-sad-l12-boosting
+        Boosting
+    knowledge-sad-l12-stacking
+        Stacking and ensemble tradeoffs
+
+unit-m2-sad-l13  —  SaD Lecture 13 — Similarity-Based Learning
+    knowledge-sad-l13-neighbors
+        1-NN and k-NN as lazy learners
+    knowledge-sad-l13-aggregation
+        Classification, regression, voting, and weighting
+    knowledge-sad-l13-metrics
+        Similarities, distances, and metric axioms
+    knowledge-sad-l13-minkowski
+        Minkowski distances and feature scaling
+    knowledge-sad-l13-special-measures
+        Cosine, Jaccard, and Mahalanobis measures
+    knowledge-sad-l13-exact-indexing
+        Exact similarity-search indexes
+    knowledge-sad-l13-lsh
+        Approximate search and locality-sensitive hashing
+
+unit-m2-sad-l14  —  SaD Lecture 14 — Probability-Based Learning
+    knowledge-sad-l14-nb-recap
+        Naive Bayes decision rule
+    knowledge-sad-l14-smoothing
+        Zero counts and Laplace smoothing
+    knowledge-sad-l14-numeric
+        Numerical attributes and discretization
+    knowledge-sad-l14-gaussian
+        Gaussian Naive Bayes
+    knowledge-sad-l14-multinomial
+        Multinomial Naive Bayes and log space
+    knowledge-sad-l14-bayes-net
+        Bayesian networks and factorization
+    knowledge-sad-l14-markov
+        Conditional independence and Markov blankets
+
+unit-m2-sad-l15  —  SaD Lecture 15 — Neural Networks
+    knowledge-sad-l15-neuron
+        Artificial neurons and linear-model equivalence
+    knowledge-sad-l15-activation
+        Nonlinearity, activation functions, and XOR
+    knowledge-sad-l15-output
+        One-hot targets, output layers, and softmax
+    knowledge-sad-l15-forward
+        Multilayer forward passes, shapes, and parameter counts
+    knowledge-sad-l15-backprop
+        Loss gradients and backpropagation
+    knowledge-sad-l15-training
+        Training, generalization, and practical choices
+    knowledge-sad-l15-universality
+        Expressiveness and universal approximation
+    knowledge-sad-l15-outlook
+        CNN, RNN, and Transformer outlook

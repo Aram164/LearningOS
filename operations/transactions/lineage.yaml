@@ -1,6 +1,44 @@
 schema_version: 2
 type: semantic-lineage-ledger
 records:
+  covers:route-13f3ebff8cc9534c96100502:
+    claim_id: covers:route-13f3ebff8cc9534c96100502
+    claim_kind: route-covers
+    statement: route-13f3ebff8cc9534c96100502 covers knowledge-sad-l03-covariance,
+      knowledge-sad-l03-interpretation, knowledge-sad-l03-paired-data
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/xZ_z8KWkhXE.json: sha256:06581dec1e50d4dfa8b3fead4336ff0a4c2c53a4188622cdd421a58ff3485a90
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/xZ_z8KWkhXE.md: sha256:99cec92a5926234502255df3bce48ecdbce1ab7bf5e81dd8daae07162a1db399
+      evidence:
+      - route-locator:00:00-04:16
+      - 'external:https://www.youtube.com/watch?v=xZ_z8KWkhXE -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 3c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/xZ_z8KWkhXE.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/xZ_z8KWkhXE.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
   covers:route-1c01e7c903e30083cbe3009f:
     claim_id: covers:route-1c01e7c903e30083cbe3009f
     claim_kind: route-covers
@@ -105,6 +143,80 @@ records:
     admitted_by:
       request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
       idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-37c710174c2a5be9353cb154:
+    claim_id: covers:route-37c710174c2a5be9353cb154
+    claim_kind: route-covers
+    statement: route-37c710174c2a5be9353cb154 covers knowledge-sad-l04-bayes, knowledge-sad-l04-naive-bayes
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/O2L2Uv9pdDA.json: sha256:5a448b47b707dd511ba6cb3018e28f608e3e260512d1139c67ea50fd27a06de2
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/O2L2Uv9pdDA.md: sha256:096617dd15930100e6cb8068c6fd6ccb3910da18bc047d2f38a9934b301a08fe
+      evidence:
+      - route-locator:01:25-12:29
+      - 'external:https://www.youtube.com/watch?v=O2L2Uv9pdDA -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/O2L2Uv9pdDA.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/O2L2Uv9pdDA.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-37cd5e058977f4aa2f38ee19:
+    claim_id: covers:route-37cd5e058977f4aa2f38ee19
+    claim_kind: route-covers
+    statement: route-37cd5e058977f4aa2f38ee19 covers knowledge-sad-l06-expectation
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/KLs_7b7SKi4.json: sha256:8f8ce2a83321d7a10ef0c333cc220d7eb5274bb5f6de047214cf829ca1f51463
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/KLs_7b7SKi4.md: sha256:da52104f142f58e3641b92ed94cdb12e61f83c87fec0c07dd739d9b025a5919c
+      evidence:
+      - route-locator:03:40-10:28
+      - 'external:https://www.youtube.com/watch?v=KLs_7b7SKi4 -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/0d/1r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/KLs_7b7SKi4.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/KLs_7b7SKi4.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
     reviewed_by: ''
     status: supported
   covers:route-3c30c32cc585a9450ea0cb62:
@@ -816,6 +928,755 @@ records:
       idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
     reviewed_by: ''
     status: supported
+  covers:route-sad-l01-3b1b-53e6cce1:
+    claim_id: covers:route-sad-l01-3b1b-53e6cce1
+    claim_kind: route-covers
+    statement: route-sad-l01-3b1b-53e6cce1 covers knowledge-sad-l01-base-rates, knowledge-sad-l01-sampling-context
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/HZGCoVF3YvM.json: sha256:b681601894afa501e808c8569cfb1948c561b492dcfbd4f751e0cabcca73642b
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/HZGCoVF3YvM.md: sha256:721cef5df2123d2f1cd4dd4f4a6e2386b9aaacfdff8f0a5f8a4d994a37910736
+      evidence:
+      - route-locator:02:54-07:44
+      - 'external:https://www.youtube.com/watch?v=HZGCoVF3YvM -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/HZGCoVF3YvM.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/HZGCoVF3YvM.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l01-3b1b-fcc76a3f:
+    claim_id: covers:route-sad-l01-3b1b-fcc76a3f
+    claim_kind: route-covers
+    statement: route-sad-l01-3b1b-fcc76a3f covers knowledge-sad-l01-base-rates, knowledge-sad-l01-classification
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/lG4VkPoG3ko.json: sha256:b416c5df466f2f5a2dbed42e6326117dff31682200fcea3851ad209436f1bab3
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/lG4VkPoG3ko.md: sha256:e4174ccc4688322ed9e62d4223452b3e37bf01ef2ea3f2753dd9e8d2897e7d42
+      evidence:
+      - route-locator:00:00-02:09
+      - 'external:https://www.youtube.com/watch?v=lG4VkPoG3ko -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 2c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/lG4VkPoG3ko.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/lG4VkPoG3ko.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l01-kts-2af3910c:
+    claim_id: covers:route-sad-l01-kts-2af3910c
+    claim_kind: route-covers
+    statement: route-sad-l01-kts-2af3910c covers knowledge-sad-l01-distributions,
+      knowledge-sad-l01-location
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/HsDeAoBOyS4.json: sha256:aa178dc9d6b3c171fcf19d3cc44eed21cc96c1f3eaf224a3d03429bef455b01c
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/HsDeAoBOyS4.md: sha256:aab97df69c57a65b87daee29d38392cc72858010ecc65172853c623604a97848
+      evidence:
+      - route-locator:01:43-08:31
+      - 'external:https://www.youtube.com/watch?v=HsDeAoBOyS4 -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/HsDeAoBOyS4.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/HsDeAoBOyS4.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l01-kts-cb065066:
+    claim_id: covers:route-sad-l01-kts-cb065066
+    claim_kind: route-covers
+    statement: route-sad-l01-kts-cb065066 covers knowledge-sad-l01-location
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/ybyunHdinXo.json: sha256:939b05be6382626453ed72406c1f65e348bfa86fd2e2c0862f831f1301d480da
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/ybyunHdinXo.md: sha256:154d1a1e1b5d5e069944b180264cc51a17bab9c7c2619da6f482abe5c8246322
+      evidence:
+      - route-locator:00:04-01:58
+      - 'external:https://www.youtube.com/watch?v=ybyunHdinXo -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/ybyunHdinXo.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/ybyunHdinXo.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l01-statquest-33ecd555:
+    claim_id: covers:route-sad-l01-statquest-33ecd555
+    claim_kind: route-covers
+    statement: route-sad-l01-statquest-33ecd555 covers knowledge-sad-l01-classification
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/Kdsp6soqA7o.json: sha256:37df8468e3cbe74d3483712d96509cafc662eb048fb905fd891f66d341113384
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/Kdsp6soqA7o.md: sha256:0b7a9803b60d88100e76b0e04b055472d057000e4b1c63ebb8d5277693cf062d
+      evidence:
+      - route-locator:01:38-04:18
+      - 'external:https://www.youtube.com/watch?v=Kdsp6soqA7o -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/Kdsp6soqA7o.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/Kdsp6soqA7o.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l01-statquest-74c7d9c5:
+    claim_id: covers:route-sad-l01-statquest-74c7d9c5
+    claim_kind: route-covers
+    statement: route-sad-l01-statquest-74c7d9c5 covers knowledge-sad-l01-classification
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/vP06aMoz4v8.json: sha256:741ae64511777605a4f9e6226b67b899eca7bacbde4ccdbb4c98e642d5a9f86e
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/vP06aMoz4v8.md: sha256:3c357440c30854efce7bdc28286d1cbc6b82b4950de4928f89c55e7a88351f74
+      evidence:
+      - route-locator:02:46-05:28
+      - 'external:https://www.youtube.com/watch?v=vP06aMoz4v8 -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/vP06aMoz4v8.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/vP06aMoz4v8.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l02-kts-254d32a3:
+    claim_id: covers:route-sad-l02-kts-254d32a3
+    claim_kind: route-covers
+    statement: route-sad-l02-kts-254d32a3 covers knowledge-sad-l02-scales, knowledge-sad-l02-vocabulary
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/FZ4pEQxkVhU.json: sha256:81b96b627d3932538ea5bda0f4a221d47efe5c448ed69039e609700b80c937ff
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/FZ4pEQxkVhU.md: sha256:e800f2060797826ed53c94cdfbd6512e8c3a6c33558786af181b3a12de68dde7
+      evidence:
+      - route-locator:02:04-04:30
+      - 'external:https://www.youtube.com/watch?v=FZ4pEQxkVhU -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 2c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/FZ4pEQxkVhU.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/FZ4pEQxkVhU.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l02-kts-986a5336:
+    claim_id: covers:route-sad-l02-kts-986a5336
+    claim_kind: route-covers
+    statement: route-sad-l02-kts-986a5336 covers knowledge-sad-l02-dispersion
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/3oZrS3ZWVcA.json: sha256:bb08dd666f4083905d20a42114dc7466ea9ab5d81db7f2b9fbd67579325a0bf4
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/3oZrS3ZWVcA.md: sha256:e84441a99e52f52fa78eba0cc0e4f87597b154f683ec7a14418619aff1f59a11
+      evidence:
+      - route-locator:06:30-08:46
+      - 'external:https://www.youtube.com/watch?v=3oZrS3ZWVcA -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/0d/1r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/3oZrS3ZWVcA.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/3oZrS3ZWVcA.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l02-kts-aef32727:
+    claim_id: covers:route-sad-l02-kts-aef32727
+    claim_kind: route-covers
+    statement: route-sad-l02-kts-aef32727 covers knowledge-sad-l02-vocabulary
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/aJDXIG1P738.json: sha256:8dc8319f495bf8c2652b16c8db6313797ffacdfe975180f0c67099beca1a66f9
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/aJDXIG1P738.md: sha256:73497fcb3f4231b2d3e67e46405e85ab6550d784d97aeb800132eca02f8243ef
+      evidence:
+      - route-locator:01:16-03:05
+      - 'external:https://www.youtube.com/watch?v=aJDXIG1P738 -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/aJDXIG1P738.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/aJDXIG1P738.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l02-zedstats-103eea93:
+    claim_id: covers:route-sad-l02-zedstats-103eea93
+    claim_kind: route-covers
+    statement: route-sad-l02-zedstats-103eea93 covers knowledge-sad-l02-dispersion,
+      knowledge-sad-l02-location
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/qcTcsEdMgBo.json: sha256:20fa0be743c944f20c0d6b5e9ed0b71d5e64cd8cdd3faedd2a40a079a6a752d3
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/qcTcsEdMgBo.md: sha256:5c3f5b3df1459f754039482cc6ff8fbe6f34c9822b6c624d7721fac917c76a88
+      evidence:
+      - route-locator:02:54-04:08
+      - 'external:https://www.youtube.com/watch?v=qcTcsEdMgBo -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/qcTcsEdMgBo.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/qcTcsEdMgBo.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l03-kts-2769be33:
+    claim_id: covers:route-sad-l03-kts-2769be33
+    claim_kind: route-covers
+    statement: route-sad-l03-kts-2769be33 covers knowledge-sad-l03-simple-regression
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/Ekbw28n6IX0.json: sha256:1ec900cb497fc918098f9aee3a5e61c6b8a7128b33b536f4993cd0dc84c11edc
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/Ekbw28n6IX0.md: sha256:1b0fab0cf941f14a93fa02aebb8e29c3d93427f82c142ad4cc8508fc265fa331
+      evidence:
+      - route-locator:05:58-11:22
+      - 'external:https://www.youtube.com/watch?v=Ekbw28n6IX0 -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/Ekbw28n6IX0.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/Ekbw28n6IX0.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l03-kts-9e6bfe8d:
+    claim_id: covers:route-sad-l03-kts-9e6bfe8d
+    claim_kind: route-covers
+    statement: route-sad-l03-kts-9e6bfe8d covers knowledge-sad-l03-covariance, knowledge-sad-l03-paired-data
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/3I-aLUc6ylQ.json: sha256:317b51b5dc5ab7c9867ca3521e294ffcc5eec80e36aa5669e7855cac4100c4ec
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/3I-aLUc6ylQ.md: sha256:7de93d16c0983fd252c4802e3a79b3362c4a2a25198b96ea29dc106deebabe9e
+      evidence:
+      - route-locator:04:55-07:16
+      - 'external:https://www.youtube.com/watch?v=3I-aLUc6ylQ -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 2c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/3I-aLUc6ylQ.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/3I-aLUc6ylQ.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l04-kts-c57f26de:
+    claim_id: covers:route-sad-l04-kts-c57f26de
+    claim_kind: route-covers
+    statement: route-sad-l04-kts-c57f26de covers knowledge-sad-l04-bayes, knowledge-sad-l04-conditional,
+      knowledge-sad-l04-independence
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/ZlBog_1EyAM.json: sha256:7f348db6f91561aa0e93b8d8cb3b55b56b1ab229fb8183a65a7f2cce460a0f12
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/ZlBog_1EyAM.md: sha256:e9625ebfc99a29d811a3631442d8cbd8d7435905db5cfaf873a8afdc18134598
+      evidence:
+      - route-locator:03:53-06:28
+      - 'external:https://www.youtube.com/watch?v=ZlBog_1EyAM -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 3c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/ZlBog_1EyAM.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/ZlBog_1EyAM.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l05-jbstats-60fc5740:
+    claim_id: covers:route-sad-l05-jbstats-60fc5740
+    claim_kind: route-covers
+    statement: route-sad-l05-jbstats-60fc5740 covers knowledge-sad-l05-counting-probability,
+      knowledge-sad-l05-decision-grid
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/L2KMttDm3aY.json: sha256:8e3288abad57ebcd3878308abfa474772e736721dbd5fc9a9b7de217be6f06c0
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/L2KMttDm3aY.md: sha256:b0e79f17322efc8beddd2c8226584ffac6bf4e960fa564f6992bdc945f7407ee
+      evidence:
+      - route-locator:00:35-04:06
+      - 'external:https://www.youtube.com/watch?v=L2KMttDm3aY -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 2c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/L2KMttDm3aY.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/L2KMttDm3aY.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l06-jbstats-ff560e73:
+    claim_id: covers:route-sad-l06-jbstats-ff560e73
+    claim_kind: route-covers
+    statement: route-sad-l06-jbstats-ff560e73 covers knowledge-sad-l06-concentration,
+      knowledge-sad-l06-expectation, knowledge-sad-l06-random-variable, knowledge-sad-l06-variance-covariance
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/Vyk8HQOckIE.json: sha256:827688bdb1b62227552607ba1bc26454e64284982f171ae4d9afce0162422a90
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/Vyk8HQOckIE.md: sha256:c1d224bb45483595b95ce1771e4c23e7e0c36934e2b7e000e06589d2a62fd92a
+      evidence:
+      - route-locator:04:27-06:01
+      - 'external:https://www.youtube.com/watch?v=Vyk8HQOckIE -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 4c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/Vyk8HQOckIE.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/Vyk8HQOckIE.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l06-kts-b37953cf:
+    claim_id: covers:route-sad-l06-kts-b37953cf
+    claim_kind: route-covers
+    statement: route-sad-l06-kts-b37953cf covers knowledge-sad-l06-distribution-functions,
+      knowledge-sad-l06-random-variable
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/DoHTsDrzAQk.json: sha256:23430146d99eb3f9c20b1423760ea44b7e8ca7ba2d0ceb23940e3641f0c541a4
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/DoHTsDrzAQk.md: sha256:87502f1eceea22bd2c4e55d9110a423865e5ffb25df35cd1f59a9f516f0e883b
+      evidence:
+      - route-locator:04:28-07:26
+      - 'external:https://www.youtube.com/watch?v=DoHTsDrzAQk -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 2c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/DoHTsDrzAQk.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/DoHTsDrzAQk.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l07-jbstats-274a2f0f:
+    claim_id: covers:route-sad-l07-jbstats-274a2f0f
+    claim_kind: route-covers
+    statement: route-sad-l07-jbstats-274a2f0f covers knowledge-sad-l07-bernoulli-binomial,
+      knowledge-sad-l07-geometric, knowledge-sad-l07-hypergeometric, knowledge-sad-l07-model-selection,
+      knowledge-sad-l07-poisson, knowledge-sad-l07-relationships
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/UrOXRvG9oYE.json: sha256:42cac7b391540139e52c0ab62d2dd052e4b70aa51a3a322a81525f14826f2564
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/UrOXRvG9oYE.md: sha256:04e7d8244282ce781e95670115df7693fb223ac7cac08eed86046acd9fe7a0c8
+      evidence:
+      - route-locator:01:43-03:06
+      - 'external:https://www.youtube.com/watch?v=UrOXRvG9oYE -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 0c/6d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/UrOXRvG9oYE.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/UrOXRvG9oYE.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l07-kts-573039b8:
+    claim_id: covers:route-sad-l07-kts-573039b8
+    claim_kind: route-covers
+    statement: route-sad-l07-kts-573039b8 covers knowledge-sad-l07-geometric, knowledge-sad-l07-relationships
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/2v-4NrbVVr0.json: sha256:c279652b4e30a057b4534f404a9fed6a764ff765244d1b9228ca5765863c941d
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/2v-4NrbVVr0.md: sha256:6e508328f1fc20b1560f3e064e043b808fcba7d1702315d5ecfff561b3057ca5
+      evidence:
+      - route-locator:00:03-05:00
+      - 'external:https://www.youtube.com/watch?v=2v-4NrbVVr0 -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/2v-4NrbVVr0.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/2v-4NrbVVr0.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l07-statquest-be222dd2:
+    claim_id: covers:route-sad-l07-statquest-be222dd2
+    claim_kind: route-covers
+    statement: route-sad-l07-statquest-be222dd2 covers knowledge-sad-l07-bernoulli-binomial
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/J8jNoF-K8E8.json: sha256:d32e666d85fe96f55b7c4a931d60f0e81e988fbbfe8bd03d78a197941a98e6dd
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/J8jNoF-K8E8.md: sha256:97c6a028300ed7bec0988136a8c0747f5c5fc2e47b91cbd0f374752865104409
+      evidence:
+      - route-locator:05:34-09:09
+      - 'external:https://www.youtube.com/watch?v=J8jNoF-K8E8 -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/0d/1r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/J8jNoF-K8E8.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/J8jNoF-K8E8.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l08-3b1b-b70d0fa4:
+    claim_id: covers:route-sad-l08-3b1b-b70d0fa4
+    claim_kind: route-covers
+    statement: route-sad-l08-3b1b-b70d0fa4 covers knowledge-sad-l08-clt, knowledge-sad-l08-normal,
+      knowledge-sad-l08-standardization, knowledge-sad-l08-transform-sum
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/zeJD6dqJ5lo.json: sha256:bce9a9ae482459c8786dbfadf7b20d1bdc1049cfc131d260d12dfa4582813394
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/zeJD6dqJ5lo.md: sha256:71361b28ceb2d4d0d17a9a98e242233bf9f5f8d972d359e93448c5c1385952bd
+      evidence:
+      - route-locator:05:01-08:07
+      - 'external:https://www.youtube.com/watch?v=zeJD6dqJ5lo -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 4c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/zeJD6dqJ5lo.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/zeJD6dqJ5lo.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
   covers:route-sad-l08-arbeitsbuch-619-transfer:
     claim_id: covers:route-sad-l08-arbeitsbuch-619-transfer
     claim_kind: route-covers
@@ -880,5 +1741,1398 @@ records:
     admitted_by:
       request_id: repair-clt-652f4642affe40a5a3fe42e7238f7766
       idempotency_key: repair-clt-652f4642affe40a5a3fe42e7238f7766
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l08-iain-3f323b42:
+    claim_id: covers:route-sad-l08-iain-3f323b42
+    claim_kind: route-covers
+    statement: route-sad-l08-iain-3f323b42 covers knowledge-sad-l08-normal
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/RNmDyzYw7aQ.json: sha256:6e1cb7786183fcda26cf4f09a2730e7e8ebe4ca615366dd3201e8916da9b0dd1
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/RNmDyzYw7aQ.md: sha256:ed85b5d3650e132774daa5f8771b0322e34a70315ac4c35cb3c6fcaf8a9223f0
+      evidence:
+      - route-locator:00:05-03:48
+      - 'external:https://www.youtube.com/watch?v=RNmDyzYw7aQ -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 0c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/RNmDyzYw7aQ.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/RNmDyzYw7aQ.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l08-jbstats-356cb7ef:
+    claim_id: covers:route-sad-l08-jbstats-356cb7ef
+    claim_kind: route-covers
+    statement: route-sad-l08-jbstats-356cb7ef covers knowledge-sad-l08-clt
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/Pujol1yC1_A.json: sha256:de39728cc2a4757f4f296adbfbecd6025e1019613336ce22525b30a46132b323
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/Pujol1yC1_A.md: sha256:7afcf84c1f9f19eda6cd4416ab60dfbbcde388aa875f1c9e07bfd955f3221d1e
+      evidence:
+      - route-locator:01:38-12:44
+      - 'external:https://www.youtube.com/watch?v=Pujol1yC1_A -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/Pujol1yC1_A.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/Pujol1yC1_A.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l08-jbstats-79086b7d:
+    claim_id: covers:route-sad-l08-jbstats-79086b7d
+    claim_kind: route-covers
+    statement: route-sad-l08-jbstats-79086b7d covers knowledge-sad-l08-normal, knowledge-sad-l08-standardization
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/iYiOVISWXS4.json: sha256:d25c30a1094e6c5f7fbe4802d4e079ce966ea111705be6736fa230fcad6311e6
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/iYiOVISWXS4.md: sha256:c25794cc7b6966fdf64856bc7a29371df6a6a97be2b3ef92b2c4d9de716a48bf
+      evidence:
+      - route-locator:01:44-02:43
+      - 'external:https://www.youtube.com/watch?v=iYiOVISWXS4 -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/iYiOVISWXS4.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/iYiOVISWXS4.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l08-statquest-894e979e:
+    claim_id: covers:route-sad-l08-statquest-894e979e
+    claim_kind: route-covers
+    statement: route-sad-l08-statquest-894e979e covers knowledge-sad-l08-clt
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/YAlJCEDH2uY.json: sha256:079e36db711e8b7f00668a611fd7e0d62622ee06f4f5e340e6520f05154217f8
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/YAlJCEDH2uY.md: sha256:a31fc8a0ba09adf1d21a154b354802ec154b9b40ae6e420e97a6165dab124773
+      evidence:
+      - route-locator:01:06-04:04
+      - 'external:https://www.youtube.com/watch?v=YAlJCEDH2uY -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/YAlJCEDH2uY.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/YAlJCEDH2uY.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l08-statquest-aba65d1a:
+    claim_id: covers:route-sad-l08-statquest-aba65d1a
+    claim_kind: route-covers
+    statement: route-sad-l08-statquest-aba65d1a covers knowledge-sad-l08-likelihood
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/pYxNSUDSFH4.json: sha256:e1e8b7c0ded08e44435db99e850c8be46edfa29e194cfe928954e337e21d380f
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/pYxNSUDSFH4.md: sha256:f7c386ddb3473dd73e899a2161c9dc2dfe1d43b41b1bc0bfe7a1ba0d7a07e11d
+      evidence:
+      - route-locator:00:47-03:36
+      - 'external:https://www.youtube.com/watch?v=pYxNSUDSFH4 -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/pYxNSUDSFH4.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/pYxNSUDSFH4.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l08-statquest-fbb1015c:
+    claim_id: covers:route-sad-l08-statquest-fbb1015c
+    claim_kind: route-covers
+    statement: route-sad-l08-statquest-fbb1015c covers knowledge-sad-l08-likelihood,
+      knowledge-sad-l08-mle, knowledge-sad-l08-normal
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/XepXtl9YKwc.json: sha256:dd9d7429e684ac68e7340b1ed3d178b84c196ade36c21d019145eb15d0f553ee
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/XepXtl9YKwc.md: sha256:fd86183dd41054549edfe5f50cf33d6a97b9d6148856b930c132d8bc6c3747d4
+      evidence:
+      - route-locator:03:25-04:55
+      - 'external:https://www.youtube.com/watch?v=XepXtl9YKwc -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 2c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/XepXtl9YKwc.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/XepXtl9YKwc.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l09-jbstats-10cb17e3:
+    claim_id: covers:route-sad-l09-jbstats-10cb17e3
+    claim_kind: route-covers
+    statement: route-sad-l09-jbstats-10cb17e3 covers knowledge-sad-l09-standard-error,
+      knowledge-sad-l09-t-interval, knowledge-sad-l09-z-interval
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/Uv6nGIgZMVw.json: sha256:fab462d777b3b0089201911509dfb59408862cee173d936b560c9a5144220063
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/Uv6nGIgZMVw.md: sha256:8876211f16713d03ff4139b320ca32862fed89691fb66af011550c8fa65b8540
+      evidence:
+      - route-locator:00:18-01:58
+      - 'external:https://www.youtube.com/watch?v=Uv6nGIgZMVw -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/2d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/Uv6nGIgZMVw.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/Uv6nGIgZMVw.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l09-jbstats-5c146010:
+    claim_id: covers:route-sad-l09-jbstats-5c146010
+    claim_kind: route-covers
+    statement: route-sad-l09-jbstats-5c146010 covers knowledge-sad-l09-data-bias,
+      knowledge-sad-l09-t-interval
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/CF4Vdqiwhaw.json: sha256:72c4c6a085180e88acc803916265642d41003733d125ce562256d4d34dde3440
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/CF4Vdqiwhaw.md: sha256:6ac314684c57fae3eff92f937a5d28e572882329190e5a4bfd48a86c83347f64
+      evidence:
+      - route-locator:00:36-01:09
+      - 'external:https://www.youtube.com/watch?v=CF4Vdqiwhaw -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/CF4Vdqiwhaw.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/CF4Vdqiwhaw.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l09-kts-23822c57:
+    claim_id: covers:route-sad-l09-kts-23822c57
+    claim_kind: route-covers
+    statement: route-sad-l09-kts-23822c57 covers knowledge-sad-l09-estimator, knowledge-sad-l09-standard-error,
+      knowledge-sad-l09-z-interval
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/DdwTa28W4Os.json: sha256:c8bb0ce19afd0f20fc82f758de975492a43f4e4370eee52a46d304995e376b9b
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/DdwTa28W4Os.md: sha256:bcf9002a34bbe2cf945586c8f7eb60861b50c9b92f11ff691fd32434abde4c6b
+      evidence:
+      - route-locator:07:53-13:00
+      - 'external:https://www.youtube.com/watch?v=DdwTa28W4Os -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 3c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/DdwTa28W4Os.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/DdwTa28W4Os.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l09-statquest-481095bc:
+    claim_id: covers:route-sad-l09-statquest-481095bc
+    claim_kind: route-covers
+    statement: route-sad-l09-statquest-481095bc covers knowledge-sad-l09-standard-error
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/A82brFpdr9g.json: sha256:690bc5168a3f7fdbbab99e7bd66f1d478716669196462659317b3821dd466848
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/A82brFpdr9g.md: sha256:8769ba8b0c2917917466cb260e1490f82e18ab73d0a0eb9384a546e175ef0d54
+      evidence:
+      - route-locator:00:52-02:10
+      - 'external:https://www.youtube.com/watch?v=A82brFpdr9g -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/A82brFpdr9g.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/A82brFpdr9g.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l09-statquest-643478b8:
+    claim_id: covers:route-sad-l09-statquest-643478b8
+    claim_kind: route-covers
+    statement: route-sad-l09-statquest-643478b8 covers knowledge-sad-l09-bootstrap,
+      knowledge-sad-l09-estimator, knowledge-sad-l09-standard-error
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/XNgt7F6FqDU.json: sha256:266e7231e3040c1a48128556092d2d04014a12086e4448a6ac27be5282bfc4d6
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/XNgt7F6FqDU.md: sha256:78342bb4c3d09c1cf587852a2a43f36502bcabc9a525a6af5fd232ca739fc545
+      evidence:
+      - route-locator:04:00-05:47
+      - 'external:https://www.youtube.com/watch?v=XNgt7F6FqDU -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 2c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/XNgt7F6FqDU.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/XNgt7F6FqDU.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l09-statquest-b6f4132e:
+    claim_id: covers:route-sad-l09-statquest-b6f4132e
+    claim_kind: route-covers
+    statement: route-sad-l09-statquest-b6f4132e covers knowledge-sad-l09-bootstrap
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/TqOeMYtOc1w.json: sha256:45303c6fb232b117960a7bd96c79df9372a419aeb42c36cc95070bf0922fe4fe
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/TqOeMYtOc1w.md: sha256:d8159f1c101b600669f35d6a6ac9077e410f5f53ec2ee3a3ccccc7c79c492bd9
+      evidence:
+      - route-locator:02:55-03:43
+      - 'external:https://www.youtube.com/watch?v=TqOeMYtOc1w -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/0d/1r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/TqOeMYtOc1w.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/TqOeMYtOc1w.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l09-statquest-debf2550:
+    claim_id: covers:route-sad-l09-statquest-debf2550
+    claim_kind: route-covers
+    statement: route-sad-l09-statquest-debf2550 covers knowledge-sad-l09-bootstrap,
+      knowledge-sad-l09-standard-error
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/Xz0x-8-cgaQ.json: sha256:68c22ad2860b53fbb630abf9f5673ded8211b48f858e213354f0f66d14425a3a
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/Xz0x-8-cgaQ.md: sha256:df3e413db06afecbeb75d2a652a086d35bb75fc929bd887d9528c4cf5d15d293
+      evidence:
+      - route-locator:02:28-05:00
+      - 'external:https://www.youtube.com/watch?v=Xz0x-8-cgaQ -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/Xz0x-8-cgaQ.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/Xz0x-8-cgaQ.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l09-zedstats-7578840b:
+    claim_id: covers:route-sad-l09-zedstats-7578840b
+    claim_kind: route-covers
+    statement: route-sad-l09-zedstats-7578840b covers knowledge-sad-l09-estimator,
+      knowledge-sad-l09-standard-error, knowledge-sad-l09-t-interval, knowledge-sad-l09-z-interval
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/EJe3jiZNwUU.json: sha256:f1a6072317b206e7fe290ac5a43f08cfcfb415331dd09ca6d2b3f0a4ba178f7c
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/EJe3jiZNwUU.md: sha256:cd8ab7a25da87be8f8a20aa298942d3691d6c47c6571b94d1e4df3ae4def83ba
+      evidence:
+      - route-locator:06:56-13:41
+      - 'external:https://www.youtube.com/watch?v=EJe3jiZNwUU -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 4c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/EJe3jiZNwUU.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/EJe3jiZNwUU.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l10-jbstats-50936f53:
+    claim_id: covers:route-sad-l10-jbstats-50936f53
+    claim_kind: route-covers
+    statement: route-sad-l10-jbstats-50936f53 covers knowledge-sad-l10-errors-power,
+      knowledge-sad-l10-test-model
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/7mE-K_w1v90.json: sha256:b2fc695f4ad1d02f5ddadb57699d2099f34db64ad4bfa6010f3313c15fd2a499
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/7mE-K_w1v90.md: sha256:3643d81d68e4291a6215c6b897bbd1fa9a3bf2c4c62273b7065411693b6d6255
+      evidence:
+      - route-locator:03:57-05:43
+      - 'external:https://www.youtube.com/watch?v=7mE-K_w1v90 -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/7mE-K_w1v90.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/7mE-K_w1v90.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l10-jbstats-71c4f9be:
+    claim_id: covers:route-sad-l10-jbstats-71c4f9be
+    claim_kind: route-covers
+    statement: route-sad-l10-jbstats-71c4f9be covers knowledge-sad-l10-errors-power,
+      knowledge-sad-l10-tails-pvalue, knowledge-sad-l10-test-model
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/UsU-O2Z1rAs.json: sha256:c8b5efd414381f8a2ad961ab080512c557eb24d46b3f05c10c4c52a94827df42
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/UsU-O2Z1rAs.md: sha256:dfd5f07fd5ac5f8c75f32864c30639f4af41387ee200ca0a91ae9ce5f735359d
+      evidence:
+      - route-locator:00:55-02:52
+      - 'external:https://www.youtube.com/watch?v=UsU-O2Z1rAs -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 2c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/UsU-O2Z1rAs.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/UsU-O2Z1rAs.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l10-jbstats-ab5211d0:
+    claim_id: covers:route-sad-l10-jbstats-ab5211d0
+    claim_kind: route-covers
+    statement: route-sad-l10-jbstats-ab5211d0 covers knowledge-sad-l10-tails-pvalue,
+      knowledge-sad-l10-test-model
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/tTeMYuS87oU.json: sha256:78a82fba5a8f3bf81021fe52dbba94c0685f90924126207a07d5a7e0466d9975
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/tTeMYuS87oU.md: sha256:bcdddaa765f586c314e4c88e8ddbd71c814d62b1421bafd619052fac8c65afd7
+      evidence:
+      - route-locator:00:57-02:58
+      - 'external:https://www.youtube.com/watch?v=tTeMYuS87oU -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/tTeMYuS87oU.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/tTeMYuS87oU.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l10-kts-bc6c3f89:
+    claim_id: covers:route-sad-l10-kts-bc6c3f89
+    claim_kind: route-covers
+    statement: route-sad-l10-kts-bc6c3f89 covers knowledge-sad-l10-test-model, knowledge-sad-l10-z-t
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/rbYg5IsOYaM.json: sha256:66e46c04bcf0e7891088c362f454b7552857fb31b33205664a7a3da5ef276f60
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/rbYg5IsOYaM.md: sha256:038176d8310163c4efba5831acfaf1f8c501b1db3c9e02485b6b01457c6703f2
+      evidence:
+      - route-locator:07:12-09:23
+      - 'external:https://www.youtube.com/watch?v=rbYg5IsOYaM -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 2c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/rbYg5IsOYaM.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/rbYg5IsOYaM.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l10-statquest-01230a73:
+    claim_id: covers:route-sad-l10-statquest-01230a73
+    claim_kind: route-covers
+    statement: route-sad-l10-statquest-01230a73 covers knowledge-sad-l10-errors-power,
+      knowledge-sad-l10-tails-pvalue
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/bsZGt-caXO4.json: sha256:b9f513b5c8465bd2ea567222a00a87a3d6a03f720ea948b5fa13f9c81f87d9e8
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/bsZGt-caXO4.md: sha256:c2dd4585ef1d92749a9d55c6352294acd575d8411da010b3864d0e4a7cb75488
+      evidence:
+      - route-locator:01:52-02:38
+      - 'external:https://www.youtube.com/watch?v=bsZGt-caXO4 -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/bsZGt-caXO4.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/bsZGt-caXO4.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l10-statquest-a6d10f71:
+    claim_id: covers:route-sad-l10-statquest-a6d10f71
+    claim_kind: route-covers
+    statement: route-sad-l10-statquest-a6d10f71 covers knowledge-sad-l10-errors-power,
+      knowledge-sad-l10-tails-pvalue
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/vemZtEM63GY.json: sha256:eaae3b6d63ec2405e20cebe46bdb4b9c74aabae6400801ef2ef5306c89011109
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/vemZtEM63GY.md: sha256:79165a0b50145eba97d6d9c66cdc3ac02329744b9846a437265e205557db37b2
+      evidence:
+      - route-locator:05:35-08:51
+      - 'external:https://www.youtube.com/watch?v=vemZtEM63GY -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 0c/2d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/vemZtEM63GY.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/vemZtEM63GY.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l10-statquest-af56bf5c:
+    claim_id: covers:route-sad-l10-statquest-af56bf5c
+    claim_kind: route-covers
+    statement: route-sad-l10-statquest-af56bf5c covers knowledge-sad-l10-test-model
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/0oc49DyA3hU.json: sha256:d9068dd3f1f20456f6eac95fc4e35b5de99a88ac800f9ccddd5390c65556105b
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/0oc49DyA3hU.md: sha256:4aca9e4e5215fb715a8857919247808a71a0e7c90ea0f9b9c787a6299b80c388
+      evidence:
+      - route-locator:09:55-12:43
+      - 'external:https://www.youtube.com/watch?v=0oc49DyA3hU -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 0c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/0oc49DyA3hU.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/0oc49DyA3hU.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l10-statquest-b50dbc7a:
+    claim_id: covers:route-sad-l10-statquest-b50dbc7a
+    claim_kind: route-covers
+    statement: route-sad-l10-statquest-b50dbc7a covers knowledge-sad-l10-tails-pvalue,
+      knowledge-sad-l10-test-model
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/JQc3yx0-Q9E.json: sha256:bdb29faf3b6a4d289f1027fca9593213bdbc9f0555be4ad7d27b82a91e303e4b
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/JQc3yx0-Q9E.md: sha256:348b1031b6cee5df0136a31b33b6b4069cf6da1461a676a62aad54a0f5831dbe
+      evidence:
+      - route-locator:04:49-09:12
+      - 'external:https://www.youtube.com/watch?v=JQc3yx0-Q9E -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 2c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/JQc3yx0-Q9E.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/JQc3yx0-Q9E.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l10-zedstats-9d0166cf:
+    claim_id: covers:route-sad-l10-zedstats-9d0166cf
+    claim_kind: route-covers
+    statement: route-sad-l10-zedstats-9d0166cf covers knowledge-sad-l10-ci-duality,
+      knowledge-sad-l10-errors-power, knowledge-sad-l10-tails-pvalue, knowledge-sad-l10-test-model
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/8JIe_cz6qGA.json: sha256:9feac001865d54d7357de3e87092f055f8bc43b953420a578f1a3f50e487a228
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/8JIe_cz6qGA.md: sha256:bc77d8564355e2601e46dc03c8c232ed58c05c0d21c750f51826a65e0b4591c4
+      evidence:
+      - route-locator:19:17-26:32
+      - 'external:https://www.youtube.com/watch?v=8JIe_cz6qGA -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 4c/0d/1r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/8JIe_cz6qGA.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/8JIe_cz6qGA.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l12-statquest-6b496022:
+    claim_id: covers:route-sad-l12-statquest-6b496022
+    claim_kind: route-covers
+    statement: route-sad-l12-statquest-6b496022 covers knowledge-sad-l12-tree-model
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/_L39rN6gz7Y.json: sha256:8197d89f59b06f7f194e7d8a10b1c7e21bc2cc14f584467f4cef17462d317143
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/_L39rN6gz7Y.md: sha256:97826af17d199a1fc1c1e9084ed7c0ff03eb8b52ab3feb394d52db20e0f4bc01
+      evidence:
+      - route-locator:06:46-12:22
+      - 'external:https://www.youtube.com/watch?v=_L39rN6gz7Y -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/_L39rN6gz7Y.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/_L39rN6gz7Y.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l12-statquest-74b7a261:
+    claim_id: covers:route-sad-l12-statquest-74b7a261
+    claim_kind: route-covers
+    statement: route-sad-l12-statquest-74b7a261 covers knowledge-sad-l12-pruning,
+      knowledge-sad-l12-regression
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/D0efHEJsfHo.json: sha256:83d27ecfb46ba8fa07b1ea077bbfe6ceb99ff33d6d60d650b3cffe003da6fed9
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/D0efHEJsfHo.md: sha256:390883c678e96bf9849b66d8ee184a182f08bc36d740ac6b34260178b6bb4251
+      evidence:
+      - route-locator:04:11-10:48
+      - 'external:https://www.youtube.com/watch?v=D0efHEJsfHo -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/D0efHEJsfHo.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/D0efHEJsfHo.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l12-statquest-b8a64375:
+    claim_id: covers:route-sad-l12-statquest-b8a64375
+    claim_kind: route-covers
+    statement: route-sad-l12-statquest-b8a64375 covers knowledge-sad-l12-bagging-forest
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/J4Wdy0Wc_xQ.json: sha256:352e7d49fa266758d2651d9b7afa07d9593faa7d7cc0db6062100385b6b4dfbc
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/J4Wdy0Wc_xQ.md: sha256:718409fe51bd528cf9f5fa92c6f30b2ecd1f1118165de6d8b9f31c906b808218
+      evidence:
+      - route-locator:01:17-04:10
+      - 'external:https://www.youtube.com/watch?v=J4Wdy0Wc_xQ -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/J4Wdy0Wc_xQ.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/J4Wdy0Wc_xQ.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l12-statquest-d6d86b8e:
+    claim_id: covers:route-sad-l12-statquest-d6d86b8e
+    claim_kind: route-covers
+    statement: route-sad-l12-statquest-d6d86b8e covers knowledge-sad-l12-pruning,
+      knowledge-sad-l12-regression, knowledge-sad-l12-tree-model
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/g9c66TUylZ4.json: sha256:13844a6aaeb4e5b095c41af26411098e53c11f33725cfcc02139fc5a3357e031
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/g9c66TUylZ4.md: sha256:ef7c557cc97f37e1e305b65af867883d7d3c5398e0f8538b069ddfb6ae07ff1c
+      evidence:
+      - route-locator:06:59-12:58
+      - 'external:https://www.youtube.com/watch?v=g9c66TUylZ4 -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 3c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/g9c66TUylZ4.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/g9c66TUylZ4.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l12-statquest-e1abe39c:
+    claim_id: covers:route-sad-l12-statquest-e1abe39c
+    claim_kind: route-covers
+    statement: route-sad-l12-statquest-e1abe39c covers knowledge-sad-l12-boosting,
+      knowledge-sad-l12-tree-model
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/LsK-xG1cLYA.json: sha256:978856b4d8a490a27afbb0f105c8e6d50042a52ce9c9548f01f11144d11ca071
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/LsK-xG1cLYA.md: sha256:d8fbf3a7af5db824649d9490c0b0afe442900c566f7fa6d43d1e2de4012d7bcf
+      evidence:
+      - route-locator:04:09-15:32
+      - 'external:https://www.youtube.com/watch?v=LsK-xG1cLYA -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/LsK-xG1cLYA.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/LsK-xG1cLYA.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l14-statquest-a2526559:
+    claim_id: covers:route-sad-l14-statquest-a2526559
+    claim_kind: route-covers
+    statement: route-sad-l14-statquest-a2526559 covers knowledge-sad-l14-gaussian,
+      knowledge-sad-l14-nb-recap, knowledge-sad-l14-numeric
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/H3EjCKtlVog.json: sha256:1bde53f258e9153af13df279d05813bb5ee0487890248a3812fa546f63b43fcf
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/H3EjCKtlVog.md: sha256:51b6b0abed58727922e42307a7e312f5df4a61304ac2d8dfc496ab3c0cee94c7
+      evidence:
+      - route-locator:01:14-02:22
+      - 'external:https://www.youtube.com/watch?v=H3EjCKtlVog -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 3c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/H3EjCKtlVog.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/H3EjCKtlVog.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l15-3b1b-3bd76e77:
+    claim_id: covers:route-sad-l15-3b1b-3bd76e77
+    claim_kind: route-covers
+    statement: route-sad-l15-3b1b-3bd76e77 covers knowledge-sad-l15-backprop, knowledge-sad-l15-forward
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/tIeHLnjs5U8.json: sha256:2820353db9b557db3689f3b098da1e2760bf81b2ded887d187de253b573b8b33
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/tIeHLnjs5U8.md: sha256:e8ced74fddd59b68006cfed1e37db218b88537bac40f109757921b3c326379af
+      evidence:
+      - route-locator:02:27-04:07
+      - 'external:https://www.youtube.com/watch?v=tIeHLnjs5U8 -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/1d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/tIeHLnjs5U8.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/tIeHLnjs5U8.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l15-3b1b-64e09375:
+    claim_id: covers:route-sad-l15-3b1b-64e09375
+    claim_kind: route-covers
+    statement: route-sad-l15-3b1b-64e09375 covers knowledge-sad-l15-backprop, knowledge-sad-l15-forward,
+      knowledge-sad-l15-training
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/Ilg3gGewQ5U.json: sha256:4729f192264b41e1fb1b2ece2e8a81d5fcee81f61bcdfce725bf456d95cf42ed
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/Ilg3gGewQ5U.md: sha256:5e47b33acac53182f202fac7a59e06a88a93dd8715653dc79609366900b13c6b
+      evidence:
+      - route-locator:03:39-09:14
+      - 'external:https://www.youtube.com/watch?v=Ilg3gGewQ5U -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 0c/3d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/Ilg3gGewQ5U.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/Ilg3gGewQ5U.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l15-3b1b-912ab5c3:
+    claim_id: covers:route-sad-l15-3b1b-912ab5c3
+    claim_kind: route-covers
+    statement: route-sad-l15-3b1b-912ab5c3 covers knowledge-sad-l15-activation, knowledge-sad-l15-forward,
+      knowledge-sad-l15-neuron
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/aircAruvnKk.json: sha256:b31a17572a9934381ba457cca86b420760c2a65123da08c07dfecf8ecee78be2
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/aircAruvnKk.md: sha256:38ff1541f4ff98d0e97ee06031edae24865847bfc8c7769e81aec273a16eba03
+      evidence:
+      - route-locator:09:08-12:27
+      - 'external:https://www.youtube.com/watch?v=aircAruvnKk -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 3c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/aircAruvnKk.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/aircAruvnKk.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l15-3b1b-be47a6f6:
+    claim_id: covers:route-sad-l15-3b1b-be47a6f6
+    claim_kind: route-covers
+    statement: route-sad-l15-3b1b-be47a6f6 covers knowledge-sad-l15-forward, knowledge-sad-l15-training
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/IHZwWFHWa-w.json: sha256:7b0a942c6da8ba0e862529b0c64f5445679a8a0ad703dae32341570707f90cbb
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/IHZwWFHWa-w.md: sha256:83bb411e288c3d0d4f198a63017c18b0141cd05abf8c749b4f3f25667182fdee
+      evidence:
+      - route-locator:02:31-05:09
+      - 'external:https://www.youtube.com/watch?v=IHZwWFHWa-w -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 0c/2d/1r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/IHZwWFHWa-w.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/IHZwWFHWa-w.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l15-karpathy-f4cc482a:
+    claim_id: covers:route-sad-l15-karpathy-f4cc482a
+    claim_kind: route-covers
+    statement: route-sad-l15-karpathy-f4cc482a covers knowledge-sad-l15-activation,
+      knowledge-sad-l15-backprop, knowledge-sad-l15-forward, knowledge-sad-l15-neuron,
+      knowledge-sad-l15-training
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/VMj-3S1tku0.json: sha256:c7c58dd76b4d77c0f3a91e9f5a03c1eece30dabb178d85cc8df5edbc19ea475d
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/VMj-3S1tku0.md: sha256:f37507defb7bcb8a1729fcbf6beb45a548ad61da50e333553b429e88f6c6d2d7
+      evidence:
+      - route-locator:34:31-38:14
+      - 'external:https://www.youtube.com/watch?v=VMj-3S1tku0 -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 5c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/VMj-3S1tku0.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/VMj-3S1tku0.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l15-statquest-62d1ad03:
+    claim_id: covers:route-sad-l15-statquest-62d1ad03
+    claim_kind: route-covers
+    statement: route-sad-l15-statquest-62d1ad03 covers knowledge-sad-l15-backprop,
+      knowledge-sad-l15-forward, knowledge-sad-l15-training
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/IN2XmBhILt4.json: sha256:f7b1bc0d5e3d2dbff6b5a46dd4ca405b7973bca086c1492efde36f0f0f472901
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/IN2XmBhILt4.md: sha256:5e7757eeee5e5566cbca6bc66bb729bca813c05d63d5a868be46df6c5db3d7c6
+      evidence:
+      - route-locator:10:41-13:30
+      - 'external:https://www.youtube.com/watch?v=IN2XmBhILt4 -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 3c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/IN2XmBhILt4.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/IN2XmBhILt4.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l15-statquest-b4da2828:
+    claim_id: covers:route-sad-l15-statquest-b4da2828
+    claim_kind: route-covers
+    statement: route-sad-l15-statquest-b4da2828 covers knowledge-sad-l15-activation,
+      knowledge-sad-l15-forward, knowledge-sad-l15-neuron
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/CqOfi41LfDw.json: sha256:1c95cdf284e057123211835eb2f0d1d9ffe7624d7da5b2fabe487e0208f6c39a
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/CqOfi41LfDw.md: sha256:ad2c4b30c1596e00efd80e1ba0b58100f4b908ef64d2f3dd9f01a9dee88e2bc6
+      evidence:
+      - route-locator:08:25-15:25
+      - 'external:https://www.youtube.com/watch?v=CqOfi41LfDw -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 3c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/CqOfi41LfDw.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/CqOfi41LfDw.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l15-statquest-ddd295f3:
+    claim_id: covers:route-sad-l15-statquest-ddd295f3
+    claim_kind: route-covers
+    statement: route-sad-l15-statquest-ddd295f3 covers knowledge-sad-l15-training
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 47
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l05: 14
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l08: 22
+        unit-m2-sad-l09: 14
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l14: 15
+        unit-m2-sad-l15: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/vMh0zPT0tLI.json: sha256:282eadef1690e3077f026ea3cccdd926c282c04892c1d0678a43130737e7585e
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/vMh0zPT0tLI.md: sha256:f7449bcfecbc201a46b2830392a93edb992c92c24b14627c92fa58dea344a326
+      evidence:
+      - route-locator:04:21-07:18
+      - 'external:https://www.youtube.com/watch?v=vMh0zPT0tLI -- trail: verified live
+        2026-09-15 (VERIFIED-URLS); transcript word-verified; recheck 1c/0d/0r'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/vMh0zPT0tLI.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/proposals/vMh0zPT0tLI.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-video-routes-2026-09-15
+      idempotency_key: video-routes-import-2026-09-15-retry2
     reviewed_by: ''
     status: supported
