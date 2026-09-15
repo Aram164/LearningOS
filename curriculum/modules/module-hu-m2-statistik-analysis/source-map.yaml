@@ -10968,8 +10968,8 @@ sources:
     - knowledge-sad-l11-evaluation
     depth: practice
     scope: complementary
-    locator: Chapter 3, pp. 113-137 (ROC p. 117; confusion matrix p. 118; precision/recall trade-off p.
-      121; AUC p. 126; multiclass p. 128; multilabel p. 134)
+    locator: Chapter 3, pp. 113-137 (ROC pp. 125-126; confusion matrix p. 118; precision/recall trade-off
+      p. 121; AUC p. 126; multiclass p. 128; multilabel p. 134)
     angle_detail: 'The evaluation chapter as a drill: confusion matrix (p. 118), precision/recall trade-off
       (p. 121), ROC and AUC (pp. 117, 126), and then the multiclass and multilabel extensions (pp. 128,
       134) that L11 names but does not work through. The precision-recall trade-off curve is the part
