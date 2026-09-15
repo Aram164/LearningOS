@@ -46,3 +46,16 @@ log-space); Kroese Ch7 + Marsland Ch16 + ISLP lab at anchor level.
 Bishop/Jurafsky/MIT routes unopened (not local); videos reference-only.
 All 7 nodes carry verified book routes; 20/21 mapped routes referenced by
 stages (lone gap: one StatQuest video, by decision). No import needed.
+
+## L13 Similarity (verify-only, no changes)
+
+Read: Kelleher Ch5 in full (feature space, metric axioms, Euclidean/Manhattan/
+Minkowski + p-effects, NN + Voronoi + decision boundary, k-NN noise/imbalance/
+weighted, k-d trees + retrieval algorithm, normalization, continuous targets,
+binary indexes, cosine, Mahalanobis, feature selection + curse); ESL §13.3
+(kNN rule, Cover–Hart 2×Bayes bound) + §13.5 (editing/condensing, Hart 1968);
+Zacharski Ch2/Ch5 at anchor level (metric pages and kNN/CV pages as cited).
+LSH: full-text sweeps of Marsland/Kroese/ISLP/ESL/Kelleher/Zacharski/Geron
+find zero teaching (Kelleher names it once, p. 240) — stays deck-only by the
+plan branch; a Mining-Massive-Datasets fetch would close it.
+All 13 mapped routes referenced by stages. No import needed.
