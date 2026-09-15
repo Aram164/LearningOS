@@ -7618,7 +7618,7 @@ sources:
     - knowledge-sad-l05-counting-probability
     depth: practice
     scope: complementary
-    locator: §1.2.2 and §1.2.4, physical PDF pp. 5–6; answers pp. 8–9
+    locator: §1.2.2 and §1.2.4, physical PDF pp. 6–7; solutions pp. 9–10
     angle_detail: The named §1.2.2 tasks cover permutations, repeated colors, ordered podium places, repeated
       ice-cream types and unlabelled prizes. The later random-variable section is not part of this assignment.
     vault_path: material://source-sad-klausuren-extern/Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf
