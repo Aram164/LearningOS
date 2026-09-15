@@ -2398,6 +2398,39 @@ sources:
     scope: complementary
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
     id: route-1e60df494cdea8d7b689066e
+  - id: route-sad-l01-fahrmeir-baserates
+    unit_id: unit-m2-sad-l01
+    title: Fahrmeir Bsp 4.24–4.25 — the 3.2% positive test
+    format: book
+    angle: A 98%-accurate test returns positive and the patient is still only 3.2% likely ill — the base-rate
+      fallacy with the numbers worked twice, once by formula and once by counting 98 of 3095.
+    covers:
+    - knowledge-sad-l01-base-rates
+    depth: orientation
+    scope: complementary
+    locator: Bsp 4.24–4.25 + Satz von Bayes, printed pp. 216–219 (PDF pp. 230–233)
+    angle_detail: 'Read Bsp 4.24 for the setup (sensitivity 0.98, specificity 0.97, prevalence 0.001 with
+      the German vocabulary Sensitivität/Spezifität/a-priori), then 4.25 for both computations: the Bayes
+      formula giving 0.032 and the frequency tree (98 of 3095 positives actually ill, 96.8% false diagnoses).
+      The tree version is the keeper: turn every conditional-probability question into counts first. Solutions
+      are inline.'
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - id: route-sad-l03-fahrmeir-multi
+    unit_id: unit-m2-sad-l03
+    title: Fahrmeir §12.2.3 — normal equations in matrix form
+    format: book
+    angle: 'The matrix form the exercises assume: Y = Xβ + ε, X′Xβ̂ = X′Y, β̂ = (X′X)⁻¹X′Y with Var(β̂ⱼ)
+      = σ²vⱼ — three pages that turn Blatt 1 Aufgabe 3 from symbol soup into a derivation.'
+    covers:
+    - knowledge-sad-l03-multivariate
+    depth: orientation
+    scope: complementary
+    locator: §12.2.3, printed pp. 509–511 (PDF pp. 519–521)
+    angle_detail: 'Read for the design-matrix construction (first column of ones), the KQ minimization
+      to the normal equations, and the variance formula that explains where standard errors come from.
+      Note the closing warning: (X′X)⁻¹ needs numeric algorithms — the conceptual bridge to gradient descent
+      in the same lecture. The surrounding R sections (§12.6) are out of exam scope.'
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
 - source_id: source-fritzsche-trainingsbuch
   role: practice
   why: Gentle German worked companion after current HU tasks; Chapters 1-4 match the script sequence and
@@ -4201,6 +4234,38 @@ sources:
       a quantity rather than a column heading, and it explains why the t approaches the Normal as n grows.
       Background, not exam-bearing — read it once.
     vault_path: material://source-blitzstein-hwang/blitzstein.pdf
+  - id: route-sad-l01-blitzstein-baserates
+    unit_id: unit-m2-sad-l01
+    title: Blitzstein Ex 2.3.9 — Fred’s 16% positive test
+    format: book
+    angle: 'The English twin of the Fahrmeir test story: 1% prevalence, 95% accuracy, 16% posterior —
+      with the 10,000-person frequency tree that makes the rarity-vs-error tradeoff visible.'
+    covers:
+    - knowledge-sad-l01-base-rates
+    depth: orientation
+    scope: complementary
+    locator: Ex 2.3.9, printed pp. 56–57 (PDF pp. 73–74)
+    angle_detail: 'Read the worked solution (Bayes + law of total probability) then the population tree:
+      100 ill of 10,000, 95 true positives against 495 false ones. The takeaway sentence is the exam weapon:
+      the posterior balances test evidence against base-rate rarity. Pair with the Fahrmeir route for
+      the German vocabulary.'
+    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
+  - id: route-sad-l02-blitzstein-simpson
+    unit_id: unit-m2-sad-l02
+    title: Blitzstein Ex 2.8.3 — Hibbert vs Nick
+    format: book
+    angle: 'The reversal, worked: Hibbert wins every surgery type and loses overall — then the weighted-average
+      equations showing exactly why (different weights), which is the whole paradox.'
+    covers:
+    - knowledge-sad-l02-simpson
+    depth: orientation
+    scope: complementary
+    locator: Ex 2.8.3, printed pp. 76–78 (PDF pp. 93–95)
+    angle_detail: 'Read the tables first (70/90 vs 2/10; 10/10 vs 81/90; aggregates 80/100 vs 83/100),
+      then the LOTP decomposition: P(A|B) and P(A|Bᶜ) as weighted averages with different weights P(C|B)
+      vs P(C|Bᶜ). The formal condition box is worth copying to the cheat sheet. Continues into prosecutor/defense
+      fallacies — skim those as L04 Bayes context, not L02 scope.'
+    vault_path: material://source-blitzstein-hwang/blitzstein.pdf
 - source_id: source-fortmann-roe-bias-variance
   role: intuition
   why: A single well-known article that explains the bias-variance decomposition with the dartboard picture.
@@ -4638,7 +4703,6 @@ sources:
     - knowledge-sad-l02-location
     - knowledge-sad-l02-dispersion
     - knowledge-sad-l02-sampling
-    - knowledge-sad-l02-simpson
     depth: orientation
     scope: complementary
     locator: Ch 1 §1.2 data basics, pdf pp. 14-21; §1.3 sampling principles and strategies, pdf pp. 22-30;
@@ -5021,16 +5085,16 @@ sources:
     - knowledge-sad-l02-frequencies
     - knowledge-sad-l02-location
     - knowledge-sad-l02-dispersion
-    - knowledge-sad-l02-sampling
     depth: practice
     scope: complementary
     locator: Ch 15 §§15.2-15.5 histograms, kernel density, empirical distribution function, scatterplot,
       pdf pp. 216-231; Ch 16 §§16.1-16.4, pdf pp. 238-244; exercises pdf pp. 233-237 and pp. 247-250
     angle_detail: L02 draws histograms and moves on. §15.4 introduces the empirical distribution function
-      Fn and states that it converges to the true F — the formal content of the intuition that a bigger
-      sample gives a better picture. That single idea is what later makes the bootstrap in L09 comprehensible
-      rather than magical, so reading it now pays twice. §15.3 on kernel density estimates is outside
-      SaD scope; skim it as context for why smoothed histograms exist.
+      Fn and works it through on two datasets — the formal picture behind histograms. It states no convergence
+      to the true F here (verified by full-text search of §§15.2–15.5); that argument belongs to the LLN/Glivenko–Cantelli
+      material. Read Fn as the object the L09 bootstrap resamples, which is why meeting it now pays twice.
+      §15.3 on kernel density estimates is outside SaD scope; skim it as context for why smoothed histograms
+      exist.
     vault_path: material://source-dekking-mips/dekking.pdf
   - id: route-1d5ebe1552e3c9bdb2923b53
     unit_id: unit-m2-sad-l03

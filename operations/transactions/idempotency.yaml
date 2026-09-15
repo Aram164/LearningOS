@@ -319,6 +319,17 @@ entries:
       unit-m2-sad-l15: 13
     snapshot_before: sha256:e6a89d2e4b37995f94a13b40056e8eeffe3c4808ef5460310cde5d4764c55127
     snapshot_after: sha256:dd248c7f688182b311675d022c57673b65cf8b49e328b96e71a19521ebf60817
+  book-routes-import-2026-09-16-retry1:
+    request_id: request-book-routes-2026-09-16
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:2e0dfa79564e34e8a3c721b135f7a017710167d8d4ffb5fbb7980d8e625efddb
+    transaction_id: transaction-20260916-004832-001
+    receipt_path: operations/transactions/transaction-20260916-004832-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 49
+    snapshot_before: sha256:3376c281d1acca9ff3a61839fe502eb4faec1be0887b825660920c25e1a25400
+    snapshot_after: sha256:2376c0d08e79264b05d1396996788ebf2ddbdfc7c450c11c1d9ac895eb585488
   c12c112b-f1c6-4c6b-932a-b7c311fd53d1:
     request_id: 4b152687-66b3-4834-8bd2-adaac7168174
     capability: module.plan.import

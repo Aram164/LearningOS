@@ -296,6 +296,30 @@ records:
       idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
     reviewed_by: ''
     status: supported
+  covers:route-61c0f7bd88ab5c8d2e2e23f4:
+    claim_id: covers:route-61c0f7bd88ab5c8d2e2e23f4
+    claim_kind: route-covers
+    statement: route-61c0f7bd88ab5c8d2e2e23f4 covers knowledge-sad-l02-dispersion,
+      knowledge-sad-l02-frequencies, knowledge-sad-l02-location
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 49
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/book-routes-audit.md: sha256:a8251b4e9966e1c89404c15aab158039b39bf5e84b5f6ee8d7cc7edf4bbec36f
+      evidence:
+      - route-locator:empirical distribution function
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/book-routes-audit.md
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-book-routes-2026-09-16
+      idempotency_key: book-routes-import-2026-09-16-retry1
+    reviewed_by: ''
+    status: supported
   covers:route-83c5d83dd034abfedd3153bf:
     claim_id: covers:route-83c5d83dd034abfedd3153bf
     claim_kind: route-covers
@@ -343,6 +367,31 @@ records:
     admitted_by:
       request_id: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
       idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
+    reviewed_by: ''
+    status: supported
+  covers:route-a225112e34dbc25aa40a9926:
+    claim_id: covers:route-a225112e34dbc25aa40a9926
+    claim_kind: route-covers
+    statement: route-a225112e34dbc25aa40a9926 covers knowledge-sad-l02-dispersion,
+      knowledge-sad-l02-frequencies, knowledge-sad-l02-location, knowledge-sad-l02-sampling,
+      knowledge-sad-l02-scales, knowledge-sad-l02-vocabulary
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 49
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/book-routes-audit.md: sha256:a8251b4e9966e1c89404c15aab158039b39bf5e84b5f6ee8d7cc7edf4bbec36f
+      evidence:
+      - route-locator:considering categorical data
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/book-routes-audit.md
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-book-routes-2026-09-16
+      idempotency_key: book-routes-import-2026-09-16-retry1
     reviewed_by: ''
     status: supported
   covers:route-an-ch03-henningdierks:
@@ -1002,6 +1051,52 @@ records:
       idempotency_key: video-routes-import-2026-09-15-retry2
     reviewed_by: ''
     status: supported
+  covers:route-sad-l01-blitzstein-baserates:
+    claim_id: covers:route-sad-l01-blitzstein-baserates
+    claim_kind: route-covers
+    statement: route-sad-l01-blitzstein-baserates covers knowledge-sad-l01-base-rates
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 49
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/book-routes-audit.md: sha256:a8251b4e9966e1c89404c15aab158039b39bf5e84b5f6ee8d7cc7edf4bbec36f
+      evidence:
+      - route-locator:PDF pp. 73–74
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/book-routes-audit.md
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-book-routes-2026-09-16
+      idempotency_key: book-routes-import-2026-09-16-retry1
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l01-fahrmeir-baserates:
+    claim_id: covers:route-sad-l01-fahrmeir-baserates
+    claim_kind: route-covers
+    statement: route-sad-l01-fahrmeir-baserates covers knowledge-sad-l01-base-rates
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 49
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/book-routes-audit.md: sha256:a8251b4e9966e1c89404c15aab158039b39bf5e84b5f6ee8d7cc7edf4bbec36f
+      evidence:
+      - route-locator:PDF pp. 230–233
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/book-routes-audit.md
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-book-routes-2026-09-16
+      idempotency_key: book-routes-import-2026-09-16-retry1
+    reviewed_by: ''
+    status: supported
   covers:route-sad-l01-kts-2af3910c:
     claim_id: covers:route-sad-l01-kts-2af3910c
     claim_kind: route-covers
@@ -1151,6 +1246,29 @@ records:
       idempotency_key: video-routes-import-2026-09-15-retry2
     reviewed_by: ''
     status: supported
+  covers:route-sad-l02-blitzstein-simpson:
+    claim_id: covers:route-sad-l02-blitzstein-simpson
+    claim_kind: route-covers
+    statement: route-sad-l02-blitzstein-simpson covers knowledge-sad-l02-simpson
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 49
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/book-routes-audit.md: sha256:a8251b4e9966e1c89404c15aab158039b39bf5e84b5f6ee8d7cc7edf4bbec36f
+      evidence:
+      - route-locator:PDF pp. 93–95
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/book-routes-audit.md
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-book-routes-2026-09-16
+      idempotency_key: book-routes-import-2026-09-16-retry1
+    reviewed_by: ''
+    status: supported
   covers:route-sad-l02-kts-254d32a3:
     claim_id: covers:route-sad-l02-kts-254d32a3
     claim_kind: route-covers
@@ -1298,6 +1416,29 @@ records:
     admitted_by:
       request_id: request-video-routes-2026-09-15
       idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l03-fahrmeir-multi:
+    claim_id: covers:route-sad-l03-fahrmeir-multi
+    claim_kind: route-covers
+    statement: route-sad-l03-fahrmeir-multi covers knowledge-sad-l03-multivariate
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 49
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l03: 16
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/book-routes-audit.md: sha256:a8251b4e9966e1c89404c15aab158039b39bf5e84b5f6ee8d7cc7edf4bbec36f
+      evidence:
+      - route-locator:PDF pp. 519–521
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/book-routes-audit.md
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-book-routes-2026-09-16
+      idempotency_key: book-routes-import-2026-09-16-retry1
     reviewed_by: ''
     status: supported
   covers:route-sad-l03-kts-2769be33:
