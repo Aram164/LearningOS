@@ -33,3 +33,16 @@ ill-posed/generalization), Ch2 fraud case, Ch8 (hold-out/peeking/confusion);
 ISLP §2.1–2.2 (train/test MSE, U-curve, bias-variance decomposition);
 Kroese Ch1–2 (risk, Bayes-optimal predictor, training-vs-test loss §2.3).
 All 22 mapped L11 routes referenced by stages. No import needed.
+
+## L14 Probabilistic learning (verify-only, no changes)
+
+Read: Kelleher Ch6 in full (recap/MAP, NB fraud worked, Laplace smoothing
+with k, PDFs incl. Gaussian/student-t/binning, Bayes nets/CPTs/Markov
+blanket/structure learning); Murphy §9.3–9.4 (NB/MLE, add-one smoothing,
+NB–logreg connection, generative-vs-discriminative); ISLP §4.4.4 (NB
+assumption, Gaussian/histogram/categorical options, bias-variance framing);
+Zacharski Ch6 (m-estimate smoothing worked on votes) + Ch7 (text NB,
+log-space); Kroese Ch7 + Marsland Ch16 + ISLP lab at anchor level.
+Bishop/Jurafsky/MIT routes unopened (not local); videos reference-only.
+All 7 nodes carry verified book routes; 20/21 mapped routes referenced by
+stages (lone gap: one StatQuest video, by decision). No import needed.
