@@ -1,0 +1,20 @@
+{
+  "verdicts": [
+    {
+      "evidence": "Volltextsuche nach Median/Modus/robust: 0 Treffer; [00:39] Mittelwert nur \"in einem anderen Video vorgestellt\"; [01:50] \"kommen sie auf 9 Stunden\" nur als Streuungs-Referenz",
+      "knowledge_node": "knowledge-sad-l01-location",
+      "reason": "Falscher Knoten: Video rechnet Spannweite bis Variationskoeffizient, vergleicht nie Lagemaße und diskutiert keine Robustheit.",
+      "recorded_confidence": "medium",
+      "verdict": "remove"
+    },
+    {
+      "knowledge_node": "knowledge-sad-l02-dispersion",
+      "recorded_confidence": "unstated",
+      "verdict": "confirm",
+      "new_confidence": "medium",
+      "evidence": "[06:30] der sogenannten Varianz; [06:37] statt des absoluten Betrages das Quadrat der Differenz; zero divisor discussion in file",
+      "reason": "Operator direct read: variance constructed stepwise from the zero-sum problem; range/SD/CV worked; divisors absent so medium not high"
+    }
+  ],
+  "video_id": "3oZrS3ZWVcA"
+}

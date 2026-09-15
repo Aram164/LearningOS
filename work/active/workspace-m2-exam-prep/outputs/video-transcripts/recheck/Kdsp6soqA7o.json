@@ -1,0 +1,1 @@
+{"verdicts":[{"evidence":"[02:01] contains true positives / [02:49] 142 true positives / [03:08] misclassified 29 patients / [05:24] three rows and three","knowledge_node":"knowledge-sad-l01-classification","reason":"All four cells defined then read off two full binary matrices plus a 3-class extension.","recorded_confidence":"high","verdict":"confirm"}],"video_id":"Kdsp6soqA7o"}

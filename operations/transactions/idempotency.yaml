@@ -2227,3 +2227,14 @@ entries:
       unit-m2-sad-l05: 6
     snapshot_before: sha256:c0a6199c8c48eb0e1c9b5c7427dfba9a2b644a6673742cf79190d3fc24101917
     snapshot_after: sha256:72337cea1a30ff4ec336958d8a27340bc90a5635a4b779ed8546e60cc83c6ce7
+  video-routes-import-2026-09-15-retry2:
+    request_id: request-video-routes-2026-09-15
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:101de853f81114237f5a152522a138b1e90c4601f7bba55cde0f85a2ef0eff95
+    transaction_id: transaction-20260915-231853-001
+    receipt_path: operations/transactions/transaction-20260915-231853-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 47
+    snapshot_before: sha256:929f9f2ccf16fb14831d439163bd51edd13d28253b4d10fff578dc3c3feb99db
+    snapshot_after: sha256:9f7f018b8388fd83e3b789e8e40fbc586c03064e632459baee07dfc0748e4fcd
