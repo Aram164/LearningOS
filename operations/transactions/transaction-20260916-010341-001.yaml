@@ -1,0 +1,45 @@
+schema_version: 2
+id: transaction-20260916-010341-001
+type: transaction-receipt
+status: committed
+capability: route.patch
+committed_at: '2026-09-16T01:03:41+02:00'
+snapshot_before: sha256:eb26e20f5be6de7f947094095f0af4f0ce5925a3bcae2a62bafc7bdba1e02f80
+snapshot_after: sha256:ac5ed5d2fd38d1f17cd322aeaa86fbffdc5d0fa91861895bf7e001b909dca8cb
+expected_revisions:
+  module-hu-m2-statistik-analysis: 49
+  study-map-m2-sad-l11: 5
+  unit-m2-sad-l11: 11
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 49
+    after: 50
+  study-map-m2-sad-l11:
+    before: 5
+    after: 6
+  unit-m2-sad-l11:
+    before: 11
+    after: 12
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: b7d21dea724bfa05e9bc4763396527f8889ec5f199df24a68922c202b81fc5c4
+  sha256_after: 6bac220e2478ad1e6a8d436e514b89cfae5795958d7ae3dd73c8f00052b93f41
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: route.patch
+    declared_writes:
+    - curriculum/modules/*/source-map.yaml
+    - curriculum/modules/*/units/*/unit.yaml
+    - curriculum/modules/*/units/*/study-map.yaml
+request:
+  channel: operator
+  request_id: request-roc-fix-2026-09-16
+  idempotency_key: route-patch-roc-fix-2026-09-16
+  intent_sha256: sha256:ecb322e02e188aa23d612c0c59572cf796590eec505fb1e7a9bcbe389a0b68e0
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:ecb322e02e188aa23d612c0c59572cf796590eec505fb1e7a9bcbe389a0b68e0
