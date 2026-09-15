@@ -59,3 +59,19 @@ LSH: full-text sweeps of Marsland/Kroese/ISLP/ESL/Kelleher/Zacharski/Geron
 find zero teaching (Kelleher names it once, p. 240) — stays deck-only by the
 plan branch; a Mining-Massive-Datasets fetch would close it.
 All 13 mapped routes referenced by stages. No import needed.
+
+## L15 Neural networks (verify-only, no changes)
+
+Read: Geron Ch10 (perceptron→XOR→MLP→backprop→activations→regression/
+classification outputs) + Ch11 (vanishing/exploding, Glorot/He init, ReLU
+variants, batchnorm, optimizers); ISLP §10.1–10.2 (single/multilayer, MNIST
+architecture); Marsland Ch3–4 + §4.3.2 (XOR, backprop, Universal
+Approximation Theorem with bump-function demonstration — no fetch needed);
+MML §5.4–5.6 (Jacobian, gradient identities, chain-rule backprop + autodiff);
+Kroese Ch9 (Kolmogorov, gradient Thm 9.2, backprop procedure); Kelleher Ch7
+(error-based learning, gradient descent); Murphy §§13.2–13.3 (XOR, MLP,
+activations, backprop algorithms); cs229 §7 + csc411 §8.3 (NN sections).
+Outlook stays deck+eecs498 (course-outlook, deck-appropriate, not a book
+gap). Nielsen/Prince/Goodfellow/D2L websites unopened (not local).
+32/40 mapped routes referenced by stages; all 8 unsurfaced are videos, by
+decision. No import needed.
