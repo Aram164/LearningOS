@@ -1,0 +1,20 @@
+{
+  "schema_version": 2,
+  "request_id": "request-coursera-retire-sad",
+  "idempotency_key": "coursera-retire-sad-2026-09-16",
+  "capability": "module.plan.import",
+  "channel": "operator",
+  "expected_snapshot": "sha256:128079aac5ce76752183803d5e2b0e20f2a9b8f70d5e18f5cfddafab53266e12",
+  "expected_revisions": {
+    "module-hu-m2-statistik-analysis": 51
+  },
+  "payload": {
+    "module_id": "module-hu-m2-statistik-analysis",
+    "file": "work/active/workspace-m2-exam-prep/outputs/coursera-replacement-2026-09-16/coursera-retire-plan.yaml",
+    "file_sha256": "sha256:7bef4a66d75146be8e30b8a516c3c6ce6f22162ad3aebe699c35e61e491e7cb9"
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:3f39b79d1a6f4a17e65df75ea0e6aaf5c0bea2f5ebbe1991ea2bd8fd5fd93c86"
+  }
+}

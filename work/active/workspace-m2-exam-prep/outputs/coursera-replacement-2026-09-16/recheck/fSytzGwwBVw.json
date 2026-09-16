@@ -1,0 +1,12 @@
+{
+ "video_id": "fSytzGwwBVw",
+ "verdicts": [
+  {
+   "knowledge_node": "knowledge-sad-l11-resampling",
+   "verdict": "confirm",
+   "recorded_confidence": "medium",
+   "evidence": "[02:43] \"Reusing the same data for both training and testing is a bad idea\" / [02:54] \"use the first 75% of the data for training\" / [03:29] \"cross-validation uses them all one at a time and summarizes the results at the end\" / [03:41] \"using the first three blocks to train the method\"",
+   "reason": "Data-role separation, the leakage argument and block rotation are all worked. Medium, not high: the node also names the bootstrap and the video mentions it zero times in the full transcript."
+  }
+ ]
+}

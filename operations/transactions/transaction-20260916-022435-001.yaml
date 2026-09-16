@@ -1,0 +1,49 @@
+schema_version: 2
+id: transaction-20260916-022435-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-09-16T02:24:35+02:00'
+snapshot_before: sha256:fad4deeab0c35bb8fa68990099211094f2f56808f2d52e0e622aa491f375a7dc
+snapshot_after: sha256:8e319299cb83604768a20d378df5c4636be9a808b8c8beb5d9dce8e9052e45f5
+expected_revisions:
+  module-hu-aml: 12
+artifact_revisions:
+  module-hu-aml:
+    before: 12
+    after: 13
+writes:
+- path: curriculum/modules/module-hu-aml/module.yaml
+  sha256_before: d0e20b2d07c184bb51b147e789945b5ad1e0a967298fb42e7b5a022a3b6fd9c0
+  sha256_after: d0e20b2d07c184bb51b147e789945b5ad1e0a967298fb42e7b5a022a3b6fd9c0
+  created: false
+- path: curriculum/modules/module-hu-aml/source-map.yaml
+  sha256_before: 03304020181847b57026ce73051dea2acb2f7b38a730f7b5dcacb08ae7d92450
+  sha256_after: 9b8fbcc8aa0cc258213ef6d5a6f95d92e1a14eb8a29edb7e04b6301d0761d76a
+  created: false
+- path: operations/transactions/lineage.yaml
+  sha256_before: 7c44e371c6b97cb1855b73f845cbd645793c889b79fbc2dd811084243cf8ffcc
+  sha256_after: c828d0bbc85d8cc647ebbf4f0168a84ca20697293b863812e1b188ed830948d4
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-coursera-retire-aml
+  idempotency_key: coursera-retire-aml-2026-09-16
+  intent_sha256: sha256:9f2087c23e4c79a23595814b78e69ec8b9d0718d975f9ffa95d70ad0562eb340
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:9f2087c23e4c79a23595814b78e69ec8b9d0718d975f9ffa95d70ad0562eb340

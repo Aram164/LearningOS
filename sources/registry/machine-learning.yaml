@@ -1194,3 +1194,18 @@ sources:
         level: introductory
         strengths:
           - "Chapter 3 builds shingling → minhash signatures → LSH banding → candidate pairs in one line of argument; §3.4.1 is the collision-probability-tracks-similarity construction the L13 deck states without support"
+  # 2026-09-16: replaces the enrolment-walled Ng Coursera route on the one AML
+  # node that had no free intuition-depth survivor. Read firsthand before filing.
+  - id: source-kamper-logreg
+    thematic_group_ids: [thematic-group-machine-learning]
+    title: Herman Kamper — Logistic regression lecture series (Stellenbosch University)
+    type: video
+    authors: [Herman Kamper]
+    organization: Stellenbosch University
+    url: https://www.youtube.com/watch?v=fPT8VeuFRkU
+    evaluations:
+      - concepts: [concept-logistic-regression]
+        roles: [derivation, intuition]
+        level: introductory
+        strengths:
+          - "Video 3 derives the decision boundary as the locus where sigmoid(w'x) = 0.5 and shows the weight vector orthogonal to it — the separator geometry, not just the S-curve"

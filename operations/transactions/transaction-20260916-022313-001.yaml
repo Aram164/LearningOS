@@ -1,0 +1,43 @@
+schema_version: 2
+id: transaction-20260916-022313-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-09-16T02:23:13+02:00'
+snapshot_before: sha256:dd4a77d2cb25fafa251fd1e39548b8f0f7c4f7a554c28d4d7d44fbf6bae57906
+snapshot_after: sha256:9b9311a88146b7b8490d47ddcb6d87721c860a5a2eb63bf9d021b34e3b943e87
+expected_revisions:
+  unit-m2-sad-l03: 16
+  study-map-m2-sad-l03: 5
+artifact_revisions:
+  study-map-m2-sad-l03:
+    before: 5
+    after: 6
+  unit-m2-sad-l03:
+    before: 16
+    after: 17
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/study-map.yaml
+  sha256_before: 55e13f4f576681fa3f894644f5f7f8d8189989e42ae9587d485fcff81d073e51
+  sha256_after: e1f77dea5d2b22810505abae721e6e81f7de53344648121e0afa14bf60af335a
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/unit.yaml
+  sha256_before: f4323a30ffcc35b19d52775366e886783e5981404d39c35936090c4982b2b398
+  sha256_after: f4323a30ffcc35b19d52775366e886783e5981404d39c35936090c4982b2b398
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.map.import
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: operator
+  request_id: request-coursera-retire-unit-m2-sad-l03
+  idempotency_key: coursera-retire-unit-m2-sad-l03-2026-09-16
+  intent_sha256: sha256:0c7d0784d54ed4f03716bcd4cefa60d29f31dfd9f0af25152c7a6bdf3c62195f
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:0c7d0784d54ed4f03716bcd4cefa60d29f31dfd9f0af25152c7a6bdf3c62195f

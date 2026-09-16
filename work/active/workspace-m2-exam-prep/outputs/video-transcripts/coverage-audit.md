@@ -24,7 +24,7 @@ All 65 URLs verified live on YouTube on 2026-09-15 (VERIFIED-URLS.txt). Channel-
 Kurzes Tutorium Statistik (12), jbstatistics (10), zedstatistics (3) and Karpathy micrograd (1) route under existing
 registry sources; 3Blue1Brown videos route under the matching playlist source except the CLT video, which needs the
 new draft source-3b1b-central-limit-theorem; the Iain Gaussian video needs the new draft
-source-iain-gaussian-distribution (both staged uncommitted in sources/registry/mathematics.yaml). Seven videos were
+source-iain-gaussian-distribution (both committed to sources/registry/mathematics.yaml in 575b3c9). Seven videos were
 already routed: six SaD routes are repaired in place under their existing ids, and YG15m2VwSjA (already routed on
 Analysis ch06) is excluded with its record retained.
 
