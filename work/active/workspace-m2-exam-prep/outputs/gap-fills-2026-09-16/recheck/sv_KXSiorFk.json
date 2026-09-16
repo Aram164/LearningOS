@@ -1,0 +1,12 @@
+{
+ "video_id": "sv_KXSiorFk",
+ "verdicts": [
+  {
+   "knowledge_node": "knowledge-sad-l07-model-selection",
+   "verdict": "confirm",
+   "recorded_confidence": "medium",
+   "evidence": "[00:20] \"I'm going to assume that\" / [00:53] \"Suppose events are occurring independently\" / [02:02] \"trying to determine whether a Poisson distribution might be reasonable\" / [02:26] \"chocolate chips are distributed randomly and independently throughout the cookie dough\"",
+   "reason": "Assumption-to-family judgment is the whole subject and is applied to several cases; medium not high because the video states outright it does no calculations, so no decision rule is computed."
+  }
+ ]
+}

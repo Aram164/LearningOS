@@ -1,0 +1,12 @@
+{
+ "video_id": "Yh5bR7X3ch8",
+ "verdicts": [
+  {
+   "knowledge_node": "knowledge-sad-l06-concentration",
+   "verdict": "confirm",
+   "recorded_confidence": "high",
+   "evidence": "[00:03] \"we derive and discuss the weak law of large numbers\" / [00:51] \"this gives us the so-called sample mean\" / [03:31] \"We are now in a position to apply the Chebyshev inequality\"",
+   "reason": "WLLN is derived, and derived *via* Chebyshev, so the pair closes both halves of the node."
+  }
+ ]
+}

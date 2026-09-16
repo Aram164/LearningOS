@@ -1175,3 +1175,22 @@ sources:
     title: "Marsland — Machine Learning: An Algorithmic Perspective (2nd ed.)"
     type: book
     material: material://source-marsland-ml-algorithmic
+  # 2026-09-16: the only real treatment of locality-sensitive hashing available —
+  # no book in the local library teaches it (Kelleher indexes it to a page with no
+  # hashing content, Murphy mentions it in passing, CSC411 declines to cover it).
+  # Free full text at mmds.org; verified firsthand 2026-09-16.
+  - id: source-mmds-book
+    thematic_group_ids: [thematic-group-machine-learning]
+    title: Leskovec, Rajaraman & Ullman — Mining of Massive Datasets (free full text)
+    type: book
+    authors: [Jure Leskovec, Anand Rajaraman, Jeffrey Ullman]
+    organization: Stanford
+    url: http://www.mmds.org/
+    identifiers:
+      chapter-3-pdf: http://infolab.stanford.edu/~ullman/mmds/ch3.pdf
+    evaluations:
+      - concepts: [concept-similarity-search]
+        roles: [derivation, first-learning]
+        level: introductory
+        strengths:
+          - "Chapter 3 builds shingling → minhash signatures → LSH banding → candidate pairs in one line of argument; §3.4.1 is the collision-probability-tracks-similarity construction the L13 deck states without support"

@@ -1,0 +1,12 @@
+{
+ "video_id": "eexQyHj6hEA",
+ "verdicts": [
+  {
+   "knowledge_node": "knowledge-sad-l07-relationships",
+   "verdict": "confirm",
+   "recorded_confidence": "high",
+   "evidence": "[00:13] \"n tends to infinity P goes to 0 and lambda equals n times P stays constant\" / [00:34] \"P equals lambda over N and we took this value and we substituted it\" / [01:01] \"the binomial tends toward the Poisson\" / [01:22] \"Albinism is a rare genetic disorder that affects approximately 1 in 20,000\"",
+   "reason": "The limit is actually derived by substitution, not asserted, and then applied to a worked example."
+  }
+ ]
+}

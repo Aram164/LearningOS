@@ -1,0 +1,12 @@
+{
+ "video_id": "sxQaBpKfDRk",
+ "verdicts": [
+  {
+   "knowledge_node": "knowledge-sad-l01-course-map",
+   "verdict": "confirm",
+   "recorded_confidence": "high",
+   "evidence": "[05:20] \"types: Descriptive and Inferential\" / [05:22] \"Descriptive statistics, well... they describe what the data show\" / [07:32] \"Inferential statistics allows us to make….inferences\" / [07:38] \"conclusions that extend beyond the data we have in hand\"",
+   "reason": "The description->inference split is stated and worked; prediction and uncertainty framed from [00:31] and [02:06]."
+  }
+ ]
+}

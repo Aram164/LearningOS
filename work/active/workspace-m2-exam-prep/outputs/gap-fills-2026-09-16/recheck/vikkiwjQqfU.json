@@ -1,0 +1,12 @@
+{
+ "video_id": "vikkiwjQqfU",
+ "verdicts": [
+  {
+   "knowledge_node": "knowledge-sad-l01-sampling-context",
+   "verdict": "confirm",
+   "recorded_confidence": "high",
+   "evidence": "[05:30] \"a statistician would say that it represents a population\" / [07:18] \"we rarely, if ever, have enough time and money to measure every single thing\" / [07:22] \"we almost always estimate the population parameters using a relatively small sample\"",
+   "reason": "Population vs sample and the reason sampling is necessary are both stated and used; parameters vs estimates distinguished."
+  }
+ ]
+}

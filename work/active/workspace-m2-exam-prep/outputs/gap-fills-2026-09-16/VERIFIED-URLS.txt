@@ -1,0 +1,16 @@
+# Live-URL verification for the 2026-09-16 gap-fill package
+# Checked 2026-09-15T23:59:18Z with yt-dlp metadata fetch / HTTP HEAD.
+
+OK   https://www.youtube.com/watch?v=sxQaBpKfDRk  780|CrashCourse|What Is Statistics: Crash Course Statistics #1
+OK   https://www.youtube.com/watch?v=qBigTkBLU6g  222|StatQuest with Josh Starmer|StatQuest: Histograms, Clearly Explained
+OK   https://www.youtube.com/watch?v=vikkiwjQqfU  871|StatQuest with Josh Starmer|Population and Estimated Parameters, Clearly Explained!!!
+OK   https://www.youtube.com/watch?v=ebEkn-BiW5k  279|minutephysics|Simpson's Paradox
+OK   https://www.youtube.com/watch?v=Ic_0jSPtx_k  431|PsychExamReview|The Framing Effect (Intro Psych Tutorial #94)
+OK   https://www.youtube.com/watch?v=d5pnfFvggYk  356|MIT OpenCourseWare|L18.3 The Chebyshev Inequality
+OK   https://www.youtube.com/watch?v=Yh5bR7X3ch8  451|MIT OpenCourseWare|L18.4 The Weak Law of Large Numbers
+OK   https://www.youtube.com/watch?v=sv_KXSiorFk  880|jbstatistics|Poisson or Not?  (When does a random variable have a Poisson distribution?)
+OK   https://www.youtube.com/watch?v=jmqZG6roVqU  543|jbstatistics|An Introduction to the Poisson Distribution
+OK   https://www.youtube.com/watch?v=eexQyHj6hEA  323|jbstatistics|The Relationship Between the Binomial and Poisson Distributions
+OK   https://www.youtube.com/watch?v=L2KMttDm3aY  934|jbstatistics|An Introduction to the Hypergeometric Distribution
+HTTP 200  http://infolab.stanford.edu/~ullman/mmds/ch3.pdf (Mining of Massive Datasets, ch.3)
+HTTP 200  http://www.mmds.org/ (book home)
