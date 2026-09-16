@@ -1009,3 +1009,55 @@ sources:
         level: introductory
         strengths:
           - "Builds the Gaussian from signal-domain intuition rather than the density formula"
+  # 2026-09-16: four free sources that close deck-only and all-low-confidence SaD
+  # nodes. Each was read firsthand (caption transcript / full text) before being
+  # filed; see work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/.
+  # Routes land through module.plan.import; this record is what the gateway
+  # cannot create.
+  - id: source-mit-res6012
+    thematic_group_ids: [thematic-group-mathematics]
+    title: MIT RES.6-012 — Introduction to Probability (Tsitsiklis, OCW, Spring 2018)
+    type: course
+    authors: [John Tsitsiklis]
+    organization: MIT
+    year: 2018
+    url: https://ocw.mit.edu/RES-6-012S18
+    evaluations:
+      - concepts: [concept-law-of-large-numbers, concept-variance]
+        roles: [derivation]
+        level: introductory
+        strengths:
+          - "Short single-topic segments: L18.3 states and proves the Chebyshev inequality, L18.4 derives the weak law from it — the bound the SaD L06 video coverage never stated"
+  - id: source-crashcourse-statistics
+    thematic_group_ids: [thematic-group-mathematics]
+    title: CrashCourse Statistics (video series)
+    type: video
+    url: https://www.youtube.com/watch?v=sxQaBpKfDRk
+    evaluations:
+      - concepts: [concept-descriptive-statistics]
+        roles: [orientation]
+        level: introductory
+        strengths:
+          - "Episode 1 draws the whole course map — description, then inference beyond the data in hand, then prediction — which the L01 deck asserts in one slide"
+  - id: source-minutephysics
+    thematic_group_ids: [thematic-group-mathematics]
+    title: minutephysics — Simpson's Paradox (video)
+    type: video
+    url: https://www.youtube.com/watch?v=ebEkn-BiW5k
+    evaluations:
+      - concepts: [concept-simpsons-paradox]
+        roles: [intuition]
+        level: introductory
+        strengths:
+          - "Shows the reversal on two real datasets and names group proportions as the cause, then gives the two-trend picture that makes it re-derivable"
+  - id: source-psychexamreview
+    thematic_group_ids: [thematic-group-mathematics]
+    title: PsychExamReview — The Framing Effect (Intro Psych Tutorial #94)
+    type: video
+    url: https://www.youtube.com/watch?v=Ic_0jSPtx_k
+    evaluations:
+      - concepts: [concept-probability]
+        roles: [intuition]
+        level: introductory
+        strengths:
+          - "Runs the Asian-disease experiment in both framings and shows mathematically identical options flipping the choice — the motivation the L04 deck opens with"

@@ -1,0 +1,12 @@
+{
+ "video_id": "L2KMttDm3aY",
+ "verdicts": [
+  {
+   "knowledge_node": "knowledge-sad-l07-hypergeometric",
+   "verdict": "confirm",
+   "recorded_confidence": "high",
+   "evidence": "[00:42] \"These types of urn and balls problems are classic hypergeometric problems\" / [00:45] \"Five balls are randomly drawn without replacement\" / [02:31] \"this is 0.01354\" / [09:46] \"works out to 0.166490\"",
+   "reason": "Hypergeometric PMF is built from combinations and evaluated numerically; transcript already held in-repo and word-verified in the 2026-09-15 package."
+  }
+ ]
+}

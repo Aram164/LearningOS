@@ -1,0 +1,12 @@
+{
+ "video_id": "jmqZG6roVqU",
+ "verdicts": [
+  {
+   "knowledge_node": "knowledge-sad-l07-poisson",
+   "verdict": "confirm",
+   "recorded_confidence": "high",
+   "evidence": "[01:34] \"is equal to lambda to the X * E minus lambda over X factorial\" / [04:48] \"we would see that is equal to 0.163\" / [04:56] \"the probability of getting exactly three radioactive decays\" / [02:51] \"The mean of the Poisson distribution is lambda\"",
+   "reason": "PMF written out and evaluated to a number on a worked example, plus the moment; the prior route had no formula at all."
+  }
+ ]
+}

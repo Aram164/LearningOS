@@ -2043,6 +2043,17 @@ entries:
       unit-m2-sad-l08: 21
     snapshot_before: sha256:5c69d4f18b9665bcd2c9d67a4e802a6b090850df1555802fad7fc6e68f5f19e0
     snapshot_after: sha256:bdc9c347ada9e3406368b7d02d2fb66e08a0e7556401e1609e2edbcec44b4b2c
+  sad-gap-fills-2026-09-16-001:
+    request_id: request-sad-gap-fills-2026-09-16
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:0a561e32fe74d1de0fb571a10ecdea1d576e11f7572050a8ac69f0367bfadcc6
+    transaction_id: transaction-20260916-020716-001
+    receipt_path: operations/transactions/transaction-20260916-020716-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 51
+    snapshot_before: sha256:3535aed84666acfd5deb15a77df4065c7e4e133fc03723bc67ffaa0e4770f770
+    snapshot_after: sha256:976a7cbb9540c47244deb2bd1c4c047e899b7054523580c87abbba6fd862d518
   sad-identity-recovery-unit-m2-sad-clustering-20260907:
     request_id: request-sad-identity-recovery-unit-m2-sad-clustering-20260907
     capability: unit.map.import

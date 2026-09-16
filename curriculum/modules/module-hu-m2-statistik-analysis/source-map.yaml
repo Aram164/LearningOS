@@ -2431,6 +2431,23 @@ sources:
       Note the closing warning: (X′X)⁻¹ needs numeric algorithms — the conceptual bridge to gradient descent
       in the same lecture. The surrounding R sections (§12.6) are out of exam scope.'
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
+  - id: route-sad-l10-fahrmeir-bonferroni
+    unit_id: unit-m2-sad-l10
+    title: Fahrmeir — Bonferroni-Korrektur with the inflation table
+    format: book
+    angle: The same correction in the course language, with the inflation shown as numbers.
+    covers:
+    - knowledge-sad-l10-multiple
+    depth: practice
+    scope: complementary
+    locator: 'Kapitel 12, pdf p. 446: the error-inflation table and the Bonferroni-Korrektur at level
+      alpha/k'
+    angle_detail: 'Worth one page next to the ISLP chapter because it is in German, matching the lecture
+      and the exam, and because it makes the problem quantitative first: the table shows the probability
+      of at least one false rejection climbing to 0.994 before the correction is introduced, then states
+      the Bonferroni rule as testing each hypothesis at alpha over k. Seeing 0.994 is what makes the correction
+      feel necessary rather than arbitrary.'
+    vault_path: material://source-fahrmeir-statistik/statistik.pdf
 - source_id: source-fritzsche-trainingsbuch
   role: practice
   why: Gentle German worked companion after current HU tasks; Chapters 1-4 match the script sequence and
@@ -2777,6 +2794,55 @@ sources:
     scope: complementary
     vault_path: material://source-kelleher-fmlpda/kelleher.pdf
     id: route-ea5b4ef7bbb182677102ed38
+  - id: route-sad-l11-kelleher-crispdm
+    unit_id: unit-m2-sad-l11
+    title: Kelleher §1.5 — CRISP-DM, the pipeline as a named process
+    format: book
+    angle: Names the phases and their feedback loops, so the pipeline stops being a list of words.
+    covers:
+    - knowledge-sad-l11-pipeline
+    depth: orientation
+    scope: complementary
+    locator: '§1.5 "The Predictive Data Analytics Project Lifecycle: CRISP-DM", pdf pp. 48-52, including
+      the phase diagram Figure 1.4 on p. 49'
+    angle_detail: The L11 node describes acquisition through deployment as coupled steps, and the routes
+      it had treat modelling only. Kelleher gives the standard process by name, with Figure 1.4 showing
+      the six phases and, more usefully, the arrows back — which is the part the deck flattens. Five pages.
+      It also sets up the point the lecture makes later, that modelling is a small share of the work.
+    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
+  - id: route-sad-l13-kelleher-kdtree
+    unit_id: unit-m2-sad-l13
+    title: Kelleher — k-d trees, the exact index before the approximation
+    format: book
+    angle: Builds the exact index step by step, which is the baseline LSH is later traded against.
+    covers:
+    - knowledge-sad-l13-exact-indexing
+    depth: derivation
+    scope: complementary
+    locator: 'Chapter 5, pdf pp. 234-240: k-d tree construction by median splits and the retrieval walk'
+    angle_detail: 'Exact indexing had reference routes but nothing that constructs one. Kelleher builds
+      the k-d tree explicitly — pick a feature, split at its median, recurse, cycle through the features
+      — and then walks retrieval on it. Read it before the LSH chapter: the approximate method only makes
+      sense once the exact one has been seen paying its full cost, and the pairing is exactly what the
+      L13 deck assumes.'
+    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
+  - id: route-sad-l14-kelleher-bayes-nets
+    unit_id: unit-m2-sad-l14
+    title: Kelleher §6.4.4 — Bayesian networks and the Markov blanket
+    format: book
+    angle: Covers both the factorization and the independence structure that makes it work.
+    covers:
+    - knowledge-sad-l14-bayes-net
+    - knowledge-sad-l14-markov
+    depth: derivation
+    scope: complementary
+    locator: §6.4.4 "Bayesian Networks", pdf pp. 324-335; the Markov blanket with Figure 6.10 on p. 328
+    angle_detail: Both L14 nodes were carried by advanced references and the deck. Kelleher works the
+      network as a factorization over parents and then defines the Markov blanket on p. 328 as the set
+      that makes a node independent of the rest of the graph, with Figure 6.10 shading it. Taking the
+      two nodes through one continuous treatment is the point — the factorization is only justified by
+      the independence structure, and reading them apart is what makes this material feel arbitrary.
+    vault_path: material://source-kelleher-fmlpda/kelleher.pdf
 - source_id: source-analysis-drill-blaetter-extern
   role: practice
   why: 'Topic-specific solved drills fill the local exercise gap. Routed file by file since 2026-08-22,
@@ -3667,6 +3733,23 @@ sources:
       rather than described. L09 presents the bootstrap as a procedure; seeing the resampled estimates
       accumulate into a histogram is what makes the standard-error claim believable. Exercises at p. 232.
       Read Dekking Ch 18 first for the principle, then this for the execution.
+    vault_path: material://source-islp/islp.pdf
+  - id: route-sad-l10-islp-multiple-testing
+    unit_id: unit-m2-sad-l10
+    title: ISLP Chapter 13 — multiple testing, from the problem to the remedies
+    format: book
+    angle: A full chapter on the node, at the level the SaD deck pitches it.
+    covers:
+    - knowledge-sad-l10-multiple
+    depth: derivation
+    scope: complementary
+    locator: 'Chapter 13, pdf pp. 564-594: §13.1 hypothesis-testing review, §13.2 the multiple-testing
+      problem, §13.3 family-wise error rate, §13.4 false discovery rate'
+    angle_detail: 'Multiple testing had three routes and no dedicated treatment. ISLP gives it a chapter:
+      the review in §13.1 re-establishes the single test, §13.2 shows what breaks when many are run, and
+      §13.3 and §13.4 set family-wise error against the false discovery rate so the two corrections are
+      distinguishable rather than blurred. Read §13.1 only if the L10 material has gone cold; the chapter
+      is otherwise self-contained.'
     vault_path: material://source-islp/islp.pdf
 - source_id: source-analysis-klausuren-extern
   role: exam-preparation
@@ -6496,6 +6579,24 @@ sources:
       and §5.10 are outside SaD scope but are short and make the point that a limit theorem is a claim
       about the world. No likelihood content.
     vault_path: material://source-tijms-understanding-probability/tijms.pdf
+  - id: route-sad-l04-tijms-intuition
+    unit_id: unit-m2-sad-l04
+    title: Tijms — why probability needs a calculus rather than intuition
+    format: book
+    angle: 'States the motive the L04 deck opens with: unaided intuition is unreliable here, so a formalism
+      is needed.'
+    covers:
+    - knowledge-sad-l04-framing
+    depth: orientation
+    scope: complementary
+    locator: Chapter 1, pdf p. 16 on intuition versus probability; pdf p. 27 on the psychology of probability
+      intuition
+    angle_detail: Pairs with the framing video, which supplies the experiment; this supplies the thesis.
+      Tijms writes on p. 16 that probability and intuition do not always agree and that no other branch
+      of mathematics makes mistakes so easy, and returns on p. 27 to the psychology of probability intuition
+      as the organising feature of the classic problems. Two pages, and they justify every axiom that
+      follows in the lecture.
+    vault_path: material://source-tijms-understanding-probability/tijms.pdf
 - source_id: source-deitmar-uebungsbuch
   role: reference
   why: Fresh solved exercises are reserved for exhausted topics rather than the first pass; routed here
@@ -8771,6 +8872,40 @@ sources:
     locator: '"p-values: What they are and how to interpret them", 05:35-08:51 for thresholds and false
       positives; 08:51-10:49 for the effect-size warning'
     url: https://www.youtube.com/watch?v=vemZtEM63GY
+  - id: route-sad-l01-statquest-histograms
+    unit_id: unit-m2-sad-l01
+    title: StatQuest — histograms and the step to a distribution
+    format: video
+    angle: Builds the histogram from raw measurements and then uses it to justify choosing a distribution.
+    covers:
+    - knowledge-sad-l01-distributions
+    depth: intuition
+    scope: complementary
+    locator: '"StatQuest: Histograms, Clearly Explained", 01:12-02:00 for binning; 01:53-02:22 for approximating
+      with a distribution; 02:23-03:00 for bin width'
+    angle_detail: The existing L01 video route reaches this node only through boxplot shape, which the
+      2026-09-15 recheck downgraded for showing no histogram at all. This one constructs the histogram
+      by binning and stacking, uses it to predict where future measurements fall, and then names the actual
+      decision — normal or exponential — that the histogram justifies. It also works the bin-width tradeoff
+      in both directions, too narrow and too wide, which is the part exam questions probe.
+    url: https://www.youtube.com/watch?v=qBigTkBLU6g
+  - id: route-sad-l01-statquest-population
+    unit_id: unit-m2-sad-l01
+    title: StatQuest — population, sample, and estimated parameters
+    format: video
+    angle: Separates the population from the sample and says plainly why the sample is all you ever get.
+    covers:
+    - knowledge-sad-l01-sampling-context
+    depth: intuition
+    scope: complementary
+    locator: '"Population and Estimated Parameters, Clearly Explained!!!", 05:03-05:45 for what a population
+      is; 07:15-07:30 for why we estimate from a sample'
+    angle_detail: The node is samples, populations and context, and the context half is the part usually
+      skipped. At 05:30 a histogram over every liver cell or every store in a chain is named a population
+      and its mean and standard deviation population parameters; at 07:18 the reason for sampling is stated
+      without hedging — we rarely have the time or money to measure every single thing, so we almost always
+      estimate from a relatively small sample. That sentence is what makes the rest of the course necessary.
+    url: https://www.youtube.com/watch?v=vikkiwjQqfU
 - source_id: source-jbstatistics
   role: intuition
   why: Short calculation-exact probability and inference refreshers.
@@ -9105,6 +9240,77 @@ sources:
     locator: '"An Introduction to Hypothesis Testing", 00:57-02:58 for the null-model computation; 02:58-05:01
       for hypotheses framing'
     url: https://www.youtube.com/watch?v=tTeMYuS87oU
+  - id: route-sad-l07-jbstat-poisson-or-not
+    unit_id: unit-m2-sad-l07
+    title: jbstatistics — Poisson or not? assumptions before formulas
+    format: video
+    angle: Makes the assumption check itself the subject, then applies it to cases that pass and cases
+      that fail.
+    covers:
+    - knowledge-sad-l07-model-selection
+    depth: intuition
+    scope: complementary
+    locator: '"Poisson or Not? (When does a random variable have a Poisson distribution?)", 00:53-02:10
+      for the assumptions; 02:26-05:30 for the judgement cases'
+    angle_detail: 'The node is choosing a distribution from assumptions, and the routed overview video
+      was downgraded for mapping setups to families without ever exercising the choice. Here the independence
+      and random-occurrence conditions are stated at 00:53 and then tested against concrete situations
+      — chocolate chips in cookie dough, recorded deaths — with the cases that fail called out. Note the
+      video says at 00:20 that it does no calculations: take the criteria from here and the arithmetic
+      from the Poisson route.'
+    url: https://www.youtube.com/watch?v=sv_KXSiorFk
+  - id: route-sad-l07-jbstat-poisson
+    unit_id: unit-m2-sad-l07
+    title: jbstatistics — the Poisson distribution, evaluated on an example
+    format: video
+    angle: Writes the Poisson PMF and evaluates it to a number instead of gesturing at the family.
+    covers:
+    - knowledge-sad-l07-poisson
+    depth: intuition
+    scope: complementary
+    locator: '"An Introduction to the Poisson Distribution", 01:34-02:10 for the PMF; 04:30-05:30 for
+      the worked radioactive-decay probability'
+    angle_detail: The previous route for this node gave a rate-event gloss with no formula, moment or
+      probability — the recheck said so and downgraded it. This one writes the PMF explicitly at 01:34,
+      states the mean as lambda at 02:51, and computes the probability of exactly three decays in a two-second
+      interval as 0.163 at 04:48. Nine minutes for the formula, the moment and a worked value.
+    url: https://www.youtube.com/watch?v=jmqZG6roVqU
+  - id: route-sad-l07-jbstat-binomial-poisson
+    unit_id: unit-m2-sad-l07
+    title: jbstatistics — the binomial-to-Poisson limit, derived
+    format: video
+    angle: Derives the limit by substituting into the binomial formula rather than asserting the approximation.
+    covers:
+    - knowledge-sad-l07-relationships
+    depth: derivation
+    scope: complementary
+    locator: '"The Relationship Between the Binomial and Poisson Distributions", 00:06-01:10 for the substitution
+      and limit; 01:14-05:00 for the albinism example'
+    angle_detail: Relationships between the discrete families were downgraded because the routed video
+      asserted the approximation links verbally and showed no limit. Here lambda is set to n times p,
+      p is replaced by lambda over n inside the binomial formula at 00:34, and the limit as n grows and
+      p shrinks is taken to the Poisson at 01:01 — then applied to albinism at roughly one in twenty thousand.
+      That is the derivation the node asks for and it takes five minutes.
+    url: https://www.youtube.com/watch?v=eexQyHj6hEA
+  - id: route-sad-l07-jbstat-hypergeometric
+    unit_id: unit-m2-sad-l07
+    title: jbstatistics — the hypergeometric PMF, built and evaluated
+    format: video
+    angle: Builds the without-replacement count from combinations and evaluates it, rather than defining
+      the setup and stopping.
+    covers:
+    - knowledge-sad-l07-hypergeometric
+    depth: intuition
+    scope: complementary
+    locator: '"An Introduction to the Hypergeometric Distribution", 00:38-01:15 for the urn setup; 01:48-02:40
+      and 09:30-10:10 for the evaluated probabilities'
+    angle_detail: The same video already serves L05 counting; it is routed here as well because L07 needs
+      the family itself, not the counting drill, and the recheck for the L07 overview video recorded that
+      it defined the without-replacement setup without ever writing or evaluating a PMF. This one computes
+      20 choose 5, works the favourable-over-total ratio to 0.01354, and later reaches 0.166490, with
+      an explicit binomial contrast for when sampling without replacement stops mattering. The L05 route
+      is unchanged.
+    url: https://www.youtube.com/watch?v=L2KMttDm3aY
 - source_id: source-mfnf-analysis1
   role: reference
   why: Accessible German explanation fallback for a specific gap, not an exam authority.
@@ -11136,6 +11342,22 @@ sources:
       The course deck also includes numeric descent updates; this book adds executable code and a fuller
       comparison of the methods.
     vault_path: material://source-geron-handson/geron.pdf
+  - id: route-sad-l02-geron-sampling-bias
+    unit_id: unit-m2-sad-l02
+    title: Géron — sampling bias and the 1936 Literary Digest failure
+    format: book
+    angle: Gives the node the worked cautionary case it lacked — a huge sample that was still wrong.
+    covers:
+    - knowledge-sad-l02-sampling
+    depth: intuition
+    scope: complementary
+    locator: Chapter 2, pdf pp. 52-53, "Nonrepresentative Training Data" and the sampling-bias sidebar
+    angle_detail: 'The L02 sampling node had book and exercise routes but nothing that shows the failure
+      mode landing. These two pages state that even very large samples can be nonrepresentative when the
+      method is flawed, then walk the 1936 Literary Digest poll: a sample of millions that called the
+      election wrongly, with the two mechanisms named — who the sampling frame reached, and who chose
+      to answer. The example is short enough to recall in an exam and precise enough to cite.'
+    vault_path: material://source-geron-handson/geron.pdf
 - source_id: source-eecs498
   role: optional-depth
   why: Selected fully connected and convolutional-network lectures only after SaD scope is secure.
@@ -11615,6 +11837,22 @@ sources:
     scope: complementary
     vault_path: material://source-esl/esl.pdf
     id: route-dcca2fcb9c954793598be2ee
+  - id: route-sad-l12-esl-stacking
+    unit_id: unit-m2-sad-l12
+    title: ESL §8.8 — model averaging and stacked generalization
+    format: book
+    angle: The actual construction behind stacking, including why the weights must be fit out-of-sample.
+    covers:
+    - knowledge-sad-l12-stacking
+    depth: derivation
+    scope: complementary
+    locator: §8.8 "Model Averaging and Stacking", pdf pp. 307-309
+    angle_detail: 'Stacking had no route that derived anything. ESL sets model averaging up as a weighted
+      combination, then gives stacked generalization with the detail that matters: the combination weights
+      are estimated from cross-validated predictions, not from the training fit, which is the whole reason
+      stacking does not simply overfit to the strongest member. Three pages, and dense — read it after
+      the deck rather than instead of it.'
+    vault_path: material://source-esl/esl.pdf
 - source_id: source-3b1b-linear-algebra
   role: intuition
   why: Targeted visual support for vector, matrix, and covariance geometry already selected by L01 and
@@ -11881,3 +12119,131 @@ sources:
     scope: complementary
     locator: '"What is a Gaussian Distribution?", 00:05-03:48 for parameters plus scope limits'
     url: https://www.youtube.com/watch?v=RNmDyzYw7aQ
+- source_id: source-crashcourse-statistics
+  role: intuition
+  why: Added 2026-09-16 to close SaD coverage gaps; see gap-fills-2026-09-16 audit.
+  priority: 40
+  unit_routes:
+  - id: route-sad-l01-crashcourse-coursemap
+    unit_id: unit-m2-sad-l01
+    title: 'CrashCourse Statistics #1 — the whole course map in one episode'
+    format: video
+    angle: 'Draws the arc the L01 deck asserts on one slide: description first, then inference about a
+      population, then prediction.'
+    covers:
+    - knowledge-sad-l01-course-map
+    depth: orientation
+    scope: complementary
+    locator: '"What Is Statistics: Crash Course Statistics #1", 05:20-06:00 for the descriptive/inferential
+      split; 06:53-08:10 for inference beyond the data'
+    angle_detail: The node is the shape of the whole course, and this is the only route that shows that
+      shape rather than one station on it. At 05:20 statistics is split into descriptive and inferential;
+      from 06:53 descriptive summaries are built and then explicitly outgrown, with inferential statistics
+      introduced at 07:32 as "conclusions that extend beyond the data we have in hand". Prediction is
+      framed from the opening. Watch before L02, not during revision.
+    url: https://www.youtube.com/watch?v=sxQaBpKfDRk
+- source_id: source-minutephysics
+  role: intuition
+  why: Added 2026-09-16 to close SaD coverage gaps; see gap-fills-2026-09-16 audit.
+  priority: 40
+  unit_routes:
+  - id: route-sad-l02-minutephysics-simpson
+    unit_id: unit-m2-sad-l02
+    title: minutephysics — Simpson's paradox on two real datasets
+    format: video
+    angle: Shows a trend reversing under aggregation and names group proportions as the mechanism.
+    covers:
+    - knowledge-sad-l02-simpson
+    depth: intuition
+    scope: complementary
+    locator: '"Simpson''s Paradox", 00:20-01:10 for the treatment reversal; 01:57-02:40 for the Wisconsin/Texas
+      case; 02:44-03:10 for the two-trend picture'
+    angle_detail: Blitzstein Ex 2.8.3 already gives this node its formal statement; what was missing was
+      the picture. Here the reversal is shown twice on real data — survival rates that flip once people
+      and cats are pooled at 00:43, and Wisconsin outscoring Texas overall while losing within every group
+      at 02:22 — and the cause is named as differing group proportions rather than left as a curiosity.
+      The closing two-trend graphic at 02:44 is what makes it re-derivable under exam pressure.
+    url: https://www.youtube.com/watch?v=ebEkn-BiW5k
+- source_id: source-psychexamreview
+  role: intuition
+  why: Added 2026-09-16 to close SaD coverage gaps; see gap-fills-2026-09-16 audit.
+  priority: 40
+  unit_routes:
+  - id: route-sad-l04-psychexamreview-framing
+    unit_id: unit-m2-sad-l04
+    title: PsychExamReview — the framing effect, run as an experiment
+    format: video
+    angle: Runs the Asian-disease problem in both framings and shows identical options producing opposite
+      choices.
+    covers:
+    - knowledge-sad-l04-framing
+    depth: intuition
+    scope: complementary
+    locator: '"The Framing Effect (Intro Psych Tutorial #94)", 01:34-02:10 for both versions of the problem;
+      02:13-03:00 for the gain/loss explanation'
+    angle_detail: 'This node was deck-only: the lecture opens on framing to motivate a formal calculus,
+      and nothing in the plan supported it. The video poses both versions, states at 01:58 that the answers
+      are mathematically identical, then explains the reversal at 02:19 — one framing counts people saved,
+      the other people dying — and closes on loss aversion driving risk-seeking. That is precisely the
+      argument the deck needs before the Kolmogorov axioms arrive.'
+    url: https://www.youtube.com/watch?v=Ic_0jSPtx_k
+- source_id: source-mit-res6012
+  role: intuition
+  why: Added 2026-09-16 to close SaD coverage gaps; see gap-fills-2026-09-16 audit.
+  priority: 40
+  unit_routes:
+  - id: route-sad-l06-mit-chebyshev
+    unit_id: unit-m2-sad-l06
+    title: MIT RES.6-012 L18.3 — the Chebyshev inequality, stated and proved
+    format: video
+    angle: States the bound precisely and proves it, which the existing L06 video coverage never did.
+    covers:
+    - knowledge-sad-l06-concentration
+    depth: derivation
+    scope: complementary
+    locator: '"L18.3 The Chebyshev Inequality", 00:00-00:50 for the statement; 01:24-05:00 for the proof
+      from Markov'
+    angle_detail: The 2026-09-15 recheck downgraded this node because the routed video invoked the law
+      of large numbers without ever stating a bound. Tsitsiklis gives the inequality in precise terms
+      at 00:31 — the probability of landing far from the mean is at most the variance over the square
+      of the distance — and then derives it from Markov. Six minutes, and it is the half of the node that
+      carries the exam weight.
+    url: https://www.youtube.com/watch?v=d5pnfFvggYk
+  - id: route-sad-l06-mit-wlln
+    unit_id: unit-m2-sad-l06
+    title: MIT RES.6-012 L18.4 — the weak law derived from Chebyshev
+    format: video
+    angle: Derives the weak law, and derives it from the Chebyshev bound rather than asserting convergence.
+    covers:
+    - knowledge-sad-l06-concentration
+    depth: derivation
+    scope: complementary
+    locator: '"L18.4 The Weak Law of Large Numbers", 00:03-01:30 for the sample-mean setup; 03:31-06:00
+      for the derivation'
+    angle_detail: Pairs with L18.3 and should be watched straight after it. The sample mean is set up
+      as a random variable at 00:51, and at 03:31 the Chebyshev inequality is applied to it to obtain
+      the law — so the two segments together close both halves of a node that previously had neither.
+      Stop after the statement unless you want the convergence-in-probability discussion.
+    url: https://www.youtube.com/watch?v=Yh5bR7X3ch8
+- source_id: source-mmds-book
+  role: intuition
+  why: Added 2026-09-16 to close SaD coverage gaps; see gap-fills-2026-09-16 audit.
+  priority: 40
+  unit_routes:
+  - id: route-sad-l13-mmds-lsh
+    unit_id: unit-m2-sad-l13
+    title: Mining of Massive Datasets ch.3 — minhashing and LSH
+    format: book
+    angle: The only real treatment of LSH available for this course, free from the authors.
+    covers:
+    - knowledge-sad-l13-lsh
+    depth: derivation
+    scope: complementary
+    locator: 'Chapter 3 "Finding Similar Items", ch3.pdf pp. 9-21: §3.3 minhashing pp. 9-15, §3.4 locality-sensitive
+      hashing pp. 16-21, §3.4.1 minhash signatures p. 17, §3.4.2 banding analysis p. 18'
+    angle_detail: 'This node was deck-only and no book in the library teaches it — Kelleher indexes LSH
+      to a page with no hashing content, Murphy mentions it while discussing attention, and CSC411 says
+      outright it will not cover it. The MMDS chapter builds the whole chain: shingles, then minhash signatures
+      whose agreement estimates Jaccard similarity, then the banding scheme in §3.4.1 that makes collision
+      probability track similarity, and the candidate-pair analysis that turns a threshold into a choice
+      of bands and rows. Free full text at mmds.org.'

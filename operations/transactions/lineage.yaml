@@ -1074,6 +1074,42 @@ records:
       idempotency_key: book-routes-import-2026-09-16-retry1
     reviewed_by: ''
     status: supported
+  covers:route-sad-l01-crashcourse-coursemap:
+    claim_id: covers:route-sad-l01-crashcourse-coursemap
+    claim_kind: route-covers
+    statement: route-sad-l01-crashcourse-coursemap covers knowledge-sad-l01-course-map
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/sxQaBpKfDRk.json: sha256:79ac280a934fa4f0f54149c0f112c2280f0d71563c6dca5a398b11075df266cf
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/sxQaBpKfDRk.md: sha256:26dfcc79ca795feed2e0132240dcc7cd55cb12fefac13c7bb5ff92b31789b8e3
+      evidence:
+      - 'route-locator:"What Is Statistics: Crash Course Statistics #1", 05:20-06:00
+        for the descriptiv'
+      - 'external:https://www.youtube.com/watch?v=sxQaBpKfDRk -- trail: verified live
+        2026-09-16 (VERIFIED-URLS.txt); transcript read line by line; all quoted citations
+        re-checked at their timestamp'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/sxQaBpKfDRk.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/sxQaBpKfDRk.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
+    reviewed_by: ''
+    status: supported
   covers:route-sad-l01-fahrmeir-baserates:
     claim_id: covers:route-sad-l01-fahrmeir-baserates
     claim_kind: route-covers
@@ -1246,6 +1282,78 @@ records:
       idempotency_key: video-routes-import-2026-09-15-retry2
     reviewed_by: ''
     status: supported
+  covers:route-sad-l01-statquest-histograms:
+    claim_id: covers:route-sad-l01-statquest-histograms
+    claim_kind: route-covers
+    statement: route-sad-l01-statquest-histograms covers knowledge-sad-l01-distributions
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/qBigTkBLU6g.json: sha256:eee121298c772ad4c521c8cb6e5429b349472540912621f1021e3b95bda25066
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/qBigTkBLU6g.md: sha256:0f19fffbd88dcf6c0f5aa02923442cceb55e26ee5c238de19395d5656a685abe
+      evidence:
+      - 'route-locator:"StatQuest: Histograms, Clearly Explained", 01:12-02:00 for
+        binning; 01:53-02:22'
+      - 'external:https://www.youtube.com/watch?v=qBigTkBLU6g -- trail: verified live
+        2026-09-16 (VERIFIED-URLS.txt); transcript read line by line; all quoted citations
+        re-checked at their timestamp'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/qBigTkBLU6g.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/qBigTkBLU6g.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l01-statquest-population:
+    claim_id: covers:route-sad-l01-statquest-population
+    claim_kind: route-covers
+    statement: route-sad-l01-statquest-population covers knowledge-sad-l01-sampling-context
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/vikkiwjQqfU.json: sha256:a49e8340253c89f8d2c32a0a9d9b77e094798f36dccfc559f8501b5c6f135fb6
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/vikkiwjQqfU.md: sha256:ec9349bc1774332dc8267588c284d42f69aa3e02b55c04cb5cc9f1076c2d316a
+      evidence:
+      - route-locator:"Population and Estimated Parameters, Clearly Explained!!!",
+        05:03-05:45 for wha
+      - 'external:https://www.youtube.com/watch?v=vikkiwjQqfU -- trail: verified live
+        2026-09-16 (VERIFIED-URLS.txt); transcript read line by line; all quoted citations
+        re-checked at their timestamp'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/vikkiwjQqfU.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/vikkiwjQqfU.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
+    reviewed_by: ''
+    status: supported
   covers:route-sad-l02-blitzstein-simpson:
     claim_id: covers:route-sad-l02-blitzstein-simpson
     claim_kind: route-covers
@@ -1267,6 +1375,37 @@ records:
     admitted_by:
       request_id: request-book-routes-2026-09-16
       idempotency_key: book-routes-import-2026-09-16-retry1
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l02-geron-sampling-bias:
+    claim_id: covers:route-sad-l02-geron-sampling-bias
+    claim_kind: route-covers
+    statement: route-sad-l02-geron-sampling-bias covers knowledge-sad-l02-sampling
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/book-fills-audit.md: sha256:7af25030f3552c9cb3d19562c62bf22269e65a3f441123282670ec1de35a8197
+      evidence:
+      - route-locator:Chapter 2, pdf pp. 52-53, "Nonrepresentative Training Data"
+        and the sampling-bia
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/book-fills-audit.md
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
     reviewed_by: ''
     status: supported
   covers:route-sad-l02-kts-254d32a3:
@@ -1378,6 +1517,42 @@ records:
     admitted_by:
       request_id: request-video-routes-2026-09-15
       idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l02-minutephysics-simpson:
+    claim_id: covers:route-sad-l02-minutephysics-simpson
+    claim_kind: route-covers
+    statement: route-sad-l02-minutephysics-simpson covers knowledge-sad-l02-simpson
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/ebEkn-BiW5k.json: sha256:adf7e5da704c4649af739f40ead49ac89bc273079342e427ffe5135496af5c6d
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/ebEkn-BiW5k.md: sha256:4a90259f9b6f0fd34121e05cc5ec4831e3e31e0319fa47f61f30243b0a9fceb2
+      evidence:
+      - route-locator:"Simpson's Paradox", 00:20-01:10 for the treatment reversal;
+        01:57-02:40 for the
+      - 'external:https://www.youtube.com/watch?v=ebEkn-BiW5k -- trail: verified live
+        2026-09-16 (VERIFIED-URLS.txt); transcript read line by line; all quoted citations
+        re-checked at their timestamp'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/ebEkn-BiW5k.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/ebEkn-BiW5k.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
     reviewed_by: ''
     status: supported
   covers:route-sad-l02-zedstats-103eea93:
@@ -1553,6 +1728,73 @@ records:
       idempotency_key: video-routes-import-2026-09-15-retry2
     reviewed_by: ''
     status: supported
+  covers:route-sad-l04-psychexamreview-framing:
+    claim_id: covers:route-sad-l04-psychexamreview-framing
+    claim_kind: route-covers
+    statement: route-sad-l04-psychexamreview-framing covers knowledge-sad-l04-framing
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/Ic_0jSPtx_k.json: sha256:af3ad200af6efcb5f436083e63a6da3e1b3aaad51c219e66256f9cec2a259622
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/Ic_0jSPtx_k.md: sha256:7d5791c428816939b946ebf44d50a98ff91f682bba77ce540cd958b67af224a4
+      evidence:
+      - 'route-locator:"The Framing Effect (Intro Psych Tutorial #94)", 01:34-02:10
+        for both versions o'
+      - 'external:https://www.youtube.com/watch?v=Ic_0jSPtx_k -- trail: verified live
+        2026-09-16 (VERIFIED-URLS.txt); transcript read line by line; all quoted citations
+        re-checked at their timestamp'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/Ic_0jSPtx_k.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/Ic_0jSPtx_k.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l04-tijms-intuition:
+    claim_id: covers:route-sad-l04-tijms-intuition
+    claim_kind: route-covers
+    statement: route-sad-l04-tijms-intuition covers knowledge-sad-l04-framing
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/book-fills-audit.md: sha256:7af25030f3552c9cb3d19562c62bf22269e65a3f441123282670ec1de35a8197
+      evidence:
+      - route-locator:Chapter 1, pdf p. 16 on intuition versus probability; pdf p.
+        27 on the psycholog
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/book-fills-audit.md
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
+    reviewed_by: ''
+    status: supported
   covers:route-sad-l05-jbstats-60fc5740:
     claim_id: covers:route-sad-l05-jbstats-60fc5740
     claim_kind: route-covers
@@ -1665,6 +1907,222 @@ records:
     admitted_by:
       request_id: request-video-routes-2026-09-15
       idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l06-mit-chebyshev:
+    claim_id: covers:route-sad-l06-mit-chebyshev
+    claim_kind: route-covers
+    statement: route-sad-l06-mit-chebyshev covers knowledge-sad-l06-concentration
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/d5pnfFvggYk.json: sha256:1d5569323c0b86c03f81bb203f9c323a172fa4a6d3a522f72aab5bda7ce10fc3
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/d5pnfFvggYk.md: sha256:e0ee0ebb5578f706226bc7ffa027d995adc236641c4043b1ae0def6176e3ce26
+      evidence:
+      - route-locator:"L18.3 The Chebyshev Inequality", 00:00-00:50 for the statement;
+        01:24-05:00 for
+      - 'external:https://www.youtube.com/watch?v=d5pnfFvggYk -- trail: verified live
+        2026-09-16 (VERIFIED-URLS.txt); transcript read line by line; all quoted citations
+        re-checked at their timestamp'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/d5pnfFvggYk.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/d5pnfFvggYk.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l06-mit-wlln:
+    claim_id: covers:route-sad-l06-mit-wlln
+    claim_kind: route-covers
+    statement: route-sad-l06-mit-wlln covers knowledge-sad-l06-concentration
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/Yh5bR7X3ch8.json: sha256:67acd70cbd36591e18f38ce9ddc32fb12450c1e3630856c8187b73fc685bc27b
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/Yh5bR7X3ch8.md: sha256:331eb6608b37e2059e2a9ab4f172cb2a6063673326060e543ff0971d9c83bc20
+      evidence:
+      - route-locator:"L18.4 The Weak Law of Large Numbers", 00:03-01:30 for the sample-mean
+        setup; 03
+      - 'external:https://www.youtube.com/watch?v=Yh5bR7X3ch8 -- trail: verified live
+        2026-09-16 (VERIFIED-URLS.txt); transcript read line by line; all quoted citations
+        re-checked at their timestamp'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/Yh5bR7X3ch8.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/Yh5bR7X3ch8.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l07-jbstat-binomial-poisson:
+    claim_id: covers:route-sad-l07-jbstat-binomial-poisson
+    claim_kind: route-covers
+    statement: route-sad-l07-jbstat-binomial-poisson covers knowledge-sad-l07-relationships
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/eexQyHj6hEA.json: sha256:980508a4bea28d204c1f34e48bcb41cdea0dbca00b5599f495be9c4a4b55b8e8
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/eexQyHj6hEA.md: sha256:19c82e37cd29ecffeb27edff06ac288c7fad1294d42837f2517adc55f6fc39ed
+      evidence:
+      - route-locator:"The Relationship Between the Binomial and Poisson Distributions",
+        00:06-01:10 f
+      - 'external:https://www.youtube.com/watch?v=eexQyHj6hEA -- trail: verified live
+        2026-09-16 (VERIFIED-URLS.txt); transcript read line by line; all quoted citations
+        re-checked at their timestamp'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/eexQyHj6hEA.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/eexQyHj6hEA.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l07-jbstat-hypergeometric:
+    claim_id: covers:route-sad-l07-jbstat-hypergeometric
+    claim_kind: route-covers
+    statement: route-sad-l07-jbstat-hypergeometric covers knowledge-sad-l07-hypergeometric
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/L2KMttDm3aY.json: sha256:16a59354b57c47b080e0c6e59491f312615267cee66b03b260f5dc84a2681ddf
+        file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/L2KMttDm3aY.md: sha256:b0e79f17322efc8beddd2c8226584ffac6bf4e960fa564f6992bdc945f7407ee
+      evidence:
+      - route-locator:"An Introduction to the Hypergeometric Distribution", 00:38-01:15
+        for the urn se
+      - 'external:https://www.youtube.com/watch?v=L2KMttDm3aY -- trail: verified live
+        2026-09-16 (VERIFIED-URLS.txt); transcript read line by line; all quoted citations
+        re-checked at their timestamp'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/video-transcripts/transcripts/L2KMttDm3aY.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/L2KMttDm3aY.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l07-jbstat-poisson:
+    claim_id: covers:route-sad-l07-jbstat-poisson
+    claim_kind: route-covers
+    statement: route-sad-l07-jbstat-poisson covers knowledge-sad-l07-poisson
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/jmqZG6roVqU.json: sha256:4f1a4192e65c86261129eaacb924401ad6ae35f2afb25fb5302f7e739f16d8e5
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/jmqZG6roVqU.md: sha256:cf0306fe55681ced95dd4acefa5159387db390de827b1191c1c39dda990c06bd
+      evidence:
+      - route-locator:"An Introduction to the Poisson Distribution", 01:34-02:10 for
+        the PMF; 04:30-05
+      - 'external:https://www.youtube.com/watch?v=jmqZG6roVqU -- trail: verified live
+        2026-09-16 (VERIFIED-URLS.txt); transcript read line by line; all quoted citations
+        re-checked at their timestamp'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/jmqZG6roVqU.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/jmqZG6roVqU.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l07-jbstat-poisson-or-not:
+    claim_id: covers:route-sad-l07-jbstat-poisson-or-not
+    claim_kind: route-covers
+    statement: route-sad-l07-jbstat-poisson-or-not covers knowledge-sad-l07-model-selection
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/sv_KXSiorFk.json: sha256:d44f7a243face5eef25f9b4a4e8bbc13301c6e7c78f6bf4edf9c42aadf02bab0
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/sv_KXSiorFk.md: sha256:c5b19665b49c65f903dccdda66f35ff36c4f941275e00a3413cb372e012916c6
+      evidence:
+      - route-locator:"Poisson or Not? (When does a random variable have a Poisson
+        distribution?)", 00
+      - 'external:https://www.youtube.com/watch?v=sv_KXSiorFk -- trail: verified live
+        2026-09-16 (VERIFIED-URLS.txt); transcript read line by line; all quoted citations
+        re-checked at their timestamp'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/transcripts/sv_KXSiorFk.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/recheck/sv_KXSiorFk.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
     reviewed_by: ''
     status: supported
   covers:route-sad-l07-jbstats-274a2f0f:
@@ -2409,6 +2867,68 @@ records:
       idempotency_key: video-routes-import-2026-09-15-retry2
     reviewed_by: ''
     status: supported
+  covers:route-sad-l10-fahrmeir-bonferroni:
+    claim_id: covers:route-sad-l10-fahrmeir-bonferroni
+    claim_kind: route-covers
+    statement: route-sad-l10-fahrmeir-bonferroni covers knowledge-sad-l10-multiple
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/book-fills-audit.md: sha256:7af25030f3552c9cb3d19562c62bf22269e65a3f441123282670ec1de35a8197
+      evidence:
+      - 'route-locator:Kapitel 12, pdf p. 446: the error-inflation table and the Bonferroni-Korrektur
+        a'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/book-fills-audit.md
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l10-islp-multiple-testing:
+    claim_id: covers:route-sad-l10-islp-multiple-testing
+    claim_kind: route-covers
+    statement: route-sad-l10-islp-multiple-testing covers knowledge-sad-l10-multiple
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/book-fills-audit.md: sha256:7af25030f3552c9cb3d19562c62bf22269e65a3f441123282670ec1de35a8197
+      evidence:
+      - 'route-locator:Chapter 13, pdf pp. 564-594: §13.1 hypothesis-testing review,
+        §13.2 the multiple'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/book-fills-audit.md
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
+    reviewed_by: ''
+    status: supported
   covers:route-sad-l10-jbstats-50936f53:
     claim_id: covers:route-sad-l10-jbstats-50936f53
     claim_kind: route-covers
@@ -2749,6 +3269,67 @@ records:
       idempotency_key: video-routes-import-2026-09-15-retry2
     reviewed_by: ''
     status: supported
+  covers:route-sad-l11-kelleher-crispdm:
+    claim_id: covers:route-sad-l11-kelleher-crispdm
+    claim_kind: route-covers
+    statement: route-sad-l11-kelleher-crispdm covers knowledge-sad-l11-pipeline
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/book-fills-audit.md: sha256:7af25030f3552c9cb3d19562c62bf22269e65a3f441123282670ec1de35a8197
+      evidence:
+      - 'route-locator:§1.5 "The Predictive Data Analytics Project Lifecycle: CRISP-DM",
+        pdf pp. 48-52,'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/book-fills-audit.md
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l12-esl-stacking:
+    claim_id: covers:route-sad-l12-esl-stacking
+    claim_kind: route-covers
+    statement: route-sad-l12-esl-stacking covers knowledge-sad-l12-stacking
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/book-fills-audit.md: sha256:7af25030f3552c9cb3d19562c62bf22269e65a3f441123282670ec1de35a8197
+      evidence:
+      - route-locator:§8.8 "Model Averaging and Stacking", pdf pp. 307-309
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/book-fills-audit.md
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
+    reviewed_by: ''
+    status: supported
   covers:route-sad-l12-statquest-6b496022:
     claim_id: covers:route-sad-l12-statquest-6b496022
     claim_kind: route-covers
@@ -2935,6 +3516,102 @@ records:
     admitted_by:
       request_id: request-video-routes-2026-09-15
       idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l13-kelleher-kdtree:
+    claim_id: covers:route-sad-l13-kelleher-kdtree
+    claim_kind: route-covers
+    statement: route-sad-l13-kelleher-kdtree covers knowledge-sad-l13-exact-indexing
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/book-fills-audit.md: sha256:7af25030f3552c9cb3d19562c62bf22269e65a3f441123282670ec1de35a8197
+      evidence:
+      - 'route-locator:Chapter 5, pdf pp. 234-240: k-d tree construction by median
+        splits and the retri'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/book-fills-audit.md
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l13-mmds-lsh:
+    claim_id: covers:route-sad-l13-mmds-lsh
+    claim_kind: route-covers
+    statement: route-sad-l13-mmds-lsh covers knowledge-sad-l13-lsh
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/book-fills-audit.md: sha256:7af25030f3552c9cb3d19562c62bf22269e65a3f441123282670ec1de35a8197
+      evidence:
+      - 'route-locator:Chapter 3 "Finding Similar Items", ch3.pdf pp. 9-21: §3.3 minhashing
+        pp. 9-15, §'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/book-fills-audit.md
+      - 'external:http://infolab.stanford.edu/~ullman/mmds/ch3.pdf -- trail: fetched
+        and read 2026-09-16; HTTP 200 recorded in VERIFIED-URLS.txt'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l14-kelleher-bayes-nets:
+    claim_id: covers:route-sad-l14-kelleher-bayes-nets
+    claim_kind: route-covers
+    statement: route-sad-l14-kelleher-bayes-nets covers knowledge-sad-l14-bayes-net,
+      knowledge-sad-l14-markov
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 51
+        unit-m2-sad-l01: 9
+        unit-m2-sad-l02: 11
+        unit-m2-sad-l04: 17
+        unit-m2-sad-l06: 20
+        unit-m2-sad-l07: 17
+        unit-m2-sad-l10: 12
+        unit-m2-sad-l11: 12
+        unit-m2-sad-l12: 11
+        unit-m2-sad-l13: 11
+        unit-m2-sad-l14: 15
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/book-fills-audit.md: sha256:7af25030f3552c9cb3d19562c62bf22269e65a3f441123282670ec1de35a8197
+      evidence:
+      - route-locator:§6.4.4 "Bayesian Networks", pdf pp. 324-335; the Markov blanket
+        with Figure 6.10
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/gap-fills-2026-09-16/book-fills-audit.md
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-sad-gap-fills-2026-09-16
+      idempotency_key: sad-gap-fills-2026-09-16-001
     reviewed_by: ''
     status: supported
   covers:route-sad-l14-statquest-a2526559:

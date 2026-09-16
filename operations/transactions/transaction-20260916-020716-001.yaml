@@ -1,0 +1,49 @@
+schema_version: 2
+id: transaction-20260916-020716-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-09-16T02:07:16+02:00'
+snapshot_before: sha256:3535aed84666acfd5deb15a77df4065c7e4e133fc03723bc67ffaa0e4770f770
+snapshot_after: sha256:976a7cbb9540c47244deb2bd1c4c047e899b7054523580c87abbba6fd862d518
+expected_revisions:
+  module-hu-m2-statistik-analysis: 50
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 50
+    after: 51
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/module.yaml
+  sha256_before: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  sha256_after: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: 6bac220e2478ad1e6a8d436e514b89cfae5795958d7ae3dd73c8f00052b93f41
+  sha256_after: 93a3008145c80fa73bdc5d94c304debb62ce607f3a89b8345c073eab28873548
+  created: false
+- path: operations/transactions/lineage.yaml
+  sha256_before: ab146c56639d5dade28b4e088dcdf71cec0f0fde2a1d5c2dfcd5692c97eedb48
+  sha256_after: 60aa001b8357721b7a3dbd5b9a883c2a1dabedbc8230f6e72b78b1c9062905de
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: request-sad-gap-fills-2026-09-16
+  idempotency_key: sad-gap-fills-2026-09-16-001
+  intent_sha256: sha256:0a561e32fe74d1de0fb571a10ecdea1d576e11f7572050a8ac69f0367bfadcc6
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:0a561e32fe74d1de0fb571a10ecdea1d576e11f7572050a8ac69f0367bfadcc6
