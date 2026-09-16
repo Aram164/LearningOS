@@ -411,6 +411,100 @@ entries:
       unit-m2-sad-l10: 12
     snapshot_before: sha256:05e3799be58b908125832aae70e1776ae0e804430810ed9df730421b0ade270d
     snapshot_after: sha256:7b7ca7b2b4ef6e1c0270c9828742fb7547615cba07f3c84d9b34094f5e9b8721
+  coursera-retire-aml-2026-09-16:
+    request_id: request-coursera-retire-aml
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:9f2087c23e4c79a23595814b78e69ec8b9d0718d975f9ffa95d70ad0562eb340
+    transaction_id: transaction-20260916-022435-001
+    receipt_path: operations/transactions/transaction-20260916-022435-001.yaml
+    revisions:
+      module-hu-aml: 13
+    snapshot_before: sha256:fad4deeab0c35bb8fa68990099211094f2f56808f2d52e0e622aa491f375a7dc
+    snapshot_after: sha256:8e319299cb83604768a20d378df5c4636be9a808b8c8beb5d9dce8e9052e45f5
+  coursera-retire-sad-2026-09-16:
+    request_id: request-coursera-retire-sad
+    capability: module.plan.import
+    channel: operator
+    intent_sha256: sha256:3f39b79d1a6f4a17e65df75ea0e6aaf5c0bea2f5ebbe1991ea2bd8fd5fd93c86
+    transaction_id: transaction-20260916-022423-001
+    receipt_path: operations/transactions/transaction-20260916-022423-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 52
+    snapshot_before: sha256:128079aac5ce76752183803d5e2b0e20f2a9b8f70d5e18f5cfddafab53266e12
+    snapshot_after: sha256:fad4deeab0c35bb8fa68990099211094f2f56808f2d52e0e622aa491f375a7dc
+  coursera-retire-unit-aml-l03-2026-09-16:
+    request_id: request-coursera-retire-unit-aml-l03
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:cce472690b56ab3efea8f22a693bcc7513c562de2b2cc0977ab4a07a8076f493
+    transaction_id: transaction-20260916-022239-001
+    receipt_path: operations/transactions/transaction-20260916-022239-001.yaml
+    revisions:
+      study-map-aml-l03: 4
+      unit-aml-l03: 6
+    snapshot_before: sha256:6af788d330fbfca4044170dde797e2edf115a505128e912094b6b6e91672bb98
+    snapshot_after: sha256:ec774ed8af322710f2861201621a98b0db5377ce0b165da362c5db35a2d8fadf
+  coursera-retire-unit-aml-l04-2026-09-16:
+    request_id: request-coursera-retire-unit-aml-l04
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:090a42ebbe3a1f4226cbc15f63c06a1be00b8eb9191284428e50c6fb1ff7e2d5
+    transaction_id: transaction-20260916-022248-001
+    receipt_path: operations/transactions/transaction-20260916-022248-001.yaml
+    revisions:
+      study-map-aml-l04: 4
+      unit-aml-l04: 6
+    snapshot_before: sha256:ec774ed8af322710f2861201621a98b0db5377ce0b165da362c5db35a2d8fadf
+    snapshot_after: sha256:283adcc20cfd0b556b1dce1b74bc2965ccc9e562ad8d86b4c0e956dcefd7b3f7
+  coursera-retire-unit-aml-l05-2026-09-16:
+    request_id: request-coursera-retire-unit-aml-l05
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:37e4104c8595298c54aee723342749b74fb974e37bd99bbc4b66f2db137d3487
+    transaction_id: transaction-20260916-022256-001
+    receipt_path: operations/transactions/transaction-20260916-022256-001.yaml
+    revisions:
+      study-map-aml-l05: 4
+      unit-aml-l05: 6
+    snapshot_before: sha256:283adcc20cfd0b556b1dce1b74bc2965ccc9e562ad8d86b4c0e956dcefd7b3f7
+    snapshot_after: sha256:b4de40742e8ef03bc96e438d1775de4d023638552aee09291a21997d20275441
+  coursera-retire-unit-aml-l06-2026-09-16:
+    request_id: request-coursera-retire-unit-aml-l06
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:d2a4040a1bfdf71295b0d7460e64f449fe8fe120571c37c9a25d014ea4707e29
+    transaction_id: transaction-20260916-022305-001
+    receipt_path: operations/transactions/transaction-20260916-022305-001.yaml
+    revisions:
+      study-map-aml-l06: 4
+      unit-aml-l06: 6
+    snapshot_before: sha256:b4de40742e8ef03bc96e438d1775de4d023638552aee09291a21997d20275441
+    snapshot_after: sha256:dd4a77d2cb25fafa251fd1e39548b8f0f7c4f7a554c28d4d7d44fbf6bae57906
+  coursera-retire-unit-m2-sad-l03-2026-09-16:
+    request_id: request-coursera-retire-unit-m2-sad-l03
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:0c7d0784d54ed4f03716bcd4cefa60d29f31dfd9f0af25152c7a6bdf3c62195f
+    transaction_id: transaction-20260916-022313-001
+    receipt_path: operations/transactions/transaction-20260916-022313-001.yaml
+    revisions:
+      study-map-m2-sad-l03: 6
+      unit-m2-sad-l03: 17
+    snapshot_before: sha256:dd4a77d2cb25fafa251fd1e39548b8f0f7c4f7a554c28d4d7d44fbf6bae57906
+    snapshot_after: sha256:9b9311a88146b7b8490d47ddcb6d87721c860a5a2eb63bf9d021b34e3b943e87
+  coursera-retire-unit-m2-sad-l11-2026-09-16:
+    request_id: request-coursera-retire-unit-m2-sad-l11
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:cd79b93724d5db25bd5c550eb85d566be82c14d5ada5c5af7ee9261e1c700931
+    transaction_id: transaction-20260916-022322-001
+    receipt_path: operations/transactions/transaction-20260916-022322-001.yaml
+    revisions:
+      study-map-m2-sad-l11: 7
+      unit-m2-sad-l11: 13
+    snapshot_before: sha256:9b9311a88146b7b8490d47ddcb6d87721c860a5a2eb63bf9d021b34e3b943e87
+    snapshot_after: sha256:14d9a2e685a62a2240ab12bd990fc6d13457cf3dacc456e6194338bef0029995
   de0b5870-9853-4a40-bf86-f7009e342b2f:
     request_id: 2c1636a1-b03c-451a-ba4d-47247e7b5a07
     capability: module.plan.import

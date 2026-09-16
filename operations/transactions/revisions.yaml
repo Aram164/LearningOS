@@ -25,8 +25,8 @@ revisions:
   job-quarantine-collapse-v1: 1
   materials-manifest: 1
   module-hu-algo2: 2
-  module-hu-aml: 12
-  module-hu-m2-statistik-analysis: 51
+  module-hu-aml: 13
+  module-hu-m2-statistik-analysis: 52
   module-job-engineering-tools: 1
   module-job-git: 1
   module-job-polars: 3
@@ -159,10 +159,10 @@ revisions:
   stage-rust-19-pull-based-advanced-clinic-unsafe-macros-and-typ: 1
   study-map-aml-l01: 3
   study-map-aml-l02: 3
-  study-map-aml-l03: 3
-  study-map-aml-l04: 3
-  study-map-aml-l05: 3
-  study-map-aml-l06: 3
+  study-map-aml-l03: 4
+  study-map-aml-l04: 4
+  study-map-aml-l05: 4
+  study-map-aml-l06: 4
   study-map-aml-l07: 3
   study-map-aml-l08: 3
   study-map-aml-l09: 3
@@ -186,7 +186,7 @@ revisions:
   study-map-m2-sad-exam-prep: 2
   study-map-m2-sad-l01: 4
   study-map-m2-sad-l02: 5
-  study-map-m2-sad-l03: 5
+  study-map-m2-sad-l03: 6
   study-map-m2-sad-l04: 5
   study-map-m2-sad-l05: 6
   study-map-m2-sad-l06: 8
@@ -194,7 +194,7 @@ revisions:
   study-map-m2-sad-l08: 13
   study-map-m2-sad-l09: 7
   study-map-m2-sad-l10: 5
-  study-map-m2-sad-l11: 6
+  study-map-m2-sad-l11: 7
   study-map-m2-sad-l12: 5
   study-map-m2-sad-l13: 5
   study-map-m2-sad-l14: 5
@@ -203,10 +203,10 @@ revisions:
   unit-aml-exam-prep: 7
   unit-aml-l01: 6
   unit-aml-l02: 6
-  unit-aml-l03: 5
-  unit-aml-l04: 5
-  unit-aml-l05: 5
-  unit-aml-l06: 5
+  unit-aml-l03: 6
+  unit-aml-l04: 6
+  unit-aml-l05: 6
+  unit-aml-l06: 6
   unit-aml-l07: 6
   unit-aml-l08: 5
   unit-aml-l09: 5
@@ -239,7 +239,7 @@ revisions:
   unit-m2-sad-exam-prep: 10
   unit-m2-sad-l01: 9
   unit-m2-sad-l02: 11
-  unit-m2-sad-l03: 16
+  unit-m2-sad-l03: 17
   unit-m2-sad-l04: 17
   unit-m2-sad-l05: 15
   unit-m2-sad-l06: 20
@@ -247,7 +247,7 @@ revisions:
   unit-m2-sad-l08: 22
   unit-m2-sad-l09: 14
   unit-m2-sad-l10: 12
-  unit-m2-sad-l11: 12
+  unit-m2-sad-l11: 13
   unit-m2-sad-l12: 11
   unit-m2-sad-l13: 11
   unit-m2-sad-l14: 15

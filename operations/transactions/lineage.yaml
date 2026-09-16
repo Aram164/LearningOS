@@ -145,6 +145,56 @@ records:
       idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
     reviewed_by: ''
     status: supported
+  covers:route-34e7a26df2c02e415319d40a:
+    claim_id: covers:route-34e7a26df2c02e415319d40a
+    claim_kind: route-covers
+    statement: route-34e7a26df2c02e415319d40a covers nothing
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-aml: 13
+        unit-aml-l03: 6
+        unit-aml-l04: 6
+        unit-aml-l05: 6
+        unit-aml-l06: 6
+      source_hashes:
+        file:work/active/workspace-aml-exam-prep/outputs/coursera-replacement-2026-09-16/coverage-audit.md: sha256:840fed9036a811b54504cea2557c880a4f85ab10b3d83dceb857d49c7d05e94d
+      evidence:
+      - 'repo-file:work/active/workspace-aml-exam-prep/outputs/coursera-replacement-2026-09-16/coverage-audit.md
+        -- trail: route retired: source is enrolment-walled; every node it claimed
+        keeps same-depth free coverage on the same unit, except aml-l05-boundary which
+        is refilled in this same plan'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-coursera-retire-aml
+      idempotency_key: coursera-retire-aml-2026-09-16
+    reviewed_by: ''
+    status: withdrawn
+  covers:route-3779cdc11dbbbbe4d52b87ee:
+    claim_id: covers:route-3779cdc11dbbbbe4d52b87ee
+    claim_kind: route-covers
+    statement: route-3779cdc11dbbbbe4d52b87ee covers nothing
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 52
+        unit-m2-sad-l03: 17
+        unit-m2-sad-l11: 13
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/coursera-replacement-2026-09-16/coverage-audit.md: sha256:3a448f127d23c6b9d043660d332837de63d8c3d1c4e5e338b3562a2dc6c4fd99
+      evidence:
+      - 'repo-file:work/active/workspace-m2-exam-prep/outputs/coursera-replacement-2026-09-16/coverage-audit.md
+        -- trail: route retired: source is enrolment-walled; per-node survivor counts
+        recorded in the audit, and the two nodes that would have lost intuition-depth
+        coverage are refilled in this same plan'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-coursera-retire-sad
+      idempotency_key: coursera-retire-sad-2026-09-16
+    reviewed_by: ''
+    status: withdrawn
   covers:route-37c710174c2a5be9353cb154:
     claim_id: covers:route-37c710174c2a5be9353cb154
     claim_kind: route-covers
@@ -271,6 +321,32 @@ records:
       idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
     reviewed_by: ''
     status: supported
+  covers:route-5cf858ae016d05f91d008978:
+    claim_id: covers:route-5cf858ae016d05f91d008978
+    claim_kind: route-covers
+    statement: route-5cf858ae016d05f91d008978 covers nothing
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-aml: 13
+        unit-aml-l03: 6
+        unit-aml-l04: 6
+        unit-aml-l05: 6
+        unit-aml-l06: 6
+      source_hashes:
+        file:work/active/workspace-aml-exam-prep/outputs/coursera-replacement-2026-09-16/coverage-audit.md: sha256:840fed9036a811b54504cea2557c880a4f85ab10b3d83dceb857d49c7d05e94d
+      evidence:
+      - 'repo-file:work/active/workspace-aml-exam-prep/outputs/coursera-replacement-2026-09-16/coverage-audit.md
+        -- trail: route retired: source is enrolment-walled; every node it claimed
+        keeps same-depth free coverage on the same unit, except aml-l05-boundary which
+        is refilled in this same plan'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-coursera-retire-aml
+      idempotency_key: coursera-retire-aml-2026-09-16
+    reviewed_by: ''
+    status: withdrawn
   covers:route-602a7c97b64cbe82ff7782a8:
     claim_id: covers:route-602a7c97b64cbe82ff7782a8
     claim_kind: route-covers
@@ -392,6 +468,35 @@ records:
     admitted_by:
       request_id: request-book-routes-2026-09-16
       idempotency_key: book-routes-import-2026-09-16-retry1
+    reviewed_by: ''
+    status: supported
+  covers:route-aml-l05-kamper-boundary:
+    claim_id: covers:route-aml-l05-kamper-boundary
+    claim_kind: route-covers
+    statement: route-aml-l05-kamper-boundary covers knowledge-aml-l05-boundary
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-aml: 13
+        unit-aml-l03: 6
+        unit-aml-l04: 6
+        unit-aml-l05: 6
+        unit-aml-l06: 6
+      source_hashes:
+        file:work/active/workspace-aml-exam-prep/outputs/coursera-replacement-2026-09-16/recheck/fPT8VeuFRkU.json: sha256:63753fe120afa4660f5fb6dea94d5d4ff353b1ac98c62ed55bb8590b889d3131
+        file:work/active/workspace-aml-exam-prep/outputs/coursera-replacement-2026-09-16/transcripts/fPT8VeuFRkU.md: sha256:78f5884333b05d25b3c20c9667f04e90f22e469f3e63543e0c24f3797b36a173
+      evidence:
+      - 'route-locator:"Logistic regression 3: The decision boundary and weight vector",
+        00:19-01:15 fo'
+      - 'external:https://www.youtube.com/watch?v=fPT8VeuFRkU -- trail: verified live
+        2026-09-16 (VERIFIED-URLS.txt); transcript read line by line'
+      - repo-file:work/active/workspace-aml-exam-prep/outputs/coursera-replacement-2026-09-16/transcripts/fPT8VeuFRkU.md
+      - repo-file:work/active/workspace-aml-exam-prep/outputs/coursera-replacement-2026-09-16/recheck/fPT8VeuFRkU.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-coursera-retire-aml
+      idempotency_key: coursera-retire-aml-2026-09-16
     reviewed_by: ''
     status: supported
   covers:route-an-ch03-henningdierks:
@@ -682,6 +787,30 @@ records:
       idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
     reviewed_by: ''
     status: supported
+  covers:route-b2cb82ed2840a70e81bfbaa5:
+    claim_id: covers:route-b2cb82ed2840a70e81bfbaa5
+    claim_kind: route-covers
+    statement: route-b2cb82ed2840a70e81bfbaa5 covers nothing
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 52
+        unit-m2-sad-l03: 17
+        unit-m2-sad-l11: 13
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/coursera-replacement-2026-09-16/coverage-audit.md: sha256:3a448f127d23c6b9d043660d332837de63d8c3d1c4e5e338b3562a2dc6c4fd99
+      evidence:
+      - 'repo-file:work/active/workspace-m2-exam-prep/outputs/coursera-replacement-2026-09-16/coverage-audit.md
+        -- trail: route retired: source is enrolment-walled; per-node survivor counts
+        recorded in the audit, and the two nodes that would have lost intuition-depth
+        coverage are refilled in this same plan'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-coursera-retire-sad
+      idempotency_key: coursera-retire-sad-2026-09-16
+    reviewed_by: ''
+    status: withdrawn
   covers:route-b574283601c1e7562e4f5071:
     claim_id: covers:route-b574283601c1e7562e4f5071
     claim_kind: route-covers
@@ -771,6 +900,32 @@ records:
       idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
     reviewed_by: ''
     status: supported
+  covers:route-d0e6480de8943d4dc68a3563:
+    claim_id: covers:route-d0e6480de8943d4dc68a3563
+    claim_kind: route-covers
+    statement: route-d0e6480de8943d4dc68a3563 covers nothing
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-aml: 13
+        unit-aml-l03: 6
+        unit-aml-l04: 6
+        unit-aml-l05: 6
+        unit-aml-l06: 6
+      source_hashes:
+        file:work/active/workspace-aml-exam-prep/outputs/coursera-replacement-2026-09-16/coverage-audit.md: sha256:840fed9036a811b54504cea2557c880a4f85ab10b3d83dceb857d49c7d05e94d
+      evidence:
+      - 'repo-file:work/active/workspace-aml-exam-prep/outputs/coursera-replacement-2026-09-16/coverage-audit.md
+        -- trail: route retired: source is enrolment-walled; every node it claimed
+        keeps same-depth free coverage on the same unit, except aml-l05-boundary which
+        is refilled in this same plan'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-coursera-retire-aml
+      idempotency_key: coursera-retire-aml-2026-09-16
+    reviewed_by: ''
+    status: withdrawn
   covers:route-d74a33b5dc1ddb179eb252f8:
     claim_id: covers:route-d74a33b5dc1ddb179eb252f8
     claim_kind: route-covers
@@ -872,6 +1027,32 @@ records:
       idempotency_key: codex-sad-l08-l10-1d853abf32574fef9a4d07e643cff59a
     reviewed_by: ''
     status: supported
+  covers:route-dddb775edaf64654e52ffd26:
+    claim_id: covers:route-dddb775edaf64654e52ffd26
+    claim_kind: route-covers
+    statement: route-dddb775edaf64654e52ffd26 covers nothing
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-aml: 13
+        unit-aml-l03: 6
+        unit-aml-l04: 6
+        unit-aml-l05: 6
+        unit-aml-l06: 6
+      source_hashes:
+        file:work/active/workspace-aml-exam-prep/outputs/coursera-replacement-2026-09-16/coverage-audit.md: sha256:840fed9036a811b54504cea2557c880a4f85ab10b3d83dceb857d49c7d05e94d
+      evidence:
+      - 'repo-file:work/active/workspace-aml-exam-prep/outputs/coursera-replacement-2026-09-16/coverage-audit.md
+        -- trail: route retired: source is enrolment-walled; every node it claimed
+        keeps same-depth free coverage on the same unit, except aml-l05-boundary which
+        is refilled in this same plan'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-coursera-retire-aml
+      idempotency_key: coursera-retire-aml-2026-09-16
+    reviewed_by: ''
+    status: withdrawn
   covers:route-deaaba021bfaafb4d0aa6bd8:
     claim_id: covers:route-deaaba021bfaafb4d0aa6bd8
     claim_kind: route-covers
@@ -3298,6 +3479,60 @@ records:
     admitted_by:
       request_id: request-sad-gap-fills-2026-09-16
       idempotency_key: sad-gap-fills-2026-09-16-001
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l11-statquest-crossval:
+    claim_id: covers:route-sad-l11-statquest-crossval
+    claim_kind: route-covers
+    statement: route-sad-l11-statquest-crossval covers knowledge-sad-l11-resampling
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 52
+        unit-m2-sad-l03: 17
+        unit-m2-sad-l11: 13
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/coursera-replacement-2026-09-16/recheck/fSytzGwwBVw.json: sha256:df0a116f0fe713b8c94598d998909603c1aaadfad529b6f2b48c27b6a81c710c
+        file:work/active/workspace-m2-exam-prep/outputs/coursera-replacement-2026-09-16/transcripts/fSytzGwwBVw.md: sha256:49b3b08bd99eed09a66f6be74d8b1ecacaab72f3dcff50f57e7be156caf6aef9
+      evidence:
+      - 'route-locator:"Machine Learning Fundamentals: Cross Validation", 02:43-03:10
+        for the leakage a'
+      - 'external:https://www.youtube.com/watch?v=fSytzGwwBVw -- trail: verified live
+        2026-09-16 (VERIFIED-URLS.txt); transcript read line by line'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/coursera-replacement-2026-09-16/transcripts/fSytzGwwBVw.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/coursera-replacement-2026-09-16/recheck/fSytzGwwBVw.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-coursera-retire-sad
+      idempotency_key: coursera-retire-sad-2026-09-16
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l11-statquest-roc-auc:
+    claim_id: covers:route-sad-l11-statquest-roc-auc
+    claim_kind: route-covers
+    statement: route-sad-l11-statquest-roc-auc covers knowledge-sad-l11-evaluation
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 52
+        unit-m2-sad-l03: 17
+        unit-m2-sad-l11: 13
+      source_hashes:
+        file:work/active/workspace-m2-exam-prep/outputs/coursera-replacement-2026-09-16/recheck/4jRBRDbJemM.json: sha256:87db29979fea9db55ce27c59d5c56fd095bd44fe023fdbd5aa1d7db071c54f62
+        file:work/active/workspace-m2-exam-prep/outputs/coursera-replacement-2026-09-16/transcripts/4jRBRDbJemM.md: sha256:743a2a3d2df3f9d5751f174c83276bd103655b019875f9422fdbd495a8df27d3
+      evidence:
+      - route-locator:"ROC and AUC, Clearly Explained!", 02:20-03:40 for the threshold;
+        06:55-08:40 fo
+      - 'external:https://www.youtube.com/watch?v=4jRBRDbJemM -- trail: verified live
+        2026-09-16 (VERIFIED-URLS.txt); transcript read line by line'
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/coursera-replacement-2026-09-16/transcripts/4jRBRDbJemM.md
+      - repo-file:work/active/workspace-m2-exam-prep/outputs/coursera-replacement-2026-09-16/recheck/4jRBRDbJemM.json
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: request-coursera-retire-sad
+      idempotency_key: coursera-retire-sad-2026-09-16
     reviewed_by: ''
     status: supported
   covers:route-sad-l12-esl-stacking:

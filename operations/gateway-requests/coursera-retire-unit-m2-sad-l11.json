@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "request_id": "request-coursera-retire-unit-m2-sad-l11",
+  "idempotency_key": "coursera-retire-unit-m2-sad-l11-2026-09-16",
+  "capability": "unit.map.import",
+  "channel": "operator",
+  "expected_snapshot": "sha256:9b9311a88146b7b8490d47ddcb6d87721c860a5a2eb63bf9d021b34e3b943e87",
+  "expected_revisions": {
+    "unit-m2-sad-l11": 12,
+    "study-map-m2-sad-l11": 6
+  },
+  "payload": {
+    "unit_id": "unit-m2-sad-l11",
+    "file": "work/active/workspace-m2-exam-prep/outputs/coursera-replacement-2026-09-16/map-drafts/unit-m2-sad-l11.study-map.yaml",
+    "file_sha256": "sha256:4efbc1b51546783f6900dfd1b4b519aafa47965ce1f3c88057294740a1d01698",
+    "replace": true
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:cd79b93724d5db25bd5c550eb85d566be82c14d5ada5c5af7ee9261e1c700931"
+  }
+}

@@ -4794,7 +4794,9 @@ sources:
       convenience — and works through what each does to representativeness, plus non-response and voluntary-response
       bias. L02's sampling node is one slide; the exam question 'why is this sample not representative'
       expects the vocabulary from this section. §2.2 is also the only treatment here that takes categorical
-      data seriously as its own case with contingency tables, which is where Simpson's paradox lives.
+      data seriously as its own case, with contingency tables and conditional proportions. It does not
+      cover Simpson's paradox — a full-text search of all 422 pages finds no mention; take that node from
+      Blitzstein Ex 2.8.3 and the L02 video route.
     vault_path: material://source-openintro-statistics/openintro.pdf
   - id: route-c36a55ce03e709469e710d7e
     unit_id: unit-m2-sad-l03
@@ -5421,49 +5423,6 @@ sources:
       the shapes wrong. These exercises are sized for that check and grade immediately, so an error is
       caught in seconds rather than at the end of a written derivation. Pair with the SaD Übungen, which
       set the same kind of task in the course's own notation.
-- source_id: source-ng-coursera
-  role: first-exposure
-  why: The classic introductory ML course; still the gentlest available treatment of gradient descent
-    and the bias-variance material.
-  priority: 7
-  unit_routes:
-  - id: route-b2cb82ed2840a70e81bfbaa5
-    unit_id: unit-m2-sad-l03
-    title: Ng — regression course, Weeks 1–2 (course entry)
-    format: course
-    depth: intuition
-    scope: complementary
-    locator: 'Machine Learning Specialization, Course 1 ''Supervised Machine Learning: Regression and
-      Classification'', Week 1 ''Linear regression model'' and Week 2 ''Multiple linear regression'',
-      ''Feature scaling'', and ''Choosing the learning rate'''
-    covers:
-    - knowledge-sad-l03-gradient-descent
-    - knowledge-sad-l03-scaling-weights
-    - knowledge-sad-l03-simple-regression
-    angle: Offers separate short lessons on the regression objective, learning rate, scaling and convergence.
-    angle_detail: Open goes to the course syllabus, not an individual lesson. Access to videos or labs
-      may require enrollment. The current syllabus verifies the named segments; playback and full video
-      content were not re-audited under the requested video budget.
-    url: https://www.coursera.org/learn/machine-learning
-  - id: route-3779cdc11dbbbbe4d52b87ee
-    unit_id: unit-m2-sad-l11
-    title: Ng — bias, variance and the evaluation workflow lectures
-    format: course
-    depth: intuition
-    scope: complementary
-    locator: 'Week 6: the ''Advice for applying machine learning'' lectures (train/validation/test split,
-      learning curves, diagnosing bias vs variance)'
-    covers:
-    - knowledge-sad-l11-generalization
-    - knowledge-sad-l11-resampling
-    - knowledge-sad-l11-evaluation
-    angle: Turns bias and variance into a diagnostic procedure — read the learning curves, then decide
-      what to change.
-    angle_detail: 'L11 defines underfitting, overfitting and the bias-variance trade-off. Ng''s week 6
-      makes them actionable: if training and validation error are both high you have bias and more data
-      will not help; if they diverge you have variance and more data will. That if-then structure is the
-      most retainable form of this material and is exactly what a conceptual exam question about the trade-off
-      is testing.'
 - source_id: source-prince-udl
   role: optional-depth
   why: Understanding Deep Learning — a modern, unusually well-illustrated textbook; free PDF.
@@ -8906,6 +8865,44 @@ sources:
       without hedging — we rarely have the time or money to measure every single thing, so we almost always
       estimate from a relatively small sample. That sentence is what makes the rest of the course necessary.
     url: https://www.youtube.com/watch?v=vikkiwjQqfU
+  - id: route-sad-l11-statquest-crossval
+    unit_id: unit-m2-sad-l11
+    title: StatQuest — cross validation and why you cannot test on training data
+    format: video
+    angle: Makes the separation of data roles the argument rather than a definition, then rotates the
+      test block.
+    covers:
+    - knowledge-sad-l11-resampling
+    depth: intuition
+    scope: complementary
+    locator: '"Machine Learning Fundamentals: Cross Validation", 02:43-03:10 for the leakage argument
+      and the 75/25 split; 03:26-04:30 for block rotation'
+    angle_detail: 'This node lost its only intuition-depth route when the enrolment-walled Ng course was
+      retired, and the free routes that remain are all derivation or practice. Here reusing data for training
+      and testing is called a bad idea at 02:43 and the reason given, a fixed 75/25 split is proposed
+      and then questioned at 03:11, and cross validation is introduced at 03:29 as using every block one
+      at a time and summarising at the end. Note the limit: the node also names the bootstrap and this
+      video never mentions it — take that from the L09 bootstrap material.'
+    url: https://www.youtube.com/watch?v=fSytzGwwBVw
+  - id: route-sad-l11-statquest-roc-auc
+    unit_id: unit-m2-sad-l11
+    title: StatQuest — ROC, AUC, and which metric survives class imbalance
+    format: video
+    angle: Sweeps the threshold, builds the ROC from per-threshold confusion matrices, then shows which
+      metric to trust when classes are imbalanced.
+    covers:
+    - knowledge-sad-l11-evaluation
+    depth: intuition
+    scope: complementary
+    locator: '"ROC and AUC, Clearly Explained!", 02:20-03:40 for the threshold; 06:55-08:40 for ROC as
+      a summary of confusion matrices; 14:41-15:30 for precision under imbalance'
+    angle_detail: 'The evaluation node is about metric choice following costs and prevalence, and no other
+      L11 route reaches that at intuition depth. The video sets a 0.5 threshold at 02:20, points out at
+      06:55 that one confusion matrix per threshold is unusable, and introduces the ROC at 07:08 as the
+      way to summarise them. The part worth staying for is 14:41 onward: precision is defined, and at
+      15:12 it is preferred to the false-positive rate precisely because it excludes true negatives and
+      so is not distorted by imbalance — the rare-disease case.'
+    url: https://www.youtube.com/watch?v=4jRBRDbJemM
 - source_id: source-jbstatistics
   role: intuition
   why: Short calculation-exact probability and inference refreshers.
