@@ -7,8 +7,6 @@ returns the one canonical file that a gateway transaction may publish.
 
 from __future__ import annotations
 
-import hashlib
-import json
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -16,7 +14,11 @@ from typing import Any
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.loader import load_repo
 from learning_os.material_slices import parse_locator_page_ranges
-from learning_os.materials_resolution import resolve_route_material_files
+from learning_os.materials_resolution import (
+    route_material_checksum,
+    sha256_file,
+    stable_checksum,
+)
 from learning_os.transactions import artifact_revision
 
 #: Widest cited page span the provenance check expands before refusing.
@@ -27,33 +29,6 @@ _MAX_CITED_SPAN = 100_000
 
 class MaterialSynthesisError(ValueError):
     """A dossier is invalid or stale; callers must leave canonical state unchanged."""
-
-
-def _sha256_bytes(value: bytes) -> str:
-    return "sha256:" + hashlib.sha256(value).hexdigest()
-
-
-def _sha256_file(path: Path, cache: dict[Path, str] | None = None) -> str:
-    """Hash one material file, at most once per build.
-
-    Routes deliberately share files — a lecture deck reached by four routes is
-    one deck — and every route hashed it again. The memo is created per build
-    and never outlives it, so a file that changes between builds is still
-    rehashed and a stale dossier still goes stale (2026-09-05 audit, F13).
-    """
-    if cache is None:
-        return _sha256_bytes(path.read_bytes())
-    key = Path(path).resolve()
-    checksum = cache.get(key)
-    if checksum is None:
-        checksum = _sha256_bytes(path.read_bytes())
-        cache[key] = checksum
-    return checksum
-
-
-def _stable_checksum(value: Any) -> str:
-    payload = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    return _sha256_bytes(payload.encode("utf-8"))
 
 
 def _rich_routes(repo, unit_id: str) -> list[dict[str, Any]]:
@@ -72,28 +47,6 @@ def _rich_routes(repo, unit_id: str) -> list[dict[str, Any]]:
                 row["source_id"] = source_id
                 output.append(row)
     return output
-
-
-def _route_material_checksum(repo, route: dict[str, Any],
-                             cache: dict[Path, str] | None = None) -> str:
-    """Hash local material bytes when resolvable; otherwise hash the exact route.
-
-    Remote and deliberately unavailable resources still need a stable freshness
-    token.  The route hash is explicitly provenance, not a claim that remote
-    bytes were reviewed.
-    """
-    files = resolve_route_material_files(repo, route)
-    if len(files) == 1:
-        return _sha256_file(files[0].path, cache)
-    if files:
-        return _stable_checksum([
-            {"material_uri": uri, "sha256": _sha256_file(path, cache)}
-            for uri, path in sorted(files, key=lambda row: row[0])
-        ])
-    return _stable_checksum({
-        key: route.get(key)
-        for key in ("id", "source_id", "unit_id", "locator", "url", "vault_path")
-    })
 
 
 def current_unit_material_basis(
@@ -137,10 +90,10 @@ def current_unit_material_basis(
         # checksum: either a coordinated module-plan change or an out-of-band
         # byte change makes a reviewed dossier stale.
         "source_map_revision": artifact_revision(root, unit.module_id),
-        "source_map_checksum": _sha256_file(source_map_path, cache),
-        "route_set_checksum": _stable_checksum(route_rows),
+        "source_map_checksum": sha256_file(source_map_path, cache),
+        "route_set_checksum": stable_checksum(route_rows),
         "material_checksums": {
-            str(route["id"]): _route_material_checksum(repo, route, cache)
+            str(route["id"]): route_material_checksum(repo, route, cache)
             for route in route_rows
         },
         "policy": "tiered-v1",
@@ -286,49 +239,57 @@ def inspected_pages_by_route(
     return {route_id: sorted(pages) for route_id, pages in inspected.items()}
 
 
-def _pages_beyond(seen: set[int], locator: Any) -> list[int]:
-    """Cited pages no slice inspected, sampled for the error message."""
+def _check_evidence_pages(seen: set[int], inspected: list[int], locator: Any,
+                          where: str) -> None:
+    """One evidence locator against the inspected set, or raise."""
+    ranges = parse_locator_page_ranges(locator)
+    if not ranges:
+        raise MaterialSynthesisError(
+            f"{where} evidence must cite exact PDF pages in house style "
+            f"(e.g. 'PDF pp. 34-41'); got {locator!r}")
     beyond: list[int] = []
-    for start, end in parse_locator_page_ranges(locator):
+    for start, end in ranges:
         for page in range(start, min(end, start + _MAX_CITED_SPAN) + 1):
             if page not in seen:
                 beyond.append(page)
                 if len(beyond) >= 5:
-                    return beyond
-    return beyond
+                    break
+        if len(beyond) >= 5:
+            break
+    if beyond:
+        raise MaterialSynthesisError(
+            f"{where} evidence cites PDF pages never inspected "
+            f"(e.g. p.{beyond[0]}); inspected: {inspected}")
 
 
 def validate_synthesis_page_provenance(
     inspected: dict[str, list[int]],
     synthesis: dict[str, Any],
+    *,
+    pdf_routes: set[str] | frozenset[str],
 ) -> None:
-    """Refuse evidence that cites pages no attached slice inspected.
+    """Refuse evidence that is not grounded in the attached slices.
 
-    Only routes with a reading record are checked: bundles prepared without
-    slices keep their legacy behavior, so old requests stay valid. Evidence
-    locators without parseable page references are prose the validator
-    cannot judge and are left alone — a documented boundary, not a proof.
-    Deep-reviewed evidence that names pages outside the inspected set is
-    rejected, for assessments and for both sides of pairwise comparisons.
+    ``pdf_routes`` names the inspected routes with PDF parts; only those
+    routes face the page rule, since plain-text slices have no page model.
+    Routes without a reading record keep their legacy behavior, so bundles
+    prepared without slices stay valid. For PDF routes every deep-reviewed
+    evidence item must cite exact PDF pages in house style AND stay within
+    the inspected set — an unparseable locator is refused rather than
+    waved through, for assessments and both comparison sides alike.
     """
-    unit_id = synthesis.get("unit_id", "?")
     for row in synthesis.get("route_assessments", []) or []:
         if not isinstance(row, dict) or row.get("review_status") != "deep-reviewed":
             continue
         route_id = str(row.get("route_id"))
-        if route_id not in inspected:
+        if route_id not in inspected or route_id not in pdf_routes:
             continue
         seen = set(inspected[route_id])
         for evidence in row.get("evidence", []) or []:
             if not isinstance(evidence, dict):
                 continue
-            beyond = _pages_beyond(seen, evidence.get("locator"))
-            if beyond:
-                raise MaterialSynthesisError(
-                    f"{route_id} evidence cites PDF pages never inspected "
-                    f"(e.g. p.{beyond[0]}); inspected: {sorted(seen)} "
-                    f"for dossier {synthesis.get('id', unit_id)}"
-                )
+            _check_evidence_pages(seen, inspected[route_id], evidence.get("locator"),
+                                  where=route_id)
     for comparison in synthesis.get("comparisons", []) or []:
         if not isinstance(comparison, dict):
             continue
@@ -339,18 +300,14 @@ def validate_synthesis_page_provenance(
             route_id = comparison.get(key)
             rows = evidence.get(side)
             if not isinstance(route_id, str) or route_id not in inspected \
-                    or not isinstance(rows, list):
+                    or route_id not in pdf_routes or not isinstance(rows, list):
                 continue
             seen = set(inspected[route_id])
             for item in rows:
                 if not isinstance(item, dict):
                     continue
-                beyond = _pages_beyond(seen, item.get("locator"))
-                if beyond:
-                    raise MaterialSynthesisError(
-                        f"comparison {side} of {route_id} cites PDF pages never "
-                        f"inspected (e.g. p.{beyond[0]}); inspected: {sorted(seen)}"
-                    )
+                _check_evidence_pages(seen, inspected[route_id], item.get("locator"),
+                                      where=f"comparison {side} of {route_id}")
 
 
 def material_synthesis_freshness(
