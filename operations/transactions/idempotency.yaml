@@ -121,6 +121,30 @@ entries:
       unit-m2-sad-l04: 16
     snapshot_before: sha256:04b36446b753c789d7b631edf290530ef78f013f8110a1e9fcd3af9e34cb0b80
     snapshot_after: sha256:8212040256452e3969185d1bcb9653858800eb5033178ad7211c48cd66b132f5
+  ai-delivery-sad-l03-pilot2-apply-002:
+    request_id: request-ai-delivery-apply-sad-l03-pilot2
+    capability: ai-action.delivery.apply
+    channel: operator
+    intent_sha256: sha256:bb40225f1335a32f8112b8fb75f91db1635a9c45cd952c2336e78af9434c373e
+    transaction_id: transaction-20260917-205639-001
+    receipt_path: operations/transactions/transaction-20260917-205639-001.yaml
+    revisions:
+      material-synthesis-m2-sad-l03-pilot: 1
+      unit-m2-sad-l03: 19
+    snapshot_before: sha256:c1249a84ba48d27d9a28094b5f06d02508725e3d89449d131b0a8912ea4218d6
+    snapshot_after: sha256:56fd76577a49a6bebccb91730343a811160496662667b077250b6db15d3251f2
+  ai-delivery-sad-l03-pilot3-apply-001:
+    request_id: request-ai-delivery-apply-sad-l03-pilot3
+    capability: ai-action.delivery.apply
+    channel: operator
+    intent_sha256: sha256:49cd96964014b6dc44d720ff865ca0c212d4e595d50f3f63862cc0ca20ea2b69
+    transaction_id: transaction-20260917-210208-001
+    receipt_path: operations/transactions/transaction-20260917-210208-001.yaml
+    revisions:
+      material-synthesis-m2-sad-l03: 1
+      unit-m2-sad-l03: 20
+    snapshot_before: sha256:56fd76577a49a6bebccb91730343a811160496662667b077250b6db15d3251f2
+    snapshot_after: sha256:c9c7cc46bebf2e35173ec018226a2b8a58196429cc60bb311868b38edc30563c
   algo2-safe-shelve-20260831-001:
     request_id: request-algo2-safe-shelve-20260831-001
     capability: module.plan.import
@@ -2125,6 +2149,19 @@ entries:
       unit-m2-sad-l11: 12
     snapshot_before: sha256:eb26e20f5be6de7f947094095f0af4f0ce5925a3bcae2a62bafc7bdba1e02f80
     snapshot_after: sha256:ac5ed5d2fd38d1f17cd322aeaa86fbffdc5d0fa91861895bf7e001b909dca8cb
+  routepatch-sad-l03-ced062:
+    request_id: request-routepatch-sad-l03-ced062
+    capability: route.patch
+    channel: operator
+    intent_sha256: sha256:d551555456a528143370ceeee8949be743b7f93aceb131609a74900e3adb360e
+    transaction_id: transaction-20260917-203949-001
+    receipt_path: operations/transactions/transaction-20260917-203949-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 53
+      study-map-m2-sad-l03: 7
+      unit-m2-sad-l03: 18
+    snapshot_before: sha256:8e319299cb83604768a20d378df5c4636be9a808b8c8beb5d9dce8e9052e45f5
+    snapshot_after: sha256:c1249a84ba48d27d9a28094b5f06d02508725e3d89449d131b0a8912ea4218d6
   runtime-review-backfill-clt-v1:
     request_id: request-runtime-review-backfill-clt-v1
     capability: unit.map.import

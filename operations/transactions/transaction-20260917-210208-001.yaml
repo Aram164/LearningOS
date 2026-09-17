@@ -1,0 +1,64 @@
+schema_version: 2
+id: transaction-20260917-210208-001
+type: transaction-receipt
+status: committed
+capability: ai-action.delivery.apply
+committed_at: '2026-09-17T21:02:08+02:00'
+snapshot_before: sha256:56fd76577a49a6bebccb91730343a811160496662667b077250b6db15d3251f2
+snapshot_after: sha256:c9c7cc46bebf2e35173ec018226a2b8a58196429cc60bb311868b38edc30563c
+expected_revisions:
+  unit-m2-sad-l03: 19
+  material-synthesis-m2-sad-l03: 0
+artifact_revisions:
+  material-synthesis-m2-sad-l03:
+    before: 0
+    after: 1
+  unit-m2-sad-l03:
+    before: 19
+    after: 20
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/material-synthesis.yaml
+  sha256_before: 6cf43e051bf5e9273ad7068b59f3d7720b3d996b6121214d3e183ace02b8c1b0
+  sha256_after: 1f447df5fd325c2b2bdd1f194594bc973193eda27498dedcd706ce3b1a695ac7
+  created: false
+- path: operations/ai-actions/requests/ai-request-sad-l03-pilot3/request.yaml
+  sha256_before: ce4edf3cda11c182ee897c7d72b6d15ebad8ef252279c807ba13e37c47c20073
+  sha256_after: f579ca8a36227bbb7d86adcad80413a385a4e226b76c0045c64012550c424ac4
+  created: false
+metadata:
+  request_id: ai-request-sad-l03-pilot3
+  delivery_id: ai-delivery-sad-l03-pilot3
+  action_id: unit.compare-materials
+  approved_delivery:
+    delivery_sha256: sha256:1841e5701cbeda86da03b380a57768822964461bcf4e1c388f0edf4e6b251162
+    artifact_sha256:
+      material-synthesis.json: sha256:c5c2dac33da907cc984ef60aeb2a4f898420b346c064b582cbde221ab4fa1468
+  created_ids: []
+  updated_ids:
+  - material-synthesis-m2-sad-l03
+  - unit-m2-sad-l03
+  deleted_ids: []
+  superseded_ids: []
+  validation:
+    schemas: passed
+    references: passed
+    boundaries: passed
+    projection: passed
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: ai-action.delivery.apply
+    declared_writes:
+    - operations/ai-actions/requests/**
+  - capability: unit.material-synthesis.publish
+    declared_writes:
+    - curriculum/modules/**/units/**/material-synthesis.yaml
+request:
+  channel: operator
+  request_id: request-ai-delivery-apply-sad-l03-pilot3
+  idempotency_key: ai-delivery-sad-l03-pilot3-apply-001
+  intent_sha256: sha256:49cd96964014b6dc44d720ff865ca0c212d4e595d50f3f63862cc0ca20ea2b69
+  approval:
+    kind: approved-delivery
+    subject_sha256: sha256:49cd96964014b6dc44d720ff865ca0c212d4e595d50f3f63862cc0ca20ea2b69
