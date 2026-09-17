@@ -1838,13 +1838,15 @@ sources:
     format: website
     depth: intuition
     scope: prerequisite
-    locator: '"The paradox of the derivative — illustrated author lesson with embedded video"'
+    locator: transcript/9vKqVkMQHKk.md (Kapitel 2 'The paradox of the derivative', 16:50). The limiting-slope
+      construction runs [04:30]-[09:00]; the worked t-cubed derivation follows at [10:30]-[13:00].
     covers:
     - knowledge-sad-l03-gradient-descent
     angle: Builds instantaneous velocity from shrinking changes in distance and time.
     angle_detail: Use this prerequisite only if the meaning of a derivative is unclear. It explains the
       slope used by an update, not multivariable gradient descent itself.
     url: https://www.3blue1brown.com/lessons/derivatives/
+    vault_path: material://source-3b1b-essence-of-calculus/transcript/9vKqVkMQHKk.md
   - id: route-dd5f555433ae41e4cd19802b
     unit_id: unit-m2-sad-l15
     title: 3Blue1Brown — the chain rule, which is all backpropagation is
