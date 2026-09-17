@@ -34,6 +34,7 @@ from learning_os.backup_manifest import BackupManifestError  # noqa: E402
 
 # Command registry: one module per domain, so a behaviour is found by name.
 from learning_os.commands.ai import (  # noqa: E402
+    cmd_ai_action_append_slices,
     cmd_ai_action_apply_delivery,
     cmd_ai_action_import_delivery,
     cmd_ai_action_list,
@@ -310,6 +311,26 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--expected-snapshot", default=None)
     p.add_argument("--request-id", default=None)
     p.set_defaults(func=cmd_ai_action_prepare)
+
+    p = sub.add_parser("ai-action-append-slices",
+                       help="attach one targeted follow-up slice pass to a prepared request")
+    p.add_argument("--request-id", required=True)
+    p.add_argument("--route-id", required=True)
+    p.add_argument("--start", required=True, type=int,
+                   help="first 1-based PDF page of the continuation range")
+    p.add_argument("--end", required=True, type=int,
+                   help="last 1-based PDF page of the continuation range")
+    p.add_argument("--kind", required=True,
+                   help="evidence gap kind: concept-coverage, prerequisite, notation, "
+                        "derivation, example, exercise or limitation")
+    p.add_argument("--concept-id", action="append", default=None,
+                   help="concept the gap concerns (repeatable)")
+    p.add_argument("--reason", required=True,
+                   help="why exactly these pages are needed")
+    p.add_argument("--material-uri", default=None,
+                   help="required when the route binds several files")
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_ai_action_append_slices)
 
     p = sub.add_parser("ai-action-import-delivery",
                        help="import and validate an approved delivery directory")

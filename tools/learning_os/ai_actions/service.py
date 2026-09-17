@@ -24,14 +24,21 @@ from learning_os.fingerprint import source_fingerprint
 from learning_os.garden import project_garden_entries
 from learning_os.loader import load_repo
 from learning_os.material_slices import (
+    MAX_SLICE_BYTES_TOTAL,
     SLICE_BUNDLE_PREFIX,
+    ContinuationError,
     SliceResolutionError,
     build_unit_slices,
+    continuation_record_dict,
+    plan_continuation,
+    read_bundle_slice_index,
     slice_index_entry,
 )
 from learning_os.material_synthesis import (
     current_unit_material_basis,
+    inspected_pages_by_route,
     synthesis_destination,
+    validate_synthesis_page_provenance,
     validate_unit_material_synthesis,
 )
 from learning_os.transactions import (
@@ -47,6 +54,7 @@ from learning_os.transactions import (
 from .binding import read_bound_delivery, validated_sha256
 from .errors import (
     ActionPolicyError,
+    ContinuationRefusedError,
     DeliveryValidationError,
     StaleDeliveryError,
     TargetNotFoundError,
@@ -56,6 +64,7 @@ from .registry import ActionRegistry, AdapterRegistry
 from .storage import FilesystemAIActionRepository
 from .support import (
     Clock,
+    _atomic_text,
     _dump_yaml,
     _inside,
     _iso,
@@ -308,6 +317,7 @@ class AIActionService:
                 "originals": [original],
             }
             basis = current_unit_material_basis(self.root, target_id, repo=repo)
+            request["material_basis"] = basis
             try:
                 slices = build_unit_slices(repo, routes, basis=basis)
             except SliceResolutionError as exc:
@@ -354,6 +364,17 @@ class AIActionService:
                 "the slice_sha256, which only proves the transport bytes of the extracted text. "
                 "When a slice header reports truncation, record it in limitations; never claim "
                 "pages beyond the attachment.\n"
+                "\n"
+                "When the attached pages cannot support a claim, do not guess and do not "
+                "claim absence: absence from the inspected pages is never proof of absence "
+                "from the source. State the concrete evidence gap in the discussion — which "
+                "concept, what kind of material is missing (concept-coverage, prerequisite, "
+                "notation, derivation, example, exercise or limitation) and which exact pages "
+                "should be read next. The operator may then attach a targeted continuation "
+                "pass to this same request; passes stay small and bounded and stop after a "
+                "few rounds. Request another pass only for a named gap; stop as soon as the "
+                "evidence suffices, or record the point as not established from inspected "
+                "material.\n"
             )
             bundle_files["instructions.md"] = instructions.encode("utf-8")
             bundle_files["context.md"] = (
@@ -365,6 +386,116 @@ class AIActionService:
                 bundle_files["attachments/source-map.yaml"] = source_map_path.read_bytes()
         self.repository.save_request(request, bundle_files)
         return request
+
+    def append_slices(
+        self,
+        *,
+        request_id: str,
+        route_id: str,
+        start: int,
+        end: int,
+        kind: str,
+        concept_ids: list[str],
+        reason: str,
+        material_uri: str | None = None,
+        expected_snapshot: str | None = None,
+    ) -> dict[str, Any]:
+        """Attach one targeted follow-up pass to a prepared compare request.
+
+        Pass 1 came from preparation; this adds pass 2 (or 3) for exactly
+        one route with an explicit page range and a stated evidence gap.
+        The snapshot and the material bytes are re-verified first: anything
+        that moved since preparation refuses with a re-prepare instruction
+        instead of mixing stale reads. Only ``prepared`` requests grow;
+        deliveries, canonical records and other actions are untouched.
+        """
+        request = self.repository.get_request(request_id)
+        if request.get("action_id") != "unit.compare-materials":
+            raise ActionPolicyError(
+                f"continuations only amend unit.compare-materials requests: {request_id}")
+        if request.get("status") != "prepared":
+            raise ActionPolicyError(
+                f"request {request_id} is {request.get('status')}; "
+                "only prepared requests accept continuation passes")
+        snapshot = _snapshot(self.root)
+        if expected_snapshot and expected_snapshot != snapshot:
+            raise StaleDeliveryError(
+                f"expected snapshot {expected_snapshot}, current snapshot is {snapshot}"
+            )
+        if snapshot != (request.get("preconditions") or {}).get("snapshot_id"):
+            raise StaleDeliveryError(
+                "records changed since request preparation; "
+                "re-prepare the request instead of continuing it")
+        target_id = str((request.get("target") or {}).get("id"))
+        repo = load_repo(self.root)
+        unit = repo.units.get(target_id)
+        if unit is None:
+            raise TargetNotFoundError(f"Unit target not found: {target_id}")
+        source_map = repo.module_source_maps.get(unit.module_id) or {}
+        route: dict[str, Any] | None = None
+        for source_row in source_map.get("sources", []) or []:
+            if not isinstance(source_row, dict):
+                continue
+            for row in source_row.get("unit_routes", []) or []:
+                if isinstance(row, dict) and row.get("unit_id") == target_id \
+                        and str(row.get("id")) == route_id:
+                    route = {**row, "source_id": source_row.get("source_id")}
+        if route is None:
+            raise ActionPolicyError(
+                f"route {route_id} is not part of this request's unit")
+        bundle_dir = self.repository.request_dir(str(request["id"]))
+        index_records = read_bundle_slice_index(bundle_dir)
+        prior = [entry for entry in index_records
+                 if isinstance(entry, dict) and entry.get("route_id") == route_id]
+        if not prior:
+            raise ContinuationRefusedError(
+                f"route {route_id} continuation refused: "
+                "it has no first-pass slice to continue from")
+        stored_basis = request.get("material_basis")
+        if not isinstance(stored_basis, dict) or not stored_basis.get("material_checksums"):
+            raise ContinuationRefusedError(
+                f"route {route_id} continuation refused: this request predates "
+                "slice-basis binding; re-prepare the request instead of continuing it")
+        inspected = inspected_pages_by_route(index_records).get(route_id, [])
+        try:
+            record, index_entry, body = plan_continuation(
+                repo, route, basis=stored_basis, inspected=inspected,
+                passes_used=len(prior), start=start, end=end, kind=kind,
+                concept_ids=concept_ids, reason=reason, material_uri=material_uri,
+            )
+        except ContinuationError as exc:
+            raise ContinuationRefusedError(str(exc)) from exc
+        spent = len(body)
+        for entry in index_records:
+            if not isinstance(entry, dict):
+                continue
+            existing = bundle_dir / str(entry.get("bundle_path", ""))
+            if existing.is_file():
+                spent += existing.stat().st_size
+        if spent > MAX_SLICE_BYTES_TOTAL:
+            raise ContinuationRefusedError(
+                f"route {route_id} continuation refused: its slice tips the bundle "
+                f"over the {MAX_SLICE_BYTES_TOTAL}-byte ceiling")
+        record_path = (f"{SLICE_BUNDLE_PREFIX}/continuations/"
+                       f"pass-{record.pass_number}-{route_id}.yaml")
+        record_target = bundle_dir / record_path
+        record_target.parent.mkdir(parents=True, exist_ok=True)
+        _atomic_text(record_target, _dump_yaml(continuation_record_dict(record)))
+        slice_target = bundle_dir / index_entry["bundle_path"]
+        slice_target.parent.mkdir(parents=True, exist_ok=True)
+        slice_target.write_bytes(body)
+        index_records.append(index_entry)
+        _atomic_text(bundle_dir / SLICE_BUNDLE_PREFIX / "index.json",
+                     json.dumps(index_records, indent=2) + "\n")
+        passes = list(request.get("reading_passes") or [])
+        passes.append({"route_id": route_id, "pass": record.pass_number,
+                       "bundle_path": index_entry["bundle_path"],
+                       "continuation": record_path})
+        request["reading_passes"] = passes
+        self.repository.update_request(request)
+        return {"request_id": str(request["id"]), "route_id": route_id,
+                "pass": record.pass_number, "bundle_path": index_entry["bundle_path"],
+                "pages": list(range(start, end + 1)), "page_total": record.page_total}
 
     def import_delivery(self, source: Path) -> DeliveryRecord:
         delivery, staged = self.repository.stage_delivery_directory(source)
@@ -609,6 +740,14 @@ class AIActionService:
                     validate_unit_material_synthesis(self.root, target_id, synthesis)
                 except ValueError as exc:
                     raise DeliveryValidationError(str(exc)) from exc
+                bundle_dir = self.repository.request_dir(str(request["id"]))
+                index_records = read_bundle_slice_index(bundle_dir)
+                if index_records:
+                    try:
+                        validate_synthesis_page_provenance(
+                            inspected_pages_by_route(index_records), synthesis)
+                    except ValueError as exc:
+                        raise DeliveryValidationError(str(exc)) from exc
                 provenance = (synthesis.get("basis") or {}).get("ai_provenance") or {}
                 expected_provider = (request.get("provider") or {}).get("preferred")
                 if provenance != {

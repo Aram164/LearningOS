@@ -7,19 +7,30 @@ from pathlib import Path
 
 import pytest
 import yaml
-from repo_builders import add_curriculum, write_minimal_pdf, write_yaml
+from repo_builders import add_curriculum, run_los, write_minimal_pdf, write_yaml
 
 from learning_os import material_slices
-from learning_os.ai_actions import AIActionService, UnresolvedMaterialError
+from learning_os.ai_actions import (
+    ActionPolicyError,
+    AIActionService,
+    ContinuationRefusedError,
+    UnresolvedMaterialError,
+)
 from learning_os.loader import load_repo
 from learning_os.material_slices import (
     MAX_SLICE_PAGES,
+    MAX_SLICE_PASSES,
     SliceResolutionError,
     build_unit_slices,
+    continuation_record_dict,
     parse_locator_page_ranges,
+    plan_continuation,
 )
 from learning_os.material_synthesis import (
+    MaterialSynthesisError,
     current_unit_material_basis,
+    inspected_pages_by_route,
+    validate_synthesis_page_provenance,
     validate_unit_material_synthesis,
 )
 from learning_os.materials_resolution import resolve_route_material_files
@@ -122,15 +133,26 @@ def test_resolver_is_centralized_single_multi_and_garbage(mini_repo):
 
 
 def test_slice_truncates_long_pdf_and_records_total(mini_repo):
-    pages = [f"content line {n}" for n in range(1, 21)]
+    pages = [f"content line {n}" for n in range(1, 26)]
     _add_sliced_unit(mini_repo, [_route("route-demo-long", "long.pdf")], {"long.pdf": pages})
     [(slice_, _)] = _slices(mini_repo, [_route("route-demo-long", "long.pdf")])
     (part,) = slice_.parts
     assert part.pages == tuple(range(1, MAX_SLICE_PAGES + 1))
-    assert part.page_total == 20
+    assert part.page_total == 25
     assert part.status == "truncated"
     assert "content line 1" in part.text
-    assert "content line 20" not in part.text
+    assert "content line 20" in part.text
+    assert "content line 25" not in part.text
+
+
+def test_first_pass_can_contain_twenty_pages(mini_repo):
+    pages = [f"content line {n}" for n in range(1, 21)]
+    locator = "full.pdf"
+    _add_sliced_unit(mini_repo, [_route("route-demo-twenty", locator)], {"full.pdf": pages})
+    [(slice_, _)] = _slices(mini_repo, [_route("route-demo-twenty", locator)])
+    (part,) = slice_.parts
+    assert part.pages == tuple(range(1, 21))
+    assert part.status == "complete"
 
 
 def test_slice_prefers_locator_ranges(mini_repo):
@@ -310,3 +332,293 @@ def test_slice_checksum_is_not_valid_evidence(mini_repo):
     }
     with pytest.raises(ValueError, match="evidence checksum"):
         validate_unit_material_synthesis(mini_repo, "unit-demo-l01", value)
+
+
+LONG_PAGES = [f"content line {n}" for n in range(1, 31)]
+
+LONG_REQUEST = "ai-request-long"
+
+
+def _prepared_long_route(root: Path, request_id: str = LONG_REQUEST):
+    routes = [_route("route-demo-long", "long.pdf")]
+    _add_sliced_unit(root, routes, {"long.pdf": LONG_PAGES})
+    app = AIActionService(root)
+    request = app.prepare(
+        action_id="unit.compare-materials",
+        target_kind="unit",
+        target_id="unit-demo-l01",
+        provider="manual-bundle",
+        request_id=request_id,
+    )
+    return app, request
+
+
+def _append(app: AIActionService, **overrides):
+    args = {
+        "request_id": LONG_REQUEST,
+        "route_id": "route-demo-long",
+        "start": 21,
+        "end": 30,
+        "kind": "example",
+        "concept_ids": ["concept-expected-value"],
+        "reason": "worked examples follow the definition section",
+    }
+    args.update(overrides)
+    return app.append_slices(**args)
+
+
+def _bundle(root: Path, request_id: str = LONG_REQUEST) -> Path:
+    return root / "operations/ai-actions/requests" / request_id
+
+
+def test_short_source_needs_no_second_pass(mini_repo):
+    _add_sliced_unit(mini_repo, [_route("route-demo-short", "short.pdf")],
+                     {"short.pdf": ["only page one", "only page two"]})
+    app = AIActionService(mini_repo)
+    request = app.prepare(
+        action_id="unit.compare-materials",
+        target_kind="unit",
+        target_id="unit-demo-l01",
+        provider="manual-bundle",
+        request_id="ai-request-short",
+    )
+    assert request.get("reading_passes") is None
+    bundle = _bundle(mini_repo, "ai-request-short")
+    assert not (bundle / "attachments/slices/continuations").exists()
+    index = json.loads((bundle / "attachments/slices/index.json").read_text(encoding="utf-8"))
+    assert [(entry["pass"], entry["route_id"]) for entry in index] == [
+        (1, "route-demo-short")]
+
+
+def test_sufficient_first_pass_validates_without_continuation(mini_repo):
+    _add_sliced_unit(mini_repo, [_route("route-demo-book", "lecture-01.pdf")],
+                     {"lecture-01.pdf": ["expected-value lecture"]})
+    AIActionService(mini_repo).prepare(
+        action_id="unit.compare-materials",
+        target_kind="unit",
+        target_id="unit-demo-l01",
+        provider="manual-bundle",
+        request_id="ai-request-solo",
+    )
+    bundle = _bundle(mini_repo, "ai-request-solo")
+    index = json.loads((bundle / "attachments/slices/index.json").read_text(encoding="utf-8"))
+    inspected = inspected_pages_by_route(index)
+    assert inspected == {"route-demo-book": [1]}
+    validate_synthesis_page_provenance(inspected, {
+        "id": "material-synthesis-demo-l01",
+        "unit_id": "unit-demo-l01",
+        "route_assessments": [{
+            "route_id": "route-demo-book",
+            "review_status": "deep-reviewed",
+            "evidence": [{"locator": "lecture-01.pdf p.1"}],
+        }],
+        "comparisons": [],
+    })
+
+
+def test_explicit_gap_triggers_targeted_second_pass(mini_repo):
+    app, _ = _prepared_long_route(mini_repo)
+    result = _append(app)
+    assert result["pass"] == 2
+    assert result["pages"] == list(range(21, 31))
+    bundle = _bundle(mini_repo)
+    assert (bundle / result["bundle_path"]).is_file()
+    record = yaml.safe_load(
+        (bundle / "attachments/slices/continuations/pass-2-route-demo-long.yaml"
+         ).read_text(encoding="utf-8"))
+    assert record["pass_number"] == 2
+    assert record["unresolved_claim"]["kind"] == "example"
+    assert record["unresolved_claim"]["concept_ids"] == ["concept-expected-value"]
+    assert "examples follow" in record["unresolved_claim"]["reason"]
+    assert record["requested_pages"] == {"start": 21, "end": 30}
+    assert record["prior_inspected_pages"] == list(range(1, 21))
+    index = json.loads((bundle / "attachments/slices/index.json").read_text(encoding="utf-8"))
+    assert [(entry["pass"], entry["route_id"]) for entry in index] == [
+        (1, "route-demo-long"), (2, "route-demo-long")]
+    request = app.repository.get_request(LONG_REQUEST)
+    assert request["reading_passes"] == [{
+        "route_id": "route-demo-long", "pass": 2,
+        "bundle_path": result["bundle_path"],
+        "continuation": "attachments/slices/continuations/pass-2-route-demo-long.yaml",
+    }]
+
+
+def test_second_pass_uses_only_the_requested_range(mini_repo):
+    app, _ = _prepared_long_route(mini_repo)
+    result = _append(app)
+    body = (_bundle(mini_repo) / result["bundle_path"]).read_text(encoding="utf-8")
+    assert "content line 25" in body
+    assert "content line 5" not in body
+    assert "PDF pp. 21-30 of 30" in body
+
+
+def test_pass_cap_refuses_a_fourth_pass(mini_repo):
+    app, _ = _prepared_long_route(mini_repo)
+    _append(app, start=21, end=25)
+    _append(app, start=26, end=30)
+    with pytest.raises(ContinuationRefusedError, match=f"{MAX_SLICE_PASSES} passes"):
+        _append(app, start=21, end=25)
+
+
+def test_bundle_budget_is_enforced_on_append(mini_repo, monkeypatch):
+    app, _ = _prepared_long_route(mini_repo)
+    monkeypatch.setattr("learning_os.ai_actions.service.MAX_SLICE_BYTES_TOTAL", 0)
+    with pytest.raises(ContinuationRefusedError, match="byte ceiling"):
+        _append(app)
+
+
+def test_out_of_range_continuation_fails_clearly(mini_repo):
+    app, _ = _prepared_long_route(mini_repo)
+    with pytest.raises(ContinuationRefusedError, match="outside this 30-page file"):
+        _append(app, start=28, end=35)
+    with pytest.raises(ContinuationRefusedError, match="not an explicit bounded range"):
+        _append(app, start=1, end=MAX_SLICE_PAGES + 1)
+    with pytest.raises(ContinuationRefusedError, match="not an explicit bounded range"):
+        _append(app, start=0, end=5)
+
+
+def test_continuation_needs_a_known_kind_and_gap(mini_repo):
+    app, _ = _prepared_long_route(mini_repo)
+    with pytest.raises(ContinuationRefusedError, match="unknown gap kind"):
+        _append(app, kind="vibes")
+    with pytest.raises(ContinuationRefusedError, match="unknown concept ids"):
+        _append(app, concept_ids=["concept-nope"])
+    with pytest.raises(ContinuationRefusedError, match="stated evidence gap"):
+        _append(app, reason="   ")
+
+
+def test_changed_material_between_passes_refuses_reprepare(mini_repo):
+    app, _ = _prepared_long_route(mini_repo)
+    write_minimal_pdf(
+        mini_repo.parent / "materials/source-demo-book/long.pdf",
+        ["replaced content"] * 30)
+    with pytest.raises(ContinuationRefusedError, match="changed since pass 1"):
+        _append(app)
+
+
+def test_continuation_without_first_pass_is_refused(mini_repo):
+    routes = [
+        _route("route-demo-current", "current.pdf"),
+        _route("route-demo-optional", "gone.pdf", scope="optional"),
+    ]
+    _add_sliced_unit(mini_repo, routes, {"current.pdf": ["current content"]})
+    app = AIActionService(mini_repo)
+    app.prepare(
+        action_id="unit.compare-materials",
+        target_kind="unit",
+        target_id="unit-demo-l01",
+        provider="manual-bundle",
+        request_id="ai-request-nofirst",
+    )
+    with pytest.raises(ContinuationRefusedError, match="no first-pass slice"):
+        app.append_slices(
+            request_id="ai-request-nofirst", route_id="route-demo-optional",
+            start=1, end=2, kind="example", concept_ids=["concept-expected-value"],
+            reason="optional route follow-up without a first pass")
+
+
+def test_append_refuses_non_compare_requests_and_delivered_ones(mini_repo):
+    _prepared_long_route(mini_repo)
+    app = AIActionService(mini_repo)
+    with pytest.raises(ActionPolicyError, match="not part of this request's unit"):
+        app.append_slices(
+            request_id=LONG_REQUEST, route_id="route-demo-ghost",
+            start=1, end=2, kind="example", concept_ids=["concept-expected-value"],
+            reason="unknown route")
+    request = app.repository.get_request(LONG_REQUEST)
+    request["status"] = "delivery-ready"
+    app.repository.update_request(request)
+    with pytest.raises(ActionPolicyError, match="only prepared requests"):
+        _append(app)
+
+
+def test_page_provenance_accepts_inspected_and_prose():
+    inspected = {"route-demo-a": [1, 2, 3], "route-demo-b": [5]}
+    validate_synthesis_page_provenance(inspected, {
+        "id": "material-synthesis-x", "unit_id": "unit-demo-l01",
+        "route_assessments": [
+            {"route_id": "route-demo-a", "review_status": "deep-reviewed",
+             "evidence": [{"locator": "book.pdf, pdf pp. 1-3"}]},
+            {"route_id": "route-demo-b", "review_status": "deep-reviewed",
+             "evidence": [{"locator": "Aufgabe 6.19(a-b) only"}]},
+            {"route_id": "route-demo-c", "review_status": "deep-reviewed",
+             "evidence": [{"locator": "other.pdf p.99"}]},
+            {"route_id": "route-demo-a", "review_status": "screened",
+             "reason": "metadata only"},
+        ],
+        "comparisons": [{
+            "left_route_id": "route-demo-a", "right_route_id": "route-demo-b",
+            "evidence": {
+                "left": [{"locator": "book.pdf p.2"}],
+                "right": [{"locator": "notes.pdf p.5"}],
+            },
+        }],
+    })
+
+
+def test_page_provenance_refuses_uninspected_pages():
+    inspected = {"route-demo-a": [1, 2]}
+    with pytest.raises(MaterialSynthesisError, match="never inspected"):
+        validate_synthesis_page_provenance(inspected, {
+            "id": "material-synthesis-x", "unit_id": "unit-demo-l01",
+            "route_assessments": [{
+                "route_id": "route-demo-a", "review_status": "deep-reviewed",
+                "evidence": [{"locator": "book.pdf, pdf pp. 1-9"}],
+            }],
+            "comparisons": [],
+        })
+
+
+def test_page_provenance_checks_both_comparison_sides():
+    inspected = {"route-demo-a": [1], "route-demo-b": [1]}
+    with pytest.raises(MaterialSynthesisError, match="comparison right"):
+        validate_synthesis_page_provenance(inspected, {
+            "id": "material-synthesis-x", "unit_id": "unit-demo-l01",
+            "route_assessments": [],
+            "comparisons": [{
+                "left_route_id": "route-demo-a", "right_route_id": "route-demo-b",
+                "evidence": {
+                    "left": [{"locator": "a.pdf p.1"}],
+                    "right": [{"locator": "b.pdf p.7"}],
+                },
+            }],
+        })
+
+
+def test_continuation_record_round_trips_through_yaml(mini_repo):
+    _prepared_long_route(mini_repo)
+    repo = load_repo(mini_repo)
+    route = _route("route-demo-long", "long.pdf")
+    record, _, _ = plan_continuation(
+        repo, route, basis=_basis(mini_repo), inspected=list(range(1, 21)),
+        passes_used=1, start=21, end=30, kind="derivation",
+        concept_ids=["concept-expected-value"],
+        reason="the derivation continues past page 20")
+    as_yaml = yaml.safe_dump(continuation_record_dict(record), sort_keys=False)
+    reloaded = yaml.safe_load(as_yaml)
+    assert reloaded["route_id"] == "route-demo-long"
+    assert reloaded["pass_number"] == 2
+    assert reloaded["unresolved_claim"] == {
+        "kind": "derivation",
+        "concept_ids": ["concept-expected-value"],
+        "reason": "the derivation continues past page 20",
+    }
+    assert reloaded["requested_pages"] == {"start": 21, "end": 30}
+    assert reloaded["prior_inspected_pages"] == list(range(1, 21))
+
+
+def test_append_slices_cli_reports_the_new_pass(mini_repo):
+    _prepared_long_route(mini_repo, request_id="ai-request-cli")
+    routes_before = _bundle(mini_repo, "ai-request-cli")
+    assert routes_before.is_dir()
+    proc = run_los(
+        mini_repo, "ai-action-append-slices",
+        "--request-id", "ai-request-cli", "--route-id", "route-demo-long",
+        "--start", "21", "--end", "30", "--kind", "derivation",
+        "--concept-id", "concept-expected-value",
+        "--reason", "the derivation continues past page 20")
+    assert proc.returncode == 0, proc.stderr
+    payload = json.loads(proc.stdout)
+    assert payload["ok"] is True
+    assert payload["continuation"]["pass"] == 2
+    assert payload["continuation"]["pages"] == list(range(21, 31))

@@ -43,6 +43,21 @@ def cmd_ai_action_prepare(args) -> int:
     return 0
 
 
+def cmd_ai_action_append_slices(args) -> int:
+    root = _root(args)
+    with _operator_lock(root):
+        service = AIActionService(root)
+        result = service.append_slices(
+            request_id=args.request_id, route_id=args.route_id,
+            start=args.start, end=args.end, kind=args.kind,
+            concept_ids=args.concept_id or [], reason=args.reason,
+            material_uri=args.material_uri, expected_snapshot=args.expected_snapshot,
+        )
+        _publish(root)
+    print(json.dumps({"ok": True, "continuation": result}, indent=2, ensure_ascii=False))
+    return 0
+
+
 def cmd_ai_action_import_delivery(args) -> int:
     root = _root(args)
     with _operator_lock(root):
