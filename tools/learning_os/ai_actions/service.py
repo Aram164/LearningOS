@@ -23,6 +23,12 @@ from learning_os.contracts.write_scopes import WriteScopeError, require_write_sc
 from learning_os.fingerprint import source_fingerprint
 from learning_os.garden import project_garden_entries
 from learning_os.loader import load_repo
+from learning_os.material_slices import (
+    SLICE_BUNDLE_PREFIX,
+    SliceResolutionError,
+    build_unit_slices,
+    slice_index_entry,
+)
 from learning_os.material_synthesis import (
     current_unit_material_basis,
     synthesis_destination,
@@ -44,6 +50,7 @@ from .errors import (
     DeliveryValidationError,
     StaleDeliveryError,
     TargetNotFoundError,
+    UnresolvedMaterialError,
 )
 from .registry import ActionRegistry, AdapterRegistry
 from .storage import FilesystemAIActionRepository
@@ -300,6 +307,17 @@ class AIActionService:
                 "attachment_ids": [original["id"]],
                 "originals": [original],
             }
+            basis = current_unit_material_basis(self.root, target_id, repo=repo)
+            try:
+                slices = build_unit_slices(repo, routes, basis=basis)
+            except SliceResolutionError as exc:
+                raise UnresolvedMaterialError(f"{exc} No request was prepared.") from exc
+            for slice_, body in slices:
+                bundle_files[slice_.bundle_path] = body
+            bundle_files[f"{SLICE_BUNDLE_PREFIX}/index.json"] = (
+                json.dumps([slice_index_entry(slice_) for slice_, _ in slices],
+                           indent=2) + "\n"
+            ).encode("utf-8")
             context = {
                 "target": {k: target[k] for k in
                            ("id", "type", "title", "path", "state", "revision")},
@@ -307,7 +325,7 @@ class AIActionService:
                 "related_module_ids": unit.data.get("related_module_ids", []),
                 "artifacts": unit.data.get("artifacts", {}),
                 "routes": routes,
-                "basis": current_unit_material_basis(self.root, target_id),
+                "basis": basis,
                 "policy": {
                     "all_routes_listed": True,
                     "deep_scopes": ["current", "prerequisite"],
@@ -326,6 +344,16 @@ class AIActionService:
                 "upload, create sources, create concepts, or write a standalone lesson. Return "
                 "one whole approved `unit-material-synthesis.schema.json` record as an artifact "
                 "for capability `unit.material-synthesis.publish`.\n"
+                "\n"
+                "Material slices are attached under attachments/slices/<route-id>.md with an "
+                "index at attachments/slices/index.json — one slice per deep-review route, "
+                "nothing else was read. Judge the attached pages themselves: fill contribution, "
+                "assumptions, notation, exercise_value, best_for and limitations from the slice "
+                "text and cite exact slice pages in every evidence note (e.g. 'PDF pp. 386-393'). "
+                "evidence.checksum is always the material_checksum from the slice header — never "
+                "the slice_sha256, which only proves the transport bytes of the extracted text. "
+                "When a slice header reports truncation, record it in limitations; never claim "
+                "pages beyond the attachment.\n"
             )
             bundle_files["instructions.md"] = instructions.encode("utf-8")
             bundle_files["context.md"] = (

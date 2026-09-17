@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 import yaml
-from repo_builders import add_curriculum, write_yaml
+from repo_builders import add_curriculum, write_minimal_pdf, write_yaml
 
 from learning_os.ai_actions import AIActionService
 from learning_os.backup_manifest import (
@@ -77,9 +77,11 @@ def _add_routed_unit(root: Path) -> None:
     registry = yaml.safe_load(registry_path.read_text(encoding="utf-8"))
     registry["sources"][0]["material"] = "material://source-demo-book/book.pdf"
     write_yaml(registry_path, registry)
-    material = root.parent / "materials/source-demo-book/lecture-01.pdf"
-    material.parent.mkdir(parents=True, exist_ok=True)
-    material.write_bytes(b"synthetic expected-value lecture")
+    write_minimal_pdf(
+        root.parent / "materials/source-demo-book/lecture-01.pdf",
+        ["synthetic expected-value lecture",
+         "the weighted sum over finite outcomes"],
+    )
 
 
 def _synthesis(root: Path) -> dict:
@@ -252,6 +254,15 @@ def test_unit_compare_materials_prepares_bounded_local_request(mini_repo):
     assert "route-demo-l01-book" in context
     assert "repository.read-external" not in context
     assert not any(path.suffix == ".pdf" for path in bundle.rglob("*"))
+    slice_doc = bundle / "attachments/slices/route-demo-l01-book.md"
+    assert slice_doc.is_file()
+    header = slice_doc.read_text(encoding="utf-8")
+    assert "synthetic expected-value lecture" in header
+    assert "material_checksum: sha256:" in header
+    assert "slice_sha256: sha256:" in header
+    index = json.loads((bundle / "attachments/slices/index.json").read_text(encoding="utf-8"))
+    assert [entry["route_id"] for entry in index] == ["route-demo-l01-book"]
+    assert index[0]["material_checksum"] != index[0]["slice_sha256"]
 
 
 def _import_unit_synthesis_delivery(root: Path, tmp_path: Path):

@@ -15,13 +15,7 @@ from typing import Any
 
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.loader import load_repo
-from learning_os.materials_resolution import (
-    MATERIAL_SUFFIX_TOKEN,
-    material_location,
-    material_uri_authority,
-    project_material_resource,
-    safe_material_locator,
-)
+from learning_os.materials_resolution import resolve_route_material_files
 from learning_os.transactions import artifact_revision
 
 
@@ -74,63 +68,6 @@ def _rich_routes(repo, unit_id: str) -> list[dict[str, Any]]:
     return output
 
 
-def _route_material_files(repo, route: dict[str, Any]) -> list[tuple[str, Path]]:
-    """Resolve every exact local file named by one route, or none.
-
-    Most routes name one file and use the ordinary material projection.  A
-    small but important class (including SaD L03's current exercise route)
-    deliberately binds two files with a semicolon.  Treating that locator as
-    prose made freshness fall back to a route-text hash, so changing either
-    reviewed PDF did not stale the dossier.  The multi-file branch is strict:
-    every semicolon-delimited part must name exactly one safe existing file,
-    otherwise no partial byte-coverage claim is made.
-    """
-    projected = project_material_resource(repo, {
-        "source_id": route.get("source_id"),
-        "locator": route.get("locator"),
-        "vault_path": route.get("vault_path"),
-    })
-    material_uri = projected.get("material_uri")
-    relative = projected.get("material_path")
-    if isinstance(material_uri, str) and isinstance(relative, str) \
-            and projected.get("material_exists"):
-        path = repo.learningos_root / relative
-        if path.is_file() and not path.is_symlink():
-            return [(material_uri, path)]
-
-    locator = route.get("locator")
-    source = repo.sources.get(route.get("source_id"))
-    source_material = source.get("material") if isinstance(source, dict) else None
-    authority = material_uri_authority(source_material)
-    if not isinstance(locator, str) or ";" not in locator or not authority:
-        return []
-
-    candidates: list[str] = []
-    for part in locator.split(";"):
-        matches = list(MATERIAL_SUFFIX_TOKEN.finditer(part))
-        if len(matches) != 1:
-            return []
-        candidate = safe_material_locator(part[:matches[0].end()].strip())
-        if candidate is None:
-            return []
-        candidates.append(candidate)
-    if len(candidates) < 2 or len(candidates) != len(set(candidates)):
-        return []
-
-    files: list[tuple[str, Path]] = []
-    for candidate in candidates:
-        uri = f"material://{authority}/{candidate}"
-        location = material_location(repo, uri)
-        relative = location.get("material_path")
-        if not isinstance(relative, str) or not location.get("material_exists"):
-            return []
-        path = repo.learningos_root / relative
-        if not path.is_file() or path.is_symlink():
-            return []
-        files.append((uri, path))
-    return files
-
-
 def _route_material_checksum(repo, route: dict[str, Any],
                              cache: dict[Path, str] | None = None) -> str:
     """Hash local material bytes when resolvable; otherwise hash the exact route.
@@ -139,9 +76,9 @@ def _route_material_checksum(repo, route: dict[str, Any],
     token.  The route hash is explicitly provenance, not a claim that remote
     bytes were reviewed.
     """
-    files = _route_material_files(repo, route)
+    files = resolve_route_material_files(repo, route)
     if len(files) == 1:
-        return _sha256_file(files[0][1], cache)
+        return _sha256_file(files[0].path, cache)
     if files:
         return _stable_checksum([
             {"material_uri": uri, "sha256": _sha256_file(path, cache)}
