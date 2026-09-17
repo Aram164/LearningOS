@@ -32,6 +32,45 @@ def write_yaml(path: Path, data: dict) -> None:
     path.write_text(yaml.safe_dump(data, sort_keys=False, allow_unicode=True), encoding="utf-8")
 
 
+def write_minimal_pdf(path: Path, texts: list[str]) -> None:
+    """A dependency-free multi-page PDF with one text line per page.
+
+    Hand-built so fixtures need no PDF writer: pypdf reads the result and
+    extracts each page's line back. ``texts[i]`` must be plain ASCII in
+    parentheses-safe characters.
+    """
+    objects: list[bytes] = [b"<< /Type /Catalog /Pages 2 0 R >>"]
+    kids = " ".join(f"{3 + i * 3} 0 R" for i in range(len(texts)))
+    objects.append(f"<< /Type /Pages /Kids [{kids}] /Count {len(texts)} >>".encode())
+    for i, text in enumerate(texts):
+        objects.append(
+            f"<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] "
+            f"/Contents {4 + i * 3} 0 R "
+            f"/Resources << /Font << /F1 {5 + i * 3} 0 R >> >> >>".encode()
+        )
+        stream = f"BT /F1 24 Tf 100 700 Td ({text}) Tj ET".encode()
+        objects.append(
+            b"<< /Length " + str(len(stream)).encode() + b" >>\nstream\n" + stream
+            + b"\nendstream"
+        )
+        objects.append(b"<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>")
+    out = bytearray(b"%PDF-1.4\n")
+    offsets = [0]
+    for number, body in enumerate(objects, start=1):
+        offsets.append(len(out))
+        out += f"{number} 0 obj\n".encode() + body + b"\nendobj\n"
+    xref = len(out)
+    out += f"xref\n0 {len(objects) + 1}\n0000000000 65535 f \n".encode()
+    for offset in offsets[1:]:
+        out += f"{offset:010d} 00000 n \n".encode()
+    out += (
+        f"trailer\n<< /Size {len(objects) + 1} /Root 1 0 R >>\n"
+        f"startxref\n{xref}\n%%EOF".encode()
+    )
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_bytes(bytes(out))
+
+
 def add_curriculum(root: Path) -> None:
     write_yaml(root / "curriculum/programs/program-bachelors.yaml", {
         "id": "program-bachelors", "type": "program", "title": "Bachelor’s",
