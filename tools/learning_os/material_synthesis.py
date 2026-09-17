@@ -15,6 +15,7 @@ from learning_os.contracts.json_schema import validate_contract
 from learning_os.loader import load_repo
 from learning_os.material_slices import parse_locator_page_ranges
 from learning_os.materials_resolution import (
+    MATERIAL_SUFFIX_TOKEN,
     route_material_checksum,
     sha256_file,
     stable_checksum,
@@ -239,57 +240,151 @@ def inspected_pages_by_route(
     return {route_id: sorted(pages) for route_id, pages in inspected.items()}
 
 
-def _check_evidence_pages(seen: set[int], inspected: list[int], locator: Any,
-                          where: str) -> None:
-    """One evidence locator against the inspected set, or raise."""
+def inspected_material_by_route(
+    index_records: list[dict[str, Any]],
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """Inspected pages per route AND material: route -> uri -> record.
+
+    A route-level page union cannot tell part-a p.22 from part-b p.22, so
+    provenance keeps file identity: kind, inspected pages and the file hash
+    of every sliced part, across all passes.
+    """
+    inspected: dict[str, dict[str, dict[str, Any]]] = {}
+    for record in index_records or []:
+        if not isinstance(record, dict):
+            continue
+        route_id = record.get("route_id")
+        if not isinstance(route_id, str):
+            continue
+        materials = inspected.setdefault(route_id, {})
+        for part in record.get("parts", []) or []:
+            if not isinstance(part, dict):
+                continue
+            uri = part.get("material_uri")
+            if not isinstance(uri, str):
+                continue
+            entry = materials.setdefault(uri, {"kind": part.get("kind"),
+                                               "pages": set(),
+                                               "file_sha256": part.get("file_sha256")})
+            for page in part.get("pages", []) or []:
+                if isinstance(page, int) and not isinstance(page, bool) and page >= 1:
+                    entry["pages"].add(page)
+    return {
+        route_id: {
+            uri: {"kind": entry["kind"], "pages": sorted(entry["pages"]),
+                  "file_sha256": entry["file_sha256"]}
+            for uri, entry in materials.items()
+        }
+        for route_id, materials in inspected.items()
+    }
+
+
+def _evidence_filename(locator: Any) -> str | None:
+    """The single material file an evidence locator names, if exactly one.
+
+    House-style filenames carry no whitespace, so each suffix-token span is
+    recovered by walking left to the previous boundary. Zero or several
+    distinct names mean the locator does not identify one file.
+    """
+    if not isinstance(locator, str):
+        return None
+    names: list[str] = []
+    for match in MATERIAL_SUFFIX_TOKEN.finditer(locator):
+        after = locator[match.end():match.end() + 1]
+        if after and (after.isalnum() or after == "."):
+            continue
+        boundary = max(locator.rfind(char, 0, match.start())
+                       for char in (" ", "\t", "\n", ",", ";", '"', "'", "(", "["))
+        candidate = locator[boundary + 1:match.end()]
+        if candidate and candidate not in names:
+            names.append(candidate)
+    if len(names) != 1:
+        return None
+    return names[0]
+
+
+def _evidence_material(materials: dict[str, dict[str, Any]], locator: Any,
+                       *, where: str) -> str:
+    """The one bound material an evidence locator can own pages from.
+
+    A single-material route is unambiguous. Otherwise the locator must name
+    exactly one bound file — except when it cites pages and only one bound
+    material has a page model, which can only be that PDF.
+    """
+    if len(materials) == 1:
+        return next(iter(materials))
+    filename = _evidence_filename(locator)
+    if filename is not None:
+        hits = [uri for uri in materials if uri.rsplit("/", 1)[-1] == filename]
+        if len(hits) == 1:
+            return hits[0]
+    refs = parse_locator_page_ranges(locator)
+    if filename is None and refs:
+        pdfs = [uri for uri, info in materials.items() if info.get("kind") == "pdf"]
+        if len(pdfs) == 1:
+            return pdfs[0]
+    bound = ", ".join(sorted(uri.rsplit("/", 1)[-1] for uri in materials))
+    raise MaterialSynthesisError(
+        f"{where} evidence must name exactly one of the route's files "
+        f"({bound}); got {locator!r}")
+
+
+def _check_material_evidence(materials: dict[str, dict[str, Any]], locator: Any,
+                             *, where: str) -> None:
+    """One evidence locator against its owning material, or raise."""
+    uri = _evidence_material(materials, locator, where=where)
+    info = materials[uri]
+    name = uri.rsplit("/", 1)[-1]
     ranges = parse_locator_page_ranges(locator)
-    if not ranges:
+    if info.get("kind") == "pdf":
+        if not ranges:
+            raise MaterialSynthesisError(
+                f"{where} evidence must cite exact PDF pages in house style "
+                f"(e.g. '{name}, PDF pp. 34-41'); got {locator!r}")
+        seen = set(info.get("pages", []))
+        beyond: list[int] = []
+        for start, end in ranges:
+            for page in range(start, min(end, start + _MAX_CITED_SPAN) + 1):
+                if page not in seen:
+                    beyond.append(page)
+                    if len(beyond) >= 5:
+                        break
+            if len(beyond) >= 5:
+                break
+        if beyond:
+            raise MaterialSynthesisError(
+                f"{where} evidence cites {name} pages never inspected "
+                f"(e.g. p.{beyond[0]}); inspected: {sorted(seen)}")
+    elif ranges:
         raise MaterialSynthesisError(
-            f"{where} evidence must cite exact PDF pages in house style "
-            f"(e.g. 'PDF pp. 34-41'); got {locator!r}")
-    beyond: list[int] = []
-    for start, end in ranges:
-        for page in range(start, min(end, start + _MAX_CITED_SPAN) + 1):
-            if page not in seen:
-                beyond.append(page)
-                if len(beyond) >= 5:
-                    break
-        if len(beyond) >= 5:
-            break
-    if beyond:
-        raise MaterialSynthesisError(
-            f"{where} evidence cites PDF pages never inspected "
-            f"(e.g. p.{beyond[0]}); inspected: {inspected}")
+            f"{where} evidence cites pages from text material {name}, "
+            f"which has no page model; got {locator!r}")
 
 
 def validate_synthesis_page_provenance(
-    inspected: dict[str, list[int]],
+    inspected: dict[str, dict[str, dict[str, Any]]],
     synthesis: dict[str, Any],
-    *,
-    pdf_routes: set[str] | frozenset[str],
 ) -> None:
     """Refuse evidence that is not grounded in the attached slices.
 
-    ``pdf_routes`` names the inspected routes with PDF parts; only those
-    routes face the page rule, since plain-text slices have no page model.
+    Provenance is per material, not per route: part-a p.22 and part-b p.22
+    are different claims and checked against their own inspected sets.
     Routes without a reading record keep their legacy behavior, so bundles
-    prepared without slices stay valid. For PDF routes every deep-reviewed
-    evidence item must cite exact PDF pages in house style AND stay within
-    the inspected set — an unparseable locator is refused rather than
-    waved through, for assessments and both comparison sides alike.
+    prepared without slices stay valid. Applies to assessments and both
+    comparison sides alike.
     """
     for row in synthesis.get("route_assessments", []) or []:
         if not isinstance(row, dict) or row.get("review_status") != "deep-reviewed":
             continue
         route_id = str(row.get("route_id"))
-        if route_id not in inspected or route_id not in pdf_routes:
+        materials = inspected.get(route_id)
+        if not materials:
             continue
-        seen = set(inspected[route_id])
         for evidence in row.get("evidence", []) or []:
             if not isinstance(evidence, dict):
                 continue
-            _check_evidence_pages(seen, inspected[route_id], evidence.get("locator"),
-                                  where=route_id)
+            _check_material_evidence(materials, evidence.get("locator"),
+                                     where=route_id)
     for comparison in synthesis.get("comparisons", []) or []:
         if not isinstance(comparison, dict):
             continue
@@ -299,15 +394,16 @@ def validate_synthesis_page_provenance(
         for side, key in (("left", "left_route_id"), ("right", "right_route_id")):
             route_id = comparison.get(key)
             rows = evidence.get(side)
-            if not isinstance(route_id, str) or route_id not in inspected \
-                    or route_id not in pdf_routes or not isinstance(rows, list):
+            if not isinstance(route_id, str) or not isinstance(rows, list):
                 continue
-            seen = set(inspected[route_id])
+            materials = inspected.get(route_id)
+            if not materials:
+                continue
             for item in rows:
                 if not isinstance(item, dict):
                     continue
-                _check_evidence_pages(seen, inspected[route_id], item.get("locator"),
-                                      where=f"comparison {side} of {route_id}")
+                _check_material_evidence(materials, item.get("locator"),
+                                         where=f"comparison {side} of {route_id}")
 
 
 def material_synthesis_freshness(

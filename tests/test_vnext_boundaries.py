@@ -329,6 +329,80 @@ def test_multi_pass_dossier_publishes_exactly_one_synthesis(
         "material-synthesis.yaml"]
 
 
+def test_publish_refuses_cross_file_page_confusion(
+    mini_repo, repo_root, tmp_path,
+):
+    _add_routed_unit(mini_repo)
+    write_minimal_pdf(
+        mini_repo.parent / "materials/source-demo-book/part-b.pdf",
+        [f"second file line {n}" for n in range(1, 26)],
+    )
+    source_map_path = (
+        mini_repo / "curriculum/modules/module-demo/source-map.yaml")
+    source_map = yaml.safe_load(source_map_path.read_text(encoding="utf-8"))
+    source_map["sources"][0]["unit_routes"][0]["locator"] = (
+        "lecture-01.pdf, reviewed section; part-b.pdf")
+    write_yaml(source_map_path, source_map)
+    app = AIActionService(mini_repo)
+    request = app.prepare(
+        action_id="unit.compare-materials",
+        target_kind="unit",
+        target_id="unit-demo-l01",
+        provider="manual-bundle",
+        request_id="ai-request-crossfile",
+    )
+    app.append_slices(
+        request_id=request["id"], route_id="route-demo-l01-book",
+        start=21, end=23, kind="example", concept_ids=["concept-expected-value"],
+        reason="examples continue in the second file",
+        material_uri="material://source-demo-book/part-b.pdf")
+    source = tmp_path / "rejected-crossfile-delivery"
+    (source / "artifacts").mkdir(parents=True)
+    synthesis = _synthesis(mini_repo)
+    synthesis["route_assessments"][0]["locator"] = (
+        "lecture-01.pdf, reviewed section; part-b.pdf")
+    synthesis["route_assessments"][0]["evidence"] = [{
+        "locator": "lecture-01.pdf, PDF p.22",
+        "checksum": synthesis["route_assessments"][0]["evidence"][0]["checksum"],
+    }]
+    synthesis["basis"]["ai_provenance"] = {
+        "request_id": request["id"],
+        "delivery_id": "ai-delivery-crossfile",
+        "provider": "manual-bundle",
+    }
+    write_yaml(source / "artifacts/material-synthesis.yaml", synthesis)
+    write_yaml(source / "delivery.yaml", {
+        "schema_version": 1,
+        "id": "ai-delivery-crossfile",
+        "type": "ai-action-delivery",
+        "request_id": request["id"],
+        "action_id": "unit.compare-materials",
+        "status": "ready",
+        "producer": {"provider": "manual", "adapter": "manual-bundle"},
+        "approval": {
+            "user_approved": True,
+            "approved_at": "2026-08-25T12:00:00+00:00",
+        },
+        "operations": [{
+            "capability": "unit.material-synthesis.publish",
+            "target_id": "unit-demo-l01",
+            "artifact_ref": "artifacts/material-synthesis.yaml",
+        }],
+        "preconditions": request["preconditions"],
+    })
+    delivery = app.import_delivery(source)
+    envelope = _delivery_apply_envelope(mini_repo, app, delivery["id"])
+    refused = _run_delivery_apply(
+        repo_root, mini_repo, tmp_path / "apply-crossfile.json", envelope,
+    )
+    assert refused.returncode != 0
+    assert "lecture-01.pdf pages never inspected" in (refused.stdout + refused.stderr)
+    assert not (
+        mini_repo
+        / "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml"
+    ).exists()
+
+
 def test_publish_refuses_evidence_citing_uninspected_pages(
     mini_repo, repo_root, tmp_path,
 ):
