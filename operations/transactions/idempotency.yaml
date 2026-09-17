@@ -145,6 +145,18 @@ entries:
       unit-m2-sad-l03: 20
     snapshot_before: sha256:56fd76577a49a6bebccb91730343a811160496662667b077250b6db15d3251f2
     snapshot_after: sha256:c9c7cc46bebf2e35173ec018226a2b8a58196429cc60bb311868b38edc30563c
+  ai-delivery-sad-l04-pilot-apply-001:
+    request_id: request-ai-delivery-apply-sad-l04-pilot
+    capability: ai-action.delivery.apply
+    channel: operator
+    intent_sha256: sha256:e08d06b297daf582f919a170bcae831f60f635131281ab094927a666542908ec
+    transaction_id: transaction-20260917-213624-001
+    receipt_path: operations/transactions/transaction-20260917-213624-001.yaml
+    revisions:
+      material-synthesis-m2-sad-l04: 1
+      unit-m2-sad-l04: 18
+    snapshot_before: sha256:c9c7cc46bebf2e35173ec018226a2b8a58196429cc60bb311868b38edc30563c
+    snapshot_after: sha256:722517a83675d9d881c75eb14ac62dbf2958fdf5a062d3cc4b13879922c6f549
   algo2-safe-shelve-20260831-001:
     request_id: request-algo2-safe-shelve-20260831-001
     capability: module.plan.import
@@ -2405,6 +2417,30 @@ entries:
       unit-m2-sad-l05: 6
     snapshot_before: sha256:c0a6199c8c48eb0e1c9b5c7427dfba9a2b644a6673742cf79190d3fc24101917
     snapshot_after: sha256:72337cea1a30ff4ec336958d8a27340bc90a5635a4b779ed8546e60cc83c6ce7
+  unit-map-import-sad-l04-repair-001:
+    request_id: request-unit-map-import-sad-l04-repair
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:69ea72c07a6776324184641abd19d4b2fb7f27c641da055df0128482b49b5521
+    transaction_id: transaction-20260917-214138-001
+    receipt_path: operations/transactions/transaction-20260917-214138-001.yaml
+    revisions:
+      study-map-m2-sad-l04: 6
+      unit-m2-sad-l04: 19
+    snapshot_before: sha256:722517a83675d9d881c75eb14ac62dbf2958fdf5a062d3cc4b13879922c6f549
+    snapshot_after: sha256:94b74e14bf29d15f33e36bbf75f767ee0e5bb8b60a1ff6f23ae3f16397c7aeb8
+  unit-map-import-sad-l04-repair2-001:
+    request_id: request-unit-map-import-sad-l04-repair2
+    capability: unit.map.import
+    channel: operator
+    intent_sha256: sha256:4475bd6ded3baac2c7c0275e5e2b2eb84a5559bb5f368487f081b21f9455e539
+    transaction_id: transaction-20260917-215047-001
+    receipt_path: operations/transactions/transaction-20260917-215047-001.yaml
+    revisions:
+      study-map-m2-sad-l04: 7
+      unit-m2-sad-l04: 20
+    snapshot_before: sha256:94b74e14bf29d15f33e36bbf75f767ee0e5bb8b60a1ff6f23ae3f16397c7aeb8
+    snapshot_after: sha256:26592dc0535472cf013092f00d24b34dcd804b88b18aee40bed6217d8df97317
   video-routes-import-2026-09-15-retry2:
     request_id: request-video-routes-2026-09-15
     capability: module.plan.import
