@@ -29,6 +29,7 @@ from learning_os.material_slices import (
 from learning_os.material_synthesis import (
     MaterialSynthesisError,
     current_unit_material_basis,
+    inspected_material_by_route,
     inspected_pages_by_route,
     validate_synthesis_page_provenance,
     validate_unit_material_synthesis,
@@ -404,7 +405,15 @@ def test_sufficient_first_pass_validates_without_continuation(mini_repo):
     index = json.loads((bundle / "attachments/slices/index.json").read_text(encoding="utf-8"))
     inspected = inspected_pages_by_route(index)
     assert inspected == {"route-demo-book": [1]}
-    validate_synthesis_page_provenance(inspected, {
+    material_map = {
+        "route-demo-book": {
+            "material://source-demo-book/lecture-01.pdf": {
+                "kind": "pdf", "pages": inspected["route-demo-book"],
+                "file_sha256": "sha256:book",
+            }
+        }
+    }
+    validate_synthesis_page_provenance(material_map, {
         "id": "material-synthesis-demo-l01",
         "unit_id": "unit-demo-l01",
         "route_assessments": [{
@@ -413,7 +422,7 @@ def test_sufficient_first_pass_validates_without_continuation(mini_repo):
             "evidence": [{"locator": "lecture-01.pdf p.1"}],
         }],
         "comparisons": [],
-    }, pdf_routes={"route-demo-book"})
+    })
 
 
 def test_explicit_gap_triggers_targeted_second_pass(mini_repo):
@@ -579,70 +588,164 @@ def test_append_refuses_non_compare_requests_and_delivered_ones(mini_repo):
         _append(app)
 
 
-def test_page_provenance_accepts_inspected_and_prose():
-    inspected = {"route-demo-a": [1, 2, 3], "route-demo-b": [5]}
-    validate_synthesis_page_provenance(inspected, {
+def _pdf_material(pages, uri="material://demo/book.pdf"):
+    return {uri: {"kind": "pdf", "pages": list(pages), "file_sha256": "sha256:pdf"}}
+
+
+def _text_material(uri="material://demo/notes.md"):
+    return {uri: {"kind": "text", "pages": [], "file_sha256": "sha256:text"}}
+
+
+def _dossier(assessments, comparisons=()):
+    return {
         "id": "material-synthesis-x", "unit_id": "unit-demo-l01",
-        "route_assessments": [
-            {"route_id": "route-demo-a", "review_status": "deep-reviewed",
-             "evidence": [{"locator": "book.pdf, pdf pp. 1-3"}]},
-            {"route_id": "route-demo-b", "review_status": "deep-reviewed",
-             "evidence": [{"locator": "Aufgabe 6.19(a-b) only"}]},
-            {"route_id": "route-demo-c", "review_status": "deep-reviewed",
-             "evidence": [{"locator": "other.pdf p.99"}]},
-            {"route_id": "route-demo-a", "review_status": "screened",
-             "reason": "metadata only"},
-        ],
-        "comparisons": [{
-            "left_route_id": "route-demo-a", "right_route_id": "route-demo-b",
-            "evidence": {
-                "left": [{"locator": "book.pdf p.2"}],
-                "right": [{"locator": "notes.pdf p.5"}],
-            },
-        }],
-    }, pdf_routes={"route-demo-a"})
+        "route_assessments": assessments, "comparisons": list(comparisons),
+    }
+
+
+def _assessment(route_id, evidence, status="deep-reviewed"):
+    row = {"route_id": route_id, "review_status": status}
+    if status == "deep-reviewed":
+        row["evidence"] = [{"locator": locator} for locator in evidence]
+    else:
+        row["reason"] = "metadata only"
+    return row
+
+
+def test_page_provenance_accepts_inspected_and_prose():
+    inspected = {
+        "route-demo-a": _pdf_material([1, 2, 3]),
+        "route-demo-b": _text_material(),
+    }
+    validate_synthesis_page_provenance(inspected, _dossier([
+        _assessment("route-demo-a", ["book.pdf, pdf pp. 1-3"]),
+        _assessment("route-demo-b", ["Aufgabe 6.19(a-b) only"]),
+        _assessment("route-demo-c", ["other.pdf p.99"]),
+        _assessment("route-demo-a", [], status="screened"),
+    ], comparisons=[{
+        "left_route_id": "route-demo-a", "right_route_id": "route-demo-b",
+        "evidence": {
+            "left": [{"locator": "book.pdf p.2"}],
+            "right": [{"locator": "notes.md, section 3"}],
+        },
+    }]))
 
 
 def test_page_provenance_refuses_uninspected_pages():
-    inspected = {"route-demo-a": [1, 2]}
+    inspected = {"route-demo-a": _pdf_material([1, 2])}
     with pytest.raises(MaterialSynthesisError, match="never inspected"):
-        validate_synthesis_page_provenance(inspected, {
-            "id": "material-synthesis-x", "unit_id": "unit-demo-l01",
-            "route_assessments": [{
-                "route_id": "route-demo-a", "review_status": "deep-reviewed",
-                "evidence": [{"locator": "book.pdf, pdf pp. 1-9"}],
-            }],
-            "comparisons": [],
-        }, pdf_routes={"route-demo-a"})
+        validate_synthesis_page_provenance(inspected, _dossier([
+            _assessment("route-demo-a", ["book.pdf, pdf pp. 1-9"]),
+        ]))
 
 
 def test_page_provenance_refuses_pageless_pdf_evidence():
-    inspected = {"route-demo-a": [1, 2]}
+    inspected = {"route-demo-a": _pdf_material([1, 2])}
     with pytest.raises(MaterialSynthesisError, match="must cite exact PDF pages"):
-        validate_synthesis_page_provenance(inspected, {
-            "id": "material-synthesis-x", "unit_id": "unit-demo-l01",
-            "route_assessments": [{
-                "route_id": "route-demo-a", "review_status": "deep-reviewed",
-                "evidence": [{"locator": "the later chapter develops it further"}],
-            }],
-            "comparisons": [],
-        }, pdf_routes={"route-demo-a"})
+        validate_synthesis_page_provenance(inspected, _dossier([
+            _assessment("route-demo-a", ["the later chapter develops it further"]),
+        ]))
+
+
+def test_page_provenance_refuses_pages_from_text_material():
+    inspected = {"route-demo-b": _text_material()}
+    with pytest.raises(MaterialSynthesisError, match="no page model"):
+        validate_synthesis_page_provenance(inspected, _dossier([
+            _assessment("route-demo-b", ["notes.md p.5"]),
+        ]))
 
 
 def test_page_provenance_checks_both_comparison_sides():
-    inspected = {"route-demo-a": [1], "route-demo-b": [1]}
+    inspected = {
+        "route-demo-a": _pdf_material([1]),
+        "route-demo-b": _pdf_material([1]),
+    }
     with pytest.raises(MaterialSynthesisError, match="comparison right"):
-        validate_synthesis_page_provenance(inspected, {
-            "id": "material-synthesis-x", "unit_id": "unit-demo-l01",
-            "route_assessments": [],
-            "comparisons": [{
-                "left_route_id": "route-demo-a", "right_route_id": "route-demo-b",
-                "evidence": {
-                    "left": [{"locator": "a.pdf p.1"}],
-                    "right": [{"locator": "b.pdf p.7"}],
-                },
-            }],
-        }, pdf_routes={"route-demo-a", "route-demo-b"})
+        validate_synthesis_page_provenance(inspected, _dossier([], comparisons=[{
+            "left_route_id": "route-demo-a", "right_route_id": "route-demo-b",
+            "evidence": {
+                "left": [{"locator": "a.pdf p.1"}],
+                "right": [{"locator": "b.pdf p.7"}],
+            },
+        }]))
+
+
+def test_page_provenance_distinguishes_files_of_one_route():
+    inspected = {"route-demo-multi": {
+        "material://demo/part-a.pdf": {"kind": "pdf", "pages": [1, 2],
+                                       "file_sha256": "sha256:a"},
+        "material://demo/part-b.pdf": {"kind": "pdf", "pages": [1, 2, 22],
+                                       "file_sha256": "sha256:b"},
+    }}
+    validate_synthesis_page_provenance(inspected, _dossier([
+        _assessment("route-demo-multi", ["part-b.pdf, PDF p.22"]),
+    ]))
+    with pytest.raises(MaterialSynthesisError, match="part-a.pdf pages never inspected"):
+        validate_synthesis_page_provenance(inspected, _dossier([
+            _assessment("route-demo-multi", ["part-a.pdf, PDF p.22"]),
+        ]))
+
+
+def test_page_provenance_names_ambiguous_multi_file_evidence():
+    inspected = {"route-demo-multi": {
+        "material://demo/part-a.pdf": {"kind": "pdf", "pages": [1],
+                                       "file_sha256": "sha256:a"},
+        "material://demo/part-b.pdf": {"kind": "pdf", "pages": [1],
+                                       "file_sha256": "sha256:b"},
+    }}
+    with pytest.raises(MaterialSynthesisError, match="must name exactly one"):
+        validate_synthesis_page_provenance(inspected, _dossier([
+            _assessment("route-demo-multi", ["the worked example shows it"]),
+        ]))
+    with pytest.raises(MaterialSynthesisError, match="must name exactly one"):
+        validate_synthesis_page_provenance(inspected, _dossier([
+            _assessment("route-demo-multi", ["murphy.pdf p.1"]),
+        ]))
+
+
+def test_page_provenance_accepts_mixed_pdf_text_evidence():
+    inspected = {"route-demo-mixed": {
+        "material://demo/slides.pdf": {"kind": "pdf", "pages": [2, 3],
+                                       "file_sha256": "sha256:s"},
+        **_text_material("material://demo/notes.md"),
+    }}
+    validate_synthesis_page_provenance(inspected, _dossier([
+        _assessment("route-demo-mixed", ["slides.pdf, PDF pp. 2-3"]),
+        _assessment("route-demo-mixed", ["notes.md, section on variance"]),
+    ]))
+    with pytest.raises(MaterialSynthesisError, match="must name exactly one"):
+        validate_synthesis_page_provenance(inspected, _dossier([
+            _assessment("route-demo-mixed", ["the introduction motivates it"]),
+        ]))
+
+
+def test_inspected_material_by_route_keeps_file_identity():
+    index = [
+        {"pass": 1, "route_id": "route-demo-multi", "material_checksum": "sha256:m",
+         "slice_sha256": "sha256:s1", "bundle_path": "attachments/slices/route-demo-multi.md",
+         "parts": [
+             {"material_uri": "material://demo/part-a.pdf", "kind": "pdf",
+              "pages": [1, 2], "page_total": 25, "status": "truncated",
+              "chars": 10, "file_sha256": "sha256:a"},
+             {"material_uri": "material://demo/part-b.pdf", "kind": "pdf",
+              "pages": [1, 2], "page_total": 25, "status": "truncated",
+              "chars": 10, "file_sha256": "sha256:b"},
+         ]},
+        {"pass": 2, "route_id": "route-demo-multi", "material_checksum": "sha256:m",
+         "slice_sha256": "sha256:s2",
+         "bundle_path": "attachments/slices/route-demo-multi--pass2.md",
+         "parts": [
+             {"material_uri": "material://demo/part-b.pdf", "kind": "pdf",
+              "pages": [21, 22], "page_total": 25, "status": "complete",
+              "chars": 10, "file_sha256": "sha256:b"},
+         ]},
+    ]
+    assert inspected_material_by_route(index) == {"route-demo-multi": {
+        "material://demo/part-a.pdf": {"kind": "pdf", "pages": [1, 2],
+                                       "file_sha256": "sha256:a"},
+        "material://demo/part-b.pdf": {"kind": "pdf", "pages": [1, 2, 21, 22],
+                                       "file_sha256": "sha256:b"},
+    }}
 
 
 def test_continuation_record_round_trips_through_yaml(mini_repo):

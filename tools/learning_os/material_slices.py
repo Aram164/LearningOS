@@ -101,6 +101,7 @@ class SlicePart:
     page_total: int | None = None
     status: str = "complete"
     text: str = ""
+    file_sha256: str = ""
 
 
 @dataclass(frozen=True)
@@ -193,11 +194,11 @@ def _read_pdf_part(route_id: str, material_uri: str, path: Path, locator: str) -
         raise SliceResolutionError(
             route_id, f"its file cannot be parsed as PDF: {exc}") from exc
     pages, status = _select_pages(total, parse_locator_page_ranges(locator))
-    return _pdf_part_for_pages(route_id, material_uri, reader, total, pages, status)
+    return _pdf_part_for_pages(route_id, material_uri, path, reader, total, pages, status)
 
 
-def _pdf_part_for_pages(route_id: str, material_uri: str, reader: Any, total: int,
-                        pages: tuple[int, ...], status: str) -> SlicePart:
+def _pdf_part_for_pages(route_id: str, material_uri: str, path: Path, reader: Any,
+                        total: int, pages: tuple[int, ...], status: str) -> SlicePart:
     raw: list[tuple[int, str]] = []
     for page in pages:
         try:
@@ -215,6 +216,7 @@ def _pdf_part_for_pages(route_id: str, material_uri: str, reader: Any, total: in
         page_total=total,
         status=status,
         text="".join(chunks),
+        file_sha256=sha256_file(path),
     )
 
 
@@ -227,7 +229,8 @@ def _read_text_part(route_id: str, material_uri: str, path: Path) -> SlicePart:
     if len(text.encode("utf-8")) > MAX_TEXT_SLICE_BYTES:
         text = text.encode("utf-8")[:MAX_TEXT_SLICE_BYTES].decode("utf-8", errors="ignore")
         status = "truncated"
-    return SlicePart(material_uri=material_uri, kind="text", status=status, text=text)
+    return SlicePart(material_uri=material_uri, kind="text", status=status, text=text,
+                     file_sha256=sha256_file(path))
 
 
 def _read_part(route_id: str, resolved: ResolvedMaterialFile, locator: str) -> SlicePart:
@@ -328,6 +331,7 @@ def slice_index_entry(slice_: MaterialSlice, *, pass_number: int = 1) -> dict[st
                 "page_total": part.page_total,
                 "status": part.status,
                 "chars": len(part.text),
+                "file_sha256": part.file_sha256,
             }
             for part in slice_.parts
         ],
@@ -570,8 +574,8 @@ def plan_continuation(
             f"pages {start}-{end} were already inspected; "
             "a continuation must name unread pages")
     try:
-        part = _pdf_part_for_pages(route_id, resolved.material_uri, reader, total,
-                                   pages, "complete")
+        part = _pdf_part_for_pages(route_id, resolved.material_uri, resolved.path,
+                                   reader, total, pages, "complete")
     except SliceResolutionError as exc:
         raise ContinuationError(route_id, "its pages yield no extractable text") from exc
     pending = MaterialSlice(
