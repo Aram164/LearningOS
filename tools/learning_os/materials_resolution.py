@@ -15,6 +15,8 @@ which therefore no longer reaches into projection internals for identity.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
 from pathlib import Path, PurePosixPath
 from typing import TYPE_CHECKING, Any, NamedTuple
@@ -323,3 +325,54 @@ def resolve_route_material_files(
             return []
         files.append(ResolvedMaterialFile(uri, path))
     return files
+
+
+def sha256_bytes(value: bytes) -> str:
+    return "sha256:" + hashlib.sha256(value).hexdigest()
+
+
+def sha256_file(path: Path, cache: dict[Path, str] | None = None) -> str:
+    """Hash one material file, at most once per build.
+
+    Routes deliberately share files — a lecture deck reached by four routes is
+    one deck — and every route hashed it again. The memo is created per build
+    and never outlives it, so a file that changes between builds is still
+    rehashed and a stale dossier still goes stale (2026-09-05 audit, F13).
+    """
+    if cache is None:
+        return sha256_bytes(path.read_bytes())
+    key = Path(path).resolve()
+    checksum = cache.get(key)
+    if checksum is None:
+        checksum = sha256_bytes(path.read_bytes())
+        cache[key] = checksum
+    return checksum
+
+
+def stable_checksum(value: Any) -> str:
+    payload = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return sha256_bytes(payload.encode("utf-8"))
+
+
+def route_material_checksum(repo: Repo, route: dict[str, Any],
+                            cache: dict[Path, str] | None = None) -> str:
+    """Freshness token for the exact material one route binds.
+
+    Hash local material bytes when resolvable — one file directly, several
+    files as a stable aggregate over their URIs and hashes; otherwise hash
+    the exact route. Remote and deliberately unavailable resources still need
+    a stable token. The route hash is explicitly provenance, not a claim
+    that remote bytes were reviewed.
+    """
+    files = resolve_route_material_files(repo, route)
+    if len(files) == 1:
+        return sha256_file(files[0].path, cache)
+    if files:
+        return stable_checksum([
+            {"material_uri": row.material_uri, "sha256": sha256_file(row.path, cache)}
+            for row in sorted(files, key=lambda row: row.material_uri)
+        ])
+    return stable_checksum({
+        key: route.get(key)
+        for key in ("id", "source_id", "unit_id", "locator", "url", "vault_path")
+    })

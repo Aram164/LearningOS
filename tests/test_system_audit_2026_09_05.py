@@ -429,7 +429,7 @@ def test_dossier_projection_loads_the_repository_once_and_hashes_once(
     mini_repo: Path, monkeypatch: pytest.MonkeyPatch
 ):
     """F13: many dossiers must not multiply repository loads or file hashes."""
-    from learning_os import material_synthesis
+    from learning_os import material_synthesis, materials_resolution
     from learning_os.genout import build_manifest
     from learning_os.loader import load_repo
     from learning_os.routes import deterministic_route_id
@@ -504,7 +504,7 @@ def test_dossier_projection_loads_the_repository_once_and_hashes_once(
     loads: list[str] = []
     hashed: list[bytes] = []
     real_load = material_synthesis.load_repo
-    real_hash = material_synthesis._sha256_bytes
+    real_hash = materials_resolution.sha256_bytes
 
     def counted_load(root, *args, **kwargs):
         loads.append(str(root))
@@ -515,7 +515,7 @@ def test_dossier_projection_loads_the_repository_once_and_hashes_once(
         return real_hash(value)
 
     monkeypatch.setattr(material_synthesis, "load_repo", counted_load)
-    monkeypatch.setattr(material_synthesis, "_sha256_bytes", counted_hash)
+    monkeypatch.setattr(materials_resolution, "sha256_bytes", counted_hash)
 
     repo = load_repo(mini_repo)
     manifest = build_manifest(repo, "T1")

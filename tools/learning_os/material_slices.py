@@ -35,6 +35,8 @@ from typing import Any
 from .materials_resolution import (
     ResolvedMaterialFile,
     resolve_route_material_files,
+    route_material_checksum,
+    sha256_file,
 )
 
 #: Scopes whose routes must carry a readable slice into the compare bundle.
@@ -420,6 +422,7 @@ class ContinuationRecord:
     prior_pages: tuple[int, ...]
     material_uri: str
     material_checksum: str
+    file_sha256: str
     slice_sha256: str
     bundle_path: str
     page_total: int
@@ -444,6 +447,7 @@ def continuation_record_dict(record: ContinuationRecord) -> dict[str, Any]:
         "prior_inspected_pages": list(record.prior_pages),
         "material_uri": record.material_uri,
         "material_checksum": record.material_checksum,
+        "file_sha256": record.file_sha256,
         "slice_sha256": record.slice_sha256,
         "bundle_path": record.bundle_path,
         "page_total": record.page_total,
@@ -465,10 +469,6 @@ def read_bundle_slice_index(bundle_dir: Path) -> list[dict[str, Any]]:
     except (OSError, ValueError):
         return []
     return value if isinstance(value, list) else []
-
-
-def _sha256_file(path: Path) -> str:
-    return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
 
 
 def plan_continuation(
@@ -539,7 +539,12 @@ def plan_continuation(
         raise ContinuationError(
             route_id, "continuations read PDF pages; plain-text routes arrive whole in pass 1")
     checksum = (basis.get("material_checksums") or {}).get(route_id)
-    if _sha256_file(resolved.path) != checksum:
+    try:
+        current = route_material_checksum(repo, route)
+    except Exception as exc:
+        raise ContinuationError(
+            route_id, f"its current material cannot be hashed: {exc}") from exc
+    if current != checksum:
         raise ContinuationError(
             route_id,
             "its material changed since pass 1; re-prepare the request instead of continuing",
@@ -559,6 +564,11 @@ def plan_continuation(
         raise ContinuationError(
             route_id, f"pages {start}-{end} are outside this {total}-page file")
     pages = tuple(range(start, end + 1))
+    if not set(pages) - set(inspected):
+        raise ContinuationError(
+            route_id,
+            f"pages {start}-{end} were already inspected; "
+            "a continuation must name unread pages")
     try:
         part = _pdf_part_for_pages(route_id, resolved.material_uri, reader, total,
                                    pages, "complete")
@@ -586,6 +596,7 @@ def plan_continuation(
         prior_pages=tuple(sorted(set(inspected))),
         material_uri=resolved.material_uri,
         material_checksum=checksum,
+        file_sha256=sha256_file(resolved.path),
         slice_sha256=digest,
         bundle_path=f"{SLICE_BUNDLE_PREFIX}/{route_id}--pass{passes_used + 1}.md",
         page_total=total,

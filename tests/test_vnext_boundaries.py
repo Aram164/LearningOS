@@ -269,6 +269,10 @@ def test_multi_pass_dossier_publishes_exactly_one_synthesis(
     mini_repo, repo_root, tmp_path,
 ):
     _add_routed_unit(mini_repo)
+    write_minimal_pdf(
+        mini_repo.parent / "materials/source-demo-book/lecture-01.pdf",
+        [f"lecture line {n}" for n in range(1, 26)],
+    )
     app = AIActionService(mini_repo)
     request = app.prepare(
         action_id="unit.compare-materials",
@@ -279,11 +283,15 @@ def test_multi_pass_dossier_publishes_exactly_one_synthesis(
     )
     app.append_slices(
         request_id=request["id"], route_id="route-demo-l01-book",
-        start=1, end=2, kind="example", concept_ids=["concept-expected-value"],
-        reason="re-read the worked calculation with the derivation context")
+        start=21, end=23, kind="example", concept_ids=["concept-expected-value"],
+        reason="worked examples follow the definition section")
     source = tmp_path / "approved-multipass-delivery"
     (source / "artifacts").mkdir(parents=True)
     synthesis = _synthesis(mini_repo)
+    synthesis["route_assessments"][0]["evidence"] = [{
+        "locator": "lecture-01.pdf, pdf pp. 21-23",
+        "checksum": synthesis["route_assessments"][0]["evidence"][0]["checksum"],
+    }]
     synthesis["basis"]["ai_provenance"] = {
         "request_id": request["id"],
         "delivery_id": "ai-delivery-multipass",

@@ -362,6 +362,9 @@ class AIActionService:
                 "text and cite exact slice pages in every evidence note (e.g. 'PDF pp. 386-393'). "
                 "evidence.checksum is always the material_checksum from the slice header — never "
                 "the slice_sha256, which only proves the transport bytes of the extracted text. "
+                "Every evidence item for a PDF route must cite the exact inspected pages in "
+                "house style (e.g. 'PDF pp. 386-393'); evidence without exact page citations, "
+                "or citing pages beyond the attachment, is rejected at publish. "
                 "When a slice header reports truncation, record it in limitations; never claim "
                 "pages beyond the attachment.\n"
                 "\n"
@@ -743,9 +746,15 @@ class AIActionService:
                 bundle_dir = self.repository.request_dir(str(request["id"]))
                 index_records = read_bundle_slice_index(bundle_dir)
                 if index_records:
+                    pdf_routes = {
+                        str(entry.get("route_id")) for entry in index_records
+                        if isinstance(entry, dict) and any(
+                            isinstance(part, dict) and part.get("kind") == "pdf"
+                            for part in entry.get("parts", []) or [])}
                     try:
                         validate_synthesis_page_provenance(
-                            inspected_pages_by_route(index_records), synthesis)
+                            inspected_pages_by_route(index_records), synthesis,
+                            pdf_routes=pdf_routes)
                     except ValueError as exc:
                         raise DeliveryValidationError(str(exc)) from exc
                 provenance = (synthesis.get("basis") or {}).get("ai_provenance") or {}

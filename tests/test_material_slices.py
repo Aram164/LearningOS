@@ -413,7 +413,7 @@ def test_sufficient_first_pass_validates_without_continuation(mini_repo):
             "evidence": [{"locator": "lecture-01.pdf p.1"}],
         }],
         "comparisons": [],
-    })
+    }, pdf_routes={"route-demo-book"})
 
 
 def test_explicit_gap_triggers_targeted_second_pass(mini_repo):
@@ -496,6 +496,53 @@ def test_changed_material_between_passes_refuses_reprepare(mini_repo):
         _append(app)
 
 
+def test_multi_file_continuation_uses_route_hash_not_file_hash(mini_repo):
+    locator = "part-a.pdf, reviewed section; part-b.pdf"
+    routes = [_route("route-demo-multi", locator)]
+    _add_sliced_unit(mini_repo, routes, {
+        "part-a.pdf": [f"alpha line {n}" for n in range(1, 26)],
+        "part-b.pdf": [f"beta line {n}" for n in range(1, 26)],
+    })
+    app = AIActionService(mini_repo)
+    request = app.prepare(
+        action_id="unit.compare-materials",
+        target_kind="unit",
+        target_id="unit-demo-l01",
+        provider="manual-bundle",
+        request_id="ai-request-multi",
+    )
+    with pytest.raises(ContinuationRefusedError, match="several files"):
+        app.append_slices(
+            request_id=request["id"], route_id="route-demo-multi",
+            start=21, end=24, kind="example", concept_ids=["concept-expected-value"],
+            reason="examples in the second file")
+    result = app.append_slices(
+        request_id=request["id"], route_id="route-demo-multi",
+        start=21, end=24, kind="example", concept_ids=["concept-expected-value"],
+        reason="examples in the second file",
+        material_uri="material://source-demo-book/part-b.pdf")
+    assert result["pass"] == 2
+    bundle = _bundle(mini_repo, request["id"])
+    body = (bundle / result["bundle_path"]).read_text(encoding="utf-8")
+    assert "beta line 23" in body
+    assert "alpha line" not in body
+    record = yaml.safe_load(
+        (bundle / "attachments/slices/continuations/pass-2-route-demo-multi.yaml"
+         ).read_text(encoding="utf-8"))
+    assert record["material_uri"] == "material://source-demo-book/part-b.pdf"
+    assert record["file_sha256"].startswith("sha256:")
+    assert record["material_checksum"] != record["file_sha256"]
+
+
+def test_continuation_refuses_fully_inspected_ranges(mini_repo):
+    app, _ = _prepared_long_route(mini_repo)
+    _append(app, start=21, end=25)
+    with pytest.raises(ContinuationRefusedError, match="already inspected"):
+        _append(app, start=21, end=25)
+    result = _append(app, start=24, end=28)
+    assert result["pass"] == 3
+
+
 def test_continuation_without_first_pass_is_refused(mini_repo):
     routes = [
         _route("route-demo-current", "current.pdf"),
@@ -553,7 +600,7 @@ def test_page_provenance_accepts_inspected_and_prose():
                 "right": [{"locator": "notes.pdf p.5"}],
             },
         }],
-    })
+    }, pdf_routes={"route-demo-a"})
 
 
 def test_page_provenance_refuses_uninspected_pages():
@@ -566,7 +613,20 @@ def test_page_provenance_refuses_uninspected_pages():
                 "evidence": [{"locator": "book.pdf, pdf pp. 1-9"}],
             }],
             "comparisons": [],
-        })
+        }, pdf_routes={"route-demo-a"})
+
+
+def test_page_provenance_refuses_pageless_pdf_evidence():
+    inspected = {"route-demo-a": [1, 2]}
+    with pytest.raises(MaterialSynthesisError, match="must cite exact PDF pages"):
+        validate_synthesis_page_provenance(inspected, {
+            "id": "material-synthesis-x", "unit_id": "unit-demo-l01",
+            "route_assessments": [{
+                "route_id": "route-demo-a", "review_status": "deep-reviewed",
+                "evidence": [{"locator": "the later chapter develops it further"}],
+            }],
+            "comparisons": [],
+        }, pdf_routes={"route-demo-a"})
 
 
 def test_page_provenance_checks_both_comparison_sides():
@@ -582,7 +642,7 @@ def test_page_provenance_checks_both_comparison_sides():
                     "right": [{"locator": "b.pdf p.7"}],
                 },
             }],
-        })
+        }, pdf_routes={"route-demo-a", "route-demo-b"})
 
 
 def test_continuation_record_round_trips_through_yaml(mini_repo):
