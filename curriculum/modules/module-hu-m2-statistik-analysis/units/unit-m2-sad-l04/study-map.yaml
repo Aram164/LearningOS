@@ -65,7 +65,9 @@ stages:
     locator: lecture-slides/04_probability.pdf, PDF pp. 16-21,24-25
     angle: Builds an outcome space from combinations of email attributes, then defines events as subsets.
     angle_detail: Distinguish possible attribute combinations from the eight observed training emails
-      and their relative frequencies.
+      and their relative frequencies. Note two slide slips on these pages. p. 17 labels '{2,4,6}' the
+      'odd event', and p. 25 prints (3+2-3)/8 with P(A∪C) where (3+2-2)/8 with P(A∪B) is meant (both results,
+      3/8, still hold).
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
   - material_ref:
@@ -194,8 +196,10 @@ stages:
     kind: read
     locator: lecture-slides/04_probability.pdf, PDF pp. 22-23,26-30
     angle: Derives the union rule by disjoint decomposition and uses a complement for the birthday problem.
-    angle_detail: For the birthday calculation, state the uniform-day and independent-birthday assumptions
-      before multiplying the no-match probabilities.
+    angle_detail: For the birthday calculation, use the slide's explicit assumptions (uniform 1/365 days;
+      no seasonal bias; no twins) and note that birthday independence enters only through the urn-with-replacement
+      model before multiplying the no-match probabilities. Stating independence explicitly when solving
+      remains good practice.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
   - material_ref:
@@ -658,6 +662,8 @@ stages:
       example.
     angle_detail: On physical p. 44, 0.1% means 0.001, not the displayed 0.0001. Use that prevalence consistently.
       Pages 45–47 illustrate a separate secretary problem; they are not another diagnostic-test calculation.
+      The ∀i,j partition wording on p. 43 is corrected in the conditional stage (pairwise disjoint for
+      i≠j).
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
   - material_ref:
@@ -683,8 +689,9 @@ stages:
     scope_triage: required-now
     route_id: route-78ae1df0aa949bb2a8a872dc
     locator: exercise-slides/UE3.pdf, physical PDF pp. 34–38
-    angle: Works a diagnostic-test inversion with sensitivity 80%, false-positive rate 15% and prevalence
-      10%.
+    angle: Works a diagnostic-test total-probability calculation (correct-diagnosis rate 84.5%, marginal
+      positive rate 21.5%) with sensitivity 80%, false-positive rate 15% and prevalence 10%; it performs
+      no posterior inversion.
     angle_detail: Attempt pp. 35 and 37 before reading the following answer slides. These parameters differ
       from the lecture example.
   - material_ref:
@@ -1310,7 +1317,10 @@ stages:
     locator: cs229-notes.pdf §4.2, physical PDF pp. 43–45; §4.2.1 begins p. 46
     angle: Makes the independence assumption and indicator-based estimates explicit for binary word features.
     angle_detail: Use the displayed model and class scores now. The likelihood derivation is a return
-      reading after L08; Laplace smoothing starts the later L14 extension.
+      reading after L08; this deck only names Laplace smoothing as a remedy and defers it to 'later'.
+      The canonical curriculum routes that follow-up to unit-m2-sad-l14, whose unit/stage metadata explicitly
+      targets zero counts and Laplace smoothing (L14 source material itself was not inspected in this
+      repair).
   - material_ref:
       route_id: route-0afeba6c2e9a73159d6ad420
       inherit:
