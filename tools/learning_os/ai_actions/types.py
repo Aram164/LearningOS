@@ -61,6 +61,8 @@ class AIActionRequest(TypedDict):
     created_at: str
     delivery_id: NotRequired[str]
     receipt_id: NotRequired[str]
+    reading_passes: NotRequired[list[dict[str, Any]]]
+    material_basis: NotRequired[dict[str, Any]]
 
 
 class DeliveryRecord(TypedDict, total=False):

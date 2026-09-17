@@ -265,6 +265,114 @@ def test_unit_compare_materials_prepares_bounded_local_request(mini_repo):
     assert index[0]["material_checksum"] != index[0]["slice_sha256"]
 
 
+def test_multi_pass_dossier_publishes_exactly_one_synthesis(
+    mini_repo, repo_root, tmp_path,
+):
+    _add_routed_unit(mini_repo)
+    app = AIActionService(mini_repo)
+    request = app.prepare(
+        action_id="unit.compare-materials",
+        target_kind="unit",
+        target_id="unit-demo-l01",
+        provider="manual-bundle",
+        request_id="ai-request-multipass",
+    )
+    app.append_slices(
+        request_id=request["id"], route_id="route-demo-l01-book",
+        start=1, end=2, kind="example", concept_ids=["concept-expected-value"],
+        reason="re-read the worked calculation with the derivation context")
+    source = tmp_path / "approved-multipass-delivery"
+    (source / "artifacts").mkdir(parents=True)
+    synthesis = _synthesis(mini_repo)
+    synthesis["basis"]["ai_provenance"] = {
+        "request_id": request["id"],
+        "delivery_id": "ai-delivery-multipass",
+        "provider": "manual-bundle",
+    }
+    write_yaml(source / "artifacts/material-synthesis.yaml", synthesis)
+    write_yaml(source / "delivery.yaml", {
+        "schema_version": 1,
+        "id": "ai-delivery-multipass",
+        "type": "ai-action-delivery",
+        "request_id": request["id"],
+        "action_id": "unit.compare-materials",
+        "status": "ready",
+        "producer": {"provider": "manual", "adapter": "manual-bundle"},
+        "approval": {
+            "user_approved": True,
+            "approved_at": "2026-08-25T12:00:00+00:00",
+        },
+        "operations": [{
+            "capability": "unit.material-synthesis.publish",
+            "target_id": "unit-demo-l01",
+            "artifact_ref": "artifacts/material-synthesis.yaml",
+        }],
+        "preconditions": request["preconditions"],
+    })
+    delivery = app.import_delivery(source)
+    envelope = _delivery_apply_envelope(mini_repo, app, delivery["id"])
+    applied = _run_delivery_apply(
+        repo_root, mini_repo, tmp_path / "apply-multipass.json", envelope,
+    )
+    assert applied.returncode == 0, applied.stderr
+    unit_dir = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01"
+    assert (unit_dir / "material-synthesis.yaml").is_file()
+    assert [path.name for path in unit_dir.glob("material-synthesis*.yaml")] == [
+        "material-synthesis.yaml"]
+
+
+def test_publish_refuses_evidence_citing_uninspected_pages(
+    mini_repo, repo_root, tmp_path,
+):
+    _add_routed_unit(mini_repo)
+    app = AIActionService(mini_repo)
+    request = app.prepare(
+        action_id="unit.compare-materials",
+        target_kind="unit",
+        target_id="unit-demo-l01",
+        provider="manual-bundle",
+        request_id="ai-request-unread-pages",
+    )
+    source = tmp_path / "rejected-unread-delivery"
+    (source / "artifacts").mkdir(parents=True)
+    synthesis = _synthesis(mini_repo)
+    synthesis["route_assessments"][0]["evidence"] = [{
+        "locator": "lecture-01.pdf p.9",
+        "checksum": synthesis["route_assessments"][0]["evidence"][0]["checksum"],
+    }]
+    write_yaml(source / "artifacts/material-synthesis.yaml", synthesis)
+    write_yaml(source / "delivery.yaml", {
+        "schema_version": 1,
+        "id": "ai-delivery-unread",
+        "type": "ai-action-delivery",
+        "request_id": request["id"],
+        "action_id": "unit.compare-materials",
+        "status": "ready",
+        "producer": {"provider": "manual", "adapter": "manual-bundle"},
+        "approval": {
+            "user_approved": True,
+            "approved_at": "2026-08-25T12:00:00+00:00",
+        },
+        "operations": [{
+            "capability": "unit.material-synthesis.publish",
+            "target_id": "unit-demo-l01",
+            "artifact_ref": "artifacts/material-synthesis.yaml",
+        }],
+        "preconditions": request["preconditions"],
+    })
+    delivery = app.import_delivery(source)
+    envelope = _delivery_apply_envelope(mini_repo, app, delivery["id"])
+    refused = _run_delivery_apply(
+        repo_root, mini_repo, tmp_path / "apply-unread.json", envelope,
+    )
+    assert refused.returncode != 0
+    assert "never inspected" in (refused.stdout + refused.stderr)
+    assert not (
+        mini_repo
+        / "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml"
+    ).exists()
+
+
 def _import_unit_synthesis_delivery(root: Path, tmp_path: Path):
     app = AIActionService(root)
     request = app.prepare(

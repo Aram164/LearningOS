@@ -15,8 +15,14 @@ from typing import Any
 
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.loader import load_repo
+from learning_os.material_slices import parse_locator_page_ranges
 from learning_os.materials_resolution import resolve_route_material_files
 from learning_os.transactions import artifact_revision
+
+#: Widest cited page span the provenance check expands before refusing.
+#: Real evidence cites dozens of pages at most; anything wider cannot be
+#: covered by bounded slices and is rejected as uncitable, never sampled.
+_MAX_CITED_SPAN = 100_000
 
 
 class MaterialSynthesisError(ValueError):
@@ -255,6 +261,96 @@ def validate_unit_material_synthesis(
                     f"comparison {side} evidence checksum does not match {route_id}"
                 )
     return value
+
+
+def inspected_pages_by_route(
+    index_records: list[dict[str, Any]],
+) -> dict[str, list[int]]:
+    """Union of inspected PDF pages per route across every slice pass."""
+    inspected: dict[str, set[int]] = {}
+    for record in index_records or []:
+        if not isinstance(record, dict):
+            continue
+        route_id = record.get("route_id")
+        if not isinstance(route_id, str):
+            continue
+        pages = inspected.setdefault(route_id, set())
+        for part in record.get("parts", []) or []:
+            if not isinstance(part, dict):
+                continue
+            for page in part.get("pages", []) or []:
+                if isinstance(page, bool):
+                    continue
+                if isinstance(page, int) and page >= 1:
+                    pages.add(page)
+    return {route_id: sorted(pages) for route_id, pages in inspected.items()}
+
+
+def _pages_beyond(seen: set[int], locator: Any) -> list[int]:
+    """Cited pages no slice inspected, sampled for the error message."""
+    beyond: list[int] = []
+    for start, end in parse_locator_page_ranges(locator):
+        for page in range(start, min(end, start + _MAX_CITED_SPAN) + 1):
+            if page not in seen:
+                beyond.append(page)
+                if len(beyond) >= 5:
+                    return beyond
+    return beyond
+
+
+def validate_synthesis_page_provenance(
+    inspected: dict[str, list[int]],
+    synthesis: dict[str, Any],
+) -> None:
+    """Refuse evidence that cites pages no attached slice inspected.
+
+    Only routes with a reading record are checked: bundles prepared without
+    slices keep their legacy behavior, so old requests stay valid. Evidence
+    locators without parseable page references are prose the validator
+    cannot judge and are left alone — a documented boundary, not a proof.
+    Deep-reviewed evidence that names pages outside the inspected set is
+    rejected, for assessments and for both sides of pairwise comparisons.
+    """
+    unit_id = synthesis.get("unit_id", "?")
+    for row in synthesis.get("route_assessments", []) or []:
+        if not isinstance(row, dict) or row.get("review_status") != "deep-reviewed":
+            continue
+        route_id = str(row.get("route_id"))
+        if route_id not in inspected:
+            continue
+        seen = set(inspected[route_id])
+        for evidence in row.get("evidence", []) or []:
+            if not isinstance(evidence, dict):
+                continue
+            beyond = _pages_beyond(seen, evidence.get("locator"))
+            if beyond:
+                raise MaterialSynthesisError(
+                    f"{route_id} evidence cites PDF pages never inspected "
+                    f"(e.g. p.{beyond[0]}); inspected: {sorted(seen)} "
+                    f"for dossier {synthesis.get('id', unit_id)}"
+                )
+    for comparison in synthesis.get("comparisons", []) or []:
+        if not isinstance(comparison, dict):
+            continue
+        evidence = comparison.get("evidence")
+        if not isinstance(evidence, dict):
+            continue
+        for side, key in (("left", "left_route_id"), ("right", "right_route_id")):
+            route_id = comparison.get(key)
+            rows = evidence.get(side)
+            if not isinstance(route_id, str) or route_id not in inspected \
+                    or not isinstance(rows, list):
+                continue
+            seen = set(inspected[route_id])
+            for item in rows:
+                if not isinstance(item, dict):
+                    continue
+                beyond = _pages_beyond(seen, item.get("locator"))
+                if beyond:
+                    raise MaterialSynthesisError(
+                        f"comparison {side} of {route_id} cites PDF pages never "
+                        f"inspected (e.g. p.{beyond[0]}); inspected: {sorted(seen)}"
+                    )
 
 
 def material_synthesis_freshness(
