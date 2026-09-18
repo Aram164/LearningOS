@@ -1,13 +1,8 @@
-schema_version: 1
-id: material-synthesis-m2-sad-l04
-type: unit-material-synthesis
-unit_id: unit-m2-sad-l04
-status: approved
 basis:
-  unit_revision: 17
-  source_map_revision: 53
-  source_map_checksum: sha256:fea5b938fbd75af8ae545f2e89402dac8d8cfa1c502c4ac8e2f8f062885cf458
-  route_set_checksum: sha256:0554867e7ab0b48092ebf507806ff3d40b471a1aeeaf9bb91e99c79541c0df39
+  ai_provenance:
+    delivery_id: ai-delivery-sad-l04-pilot
+    provider: manual-bundle
+    request_id: ai-request-sad-l04-pilot
   material_checksums:
     route-0afeba6c2e9a73159d6ad420: sha256:a60b0290379e3c97a1af58e5c042ce33ff6492bfdd1bd1ace19b7b3f9548a209
     route-1d4c3d5164052df9c540d079: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
@@ -38,56 +33,119 @@ basis:
     route-sad-l04-kts-c57f26de: sha256:5ec2f6e59160d1f76e43cc3c515af2055d655465ee6577be3de4aa90fa935326
     route-sad-l04-psychexamreview-framing: sha256:1c23a6f1b6e1726c905be6dd4bdf8170f0e0d8a91e3d8ac1b5fb6353b4cd04cc
     route-sad-l04-tijms-intuition: sha256:7efa2440829e6b5e455df2ca57e4a7c64e84aae9c18c0aef9fe1a7019dc1d99e
-  policy: tiered-v1
-  ai_provenance:
-    request_id: ai-request-sad-l04-pilot
-    delivery_id: ai-delivery-sad-l04-pilot
-    provider: manual-bundle
+  policy: tiered-v2
+  route_set_checksum: sha256:8a630c90fe9f52d41ca3ae5c8b5e7bc873093c5f31f11767bfa9ae8e55b6082f
+  source_map_checksum: sha256:2dbb846594706449c415a2a3ee6164439c6dd2e7160a96a5a67f528c2ac4a8ca
+  source_map_revision: 55
+  unit_revision: 23
+comparisons:
+- concept_ids:
+  - concept-bayes-theorem
+  - concept-conditional-probability
+  - concept-naive-bayes
+  evidence:
+    left:
+    - checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
+      locator: 04_probability.pdf, PDF pp. 49-53
+      note: NB-Modell und Zero-Count-Demo
+    right:
+    - checksum: sha256:4d3703977a1bdfdddc3c9ba25caf75de20a0b323d6c4fc62af71b896a67589e5
+      locator: UE4.pdf, PDF pp. 9-12
+      note: Kette mit Annahmendiskussion
+  left_route_id: route-1d4c3d5164052df9c540d079
+  narrative: Das Deck liefert Herleitung und Modell (Unabhaengigkeitsbedingungen, NB-Faktorisierung, Zero-Count-Demo),
+    UE4 die vollstaendigste durchgearbeitete Total→Bayes→NB-Kette mit expliziter Annahmendiskussion. UE4-Zahlen
+    sind eine eigene Variante.
+  relation: complements
+  right_route_id: route-c355ecc8ea7599015a21abfe
+- concept_ids:
+  - concept-conditional-probability
+  - concept-bayes-theorem
+  - concept-naive-bayes
+  evidence:
+    left:
+    - checksum: sha256:47b06532947d7c75804880275f3e8644b960125f4ae6030b6585a4aa9a1ebeac
+      locator: blatt-02.pdf, PDF p. 2
+      note: Blatt-Parameter und -Forderung
+    right:
+    - checksum: sha256:4d3703977a1bdfdddc3c9ba25caf75de20a0b323d6c4fc62af71b896a67589e5
+      locator: UE4.pdf, PDF p. 9
+      note: UE4-Parameter und -Rechnung
+  left_route_id: route-a577afe5626f081623095a82
+  narrative: 'Beide rechnen im Sportverein, aber mit verschiedenen Parametern (Blatt: 70 %/35 %, 3:2,
+    50 %/25 %; UE4: 75 %/40 %, 5:4, 60 %/30 %). UE4 ist Methodenanalogon, kein exakter Antwortschluessel
+    zum aktuellen Blatt.'
+  relation: contrasts
+  right_route_id: route-c355ecc8ea7599015a21abfe
+- concept_ids:
+  - concept-bayes-theorem
+  - concept-conditional-probability
+  evidence:
+    left:
+    - checksum: sha256:184a6f0e0552e4a2b5a82cd591b55eaac411464ad2475908bb87cbeebfd03b88
+      locator: UE3.pdf, PDF pp. 34-38
+      note: UE3-Parameter und Total-Resultate
+    right:
+    - checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
+      locator: 04_probability.pdf, PDF pp. 43-44
+      note: Deck-Lemma und Diagnostik-Inversion
+  left_route_id: route-78ae1df0aa949bb2a8a872dc
+  narrative: 'Beide nutzen Diagnostik-Rahmung, aber verschiedene Parameter und Ziele: UE3 rechnet Total
+    Probability (84,5 % korrekt, 21,5 % positiv) ohne Inversion; das Deck invertiert zur Posterior P(gesund|positiv)
+    mit inkonsistenter Praevalenz.'
+  relation: contrasts
+  right_route_id: route-1d4c3d5164052df9c540d079
+concept_groups:
+- bridge_note_ids: []
+  concept_id: concept-probability
+  local_node_ids:
+  - knowledge-sad-l04-framing
+  - knowledge-sad-l04-events
+  - knowledge-sad-l04-axioms
+  narrative: 'Alle drei Knoten sind etabliert: Framing allein durch das vollstaendig inspizierte Deck
+    (S. 2-5); Ereignisraeume zusaetzlich durch UE3 (S. 15-20) und die Blatt-Forderung; Axiome mit Folgerungen
+    zusaetzlich durch UE3 (S. 21) und die De-Mere-Anwendung.'
+  related_unit_ids: []
+- bridge_note_ids: []
+  concept_id: concept-conditional-probability
+  local_node_ids:
+  - knowledge-sad-l04-conditional
+  narrative: 'Konditional und Total Probability: Deck-Quotient mit E-Mail-Likelihoods (S. 32-37), UE3-Sammlung
+    mit Kartenbeispiel (S. 31-33), UE4-gewichtete Summe (S. 9), Blatt-Forderung.'
+  related_unit_ids: []
+- bridge_note_ids: []
+  concept_id: concept-bayes-theorem
+  local_node_ids:
+  - knowledge-sad-l04-bayes
+  narrative: 'Bayes-Inversion: Deck-Lemma mit Diagnostik und Secretary (S. 43-47), UE4-Kette (S. 10),
+    Blatt-Forderung; UE3-Diagnostik bewusst ohne Inversion (nur Total Probability).'
+  related_unit_ids: []
+- bridge_note_ids: []
+  concept_id: concept-conditional-independence
+  local_node_ids:
+  - knowledge-sad-l04-independence
+  narrative: 'Unabhaengigkeit: Deck-Bedingungen mit Beid-Warnung (S. 40/42/49-50), UE3-Sammlung (S. 32-33),
+    UE4-Annahmendiskussion (S. 12), Blatt-Kontraste (d/e).'
+  related_unit_ids: []
+- bridge_note_ids: []
+  concept_id: concept-naive-bayes
+  local_node_ids:
+  - knowledge-sad-l04-naive-bayes
+  narrative: 'Naive Bayes: Deck-Modell mit Mengen-BoW, unnormiertem Argmax, Zero-Count-Demo und benannter
+    Glaettung (S. 49-59), UE4-Zwei-Merkmal-Kette (S. 11-12), Blatt-Forderung.'
+  related_unit_ids: []
+id: material-synthesis-m2-sad-l04
 route_assessments:
-- route_id: route-1d4c3d5164052df9c540d079
-  source_id: source-sad-ss26-lectures
-  locator: lecture-slides/04_probability.pdf, 59 slides
-  review_status: deep-reviewed
+- assumptions: Endliche Ereignisraeume im Deck; Gleichwahrscheinlichkeit nur als Laplace-Sonderfall; Stationaritaet
+    bei Haeufigkeitsschaetzung; Urnenmodell mit Zuruecklegen im Birthday-Beispiel; bedingte Unabhaengigkeit
+    als NB-Modellannahme.
+  best_for: Konzeptionelles Rueckgrat, Herleitungen, Annahmen und Modelldeutung inklusive Naive-Bayes-Formulierung.
   concept_ids:
   - concept-probability
   - concept-conditional-probability
   - concept-bayes-theorem
   - concept-conditional-independence
   - concept-naive-bayes
-  evidence:
-  - locator: 04_probability.pdf, PDF pp. 2-5
-    checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
-    note: Framing-Quiz mit Aufloesung
-  - locator: 04_probability.pdf, PDF pp. 7-9
-    checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
-    note: SPAM-Datensatz, 8 Mails, fehlende Kombination
-  - locator: 04_probability.pdf, PDF pp. 10-14
-    checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
-    note: Accuracy-Mass und Merkmalsgenauigkeiten
-  - locator: 04_probability.pdf, PDF pp. 16-20
-    checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
-    note: Ereignisraum, Ereignisse, Haeufigkeit, Stationaritaet
-  - locator: 04_probability.pdf, PDF pp. 21-23
-    checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
-    note: Laplace, Kolmogorov-Axiome, Folgerungen
-  - locator: 04_probability.pdf, PDF pp. 24-30
-    checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
-    note: Ereignisraum-Konstruktion, Birthday-Beispiel
-  - locator: 04_probability.pdf, PDF pp. 32-37
-    checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
-    note: Bedingte Wahrscheinlichkeit, E-Mail-Likelihoods
-  - locator: 04_probability.pdf, PDF pp. 40-44
-    checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
-    note: Unabhaengigkeit, Total/Bayes-Lemma, Diagnostik
-  - locator: 04_probability.pdf, PDF pp. 45-47
-    checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
-    note: Secretary-Beispiel
-  - locator: 04_probability.pdf, PDF pp. 49-53
-    checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
-    note: Bedingte Unabhaengigkeit, NB-Modell, Zero-Count-Demo
-  - locator: 04_probability.pdf, PDF pp. 54-59
-    checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
-    note: Text-NB, Smoothing-Vorschau, Komplexitaet, Wrap-Up
   contribution: 'Konzeptionelle Schiene der VL4: Framing-Quiz; SPAM-Setup mit 8 Mails; Ereignisraeume
     und Mengenoperationen; Laplace; finite Kolmogorov-Axiome mit teilbewiesenen Folgerungen (Vereinigungsskizze;
     Komplement genannt); Birthday-Beispiel mit expliziter Uniformitaet; bedingte Wahrscheinlichkeit mit
@@ -95,456 +153,402 @@ route_assessments:
     Secretary-Beispiel; bedingte Unabhaengigkeit in beide Richtungen; kategoriales Naive-Bayes-Modell
     mit Mengen-BoW, unnormiertem Argmax, demonstriertem Zero-Count, benannter Glaettung, Log-Raum, Komplexitaet
     und generativ/diskriminativ-Schluss.'
-  assumptions: Endliche Ereignisraeume im Deck; Gleichwahrscheinlichkeit nur als Laplace-Sonderfall; Stationaritaet
-    bei Haeufigkeitsschaetzung; Urnenmodell mit Zuruecklegen im Birthday-Beispiel; bedingte Unabhaengigkeit
-    als NB-Modellannahme.
-  notation: Omega/Ereignisse/A-B; P(A|B)-Quotient; SP/SP=Y/N-Kuerzel; k/aehnliche NB-Notation mit Prior
-    mal Likelihoods; Formelextraktion teils degradiert.
+  evidence:
+  - checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
+    locator: 04_probability.pdf, PDF pp. 2-5
+    note: Framing-Quiz mit Aufloesung
+  - checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
+    locator: 04_probability.pdf, PDF pp. 7-9
+    note: SPAM-Datensatz, 8 Mails, fehlende Kombination
+  - checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
+    locator: 04_probability.pdf, PDF pp. 10-14
+    note: Accuracy-Mass und Merkmalsgenauigkeiten
+  - checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
+    locator: 04_probability.pdf, PDF pp. 16-20
+    note: Ereignisraum, Ereignisse, Haeufigkeit, Stationaritaet
+  - checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
+    locator: 04_probability.pdf, PDF pp. 21-23
+    note: Laplace, Kolmogorov-Axiome, Folgerungen
+  - checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
+    locator: 04_probability.pdf, PDF pp. 24-30
+    note: Ereignisraum-Konstruktion, Birthday-Beispiel
+  - checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
+    locator: 04_probability.pdf, PDF pp. 32-37
+    note: Bedingte Wahrscheinlichkeit, E-Mail-Likelihoods
+  - checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
+    locator: 04_probability.pdf, PDF pp. 40-44
+    note: Unabhaengigkeit, Total/Bayes-Lemma, Diagnostik
+  - checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
+    locator: 04_probability.pdf, PDF pp. 45-47
+    note: Secretary-Beispiel
+  - checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
+    locator: 04_probability.pdf, PDF pp. 49-53
+    note: Bedingte Unabhaengigkeit, NB-Modell, Zero-Count-Demo
+  - checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
+    locator: 04_probability.pdf, PDF pp. 54-59
+    note: Text-NB, Smoothing-Vorschau, Komplexitaet, Wrap-Up
   exercise_value: Keine Aufgaben; Rechen- und Zaehlbeispiele (SPAM-Genauigkeiten, Birthday-Tabelle, E-Mail-Likelihoods,
     NB-Scores) als Lesebeispiele.
-  best_for: Konzeptionelles Rueckgrat, Herleitungen, Annahmen und Modelldeutung inklusive Naive-Bayes-Formulierung.
   limitations: S. 17 odd-event-Fehlbezeichnung; S. 25 Vereinigungs-Typo; S. 43 ∀i,j-Quantor; S. 44 Praevalenz
     0,1 % gegen 0,0001 (antwortwirksam); S. 42 kausale Unabhaengigkeits-Rhetorik; S. 35 nur-apparente
     1/5-Inkonsistenz (extraktionssensitiv); Formeln teils degradiert; Figuren S. 41 und Teschl-Beispiel
     S. 38-39 nicht extrahiert; Beweise teils omitted.
-- route_id: route-a577afe5626f081623095a82
-  source_id: source-sad-uebungen
-  locator: exercise-slides/blatt-02.pdf, pp. 1-2, Aufgaben 1-2
+  locator: lecture-slides/04_probability.pdf, 59 slides
+  notation: Omega/Ereignisse/A-B; P(A|B)-Quotient; SP/SP=Y/N-Kuerzel; k/aehnliche NB-Notation mit Prior
+    mal Likelihoods; Formelextraktion teils degradiert.
   review_status: deep-reviewed
+  route_id: route-1d4c3d5164052df9c540d079
+  scope_of_absence: 04_probability.pdf, PDF pp. 1-59 of 59 (whole file)
+  source_id: source-sad-ss26-lectures
+- assumptions: Aufgabenstellungen; setzen VL-Begriffe und Rechenregeln voraus.
+  best_for: Nachweis geforderter Rechen-, Inversions- und Deutungsleistung.
   concept_ids:
   - concept-probability
   - concept-conditional-probability
   - concept-bayes-theorem
   - concept-conditional-independence
   - concept-naive-bayes
-  evidence:
-  - locator: blatt-02.pdf, PDF p. 1
-    checksum: sha256:47b06532947d7c75804880275f3e8644b960125f4ae6030b6585a4aa9a1ebeac
-    note: 'Aufgabe 1(a)-(e): Wuerfel, Karten, Muenze, Portfolio'
-  - locator: blatt-02.pdf, PDF p. 2
-    checksum: sha256:47b06532947d7c75804880275f3e8644b960125f4ae6030b6585a4aa9a1ebeac
-    note: 'Aufgabe 2(a)-(d): Basketball/Schwimmen, NB-Forderung'
   contribution: 'Gepruefte Aufgabenforderungen: explizite Ergebnisraeume (Wuerfelwiederholung, geordnete
     Karten), Komplement- und Unabhaengigkeitsannahmen, Portfolio-Schwelle mit perfekter Abhaengigkeit
     als Kontrast; Sportverein mit 70 %/35 %, 3:2, 50 %/25 %: Total Probability, Bayes-Inversion, Zwei-Merkmal-NB
     mit Benennung der Unabhaengigkeitsannahme. Keine Loesungen.'
-  assumptions: Aufgabenstellungen; setzen VL-Begriffe und Rechenregeln voraus.
-  notation: P(A), P(J|B), Prior mal Likelihoods in 2(c)-Forderung.
+  evidence:
+  - checksum: sha256:47b06532947d7c75804880275f3e8644b960125f4ae6030b6585a4aa9a1ebeac
+    locator: blatt-02.pdf, PDF p. 1
+    note: 'Aufgabe 1(a)-(e): Wuerfel, Karten, Muenze, Portfolio'
+  - checksum: sha256:47b06532947d7c75804880275f3e8644b960125f4ae6030b6585a4aa9a1ebeac
+    locator: blatt-02.pdf, PDF p. 2
+    note: 'Aufgabe 2(a)-(d): Basketball/Schwimmen, NB-Forderung'
   exercise_value: 'Hoch als Pruefungsformat: Rechenwege mit Begruendung, Modellannahme benennen und hinterfragen.'
-  best_for: Nachweis geforderter Rechen-, Inversions- und Deutungsleistung.
   limitations: Nur Forderungen; keine Loesungswerte, kein Code, keine Datensaetze.
-- route_id: route-78ae1df0aa949bb2a8a872dc
-  source_id: source-sad-uebungen
-  locator: exercise-slides/UE3.pdf, slides 15-38
+  locator: exercise-slides/blatt-02.pdf, pp. 1-2, Aufgaben 1-2
+  notation: P(A), P(J|B), Prior mal Likelihoods in 2(c)-Forderung.
   review_status: deep-reviewed
+  route_id: route-a577afe5626f081623095a82
+  scope_of_absence: blatt-02.pdf, PDF pp. 1-2 of 3
+  source_id: source-sad-uebungen
+- assumptions: Stichproben-Haeufigkeiten; Nenner P(B)>0 (plus ueberfluessige A∩B≠∅-Bedingung).
+  best_for: Ereignis-/Wahrscheinlichkeits-Begriffsfestigung, Komplementrechnung, Konditionalpraxis, diagnostische
+    Total-Probability-Rechnung.
   concept_ids:
   - concept-probability
   - concept-conditional-probability
   - concept-bayes-theorem
-  evidence:
-  - locator: UE3.pdf, PDF pp. 15-21
-    checksum: sha256:184a6f0e0552e4a2b5a82cd591b55eaac411464ad2475908bb87cbeebfd03b88
-    note: Gluehbirnen-Beispiel, Ereignisfeld, Axiome
-  - locator: UE3.pdf, PDF pp. 25-29
-    checksum: sha256:184a6f0e0552e4a2b5a82cd591b55eaac411464ad2475908bb87cbeebfd03b88
-    note: De-Mere-Komplement, 50,6 %
-  - locator: UE3.pdf, PDF pp. 31-33
-    checksum: sha256:184a6f0e0552e4a2b5a82cd591b55eaac411464ad2475908bb87cbeebfd03b88
-    note: Konditional-Definition, Unabhaengigkeit, Kartenbeispiel
-  - locator: UE3.pdf, PDF pp. 34-38
-    checksum: sha256:184a6f0e0552e4a2b5a82cd591b55eaac411464ad2475908bb87cbeebfd03b88
-    note: Diagnostik-Total-Probability ohne Inversion
   contribution: 'Begriffsblaetter (Ereignisfeld inkl. sigma-additiver Axiome) plus durchgerechnete Beispiele:
     De-Mere-Komplement; Konditional-Sammlung mit Karten-Unabhaengigkeitscheck; Diagnostik mit Sensitivitaet
     80 %, FPR 15 %, Praevalenz 10 % als Total-Probability-Rechnung (84,5 % korrekt, 21,5 % positiv) ohne
     Posterior-Inversion. Keine Blatt- und keine Deck-Beispiel-Loesung.'
-  assumptions: Stichproben-Haeufigkeiten; Nenner P(B)>0 (plus ueberfluessige A∩B≠∅-Bedingung).
-  notation: Epsilon-Ereignisfeld; P(A|B)-Quotient; Sensitivitaet/Spezifitaet-Vokabular.
+  evidence:
+  - checksum: sha256:184a6f0e0552e4a2b5a82cd591b55eaac411464ad2475908bb87cbeebfd03b88
+    locator: UE3.pdf, PDF pp. 15-21
+    note: Gluehbirnen-Beispiel, Ereignisfeld, Axiome
+  - checksum: sha256:184a6f0e0552e4a2b5a82cd591b55eaac411464ad2475908bb87cbeebfd03b88
+    locator: UE3.pdf, PDF pp. 25-29
+    note: De-Mere-Komplement, 50,6 %
+  - checksum: sha256:184a6f0e0552e4a2b5a82cd591b55eaac411464ad2475908bb87cbeebfd03b88
+    locator: UE3.pdf, PDF pp. 31-33
+    note: Konditional-Definition, Unabhaengigkeit, Kartenbeispiel
+  - checksum: sha256:184a6f0e0552e4a2b5a82cd591b55eaac411464ad2475908bb87cbeebfd03b88
+    locator: UE3.pdf, PDF pp. 34-38
+    note: Diagnostik-Total-Probability ohne Inversion
   exercise_value: 'Hoch als Rechenpraxis: Komplement, Konditional, Total Probability am Test-Kontext;
     pp. 35/37 als Vor-Rechenaufforderung nutzbar.'
-  best_for: Ereignis-/Wahrscheinlichkeits-Begriffsfestigung, Komplementrechnung, Konditionalpraxis, diagnostische
-    Total-Probability-Rechnung.
   limitations: S. 32 A∩B≠∅-Bedingung staerker als noetig; Diagnostik ohne Inversion trotz Sensitivitaet-Rahmung;
     Parameter abweichend vom Deck; keine Blatt-Loesung.
-- route_id: route-c355ecc8ea7599015a21abfe
-  source_id: source-sad-uebungen
-  locator: exercise-slides/UE4.pdf, slides 9-12
+  locator: exercise-slides/UE3.pdf, slides 15-38
+  notation: Epsilon-Ereignisfeld; P(A|B)-Quotient; Sensitivitaet/Spezifitaet-Vokabular.
   review_status: deep-reviewed
+  route_id: route-78ae1df0aa949bb2a8a872dc
+  scope_of_absence: UE3.pdf, PDF pp. 15-38 of 54
+  source_id: source-sad-uebungen
+- assumptions: Tutorial-eigene Zahlenvariante; bedingte Unabhaengigkeit als Vereinfachung markiert.
+  best_for: Durchgearbeitete Total→Bayes→NB-Kette und explizite Modellannahmen-Diskussion.
   concept_ids:
   - concept-conditional-probability
   - concept-bayes-theorem
   - concept-naive-bayes
-  evidence:
-  - locator: UE4.pdf, PDF p. 9
-    checksum: sha256:4d3703977a1bdfdddc3c9ba25caf75de20a0b323d6c4fc62af71b896a67589e5
-    note: Total Probability P(B)=107/180
-  - locator: UE4.pdf, PDF p. 10
-    checksum: sha256:4d3703977a1bdfdddc3c9ba25caf75de20a0b323d6c4fc62af71b896a67589e5
-    note: Bayes-Inversion P(J|B)=75/107
-  - locator: UE4.pdf, PDF p. 11
-    checksum: sha256:4d3703977a1bdfdddc3c9ba25caf75de20a0b323d6c4fc62af71b896a67589e5
-    note: NB-Scores 0,25 vs 0,053, proportional
-  - locator: UE4.pdf, PDF p. 12
-    checksum: sha256:4d3703977a1bdfdddc3c9ba25caf75de20a0b323d6c4fc62af71b896a67589e5
-    note: Bedingte-Unabhaengigkeits-Diskussion
   contribution: 'Vollstaendige durchgearbeitete Kette im Sportverein (75 %/40 %, 5:4, 60 %/30 %): Total
     Probability, echte Bayes-Inversion, Zwei-Merkmal-NB mit proportionalen Scores und expliziter Diskussion
     der bedingten Unabhaengigkeit als vermutlich verletzter, aber brauchbarer Modellannahme. Zahlenvariante
     abweichend vom aktuellen Blatt 2.'
-  assumptions: Tutorial-eigene Zahlenvariante; bedingte Unabhaengigkeit als Vereinfachung markiert.
-  notation: P(B|J), P(J|B), proportionale Scores mit Proportionalzeichen.
+  evidence:
+  - checksum: sha256:4d3703977a1bdfdddc3c9ba25caf75de20a0b323d6c4fc62af71b896a67589e5
+    locator: UE4.pdf, PDF p. 9
+    note: Total Probability P(B)=107/180
+  - checksum: sha256:4d3703977a1bdfdddc3c9ba25caf75de20a0b323d6c4fc62af71b896a67589e5
+    locator: UE4.pdf, PDF p. 10
+    note: Bayes-Inversion P(J|B)=75/107
+  - checksum: sha256:4d3703977a1bdfdddc3c9ba25caf75de20a0b323d6c4fc62af71b896a67589e5
+    locator: UE4.pdf, PDF p. 11
+    note: NB-Scores 0,25 vs 0,053, proportional
+  - checksum: sha256:4d3703977a1bdfdddc3c9ba25caf75de20a0b323d6c4fc62af71b896a67589e5
+    locator: UE4.pdf, PDF p. 12
+    note: Bedingte-Unabhaengigkeits-Diskussion
   exercise_value: Hoch als Musterloesungskette mit Methodendiskussion.
-  best_for: Durchgearbeitete Total→Bayes→NB-Kette und explizite Modellannahmen-Diskussion.
   limitations: Zahlen (75/40, 5:4, 60/30) weichen vom Blatt ab (70/35, 3:2, 50/25); kein exakter Antwortschluessel
     zum aktuellen Blatt; Scores unnormiert.
-- route_id: route-0afeba6c2e9a73159d6ad420
-  source_id: source-sad-2025-recordings
-  locator: 04_probability_with_notes (1).pdf
-  review_status: screened
-  concept_ids:
+  locator: exercise-slides/UE4.pdf, slides 9-12
+  notation: P(B|J), P(J|B), proportionale Scores mit Proportionalzeichen.
+  review_status: deep-reviewed
+  route_id: route-c355ecc8ea7599015a21abfe
+  scope_of_absence: UE4.pdf, PDF pp. 9-12 of 69
+  source_id: source-sad-uebungen
+- concept_ids:
   - concept-bayes-theorem
   - concept-conditional-independence
   - concept-conditional-probability
   - concept-naive-bayes
   - concept-probability
+  locator: 04_probability_with_notes (1).pdf
   reason: 'Route ausserhalb des Leseauftrags (Scope prior-year): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-361d03e96b7b4416138c8def
-  source_id: source-3b1b-bayes-theorem
-  locator: '"Bayes theorem, the geometry of changing beliefs" — illustrated author lesson'
   review_status: screened
-  concept_ids:
+  route_id: route-0afeba6c2e9a73159d6ad420
+  source_id: source-sad-2025-recordings
+- concept_ids:
   - concept-bayes-theorem
   - concept-conditional-probability
+  locator: '"Bayes theorem, the geometry of changing beliefs" — illustrated author lesson'
   reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-37c710174c2a5be9353cb154
-  source_id: source-statquest
-  locator: '"Naive Bayes, Clearly Explained!!!", 01:25-12:29 for likelihoods, scoring, and smoothing'
   review_status: screened
-  concept_ids:
+  route_id: route-361d03e96b7b4416138c8def
+  source_id: source-3b1b-bayes-theorem
+- concept_ids:
   - concept-bayes-theorem
   - concept-naive-bayes
+  locator: '"Naive Bayes, Clearly Explained!!!", 01:25-12:29 for likelihoods, scoring, and smoothing'
   reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-395d30ff10c3ab149d789c7c
-  source_id: source-mit-6041sc
+  review_status: screened
+  route_id: route-37c710174c2a5be9353cb154
+  source_id: source-statquest
+- concept_ids:
+  - concept-bayes-theorem
+  - concept-conditional-independence
+  - concept-conditional-probability
   locator: Lecture 2 "Conditioning and Bayes’ Rule" and Lecture 3 "Independence", lesson pages with written
     PDFs
+  reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
+    geprueft; Einordnung nur aus Metadaten.'
   review_status: screened
-  concept_ids:
+  route_id: route-395d30ff10c3ab149d789c7c
+  source_id: source-mit-6041sc
+- concept_ids:
   - concept-bayes-theorem
   - concept-conditional-independence
   - concept-conditional-probability
-  reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
-    geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-44431ac89d714785b2bab31b
-  source_id: source-mit-1805
   locator: '"Conditional Probability, Independence and Bayes’ Theorem", Class 3, physical PDF pp. 1–11'
+  reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
+    geprueft; Einordnung nur aus Metadaten.'
   review_status: screened
-  concept_ids:
+  route_id: route-44431ac89d714785b2bab31b
+  source_id: source-mit-1805
+- concept_ids:
   - concept-bayes-theorem
   - concept-conditional-independence
   - concept-conditional-probability
-  reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
-    geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-510e0c869360f72413e11c13
-  source_id: source-pitman-probability
   locator: §1.4, PDF pp. 44–55; §1.5, pp. 58–62
-  review_status: screened
-  concept_ids:
-  - concept-bayes-theorem
-  - concept-conditional-independence
-  - concept-conditional-probability
   reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-66691da3faf6c5780cf0b66d
-  source_id: source-openintro-statistics
-  locator: §3.1, PDF pp. 81–91; §3.2, pp. 95–108
   review_status: screened
-  concept_ids:
+  route_id: route-510e0c869360f72413e11c13
+  source_id: source-pitman-probability
+- concept_ids:
   - concept-bayes-theorem
   - concept-conditional-independence
   - concept-conditional-probability
   - concept-probability
+  locator: §3.1, PDF pp. 81–91; §3.2, pp. 95–108
   reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-878acd203c5603b70539868d
-  source_id: source-jurafsky-slp3
-  locator: August 19, 2026 Appendix B §§B.1–B.4, physical PDF pp. 3–8
   review_status: screened
-  concept_ids:
+  route_id: route-66691da3faf6c5780cf0b66d
+  source_id: source-openintro-statistics
+- concept_ids:
   - concept-conditional-independence
   - concept-naive-bayes
+  locator: August 19, 2026 Appendix B §§B.1–B.4, physical PDF pp. 3–8
   reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-87f36cab308f54f199bc3034
-  source_id: source-fahrmeir-arbeitsbuch
+  review_status: screened
+  route_id: route-878acd203c5603b70539868d
+  source_id: source-jurafsky-slp3
+- concept_ids:
+  - concept-bayes-theorem
+  - concept-conditional-independence
+  - concept-conditional-probability
+  - concept-probability
   locator: Aufgaben 4.1–4.2, PDF p. 83, solutions p. 89; 4.6–4.7, p. 85, solutions pp. 92–93; 4.9, pp.
     86–87, solution p. 94; 4.11, p. 87, solution p. 95
-  review_status: screened
-  concept_ids:
-  - concept-bayes-theorem
-  - concept-conditional-independence
-  - concept-conditional-probability
-  - concept-probability
   reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-8c0f35f6c57e551481433291
-  source_id: source-tijms-understanding-probability
+  review_status: screened
+  route_id: route-87f36cab308f54f199bc3034
+  source_id: source-fahrmeir-arbeitsbuch
+- concept_ids:
+  - concept-bayes-theorem
+  - concept-conditional-probability
   locator: §§6.1–6.2.1, PDF pp. 219–228; §8.1, pp. 255–258
-  review_status: screened
-  concept_ids:
-  - concept-bayes-theorem
-  - concept-conditional-probability
   reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-8de21f881a829cb3dec1d55d
-  source_id: source-ross-first-course
-  locator: Ch 2 §§2.3–2.4, PDF pp. 54–58; Ch 3 §§3.2–3.4, pp. 101–103,120–122,128–132
   review_status: screened
-  concept_ids:
+  route_id: route-8c0f35f6c57e551481433291
+  source_id: source-tijms-understanding-probability
+- concept_ids:
   - concept-bayes-theorem
   - concept-conditional-independence
   - concept-conditional-probability
   - concept-probability
+  locator: Ch 2 §§2.3–2.4, PDF pp. 54–58; Ch 3 §§3.2–3.4, pp. 101–103,120–122,128–132
   reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-9a18c8d3ccfb21c3f023b850
-  source_id: source-kurzes-tutorium-statistik
-  locator: '"Kurzes Tutorium Statistik" channel index; probability episode links unresolved'
   review_status: screened
-  concept_ids:
+  route_id: route-8de21f881a829cb3dec1d55d
+  source_id: source-ross-first-course
+- concept_ids:
   - concept-bayes-theorem
   - concept-conditional-probability
   - concept-probability
+  locator: '"Kurzes Tutorium Statistik" channel index; probability episode links unresolved'
   reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-ac99d1d809345a00721a6f99
-  source_id: source-sad-klausuren-extern
+  review_status: screened
+  route_id: route-9a18c8d3ccfb21c3f023b850
+  source_id: source-kurzes-tutorium-statistik
+- concept_ids:
+  - concept-bayes-theorem
+  - concept-conditional-independence
+  - concept-conditional-probability
+  - concept-probability
   locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, PDF pp. 5–6, §§1.1–1.2; solutions pp.
     8–9
+  reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
+    geprueft; Einordnung nur aus Metadaten.'
   review_status: screened
-  concept_ids:
+  route_id: route-ac99d1d809345a00721a6f99
+  source_id: source-sad-klausuren-extern
+- concept_ids:
   - concept-bayes-theorem
   - concept-conditional-independence
   - concept-conditional-probability
-  - concept-probability
-  reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
-    geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-b48ac5af55a8c900d68bb0c9
-  source_id: source-blitzstein-hwang
   locator: §§2.2–2.3, PDF pp. 63–73; §2.5, pp. 80–84
-  review_status: screened
-  concept_ids:
-  - concept-bayes-theorem
-  - concept-conditional-independence
-  - concept-conditional-probability
   reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-c8fc9d587448ab88b808180a
-  source_id: source-cs229-notes
-  locator: cs229-notes.pdf §4.2, physical PDF pp. 43–45; §4.2.1 starts p. 46
   review_status: screened
-  concept_ids:
+  route_id: route-b48ac5af55a8c900d68bb0c9
+  source_id: source-blitzstein-hwang
+- concept_ids:
   - concept-naive-bayes
+  locator: cs229-notes.pdf §4.2, physical PDF pp. 43–45; §4.2.1 starts p. 46
   reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-de38ce9e78f4dd052d5013b4
-  source_id: source-stat110
-  locator: 'Stat 110 course homepage: Lectures 4–5; Strategic Practice 2, "Conditional Probability"'
   review_status: screened
-  concept_ids:
+  route_id: route-c8fc9d587448ab88b808180a
+  source_id: source-cs229-notes
+- concept_ids:
   - concept-bayes-theorem
   - concept-conditional-independence
   - concept-conditional-probability
+  locator: 'Stat 110 course homepage: Lectures 4–5; Strategic Practice 2, "Conditional Probability"'
   reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-e3418e502d6ca2dcdf2f2c9d
-  source_id: source-fau-klausur-ws1415
+  review_status: screened
+  route_id: route-de38ce9e78f4dd052d5013b4
+  source_id: source-stat110
+- concept_ids:
+  - concept-conditional-independence
+  - concept-conditional-probability
   locator: FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf, physical PDF p. 4, Aufgabe 1 item
     2; solution p. 22 item 2
-  review_status: screened
-  concept_ids:
-  - concept-conditional-independence
-  - concept-conditional-probability
   reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-e488632c39efaf524b49f243
-  source_id: source-fahrmeir-statistik
+  review_status: screened
+  route_id: route-e3418e502d6ca2dcdf2f2c9d
+  source_id: source-fau-klausur-ws1415
+- concept_ids:
+  - concept-bayes-theorem
+  - concept-conditional-independence
+  - concept-conditional-probability
+  - concept-probability
   locator: §4.1, PDF pp. 195–206; §§4.4–4.7, pp. 221–233
+  reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
+    geprueft; Einordnung nur aus Metadaten.'
   review_status: screened
-  concept_ids:
+  route_id: route-e488632c39efaf524b49f243
+  source_id: source-fahrmeir-statistik
+- concept_ids:
   - concept-bayes-theorem
   - concept-conditional-independence
   - concept-conditional-probability
   - concept-probability
-  reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
-    geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-f99c92614d78638f193ab4d3
-  source_id: source-schaums-probability
   locator: Ch 3, PDF pp. 40–43; Ch 4, pp. 56–62 and 65, named examples and solved problems
+  reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
+    geprueft; Einordnung nur aus Metadaten.'
   review_status: screened
-  concept_ids:
+  route_id: route-f99c92614d78638f193ab4d3
+  source_id: source-schaums-probability
+- concept_ids:
   - concept-bayes-theorem
   - concept-conditional-independence
   - concept-conditional-probability
   - concept-probability
-  reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
-    geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-fa96784fa40036436bf1b2cc
-  source_id: source-dekking-mips
   locator: Ch 2, PDF pp. 24–31; Ch 3, pp. 36–46; exercise 3.4, p. 48, answer p. 434
+  reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
+    geprueft; Einordnung nur aus Metadaten.'
   review_status: screened
-  concept_ids:
+  route_id: route-fa96784fa40036436bf1b2cc
+  source_id: source-dekking-mips
+- concept_ids:
   - concept-bayes-theorem
   - concept-conditional-independence
   - concept-conditional-probability
-  - concept-probability
-  reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
-    geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-fe8b4fbc40e7e85daf8ef25b
-  source_id: source-grinstead-snell
   locator: §4.1 Discrete Conditional Probability, physical PDF pp. 141–149
-  review_status: screened
-  concept_ids:
-  - concept-bayes-theorem
-  - concept-conditional-independence
-  - concept-conditional-probability
   reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-sad-l04-kelleher-bayes
-  source_id: source-kelleher-fmlpda
-  locator: §6.2.1, physical PDF pp. 287–289; §6.2.3–6.3.1, pp. 295–304
   review_status: screened
-  concept_ids:
+  route_id: route-fe8b4fbc40e7e85daf8ef25b
+  source_id: source-grinstead-snell
+- concept_ids:
   - concept-bayes-theorem
   - concept-conditional-independence
   - concept-naive-bayes
+  locator: §6.2.1, physical PDF pp. 287–289; §6.2.3–6.3.1, pp. 295–304
   reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-sad-l04-kts-c57f26de
-  source_id: source-kurzes-tutorium-statistik
+  review_status: screened
+  route_id: route-sad-l04-kelleher-bayes
+  source_id: source-kelleher-fmlpda
+- concept_ids:
+  - concept-bayes-theorem
+  - concept-conditional-independence
+  - concept-conditional-probability
   locator: '"Bedingte Wahrscheinlichkeit, Satz von Bayes und stochastische Unabhängigkeit", 03:53-06:28
     für die Bedingung mit Tafel; 10:24-11:20 für die Umkehrung'
-  review_status: screened
-  concept_ids:
-  - concept-bayes-theorem
-  - concept-conditional-independence
-  - concept-conditional-probability
   reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-sad-l04-psychexamreview-framing
-  source_id: source-psychexamreview
+  review_status: screened
+  route_id: route-sad-l04-kts-c57f26de
+  source_id: source-kurzes-tutorium-statistik
+- concept_ids:
+  - concept-probability
   locator: '"The Framing Effect (Intro Psych Tutorial #94)", 01:34-02:10 for both versions of the problem;
     02:13-03:00 for the gain/loss explanation'
-  review_status: screened
-  concept_ids:
-  - concept-probability
   reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-- route_id: route-sad-l04-tijms-intuition
-  source_id: source-tijms-understanding-probability
+  review_status: screened
+  route_id: route-sad-l04-psychexamreview-framing
+  source_id: source-psychexamreview
+- concept_ids:
+  - concept-probability
   locator: Chapter 1, pdf p. 16 on intuition versus probability; pdf p. 27 on the psychology of probability
     intuition
-  review_status: screened
-  concept_ids:
-  - concept-probability
   reason: 'Route ausserhalb des Leseauftrags (Scope complementary): kein Slice beigelegt, keine Inhaltsbehauptung
     geprueft; Einordnung nur aus Metadaten.'
-comparisons:
-- left_route_id: route-1d4c3d5164052df9c540d079
-  right_route_id: route-c355ecc8ea7599015a21abfe
-  relation: complements
-  narrative: Das Deck liefert Herleitung und Modell (Unabhaengigkeitsbedingungen, NB-Faktorisierung, Zero-Count-Demo),
-    UE4 die vollstaendigste durchgearbeitete Total→Bayes→NB-Kette mit expliziter Annahmendiskussion. UE4-Zahlen
-    sind eine eigene Variante.
-  concept_ids:
-  - concept-bayes-theorem
-  - concept-conditional-probability
-  - concept-naive-bayes
-  evidence:
-    left:
-    - locator: 04_probability.pdf, PDF pp. 49-53
-      checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
-      note: NB-Modell und Zero-Count-Demo
-    right:
-    - locator: UE4.pdf, PDF pp. 9-12
-      checksum: sha256:4d3703977a1bdfdddc3c9ba25caf75de20a0b323d6c4fc62af71b896a67589e5
-      note: Kette mit Annahmendiskussion
-- left_route_id: route-a577afe5626f081623095a82
-  right_route_id: route-c355ecc8ea7599015a21abfe
-  relation: contrasts
-  narrative: 'Beide rechnen im Sportverein, aber mit verschiedenen Parametern (Blatt: 70 %/35 %, 3:2,
-    50 %/25 %; UE4: 75 %/40 %, 5:4, 60 %/30 %). UE4 ist Methodenanalogon, kein exakter Antwortschluessel
-    zum aktuellen Blatt.'
-  concept_ids:
-  - concept-conditional-probability
-  - concept-bayes-theorem
-  - concept-naive-bayes
-  evidence:
-    left:
-    - locator: blatt-02.pdf, PDF p. 2
-      checksum: sha256:47b06532947d7c75804880275f3e8644b960125f4ae6030b6585a4aa9a1ebeac
-      note: Blatt-Parameter und -Forderung
-    right:
-    - locator: UE4.pdf, PDF p. 9
-      checksum: sha256:4d3703977a1bdfdddc3c9ba25caf75de20a0b323d6c4fc62af71b896a67589e5
-      note: UE4-Parameter und -Rechnung
-- left_route_id: route-78ae1df0aa949bb2a8a872dc
-  right_route_id: route-1d4c3d5164052df9c540d079
-  relation: contrasts
-  narrative: 'Beide nutzen Diagnostik-Rahmung, aber verschiedene Parameter und Ziele: UE3 rechnet Total
-    Probability (84,5 % korrekt, 21,5 % positiv) ohne Inversion; das Deck invertiert zur Posterior P(gesund|positiv)
-    mit inkonsistenter Praevalenz.'
-  concept_ids:
-  - concept-bayes-theorem
-  - concept-conditional-probability
-  evidence:
-    left:
-    - locator: UE3.pdf, PDF pp. 34-38
-      checksum: sha256:184a6f0e0552e4a2b5a82cd591b55eaac411464ad2475908bb87cbeebfd03b88
-      note: UE3-Parameter und Total-Resultate
-    right:
-    - locator: 04_probability.pdf, PDF pp. 43-44
-      checksum: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
-      note: Deck-Lemma und Diagnostik-Inversion
-concept_groups:
-- concept_id: concept-probability
-  local_node_ids:
-  - knowledge-sad-l04-framing
-  - knowledge-sad-l04-events
-  - knowledge-sad-l04-axioms
-  related_unit_ids: []
-  bridge_note_ids: []
-  narrative: 'Alle drei Knoten sind etabliert: Framing allein durch das vollstaendig inspizierte Deck
-    (S. 2-5); Ereignisraeume zusaetzlich durch UE3 (S. 15-20) und die Blatt-Forderung; Axiome mit Folgerungen
-    zusaetzlich durch UE3 (S. 21) und die De-Mere-Anwendung.'
-- concept_id: concept-conditional-probability
-  local_node_ids:
-  - knowledge-sad-l04-conditional
-  related_unit_ids: []
-  bridge_note_ids: []
-  narrative: 'Konditional und Total Probability: Deck-Quotient mit E-Mail-Likelihoods (S. 32-37), UE3-Sammlung
-    mit Kartenbeispiel (S. 31-33), UE4-gewichtete Summe (S. 9), Blatt-Forderung.'
-- concept_id: concept-bayes-theorem
-  local_node_ids:
-  - knowledge-sad-l04-bayes
-  related_unit_ids: []
-  bridge_note_ids: []
-  narrative: 'Bayes-Inversion: Deck-Lemma mit Diagnostik und Secretary (S. 43-47), UE4-Kette (S. 10),
-    Blatt-Forderung; UE3-Diagnostik bewusst ohne Inversion (nur Total Probability).'
-- concept_id: concept-conditional-independence
-  local_node_ids:
-  - knowledge-sad-l04-independence
-  related_unit_ids: []
-  bridge_note_ids: []
-  narrative: 'Unabhaengigkeit: Deck-Bedingungen mit Beid-Warnung (S. 40/42/49-50), UE3-Sammlung (S. 32-33),
-    UE4-Annahmendiskussion (S. 12), Blatt-Kontraste (d/e).'
-- concept_id: concept-naive-bayes
-  local_node_ids:
-  - knowledge-sad-l04-naive-bayes
-  related_unit_ids: []
-  bridge_note_ids: []
-  narrative: 'Naive Bayes: Deck-Modell mit Mengen-BoW, unnormiertem Argmax, Zero-Count-Demo und benannter
-    Glaettung (S. 49-59), UE4-Zwei-Merkmal-Kette (S. 11-12), Blatt-Forderung.'
+  review_status: screened
+  route_id: route-sad-l04-tijms-intuition
+  source_id: source-tijms-understanding-probability
+schema_version: 1
+status: approved
+type: unit-material-synthesis
+unit_id: unit-m2-sad-l04

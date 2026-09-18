@@ -1,0 +1,39 @@
+schema_version: 2
+id: transaction-20260918-043722-001
+type: transaction-receipt
+status: committed
+capability: unit.material-synthesis.publish
+committed_at: '2026-09-18T04:37:22+02:00'
+snapshot_before: sha256:527f87fb959a315fdde7d3bb5ed4640acbe820685148a4dc324f014e5df18e8e
+snapshot_after: sha256:0098b6b0191943ce2604780a66a5ac714f73394c0aa02987baa11f563d3665c8
+expected_revisions:
+  unit-m2-sad-l03: 21
+  material-synthesis-m2-sad-l03: 2
+artifact_revisions:
+  material-synthesis-m2-sad-l03:
+    before: 2
+    after: 3
+  unit-m2-sad-l03:
+    before: 21
+    after: 22
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/material-synthesis.yaml
+  sha256_before: 76ad7dc27705949bdb8c027aecc0a5b46cafcc04c0356dca0cc70b893ee336c7
+  sha256_after: b7cca149c222db0bab8efd0255d7cc0026048b6ea80bfdf03d1ec42f7d956332
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.material-synthesis.publish
+    declared_writes:
+    - curriculum/modules/**/units/**/material-synthesis.yaml
+request:
+  channel: operator
+  request_id: request-synthesis-scope-backfill-l03
+  idempotency_key: synthesis-scope-backfill-l03-001
+  intent_sha256: sha256:070d6e987b89bbbbc8fac029981f6a241160393a4bbfbe1e8b25350c18788105
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:070d6e987b89bbbbc8fac029981f6a241160393a4bbfbe1e8b25350c18788105
