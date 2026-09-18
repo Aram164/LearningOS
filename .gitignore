@@ -28,3 +28,5 @@ operations/ai-actions/incoming/
 # between a process dying mid-write and the next run rolling it back, and hold
 # copies of canonical files — never a thing to commit.
 operations/transactions/.inflight/
+.pytest_cache/
+.ruff_cache/
