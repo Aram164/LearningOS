@@ -23,13 +23,13 @@ revisions:
   concept-selection-family: 1
   concept-skrub: 1
   job-quarantine-collapse-v1: 1
-  material-synthesis-m2-sad-l03: 1
+  material-synthesis-m2-sad-l03: 3
   material-synthesis-m2-sad-l03-pilot: 1
-  material-synthesis-m2-sad-l04: 1
+  material-synthesis-m2-sad-l04: 4
   materials-manifest: 1
   module-hu-algo2: 2
   module-hu-aml: 13
-  module-hu-m2-statistik-analysis: 53
+  module-hu-m2-statistik-analysis: 55
   module-job-engineering-tools: 1
   module-job-git: 1
   module-job-polars: 3
@@ -242,8 +242,8 @@ revisions:
   unit-m2-sad-exam-prep: 10
   unit-m2-sad-l01: 9
   unit-m2-sad-l02: 11
-  unit-m2-sad-l03: 20
-  unit-m2-sad-l04: 20
+  unit-m2-sad-l03: 22
+  unit-m2-sad-l04: 24
   unit-m2-sad-l05: 15
   unit-m2-sad-l06: 20
   unit-m2-sad-l07: 17

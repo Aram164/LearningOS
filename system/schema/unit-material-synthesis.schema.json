@@ -35,7 +35,7 @@
           "propertyNames": {"pattern": "^route-[a-z0-9]+(?:-[a-z0-9]+)*$"},
           "additionalProperties": {"$ref": "https://learningos.local/schema/material-comparison-defs.schema.json#/$defs/sha256"}
         },
-        "policy": {"const": "tiered-v1"},
+        "policy": {"const": "tiered-v2"},
         "ai_provenance": {
           "type": "object",
           "additionalProperties": false,
@@ -72,6 +72,11 @@
           "exercise_value": {"type": "string", "minLength": 1},
           "best_for": {"type": "string", "minLength": 1},
           "limitations": {"type": "string", "minLength": 1},
+          "scope_of_absence": {
+            "description": "Exactly what this deep review inspected, in house-style page citations (e.g. \"UE3.pdf, PDF pp. 15-38 of 54\"). Every negative claim in `contribution` or `limitations` is bounded by this and by nothing wider: absence from inspected pages is not absence from the material.",
+            "type": "string",
+            "minLength": 1
+          },
           "reason": {"type": "string", "minLength": 1},
           "evidence": {
             "type": "array",
@@ -84,7 +89,7 @@
             "then": {
               "required": [
                 "contribution", "assumptions", "notation", "exercise_value",
-                "best_for", "limitations", "evidence"
+                "best_for", "limitations", "scope_of_absence", "evidence"
               ],
               "properties": {"evidence": {"minItems": 1}}
             },
@@ -94,7 +99,8 @@
                 "anyOf": [
                   {"required": ["contribution"]}, {"required": ["assumptions"]},
                   {"required": ["notation"]}, {"required": ["exercise_value"]},
-                  {"required": ["best_for"]}, {"required": ["limitations"]}
+                  {"required": ["best_for"]}, {"required": ["limitations"]},
+                  {"required": ["scope_of_absence"]}
                 ]
               }
             }

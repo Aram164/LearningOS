@@ -41,7 +41,7 @@
 # Keys that were once published and must never come back under this name.
 # `exam_spine` was a strict subset of `academic_deadlines` — a second shape for
 # the same facts (ADR-006, 2026-08-03).
-contract_version: 10
+contract_version: 11
 top_level_keys:
 - _generated
 - academic_deadlines
@@ -98,8 +98,8 @@ index_keys:
 - unit_to_study_map
 - workspace_to_modules
 - workspace_to_units
-schema_path: system/contracts/manifest-v10.schema.json
-schema_sha256: sha256:1209c4d49ec4ae7c826e9893c66490830f9a838d524a72278d45d33ad096acdd
+schema_path: system/contracts/manifest-v11.schema.json
+schema_sha256: sha256:35b4e5765ded09b72d191e68e590ff63768cf43113613725e691703150221a6a
 forbidden_top_level_keys:
 - exam_spine
 history:
@@ -167,3 +167,8 @@ history:
   note: Publish material-owned solution exposure and required activity assets; mirror
     optional fields in the UI reader.
   mirrored_in_ui: contracts/manifest-v10.lock.json
+- version: 11
+  adopted: '2026-09-18'
+  note: route assessments carry scope_of_absence; freshness reasons drop unit_revision,
+    which a publish can never satisfy
+  mirrored_in_ui: contracts/manifest-v11.lock.json

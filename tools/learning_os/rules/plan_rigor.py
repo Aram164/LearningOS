@@ -160,17 +160,158 @@ class ChecksPlanRigor:
                 f"hover", where,
             )
 
+    def _routes_by_id(self) -> dict[str, dict]:
+        """Every rich route in the repository, by stable id."""
+        index: dict[str, dict] = {}
+        for source_map in self.repo.module_source_maps.values():
+            for entry in source_map.get("sources", []) or []:
+                if not isinstance(entry, dict):
+                    continue
+                for route in entry.get("unit_routes", []) or []:
+                    if isinstance(route, dict) and isinstance(route.get("id"), str):
+                        index[route["id"]] = route
+        return index
+
+
+    def _check_row_angle(self, smid: str, stage: dict, resource: dict,
+                         routes: dict[str, dict], where: str) -> None:
+        """A stage row's angle against the route it claims to place.
+
+        The angle a learner reads at session time lives on the row, not on the
+        route, and the two drifted apart without anything noticing: an audit on
+        2026-09-18 found 404 rows whose angle contradicts its own route, while
+        `assemble_lecture_study_maps.py` — the documented path for structural
+        plan revisions — regenerates none of them and would overwrite every one.
+        The L04 UE3 repair is the shape of it: the row was corrected to
+        "total-probability ... no posterior inversion" while its route still
+        says "sensitivity/specificity" and still claims to cover Bayes.
+
+        A warning, not an error, and deliberately not yet in the baseline: each
+        row is either a legitimate per-placement refinement or an unrecorded
+        correction, and only a human reading both can say which. Enforcement —
+        a required supersession pointer to the synthesis assessment that
+        justifies the difference — comes after that triage.
+        """
+        angle = str(resource.get("angle") or "").strip()
+        if not angle:
+            return
+        route_id = resource.get("route_id")
+        if not isinstance(route_id, str):
+            ref = resource.get("material_ref")
+            route_id = ref.get("route_id") if isinstance(ref, dict) else None
+        if not isinstance(route_id, str):
+            return
+        route = routes.get(route_id)
+        if route is None:
+            return
+        route_angle = str(route.get("angle") or "").strip()
+        if not route_angle or " ".join(angle.split()) == " ".join(route_angle.split()):
+            return
+        self.warn(
+            "ANGLE-DIVERGES-FROM-ROUTE",
+            f"study map '{smid}' stage '{stage.get('id')}' gives {route_id} an "
+            f"angle its route does not carry ('{angle[:48]}…' vs "
+            f"'{route_angle[:48]}…') — refine the route, or record which "
+            f"synthesis assessment corrects it",
+            where,
+        )
+
     # ----------------------------------------------------- study-map rows
+    def _stage_node_id(self, smid: str, stage: dict, unit_nodes: set[str] | None,
+                       where: str) -> str | None:
+        """The knowledge node a stage teaches: explicit key, else id convention.
+
+        The assembler joins node to routes via `covers` and used to throw the
+        key away at emission, so a later covers edit orphaned placements with
+        nothing able to see it (2026-09-18: UE3 still placed on the L04 Bayes
+        stage after its Bayes coverage was dropped). Stages that follow the
+        `stage-<slug>` / `knowledge-<slug>` convention link back silently;
+        only the unlinkable ones warn — the backfill is incremental, like
+        every other rigor check in this file.
+        """
+        if unit_nodes is None:
+            return None
+        key = stage.get("knowledge_node_id")
+        if isinstance(key, str) and key.strip():
+            if unit_nodes is not None and key not in unit_nodes:
+                self.warn(
+                    "STAGE-NODE-UNLINKED",
+                    f"study map '{smid}' stage '{stage.get('id')}' names node "
+                    f"'{key}' absent from its unit's knowledge map — fix the "
+                    f"key or the map",
+                    where,
+                )
+                return None
+            return key
+        if unit_nodes is not None:
+            stage_id = str(stage.get("id") or "")
+            if stage_id.startswith("stage-"):
+                inferred = "knowledge-" + stage_id[len("stage-"):]
+                if inferred in unit_nodes:
+                    return inferred
+        self.warn(
+            "STAGE-NODE-UNLINKED",
+            f"study map '{smid}' stage '{stage.get('id')}' carries no "
+            f"knowledge_node_id and its id matches no live node — name the "
+            f"node the stage teaches",
+            where,
+        )
+        return None
+
+    def _check_row_node(self, smid: str, stage: dict, node_id: str,
+                        resource: dict, routes: dict[str, dict], where: str) -> None:
+        """A placed route against the node of the stage it sits on.
+
+        A warning, not an error: the placement may be deliberate scaffolding
+        (UE3's total-probability calculation is the denominator the Bayes
+        stage inverts), but that call must be recorded instead of accidental.
+        """
+        route_id = resource.get("route_id")
+        if not isinstance(route_id, str):
+            ref = resource.get("material_ref")
+            route_id = ref.get("route_id") if isinstance(ref, dict) else None
+        if not isinstance(route_id, str):
+            return
+        route = routes.get(route_id)
+        if route is None:
+            return
+        covers = [str(node) for node in (route.get("covers") or [])]
+        if node_id not in covers:
+            self.warn(
+                "RESOURCE-NODE-ORPHAN",
+                f"study map '{smid}' stage '{stage.get('id')}' teaches node "
+                f"'{node_id}' but {route_id} no longer covers it — move the "
+                f"placement or record why it stays",
+                where,
+            )
+
     def _check_stage_resource_rigor(self) -> None:
         r = self.repo
+        routes = self._routes_by_id()
         for smid, study_map in r.study_maps.items():
             where = self._rel(study_map.path)
+            unit = r.units.get(study_map.unit_id)
+            unit_nodes: set[str] | None = None
+            if unit is not None and isinstance(unit.data.get("knowledge_map"), dict):
+                # Units without a knowledge map (roadmaps, fluency drills)
+                # have no nodes to link against; their stages stay unchecked
+                # rather than warning once per stage about a map that by
+                # design does not exist.
+                unit_nodes = {
+                    str(node.get("id"))
+                    for node in (unit.data.get("knowledge_map") or {}).get("nodes", []) or []
+                    if isinstance(node, dict) and node.get("id")
+                }
             for stage in study_map.data.get("stages", []) or []:
                 if not isinstance(stage, dict):
                     continue
+                node_id = self._stage_node_id(smid, stage, unit_nodes, where)
                 for resource in stage.get("resources", []) or []:
                     if not isinstance(resource, dict):
                         continue
+                    self._check_row_angle(smid, stage, resource, routes, where)
+                    if node_id is not None:
+                        self._check_row_node(smid, stage, node_id, resource, routes, where)
                     locator = str(resource.get("locator") or "")
                     if _looks_fused(locator):
                         self.err(

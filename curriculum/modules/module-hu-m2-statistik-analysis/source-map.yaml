@@ -1230,12 +1230,12 @@ sources:
     unit_id: unit-m2-sad-l04
     title: UE3, slides 15-38 — events, axioms and conditional probability
     format: solutions
-    angle: Combines event examples, a dice-game complement and a worked sensitivity/specificity calculation.
+    angle: Works event/axiom examples plus conditional drills and a sensitivity/specificity total-probability
+      calculation without posterior inversion.
     covers:
     - knowledge-sad-l04-events
     - knowledge-sad-l04-axioms
     - knowledge-sad-l04-conditional
-    - knowledge-sad-l04-bayes
     - knowledge-sad-l04-independence
     depth: practice
     scope: current

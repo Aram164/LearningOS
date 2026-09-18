@@ -258,6 +258,15 @@ def _write_demo_plan(mini_repo, tmp_path):
         "nodes": [{"id": "knowledge-demo-alpha", "title": "Alpha",
                    "summary": "First node."}],
     }
+    # A unit that gains a knowledge map must name its stages' nodes, or the
+    # plan shadow gate refuses: an unlinkable stage is the finding the
+    # STAGE-NODE-UNLINKED rule exists for, not test scaffolding to exempt.
+    map_path = (mini_repo / "curriculum/modules/module-demo/units"
+                / "unit-demo-l01/study-map.yaml")
+    study_map = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    study_map["stages"][0]["knowledge_node_id"] = "knowledge-demo-alpha"
+    map_path.write_text(yaml.safe_dump(study_map, sort_keys=False,
+                                       allow_unicode=True), encoding="utf-8")
     audit_rel = "work/active/workspace-demo/outputs/demo-b-coverage-audit.md"
     audit = mini_repo / audit_rel
     audit.parent.mkdir(parents=True, exist_ok=True)

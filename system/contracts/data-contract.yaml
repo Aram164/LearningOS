@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 25
-schema_fingerprint: sha256:4f52f0d2c676bb36b85147ad29efea31bc8f9c81dfc1936a4877d9ef3c4ea3fa
+contract_version: 32
+schema_fingerprint: sha256:9b0f416605186bb0d5e64427e6ed1446e579c7311fd5a84466ea2c996a493416
 record_schemas: 32
 history:
 - version: 1
@@ -218,5 +218,47 @@ history:
     accept reviews on both current-template and legacy resources. Explicit prior exposure
     can exclude assessment while practice remains available. Optional additions; no
     migration.
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 26
+  adopted: '2026-09-18'
+  note: 'unit-material-synthesis basis policy tiered-v1 -> tiered-v2: route_set_checksum
+    and source_map_checksum now hash evidential projections, not whole rows or file
+    bytes'
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 27
+  adopted: '2026-09-18'
+  note: unit-material-synthesis basis policy accepts tiered-v1 and tiered-v2 during
+    the basis-projection migration
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 28
+  adopted: '2026-09-18'
+  note: unit-material-synthesis basis policy pinned to tiered-v2; both published dossiers
+    rebased onto the narrowed basis projection
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 29
+  adopted: '2026-09-18'
+  note: unit-material-synthesis gains optional scope_of_absence ahead of the backfill
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 30
+  adopted: '2026-09-18'
+  note: scope_of_absence required on every deep-reviewed assessment; both published
+    dossiers backfilled from their own slice indexes
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 31
+  adopted: '2026-09-18'
+  note: stageCore gains optional knowledge_node_id (assembler-emitted join key; legacy
+    stages link by id convention)
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 32
+  adopted: '2026-09-18'
+  note: legacyStage gains optional knowledge_node_id (same join key for pre-template
+    maps)
   migration: null
   fixture: tests/fixtures/formats/v25/

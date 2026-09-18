@@ -16,8 +16,9 @@ from learning_os.loader import load_repo
 from learning_os.material_slices import parse_locator_page_ranges
 from learning_os.materials_resolution import (
     MATERIAL_SUFFIX_TOKEN,
+    evidential_route_projection,
+    evidential_source_map_projection,
     route_material_checksum,
-    sha256_file,
     stable_checksum,
 )
 from learning_os.transactions import artifact_revision
@@ -49,6 +50,31 @@ def _rich_routes(repo, unit_id: str) -> list[dict[str, Any]]:
                 output.append(row)
     return output
 
+
+# `unit_revision` is recorded but deliberately not compared. Publishing a
+# dossier guards the unit artifact, so the commit bumps the unit's revision
+# after the basis has already been derived: every dossier was born one
+# revision behind and reported "stale basis" from the moment it was written
+# (L03 recorded 19 against a live 20, L04 recorded 17 against 20). It travels
+# as provenance, like a continued file SHA. What the dossier genuinely owes
+# the unit — a concept group for every local knowledge node, exactly once —
+# is enforced directly by `validate_unit_material_synthesis` at publish.
+#
+# `source_map_revision` is recorded but deliberately not compared, for the
+# same reason at module granularity: it is a logical counter that moves on
+# every canonical edit to the module, prose included. Comparing it reimposed
+# through the back door the exact punishment the evidential checksums were
+# built to remove — a corrected angle staling every dossier in the module,
+# including other units'. A prose change moves no evidential checksum, so the
+# dossier stays current; an evidential change moves exactly the checksums of
+# the units that rest on it. The revision travels as provenance so a reader
+# can still tell which module state was live at review time.
+_COMPARED_BASIS_FIELDS = (
+    "source_map_checksum",
+    "route_set_checksum",
+    "material_checksums",
+    "policy",
+)
 
 def current_unit_material_basis(
     root: Path,
@@ -87,17 +113,31 @@ def current_unit_material_basis(
     return {
         "unit_revision": artifact_revision(root, unit_id),
         # Module-plan transactions guard the module source map with the owning
-        # module artifact revision.  Keep that revision alongside the byte
-        # checksum: either a coordinated module-plan change or an out-of-band
-        # byte change makes a reviewed dossier stale.
+        # module artifact revision.  Keep that revision as provenance only:
+        # the evidential checksums below are what stale a dossier, so a
+        # prose-only edit moves nothing while an evidential edit moves exactly
+        # the affected units.  The checksum covers the map's evidential
+        # projection for THIS unit, not the file's bytes — hashing the bytes
+        # made every dossier in a module depend on every word in it, so a prose
+        # fix on an unrelated unit's route staled this one too.
         "source_map_revision": artifact_revision(root, unit.module_id),
-        "source_map_checksum": sha256_file(source_map_path, cache),
-        "route_set_checksum": stable_checksum(route_rows),
+        "source_map_checksum": stable_checksum(
+            evidential_source_map_projection(
+                repo.module_source_maps.get(unit.module_id) or {}, unit_id
+            )
+        ),
+        # Prose is deliberately outside the hash. Hashing whole rows made a
+        # typo fix in one `angle` stale a whole unit's dossier, which is the
+        # wrong incentive: the canonical route is exactly where a corrected
+        # angle belongs.
+        "route_set_checksum": stable_checksum(
+            [evidential_route_projection(route) for route in route_rows]
+        ),
         "material_checksums": {
             str(route["id"]): route_material_checksum(repo, route, cache)
             for route in route_rows
         },
-        "policy": "tiered-v1",
+        "policy": "tiered-v2",
     }
 
 
@@ -145,8 +185,7 @@ def validate_unit_material_synthesis(
 
     basis = value["basis"]
     current = current_unit_material_basis(root, unit_id)
-    for field in ("unit_revision", "source_map_revision", "source_map_checksum",
-                  "route_set_checksum", "material_checksums", "policy"):
+    for field in _COMPARED_BASIS_FIELDS:
         if basis.get(field) != current[field]:
             raise MaterialSynthesisError(f"dossier basis is stale at {field}")
 
@@ -385,6 +424,15 @@ def validate_synthesis_page_provenance(
                 continue
             _check_material_evidence(materials, evidence.get("locator"),
                                      where=route_id)
+        # The bound every negative claim in this assessment is limited to. It
+        # is checked exactly like evidence, because that is what it is: a claim
+        # about which pages were in front of the reviewer. An unbounded "no
+        # worked solution here" over a file whose pages nobody opened is the
+        # one thing the reading budget cannot detect on its own.
+        scope = row.get("scope_of_absence")
+        if scope is not None:
+            _check_material_evidence(materials, scope,
+                                     where=f"{route_id} scope_of_absence")
     for comparison in synthesis.get("comparisons", []) or []:
         if not isinstance(comparison, dict):
             continue
@@ -425,8 +473,7 @@ def material_synthesis_freshness(
         # local failure, while an ordinary manifest exposes only a stable code.
         return {"status": "stale", "reasons": ["current-basis-unavailable"]}
     basis = value.get("basis") or {}
-    for field in ("unit_revision", "source_map_revision", "source_map_checksum",
-                  "route_set_checksum", "material_checksums", "policy"):
+    for field in _COMPARED_BASIS_FIELDS:
         if basis.get(field) != current.get(field):
             reasons.append(field)
     return {"status": "current" if not reasons else "stale", "reasons": reasons}

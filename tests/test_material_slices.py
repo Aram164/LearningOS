@@ -310,6 +310,7 @@ def test_slice_checksum_is_not_valid_evidence(mini_repo):
             "exercise_value": "Includes a small worked calculation.",
             "best_for": "Checking the lecture's core derivation.",
             "limitations": "Does not cover continuous variables.",
+            "scope_of_absence": "lecture-01.pdf, PDF p. 1 of 1",
             "evidence": [{"locator": "lecture-01.pdf p.1",
                           "checksum": entry["slice_sha256"]}],
         }],
@@ -629,6 +630,23 @@ def test_page_provenance_accepts_inspected_and_prose():
             "right": [{"locator": "notes.md, section 3"}],
         },
     }]))
+
+
+def test_scope_of_absence_is_checked_against_the_inspected_pages():
+    """A stated bound is a claim about the attachment, so it is checked as one.
+
+    The published L04 UE3 assessment said a 54-page exercise set contained no
+    sheet solution on the strength of 24 inspected pages. Nothing could see
+    that, because the claim lived in prose while only `evidence` was bound.
+    """
+    inspected = {"route-demo-a": _pdf_material([1, 2, 3])}
+    row = _assessment("route-demo-a", ["book.pdf, pdf pp. 1-3"])
+    row["scope_of_absence"] = "book.pdf, PDF pp. 1-3 of 54"
+    validate_synthesis_page_provenance(inspected, _dossier([row]))
+
+    overreaching = dict(row, scope_of_absence="book.pdf, PDF pp. 1-54 of 54")
+    with pytest.raises(MaterialSynthesisError, match="scope_of_absence"):
+        validate_synthesis_page_provenance(inspected, _dossier([overreaching]))
 
 
 def test_page_provenance_refuses_uninspected_pages():

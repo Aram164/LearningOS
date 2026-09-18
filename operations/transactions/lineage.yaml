@@ -396,6 +396,30 @@ records:
       idempotency_key: book-routes-import-2026-09-16-retry1
     reviewed_by: ''
     status: supported
+  covers:route-78ae1df0aa949bb2a8a872dc:
+    claim_id: covers:route-78ae1df0aa949bb2a8a872dc
+    claim_kind: route-covers
+    statement: route-78ae1df0aa949bb2a8a872dc covers knowledge-sad-l04-axioms, knowledge-sad-l04-conditional,
+      knowledge-sad-l04-events, knowledge-sad-l04-independence
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 55
+        unit-m2-sad-l04: 23
+      source_hashes:
+        file:curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/material-synthesis.yaml: sha256:87cdd3184d336826914580287e3057c1c0ac967d98d00b28a7d86acf0a7f1441
+      evidence:
+      - 'repo-file:curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/material-synthesis.yaml
+        -- trail: Dossier contribution records Diagnostik-Total-Probability ohne Posterior-Inversion
+        over UE3 pp.15-38 of 54 (evidence pp.15-21/25-29/31-33/34-38, scope_of_absence
+        pp.15-38 of 54); the unit inversion chain lives on UE4 route-c355ecc8ea7599015a21abfe.'
+      assumes: []
+    judged_by: operator/operator-approval
+    admitted_by:
+      request_id: op-20260918-ue3-covers-001
+      idempotency_key: ue3-covers-correction-001
+    reviewed_by: ''
+    status: supported
   covers:route-83c5d83dd034abfedd3153bf:
     claim_id: covers:route-83c5d83dd034abfedd3153bf
     claim_kind: route-covers

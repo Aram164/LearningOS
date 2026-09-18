@@ -4,10 +4,10 @@ type: unit-material-synthesis
 unit_id: unit-m2-sad-l03
 status: approved
 basis:
-  unit_revision: 19
+  unit_revision: 21
   source_map_revision: 53
-  source_map_checksum: sha256:fea5b938fbd75af8ae545f2e89402dac8d8cfa1c502c4ac8e2f8f062885cf458
-  route_set_checksum: sha256:32dc0b1de8f6ce958921f2778124f69ff8f1032ecb99c6b9010e4fb7cd5c1d61
+  source_map_checksum: sha256:ec0bd2178199886be2e2502bb68eca2da191c285050d523c280180708a0e192d
+  route_set_checksum: sha256:3de554d2dc64fdb7b356b37c36e9e169808d8f33e75bb0c037afc4f271717319
   material_checksums:
     route-13f3ebff8cc9534c96100502: sha256:de48ef0c67eedf99fc36d6e26cb356661d978f60b23b8ff24cf4281ae6613c89
     route-1d5ebe1552e3c9bdb2923b53: sha256:b334aedac636d94bc89807e81d7ee838c67edb0c5304c492c139d6cb5d65f7e8
@@ -43,7 +43,7 @@ basis:
     route-sad-l03-murphy-regression: sha256:89749245bc8065d7575f990815c621a091de3facca1585168fc0369542742dcf
     route-sad-l03-statquest-gd: sha256:dcbb18df7fdd5c440d10c1d6f066f4f80515c4e6a34129bf44faa4fdb4999da7
     route-sad-l03-statquest-ols: sha256:5f8b9c9015b3cc123a1f90faa36d21dc696fd45b19fb2cf3cb51efeed9edd350
-  policy: tiered-v1
+  policy: tiered-v2
   ai_provenance:
     request_id: ai-request-sad-l03-pilot3
     delivery_id: ai-delivery-sad-l03-pilot3
@@ -102,6 +102,7 @@ route_assessments:
     Skalierungsvorbehalt bei Wichtigkeitsvergleichen).
   limitations: Formelextraktion teils degradiert (u.a. S. 6/9/12-14); Figuren S. 25/29/34 nicht extrahiert;
     Konvexitaetsbeweis ausgelassen; kein skalierter Kontrolllauf des Beispiels; Regularisierung nur Ausblick.
+  scope_of_absence: 03_correlation_regression.pdf, PDF pp. 1-48 of 48 (whole file)
 - route_id: route-e958371305abdd06a667a4e2
   source_id: source-sad-uebungen
   locator: exercise-slides/Blatt1.pdf, p. 3, Aufgabe 2
@@ -122,6 +123,7 @@ route_assessments:
   best_for: Nachweis geforderter Rechen- und Deutungsleistung zu Korrelation/einfacher Regression.
   limitations: 'Nur Forderung, keine Loesung; Datensatz weicht numerisch von der UE3-Musterloesung ab
     (Blatt1: 1885-2385/21,80-28,00 vs. UE3: 1900-2400/22,00-27,50).'
+  scope_of_absence: Blatt1.pdf, PDF p. 3 of 4
 - route_id: route-6b78db21b974a13178ff0860
   source_id: source-sad-uebungen
   locator: exercise-slides/Blatt1.pdf, p. 4, Aufgabe 3
@@ -142,6 +144,7 @@ route_assessments:
   exercise_value: Hoch als Implementierungsaufgabe inkl. Fehlerdeutung im Anwendungskontext.
   best_for: Nachweis geforderter multivariater Rechen- und Implementierungsleistung.
   limitations: Nur Forderung; Loesung/Code/CSV nicht inspiziert; keine Skalierungsforderung.
+  scope_of_absence: Blatt1.pdf, PDF p. 4 of 4
 - route_id: route-f7249a8bba66bc3ac7724629
   source_id: source-sad-uebungen
   locator: exercise-slides/UE2.pdf, slides 20-28
@@ -160,6 +163,7 @@ route_assessments:
   exercise_value: 'Hoch als Rechenpraxis: Kovarianz, Korrelation, Interpretation am selben Datensatz.'
   best_for: Rechenpraxis und Deutungsroutine zu Korrelation/Kovarianz.
   limitations: Keine Regressionsrechnung in diesem Ausschnitt; ein Datensatz, ein Beispiel.
+  scope_of_absence: UE2.pdf, PDF pp. 20-28 of 61
 - route_id: route-3331bd0f1465151518d0d323
   source_id: source-sad-uebungen
   locator: exercise-slides/UE2.pdf, slides 30-35
@@ -180,6 +184,7 @@ route_assessments:
   exercise_value: 'Hoch: Matrixaufbau, Vorhersage, RMSE-Rechnung und -deutung am Beispiel.'
   best_for: Rechenpraxis multivariate Regression und RMSE-Deutung.
   limitations: Herleitung der Normalgleichung nicht hier (liegt im Deck); nur ein Beispiel.
+  scope_of_absence: UE2.pdf, PDF pp. 30-35 of 61
 - route_id: route-adde7a7fe7cf2ed16214142c
   source_id: source-sad-uebungen
   locator: exercise-slides/UE3.pdf, PDF pp. 7–11
@@ -199,6 +204,7 @@ route_assessments:
   exercise_value: 'Hoch als Musterloesung: Rechenweg mit Zahlen und Marginaleffekt-Deutung.'
   best_for: Durchgerechnete Referenzloesung zu Kovarianz/einfacher Regression und RMSE-Deutung.
   limitations: Loesungsdatensatz weicht von der Blatt1-Aufgabenstellung ab (siehe Vergleich); keine Methoden-/Code-Ebene.
+  scope_of_absence: UE3.pdf, PDF pp. 7-11 of 54
 - route_id: route-aa8a395d2936e94fd38796e0
   source_id: source-sad-uebungen
   locator: exercise-slides/blatt-02.pdf, p. 3, Aufgabe 3(a)-(b)
@@ -219,6 +225,7 @@ route_assessments:
   exercise_value: Hoch als Implementierungsaufgabe inkl. Hyperparameterwahl und Verlaufsdeutung.
   best_for: Nachweis geforderter GD-Implementierungsleistung mit Konvergenzbeurteilung.
   limitations: Nur Forderung; Loesung/Code/CSV/Plot nicht inspiziert.
+  scope_of_absence: blatt-02.pdf, PDF p. 3 of 3
 - route_id: route-9858d63c791d015034a2641f
   source_id: source-sad-uebungen
   locator: exercise-slides/UE3.pdf, slides 40-45
@@ -239,6 +246,7 @@ route_assessments:
   exercise_value: 'Hoch: Iterationen nachvollziehbar, Skalierungsmotivation am Mechanismus gezeigt.'
   best_for: 'GD-Verhalten und Standardisierung: Mechanismus plus Motivation.'
   limitations: Plotvergleiche S. 43 (LR/Vergleiche) nur als Captions; kein Realdatensatz-Lauf.
+  scope_of_absence: UE3.pdf, PDF pp. 40-45 of 54
 - route_id: route-ced0625bb9bbca4add20f4f3
   source_id: source-3b1b-essence-of-calculus
   locator: transcript/9vKqVkMQHKk.md (Kapitel 2 'The paradox of the derivative', 16:50). The limiting-slope
@@ -258,6 +266,7 @@ route_assessments:
   exercise_value: Gering direkt; staerkt das Grenzwertverstaendnis hinter Update-Schritten.
   best_for: Ableitungsintuition genau dann, wenn die Grenzwertidee unklar ist.
   limitations: Reichweite endet bei skalaren Ableitungen; Fremdmaterial (Video-Transkript), kein VL-Stoff.
+  scope_of_absence: 9vKqVkMQHKk.md, full text slice
 - route_id: route-13f3ebff8cc9534c96100502
   source_id: source-statquest
   locator: '"Pearson''s Correlation, Clearly Explained!!!", 00:00-04:16 for intuition and the causation

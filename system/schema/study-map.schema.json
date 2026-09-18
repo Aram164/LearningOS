@@ -116,6 +116,7 @@
       "additionalProperties": false,
       "properties": {
         "id": {"type": "string", "pattern": "^stage-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "knowledge_node_id": {"description": "The knowledge-map node this stage teaches. Backfilled incrementally; stages without it link back by id convention only.", "type": "string", "pattern": "^knowledge-[a-z0-9]+(?:-[a-z0-9]+)*$"},
         "title": {"type": "string", "minLength": 1},
         "status": {"enum": ["pending", "active", "paused", "complete", "skipped"]},
         "objective": {"type": "string", "minLength": 1},

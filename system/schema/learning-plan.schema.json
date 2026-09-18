@@ -160,6 +160,11 @@
           "type": "integer",
           "minimum": 1
         },
+        "knowledge_node_id": {
+          "description": "The knowledge-map node this stage teaches. The assembler writes it from the node it joined on; hand-built stages must name it explicitly. Optional only because the pre-2026-09 backfill is incremental — a stage without it can only be linked back by id convention, and nothing can check its placements.",
+          "type": "string",
+          "pattern": "^knowledge-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
         "title": {
           "$ref": "#/$defs/nonEmptyText"
         },

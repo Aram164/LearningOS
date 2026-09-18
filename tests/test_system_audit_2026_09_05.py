@@ -489,6 +489,7 @@ def test_dossier_projection_loads_the_repository_once_and_hashes_once(
                     "exercise_value": "One worked calculation.",
                     "best_for": "Rebuilding the derivation.",
                     "limitations": "No continuous variables.",
+                    "scope_of_absence": "lecture-01.pdf, PDF p. 1 of 1",
                     "evidence": [{
                         "locator": "lecture-01.pdf",
                         "checksum": basis["material_checksums"][route_id],
