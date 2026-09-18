@@ -417,6 +417,8 @@ def test_boundary_functions_agree(mini_repo):
 def test_failing_git_status_refuses(mini_repo):
     from learning_os.errors import TransactionFailure
     subprocess.run(["git", "init"], cwd=mini_repo, check=True)
+    subprocess.run(["git", "config", "user.name", "CI"], cwd=mini_repo, check=True)
+    subprocess.run(["git", "config", "user.email", "ci@example.com"], cwd=mini_repo, check=True)
     subprocess.run(["git", "commit", "--allow-empty", "-m", "Initial"], cwd=mini_repo, check=True)
     
     index_file = mini_repo / ".git/index"

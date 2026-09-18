@@ -1,258 +1,139 @@
-# The perimeter — the shape of the two levels above repository/.
-#
-# WHY THIS FILE EXISTS
-# --------------------
-# ADR-014 declares the umbrella's shape and nothing enforced it. The 2026-09-03
-# audit found two invisibilities stacked on top of each other:
-#
-#   1. The umbrella level is in NO git index. The wrapper's .gitignore ignores
-#      `LearningOS/` wholly, so `git ls-files LearningOS` returns nothing.
-#   2. It is outside `repo.root`, so no validator rule ever looked there.
-#
-# Three loose PDFs, two audit documents and a patch directory accumulated there
-# without anything noticing. Two of the PDFs are byte-identical duplicates of
-# managed course material; one is the only copy in existence.
-#
-# WHY IT IS AUTHORED HERE, INSIDE THE REPOSITORY
-# ----------------------------------------------
-# Because this is the only level of the tree that is under version control. A
-# declaration about an untracked directory has to live somewhere tracked or it
-# shares the fate of what it governs.
-#
-# THE SPLIT WITH THE CORPUS
-# -------------------------
-# The normative corpus governs the repository of record. The perimeter governs
-# what the repository is nested inside. Neither index reaches across
-# `repo.root` with `../`: `corpus_files()` globs from the repository root and
-# `Validator._rel()` assumes containment, so a `../AGENTS.md` row would break
-# both, and every synthetic mini-repo with them. Two indexes, one boundary.
-#
-# READ FROM DISK, NEVER FROM GIT
-# ------------------------------
-# The wrapper ignores `LearningOS/` wholly and `*.pdf` globally. Git is blind
-# to precisely the things this contract exists to see.
-
 perimeter_version: 1
-
 roots:
-  wrapper: .            # semestercontext/
+  wrapper: .
   umbrella: LearningOS
-
-# The check applies only where all of these are present.
-#
-# A synthetic mini-repo builds `LearningOS/repository` and `LearningOS/materials`
-# and nothing else — it is not this tree, and a perimeter error raised against
-# it would be nonsense. This is the same shape as the corpus checker returning
-# [] for a repository with no prose, and it is declared here rather than
-# hardcoded so the discriminator is visible instead of implied.
 applies_when_present:
-  - LearningOS/obsidian-ui
-  - LearningOS/workbench
-  - LearningOS/archive
-
-# Suffixes that mean "course material" — they belong under LearningOS/materials/
-# and are addressable as material:// once the managed ingest has seen them.
+- LearningOS/obsidian-ui
+- LearningOS/workbench
+- LearningOS/archive
 material_suffixes:
-  [".pdf", ".epub", ".djvu", ".mobi", ".azw3", ".pptx", ".ppt",
-   ".mp4", ".mkv", ".mov", ".m4v", ".webm"]
-
-# Present at both levels, owned by the host rather than by us.
-ephemera: [".DS_Store", ".git", ".obsidian", ".venv", ".idea", ".smart-env"]
-
+- .pdf
+- .epub
+- .djvu
+- .mobi
+- .azw3
+- .pptx
+- .ppt
+- .mp4
+- .mkv
+- .mov
+- .m4v
+- .webm
+ephemera:
+- .DS_Store
+- .git
+- .obsidian
+- .venv
+- .idea
+- .smart-env
 entries:
-
-  # ---- wrapper root --------------------------------------------------------
-
-  - path: .gitignore
-    kind: file
-    owner: operator
-    purpose: tracks the knowledge system and excludes the heavy material tree.
-
-  - path: .claude
-    kind: directory
-    owner: agent-config
-    purpose: Claude Code project configuration.
-
-  - path: .opencode
-    kind: file
-    class: contract
-    authority: binding
-    owner: agent-roles
-    purpose: >-
-      The 0x-alpha reviewer rule set. Instruction-bearing and binding on the
-      reviewer, and governed by nothing else — the normative corpus cannot
-      reach outside the repository.
-
-  - path: AGENTS.md
-    kind: document
-    class: contract
-    authority: binding
-    owner: agent-roles
-    annotation: role division for Codex and other agents
-    purpose: >-
-      The role division for Codex and other agents. Loaded only when an agent
-      starts from the wrapper root; repository/AGENTS.md names it as a required
-      read precisely because an agent starting inside repository/ never sees it.
-
-  - path: tools
-    kind: directory
-    owner: agent-pipeline
-    annotation: engineering orchestration; not a LearningOS product surface
-    purpose: >-
-      The coding-agent pipeline that drives Core and the UI together. It is
-      declared here rather than under repository/tools/ for two reasons: it
-      orchestrates both nested repositories, so it belongs at the level that
-      contains both; and it checks Core out into per-issue worktrees handed to
-      write-capable agents, so living inside Core would place the orchestrator's
-      own configuration inside every sandbox it creates. Not imported by
-      learning_os, not exposed through los.py, never in the manifest.
-
-  - path: LearningOS
-    kind: directory
-    owner: learningos
-    purpose: the umbrella for every LearningOS component (ADR-014).
-
-  - path: Stratum
-    kind: nested_repo
-    owner: external
-    annotation: independent external Git repository; never traversed
-    purpose: >-
-      An independent external Git repository, declared by ADR-014 and rendered
-      in ARCHITECTURE §3.1. Keeps its own remotes and worktree. LearningOS
-      never indexes, validates or manages it; never traversed.
-
-  - path: tpcx-ai-v2.0.0
-    kind: directory
-    owner: external
-    annotation: the operator's own TPC-DS/AI vendor download; never traversed
-    purpose: >-
-      The TPCx-AI v2.0.0 benchmark kit (~1.0 GB), downloaded by the operator
-      from tpc.org under their own one-time key. It is not LearningOS material
-      and must never be filed into it: an earlier pass read it as loose
-      material and buried it under LearningOS/archive/, which silently broke
-      the venv inside it whose 1893 shebangs carry this absolute path. Because
-      the wrapper .gitignore excludes it, git recorded nothing and there was no
-      commit to revert. Declared here so the perimeter stops reporting it as
-      undeclared, and so the next reader learns it is hands-off rather than
-      cleanup fodder. Never traversed, never validated, never relocated.
-
-  # ---- umbrella ------------------------------------------------------------
-
-  - path: LearningOS/repository
-    kind: nested_repo
-    owner: learningos
-    purpose: the authored repository of record.
-
-  - path: LearningOS/obsidian-ui
-    kind: nested_repo
-    owner: learningos
-    purpose: the independent interface repository.
-
-  - path: LearningOS/materials
-    kind: directory
-    owner: materials
-    file_policy: managed
-    annotation: books, slides, videos, datasets — addressable as material://
-    purpose: >-
-      Course material — books, slides, videos, datasets. Every file is
-      addressable as material:// through the managed ingest. This is the one
-      directory a perimeter-level duplicate is measured against.
-
-  - path: LearningOS/projects
-    kind: directory
-    owner: projects
-    purpose: active LearningOS-owned code repositories.
-
-  - path: LearningOS/workbench
-    kind: directory
-    owner: workbench
-    purpose: disposable audits, strategy and scratch tooling (ADR-014).
-
-  - path: LearningOS/archive
-    kind: directory
-    owner: archive
-    purpose: retired, recoverable, non-active artifacts.
-
-  - path: LearningOS/legacy
-    kind: directory
-    owner: legacy
-    purpose: the frozen pre-v3 tree and the preserved former Job source (ADR-014).
-
-  - path: LearningOS/README.md
-    kind: document
-    class: reference
-    authority: informative
-    owner: learningos
-
-  - path: LearningOS/CLAUDE.md
-    kind: symlink
-    target: repository/system/CLAUDE.md
-    owner: learningos
-    purpose: the Claude adapter, reachable from the umbrella.
-
-  - path: LearningOS/Plans
-    kind: symlink
-    target: legacy/Plans
-    owner: legacy
-
-  - path: LearningOS/.env
-    kind: file
-    owner: operator
-    purpose: bounded review client credentials (ADR-014); never committed.
-
-# ---- known strays, awaiting disposition -------------------------------------
-#
-# Recorded 2026-09-04. These are the audit's Finding 1, declared rather than
-# silently tolerated: naming them is what makes them visible, and the checker
-# treats a declared stray as known rather than raising an error that would turn
-# every gate red before anything had been decided.
-#
-# This list is self-cleaning. `tests/test_perimeter.py` asserts every entry is
-# still on disk, so a path that has been disposed of MUST be removed from here
-# or the test fails. The list can only shrink.
-#
-# The umbrella level is in no git index, so every disposition is irreversible
-# and none is performed on this file's say-so. Each entry states what must be
-# proved first.
-
-pending_disposition:
-  - path: original_research.txt
-    disposition: >-
-      operator files it with the intelligence-plane audit record or promotes
-      it to a declared wrapper entry. Already proved not a duplicate: sha256
-      4345cf71…a27483 differs from the workbench RESEARCH.txt (53f66bdf…bbe4),
-      so it must not be disposed of as a shadow.
-  # 2026-09-10: the consolidated research/autonomy/runtime dossier moved to
-  # LearningOS/workbench/ per Aram (active handoff artifact, explicitly
-  # non-canonical) and this entry was removed; workbench/ is a declared
-  # directory so no per-file declaration is needed.
-#
-# 2026-09-08: original_research.txt (31,901 bytes at the wrapper root) is the
-# commissioning brief — the user request that launched the intelligence-plane
-# research. Declared here so deny-by-default stays green while the operator
-# decides its final place; remove this entry when it is filed or promoted.
-#
-# Emptied 2026-09-07. Every entry above was disposed of as it said:
-#
-#   moved to LearningOS/workbench/  — Atlas.implementation.plan.md (typo fixed in
-#     the move), LearningOS-ARCHITECTURE-AND-ATLAS-EXECUTION-PLAN-2026-09-05.md,
-#     LEARNINGOS-CRITICAL-SYSTEM-AUDIT-FINDINGS-2026-08-29.md,
-#     LEARNINGOS-REMEDIATION-PLAN-2026-09-03.md, JOB-COLLAPSE-OPUS-AUDIT.md,
-#     JOB-COLLAPSE-GEMINI-DATA-MAP.md
-#   shelved to LearningOS/archive/retired-semester-root/ — _tier1-patches, after
-#     proving both tier-1 commits (Core 8b275f1, UI b0eb1c7) are ancestors of
-#     their repository's current main. Applied work, not unapplied work.
-#   deleted — python-polars-the-definitive-guide.pdf and
-#     03_correlation_regression.pdf, after re-computing both sha256 pairs at
-#     execution time (8a8fdf9e…f318fe and d035cdfb…cc066, each still identical to
-#     its managed copy) and backing both files up first.
-#   ingested — mml-book.pdf, moved (never copied, it was the only copy) to
-#     materials/machine-learning/classical/mml/, its slug added to PLACEMENT, the
-#     .flat alias rebuilt, records/materials-manifest.yaml regenerated, and
-#     material://source-mml/mml-book.pdf proved to resolve to the same
-#     sha256 3f87b70c…8911bc. Only then was the umbrella level left without it.
-#
-# The list stays here, empty, because the mechanism outlives its first use: a
-# stray found at either level is declared here rather than silently tolerated,
-# and `tests/test_perimeter.py` keeps the list honest by failing when an entry
-# names a path that is no longer on disk.
+- path: .gitignore
+  kind: file
+  owner: operator
+  purpose: tracks the knowledge system and excludes the heavy material tree.
+- path: .claude
+  kind: directory
+  owner: agent-config
+  purpose: Claude Code project configuration.
+- path: .opencode
+  kind: file
+  class: contract
+  authority: binding
+  owner: agent-roles
+  purpose: The 0x-alpha reviewer rule set. Instruction-bearing and binding on the
+    reviewer, and governed by nothing else — the normative corpus cannot reach outside
+    the repository.
+- path: AGENTS.md
+  kind: document
+  class: contract
+  authority: binding
+  owner: agent-roles
+  annotation: role division for Codex and other agents
+  purpose: The role division for Codex and other agents. Loaded only when an agent
+    starts from the wrapper root; repository/AGENTS.md names it as a required read
+    precisely because an agent starting inside repository/ never sees it.
+- path: tools
+  kind: directory
+  owner: agent-pipeline
+  annotation: engineering orchestration; not a LearningOS product surface
+  purpose: 'The coding-agent pipeline that drives Core and the UI together. It is
+    declared here rather than under repository/tools/ for two reasons: it orchestrates
+    both nested repositories, so it belongs at the level that contains both; and it
+    checks Core out into per-issue worktrees handed to write-capable agents, so living
+    inside Core would place the orchestrator''s own configuration inside every sandbox
+    it creates. Not imported by learning_os, not exposed through los.py, never in
+    the manifest.'
+- path: LearningOS
+  kind: directory
+  owner: learningos
+  purpose: the umbrella for every LearningOS component (ADR-014).
+- path: Stratum
+  kind: nested_repo
+  owner: external
+  annotation: independent external Git repository; never traversed
+  purpose: An independent external Git repository, declared by ADR-014 and rendered
+    in ARCHITECTURE §3.1. Keeps its own remotes and worktree. LearningOS never indexes,
+    validates or manages it; never traversed.
+- path: tpcx-ai-v2.0.0
+  kind: directory
+  owner: external
+  annotation: the operator's own TPC-DS/AI vendor download; never traversed
+  purpose: 'The TPCx-AI v2.0.0 benchmark kit (~1.0 GB), downloaded by the operator
+    from tpc.org under their own one-time key. It is not LearningOS material and must
+    never be filed into it: an earlier pass read it as loose material and buried it
+    under LearningOS/archive/, which silently broke the venv inside it whose 1893
+    shebangs carry this absolute path. Because the wrapper .gitignore excludes it,
+    git recorded nothing and there was no commit to revert. Declared here so the perimeter
+    stops reporting it as undeclared, and so the next reader learns it is hands-off
+    rather than cleanup fodder. Never traversed, never validated, never relocated.'
+- path: LearningOS/repository
+  kind: nested_repo
+  owner: learningos
+  purpose: the authored repository of record.
+- path: LearningOS/obsidian-ui
+  kind: nested_repo
+  owner: learningos
+  purpose: the independent interface repository.
+- path: LearningOS/materials
+  kind: directory
+  owner: materials
+  file_policy: managed
+  annotation: books, slides, videos, datasets — addressable as material://
+  purpose: Course material — books, slides, videos, datasets. Every file is addressable
+    as material:// through the managed ingest. This is the one directory a perimeter-level
+    duplicate is measured against.
+- path: LearningOS/projects
+  kind: directory
+  owner: projects
+  purpose: active LearningOS-owned code repositories.
+- path: LearningOS/workbench
+  kind: directory
+  owner: workbench
+  purpose: disposable audits, strategy and scratch tooling (ADR-014).
+- path: LearningOS/archive
+  kind: directory
+  owner: archive
+  purpose: retired, recoverable, non-active artifacts.
+- path: LearningOS/legacy
+  kind: directory
+  owner: legacy
+  purpose: the frozen pre-v3 tree and the preserved former Job source (ADR-014).
+- path: LearningOS/README.md
+  kind: document
+  class: reference
+  authority: informative
+  owner: learningos
+- path: LearningOS/CLAUDE.md
+  kind: symlink
+  target: repository/system/CLAUDE.md
+  owner: learningos
+  purpose: the Claude adapter, reachable from the umbrella.
+- path: LearningOS/Plans
+  kind: symlink
+  target: legacy/Plans
+  owner: legacy
+- path: LearningOS/.env
+  kind: file
+  owner: operator
+  purpose: bounded review client credentials (ADR-014); never committed.
+pending_disposition: []
