@@ -1,0 +1,3 @@
+## 2025-02-23 - Python Inline Import Performance Impact in Recursive Functions
+**Learning:** In highly recursive functions like `_normalize` for YAML loading, placing an expensive operation (like `import datetime as _dt`) before common branch logic (e.g., dict/list type matching) causes severe performance degradation, because the import is evaluated on every recursive call for every single node in the tree.
+**Action:** Lift common execution paths (e.g., matching primitives `str`, `int`, `bool`, `float` with `type() is`) to execute *before* expensive fallback branches like inline module imports. Keep `isinstance()` for collections to support parser-specific subclasses, while using fast exact type matches for primitives.
