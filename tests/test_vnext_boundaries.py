@@ -1094,10 +1094,14 @@ def _unreadable(directory: Path):
         try:
             with os.scandir(directory) as entries:
                 next(entries, None)
+            # The goal is to check if we can read files inside the dir.
+            for file in directory.iterdir():
+                os.stat(file)
+                file.lstat()
         except PermissionError:
             pass
         else:
-            pytest.skip("this user can still enumerate a mode-000 directory")
+            pytest.skip("User can still read directory")
         yield
     finally:
         os.chmod(directory, original)
