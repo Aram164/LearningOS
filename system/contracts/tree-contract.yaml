@@ -203,6 +203,8 @@ hidden:
       purpose: ruff cache, self-ignoring in the same way
     - path: .obsidian
       purpose: Obsidian workspace state — interface layer, never core (ADR-006)
+    - path: .jules
+      purpose: Agent journal and scratchpad
 
 # Directory names that are never declared anywhere, at any depth, because they
 # are build residue rather than structure.
