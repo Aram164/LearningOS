@@ -32,6 +32,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `assemble_lecture_study_maps.py` | bounded authoring tool | Builds review drafts from already-authored maps; never a general canonical writer. |
 | `build_materials_index.py` | bounded materials maintenance | Builds plain-text material catalogues; its HTML surface is retired unless explicitly requested. |
 | `build_materials_tree.py` | bounded materials maintenance | Maintains the physical topic tree and `.flat` compatibility links. |
+| `material_text.py` | bounded authoring tool | Digest-keyed page-text cache for local materials; read cached pages instead of re-extracting. |
 | `material_toc.py` | bounded authoring tool | Reads local material structure while authoring or checking exact locators. |
 | `materials_manifest.py` | bounded integrity tool | Builds/verifies the external-material checksum inventory. |
 | `ingest_transcript.py` | bounded materials maintenance | Fetches third-party video captions into the managed materials tree as timestamp-addressable transcripts; writes only under `LearningOS/materials/`, never canonical state. |

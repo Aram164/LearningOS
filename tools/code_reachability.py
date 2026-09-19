@@ -37,6 +37,7 @@ ENTRYPOINTS = (
     "lift_angle_out_of_locator.py",
     "los.py",
     "manifest_contract.py",
+    "material_text.py",
     "material_toc.py",
     "materials_manifest.py",
     "normalise_material_uris.py",
