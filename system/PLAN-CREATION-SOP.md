@@ -131,7 +131,13 @@ Inventory all of these, even when they will not be selected:
 
 `rg --files` is the first file inventory tool. If the materials tree is
 gitignored and therefore invisible to it, use a narrowly scoped `find` on the
-exact material root. Sibling code repositories are not automatic material
+exact material root. Start from the checked-in rails before scanning:
+`records/materials-manifest.yaml` carries checksums for the external materials
+tree (`make inventory` rebuilds it after adding or moving sources),
+`materials/FILES.txt` (`make materials`) lists every unregistered file by
+name, and `tools/material_toc.py --toc` prints a local material's contents
+with PDF pages while `--verify --page N --expect "…"` checks a locator
+against the file. Sibling code repositories are not automatic material
 roots. If the current task explicitly needs Stratum context, inspect only the
 relevant paths and turn confirmed learning into ordinary LearningOS records;
 do not register or copy the repository as managed LearningOS content.
