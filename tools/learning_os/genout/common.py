@@ -108,6 +108,10 @@ def stable_generated_at(root: Path) -> str:
     try:
         ts = read_history(root, "-1", "--format=%cI").strip()
         if ts:
+            # Normalize 'Z' to '+00:00' to ensure consistent output format
+            # across different git versions and configurations.
+            if ts.endswith("Z"):
+                ts = ts[:-1] + "+00:00"
             return f"{ts} (last commit)"
     except GitHistoryError as exc:
         raise TransactionFailure(f"failed to read git history: {exc}") from exc
