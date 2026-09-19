@@ -615,10 +615,11 @@ single versioned lock; do not put the current version in import paths.
 
 ## 25a. Revise an existing plan
 
-§23 covers a lecture arriving. This covers the far more common case: a plan
-that already exists and needs changing — a locator sharpened, an angle written,
-a source routed to a stage it was missing from, a stage's material menu
-extended.
+This section owns the revision procedure; [PLAN-CREATION-SOP.md](PLAN-CREATION-SOP.md)
+Gates 0–6 own the acceptance gates. §23 covers a lecture arriving. This covers
+the far more common case: a plan that already exists and needs changing — a
+locator sharpened, an angle written, a source routed to a stage it was missing
+from, a stage's material menu extended.
 
 For one existing material's title, locator, angle, angle detail, URL or vault
 path, use the bounded `route.patch` capability. Read `plan-edit-context UNIT_ID
@@ -676,7 +677,7 @@ For structural plan revisions, use the creation/import path:
    direct CLI application is disabled"*), so the bare CLI can preflight and
    nothing more. The envelope carries `schema_version: 2`, `request_id`,
    `idempotency_key`, `capability`, `channel`, `expected_snapshot` (from
-   `los.py bootstrap`), `expected_revisions` covering **exactly** every
+   `los.py bootstrap --compact`), `expected_revisions` covering **exactly** every
    artifact the transaction touches — the module plus each unit in the
    package, no more and no fewer — an `approval` whose `subject_sha256` is
    `intent_sha256(envelope)`, and the payload. `approve` never appears in the

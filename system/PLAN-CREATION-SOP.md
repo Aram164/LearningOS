@@ -79,21 +79,36 @@ A plan is complete only when all of the following are true:
 
 ## Gate 0 — establish the contract and repository state
 
-Run:
+Start compact ([OPERATOR.md](OPERATOR.md) Start here). Run:
 
 ```bash
-.venv/bin/python tools/los.py capabilities --json
-.venv/bin/python tools/los.py bootstrap
+.venv/bin/python tools/los.py capabilities --compact --json
+.venv/bin/python tools/los.py bootstrap --compact
 git status --short
 ```
+
+Fetch one capability's complete definition only for the capability you will
+use:
+
+```bash
+.venv/bin/python tools/los.py capabilities NAME --json
+```
+
+Full `capabilities --json` and full `bootstrap` are explicit bulk reads for
+tasks that need the complete catalogue or the full projection, not routine
+startup. For plan work, read focused context instead of the full projection:
+`plan-edit-context UNIT_ID` (add `--route-id`/`--route-ids` for routes,
+`--stage-id` for one stage), `inspect ID` for records, `note-read` for note
+bodies.
 
 Preserve unrelated changes. Read the current module, source map, units, optional
 study maps, workspace, the relevant JSON Schemas, and any earlier plan package
 before drafting. Older plans are evidence about possible coverage, never the
 semantic authority or a required output shape. Copy `snapshot.snapshot_id` from
-`bootstrap` **after** the coverage audit and any in-repository draft exist —
-both live under canonical roots and move the fingerprint (Gate 3). The actual
-import requires the id; a preflight may run without it, but an import may not.
+`bootstrap --compact` **after** the coverage audit and any in-repository draft
+exist — both live under canonical roots and move the fingerprint (Gate 3). The
+actual import requires the id; a preflight may run without it, but an import
+may not.
 
 ## Gate 1 — build the material inventory before writing stages
 
@@ -328,6 +343,27 @@ Additional package invariants:
 - absence of a matching exercise is recorded, not filled by mislabelling a
   nearby sheet.
 
+## Which path: choose once, then follow only that path
+
+Choose once before Gates 1–6; do not re-derive the procedure after choosing:
+
+- One material field (title, locator, angle, angle_detail, URL/vault_path)
+  on an existing route: `plan-edit-context UNIT_ID --route-id ROUTE_ID`
+  (or `--route-ids` for 1–20 routes), then `route-patch --check` and gateway
+  apply per WORKFLOWS §25a. No coverage audit, no plan package.
+- One existing lecture (routes plus map for that unit): `plan-edit-context
+  UNIT_ID --audit`, source reading, coverage audit, one compact
+  `unit-plan-revise` patch, one preflight, one reviewed apply, and
+  `make plan-check`.
+- Structural change (multi-unit changes, new units, unit ordering, workspace
+  joins, source-registry patches): full Gates 1–6 via `module-plan-import`.
+
+The compact paths never substitute for structural changes: identity, scope,
+coverage, source, or membership changes still require the full plan path.
+Snapshot guards, receipts, source completeness, and learner-state protection
+apply on all three paths. Procedure owner is WORKFLOWS §25a; this SOP owns
+Gates 0–6 only.
+
 ## Gate 4 — run the no-write preflight
 
 Run:
@@ -349,7 +385,7 @@ or every missing source route) and fix the class once.
 
 ## Gate 5 — apply once with optimistic concurrency
 
-After a successful check, run `bootstrap` again and use its current snapshot:
+After a successful check, run `bootstrap --compact` again and use its current snapshot:
 
 ```bash
 .venv/bin/python tools/los.py module-plan-import MODULE_ID \
