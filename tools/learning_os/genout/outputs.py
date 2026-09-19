@@ -74,6 +74,12 @@ def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
 
 _KEEP_NAMES = {".gitkeep", ".DS_Store"}
 
+#: Sibling producers the publisher must not garbage-collect. The page-text
+#: cache and the summary cache live under generated/ (gitignored, disposable)
+#: but are owned by their own tools with their own invalidation; a rebuild
+#: of the projection must leave them alone.
+_KEEP_TOP_DIRS = frozenset({"text-cache", "summaries"})
+
 
 _KEEP_REPORT_PREFIX = "validation-report"
 
@@ -177,12 +183,16 @@ def _remove_stale(gen: Path, outputs: dict[str, str]) -> None:
         if rel.parts and rel.parts[0] == "reports" \
                 and f.name.startswith(_KEEP_REPORT_PREFIX):
             continue
+        if rel.parts and rel.parts[0] in _KEEP_TOP_DIRS:
+            continue
         if rel not in expected:
             f.unlink()
     # Prune directories left empty by the deletions (deepest first);
     # rmdir refuses non-empty directories, so this is safe.
     for d in sorted(stale_dirs, reverse=True):
         if d.name == "reports":
+            continue
+        if d.relative_to(gen).parts[0] in _KEEP_TOP_DIRS:
             continue
         try:
             d.rmdir()
