@@ -349,14 +349,18 @@ Choose once before Gates 1–6; do not re-derive the procedure after choosing:
 
 - One material field (title, locator, angle, angle_detail, URL/vault_path)
   on an existing route: `plan-edit-context UNIT_ID --route-id ROUTE_ID`
-  (or `--route-ids` for 1–20 routes), then `route-patch --check` and gateway
+  (or `--route-ids` for 1–20 routes in one snapshot-bound call — prefer the
+  batch over repeated single reads), then `route-patch --check` and gateway
   apply per WORKFLOWS §25a. No coverage audit, no plan package.
+  Read only OPERATOR Start here and WORKFLOWS §25a.
 - One existing lecture (routes plus map for that unit): `plan-edit-context
   UNIT_ID --audit`, source reading, coverage audit, one compact
   `unit-plan-revise` patch, one preflight, one reviewed apply, and
-  `make plan-check`.
+  `make plan-check`. Read OPERATOR Start here, WORKFLOWS §25a, and SOP
+  Gates 0–6.
 - Structural change (multi-unit changes, new units, unit ordering, workspace
   joins, source-registry patches): full Gates 1–6 via `module-plan-import`.
+  Read the full SOP Gates 0–6 plus WORKFLOWS §25a.
 
 The compact paths never substitute for structural changes: identity, scope,
 coverage, source, or membership changes still require the full plan path.
@@ -408,6 +412,10 @@ make check
 git diff --check
 git status --short
 ```
+
+For routine readouts, prefer `python tools/validate.py --compact`: same
+error gate, errors plus one summary line, the full warning list stays in
+the report.
 
 Also run `.venv/bin/python tools/validate.py --online` when registered or newly
 selected web sources changed. If the module is still covered by a compatibility
