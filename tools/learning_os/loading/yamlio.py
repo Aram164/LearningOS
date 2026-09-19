@@ -78,13 +78,24 @@ def _read_text(path: Path, root: Path, *, errors: str = "strict") -> str:
 def _normalize(value):
     """YAML 1.1 auto-parses ISO dates; the schemas expect strings. Normalize
     recursively so the logical model is representation-independent."""
-    import datetime as _dt
-    if isinstance(value, (_dt.date, _dt.datetime)):
-        return value.isoformat()
+    # Fast path for exact types to avoid isinstance overhead in deep recursion
+    t = type(value)
+    if t is str or t is int or t is bool or t is float or value is None:
+        return value
+    if t is dict:
+        return {k: _normalize(v) for k, v in value.items()}
+    if t is list:
+        return [_normalize(v) for v in value]
+
+    # Fallback for subclasses (e.g., from PyYAML loaders)
     if isinstance(value, dict):
         return {k: _normalize(v) for k, v in value.items()}
     if isinstance(value, list):
         return [_normalize(v) for v in value]
+
+    import datetime as _dt
+    if isinstance(value, (_dt.date, _dt.datetime)):
+        return value.isoformat()
     return value
 
 

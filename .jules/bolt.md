@@ -1,0 +1,3 @@
+## 2024-05-19 - Expensive operations in deep recursion
+**Learning:** The `_normalize` function in `yamlio.py` is deeply recursive and used heavily. Doing inline imports (`import datetime as _dt`) and `isinstance()` checks early in the function meant these relatively expensive operations ran for every single leaf node (thousands of strings/ints/floats) in parsed YAML structures.
+**Action:** Always process the fast path using exact type checks (`type(value) is str`) and exact structure matches for common cases *before* doing expensive operations like inline imports or `isinstance` checks for edge cases. Be careful to retain `isinstance` fallbacks for when subclasses (e.g., from PyYAML) are encountered.
