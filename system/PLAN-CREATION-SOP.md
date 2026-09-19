@@ -179,6 +179,16 @@ Create one lecture unit per ordinary lecture. Split combined plans such as
 remain only as an auxiliary review unit with explicit parent/child or purpose
 context.
 
+Triage chapters through cached summaries before full-reading. For a chapter
+range of a cached material, read
+`generated/summaries/<sha256>/pages-<start>-<end>/summary.md` when present,
+and record an explicit grade — `accept`, `defer`, or `reject` — with a
+one-line reason and the summary digest. On a miss, full-read the chapter,
+decide, and leave a draft summary in the workspace outputs for
+`tools/material_summarize.py --promote`. Summaries select and suggest angles
+only: coverage claims, locators, and routes still require the opened material,
+and a route evidenced only by a summary fails review.
+
 For every unit, finish its semantic map before considering stages:
 
 - authoritative scope material and the exact concepts actually taught;

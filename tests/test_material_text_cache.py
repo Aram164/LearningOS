@@ -108,6 +108,7 @@ def test_build_caches_pages_and_refresh_hits(tmp_path: Path, capsys):
     assert "Hello cache page one" in page.read_text(encoding="utf-8")
     index = json.loads((cache / digest_a / "index.json").read_text(encoding="utf-8"))
     assert (index["sha256"], index["pages"]) == (digest_a, 1)
+    assert "GENERATED" in index["_generated"]["warning"]
 
     code, summary = _run(mt, base, manifest, cache, capsys, "--refresh")
     assert code == 0
@@ -138,6 +139,60 @@ def test_changed_bytes_invalidate_and_orphans_pruned(tmp_path: Path, capsys):
     new_digest = hashlib.sha256(second).hexdigest()
     assert "Second edition text" in (
         cache / new_digest / "pp-0001.txt").read_text(encoding="utf-8")
+
+
+@needs_pdftotext
+def test_refresh_heals_pre_header_indexes_without_reextracting(tmp_path: Path, capsys):
+    mt = _material_text()
+    data = _tiny_pdf("Legacy edition text")
+    base = tmp_path / "materials"
+    _tree(base, {"deck-a.pdf": data})
+    manifest = tmp_path / "manifest.yaml"
+    manifest.write_text(_manifest_yaml({"deck-a.pdf": data}), encoding="utf-8")
+    cache = tmp_path / "cache"
+    digest = hashlib.sha256(data).hexdigest()
+    legacy = cache / digest
+    legacy.mkdir(parents=True)
+    (legacy / "pp-0001.txt").write_text("Legacy edition text\n", encoding="utf-8")
+    (legacy / "index.json").write_text(json.dumps(
+        {"material": "deck-a.pdf", "sha256": digest, "pages": 1}), encoding="utf-8")
+    code = mt.main(["--manifest", str(manifest), "--materials-root", str(base),
+                    "--cache-dir", str(cache), "--refresh"])
+    out, _ = capsys.readouterr()
+    assert code == 0
+    summary = json.loads(out)
+    assert (summary["healed"], summary["extracted"]) == (1, 0)
+    index = json.loads((legacy / "index.json").read_text(encoding="utf-8"))
+    assert index["_generated"]["generator"] == "tools/material_text.py"
+    assert (legacy / "pp-0001.txt").read_text(encoding="utf-8") == "Legacy edition text\n"
+
+
+@needs_pdftotext
+def test_boundary_entries_skip_and_prune_spares_foreign_dirs(
+        tmp_path: Path, capsys):
+    mt = _material_text()
+    data = _tiny_pdf("Boundary edition text")
+    base = tmp_path / "materials"
+    _tree(base, {"deck-a.pdf": data})
+    manifest = tmp_path / "manifest.yaml"
+    manifest.write_text(_manifest_yaml(
+        {"deck-a.pdf": data, "../outside.pdf": None}), encoding="utf-8")
+    cache = tmp_path / "cache"
+    foreign = cache / "operators-scratch"
+    foreign.mkdir(parents=True)
+    (foreign / "note.txt").write_text("do not eat", encoding="utf-8")
+    orphan = cache / ("cd" * 32)
+    orphan.mkdir(parents=True)
+    code = mt.main(["--manifest", str(manifest), "--materials-root", str(base),
+                    "--cache-dir", str(cache), "--refresh"])
+    out, _ = capsys.readouterr()
+    assert code == 0
+    summary = json.loads(out)
+    assert {"../outside.pdf": "boundary"} == {
+        s["material"]: s["reason"] for s in summary["skipped"]}
+    assert summary["pruned"] == 1
+    assert (foreign / "note.txt").read_text(encoding="utf-8") == "do not eat"
+    assert not orphan.exists()
 
 
 def test_missing_manifest_fails_cleanly(tmp_path: Path, capsys):

@@ -39,6 +39,7 @@ ENTRYPOINTS = (
     "manifest_contract.py",
     "material_text.py",
     "material_toc.py",
+    "material_summarize.py",
     "materials_manifest.py",
     "normalise_material_uris.py",
     "plan_write_audit.py",
