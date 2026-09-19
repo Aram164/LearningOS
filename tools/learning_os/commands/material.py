@@ -59,6 +59,33 @@ def _guard_rows(root, artifacts):
     return {rid: artifact_revision(root, rid) for rid in sorted(set(artifacts))}
 
 
+def _apply_hint(args, capability, snapshot_id, revisions):
+    """Ready-to-submit apply values for a successful --check.
+
+    Direct CLI application is disabled, so the hint echoes everything the
+    GatewayEnvelopeV2 needs except the per-request fields (request_id,
+    idempotency_key, channel, approval): capability, exact payload,
+    expected snapshot, and expected revisions. Output layer only —
+    validation, guards, and receipts are unchanged.
+    """
+    if capability != "route.patch":
+        return None
+    return {
+        "apply_via": "GatewayEnvelopeV2",
+        "capability": capability,
+        "payload": {
+            "unit_id": args.unit_id,
+            "route_id": args.route_id,
+            "changes": args.changes,
+        },
+        "expected_snapshot": snapshot_id,
+        "expected_revisions": dict(revisions),
+        "apply_how": ("direct CLI application is disabled; submit a "
+                      "GatewayEnvelopeV2 with this capability, payload, "
+                      "expected_snapshot and expected_revisions"),
+    }
+
+
 def _map_for_unit(repo, unit_id):
     maps = [sm for sm in repo.study_maps.values() if sm.unit_id == unit_id]
     if len(maps) > 1:
@@ -320,9 +347,13 @@ def _execute(args, capability, planner):
         if errors:
             raise WriteRefused("canonical validation failed: " + "; ".join(map(str, errors[:8])))
         if args.check:
-            return _print_stable(root, snapshot, {
+            check_result = {
                 **result, "ok": True, "check": True, "canonical_files_written": 0,
-            })
+            }
+            hint = _apply_hint(args, capability, snapshot, result["expected_revisions"])
+            if hint is not None:
+                check_result["next"] = hint
+            return _print_stable(root, snapshot, check_result)
         if not writes:
             raise WriteRefused("no material changes to apply")
         code, errors, confirmation = _write_transaction(
