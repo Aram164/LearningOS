@@ -2,6 +2,8 @@
 """Learning OS v3 generator (BUILD-SPEC Step 5).
 
     python tools/generate.py            # rebuild all generated outputs
+    python tools/generate.py --shadow-derived [--json]
+                                        # proof-phase shadow comparison (no writes)
 
 Produces, deterministically except timestamps: generated/manifest.json,
 concept-index.md, source-index.md (incl. per-lecture and per-concept selector
@@ -17,18 +19,91 @@ import argparse
 from pathlib import Path
 
 from learning_os.genout import generate_all, write_outputs  # noqa: E402
+from learning_os.genout.common import stable_generated_at  # noqa: E402
+from learning_os.genout.derived_generation import (  # noqa: E402
+    BACKLINKS_SEMANTIC_ID,
+    CONCEPT_MAP_BODY_ID,
+    DEPENDENCY_REPORT_BODY_ID,
+    compare_shadow_generation,
+)
 from learning_os.learning_runtime import RuntimeInputError  # noqa: E402
 from learning_os.loader import load_repo  # noqa: E402
 from learning_os.transactions import TransactionFailure  # noqa: E402
+
+_NODE_ARTIFACTS = (
+    (BACKLINKS_SEMANTIC_ID, "backlinks.json"),
+    (CONCEPT_MAP_BODY_ID, "concept-map.md"),
+    (DEPENDENCY_REPORT_BODY_ID, "dependency-report.md"),
+)
+
+
+def _describe_event(event) -> str:
+    if event.status == "hit":
+        return "hit"
+    if event.reason == "cache-miss":
+        return "rebuilt (cold)"
+    if event.reason == "node-key-changed-output-same":
+        return "rebuilt-output-unchanged"
+    return "rebuilt-output-changed"
+
+
+def _shadow_main(root: Path, *, as_json: bool) -> int:
+    """Compare shadow generation against legacy builders (never writes)."""
+    import json
+
+    repo = load_repo(root)
+    trace: list = []
+    comparison = compare_shadow_generation(repo, stable_generated_at(root), trace=trace)
+    by_node = {event.node: event for event in trace}
+    if as_json:
+        print(json.dumps({
+            "equivalent": comparison.equivalent,
+            "artifacts": dict(comparison.artifacts),
+            "nodes": {
+                node_id: (
+                    {"status": "hit"}
+                    if by_node[node_id].status == "hit"
+                    else {"status": "rebuilt",
+                          "output_changed": by_node[node_id].reason
+                          != "node-key-changed-output-same"}
+                )
+                for node_id, _artifact in _NODE_ARTIFACTS
+            },
+        }, indent=2, sort_keys=True))
+        return 0 if comparison.equivalent else 1
+    if comparison.equivalent:
+        print("shadow generation: exact")
+    else:
+        mismatched = sorted(name for name, ok in comparison.artifacts.items() if not ok)
+        print(f"shadow generation: MISMATCH ({', '.join(mismatched)})")
+    print()
+    for node_id, artifact in _NODE_ARTIFACTS:
+        print(artifact)
+        print(f"  semantic: {_describe_event(by_node[node_id])}")
+        print()
+    total = len(comparison.artifacts)
+    matched = sum(1 for ok in comparison.artifacts.values() if ok)
+    print(f"{matched}/{total} artifacts byte-identical")
+    return 0 if comparison.equivalent else 1
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=None,
                         help="repository root (default: parent of tools/)")
+    parser.add_argument("--shadow-derived", action="store_true",
+                        help="compare derived shadow generation against the legacy "
+                             "builders without writing (exit nonzero on mismatch)")
+    parser.add_argument("--json", action="store_true",
+                        help="machine-readable shadow report (requires --shadow-derived)")
     args = parser.parse_args()
 
+    if args.json and not args.shadow_derived:
+        parser.error("--json requires --shadow-derived")
+
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
+    if args.shadow_derived:
+        return _shadow_main(root, as_json=args.json)
     repo = load_repo(root)
     try:
         outputs = generate_all(repo)
