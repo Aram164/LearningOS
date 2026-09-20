@@ -25,6 +25,8 @@ from learning_os.diagnostics.context import record_debug, trace_context_from_env
 from learning_os.diagnostics.store import bind_store as _bind_diag_store
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.transactions import (
+    PostCommitFailure,
+    ProjectionFailure,
     ReplayEvidenceError,
     TransactionFailure,
     TransactionIdempotencyConflict,
@@ -473,6 +475,28 @@ def _classify_failure(code: int, message: str) -> dict:
     if any(token in lowered for token in ("approval", "approve", "confirm")):
         return _gateway_error("UNCONFIRMED", message)
     return _gateway_error("INVALID_REQUEST", message)
+
+
+def _projection_error(exc: ProjectionFailure) -> dict:
+    """Typed projection outcome: subsystem proven, prose not consulted.
+
+    A complete rollback proves the write never committed; an incomplete
+    one leaves the outcome unknown however the message reads.
+    """
+    if exc.rollback_complete:
+        return _gateway_error(
+            "PROJECTION_FAILED", str(exc), retryable=True,
+            details={"stage": "core.projection", "rollback_complete": True})
+    return _gateway_error(
+        "INTERNAL_FAILURE", str(exc), retryable=True,
+        details={"stage": "core.projection", "rollback_complete": False})
+
+
+def _post_commit_error(exc: PostCommitFailure) -> dict:
+    """Committed yet failed: never a definitive refusal."""
+    return _gateway_error(
+        "INTERNAL_FAILURE", str(exc), retryable=True,
+        details={"stage": "core.commit", "committed": True})
 
 
 def _context_from_v2(envelope: dict) -> GatewayRequestContext:
@@ -1007,6 +1031,29 @@ def cmd_capability(args) -> int:
             print(json.dumps(response, indent=2, ensure_ascii=False))
             return _close_attempt(
                 attempt, 3, "error", {"stage": "core.snapshot_guard"})
+        except ProjectionFailure as exc:
+            response = _v2_response(
+                envelope,
+                ok=False,
+                error=_projection_error(exc),
+            )
+            _validate_capability_envelope(root, response, kind="result")
+            print(json.dumps(response, indent=2, ensure_ascii=False))
+            return _close_attempt(
+                attempt, 2, "error", {"stage": "core.projection"})
+        except PostCommitFailure as exc:
+            response = _v2_response(
+                envelope,
+                ok=False,
+                transaction_id=exc.transaction_id,
+                receipt_path=exc.receipt_path,
+                snapshot_after=exc.snapshot_after,
+                error=_post_commit_error(exc),
+            )
+            _validate_capability_envelope(root, response, kind="result")
+            print(json.dumps(response, indent=2, ensure_ascii=False))
+            return _close_attempt(
+                attempt, 2, "error", {"stage": "core.commit"})
         except TransactionFailure as exc:
             code, result = 2, {"error": str(exc)}
         except ValueError as exc:

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -10,11 +11,15 @@ import yaml
 from gateway_helpers import file_sha256, request_artifact_id
 from jsonschema import Draft202012Validator
 
-from learning_os.commands.capability import _classify_failure
+from learning_os.commands.capability import _classify_failure, _projection_error
 from learning_os.commands.support import _read_content_bound_file, _session_ledger
 from learning_os.contracts.gateway import GatewayRequestContext, intent_sha256
 from learning_os.fingerprint import canonical_fingerprint
-from learning_os.transactions import TransactionIdempotencyConflict, TransactionService
+from learning_os.transactions import (
+    ProjectionFailure,
+    TransactionIdempotencyConflict,
+    TransactionService,
+)
 
 
 def _envelope(root: Path, *, text: str = "bounded capture",
@@ -596,6 +601,112 @@ def test_gateway_v2_never_classifies_an_incomplete_rollback_as_no_commit(
     error = _classify_failure(2, message)
     assert error["code"] == "INTERNAL_FAILURE"
     assert error["retryable"] is True
+
+
+def test_gateway_v2_projection_failure_carries_typed_provenance(
+    mini_repo: Path, repo_root: Path, tmp_path: Path
+):
+    """End to end: a projection failure reaches the gateway typed.
+
+    Read-only generated/ breaks both publication and rollback
+    republication, so rollback is incomplete and the code stays
+    INTERNAL_FAILURE — but the details prove the typed path was taken
+    (subsystem plus rollback outcome) rather than the prose fallback,
+    which never sets details.
+    """
+    generated = mini_repo / "generated"
+    generated.mkdir(exist_ok=True)
+    os.chmod(generated, 0o555)
+    try:
+        envelope = _envelope(mini_repo)
+        refused = _run(repo_root, mini_repo, tmp_path / "projection.json", envelope)
+    finally:
+        os.chmod(generated, 0o755)
+    assert refused.returncode == 2
+    response = json.loads(refused.stdout)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is True
+    assert response["error"]["details"] == {
+        "stage": "core.projection",
+        "rollback_complete": False,
+    }
+
+
+def test_gateway_v2_post_commit_hook_failure_is_never_a_definitive_refusal(
+    mini_repo: Path, repo_root: Path, tmp_path: Path
+):
+    """Critical: a committed write must not return INVALID_REQUEST.
+
+    The receipt is durable before the session-ownership ledger write, so a
+    ledger failure still committed. The gateway must answer INTERNAL_FAILURE
+    with the receipt facts — and an exact retry must then replay the
+    committed receipt instead of the UI discarding its recovery evidence.
+    """
+    ledger = _session_ledger(mini_repo.resolve())
+    assert not ledger.exists()
+    ledger.mkdir()
+    try:
+        envelope = _envelope(mini_repo)
+        failed = _run(repo_root, mini_repo, tmp_path / "post-commit.json", envelope)
+    finally:
+        ledger.rmdir()
+    assert failed.returncode == 2
+    response = json.loads(failed.stdout)
+    assert response["ok"] is False
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is True
+    assert response["error"]["details"] == {
+        "stage": "core.commit",
+        "committed": True,
+    }
+    assert response["transaction_id"]
+    assert response["receipt_path"]
+    assert response["snapshot_after"]
+    assert list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+    # The retry discovers the committed receipt, but session ownership died
+    # with the first attempt's ledger write, so repair fails closed instead
+    # of inventing authorship. Still INTERNAL_FAILURE — never definitive.
+    replayed = _run(repo_root, mini_repo, tmp_path / "post-commit-retry.json", envelope)
+    assert replayed.returncode == 2
+    retry = json.loads(replayed.stdout)
+    assert retry["error"]["code"] == "INTERNAL_FAILURE"
+    assert retry["error"]["retryable"] is False
+    assert "session ledger" in retry["error"]["message"]
+
+    # Once any later write re-establishes the ledger, the exact retry of
+    # the original envelope replays the committed receipt.
+    second = _envelope(mini_repo, key="capture-v2-002", text="second write")
+    second["request_id"] = "request-capture-v2-002"
+    second["approval"]["subject_sha256"] = intent_sha256(second)
+    settled = _run(repo_root, mini_repo, tmp_path / "post-commit-second.json", second)
+    assert settled.returncode == 0
+
+    replayed = _run(repo_root, mini_repo, tmp_path / "post-commit-retry2.json", envelope)
+    assert replayed.returncode == 0
+    retry = json.loads(replayed.stdout)
+    assert retry["ok"] is True
+    assert retry["replayed"] is True
+    assert retry["transaction_id"] == response["transaction_id"]
+
+
+@pytest.mark.parametrize(
+    ("rollback_complete", "code"),
+    [(True, "PROJECTION_FAILED"), (False, "INTERNAL_FAILURE")],
+)
+def test_projection_error_maps_rollback_outcome_not_prose(
+    rollback_complete: bool, code: str
+):
+    """Errno text stays errno text; the flag decides the code."""
+    error = _projection_error(ProjectionFailure(
+        "[Errno 13] Permission denied: 'generated/manifest.json'",
+        rollback_complete=rollback_complete))
+    assert error["code"] == code
+    assert error["retryable"] is True
+    assert error["details"] == {
+        "stage": "core.projection",
+        "rollback_complete": rollback_complete,
+    }
 
 
 def test_gateway_v2_returns_typed_unknown_capability(

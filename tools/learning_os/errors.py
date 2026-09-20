@@ -15,6 +15,53 @@ class TransactionFailure(Exception):
     """A governed write failed and its canonical changes were rolled back."""
 
 
+class ProjectionFailure(TransactionFailure):
+    """The commit-time projection/publication step failed.
+
+    Carries whether rollback completed, so the gateway classifies by
+    subsystem outcome instead of matching exception prose. A complete
+    rollback proves NOT_COMMITTED (PROJECTION_FAILED); an incomplete one
+    leaves the outcome unknown (INTERNAL_FAILURE).
+    """
+
+    def __init__(self, message: str, *, rollback_complete: bool):
+        super().__init__(message)
+        self.rollback_complete = rollback_complete
+
+
+class PostCommitFailure(TransactionFailure):
+    """The receipt is durable but post-commit bookkeeping failed.
+
+    The write committed; only session-ownership recording or inflight
+    cleanup broke. Carries the receipt facts so the gateway can return
+    them and an exact retry can replay the committed receipt. Must never
+    be classified as a definitive refusal.
+    """
+
+    def __init__(self, message: str, *, transaction_id: str,
+                 receipt_path: str, snapshot_after: str):
+        super().__init__(message)
+        self.transaction_id = transaction_id
+        self.receipt_path = receipt_path
+        self.snapshot_after = snapshot_after
+
+
+class TransactionIdempotencyConflict(TransactionFailure):
+    """An idempotency key was reused for a different approved intent."""
+
+
+class ReplayEvidenceError(TransactionFailure):
+    """A persisted success claim does not match its own recorded evidence.
+
+    Raised by ``replay_for_request`` whenever the idempotency ledger row and
+    its named receipt disagree, are malformed, or fail schema validation.
+    Always non-retryable: the underlying write may or may not have happened,
+    but the *evidence* is contradictory, so the only safe response is a
+    refusal that preserves everything for manual reconciliation. The original
+    capability handler must never run in response to this.
+    """
+
+
 def unreadable_refusal(root: Path, failures: list[tuple[Path, str]], action: str) -> str:
     """Why a command will not answer, naming the files it could not read.
 

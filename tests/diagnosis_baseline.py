@@ -1,6 +1,6 @@
 """Phase-0 diagnostic baseline: what diagnosis costs before track #2.
 
-Drives eight failure/success scenarios through the real Core CLI on throwaway
+Drives fourteen failure/success/adversarial scenarios through the real Core CLI on throwaway
 mini repositories and records, per scenario, the ground truth (manually
 labelled: no resolver exists yet), the evidence a diagnoser must open today,
 and the commands diagnosis takes today. Also measures the Phase-1 trace
@@ -400,9 +400,309 @@ def _s8_recovery_replay(scratch: Path) -> dict:
     }
 
 
+def _s9_ambiguous_then_stale_recovery(scratch: Path) -> dict:
+    mini = _fresh_mini(scratch, "s9")
+    envelope = approved_v2_envelope(
+        mini, capability="stage.progress.update", payload=dict(STAGE_PAYLOAD),
+        artifact_ids=list(STAGE_ARTIFACTS), idempotency_key="baseline-s9")
+    generated = mini / "generated"
+    generated.mkdir(exist_ok=True)
+    os.chmod(generated, 0o555)
+    try:
+        first = _run_capability(mini, envelope)
+    finally:
+        os.chmod(generated, 0o755)
+    assert (_response(first) or {}).get("error", {}).get("code") == "INTERNAL_FAILURE", \
+        (_response(first), first.stderr[-500:])
+    # Recovery re-prepares the same request against a snapshot that is
+    # already stale at arrival; the refusal proves nothing about attempt 1.
+    import copy
+
+    from learning_os.contracts.gateway import intent_sha256
+
+    retry = copy.deepcopy(envelope)
+    retry["expected_snapshot"] = "sha256:" + "0" * 64
+    retry["approval"]["subject_sha256"] = intent_sha256(retry)
+    second = _run_capability(mini, retry)
+    body = _response(second) or {}
+    return {
+        "scenario": "S9 ambiguous attempt with stale recovery",
+        "request_id": "request-baseline-s9",
+        "idempotency_key": "baseline-s9",
+        "response": body,
+        "_mini": mini,
+        "exit_code": second.returncode,
+        "typed_error": (body.get("error") or {}).get("code"),
+        "receipts": len(_receipts(mini)),
+        "ledger_keys": _ledger_keys(mini),
+        "ground_truth": {"failure_stage": "core.projection",
+                         "canonical": "AMBIGUOUS", "ui": "BLOCKED"},
+        "evidence_opened_today": [
+            "CLI stdout, both attempts (INTERNAL_FAILURE, then STALE_SNAPSHOT)",
+            "operations/transactions/ (no receipt for either attempt)",
+        ],
+        "commands_run_today": ["los capability stage.progress.update … (twice)"],
+        "note": "the STALE_SNAPSHOT refusal covers only the recovery attempt; "
+                "attempt 1 stays ambiguous, so the operation does too.",
+    }
+
+
+def _s10_ambiguous_then_revision_recovery(scratch: Path) -> dict:
+    mini = _fresh_mini(scratch, "s10")
+    envelope = approved_v2_envelope(
+        mini, capability="stage.progress.update", payload=dict(STAGE_PAYLOAD),
+        artifact_ids=list(STAGE_ARTIFACTS), idempotency_key="baseline-s10")
+    generated = mini / "generated"
+    generated.mkdir(exist_ok=True)
+    os.chmod(generated, 0o555)
+    try:
+        first = _run_capability(mini, envelope)
+    finally:
+        os.chmod(generated, 0o755)
+    assert (_response(first) or {}).get("error", {}).get("code") == "INTERNAL_FAILURE", \
+        (_response(first), first.stderr[-500:])
+    # A concurrent writer commits the same artifacts between the attempts. It
+    # is a real second transaction under its own idempotency key — never a
+    # hand-written ledger bump — so its startup drains attempt 1's stale
+    # inflight journal exactly as production recovery would, then bumps the
+    # guarded revisions. It re-affirms the already-active stage, leaving the
+    # retry's completion domain-valid so the recovery dies on the revision
+    # guard instead of on stage state. It runs untraced: it is a different
+    # operation, so its spans belong to no diagnosis here. (A hand-written
+    # ledger cannot model this: the next command startup would replay
+    # attempt 1's stale rollback intent and delete the foreign write.)
+    writer_payload = dict(STAGE_PAYLOAD)
+    writer_payload["status"] = "active"
+    writer = approved_v2_envelope(
+        mini, capability="stage.progress.update", payload=writer_payload,
+        artifact_ids=list(STAGE_ARTIFACTS), idempotency_key="baseline-s10-writer")
+    saved_trace = dict(_TRACE_ENV)
+    _TRACE_ENV.clear()
+    try:
+        concurrent = _run_capability(mini, writer)
+    finally:
+        _TRACE_ENV.update(saved_trace)
+    writer_body = _response(concurrent) or {}
+    assert writer_body.get("ok") is True, \
+        (writer_body, concurrent.stderr[-500:])
+    assert writer_body.get("snapshot_after"), writer_body
+    # Recovery re-prepares against the current snapshot but still carries the
+    # pre-writer revision floor: the snapshot guard passes and the revision
+    # guard refuses. The refusal proves nothing about attempt 1.
+    import copy
+
+    from learning_os.contracts.gateway import intent_sha256
+
+    retry = copy.deepcopy(envelope)
+    retry["expected_snapshot"] = writer_body["snapshot_after"]
+    retry["approval"]["subject_sha256"] = intent_sha256(retry)
+    second = _run_capability(mini, retry)
+    body = _response(second) or {}
+    assert (body.get("error") or {}).get("code") == "REVISION_CONFLICT", \
+        (body, second.stderr[-500:])
+    return {
+        "scenario": "S10 ambiguous attempt with revision-conflict recovery",
+        "request_id": "request-baseline-s10",
+        "idempotency_key": "baseline-s10",
+        "response": body,
+        "_mini": mini,
+        "exit_code": second.returncode,
+        "typed_error": (body.get("error") or {}).get("code"),
+        "receipts": len(_receipts(mini)),
+        "ledger_keys": _ledger_keys(mini),
+        "ground_truth": {"failure_stage": "core.projection",
+                         "canonical": "AMBIGUOUS", "ui": "BLOCKED"},
+        "evidence_opened_today": [
+            "CLI stdout, all attempts (INTERNAL_FAILURE, writer ok, then "
+            "REVISION_CONFLICT)",
+            "operations/transactions/revisions.yaml (moved between attempts)",
+        ],
+        "commands_run_today": ["los capability stage.progress.update … (thrice)"],
+        "note": "the REVISION_CONFLICT refusal covers only the recovery attempt; "
+                "attempt 1 stays ambiguous, so the operation does too.",
+    }
+
+
+def _s11_ambiguous_then_invalid_recovery(scratch: Path) -> dict:
+    mini = _fresh_mini(scratch, "s11")
+    envelope = approved_v2_envelope(
+        mini, capability="stage.progress.update", payload=dict(STAGE_PAYLOAD),
+        artifact_ids=list(STAGE_ARTIFACTS), idempotency_key="baseline-s11")
+    generated = mini / "generated"
+    generated.mkdir(exist_ok=True)
+    os.chmod(generated, 0o555)
+    try:
+        first = _run_capability(mini, envelope)
+    finally:
+        os.chmod(generated, 0o755)
+    assert (_response(first) or {}).get("error", {}).get("code") == "INTERNAL_FAILURE", \
+        (_response(first), first.stderr[-500:])
+    # Recovery re-prepares with an approval flag in the payload instead of
+    # the envelope; the gateway refuses the malformed retry, which proves
+    # nothing about attempt 1.
+    import copy
+
+    from learning_os.contracts.gateway import intent_sha256
+
+    retry = copy.deepcopy(envelope)
+    retry["payload"]["approve"] = True
+    retry["approval"]["subject_sha256"] = intent_sha256(retry)
+    second = _run_capability(mini, retry)
+    body = _response(second) or {}
+    return {
+        "scenario": "S11 ambiguous attempt with invalid recovery",
+        "request_id": "request-baseline-s11",
+        "idempotency_key": "baseline-s11",
+        "response": body,
+        "_mini": mini,
+        "exit_code": second.returncode,
+        "typed_error": (body.get("error") or {}).get("code"),
+        "receipts": len(_receipts(mini)),
+        "ledger_keys": _ledger_keys(mini),
+        "ground_truth": {"failure_stage": "core.projection",
+                         "canonical": "AMBIGUOUS", "ui": "BLOCKED"},
+        "evidence_opened_today": [
+            "CLI stdout, both attempts (INTERNAL_FAILURE, then INVALID_REQUEST)",
+        ],
+        "commands_run_today": ["los capability stage.progress.update … (twice)"],
+    }
+
+
+def _s12_tampered_receipt(scratch: Path) -> dict:
+    mini = _fresh_mini(scratch, "s12")
+    proc = _run_capability(mini, approved_v2_envelope(
+        mini, capability="stage.progress.update", payload=dict(STAGE_PAYLOAD),
+        artifact_ids=list(STAGE_ARTIFACTS), idempotency_key="baseline-s12"))
+    body = _response(proc) or {}
+    assert body.get("ok") is True, (body, proc.stderr[-500:])
+    # Adversarial: the receipt's intent binding is edited after a genuine
+    # commit. Execution says committed; the evidence can no longer be
+    # trusted — contradiction, not proof.
+    import yaml
+
+    [receipt_path] = list(
+        (mini / "operations" / "transactions").glob("transaction-*.yaml"))
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    intent = receipt["request"]["intent_sha256"]
+    flipped = intent[:-1] + ("0" if intent[-1:] != "0" else "1")
+    receipt["request"]["intent_sha256"] = flipped
+    receipt_path.write_text(yaml.safe_dump(receipt, sort_keys=False),
+                            encoding="utf-8")
+    return {
+        "scenario": "S12 committed write with tampered receipt",
+        "request_id": "request-baseline-s12",
+        "idempotency_key": "baseline-s12",
+        "response": body,
+        "_mini": mini,
+        "exit_code": proc.returncode,
+        "typed_error": (body or {}).get("error"),
+        "receipts": len(_receipts(mini)),
+        "ledger_keys": _ledger_keys(mini),
+        "ground_truth": {"failure_stage": None,
+                         "canonical": "AMBIGUOUS", "ui": "BLOCKED"},
+        "evidence_opened_today": [
+            "CLI stdout (GatewayResultV2 success: the tamper came after)",
+            "operations/transactions/transaction-*.yaml (intent edited post-commit)",
+            "los operations (strict verification fails: not COMMITTED)",
+        ],
+        "commands_run_today": ["los capability stage.progress.update …"],
+        "note": "no failure occurred during execution; the ambiguity is the "
+                "tampered binding, found by verification, not by spans.",
+    }
+
+
+def _s13_tampered_ledger_row(scratch: Path) -> dict:
+    mini = _fresh_mini(scratch, "s13")
+    proc = _run_capability(mini, approved_v2_envelope(
+        mini, capability="stage.progress.update", payload=dict(STAGE_PAYLOAD),
+        artifact_ids=list(STAGE_ARTIFACTS), idempotency_key="baseline-s13"))
+    body = _response(proc) or {}
+    assert body.get("ok") is True, (body, proc.stderr[-500:])
+    # Adversarial: the idempotency row is repointed at a transaction that
+    # does not exist. The receipt is genuine; the ledger contradicts it.
+    import yaml
+
+    ledger_path = mini / "operations" / "transactions" / "idempotency.yaml"
+    ledger = yaml.safe_load(ledger_path.read_text(encoding="utf-8"))
+    ledger["entries"]["baseline-s13"]["transaction_id"] = \
+        "transaction-00000000-000000-000"
+    ledger_path.write_text(yaml.safe_dump(ledger, sort_keys=False),
+                           encoding="utf-8")
+    return {
+        "scenario": "S13 committed write with tampered ledger row",
+        "request_id": "request-baseline-s13",
+        "idempotency_key": "baseline-s13",
+        "response": body,
+        "_mini": mini,
+        "exit_code": proc.returncode,
+        "typed_error": (body or {}).get("error"),
+        "receipts": len(_receipts(mini)),
+        "ledger_keys": _ledger_keys(mini),
+        "ground_truth": {"failure_stage": None,
+                         "canonical": "AMBIGUOUS", "ui": "BLOCKED"},
+        "evidence_opened_today": [
+            "CLI stdout (GatewayResultV2 success: the tamper came after)",
+            "operations/transactions/idempotency.yaml (row repointed post-commit)",
+            "los operations (strict verification fails: not COMMITTED)",
+        ],
+        "commands_run_today": ["los capability stage.progress.update …"],
+        "note": "no failure occurred during execution; the ambiguity is the "
+                "tampered row, found by verification, not by spans.",
+    }
+
+
+def _s14_tampered_revision_floor(scratch: Path) -> dict:
+    mini = _fresh_mini(scratch, "s14")
+    proc = _run_capability(mini, approved_v2_envelope(
+        mini, capability="stage.progress.update", payload=dict(STAGE_PAYLOAD),
+        artifact_ids=list(STAGE_ARTIFACTS), idempotency_key="baseline-s14"))
+    body = _response(proc) or {}
+    assert body.get("ok") is True, (body, proc.stderr[-500:])
+    # Adversarial: the live revision floor is dropped below what the genuine
+    # receipt recorded. Revisions only ever increase, so this is provable
+    # mutation of shared evidence.
+    import yaml
+
+    [receipt_path] = list(
+        (mini / "operations" / "transactions").glob("transaction-*.yaml"))
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    artifact, recorded = next(iter(receipt["artifact_revisions"].items()))
+    ledger_path = mini / "operations" / "transactions" / "revisions.yaml"
+    ledger = yaml.safe_load(ledger_path.read_text(encoding="utf-8"))
+    ledger["revisions"][artifact] = recorded["after"] - 1
+    ledger_path.write_text(yaml.safe_dump(ledger, sort_keys=False),
+                           encoding="utf-8")
+    return {
+        "scenario": "S14 committed write with tampered revision floor",
+        "request_id": "request-baseline-s14",
+        "idempotency_key": "baseline-s14",
+        "response": body,
+        "_mini": mini,
+        "exit_code": proc.returncode,
+        "typed_error": (body or {}).get("error"),
+        "receipts": len(_receipts(mini)),
+        "ledger_keys": _ledger_keys(mini),
+        "ground_truth": {"failure_stage": None,
+                         "canonical": "AMBIGUOUS", "ui": "BLOCKED"},
+        "evidence_opened_today": [
+            "CLI stdout (GatewayResultV2 success: the tamper came after)",
+            "operations/transactions/revisions.yaml (floor dropped post-commit)",
+            "los operations (strict verification fails: not COMMITTED)",
+        ],
+        "commands_run_today": ["los capability stage.progress.update …"],
+        "note": "no failure occurred during execution; the ambiguity is the "
+                "tampered floor, found by verification, not by spans.",
+    }
+
+
 SCENARIOS = (_s1_success, _s2_stale_snapshot, _s3_revision_conflict,
              _s4_invalid_payload, _s5_child_failure, _s6_lost_response,
-             _s7_projection_failure, _s8_recovery_replay)
+             _s7_projection_failure, _s8_recovery_replay,
+             _s9_ambiguous_then_stale_recovery,
+             _s10_ambiguous_then_revision_recovery,
+             _s11_ambiguous_then_invalid_recovery,
+             _s12_tampered_receipt, _s13_tampered_ledger_row,
+             _s14_tampered_revision_floor)
 
 
 # ---------------------------------------------------------------------------
@@ -482,7 +782,10 @@ def main() -> None:
     parser.add_argument("--resolve", action="store_true",
                         help="run the resolver prototype over every scenario")
     args = parser.parse_args()
-    scratch = Path(tempfile.mkdtemp(prefix="diagnosis-baseline-"))
+    # Resolved like every real caller: write_target() grants authority to a
+    # stable path, so an unresolved scratch (macOS /var TMPDIR) would read
+    # as escaping its own repository under strict verification.
+    scratch = Path(tempfile.mkdtemp(prefix="diagnosis-baseline-")).resolve()
     try:
         rows = []
         for scenario in SCENARIOS:

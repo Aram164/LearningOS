@@ -29,6 +29,8 @@ from learning_os.fingerprint import source_fingerprint
 from learning_os.loader import load_repo
 from learning_os.rules.common import Issue
 from learning_os.transactions import (
+    PostCommitFailure,
+    ProjectionFailure,
     TransactionConflict,
     TransactionFailure,
     TransactionService,
@@ -262,17 +264,18 @@ def test_projection_publication_refuses_a_changed_canonical_snapshot(
     with gateway_request_context(
         _gateway_context("capture.create", "projection-race")
     ):
-        code, errors, confirmation = command_support._write_transaction(
-            mini_repo,
-            {target: "transaction content\n"},
-            capability="capture.create",
-            expected_revisions={artifact: 0},
-            artifact_ids=[artifact],
-        )
+        with pytest.raises(ProjectionFailure) as caught:
+            command_support._write_transaction(
+                mini_repo,
+                {target: "transaction content\n"},
+                capability="capture.create",
+                expected_revisions={artifact: 0},
+                artifact_ids=[artifact],
+            )
 
-    assert code == 2
-    assert any("changed during projection publication" in error for error in errors)
-    assert confirmation == {}
+    assert caught.value.rollback_complete is False
+    assert "changed during projection publication" in str(caught.value)
+    assert "rollback incomplete" in str(caught.value)
     assert not target.exists()
     assert external.is_file(), "rollback must not erase an unrelated external edit"
     assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
@@ -596,6 +599,81 @@ def test_post_commit_bookkeeping_failure_preserves_commit_and_raises(tmp_path: P
     assert target.read_text(encoding="utf-8") == "new\n"
     assert artifact_revision(root, "project-demo") == 1
     assert list((root / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_post_commit_failure_carries_receipt_facts_for_retry(tmp_path: Path):
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+    target.parent.mkdir(parents=True)
+    target.write_text("old\n", encoding="utf-8")
+
+    def fail_bookkeeping(_paths):
+        raise RuntimeError("forced touched-ledger failure")
+
+    with pytest.raises(PostCommitFailure) as caught:
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            touched=fail_bookkeeping,
+        )
+    failure = caught.value
+    receipts = list((root / "operations/transactions").glob("transaction-*.yaml"))
+    assert len(receipts) == 1
+    stored = yaml.safe_load(receipts[0].read_text(encoding="utf-8"))
+    assert failure.transaction_id == stored["id"]
+    assert failure.receipt_path == "operations/transactions/" + receipts[0].name
+    assert failure.snapshot_after == stored["snapshot_after"]
+    assert failure.snapshot_after.startswith("sha256:")
+
+
+def test_projection_failure_with_complete_rollback_is_typed(tmp_path: Path):
+    """Errno text without magic words still proves the failing subsystem."""
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+
+    def fail_publish() -> str:
+        raise OSError(13, "Permission denied",
+                      str(root / "generated" / "manifest.json"))
+
+    with pytest.raises(ProjectionFailure) as caught:
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            publish=fail_publish,
+            rollback_publish=lambda: None,
+        )
+    assert caught.value.rollback_complete is True
+    assert "rollback incomplete" not in str(caught.value)
+    assert not target.exists()
+    assert not list((root / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_projection_failure_with_broken_rollback_is_typed_incomplete(
+    tmp_path: Path,
+):
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+
+    def fail_publish() -> str:
+        raise OSError(13, "Permission denied",
+                      str(root / "generated" / "manifest.json"))
+
+    def fail_rollback_publish() -> None:
+        raise OSError(13, "Permission denied",
+                      str(root / "generated" / "manifest.json"))
+
+    with pytest.raises(ProjectionFailure) as caught:
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            publish=fail_publish,
+            rollback_publish=fail_rollback_publish,
+        )
+    assert caught.value.rollback_complete is False
+    assert "rollback incomplete" in str(caught.value)
 
 
 def test_transaction_owned_writes_share_the_receipt_identity(tmp_path: Path):

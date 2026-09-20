@@ -33,6 +33,8 @@ from learning_os.genout import (
 from learning_os.loader import load_repo
 from learning_os.rules import validate
 from learning_os.transactions import (
+    PostCommitFailure,
+    ProjectionFailure,
     TransactionConflict,
     TransactionFailure,
     TransactionService,
@@ -423,6 +425,11 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
         # The V2 gateway owns the typed stale-snapshot response. Let the exact
         # expected/actual values cross that boundary without being flattened
         # into a generic transaction failure.
+        raise
+    except (ProjectionFailure, PostCommitFailure):
+        # Typed failure provenance crosses the (code, errors) channel by
+        # propagation: the gateway classifies by its attrs, and direct CLI
+        # use still exits 2 through los.py's TransactionFailure handler.
         raise
     except TransactionFailure as exc:
         # Canonical write refusal is a handled operator error, not an internal
