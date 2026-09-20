@@ -7,6 +7,12 @@ digests), store.py (content-addressed persistence), engine.py (evaluation).
 
 from __future__ import annotations
 
+from .engine import (
+    BuildContext,
+    Evaluation,
+    TraceEvent,
+    evaluate,
+)
 from .identity import (
     digest_bytes,
     digest_file,
@@ -37,10 +43,13 @@ __all__ = [
     "DERIVED_TOP_DIR",
     "ENGINE_VERSION",
     "STATE_SCHEMA_VERSION",
+    "BuildContext",
     "DerivedError",
+    "Evaluation",
     "InputRef",
     "NodeSpec",
     "NodeState",
+    "TraceEvent",
     "canonical_bytes",
     "derived_dir",
     "digest_bytes",
@@ -48,6 +57,7 @@ __all__ = [
     "digest_paths",
     "digest_producer_files",
     "digest_tree",
+    "evaluate",
     "lookup",
     "node_key",
     "read_state",
