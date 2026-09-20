@@ -117,8 +117,30 @@ def test_identical_rebuild_prunes_downstream_invalidation(tmp_path: Path):
     assert [(event.node, event.status) for event in trace] == [
         ("a", "rebuilt"), ("b", "rebuilt"), ("c", "hit")]
     assert [event.reason for event in trace] == [
-        "node-key-changed", "node-key-changed", "node-key-equal"]
+        "node-key-changed-output-changed", "node-key-changed-output-same", "node-key-equal"]
     assert calls == ["a", "b"]
+
+
+def test_rebuild_reasons_distinguish_changed_and_pruned(tmp_path: Path):
+    """Refined reasons name the pruning verdict without affecting reuse."""
+    producer = _producer(tmp_path)
+    registry = {
+        "same": (_spec("same", producer, direct_inputs=("doc",)), lambda ctx: {"fixed": 1}),
+        "diff": (_spec("diff", producer, direct_inputs=("doc",)),
+                 lambda ctx: {"seen": ctx.inputs["doc"]}),
+    }
+    for node in ("same", "diff"):
+        assert evaluate(tmp_path, node, registry=registry, inputs={"doc": "d1"}).status == "rebuilt"
+    trace: list = []
+    assert evaluate(
+        tmp_path, "same", registry=registry, inputs={"doc": "d2"}, trace=trace).status == "rebuilt"
+    assert [(event.node, event.reason) for event in trace] == [
+        ("same", "node-key-changed-output-same")]
+    trace.clear()
+    assert evaluate(
+        tmp_path, "diff", registry=registry, inputs={"doc": "d2"}, trace=trace).status == "rebuilt"
+    assert [(event.node, event.reason) for event in trace] == [
+        ("diff", "node-key-changed-output-changed")]
 
 
 def test_diamond_evaluates_shared_nodes_once(tmp_path: Path):
