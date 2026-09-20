@@ -1,16 +1,28 @@
-"""Search index builders: grams, segments, postings, registry.
+"""Search index builders and the exhaustive-vs-index differential suite.
 
-Commit 3 of the incremental-computation plan (unit scope): the pure
-builder layer with no CLI wiring. The differential suite comparing
-indexed vs exhaustive search lands in commit 4.
+Commits 3-4 of the incremental-computation plan: the pure builder layer
+plus the oracle proving indexed search equals exhaustive search across a
+fixed battery, a seeded randomized corpus, every mutation class, and
+every cache-corruption class.
 """
 
 from __future__ import annotations
 
+import random
+import re
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
+import learning_os.commands.reads as reads_module
+import learning_os.search.index as search_index_module
+from learning_os.commands.reads import (
+    _exhaustive_content_search,
+    _indexed_content_search,
+    _note_collection,
+    content_search,
+)
 from learning_os.derived import DerivedError, Evaluation, NodeSpec
 from learning_os.search.index import (
     NoteBlob,
@@ -265,3 +277,438 @@ def test_candidates_always_include_non_ascii_notes(tmp_path: Path):
 def test_candidates_reject_misshapen_postings(tmp_path: Path):
     with pytest.raises(DerivedError, match="invalid shape"):
         candidates(tmp_path, {"format": 999}, ["x"])
+
+
+# ---------------------------------------------------------------------------
+# Differential harness: indexed must equal exhaustive, byte for byte.
+# ---------------------------------------------------------------------------
+
+#: (filename, note id, title or None, body, extra frontmatter lines)
+FIXED_NOTES = [
+    ("n1.md", "n1", "Gradient Methods",
+     "Gradient descent converges under mild conditions.\nSecond line about learning rates.\n", ()),
+    ("n2.md", "n2", "Short", "ab", ()),
+    ("n3.md", "n3", "Single", "x", ()),
+    ("n4.md", "n4", "Empty Body", "", ()),
+    ("n5.md", "n5", "Unicode Body", "Größe und Richtung\nZweite Zeile\n", ()),
+    ("n6.md", "n6", "Größe im Titel", "plain ascii body", ()),
+    ("n7.md", "n7", None, "title falls back to the note id", ()),
+    ("n8.md", "n8", "Long", "hit\n" * 40, ()),
+    ("n9.md", "note.with-dots_9", "Odd Id", "ids appear in frontmatter text", ()),
+    ("n10.md", "n10", "Regex Chars",
+     "match a+b literally, also (c) [d] e.f g*h i?j k|l ^m n$ \\o", ()),
+    ("n11.md", "n11", "UPPER lower", "MiXeD CASE Body TEXT", ()),
+    ("n12.md", "n12", "Extra Fields", "nothing special", ("role: synthesis", "state: evolving")),
+    ("n13.md", "n13", "Whitespace", "   \n\t\n", ()),
+    ("n14.md", "n14", "日本語", "日本語の本文", ()),
+]
+
+QUERIES = [
+    "gradient", "grad", "a", "ab", "x", "descent converges", "GRADIENT",
+    "missing-term", "the", "id:", "---", "a+b", "(c)", "[d]", "e.f", "g*h",
+    "k|l", "^m", "n$", "\\o", "title", "mixed", "MIXED case", "Größe",
+    "日本", "plain", "nothing", "hit", "note.with", "second line",
+    "gradient missing-term", "n1", "Whitespace", "role", "synthesis",
+    "falls back", "日本語の", "ö", "Zweite", "Extra Fields",
+]
+
+
+def _write_note(notes_dir: Path, filename: str, note_id: str,
+                title: str | None, body: str, extra=()) -> Path:
+    lines = ["---", f"id: {note_id}"]
+    if title is not None:
+        lines.append(f"title: {title}")
+    lines.extend(extra)
+    lines.append("---")
+    target = notes_dir / filename
+    target.write_text("\n".join(lines) + "\n" + body, encoding="utf-8")
+    return target
+
+
+def _write_corpus(root: Path, notes=FIXED_NOTES) -> Path:
+    notes_dir = root / "knowledge" / "notes"
+    notes_dir.mkdir(parents=True, exist_ok=True)
+    for filename, note_id, title, body, *rest in notes:
+        _write_note(notes_dir, filename, note_id, title, body, *(rest or [()]))
+    return notes_dir
+
+
+def _stage_producers(root: Path) -> None:
+    """Copy the real producer bytes under a mini root (real wiring, real bytes)."""
+    for rel in dict.fromkeys([*SEGMENT_PRODUCER_FILES, *POSTINGS_PRODUCER_FILES]):
+        target = root / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((REPO_ROOT / rel).read_bytes())
+
+
+def _compiled(query: str):
+    return [re.compile(re.escape(term), re.IGNORECASE) for term in query.split()]
+
+
+def _ordered_notes(root: Path):
+    repo = _note_collection(root)
+    assert not repo.parse_failures, repo.parse_failures
+    return sorted(repo.notes.values(), key=lambda note: note.id)
+
+
+def _assert_agree(root: Path, query: str):
+    """Full match-list equality: ids, order, paths, hashes, snippets."""
+    ordered = _ordered_notes(root)
+    terms = _compiled(query)
+    expected = _exhaustive_content_search(root, ordered, terms)
+    got = _indexed_content_search(root, ordered, terms, query.split())
+    assert got == expected
+    return expected
+
+
+def _counting_builds(monkeypatch):
+    counts = {"segments": 0, "postings": 0}
+    original_segment = search_index_module.build_segment
+    original_postings = search_index_module.build_postings
+
+    def segment(note):
+        counts["segments"] += 1
+        return original_segment(note)
+
+    def postings(ctx):
+        counts["postings"] += 1
+        return original_postings(ctx)
+
+    monkeypatch.setattr(search_index_module, "build_segment", segment)
+    monkeypatch.setattr(search_index_module, "build_postings", postings)
+    return counts
+
+
+def test_fixed_battery_agrees_fresh_and_warm(tmp_path: Path, monkeypatch):
+    _write_corpus(tmp_path)
+    _stage_producers(tmp_path)
+    counts = _counting_builds(monkeypatch)
+    for query in QUERIES:
+        _assert_agree(tmp_path, query)
+    # One corpus: every segment built once on the first query, then hits.
+    assert counts == {"segments": len(FIXED_NOTES), "postings": 1}
+    for query in QUERIES:
+        _assert_agree(tmp_path, query)
+    assert counts == {"segments": len(FIXED_NOTES), "postings": 1}
+
+
+def test_battery_result_shapes(tmp_path: Path):
+    _write_corpus(tmp_path)
+    _stage_producers(tmp_path)
+    assert _assert_agree(tmp_path, "missing-term") == []
+    some = _assert_agree(tmp_path, "the")
+    assert some
+    assert [match["id"] for match in some] == sorted(match["id"] for match in some)
+    assert len(_assert_agree(tmp_path, "gradient")) >= 1
+
+
+def test_randomized_corpus_and_queries_agree(tmp_path: Path):
+    rng = random.Random(20260920)
+    words = ["alpha", "beta", "gamma", "gradient", "descent", "x", "ab", "A",
+             "MiXeD", "Größe", "日本", "a+b", "(x)", "[01]", "c.d", "e*f",
+             "UPPER", "with-dash", "under_score", "dot.t", "123", ""]
+    title_words = ["alpha", "beta", "gamma", "gradient", "descent", "UPPER",
+                   "plain", "note", "with-dash", "under_score", "dot.t", "123", "A"]
+    notes = []
+    for index in range(24):
+        body = " ".join(rng.choice(words) for _ in range(rng.randint(0, 40)))
+        title = " ".join(rng.choice(title_words) for _ in range(rng.randint(0, 3))) or None
+        notes.append((f"r{index}.md", f"r{index}", title, body, ()))
+    _write_corpus(tmp_path, notes)
+    _stage_producers(tmp_path)
+    for _ in range(40):
+        terms = []
+        for _ in range(rng.randint(1, 3)):
+            word = rng.choice(words)
+            if word and rng.random() < 0.4:
+                start = rng.randint(0, len(word) - 1)
+                word = word[start : rng.randint(start + 1, len(word))]
+            if word and rng.random() < 0.3:
+                word = "".join(c.upper() if rng.random() < 0.5 else c.lower() for c in word)
+            terms.append(word or "zz-missing")
+        _assert_agree(tmp_path, " ".join(terms))
+
+
+# ---------------------------------------------------------------------------
+# Mutations: equality plus the expected rebuild closure.
+# ---------------------------------------------------------------------------
+
+def _warm_corpus(tmp_path: Path, monkeypatch):
+    _write_corpus(tmp_path)
+    _stage_producers(tmp_path)
+    counts = _counting_builds(monkeypatch)
+    _assert_agree(tmp_path, "gradient")
+    counts.update(segments=0, postings=0)
+    return counts
+
+
+def test_body_edit_rebuilds_one_segment(tmp_path: Path, monkeypatch):
+    counts = _warm_corpus(tmp_path, monkeypatch)
+    notes_dir = tmp_path / "knowledge" / "notes"
+    _write_note(notes_dir, "n1.md", "n1", "Gradient Methods", "rewritten body text")
+    _assert_agree(tmp_path, "rewritten")
+    _assert_agree(tmp_path, "gradient")
+    assert counts == {"segments": 1, "postings": 1}
+
+
+def test_title_change_rebuilds_one_segment(tmp_path: Path, monkeypatch):
+    counts = _warm_corpus(tmp_path, monkeypatch)
+    notes_dir = tmp_path / "knowledge" / "notes"
+    _write_note(notes_dir, "n1.md", "n1", "Renamed Title",
+                "Gradient descent converges under mild conditions.\n")
+    assert _assert_agree(tmp_path, "Renamed")[0]["title"] == "Renamed Title"
+    assert counts == {"segments": 1, "postings": 1}
+
+
+def test_added_note_builds_one_segment(tmp_path: Path, monkeypatch):
+    counts = _warm_corpus(tmp_path, monkeypatch)
+    _write_note(tmp_path / "knowledge" / "notes", "new.md", "new", "New",
+                "brand new content")
+    assert _assert_agree(tmp_path, "brand")[0]["id"] == "new"
+    assert counts == {"segments": 1, "postings": 1}
+
+
+def test_deleted_note_rebuilds_postings_only(tmp_path: Path, monkeypatch):
+    counts = _warm_corpus(tmp_path, monkeypatch)
+    (tmp_path / "knowledge" / "notes" / "n1.md").unlink()
+    assert _assert_agree(tmp_path, "gradient") == []
+    assert counts == {"segments": 0, "postings": 1}
+
+
+def test_renamed_note_rebuilds_one_segment(tmp_path: Path, monkeypatch):
+    counts = _warm_corpus(tmp_path, monkeypatch)
+    notes_dir = tmp_path / "knowledge" / "notes"
+    (notes_dir / "n2.md").rename(notes_dir / "subdir-n2.md")
+    found = _assert_agree(tmp_path, "Short")
+    assert [match["id"] for match in found] == ["n2"]
+    assert found[0]["path"] == "knowledge/notes/subdir-n2.md"
+    assert counts == {"segments": 1, "postings": 1}
+
+
+def test_changed_note_id_rebuilds_one_segment(tmp_path: Path, monkeypatch):
+    counts = _warm_corpus(tmp_path, monkeypatch)
+    notes_dir = tmp_path / "knowledge" / "notes"
+    (notes_dir / "n2.md").unlink()
+    _write_note(notes_dir, "n2.md", "n2-renamed", "Short", "ab")
+    assert [match["id"] for match in _assert_agree(tmp_path, "Short")] == ["n2-renamed"]
+    assert counts == {"segments": 1, "postings": 1}
+
+
+def test_indexer_version_bump_rebuilds_everything(tmp_path: Path, monkeypatch):
+    import learning_os.search.model as search_model
+
+    counts = _warm_corpus(tmp_path, monkeypatch)
+    # A coherent bump moves builders and validators together.
+    monkeypatch.setattr(search_model, "INDEX_FORMAT_VERSION", 999)
+    monkeypatch.setattr(search_index_module, "INDEX_FORMAT_VERSION", 999)
+    for query in QUERIES:
+        _assert_agree(tmp_path, query)
+    assert counts == {"segments": len(FIXED_NOTES), "postings": 1}
+
+
+def test_verification_reads_no_note_bytes(tmp_path: Path, monkeypatch):
+    _write_corpus(tmp_path)
+    _stage_producers(tmp_path)
+    ordered = _ordered_notes(tmp_path)
+    verifying = {"active": False}
+    reads = []
+    original_bytes = reads_module._note_bytes
+    original_query = reads_module.candidates
+
+    def counting_bytes(root, note):
+        if verifying["active"]:
+            reads.append(note.id)
+        return original_bytes(root, note)
+
+    def gated(root, postings, terms):
+        try:
+            return original_query(root, postings, terms)
+        finally:
+            verifying["active"] = True
+
+    monkeypatch.setattr(reads_module, "_note_bytes", counting_bytes)
+    monkeypatch.setattr(reads_module, "candidates", gated)
+    terms = _compiled("gradient")
+    got = _indexed_content_search(tmp_path, ordered, terms, ["gradient"])
+    assert [match["id"] for match in got] == ["n1"]
+    assert reads == []
+    assert got == _exhaustive_content_search(tmp_path, ordered, terms)
+
+
+# ---------------------------------------------------------------------------
+# Cache states: every corruption class still agrees (and heals).
+# ---------------------------------------------------------------------------
+
+def _derived_state_dir(root: Path) -> Path:
+    return root / "generated" / "derived-state"
+
+
+def test_deleted_cache_rebuilds(tmp_path: Path, monkeypatch):
+    counts = _warm_corpus(tmp_path, monkeypatch)
+    import shutil
+
+    shutil.rmtree(_derived_state_dir(tmp_path))
+    for query in QUERIES:
+        _assert_agree(tmp_path, query)
+    assert counts == {"segments": len(FIXED_NOTES), "postings": 1}
+
+
+def test_corrupt_state_rebuilds(tmp_path: Path):
+    _write_corpus(tmp_path)
+    _stage_producers(tmp_path)
+    _assert_agree(tmp_path, "gradient")
+    (_derived_state_dir(tmp_path) / "state-v1.json").write_text("{corrupt", encoding="utf-8")
+    for query in QUERIES:
+        _assert_agree(tmp_path, query)
+
+
+def test_tampered_blob_rebuilds_and_heals(tmp_path: Path, monkeypatch):
+    counts = _warm_corpus(tmp_path, monkeypatch)
+    blobs = list((_derived_state_dir(tmp_path) / "blobs").iterdir())
+    assert blobs
+    blobs[0].write_bytes(b"tampered")
+    for query in QUERIES:
+        _assert_agree(tmp_path, query)
+    counts.update(segments=0, postings=0)
+    for query in QUERIES:
+        _assert_agree(tmp_path, query)
+    assert counts == {"segments": 0, "postings": 0}
+
+
+def test_missing_blob_rebuilds_and_heals(tmp_path: Path, monkeypatch):
+    counts = _warm_corpus(tmp_path, monkeypatch)
+    blobs = list((_derived_state_dir(tmp_path) / "blobs").iterdir())
+    blobs[0].unlink()
+    for query in QUERIES:
+        _assert_agree(tmp_path, query)
+    counts.update(segments=0, postings=0)
+    for query in QUERIES:
+        _assert_agree(tmp_path, query)
+    assert counts == {"segments": 0, "postings": 0}
+
+
+def test_wrongly_shaped_postings_self_heals(tmp_path: Path):
+    import hashlib
+    import json
+
+    from learning_os.derived import canonical_bytes, read_state
+
+    _write_corpus(tmp_path)
+    _stage_producers(tmp_path)
+    _assert_agree(tmp_path, "gradient")
+    state_dir = _derived_state_dir(tmp_path)
+    forged = canonical_bytes({"format": 999, "notes": {}})
+    digest = hashlib.sha256(forged).hexdigest()
+    (state_dir / "blobs" / digest).write_bytes(forged)
+    payload = json.loads((state_dir / "state-v1.json").read_text(encoding="utf-8"))
+    # Keep the true node key so the engine hits the forged blob.
+    payload["nodes"][POSTINGS_NODE_ID]["output_sha256"] = digest
+    payload["nodes"][POSTINGS_NODE_ID]["blob"] = f"blobs/{digest}"
+    (state_dir / "state-v1.json").write_text(json.dumps(payload), encoding="utf-8")
+    ordered = _ordered_notes(tmp_path)
+    terms = _compiled("gradient")
+    with pytest.raises(DerivedError, match="invalid shape"):
+        _indexed_content_search(tmp_path, ordered, terms, ["gradient"])
+    assert POSTINGS_NODE_ID not in read_state(tmp_path)
+    for query in QUERIES:
+        _assert_agree(tmp_path, query)
+
+
+def test_wrongly_shaped_segment_self_heals(tmp_path: Path):
+    import hashlib
+    import json
+
+    from learning_os.derived import canonical_bytes, read_state
+
+    _write_corpus(tmp_path)
+    _stage_producers(tmp_path)
+    _assert_agree(tmp_path, "gradient")
+    state_dir = _derived_state_dir(tmp_path)
+    forged = canonical_bytes({"format": 999})
+    digest = hashlib.sha256(forged).hexdigest()
+    (state_dir / "blobs" / digest).write_bytes(forged)
+    payload = json.loads((state_dir / "state-v1.json").read_text(encoding="utf-8"))
+    victim = segment_node_id("n1")
+    # Keep the true node key so the engine hits the forged blob.
+    payload["nodes"][victim]["output_sha256"] = digest
+    payload["nodes"][victim]["blob"] = f"blobs/{digest}"
+    (state_dir / "state-v1.json").write_text(json.dumps(payload), encoding="utf-8")
+    ordered = _ordered_notes(tmp_path)
+    terms = _compiled("gradient")
+    with pytest.raises(DerivedError, match="invalid shape"):
+        _indexed_content_search(tmp_path, ordered, terms, ["gradient"])
+    assert victim not in read_state(tmp_path)
+    for query in QUERIES:
+        _assert_agree(tmp_path, query)
+
+
+# ---------------------------------------------------------------------------
+# CLI envelope parity across the flag (malformed, snapshot, pagination).
+# ---------------------------------------------------------------------------
+
+def _run_search(root: Path, query: str, *, flag: bool, monkeypatch, capsys,
+                offset=0, limit=100, expected_snapshot=None, type_="note"):
+    args = SimpleNamespace(
+        query=query, type=type_, offset=offset, limit=limit,
+        expected_snapshot=expected_snapshot, root=str(root))
+    monkeypatch.setattr(reads_module, "USE_SEARCH_INDEX", flag)
+    code = content_search(args)
+    out, err = capsys.readouterr()
+    return code, out, err
+
+
+def test_cli_envelope_identical_across_flag(tmp_path: Path, monkeypatch, capsys):
+    _write_corpus(tmp_path)
+    _stage_producers(tmp_path)
+    for query in QUERIES:
+        off = _run_search(tmp_path, query, flag=False, monkeypatch=monkeypatch, capsys=capsys)
+        on = _run_search(tmp_path, query, flag=True, monkeypatch=monkeypatch, capsys=capsys)
+        assert on == off
+        assert off[0] == 0
+
+
+def test_cli_pagination_identical_across_flag(tmp_path: Path, monkeypatch, capsys):
+    import json
+
+    _write_corpus(tmp_path)
+    _stage_producers(tmp_path)
+    pages = {}
+    for flag in (False, True):
+        outs = []
+        snapshot = None
+        for offset in (0, 1, 2):
+            code, out, err = _run_search(
+                tmp_path, "the", flag=flag, monkeypatch=monkeypatch, capsys=capsys,
+                offset=offset, limit=1, expected_snapshot=snapshot)
+            assert code == 0, err
+            outs.append(out)
+            snapshot = json.loads(out)["snapshot_id"]
+        pages[flag] = outs
+    assert pages[True] == pages[False]
+
+
+def test_cli_malformed_note_refuses_identically(tmp_path: Path, monkeypatch, capsys):
+    notes_dir = _write_corpus(tmp_path)
+    _stage_producers(tmp_path)
+    (notes_dir / "broken.md").write_text("---\nid: [unclosed\n---\nbody\n", encoding="utf-8")
+    off = _run_search(tmp_path, "gradient", flag=False, monkeypatch=monkeypatch, capsys=capsys)
+    on = _run_search(tmp_path, "gradient", flag=True, monkeypatch=monkeypatch, capsys=capsys)
+    assert off[0] == 2 and on == off
+    assert off[1] == "" and "search" in off[2]
+    # Repair: both paths agree again.
+    (notes_dir / "broken.md").write_text(
+        "---\nid: repaired\ntitle: Repaired\n---\nrepaired body\n", encoding="utf-8")
+    off = _run_search(tmp_path, "repaired", flag=False, monkeypatch=monkeypatch, capsys=capsys)
+    on = _run_search(tmp_path, "repaired", flag=True, monkeypatch=monkeypatch, capsys=capsys)
+    assert on == off
+    assert off[0] == 0
+
+
+def test_cli_snapshot_mismatch_refuses_identically(tmp_path: Path, monkeypatch, capsys):
+    _write_corpus(tmp_path)
+    _stage_producers(tmp_path)
+    off = _run_search(tmp_path, "gradient", flag=False, monkeypatch=monkeypatch,
+                       capsys=capsys, expected_snapshot="sha256:" + "0" * 64)
+    on = _run_search(tmp_path, "gradient", flag=True, monkeypatch=monkeypatch,
+                      capsys=capsys, expected_snapshot="sha256:" + "0" * 64)
+    assert off[0] == 3 and on == off

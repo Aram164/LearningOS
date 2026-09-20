@@ -229,6 +229,17 @@ def _match_verified(items, terms):
     return matches
 
 
+def _exhaustive_content_search(root, ordered, terms):
+    """The current implementation, kept as the differential oracle."""
+    matches = []
+    for note in ordered:
+        raw = _note_bytes(root, note)
+        matches.extend(_match_verified(
+            [(note.id, note.meta.get("title", note.id),
+              note.path.relative_to(root).as_posix(), raw)], terms))
+    return matches
+
+
 def _indexed_content_search(root, ordered, terms, raw_terms):
     """Indexed path: derived postings narrow candidates, regex verifies.
 
@@ -289,12 +300,7 @@ def content_search(args) -> int:
             if USE_SEARCH_INDEX:
                 matches = _indexed_content_search(root, ordered, terms, raw_terms)
             else:
-                matches = []
-                for note in ordered:
-                    raw = _note_bytes(root, note)
-                    matches.extend(_match_verified(
-                        [(note.id, note.meta.get("title", note.id),
-                          note.path.relative_to(root).as_posix(), raw)], terms))
+                matches = _exhaustive_content_search(root, ordered, terms)
             return _print_stable(root, snapshot, {
                 "contract": "note-content-search", "items": matches[offset:offset + limit],
                 "total": len(matches),
