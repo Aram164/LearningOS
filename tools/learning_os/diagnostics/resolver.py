@@ -21,6 +21,13 @@ from pathlib import Path
 
 import yaml
 
+from ..contracts.gateway import GatewayRequestContext
+from ..errors import (
+    ReplayEvidenceError,
+    TransactionFailure,
+    TransactionIdempotencyConflict,
+)
+from ..evidence import verify_committed_evidence
 from . import conventions
 
 #: UI-side received outcomes that name a stage. Only transport losses map
@@ -57,7 +64,10 @@ class AuthorityEvidence:
     capability: str
     receipts: list[dict] = field(default_factory=list)
     ledger: dict = field(default_factory=dict)
+    verified_receipt: dict | None = None
+    verification_error: str | None = None
     response_code: str | None = None
+    response_codes: list = field(default_factory=list)
     response_replayed: bool = False
     response_snapshot_after: str | None = None
     response_transaction_id: str | None = None
@@ -68,7 +78,8 @@ class AuthorityEvidence:
 def collect_authority(root: Path, *, request_id: str, idempotency_key: str,
                       capability: str, response: dict | None = None,
                       transport_error: str | None = None,
-                      observed_snapshot: str | None = None) -> AuthorityEvidence:
+                      observed_snapshot: str | None = None,
+                      response_codes: list | None = None) -> AuthorityEvidence:
     """Read receipts and the idempotency ledger; pure reads, no inference."""
     receipts = []
     for path in sorted((root / "operations" / "transactions").glob("transaction-*.yaml")):
@@ -88,14 +99,48 @@ def collect_authority(root: Path, *, request_id: str, idempotency_key: str,
                       or {}).get("entries", {})
         except (OSError, ValueError):
             ledger = {}
+    if not isinstance(ledger, dict):
+        ledger = {}
+    # Strict verification through the same checklist the Gateway replay
+    # uses: the trace supplies this operation's identity, the ledger row
+    # supplies the trusted channel/intent, and the approval subject is
+    # bound by the admission invariant (approval == intent). A receipt
+    # only proves COMMITTED when this passes; anything else is ambiguity.
+    verified_receipt: dict | None = None
+    verification_error: str | None = None
+    raw_row = ledger.get(idempotency_key)
+    if isinstance(raw_row, dict) and isinstance(raw_row.get("channel"), str) \
+            and isinstance(raw_row.get("intent_sha256"), str):
+        trusted = GatewayRequestContext(
+            request_id=request_id, idempotency_key=idempotency_key,
+            capability=capability, channel=raw_row["channel"],
+            intent_sha256=raw_row["intent_sha256"],
+            # Nominal: the verifier never reads the approval kind, only
+            # the subject binding proven against the row's intent.
+            approval_kind="direct-user-gesture",
+            approval_subject_sha256=raw_row["intent_sha256"],
+        )
+        try:
+            verified = verify_committed_evidence(root, trusted)
+        except (ReplayEvidenceError, TransactionIdempotencyConflict,
+                TransactionFailure) as exc:
+            verification_error = str(exc)
+        else:
+            if verified is not None:
+                verified_receipt = dict(verified[0])
+                verified_receipt["_path"] = verified[1]["receipt_path"]
     error = (response or {}).get("error") or {}
+    codes = list(response_codes) if response_codes is not None else [error.get("code")]
     return AuthorityEvidence(
         request_id=request_id,
         idempotency_key=idempotency_key,
         capability=capability,
         receipts=receipts,
-        ledger=ledger if isinstance(ledger, dict) else {},
+        ledger=ledger,
+        verified_receipt=verified_receipt,
+        verification_error=verification_error,
         response_code=error.get("code"),
+        response_codes=codes,
         response_replayed=bool((response or {}).get("replayed", False)),
         response_snapshot_after=(response or {}).get("snapshot_after"),
         response_transaction_id=(response or {}).get("transaction_id"),
@@ -181,6 +226,29 @@ def _attempt_spans(records: list[dict]) -> list[dict]:
     return attempts
 
 
+def _refusals_prove_no_commit(records: list[dict],
+                              authority: AuthorityEvidence) -> bool:
+    """Whether the recorded refusals cover every counted attempt.
+
+    A definitive refusal proves no-commit only for its own attempt. A
+    recovery refusal (STALE/REVISION/INVALID on attempt 2) says nothing
+    about an ambiguous attempt 1 — the UI-side rule, applied here to the
+    merged trace. Attempts are counted from UI dispatches and Core
+    attempt spans, whichever reports more, so a transport-lost dispatch
+    or a crashed attempt without a response summary still withholds
+    proof; success responses never count as refusals.
+    """
+    codes = authority.response_codes or [authority.response_code]
+    if not all(code in conventions.DEFINITIVE_NO_COMMIT_CODES for code in codes):
+        return False
+    dispatches = sum(1 for record in records
+                     if record.get("name") == conventions.EVENT_ENVELOPE_DISPATCHED)
+    spans = sum(1 for record in records
+                if record.get("kind") == "span-start"
+                and record.get("name") == "attempt")
+    return len(codes) >= max(dispatches, spans, 1)
+
+
 def resolve(records: list[dict], authority: AuthorityEvidence) -> CausalDiagnosis:
     """One diagnosis from execution records plus authority evidence."""
     events = sorted(_events(records), key=lambda record: record.get("ts", 0))
@@ -188,10 +256,13 @@ def resolve(records: list[dict], authority: AuthorityEvidence) -> CausalDiagnosi
     evidence: list[str] = []
     reasons: list[str] = []
 
-    receipt = _matching_receipt(authority)
+    if authority.verified_receipt is not None:
+        evidence.append(f"receipt:{authority.verified_receipt['_path']}")
+    else:
+        suspect = _matching_receipt(authority)
+        if suspect is not None:
+            evidence.append(f"receipt:{suspect['_path']}")
     ledger_entry = authority.ledger.get(authority.idempotency_key)
-    if receipt is not None:
-        evidence.append(f"receipt:{receipt['_path']}")
     if ledger_entry is not None:
         evidence.append(f"ledger:{authority.idempotency_key}")
     if authority.response_code is not None:
@@ -202,21 +273,35 @@ def resolve(records: list[dict], authority: AuthorityEvidence) -> CausalDiagnosi
         evidence.append(f"observed:{authority.observed_snapshot}")
 
     # --- canonical outcome: authority decides ---------------------------
+    # COMMITTED requires a receipt verified through the same strict
+    # checklist the Gateway replay uses — agreement on one transaction id
+    # was a weaker parallel truth system, and it is gone.
     canonical: str
-    if receipt is not None and ledger_entry is not None \
-            and ledger_entry.get("transaction_id") == receipt.get("id"):
+    if authority.verified_receipt is not None:
         canonical = "COMMITTED"
-        reasons.append("a committed receipt and its ledger entry agree")
-    elif receipt is not None or ledger_entry is not None:
+        reasons.append("a committed receipt verified against its ledger entry, "
+                       "the live revision floor, and the capability catalog")
+    elif authority.verification_error is not None:
         canonical = "AMBIGUOUS"
-        reasons.append("receipt and ledger disagree — contradiction, not proof")
-    elif authority.response_code in conventions.DEFINITIVE_NO_COMMIT_CODES:
+        reasons.append("committed evidence failed strict verification: "
+                       f"{authority.verification_error}")
+    elif _matching_receipt(authority) is not None or ledger_entry is not None:
+        canonical = "AMBIGUOUS"
+        reasons.append("authority evidence is present but unverified — "
+                       "contradiction, not proof")
+    elif _refusals_prove_no_commit(records, authority):
         canonical = "NOT_COMMITTED"
-        reasons.append(f"{authority.response_code} is definitive: the write "
+        codes = authority.response_codes or [authority.response_code]
+        reasons.append(f"every counted attempt ended in a definitive refusal "
+                       f"({', '.join(sorted(set(codes)))}): the write "
                        "cannot have committed")
     else:
         canonical = "AMBIGUOUS"
-        if authority.response_code is not None:
+        codes = authority.response_codes or [authority.response_code]
+        if any(code in conventions.DEFINITIVE_NO_COMMIT_CODES for code in codes):
+            reasons.append("a definitive refusal on a later attempt cannot prove "
+                           "an earlier ambiguous attempt wrote nothing")
+        elif authority.response_code is not None:
             reasons.append(f"{authority.response_code} is not a definitive "
                            "no-commit code, and no receipt exists")
         else:

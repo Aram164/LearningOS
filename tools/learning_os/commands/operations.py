@@ -13,12 +13,7 @@ import json
 from pathlib import Path
 
 from learning_os.diagnostics import conventions
-from learning_os.diagnostics.resolver import (
-    AuthorityEvidence,
-    collect_authority,
-    matching_receipt,
-    resolve,
-)
+from learning_os.diagnostics.resolver import AuthorityEvidence, collect_authority, resolve
 from learning_os.diagnostics.store import read_records
 
 from .support import _root
@@ -70,11 +65,12 @@ def _observed_for(records: list[dict], snapshot_after: str | None,
                   manifest_snapshot: str | None) -> str | None:
     """What observation evidence exists for one operation.
 
-    The live manifest only proves the *current* state, so a historical
-    commit must not be judged against it: a superseded snapshot is still a
-    published one. Publication evidence (the commit published this exact
-    snapshot, or the UI settled while observing it) counts as observed;
-    only a receipt with no publication trace at all stays unverified.
+    Publication is not observation: a projection-published event proves Core
+    wrote the snapshot, not that any interface observed it, so it never
+    counts here. Observation evidence is the live manifest showing this
+    exact snapshot (current visibility), or the UI settling while observing
+    it (the durable proof for a superseded snapshot). A receipt with
+    neither stays unverified.
     """
     if snapshot_after is None:
         return manifest_snapshot
@@ -82,9 +78,6 @@ def _observed_for(records: list[dict], snapshot_after: str | None,
         return manifest_snapshot
     for record in records:
         attrs = record.get("attrs") or {}
-        if record.get("name") == conventions.EVENT_PROJECTION_PUBLISHED \
-                and attrs.get("snapshot") == snapshot_after:
-            return snapshot_after
         if record.get("name") == conventions.EVENT_RECOVERY_SETTLED \
                 and attrs.get("snapshot_after") == snapshot_after \
                 and attrs.get("observed") is True:
@@ -92,31 +85,25 @@ def _observed_for(records: list[dict], snapshot_after: str | None,
     return None
 
 
-def _evidence_for(root: Path, records: list[dict], observed: str | None,
-                  receipts: list[dict], ledger: dict) -> AuthorityEvidence:
+def _evidence_for(root: Path, records: list[dict],
+                  observed: str | None) -> AuthorityEvidence:
+    # One collection path: the strict receipt verification lives in
+    # collect_authority, so Operations can never drift from it.
     request_id, idempotency_key, capability = _identity(records)
     summaries = sorted(_summaries(records), key=lambda row: row.get("ts", 0))
     response = _response_from_summary(summaries[-1] if summaries else None)
-    error = (response or {}).get("error") or {}
-    return AuthorityEvidence(
-        request_id=request_id or "unknown-request",
+    codes: list = []
+    for summary in summaries:
+        attrs = summary.get("attrs") or {}
+        codes.append(None if attrs.get("ok") else attrs.get("code"))
+    return collect_authority(
+        root, request_id=request_id or "unknown-request",
         idempotency_key=idempotency_key or "unknown-key",
         capability=capability or "unknown-capability",
-        receipts=receipts,
-        ledger=ledger if isinstance(ledger, dict) else {},
-        response_code=error.get("code"),
-        response_replayed=bool((response or {}).get("replayed", False)),
-        response_snapshot_after=(response or {}).get("snapshot_after"),
-        response_transaction_id=(response or {}).get("transaction_id"),
+        response=response,
+        response_codes=codes,
         observed_snapshot=_observed_for(
-            records, (response or {}).get("snapshot_after"), observed),
-    )
-
-
-def _authority_preload(root: Path) -> tuple[list[dict], dict]:
-    probe = collect_authority(root, request_id="", idempotency_key="",
-                              capability="")
-    return probe.receipts, probe.ledger
+            records, (response or {}).get("snapshot_after"), observed))
 
 
 def list_operations(root: Path, limit: int = 20) -> list[dict]:
@@ -125,7 +112,6 @@ def list_operations(root: Path, limit: int = 20) -> list[dict]:
     for record in read_records(root):
         if record.get("op"):
             by_op.setdefault(record["op"], []).append(record)
-    receipts, ledger = _authority_preload(root)
     observed = _observed_snapshot(root)
     rows = []
     for op, records in by_op.items():
@@ -135,7 +121,7 @@ def list_operations(root: Path, limit: int = 20) -> list[dict]:
         ends = [row for row in records if row.get("kind") == "span-end"]
         started = min([row.get("ts") for row in records if row.get("ts")] or [None])
         finished = max([row.get("ts") for row in ends if row.get("ts")] or [None])
-        authority = _evidence_for(root, records, observed, receipts, ledger)
+        authority = _evidence_for(root, records, observed)
         diagnosis = resolve(records, authority)
         replayed = any((row.get("attrs") or {}).get("replayed") for row in
                        _summaries(records)) or len(starts) > 1
@@ -171,6 +157,7 @@ TIMELINE = (
     ("Receipt persisted", (conventions.EVENT_RECEIPT_PERSISTED,)),
     ("Response classified", ("ui.response.received",)),
     ("Recovery settled", (conventions.EVENT_RECOVERY_SETTLED,)),
+    ("Recovery blocked", (conventions.EVENT_RECOVERY_BLOCKED,)),
 )
 
 _STAGE_ROW = {
@@ -224,12 +211,10 @@ def describe_operation(root: Path, request_id: str) -> dict | None:
                      key=lambda row: row.get("ts", 0))
     if not records:
         return None
-    receipts, ledger = _authority_preload(root)
     observed = _observed_snapshot(root)
-    authority = _evidence_for(root, records, observed, receipts, ledger)
+    authority = _evidence_for(root, records, observed)
     diagnosis = resolve(records, authority)
-    receipt = matching_receipt(receipts, authority.request_id,
-                               authority.idempotency_key) or {}
+    receipt = authority.verified_receipt or {}
     if diagnosis.canonical_outcome == "COMMITTED" \
             and diagnosis.recovery_requirement == "none":
         ui_outcome = "SETTLED"

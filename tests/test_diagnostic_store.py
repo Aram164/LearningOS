@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import shutil
 import subprocess
 import sys
@@ -368,3 +369,81 @@ def test_no_learner_payload_text_reaches_the_store(tmp_path: Path):
     stored = traces_path(mini).read_text(encoding="utf-8")
     assert canary not in stored
     assert "freeform prose" not in stored
+
+
+def test_no_validation_body_reaches_the_store(tmp_path: Path):
+    """Failure-path canary: validator prose is caller detail, not telemetry."""
+    import pytest
+
+    from learning_os.errors import TransactionFailure
+    from learning_os.transactions import TransactionService
+
+    canary = "canary-validation-8b4f2d1e9a"
+    root = tmp_path / "store-validation-privacy"
+    target = root / "projects/registry/project-demo.yaml"
+    target.parent.mkdir(parents=True)
+    target.write_text("old\n", encoding="utf-8")
+    service = TransactionService(root)
+    with pytest.raises(TransactionFailure, match=canary):
+        service.commit(
+            capability="project.update", writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            validate_state=lambda: [
+                f"fabricated issue quoting {canary} and 'learner prose here'"],
+        )
+    stored = traces_path(root).read_text(encoding="utf-8")
+    assert canary not in stored
+    assert "learner prose" not in stored
+    failures = [
+        record for record in read_records(root)
+        if record.get("name") == "core.stage.failed"
+        and record.get("stage") == "core.validation"
+    ]
+    assert failures, "the validation failure must stay on record"
+    assert failures[0]["attrs"]["error"] == "canonical validation failed"
+    assert failures[0]["attrs"]["issues"] == 1
+
+
+def test_no_exception_body_reaches_the_store(tmp_path: Path):
+    """Failure-path canary: exception text is caller detail, not telemetry.
+
+    A chmod projection failure raises with an errno body quoting the absolute
+    target path. The store may record the failure kind; the body must not
+    persist anywhere in it.
+    """
+    from gateway_helpers import approved_v2_envelope, request_artifact_id
+
+    mini = _mini_with_curriculum(tmp_path, "store-exception-privacy")
+    key = "store-exception-privacy-1"
+    envelope = approved_v2_envelope(
+        mini, capability="garden.seed.create",
+        payload={"title": "Seed probe", "text": "doomed write"},
+        artifact_ids=[request_artifact_id("garden.seed.create", key)],
+        idempotency_key=key)
+    generated = mini / "generated"
+    os.chmod(generated, 0o555)
+    try:
+        proc = subprocess.run(
+            [sys.executable, str(LOS), "--root", str(mini), "capability",
+             "garden.seed.create", "--payload-file", "-"],
+            input=json.dumps(envelope), capture_output=True, text=True,
+            timeout=120)
+    finally:
+        os.chmod(generated, 0o755)
+    body = json.loads(proc.stdout)
+    assert body["error"]["code"] == "INTERNAL_FAILURE", body
+    # The body the canary guards against: it must exist on the response (the
+    # failure really happened) and must not exist in the store.
+    assert "Permission denied" in body["error"]["message"], body
+    stored = traces_path(mini).read_text(encoding="utf-8")
+    assert "Permission denied" not in stored
+    assert "[Errno" not in stored
+    assert str(mini) not in stored
+    failures = [
+        record for record in read_records(mini)
+        if record.get("name") == "core.stage.failed"
+        and record.get("stage") == "core.projection"
+    ]
+    assert failures, "the projection failure must stay on record"
+    assert re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*",
+                        failures[0]["attrs"]["error"]), failures[0]["attrs"]
