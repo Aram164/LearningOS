@@ -64,6 +64,7 @@ from learning_os.genout.manifest_derived import (
     TYPED_COLLECTIONS_ID,
     UNIT_PROJECT_EDGES_ID,
     UNITS_ID,
+    VALIDATION_PROOF_ID,
     WORKSPACES_ID,
     build_manifest_shadow,
     compare_shadow_manifest,
@@ -140,7 +141,7 @@ def test_matrix_note_body_append_prunes_at_the_leaf(tmp_path: Path):
 
     summary, _ = _mutate_and_compare(mini, mutate)
     _assert_partition(
-        summary, changed=set(), same={BACKLINKS_SEMANTIC_ID, COUNTS_ID, NOTES_ID}
+        summary, changed={VALIDATION_PROOF_ID}, same={BACKLINKS_SEMANTIC_ID, COUNTS_ID, NOTES_ID}
     )
 
 
@@ -150,7 +151,7 @@ def test_matrix_note_title(tmp_path: Path):
         mini, lambda root: _replace_text(root / NOTE, "title: Demo note", "title: Re"))
     _assert_partition(
         summary,
-        changed={NOTES_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID},
+        changed={VALIDATION_PROOF_ID, NOTES_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID},
         same={BACKLINKS_SEMANTIC_ID, COUNTS_ID, INDEXES_ID, TYPED_COLLECTIONS_ID},
     )
 
@@ -165,7 +166,7 @@ def test_matrix_concept_label(tmp_path: Path):
     )
     _assert_partition(
         summary,
-        changed={CONCEPTS_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID},
+        changed={VALIDATION_PROOF_ID, CONCEPTS_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID},
         same={COUNTS_ID, INDEXES_ID, EDGES_ID, TYPED_COLLECTIONS_ID},
     )
 
@@ -184,7 +185,7 @@ def test_matrix_concept_relation(tmp_path: Path):
     summary, _ = _mutate_and_compare(mini, mutate)
     _assert_partition(
         summary,
-        changed={BACKLINKS_SEMANTIC_ID, COUNTS_ID, RELATIONS_ID, SEMANTIC_PAYLOAD_ID},
+        changed={VALIDATION_PROOF_ID, BACKLINKS_SEMANTIC_ID, COUNTS_ID, RELATIONS_ID, SEMANTIC_PAYLOAD_ID},
         same=set(),
     )
 
@@ -199,7 +200,7 @@ def test_matrix_source_title(tmp_path: Path):
     )
     _assert_partition(
         summary,
-        changed={SOURCES_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID},
+        changed={VALIDATION_PROOF_ID, SOURCES_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID},
         same={COUNTS_ID, INDEXES_ID, LEARNING_PATHS_ID, SOURCE_MAPS_ID,
               STUDY_MAPS_ID, TYPED_COLLECTIONS_ID},
     )
@@ -215,7 +216,7 @@ def test_matrix_collection_title(tmp_path: Path):
     )
     _assert_partition(
         summary,
-        changed={COLLECTIONS_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID},
+        changed={VALIDATION_PROOF_ID, COLLECTIONS_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID},
         same={COUNTS_ID, INDEXES_ID, TYPED_COLLECTIONS_ID},
     )
 
@@ -230,7 +231,7 @@ def test_matrix_project_title(tmp_path: Path):
     )
     _assert_partition(
         summary,
-        changed={PROJECTS_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID, TYPED_COLLECTIONS_ID},
+        changed={VALIDATION_PROOF_ID, PROJECTS_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID, TYPED_COLLECTIONS_ID},
         same={COUNTS_ID, INDEXES_ID, EDGES_ID, PROGRESS_ID, REVIEW_ITEMS_ID,
               SEMESTERS_ID, STAGES_ID, UNIT_PROJECT_EDGES_ID},
     )
@@ -245,7 +246,7 @@ def test_matrix_module_title(tmp_path: Path):
     )
     _assert_partition(
         summary,
-        changed={DEADLINES_ID, MODULES_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID,
+        changed={VALIDATION_PROOF_ID, DEADLINES_ID, MODULES_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID,
                  TYPED_COLLECTIONS_ID},
         same={BACKLINKS_SEMANTIC_ID, COUNTS_ID, INDEXES_ID, EDGES_ID, PROGRESS_ID,
               REVIEW_ITEMS_ID, SEMESTERS_ID, STAGES_ID, UNITS_ID},
@@ -261,7 +262,7 @@ def test_matrix_unit_title(tmp_path: Path):
     )
     _assert_partition(
         summary,
-        changed={RECORDS_ID, SEMANTIC_PAYLOAD_ID, TYPED_COLLECTIONS_ID, UNITS_ID},
+        changed={VALIDATION_PROOF_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID, TYPED_COLLECTIONS_ID, UNITS_ID},
         same={BACKLINKS_SEMANTIC_ID, COUNTS_ID, INDEXES_ID, EDGES_ID, MODULES_ID,
               PROGRESS_ID, REVIEW_ITEMS_ID, SEMESTERS_ID, STAGES_ID, SYNTHSES_ID},
     )
@@ -281,7 +282,7 @@ def test_matrix_working_note_content(tmp_path: Path):
     assert compare_shadow_manifest(load_repo(mini), STAMP, trace=trace).equivalent
     _assert_partition(
         trace_summary(trace),
-        changed={RECORDS_ID, SEMANTIC_PAYLOAD_ID, TYPED_COLLECTIONS_ID, UNITS_ID},
+        changed={VALIDATION_PROOF_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID, TYPED_COLLECTIONS_ID, UNITS_ID},
         same={COUNTS_ID, INDEXES_ID, LEARNING_PATHS_ID, EDGES_ID, MODULES_ID,
               PROGRESS_ID, REVIEW_ITEMS_ID, SEMESTERS_ID, STAGES_ID, STUDY_MAPS_ID},
     )
@@ -296,7 +297,7 @@ def test_matrix_study_map_stage_status(tmp_path: Path):
     )
     _assert_partition(
         summary,
-        changed={COUNTS_ID, PROGRESS_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID,
+        changed={VALIDATION_PROOF_ID, COUNTS_ID, PROGRESS_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID,
                  STAGES_ID, STUDY_MAPS_ID, TYPED_COLLECTIONS_ID},
         same={BACKLINKS_SEMANTIC_ID, INDEXES_ID, EDGES_ID, REVIEW_ITEMS_ID,
               SEMESTERS_ID},
@@ -313,7 +314,7 @@ def test_matrix_source_map_angle_prose(tmp_path: Path):
     )
     _assert_partition(
         summary,
-        changed={RECORDS_ID, SEMANTIC_PAYLOAD_ID, SOURCE_MAPS_ID, TYPED_COLLECTIONS_ID},
+        changed={VALIDATION_PROOF_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID, SOURCE_MAPS_ID, TYPED_COLLECTIONS_ID},
         same={BACKLINKS_SEMANTIC_ID, COUNTS_ID, INDEXES_ID, EDGES_ID, PROGRESS_ID,
               REVIEW_ITEMS_ID, SEMESTERS_ID, STAGES_ID, STUDY_MAPS_ID,
               SYNTHSES_ID, UNITS_ID},
@@ -333,7 +334,7 @@ def test_matrix_workspace_objective(tmp_path: Path):
     summary, _ = _mutate_and_compare(mini, mutate)
     _assert_partition(
         summary,
-        changed={RECORDS_ID, SEMANTIC_PAYLOAD_ID, WORKSPACES_ID},
+        changed={VALIDATION_PROOF_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID, WORKSPACES_ID},
         same={BACKLINKS_SEMANTIC_ID, COUNTS_ID, INDEXES_ID, TYPED_COLLECTIONS_ID},
     )
 
@@ -349,7 +350,7 @@ def test_matrix_workspace_trailing_body_prunes(tmp_path: Path):
     summary, _ = _mutate_and_compare(mini, mutate)
     _assert_partition(
         summary,
-        changed=set(),
+        changed={VALIDATION_PROOF_ID},
         same={BACKLINKS_SEMANTIC_ID, COUNTS_ID, WORKSPACES_ID},
     )
 
@@ -364,7 +365,7 @@ def test_matrix_revision_ledger_bump(tmp_path: Path):
     )
     _assert_partition(
         summary,
-        changed={RECORDS_ID, REVISIONS_ID, SEMANTIC_PAYLOAD_ID,
+        changed={VALIDATION_PROOF_ID, RECORDS_ID, REVISIONS_ID, SEMANTIC_PAYLOAD_ID,
                  TYPED_COLLECTIONS_ID, UNITS_ID},
         same={COLLECTIONS_ID, COUNTS_ID, INDEXES_ID, LEARNING_PATHS_ID, EDGES_ID,
               MODULES_ID, PROGRAMS_ID, PROGRESS_ID, PROJECTS_ID, REVIEW_ITEMS_ID,
@@ -383,7 +384,7 @@ def test_matrix_garden_add(tmp_path: Path):
     summary, _ = _mutate_and_compare(mini, mutate)
     _assert_partition(
         summary,
-        changed={AI_ACTIONS_ID, COUNTS_ID, GARDEN_ID, SEMANTIC_PAYLOAD_ID},
+        changed={VALIDATION_PROOF_ID, AI_ACTIONS_ID, COUNTS_ID, GARDEN_ID, SEMANTIC_PAYLOAD_ID},
         same=set(),
     )
 
@@ -398,7 +399,7 @@ def test_matrix_ai_request_status(tmp_path: Path):
     )
     _assert_partition(
         summary,
-        changed={AI_ACTIONS_ID, SEMANTIC_PAYLOAD_ID},
+        changed={VALIDATION_PROOF_ID, AI_ACTIONS_ID, SEMANTIC_PAYLOAD_ID},
         same={COUNTS_ID},
     )
 
@@ -413,7 +414,7 @@ def test_matrix_learning_path_title(tmp_path: Path):
     )
     _assert_partition(
         summary,
-        changed={LEARNING_PATHS_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID},
+        changed={VALIDATION_PROOF_ID, LEARNING_PATHS_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID},
         same={COUNTS_ID, INDEXES_ID, TYPED_COLLECTIONS_ID},
     )
 
@@ -428,7 +429,7 @@ def test_matrix_program_title(tmp_path: Path):
     )
     _assert_partition(
         summary,
-        changed={PROGRAMS_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID, TYPED_COLLECTIONS_ID},
+        changed={VALIDATION_PROOF_ID, PROGRAMS_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID, TYPED_COLLECTIONS_ID},
         same={COUNTS_ID, INDEXES_ID, EDGES_ID, PROGRESS_ID, REVIEW_ITEMS_ID,
               SEMESTERS_ID, STAGES_ID},
     )
@@ -444,7 +445,7 @@ def test_matrix_thematic_title(tmp_path: Path):
     )
     _assert_partition(
         summary,
-        changed={SEMANTIC_PAYLOAD_ID, THEMATIC_GROUPS_ID},
+        changed={VALIDATION_PROOF_ID, SEMANTIC_PAYLOAD_ID, THEMATIC_GROUPS_ID},
         same={COLLECTIONS_ID, COUNTS_ID, MODULES_ID, SOURCES_ID},
     )
 
@@ -459,7 +460,7 @@ def test_matrix_topic_title(tmp_path: Path):
     )
     _assert_partition(
         summary,
-        changed={SEMANTIC_PAYLOAD_ID, TOPICS_ID},
+        changed={VALIDATION_PROOF_ID, SEMANTIC_PAYLOAD_ID, TOPICS_ID},
         same={COUNTS_ID},
     )
 
@@ -472,7 +473,7 @@ def test_matrix_resume_pointer(tmp_path: Path):
             root / "curriculum/resume.yaml",
             lambda data: data.update(stage_id="stage-demo-2")),
     )
-    _assert_partition(summary, changed={SEMANTIC_PAYLOAD_ID}, same=set())
+    _assert_partition(summary, changed={VALIDATION_PROOF_ID, SEMANTIC_PAYLOAD_ID}, same=set())
 
 
 def test_matrix_inbox_add(tmp_path: Path):
@@ -484,7 +485,7 @@ def test_matrix_inbox_add(tmp_path: Path):
     summary, _ = _mutate_and_compare(mini, mutate)
     _assert_partition(
         summary,
-        changed={COUNTS_ID, REVIEW_ITEMS_ID, SEMANTIC_PAYLOAD_ID},
+        changed={VALIDATION_PROOF_ID, COUNTS_ID, REVIEW_ITEMS_ID, SEMANTIC_PAYLOAD_ID},
         same=set(),
     )
 
@@ -499,7 +500,7 @@ def test_matrix_project_alias_add(tmp_path: Path):
     )
     _assert_partition(
         summary,
-        changed={INDEXES_ID, PROJECT_ALIASES_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID},
+        changed={VALIDATION_PROOF_ID, INDEXES_ID, PROJECT_ALIASES_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID},
         same={TYPED_COLLECTIONS_ID},
     )
 
@@ -520,7 +521,7 @@ def test_matrix_project_relation_add(tmp_path: Path):
     summary, _ = _mutate_and_compare(mini, mutate)
     _assert_partition(
         summary,
-        changed={INDEXES_ID, PROJECT_RELATIONSHIPS_ID, PROJECTS_ID, RECORDS_ID,
+        changed={VALIDATION_PROOF_ID, INDEXES_ID, PROJECT_RELATIONSHIPS_ID, PROJECTS_ID, RECORDS_ID,
                  SEMANTIC_PAYLOAD_ID, TYPED_COLLECTIONS_ID},
         same={COUNTS_ID, EDGES_ID, PROGRESS_ID, REVIEW_ITEMS_ID, SEMESTERS_ID,
               STAGES_ID, UNIT_PROJECT_EDGES_ID},
@@ -537,7 +538,7 @@ def test_matrix_coordination(tmp_path: Path):
     summary, _ = _mutate_and_compare(mini, mutate)
     _assert_partition(
         summary,
-        changed={COORDINATION_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID},
+        changed={VALIDATION_PROOF_ID, COORDINATION_ID, RECORDS_ID, SEMANTIC_PAYLOAD_ID},
         same={INDEXES_ID, TYPED_COLLECTIONS_ID},
     )
 
@@ -551,7 +552,7 @@ def test_matrix_unrelated_transcription_is_invisible(tmp_path: Path):
         target.write_text("excluded\n", encoding="utf-8")
 
     summary, _ = _mutate_and_compare(mini, mutate)
-    _assert_partition(summary, changed=set(), same=set())
+    _assert_partition(summary, changed={VALIDATION_PROOF_ID}, same=set())
 
 
 # B. Producer invalidation, corruption, contract handling.
@@ -594,7 +595,7 @@ def test_contract_comment_is_semantically_invisible(tmp_path: Path):
                         encoding="utf-8")
     trace: list = []
     assert compare_shadow_manifest(load_repo(mini), STAMP, trace=trace).equivalent
-    _assert_partition(trace_summary(trace), changed=set(), same=set())
+    _assert_partition(trace_summary(trace), changed={VALIDATION_PROOF_ID}, same=set())
 
 
 def test_schema_change_fails_identically_on_both_sides(tmp_path: Path):
