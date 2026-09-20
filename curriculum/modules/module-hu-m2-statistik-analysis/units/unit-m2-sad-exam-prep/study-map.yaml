@@ -12,6 +12,7 @@ shelving:
   state: none
 stages:
 - id: stage-m2-sad-calibrate
+  knowledge_node_id: knowledge-sad-exam-calibration
   number: 1
   title: SaD.0 — cold diagnostic and scope calibration
   status: pending
@@ -61,6 +62,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s01-descriptive
+  knowledge_node_id: knowledge-sad-exam-descriptive
   number: 2
   title: SaD.1 — descriptive statistics, data quality, and base rates (L01–L02)
   status: pending
@@ -117,6 +119,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s02-regression
+  knowledge_node_id: knowledge-sad-exam-regression
   number: 3
   title: SaD.2 — correlation, regression, and optimization (L03)
   status: pending
@@ -169,6 +172,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s03-probability-counting
+  knowledge_node_id: knowledge-sad-exam-probability
   number: 4
   title: SaD.3 — probability, Bayes, independence, and counting (L04–L05)
   status: pending
@@ -225,6 +229,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s04-random-variables
+  knowledge_node_id: knowledge-sad-exam-random-variables
   number: 5
   title: SaD.4 — random variables, expectation, variance, and CDFs (L06)
   status: pending
@@ -276,6 +281,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s05-discrete-distributions
+  knowledge_node_id: knowledge-sad-exam-random-variables
   number: 6
   title: SaD.5 — discrete distributions and model choice (L07)
   status: pending
@@ -328,6 +334,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s06-normal-clt-likelihood
+  knowledge_node_id: knowledge-sad-exam-random-variables
   number: 7
   title: SaD.6 — Normal distribution, CLT, approximations, and likelihood (L08)
   status: pending
@@ -385,6 +392,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s07-estimation
+  knowledge_node_id: knowledge-sad-exam-inference
   number: 8
   title: SaD.7 — estimators, uncertainty, and confidence intervals (L09)
   status: pending
@@ -437,6 +445,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s08-testing
+  knowledge_node_id: knowledge-sad-exam-inference
   number: 9
   title: SaD.8 — hypothesis tests, p-values, errors, and power (L10)
   status: pending
@@ -493,6 +502,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s09-workflow-evaluation
+  knowledge_node_id: knowledge-sad-exam-workflow
   number: 10
   title: SaD.9 — data-science workflow, leakage, and evaluation (L11)
   status: pending
@@ -538,6 +548,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s10-trees-ensembles
+  knowledge_node_id: knowledge-sad-exam-trees
   number: 11
   title: SaD.10 — decision trees and ensembles (L12)
   status: pending
@@ -597,6 +608,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s11-similarity-clustering
+  knowledge_node_id: knowledge-sad-exam-similarity
   number: 12
   title: SaD.11 — similarity, k-NN, search, and clustering (L13 + UE7)
   status: pending
@@ -653,6 +665,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s12-probabilistic-learning
+  knowledge_node_id: knowledge-sad-exam-probabilistic-ml
   number: 13
   title: SaD.12 — Naive Bayes extensions and Bayesian networks (L14)
   status: pending
@@ -699,6 +712,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s13-neural-networks
+  knowledge_node_id: knowledge-sad-exam-neural
   number: 14
   title: SaD.13 — neural networks, backpropagation, and training (L15)
   status: pending
@@ -747,6 +761,8 @@ stages:
       regression and SVMs'
     scope_triage: helpful-now
     route_id: route-fabc07c65cb1dee886db114f
+    node_scaffold_note: Optimization groundwork L15 assumes; Kelleher §7.6 (p.416) states the chapter
+      excludes neural networks — error surface, descent step and learning rate only.
     angle: The optimization groundwork L15 assumes — not a neural-network chapter.
     angle_detail: §7.6 (PDF p. 416) states in the book’s own words that the chapter does not cover artificial
       neural networks. Use it for the error surface, the descent step and the learning rate; the multilayer
@@ -755,6 +771,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-m2-sad-s14-exam-transfer
+  knowledge_node_id: knowledge-sad-exam-transfer
   number: 15
   title: SaD.X — Statistics-only retrieval and timed half-mocks
   status: pending

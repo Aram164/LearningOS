@@ -118,6 +118,32 @@ def test_explicit_key_resolves_and_orphan_applies():
     assert _codes(checker) == ["RESOURCE-NODE-ORPHAN"]
 
 
+def test_scaffold_note_records_deliberate_placement():
+    stage = {"id": "stage-demo-bayes",
+             "resources": [{"route_id": "route-ue3",
+                            "node_scaffold_note": "Total-probability denominator the stage inverts."}]}
+    checker = _StubChecker(
+        {"unit-demo": _unit("knowledge-demo-bayes")},
+        {"sm": _map(stage)},
+        {"route-ue3": {"id": "route-ue3", "covers": ["knowledge-demo-other"]}},
+    )
+    checker.check_plan_rigor()
+    assert checker.warnings == []
+
+
+def test_blank_scaffold_note_still_warns():
+    stage = {"id": "stage-demo-bayes",
+             "resources": [{"route_id": "route-ue3",
+                            "node_scaffold_note": "   "}]}
+    checker = _StubChecker(
+        {"unit-demo": _unit("knowledge-demo-bayes")},
+        {"sm": _map(stage)},
+        {"route-ue3": {"id": "route-ue3", "covers": []}},
+    )
+    checker.check_plan_rigor()
+    assert _codes(checker) == ["RESOURCE-NODE-ORPHAN"]
+
+
 def test_unit_without_knowledge_map_stays_silent():
     stage = {"id": "stage-roadmap-step",
              "resources": [{"route_id": "route-x"}]}

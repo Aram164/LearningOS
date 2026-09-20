@@ -109,6 +109,11 @@
         },
         "independent_evidence": {
           "$ref": "#/$defs/independentEvidenceReview"
+        },
+        "node_scaffold_note": {
+          "description": "Why this placement intentionally sits on a node its route does not cover (prerequisite groundwork, contrast, deferral pointer). A non-blank note records deliberate scaffolding and silences RESOURCE-NODE-ORPHAN; the warning still fires when absent or blank.",
+          "type": "string",
+          "pattern": "\\S"
         }
       },
       "anyOf": [

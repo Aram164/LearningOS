@@ -264,7 +264,9 @@ class ChecksPlanRigor:
 
         A warning, not an error: the placement may be deliberate scaffolding
         (UE3's total-probability calculation is the denominator the Bayes
-        stage inverts), but that call must be recorded instead of accidental.
+        stage inverts). A non-blank ``node_scaffold_note`` on the resource
+        records that call and silences the warning; anything else must move
+        or gain covers.
         """
         route_id = resource.get("route_id")
         if not isinstance(route_id, str):
@@ -277,11 +279,15 @@ class ChecksPlanRigor:
             return
         covers = [str(node) for node in (route.get("covers") or [])]
         if node_id not in covers:
+            note = resource.get("node_scaffold_note")
+            if isinstance(note, str) and note.strip():
+                return
             self.warn(
                 "RESOURCE-NODE-ORPHAN",
                 f"study map '{smid}' stage '{stage.get('id')}' teaches node "
                 f"'{node_id}' but {route_id} no longer covers it — move the "
-                f"placement or record why it stays",
+                f"placement, extend the route covers, or record "
+                f"node_scaffold_note",
                 where,
             )
 

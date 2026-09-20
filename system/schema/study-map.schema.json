@@ -107,7 +107,8 @@
         "vault_path": {"type": "string"},
         "scope_triage": {"enum": ["required-now", "helpful-now", "deferred", "reference-only"]},
         "affordance": {"description": "What the resource is a candidate for: guided work (intervention), independent target evidence (evidence), or either depending on learner state (mixed). A candidate annotation, not a suitability verdict.", "enum": ["intervention", "evidence", "mixed"]},
-        "independent_evidence": {"$ref": "https://learningos.local/schema/learning-plan-v1#/$defs/independentEvidenceReview"}
+        "independent_evidence": {"$ref": "https://learningos.local/schema/learning-plan-v1#/$defs/independentEvidenceReview"},
+        "node_scaffold_note": {"description": "Why this placement intentionally sits on a node its route does not cover. A non-blank note records deliberate scaffolding and silences RESOURCE-NODE-ORPHAN.", "type": "string", "pattern": "\\S"}
       }
     },
     "legacyStage": {

@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 32
-schema_fingerprint: sha256:9b0f416605186bb0d5e64427e6ed1446e579c7311fd5a84466ea2c996a493416
+contract_version: 33
+schema_fingerprint: sha256:a038fa0224d4d94d1bd644d430cb01063e4c53573eb1dfae5318c1c80e230f63
 record_schemas: 32
 history:
 - version: 1
@@ -260,5 +260,11 @@ history:
   adopted: '2026-09-18'
   note: legacyStage gains optional knowledge_node_id (same join key for pre-template
     maps)
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 33
+  adopted: '2026-09-20'
+  note: 'add optional node_scaffold_note to study-map resource (v1 + legacy): records
+    deliberate scaffolding placements; no existing data invalidated, no migration'
   migration: null
   fixture: tests/fixtures/formats/v25/
