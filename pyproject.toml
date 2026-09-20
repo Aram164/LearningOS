@@ -13,7 +13,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "ruff>=0.16"]
+dev = ["pytest", "ruff>=0.16", "pypdf"]
 
 [project.scripts]
 los = "los:main"
