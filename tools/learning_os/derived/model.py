@@ -25,7 +25,11 @@ class DerivedError(ValueError):
 #: Bumped whenever evaluation, hashing, or state-shape semantics change.
 #: Part of every node key, so an engine change invalidates all cached nodes
 #: without requiring each producer to know about it.
-ENGINE_VERSION = 1
+#:
+#: v2 (2026-09-20): the key additionally covers the whole-tree core code
+#: digest and the runtime identity (F3/F4), so any pre-v2 cached entry is a
+#: stale-key miss rather than a hit under weaker identity.
+ENGINE_VERSION = 2
 
 #: Implementation files every derived evaluation depends on. Consumers
 #: include these in their node producer lists so substrate changes
@@ -79,13 +83,16 @@ def node_key(
     node_id: str,
     node_version: int,
     producer_digest: str,
+    code_digest: str,
+    runtime_digest: str,
     direct_inputs: tuple[InputRef, ...] = (),
     dependency_outputs: Mapping[str, str] | None = None,
 ) -> str:
     """Build the reuse key for one node evaluation.
 
     The key covers the engine version, the node identity and version, the
-    producer implementation bytes, the direct input digests, and the
+    declared producer implementation bytes, the whole-tree core code
+    digest, the runtime identity, the direct input digests, and the
     dependency *output* digests — never repository HEAD, never the whole
     canonical state, and never whether a dependency was rebuilt. Inputs
     are ordered canonically so declaration order cannot fork the key.
@@ -95,6 +102,8 @@ def node_key(
         node_id,
         str(node_version),
         producer_digest,
+        code_digest,
+        runtime_digest,
     ]
     for ref in sorted(direct_inputs, key=lambda item: item.id):
         parts.append(ref.id)

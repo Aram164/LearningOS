@@ -10,17 +10,22 @@ from __future__ import annotations
 from .engine import (
     BuildContext,
     Evaluation,
+    Staging,
     TraceEvent,
+    commit_staging,
     evaluate,
     evaluate_many,
 )
 from .identity import (
+    canonical_snapshot_digest,
     digest_bytes,
+    digest_code_tree,
     digest_file,
     digest_matching_files,
     digest_paths,
     digest_producer_files,
     digest_tree,
+    runtime_digest,
 )
 from .model import (
     ENGINE_VERSION,
@@ -52,10 +57,14 @@ __all__ = [
     "InputRef",
     "NodeSpec",
     "NodeState",
+    "Staging",
     "TraceEvent",
     "canonical_bytes",
+    "canonical_snapshot_digest",
+    "commit_staging",
     "derived_dir",
     "digest_bytes",
+    "digest_code_tree",
     "digest_file",
     "digest_matching_files",
     "digest_paths",
@@ -67,6 +76,7 @@ __all__ = [
     "lookup",
     "node_key",
     "read_state",
+    "runtime_digest",
     "state_path",
     "store_node",
 ]

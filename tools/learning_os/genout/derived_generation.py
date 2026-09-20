@@ -11,11 +11,20 @@ from __future__ import annotations
 import json
 from dataclasses import dataclass
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
-from ..derived.engine import BuildContext, Registry, TraceEvent, evaluate_many
-from ..derived.identity import digest_matching_files
+from ..derived.engine import (
+    BuildContext,
+    Registry,
+    Staging,
+    TraceEvent,
+    commit_staging,
+    evaluate_many,
+)
+from ..derived.identity import canonical_snapshot_digest, digest_matching_files
 from ..derived.model import DERIVED_SUBSTRATE_FILES, NodeSpec
+from ..errors import TransactionFailure
+from ..loader import Repo, load_repo
 from .concepts import (
     build_backlinks,
     build_backlinks_semantic,
@@ -45,9 +54,6 @@ from .derived_inputs import (
 from .derived_inputs import (
     enumerate_workspace_files as _workspace_files,
 )
-
-if TYPE_CHECKING:
-    from ..loader import Repo
 
 BACKLINKS_SEMANTIC_ID = "gen.backlinks.semantic"
 CONCEPT_MAP_BODY_ID = "gen.concept-map.body"
@@ -159,6 +165,11 @@ def _backlinks_artifact(payload: dict) -> str:
     )
 
 
+#: Snapshot-transaction attempts before a persistently moving tree
+#: refuses instead of retrying (mirrors the manifest shadow's bound).
+SNAPSHOT_ATTEMPTS = 3
+
+
 def generate_shadow(
     repo: Repo,
     generated_at: str,
@@ -169,22 +180,51 @@ def generate_shadow(
 
     Only semantic values come from cached nodes; publication stamping is
     always fresh, exactly as the legacy path does it.
+
+    Snapshot-bound like the manifest shadow: the repo is loaded inside
+    the transaction's own snapshot window and evaluation commits only
+    when the inputs prove stable across it. (No parse-failure refusal
+    here: the legacy backlinks/map/report builders do not refuse, so the
+    shadow must match them exactly, malformed records and all.)
     """
-    results = evaluate_many(
-        repo.root,
-        [BACKLINKS_SEMANTIC_ID, CONCEPT_MAP_BODY_ID, DEPENDENCY_REPORT_BODY_ID],
-        registry=generation_registry(repo),
-        inputs=generation_input_digests(repo.root),
-        trace=trace,
+    root = repo.root
+    for _ in range(SNAPSHOT_ATTEMPTS):
+        snapshot_before = canonical_snapshot_digest(root)
+        fresh = load_repo(root)
+        if canonical_snapshot_digest(root) != snapshot_before:
+            continue  # the load raced a concurrent edit; reload
+        staging = Staging()
+        attempt_trace: list[TraceEvent] = []
+        inputs_before = generation_input_digests(root)
+        results = evaluate_many(
+            root,
+            [BACKLINKS_SEMANTIC_ID, CONCEPT_MAP_BODY_ID, DEPENDENCY_REPORT_BODY_ID],
+            registry=generation_registry(fresh),
+            inputs=inputs_before,
+            staging=staging,
+            trace=attempt_trace,
+        )
+        backlinks = publish_backlinks(
+            fresh, results[BACKLINKS_SEMANTIC_ID].value, generated_at)
+        artifacts = {
+            "backlinks.json": _backlinks_artifact(backlinks),
+            "concept-map.md": publish_concept_map(
+                results[CONCEPT_MAP_BODY_ID].value, generated_at) + "\n",
+            "dependency-report.md": publish_dependency_report(
+                results[DEPENDENCY_REPORT_BODY_ID].value, generated_at) + "\n",
+        }
+        if generation_input_digests(root) != inputs_before:
+            continue  # inputs moved during evaluation; the staging dies here
+        if canonical_snapshot_digest(root) != snapshot_before:
+            continue
+        commit_staging(root, staging)
+        if trace is not None:
+            trace.extend(attempt_trace)
+        return artifacts
+    raise TransactionFailure(
+        "cannot generate shadow artifacts: canonical inputs changed during "
+        f"generation ({SNAPSHOT_ATTEMPTS} attempts)"
     )
-    backlinks = publish_backlinks(repo, results[BACKLINKS_SEMANTIC_ID].value, generated_at)
-    return {
-        "backlinks.json": _backlinks_artifact(backlinks),
-        "concept-map.md": publish_concept_map(
-            results[CONCEPT_MAP_BODY_ID].value, generated_at) + "\n",
-        "dependency-report.md": publish_dependency_report(
-            results[DEPENDENCY_REPORT_BODY_ID].value, generated_at) + "\n",
-    }
 
 
 def legacy_shadow_artifacts(repo: Repo, generated_at: str) -> dict[str, str]:
