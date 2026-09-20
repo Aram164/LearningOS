@@ -15,6 +15,7 @@ import json
 from pathlib import Path
 
 import pytest
+import yaml
 from conftest import build_mini_repo
 from repo_builders import add_curriculum, write_yaml
 
@@ -42,6 +43,7 @@ from learning_os.genout.derived_generation import (
     generation_registry,
 )
 from learning_os.loader import load_repo
+from learning_os.loading import parse_frontmatter
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 STAMP = "2026-09-20T00:00:00+02:00"
@@ -370,6 +372,176 @@ def test_cli_json_requires_shadow_flag(tmp_path: Path):
         capture_output=True, text=True, timeout=60)
     assert proc.returncode == 2
     assert "--json requires --shadow-derived" in proc.stderr
+
+
+# ---------------------------------------------------------------------------
+# C. Mutation matrix: exact rebuild closures and pruning proofs.
+# ---------------------------------------------------------------------------
+
+NOTE_A_META = (
+    "---\nid: note-a\ntitle: Note A\nconcepts: [c1, c2]\n"
+    "sources: [source-demo-book]\ncontexts: [workspace-demo]\n"
+    "supersedes: [note-old]\n---\n"
+)
+
+
+def _warmed_shadow(tmp_path: Path) -> Path:
+    """Rich mini with producers staged and one shadow run banked."""
+    mini = _curriculum_mini(tmp_path)
+    _stage_shadow_producers(mini)
+    assert compare_shadow_generation(_rich_repo(mini), STAMP).equivalent
+    return mini
+
+
+def _rerun(mini: Path) -> dict[str, tuple[str, str]]:
+    trace: list = []
+    comparison = compare_shadow_generation(load_repo(mini), STAMP, trace=trace)
+    assert comparison.equivalent, comparison.artifacts
+    return _trace_summary(trace)
+
+
+def _rewrite_note_a(mini: Path, *, concepts="c1, c2", body="See note://note-b for details.\n"):
+    (mini / "knowledge" / "notes" / "note-a.md").write_text(
+        NOTE_A_META.replace("concepts: [c1, c2]", f"concepts: [{concepts}]")
+        + "\n" + body,
+        encoding="utf-8")
+
+
+def _update_workspace_meta(mini: Path, path: str, **fields) -> None:
+    target = mini / path
+    meta, body = parse_frontmatter(target.read_text(encoding="utf-8"), target)
+    meta.update(fields)
+    target.write_text(
+        "---\n" + yaml.safe_dump(meta, sort_keys=False).rstrip() + "\n---\n\n" + body.lstrip(),
+        encoding="utf-8")
+
+
+def _append_relation(mini: Path, relation: dict) -> None:
+    target = mini / "knowledge" / "concept-relations.yaml"
+    data = yaml.safe_load(target.read_text(encoding="utf-8"))
+    data["relations"].append(relation)
+    write_yaml(target, data)
+
+
+def test_note_prose_edit_prunes_backlinks_and_dependents(tmp_path: Path):
+    mini = _warmed_shadow(tmp_path)
+    _rewrite_note_a(mini, body="See note://note-b for further details and background.\n")
+    assert _rerun(mini) == {
+        BACKLINKS_SEMANTIC_ID: ("rebuilt", "node-key-changed-output-same"),
+        CONCEPT_MAP_BODY_ID: ("hit", "node-key-equal"),
+        DEPENDENCY_REPORT_BODY_ID: ("hit", "node-key-equal"),
+    }
+
+
+def test_note_concept_edit_propagates_then_prunes(tmp_path: Path):
+    mini = _warmed_shadow(tmp_path)
+    _rewrite_note_a(mini, concepts="c1, c2, c4")
+    assert _rerun(mini) == {
+        BACKLINKS_SEMANTIC_ID: ("rebuilt", "node-key-changed-output-changed"),
+        CONCEPT_MAP_BODY_ID: ("hit", "node-key-equal"),
+        # The report rebuilds (its backlinks output hash moved) but its own
+        # output is unchanged: it reads only module_to_workspaces.
+        DEPENDENCY_REPORT_BODY_ID: ("rebuilt", "node-key-changed-output-same"),
+    }
+
+
+def test_relation_edit_rebuilds_all_dependents(tmp_path: Path):
+    mini = _warmed_shadow(tmp_path)
+    _append_relation(mini, {"from": "c4", "type": "requires", "to": "c3"})
+    assert _rerun(mini) == {
+        BACKLINKS_SEMANTIC_ID: ("rebuilt", "node-key-changed-output-changed"),
+        CONCEPT_MAP_BODY_ID: ("rebuilt", "node-key-changed-output-changed"),
+        DEPENDENCY_REPORT_BODY_ID: ("rebuilt", "node-key-changed-output-changed"),
+    }
+
+
+def test_unrelated_source_edit_hits_everything(tmp_path: Path):
+    from learning_os.genout.derived_generation import generation_input_digests as digests
+
+    mini = _warmed_shadow(tmp_path)
+    before = digests(mini)
+    target = mini / "sources" / "sources.yaml"
+    data = yaml.safe_load(target.read_text(encoding="utf-8"))
+    data["sources"][0]["title"] = "Renamed Demo Book"
+    write_yaml(target, data)
+    assert digests(mini) == before
+    assert _rerun(mini) == {
+        BACKLINKS_SEMANTIC_ID: ("hit", "node-key-equal"),
+        CONCEPT_MAP_BODY_ID: ("hit", "node-key-equal"),
+        DEPENDENCY_REPORT_BODY_ID: ("hit", "node-key-equal"),
+    }
+
+
+def test_workspace_module_edit_rebuilds_backlinks_path(tmp_path: Path):
+    mini = _warmed_shadow(tmp_path)
+    _update_workspace_meta(
+        mini, "work/active/workspace-demo/CONTEXT.md",
+        module_ids=["module-demo", "module-lonely"])
+    assert _rerun(mini) == {
+        BACKLINKS_SEMANTIC_ID: ("rebuilt", "node-key-changed-output-changed"),
+        CONCEPT_MAP_BODY_ID: ("hit", "node-key-equal"),
+        DEPENDENCY_REPORT_BODY_ID: ("rebuilt", "node-key-changed-output-changed"),
+    }
+
+
+def test_workspace_concepts_edit_prunes_backlinks_only(tmp_path: Path):
+    mini = _warmed_shadow(tmp_path)
+    _update_workspace_meta(
+        mini, "work/active/workspace-demo/CONTEXT.md",
+        concepts=["concept-expected-value", "c1"])
+    assert _rerun(mini) == {
+        # Backlinks rereads workspaces but ignores their concept lists.
+        BACKLINKS_SEMANTIC_ID: ("rebuilt", "node-key-changed-output-same"),
+        CONCEPT_MAP_BODY_ID: ("hit", "node-key-equal"),
+        # The report prints workspace concept lists: genuinely changed.
+        DEPENDENCY_REPORT_BODY_ID: ("rebuilt", "node-key-changed-output-changed"),
+    }
+
+
+def test_producer_version_bump_rebuilds_only_its_node(tmp_path: Path):
+    from dataclasses import replace
+
+    from learning_os.genout.derived_generation import (
+        generation_input_digests,
+        legacy_shadow_artifacts,
+    )
+
+    mini = _warmed_shadow(tmp_path)
+    repo = load_repo(mini)
+    registry = dict(generation_registry(repo))
+    spec, build = registry[BACKLINKS_SEMANTIC_ID]
+    registry[BACKLINKS_SEMANTIC_ID] = (replace(spec, version=2), build)
+    from learning_os.derived import evaluate_many
+
+    trace: list = []
+    results = evaluate_many(
+        mini,
+        [BACKLINKS_SEMANTIC_ID, CONCEPT_MAP_BODY_ID, DEPENDENCY_REPORT_BODY_ID],
+        registry=registry,
+        inputs=generation_input_digests(mini),
+        trace=trace)
+    assert _trace_summary(trace) == {
+        BACKLINKS_SEMANTIC_ID: ("rebuilt", "node-key-changed-output-same"),
+        CONCEPT_MAP_BODY_ID: ("hit", "node-key-equal"),
+        DEPENDENCY_REPORT_BODY_ID: ("hit", "node-key-equal"),
+    }
+    assert set(results) == {
+        BACKLINKS_SEMANTIC_ID, CONCEPT_MAP_BODY_ID, DEPENDENCY_REPORT_BODY_ID}
+    assert legacy_shadow_artifacts(repo, STAMP)["backlinks.json"].startswith('{"_generated":')
+
+
+def test_corrupt_backlinks_blob_heals_without_cascade(tmp_path: Path):
+    from learning_os.derived import read_state
+
+    mini = _warmed_shadow(tmp_path)
+    entry = read_state(mini)[BACKLINKS_SEMANTIC_ID]
+    blob = mini / "generated" / "derived-state" / entry.blob
+    blob.write_bytes(b"tampered")
+    assert _rerun(mini) == {
+        BACKLINKS_SEMANTIC_ID: ("rebuilt", "cache-miss"),
+        CONCEPT_MAP_BODY_ID: ("hit", "node-key-equal"),
+        DEPENDENCY_REPORT_BODY_ID: ("hit", "node-key-equal"),
+    }
 
 
 @pytest.mark.full_repo
