@@ -643,72 +643,106 @@ def test_wrongly_shaped_segment_self_heals(tmp_path: Path):
 
 
 # ---------------------------------------------------------------------------
-# CLI envelope parity across the flag (malformed, snapshot, pagination).
+# CLI envelope: production must equal the oracle end to end.
 # ---------------------------------------------------------------------------
 
-def _run_search(root: Path, query: str, *, flag: bool, monkeypatch, capsys,
+def _run_search(root: Path, query: str, *, capsys,
                 offset=0, limit=100, expected_snapshot=None, type_="note"):
     args = SimpleNamespace(
         query=query, type=type_, offset=offset, limit=limit,
         expected_snapshot=expected_snapshot, root=str(root))
-    monkeypatch.setattr(reads_module, "USE_SEARCH_INDEX", flag)
     code = content_search(args)
     out, err = capsys.readouterr()
     return code, out, err
 
 
-def test_cli_envelope_identical_across_flag(tmp_path: Path, monkeypatch, capsys):
-    _write_corpus(tmp_path)
-    _stage_producers(tmp_path)
-    for query in QUERIES:
-        off = _run_search(tmp_path, query, flag=False, monkeypatch=monkeypatch, capsys=capsys)
-        on = _run_search(tmp_path, query, flag=True, monkeypatch=monkeypatch, capsys=capsys)
-        assert on == off
-        assert off[0] == 0
-
-
-def test_cli_pagination_identical_across_flag(tmp_path: Path, monkeypatch, capsys):
+def test_cli_matches_exhaustive_oracle(tmp_path: Path, capsys):
     import json
 
     _write_corpus(tmp_path)
     _stage_producers(tmp_path)
-    pages = {}
-    for flag in (False, True):
-        outs = []
-        snapshot = None
-        for offset in (0, 1, 2):
-            code, out, err = _run_search(
-                tmp_path, "the", flag=flag, monkeypatch=monkeypatch, capsys=capsys,
-                offset=offset, limit=1, expected_snapshot=snapshot)
-            assert code == 0, err
-            outs.append(out)
-            snapshot = json.loads(out)["snapshot_id"]
-        pages[flag] = outs
-    assert pages[True] == pages[False]
+    for query in QUERIES:
+        code, out, err = _run_search(tmp_path, query, capsys=capsys)
+        assert code == 0, err
+        payload = json.loads(out)
+        ordered = _ordered_notes(tmp_path)
+        expected = _exhaustive_content_search(tmp_path, ordered, _compiled(query))
+        assert payload["contract"] == "note-content-search"
+        assert payload["items"] == expected[:100]
+        assert payload["total"] == len(expected)
+        assert payload["next_offset"] == (100 if 100 < len(expected) else None)
 
 
-def test_cli_malformed_note_refuses_identically(tmp_path: Path, monkeypatch, capsys):
+def test_cli_uses_index_not_fallback(tmp_path: Path, monkeypatch, capsys):
+    _write_corpus(tmp_path)
+    _stage_producers(tmp_path)
+
+    def boom(*args, **kwargs):
+        raise AssertionError("exhaustive fallback taken")
+
+    monkeypatch.setattr(reads_module, "_exhaustive_content_search", boom)
+    for query in QUERIES:
+        code, _out, err = _run_search(tmp_path, query, capsys=capsys)
+        assert code == 0, err
+
+
+def test_cli_falls_back_on_derived_error(tmp_path: Path, monkeypatch, capsys):
+    import json
+
+    _write_corpus(tmp_path)
+    _stage_producers(tmp_path)
+
+    def broken(*args, **kwargs):
+        raise DerivedError("injected")
+
+    monkeypatch.setattr(reads_module, "candidates", broken)
+    code, out, err = _run_search(tmp_path, "gradient", capsys=capsys)
+    assert code == 0, err
+    ordered = _ordered_notes(tmp_path)
+    expected = _exhaustive_content_search(tmp_path, ordered, _compiled("gradient"))
+    assert json.loads(out)["items"] == expected
+
+
+def test_cli_pagination_pages_the_oracle(tmp_path: Path, capsys):
+    import json
+
+    _write_corpus(tmp_path)
+    _stage_producers(tmp_path)
+    ordered = _ordered_notes(tmp_path)
+    expected = _exhaustive_content_search(tmp_path, ordered, _compiled("the"))
+    assert len(expected) >= 2
+    seen = []
+    snapshot = None
+    for offset in range(len(expected)):
+        code, out, err = _run_search(
+            tmp_path, "the", capsys=capsys, offset=offset, limit=1,
+            expected_snapshot=snapshot)
+        assert code == 0, err
+        payload = json.loads(out)
+        assert payload["total"] == len(expected)
+        seen.extend(payload["items"])
+        snapshot = payload["snapshot_id"]
+    assert seen == expected
+
+
+def test_cli_malformed_note_still_refuses(tmp_path: Path, capsys):
     notes_dir = _write_corpus(tmp_path)
     _stage_producers(tmp_path)
     (notes_dir / "broken.md").write_text("---\nid: [unclosed\n---\nbody\n", encoding="utf-8")
-    off = _run_search(tmp_path, "gradient", flag=False, monkeypatch=monkeypatch, capsys=capsys)
-    on = _run_search(tmp_path, "gradient", flag=True, monkeypatch=monkeypatch, capsys=capsys)
-    assert off[0] == 2 and on == off
-    assert off[1] == "" and "search" in off[2]
-    # Repair: both paths agree again.
+    code, out, err = _run_search(tmp_path, "gradient", capsys=capsys)
+    assert code == 2
+    assert out == "" and "search" in err
+    # Repair: production answers again.
     (notes_dir / "broken.md").write_text(
         "---\nid: repaired\ntitle: Repaired\n---\nrepaired body\n", encoding="utf-8")
-    off = _run_search(tmp_path, "repaired", flag=False, monkeypatch=monkeypatch, capsys=capsys)
-    on = _run_search(tmp_path, "repaired", flag=True, monkeypatch=monkeypatch, capsys=capsys)
-    assert on == off
-    assert off[0] == 0
+    code, out, err = _run_search(tmp_path, "repaired", capsys=capsys)
+    assert code == 0, err
 
 
-def test_cli_snapshot_mismatch_refuses_identically(tmp_path: Path, monkeypatch, capsys):
+def test_cli_snapshot_mismatch_still_refuses(tmp_path: Path, capsys):
     _write_corpus(tmp_path)
     _stage_producers(tmp_path)
-    off = _run_search(tmp_path, "gradient", flag=False, monkeypatch=monkeypatch,
-                       capsys=capsys, expected_snapshot="sha256:" + "0" * 64)
-    on = _run_search(tmp_path, "gradient", flag=True, monkeypatch=monkeypatch,
-                      capsys=capsys, expected_snapshot="sha256:" + "0" * 64)
-    assert off[0] == 3 and on == off
+    code, _out, err = _run_search(
+        tmp_path, "gradient", capsys=capsys, expected_snapshot="sha256:" + "0" * 64)
+    assert code == 3
+    assert "snapshot" in err
