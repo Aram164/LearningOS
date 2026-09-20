@@ -765,6 +765,8 @@ stages:
       in a CLT simulation.
     scope_triage: reference-only
     route_id: route-66b70c94de7bc040921d186c
+    node_scaffold_note: Closest related material, a negative-binomial sketch; the deck has no dedicated
+      Geometric lesson — reference contrast only.
     source_id: source-sad-ss26-lectures
   - material_ref:
       route_id: route-475a87b6ec22bf8e77f9de71
@@ -780,6 +782,7 @@ stages:
       in Aufgabe 3(a)(4), PDF p. 3; establish whether counts include the successful trial.'
     scope_triage: reference-only
     route_id: route-475a87b6ec22bf8e77f9de71
+    node_scaffold_note: Contrast only — fixed-sample models here, not Geometric waiting times.
   - material_ref:
       route_id: route-52083707f01a014c3e2c267b
       inherit:
@@ -794,6 +797,7 @@ stages:
       in Aufgabe 3(a)(4), PDF p. 3; establish whether counts include the successful trial.'
     scope_triage: reference-only
     route_id: route-52083707f01a014c3e2c267b
+    node_scaffold_note: Contrast only — fixed-sample models here, not Geometric waiting times.
   - material_ref:
       route_id: route-3e560269a42e146f88512ee4
       inherit:

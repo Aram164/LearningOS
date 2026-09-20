@@ -1,0 +1,107 @@
+# Node-linkage backfill decisions (2026-09-20)
+# Stage -> knowledge_node_id for all 72 STAGE-NODE-UNLINKED warnings.
+# Mechanical matches carry no note; judgment calls explain themselves.
+# Many-to-one (several stages, one node) is intended where listed.
+
+units:
+  unit-m2-sad-exam-prep:
+    stage-m2-sad-calibrate: knowledge-sad-exam-calibration
+    stage-m2-sad-s01-descriptive: knowledge-sad-exam-descriptive
+    stage-m2-sad-s02-regression: knowledge-sad-exam-regression
+    stage-m2-sad-s03-probability-counting: knowledge-sad-exam-probability
+    stage-m2-sad-s04-random-variables: knowledge-sad-exam-random-variables
+    stage-m2-sad-s05-discrete-distributions: knowledge-sad-exam-random-variables
+    stage-m2-sad-s06-normal-clt-likelihood: knowledge-sad-exam-random-variables
+    stage-m2-sad-s07-estimation: knowledge-sad-exam-inference
+    stage-m2-sad-s08-testing: knowledge-sad-exam-inference
+    stage-m2-sad-s09-workflow-evaluation: knowledge-sad-exam-workflow
+    stage-m2-sad-s10-trees-ensembles: knowledge-sad-exam-trees
+    stage-m2-sad-s11-similarity-clustering: knowledge-sad-exam-similarity
+    stage-m2-sad-s12-probabilistic-learning: knowledge-sad-exam-probabilistic-ml
+    stage-m2-sad-s13-neural-networks: knowledge-sad-exam-neural
+    stage-m2-sad-s14-exam-transfer: knowledge-sad-exam-transfer
+  unit-algo2-exam-prep:
+    stage-algo2-t01-fast-multiplication: knowledge-algo2-fast-multiplication
+    stage-algo2-t02-amortized-analysis: knowledge-algo2-amortized-analysis
+    stage-algo2-t03-b-trees: knowledge-algo2-b-trees
+    stage-algo2-t04-fibonacci-heaps: knowledge-algo2-fibonacci-heaps
+    stage-algo2-t05-splay-trees: knowledge-algo2-splay-trees
+    stage-algo2-t06-cuckoo-hashing: knowledge-algo2-cuckoo-hashing
+    stage-algo2-t07-shortest-paths: knowledge-algo2-shortest-paths
+    stage-algo2-t08-maximum-flow: knowledge-algo2-maximum-flow
+    stage-algo2-t09-bipartite-matching: knowledge-algo2-bipartite-matching
+    stage-algo2-t10-stable-matching: knowledge-algo2-stable-matching
+    stage-algo2-t11-computational-geometry: knowledge-algo2-computational-geometry
+    stage-algo2-t12-fft: knowledge-algo2-fft
+  unit-aml-exam-prep:
+    stage-aml-calibration: knowledge-aml-exam-calibration
+    stage-aml-foundations-repair: knowledge-aml-exam-classical
+    stage-aml-linear-optimization-repair: knowledge-aml-exam-classical
+    stage-aml-neural-transformer-loop: knowledge-aml-exam-neural
+    stage-aml-integration-sheet: knowledge-aml-exam-integration
+    stage-aml-mock-one: knowledge-aml-exam-integration
+    stage-aml-mock-one-repair: knowledge-aml-exam-error-control
+    stage-aml-mock-two: knowledge-aml-exam-integration
+    stage-aml-final-repair: knowledge-aml-exam-error-control
+    stage-aml-taper: knowledge-aml-exam-error-control
+  unit-m2-combined-exam-rehearsal:
+    stage-m2-joint-mock-one: knowledge-m2-joint-simulation
+    stage-m2-joint-repair: knowledge-m2-joint-switching
+    stage-m2-joint-mock-two: knowledge-m2-joint-simulation
+    stage-m2-joint-final-retrieval: knowledge-m2-joint-taper
+  unit-job-polars-selection-backend:
+    stage-polars-04-selection-and-projection-index-logic-versus-expr: knowledge-polars-selection-contract
+    stage-polars-selection-head-tail-sample: knowledge-polars-runtime-operands
+    stage-polars-selection-duplicates: knowledge-polars-selection-methods
+    stage-polars-selection-dropna: knowledge-polars-dropna-lowering
+  unit-job-polars-expressions:
+    stage-polars-05-expressions-and-column-creation: knowledge-polars-expr-contexts
+    stage-polars-expr-selectors-expansion: knowledge-polars-expr-expansion
+    stage-polars-expr-horizontal-conditional: knowledge-polars-expr-horizontal
+    stage-polars-expr-assignmap-lowering: knowledge-polars-expr-lowering
+  unit-job-polars-backend-loop:
+    stage-polars-backend-trace-lifecycle: knowledge-polars-stratum-lifecycle
+    stage-polars-backend-decision-loop: knowledge-polars-implementation-decision
+    stage-polars-backend-family-transfer: knowledge-polars-family-transfer
+    stage-polars-backend-regression-policy: knowledge-polars-regression-policy
+  unit-job-polars-schema-missing-types:
+    stage-polars-03-construction-i-o-schema-and-chunks: knowledge-polars-schema-construction
+    stage-polars-07-type-promotion-coercion-and-strictness: knowledge-polars-casting
+    stage-polars-06-nulls-nans-and-the-missing-value-model: knowledge-polars-missing-model
+  unit-job-polars-lazy-udf-interop:
+    stage-polars-15-lazy-plans-and-optimizer-literacy: knowledge-polars-lazy-plans
+    stage-polars-16-udfs-fallbacks-and-native-expression-rewrites: knowledge-polars-udf-boundary
+    stage-polars-17-arrow-interop-chunks-and-conversion-costs: knowledge-polars-arrow-interop
+  unit-job-polars-joins-reshape:
+    stage-polars-12-joins-i-relational-semantics-and-key-cardinality: knowledge-polars-join-semantics
+    stage-polars-13-joins-ii-build-a-pandas-polars-join-compatibilit: knowledge-polars-join-compatibility
+    stage-polars-14-concatenation-and-reshaping: knowledge-polars-reshape
+  unit-job-polars-capstone-transition:
+    stage-polars-18-capstone-specify-implement-and-prove-a-mirrored: knowledge-polars-capstone
+    stage-polars-capstone-property-stress: knowledge-polars-property-stress
+    stage-polars-version-transition-lab: knowledge-polars-version-transition
+  unit-job-polars-aggregation-windows:
+    stage-polars-10-groupby-aggregation-counting-and-de-duplication: knowledge-polars-aggregation
+    stage-polars-aggregation-signature-contract: knowledge-polars-aggregation-flags
+    stage-polars-11-windows-and-per-group-transformations: knowledge-polars-windows
+  unit-job-polars-pandas-fluency:
+    stage-polars-01-two-data-models-and-the-eight-divergence-axes: knowledge-polars-divergence-axes
+    stage-polars-02-the-parity-harness-differential-testing-from-day: knowledge-polars-parity-harness
+  unit-job-polars-order-text-time:
+    stage-polars-08-ordering-sorting-and-determinism: knowledge-polars-ordering
+    stage-polars-09-strings-datetimes-and-namespace-translation: knowledge-polars-text-temporal
+
+notes:
+  # M2 exam-prep: 15 stages share 12 nodes; s04/s05/s06 share the
+  # random-variables node (L06/L07/L08 are all distributions-side),
+  # s07/s08 share inference. s06 stays distributions-side despite the
+  # likelihood shade: the stage is L08 Normal/CLT, not estimation.
+  # AML mocks sit under integration (timed retrieval papers), repairs
+  # under error-control. Taper joins error-control: its operative
+  # content is the error ledger + A4 retrieval discipline.
+  # Rehearsal repair joins switching: its objective keeps only
+  # switching/time errors joint, returning the rest to subject maps.
+  # Polars-01 joins divergence-axes: the version pin is setup, the
+  # taught outcome is the axes-as-checklist. Nodes with no stage
+  # (aml scope/logistics, polars version-contract) are map-level
+  # context, not warnings; the check is per-stage only.

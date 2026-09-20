@@ -1,0 +1,901 @@
+id: study-map-m2-sad-l12
+type: study-map
+plan_template_version: 1
+unit_id: unit-m2-sad-l12
+status: not-started
+current_stage: stage-sad-l12-tree-model
+source_plan:
+  path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  provenance: operator
+detours: []
+shelving:
+  state: none
+stages:
+- id: stage-sad-l12-tree-model
+  number: 1
+  title: Decision trees, rules, and preference bias
+  status: pending
+  objective: Internal nodes test features, branches partition the instance space, and leaves predict;
+    simpler rules encode a generalization preference rather than merely memorizing IDs.
+  done_when:
+  - 'Reproduce without notes: Internal nodes test features, branches partition the instance space, and
+    leaves predict; simpler rules encode a generalization preference rather than merely memorizing IDs.'
+  - Using L12 PDF pp. 5-12, trace one instance from root to leaf and write the corresponding rule. Defer
+    tree induction, pruning and AdaBoost until their stages.
+  exam_critical: true
+  concepts:
+  - concept-decision-trees
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L12 tree-based learning deck
+    locator: lecture-slides/12_tree_based.pdf, PDF pp. 5-14
+    angle: The current lecture's focused reading for decision trees, rules, and preference bias.
+    angle_detail: Read physical PDF pages 5-14 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
+    scope_triage: required-now
+    route_id: route-2dae8c065ede0f1bff7b14d7
+    source_id: source-sad-ss26-lectures
+  - material_ref:
+      route_id: route-9892260cc9d0dbf2da2b165c
+      inherit:
+      - label
+      - locator
+      - angle
+      - vault_path
+      - source_id
+    kind: read
+    angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes
+      the entropy of the target, then the remainder for each candidate feature, then the gain, then recurses
+      — with the arithmetic printed at every node. That is exactly the calculation an exam will ask for
+      on a small table, and doing it once with a fully worked reference is worth more than reading the
+      formula ten times. The chapter also covers the gain-ratio correction for many-valued features, which
+      the deck mentions in passing.
+    scope_triage: helpful-now
+    route_id: route-9892260cc9d0dbf2da2b165c
+  - material_ref:
+      route_id: route-6b5698803acbdbd638a146b6
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-6b5698803acbdbd638a146b6
+  - material_ref:
+      route_id: route-0f00ed6b65da6c9fdd94757f
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: helpful-now
+    route_id: route-0f00ed6b65da6c9fdd94757f
+  - material_ref:
+      route_id: route-f13a1bb3e87f67e51c110dad
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-f13a1bb3e87f67e51c110dad
+  - material_ref:
+      route_id: route-8b4580c36cbf51ee7807a23e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-8b4580c36cbf51ee7807a23e
+  - material_ref:
+      route_id: route-0f4dd7d42e4f26f7e9730a91
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-0f4dd7d42e4f26f7e9730a91
+  - material_ref:
+      route_id: route-5a43ff2dd96c3c7e6aee61a4
+      inherit:
+      - label
+      - locator
+      - angle_detail
+      - source_id
+      - vault_path
+    kind: reference
+    angle: Deferred to regression trees and boosting; this PDF is not a categorical-entropy introduction.
+    scope_triage: reference-only
+    route_id: route-5a43ff2dd96c3c7e6aee61a4
+    node_scaffold_note: Deferral pointer — advanced regression-tree and boosting treatment lives on later stages; this PDF is not a categorical-entropy introduction.
+  - material_ref:
+      route_id: route-8fec57420f21e471d11c0a87
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-8fec57420f21e471d11c0a87
+  - material_ref:
+      route_id: route-f9377aee01af8b15edbf8705
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-f9377aee01af8b15edbf8705
+  - material_ref:
+      route_id: route-fcd3c263bfe17bebb07f49c3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-fcd3c263bfe17bebb07f49c3
+  - material_ref:
+      route_id: route-1f6f29865621dc40da790e50
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-1f6f29865621dc40da790e50
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-tree-model/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l12-entropy-id3
+  number: 2
+  title: Entropy, information gain, and ID3
+  status: pending
+  objective: Entropy measures class impurity, information gain measures the reduction after a split, and
+    ID3 greedily chooses the feature that produces the largest gain.
+  done_when:
+  - 'Reproduce without notes: Entropy measures class impurity, information gain measures the reduction
+    after a split, and ID3 greedily chooses the feature that produces the largest gain.'
+  - Compute entropy and information gain for the L12 PDF pp. 21-24 dataset, then check the shown split.
+    Use the existing MIT ID-tree question for additional practice; reserve Cornell Fall HW8 for regression
+    trees.
+  exam_critical: true
+  concepts:
+  - concept-information-gain
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L12 tree-based learning deck
+    locator: lecture-slides/12_tree_based.pdf, PDF pp. 15-26
+    angle: The current lecture's focused reading for entropy, information gain, and id3.
+    angle_detail: Read physical PDF pages 15-26 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
+    scope_triage: required-now
+    route_id: route-2dae8c065ede0f1bff7b14d7
+    source_id: source-sad-ss26-lectures
+  - material_ref:
+      route_id: route-9892260cc9d0dbf2da2b165c
+      inherit:
+      - label
+      - locator
+      - angle
+      - vault_path
+      - source_id
+    kind: read
+    angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes
+      the entropy of the target, then the remainder for each candidate feature, then the gain, then recurses
+      — with the arithmetic printed at every node. That is exactly the calculation an exam will ask for
+      on a small table, and doing it once with a fully worked reference is worth more than reading the
+      formula ten times. The chapter also covers the gain-ratio correction for many-valued features, which
+      the deck mentions in passing.
+    scope_triage: helpful-now
+    route_id: route-9892260cc9d0dbf2da2b165c
+  - material_ref:
+      route_id: route-cd624eec2c74722433fa56ea
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-cd624eec2c74722433fa56ea
+  - material_ref:
+      route_id: route-0f00ed6b65da6c9fdd94757f
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: helpful-now
+    route_id: route-0f00ed6b65da6c9fdd94757f
+  - material_ref:
+      route_id: route-2ecd41a999e0fd49db64c0c0
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-2ecd41a999e0fd49db64c0c0
+  - material_ref:
+      route_id: route-5a43ff2dd96c3c7e6aee61a4
+      inherit:
+      - label
+      - locator
+      - angle_detail
+      - source_id
+      - vault_path
+    kind: reference
+    angle: Deferred to regression trees and boosting; this PDF is not a categorical-entropy introduction.
+    scope_triage: reference-only
+    route_id: route-5a43ff2dd96c3c7e6aee61a4
+    node_scaffold_note: Deferral pointer — advanced regression-tree and boosting treatment lives on later stages; this PDF is not a categorical-entropy introduction.
+  - material_ref:
+      route_id: route-8fec57420f21e471d11c0a87
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    route_id: route-8fec57420f21e471d11c0a87
+  - material_ref:
+      route_id: route-f9377aee01af8b15edbf8705
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-f9377aee01af8b15edbf8705
+  - material_ref:
+      route_id: route-775c3bffd9b1dda61f65be0d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-775c3bffd9b1dda61f65be0d
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-entropy-id3/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l12-regression
+  number: 3
+  title: Regression trees and variance reduction
+  status: pending
+  objective: Numeric targets replace class impurity with within-node squared-error or variance reduction
+    while retaining the same recursive partition structure.
+  done_when:
+  - 'Reproduce without notes: Numeric targets replace class impurity with within-node squared-error or
+    variance reduction while retaining the same recursive partition structure.'
+  - Attempt Cornell Fall 2018 HW8 PDF Problem 1(a); Problem 1(b) solution correspondence remains unresolved
+    because the PDF and TeX differ.
+  exam_critical: true
+  concepts:
+  - concept-variance
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L12 tree-based learning deck
+    locator: lecture-slides/12_tree_based.pdf, PDF pp. 27
+    angle: The current lecture's focused reading for regression trees and variance reduction.
+    angle_detail: Read physical PDF pages 27 for this stage. Printed slide labels may differ. This slice
+      focuses the existing deck route; the complete lecture remains accessible through the unit material
+      menu.
+    scope_triage: required-now
+    route_id: route-2dae8c065ede0f1bff7b14d7
+    source_id: source-sad-ss26-lectures
+  - material_ref:
+      route_id: route-6b5698803acbdbd638a146b6
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-6b5698803acbdbd638a146b6
+  - material_ref:
+      route_id: route-8b4580c36cbf51ee7807a23e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-8b4580c36cbf51ee7807a23e
+  - material_ref:
+      route_id: route-f9377aee01af8b15edbf8705
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-f9377aee01af8b15edbf8705
+  - material_ref:
+      route_id: route-775c3bffd9b1dda61f65be0d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-775c3bffd9b1dda61f65be0d
+  - material_ref:
+      route_id: route-5a43ff2dd96c3c7e6aee61a4
+      inherit:
+      - angle
+      - angle_detail
+      - source_id
+      - vault_path
+    kind: practise
+    label: Cornell Fall 2018 HW8 Problem 1(a)
+    locator: 2018Fall/HW8/hw8.pdf, PDF pp. 1, Problem 1(a)
+    scope_triage: helpful-now
+    route_id: route-5a43ff2dd96c3c7e6aee61a4
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-regression/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l12-pruning
+  number: 4
+  title: Tree growth, stopping, and pruning
+  status: pending
+  objective: Depth, minimum samples, purity thresholds, and post-pruning control complexity; an unpruned
+    tree can fit noise and generalize poorly.
+  done_when:
+  - 'Reproduce without notes: Depth, minimum samples, purity thresholds, and post-pruning control complexity;
+    an unpruned tree can fit noise and generalize poorly.'
+  - Attempt Cornell Fall 2018 HW8 PDF Problem 1(b); Problem 1(b) solution correspondence remains unresolved
+    because the PDF and TeX differ.
+  exam_critical: true
+  concepts:
+  - concept-decision-trees
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L12 tree-based learning deck
+    locator: lecture-slides/12_tree_based.pdf, PDF pp. 29-30
+    angle: The current lecture's focused reading for tree growth, stopping, and pruning.
+    angle_detail: Read physical PDF pages 29-30 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
+    scope_triage: required-now
+    route_id: route-2dae8c065ede0f1bff7b14d7
+    source_id: source-sad-ss26-lectures
+  - material_ref:
+      route_id: route-9892260cc9d0dbf2da2b165c
+      inherit:
+      - label
+      - locator
+      - angle
+      - vault_path
+      - source_id
+    kind: read
+    angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes
+      the entropy of the target, then the remainder for each candidate feature, then the gain, then recurses
+      — with the arithmetic printed at every node. That is exactly the calculation an exam will ask for
+      on a small table, and doing it once with a fully worked reference is worth more than reading the
+      formula ten times. The chapter also covers the gain-ratio correction for many-valued features, which
+      the deck mentions in passing.
+    scope_triage: helpful-now
+    route_id: route-9892260cc9d0dbf2da2b165c
+  - material_ref:
+      route_id: route-6b5698803acbdbd638a146b6
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-6b5698803acbdbd638a146b6
+  - material_ref:
+      route_id: route-cd624eec2c74722433fa56ea
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-cd624eec2c74722433fa56ea
+  - material_ref:
+      route_id: route-0f00ed6b65da6c9fdd94757f
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: helpful-now
+    route_id: route-0f00ed6b65da6c9fdd94757f
+  - material_ref:
+      route_id: route-f13a1bb3e87f67e51c110dad
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-f13a1bb3e87f67e51c110dad
+  - material_ref:
+      route_id: route-f9377aee01af8b15edbf8705
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-f9377aee01af8b15edbf8705
+  - material_ref:
+      route_id: route-775c3bffd9b1dda61f65be0d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-775c3bffd9b1dda61f65be0d
+  - material_ref:
+      route_id: route-fcd3c263bfe17bebb07f49c3
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-fcd3c263bfe17bebb07f49c3
+  - material_ref:
+      route_id: route-5a43ff2dd96c3c7e6aee61a4
+      inherit:
+      - angle
+      - angle_detail
+      - source_id
+      - vault_path
+    kind: practise
+    label: Cornell Fall 2018 HW8 Problem 1(b)
+    locator: 2018Fall/HW8/hw8.pdf, PDF pp. 1-3, Problem 1(b)
+    scope_triage: helpful-now
+    route_id: route-5a43ff2dd96c3c7e6aee61a4
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-pruning/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l12-bagging-forest
+  number: 5
+  title: Bagging and random forests
+  status: pending
+  objective: Bootstrap aggregation averages unstable learners, while random forests add feature subsampling
+    to decorrelate trees and reduce ensemble variance.
+  done_when:
+  - 'Reproduce without notes: Bootstrap aggregation averages unstable learners, while random forests add
+    feature subsampling to decorrelate trees and reduce ensemble variance.'
+  exam_critical: true
+  concepts:
+  - concept-random-forest
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L12 tree-based learning deck
+    locator: lecture-slides/12_tree_based.pdf, PDF pp. 31-33,35-36
+    angle: The current lecture's focused reading for bagging and random forests.
+    angle_detail: Read physical PDF pages 31-33,35-36 for this stage. Printed slide labels may differ.
+      This slice focuses the existing deck route; the complete lecture remains accessible through the
+      unit material menu.
+    scope_triage: required-now
+    route_id: route-2dae8c065ede0f1bff7b14d7
+    source_id: source-sad-ss26-lectures
+  - material_ref:
+      route_id: route-9892260cc9d0dbf2da2b165c
+      inherit:
+      - label
+      - locator
+      - angle
+      - vault_path
+      - source_id
+    kind: read
+    angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes
+      the entropy of the target, then the remainder for each candidate feature, then the gain, then recurses
+      — with the arithmetic printed at every node. That is exactly the calculation an exam will ask for
+      on a small table, and doing it once with a fully worked reference is worth more than reading the
+      formula ten times. The chapter also covers the gain-ratio correction for many-valued features, which
+      the deck mentions in passing.
+    scope_triage: helpful-now
+    route_id: route-9892260cc9d0dbf2da2b165c
+  - material_ref:
+      route_id: route-6b5698803acbdbd638a146b6
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-6b5698803acbdbd638a146b6
+  - material_ref:
+      route_id: route-cd624eec2c74722433fa56ea
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-cd624eec2c74722433fa56ea
+  - material_ref:
+      route_id: route-0f00ed6b65da6c9fdd94757f
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: helpful-now
+    route_id: route-0f00ed6b65da6c9fdd94757f
+  - material_ref:
+      route_id: route-f13a1bb3e87f67e51c110dad
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: watch
+    scope_triage: helpful-now
+    route_id: route-f13a1bb3e87f67e51c110dad
+  - material_ref:
+      route_id: route-8b4580c36cbf51ee7807a23e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-8b4580c36cbf51ee7807a23e
+  - material_ref:
+      route_id: route-0f4dd7d42e4f26f7e9730a91
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-0f4dd7d42e4f26f7e9730a91
+  - material_ref:
+      route_id: route-4e866ff69e5d5dde2aa2d6ba
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-4e866ff69e5d5dde2aa2d6ba
+  - material_ref:
+      route_id: route-775c3bffd9b1dda61f65be0d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-775c3bffd9b1dda61f65be0d
+  - material_ref:
+      route_id: route-1f6f29865621dc40da790e50
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-1f6f29865621dc40da790e50
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-bagging-forest/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l12-boosting
+  number: 6
+  title: Boosting
+  status: pending
+  objective: Sequential weak learners focus on residuals or misclassified examples, trading a coordinated
+    bias reduction against sensitivity to noise and tuning.
+  done_when:
+  - 'Reproduce without notes: Sequential weak learners focus on residuals or misclassified examples, trading
+    a coordinated bias reduction against sensitivity to noise and tuning.'
+  - Explain the reweighting shown in L12 PDF pp. 34-35; optionally prove normalization in Cornell Fall
+    2018 HW8 Problem 2.
+  exam_critical: true
+  concepts:
+  - concept-random-forest
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L12 tree-based learning deck
+    locator: lecture-slides/12_tree_based.pdf, PDF pp. 34-35
+    angle: The current lecture's focused reading for boosting.
+    angle_detail: Read physical PDF pages 34-35 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
+    scope_triage: required-now
+    route_id: route-2dae8c065ede0f1bff7b14d7
+    source_id: source-sad-ss26-lectures
+  - material_ref:
+      route_id: route-9892260cc9d0dbf2da2b165c
+      inherit:
+      - label
+      - locator
+      - angle
+      - vault_path
+      - source_id
+    kind: read
+    angle_detail: L12 states the information-gain formula and shows a resulting tree. Kelleher computes
+      the entropy of the target, then the remainder for each candidate feature, then the gain, then recurses
+      — with the arithmetic printed at every node. That is exactly the calculation an exam will ask for
+      on a small table, and doing it once with a fully worked reference is worth more than reading the
+      formula ten times. The chapter also covers the gain-ratio correction for many-valued features, which
+      the deck mentions in passing.
+    scope_triage: helpful-now
+    route_id: route-9892260cc9d0dbf2da2b165c
+  - material_ref:
+      route_id: route-6b5698803acbdbd638a146b6
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-6b5698803acbdbd638a146b6
+  - material_ref:
+      route_id: route-cd624eec2c74722433fa56ea
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-cd624eec2c74722433fa56ea
+  - material_ref:
+      route_id: route-0f00ed6b65da6c9fdd94757f
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: helpful-now
+    route_id: route-0f00ed6b65da6c9fdd94757f
+  - material_ref:
+      route_id: route-8b4580c36cbf51ee7807a23e
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-8b4580c36cbf51ee7807a23e
+  - material_ref:
+      route_id: route-2ecd41a999e0fd49db64c0c0
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-2ecd41a999e0fd49db64c0c0
+  - material_ref:
+      route_id: route-0f4dd7d42e4f26f7e9730a91
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-0f4dd7d42e4f26f7e9730a91
+  - material_ref:
+      route_id: route-5a43ff2dd96c3c7e6aee61a4
+      inherit:
+      - label
+      - angle_detail
+      - source_id
+      - vault_path
+    kind: practise
+    locator: 2018Fall/HW8/hw8.pdf, PDF p. 3, Problem 2
+    angle: Prove the AdaBoost weight update stays normalized; this is a proof rather than a multi-round
+      numeric trace.
+    scope_triage: helpful-now
+    route_id: route-5a43ff2dd96c3c7e6aee61a4
+  - material_ref:
+      route_id: route-4e866ff69e5d5dde2aa2d6ba
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-4e866ff69e5d5dde2aa2d6ba
+  - material_ref:
+      route_id: route-775c3bffd9b1dda61f65be0d
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-775c3bffd9b1dda61f65be0d
+  - material_ref:
+      route_id: route-1f6f29865621dc40da790e50
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-1f6f29865621dc40da790e50
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-boosting/notes.md
+  attachments: []
+  source_feedback: []
+- id: stage-sad-l12-stacking
+  number: 7
+  title: Stacking and ensemble tradeoffs
+  status: pending
+  objective: A meta-learner combines diverse base predictions; leakage-safe out-of-fold construction,
+    diversity, interpretability, compute, and calibration decide whether an ensemble is worthwhile.
+  done_when:
+  - 'Reproduce without notes: A meta-learner combines diverse base predictions; leakage-safe out-of-fold
+    construction, diversity, interpretability, compute, and calibration decide whether an ensemble is
+    worthwhile.'
+  exam_critical: true
+  concepts:
+  - concept-ensemble-methods
+  scope_triage: required-now
+  resources:
+  - kind: read
+    label: Current L12 tree-based learning deck
+    locator: lecture-slides/12_tree_based.pdf, PDF pp. 33,35
+    angle: The current lecture's focused reading for stacking and ensemble tradeoffs.
+    angle_detail: Read physical PDF pages 33,35 for this stage. Printed slide labels may differ. This
+      slice focuses the existing deck route; the complete lecture remains accessible through the unit
+      material menu.
+    scope_triage: required-now
+    route_id: route-2dae8c065ede0f1bff7b14d7
+    source_id: source-sad-ss26-lectures
+  - material_ref:
+      route_id: route-0f00ed6b65da6c9fdd94757f
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+    kind: reference
+    scope_triage: helpful-now
+    route_id: route-0f00ed6b65da6c9fdd94757f
+  - material_ref:
+      route_id: route-4e866ff69e5d5dde2aa2d6ba
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: read
+    scope_triage: helpful-now
+    route_id: route-4e866ff69e5d5dde2aa2d6ba
+  - material_ref:
+      route_id: route-1f6f29865621dc40da790e50
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: reference
+    scope_triage: reference-only
+    route_id: route-1f6f29865621dc40da790e50
+  working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/stages/stage-sad-l12-stacking/notes.md
+  attachments: []
+  source_feedback: []

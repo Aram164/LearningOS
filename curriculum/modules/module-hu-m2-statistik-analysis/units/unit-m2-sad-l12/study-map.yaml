@@ -123,6 +123,8 @@ stages:
     angle: Deferred to regression trees and boosting; this PDF is not a categorical-entropy introduction.
     scope_triage: reference-only
     route_id: route-5a43ff2dd96c3c7e6aee61a4
+    node_scaffold_note: Deferral pointer — advanced regression-tree and boosting treatment lives on later
+      stages; this PDF is not a categorical-entropy introduction.
   - material_ref:
       route_id: route-8fec57420f21e471d11c0a87
       inherit:
@@ -262,6 +264,8 @@ stages:
     angle: Deferred to regression trees and boosting; this PDF is not a categorical-entropy introduction.
     scope_triage: reference-only
     route_id: route-5a43ff2dd96c3c7e6aee61a4
+    node_scaffold_note: Deferral pointer — advanced regression-tree and boosting treatment lives on later
+      stages; this PDF is not a categorical-entropy introduction.
   - material_ref:
       route_id: route-8fec57420f21e471d11c0a87
       inherit:
