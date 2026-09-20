@@ -21,6 +21,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `validate.py` | supported gate | Offline/online canonical validator. |
 | `generate.py` | supported gate | Deterministic generated-view publisher. |
 | `warning_baseline.py` | supported gate | No-new-warning policy. |
+| `verify_plan_receipt.py` | supported gate | Receipt/projection check for one plan transaction (`make plan-check`). |
 | `code_reachability.py` | supported code gate | Static, code-only import/reachability report. |
 | `schema_contract.py` | supported contract tool | Stored-record contract check and deliberate bump entrypoint. |
 | `tree_contract.py` | supported contract tool | Renders ARCHITECTURE §3.2 from the tree contract; `--check` is what `make check` compares. |

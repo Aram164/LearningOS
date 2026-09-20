@@ -715,6 +715,21 @@ def test_post_commit_supported_end_to_end_via_gateway(mini_repo, tmp_path):
     assert refused.returncode == 1
     assert "without claim evidence" in refused.stderr
     package_data["claim_evidence"] = evidence
+    # The semantic review gate (unit revisions, Step 9) names menu shrinkage
+    # explicitly: a removal-only package carries its own acknowledgment.
+    package_data["acknowledgments"] = [{
+        "kind": "coverage-reduction", "target": "unit-demo-l01",
+        "reason": "Withdrawing the superseded rich route to its legacy edge; "
+                  "lineage records the withdrawal.",
+    }, {
+        "kind": "coverage-loss", "target": "knowledge-demo-alpha",
+        "reason": "The legacy edge carries no covers claim; the node is "
+                  "deliberately uncovered until its replacement route lands.",
+    }, {
+        "kind": "demotion", "target": "route-demo-rich",
+        "reason": "Withdrawing the current route to its legacy edge; the "
+                  "withdrawal is the point of this package.",
+    }]
     write_yaml(package, package_data)
     removed = approved_v2_cli(
         mini_repo, "module-plan-import", "module-demo",

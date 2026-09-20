@@ -13,10 +13,12 @@ from __future__ import annotations
 
 import argparse
 import datetime as _dt
+import time as _time
 from pathlib import Path
 
 from learning_os.loader import load_repo  # noqa: E402
 from learning_os.rules import render_report, validate  # noqa: E402
+from learning_os.rules.common import BASELINE_EXEMPT_WARNINGS  # noqa: E402
 
 
 def main() -> int:
@@ -27,18 +29,36 @@ def main() -> int:
                         help="repository root (default: parent of tools/)")
     parser.add_argument("--no-report", action="store_true",
                         help="do not write generated/reports/validation-report.md")
+    parser.add_argument("--compact", action="store_true",
+                        help="print errors plus one summary line instead of "
+                             "streaming every unchanged warning; the complete "
+                             "list stays in the validation report unless "
+                             "--no-report is also given")
     args = parser.parse_args()
 
+    started = _time.monotonic()
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
     repo = load_repo(root)
     issues = validate(repo, online=args.online)
+    elapsed = _time.monotonic() - started
 
     errors = [i for i in issues if i.severity == "E"]
     warnings = [i for i in issues if i.severity == "W"]
-    for issue in issues:
-        print(issue)
-    print(f"\n{len(errors)} error(s), {len(warnings)} warning(s) — "
-          f"{'FAIL' if errors else 'OK'}")
+    if args.compact:
+        # Without a saved report there is nowhere else to inspect warnings.
+        # Operational advisories must be visible on every run in either mode.
+        for issue in issues:
+            if issue.severity != "E" and not args.no_report \
+                    and issue.code not in BASELINE_EXEMPT_WARNINGS:
+                continue
+            print(issue)
+        print(f"{len(errors)} error(s), {len(warnings)} warning(s) — "
+              f"{'FAIL' if errors else 'OK'} ({elapsed:.1f}s)")
+    else:
+        for issue in issues:
+            print(issue)
+        print(f"\n{len(errors)} error(s), {len(warnings)} warning(s) — "
+              f"{'FAIL' if errors else 'OK'}")
 
     if not args.no_report:
         generated_at = _dt.datetime.now().astimezone().isoformat(timespec="seconds")

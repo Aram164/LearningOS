@@ -183,7 +183,8 @@ repository/
 │   ├── transactions/      one receipt per applied transaction
 │   ├── gateway-requests/  request envelopes
 │   ├── ai-actions/        AI action state; requests and deliveries are gitignored
-│   └── migrations/        applied-migration provenance
+│   ├── migrations/        applied-migration provenance
+│   └── diagnostics/       disposable diagnostic trace store (gitignored, deletable, never authoritative)
 ├── migration/             migration state, preserved originals and reports
 │   ├── backups/           pre-migration copies, retained
 │   ├── reports/           what each migration did

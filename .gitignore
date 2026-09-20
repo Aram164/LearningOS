@@ -28,3 +28,9 @@ operations/ai-actions/incoming/
 # between a process dying mid-write and the next run rolling it back, and hold
 # copies of canonical files — never a thing to commit.
 operations/transactions/.inflight/
+
+# Diagnostic trace store (track #2, Phase 3A). Non-authoritative, disposable,
+# bounded operation history: IDs and references only, never payload text.
+# Deleting it changes no canonical behavior; the resolver degrades to
+# authority-only verdicts. Outside the canonical fingerprint roots.
+operations/diagnostics/

@@ -650,6 +650,13 @@ remain inline. It does not replace the material-coverage audit for new plans.
 
 For structural plan revisions, use the creation/import path:
 
+For one existing lecture, `unit-plan-revise` accepts compact route operations
+and the final study map; it uses this same governed import path internally.
+The saved-preflight shortcut for both commands is specified in
+`PLAN-CREATION-SOP.md` Gates 4–6: `--apply-reviewed-sha256` plus
+`--review-report` dispatches the exact envelope prepared at review time,
+without refreshing its snapshot, revisions or retry identity.
+
 1. **Draft.** Regenerate the affected maps with
    `tools/assemble_lecture_study_maps.py --out <dir>` when the change is in the
    module source map, or edit a copy of the map when it is not. The assembler
@@ -665,7 +672,7 @@ For structural plan revisions, use the creation/import path:
    `--check` runs the contract, ordering, routing and shadow-repository
    validation and reports `"canonical_files_written": 0`.
 4. **Apply through the gateway**, never by writing the canonical file directly
-   — and note that "through the gateway" means an envelope, not a flag:
+   — either through the saved-preflight shortcut above or an explicit envelope:
 
    ```bash
    python tools/los.py capability module.plan.import --payload-file envelope.json

@@ -1,0 +1,57 @@
+schema_version: 2
+id: transaction-20260919-044956-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-09-19T04:49:56+02:00'
+snapshot_before: sha256:3161438956535d3a18a01261a7c7489e23d2363cf5837e6e37c674988c756753
+snapshot_after: sha256:5f43d05a868a96f5ad8044ef058107ffbf12b4397dd3ef7379860e719722aeae
+expected_revisions:
+  module-hu-m2-statistik-analysis: 55
+  unit-m2-sad-l04: 24
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 55
+    after: 56
+  unit-m2-sad-l04:
+    before: 24
+    after: 25
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/module.yaml
+  sha256_before: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  sha256_after: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: 48245898e36cf086ada14223dec482dd79dacb064b288607f480160402e4f950
+  sha256_after: 322be58a75520ff0d0976233581e2c6219826d7de2ff4afbc6d4ca458182afa5
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/study-map.yaml
+  sha256_before: 4a6d1f14ad32fd85edb2c862ea3bb07af319603733a7ad57d24ccffb4a91a19a
+  sha256_after: a15b3f737264af6177e7fb7390cdee918d153c1e8b0cbaae069d58241256f64b
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/unit.yaml
+  sha256_before: 0caa7f022f6a11e1273497f2c27a68a10a36d26838c840f02ab6cbb27c135ed2
+  sha256_after: 0caa7f022f6a11e1273497f2c27a68a10a36d26838c840f02ab6cbb27c135ed2
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: codex-sad-l04-expand-20260919-001
+  idempotency_key: codex-sad-l04-expand-20260919-001
+  intent_sha256: sha256:75362e7970087505fe96c516e7febf47a21dce4a191ad9d55063f9e5aef19acd
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:75362e7970087505fe96c516e7febf47a21dce4a191ad9d55063f9e5aef19acd

@@ -29,7 +29,7 @@ revisions:
   materials-manifest: 1
   module-hu-algo2: 2
   module-hu-aml: 13
-  module-hu-m2-statistik-analysis: 55
+  module-hu-m2-statistik-analysis: 57
   module-job-engineering-tools: 1
   module-job-git: 1
   module-job-polars: 3
@@ -202,8 +202,8 @@ revisions:
   study-map-m2-sad-l13: 5
   study-map-m2-sad-l14: 5
   study-map-m2-sad-l15: 5
-  unit-algo2-exam-prep: 1
-  unit-aml-exam-prep: 7
+  unit-algo2-exam-prep: 2
+  unit-aml-exam-prep: 8
   unit-aml-l01: 6
   unit-aml-l02: 6
   unit-aml-l03: 6
@@ -217,16 +217,16 @@ revisions:
   unit-aml-l11: 7
   unit-job-engineering-tools-fluency: 2
   unit-job-git-fluency: 1
-  unit-job-polars-aggregation-windows: 1
-  unit-job-polars-backend-loop: 2
-  unit-job-polars-capstone-transition: 1
-  unit-job-polars-expressions: 14
-  unit-job-polars-joins-reshape: 8
-  unit-job-polars-lazy-udf-interop: 8
-  unit-job-polars-order-text-time: 1
-  unit-job-polars-pandas-fluency: 11
-  unit-job-polars-schema-missing-types: 8
-  unit-job-polars-selection-backend: 11
+  unit-job-polars-aggregation-windows: 2
+  unit-job-polars-backend-loop: 3
+  unit-job-polars-capstone-transition: 2
+  unit-job-polars-expressions: 15
+  unit-job-polars-joins-reshape: 9
+  unit-job-polars-lazy-udf-interop: 9
+  unit-job-polars-order-text-time: 2
+  unit-job-polars-pandas-fluency: 12
+  unit-job-polars-schema-missing-types: 9
+  unit-job-polars-selection-backend: 12
   unit-job-python-engineering-fluency: 2
   unit-job-rust-engineering-fluency: 1
   unit-m2-analysis-ch01: 6
@@ -237,21 +237,21 @@ revisions:
   unit-m2-analysis-ch06: 7
   unit-m2-analysis-ch07: 6
   unit-m2-analysis-exam-prep: 12
-  unit-m2-combined-exam-rehearsal: 4
+  unit-m2-combined-exam-rehearsal: 5
   unit-m2-sad-clustering: 12
-  unit-m2-sad-exam-prep: 10
+  unit-m2-sad-exam-prep: 11
   unit-m2-sad-l01: 9
-  unit-m2-sad-l02: 11
+  unit-m2-sad-l02: 13
   unit-m2-sad-l03: 22
-  unit-m2-sad-l04: 24
+  unit-m2-sad-l04: 27
   unit-m2-sad-l05: 15
-  unit-m2-sad-l06: 20
-  unit-m2-sad-l07: 17
+  unit-m2-sad-l06: 22
+  unit-m2-sad-l07: 18
   unit-m2-sad-l08: 22
   unit-m2-sad-l09: 14
   unit-m2-sad-l10: 12
-  unit-m2-sad-l11: 13
-  unit-m2-sad-l12: 11
+  unit-m2-sad-l11: 14
+  unit-m2-sad-l12: 12
   unit-m2-sad-l13: 11
   unit-m2-sad-l14: 15
   unit-m2-sad-l15: 15
