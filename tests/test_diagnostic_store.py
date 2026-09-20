@@ -233,12 +233,53 @@ def test_corrupt_store_leaves_canonical_behavior_untouched(tmp_path: Path):
     assert json.loads(proc.stdout)["ok"] is True
 
 
+def test_torn_utf8_tail_keeps_valid_records_readable(tmp_path: Path):
+    """An incomplete trailing byte must cost one line, never the view."""
+    import pytest
+
+    mini = _mini_with_curriculum(tmp_path, "store-torntail")
+    proc = _stage_write(mini, "store-torntail-1")
+    assert proc.returncode == 0, proc.stderr
+    path = traces_path(mini)
+    before = read_records(mini)
+    assert before, "the seed write must leave records"
+    tail = b"\xe2\x82"  # an incomplete 3-byte sequence, no newline
+    with pytest.raises(UnicodeDecodeError):
+        tail.decode("utf-8")
+    with open(path, "ab") as handle:
+        handle.write(tail)
+    assert read_records(mini) == before
+
+
 def test_missing_store_leaves_canonical_behavior_untouched(tmp_path: Path):
     mini = _mini_with_curriculum(tmp_path, "store-missing")
     assert read_records(mini) == []
     proc = _stage_write(mini, "store-missing-1")
     assert proc.returncode == 0, proc.stderr
     assert json.loads(proc.stdout)["ok"] is True
+
+
+def test_structurally_corrupt_trace_lines_do_not_break_operations(tmp_path: Path):
+    from learning_os.commands.operations import list_operations
+
+    mini = _mini_with_curriculum(tmp_path, "store-shapes")
+    proc = _stage_write(mini, "store-shapes-1")
+    assert proc.returncode == 0, proc.stderr
+    path = traces_path(mini)
+    before = read_records(mini)
+    seed = json.loads(path.read_text(encoding="utf-8").splitlines()[0])
+    damage = [
+        {"attributes": ["broken"]}, {"trace_id": []},
+        {"span_id": {}}, {"name": []}, {"stage": []},
+        {"timestamp": "yesterday"}, {"timestamp": float("nan")},
+        {"attributes": {"request_id": []}},
+        {"attributes": {"code": []}}, {"attributes": {"stage": []}},
+    ]
+    with path.open("a", encoding="utf-8") as handle:
+        for change in damage:
+            handle.write(json.dumps({**seed, **change}) + "\n")
+    assert read_records(mini) == before
+    assert list_operations(mini)[0]["canonical_outcome"] == "COMMITTED"
 
 
 def test_unwritable_store_never_rejects_a_write(tmp_path: Path):

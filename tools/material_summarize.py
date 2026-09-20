@@ -4,8 +4,10 @@
 Summaries are judgments: the agent writes the draft, this tool only checks
 structure. A draft is admitted when its digest exists in the page-text
 cache, its material and page range match that digest's index, its length
-is a genuine compression (at least 200 characters, at most 80% of the
-source range), and no summary for that range exists yet. Admission writes
+is a genuine compression (at least 200 characters, at most 80% of a
+non-empty source range), and no summary for that range exists yet.
+An empty source range refuses: with nothing to compress against, the
+fraction is unprovable. Admission writes
 the draft after a fixed generated-file marker plus a provenance meta file
 into ``generated/summaries/<sha256>/pages-<start>-<end>/``; anything else
 refuses with a reason and writes nothing.
@@ -192,7 +194,9 @@ def main(argv: list[str] | None = None) -> int:
             return _refuse(f"cached page text is incomplete near p{page}")
     if len(draft) < MIN_DRAFT_CHARS:
         return _refuse(f"draft below {MIN_DRAFT_CHARS} characters is not a summary")
-    if source_chars and len(draft) > MAX_SOURCE_FRACTION * source_chars:
+    if source_chars == 0:
+        return _refuse("cached source range holds no text; compression is unprovable")
+    if len(draft) > MAX_SOURCE_FRACTION * source_chars:
         return _refuse("draft exceeds 80% of its source range; compress, do not copy")
     target = Path(args.cache_dir) / args.digest / f"pages-{start}-{end}"
     if (target / "summary.md").exists():

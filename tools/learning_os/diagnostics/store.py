@@ -21,6 +21,7 @@ errors to its own caller and never runs inside the write path.
 from __future__ import annotations
 
 import json
+import math
 import os
 from pathlib import Path
 
@@ -97,17 +98,23 @@ def read_records(root: Path, *, trace_id: str | None = None,
                  request_id: str | None = None) -> list[dict]:
     """Read persisted records, tolerating corruption line by line.
 
-    Unparseable lines are skipped, never fatal: a torn tail from a killed
-    process must degrade the view, not the system. Resolved back into the
-    in-memory record shape the resolver already reads.
+    Unparseable or undecodable lines are skipped, never fatal: a torn tail
+    from a killed process must degrade the view, not the system. Bytes are
+    split first and each line decoded separately, so one bad line cannot
+    take the valid records around it. Resolved back into the in-memory
+    record shape the resolver already reads.
     """
     path = traces_path(root)
     try:
-        lines = path.read_text(encoding="utf-8").splitlines()
+        raw = path.read_bytes()
     except OSError:
         return []
     records = []
-    for line in lines:
+    for raw_line in raw.splitlines():
+        try:
+            line = raw_line.decode("utf-8")
+        except ValueError:
+            continue
         if not line.strip():
             continue
         try:
@@ -119,6 +126,27 @@ def read_records(root: Path, *, trace_id: str | None = None,
         if stored.get("schema_version") != STORE_SCHEMA_VERSION:
             continue
         if stored.get("conventions_version") != conventions.VOCAB_VERSION:
+            continue
+        # Valid JSON can still be a corrupt record. Reject it before its
+        # identifiers become dict keys or its attributes reach the resolver.
+        timestamp = stored.get("timestamp")
+        attributes = stored.get("attributes")
+        if stored.get("kind") not in ("event", "span-start", "span-end") \
+                or any(not isinstance(stored.get(key), str) or not stored[key]
+                       for key in ("trace_id", "span_id", "name")) \
+                or isinstance(timestamp, bool) \
+                or not isinstance(timestamp, (int, float)) \
+                or (isinstance(timestamp, float) and not math.isfinite(timestamp)) \
+                or any(stored.get(key) is not None
+                       and not isinstance(stored[key], str)
+                       for key in ("stage", "status")) \
+                or not isinstance(attributes, dict):
+            continue
+        # These fields participate in identity, hashing and code lookups.
+        # A malformed value must not poison otherwise readable operations.
+        if any(attributes.get(key) is not None
+               and not isinstance(attributes[key], str)
+               for key in ("request_id", "idempotency_key", "capability", "code", "stage")):
             continue
         if trace_id is not None and stored.get("trace_id") != trace_id:
             continue

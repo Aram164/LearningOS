@@ -92,6 +92,24 @@ def test_promote_refuses_without_writing(tmp_path: Path, capsys):
     assert not cache.exists()
 
 
+def test_promote_refuses_an_empty_source_range(tmp_path: Path, capsys):
+    ms = _material_summarize()
+    cache = tmp_path / "text-cache" / DIGEST
+    cache.mkdir(parents=True)
+    (cache / "pp-0001.txt").write_text("", encoding="utf-8")
+    (cache / "index.json").write_text(json.dumps(
+        {"material": "deck/ch.pdf", "sha256": DIGEST, "pages": 1,
+         "extractor": "test", "built": "2026-01-01"}))
+    draft = tmp_path / "draft.md"
+    draft.write_text("A detailed chapter compression. " * 20, encoding="utf-8")
+    code = _promote(ms, tmp_path / "summaries", tmp_path / "text-cache",
+                    draft, pages="1-1")
+    _, err = capsys.readouterr()
+    assert code == 2
+    assert "no text" in err
+    assert not (tmp_path / "summaries").exists()
+
+
 def test_promote_refuses_an_existing_range(tmp_path: Path, capsys):
     ms = _material_summarize()
     text = _text_cache(tmp_path)
