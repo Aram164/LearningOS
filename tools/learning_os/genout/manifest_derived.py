@@ -27,14 +27,19 @@ from typing import TYPE_CHECKING, Any
 import yaml
 
 from ..ai_actions.projection import project_ai_actions
-from ..contracts.manifest_contract import enforce, load_contract
-from ..derived.engine import evaluate, evaluate_many
-from ..derived.identity import digest_bytes, digest_matching_files
-from ..derived.model import DERIVED_SUBSTRATE_FILES, NodeSpec
-from ..derived.store import canonical_bytes
+from ..contracts.manifest_contract import declared_version, enforce, load_contract
+from ..derived.engine import Staging, commit_staging, evaluate, evaluate_many
+from ..derived.identity import (
+    canonical_snapshot_digest,
+    digest_bytes,
+    digest_matching_files,
+)
+from ..derived.model import DERIVED_SUBSTRATE_FILES, DerivedError, NodeSpec
+from ..derived.store import canonical_bytes, invalidate
+from ..errors import TransactionFailure
 from ..garden import garden_id, project_garden_entries
 from ..githistory import GitHistoryError, last_commit_dates
-from ..loader import Repo
+from ..loader import Repo, load_repo
 from ..materials_resolution import MATERIAL_SCHEME, MATERIAL_SUFFIX_TOKEN
 from ..materials_resolution import leading_material_locator as _leading_locator
 from ..materials_resolution import material_location as _material_location
@@ -73,6 +78,7 @@ from .manifest import (
     derive_manifest_collections,
     load_manifest_revisions,
     publish_manifest_metadata,
+    require_publishable_manifest_repo,
     splice_manifest_records,
 )
 from .modules_view import _academic_deadlines
@@ -533,6 +539,12 @@ def manifest_input_digests(root: Path, repo: Repo) -> dict[str, str]:
         "manifest.notes_git": notes_git_digest(root, git_table),
         "manifest.materials": materials_digest(root, repo),
         "manifest.today": today_digest(),
+        # The contract closure is an input even though no semantic node
+        # names it: the snapshot transaction compares the whole map
+        # before and after evaluation, which proves the validator's
+        # reads stayed stable across enforce() (F2). The proof node
+        # takes the same pre-evaluation value as its direct input.
+        "manifest.contract_closure": contract_closure_digest(root),
     }
 
 
@@ -1255,17 +1267,36 @@ def validation_proof_producers() -> tuple[str, ...]:
     ))
 
 
+def _proof_matches(proof: Any, root: Path, full_digest: str, closure: str) -> bool:
+    """Whether a cached proof actually certifies this payload (F5).
+
+    The engine guarantees the bytes are intact; this guarantees they
+    are the RIGHT bytes — a valid proof for this manifest under this
+    contract. Anything else is rejected even on a key hit.
+    """
+    return (
+        isinstance(proof, dict)
+        and proof.get("valid") is True
+        and proof.get("contract_version") == declared_version(root)
+        and proof.get("manifest_sha256") == full_digest
+        and proof.get("contract_closure_sha256") == closure
+    )
+
+
 def _enforce_with_proof(
     root: Path,
     payload: dict,
     *,
+    closure: str,
+    staging: Staging | None = None,
     trace: list[TraceEvent] | None = None,
 ) -> dict:
     """Enforce the contract, reusing a previous proof when identity matches.
 
     The proof key covers the complete manifest bytes, the contract
-    closure, the validator implementation, and the validation semantics
-    version — the rule is "same bytes, same contract, same validator,
+    closure, the validator implementation, the core code digest, the
+    runtime identity, and the validation semantics version — the rule is
+    "same bytes, same contract, same validator, same code, same runtime,
     same semantics, or enforce() runs again". A failed validation raises
     out of the builder, which the engine never caches, so failures are
     always re-examined.
@@ -1273,9 +1304,13 @@ def _enforce_with_proof(
     The proof evaluates in its own phase because its key needs the live
     publication metadata, which is stamped fresh and never cached. Its
     event appends to the same trace as the semantic graph.
+
+    The closure arrives precomputed from the snapshot transaction's
+    input map: enforce()'s reads happened after that observation and
+    the transaction re-verifies it afterwards, so the proof cannot be
+    keyed on contract bytes enforce() never saw.
     """
     full_digest = digest_bytes(canonical_bytes(payload))
-    closure = contract_closure_digest(root)
 
     def build_proof(ctx: BuildContext) -> dict:
         enforce(payload, ctx.root)
@@ -1292,16 +1327,39 @@ def _enforce_with_proof(
         producer_files=validation_proof_producers(),
         direct_inputs=("manifest.full_bytes", "manifest.contract_closure"),
     )
-    return evaluate(
-        root,
-        VALIDATION_PROOF_ID,
-        registry={VALIDATION_PROOF_ID: (spec, build_proof)},
-        inputs={
-            "manifest.full_bytes": full_digest,
-            "manifest.contract_closure": closure,
-        },
-        trace=trace,
-    ).value
+    registry = {VALIDATION_PROOF_ID: (spec, build_proof)}
+    inputs = {
+        "manifest.full_bytes": full_digest,
+        "manifest.contract_closure": closure,
+    }
+    evaluation = evaluate(
+        root, VALIDATION_PROOF_ID, registry=registry, inputs=inputs,
+        staging=staging, trace=trace,
+    )
+    if evaluation.status == "hit" and not _proof_matches(
+        evaluation.value, root, full_digest, closure
+    ):
+        # Internally consistent but wrong cache state (a valid blob for
+        # another payload, a bug-written proof) must not skip enforce():
+        # drop the entry and rebuild once through the validator. A
+        # second mismatch is not instability but corruption the rebuild
+        # cannot heal, so it fails closed instead of looping.
+        invalidate(root, VALIDATION_PROOF_ID)
+        evaluation = evaluate(
+            root, VALIDATION_PROOF_ID, registry=registry, inputs=inputs,
+            staging=staging, trace=trace,
+        )
+        if not _proof_matches(evaluation.value, root, full_digest, closure):
+            raise DerivedError(
+                "validation proof failed verification after rebuild")
+    return evaluation.value
+
+
+#: Snapshot-transaction attempts before a persistently moving tree
+#: refuses instead of retrying. One attempt covers the overwhelmingly
+#: common stable tree; the retries absorb a concurrent edit landing
+#: mid-run.
+SNAPSHOT_ATTEMPTS = 3
 
 
 def build_manifest_shadow(
@@ -1318,24 +1376,62 @@ def build_manifest_shadow(
     metadata is stamped fresh and the contract is enforced exactly as
     the legacy path does (through the validation-proof node when
     reuse is enabled). ``build_manifest()`` stays authoritative.
+
+    Snapshot-bound (F2): the shadow loads the repo inside its own
+    snapshot window — snapshot, load, snapshot, verify — so the passed
+    repo's contents are never trusted, only its root. Evaluation runs
+    into staged (uncommitted) cache state; the inputs and the snapshot
+    are re-verified afterwards and the staging commits only when all
+    three observations agree. A concurrent edit therefore retries the
+    run instead of memoizing torn bytes under a fresh digest. Trace
+    events from discarded attempts are dropped; the trace holds the
+    committed attempt only.
     """
-    results = evaluate_many(
-        repo.root,
-        [SEMANTIC_PAYLOAD_ID],
-        registry=manifest_shadow_registry(repo),
-        inputs=manifest_shadow_inputs(repo.root, repo),
-        trace=trace,
+    root = repo.root
+    for _ in range(SNAPSHOT_ATTEMPTS):
+        snapshot_before = canonical_snapshot_digest(root)
+        fresh = load_repo(root)
+        if canonical_snapshot_digest(root) != snapshot_before:
+            continue  # the load raced a concurrent edit; reload
+        require_publishable_manifest_repo(fresh)
+        staging = Staging()
+        attempt_trace: list[TraceEvent] = []
+        inputs_before = manifest_shadow_inputs(root, fresh)
+        results = evaluate_many(
+            root,
+            [SEMANTIC_PAYLOAD_ID],
+            registry=manifest_shadow_registry(fresh),
+            inputs=inputs_before,
+            staging=staging,
+            trace=attempt_trace,
+        )
+        payload = {
+            "_generated": publish_manifest_metadata(fresh, generated_at),
+            **results[SEMANTIC_PAYLOAD_ID].value,
+        }
+        if enforce_contract:
+            if reuse_validation:
+                _enforce_with_proof(
+                    root,
+                    payload,
+                    closure=inputs_before["manifest.contract_closure"],
+                    staging=staging,
+                    trace=attempt_trace,
+                )
+            else:
+                enforce(payload, root)
+        if manifest_shadow_inputs(root, fresh) != inputs_before:
+            continue  # inputs moved during evaluation; the staging dies here
+        if canonical_snapshot_digest(root) != snapshot_before:
+            continue
+        commit_staging(root, staging)
+        if trace is not None:
+            trace.extend(attempt_trace)
+        return payload
+    raise TransactionFailure(
+        "cannot publish the manifest: canonical inputs changed during "
+        f"generation ({SNAPSHOT_ATTEMPTS} attempts)"
     )
-    payload = {
-        "_generated": publish_manifest_metadata(repo, generated_at),
-        **results[SEMANTIC_PAYLOAD_ID].value,
-    }
-    if enforce_contract:
-        if reuse_validation:
-            _enforce_with_proof(repo.root, payload, trace=trace)
-        else:
-            enforce(payload, repo.root)
-    return payload
 
 
 @dataclass(frozen=True)

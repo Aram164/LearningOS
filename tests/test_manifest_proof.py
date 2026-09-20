@@ -124,7 +124,7 @@ def test_registry_schema_change_reruns_validation(tmp_path, monkeypatch):
     assert spy.calls == 1
 
 
-def test_validator_code_change_reruns_only_validation(tmp_path, monkeypatch):
+def test_validator_code_change_reruns_validation(tmp_path, monkeypatch):
     mini = _warmed(tmp_path)
     staged = mini / "tools/learning_os/contracts/manifest_contract.py"
     staged.write_text(staged.read_text(encoding="utf-8") + "\n# probe\n",
@@ -133,11 +133,14 @@ def test_validator_code_change_reruns_only_validation(tmp_path, monkeypatch):
     trace: list = []
     assert compare_shadow_manifest(load_repo(mini), STAMP, trace=trace).equivalent
     summary = trace_summary(trace)
+    # Global code identity (F3): every node rebuilds, outputs unchanged,
+    # and the proof rebuild runs the validator again.
     assert summary[VALIDATION_PROOF_ID] == (
         "rebuilt", "node-key-changed-output-same")
     for node, (status, reason) in summary.items():
         if node != VALIDATION_PROOF_ID:
-            assert (status, reason) == ("hit", "node-key-equal"), node
+            assert (status, reason) == (
+                "rebuilt", "node-key-changed-output-same"), node
     assert spy.calls == 1
 
 

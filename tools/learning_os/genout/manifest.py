@@ -60,6 +60,19 @@ from .projection import (
 from .review import build_review_items
 
 
+def require_publishable_manifest_repo(repo: Repo) -> None:
+    """Refuse to publish a manifest when canonical records were unreadable.
+
+    The loader skips malformed records and records them in
+    ``repo.parse_failures``; publishing anyway would silently omit them.
+    Both the production projector and the incremental shadow call this
+    before any evaluation or cache mutation, so the two cannot disagree
+    about what "publishable" means (F1).
+    """
+    if repo.parse_failures:
+        raise TransactionFailure(unreadable_refusal(repo.root, repo.parse_failures, "publish the manifest"))
+
+
 def load_manifest_revisions(root: Path) -> dict[str, int]:
     """Artifact revisions minus gateway quarantine tokens.
 
@@ -347,8 +360,7 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
     `exam_spine` key (2026-08-03), and `stages` is the flat by-id index for
     stage lookup while `study_maps[].stages` stays the ordering authority —
     an index plus an ordered list, never two copies of the same access path."""
-    if repo.parse_failures:
-        raise TransactionFailure(unreadable_refusal(repo.root, repo.parse_failures, "publish the manifest"))
+    require_publishable_manifest_repo(repo)
 
     artifact_revisions = load_manifest_revisions(repo.root)
     projected_revision = partial(_projected_revision, artifact_revisions)

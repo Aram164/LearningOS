@@ -559,14 +559,23 @@ def test_matrix_unrelated_transcription_is_invisible(tmp_path: Path):
 # ---------------------------------------------------------------------------
 
 
-def test_producer_change_rebuilds_only_its_node(tmp_path: Path):
+def test_code_change_rebuilds_everything_output_same(tmp_path: Path):
+    """Any Core code change invalidates every cached node (F3).
+
+    Producer identity is the whole implementation tree, not the
+    per-node declared lists: a comment-only edit rebuilds all nodes
+    with identical outputs rather than risking a missed producer.
+    """
     mini = _warmed(tmp_path)
     staged = mini / "tools/learning_os/genout/projection/lifecycle.py"
     staged.write_text(staged.read_text(encoding="utf-8") + "\n# probe\n",
                       encoding="utf-8")
     trace: list = []
     assert compare_shadow_manifest(load_repo(mini), STAMP, trace=trace).equivalent
-    _assert_partition(trace_summary(trace), changed=set(), same={MODULES_ID})
+    summary = trace_summary(trace)
+    assert summary
+    assert all(reason == "node-key-changed-output-same"
+               for _, reason in summary.values())
 
 
 def test_corrupt_blob_self_heals(tmp_path: Path):

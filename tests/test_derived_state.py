@@ -22,8 +22,10 @@ from learning_os.derived import (
     InputRef,
     NodeSpec,
     canonical_bytes,
+    canonical_snapshot_digest,
     derived_dir,
     digest_bytes,
+    digest_code_tree,
     digest_file,
     digest_paths,
     digest_producer_files,
@@ -32,6 +34,7 @@ from learning_os.derived import (
     lookup,
     node_key,
     read_state,
+    runtime_digest,
     state_path,
     store_node,
 )
@@ -46,6 +49,8 @@ def _key(**overrides):
         "node_id": "search.note:x",
         "node_version": 1,
         "producer_digest": PRODUCER,
+        "code_digest": "c" * 64,
+        "runtime_digest": "r" * 64,
         "direct_inputs": (INPUT,),
         "dependency_outputs": {"up": "b" * 64},
     }
@@ -66,6 +71,8 @@ def test_node_key_covers_every_component():
     assert _key(node_id="other") != base
     assert _key(node_version=2) != base
     assert _key(producer_digest="q" * 64) != base
+    assert _key(code_digest="q" * 64) != base
+    assert _key(runtime_digest="q" * 64) != base
     assert _key(direct_inputs=(InputRef(id="knowledge.notes", digest="c" * 64),)) != base
     assert _key(direct_inputs=()) != base
     assert _key(dependency_outputs={"up": "d" * 64}) != base
@@ -411,3 +418,61 @@ def test_derived_state_survives_stale_removal(tmp_path: Path):
     assert (gen / "derived-state" / "blobs").is_dir()
     assert not stale.exists()
     assert live.exists()
+
+
+# ---------------------------------------------------------------------------
+# Code identity, runtime identity, and the coarse snapshot (F2–F4).
+# ---------------------------------------------------------------------------
+
+def test_digest_code_tree_tracks_every_implementation_file(tmp_path: Path):
+    code = tmp_path / "tools" / "learning_os"
+    (code / "genout").mkdir(parents=True)
+    (code / "engine.py").write_text("v1\n", encoding="utf-8")
+    (code / "genout" / "common.py").write_text("v1\n", encoding="utf-8")
+    before = digest_code_tree(tmp_path)
+    assert digest_code_tree(tmp_path) == before
+    (code / "genout" / "common.py").write_text("v2 semantic\n", encoding="utf-8")
+    assert digest_code_tree(tmp_path) != before
+    (code / "genout" / "__pycache__").mkdir(parents=True)
+    (code / "genout" / "__pycache__" / "common.pyc").write_bytes(b"compiled")
+    assert digest_code_tree(tmp_path) == digest_code_tree(tmp_path)
+
+
+def test_digest_code_tree_without_a_tree_is_stable_and_distinct(tmp_path: Path):
+    assert digest_code_tree(tmp_path) == digest_code_tree(tmp_path)
+    (tmp_path / "tools" / "learning_os").mkdir(parents=True)
+    assert digest_code_tree(tmp_path) != digest_code_tree(tmp_path.parent)
+
+
+def test_runtime_digest_is_stable_and_version_sensitive(monkeypatch):
+    import learning_os.derived.identity as identity_module
+
+    assert runtime_digest() == runtime_digest()
+    monkeypatch.setattr(
+        identity_module, "_runtime_components", lambda: (("python", "fake"),))
+    patched = runtime_digest()
+    monkeypatch.setattr(
+        identity_module, "_runtime_components", lambda: (("python", "other"),))
+    assert runtime_digest() != patched
+
+
+def test_canonical_snapshot_ignores_non_inputs(tmp_path: Path):
+    (tmp_path / "knowledge" / "notes").mkdir(parents=True)
+    (tmp_path / "knowledge" / "notes" / "n.md").write_text("v1", encoding="utf-8")
+    before = canonical_snapshot_digest(tmp_path)
+    assert canonical_snapshot_digest(tmp_path) == before
+    (tmp_path / "knowledge" / "notes" / "n.md").write_text("v2", encoding="utf-8")
+    assert canonical_snapshot_digest(tmp_path) != before
+    steady = canonical_snapshot_digest(tmp_path)
+    (tmp_path / "generated" / "derived-state").mkdir(parents=True)
+    (tmp_path / "generated" / "derived-state" / "state-v1.json").write_text(
+        "cache", encoding="utf-8")
+    (tmp_path / "tests").mkdir()
+    (tmp_path / "tests" / "t.py").write_text("test", encoding="utf-8")
+    attachments = tmp_path / "knowledge" / "attachments"
+    attachments.mkdir(parents=True)
+    (attachments / "big.bin").write_bytes(b"x" * 1000)
+    pycache = tmp_path / "tools" / "learning_os" / "__pycache__"
+    pycache.mkdir(parents=True)
+    (pycache / "m.pyc").write_bytes(b"compiled")
+    assert canonical_snapshot_digest(tmp_path) == steady

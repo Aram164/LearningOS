@@ -9,6 +9,7 @@ they live here now; behaviour is unchanged.
 
 from __future__ import annotations
 
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -348,23 +349,24 @@ def add_manifest_fixtures(root: Path) -> None:
 
 
 def stage_manifest_producers(root: Path, repo) -> None:
-    """Copy the real manifest-graph producer bytes under a mini root."""
-    from learning_os.genout.derived_generation import generation_registry
-    from learning_os.genout.manifest_derived import (
-        manifest_registry,
-        validation_proof_producers,
-    )
+    """Copy the real Core implementation tree under a mini root.
 
+    Producer identity is the whole ``tools/learning_os`` tree (F3), so
+    the fixture mirrors the whole tree rather than the declared subset:
+    a producer-mutation test edits the staged copy the way a production
+    code change edits the real one.
+    """
+    # `repo` stays in the signature for the existing call sites; the tree
+    # no longer depends on the registry's declarations.
     real_root = Path(__file__).resolve().parent.parent
-    registry = {**generation_registry(repo), **manifest_registry(repo)}
-    staged = [
-        path for spec, _ in registry.values() for path in spec.producer_files
-    ]
-    staged.extend(validation_proof_producers())
-    for rel in dict.fromkeys(staged):
-        target = root / rel
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes((real_root / rel).read_bytes())
+    target = root / "tools" / "learning_os"
+    if target.exists():
+        shutil.rmtree(target)
+    shutil.copytree(
+        real_root / "tools" / "learning_os",
+        target,
+        ignore=shutil.ignore_patterns("__pycache__"),
+    )
 
 
 def trace_summary(trace) -> dict[str, tuple[str, str]]:

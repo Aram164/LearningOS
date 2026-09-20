@@ -16,8 +16,11 @@ import learning_os.derived.model as model_module
 from learning_os.derived import (
     DerivedError,
     NodeSpec,
+    Staging,
+    commit_staging,
     evaluate,
     evaluate_many,
+    read_state,
 )
 
 
@@ -290,3 +293,28 @@ def test_trace_is_optional_and_diagnostic_only(tmp_path: Path):
     assert evaluate(tmp_path, "a", registry=registry, inputs={}, trace=trace).status == "hit"
     assert [(event.node, event.status, event.reason) for event in trace] == [
         ("a", "hit", "node-key-equal")]
+
+
+def test_staging_defers_store_until_commit(tmp_path: Path):
+    producer = _producer(tmp_path)
+    registry = {"a": (_spec("a", producer), lambda ctx: {"v": 1})}
+    staging = Staging()
+    first = evaluate(tmp_path, "a", registry=registry, inputs={}, staging=staging)
+    assert (first.status, first.value) == ("rebuilt", {"v": 1})
+    assert read_state(tmp_path) == {}
+    assert set(staging.pending) == {"a"}
+    commit_staging(tmp_path, staging)
+    assert staging.pending == {}
+    second = evaluate(tmp_path, "a", registry=registry, inputs={})
+    assert (second.status, second.value) == ("hit", {"v": 1})
+
+
+def test_discarded_staging_leaves_the_store_empty(tmp_path: Path):
+    producer = _producer(tmp_path)
+    registry = {"a": (_spec("a", producer), lambda ctx: {"v": 1})}
+    staging = Staging()
+    assert evaluate(tmp_path, "a", registry=registry, inputs={}, staging=staging).status == "rebuilt"
+    staging.discard()
+    assert staging.pending == {}
+    assert read_state(tmp_path) == {}
+    assert evaluate(tmp_path, "a", registry=registry, inputs={}).status == "rebuilt"
