@@ -8,10 +8,14 @@ import re
 import sys
 from pathlib import PurePosixPath
 
+from learning_os.derived import evaluate
 from learning_os.errors import unreadable_refusal
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.genout.atlas import ATLAS_DOMAINS
 from learning_os.loading import Repo, load_notes
+from learning_os.search.index import NoteBlob, build_registry
+from learning_os.search.model import POSTINGS_NODE_ID
+from learning_os.search.query import candidates
 
 from .support import (
     WriteRefused,
@@ -191,13 +195,78 @@ def cmd_note_read(args) -> int:
         return _refusal(exc)
 
 
+#: Staged rollout for the derived-state search index: the builders land
+#: with the flag off (dead branch, zero behavior change); the cutover
+#: commit removes the flag and always takes the indexed path.
+USE_SEARCH_INDEX = False
+
+
+def _match_verified(items, terms):
+    """Run the current regex verification over admitted note bytes.
+
+    ``items`` is (note id, title, repo-relative path, raw bytes). Pure:
+    every read happened before this call, so the indexed path verifies
+    from discovered bytes without re-reading.
+    """
+    matches = []
+    for note_id, title, relpath, raw in items:
+        text = raw.decode("utf-8")
+        found = [term.search(text) for term in terms]
+        if not all(found):
+            continue
+        positions = sorted({match.start() for match in found if match})
+        snippets = []
+        for position in positions[:8]:
+            start = max(text.rfind("\n", 0, position) + 1, position - 100)
+            end = text.find("\n", position)
+            end = min(end if end >= 0 else len(text), position + 180)
+            snippets.append({"line": text.count("\n", 0, position) + 1,
+                             "text": text[start:end]})
+        matches.append({"id": note_id, "type": "note", "title": title,
+                        "path": relpath,
+                        "content_sha256": "sha256:" + hashlib.sha256(raw).hexdigest(),
+                        "snippets": snippets})
+    return matches
+
+
+def _indexed_content_search(root, ordered, terms, raw_terms):
+    """Indexed path: derived postings narrow candidates, regex verifies.
+
+    Reads every note once with the same admitted reader (identical
+    refusals), then verifies only candidates from those bytes. A query
+    the prefilter cannot narrow (None) verifies every note instead.
+    """
+    blobs = {}
+    for note in ordered:
+        blobs[note.id] = NoteBlob(
+            note_id=note.id,
+            relpath=note.path.relative_to(root).as_posix(),
+            title=note.meta.get("title", note.id),
+            raw=_note_bytes(root, note))
+    registry, inputs = build_registry(list(blobs.values()))
+    postings = evaluate(root, POSTINGS_NODE_ID, registry=registry, inputs=inputs).value
+    shortlist = candidates(root, postings, raw_terms)
+    if shortlist is None:
+        selected = ordered
+    else:
+        wanted = set(shortlist)
+        selected = [note for note in ordered if note.id in wanted]
+    matches = []
+    for note in selected:
+        blob = blobs[note.id]
+        matches.extend(_match_verified(
+            [(blob.note_id, blob.title, blob.relpath, blob.raw)], terms))
+    return matches
+
+
 def content_search(args) -> int:
     root = _root(args)
     try:
         offset, limit = _window(args, 100)
         if args.type not in (None, "note"):
             raise WriteRefused("--content currently supports durable notes; use --type note")
-        terms = [re.compile(re.escape(term), re.IGNORECASE) for term in args.query.split()]
+        raw_terms = args.query.split()
+        terms = [re.compile(re.escape(term), re.IGNORECASE) for term in raw_terms]
         if not terms:
             raise WriteRefused("content search requires a nonempty query")
         with _operator_lock(root):
@@ -216,25 +285,16 @@ def content_search(args) -> int:
             ]
             if note_failures:
                 raise WriteRefused(unreadable_refusal(root, note_failures, "search"))
-            matches = []
-            for note in sorted(repo.notes.values(), key=lambda row: row.id):
-                raw = _note_bytes(root, note)
-                text = raw.decode("utf-8")
-                found = [term.search(text) for term in terms]
-                if not all(found):
-                    continue
-                positions = sorted({match.start() for match in found if match})
-                snippets = []
-                for position in positions[:8]:
-                    start = max(text.rfind("\n", 0, position) + 1, position - 100)
-                    end = text.find("\n", position)
-                    end = min(end if end >= 0 else len(text), position + 180)
-                    snippets.append({"line": text.count("\n", 0, position) + 1,
-                                     "text": text[start:end]})
-                matches.append({"id": note.id, "type": "note", "title": note.meta.get("title", note.id),
-                                "path": note.path.relative_to(root).as_posix(),
-                                "content_sha256": "sha256:" + hashlib.sha256(raw).hexdigest(),
-                                "snippets": snippets})
+            ordered = sorted(repo.notes.values(), key=lambda row: row.id)
+            if USE_SEARCH_INDEX:
+                matches = _indexed_content_search(root, ordered, terms, raw_terms)
+            else:
+                matches = []
+                for note in ordered:
+                    raw = _note_bytes(root, note)
+                    matches.extend(_match_verified(
+                        [(note.id, note.meta.get("title", note.id),
+                          note.path.relative_to(root).as_posix(), raw)], terms))
             return _print_stable(root, snapshot, {
                 "contract": "note-content-search", "items": matches[offset:offset + limit],
                 "total": len(matches),
