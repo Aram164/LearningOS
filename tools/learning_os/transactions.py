@@ -26,6 +26,7 @@ import stat
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
+from typing import NoReturn
 
 import yaml
 from jsonschema import Draft202012Validator
@@ -483,6 +484,109 @@ def _remove_journal(tx_dir: Path, transaction_id: str, journal_rel: str) -> None
         ) from exc
 
 
+def _refuse_journal(root: Path, tx_dir: Path, detail: str,
+                    path: str | None = None) -> NoReturn:
+    """Raise CORRUPT_JOURNAL for a journal that fails admission or reading.
+
+    The directory name grounds every field: a journal that disagrees with
+    its own location proves nothing, so recovery preserves the directory
+    untouched and stops.
+    """
+    journal_rel = _safe_relative(root, tx_dir)
+    conflict = {"path": path or journal_rel, "reason": "CORRUPT_JOURNAL",
+                "detail": detail}
+    raise TransactionRecoveryConflict(
+        _conflict_message(tx_dir.name, journal_rel,
+                          "its journal is not self-bound", [conflict]),
+        transaction_id=tx_dir.name, conflicts=[conflict])
+
+
+def _admit_v2_journal(root: Path, tx_dir: Path, intent: dict) -> str:
+    """Prove a version-2 journal is self-bound before anything is inspected.
+
+    Admission is lexical and structural: the journal must name its own
+    directory, its own canonical receipt path, and a normalized, unique,
+    in-root path set reachable without crossing a symlink. Backup ids
+    must be normalized, unique, and plain files. Anything else is
+    CORRUPT_JOURNAL with everything preserved — raised before receipt
+    inspection, before preflight, and therefore before any restore.
+
+    One deliberate terminal exemption: a symlink (or any other unexpected
+    node) AT the journaled path itself is live state that may have
+    appeared after journaling, so it stays preflight's verdict
+    (UNEXPECTED_FILE_TYPE) like any other post-journal divergence.
+    Intermediate components get no such exemption: with an indirection
+    in the middle, inspection itself cannot be trusted.
+    """
+    transaction_id = tx_dir.name
+    if intent.get("transaction_id") != transaction_id:
+        _refuse_journal(
+            root, tx_dir,
+            "the journal names a different transaction than its directory")
+    if intent.get("receipt_path") \
+            != f"operations/transactions/{transaction_id}.yaml":
+        _refuse_journal(
+            root, tx_dir,
+            "the journal names a receipt outside its canonical path")
+    entries = intent.get("paths")
+    if not isinstance(entries, list) or not entries:
+        _refuse_journal(root, tx_dir, "journal lists no paths")
+    resolved_root = root.resolve()
+    seen_paths: set[str] = set()
+    seen_backups: set[str] = set()
+    for entry in entries:
+        if not isinstance(entry, dict):
+            _refuse_journal(root, tx_dir, "journal entry names an unsafe path")
+        relative = entry.get("path")
+        if not isinstance(relative, str):
+            _refuse_journal(root, tx_dir, "journal entry names an unsafe path",
+                            path=str(relative))
+        rel = relative
+        # The same lexical grammar write_target() enforces for live
+        # transactions: normalized posix, relative, no dot segments.
+        candidate = Path(rel)
+        if "\x00" in rel or "\\" in rel or candidate.as_posix() != rel \
+                or candidate.is_absolute() \
+                or any(part in {".", ".."} for part in candidate.parts):
+            _refuse_journal(root, tx_dir,
+                            f"journal path is not normalized: {rel}", path=rel)
+        if rel in seen_paths:
+            _refuse_journal(root, tx_dir, f"journal lists {rel} twice",
+                            path=rel)
+        seen_paths.add(rel)
+        cursor = resolved_root
+        for part in candidate.parts[:-1]:
+            cursor = cursor / part
+            if cursor.is_symlink():
+                _refuse_journal(
+                    root, tx_dir, f"journal path traverses symlink: {rel}",
+                    path=rel)
+        try:
+            (resolved_root / rel).resolve(
+                strict=False).relative_to(resolved_root)
+        except (OSError, ValueError):
+            _refuse_journal(root, tx_dir,
+                            f"journal path escapes the repository: {rel}",
+                            path=rel)
+        before = entry.get("before")
+        if isinstance(before, dict) and before.get("kind") == "file":
+            backup_id = before.get("backup_id")
+            if not isinstance(backup_id, str) \
+                    or _JOURNAL_BACKUP_ID.fullmatch(backup_id) is None \
+                    or backup_id in (".", ".."):
+                _refuse_journal(
+                    root, tx_dir,
+                    f"journal backup id is malformed: {backup_id!r}", path=rel)
+            if backup_id in seen_backups:
+                _refuse_journal(root, tx_dir,
+                                f"journal reuses backup {backup_id}", path=rel)
+            seen_backups.add(backup_id)
+            if (tx_dir / backup_id).is_symlink():
+                _refuse_journal(root, tx_dir,
+                                f"backup {backup_id} is a symlink", path=rel)
+    return transaction_id
+
+
 def _preflight_v2_entry(root: Path, tx_dir: Path, entry: object
                         ) -> tuple[dict | None, dict | None]:
     """Classify one version-2 journal entry without touching anything.
@@ -537,40 +641,18 @@ def _preflight_v2_entry(root: Path, tx_dir: Path, entry: object
                   "detail": f"live {current} matches neither recorded side"}
 
 
-def _reconcile_v2_journal(root: Path, tx_dir: Path, intent: dict) -> None:
-    """Compare-and-undo recovery for one schema-2 journal.
+def _unwind_v2_entries(root: Path, tx_dir: Path, entries: list,
+                       transaction_id: str, journal_rel: str) -> None:
+    """Run one admitted journal's compare-and-undo plan (passes 1-3).
 
-    Either fully unwinds the crashed transaction (every path proven back
-    at its pre-state, journal removed) or raises
-    TransactionRecoveryConflict having changed nothing — except a
-    mid-restore crash or IO failure, which the next run completes
-    idempotently because restored paths read as pre-state.
+    The one unwind engine: crash recovery and live rollback both execute
+    exactly this against the published journal. Either every path is
+    proven back at pre-state or TransactionRecoveryConflict is raised
+    with the journal preserved for the next attempt — a mid-restore
+    crash or IO failure completes idempotently because restored paths
+    read as pre-state. Journal removal and projection handling belong to
+    the caller, which knows whether its commit boundary was reached.
     """
-    raw_id = intent.get("transaction_id")
-    transaction_id = raw_id if isinstance(raw_id, str) and raw_id else tx_dir.name
-    journal_rel = _safe_relative(root, tx_dir)
-    entries = intent.get("paths")
-    if not isinstance(entries, list):
-        conflicts = [{"path": journal_rel, "reason": "CORRUPT_JOURNAL",
-                      "detail": "journal lists no paths"}]
-        raise TransactionRecoveryConflict(
-            _conflict_message(transaction_id, journal_rel,
-                              "its journal lists no paths", conflicts),
-            transaction_id=transaction_id, conflicts=conflicts)
-    verdict, detail = _inspect_commit_receipt(root, intent)
-    raw_receipt = intent.get("receipt_path")
-    receipt_ref = raw_receipt if isinstance(raw_receipt, str) and raw_receipt \
-        else journal_rel
-    if verdict == "VALID_COMMIT":
-        _remove_journal(tx_dir, transaction_id, journal_rel)
-        return
-    if verdict == "CONTRADICTORY":
-        conflicts = [{"path": receipt_ref, "reason": "INVALID_COMMIT_RECEIPT",
-                      "detail": detail or "receipt contradicts the journal"}]
-        raise TransactionRecoveryConflict(
-            _conflict_message(transaction_id, journal_rel,
-                              "its commit receipt is contradictory", conflicts),
-            transaction_id=transaction_id, conflicts=conflicts)
     # PASS 1 — read-only preflight over every path. One conflict anywhere
     # stops the whole unwind before a single byte changes.
     plan = []
@@ -621,7 +703,9 @@ def _reconcile_v2_journal(root: Path, tx_dir: Path, intent: dict) -> None:
                                           [conflict]),
                         transaction_id=transaction_id, conflicts=[conflict])
                 _atomic_write_bytes(path, blob)
-        except OSError as exc:
+        except TransactionRecoveryConflict:
+            raise
+        except Exception as exc:
             conflict = {"path": _safe_relative(root, path),
                         "reason": "RESTORE_IO_FAILED",
                         "detail": f"restore could not be written: {exc}"}
@@ -630,8 +714,8 @@ def _reconcile_v2_journal(root: Path, tx_dir: Path, intent: dict) -> None:
                                   "a proven-safe restore could not be written",
                                   [conflict]),
                 transaction_id=transaction_id, conflicts=[conflict]) from exc
-    # PASS 3 — prove the footprint is fully pre-state before dropping the
-    # evidence that describes it.
+    # PASS 3 — prove the footprint is fully pre-state before the caller
+    # drops the evidence that describes it.
     drifted = []
     for action in plan:
         kind, observed = _inspect_live_path(action["path"])
@@ -644,6 +728,35 @@ def _reconcile_v2_journal(root: Path, tx_dir: Path, intent: dict) -> None:
             _conflict_message(transaction_id, journal_rel,
                               "a path changed during recovery", drifted),
             transaction_id=transaction_id, conflicts=drifted)
+
+
+def _reconcile_v2_journal(root: Path, tx_dir: Path, intent: dict) -> None:
+    """Compare-and-undo recovery for one schema-2 journal.
+
+    Either fully unwinds the crashed transaction (every path proven back
+    at its pre-state, journal removed) or raises
+    TransactionRecoveryConflict having changed nothing — except a
+    mid-restore crash or IO failure, which the next run completes
+    idempotently because restored paths read as pre-state.
+    """
+    transaction_id = _admit_v2_journal(root, tx_dir, intent)
+    journal_rel = _safe_relative(root, tx_dir)
+    verdict, detail = _inspect_commit_receipt(root, intent)
+    raw_receipt = intent.get("receipt_path")
+    receipt_ref = raw_receipt if isinstance(raw_receipt, str) and raw_receipt \
+        else journal_rel
+    if verdict == "VALID_COMMIT":
+        _remove_journal(tx_dir, transaction_id, journal_rel)
+        return
+    if verdict == "CONTRADICTORY":
+        conflicts = [{"path": receipt_ref, "reason": "INVALID_COMMIT_RECEIPT",
+                      "detail": detail or "receipt contradicts the journal"}]
+        raise TransactionRecoveryConflict(
+            _conflict_message(transaction_id, journal_rel,
+                              "its commit receipt is contradictory", conflicts),
+            transaction_id=transaction_id, conflicts=conflicts)
+    _unwind_v2_entries(root, tx_dir, intent["paths"], transaction_id,
+                       journal_rel)
     problems: list[str] = []
     _discard_stale_projection(root, problems)
     if problems:
@@ -668,8 +781,11 @@ def _reconcile_v1_journal(root: Path, tx_dir: Path, intent: dict) -> None:
     journal preserved. A `created` file that exists is NEVER unlinked:
     nobody can prove who owns those bytes.
     """
-    raw_id = intent.get("transaction_id")
-    transaction_id = raw_id if isinstance(raw_id, str) and raw_id else tx_dir.name
+    if intent.get("transaction_id") != tx_dir.name:
+        _refuse_journal(
+            root, tx_dir,
+            "the journal names a different transaction than its directory")
+    transaction_id = tx_dir.name
     journal_rel = _safe_relative(root, tx_dir)
     verdict, detail = _inspect_commit_receipt(root, intent)
     raw_receipt = intent.get("receipt_path")
@@ -792,26 +908,57 @@ def reconcile_inflight_transactions(root: Path) -> None:
     only, no post-state hashes) are handled conservatively: cleaned when
     provably already rolled back, conflicted otherwise, never blindly
     replayed.
+
+    PUBLICATION BOUNDARY:
+    The journal is staged whole under `.inflight/.preparing-<id>/` and
+    published by one atomic rename before the first canonical mutation.
+    Recovery therefore treats staging as never-armed debris (safe to
+    drop without inspection) and a published directory as complete by
+    construction: a published journal with a missing or unreadable
+    intent is corruption after arming, preserved and reported, never
+    silently cleaned.
+
+    OWNERSHIP BOUNDARY (ABA):
+    Hashes prove live state EQUALS recorded state, not that it never
+    changed in between. A non-cooperative writer that alters a file and
+    restores byte-identical content is undetectable, as is an
+    independent re-deletion of a deleted file. The contract is:
+    cooperative LearningOS writers are serialized by the operator lock;
+    non-cooperative changes that leave different state are detected;
+    byte-identical/ABA changes are state-equivalent and accepted as
+    such. Stronger proof would need locks or version tokens, which this
+    system deliberately does not add.
     """
     inflight_dir = root / "operations" / "transactions" / ".inflight"
     if not inflight_dir.is_dir():
         return
+    tx_dirs = []
+    for entry in sorted(inflight_dir.iterdir()):
+        if entry.name.startswith(".preparing-"):
+            # Never armed: publication is the atomic rename, so anything
+            # still under a staging name died before the first canonical
+            # mutation. Drop it without inspection; debris that cannot be
+            # removed is simply retried next run, never treated as proof.
+            with contextlib.suppress(OSError):
+                if entry.is_symlink() or not entry.is_dir():
+                    entry.unlink(missing_ok=True)
+                else:
+                    shutil.rmtree(entry, ignore_errors=True)
+            continue
+        if entry.is_dir() and not entry.is_symlink():
+            tx_dirs.append(entry)
     # Newest first: stacked journals unwind from the latest crash backwards.
     # Transaction ids sort chronologically, so descending names unwinds the
     # stack instead of reading a newer transaction's bytes as foreign.
-    tx_dirs = sorted(
-        (entry for entry in inflight_dir.iterdir()
-         if entry.is_dir() and not entry.is_symlink()),
-        reverse=True,
-    )
-    for tx_dir in tx_dirs:
+    for tx_dir in reversed(tx_dirs):
         intent_path = tx_dir / "intent.json"
         if intent_path.is_symlink() or not intent_path.is_file():
-            # The intent is written before the first canonical replacement,
-            # so its absence means the crash happened before anything
-            # changed. Only staged backups are here, describing nothing.
-            shutil.rmtree(tx_dir, ignore_errors=True)
-            continue
+            # Published journals are complete by construction (staged
+            # whole, then renamed), so a missing intent is corruption or
+            # tampering after arming — never the harmless early crash the
+            # old code assumed. Preserve the directory and stop.
+            _refuse_journal(
+                root, tx_dir, "published journal is missing intent.json")
         try:
             intent = json.loads(intent_path.read_text(encoding="utf-8"))
         except (OSError, ValueError) as exc:
@@ -1121,23 +1268,63 @@ class TransactionService:
                        "artifacts": sorted(conflicts)})
             raise TransactionConflict(conflicts)
 
-        inflight_dir = self.root / "operations" / "transactions" / ".inflight" / transaction_id
+        inflight_parent = self.root / "operations" / "transactions" / ".inflight"
+        staging_dir = inflight_parent / f".preparing-{transaction_id}"
+        inflight_dir = inflight_parent / transaction_id
+        journal_published = False
 
         def rollback() -> list[str]:
+            """Unwind through the published journal, never from memory alone.
+
+            Live rollback and crash recovery execute the same
+            compare-and-undo engine against the same on-disk journal, so a
+            foreign write landing during validation or projection is
+            preserved and reported instead of blindly overwritten. On
+            ambiguity the journal stays for the next run and the caller
+            gets the unrestored paths, never a false success.
+            """
             failures: list[str] = []
-            try:
-                receipt_path.unlink(missing_ok=True)
-            except OSError:
+            if os.path.lexists(receipt_path):
+                # Commit was not reached, so this transaction never wrote
+                # a receipt: anything here is foreign evidence. Report it;
+                # never delete it.
                 failures.append(_safe_relative(self.root, receipt_path))
-            for path, old in reversed(list(backups.items())):
+            if not journal_published:
+                # The journal never armed, so no canonical mutation could
+                # have happened. Verify live state still equals the
+                # pre-state snapshots and touch nothing — even here a
+                # blind memory restore could clobber a foreign write that
+                # landed while staging.
+                for path, old in backups.items():
+                    try:
+                        live = path.read_bytes() if path.is_file() else None
+                    except OSError:
+                        live = "<unreadable>"
+                    if live != old:
+                        failures.append(_safe_relative(self.root, path))
+                shutil.rmtree(staging_dir, ignore_errors=True)
+            else:
+                journal_rel = _safe_relative(self.root, inflight_dir)
                 try:
-                    if old is None:
-                        if path.is_file():
-                            path.unlink()
+                    disk_intent = json.loads(
+                        (inflight_dir / "intent.json").read_text(
+                            encoding="utf-8"))
+                except (OSError, ValueError):
+                    failures.append(journal_rel)
+                    disk_intent = None
+                if disk_intent is not None:
+                    if not isinstance(disk_intent, dict):
+                        failures.append(journal_rel)
                     else:
-                        _atomic_write_bytes(path, old)
-                except Exception:
-                    failures.append(_safe_relative(self.root, path))
+                        try:
+                            _admit_v2_journal(self.root, inflight_dir,
+                                              disk_intent)
+                            _unwind_v2_entries(
+                                self.root, inflight_dir, disk_intent["paths"],
+                                transaction_id, journal_rel)
+                        except TransactionRecoveryConflict as exc:
+                            failures.extend(conflict["path"]
+                                            for conflict in exc.conflicts)
             restore_projection = rollback_publish or publish
             if restore_projection is not None:
                 try:
@@ -1145,20 +1332,38 @@ class TransactionService:
                 except Exception:
                     failures.append("<projection publication>")
             if not failures:
-                shutil.rmtree(inflight_dir, ignore_errors=True)
+                if journal_published:
+                    try:
+                        _remove_journal(inflight_dir, transaction_id,
+                                        journal_rel)
+                    except TransactionRecoveryConflict as exc:
+                        failures.extend(conflict["path"]
+                                        for conflict in exc.conflicts)
+                else:
+                    shutil.rmtree(staging_dir, ignore_errors=True)
             return sorted(set(failures))
 
         try:
             commit_reached = False
             failed_stage = "core.commit"
-            inflight_dir.mkdir(parents=True, exist_ok=True)
+            if os.path.lexists(inflight_dir):
+                raise TransactionFailure(
+                    f"transaction {transaction_id} cannot start: a recovery "
+                    f"journal with this identity already exists under "
+                    f"{_safe_relative(self.root, inflight_dir)}; reconcile it "
+                    f"before committing")
             # Compare-and-undo journal (schema v2): for every mutated path,
             # the pre-state (with its backup blob) AND the intended
             # post-state hash. Recovery restores a path only while the live
             # file still equals one of the two recorded sides; anything
             # else is foreign state a later writer owns and must never be
-            # touched. The journal and all backups are durable before the
-            # first canonical mutation below.
+            # touched. The journal is staged whole under a `.preparing-`
+            # name and published by one atomic rename, fsynced with its
+            # parent, before the first canonical mutation below — so
+            # recovery can tell never-armed staging from a published
+            # journal that must be complete.
+            shutil.rmtree(staging_dir, ignore_errors=True)
+            staging_dir.mkdir(parents=True)
             delete_set = set(delete_paths)
             intent: dict = {
                 "schema_version": 2,
@@ -1171,7 +1376,7 @@ class TransactionService:
                     before: dict = {"kind": "absent"}
                 else:
                     backup_id = f"backup-{i}"
-                    _atomic_write_bytes(inflight_dir / backup_id, old)
+                    _atomic_write_bytes(staging_dir / backup_id, old)
                     before = {
                         "kind": "file",
                         "sha256": f"sha256:{_sha256_bytes(old)}",
@@ -1194,7 +1399,15 @@ class TransactionService:
                 # _update_intent_after before that write lands. Until then
                 # recovery treats anything but `before` as unprovable.
                 intent["paths"].append(entry)
-            _atomic_write_bytes(inflight_dir / "intent.json", json.dumps(intent).encode("utf-8"))
+            _atomic_write_bytes(
+                staging_dir / "intent.json", json.dumps(intent).encode("utf-8"))
+            os.rename(staging_dir, inflight_dir)
+            journal_published = True
+            dir_fd = os.open(inflight_parent, os.O_RDONLY)
+            try:
+                os.fsync(dir_fd)
+            finally:
+                os.close(dir_fd)
 
             for path, content in normalized_writes.items():
                 # Compare with the bytes already captured for rollback. Keep

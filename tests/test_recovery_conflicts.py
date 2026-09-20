@@ -24,6 +24,7 @@ import yaml
 from learning_os.contracts.gateway import GatewayRequestContext
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.transactions import (
+    TransactionFailure,
     TransactionRecoveryConflict,
     TransactionService,
     reconcile_inflight_transactions,
@@ -65,7 +66,7 @@ def _write_journal_v2(root: Path, tx_id: str, entries: list,
         "schema_version": 2,
         "transaction_id": tx_id,
         "receipt_path": receipt_rel
-        or f"operations/transactions/transaction-{tx_id}.yaml",
+        or f"operations/transactions/{tx_id}.yaml",
         "paths": paths,
     }
     (tx_dir / "intent.json").write_text(json.dumps(intent), encoding="utf-8")
@@ -90,7 +91,7 @@ def _write_journal_v1(root: Path, tx_id: str, rows: list,
     intent = {
         "transaction_id": tx_id,
         "receipt_path": receipt_rel
-        or f"operations/transactions/transaction-{tx_id}.yaml",
+        or f"operations/transactions/{tx_id}.yaml",
         "backups": backups,
     }
     (tx_dir / "intent.json").write_text(json.dumps(intent), encoding="utf-8")
@@ -530,3 +531,260 @@ def test_gateway_reports_recovery_conflict_as_internal_failure(tmp_path: Path):
     assert ledger_path.read_bytes() == foreign_bytes
     journals = list((mini / "operations" / "transactions" / ".inflight").iterdir())
     assert len(journals) == 1
+
+
+# ---------------------------------------------------------------------------
+# Freeze review: one unwind engine, staged journals, bound journals.
+# ---------------------------------------------------------------------------
+
+def test_live_rollback_preserves_foreign_bytes_written_during_validation(
+        tmp_path: Path):
+    """The in-process rollback runs the same compare-and-undo as recovery.
+
+    Validation/projection can span seconds; an external writer landing in
+    that window owns the bytes it wrote. Rollback must report incomplete
+    and preserve the journal, not blindly restore over them.
+    """
+    root = tmp_path / "live-foreign"
+    target = root / "work" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"old\n")
+
+    def hostile_validate():
+        target.write_bytes(b"foreign\n")
+        return ["forced validation failure"]
+
+    with pytest.raises(TransactionFailure, match="rollback incomplete for: work/mod.md"):
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            validate_state=hostile_validate,
+        )
+
+    assert target.read_bytes() == b"foreign\n"
+    journals = list((root / "operations" / "transactions" / ".inflight").iterdir())
+    assert len(journals) == 1, "an ambiguous rollback preserves its journal"
+    assert not list((root / "operations" / "transactions").glob("transaction-*.yaml"))
+
+
+def test_live_rollback_never_deletes_a_receipt_it_did_not_write(tmp_path: Path):
+    """A receipt appearing mid-flight is foreign evidence, not ours to drop."""
+    root = tmp_path / "live-receipt"
+    target = root / "work" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"old\n")
+
+    def squat_then_fail():
+        inflight = root / "operations" / "transactions" / ".inflight"
+        (tx_dir,) = [entry for entry in inflight.iterdir() if entry.is_dir()]
+        intent = json.loads((tx_dir / "intent.json").read_text(encoding="utf-8"))
+        squat = root / intent["receipt_path"]
+        squat.parent.mkdir(parents=True, exist_ok=True)
+        squat.write_bytes(b"foreign receipt\n")
+        raise OSError("forced projection failure")
+
+    with pytest.raises(TransactionFailure, match="rollback incomplete for: operations/transactions/transaction-"):
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            publish=squat_then_fail,
+            rollback_publish=lambda: None,
+        )
+
+    receipts = list((root / "operations" / "transactions").glob("transaction-*.yaml"))
+    assert len(receipts) == 1
+    assert receipts[0].read_bytes() == b"foreign receipt\n"
+    assert target.read_bytes() == b"old\n", "owned paths still unwind"
+    journals = list((root / "operations" / "transactions" / ".inflight").iterdir())
+    assert len(journals) == 1, "an ambiguous rollback preserves its journal"
+
+
+def test_staging_directory_is_cleaned_without_inspection(tmp_path: Path):
+    """`.preparing-*` never armed: publication is the atomic rename."""
+    root = tmp_path / "staging"
+    target = root / "work" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"diverged\n")
+    tx_dir = _write_journal_v2(
+        root, "transaction-20260101-000000-101",
+        [("work/mod.md", b"old\n", b"new\n")])
+    staging = tx_dir.with_name(f".preparing-{tx_dir.name}")
+    tx_dir.rename(staging)
+
+    reconcile_inflight_transactions(root)
+
+    assert not staging.exists()
+    assert target.read_bytes() == b"diverged\n"
+
+
+def test_successful_commit_leaves_no_staging_behind(tmp_path: Path):
+    root = tmp_path / "no-staging"
+    target = root / "work" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"old\n")
+
+    TransactionService(root).commit(
+        capability="project.update",
+        writes={target: "new\n"},
+        artifact_ids=["project-demo"],
+    )
+
+    inflight = root / "operations" / "transactions" / ".inflight"
+    assert not list(inflight.iterdir())
+
+
+def test_published_journal_without_intent_is_preserved_and_reported(
+        tmp_path: Path):
+    """A published directory is complete by construction; no silent cleanup."""
+    root = tmp_path / "no-intent"
+    tx_dir = root / "operations" / "transactions" / ".inflight" / \
+        "transaction-20260101-000000-102"
+    tx_dir.mkdir(parents=True)
+    (tx_dir / "backup-0").write_bytes(b"orphaned\n")
+
+    with pytest.raises(TransactionRecoveryConflict) as exc_info:
+        reconcile_inflight_transactions(root)
+
+    assert exc_info.value.conflicts[0]["reason"] == "CORRUPT_JOURNAL"
+    assert (tx_dir / "backup-0").is_file(), "evidence is preserved, not deleted"
+
+
+def test_journal_naming_another_transaction_is_rejected(tmp_path: Path):
+    root = tmp_path / "spoofed-id"
+    target = root / "work" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"new\n")
+    tx_dir = _write_journal_v2(
+        root, "transaction-20260101-000000-103",
+        [("work/mod.md", b"old\n", b"new\n")])
+    intent_path = tx_dir / "intent.json"
+    intent = json.loads(intent_path.read_text(encoding="utf-8"))
+    intent["transaction_id"] = "transaction-20260101-000000-999"
+    intent_path.write_text(json.dumps(intent), encoding="utf-8")
+
+    with pytest.raises(TransactionRecoveryConflict) as exc_info:
+        reconcile_inflight_transactions(root)
+
+    assert exc_info.value.conflicts[0]["reason"] == "CORRUPT_JOURNAL"
+    assert target.read_bytes() == b"new\n"
+    assert tx_dir.is_dir()
+
+
+def test_journal_receipt_path_is_bound_before_inspection(mini_repo: Path):
+    """A valid receipt for B cannot whitewash A's journal, whatever it says."""
+    _context, result = _commit_capture(mini_repo, "receipt-spoof")
+    target = mini_repo / "work/inbox/receipt-spoof.md"
+    receipt_b = result.receipt_path.relative_to(mini_repo).as_posix()
+    tx_dir = _write_journal_v2(
+        mini_repo, "transaction-20260101-000000-104",
+        [("work/inbox/receipt-spoof.md", None, b"committed\n")],
+        receipt_rel=receipt_b)
+
+    with pytest.raises(TransactionRecoveryConflict) as exc_info:
+        reconcile_inflight_transactions(mini_repo)
+
+    assert exc_info.value.conflicts[0]["reason"] == "CORRUPT_JOURNAL"
+    assert target.read_bytes() == b"committed\n"
+    assert tx_dir.is_dir()
+
+
+def test_duplicate_journal_path_is_rejected_before_any_restore(tmp_path: Path):
+    root = tmp_path / "dup-path"
+    target = root / "work" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"new\n")
+    tx_dir = _write_journal_v2(
+        root, "transaction-20260101-000000-105",
+        [("work/mod.md", b"old-one\n", b"new\n"),
+         ("work/mod.md", b"old-two\n", b"new\n")])
+
+    with pytest.raises(TransactionRecoveryConflict) as exc_info:
+        reconcile_inflight_transactions(root)
+
+    assert exc_info.value.conflicts[0]["reason"] == "CORRUPT_JOURNAL"
+    assert target.read_bytes() == b"new\n", "no restore may precede admission"
+    assert tx_dir.is_dir()
+
+
+def test_non_normalized_journal_path_is_rejected(tmp_path: Path):
+    root = tmp_path / "dotdot"
+    target = root / "work" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"new\n")
+    tx_dir = _write_journal_v2(
+        root, "transaction-20260101-000000-106",
+        [("work/../work/mod.md", b"old\n", b"new\n")])
+
+    with pytest.raises(TransactionRecoveryConflict) as exc_info:
+        reconcile_inflight_transactions(root)
+
+    assert exc_info.value.conflicts[0]["reason"] == "CORRUPT_JOURNAL"
+    assert target.read_bytes() == b"new\n"
+    assert tx_dir.is_dir()
+
+
+def test_journal_path_through_a_symlink_is_rejected(tmp_path: Path):
+    root = tmp_path / "linkdir"
+    real = root / "realdir"
+    real.mkdir(parents=True)
+    (real / "f.md").write_bytes(b"new\n")
+    os.symlink(real, root / "linkdir", target_is_directory=True)
+    tx_dir = _write_journal_v2(
+        root, "transaction-20260101-000000-107",
+        [("linkdir/f.md", b"old\n", b"new\n")])
+
+    with pytest.raises(TransactionRecoveryConflict) as exc_info:
+        reconcile_inflight_transactions(root)
+
+    assert exc_info.value.conflicts[0]["reason"] == "CORRUPT_JOURNAL"
+    assert (real / "f.md").read_bytes() == b"new\n"
+    assert tx_dir.is_dir()
+
+
+def test_reused_backup_id_is_rejected(tmp_path: Path):
+    root = tmp_path / "dup-backup"
+    first = root / "work" / "a.md"
+    second = root / "work" / "b.md"
+    first.parent.mkdir(parents=True)
+    first.write_bytes(b"new-a\n")
+    second.write_bytes(b"new-b\n")
+    tx_dir = _write_journal_v2(
+        root, "transaction-20260101-000000-108",
+        [("work/a.md", b"old-a\n", b"new-a\n"),
+         ("work/b.md", b"old-b\n", b"new-b\n")])
+    intent_path = tx_dir / "intent.json"
+    intent = json.loads(intent_path.read_text(encoding="utf-8"))
+    intent["paths"][1]["before"]["backup_id"] = \
+        intent["paths"][0]["before"]["backup_id"]
+    intent_path.write_text(json.dumps(intent), encoding="utf-8")
+
+    with pytest.raises(TransactionRecoveryConflict) as exc_info:
+        reconcile_inflight_transactions(root)
+
+    assert exc_info.value.conflicts[0]["reason"] == "CORRUPT_JOURNAL"
+    assert first.read_bytes() == b"new-a\n"
+    assert second.read_bytes() == b"new-b\n"
+    assert tx_dir.is_dir()
+
+
+def test_symlinked_backup_is_rejected(tmp_path: Path):
+    root = tmp_path / "link-backup"
+    target = root / "work" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"new\n")
+    tx_dir = _write_journal_v2(
+        root, "transaction-20260101-000000-109",
+        [("work/mod.md", b"old\n", b"new\n")])
+    blob = tx_dir / "backup-0"
+    blob.rename(tx_dir / "real-0")
+    os.symlink(tx_dir / "real-0", blob)
+
+    with pytest.raises(TransactionRecoveryConflict) as exc_info:
+        reconcile_inflight_transactions(root)
+
+    assert exc_info.value.conflicts[0]["reason"] == "CORRUPT_JOURNAL"
+    assert target.read_bytes() == b"new\n"
+    assert blob.is_symlink()
+    assert tx_dir.is_dir()
