@@ -6,6 +6,8 @@
                                         # proof-phase shadow comparison (no writes)
     python tools/generate.py --shadow-manifest [--json]
                                         # proof-phase manifest comparison (no writes)
+    python tools/generate.py --shadow-all [--json]
+                                        # one guarded verdict for all migrated projections
 
 Produces, deterministically except timestamps: generated/manifest.json,
 concept-index.md, source-index.md (incl. per-lecture and per-concept selector
@@ -20,8 +22,9 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 
+from learning_os.contracts.manifest_contract import ManifestContractError  # noqa: E402
+from learning_os.derived.model import DerivedError  # noqa: E402
 from learning_os.genout import generate_all, write_outputs  # noqa: E402
-from learning_os.genout.common import stable_generated_at  # noqa: E402
 from learning_os.genout.derived_generation import (  # noqa: E402
     BACKLINKS_SEMANTIC_ID,
     CONCEPT_MAP_BODY_ID,
@@ -31,6 +34,8 @@ from learning_os.genout.derived_generation import (  # noqa: E402
 from learning_os.genout.manifest_derived import (  # noqa: E402
     compare_shadow_manifest,
 )
+from learning_os.genout.projection_verification import verify_shadow_projections  # noqa: E402
+from learning_os.githistory import GitHistoryError  # noqa: E402
 from learning_os.learning_runtime import RuntimeInputError  # noqa: E402
 from learning_os.loader import load_repo  # noqa: E402
 from learning_os.transactions import TransactionFailure  # noqa: E402
@@ -58,7 +63,7 @@ def _shadow_main(root: Path, *, as_json: bool) -> int:
 
     repo = load_repo(root)
     trace: list = []
-    comparison = compare_shadow_generation(repo, stable_generated_at(root), trace=trace)
+    comparison = compare_shadow_generation(repo, trace=trace)
     by_node = {event.node: event for event in trace}
     if as_json:
         print(json.dumps({
@@ -130,6 +135,31 @@ def _shadow_manifest_main(root: Path, *, as_json: bool) -> int:
     return 0 if comparison.equivalent else 1
 
 
+def _shadow_all_main(root: Path, *, as_json: bool) -> int:
+    """Machine-owned coordination; never publishes generated views."""
+    import json
+
+    try:
+        report = verify_shadow_projections(root)
+    except (TransactionFailure, DerivedError, ManifestContractError,
+            RuntimeInputError, GitHistoryError, OSError) as exc:
+        report = {"status": "refused", "equivalent": False, "reason": str(exc),
+                  "published": False}
+    if as_json:
+        print(json.dumps(report, indent=2, sort_keys=True))
+    else:
+        print(f"projection verification: {report['status']}")
+        if "reason" in report:
+            print(report["reason"])
+        else:
+            print(f"snapshot: {report['snapshot_id']}")
+            for name, artifact in report["artifacts"].items():
+                print(f"  {name}: {'exact' if artifact['equal'] else 'MISMATCH'}")
+            if not report["same_publication"]:
+                print("publication metadata does not describe one state")
+    return {"verified": 0, "mismatch": 1, "refused": 2}[report["status"]]
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=None,
@@ -141,17 +171,22 @@ def main() -> int:
                         help="compare the shadow manifest graph against "
                              "build_manifest() without writing "
                              "(exit nonzero on mismatch)")
+    parser.add_argument("--shadow-all", action="store_true",
+                        help="verify all migrated projections under one snapshot; "
+                             "updates disposable cache only, never publishes views")
     parser.add_argument("--json", action="store_true",
                         help="machine-readable shadow report "
-                             "(requires --shadow-derived or --shadow-manifest)")
+                             "(requires a shadow mode)")
     args = parser.parse_args()
 
-    if args.json and not (args.shadow_derived or args.shadow_manifest):
-        parser.error("--json requires --shadow-derived or --shadow-manifest")
-    if args.shadow_derived and args.shadow_manifest:
+    if args.json and not (args.shadow_derived or args.shadow_manifest or args.shadow_all):
+        parser.error("--json requires --shadow-derived, --shadow-manifest, or --shadow-all")
+    if sum((args.shadow_derived, args.shadow_manifest, args.shadow_all)) > 1:
         parser.error("choose one shadow mode")
 
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
+    if args.shadow_all:
+        return _shadow_all_main(root, as_json=args.json)
     if args.shadow_derived:
         return _shadow_main(root, as_json=args.json)
     if args.shadow_manifest:

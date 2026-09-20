@@ -36,7 +36,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `build_materials_tree.py` | bounded materials maintenance | Maintains the physical topic tree and `.flat` compatibility links. |
 | `material_text.py` | bounded authoring tool | Digest-keyed page-text cache for local materials; read cached pages instead of re-extracting. |
 | `material_toc.py` | bounded authoring tool | Reads local material structure while authoring or checking exact locators. |
-| `material_summarize.py` | bounded authoring tool | Admits reviewed chapter summaries into the digest-keyed summary cache. |
+| `material_summarize.py` | bounded authoring tool | Admits reviewed chapter summaries; `--read --material PATH --pages START-END` returns one reusable summary with live source checks, explicit hit/missing/stale/refused status, and content integrity. |
 | `materials_manifest.py` | bounded integrity tool | Builds/verifies the external-material checksum inventory. |
 | `ingest_transcript.py` | bounded materials maintenance | Fetches third-party video captions into the managed materials tree as timestamp-addressable transcripts; writes only under `LearningOS/materials/`, never canonical state. |
 | `refresh_amls_fixture.py` | bounded fixture maintenance | Refreshes the checked-in AMLS paper inventory when its external source changes. |

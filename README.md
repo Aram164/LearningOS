@@ -115,6 +115,7 @@ make inventory  # rebuild the materials manifest (see "Materials durability")
 make test-fast  # quick feedback: synthetic fixtures, no checked-in repository load
 make test       # complete suite, including full-repository integration checks
 make code-check # static reachability/layer/cycle gate; reads code only
+make projection-check # one guarded equivalence proof for the four migrated projections
 make system-check # Core lint/validation/tests + the sibling UI's complete check
 make stress     # deliberate deep audit: release pair + production/fuzz/concurrency + URLs
 make            # list the one-word commands
@@ -125,6 +126,20 @@ Core/UI release, and `make stress` when deliberately auditing resilience. The
 stress command is the single owner of repeated generation, atomic publication,
 concurrent CLI reads, repeated UI rounds, and online URL reachability; those
 checks should not be reconstructed as personal shell recipes.
+
+`make system-check` includes `make projection-check` automatically. For a
+standalone machine-readable verdict, run
+`.venv/bin/python tools/generate.py --shadow-all --json`. One command compares
+the manifest, backlinks, concept map, and dependency report with their full
+builders, checks that all results describe one stable input state, and returns
+`verified`, `mismatch`, or `refused` (exit codes 0, 1, and 2). It chooses timestamps
+inside guarded attempts and retries concurrent changes automatically. The
+compact report includes the snapshot, artifact hashes, and reuse counts; agents
+do not need to coordinate the individual shadow commands or reconstruct their
+consistency checks. Published views stay unchanged; disposable derived state
+may be refreshed. This is a projection-equivalence check for the four named
+artifacts, not a replacement for canonical validation, the paired release gate,
+or a current snapshot guard on a subsequent write.
 
 Interface layers (the Obsidian UI project, scripts, other agents) use the
 stable CLI gateway instead of parsing YAML — `python tools/los.py status

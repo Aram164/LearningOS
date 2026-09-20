@@ -12,7 +12,7 @@ VENV   := .venv
 # Homebrew "externally-managed-environment" errors on macOS.
 PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYTHON))
 
-.PHONY: help check warnings views materials inventory verify-materials contract test test-fast bench lint code-check all setup hooks garden status plan-check system-check stress
+.PHONY: help check warnings views materials inventory verify-materials contract test test-fast bench lint code-check all setup hooks garden status plan-check projection-check system-check stress
 
 help:
 	@echo "make check  - validate the repository (schemas + semantic rules)"
@@ -34,6 +34,7 @@ help:
 	@echo "make test   - run the complete test suite, including full-repository checks"
 	@echo "make lint   - run the defect-oriented static checks used by CI"
 	@echo "make code-check - verify Core reachability, dependency cycles, and entrypoint direction"
+	@echo "make projection-check - verify the four migrated projections under one snapshot"
 	@echo "make plan-check - verify a curriculum revision (focused tests, no UI build)"
 	@echo "make system-check - verify Core and the sibling Obsidian UI as one release pair"
 	@echo "make stress - system-check + production/fuzz/concurrency stress + online URL audit"
@@ -99,6 +100,9 @@ lint:
 code-check:
 	$(PY) tools/code_reachability.py
 
+projection-check:
+	$(PY) tools/generate.py --shadow-all
+
 # One command answers the question agents repeatedly had to reconstruct by
 # hand: "is the pair I am about to rely on coherent?" It intentionally changes
 # no canonical data. The UI build is deterministic and its own check refuses a
@@ -107,6 +111,7 @@ system-check:
 	$(MAKE) lint
 	$(PY) tools/validate.py --no-report
 	$(PY) tools/warning_baseline.py --check
+	$(MAKE) projection-check
 	@test -f ../obsidian-ui/package.json || { echo "system-check: sibling ../obsidian-ui is missing" >&2; exit 1; }
 # The cross-process recovery test skips itself when the UI is absent, because
 # Core is usable alone. The paired gate is the one place where that skip would

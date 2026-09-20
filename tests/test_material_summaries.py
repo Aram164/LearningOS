@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import hashlib
 import importlib.util
 import json
 import sys
 from pathlib import Path
+
+import pytest
 
 TOOLS = Path(__file__).resolve().parents[1] / "tools"
 
@@ -121,3 +124,120 @@ def test_promote_refuses_an_existing_range(tmp_path: Path, capsys):
     assert _promote(ms, cache, text, draft) == 2
     _, err = capsys.readouterr()
     assert "already exists" in err
+
+
+def _read_fixture(tmp_path, capsys):
+    ms = _material_summarize()
+    base = tmp_path / "materials"
+    live = base / "deck/ch.pdf"
+    live.parent.mkdir(parents=True)
+    live.write_bytes(b"source identity; PDF extraction is not part of this lookup")
+    digest = hashlib.sha256(live.read_bytes()).hexdigest()
+    text = _text_cache(tmp_path)
+    old = text / DIGEST
+    index = json.loads((old / "index.json").read_text())
+    index["sha256"] = digest
+    (old / "index.json").write_text(json.dumps(index))
+    old.rename(text / digest)
+    cache = tmp_path / "summaries"
+    draft = tmp_path / "draft.md"
+    draft.write_text("A reusable reviewed explanation of the chapter. " * 10)
+    assert _promote(ms, cache, text, draft, digest=digest) == 0
+    capsys.readouterr()
+    target = cache / digest / "pages-1-3"
+    args = ["--read", "--material", "deck/ch.pdf", "--pages", "1-3",
+            "--cache-dir", str(cache), "--materials-root", str(base)]
+    return ms, live, target, digest, args
+
+
+def test_repeated_summary_lookup_reuses_analysis_without_page_cache(tmp_path, capsys, monkeypatch):
+    ms, live, target, digest, args = _read_fixture(tmp_path, capsys)
+
+    def no_page_cache(*args):
+        pytest.fail("a summary hit must not inspect or re-extract page text")
+
+    monkeypatch.setattr(ms, "cache_index", no_page_cache)
+    before = {p: p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
+    original_open = Path.open
+
+    def guarded_open(path, *args, **kwargs):
+        if "text-cache" in path.parts:
+            pytest.fail("a summary hit must not read the page cache")
+        return original_open(path, *args, **kwargs)
+
+    with monkeypatch.context() as guard:
+        guard.setattr(Path, "open", guarded_open)
+        for _ in range(3):
+            assert ms.main(args) == 0
+            result = json.loads(capsys.readouterr().out)
+            assert result["status"] == "hit"
+            assert result["source_sha256"] == digest
+            assert result["integrity"] == "verified"
+            assert result["summary"] == (target / "summary.md").read_text()
+            assert result["primary_evidence_required"] is True
+    assert before == {p: p.read_bytes() for p in tmp_path.rglob("*") if p.is_file()}
+
+
+def test_summary_lookup_source_change_and_exact_scope(tmp_path, capsys):
+    ms, live, target, digest, args = _read_fixture(tmp_path, capsys)
+    assert ms.main([*args, "--pages", "2-3"]) == 1
+    assert json.loads(capsys.readouterr().out)["status"] == "missing"
+    live.write_bytes(b"new source")
+    assert ms.main([*args, "--digest", digest]) == 1
+    stale = json.loads(capsys.readouterr().out)
+    assert stale["status"] == "stale" and "summary" not in stale
+    assert ms.main(args) == 1
+    missing = json.loads(capsys.readouterr().out)
+    assert missing["status"] == "missing" and "summary" not in missing
+
+
+def test_legacy_summary_is_preserved_and_integrity_not_invented(tmp_path, capsys):
+    ms, live, target, digest, args = _read_fixture(tmp_path, capsys)
+    path = target / "meta.json"
+    meta = json.loads(path.read_text())
+    del meta["summary_sha256"]
+    path.write_text(json.dumps(meta))
+    before = path.read_bytes()
+    assert ms.main(args) == 0
+    assert json.loads(capsys.readouterr().out)["integrity"] == "legacy-unrecorded"
+    assert path.read_bytes() == before
+
+
+@pytest.mark.parametrize("damage", ["body", "material", "range", "digest", "meta",
+                                    "partial", "oversize", "encoding", "escape"])
+def test_summary_lookup_refuses_corrupt_or_unbounded_entries(tmp_path, capsys, damage):
+    ms, live, target, digest, args = _read_fixture(tmp_path, capsys)
+    body, metadata = target / "summary.md", target / "meta.json"
+    meta = json.loads(metadata.read_text())
+    if damage == "body":
+        body.write_text("Altered content")
+    elif damage in {"material", "range", "digest"}:
+        key, value = {"material": ("material", "other.pdf"),
+                      "range": ("page_range", [1, 2]),
+                      "digest": ("sha256", "00" * 32)}[damage]
+        meta[key] = value
+        metadata.write_text(json.dumps(meta))
+    elif damage == "meta":
+        metadata.write_text("[]")
+    elif damage == "partial":
+        metadata.unlink()
+    elif damage == "oversize":
+        body.write_bytes(b"x" * (ms.MAX_SUMMARY_BYTES + 1))
+    elif damage == "encoding":
+        body.write_bytes(b"\xff")
+    else:
+        body.unlink()
+        body.symlink_to(live)
+    assert ms.main(args) == 2
+    result = json.loads(capsys.readouterr().out)
+    assert result["status"] == "refused" and "summary" not in result
+
+
+def test_summary_lookup_refuses_source_race_or_escape(tmp_path, capsys, monkeypatch):
+    ms, live, target, digest, args = _read_fixture(tmp_path, capsys)
+    calls = iter([digest, "00" * 32])
+    monkeypatch.setattr(ms, "sha256", lambda path: next(calls))
+    assert ms.main(args) == 2
+    assert "changed during lookup" in json.loads(capsys.readouterr().out)["reason"]
+    assert ms.main([*args, "--material", "../outside.pdf"]) == 2
+    assert json.loads(capsys.readouterr().out)["status"] == "refused"

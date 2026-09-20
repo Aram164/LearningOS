@@ -24,7 +24,9 @@ from ..derived.engine import (
 from ..derived.identity import canonical_snapshot_digest, digest_matching_files
 from ..derived.model import DERIVED_SUBSTRATE_FILES, NodeSpec
 from ..errors import TransactionFailure
+from ..githistory import fresh_git_snapshot
 from ..loader import Repo, load_repo
+from .common import _git_state, stable_generated_at
 from .concepts import (
     build_backlinks,
     build_backlinks_semantic,
@@ -172,14 +174,16 @@ SNAPSHOT_ATTEMPTS = 3
 
 def generate_shadow(
     repo: Repo,
-    generated_at: str,
+    generated_at: str | None = None,
     *,
     trace: list[TraceEvent] | None = None,
 ) -> dict[str, str]:
     """Compute the shadow artifacts through the derived graph (no writes).
 
     Only semantic values come from cached nodes; publication stamping is
-    always fresh, exactly as the legacy path does it.
+    always fresh, exactly as the legacy path does it. The default timestamp
+    is captured inside each attempt, so a retry also refreshes the stamp.
+    Explicit stamps remain available for deterministic proof fixtures.
 
     Snapshot-bound like the manifest shadow: the repo is loaded inside
     the transaction's own snapshot window and evaluation commits only
@@ -189,9 +193,16 @@ def generate_shadow(
     """
     root = repo.root
     for _ in range(SNAPSHOT_ATTEMPTS):
-        snapshot_before = canonical_snapshot_digest(root)
+        git_before = fresh_git_snapshot(root)
+        state_before = _git_state(root)
+        if git_before.table is None or git_before.head != state_before[0]:
+            continue
+        snapshot_before = canonical_snapshot_digest(root, git_before)
+        stamp = generated_at if generated_at is not None else stable_generated_at(root)
         fresh = load_repo(root)
-        if canonical_snapshot_digest(root) != snapshot_before:
+        git_mid = fresh_git_snapshot(root)
+        if (git_mid.table is None or git_mid.head != state_before[0]
+                or canonical_snapshot_digest(root, git_mid) != snapshot_before):
             continue  # the load raced a concurrent edit; reload
         staging = Staging()
         attempt_trace: list[TraceEvent] = []
@@ -205,17 +216,20 @@ def generate_shadow(
             trace=attempt_trace,
         )
         backlinks = publish_backlinks(
-            fresh, results[BACKLINKS_SEMANTIC_ID].value, generated_at)
+            fresh, results[BACKLINKS_SEMANTIC_ID].value, stamp)
         artifacts = {
             "backlinks.json": _backlinks_artifact(backlinks),
             "concept-map.md": publish_concept_map(
-                results[CONCEPT_MAP_BODY_ID].value, generated_at) + "\n",
+                results[CONCEPT_MAP_BODY_ID].value, stamp) + "\n",
             "dependency-report.md": publish_dependency_report(
-                results[DEPENDENCY_REPORT_BODY_ID].value, generated_at) + "\n",
+                results[DEPENDENCY_REPORT_BODY_ID].value, stamp) + "\n",
         }
         if generation_input_digests(root) != inputs_before:
             continue  # inputs moved during evaluation; the staging dies here
-        if canonical_snapshot_digest(root) != snapshot_before:
+        git_after = fresh_git_snapshot(root)
+        if (git_after.table is None or git_after.head != state_before[0]
+                or canonical_snapshot_digest(root, git_after) != snapshot_before
+                or _git_state(root) != state_before):
             continue
         commit_staging(root, staging)
         if trace is not None:
@@ -223,7 +237,7 @@ def generate_shadow(
         return artifacts
     raise TransactionFailure(
         "cannot generate shadow artifacts: canonical inputs changed during "
-        f"generation ({SNAPSHOT_ATTEMPTS} attempts)"
+        f"generation or Git history was unreadable ({SNAPSHOT_ATTEMPTS} attempts)"
     )
 
 
@@ -249,13 +263,14 @@ class ShadowComparison:
 
 def compare_shadow_generation(
     repo: Repo,
-    generated_at: str,
+    generated_at: str | None = None,
     *,
     trace: list[TraceEvent] | None = None,
 ) -> ShadowComparison:
     """Run both implementations and compare artifact bytes exactly."""
-    legacy = legacy_shadow_artifacts(repo, generated_at)
     shadow = generate_shadow(repo, generated_at, trace=trace)
+    stamp = json.loads(shadow["backlinks.json"])["_generated"]["generated_at"]
+    legacy = legacy_shadow_artifacts(load_repo(repo.root), stamp)
     artifacts = {name: shadow[name] == legacy[name] for name in SHADOW_ARTIFACTS}
     return ShadowComparison(
         equivalent=all(artifacts.values()),
