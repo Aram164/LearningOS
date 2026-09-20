@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import ast
+import hashlib
 import json
 import subprocess
 import sys
@@ -33,6 +34,7 @@ from learning_os.transactions import (
     ProjectionFailure,
     TransactionConflict,
     TransactionFailure,
+    TransactionRecoveryConflict,
     TransactionService,
     TransactionSnapshotConflict,
     artifact_revision,
@@ -832,18 +834,40 @@ def test_a_rollback_that_cannot_finish_refuses_instead_of_continuing(mini_repo: 
     record.mkdir(parents=True)
     (record / "intent.json").write_text(json.dumps({
         "transaction_id": "tx-broken",
+        "receipt_path": "operations/transactions/transaction-tx-broken.yaml",
         "backups": [{"path": "knowledge/concepts.yaml", "created": False,
                      "backup_id": "backup-0"}],
     }), encoding="utf-8")
     # backup-0 is deliberately absent: the crash took the copy with it.
 
-    with pytest.raises(TransactionFailure, match="backup copy is missing"):
+    with pytest.raises(TransactionRecoveryConflict) as exc_info:
         transaction_module.reconcile_inflight_transactions(mini_repo)
+    assert exc_info.value.conflicts[0]["reason"] == "LEGACY_JOURNAL_UNPROVABLE"
 
     # The record survives, so a later attempt can still act on it, and the
     # damaged file is not silently presented as repaired.
     assert (record / "intent.json").is_file()
     assert target.read_text(encoding="utf-8") != original
+
+
+def _v2_crash_journal(record: Path, transaction_id: str, relative: str,
+                    before: bytes, after: bytes) -> None:
+    """A version-2 crash journal: pre-state plus intended post-state."""
+    record.mkdir(parents=True)
+    (record / "backup-0").write_bytes(before)
+    (record / "intent.json").write_text(json.dumps({
+        "schema_version": 2,
+        "transaction_id": transaction_id,
+        "receipt_path": f"operations/transactions/transaction-{transaction_id}.yaml",
+        "paths": [{
+            "path": relative,
+            "before": {"kind": "file",
+                       "sha256": f"sha256:{hashlib.sha256(before).hexdigest()}",
+                       "backup_id": "backup-0"},
+            "after": {"kind": "file",
+                      "sha256": f"sha256:{hashlib.sha256(after).hexdigest()}"},
+        }],
+    }), encoding="utf-8")
 
 
 def test_reconciliation_restores_the_previous_bytes_and_is_idempotent(mini_repo: Path):
@@ -852,13 +876,8 @@ def test_reconciliation_restores_the_previous_bytes_and_is_idempotent(mini_repo:
     target.write_bytes(b"half-applied\n")
 
     record = mini_repo / "operations" / "transactions" / ".inflight" / "tx-good"
-    record.mkdir(parents=True)
-    (record / "backup-0").write_bytes(original)
-    (record / "intent.json").write_text(json.dumps({
-        "transaction_id": "tx-good",
-        "backups": [{"path": "knowledge/concepts.yaml", "created": False,
-                     "backup_id": "backup-0"}],
-    }), encoding="utf-8")
+    _v2_crash_journal(record, "tx-good", "knowledge/concepts.yaml",
+                      original, b"half-applied\n")
 
     transaction_module.reconcile_inflight_transactions(mini_repo)
     assert target.read_bytes() == original
@@ -886,13 +905,8 @@ def test_rollback_discards_a_projection_describing_the_undone_state(mini_repo: P
 
     target.write_bytes(b"half-applied\n")
     record = mini_repo / "operations" / "transactions" / ".inflight" / "tx-crashed"
-    record.mkdir(parents=True)
-    (record / "backup-0").write_bytes(original)
-    (record / "intent.json").write_text(json.dumps({
-        "transaction_id": "tx-crashed",
-        "backups": [{"path": "knowledge/concepts.yaml", "created": False,
-                     "backup_id": "backup-0"}],
-    }), encoding="utf-8")
+    _v2_crash_journal(record, "tx-crashed", "knowledge/concepts.yaml",
+                      original, b"half-applied\n")
 
     transaction_module.reconcile_inflight_transactions(mini_repo)
 
@@ -909,13 +923,8 @@ def test_rollback_keeps_a_projection_that_still_matches(mini_repo: Path):
     target.write_bytes(b"half-applied\n")
 
     record = mini_repo / "operations" / "transactions" / ".inflight" / "tx-crashed"
-    record.mkdir(parents=True)
-    (record / "backup-0").write_bytes(original)
-    (record / "intent.json").write_text(json.dumps({
-        "transaction_id": "tx-crashed",
-        "backups": [{"path": "knowledge/concepts.yaml", "created": False,
-                     "backup_id": "backup-0"}],
-    }), encoding="utf-8")
+    _v2_crash_journal(record, "tx-crashed", "knowledge/concepts.yaml",
+                      original, b"half-applied\n")
 
     # Written to match the state rollback is about to restore.
     target_restored = original
