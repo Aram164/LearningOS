@@ -13,8 +13,6 @@ from __future__ import annotations
 import hashlib
 from pathlib import Path
 
-import yaml
-
 from learning_os.loader import load_repo
 from learning_os.material_refs import unit_routes
 from learning_os.materials_resolution import (
@@ -44,21 +42,6 @@ OPERATOR_CONTRACT_VERSION = "operator-v2"
 SKIP_NAMES = frozenset({".DS_Store"})
 
 
-def _manifest_digests(root: Path) -> dict[str, str]:
-    """Recorded sha256 per materials relpath, or {} when uninventoried."""
-    try:
-        data = yaml.safe_load(
-            (root / "records" / "materials-manifest.yaml").read_text(
-                encoding="utf-8"))
-    except (OSError, yaml.YAMLError):
-        return {}
-    files = data.get("files") if isinstance(data, dict) else None
-    if not isinstance(files, dict):
-        return {}
-    return {str(rel): row["sha256"] for rel, row in files.items()
-            if isinstance(row, dict) and isinstance(row.get("sha256"), str)}
-
-
 def _live_sha256(path: Path) -> str | None:
     try:
         digest = hashlib.sha256()
@@ -68,24 +51,6 @@ def _live_sha256(path: Path) -> str | None:
     except OSError:
         return None
     return digest.hexdigest()
-
-
-def _recorded_or_live(recorded: dict[str, str], base: Path | None,
-                      path: Path) -> str | None:
-    """The content digest behind one material file.
-
-    Recorded manifest checksums win; files the inventory has not seen yet
-    (transcripts fetched since the last ``make inventory``) fall back to
-    live bytes. Both are content digests, so either invalidates on change.
-    """
-    if base is not None:
-        try:
-            rel = path.resolve().relative_to(base).as_posix()
-        except (OSError, ValueError):
-            rel = None
-        if rel is not None and rel in recorded:
-            return recorded[rel]
-    return _live_sha256(path)
 
 
 def _iter_material_files(directory: Path):
@@ -102,14 +67,11 @@ def _evidence(repo, source_ids) -> dict[str, str]:
 
     Authority-prefix, not route-target-only: a re-uploaded video changes
     the key even though no locator moved — which is exactly what makes a
-    transcript a legitimate dossier input with zero route edits.
+    transcript a legitimate dossier input with zero route edits. Digests
+    always hash live bytes; recorded inventory checksums are historical
+    observations and never stand in for current content.
     """
-    recorded = _manifest_digests(repo.root)
     materials = repo.learningos_root / "materials"
-    try:
-        base = materials.resolve()
-    except OSError:
-        base = None
     evidence: dict[str, str] = {}
     for sid in sorted(source_ids):
         source = repo.sources.get(sid)
@@ -124,7 +86,7 @@ def _evidence(repo, source_ids) -> dict[str, str]:
                     boundary_root=materials)
             except (PathBoundaryError, FileNotFoundError, OSError):
                 continue
-            digest = _recorded_or_live(recorded, base, path)
+            digest = _live_sha256(path)
             if digest is not None:
                 evidence[single] = f"sha256:{digest}"
             continue
@@ -142,7 +104,7 @@ def _evidence(repo, source_ids) -> dict[str, str]:
         except OSError:
             continue
         for path in _iter_material_files(directory):
-            digest = _recorded_or_live(recorded, base, path)
+            digest = _live_sha256(path)
             if digest is None:
                 continue
             try:

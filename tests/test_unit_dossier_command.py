@@ -86,6 +86,34 @@ def test_new_transcript_digest_moves_only_evidence(mini_repo):
             if after["hashes"][name] != digest} == {"evidence"}
 
 
+def test_changed_bytes_invalidate_with_stale_inventory(mini_repo):
+    """Live bytes rule: a changed file invalidates even when the recorded
+    inventory still names the old digest."""
+    rich_fixture(mini_repo)
+    folder = _point_source_at_directory(mini_repo)
+    transcript = folder / "transcript" / "abc123.md"
+    transcript.parent.mkdir(parents=True, exist_ok=True)
+    transcript.write_text("[00:00] expected value\n", encoding="utf-8")
+    _write_manifest(mini_repo, {
+        "source-demo-book/transcript/abc123.md": transcript})
+    before = _dossier(mini_repo)
+    assert before["served_from_cache"] is False
+
+    cached = _dossier(mini_repo)
+    assert cached["key"] == before["key"]
+    assert cached["served_from_cache"] is True
+
+    transcript.write_text("[00:00] expected value, re-recorded\n",
+                          encoding="utf-8")
+    # The inventory is deliberately NOT refreshed here.
+    after = _dossier(mini_repo)
+    assert after["key"] != before["key"]
+    assert after["served_from_cache"] is False
+    changed = {name for name, digest in after["hashes"].items()
+               if before["hashes"][name] != digest}
+    assert changed == {"evidence"}
+
+
 def test_poisoned_cache_is_rebuilt_not_served(mini_repo):
     rich_fixture(mini_repo)
     first = _dossier(mini_repo)

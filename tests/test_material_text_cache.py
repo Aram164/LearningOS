@@ -202,3 +202,108 @@ def test_missing_manifest_fails_cleanly(tmp_path: Path, capsys):
                     "--cache-dir", str(tmp_path / "cache")])
     capsys.readouterr()
     assert code == 2
+
+
+@needs_pdftotext
+def test_changed_page_text_invalidates_and_reextracts(tmp_path: Path, capsys):
+    mt = _material_text()
+    data = _tiny_pdf("Original page text")
+    base = tmp_path / "materials"
+    _tree(base, {"deck-a.pdf": data})
+    manifest = tmp_path / "manifest.yaml"
+    manifest.write_text(_manifest_yaml({"deck-a.pdf": data}), encoding="utf-8")
+    cache = tmp_path / "cache"
+    code, summary = _run(mt, base, manifest, cache, capsys, "--build")
+    assert code == 0 and summary["extracted"] == 1
+    digest = hashlib.sha256(data).hexdigest()
+    page = cache / digest / "pp-0001.txt"
+    page.write_text("Altered content\n", encoding="utf-8")
+
+    code, summary = _run(mt, base, manifest, cache, capsys, "--refresh")
+    assert code == 0
+    assert (summary["cached"], summary["extracted"]) == (0, 1)
+    assert "Original page text" in page.read_text(encoding="utf-8")
+
+
+@needs_pdftotext
+def test_changed_extractor_identity_invalidates(tmp_path: Path, capsys):
+    mt = _material_text()
+    data = _tiny_pdf("Extractor edition text")
+    base = tmp_path / "materials"
+    _tree(base, {"deck-a.pdf": data})
+    manifest = tmp_path / "manifest.yaml"
+    manifest.write_text(_manifest_yaml({"deck-a.pdf": data}), encoding="utf-8")
+    cache = tmp_path / "cache"
+    code, summary = _run(mt, base, manifest, cache, capsys, "--build")
+    assert code == 0 and summary["extracted"] == 1
+    digest = hashlib.sha256(data).hexdigest()
+    index_path = cache / digest / "index.json"
+    index = json.loads(index_path.read_text(encoding="utf-8"))
+    assert index["extractor"] == mt.EXTRACTOR
+    assert len(index["pages_sha256"]) == 1
+    index["extractor"] = "other-extractor"
+    index_path.write_text(json.dumps(index), encoding="utf-8")
+
+    code, summary = _run(mt, base, manifest, cache, capsys, "--refresh")
+    assert code == 0
+    assert (summary["cached"], summary["extracted"]) == (0, 1)
+
+
+@needs_pdftotext
+def test_interrupted_publication_publishes_nothing_partial(
+        tmp_path: Path, capsys):
+    mt = _material_text()
+    data = _tiny_pdf("Complete page text")
+    base = tmp_path / "materials"
+    _tree(base, {"deck-a.pdf": data})
+    manifest = tmp_path / "manifest.yaml"
+    manifest.write_text(_manifest_yaml({"deck-a.pdf": data}), encoding="utf-8")
+    cache = tmp_path / "cache"
+    digest = hashlib.sha256(data).hexdigest()
+    staging = cache / f".{digest}.staging"
+    staging.mkdir(parents=True)
+    (staging / "pp-0001.txt").write_text("partial", encoding="utf-8")
+    partial = cache / digest
+    partial.mkdir(parents=True)
+    (partial / "pp-0001.txt").write_text("partial", encoding="utf-8")
+
+    code, summary = _run(mt, base, manifest, cache, capsys, "--refresh")
+    assert code == 0
+    assert summary["extracted"] == 1
+    assert not staging.exists()
+    page = cache / digest / "pp-0001.txt"
+    assert "Complete page text" in page.read_text(encoding="utf-8")
+    index = json.loads((cache / digest / "index.json").read_text(
+        encoding="utf-8"))
+    assert index["pages_sha256"] == [
+        hashlib.sha256(page.read_bytes()).hexdigest()]
+
+
+@needs_pdftotext
+def test_source_changed_during_extraction_publishes_nothing(
+        tmp_path: Path, capsys, monkeypatch):
+    mt = _material_text()
+    data = _tiny_pdf("Racing page text")
+    base = tmp_path / "materials"
+    _tree(base, {"deck-a.pdf": data})
+    manifest = tmp_path / "manifest.yaml"
+    manifest.write_text(_manifest_yaml({"deck-a.pdf": data}), encoding="utf-8")
+    cache = tmp_path / "cache"
+    digest = hashlib.sha256(data).hexdigest()
+    real_sha256 = mt.sha256
+    calls = []
+
+    def racing(path):
+        calls.append(path)
+        if len(calls) == 1:
+            return real_sha256(path)
+        return "00" * 32
+
+    monkeypatch.setattr(mt, "sha256", racing)
+    code, summary = _run(mt, base, manifest, cache, capsys, "--refresh")
+    assert code == 0
+    assert summary["extracted"] == 0
+    assert summary["skipped"] == [
+        {"material": "deck-a.pdf", "reason": "source-changed"}]
+    assert not (cache / digest).exists()
+    assert list(cache.iterdir()) == []
