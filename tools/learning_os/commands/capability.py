@@ -30,6 +30,7 @@ from learning_os.transactions import (
     ReplayEvidenceError,
     TransactionFailure,
     TransactionIdempotencyConflict,
+    TransactionRecoveryConflict,
     TransactionResult,
     TransactionSnapshotConflict,
     replay_for_request,
@@ -947,6 +948,34 @@ def cmd_capability(args) -> int:
             attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
                           status="error", attrs={"outcome": "evidence-error"})
             return _close_attempt(attempt, 2, "error", {"stage": "core.replay"})
+        except TransactionRecoveryConflict as exc:
+            # A stale crash journal names paths the lookup cannot prove
+            # transaction-owned. Nothing was modified and the journal was
+            # preserved; the operator reconciles by hand. Never retryable
+            # and never definitive: the fix is manual reconciliation, and
+            # the request itself was never attempted.
+            response = _v2_response(
+                envelope,
+                ok=False,
+                error=_gateway_error(
+                    "INTERNAL_FAILURE", str(exc), retryable=False,
+                    details={
+                        "transaction_id": exc.transaction_id,
+                        "conflicting_paths": [
+                            entry.get("path") for entry in exc.conflicts
+                        ],
+                        "reasons": sorted({
+                            entry.get("reason") for entry in exc.conflicts
+                            if entry.get("reason")
+                        }),
+                    },
+                ),
+            )
+            _validate_capability_envelope(root, response, kind="result")
+            print(json.dumps(response, indent=2, ensure_ascii=False))
+            attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
+                          status="error", attrs={"outcome": "recovery-conflict"})
+            return _close_attempt(attempt, 2, "error", {"stage": "core.replay"})
         except TransactionFailure as exc:
             response = _v2_response(
                 envelope,
@@ -1054,6 +1083,32 @@ def cmd_capability(args) -> int:
             print(json.dumps(response, indent=2, ensure_ascii=False))
             return _close_attempt(
                 attempt, 2, "error", {"stage": "core.commit"})
+        except TransactionRecoveryConflict as exc:
+            # Defense in depth: the replay section's lock acquisition above
+            # normally reconciles (and catches this) first, since the lock
+            # is re-entrant. If that flow ever changes, a conflict reaching
+            # the dispatch section must still refuse ambiguously — never
+            # fall through to the definitive INVALID_REQUEST below.
+            response = _v2_response(
+                envelope,
+                ok=False,
+                error=_gateway_error(
+                    "INTERNAL_FAILURE", str(exc), retryable=False,
+                    details={
+                        "transaction_id": exc.transaction_id,
+                        "conflicting_paths": [
+                            entry.get("path") for entry in exc.conflicts
+                        ],
+                        "reasons": sorted({
+                            entry.get("reason") for entry in exc.conflicts
+                            if entry.get("reason")
+                        }),
+                    },
+                ),
+            )
+            _validate_capability_envelope(root, response, kind="result")
+            print(json.dumps(response, indent=2, ensure_ascii=False))
+            return _close_attempt(attempt, 2, "error", {"code": "INTERNAL_FAILURE"})
         except TransactionFailure as exc:
             code, result = 2, {"error": str(exc)}
         except ValueError as exc:
