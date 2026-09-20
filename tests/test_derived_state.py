@@ -217,6 +217,15 @@ def test_store_replaces_and_orphans_old_blob(tmp_path: Path):
     assert not list(derived_dir(tmp_path).rglob("*.tmp"))
 
 
+def test_stored_state_carries_the_generated_header(tmp_path: Path):
+    import json
+
+    store_node(tmp_path, "n", node_key="k1", value={"v": 1})
+    payload = json.loads(state_path(tmp_path).read_text(encoding="utf-8"))
+    assert "GENERATED" in payload["_generated"]["warning"]
+    assert lookup(tmp_path, "n") is not None
+
+
 def test_store_replaces_corrupt_state(tmp_path: Path):
     state_path(tmp_path).parent.mkdir(parents=True)
     state_path(tmp_path).write_text("not json", encoding="utf-8")
