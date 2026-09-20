@@ -4,6 +4,8 @@
     python tools/generate.py            # rebuild all generated outputs
     python tools/generate.py --shadow-derived [--json]
                                         # proof-phase shadow comparison (no writes)
+    python tools/generate.py --shadow-manifest [--json]
+                                        # proof-phase manifest comparison (no writes)
 
 Produces, deterministically except timestamps: generated/manifest.json,
 concept-index.md, source-index.md (incl. per-lecture and per-concept selector
@@ -25,6 +27,9 @@ from learning_os.genout.derived_generation import (  # noqa: E402
     CONCEPT_MAP_BODY_ID,
     DEPENDENCY_REPORT_BODY_ID,
     compare_shadow_generation,
+)
+from learning_os.genout.manifest_derived import (  # noqa: E402
+    compare_shadow_manifest,
 )
 from learning_os.learning_runtime import RuntimeInputError  # noqa: E402
 from learning_os.loader import load_repo  # noqa: E402
@@ -87,6 +92,44 @@ def _shadow_main(root: Path, *, as_json: bool) -> int:
     return 0 if comparison.equivalent else 1
 
 
+def _shadow_manifest_main(root: Path, *, as_json: bool) -> int:
+    """Compare the shadow manifest against build_manifest (never writes)."""
+    import json
+
+    repo = load_repo(root)
+    trace: list = []
+    comparison = compare_shadow_manifest(repo, stable_generated_at(root), trace=trace)
+    by_node = {event.node: event for event in trace}
+    if as_json:
+        print(json.dumps({
+            "equivalent": comparison.equivalent,
+            "artifact": "manifest.json",
+            "legacy_sha256": comparison.legacy_sha256,
+            "shadow_sha256": comparison.shadow_sha256,
+            "nodes": {
+                node_id: (
+                    {"status": "hit"}
+                    if by_node[node_id].status == "hit"
+                    else {"status": "rebuilt",
+                          "output_changed": by_node[node_id].reason
+                          != "node-key-changed-output-same"}
+                )
+                for node_id in sorted(by_node)
+            },
+        }, indent=2, sort_keys=True))
+        return 0 if comparison.equivalent else 1
+    if comparison.equivalent:
+        print("shadow manifest: exact")
+    else:
+        print("shadow manifest: MISMATCH (manifest.json)")
+    print()
+    for node_id in sorted(by_node):
+        print(f"  {node_id}: {_describe_event(by_node[node_id])}")
+    print()
+    print(f"manifest.json sha256:{comparison.shadow_sha256}")
+    return 0 if comparison.equivalent else 1
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=None,
@@ -94,16 +137,25 @@ def main() -> int:
     parser.add_argument("--shadow-derived", action="store_true",
                         help="compare derived shadow generation against the legacy "
                              "builders without writing (exit nonzero on mismatch)")
+    parser.add_argument("--shadow-manifest", action="store_true",
+                        help="compare the shadow manifest graph against "
+                             "build_manifest() without writing "
+                             "(exit nonzero on mismatch)")
     parser.add_argument("--json", action="store_true",
-                        help="machine-readable shadow report (requires --shadow-derived)")
+                        help="machine-readable shadow report "
+                             "(requires --shadow-derived or --shadow-manifest)")
     args = parser.parse_args()
 
-    if args.json and not args.shadow_derived:
-        parser.error("--json requires --shadow-derived")
+    if args.json and not (args.shadow_derived or args.shadow_manifest):
+        parser.error("--json requires --shadow-derived or --shadow-manifest")
+    if args.shadow_derived and args.shadow_manifest:
+        parser.error("choose one shadow mode")
 
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
     if args.shadow_derived:
         return _shadow_main(root, as_json=args.json)
+    if args.shadow_manifest:
+        return _shadow_manifest_main(root, as_json=args.json)
     repo = load_repo(root)
     try:
         outputs = generate_all(repo)

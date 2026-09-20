@@ -263,3 +263,115 @@ def material_fixture(root):
     assert not errors, errors
     write_baseline(root, signatures, "Pre-existing warnings in this synthetic fixture")
     return load_repo(root), route_id, sm.id
+
+
+def curriculum_mini(tmp_path: Path):
+    """A mini repo plus partitioned curriculum. Shared by the manifest
+    shadow suites so both pin the same fixture shape."""
+    from conftest import build_mini_repo
+
+    mini = build_mini_repo(tmp_path)
+    add_curriculum(mini)
+    return mini
+
+
+def add_manifest_fixtures(root: Path) -> None:
+    """Projects, paths, shelves, facets, garden, AI, ledger, resume.
+
+    Schema-valid minimal rows for every manifest domain the plain mini
+    lacks, so the shadow mutation matrix can touch each one. Behaviour
+    matches the probe that derived the expected closures.
+    """
+    write_yaml(root / "projects/registry/project-demo.yaml", {
+        "schema_version": 1, "id": "project-demo", "type": "project",
+        "title": "Demo project", "project_type": "software",
+        "status": "active", "root_uri": "project://demo",
+        "objective": "Demonstrate the shadow graph.",
+        "milestone_ids": [], "linked_module_ids": ["module-demo"],
+        "unit_ids": ["unit-demo-l01"], "workspace_ids": ["workspace-demo"],
+        "thematic_group_ids": [],
+        "boundaries": {"confidentiality": "private",
+                       "external_code_access": "approved"},
+    })
+    write_yaml(root / "projects/relations/project-relations.yaml", {
+        "relations": [{"id": "relationship-demo",
+                       "from_project_id": "project-demo",
+                       "to_id": "module-demo", "to_type": "module",
+                       "relation_type": "informs", "reason": "Demo.",
+                       "contribution": "Demo shelf."}],
+    })
+    write_yaml(root / "projects/aliases.yaml",
+               {"aliases": {"old-demo": "project-demo"}})
+    write_yaml(root / "work/active/workspace-demo/paths/path-demo.yaml", {
+        "id": "path-demo", "title": "Demo path", "status": "active",
+        "workspace_id": "workspace-demo", "current_stage": "stage-demo-path",
+        "created": "2026-09-01",
+        "stages": [{"id": "stage-demo-path", "title": "First step",
+                    "status": "active", "objective": "Begin.",
+                    "done_when": ["Started."]}],
+    })
+    write_yaml(root / "sources/collections/shelf.yaml", {
+        "id": "shelf", "collection_kind": "catalogue", "title": "Shelf",
+        "entries": [{"source": "source-demo-book"}],
+    })
+    write_yaml(root / "curriculum/thematic-groups.yaml", {
+        "thematic_groups": [{"id": "group-maths", "title": "Maths", "order": 1}],
+    })
+    write_yaml(root / "sources/topics.yaml", {
+        "topics": [{"id": "topic-probability", "title": "Probability",
+                    "domain": "mathematics"}],
+    })
+    garden = root / "knowledge/garden"
+    garden.mkdir(parents=True, exist_ok=True)
+    (garden / "seed.md").write_text("A thought. #idea\n", encoding="utf-8")
+    bundle = root / "operations/ai-actions/requests/ai-request-demo"
+    bundle.mkdir(parents=True, exist_ok=True)
+    (bundle / "request.yaml").write_text(yaml.safe_dump({
+        "id": "ai-request-demo", "action_id": "unit.compare-materials",
+        "status": "prepared",
+        "target": {"kind": "unit", "id": "unit-demo-l01"},
+        "provider": {"preferred": "manual-bundle"},
+        "created_at": "2026-09-20T00:00:00+00:00",
+    }), encoding="utf-8")
+    ledger = root / "operations/transactions/revisions.yaml"
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    ledger.write_text(yaml.safe_dump({
+        "schema_version": 1, "type": "artifact-revision-ledger",
+        "revisions": {"unit-demo-l01": 3},
+    }), encoding="utf-8")
+    (root / "curriculum/resume.yaml").write_text(
+        yaml.safe_dump({"type": "resume-pointer", "module_id": "module-demo",
+                        "unit_id": "unit-demo-l01",
+                        "study_map_id": "study-map-demo-l01",
+                        "stage_id": "stage-demo", "updated": "2026-09-20"}),
+        encoding="utf-8")
+
+
+def stage_manifest_producers(root: Path, repo) -> None:
+    """Copy the real manifest-graph producer bytes under a mini root."""
+    from learning_os.genout.derived_generation import generation_registry
+    from learning_os.genout.manifest_derived import manifest_registry
+
+    real_root = Path(__file__).resolve().parent.parent
+    registry = {**generation_registry(repo), **manifest_registry(repo)}
+    for rel in dict.fromkeys(
+        path for spec, _ in registry.values() for path in spec.producer_files
+    ):
+        target = root / rel
+        target.parent.mkdir(parents=True, exist_ok=True)
+        target.write_bytes((real_root / rel).read_bytes())
+
+
+def trace_summary(trace) -> dict[str, tuple[str, str]]:
+    """Node -> (status, reason) for exact closure assertions."""
+    return {event.node: (event.status, event.reason) for event in trace}
+
+
+def moved_only(before: dict[str, str], after: dict[str, str]) -> set[str]:
+    return {name for name in before if before[name] != after[name]}
+
+
+def rewrite_yaml_doc(path: Path, mutate) -> None:
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    mutate(data)
+    path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")

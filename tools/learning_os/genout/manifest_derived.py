@@ -17,12 +17,16 @@ from __future__ import annotations
 
 import datetime
 import hashlib
+import json
 from collections.abc import Callable
+from dataclasses import dataclass
 from functools import partial
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 from ..ai_actions.projection import project_ai_actions
+from ..contracts.manifest_contract import enforce
+from ..derived.engine import evaluate_many
 from ..derived.identity import digest_bytes, digest_matching_files
 from ..derived.model import DERIVED_SUBSTRATE_FILES, NodeSpec
 from ..garden import garden_id, project_garden_entries
@@ -36,8 +40,9 @@ from ..materials_resolution import resolve_route_material_files as _resolve_rout
 from ..materials_resolution import safe_material_locator as _safe_locator
 from ..materials_resolution import single_file_material as _single_file_material
 from ..pathing import PathBoundaryError, read_text_inside, resolved_inside
+from .concepts import build_backlinks
 from .coordination import adoption_counts
-from .derived_generation import BACKLINKS_SEMANTIC_ID
+from .derived_generation import BACKLINKS_SEMANTIC_ID, generation_input_digests, generation_registry
 from .derived_inputs import (
     enumerate_ai_action_files,
     enumerate_collection_files,
@@ -57,12 +62,14 @@ from .derived_inputs import (
 from .manifest import (
     _projected_revision,
     assemble_manifest_semantic_payload,
+    build_manifest,
     build_manifest_relations,
     build_manifest_semesters,
     build_manifest_stages,
     count_inbox_items,
     derive_manifest_collections,
     load_manifest_revisions,
+    publish_manifest_metadata,
     splice_manifest_records,
 )
 from .modules_view import _academic_deadlines
@@ -94,7 +101,7 @@ from .projection import (
 from .review import build_review_items
 
 if TYPE_CHECKING:
-    from ..derived.engine import BuildContext, Registry
+    from ..derived.engine import BuildContext, Registry, TraceEvent
 
 NOTES_ID = "manifest.notes"
 CONCEPTS_ID = "manifest.concepts"
@@ -1181,4 +1188,85 @@ def manifest_registry(repo: Repo) -> Registry:
             build_semantic_payload,
         ),
     }
+
+
+def manifest_shadow_registry(repo: Repo) -> Registry:
+    """The manifest graph plus the shared backlinks semantic node."""
+    return {**generation_registry(repo), **manifest_registry(repo)}
+
+
+def manifest_shadow_inputs(root: Path, repo: Repo) -> dict[str, str]:
+    """Merged gen.* and manifest.* input digests for one evaluation."""
+    return {
+        **generation_input_digests(root),
+        **manifest_input_digests(root, repo),
+    }
+
+
+def serialize_manifest(payload: dict) -> str:
+    """manifest.json bytes exactly as outputs.py writes them."""
+    return (
+        json.dumps(payload, separators=(",", ":"), sort_keys=True, ensure_ascii=False)
+        + "\n"
+    )
+
+
+def build_manifest_shadow(
+    repo: Repo,
+    generated_at: str,
+    *,
+    trace: list[TraceEvent] | None = None,
+    enforce_contract: bool = True,
+) -> dict:
+    """Compute the manifest through the derived graph (no writes).
+
+    Only the semantic payload comes from cached nodes; publication
+    metadata is stamped fresh and the contract is enforced exactly as
+    the legacy path does. ``build_manifest()`` stays authoritative.
+    """
+    results = evaluate_many(
+        repo.root,
+        [SEMANTIC_PAYLOAD_ID],
+        registry=manifest_shadow_registry(repo),
+        inputs=manifest_shadow_inputs(repo.root, repo),
+        trace=trace,
+    )
+    payload = {
+        "_generated": publish_manifest_metadata(repo, generated_at),
+        **results[SEMANTIC_PAYLOAD_ID].value,
+    }
+    if enforce_contract:
+        enforce(payload, repo.root)
+    return payload
+
+
+@dataclass(frozen=True)
+class ShadowManifestComparison:
+    """Byte-exact shadow-vs-legacy verdict with both sides attached."""
+
+    equivalent: bool
+    shadow_sha256: str
+    legacy_sha256: str
+    shadow: dict
+    legacy: dict
+
+
+def compare_shadow_manifest(
+    repo: Repo,
+    generated_at: str,
+    *,
+    trace: list[TraceEvent] | None = None,
+) -> ShadowManifestComparison:
+    """Run both implementations and compare manifest bytes exactly."""
+    legacy = build_manifest(repo, generated_at, build_backlinks(repo, generated_at))
+    shadow = build_manifest_shadow(repo, generated_at, trace=trace)
+    legacy_blob = serialize_manifest(legacy).encode("utf-8")
+    shadow_blob = serialize_manifest(shadow).encode("utf-8")
+    return ShadowManifestComparison(
+        equivalent=shadow_blob == legacy_blob,
+        shadow_sha256=hashlib.sha256(shadow_blob).hexdigest(),
+        legacy_sha256=hashlib.sha256(legacy_blob).hexdigest(),
+        shadow=shadow,
+        legacy=legacy,
+    )
 
