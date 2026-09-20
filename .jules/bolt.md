@@ -1,0 +1,3 @@
+## 2026-09-20 - Fast paths in highly recursive tree traversals
+**Learning:** In highly recursive functions like YAML parsed data traversal (`_normalize`), standard `isinstance` checks and inline imports (like `import datetime`) add up to significant overhead. Exact type matching (`type(value) is str`) for primitives and delaying expensive imports until necessary yields a ~1.45x speedup in parsing deep/wide trees.
+**Action:** When writing or optimizing heavily recursive data traversal, place fast exact-type checks for leaves first, followed by structural exact-type checks (lists/dicts), leaving expensive imports and slow `isinstance` checks for subclasses and rare types at the end of the function block.
