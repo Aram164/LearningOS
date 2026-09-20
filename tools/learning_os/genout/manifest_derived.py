@@ -28,17 +28,24 @@ import yaml
 
 from ..ai_actions.projection import project_ai_actions
 from ..contracts.manifest_contract import declared_version, enforce, load_contract
-from ..derived.engine import Staging, commit_staging, evaluate, evaluate_many
+from ..derived.engine import (
+    BuildContext,
+    Staging,
+    commit_staging,
+    evaluate,
+    evaluate_many,
+)
 from ..derived.identity import (
     canonical_snapshot_digest,
     digest_bytes,
     digest_matching_files,
+    validator_runtime_digest,
 )
 from ..derived.model import DERIVED_SUBSTRATE_FILES, DerivedError, NodeSpec
-from ..derived.store import canonical_bytes, invalidate
+from ..derived.store import canonical_bytes, store_node
 from ..errors import TransactionFailure
 from ..garden import garden_id, project_garden_entries
-from ..githistory import GitHistoryError, last_commit_dates
+from ..githistory import GitSnapshot, fresh_git_snapshot
 from ..loader import Repo, load_repo
 from ..materials_resolution import MATERIAL_SCHEME, MATERIAL_SUFFIX_TOKEN
 from ..materials_resolution import leading_material_locator as _leading_locator
@@ -48,6 +55,7 @@ from ..materials_resolution import resolve_route_material_files as _resolve_rout
 from ..materials_resolution import safe_material_locator as _safe_locator
 from ..materials_resolution import single_file_material as _single_file_material
 from ..pathing import PathBoundaryError, read_text_inside, resolved_inside
+from .common import _git_state, stable_generated_at
 from .concepts import build_backlinks
 from .coordination import adoption_counts
 from .derived_generation import BACKLINKS_SEMANTIC_ID, generation_input_digests, generation_registry
@@ -110,7 +118,7 @@ from .projection import (
 from .review import build_review_items
 
 if TYPE_CHECKING:
-    from ..derived.engine import BuildContext, Registry, TraceEvent
+    from ..derived.engine import Registry, TraceEvent
 
 NOTES_ID = "manifest.notes"
 CONCEPTS_ID = "manifest.concepts"
@@ -182,17 +190,17 @@ def _node(version_producers: tuple[str, ...]) -> tuple[str, ...]:
     return (*_SELF, *version_producers, *DERIVED_SUBSTRATE_FILES)
 
 
-def _git_table(root: Path) -> dict[str, str]:
-    """Whole-tree last-commit dates, or empty when history is unreadable.
+def _fresh_git_table(root: Path) -> dict[str, str]:
+    """Whole-tree last-commit dates, read UNCACHED, or empty when unreadable.
 
-    Legacy calls the same walk per read; a broken history raises in the
-    builder either way, so the digest falling back to empty can only
-    accompany an identical legacy failure.
+    Every digest default reads fresh (G1a): sharing one cached walk across
+    a transaction's observations would let a concurrent commit hide behind
+    the first lookup. A broken history still falls back to empty — legacy
+    raises in the builder either way, so the fallback can only accompany
+    an identical legacy failure.
     """
-    try:
-        return last_commit_dates(str(root))
-    except GitHistoryError:
-        return {}
+    table = fresh_git_snapshot(root).table
+    return dict(table) if table is not None else {}
 
 
 def notes_git_digest(root: Path, git_table: dict[str, str] | None = None) -> str:
@@ -200,8 +208,9 @@ def notes_git_digest(root: Path, git_table: dict[str, str] | None = None) -> str
 
     Covers every note file, though only reviewed notes are read: a commit
     touching an unreviewed note costs one counts rebuild, never a wrong hit.
+    ``None`` reads the table fresh; a transaction passes its attempt table.
     """
-    table = git_table if git_table is not None else _git_table(root)
+    table = git_table if git_table is not None else _fresh_git_table(root)
     digest = hashlib.sha256()
     for path in enumerate_note_files(root):
         rel = path.relative_to(root).as_posix()
@@ -242,9 +251,10 @@ def working_notes_digest(
 
     Sites are stable across evaluations; the unit/study-map/learning-path
     content digests pin the references themselves, so absent references
-    contribute no line.
+    contribute no line. ``None`` reads the table fresh; a transaction
+    passes its attempt table.
     """
-    table = git_table if git_table is not None else _git_table(root)
+    table = git_table if git_table is not None else _fresh_git_table(root)
     lines: list[str] = []
     for unit in sorted(repo.units.values(), key=lambda item: item.id):
         line = _working_note_line(
@@ -481,14 +491,17 @@ def contract_closure_digest(root: Path) -> str:
     return digest_matching_files(root, files)
 
 
-def manifest_input_digests(root: Path, repo: Repo) -> dict[str, str]:
+def manifest_input_digests(
+    root: Path, repo: Repo, git_table: dict[str, str] | None = None
+) -> dict[str, str]:
     """One content digest per manifest input domain.
 
     Complements ``generation_input_digests`` (the gen.* groups are reused
-    as-is); evaluation merges both maps. The git walk runs once here and
-    is shared by the notes and working-note digests.
+    as-is); evaluation merges both maps. The git table is read once here
+    and shared by the notes and working-note digests — a transaction
+    passes its attempt table, ``None`` reads fresh.
     """
-    git_table = _git_table(root)
+    table = git_table if git_table is not None else _fresh_git_table(root)
     return {
         "manifest.sources": digest_matching_files(root, enumerate_source_files(root)),
         "manifest.collections": digest_matching_files(
@@ -535,8 +548,8 @@ def manifest_input_digests(root: Path, repo: Repo) -> dict[str, str]:
         "manifest.ai_files": digest_matching_files(
             root, enumerate_ai_action_files(root)
         ),
-        "manifest.working_notes": working_notes_digest(root, repo, git_table),
-        "manifest.notes_git": notes_git_digest(root, git_table),
+        "manifest.working_notes": working_notes_digest(root, repo, table),
+        "manifest.notes_git": notes_git_digest(root, table),
         "manifest.materials": materials_digest(root, repo),
         "manifest.today": today_digest(),
         # The contract closure is an input even though no semantic node
@@ -580,14 +593,19 @@ _RECORD_GROUP_NODES = {
 }
 
 
-def manifest_registry(repo: Repo) -> Registry:
+def manifest_registry(repo: Repo, git: GitSnapshot | None = None) -> Registry:
     """Node specs (static) with builders closed over the loaded repo.
 
     The repo is execution data; reuse is proven by the declared input
     digests and dependency outputs, never by object identity. Builders
     call the exact legacy projectors — see the module docstring for the
-    pinning discipline.
+    pinning discipline. A snapshot transaction passes its attempt snapshot
+    so git-reading builders observe the table the input digests pinned
+    (G1a); ``None`` keeps the legacy live read. A ``None`` table inside a
+    passed snapshot (unreadable history) likewise falls back to the live
+    read, reproducing the legacy failure rather than inventing values.
     """
+    git_table = git.table if git is not None else None
 
     def _revision(ctx: BuildContext) -> Callable[[str, dict | None], int]:
         return partial(_projected_revision, ctx.dependencies[REVISIONS_ID].value)
@@ -620,19 +638,21 @@ def manifest_registry(repo: Repo) -> Registry:
         return project_workspaces(repo, _revision(ctx))
 
     def build_learning_paths(ctx: BuildContext) -> list[dict]:
-        return project_learning_paths(repo, _revision(ctx))
+        return project_learning_paths(repo, _revision(ctx), git_table)
 
     def build_programs(ctx: BuildContext) -> list[dict]:
         return project_programs(repo, _revision(ctx))
 
     def build_units(ctx: BuildContext) -> list[dict]:
         return project_units(
-            repo, _revision(ctx), ctx.dependencies[UNIT_PROJECT_EDGES_ID].value
+            repo, _revision(ctx), ctx.dependencies[UNIT_PROJECT_EDGES_ID].value,
+            git_table,
         )
 
     def build_study_maps(ctx: BuildContext) -> list[dict]:
         return project_study_maps(
-            repo, _revision(ctx), ctx.dependencies[SOURCE_MAPS_ID].value
+            repo, _revision(ctx), ctx.dependencies[SOURCE_MAPS_ID].value,
+            git_table,
         )
 
     def build_source_maps(ctx: BuildContext) -> list[dict]:
@@ -723,7 +743,7 @@ def manifest_registry(repo: Repo) -> Registry:
             inbox_items=count_inbox_items(repo.root),
             garden_entries=ctx.dependencies[GARDEN_ID].value,
             ai_requests=ctx.dependencies[AI_ACTIONS_ID].value["ai_actions"]["requests"],
-            adoption=adoption_counts(repo),
+            adoption=adoption_counts(repo, git_table),
         )
 
     def build_review_items_node(ctx: BuildContext) -> list[dict]:
@@ -1238,16 +1258,23 @@ def manifest_registry(repo: Repo) -> Registry:
     }
 
 
-def manifest_shadow_registry(repo: Repo) -> Registry:
+def manifest_shadow_registry(repo: Repo, git: GitSnapshot | None = None) -> Registry:
     """The manifest graph plus the shared backlinks semantic node."""
-    return {**generation_registry(repo), **manifest_registry(repo)}
+    return {**generation_registry(repo), **manifest_registry(repo, git)}
 
 
-def manifest_shadow_inputs(root: Path, repo: Repo) -> dict[str, str]:
-    """Merged gen.* and manifest.* input digests for one evaluation."""
+def manifest_shadow_inputs(
+    root: Path, repo: Repo, git: GitSnapshot | None = None
+) -> dict[str, str]:
+    """Merged gen.* and manifest.* input digests for one evaluation.
+
+    A snapshot transaction passes its attempt snapshot so the git-backed
+    digests pin the same table the builders observe; ``None`` reads fresh.
+    """
+    table = git.table if git is not None else None
     return {
         **generation_input_digests(root),
-        **manifest_input_digests(root, repo),
+        **manifest_input_digests(root, repo, table),
     }
 
 
@@ -1295,8 +1322,9 @@ def _enforce_with_proof(
 
     The proof key covers the complete manifest bytes, the contract
     closure, the validator implementation, the core code digest, the
-    runtime identity, and the validation semantics version — the rule is
-    "same bytes, same contract, same validator, same code, same runtime,
+    runtime identity, the validator's format-provider closure (G3), and
+    the validation semantics version — the rule is "same bytes, same
+    contract, same validator, same code, same runtime, same providers,
     same semantics, or enforce() runs again". A failed validation raises
     out of the builder, which the engine never caches, so failures are
     always re-examined.
@@ -1325,12 +1353,17 @@ def _enforce_with_proof(
         id=VALIDATION_PROOF_ID,
         version=MANIFEST_VALIDATION_VERSION,
         producer_files=validation_proof_producers(),
-        direct_inputs=("manifest.full_bytes", "manifest.contract_closure"),
+        direct_inputs=(
+            "manifest.full_bytes",
+            "manifest.contract_closure",
+            "manifest.validator_runtime",
+        ),
     )
     registry = {VALIDATION_PROOF_ID: (spec, build_proof)}
     inputs = {
         "manifest.full_bytes": full_digest,
         "manifest.contract_closure": closure,
+        "manifest.validator_runtime": validator_runtime_digest(),
     }
     evaluation = evaluate(
         root, VALIDATION_PROOF_ID, registry=registry, inputs=inputs,
@@ -1341,17 +1374,26 @@ def _enforce_with_proof(
     ):
         # Internally consistent but wrong cache state (a valid blob for
         # another payload, a bug-written proof) must not skip enforce():
-        # drop the entry and rebuild once through the validator. A
-        # second mismatch is not instability but corruption the rebuild
-        # cannot heal, so it fails closed instead of looping.
-        invalidate(root, VALIDATION_PROOF_ID)
-        evaluation = evaluate(
-            root, VALIDATION_PROOF_ID, registry=registry, inputs=inputs,
-            staging=staging, trace=trace,
-        )
-        if not _proof_matches(evaluation.value, root, full_digest, closure):
+        # rebuild once through the validator. The replacement stages in
+        # memory and persists only if the surrounding transaction commits
+        # — a discarded attempt mutates nothing persistent. A second
+        # mismatch is not instability but corruption the rebuild cannot
+        # heal, so it fails closed instead of looping. (The trace keeps
+        # the single hit event: the engine owns event construction, and
+        # this path is reachable only through out-of-band state surgery.)
+        rebuilt = build_proof(BuildContext(
+            root=root, spec=spec, inputs=inputs, dependencies={}))
+        if not _proof_matches(rebuilt, root, full_digest, closure):
             raise DerivedError(
                 "validation proof failed verification after rebuild")
+        if staging is not None:
+            staging.pending[VALIDATION_PROOF_ID] = (
+                evaluation.node_key, rebuilt)
+        else:
+            store_node(
+                root, VALIDATION_PROOF_ID,
+                node_key=evaluation.node_key, value=rebuilt)
+        return rebuilt
     return evaluation.value
 
 
@@ -1386,27 +1428,42 @@ def build_manifest_shadow(
     run instead of memoizing torn bytes under a fresh digest. Trace
     events from discarded attempts are dropped; the trace holds the
     committed attempt only.
+
+    Every git observation is snapshot-bound too (G1): the attempt captures
+    one fresh history snapshot up front, evaluates builders and input
+    digests against its table, and requires a fresh re-observation to
+    agree — HEAD and table — before committing. Publication revision and
+    dirtiness are bound the same way. ``generated_at`` stays a
+    caller-asserted stamp: the future ``build_manifest_incremental`` MUST
+    resolve it inside its own transaction instead of accepting it.
     """
     root = repo.root
     for _ in range(SNAPSHOT_ATTEMPTS):
-        snapshot_before = canonical_snapshot_digest(root)
+        git_before = fresh_git_snapshot(root)
+        state_before = _git_state(root)
+        snapshot_before = canonical_snapshot_digest(root, git_before)
         fresh = load_repo(root)
-        if canonical_snapshot_digest(root) != snapshot_before:
+        git_mid = fresh_git_snapshot(root)
+        if (
+            git_mid.head != git_before.head
+            or canonical_snapshot_digest(root, git_mid) != snapshot_before
+        ):
             continue  # the load raced a concurrent edit; reload
         require_publishable_manifest_repo(fresh)
         staging = Staging()
         attempt_trace: list[TraceEvent] = []
-        inputs_before = manifest_shadow_inputs(root, fresh)
+        inputs_before = manifest_shadow_inputs(root, fresh, git_before)
         results = evaluate_many(
             root,
             [SEMANTIC_PAYLOAD_ID],
-            registry=manifest_shadow_registry(fresh),
+            registry=manifest_shadow_registry(fresh, git_before),
             inputs=inputs_before,
             staging=staging,
             trace=attempt_trace,
         )
         payload = {
-            "_generated": publish_manifest_metadata(fresh, generated_at),
+            "_generated": publish_manifest_metadata(
+                fresh, generated_at, git_state=state_before),
             **results[SEMANTIC_PAYLOAD_ID].value,
         }
         if enforce_contract:
@@ -1420,10 +1477,15 @@ def build_manifest_shadow(
                 )
             else:
                 enforce(payload, root)
-        if manifest_shadow_inputs(root, fresh) != inputs_before:
+        git_after = fresh_git_snapshot(root)
+        if git_after.head != git_before.head:
+            continue  # history moved during evaluation; the staging dies here
+        if manifest_shadow_inputs(root, fresh, git_after) != inputs_before:
             continue  # inputs moved during evaluation; the staging dies here
-        if canonical_snapshot_digest(root) != snapshot_before:
+        if canonical_snapshot_digest(root, git_after) != snapshot_before:
             continue
+        if _git_state(root) != state_before:
+            continue  # publication state moved; the staging dies here
         commit_staging(root, staging)
         if trace is not None:
             trace.extend(attempt_trace)
@@ -1447,13 +1509,20 @@ class ShadowManifestComparison:
 
 def compare_shadow_manifest(
     repo: Repo,
-    generated_at: str,
+    generated_at: str | None = None,
     *,
     trace: list[TraceEvent] | None = None,
 ) -> ShadowManifestComparison:
-    """Run both implementations and compare manifest bytes exactly."""
-    legacy = build_manifest(repo, generated_at, build_backlinks(repo, generated_at))
-    shadow = build_manifest_shadow(repo, generated_at, trace=trace)
+    """Run both implementations and compare manifest bytes exactly.
+
+    ``None`` resolves the stamp fresh INSIDE, once, shared by both sides
+    (G1b): computing it outside admits stamp(H0)+revision(H1) tears. An
+    explicit stamp is used as-is (tests). A commit landing during the
+    legacy build surfaces as an honest mismatch, never a silent tear.
+    """
+    stamp = generated_at if generated_at is not None else stable_generated_at(repo.root)
+    legacy = build_manifest(repo, stamp, build_backlinks(repo, stamp))
+    shadow = build_manifest_shadow(repo, stamp, trace=trace)
     legacy_blob = serialize_manifest(legacy).encode("utf-8")
     shadow_blob = serialize_manifest(shadow).encode("utf-8")
     return ShadowManifestComparison(

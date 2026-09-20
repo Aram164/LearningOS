@@ -98,7 +98,7 @@ def _shadow_manifest_main(root: Path, *, as_json: bool) -> int:
 
     repo = load_repo(root)
     trace: list = []
-    comparison = compare_shadow_manifest(repo, stable_generated_at(root), trace=trace)
+    comparison = compare_shadow_manifest(repo, None, trace=trace)
     by_node = {event.node: event for event in trace}
     if as_json:
         print(json.dumps({

@@ -9,10 +9,11 @@ from .materials import _materials_queue_rows
 from .modules_view import _exam_spine_lines
 
 
-def adoption_counts(repo: Repo) -> dict:
+def adoption_counts(repo: Repo, git_table: dict[str, str] | None = None) -> dict:
     """Adoption of the existing note review/evidence fields (no new schema —
     the fields have been in note.schema.json since v3; the gap is usage).
-    Shared by the health report, the reading room, and `los.py status`."""
+    Shared by the health report, the reading room, and `los.py status`.
+    A snapshot transaction passes its attempt table; ``None`` reads live."""
     notes = repo.notes.values()
     total = len(repo.notes)
     reviewed = sorted(n.id for n in notes if n.meta.get("reviewed"))
@@ -28,7 +29,8 @@ def adoption_counts(repo: Repo) -> dict:
         rev = n.meta.get("reviewed")
         if not rev:
             continue
-        last = _git_last_commit(repo.root, n.path.relative_to(repo.root).as_posix())
+        last = _git_last_commit(
+            repo.root, n.path.relative_to(repo.root).as_posix(), git_table)
         if not last or str(last) > str(rev):
             changed_since_review.append(n.id)
     return {
@@ -40,7 +42,9 @@ def adoption_counts(repo: Repo) -> dict:
     }
 
 
-def build_coordination_view(repo: Repo, generated_at: str) -> str:
+def build_coordination_view(
+    repo: Repo, generated_at: str, git_table: dict[str, str] | None = None
+) -> str:
     lines = _md_header("Coordination view", generated_at)
     lines.append("*Assembled from: the exam spine in records/modules.yaml, workspace "
                  "frontmatter, the facts in work/COORDINATION.md, and Git-derived "
@@ -100,7 +104,7 @@ def build_coordination_view(repo: Repo, generated_at: str) -> str:
         if ws.standing:
             continue
         rel = str(ws.path.parent.relative_to(repo.root))
-        last = _git_last_commit(repo.root, rel)
+        last = _git_last_commit(repo.root, rel, git_table)
         rows.append((ws.id, last))
     if rows:
         lines.append("| Workspace | Last commit touching it |")

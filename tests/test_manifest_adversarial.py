@@ -1,8 +1,9 @@
-"""Adversarial manifest proof: the cache trust boundary (F1–F6).
+"""Adversarial manifest proof: the cache trust boundary (F1–F6, G1–G3).
 
 The mutation matrix proves locality under normal edits; these tests
 attack the boundary the matrix assumes away — malformed canonical
-state, a repo loaded from torn bytes, code and runtime drift, and
+state, a repo loaded from torn bytes, code and runtime drift, stale git
+observations, executing-tree drift, format-provider drift, and
 internally consistent but wrong cache entries. Each test names the
 finding it closes.
 """
@@ -11,6 +12,8 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -20,8 +23,9 @@ from repo_builders import curriculum_mini, stage_manifest_producers
 
 import learning_os.derived.identity as identity_module
 import learning_os.genout.manifest_derived as shadow_module
+from learning_os import githistory
 from learning_os.contracts.manifest_contract import declared_version
-from learning_os.derived.identity import digest_bytes
+from learning_os.derived.identity import canonical_snapshot_digest, digest_bytes
 from learning_os.derived.store import (
     canonical_bytes,
     derived_dir,
@@ -329,3 +333,258 @@ def test_consistent_but_wrong_proof_is_rejected(tmp_path: Path, monkeypatch):
         (derived_dir(mini) / read_state(mini)[VALIDATION_PROOF_ID].blob
          ).read_text(encoding="utf-8"))
     assert healed["manifest_sha256"] == digest_bytes(canonical_bytes(shadow))
+
+
+# G1a. Git/history observations are snapshot-bound.
+# ---------------------------------------------------------------------------
+
+#: Fixed commit dates: the H0/H1 day boundary is what makes a stale git
+#: table observationally different from a fresh one.
+GIT_H0_WHEN = "2020-01-02T03:04:05+00:00"
+GIT_H1_WHEN = "2020-06-03T04:05:06+00:00"
+GIT_H0_DAY = "2020-01-02"
+GIT_H1_DAY = "2020-06-03"
+
+#: Stage working note: the mini's git-visible surface (notes_updated).
+WORKING_NOTE = (
+    "curriculum/modules/module-demo/units/unit-demo-l01/"
+    "stages/stage-demo/notes.md"
+)
+
+
+@pytest.fixture(autouse=True)
+def _isolated_git_caches(monkeypatch):
+    for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR"):
+        monkeypatch.delenv(name, raising=False)
+    githistory.last_commit_dates.cache_clear()
+    githistory.last_commit_timestamps.cache_clear()
+    yield
+    githistory.last_commit_dates.cache_clear()
+    githistory.last_commit_timestamps.cache_clear()
+
+
+def _git(mini: Path, *args: str, when: str = GIT_H0_WHEN) -> str:
+    env = {**os.environ, "GIT_AUTHOR_DATE": when, "GIT_COMMITTER_DATE": when}
+    return subprocess.run(
+        ["git", "-c", "user.name=Test User", "-c", "user.email=test@example.com",
+         "-c", "commit.gpgsign=false", *args],
+        cwd=mini, check=True, capture_output=True, text=True, env=env,
+    ).stdout.strip()
+
+
+def _git_mini(tmp_path: Path, *, warm: bool) -> Path:
+    """A staged mini committed at H0, optionally warmed by one compare."""
+    if shutil.which("git") is None:
+        pytest.skip("git executable unavailable")
+    mini = curriculum_mini(tmp_path)
+    repo = load_repo(mini)
+    stage_manifest_producers(mini, repo)
+    _git(mini, "init")
+    _git(mini, "add", "-A")
+    _git(mini, "commit", "-m", "initial")
+    assert _git(mini, "rev-parse", "HEAD")
+    if warm:
+        assert compare_shadow_manifest(load_repo(mini), STAMP).equivalent
+    return mini
+
+
+def _commit_working_note(mini: Path, text: str, when: str) -> None:
+    note = mini / WORKING_NOTE
+    note.write_text(note.read_text(encoding="utf-8") + text + "\n",
+                    encoding="utf-8")
+    _git(mini, "add", WORKING_NOTE, when=when)
+    _git(mini, "commit", "-m", "working note", when=when)
+
+
+def _all_notes_updated(manifest: dict) -> list:
+    found: list = []
+
+    def walk(node) -> None:
+        if isinstance(node, dict):
+            for key, value in node.items():
+                if key == "notes_updated":
+                    found.append(value)
+                else:
+                    walk(value)
+        elif isinstance(node, list):
+            for value in node:
+                walk(value)
+
+    walk(manifest)
+    return found
+
+
+def _fresh_legacy(mini: Path) -> dict:
+    """Legacy bytes under genuinely fresh git reads (the oracle)."""
+    githistory.last_commit_dates.cache_clear()
+    githistory.last_commit_timestamps.cache_clear()
+    repo = load_repo(mini)
+    return build_manifest(repo, STAMP, build_backlinks(repo, STAMP))
+
+
+def test_poisoned_cache_does_not_hide_a_new_commit(tmp_path: Path):
+    """A pinned H0 table plus an external commit: the first build is fresh."""
+    mini = _git_mini(tmp_path, warm=False)
+    githistory.last_commit_dates(str(mini))  # poison the cache with H0
+    _commit_working_note(mini, "second thoughts", GIT_H1_WHEN)
+    shadow = build_manifest_shadow(load_repo(mini), STAMP)
+    fresh = _fresh_legacy(mini)
+    assert GIT_H1_DAY in _all_notes_updated(fresh)  # the oracle moved
+    assert serialize_manifest(shadow) == serialize_manifest(fresh)
+
+
+def test_external_commit_between_builds_is_observed_same_process(tmp_path: Path):
+    """compare@H0 warms everything; a commit; the rebuild observes H1."""
+    mini = _git_mini(tmp_path, warm=True)
+    _commit_working_note(mini, "second thoughts", GIT_H1_WHEN)
+    shadow = build_manifest_shadow(load_repo(mini), STAMP)  # no clearing
+    fresh = _fresh_legacy(mini)
+    assert GIT_H1_DAY in _all_notes_updated(fresh)  # the oracle moved
+    assert serialize_manifest(shadow) == serialize_manifest(fresh)
+    # The committed state is fresh-consistent: a stable rerun hits all
+    # nodes and still matches the legacy bytes exactly.
+    trace: list = []
+    assert compare_shadow_manifest(load_repo(mini), STAMP, trace=trace).equivalent
+    assert all(event.status == "hit" for event in trace)
+
+
+def test_commit_during_evaluation_discards_and_rebuilds_fresh(
+    tmp_path: Path, monkeypatch,
+):
+    """A real commit landing mid-evaluation retries; the result is fresh."""
+    mini = _git_mini(tmp_path, warm=True)
+    real_evaluate_many = shadow_module.evaluate_many
+    mutated = False
+
+    def racing_evaluate_many(*args, **kwargs):
+        nonlocal mutated
+        results = real_evaluate_many(*args, **kwargs)
+        if not mutated:
+            mutated = True
+            _commit_working_note(mini, "mid-eval thoughts", GIT_H1_WHEN)
+        return results
+
+    monkeypatch.setattr(shadow_module, "evaluate_many", racing_evaluate_many)
+    shadow = build_manifest_shadow(load_repo(mini), STAMP)
+    assert mutated  # the commit landed inside the first attempt
+    fresh = _fresh_legacy(mini)
+    assert GIT_H1_DAY in _all_notes_updated(fresh)  # the oracle moved
+    assert serialize_manifest(shadow) == serialize_manifest(fresh)
+
+
+def test_empty_commit_moves_the_snapshot_and_the_revision(tmp_path: Path):
+    """HEAD-only move is detected: the snapshot moves, revision binds H1."""
+    mini = _git_mini(tmp_path, warm=True)
+    before = canonical_snapshot_digest(mini)
+    _git(mini, "commit", "--allow-empty", "-m", "empty", when=GIT_H1_WHEN)
+    assert canonical_snapshot_digest(mini) != before  # HEAD is folded
+    shadow = build_manifest_shadow(load_repo(mini), STAMP)
+    assert shadow["_generated"]["source_revision"] == _git(mini, "rev-parse", "HEAD")
+    assert compare_shadow_manifest(load_repo(mini), STAMP).equivalent
+
+
+# G2. Code identity covers the executing tree as well as the target.
+# ---------------------------------------------------------------------------
+
+
+def test_executing_code_change_invalidates_everything(tmp_path: Path, monkeypatch):
+    """A different executing tree misses every key (target half untouched)."""
+    mini = _warmed(tmp_path)
+    monkeypatch.setattr(
+        identity_module, "digest_executing_code_tree", lambda: "f" * 64)
+    trace: list = []
+    assert compare_shadow_manifest(load_repo(mini), STAMP, trace=trace).equivalent
+    assert trace
+    assert all(event.status == "rebuilt" for event in trace)
+
+
+# G3. Format-provider drift reruns validation, nothing else.
+# ---------------------------------------------------------------------------
+
+
+def test_validator_provider_flip_reruns_only_validation(tmp_path: Path, monkeypatch):
+    mini = _warmed(tmp_path)
+    real = identity_module._validator_runtime_components()
+
+    def fake_validator_components():
+        return (("format-checkers", "date-time,uri"),) + real[1:]
+
+    monkeypatch.setattr(
+        identity_module, "_validator_runtime_components", fake_validator_components)
+    calls = 0
+    real_enforce = shadow_module.enforce
+
+    def counting(payload, root):
+        nonlocal calls
+        calls += 1
+        return real_enforce(payload, root)
+
+    monkeypatch.setattr(shadow_module, "enforce", counting)
+    trace: list = []
+    assert compare_shadow_manifest(load_repo(mini), STAMP, trace=trace).equivalent
+    assert trace
+    status = {event.node: event.status for event in trace}
+    assert status[VALIDATION_PROOF_ID] == "rebuilt"
+    assert all(
+        node_status == "hit"
+        for node, node_status in status.items()
+        if node != VALIDATION_PROOF_ID
+    )
+    assert calls == 1
+
+
+# Staging. Discarded attempts mutate nothing persistent.
+# ---------------------------------------------------------------------------
+
+
+def _forge_proof(mini: Path) -> None:
+    """Plant a key-matching but semantically wrong proof (F5 shape)."""
+    state_path = derived_dir(mini) / "state-v1.json"
+    doc = json.loads(state_path.read_text(encoding="utf-8"))
+    forged = {
+        "valid": True,
+        "contract_version": declared_version(mini),
+        "manifest_sha256": "0" * 64,  # structurally valid, semantically wrong
+        "contract_closure_sha256": contract_closure_digest(mini),
+    }
+    blob_bytes = canonical_bytes(forged)
+    blob_digest = hashlib.sha256(blob_bytes).hexdigest()
+    (derived_dir(mini) / "blobs" / blob_digest).write_bytes(blob_bytes)
+    doc["nodes"][VALIDATION_PROOF_ID]["output_sha256"] = blob_digest
+    doc["nodes"][VALIDATION_PROOF_ID]["blob"] = f"blobs/{blob_digest}"
+    state_path.write_text(json.dumps(doc, sort_keys=True), encoding="utf-8")
+
+
+def test_discarded_attempt_with_bad_proof_mutates_nothing(
+    tmp_path: Path, monkeypatch,
+):
+    """Bad-proof hit plus a tree that moves every evaluation: every attempt
+    reaches the proof rebuild and then discards, and persistent state is
+    byte-identical afterwards.
+
+    The move lands where admission sees it but no node key does — a
+    non-Python file under tools/, covered by the whole-tree snapshot and
+    by nothing else (code identity hashes *.py, the fingerprint covers
+    canonical roots, inputs enumerate canonical files). The payload stays
+    byte-identical to the warmed one, so the proof evaluation is a true
+    key hit on the forged value — the exact case the old code answered
+    with a persistent invalidate() before the attempt committed.
+    """
+    mini = _warmed(tmp_path)
+    _forge_proof(mini)
+    before = _derived_snapshot(mini)
+    real_evaluate_many = shadow_module.evaluate_many
+    calls: list[str] = []
+
+    def moving_evaluate_many(*args, **kwargs):
+        results = real_evaluate_many(*args, **kwargs)
+        calls.append("evaluate")
+        (mini / "tools" / "scratch.txt").write_text(
+            f"Race {len(calls)}.\n", encoding="utf-8")
+        return results
+
+    monkeypatch.setattr(shadow_module, "evaluate_many", moving_evaluate_many)
+    with pytest.raises(TransactionFailure, match="changed during"):
+        build_manifest_shadow(load_repo(mini), STAMP)
+    assert len(calls) == shadow_module.SNAPSHOT_ATTEMPTS
+    assert _derived_snapshot(mini) == before

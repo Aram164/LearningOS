@@ -19,13 +19,16 @@ from .engine import (
 from .identity import (
     canonical_snapshot_digest,
     digest_bytes,
+    digest_code_identity,
     digest_code_tree,
+    digest_executing_code_tree,
     digest_file,
     digest_matching_files,
     digest_paths,
     digest_producer_files,
     digest_tree,
     runtime_digest,
+    validator_runtime_digest,
 )
 from .model import (
     ENGINE_VERSION,
@@ -64,7 +67,9 @@ __all__ = [
     "commit_staging",
     "derived_dir",
     "digest_bytes",
+    "digest_code_identity",
     "digest_code_tree",
+    "digest_executing_code_tree",
     "digest_file",
     "digest_matching_files",
     "digest_paths",
@@ -79,4 +84,5 @@ __all__ = [
     "runtime_digest",
     "state_path",
     "store_node",
+    "validator_runtime_digest",
 ]
