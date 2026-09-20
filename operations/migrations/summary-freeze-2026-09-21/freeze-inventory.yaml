@@ -1,0 +1,225 @@
+tool: summaries-to-notes-v1
+contract_version: 35
+captured: '2026-09-21'
+entries:
+- digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+  pages: pages-15-23
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+  page_range:
+  - 15
+  - 23
+  scope: chapter
+  model: muse-spark 2026-09
+  built: '2026-09-20'
+  meta_integrity: legacy-unrecorded
+  files:
+    summary.md:
+      bytes: 1379
+      sha256: a9c48a5e07e3ae248c1eba4923d825c282f5b03690e312bbf033e982fe72a341
+    meta.json:
+      bytes: 484
+      sha256: 1297958c5565bf27d9825f9e70455e9c38077be0f1a08ecb7650889018b98d7e
+- digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+  pages: pages-24-32
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+  page_range:
+  - 24
+  - 32
+  scope: chapter
+  model: muse-spark 2026-09
+  built: '2026-09-20'
+  meta_integrity: legacy-unrecorded
+  files:
+    summary.md:
+      bytes: 1365
+      sha256: f5f6e998d625170ab31657784e21c73dd4d8072532e28ff92c5631b6a9fee855
+    meta.json:
+      bytes: 484
+      sha256: 35c0a47336c66d2ebe9ef1d338ddebb7656496568a342cc62ed48310513e3311
+- digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+  pages: pages-34-42
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+  page_range:
+  - 34
+  - 42
+  scope: chapter
+  model: muse-spark 2026-09
+  built: '2026-09-20'
+  meta_integrity: legacy-unrecorded
+  files:
+    summary.md:
+      bytes: 1021
+      sha256: 43ebe8ec6f1932a453b89e65e78cd326d49334b84f7b1b2f5376d6329317201f
+    meta.json:
+      bytes: 484
+      sha256: d71a2ed116ddfd7ab59529cf7d0db39dc1948438b9cc0259e2aa8c874cca8fa6
+- digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+  pages: pages-44-50
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+  page_range:
+  - 44
+  - 50
+  scope: chapter
+  model: muse-spark 2026-09
+  built: '2026-09-20'
+  meta_integrity: legacy-unrecorded
+  files:
+    summary.md:
+      bytes: 1142
+      sha256: 6dc63da1b9e595c5a7fba691fdda0e05ce19ae7d5e008f9a1d142da5512dda8e
+    meta.json:
+      bytes: 484
+      sha256: 003ac7ecaf6711f297116c43238e253b10482e184763e42e0e5c17715d8ba3ed
+- digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+  pages: pages-5-8
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+  page_range:
+  - 5
+  - 8
+  scope: chapter
+  model: muse-spark 2026-09
+  built: '2026-09-20'
+  meta_integrity: legacy-unrecorded
+  files:
+    summary.md:
+      bytes: 1113
+      sha256: be66edb2951c5b5a8c184dd73716459909167be381627c474dab1b2163b4ed6f
+    meta.json:
+      bytes: 482
+      sha256: 69f9d0caf54e401a4881c4d313fe2deae4b6c722260ec0cc77e33fa02c837f37
+- digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+  pages: pages-52-60
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+  page_range:
+  - 52
+  - 60
+  scope: chapter
+  model: muse-spark 2026-09
+  built: '2026-09-20'
+  meta_integrity: legacy-unrecorded
+  files:
+    summary.md:
+      bytes: 1226
+      sha256: 009b7ee070c921d9f95a7d6b328713df1d92112b99fbe8a6294af26dab33647c
+    meta.json:
+      bytes: 484
+      sha256: 3c132e28fd58f610fa700c486bd6955a6fcb22f616a6e3504b8b8de7765837d5
+- digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+  pages: pages-9-13
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+  page_range:
+  - 9
+  - 13
+  scope: chapter
+  model: muse-spark 2026-09
+  built: '2026-09-20'
+  meta_integrity: legacy-unrecorded
+  files:
+    summary.md:
+      bytes: 837
+      sha256: eea62cee24f9c39c5d6900d99adccedab78a0e86a727a221cfa63cde97368707
+    meta.json:
+      bytes: 483
+      sha256: 619bef4e2d9e0facb7a303b141781a0b9c78212dd4f9c9bef6a2b5f6513e07ca
+- digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+  pages: pages-12-20
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+  page_range:
+  - 12
+  - 20
+  scope: chapter
+  model: muse-spark 2026-09
+  built: '2026-09-20'
+  meta_integrity: legacy-unrecorded
+  files:
+    summary.md:
+      bytes: 1623
+      sha256: 0f62c6bbff198d3fd207dd8d944748da5ea6f8b8c20540544395ae974d54f407
+    meta.json:
+      bytes: 485
+      sha256: 66094367ad766f53d49284902fd5f6463f910f4b31a2eb5898b927619b228ea5
+- digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+  pages: pages-21-32
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+  page_range:
+  - 21
+  - 32
+  scope: chapter
+  model: muse-spark 2026-09
+  built: '2026-09-20'
+  meta_integrity: legacy-unrecorded
+  files:
+    summary.md:
+      bytes: 2389
+      sha256: a40cf7d4d3a0a9e1bbe205cb372ffba4f5e70e7ef99fe3fb4b9cd6a07c5e8e67
+    meta.json:
+      bytes: 485
+      sha256: 2510c3f9b1c3f782aca0ea4cd28ec08e490a450cfd2a2489023b8f2e400e18c4
+- digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+  pages: pages-3-11
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+  page_range:
+  - 3
+  - 11
+  scope: chapter
+  model: muse-spark 2026-09
+  built: '2026-09-20'
+  meta_integrity: legacy-unrecorded
+  files:
+    summary.md:
+      bytes: 1652
+      sha256: 86c010f0fc2e873f872e9a8ecef01b5efc576135996539637460744637f22a23
+    meta.json:
+      bytes: 484
+      sha256: b48cb980522d2c9c664bb2e9b944fbd2d9dcb1af68f27477785b18d172611c03
+- digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+  pages: pages-33-38
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+  page_range:
+  - 33
+  - 38
+  scope: chapter
+  model: muse-spark 2026-09
+  built: '2026-09-20'
+  meta_integrity: legacy-unrecorded
+  files:
+    summary.md:
+      bytes: 1228
+      sha256: 8c64cb9e3b8c0c8a9cbaaf1d1a6041988446bfa8b88d8a6cb3aad8f34b803a4d
+    meta.json:
+      bytes: 485
+      sha256: 9ec9819d0623151ce0788c54f80a648314f3ad5df8d3b0791aaafcda41d2b04b
+- digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+  pages: pages-39-46
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+  page_range:
+  - 39
+  - 46
+  scope: chapter
+  model: muse-spark 2026-09
+  built: '2026-09-20'
+  meta_integrity: legacy-unrecorded
+  files:
+    summary.md:
+      bytes: 1537
+      sha256: 01bccf8dcdc094096a4ffb4a30dde149ba2bceade0d966094711458b4e0a556d
+    meta.json:
+      bytes: 485
+      sha256: 4bc88876df65f6edcdde60538540f06eb79ec18958d3079d3ef4aa3b8d9ca35c
+- digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+  pages: pages-47-49
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+  page_range:
+  - 47
+  - 49
+  scope: chapter
+  model: muse-spark 2026-09
+  built: '2026-09-20'
+  meta_integrity: legacy-unrecorded
+  files:
+    summary.md:
+      bytes: 840
+      sha256: 2a9561118346a0f6ea53c0a4b7da50d996eb42c1f28eef3991d7e33fb33b7ba0
+    meta.json:
+      bytes: 485
+      sha256: 96f255e430a6e2661f184e3e8c274625772ea861630d47755fa0a31ca40f9ac0

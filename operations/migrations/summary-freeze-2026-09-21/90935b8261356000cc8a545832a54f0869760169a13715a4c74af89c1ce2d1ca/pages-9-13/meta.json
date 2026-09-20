@@ -1,0 +1,15 @@
+{
+  "_generated": {
+    "generator": "tools/material_summarize.py",
+    "warning": "GENERATED file - do not edit; rebuilt by python tools/material_summarize.py --promote"
+  },
+  "built": "2026-09-20",
+  "material": "mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf",
+  "model": "muse-spark 2026-09",
+  "page_range": [
+    9,
+    13
+  ],
+  "scope": "chapter",
+  "sha256": "90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca"
+}

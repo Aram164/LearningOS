@@ -1,0 +1,330 @@
+tool: summaries-to-notes-v1
+contract_version: 35
+created: '2026-09-21'
+freeze_inventory_sha256: e95828176c65bcf437d9300973a90e857b153c3ab110effce166d4c7d3d55c82
+rows:
+- digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+  pages: pages-15-23
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+  page_range:
+  - 15
+  - 23
+  note_id: note-06-random-variables-pp15-23
+  note_path: knowledge/notes/mathematics/note-06-random-variables-pp15-23.md
+  title: L06 pp. 15–23 — Continuous variables, density, worked examples
+  resolution: resolved
+  reason: live bytes match; covered by registered source-sad-ss26-lectures
+  meta_integrity: legacy-unrecorded
+  binding:
+    resolution: resolved
+    material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    recorded_source_digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+    inspected_range:
+      start: 15
+      end: 23
+    frozen_input_sha256: a9c48a5e07e3ae248c1eba4923d825c282f5b03690e312bbf033e982fe72a341
+    frozen_input_bytes: 1379
+    source_id: source-sad-ss26-lectures
+    live_source_digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+    model: muse-spark 2026-09
+    built: '2026-09-20'
+- digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+  pages: pages-24-32
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+  page_range:
+  - 24
+  - 32
+  note_id: note-06-random-variables-pp24-32
+  note_path: knowledge/notes/mathematics/note-06-random-variables-pp24-32.md
+  title: L06 pp. 24–32 — Independence, expectation, LOTUS, linearity proofs
+  resolution: resolved
+  reason: live bytes match; covered by registered source-sad-ss26-lectures
+  meta_integrity: legacy-unrecorded
+  binding:
+    resolution: resolved
+    material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    recorded_source_digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+    inspected_range:
+      start: 24
+      end: 32
+    frozen_input_sha256: f5f6e998d625170ab31657784e21c73dd4d8072532e28ff92c5631b6a9fee855
+    frozen_input_bytes: 1365
+    source_id: source-sad-ss26-lectures
+    live_source_digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+    model: muse-spark 2026-09
+    built: '2026-09-20'
+- digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+  pages: pages-34-42
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+  page_range:
+  - 34
+  - 42
+  note_id: note-06-random-variables-pp34-42
+  note_path: knowledge/notes/mathematics/note-06-random-variables-pp34-42.md
+  title: L06 pp. 34–42 — Variance, scaling, uniform and exponential moments
+  resolution: resolved
+  reason: live bytes match; covered by registered source-sad-ss26-lectures
+  meta_integrity: legacy-unrecorded
+  binding:
+    resolution: resolved
+    material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    recorded_source_digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+    inspected_range:
+      start: 34
+      end: 42
+    frozen_input_sha256: 43ebe8ec6f1932a453b89e65e78cd326d49334b84f7b1b2f5376d6329317201f
+    frozen_input_bytes: 1021
+    source_id: source-sad-ss26-lectures
+    live_source_digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+    model: muse-spark 2026-09
+    built: '2026-09-20'
+- digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+  pages: pages-44-50
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+  page_range:
+  - 44
+  - 50
+  note_id: note-06-random-variables-pp44-50
+  note_path: knowledge/notes/mathematics/note-06-random-variables-pp44-50.md
+  title: 'L06 pp. 44–50 — Chebyshev: motivation, inequality, examples'
+  resolution: resolved
+  reason: live bytes match; covered by registered source-sad-ss26-lectures
+  meta_integrity: legacy-unrecorded
+  binding:
+    resolution: resolved
+    material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    recorded_source_digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+    inspected_range:
+      start: 44
+      end: 50
+    frozen_input_sha256: 6dc63da1b9e595c5a7fba691fdda0e05ce19ae7d5e008f9a1d142da5512dda8e
+    frozen_input_bytes: 1142
+    source_id: source-sad-ss26-lectures
+    live_source_digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+    model: muse-spark 2026-09
+    built: '2026-09-20'
+- digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+  pages: pages-5-8
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+  page_range:
+  - 5
+  - 8
+  note_id: note-06-random-variables-pp5-8
+  note_path: knowledge/notes/mathematics/note-06-random-variables-pp5-8.md
+  title: L06 pp. 5–8 — Random variables and discrete variables
+  resolution: resolved
+  reason: live bytes match; covered by registered source-sad-ss26-lectures
+  meta_integrity: legacy-unrecorded
+  binding:
+    resolution: resolved
+    material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    recorded_source_digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+    inspected_range:
+      start: 5
+      end: 8
+    frozen_input_sha256: be66edb2951c5b5a8c184dd73716459909167be381627c474dab1b2163b4ed6f
+    frozen_input_bytes: 1113
+    source_id: source-sad-ss26-lectures
+    live_source_digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+    model: muse-spark 2026-09
+    built: '2026-09-20'
+- digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+  pages: pages-52-60
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+  page_range:
+  - 52
+  - 60
+  note_id: note-06-random-variables-pp52-60
+  note_path: knowledge/notes/mathematics/note-06-random-variables-pp52-60.md
+  title: L06 pp. 52–60 — Sample mean, IID, law of large numbers
+  resolution: resolved
+  reason: live bytes match; covered by registered source-sad-ss26-lectures
+  meta_integrity: legacy-unrecorded
+  binding:
+    resolution: resolved
+    material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    recorded_source_digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+    inspected_range:
+      start: 52
+      end: 60
+    frozen_input_sha256: 009b7ee070c921d9f95a7d6b328713df1d92112b99fbe8a6294af26dab33647c
+    frozen_input_bytes: 1226
+    source_id: source-sad-ss26-lectures
+    live_source_digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+    model: muse-spark 2026-09
+    built: '2026-09-20'
+- digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+  pages: pages-9-13
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+  page_range:
+  - 9
+  - 13
+  note_id: note-06-random-variables-pp9-13
+  note_path: knowledge/notes/mathematics/note-06-random-variables-pp9-13.md
+  title: L06 pp. 9–13 — CDF, discrete computation, limits
+  resolution: resolved
+  reason: live bytes match; covered by registered source-sad-ss26-lectures
+  meta_integrity: legacy-unrecorded
+  binding:
+    resolution: resolved
+    material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    recorded_source_digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+    inspected_range:
+      start: 9
+      end: 13
+    frozen_input_sha256: eea62cee24f9c39c5d6900d99adccedab78a0e86a727a221cfa63cde97368707
+    frozen_input_bytes: 837
+    source_id: source-sad-ss26-lectures
+    live_source_digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+    model: muse-spark 2026-09
+    built: '2026-09-20'
+- digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+  pages: pages-12-20
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+  page_range:
+  - 12
+  - 20
+  note_id: note-11-datascience-intro-pp12-20
+  note_path: knowledge/notes/mathematics/note-11-datascience-intro-pp12-20.md
+  title: 'L11 pp. 12–20 — Machine learning: definition, classes, AI separation'
+  resolution: resolved
+  reason: live bytes match; covered by registered source-sad-ss26-lectures
+  meta_integrity: legacy-unrecorded
+  binding:
+    resolution: resolved
+    material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+    recorded_source_digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+    inspected_range:
+      start: 12
+      end: 20
+    frozen_input_sha256: 0f62c6bbff198d3fd207dd8d944748da5ea6f8b8c20540544395ae974d54f407
+    frozen_input_bytes: 1623
+    source_id: source-sad-ss26-lectures
+    live_source_digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+    model: muse-spark 2026-09
+    built: '2026-09-20'
+- digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+  pages: pages-21-32
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+  page_range:
+  - 21
+  - 32
+  note_id: note-11-datascience-intro-pp21-32
+  note_path: knowledge/notes/mathematics/note-11-datascience-intro-pp21-32.md
+  title: 'L11 pp. 21–32 — Supervised setup: splits, features, functions, loss, learning'
+  resolution: resolved
+  reason: live bytes match; covered by registered source-sad-ss26-lectures
+  meta_integrity: legacy-unrecorded
+  binding:
+    resolution: resolved
+    material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+    recorded_source_digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+    inspected_range:
+      start: 21
+      end: 32
+    frozen_input_sha256: a40cf7d4d3a0a9e1bbe205cb372ffba4f5e70e7ef99fe3fb4b9cd6a07c5e8e67
+    frozen_input_bytes: 2389
+    source_id: source-sad-ss26-lectures
+    live_source_digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+    model: muse-spark 2026-09
+    built: '2026-09-20'
+- digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+  pages: pages-3-11
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+  page_range:
+  - 3
+  - 11
+  note_id: note-11-datascience-intro-pp3-11
+  note_path: knowledge/notes/mathematics/note-11-datascience-intro-pp3-11.md
+  title: L11 pp. 3–11 — What data science is, pipeline, data types
+  resolution: resolved
+  reason: live bytes match; covered by registered source-sad-ss26-lectures
+  meta_integrity: legacy-unrecorded
+  binding:
+    resolution: resolved
+    material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+    recorded_source_digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+    inspected_range:
+      start: 3
+      end: 11
+    frozen_input_sha256: 86c010f0fc2e873f872e9a8ecef01b5efc576135996539637460744637f22a23
+    frozen_input_bytes: 1652
+    source_id: source-sad-ss26-lectures
+    live_source_digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+    model: muse-spark 2026-09
+    built: '2026-09-20'
+- digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+  pages: pages-33-38
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+  page_range:
+  - 33
+  - 38
+  note_id: note-11-datascience-intro-pp33-38
+  note_path: knowledge/notes/mathematics/note-11-datascience-intro-pp33-38.md
+  title: 'L11 pp. 33–38 — Evaluation: confusion matrix, precision/recall/F, ROC/AUC'
+  resolution: resolved
+  reason: live bytes match; covered by registered source-sad-ss26-lectures
+  meta_integrity: legacy-unrecorded
+  binding:
+    resolution: resolved
+    material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+    recorded_source_digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+    inspected_range:
+      start: 33
+      end: 38
+    frozen_input_sha256: 8c64cb9e3b8c0c8a9cbaaf1d1a6041988446bfa8b88d8a6cb3aad8f34b803a4d
+    frozen_input_bytes: 1228
+    source_id: source-sad-ss26-lectures
+    live_source_digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+    model: muse-spark 2026-09
+    built: '2026-09-20'
+- digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+  pages: pages-39-46
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+  page_range:
+  - 39
+  - 46
+  note_id: note-11-datascience-intro-pp39-46
+  note_path: knowledge/notes/mathematics/note-11-datascience-intro-pp39-46.md
+  title: 'L11 pp. 39–46 — Trade-offs: inductive bias, overfitting, CV, bootstrap'
+  resolution: resolved
+  reason: live bytes match; covered by registered source-sad-ss26-lectures
+  meta_integrity: legacy-unrecorded
+  binding:
+    resolution: resolved
+    material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+    recorded_source_digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+    inspected_range:
+      start: 39
+      end: 46
+    frozen_input_sha256: 01bccf8dcdc094096a4ffb4a30dde149ba2bceade0d966094711458b4e0a556d
+    frozen_input_bytes: 1537
+    source_id: source-sad-ss26-lectures
+    live_source_digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+    model: muse-spark 2026-09
+    built: '2026-09-20'
+- digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+  pages: pages-47-49
+  material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+  page_range:
+  - 47
+  - 49
+  note_id: note-11-datascience-intro-pp47-49
+  note_path: knowledge/notes/mathematics/note-11-datascience-intro-pp47-49.md
+  title: L11 pp. 47–49 — Compute cost and GreenCompute promo (out of scope)
+  resolution: resolved
+  reason: live bytes match; covered by registered source-sad-ss26-lectures
+  meta_integrity: legacy-unrecorded
+  binding:
+    resolution: resolved
+    material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/11_datascience_intro.pdf
+    recorded_source_digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+    inspected_range:
+      start: 47
+      end: 49
+    frozen_input_sha256: 2a9561118346a0f6ea53c0a4b7da50d996eb42c1f28eef3991d7e33fb33b7ba0
+    frozen_input_bytes: 840
+    source_id: source-sad-ss26-lectures
+    live_source_digest: b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302
+    model: muse-spark 2026-09
+    built: '2026-09-20'
