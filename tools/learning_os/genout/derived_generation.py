@@ -27,6 +27,24 @@ from .concepts import (
     publish_concept_map,
     publish_dependency_report,
 )
+from .derived_inputs import (
+    enumerate_module_files as _module_files,
+)
+from .derived_inputs import (
+    enumerate_note_files as _note_files,
+)
+from .derived_inputs import (
+    enumerate_registry_files as _registry_files,
+)
+from .derived_inputs import (
+    enumerate_study_map_files as _study_map_files,
+)
+from .derived_inputs import (
+    enumerate_unit_files as _unit_files,
+)
+from .derived_inputs import (
+    enumerate_workspace_files as _workspace_files,
+)
 
 if TYPE_CHECKING:
     from ..loader import Repo
@@ -56,96 +74,11 @@ DEPENDENCY_REPORT_PRODUCERS = CONCEPT_MAP_PRODUCERS
 SHADOW_ARTIFACTS = ("backlinks.json", "concept-map.md", "dependency-report.md")
 
 
-def _note_files(root: Path) -> list[Path]:
-    """Mirror load_notes selection: every *.md under knowledge/notes."""
-    notes_dir = root / "knowledge" / "notes"
-    if not notes_dir.is_dir():
-        return []
-    return sorted(notes_dir.rglob("*.md"))
-
-
-def _registry_files(root: Path, consolidated: str, partition: str) -> list[Path]:
-    """Mirror _load_registry selection: consolidated file plus top-level *.yaml."""
-    files: list[Path] = []
-    single = root / consolidated
-    if single.exists():
-        files.append(single)
-    part_dir = root / partition
-    if part_dir.is_dir():
-        files.extend(sorted(part_dir.glob("*.yaml")))
-    return files
-
-
-def _workspace_files(root: Path) -> list[Path]:
-    """Mirror load_workspaces CONTEXT discovery.
-
-    Learning-path files are excluded on purpose: they feed
-    repo.learning_paths, never the workspace meta/body the shadowed
-    builders read.
-    """
-    files: list[Path] = []
-    active = root / "work" / "active"
-    if active.is_dir():
-        files.extend(sorted(active.glob("*/CONTEXT.md")))
-    archived = root / "archive" / "workspaces"
-    if archived.is_dir():
-        files.extend(sorted(archived.rglob("CONTEXT.md")))
-    return files
-
-
-def _partitioned_module_files(root: Path) -> list[Path]:
-    return sorted((root / "curriculum" / "modules").glob("*/module.yaml"))
-
-
-def _module_files(root: Path) -> list[Path]:
-    """Mirror load_modules: the always-loaded legacy snapshot plus every
-    partitioned module file — exactly the files the loader opens."""
-    files: list[Path] = []
-    legacy = root / "records" / "modules.yaml"
-    if legacy.exists():
-        files.append(legacy)
-    files.extend(_partitioned_module_files(root))
-    return files
-
-
-def _unit_files(root: Path) -> list[Path]:
-    """Mirror _load_units: */unit.yaml exactly one level under each units/ dir.
-
-    Over-approximates in one corner: units of modules that failed to load
-    are hashed though the loader skips them (extra rebuild, never stale).
-    """
-    files: list[Path] = []
-    for module_file in _partitioned_module_files(root):
-        units_dir = module_file.parent / "units"
-        if not units_dir.is_dir():
-            continue
-        files.extend(sorted(units_dir.glob("*/unit.yaml")))
-    return files
-
-
-def _study_map_files(root: Path) -> list[Path]:
-    """Mirror study-map loading plus the expansion input.
-
-    StudyMap.data is the EXPANDED map, so module source-map.yaml content
-    flows into the stages backlinks reads: it is a study-map input.
-    """
-    files: list[Path] = []
-    for unit_file in _unit_files(root):
-        candidate = unit_file.parent / "study-map.yaml"
-        if candidate.is_file():
-            files.append(candidate)
-    for module_file in _partitioned_module_files(root):
-        candidate = module_file.parent / "source-map.yaml"
-        if candidate.is_file():
-            files.append(candidate)
-    return files
-
-
 def generation_input_digests(root: Path) -> dict[str, str]:
     """One content digest per generation input domain.
 
     Each digest covers exactly the canonical files its loader reads (see
-    the enumerators above), never the whole-tree fingerprint and never
+    derived_inputs), never the whole-tree fingerprint and never
     Repo object identity.
     """
     return {
