@@ -15,6 +15,8 @@ from __future__ import annotations
 import re
 from typing import Any
 
+from ..derived.model import DERIVED_SUBSTRATE_FILES
+
 #: Bumped whenever a segment or postings shape changes. Carried as the
 #: node version, so a format change invalidates every cached index node.
 INDEX_FORMAT_VERSION = 1
@@ -31,12 +33,6 @@ def segment_node_id(note_id: str) -> str:
 #: Conservative on purpose: an extra producer only costs a rebuild, while
 #: a missing one risks a stale index. query.py is deliberately absent —
 #: candidate retrieval always runs fresh and produces no cached value.
-DERIVED_SUBSTRATE_FILES = (
-    "tools/learning_os/derived/engine.py",
-    "tools/learning_os/derived/identity.py",
-    "tools/learning_os/derived/model.py",
-    "tools/learning_os/derived/store.py",
-)
 SEGMENT_PRODUCER_FILES = (
     "tools/learning_os/search/index.py",
     "tools/learning_os/search/model.py",

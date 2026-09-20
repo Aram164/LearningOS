@@ -151,3 +151,21 @@ def evaluate(
     direct input of every visited node.
     """
     return _Session(root=root, registry=registry, inputs=inputs, trace=trace).evaluate(node_id)
+
+
+def evaluate_many(
+    root: Path,
+    node_ids: list[str],
+    *,
+    registry: Registry,
+    inputs: Mapping[str, str],
+    trace: list[TraceEvent] | None = None,
+) -> dict[str, Evaluation]:
+    """Evaluate several roots sharing one memoisation session.
+
+    Shared dependencies evaluate once across all roots, and the trace
+    holds exactly one event per visited node — the shape node-execution
+    assertions want.
+    """
+    session = _Session(root=root, registry=registry, inputs=inputs, trace=trace)
+    return {node_id: session.evaluate(node_id) for node_id in node_ids}
