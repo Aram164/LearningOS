@@ -858,7 +858,7 @@ def _v2_crash_journal(record: Path, transaction_id: str, relative: str,
     (record / "intent.json").write_text(json.dumps({
         "schema_version": 2,
         "transaction_id": transaction_id,
-        "receipt_path": f"operations/transactions/transaction-{transaction_id}.yaml",
+        "receipt_path": f"operations/transactions/{transaction_id}.yaml",
         "paths": [{
             "path": relative,
             "before": {"kind": "file",
