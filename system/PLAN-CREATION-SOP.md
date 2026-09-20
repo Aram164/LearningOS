@@ -180,8 +180,18 @@ remain only as an auxiliary review unit with explicit parent/child or purpose
 context.
 
 Triage chapters through cached summaries before full-reading. For a chapter
-range of a cached material, read
-`generated/summaries/<sha256>/pages-<start>-<end>/summary.md` when present,
+range of a cached material, use
+`python tools/material_summarize.py --read --material RELATIVE_PATH --pages START-END`
+to retrieve the existing analysis without reopening cached page text. The
+lookup checks live source bytes and exact chapter provenance, returning
+`hit`, `missing`, `stale`, or `refused` as JSON. Pass `--digest` with a previously
+selected source digest to detect changed source bytes explicitly. A hit includes
+the summary and its digest; new summaries have a checked content checksum,
+while older summaries are explicitly labelled `legacy-unrecorded` for integrity
+and retain the existing reviewed-summary trust boundary. No semantic quality
+claim follows from a checksum. Refused reads require resolving the reported
+problem; stale reads require selecting the current source and chapter again.
+Use hits for triage,
 and record an explicit grade — `accept`, `defer`, or `reject` — with a
 one-line reason and the summary digest. On a miss, full-read the chapter,
 decide, and leave a draft summary in the workspace outputs for

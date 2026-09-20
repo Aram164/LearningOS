@@ -195,9 +195,9 @@ def _fresh_git_table(root: Path) -> dict[str, str]:
 
     Every digest default reads fresh (G1a): sharing one cached walk across
     a transaction's observations would let a concurrent commit hide behind
-    the first lookup. A broken history still falls back to empty — legacy
-    raises in the builder either way, so the fallback can only accompany
-    an identical legacy failure.
+    the first lookup. This standalone digest helper retains its empty
+    fallback; snapshot transactions reject unreadable observations before
+    calling it and always supply an admitted table to digests and builders.
     """
     table = fresh_git_snapshot(root).table
     return dict(table) if table is not None else {}
@@ -1406,7 +1406,7 @@ SNAPSHOT_ATTEMPTS = 3
 
 def build_manifest_shadow(
     repo: Repo,
-    generated_at: str,
+    generated_at: str | None = None,
     *,
     trace: list[TraceEvent] | None = None,
     enforce_contract: bool = True,
@@ -1433,19 +1433,23 @@ def build_manifest_shadow(
     one fresh history snapshot up front, evaluates builders and input
     digests against its table, and requires a fresh re-observation to
     agree — HEAD and table — before committing. Publication revision and
-    dirtiness are bound the same way. ``generated_at`` stays a
-    caller-asserted stamp: the future ``build_manifest_incremental`` MUST
-    resolve it inside its own transaction instead of accepting it.
+    dirtiness are bound the same way. The default timestamp is resolved
+    inside each admitted attempt and refreshed on retry. An explicit
+    ``generated_at`` remains a caller-asserted stamp for proof fixtures.
     """
     root = repo.root
     for _ in range(SNAPSHOT_ATTEMPTS):
         git_before = fresh_git_snapshot(root)
         state_before = _git_state(root)
+        if git_before.table is None or git_before.head != state_before[0]:
+            continue  # unreadable or torn history is never an admitted table
         snapshot_before = canonical_snapshot_digest(root, git_before)
+        stamp = generated_at if generated_at is not None else stable_generated_at(root)
         fresh = load_repo(root)
         git_mid = fresh_git_snapshot(root)
         if (
-            git_mid.head != git_before.head
+            git_mid.table is None
+            or git_mid.head != state_before[0]
             or canonical_snapshot_digest(root, git_mid) != snapshot_before
         ):
             continue  # the load raced a concurrent edit; reload
@@ -1463,7 +1467,7 @@ def build_manifest_shadow(
         )
         payload = {
             "_generated": publish_manifest_metadata(
-                fresh, generated_at, git_state=state_before),
+                fresh, stamp, git_state=state_before),
             **results[SEMANTIC_PAYLOAD_ID].value,
         }
         if enforce_contract:
@@ -1478,7 +1482,7 @@ def build_manifest_shadow(
             else:
                 enforce(payload, root)
         git_after = fresh_git_snapshot(root)
-        if git_after.head != git_before.head:
+        if git_after.table is None or git_after.head != state_before[0]:
             continue  # history moved during evaluation; the staging dies here
         if manifest_shadow_inputs(root, fresh, git_after) != inputs_before:
             continue  # inputs moved during evaluation; the staging dies here
@@ -1492,7 +1496,7 @@ def build_manifest_shadow(
         return payload
     raise TransactionFailure(
         "cannot publish the manifest: canonical inputs changed during "
-        f"generation ({SNAPSHOT_ATTEMPTS} attempts)"
+        f"generation or Git history was unreadable ({SNAPSHOT_ATTEMPTS} attempts)"
     )
 
 
@@ -1515,14 +1519,15 @@ def compare_shadow_manifest(
 ) -> ShadowManifestComparison:
     """Run both implementations and compare manifest bytes exactly.
 
-    ``None`` resolves the stamp fresh INSIDE, once, shared by both sides
-    (G1b): computing it outside admits stamp(H0)+revision(H1) tears. An
-    explicit stamp is used as-is (tests). A commit landing during the
-    legacy build surfaces as an honest mismatch, never a silent tear.
+    The shadow admits its own timestamp; the reference shares that stamp
+    and loads fresh rather than trusting a caller's old Repo. A commit
+    landing between the two builds surfaces as a mismatch. Callers needing
+    a verdict across multiple projections use verify_shadow_projections.
     """
-    stamp = generated_at if generated_at is not None else stable_generated_at(repo.root)
-    legacy = build_manifest(repo, stamp, build_backlinks(repo, stamp))
-    shadow = build_manifest_shadow(repo, stamp, trace=trace)
+    shadow = build_manifest_shadow(repo, generated_at, trace=trace)
+    stamp = shadow["_generated"]["generated_at"]
+    fresh = load_repo(repo.root)
+    legacy = build_manifest(fresh, stamp, build_backlinks(fresh, stamp))
     legacy_blob = serialize_manifest(legacy).encode("utf-8")
     shadow_blob = serialize_manifest(shadow).encode("utf-8")
     return ShadowManifestComparison(
@@ -1532,4 +1537,3 @@ def compare_shadow_manifest(
         shadow=shadow,
         legacy=legacy,
     )
-

@@ -18,6 +18,14 @@ Usage:
         --model "muse-spark 2026-09"
     python tools/material_summarize.py --audit [--cache-dir DIR]
         [--materials-root DIR]
+    python tools/material_summarize.py --read --material rel/path.pdf --pages 3-14
+        [--digest EXPECTED_SHA256] [--materials-root DIR]
+
+--read returns one source-bound chapter summary for triage, without reading
+cached pages or generating new analysis. Exit 0 means a hit, 1 means missing
+or stale, and 2 means refused. Legacy summaries remain readable with an
+explicit unrecorded-integrity label; newly promoted summaries carry a body
+checksum. Neither checksum nor source freshness certifies semantic quality.
 
 --audit is read-only and deliberately narrow: a summary is stale if and
 only if the live material bytes no longer hash to its recorded digest.
@@ -28,6 +36,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as _dt
+import hashlib
 import json
 import sys
 from pathlib import Path
@@ -45,6 +54,8 @@ SUMMARY_CACHE = REPO / "generated" / "summaries"
 
 MIN_DRAFT_CHARS = 200
 MAX_SOURCE_FRACTION = 0.8
+MAX_SUMMARY_BYTES = 64_000
+MAX_META_BYTES = 16_000
 
 
 def _refuse(reason: str) -> int:
@@ -64,10 +75,78 @@ def _parse_pages(raw: str) -> tuple[int, int] | None:
 
 
 def _is_hex_digest(name: str) -> bool:
+    return (isinstance(name, str) and len(name) == 64
+            and all(char in "0123456789abcdefABCDEF" for char in name))
+
+
+def _bounded_bytes(path: Path, limit: int) -> bytes:
+    with path.open("rb") as stream:
+        data = stream.read(limit + 1)
+    if len(data) > limit:
+        raise ValueError(f"{path.name} exceeds the bounded read limit")
+    return data
+
+
+def _read_summary(cache_dir: Path, base: Path, material: str,
+                  span: tuple[int, int], expected: str | None) -> int:
+    """Read exactly one chapter, checking live source bytes before and after."""
+    result = {"material": material, "page_range": list(span),
+              "purpose": "chapter-triage", "primary_evidence_required": True}
+
+    def emit(status: str, code: int, **fields) -> int:
+        print(json.dumps({**result, "status": status, **fields},
+                         ensure_ascii=False, separators=(",", ":")))
+        return code
+
     try:
-        return len(name) == 64 and int(name, 16) >= 0
-    except (TypeError, ValueError):
-        return False
+        relative = Path(material)
+        if relative.is_absolute() or ".." in relative.parts:
+            raise ValueError("material must be a relative path inside the materials root")
+        live = (base / relative).resolve()
+        live.relative_to(base.resolve())
+        digest = sha256(live)
+
+        def source_unchanged() -> bool:
+            return (sha256(live) == digest
+                    and (base / relative).resolve() == live)
+
+        result["source_sha256"] = digest
+        if expected is not None and expected.lower() != digest:
+            return emit("stale", 1, expected_sha256=expected.lower(),
+                        reason="source bytes changed; select the current chapter before reuse")
+        target = cache_dir / digest / f"pages-{span[0]}-{span[1]}"
+        target.resolve().relative_to(cache_dir.resolve())
+        meta_path, body_path = target / "meta.json", target / "summary.md"
+        # A partial or escaped entry is never reported as an ordinary miss.
+        for path in (meta_path, body_path):
+            path.resolve().relative_to(cache_dir.resolve())
+        if not meta_path.exists() and not body_path.exists():
+            if not source_unchanged():
+                raise ValueError("source changed during lookup; retry")
+            return emit("missing", 1, reason="no summary for the current source and exact page range")
+        meta = json.loads(_bounded_bytes(meta_path, MAX_META_BYTES))
+        if (not isinstance(meta, dict) or meta.get("sha256") != digest
+                or meta.get("material") != material
+                or meta.get("page_range") != list(span)
+                or meta.get("scope") != "chapter"
+                or not isinstance(meta.get("model"), str) or not meta["model"].strip()):
+            raise ValueError("summary provenance does not match the requested source and range")
+        body = _bounded_bytes(body_path, MAX_SUMMARY_BYTES)
+        summary = body.decode("utf-8")
+        if not summary.strip():
+            raise ValueError("summary is empty")
+        body_digest = hashlib.sha256(body).hexdigest()
+        recorded = meta.get("summary_sha256")
+        if recorded is not None and recorded != body_digest:
+            raise ValueError("summary content checksum mismatch")
+        if not source_unchanged():
+            raise ValueError("source changed during lookup; retry")
+        return emit("hit", 0, source_fresh=True,
+                    integrity="verified" if recorded is not None else "legacy-unrecorded",
+                    summary_sha256=body_digest, model=meta["model"],
+                    built=meta.get("built"), summary=summary)
+    except (OSError, ValueError, RuntimeError) as exc:
+        return emit("refused", 2, reason=str(exc))
 
 
 def _audit(cache_dir: Path, base: Path) -> int:
@@ -137,6 +216,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--promote", action="store_true", help="admit one draft summary")
     parser.add_argument("--audit", action="store_true",
                         help="report summaries whose live bytes left their digest")
+    parser.add_argument("--read", action="store_true",
+                        help="read one current chapter summary with provenance as JSON")
     parser.add_argument("--materials-root", default=None, help="materials tree root")
     parser.add_argument("--draft", help="draft summary file (kept after a header line)")
     parser.add_argument("--digest", help="source material sha256 from the text cache")
@@ -147,13 +228,18 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--cache-dir", default=str(SUMMARY_CACHE), help="summary cache root")
     args = parser.parse_args(argv)
 
-    if args.audit and args.promote:
-        parser.error("--audit and --promote are exclusive")
+    if sum((args.audit, args.promote, args.read)) != 1:
+        parser.error("choose exactly one of --promote, --audit, or --read")
+    if args.read:
+        if not args.material or not args.pages or (span := _parse_pages(args.pages)) is None:
+            parser.error("--read requires --material and --pages START-END")
+        if args.digest is not None and not _is_hex_digest(args.digest):
+            parser.error("--digest must be 64 hex characters")
+        base = Path(args.materials_root) if args.materials_root else materials_root()
+        return _read_summary(Path(args.cache_dir), base, args.material, span, args.digest)
     if args.audit:
         base = Path(args.materials_root) if args.materials_root else materials_root()
         return _audit(Path(args.cache_dir), base)
-    if not args.promote:
-        parser.error("nothing to do; pass --promote or --audit")
     missing = [name for name in ("draft", "digest", "material", "pages", "model")
                if not getattr(args, name)]
     if missing:
@@ -202,16 +288,17 @@ def main(argv: list[str] | None = None) -> int:
     if (target / "summary.md").exists():
         return _refuse("a summary for this range already exists; remove it deliberately first")
     target.mkdir(parents=True, exist_ok=True)
-    (target / "summary.md").write_text(
+    summary = (
         "<!-- GENERATED file - do not edit; promoted by "
-        "tools/material_summarize.py --promote -->\n\n" + draft,
-        encoding="utf-8")
+        "tools/material_summarize.py --promote -->\n\n" + draft).encode("utf-8")
+    (target / "summary.md").write_bytes(summary)
     meta = {"_generated": {
                 "warning": "GENERATED file - do not edit; rebuilt by "
                            "python tools/material_summarize.py --promote",
                 "generator": "tools/material_summarize.py"},
             "material": args.material, "sha256": args.digest,
             "page_range": [start, end], "model": args.model,
+            "summary_sha256": hashlib.sha256(summary).hexdigest(),
             "built": _dt.date.today().isoformat(), "scope": "chapter"}
     (target / "meta.json").write_text(
         json.dumps(meta, indent=2, sort_keys=True) + "\n", encoding="utf-8")

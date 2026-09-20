@@ -433,6 +433,39 @@ def test_poisoned_cache_does_not_hide_a_new_commit(tmp_path: Path):
     assert serialize_manifest(shadow) == serialize_manifest(fresh)
 
 
+@pytest.mark.parametrize("failure_point", ["head", "table"])
+def test_unreadable_history_refuses_without_mutating_derived_state(
+    tmp_path: Path, monkeypatch, failure_point: str,
+):
+    """Readable publication HEAD cannot admit unreadable history plus an old LRU."""
+    mini = _git_mini(tmp_path, warm=True)
+    old_table = dict(githistory.last_commit_dates(str(mini)))
+    _commit_working_note(mini, "second thoughts", GIT_H1_WHEN)
+    head = _git(mini, "rev-parse", "HEAD")
+    assert shadow_module._git_state(mini)[0] == head
+    assert githistory.last_commit_dates(str(mini)) == old_table
+    cache = derived_dir(mini)
+    before = {p.relative_to(cache): p.read_bytes()
+              for p in cache.rglob("*") if p.is_file()}
+    real_read = githistory.read_history
+    failures = []
+
+    def broken_history(root, *args):
+        if failure_point == "head" or "--name-only" in args:
+            failures.append(args)
+            raise githistory.GitHistoryError("history unavailable")
+        return real_read(root, *args)
+
+    monkeypatch.setattr(githistory, "read_history", broken_history)
+    trace = []
+    with pytest.raises(TransactionFailure):
+        build_manifest_shadow(load_repo(mini), STAMP, trace=trace)
+    assert len(failures) == shadow_module.SNAPSHOT_ATTEMPTS
+    assert trace == []
+    assert {p.relative_to(cache): p.read_bytes()
+            for p in cache.rglob("*") if p.is_file()} == before
+
+
 def test_external_commit_between_builds_is_observed_same_process(tmp_path: Path):
     """compare@H0 warms everything; a commit; the rebuild observes H1."""
     mini = _git_mini(tmp_path, warm=True)
