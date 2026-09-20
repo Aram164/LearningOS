@@ -1,0 +1,127 @@
+digest: 90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca
+material: mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+deck_pages: 60
+draft_dir: work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries
+record: work/active/workspace-m2-exam-prep/outputs/sad-l06-angle-verification-2026-09-20.md
+model: muse-spark 2026-09
+chapters:
+- pages:
+  - 5
+  - 8
+  draft: ch-a-pp05-08.md
+  grade: accept with note
+  source_chars: 3127
+  source_bytes: 3352
+  draft_chars: 1007
+  draft_bytes: 1023
+- pages:
+  - 9
+  - 13
+  draft: ch-b-pp09-13.md
+  grade: accept
+  source_chars: 2038
+  source_bytes: 2615
+  draft_chars: 719
+  draft_bytes: 747
+- pages:
+  - 15
+  - 23
+  draft: ch-c-pp15-23.md
+  grade: accept with finding F3
+  source_chars: 4294
+  source_bytes: 5508
+  draft_chars: 1234
+  draft_bytes: 1289
+- pages:
+  - 24
+  - 32
+  draft: ch-d-pp24-32.md
+  grade: accept with findings F4, F5
+  source_chars: 4499
+  source_bytes: 6003
+  draft_chars: 1252
+  draft_bytes: 1275
+- pages:
+  - 34
+  - 42
+  draft: ch-e-pp34-42.md
+  grade: accept
+  source_chars: 3039
+  source_bytes: 3991
+  draft_chars: 892
+  draft_bytes: 931
+- pages:
+  - 44
+  - 50
+  draft: ch-f-pp44-50.md
+  grade: accept
+  source_chars: 3981
+  source_bytes: 4438
+  draft_chars: 1011
+  draft_bytes: 1052
+- pages:
+  - 52
+  - 60
+  draft: ch-g-pp52-60.md
+  grade: accept
+  source_chars: 5698
+  source_bytes: 6162
+  draft_chars: 1097
+  draft_bytes: 1136
+direct_reads: []
+excluded:
+- pages:
+  - 1
+  - 1
+  reason: title slide
+  source_chars: 58
+  source_bytes: 58
+- pages:
+  - 2
+  - 3
+  reason: course lecture-plan admin
+  source_chars: 1449
+  source_bytes: 1513
+- pages:
+  - 4
+  - 4
+  reason: table-of-contents divider
+  source_chars: 226
+  source_bytes: 236
+- pages:
+  - 14
+  - 14
+  reason: table-of-contents divider
+  source_chars: 227
+  source_bytes: 237
+- pages:
+  - 33
+  - 33
+  reason: table-of-contents divider
+  source_chars: 250
+  source_bytes: 264
+- pages:
+  - 43
+  - 43
+  reason: table-of-contents divider
+  source_chars: 221
+  source_bytes: 231
+- pages:
+  - 51
+  - 51
+  reason: table-of-contents divider
+  source_chars: 221
+  source_bytes: 231
+receipts:
+- path: operations/transactions/transaction-20260920-023923-001.yaml
+  status: committed
+  capability: unit.plan.revise
+  writes:
+  - path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/study-map.yaml
+    created: false
+  artifact_revisions_after:
+    unit-m2-sad-l06: 21
+deck_chars: 29328
+deck_bytes: 34839
+triage_bytes: 7453
+triage_ratio_bytes: 0.214

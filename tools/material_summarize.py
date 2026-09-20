@@ -14,6 +14,12 @@ Usage:
     python tools/material_summarize.py --promote --draft DRAFT.md \\
         --digest SHA256 --material rel/path.pdf --pages 3-14 \\
         --model "muse-spark 2026-09"
+    python tools/material_summarize.py --audit [--cache-dir DIR]
+        [--materials-root DIR]
+
+--audit is read-only and deliberately narrow: a summary is stale if and
+only if the live material bytes no longer hash to its recorded digest.
+It is not a freshness check against revisions, routes, or prose.
 """
 
 from __future__ import annotations
@@ -29,6 +35,7 @@ if str(TOOLS) not in sys.path:
     sys.path.insert(0, str(TOOLS))
 
 from material_text import cache_index  # noqa: E402
+from materials_manifest import materials_root, sha256  # noqa: E402
 
 REPO = Path(__file__).resolve().parents[1]
 TEXT_CACHE = REPO / "generated" / "text-cache"
@@ -54,10 +61,81 @@ def _parse_pages(raw: str) -> tuple[int, int] | None:
     return start, end
 
 
+def _is_hex_digest(name: str) -> bool:
+    try:
+        return len(name) == 64 and int(name, 16) >= 0
+    except (TypeError, ValueError):
+        return False
+
+
+def _audit(cache_dir: Path, base: Path) -> int:
+    """Report promoted summaries whose live bytes left their digest.
+
+    Read-only. Prints one JSON object ``{checked, fresh, stale,
+    unverifiable}`` and returns 1 only when at least one summary is
+    stale. Missing or unreadable live files are unverifiable, never
+    stale: staleness means digest mismatch, nothing else.
+    """
+    stale: list[dict] = []
+    unverifiable: list[dict] = []
+    fresh = 0
+    try:
+        digest_dirs = sorted(p for p in cache_dir.iterdir()
+                             if p.is_dir() and _is_hex_digest(p.name))
+    except OSError:
+        digest_dirs = []
+    for digest_dir in digest_dirs:
+        try:
+            ranges = sorted(p for p in digest_dir.iterdir()
+                            if p.is_dir() and p.name.startswith("pages-"))
+        except OSError:
+            continue
+        for ranged in ranges:
+            where = {"digest": digest_dir.name, "range": ranged.name}
+            try:
+                meta = json.loads((ranged / "meta.json").read_text(encoding="utf-8"))
+            except (OSError, ValueError):
+                unverifiable.append({**where, "reason": "unreadable meta.json"})
+                continue
+            if not isinstance(meta, dict) or meta.get("sha256") != digest_dir.name:
+                unverifiable.append({**where, "reason": "meta digest mismatch"})
+                continue
+            material = meta.get("material")
+            if not isinstance(material, str) or not material:
+                unverifiable.append({**where, "reason": "meta has no material path"})
+                continue
+            try:
+                live = (base / material).resolve()
+                live.relative_to(base.resolve())
+            except (OSError, ValueError):
+                unverifiable.append({**where, "reason": "material path escapes root"})
+                continue
+            if not live.is_file():
+                unverifiable.append({**where, "reason": "live material file missing"})
+                continue
+            try:
+                current = sha256(live)
+            except OSError:
+                unverifiable.append({**where, "reason": "live material unreadable"})
+                continue
+            if current != digest_dir.name:
+                stale.append({**where, "material": material})
+            else:
+                fresh += 1
+    print(json.dumps({"checked": fresh + len(stale) + len(unverifiable),
+                      "fresh": fresh, "stale": stale,
+                      "unverifiable": unverifiable},
+                     ensure_ascii=False, separators=(",", ":")))
+    return 1 if stale else 0
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--promote", action="store_true", help="admit one draft summary")
+    parser.add_argument("--audit", action="store_true",
+                        help="report summaries whose live bytes left their digest")
+    parser.add_argument("--materials-root", default=None, help="materials tree root")
     parser.add_argument("--draft", help="draft summary file (kept after a header line)")
     parser.add_argument("--digest", help="source material sha256 from the text cache")
     parser.add_argument("--material", help="manifest-relative material path")
@@ -67,8 +145,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--cache-dir", default=str(SUMMARY_CACHE), help="summary cache root")
     args = parser.parse_args(argv)
 
+    if args.audit and args.promote:
+        parser.error("--audit and --promote are exclusive")
+    if args.audit:
+        base = Path(args.materials_root) if args.materials_root else materials_root()
+        return _audit(Path(args.cache_dir), base)
     if not args.promote:
-        parser.error("nothing to do; pass --promote")
+        parser.error("nothing to do; pass --promote or --audit")
     missing = [name for name in ("draft", "digest", "material", "pages", "model")
                if not getattr(args, name)]
     if missing:
