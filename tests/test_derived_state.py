@@ -28,6 +28,7 @@ from learning_os.derived import (
     digest_paths,
     digest_producer_files,
     digest_tree,
+    invalidate,
     lookup,
     node_key,
     read_state,
@@ -323,6 +324,24 @@ def test_unparseable_blob_with_matching_hash_is_a_miss(tmp_path: Path):
         "nodes": {"n": {"node_key": "k", "output_sha256": digest, "blob": f"blobs/{digest}"}},
     }))
     assert lookup(tmp_path, "n") is None
+
+
+# ---------------------------------------------------------------------------
+# Invalidation (self-healing).
+# ---------------------------------------------------------------------------
+
+def test_invalidate_drops_the_entry_and_keeps_the_blob(tmp_path: Path):
+    state = store_node(tmp_path, "n", node_key="k", value={"v": 1})
+    store_node(tmp_path, "other", node_key="k", value={"v": 2})
+    invalidate(tmp_path, "n")
+    assert lookup(tmp_path, "n") is None
+    assert lookup(tmp_path, "other") is not None
+    assert (derived_dir(tmp_path) / state.blob).exists()
+
+
+def test_invalidate_missing_entry_is_a_noop(tmp_path: Path):
+    invalidate(tmp_path, "n")
+    assert not state_path(tmp_path).exists()
 
 
 # ---------------------------------------------------------------------------

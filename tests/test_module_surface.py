@@ -28,6 +28,7 @@ PACKAGES = [
     "learning_os.derived",
     "learning_os.genout",
     "learning_os.rules",
+    "learning_os.search",
     "materials_index",
 ]
 

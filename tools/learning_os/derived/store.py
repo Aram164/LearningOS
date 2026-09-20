@@ -117,6 +117,27 @@ def read_state(root: Path) -> dict[str, NodeState]:
     return states
 
 
+def invalidate(root: Path, node_id: str) -> None:
+    """Drop one node's state entry; its blob is left as a harmless orphan.
+
+    Self-healing for hash-verified but wrongly shaped values (tampering):
+    the next evaluation misses and rebuilds from current inputs. Blobs are
+    never deleted here — identical values share one blob across nodes.
+    """
+    states = read_state(root)
+    if node_id not in states:
+        return
+    del states[node_id]
+    payload = {
+        "schema_version": STATE_SCHEMA_VERSION,
+        "nodes": {
+            key: {"node_key": item.node_key, "output_sha256": item.output_sha256, "blob": item.blob}
+            for key, item in states.items()
+        },
+    }
+    _atomic_write(_checked_store_dir(root, DERIVED_TOP_DIR) / STATE_FILENAME, canonical_bytes(payload))
+
+
 def lookup(root: Path, node_id: str) -> tuple[NodeState, Any] | None:
     """Verified reuse: entry plus an existing blob with a matching hash.
 
