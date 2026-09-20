@@ -4,7 +4,8 @@
 Extracting the same deck twice is rework, not learning. This tool keeps one
 UTF-8 page-text file per PDF page under ``generated/text-cache/<sha256>/``
 plus an ``index.json`` per digest (material, digest, pages, extractor,
-built-at). Keys are the live file bytes, so changed bytes always miss and
+per-page content hashes, built-at). Keys are the live file bytes, so changed
+bytes always miss and
 identical bytes always hit. The cache is a disposable generated view:
 rebuildable, gitignored, never referenced by canonical files. Agents read
 cached pages instead of re-running extraction.
@@ -18,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import datetime as _dt
+import hashlib
 import json
 import shutil
 import subprocess
@@ -81,12 +83,31 @@ def cache_index(cache_dir: Path, digest: str) -> dict | None:
     return record
 
 
+def _page_path(cache: Path, digest: str, page: int) -> Path:
+    return cache / digest / f"pp-{page:04d}.txt"
+
+
+def _page_hashes(cache: Path, digest: str, pages: int) -> list[str] | None:
+    """sha256 per page file, in order; None when any page is unreadable."""
+    hashes = []
+    for page in range(1, pages + 1):
+        try:
+            data = _page_path(cache, digest, page).read_bytes()
+        except OSError:
+            return None
+        hashes.append(hashlib.sha256(data).hexdigest())
+    return hashes
+
+
 def _index_valid(cache: Path, digest: str, pages: int) -> bool:
+    """A cache entry is valid only when extractor, page count, page files,
+    and per-page content hashes all agree with the index record."""
     record = cache_index(cache, digest)
     if record is None or record.get("pages") != pages:
         return False
-    return all((cache / digest / f"pp-{page:04d}.txt").is_file()
-               for page in range(1, pages + 1))
+    if record.get("extractor") != EXTRACTOR:
+        return False
+    return record.get("pages_sha256") == _page_hashes(cache, digest, pages)
 
 
 def _extract(path: Path, digest: str, rel: str, cache: Path, pages: int) -> dict:
@@ -96,37 +117,79 @@ def _extract(path: Path, digest: str, rel: str, cache: Path, pages: int) -> dict
         if text is None:
             return {"material": rel, "reason": "extract-failed"}
         texts.append(text)
-    target = cache / digest
-    target.mkdir(parents=True, exist_ok=True)
-    for page, text in enumerate(texts, start=1):
-        (target / f"pp-{page:04d}.txt").write_text(text, encoding="utf-8")
-    index = {
-        "_generated": _generated_header("tools/material_text.py"),
-        "material": rel,
-        "sha256": digest,
-        "pages": pages,
-        "extractor": EXTRACTOR,
-        "built": _dt.date.today().isoformat(),
-    }
-    (target / "index.json").write_text(
-        json.dumps(index, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    if sha256(path) != digest:
+        return {"material": rel, "reason": "source-changed"}
+    staging = cache / f".{digest}.staging"
+    if staging.is_symlink() or staging.is_file():
+        staging.unlink()
+    elif staging.is_dir():
+        shutil.rmtree(staging)
+    staging.mkdir(parents=True)
+    hashes = []
+    try:
+        for page, text in enumerate(texts, start=1):
+            data = text.encode("utf-8")
+            (staging / f"pp-{page:04d}.txt").write_bytes(data)
+            hashes.append(hashlib.sha256(data).hexdigest())
+        index = {
+            "_generated": _generated_header("tools/material_text.py"),
+            "material": rel,
+            "sha256": digest,
+            "pages": pages,
+            "extractor": EXTRACTOR,
+            "pages_sha256": hashes,
+            "built": _dt.date.today().isoformat(),
+        }
+        (staging / "index.json").write_text(
+            json.dumps(index, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8")
+        # Admit only text extracted from the bytes the digest names: a source
+        # that changed during extraction publishes nothing under this digest.
+        if sha256(path) != digest:
+            return {"material": rel, "reason": "source-changed"}
+        target = cache / digest
+        if target.is_symlink() or target.is_file():
+            target.unlink()
+        elif target.is_dir():
+            shutil.rmtree(target)
+        staging.rename(target)
+    finally:
+        if staging.is_symlink() or staging.is_file():
+            staging.unlink()
+        elif staging.is_dir():
+            shutil.rmtree(staging, ignore_errors=True)
     return {"material": rel, "pages": pages}
 
 
-def _heal_header(cache: Path, digest: str) -> bool:
-    """Add the generated-file header to a pre-header index in place.
+def _heal_index(cache: Path, digest: str, pages: int) -> bool:
+    """Fill a legacy index's missing header, extractor, and page hashes.
 
     Page text is untouched: healing rewrites one small JSON file, never
-    re-extracts. Returns True when it wrote anything.
+    re-extracts. Returns True only when it wrote something. A present but
+    disagreeing extractor or hash list is corruption, not legacy, and is
+    left for _index_valid to refuse so the entry re-extracts.
     """
     path = _index_path(cache, digest)
     try:
         record = json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return False
-    if not isinstance(record, dict) or "_generated" in record:
+    if not isinstance(record, dict) or record.get("pages") != pages:
         return False
-    record["_generated"] = _generated_header("tools/material_text.py")
+    if record.get("sha256") != digest:
+        return False
+    if "extractor" in record and record["extractor"] != EXTRACTOR:
+        return False
+    if "pages_sha256" in record:
+        complete = record.get("extractor") == EXTRACTOR and "_generated" in record
+        if complete:
+            return False
+    hashes = _page_hashes(cache, digest, pages)
+    if hashes is None:
+        return False
+    record.setdefault("_generated", _generated_header("tools/material_text.py"))
+    record.setdefault("extractor", EXTRACTOR)
+    record.setdefault("pages_sha256", hashes)
     path.write_text(json.dumps(record, indent=2, sort_keys=True) + "\n",
                     encoding="utf-8")
     return True
@@ -202,11 +265,11 @@ def main(argv: list[str] | None = None) -> int:
         except Exception:
             skipped.append({"material": rel, "reason": "unreadable-pdf"})
             continue
+        if _heal_index(cache, digest, pages):
+            healed += 1
+            continue
         if _index_valid(cache, digest, pages):
-            if _heal_header(cache, digest):
-                healed += 1
-            else:
-                cached += 1
+            cached += 1
             continue
         outcome = _extract(path, digest, rel, cache, pages)
         if "pages" in outcome:

@@ -76,11 +76,12 @@ def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
 _KEEP_NAMES = {".gitkeep", ".DS_Store"}
 
 #: Sibling producers the publisher must not garbage-collect. The page-text
-#: cache, the summary cache, and the derived-state cache live under
-#: generated/ (gitignored, disposable) but are owned by their own tools
-#: with their own invalidation; a rebuild of the projection must leave
-#: them alone.
-_KEEP_TOP_DIRS = frozenset({"text-cache", "summaries", DERIVED_TOP_DIR})
+#: cache, the summary cache, the dossier cache, and the derived-state cache
+#: live under generated/ (gitignored, disposable) but are owned by their own
+#: tools with their own invalidation; a rebuild of the projection must
+#: leave them alone.
+_KEEP_TOP_DIRS = frozenset({"text-cache", "summaries", "dossiers",
+                            DERIVED_TOP_DIR})
 
 
 _KEEP_REPORT_PREFIX = "validation-report"
