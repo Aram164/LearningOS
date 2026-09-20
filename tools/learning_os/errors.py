@@ -97,6 +97,8 @@ class TransactionRecoveryConflict(TransactionFailure):
     - ``CORRUPT_JOURNAL``: the journal entry itself is malformed or names
       a path outside the repository.
     - ``UNREADABLE_JOURNAL``: the journal cannot be read at all.
+    - ``UNSUPPORTED_JOURNAL_VERSION``: the journal declares a schema
+      version recovery does not implement. Preserved, never reinterpreted.
     - ``RESTORE_IO_FAILED``: a proven-safe restore, projection discard, or
       journal cleanup could not be written.
     """

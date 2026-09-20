@@ -284,6 +284,24 @@ def _discard_stale_projection(root: Path, problems: list[str]) -> None:
             f"undone state, and it could not be discarded ({exc}); run `make views`")
 
 
+def _invalidate_projection(root: Path) -> str | None:
+    """Drop the projection marker unconditionally; return an error, or None.
+
+    Used when canonical state is AMBIGUOUS — rollback incomplete, or a
+    recovery conflict no run could unwind. A manifest matching the
+    ambiguous bytes would be read downstream as current, so absence (the
+    honest "projection unavailable" state; `generated/` is disposable and
+    rebuilt by `make views`) is the only safe publication. A missing
+    marker is already success.
+    """
+    manifest = root / "generated" / "manifest.json"
+    try:
+        manifest.unlink(missing_ok=True)
+    except OSError as exc:
+        return str(exc)
+    return None
+
+
 def _update_intent_after(inflight_dir: Path, relative: str,
                          content: bytes) -> None:
     """Complete one journal entry's intended post-state, durably.
@@ -485,19 +503,20 @@ def _remove_journal(tx_dir: Path, transaction_id: str, journal_rel: str) -> None
 
 
 def _refuse_journal(root: Path, tx_dir: Path, detail: str,
-                    path: str | None = None) -> NoReturn:
-    """Raise CORRUPT_JOURNAL for a journal that fails admission or reading.
+                    path: str | None = None,
+                    reason: str = "CORRUPT_JOURNAL",
+                    summary: str = "its journal is not self-bound") -> NoReturn:
+    """Raise for a journal that fails admission, reading, or versioning.
 
     The directory name grounds every field: a journal that disagrees with
     its own location proves nothing, so recovery preserves the directory
     untouched and stops.
     """
     journal_rel = _safe_relative(root, tx_dir)
-    conflict = {"path": path or journal_rel, "reason": "CORRUPT_JOURNAL",
+    conflict = {"path": path or journal_rel, "reason": reason,
                 "detail": detail}
     raise TransactionRecoveryConflict(
-        _conflict_message(tx_dir.name, journal_rel,
-                          "its journal is not self-bound", [conflict]),
+        _conflict_message(tx_dir.name, journal_rel, summary, [conflict]),
         transaction_id=tx_dir.name, conflicts=[conflict])
 
 
@@ -927,7 +946,11 @@ def reconcile_inflight_transactions(root: Path) -> None:
     non-cooperative changes that leave different state are detected;
     byte-identical/ABA changes are state-equivalent and accepted as
     such. Stronger proof would need locks or version tokens, which this
-    system deliberately does not add.
+    system deliberately does not add. Likewise, a hostile writer swapping
+    a parent directory for a symlink between admission and restore is
+    outside the model: cooperative writers hold the operator lock across
+    recovery, and closing that TOCTOU would need no-follow directory
+    operations the model does not require.
     """
     inflight_dir = root / "operations" / "transactions" / ".inflight"
     if not inflight_dir.is_dir():
@@ -951,40 +974,67 @@ def reconcile_inflight_transactions(root: Path) -> None:
     # Transaction ids sort chronologically, so descending names unwinds the
     # stack instead of reading a newer transaction's bytes as foreign.
     for tx_dir in reversed(tx_dirs):
-        intent_path = tx_dir / "intent.json"
-        if intent_path.is_symlink() or not intent_path.is_file():
-            # Published journals are complete by construction (staged
-            # whole, then renamed), so a missing intent is corruption or
-            # tampering after arming — never the harmless early crash the
-            # old code assumed. Preserve the directory and stop.
-            _refuse_journal(
-                root, tx_dir, "published journal is missing intent.json")
         try:
-            intent = json.loads(intent_path.read_text(encoding="utf-8"))
-        except (OSError, ValueError) as exc:
-            raise TransactionRecoveryConflict(
-                f"transaction {tx_dir.name} left a recovery journal that "
-                f"cannot be read ({exc}); nothing was modified and the "
-                f"journal was preserved under "
-                f"{_safe_relative(root, tx_dir)} for diagnosis",
-                transaction_id=tx_dir.name,
-                conflicts=[{
-                    "path": _safe_relative(root, intent_path),
-                    "reason": "UNREADABLE_JOURNAL",
-                    "detail": "journal cannot be read"}],
-            ) from exc
-        if not isinstance(intent, dict):
-            journal_rel = _safe_relative(root, tx_dir)
-            conflicts = [{"path": journal_rel, "reason": "CORRUPT_JOURNAL",
-                          "detail": "journal is not a mapping"}]
-            raise TransactionRecoveryConflict(
-                _conflict_message(tx_dir.name, journal_rel,
-                                  "its journal is not a mapping", conflicts),
-                transaction_id=tx_dir.name, conflicts=conflicts)
-        if intent.get("schema_version", 1) == 2:
-            _reconcile_v2_journal(root, tx_dir, intent)
-        else:
-            _reconcile_v1_journal(root, tx_dir, intent)
+            _reconcile_one_journal(root, tx_dir)
+        except TransactionRecoveryConflict as exc:
+            # Recovery proved nothing about this tree, so no manifest may
+            # keep vouching for it — drop the marker regardless of
+            # fingerprint. If the marker itself cannot be dropped, say so
+            # structurally: a surviving manifest over ambiguous bytes is
+            # exactly what downstream must not trust.
+            problem = _invalidate_projection(root)
+            if problem is not None:
+                exc.conflicts.append({
+                    "path": "generated/manifest.json",
+                    "reason": "RESTORE_IO_FAILED",
+                    "detail": "projection marker could not be dropped: "
+                              f"{problem}"})
+            raise
+
+
+def _reconcile_one_journal(root: Path, tx_dir: Path) -> None:
+    """Dispatch one published journal to its schema's recovery."""
+    intent_path = tx_dir / "intent.json"
+    if intent_path.is_symlink() or not intent_path.is_file():
+        # Published journals are complete by construction (staged
+        # whole, then renamed), so a missing intent is corruption or
+        # tampering after arming — never the harmless early crash the
+        # old code assumed. Preserve the directory and stop.
+        _refuse_journal(
+            root, tx_dir, "published journal is missing intent.json")
+    try:
+        intent = json.loads(intent_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise TransactionRecoveryConflict(
+            f"transaction {tx_dir.name} left a recovery journal that "
+            f"cannot be read ({exc}); nothing was modified and the "
+            f"journal was preserved under "
+            f"{_safe_relative(root, tx_dir)} for diagnosis",
+            transaction_id=tx_dir.name,
+            conflicts=[{
+                "path": _safe_relative(root, intent_path),
+                "reason": "UNREADABLE_JOURNAL",
+                "detail": "journal cannot be read"}],
+        ) from exc
+    if not isinstance(intent, dict):
+        journal_rel = _safe_relative(root, tx_dir)
+        conflicts = [{"path": journal_rel, "reason": "CORRUPT_JOURNAL",
+                      "detail": "journal is not a mapping"}]
+        raise TransactionRecoveryConflict(
+            _conflict_message(tx_dir.name, journal_rel,
+                              "its journal is not a mapping", conflicts),
+            transaction_id=tx_dir.name, conflicts=conflicts)
+    schema_version = intent.get("schema_version", 1)
+    if schema_version == 2:
+        _reconcile_v2_journal(root, tx_dir, intent)
+    elif schema_version == 1:
+        _reconcile_v1_journal(root, tx_dir, intent)
+    else:
+        _refuse_journal(
+            root, tx_dir,
+            f"unsupported journal schema version: {schema_version!r}",
+            reason="UNSUPPORTED_JOURNAL_VERSION",
+            summary="its journal uses an unsupported schema version")
 
 
 class TransactionService:
@@ -1325,12 +1375,24 @@ class TransactionService:
                         except TransactionRecoveryConflict as exc:
                             failures.extend(conflict["path"]
                                             for conflict in exc.conflicts)
-            restore_projection = rollback_publish or publish
-            if restore_projection is not None:
-                try:
-                    restore_projection()
-                except Exception:
-                    failures.append("<projection publication>")
+            if not failures:
+                # Canonical unwind is proven complete: re-publish the
+                # projection from the restored pre-state as before.
+                restore_projection = rollback_publish or publish
+                if restore_projection is not None:
+                    try:
+                        restore_projection()
+                    except Exception:
+                        failures.append("<projection publication>")
+            if failures:
+                # Canonical state is ambiguous — unwind proved nothing, or
+                # re-publication just failed over a proven tree. Either
+                # way a manifest now would present uncertainty as
+                # current, so drop the marker instead: "projection
+                # unavailable" is the truthful state.
+                problem = _invalidate_projection(self.root)
+                if problem is not None:
+                    failures.append("generated/manifest.json")
             if not failures:
                 if journal_published:
                     try:
@@ -1571,11 +1633,11 @@ class TransactionService:
                 diag_conventions.EVENT_RECEIPT_PERSISTED,
                 attrs={"receipt": _safe_relative(self.root, receipt_path)})
 
-            # Bookkeeping is part of the commit boundary. If it fails, remove
-            # the newly-created receipt together with the canonical writes so
-            # transaction history can never claim a rolled-back change.
-            safe_receipt_path, _receipt_relative = target(receipt_path)
-            backups[safe_receipt_path] = None
+            # The receipt above is already the commit boundary: it is
+            # irrevocable, and no failure below undoes it. Bookkeeping
+            # failure preserves canonical state and the receipt and raises
+            # PostCommitFailure; exact replay repairs the remaining
+            # bookkeeping.
             if touched is not None:
                 touched([*normalized_writes, *delete_paths, receipt_path])
 

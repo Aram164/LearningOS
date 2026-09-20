@@ -788,3 +788,162 @@ def test_symlinked_backup_is_rejected(tmp_path: Path):
     assert target.read_bytes() == b"new\n"
     assert blob.is_symlink()
     assert tx_dir.is_dir()
+
+
+# ---------------------------------------------------------------------------
+# Step 2 close-out: ambiguous canonical state is never republished.
+# ---------------------------------------------------------------------------
+
+def _write_manifest(root: Path, fingerprint: str) -> Path:
+    manifest = root / "generated" / "manifest.json"
+    manifest.parent.mkdir(parents=True, exist_ok=True)
+    manifest.write_text(json.dumps(
+        {"_generated": {"source_fingerprint": fingerprint}, "records": []}),
+        encoding="utf-8")
+    return manifest
+
+
+def test_live_rollback_drops_projection_when_unwind_is_ambiguous(
+        tmp_path: Path):
+    """Foreign bytes during validation: manifest must go, not regenerate."""
+    root = tmp_path / "live-ambiguous"
+    target = root / "work" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"old\n")
+    manifest = _write_manifest(root, "0" * 64)
+
+    def hostile_validate():
+        target.write_bytes(b"foreign\n")
+        return ["forced validation failure"]
+
+    with pytest.raises(TransactionFailure, match="rollback incomplete"):
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            validate_state=hostile_validate,
+            rollback_publish=lambda: manifest.write_text("republished\n"),
+        )
+
+    assert target.read_bytes() == b"foreign\n"
+    assert not manifest.exists(), \
+        "ambiguous canonical state must read as projection unavailable"
+
+
+def test_live_rollback_still_republishes_after_clean_unwind(tmp_path: Path):
+    """Proven-complete unwind keeps the regenerate-on-rollback behavior."""
+    from learning_os.transactions import ProjectionFailure
+
+    root = tmp_path / "live-clean"
+    target = root / "work" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"old\n")
+    manifest = root / "generated" / "manifest.json"
+
+    def fail_publish() -> str:
+        raise OSError("forced projection failure")
+
+    with pytest.raises(ProjectionFailure):
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            publish=fail_publish,
+            rollback_publish=lambda: manifest.parent.mkdir(
+                parents=True, exist_ok=True) or manifest.write_text("fresh\n"),
+        )
+
+    assert target.read_bytes() == b"old\n"
+    assert manifest.read_text(encoding="utf-8") == "fresh\n"
+
+
+def test_live_rollback_drops_projection_when_republish_fails(
+        tmp_path: Path):
+    """A failed re-publication cannot leave a half-written manifest behind."""
+    from learning_os.transactions import ProjectionFailure
+
+    root = tmp_path / "live-republish-fail"
+    target = root / "work" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"old\n")
+    manifest = _write_manifest(root, "0" * 64)
+
+    def fail_publish() -> str:
+        raise OSError("forced projection failure")
+
+    def fail_rollback_publish() -> None:
+        raise OSError("forced rollback publication failure")
+
+    with pytest.raises(ProjectionFailure) as caught:
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            publish=fail_publish,
+            rollback_publish=fail_rollback_publish,
+        )
+
+    assert caught.value.rollback_complete is False
+    assert not manifest.exists()
+
+
+def test_recovery_conflict_invalidates_matching_projection(tmp_path: Path):
+    """Ambiguity drops the marker even when its fingerprint still matches."""
+    root = tmp_path / "recovery-ambiguous"
+    target = root / "work" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"foreign\n")
+    _write_journal_v2(
+        root, "transaction-20260101-000000-201",
+        [("work/mod.md", b"old\n", b"new\n")])
+    manifest = _write_manifest(root, canonical_fingerprint(root))
+
+    with pytest.raises(TransactionRecoveryConflict):
+        reconcile_inflight_transactions(root)
+
+    assert target.read_bytes() == b"foreign\n"
+    assert not manifest.exists(), \
+        "a matching fingerprint must not whitewash ambiguous bytes"
+
+
+def test_recovery_contradiction_invalidates_projection(mini_repo: Path):
+    """Every unresolvable journal — including receipt contradiction — drops it."""
+    _context, result = _commit_capture(mini_repo, "receipt-contra")
+    target = mini_repo / "work/inbox/receipt-contra.md"
+    receipt_path = mini_repo / result.receipt_path.relative_to(mini_repo)
+    receipt_path.write_text("{invalid yaml: [", encoding="utf-8")
+    manifest = _write_manifest(mini_repo, "0" * 64)
+    _write_journal_v2(
+        mini_repo, result.transaction_id,
+        [("work/inbox/receipt-contra.md", None, b"committed\n")],
+        receipt_rel=result.receipt_path.relative_to(mini_repo).as_posix())
+
+    with pytest.raises(TransactionRecoveryConflict) as exc_info:
+        reconcile_inflight_transactions(mini_repo)
+
+    assert exc_info.value.conflicts[0]["reason"] == "INVALID_COMMIT_RECEIPT"
+    assert target.read_bytes() == b"committed\n"
+    assert not manifest.exists()
+
+
+def test_unknown_journal_schema_version_is_refused(tmp_path: Path):
+    """Future evidence is preserved, never interpreted as legacy v1."""
+    root = tmp_path / "future-schema"
+    target = root / "work" / "mod.md"
+    target.parent.mkdir(parents=True)
+    target.write_bytes(b"new\n")
+    tx_dir = _write_journal_v2(
+        root, "transaction-20260101-000000-202",
+        [("work/mod.md", b"old\n", b"new\n")])
+    intent_path = tx_dir / "intent.json"
+    intent = json.loads(intent_path.read_text(encoding="utf-8"))
+    intent["schema_version"] = 3
+    intent_path.write_text(json.dumps(intent), encoding="utf-8")
+
+    with pytest.raises(TransactionRecoveryConflict) as exc_info:
+        reconcile_inflight_transactions(root)
+
+    assert exc_info.value.conflicts[0]["reason"] == \
+        "UNSUPPORTED_JOURNAL_VERSION"
+    assert target.read_bytes() == b"new\n"
+    assert tx_dir.is_dir()
