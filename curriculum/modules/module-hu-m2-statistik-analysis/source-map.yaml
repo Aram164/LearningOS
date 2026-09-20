@@ -1230,12 +1230,12 @@ sources:
     unit_id: unit-m2-sad-l04
     title: UE3, slides 15-38 — events, axioms and conditional probability
     format: solutions
-    angle: Combines event examples, a dice-game complement and a worked sensitivity/specificity calculation.
+    angle: Works event/axiom examples plus conditional drills and a sensitivity/specificity total-probability
+      calculation without posterior inversion.
     covers:
     - knowledge-sad-l04-events
     - knowledge-sad-l04-axioms
     - knowledge-sad-l04-conditional
-    - knowledge-sad-l04-bayes
     - knowledge-sad-l04-independence
     depth: practice
     scope: current
@@ -6211,7 +6211,8 @@ sources:
     scope: complementary
     locator: §1.4, PDF pp. 44–55; §1.5, pp. 58–62
     angle_detail: The box-selection example makes the prior and likelihood roles visible. This is an example-led
-      alternative; claims that it is the most visual source are unnecessary.
+      alternative; claims that it is the most visual source are unnecessary. This is intermediate-to-advanced
+      example-led reading; use it only after the course calculation works.
     vault_path: material://source-pitman-probability/pitman.pdf
   - id: route-eaf0195e1f1439482508bdd8
     unit_id: unit-m2-sad-l05
@@ -6463,7 +6464,8 @@ sources:
     scope: complementary
     locator: §§6.1–6.2.1, PDF pp. 219–228; §8.1, pp. 255–258
     angle_detail: The Monty Hall tree makes the host’s information and protocol part of the model; the
-      test example isolates the effect of a changed base rate.
+      test example isolates the effect of a changed base rate. This is optional advanced-reference reading;
+      use the named examples rather than treating the whole book as a first explanation.
     vault_path: material://source-tijms-understanding-probability/tijms.pdf
   - id: route-338021e21a64b0b32a68eb86
     unit_id: unit-m2-sad-l05
@@ -6720,7 +6722,8 @@ sources:
     scope: complementary
     locator: Ch 2 §§2.3–2.4, PDF pp. 54–58; Ch 3 §§3.2–3.4, pp. 101–103,120–122,128–132
     angle_detail: The stored copy is an 848-page reflowed PDF. Its viewer pages differ from printed editions;
-      use these narrow physical ranges instead of the old entire-chapter assignments.
+      use these narrow physical ranges instead of the old entire-chapter assignments. This is proof-dense
+      advanced reference material and should not displace the current deck or Fahrmeir.
     vault_path: material://source-ross-first-course/ross.pdf
   - id: route-b08add0fb6ed042a770114eb
     unit_id: unit-m2-sad-l05
@@ -8151,18 +8154,17 @@ sources:
     unit_id: unit-m2-sad-l04
     title: StatQuest — Naive Bayes
     format: video
-    angle: Earns smoothing by letting a repeated-word spam message break on a zero count before repairing
-      it with added counts, instead of introducing the classifier as prior-times-likelihood alone.
+    angle: Builds a categorical text classifier and lets an unseen word break the unsmoothed product before
+      L14 repairs it.
     covers:
     - knowledge-sad-l04-naive-bayes
     - knowledge-sad-l04-bayes
     depth: intuition
     scope: complementary
     locator: '"Naive Bayes, Clearly Explained!!!", 01:25-12:29 for likelihoods, scoring, and smoothing'
-    angle_detail: Begin at [01:25] for the word-histogram likelihoods, then [04:34] where priors multiply
-      into the short-message decision. The key stretch is [09:00] to [10:55], where the unseen-word zero
-      wipes out the spam score until smoothing near [12:29] fixes it. Note likelihood here just means
-      per-word class probability, interchangeable with probability in this video unlike the course usage.
+    angle_detail: Use 01:25 for the word histograms, 04:34 for prior-times-likelihood scoring, and 09:00–10:55
+      for the zero-count failure. L04 needs the failure mode because its deck names the problem; stop
+      before the additive-smoothing repair at 12:29, which belongs to L14.
     url: https://youtu.be/O2L2Uv9pdDA
   - id: route-cd51e8e2a06b4d82da11c18e
     unit_id: unit-m2-sad-l05
@@ -10263,7 +10265,8 @@ sources:
     locator: cs229-notes.pdf §4.2, physical PDF pp. 43–45; §4.2.1 starts p. 46
     angle_detail: It uses a binary feature for each vocabulary item, unlike a token-count multinomial
       model. Absent-word probabilities matter in the Bernoulli model; do not silently multiply only present-word
-      terms.
+      terms. This is a compressed advanced reference; it assumes comfort with generative-model notation
+      and has no worked course-style example.
     vault_path: material://source-cs229-notes/cs229-notes.pdf
   - id: route-2ecd41a999e0fd49db64c0c0
     unit_id: unit-m2-sad-l12

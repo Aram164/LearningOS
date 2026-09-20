@@ -10,9 +10,6 @@
     "unit_id"
   ],
   "properties": {
-    "approve": {
-      "type": "boolean"
-    },
     "selected": {
       "type": "array",
       "items": {

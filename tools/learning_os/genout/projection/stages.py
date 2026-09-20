@@ -30,6 +30,16 @@ _OPEN_TARGET_KEYS = (
 # interface reads it yet (an Open Learner Model UI would be the v10 case).
 _RUNTIME_ONLY_STAGE_KEYS = ("runtime_target", "runtime_review")
 _RUNTIME_ONLY_RESOURCE_KEYS = ("affordance", "independent_evidence")
+# Canonical-only resource state with no manifest consumer: the validator
+# reads the scaffolding record straight from the study map, and no
+# interface needs it yet. Same strip-until-needed treatment as above.
+_CORE_ONLY_RESOURCE_KEYS = ("node_scaffold_note",)
+# Canonical-only stage state with no manifest consumer: the validator links a
+# stage to its knowledge node through this key, and no interface reads it
+# yet. Projecting it would change the published shape (an interface change
+# under manifest-contract rules), so it stays Core-side until a UI need names
+# it — the same strip-until-needed treatment as the runtime keys above.
+_CORE_ONLY_STAGE_KEYS = ("knowledge_node_id",)
 
 
 def _has_direct_open_target(resource: dict) -> bool:
@@ -86,7 +96,8 @@ def _route_target(resource: dict, routes: Iterable[dict]) -> dict | None:
 def _project_stage_resource(repo: Repo, resource: dict,
                             routes: Iterable[dict]) -> dict:
     projected = _without_runtime_keys(
-        _project_material_resource(repo, resource), _RUNTIME_ONLY_RESOURCE_KEYS)
+        _project_material_resource(repo, resource),
+        _RUNTIME_ONLY_RESOURCE_KEYS + _CORE_ONLY_RESOURCE_KEYS)
     if _has_direct_open_target(projected):
         return projected
     route = _route_target(projected, routes)
@@ -118,7 +129,9 @@ def project_stages(repo: Repo, data: dict, note_key: str,
     """
     projected_stages: list[dict] = []
     for stage in data.get("stages", []) or []:
-        projected = _without_runtime_keys(dict(stage), _RUNTIME_ONLY_STAGE_KEYS)
+        projected = _without_runtime_keys(
+            dict(stage), _RUNTIME_ONLY_STAGE_KEYS + _CORE_ONLY_STAGE_KEYS
+        )
         if isinstance(stage, dict) and isinstance(stage.get("resources"), list):
             projected["resources"] = [
                 _project_stage_resource(repo, resource, resource_routes)

@@ -1,0 +1,43 @@
+schema_version: 2
+id: transaction-20260920-034526-001
+type: transaction-receipt
+status: committed
+capability: unit.plan.revise
+committed_at: '2026-09-20T03:45:26+02:00'
+snapshot_before: sha256:3ae27636b70a61fc95e0fc3cd418722a7a8ac3f28e724d2ffb3f2e8a361e1d5f
+snapshot_after: sha256:24197f662054e676d03534479cf30a14b9594864a27ea0484a11e0d0e3fdcb71
+expected_revisions:
+  unit-algo2-exam-prep: 1
+artifact_revisions:
+  unit-algo2-exam-prep:
+    before: 1
+    after: 2
+writes:
+- path: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/study-map.yaml
+  sha256_before: 2ddce3bfe06fde943fd488615b8ad91f9cc3faf7bda731f23eaedffc39056448
+  sha256_after: 9a8e31f8dc06aa65be3275fb2c847c6806a1680786acf968342211cde466b969
+  created: false
+- path: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/unit.yaml
+  sha256_before: 6d719290903adb0d63372d2316f512dd9827d5fbadcb85c39a70bdca9e13e0a0
+  sha256_after: 02687650ed7415927000bbdeb53baef99518cbba783be72ea7f089c9332d2d95
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.plan.revise
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: codex
+  request_id: request-reviewed-84f28964d7bc4aef907d69531948ed7d
+  idempotency_key: reviewed-b316ed970ef34c32869dabad53e3c698
+  intent_sha256: sha256:db8eeade16defcf94b2734911d51582214087f641a170ac0ef18194d3acb9e59
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:db8eeade16defcf94b2734911d51582214087f641a170ac0ef18194d3acb9e59

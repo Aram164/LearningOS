@@ -6,6 +6,8 @@ import copy
 import hashlib
 import json
 
+import yaml
+
 from learning_os.loader import load_repo
 from learning_os.material_refs import (
     MATERIAL_FIELDS,
@@ -57,6 +59,33 @@ def _route(routes, route_id):
 
 def _guard_rows(root, artifacts):
     return {rid: artifact_revision(root, rid) for rid in sorted(set(artifacts))}
+
+
+def _apply_hint(args, capability, snapshot_id, revisions):
+    """Ready-to-submit apply values for a successful --check.
+
+    Direct CLI application is disabled, so the hint echoes everything the
+    GatewayEnvelopeV2 needs except the per-request fields (request_id,
+    idempotency_key, channel, approval): capability, exact payload,
+    expected snapshot, and expected revisions. Output layer only —
+    validation, guards, and receipts are unchanged.
+    """
+    if capability != "route.patch":
+        return None
+    return {
+        "apply_via": "GatewayEnvelopeV2",
+        "capability": capability,
+        "payload": {
+            "unit_id": args.unit_id,
+            "route_id": args.route_id,
+            "changes": args.changes,
+        },
+        "expected_snapshot": snapshot_id,
+        "expected_revisions": dict(revisions),
+        "apply_how": ("direct CLI application is disabled; submit a "
+                      "GatewayEnvelopeV2 with this capability, payload, "
+                      "expected_snapshot and expected_revisions"),
+    }
 
 
 def _map_for_unit(repo, unit_id):
@@ -140,6 +169,139 @@ def _stage_entry(study_map, stage_id):
     return dict(matches[0])
 
 
+def _unit_audit(root, repo, unit) -> dict:
+    """Deterministic planning audit for one unit: counts and lists, no judgments.
+
+    Reports what the catalogue contains and where it stands — depth, scope,
+    triage, placements, synthesis freshness — without deciding what is useful.
+    The operator still reads the material; this only makes the shape visible
+    before that reading starts.
+    """
+    from learning_os.material_synthesis import (
+        MaterialSynthesisError,
+        synthesis_destination,
+        validate_unit_material_synthesis,
+    )
+
+    from .module import _match_key
+
+    source_map = repo.module_source_maps[unit.module_id]
+    routes = unit_routes(source_map, unit.module_id, unit.id)
+    study_map = _map_for_unit(repo, unit.id)
+    stages = study_map.data.get("stages", []) if study_map else []
+    placements = [r for s in stages if isinstance(s, dict)
+                  for r in (s.get("resources", []) or []) if isinstance(r, dict)]
+    placed_keys = {_match_key(r) for r in placements}
+
+    def placed(route):
+        return (("route", route.get("id")) in placed_keys
+                or ("source", route.get("source_id"), route.get("locator")) in placed_keys)
+
+    by_depth: dict[str, int] = {}
+    by_scope: dict[str, int] = {}
+    for route in routes:
+        by_depth[route.get("depth", "unstated")] = by_depth.get(route.get("depth", "unstated"), 0) + 1
+        by_scope[route.get("scope", "unstated")] = by_scope.get(route.get("scope", "unstated"), 0) + 1
+    triage_by_stage: dict[str, dict] = {}
+    for stage in stages:
+        if not isinstance(stage, dict):
+            continue
+        counts: dict[str, int] = {}
+        for resource in stage.get("resources", []) or []:
+            if not isinstance(resource, dict):
+                continue
+            key = resource.get("scope_triage", "untriaged")
+            counts[key] = counts.get(key, 0) + 1
+        triage_by_stage[stage.get("id", "?")] = counts
+    advanced_required = sorted(
+        route["id"] for route in routes
+        if route.get("depth") == "advanced-reference"
+        and any(r.get("scope_triage") in {"required-now", "helpful-now"}
+                for r in placements
+                if _match_key(r) in (("route", route.get("id")),
+                                     ("source", route.get("source_id"),
+                                      route.get("locator")))))
+    current_unplaced = sorted(
+        route["id"] for route in routes
+        if route.get("scope") in {"current", "prerequisite"} and not placed(route))
+    legacy: dict[str, list] = {}
+    for source in source_map.get("sources", []) or []:
+        if not isinstance(source, dict):
+            continue
+        strings = [r for r in source.get("unit_routes", []) or []
+                   if isinstance(r, str)]
+        if strings:
+            legacy[str(source.get("source_id"))] = strings
+    legacy_sources = set(legacy)
+    exact_with_unresolved = sorted(
+        route["id"] for route in routes
+        if route.get("source_id") in legacy_sources)
+    unplaced = sorted(route["id"] for route in routes if not placed(route))
+    try:
+        destination = synthesis_destination(root, unit.id)
+    except MaterialSynthesisError:
+        destination = None
+    synthesis: dict = {"present": bool(destination and destination.is_file()),
+                       "fresh": False, "detail": None,
+                       "deep_reviewed": 0, "screened": 0,
+                       "unevaluated": 0, "unavailable": 0}
+    if synthesis["present"]:
+        try:
+            dossier = yaml.safe_load(destination.read_text(encoding="utf-8"))
+            validate_unit_material_synthesis(root, unit.id, dossier)
+            synthesis["fresh"] = True
+        except Exception as exc:  # noqa: BLE001 - freshness is best-effort reporting
+            synthesis["detail"] = str(exc)
+        try:
+            for row in (dossier.get("route_assessments", []) or []):
+                status = row.get("review_status")
+                if status == "deep-reviewed":
+                    synthesis["deep_reviewed"] += 1
+                elif status == "screened":
+                    synthesis["screened"] += 1
+                elif status == "unevaluated":
+                    synthesis["unevaluated"] += 1
+                elif status == "unavailable":
+                    synthesis["unavailable"] += 1
+        except Exception:  # noqa: BLE001 - counts stay zero on unreadable dossiers
+            pass
+    adjacent: dict[str, list] = {}
+    unit_source_ids = {r.get("source_id") for r in routes}
+    for other_id, other in sorted(repo.units.items()):
+        if other_id == unit.id or other.module_id != unit.module_id:
+            continue
+        try:
+            other_routes = unit_routes(
+                repo.module_source_maps[other.module_id], other.module_id, other_id)
+        except Exception:  # noqa: BLE001 - one unreadable neighbour skips, never blocks
+            continue
+        shared = sorted(unit_source_ids & {r.get("source_id") for r in other_routes})
+        if shared:
+            adjacent[other_id] = shared
+    return {
+        "unit_id": unit.id,
+        "module_id": unit.module_id,
+        "source_records": len(unit_source_ids),
+        "routes": len(routes),
+        "placements": len(placements),
+        "routes_by_depth": by_depth,
+        "routes_by_scope": by_scope,
+        "triage_by_stage": triage_by_stage,
+        "advanced_reference_placed_required_or_helpful": advanced_required,
+        "current_or_prerequisite_unplaced": current_unplaced,
+        "legacy_string_routes_by_source": legacy,
+        "exact_routes_with_unresolved_siblings": exact_with_unresolved,
+        "unplaced_routes": unplaced,
+        "synthesis": synthesis,
+        "adjacent_unit_source_reuse": adjacent,
+        "scope_authority": unit.data.get("scope_sources", []),
+        "prior_year_boundary": sorted(
+            route["id"] for route in routes if route.get("scope") == "prior-year"),
+        "out_of_scope_present": sorted(
+            route["id"] for route in routes if route.get("scope") == "out-of-scope"),
+    }
+
+
 def cmd_plan_edit_context(args) -> int:
     root = _root(args)
     with _operator_lock(root):
@@ -161,6 +323,10 @@ def cmd_plan_edit_context(args) -> int:
         if sum(selectors) > 1:
             raise WriteRefused(
                 "plan-edit-context takes one of --route-id, --route-ids, --stage-id")
+        if getattr(args, "audit", False) and any(selectors):
+            raise WriteRefused(
+                "plan-edit-context --audit attaches to the full unit context, "
+                "not to a route or stage selection")
         if args.route_id:
             payload.update(_route_entry(
                 routes, study_map, source_map, unit, args.route_id))
@@ -185,6 +351,8 @@ def cmd_plan_edit_context(args) -> int:
                                          source_map, unit.module_id, unit.id)
             payload.update({"study_map": compact, "routes": routes,
                             "source_selections": unit.data.get("source_selections", [])})
+            if getattr(args, "audit", False):
+                payload.update({"unit_audit": _unit_audit(root, repo, unit)})
         return _print_stable(root, snapshot, payload)
 
 
@@ -320,9 +488,13 @@ def _execute(args, capability, planner):
         if errors:
             raise WriteRefused("canonical validation failed: " + "; ".join(map(str, errors[:8])))
         if args.check:
-            return _print_stable(root, snapshot, {
+            check_result = {
                 **result, "ok": True, "check": True, "canonical_files_written": 0,
-            })
+            }
+            hint = _apply_hint(args, capability, snapshot, result["expected_revisions"])
+            if hint is not None:
+                check_result["next"] = hint
+            return _print_stable(root, snapshot, check_result)
         if not writes:
             raise WriteRefused("no material changes to apply")
         code, errors, confirmation = _write_transaction(

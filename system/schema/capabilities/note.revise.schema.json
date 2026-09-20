@@ -10,9 +10,6 @@
     "note_id"
   ],
   "properties": {
-    "approve": {
-      "type": "boolean"
-    },
     "file": {
       "type": "string"
     },

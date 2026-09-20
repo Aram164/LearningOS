@@ -21,12 +21,123 @@
 #   python tools/warning_baseline.py --show                  # the delta
 #   python tools/warning_baseline.py --update --note "…"     # adopt current
 baseline_version: 1
-recorded: '2026-09-07'
-note: 'Emptied 2026-09-07: all three PERIMETER-* signatures were repaired, not traded.
-  The two shadow PDFs were deleted after re-verifying their hashes against the managed
-  copies, and mml-book.pdf was ingested into materials/ and now resolves as material://source-mml/mml-book.pdf.
-  perimeter.yaml pending_disposition is empty for the same reason. Nothing is deferred
-  here now; a new stray must be declared before it can be tolerated.'
-total: 0
-distinct_signatures: 0
-signatures: []
+recorded: '2026-09-18'
+note: Adopt STAGE-NODE-UNLINKED (14 files, convention-miss stages) and RESOURCE-NODE-ORPHAN
+  (5 files incl. UE3-on-bayes pilot) as report-only triage after planner review
+total: 485
+distinct_signatures: 38
+signatures:
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-clustering/study-map.yaml
+  count: 5
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/study-map.yaml
+  count: 51
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/study-map.yaml
+  count: 7
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/study-map.yaml
+  count: 8
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/study-map.yaml
+  count: 67
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/study-map.yaml
+  count: 88
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/study-map.yaml
+  count: 71
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/study-map.yaml
+  count: 16
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/study-map.yaml
+  count: 8
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/study-map.yaml
+  count: 9
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/study-map.yaml
+  count: 13
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/study-map.yaml
+  count: 8
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/study-map.yaml
+  count: 7
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/study-map.yaml
+  count: 10
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/study-map.yaml
+  count: 8
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/study-map.yaml
+  count: 9
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/study-map.yaml
+  count: 13
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/study-map.yaml
+  count: 3
+- code: ANGLE-DIVERGES-FROM-ROUTE
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/study-map.yaml
+  count: 3
+- code: RESOURCE-NODE-ORPHAN
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/study-map.yaml
+  count: 2
+- code: RESOURCE-NODE-ORPHAN
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/study-map.yaml
+  count: 1
+- code: RESOURCE-NODE-ORPHAN
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/study-map.yaml
+  count: 1
+- code: RESOURCE-NODE-ORPHAN
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/study-map.yaml
+  count: 3
+- code: RESOURCE-NODE-ORPHAN
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l12/study-map.yaml
+  count: 2
+- code: STAGE-NODE-UNLINKED
+  path: curriculum/modules/module-hu-algo2/units/unit-algo2-exam-prep/study-map.yaml
+  count: 12
+- code: STAGE-NODE-UNLINKED
+  path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
+  count: 10
+- code: STAGE-NODE-UNLINKED
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-combined-exam-rehearsal/study-map.yaml
+  count: 4
+- code: STAGE-NODE-UNLINKED
+  path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/study-map.yaml
+  count: 15
+- code: STAGE-NODE-UNLINKED
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-aggregation-windows/study-map.yaml
+  count: 3
+- code: STAGE-NODE-UNLINKED
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/study-map.yaml
+  count: 4
+- code: STAGE-NODE-UNLINKED
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-capstone-transition/study-map.yaml
+  count: 3
+- code: STAGE-NODE-UNLINKED
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/study-map.yaml
+  count: 4
+- code: STAGE-NODE-UNLINKED
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-joins-reshape/study-map.yaml
+  count: 3
+- code: STAGE-NODE-UNLINKED
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-lazy-udf-interop/study-map.yaml
+  count: 3
+- code: STAGE-NODE-UNLINKED
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-order-text-time/study-map.yaml
+  count: 2
+- code: STAGE-NODE-UNLINKED
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-pandas-fluency/study-map.yaml
+  count: 2
+- code: STAGE-NODE-UNLINKED
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-schema-missing-types/study-map.yaml
+  count: 3
+- code: STAGE-NODE-UNLINKED
+  path: curriculum/modules/module-job-polars/units/unit-job-polars-selection-backend/study-map.yaml
+  count: 4

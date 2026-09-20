@@ -2,11 +2,6 @@ id: study-map-algo2-exam-prep
 type: study-map
 plan_template_version: 1
 unit_id: unit-algo2-exam-prep
-# Paused with the unit and the workspace (2026-08-08 audit; a validator invariant
-# enforces that the three move together). Rebuilt 2026-08-16 from a single stub
-# stage into the full twelve-topic spine plus Phase 0 and oral delivery. Every
-# stage is `pending` and the map stays `paused`: this is the REINSTATEMENT PLAN,
-# saying what comes first WHEN this resumes - not live work.
 status: paused
 current_stage: stage-algo2-phase0
 source_plan:
@@ -52,6 +47,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t01-fast-multiplication
+  knowledge_node_id: knowledge-algo2-fast-multiplication
   number: 2
   title: T01 - Schnellere Multiplikation
   status: pending
@@ -89,6 +85,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t02-amortized-analysis
+  knowledge_node_id: knowledge-algo2-amortized-analysis
   number: 3
   title: T02 - Amortisierte Analyse
   status: pending
@@ -133,6 +130,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t03-b-trees
+  knowledge_node_id: knowledge-algo2-b-trees
   number: 4
   title: T03 - B-Bäume
   status: pending
@@ -171,6 +169,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t04-fibonacci-heaps
+  knowledge_node_id: knowledge-algo2-fibonacci-heaps
   number: 5
   title: T04 - Fibonacci-Heaps
   status: pending
@@ -209,6 +208,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t05-splay-trees
+  knowledge_node_id: knowledge-algo2-splay-trees
   number: 6
   title: T05 - Splay-Bäume
   status: pending
@@ -253,6 +253,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t06-cuckoo-hashing
+  knowledge_node_id: knowledge-algo2-cuckoo-hashing
   number: 7
   title: T06 - Cuckoo Hashing
   status: pending
@@ -292,6 +293,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t07-shortest-paths
+  knowledge_node_id: knowledge-algo2-shortest-paths
   number: 8
   title: T07 - Kürzeste Wege
   status: pending
@@ -335,6 +337,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t08-maximum-flow
+  knowledge_node_id: knowledge-algo2-maximum-flow
   number: 9
   title: T08 - Maximaler Fluss
   status: pending
@@ -385,6 +388,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t09-bipartite-matching
+  knowledge_node_id: knowledge-algo2-bipartite-matching
   number: 10
   title: T09 - Bipartites Matching
   status: pending
@@ -428,6 +432,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t10-stable-matching
+  knowledge_node_id: knowledge-algo2-stable-matching
   number: 11
   title: T10 - Stable Matching
   status: pending
@@ -470,6 +475,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t11-computational-geometry
+  knowledge_node_id: knowledge-algo2-computational-geometry
   number: 12
   title: T11 - Algorithmische Geometrie
   status: pending
@@ -513,6 +519,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-algo2-t12-fft
+  knowledge_node_id: knowledge-algo2-fft
   number: 13
   title: T12 - Schnelle Fourier-Transformation
   status: pending

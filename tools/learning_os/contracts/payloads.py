@@ -19,7 +19,24 @@ import json
 import re
 
 # Owned by the envelope, never by the payload.
-ENVELOPE_OWNED = frozenset({"expected_snapshot", "expected_revision"})
+#
+# `approve` is the operator's gesture on the envelope, and the concurrency
+# tokens live there so a caller cannot send two answers to the same question.
+# The CLI keeps `--approve` for direct human use; only the generated V2
+# payload schema excludes it. `check` is deliberately NOT here: it is a
+# per-command dry-run mode the gateway honors, and existing callers request
+# `--check` through the envelope payload. Both revision spellings stay
+# excluded: the CLI flag is `--expected-revision` (singular) while the
+# envelope carries `expected_revisions` (plural). `apply_reviewed_sha256`
+# is a CLI-only reviewed-apply gesture and never crosses the gateway.
+ENVELOPE_OWNED = frozenset({
+    "approve",
+    "apply_reviewed_sha256",
+    "review_report",
+    "expected_snapshot",
+    "expected_revision",
+    "expected_revisions",
+})
 # Argparse bookkeeping that is not part of any capability's surface.
 NOT_A_PAYLOAD_FIELD = frozenset({"help", "func", "command", "root", "json"})
 
@@ -31,6 +48,7 @@ _GATEWAY_INLINE_REQUIRED = {
     "path.note.write": ("text",),
     "stage.note.write": ("text",),
     "unit.note.append": ("text",),
+    "unit.plan.revise": ("record",),
 }
 
 

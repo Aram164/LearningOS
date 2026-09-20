@@ -645,6 +645,8 @@ stages:
     source_id: source-sad-ss26-lectures
   - id: resource-openintro-l02-simpson
     route_id: route-a225112e34dbc25aa40a9926
+    node_scaffold_note: Contingency-table preparation for Simpson's paradox; the route teaches sampling
+      design and bias, not aggregation reversals.
     kind: read
     label: OpenIntro §2.2
     source_id: source-openintro-statistics
@@ -707,18 +709,6 @@ stages:
       Ch 2 §2.1 examining numerical data, pdf pp. 40-59; §2.2 considering categorical data, pdf pp. 60-69
     scope_triage: helpful-now
     route_id: route-a225112e34dbc25aa40a9926
-  - material_ref:
-      route_id: route-61c0f7bd88ab5c8d2e2e23f4
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-61c0f7bd88ab5c8d2e2e23f4
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-sad-l02-sampling/notes.md
   attachments: []
   source_feedback: []

@@ -152,3 +152,29 @@ workspace_updates:
     sections:
       Current Scope: "One individual current unit per ordinary lecture."
       Next Action: "Open unit-example-l01, compare material angles, and choose what to study."
+
+# Optional atomic synthesis replacement. When this package adds, removes, or
+# evidentially changes the routes of a unit with an approved dossier, the
+# replacement is validated together with the new maps against the staged
+# post-change state, and all writes commit or roll back together. Pure
+# angle/angle_detail edits need no replacement. Omit this key otherwise.
+# material_syntheses:
+#   - unit_id: unit-example-l01
+#     dossier:
+#       id: material-synthesis-example-l01
+#       type: unit-material-synthesis
+#       unit_id: unit-example-l01
+#       status: approved
+#       basis: {}  # replaced by the freshly derived post-change basis
+#       route_assessments: []  # exactly one entry per final route
+#       comparisons: []
+#       concept_groups: []  # every local knowledge node mapped exactly once
+
+# Optional pre-apply acknowledgments for context-dependent changes the
+# preflight flags under semantic_ack_required: demotion, promotion,
+# scope-escalation, locator-regression, coverage-loss, coverage-reduction,
+# learner-state, cross-unit-move. Each needs kind, target, and reason.
+# acknowledgments:
+#   - kind: demotion
+#     target: route-example-l01-deck
+#     reason: "Superseded by the new derivation; the tutorial keeps the drill."

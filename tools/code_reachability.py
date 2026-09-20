@@ -29,6 +29,7 @@ ENTRYPOINTS = (
     "build_materials_tree.py",
     "code_reachability.py",
     "codex_obsidian.py",
+    "diagnostics_prune.py",
     "evaluate_operator_questions.py",
     "generate.py",
     "generate_capability_schemas.py",
@@ -37,7 +38,9 @@ ENTRYPOINTS = (
     "lift_angle_out_of_locator.py",
     "los.py",
     "manifest_contract.py",
+    "material_text.py",
     "material_toc.py",
+    "material_summarize.py",
     "materials_manifest.py",
     "normalise_material_uris.py",
     "plan_write_audit.py",
@@ -47,6 +50,7 @@ ENTRYPOINTS = (
     "stress_check.py",
     "tree_contract.py",
     "validate.py",
+    "verify_plan_receipt.py",
     "warning_baseline.py",
 )
 

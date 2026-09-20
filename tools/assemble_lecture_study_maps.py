@@ -462,6 +462,10 @@ def build(unit: dict, module_id: str, routes_for_unit: list[dict],
         stages.append({
             "id": stage_id,
             "number": number,
+            # The join key, kept: without it a later covers edit orphans
+            # placements and no rule can see it (2026-09-18, UE3 on the L04
+            # Bayes stage after its Bayes coverage was dropped).
+            "knowledge_node_id": str(node["id"]),
             "title": str(node.get("title") or "").strip(),
             "status": "pending",
             "objective": str(node.get("summary") or "").strip(),

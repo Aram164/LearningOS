@@ -58,6 +58,26 @@ def test_generated_reset_rebuilds_everything(mini_repo):
     assert (mini_repo / "knowledge" / "notes" / "mathematics" / "note-demo.md").exists()
 
 
+def test_projection_rebuild_keeps_sibling_caches(mini_repo):
+    """Sibling producers survive `make views`: text-cache and summaries are
+    owned by their own tools, so stale-sweeping must leave them alone while
+    still removing genuinely stale views."""
+    repo = load_repo(mini_repo)
+    gen = mini_repo / "generated"
+    kept = gen / "text-cache" / ("ab" * 32) / "pp-0001.txt"
+    kept.parent.mkdir(parents=True, exist_ok=True)
+    kept.write_text("cached page", encoding="utf-8")
+    summary = gen / "summaries" / ("cd" * 32) / "pages-1-2" / "summary.md"
+    summary.parent.mkdir(parents=True, exist_ok=True)
+    summary.write_text("GENERATED\ncached summary", encoding="utf-8")
+    stale = gen / "views-of-deleted-collection.md"
+    stale.write_text("stale", encoding="utf-8")
+    write_outputs(repo, generate_all(repo, generated_at="T1"))
+    assert kept.read_text(encoding="utf-8") == "cached page"
+    assert summary.exists()
+    assert not stale.exists()
+
+
 def test_every_output_carries_generated_warning(mini_repo):
     repo = load_repo(mini_repo)
     outputs = generate_all(repo, generated_at="T1")
