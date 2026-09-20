@@ -350,13 +350,18 @@ def add_manifest_fixtures(root: Path) -> None:
 def stage_manifest_producers(root: Path, repo) -> None:
     """Copy the real manifest-graph producer bytes under a mini root."""
     from learning_os.genout.derived_generation import generation_registry
-    from learning_os.genout.manifest_derived import manifest_registry
+    from learning_os.genout.manifest_derived import (
+        manifest_registry,
+        validation_proof_producers,
+    )
 
     real_root = Path(__file__).resolve().parent.parent
     registry = {**generation_registry(repo), **manifest_registry(repo)}
-    for rel in dict.fromkeys(
+    staged = [
         path for spec, _ in registry.values() for path in spec.producer_files
-    ):
+    ]
+    staged.extend(validation_proof_producers())
+    for rel in dict.fromkeys(staged):
         target = root / rel
         target.parent.mkdir(parents=True, exist_ok=True)
         target.write_bytes((real_root / rel).read_bytes())

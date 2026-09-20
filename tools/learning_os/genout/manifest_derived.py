@@ -24,11 +24,14 @@ from functools import partial
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
+import yaml
+
 from ..ai_actions.projection import project_ai_actions
-from ..contracts.manifest_contract import enforce
-from ..derived.engine import evaluate_many
+from ..contracts.manifest_contract import enforce, load_contract
+from ..derived.engine import evaluate, evaluate_many
 from ..derived.identity import digest_bytes, digest_matching_files
 from ..derived.model import DERIVED_SUBSTRATE_FILES, NodeSpec
+from ..derived.store import canonical_bytes
 from ..garden import garden_id, project_garden_entries
 from ..githistory import GitHistoryError, last_commit_dates
 from ..loader import Repo
@@ -137,10 +140,16 @@ GARDEN_ID = "manifest.garden"
 AI_ACTIONS_ID = "manifest.ai-actions"
 DEADLINES_ID = "manifest.academic-deadlines"
 SEMANTIC_PAYLOAD_ID = "manifest.semantic-payload"
+VALIDATION_PROOF_ID = "manifest.validation-proof"
 
 #: Bumped when a manifest node changes shape (inputs, dependencies, or
 #: value structure) independently of its producer files.
 MANIFEST_NODE_VERSION = 1
+
+#: Validation semantics version: the proof node's spec version. Bump when
+#: the meaning of "valid" changes independently of the contract bytes or
+#: the validator code.
+MANIFEST_VALIDATION_VERSION = 1
 
 _SELF = ("tools/learning_os/genout/manifest_derived.py",)
 _MANIFEST = ("tools/learning_os/genout/manifest.py",)
@@ -437,6 +446,33 @@ def garden_digest(root: Path, repo: Repo) -> str:
 def today_digest() -> str:
     """Today's date: academic availability is actionable state, not history."""
     return datetime.date.today().isoformat()
+
+
+def contract_closure_digest(root: Path) -> str:
+    """Every file enforce() can read: the contract, its schema, the registry.
+
+    Mirrors the validator's selection exactly: ``manifest-contract.yaml``
+    always; the schema at the contract's declared schema_path when that
+    path resolves inside the root (mirroring _schema_path's guards — an
+    unresolvable declaration fails validation regardless of schema
+    bytes); every top-level ``*.schema.json`` under system/schema,
+    which schema_registry loads unconditionally.
+    """
+    contract_file = root / "system" / "contracts" / "manifest-contract.yaml"
+    files = [contract_file]
+    try:
+        doc = yaml.safe_load(contract_file.read_text(encoding="utf-8")) or {}
+    except (OSError, yaml.YAMLError):
+        doc = {}
+    relative = doc.get("schema_path") if isinstance(doc, dict) else None
+    if isinstance(relative, str) and relative:
+        candidate = Path(relative)
+        if not candidate.is_absolute() and ".." not in candidate.parts:
+            files.append(root / relative)
+    schema_dir = root / "system" / "schema"
+    if schema_dir.is_dir():
+        files.extend(sorted(schema_dir.glob("*.schema.json")))
+    return digest_matching_files(root, files)
 
 
 def manifest_input_digests(root: Path, repo: Repo) -> dict[str, str]:
@@ -1211,18 +1247,77 @@ def serialize_manifest(payload: dict) -> str:
     )
 
 
+def validation_proof_producers() -> tuple[str, ...]:
+    """Producer files for the validation-proof node (staging helper)."""
+    return _node((
+        "tools/learning_os/contracts/manifest_contract.py",
+        "tools/learning_os/contracts/json_schema.py",
+    ))
+
+
+def _enforce_with_proof(
+    root: Path,
+    payload: dict,
+    *,
+    trace: list[TraceEvent] | None = None,
+) -> dict:
+    """Enforce the contract, reusing a previous proof when identity matches.
+
+    The proof key covers the complete manifest bytes, the contract
+    closure, the validator implementation, and the validation semantics
+    version — the rule is "same bytes, same contract, same validator,
+    same semantics, or enforce() runs again". A failed validation raises
+    out of the builder, which the engine never caches, so failures are
+    always re-examined.
+
+    The proof evaluates in its own phase because its key needs the live
+    publication metadata, which is stamped fresh and never cached. Its
+    event appends to the same trace as the semantic graph.
+    """
+    full_digest = digest_bytes(canonical_bytes(payload))
+    closure = contract_closure_digest(root)
+
+    def build_proof(ctx: BuildContext) -> dict:
+        enforce(payload, ctx.root)
+        return {
+            "valid": True,
+            "contract_version": int(load_contract(ctx.root)["contract_version"]),
+            "manifest_sha256": full_digest,
+            "contract_closure_sha256": closure,
+        }
+
+    spec = NodeSpec(
+        id=VALIDATION_PROOF_ID,
+        version=MANIFEST_VALIDATION_VERSION,
+        producer_files=validation_proof_producers(),
+        direct_inputs=("manifest.full_bytes", "manifest.contract_closure"),
+    )
+    return evaluate(
+        root,
+        VALIDATION_PROOF_ID,
+        registry={VALIDATION_PROOF_ID: (spec, build_proof)},
+        inputs={
+            "manifest.full_bytes": full_digest,
+            "manifest.contract_closure": closure,
+        },
+        trace=trace,
+    ).value
+
+
 def build_manifest_shadow(
     repo: Repo,
     generated_at: str,
     *,
     trace: list[TraceEvent] | None = None,
     enforce_contract: bool = True,
+    reuse_validation: bool = True,
 ) -> dict:
     """Compute the manifest through the derived graph (no writes).
 
     Only the semantic payload comes from cached nodes; publication
     metadata is stamped fresh and the contract is enforced exactly as
-    the legacy path does. ``build_manifest()`` stays authoritative.
+    the legacy path does (through the validation-proof node when
+    reuse is enabled). ``build_manifest()`` stays authoritative.
     """
     results = evaluate_many(
         repo.root,
@@ -1236,7 +1331,10 @@ def build_manifest_shadow(
         **results[SEMANTIC_PAYLOAD_ID].value,
     }
     if enforce_contract:
-        enforce(payload, repo.root)
+        if reuse_validation:
+            _enforce_with_proof(repo.root, payload, trace=trace)
+        else:
+            enforce(payload, repo.root)
     return payload
 
 
