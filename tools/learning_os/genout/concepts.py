@@ -9,7 +9,12 @@ from ..loader import Repo
 from .common import _json_header, _letter_toc, _md_header, mermaid_node_ids
 
 
-def build_backlinks(repo: Repo, generated_at: str) -> dict:
+def build_backlinks_semantic(repo: Repo) -> dict:
+    """Backlink indexes without publication metadata (shadow-cacheable).
+
+    Pure domain computation over the loaded repo: no timestamps, no
+    fingerprints. Publication stamping lives in publish_backlinks.
+    """
     concept_to_notes: dict[str, list] = {}
     source_to_notes: dict[str, list] = {}
     note_incoming: dict[str, list] = {}
@@ -79,13 +84,7 @@ def build_backlinks(repo: Repo, generated_at: str) -> dict:
               module_to_workspaces, unit_to_workspaces, module_to_units, source_to_units):
         for k in m:
             m[k] = sorted(set(m[k])) if all(isinstance(x, str) for x in m[k]) else m[k]
-    generated_meta = _json_header(generated_at)
-    generated_meta.update({
-        "contract_version": 2,
-        "snapshot_id": f"sha256:{source_fingerprint(repo)}",
-    })
     return {
-        "_generated": generated_meta,
         "concept_to_notes": dict(sorted(concept_to_notes.items())),
         "source_to_notes": dict(sorted(source_to_notes.items())),
         "note_incoming": dict(sorted(note_incoming.items())),
@@ -96,6 +95,23 @@ def build_backlinks(repo: Repo, generated_at: str) -> dict:
         "module_to_units": dict(sorted(module_to_units.items())),
         "source_to_units": dict(sorted(source_to_units.items())),
     }
+
+
+def publish_backlinks(repo: Repo, semantic: dict, generated_at: str) -> dict:
+    """Stamp a semantic backlinks value with publication metadata."""
+    generated_meta = _json_header(generated_at)
+    generated_meta.update({
+        "contract_version": 2,
+        "snapshot_id": f"sha256:{source_fingerprint(repo)}",
+    })
+    return {
+        "_generated": generated_meta,
+        **semantic,
+    }
+
+
+def build_backlinks(repo: Repo, generated_at: str) -> dict:
+    return publish_backlinks(repo, build_backlinks_semantic(repo), generated_at)
 
 
 def _evals_for_concept(repo: Repo, cid: str) -> list[tuple[str, dict, dict]]:
@@ -182,10 +198,12 @@ def build_concept_index(repo: Repo, backlinks: dict, generated_at: str) -> str:
 PREREQ_TYPES = ("requires", "builds-on")
 
 
-def build_dependency_report(repo: Repo, backlinks: dict, generated_at: str) -> str:
-    """Concept/module dependency view (ADR-001): direct + transitive
-    prerequisites per concept, a layered study order over the prerequisite
-    subgraph, and the module -> workspace -> concept graph."""
+def build_dependency_report_body(repo: Repo, backlinks: dict) -> str:
+    """Dependency report without the publication header (shadow-cacheable).
+
+    Reads only ``module_to_workspaces`` from ``backlinks``, so a semantic
+    (unstamped) backlinks value and the published object behave alike.
+    """
     prereqs: dict[str, set] = {}
     for rel in repo.relations:
         if rel.get("type") in PREREQ_TYPES:
@@ -201,7 +219,7 @@ def build_dependency_report(repo: Repo, backlinks: dict, generated_at: str) -> s
             stack.extend(sorted(prereqs.get(c, ())))
         return sorted(seen)
 
-    lines = _md_header("Dependency report", generated_at)
+    lines: list[str] = []
     lines.append("*Prerequisite semantics = `requires` + `builds-on` edges from "
                  "the relation registry. `motivates`/`applies-in`/`contrasts-with` "
                  "edges are context, not prerequisites, and are excluded.*")
@@ -272,14 +290,24 @@ def build_dependency_report(repo: Repo, backlinks: dict, generated_at: str) -> s
     return "\n".join(lines)
 
 
-def build_concept_map(repo: Repo, generated_at: str) -> str:
-    """Mermaid rendering of the prerequisite graph (requires + builds-on).
+def publish_dependency_report(body: str, generated_at: str) -> str:
+    """Prepend the publication header to a dependency-report body."""
+    lines = _md_header("Dependency report", generated_at)
+    lines.append(body)
+    return "\n".join(lines)
 
-    Human-facing counterpart of the dependency report: GitHub and VS Code
-    render the diagram natively. Context edges (motivates/applies-in/
-    contrasts-with) are excluded, same as the dependency report.
-    """
-    lines = _md_header("Concept map (prerequisite graph)", generated_at)
+
+def build_dependency_report(repo: Repo, backlinks: dict, generated_at: str) -> str:
+    """Concept/module dependency view (ADR-001): direct + transitive
+    prerequisites per concept, a layered study order over the prerequisite
+    subgraph, and the module -> workspace -> concept graph."""
+    return publish_dependency_report(
+        build_dependency_report_body(repo, backlinks), generated_at)
+
+
+def build_concept_map_body(repo: Repo) -> str:
+    """Mermaid prerequisite graph without the header (shadow-cacheable)."""
+    lines: list[str] = []
     lines.append("*Arrows point from prerequisite to dependent — follow the "
                  "arrows to get a study order. Solid = `requires`, "
                  "dotted = `builds-on`. Textual version: "
@@ -307,3 +335,20 @@ def build_concept_map(repo: Repo, generated_at: str) -> str:
     lines.append("```")
     lines.append("")
     return "\n".join(lines)
+
+
+def publish_concept_map(body: str, generated_at: str) -> str:
+    """Prepend the publication header to a concept-map body."""
+    lines = _md_header("Concept map (prerequisite graph)", generated_at)
+    lines.append(body)
+    return "\n".join(lines)
+
+
+def build_concept_map(repo: Repo, generated_at: str) -> str:
+    """Mermaid rendering of the prerequisite graph (requires + builds-on).
+
+    Human-facing counterpart of the dependency report: GitHub and VS Code
+    render the diagram natively. Context edges (motivates/applies-in/
+    contrasts-with) are excluded, same as the dependency report.
+    """
+    return publish_concept_map(build_concept_map_body(repo), generated_at)
