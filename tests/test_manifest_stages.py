@@ -32,6 +32,7 @@ from learning_os.genout.manifest import (
 )
 from learning_os.genout.modules_view import _academic_deadlines
 from learning_os.genout.projection import (
+    build_counts,
     build_indexes,
     build_module_concept_edges,
     build_progress,
@@ -85,6 +86,22 @@ def _assemble_via_stages(repo, generated_at, backlinks) -> dict:
         collections["modules"], collections["units"], collections["study_maps"]
     )
     ai_projection = project_manifest_ai_actions(repo)
+    garden_entries = project_garden_entries(repo)
+    counts = build_counts(
+        repo,
+        thematic_groups=prerequisites["thematic_groups"],
+        topics_v2=prerequisites["topics"],
+        topic_packs_v2=collections["topic_packs"],
+        projects_v2=collections["projects"],
+        programs_v2=collections["programs"],
+        modules_v2=collections["modules"],
+        units_v2=collections["units"],
+        stages_v2=stages,
+        inbox_items=count_inbox_items(repo.root),
+        garden_entries=garden_entries,
+        ai_requests=ai_projection["ai_actions"]["requests"],
+        adoption=adoption_counts(repo),
+    )
     semantic = assemble_manifest_semantic_payload(
         repo,
         backlinks,
@@ -98,15 +115,14 @@ def _assemble_via_stages(repo, generated_at, backlinks) -> dict:
         module_concept_edges=module_concept_edges,
         semesters_v2=build_manifest_semesters(collections["programs"]),
         unit_material_syntheses_v2=prerequisites["unit_material_syntheses"],
-        garden_entries=project_garden_entries(repo),
+        garden_entries=garden_entries,
         review_items=build_review_items(
             repo, collections["units"], collections["study_maps"]
         ),
         ai_projection=ai_projection,
         indexes=indexes,
         progress=progress,
-        inbox_items=count_inbox_items(repo.root),
-        adoption=adoption_counts(repo),
+        counts=counts,
         project_aliases=repo.project_aliases,
         resume_pointer=repo.resume_pointer,
         academic_deadlines=_academic_deadlines(repo),
