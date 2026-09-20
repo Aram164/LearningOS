@@ -14,8 +14,12 @@ import shutil
 from pathlib import Path
 
 import yaml
-from conftest import build_mini_repo
-from repo_builders import add_curriculum, write_yaml
+from repo_builders import curriculum_mini as _curriculum_mini
+from repo_builders import moved_only as _moved_only
+from repo_builders import rewrite_yaml_doc as _rewrite_yaml
+from repo_builders import stage_manifest_producers as _stage_manifest_producers
+from repo_builders import trace_summary as _trace_summary
+from repo_builders import write_yaml
 
 from learning_os.derived.engine import evaluate_many
 from learning_os.genout.concepts import build_backlinks
@@ -47,23 +51,6 @@ from learning_os.loader import load_repo
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
-def _curriculum_mini(tmp_path: Path) -> Path:
-    mini = build_mini_repo(tmp_path)
-    add_curriculum(mini)
-    return mini
-
-
-def _stage_manifest_producers(root: Path, repo) -> None:
-    """Copy the real producer bytes under a mini root for key computation."""
-    registry = {**generation_registry(repo), **manifest_registry(repo)}
-    for rel in dict.fromkeys(
-        path for spec, _ in registry.values() for path in spec.producer_files
-    ):
-        target = root / rel
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes((REPO_ROOT / rel).read_bytes())
-
-
 def _evaluate(root: Path, repo, trace=None):
     registry = {**generation_registry(repo), **manifest_registry(repo)}
     inputs = {
@@ -73,20 +60,6 @@ def _evaluate(root: Path, repo, trace=None):
     return evaluate_many(
         root, [SEMANTIC_PAYLOAD_ID], registry=registry, inputs=inputs, trace=trace
     )
-
-
-def _trace_summary(trace) -> dict[str, tuple[str, str]]:
-    return {event.node: (event.status, event.reason) for event in trace}
-
-
-def _moved_only(before: dict[str, str], after: dict[str, str]) -> set[str]:
-    return {name for name in before if before[name] != after[name]}
-
-
-def _rewrite_yaml(path: Path, mutate) -> None:
-    data = yaml.safe_load(path.read_text(encoding="utf-8"))
-    mutate(data)
-    path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
 
 
 # A. Digest sensitivity: one domain moves, the rest stand still.
