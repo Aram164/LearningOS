@@ -276,8 +276,7 @@ def assemble_manifest_semantic_payload(
     ai_projection: dict,
     indexes: dict,
     progress: dict,
-    inbox_items: int,
-    adoption: dict,
+    counts: dict,
     project_aliases: dict[str, str],
     resume_pointer: dict | None,
     academic_deadlines: list[dict],
@@ -323,16 +322,7 @@ def assemble_manifest_semantic_payload(
         "ai_actions": ai_projection["ai_actions"],
         "indexes": indexes,
         "progress": progress,
-        "counts": build_counts(
-            repo,
-            thematic_groups=thematic_groups, topics_v2=topics_v2,
-            topic_packs_v2=collections["topic_packs"],
-            projects_v2=collections["projects"],
-            programs_v2=collections["programs"], modules_v2=collections["modules"],
-            units_v2=collections["units"], stages_v2=stages_v2,
-            inbox_items=inbox_items, garden_entries=garden_entries,
-            ai_requests=ai_projection["ai_actions"]["requests"], adoption=adoption,
-        ),
+        "counts": counts,
     }
 
 
@@ -407,6 +397,17 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
 
     ai_projection = project_manifest_ai_actions(repo)
     adoption = adoption_counts(repo)
+    counts = build_counts(
+        repo,
+        thematic_groups=prerequisites["thematic_groups"],
+        topics_v2=prerequisites["topics"],
+        topic_packs_v2=collections["topic_packs"],
+        projects_v2=collections["projects"],
+        programs_v2=collections["programs"], modules_v2=collections["modules"],
+        units_v2=collections["units"], stages_v2=stages_v2,
+        inbox_items=inbox_items, garden_entries=garden_entries,
+        ai_requests=ai_projection["ai_actions"]["requests"], adoption=adoption,
+    )
     payload = {
         "_generated": generated_meta,
         **assemble_manifest_semantic_payload(
@@ -427,8 +428,7 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
             ai_projection=ai_projection,
             indexes=indexes,
             progress=progress,
-            inbox_items=inbox_items,
-            adoption=adoption,
+            counts=counts,
             project_aliases=repo.project_aliases,
             resume_pointer=repo.resume_pointer,
             academic_deadlines=_academic_deadlines(repo),

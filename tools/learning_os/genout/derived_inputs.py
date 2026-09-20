@@ -115,6 +115,19 @@ def enumerate_study_map_only_files(root: Path) -> list[Path]:
     return files
 
 
+def enumerate_synthesis_files(root: Path) -> list[Path]:
+    """Mirror _load_material_synthesis: material-synthesis.yaml per unit dir.
+
+    Same load-outcome over-approximation as enumerate_unit_files.
+    """
+    files: list[Path] = []
+    for unit_file in enumerate_unit_files(root):
+        candidate = unit_file.parent / "material-synthesis.yaml"
+        if candidate.is_file():
+            files.append(candidate)
+    return files
+
+
 def enumerate_source_map_only_files(root: Path) -> list[Path]:
     """Module source-map.yaml per module dir.
 
