@@ -28,6 +28,7 @@ from ..errors import (
     TransactionIdempotencyConflict,
 )
 from ..evidence import verify_committed_evidence
+from ..loading.yamlio import UniqueKeySafeLoader
 from . import conventions
 
 #: UI-side received outcomes that name a stage. Only transport losses map
@@ -73,34 +74,76 @@ class AuthorityEvidence:
     response_transaction_id: str | None = None
     transport_error: str | None = None
     observed_snapshot: str | None = None
+    #: Authority files (relative paths) that yielded no evidence because
+    #: they were unreadable, unparseable, or wrongly shaped. Skipped, never
+    #: fatal — but recorded, so a corrupt receipt is explicit uncertainty
+    #: rather than a silent absence.
+    unreadable_authority: list[str] = field(default_factory=list)
+
+
+def load_authority_files(root: Path) -> tuple[list[dict], dict, list[str]]:
+    """Read every receipt plus the idempotency ledger, once.
+
+    Pure reads, no inference. A file that is missing, unreadable,
+    unparseable (including any ``yaml.YAMLError``, which is not a
+    ``ValueError``), or wrongly shaped is skipped and reported by relative
+    path — never fatal, because one corrupt receipt must not break
+    diagnostics for unrelated operations. Callers diagnosing several
+    operations share one call instead of re-parsing the inventory per op.
+    """
+    receipts = []
+    unreadable = []
+    for path in sorted((root / "operations" / "transactions").glob("transaction-*.yaml")):
+        try:
+            data = yaml.load(path.read_text(encoding="utf-8"), Loader=UniqueKeySafeLoader)
+        except (OSError, ValueError, yaml.YAMLError):
+            unreadable.append(path.relative_to(root).as_posix())
+            continue
+        if isinstance(data, dict) and (
+                "request" not in data or isinstance(data["request"], dict)):
+            data = dict(data)
+            data["_path"] = path.relative_to(root).as_posix()
+            receipts.append(data)
+        else:
+            unreadable.append(path.relative_to(root).as_posix())
+    ledger: dict = {}
+    ledger_path = root / "operations" / "transactions" / "idempotency.yaml"
+    if ledger_path.is_file():
+        try:
+            raw = yaml.load(ledger_path.read_text(encoding="utf-8"),
+                            Loader=UniqueKeySafeLoader)
+            if not isinstance(raw, dict) or raw.get("schema_version") != 1 \
+                    or raw.get("type") != "transaction-idempotency-ledger" \
+                    or not isinstance(raw.get("entries"), dict):
+                raise ValueError("unsupported idempotency ledger shape")
+            entries = raw["entries"]
+        except (OSError, ValueError, yaml.YAMLError):
+            unreadable.append(ledger_path.relative_to(root).as_posix())
+            entries = {}
+        if isinstance(entries, dict):
+            ledger = entries
+        else:
+            unreadable.append(ledger_path.relative_to(root).as_posix())
+    return receipts, ledger, unreadable
 
 
 def collect_authority(root: Path, *, request_id: str, idempotency_key: str,
                       capability: str, response: dict | None = None,
                       transport_error: str | None = None,
                       observed_snapshot: str | None = None,
-                      response_codes: list | None = None) -> AuthorityEvidence:
-    """Read receipts and the idempotency ledger; pure reads, no inference."""
-    receipts = []
-    for path in sorted((root / "operations" / "transactions").glob("transaction-*.yaml")):
-        try:
-            data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
-        except (OSError, ValueError):
-            continue
-        if isinstance(data, dict):
-            data = dict(data)
-            data["_path"] = path.relative_to(root).as_posix()
-            receipts.append(data)
-    ledger: dict = {}
-    ledger_path = root / "operations" / "transactions" / "idempotency.yaml"
-    if ledger_path.is_file():
-        try:
-            ledger = (yaml.safe_load(ledger_path.read_text(encoding="utf-8"))
-                      or {}).get("entries", {})
-        except (OSError, ValueError):
-            ledger = {}
-    if not isinstance(ledger, dict):
-        ledger = {}
+                      response_codes: list | None = None,
+                      authority_files: tuple[list[dict], dict, list[str]]
+                      | None = None) -> AuthorityEvidence:
+    """Read receipts and the idempotency ledger; pure reads, no inference.
+
+    ``authority_files`` is one shared :func:`load_authority_files` result
+    for callers diagnosing several operations; it is used read-only and
+    never re-parsed. Without it, the files are loaded fresh here.
+    """
+    if authority_files is None:
+        receipts, ledger, unreadable = load_authority_files(root)
+    else:
+        receipts, ledger, unreadable = authority_files
     # Strict verification through the same checklist the Gateway replay
     # uses: the trace supplies this operation's identity, the ledger row
     # supplies the trusted channel/intent, and the approval subject is
@@ -146,6 +189,7 @@ def collect_authority(root: Path, *, request_id: str, idempotency_key: str,
         response_transaction_id=(response or {}).get("transaction_id"),
         transport_error=transport_error,
         observed_snapshot=observed_snapshot,
+        unreadable_authority=list(unreadable),
     )
 
 
@@ -255,6 +299,10 @@ def resolve(records: list[dict], authority: AuthorityEvidence) -> CausalDiagnosi
     attempts = _attempt_spans(records)
     evidence: list[str] = []
     reasons: list[str] = []
+    if authority.unreadable_authority:
+        reasons.append(
+            "authority files unreadable, excluded from evidence: "
+            + ", ".join(sorted(authority.unreadable_authority)))
 
     if authority.verified_receipt is not None:
         evidence.append(f"receipt:{authority.verified_receipt['_path']}")

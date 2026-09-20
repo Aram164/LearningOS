@@ -13,7 +13,12 @@ import json
 from pathlib import Path
 
 from learning_os.diagnostics import conventions
-from learning_os.diagnostics.resolver import AuthorityEvidence, collect_authority, resolve
+from learning_os.diagnostics.resolver import (
+    AuthorityEvidence,
+    collect_authority,
+    load_authority_files,
+    resolve,
+)
 from learning_os.diagnostics.store import read_records
 
 from .support import _root
@@ -86,7 +91,9 @@ def _observed_for(records: list[dict], snapshot_after: str | None,
 
 
 def _evidence_for(root: Path, records: list[dict],
-                  observed: str | None) -> AuthorityEvidence:
+                  observed: str | None,
+                  authority_files: tuple[list[dict], dict, list[str]]
+                  | None = None) -> AuthorityEvidence:
     # One collection path: the strict receipt verification lives in
     # collect_authority, so Operations can never drift from it.
     request_id, idempotency_key, capability = _identity(records)
@@ -103,7 +110,12 @@ def _evidence_for(root: Path, records: list[dict],
         response=response,
         response_codes=codes,
         observed_snapshot=_observed_for(
-            records, (response or {}).get("snapshot_after"), observed))
+            records, (response or {}).get("snapshot_after"), observed),
+        authority_files=authority_files)
+
+
+def _started_at(records: list[dict]):
+    return min([row.get("ts") for row in records if row.get("ts")] or [None])
 
 
 def list_operations(root: Path, limit: int = 20) -> list[dict]:
@@ -113,15 +125,24 @@ def list_operations(root: Path, limit: int = 20) -> list[dict]:
         if record.get("op"):
             by_op.setdefault(record["op"], []).append(record)
     observed = _observed_snapshot(root)
+    # Limit first: rank by start time from the trace alone, then diagnose
+    # only the requested recent operations against one shared authority
+    # load. (Diagnosing everything and slicing after costs one full
+    # receipt-inventory parse per operation — limit-after-diagnose.)
+    ranked = sorted(by_op.items(),
+                    key=lambda item: _started_at(item[1]) or 0, reverse=True)
+    selected = ranked[:max(limit, 0)]
+    shared = load_authority_files(root) if selected else None
     rows = []
-    for op, records in by_op.items():
+    for op, records in selected:
         records = sorted(records, key=lambda row: row.get("ts", 0))
         request_id, _, capability = _identity(records)
         starts = [row for row in records if row.get("kind") == "span-start"]
         ends = [row for row in records if row.get("kind") == "span-end"]
-        started = min([row.get("ts") for row in records if row.get("ts")] or [None])
+        started = _started_at(records)
         finished = max([row.get("ts") for row in ends if row.get("ts")] or [None])
-        authority = _evidence_for(root, records, observed)
+        authority = _evidence_for(root, records, observed,
+                                  authority_files=shared)
         diagnosis = resolve(records, authority)
         replayed = any((row.get("attrs") or {}).get("replayed") for row in
                        _summaries(records)) or len(starts) > 1
