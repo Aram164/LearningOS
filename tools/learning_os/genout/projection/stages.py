@@ -121,11 +121,13 @@ def _without_runtime_keys(record: dict, keys: tuple[str, ...]) -> dict:
 
 
 def project_stages(repo: Repo, data: dict, note_key: str,
-                   resource_routes: Iterable[dict] = ()) -> list[dict]:
+                   resource_routes: Iterable[dict] = (),
+                   git_table: dict[str, str] | None = None) -> list[dict]:
     """Project ``data['stages']`` with resources resolved and notes inlined.
 
     ``note_key`` is the field naming the stage's working note: ``working_note``
-    for a study map, ``notes_path`` for a learning path.
+    for a study map, ``notes_path`` for a learning path. A snapshot
+    transaction passes its attempt table; ``None`` reads live.
     """
     projected_stages: list[dict] = []
     for stage in data.get("stages", []) or []:
@@ -153,7 +155,7 @@ def project_stages(repo: Repo, data: dict, note_key: str,
             else:
                 raise FileNotFoundError
             projected["notes_updated"] = _git_last_commit(
-                repo.root, note_file.relative_to(repo.root).as_posix())
+                repo.root, note_file.relative_to(repo.root).as_posix(), git_table)
         except (OSError, PathBoundaryError, ValueError):
             projected["notes_text"] = ""
             projected["notes_updated"] = None

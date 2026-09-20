@@ -247,15 +247,20 @@ def project_manifest_ai_actions(repo: Repo) -> dict:
     return project_ai_actions(repo)
 
 
-def publish_manifest_metadata(repo: Repo, generated_at: str) -> dict:
+def publish_manifest_metadata(
+    repo: Repo,
+    generated_at: str,
+    git_state: tuple[str | None, bool] | None = None,
+) -> dict:
     """Publication/runtime metadata: identity of this build, not its meaning.
 
     Fingerprint, git state, timestamp, and declared contract version/shape
     are stamped fresh on every publication and never participate in reusable
-    semantic state.
+    semantic state. A snapshot transaction passes the revision+dirty pair it
+    admitted for the attempt (G1b); ``None`` reads live, as legacy does.
     """
     generated_meta = _json_header(generated_at)
-    revision, dirty = _git_state(repo.root)
+    revision, dirty = git_state if git_state is not None else _git_state(repo.root)
     fingerprint = source_fingerprint(repo)
     generated_meta.update({
         # Read from system/contracts/manifest-contract.yaml, never hardcoded:

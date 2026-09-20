@@ -12,10 +12,13 @@ import hashlib
 import os
 import sys
 from collections.abc import Iterable, Sequence
+from functools import lru_cache
 from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path, PurePosixPath
 
-from ..githistory import GitHistoryError, last_commit_dates
+import learning_os
+
+from ..githistory import GitSnapshot, fresh_git_snapshot
 from ..pathing import PathBoundaryError, read_bytes_inside
 from .model import DerivedError
 
@@ -187,6 +190,53 @@ def digest_code_tree(root: Path) -> str:
     return digest.hexdigest()
 
 
+@lru_cache(maxsize=1)
+def digest_executing_code_tree() -> str:
+    """Digest the Core tree this process actually executes (G2).
+
+    ``digest_code_tree(root)`` pins the TARGET tree (``--root`` may point
+    anywhere); this pins the EXECUTING one, derived from the imported
+    package's own ``__file__``. Paths hash package-relative, so identical
+    code digests identically across clones. Pinned once per process: the
+    executing bytes are fixed between import and first use, and must not
+    be re-read mid-run. An unresolvable executing tree fails closed —
+    unknown code identity never equals a known one.
+    """
+    anchor = getattr(learning_os, "__file__", None)
+    base = Path(anchor).resolve().parent if anchor else None
+    if base is None or not base.is_dir() or base.is_symlink():
+        raise DerivedError("derived executing code tree is not resolvable")
+    digest = hashlib.sha256()
+    members = sorted(
+        path for path in base.rglob("*.py")
+        if path.is_file() or path.is_symlink()
+    )
+    for path in members:
+        rel = path.relative_to(base)
+        if any(part.startswith(".") or part == "__pycache__" for part in rel.parts):
+            continue
+        digest.update(rel.as_posix().encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(digest_file(base, path).encode("ascii"))
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def digest_code_identity(root: Path) -> str:
+    """Combined code identity: target tree AND executing tree (G2).
+
+    Enforcing execution-root == target-root would break the legitimate
+    ``--root`` subprocess workflow, so the session key covers both halves:
+    a change to either tree invalidates every cached node.
+    """
+    digest = hashlib.sha256()
+    digest.update(digest_code_tree(root).encode("ascii"))
+    digest.update(b"\0")
+    digest.update(digest_executing_code_tree().encode("ascii"))
+    digest.update(b"\0")
+    return digest.hexdigest()
+
+
 #: Distributions whose behavior a derived value can depend on: YAML and
 #: contract parsing plus the installed Core itself (an installed-package
 #: run has no Core tree under the root, so the distribution version is
@@ -223,6 +273,62 @@ def runtime_digest() -> str:
     return digest.hexdigest()
 
 
+#: Optional distributions backing jsonschema's FormatChecker: the union of
+#: the ``format`` and ``format-nongpl`` extras. A format whose provider is
+#: absent is silently unchecked (validates True), so provider presence and
+#: version are part of what "valid" means — and of the proof key (G3).
+_VALIDATOR_FORMAT_DISTRIBUTIONS = (
+    "fqdn",
+    "idna",
+    "isoduration",
+    "jsonpointer",
+    "rfc3339-validator",
+    "rfc3986-validator",
+    "rfc3987",
+    "rfc3987-syntax",
+    "uri-template",
+    "webcolors",
+)
+
+
+def _validator_runtime_components() -> tuple[tuple[str, str], ...]:
+    """Version facts the validator digest is built from (seam for tests).
+
+    The registered-format set is enumerated from jsonschema itself at
+    runtime, so a provider this list never named still moves the digest
+    when it registers (or unregisters) a checker; the curated versions
+    pin behavior swaps behind one registered name (rfc3987 vs the
+    rfc3986-validator/rfc3987-syntax pair both register "uri").
+    """
+    from jsonschema import FormatChecker
+
+    components: list[tuple[str, str]] = [
+        ("format-checkers", ",".join(sorted(FormatChecker.checkers)))
+    ]
+    for name in _VALIDATOR_FORMAT_DISTRIBUTIONS:
+        try:
+            components.append((name, version(name)))
+        except PackageNotFoundError:
+            components.append((name, "not-installed"))
+    return tuple(components)
+
+
+def validator_runtime_digest() -> str:
+    """Digest the FormatChecker provider closure (G3).
+
+    Keyed into the validation-proof node ONLY: installing, removing, or
+    upgrading a format provider changes validation behavior, so it must
+    rerun enforce() — without invalidating unrelated semantic nodes.
+    """
+    digest = hashlib.sha256()
+    for name, fact in _validator_runtime_components():
+        digest.update(name.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(fact.encode("utf-8"))
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
 #: Top-level names that are never generation inputs: generated/ is
 #: written by the run itself, tests/ is not read by any builder.
 _SNAPSHOT_EXCLUDED_TOP = frozenset({"generated", "tests"})
@@ -234,16 +340,21 @@ _SNAPSHOT_EXCLUDED_TOP = frozenset({"generated", "tests"})
 _SNAPSHOT_EXCLUDED_SUBTREES = (("knowledge", "attachments"),)
 
 
-def canonical_snapshot_digest(root: Path) -> str:
+def canonical_snapshot_digest(root: Path, git: GitSnapshot | None = None) -> str:
     """One coarse content digest over every generation input (F2).
 
     The fine input maps pin each node's declared reads; this snapshot
     pins the whole tree those reads come from, plus the whole-tree git
-    table. A snapshot-bound transaction observes it before loading, after
-    loading, and after evaluation: equality across the three observations
-    proves the Repo and every hashed input describe one filesystem
-    snapshot, including reads the fine maps might miss and producer
-    bytes the per-node digests read at different moments.
+    table AND the observed HEAD. A snapshot-bound transaction observes it
+    before loading, after loading, and after evaluation: equality across
+    the three observations proves the Repo and every hashed input describe
+    one filesystem snapshot, including reads the fine maps might miss and
+    producer bytes the per-node digests read at different moments.
+
+    The git observation is ALWAYS fresh (G1a): ``None`` captures a new
+    snapshot internally, so a stale cached table can never make two
+    different histories digest equal. Folding HEAD (not just the table)
+    means even an empty commit — HEAD moves, no byte moves — is detected.
 
     ``__pycache__`` is skipped: a lazy import between two observations
     writes ``.pyc`` files, which must not read as an input change.
@@ -268,16 +379,18 @@ def canonical_snapshot_digest(root: Path) -> str:
         digest.update(b"\0")
         digest.update(digest_file(root, path).encode("ascii"))
         digest.update(b"\0")
-    try:
-        table = last_commit_dates(str(root))
-    except GitHistoryError:
-        table = None
-    if table is None:
+    snapshot = git if git is not None else fresh_git_snapshot(root)
+    if snapshot.head is None:
+        digest.update(b"<git-no-head>\0")
+    else:
+        digest.update(snapshot.head.encode("utf-8"))
+        digest.update(b"\0")
+    if snapshot.table is None:
         digest.update(b"<git-unreadable>\0")
     else:
-        for rel in sorted(table):
+        for rel in sorted(snapshot.table):
             digest.update(rel.encode("utf-8"))
             digest.update(b"\0")
-            digest.update(table[rel].encode("utf-8"))
+            digest.update(snapshot.table[rel].encode("utf-8"))
             digest.update(b"\0")
     return digest.hexdigest()

@@ -117,7 +117,8 @@ def _needs_study_map(unit_data: dict, module_status: str | None,
 
 
 def project_units(repo: Repo, revision: Revision,
-                  unit_to_projects: dict[str, list[str]]) -> list[dict]:
+                  unit_to_projects: dict[str, list[str]],
+                  git_table: dict[str, str] | None = None) -> list[dict]:
     records = []
     route_refs = list(iter_route_references(repo))
     module_status = {
@@ -175,14 +176,15 @@ def project_units(repo: Repo, revision: Revision,
             "notes_text": note_text,
             "note_sections": unit_note_sections(note_text),
             "notes_updated": _git_last_commit(
-                repo.root, note_file.relative_to(repo.root).as_posix())
+                repo.root, note_file.relative_to(repo.root).as_posix(), git_table)
                 if note_file else None,
         })
     return records
 
 
 def project_study_maps(repo: Repo, revision: Revision,
-                       source_maps: list[dict] | None = None) -> list[dict]:
+                       source_maps: list[dict] | None = None,
+                       git_table: dict[str, str] | None = None) -> list[dict]:
     # Resolve routes once in their owning source map and reuse the results.
     # Pair with the owner's keys rather than trusting a malformed module_id.
     if source_maps is None:
@@ -208,6 +210,7 @@ def project_study_maps(repo: Repo, revision: Revision,
                 data,
                 "working_note",
                 routes_by_unit.get((study_map.module_id, study_map.unit_id), ()),
+                git_table,
             ),
         })
     return records

@@ -10,7 +10,7 @@ from pathlib import Path
 from .. import __version__
 from ..errors import TransactionFailure
 from ..fingerprint import CANONICAL_ROOTS
-from ..githistory import GitHistoryError, last_commit_date, read_history
+from ..githistory import GitHistoryError, _lookup, last_commit_date, read_history
 
 LECTURE_KEY_RE = re.compile(r"^(?:VL\s*)?L?\d{1,2}\b")
 
@@ -91,7 +91,18 @@ def _letter_toc(entries: list[tuple[str, str]]) -> list[str]:
     return lines
 
 
-def _git_last_commit(root: Path, rel: str) -> str:
+def _git_last_commit(
+    root: Path, rel: str, git_table: dict[str, str] | None = None
+) -> str:
+    """Last-commit date for one path, from an attempt table or the live cache.
+
+    A snapshot transaction passes its attempt table (G1a) so every builder
+    observes the same history the input digests pinned; ``None`` keeps the
+    legacy cached read for one-shot callers. Same lookup either way, so an
+    injected table matching the live history yields byte-identical values.
+    """
+    if git_table is not None:
+        return _lookup(git_table, rel) or ""
     try:
         return last_commit_date(root, rel)
     except GitHistoryError as exc:

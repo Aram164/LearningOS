@@ -29,7 +29,11 @@ class DerivedError(ValueError):
 #: v2 (2026-09-20): the key additionally covers the whole-tree core code
 #: digest and the runtime identity (F3/F4), so any pre-v2 cached entry is a
 #: stale-key miss rather than a hit under weaker identity.
-ENGINE_VERSION = 2
+#:
+#: v3 (2026-09-20): the code identity additionally covers the executing
+#: Core tree (G2), so old cached values run under new executing bytes are
+#: a stale-key miss rather than a hit under weaker identity.
+ENGINE_VERSION = 3
 
 #: Implementation files every derived evaluation depends on. Consumers
 #: include these in their node producer lists so substrate changes

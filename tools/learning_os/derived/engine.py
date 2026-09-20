@@ -26,7 +26,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
-from .identity import digest_bytes, digest_code_tree, digest_producer_files, runtime_digest
+from .identity import digest_bytes, digest_code_identity, digest_producer_files, runtime_digest
 from .model import DerivedError, InputRef, NodeSpec, NodeState, node_key
 from .store import canonical_bytes, lookup, store_node
 
@@ -197,7 +197,7 @@ def _session(
         registry=registry,
         inputs=inputs,
         trace=trace,
-        code_digest=digest_code_tree(root),
+        code_digest=digest_code_identity(root),
         runtime_digest=runtime_digest(),
         staging=staging,
     )

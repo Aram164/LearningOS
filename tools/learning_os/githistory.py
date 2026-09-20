@@ -11,13 +11,19 @@ so a directory is answered by the newest entry beneath it — which is what
 ``git log -- <dir>`` reported when each caller asked separately.
 
 Caching is per process. The CLI runs one command per invocation and a
-transaction never commits mid-run, so a cached map cannot go stale in use.
+transaction never commits mid-run, so a cached map cannot go stale in use —
+for one-shot single-observation callers. Snapshot transactions observe the
+same history several times across one attempt, so they MUST NOT use the
+cached maps: a commit landing (or already landed) after the first lookup is
+invisible to every later one. Those callers capture a fresh GitSnapshot per
+observation with fresh_git_snapshot() and thread it through.
 """
 
 from __future__ import annotations
 
 import os
 import subprocess
+from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
@@ -105,6 +111,43 @@ def _walk(root: str, fmt: str) -> dict[str, str]:
             # git log walks newest-first, so the first sighting wins.
             found.setdefault(line, current)
     return found
+
+
+@dataclass(frozen=True)
+class GitSnapshot:
+    """One UNCACHED observation of a checkout's history: HEAD plus the table.
+
+    ``head`` is None when there is no history to observe (an export, an
+    unborn branch) or when the observation itself failed; ``table`` is the
+    whole-tree last-commit-date map, None only when Git could not be read
+    (a real error, never an empty history). No history reads as
+    ``(None, {})``; an unreadable history reads as ``(head-or-None, None)``,
+    mirroring the cached lookups' fallback semantics. Treat the table as
+    immutable: the snapshot is shared across one transaction attempt.
+    """
+
+    head: str | None
+    table: dict[str, str] | None
+
+
+def fresh_git_snapshot(root: Path | str) -> GitSnapshot:
+    """Capture the current history without touching the cached maps (G1a).
+
+    Total: every Git failure degrades to a None half, never raises, so a
+    transaction can compare observations and retry rather than crash.
+    Resolves HEAD through read_history, so the same repository boundary
+    (no walk-up past an export) applies as to every other read here.
+    """
+    try:
+        head = read_history(root, "-1", "--format=%H").strip() or None
+    except GitHistoryError:
+        return GitSnapshot(head=None, table=None)
+    if head is None:
+        return GitSnapshot(head=None, table={})
+    try:
+        return GitSnapshot(head=head, table=_walk(os.path.abspath(root), "%cs"))
+    except GitHistoryError:
+        return GitSnapshot(head=head, table=None)
 
 
 @lru_cache(maxsize=4)
