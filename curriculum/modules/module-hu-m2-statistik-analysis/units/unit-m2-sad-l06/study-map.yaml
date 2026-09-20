@@ -29,11 +29,11 @@ stages:
   resources:
   - kind: read
     label: Current L06 random-variables deck
-    locator: lecture-slides/06_random_variables.pdf, PDF pp. 5-8,18
+    locator: lecture-slides/06_random_variables.pdf, PDF pp. 5-8,18-19
     angle: Separates an outcome from the numerical function applied to it.
-    angle_detail: Read physical PDF pages 5-8,18. The three-dice example maps 216 ordered outcomes to
-      sums 3 through 18, which are not equiprobable. A continuous point event has probability zero, not
-      an undefined probability. A CDF is defined for every real x, including values outside the support.
+    angle_detail: Read physical PDF pages 5-8,18-19. The three-dice example maps 216 ordered outcomes
+      to sums 3 through 18, which are not equiprobable. A continuous point event has probability zero,
+      not an undefined probability. A CDF is defined for every real x, including values outside the support.
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
@@ -184,9 +184,10 @@ stages:
     angle_detail: Read physical PDF pages 9-23. Use F(x)=P(X≤x), including equality for discrete variables.
       On p. 15 the CDF integral must end at x, not +∞; p. 17 gives the correct limit. On p. 20 the uniform
       CDF is 1 above b, and the exponential expression is a density only when λ=k>0; its CDF is 1-exp(-kx).
-      On p. 21 continuous U(0,10) gives F(x)=x/10 on [0,10], hence P(X≤3)=0.3 and P(X>4)=0.6. The displayed
-      0.1(x+1) mixes a discrete model with a continuous one. Density need not be continuous for point
-      probabilities to vanish.
+      On p. 21 read both models and keep them apart — the stated discrete-minutes model (x = 0..9, F(x)=0.1(x+1))
+      gives P(X≤3)=0.4 and P(X>4)=0.5 — note the printed F(4) is a slip for F(3); the continuous-U(0,10)
+      reading gives F(x)=x/10, P(X≤3)=0.3 and P(X>4)=0.6. Know which model the question asks for. Density
+      need not be continuous for point probabilities to vanish.
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
@@ -417,13 +418,14 @@ stages:
   resources:
   - kind: read
     label: Current L06 random-variables deck
-    locator: lecture-slides/06_random_variables.pdf, PDF pp. 28-30,39
+    locator: lecture-slides/06_random_variables.pdf, PDF pp. 28-31,38
     angle: Computes moments of a function directly from the original distribution.
-    angle_detail: Read physical PDF pages 28-30,39. Page 28 explicitly states LOTUS. Pages 29–30 call
-      g a per-error cost but compute E[g(X)]; a total daily cost under that wording is Xg(X). With the
-      displayed table E[g(X)]=3.0467 and E[Xg(X)]=4.6733. Decide which quantity the model represents before
-      calculating. For many-to-one transformations such as |X|, combine all original outcomes mapping
-      to the same value; use Blatt 3 Aufgabe 1(c).
+    angle_detail: Read physical PDF pages 28-31,38. Page 28 states the LOTUS formula (unnamed on the slide).
+      Pages 29–30 call g a per-error cost but compute E[g(X)]; a total daily cost under that wording is
+      Xg(X). With the displayed table E[g(X)]=3.0467 and E[Xg(X)]=4.6733. Decide which quantity the model
+      represents before calculating. For many-to-one transformations such as |X|, combine all original
+      outcomes mapping to the same value (p. 31 notes the combining; p. 38 reuses the same table for Z²);
+      use Blatt 3 Aufgabe 1(c).
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
@@ -570,12 +572,13 @@ stages:
   resources:
   - kind: read
     label: Current L06 random-variables deck
-    locator: lecture-slides/06_random_variables.pdf, PDF pp. 26-32
+    locator: lecture-slides/06_random_variables.pdf, PDF pp. 24,26-32
     angle: Proves linearity by summing the joint probabilities, without assuming independence.
-    angle_detail: Read physical PDF pages 26-32. The dice mean 3.5 need not be a possible realization.
-      Page 28 already gives E[g(X)], and p. 31 proves linearity; p. 32 separately uses independence for
-      E[XY]=E[X]E[Y]. Keep finite/existing expectations in view. The repair-cost caveat is given at the
-      transformations stage.
+    angle_detail: Read physical PDF pages 24,26-32. Page 24 defines independence (factorization); p. 32's
+      E[XY] lemma is its first use. The dice mean 3.5 need not be a possible realization. Page 28 already
+      gives E[g(X)], and p. 31 proves linearity; p. 32 separately uses independence for E[XY]=E[X]E[Y].
+      Keep finite/existing expectations in view. The repair-cost caveat is given at the transformations
+      stage.
     scope_triage: required-now
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
