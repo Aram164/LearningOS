@@ -88,6 +88,17 @@ def test_module_import_template_carries_current_plan_contract(repo_root):
     assert "estimate_minutes" not in study_map["stages"][0]
 
 
+def test_unit_revise_template_carries_the_compact_contract(repo_root):
+    from learning_os.contracts import PLAN_TEMPLATE_VERSION
+
+    raw = (repo_root / "system" / "templates" / "unit-plan-revise.template.yaml") \
+        .read_text(encoding="utf-8")
+    template = yaml.safe_load(raw)
+    assert template["plan_contract"]["version"] == 1
+    assert template["plan_contract"]["plan_template_version"] == PLAN_TEMPLATE_VERSION
+    assert set(template["route_changes"]) == {"add", "update", "remove"}
+
+
 # --------------------------------------------------------------- reachability
 #
 # A creation standard that only a terminal can reach is not enforced on the

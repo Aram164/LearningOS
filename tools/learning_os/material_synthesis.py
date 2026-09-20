@@ -145,7 +145,16 @@ def validate_unit_material_synthesis(
     root: Path,
     unit_id: str,
     value: dict[str, Any],
+    *,
+    repo=None,
 ) -> dict[str, Any]:
+    """Validate one dossier against the repository at ``root``.
+
+    ``repo`` accepts an already-loaded repository so a caller validating
+    staged post-change state (a shadow copy carrying planned writes) does not
+    re-read the live tree and does not validate the wrong state. Omitting it
+    keeps the standalone contract against the live repository.
+    """
     try:
         validate_contract(root, "unit-material-synthesis.schema.json", value)
     except ValueError as exc:
@@ -153,7 +162,8 @@ def validate_unit_material_synthesis(
     if value.get("unit_id") != unit_id:
         raise MaterialSynthesisError("dossier unit_id does not match the requested unit")
 
-    repo = load_repo(root)
+    if repo is None:
+        repo = load_repo(root)
     unit = repo.units.get(unit_id)
     if unit is None:
         raise MaterialSynthesisError(f"unit not found: {unit_id}")
@@ -184,7 +194,7 @@ def validate_unit_material_synthesis(
             )
 
     basis = value["basis"]
-    current = current_unit_material_basis(root, unit_id)
+    current = current_unit_material_basis(root, unit_id, repo=repo)
     for field in _COMPARED_BASIS_FIELDS:
         if basis.get(field) != current[field]:
             raise MaterialSynthesisError(f"dossier basis is stale at {field}")

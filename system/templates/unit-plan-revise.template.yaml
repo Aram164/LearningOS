@@ -1,0 +1,82 @@
+# Compact revision for ONE existing lecture. Copy this file outside the
+# repository (LearningOS/workbench/) or into the owning workspace's outputs/
+# — a draft under work/ moves the snapshot, so capture the snapshot after the
+# draft and the coverage audit exist. Do not use YAML anchors or aliases.
+unit_id: unit-example-l04
+
+plan_contract:
+  version: 1
+  plan_template_version: 1
+  coverage_audit: work/active/workspace-example/outputs/l04-coverage-audit.md
+  checks:
+    local_inventory_complete: true
+    linked_inventory_complete: true
+    materials_opened_and_content_checked: true
+    current_and_prior_scope_reconciled: true
+    duplicates_and_numbering_checked: true
+    exclusions_and_unresolved_gaps_recorded: true
+
+# Only what changes. Unrelated source-map routes are carried forward
+# internally; never copy them here.
+# Additions must name a source already joined to this module. Joining a new
+# source, moving routes across units, or reordering stages uses module-plan-import.
+# Save --check JSON outside canonical roots and apply with both
+# --apply-reviewed-sha256 (reviewed_file_sha256) and --review-report.
+route_changes:
+  add: []
+  # - source_id: source-example-course
+  #   route:
+  #     id: route-example-l04-new
+  #     unit_id: unit-example-l04
+  #     title: New drill set
+  #     format: practice
+  #     angle: "Drills the lecture's core result in the course's notation."
+  #     covers:
+  #       - knowledge-example-l04-core-result
+  #     depth: practice
+  #     scope: current
+  #     locator: "Problem set 4, Aufgaben 1-3"
+  update: []
+  # - route_id: route-example-l04-deck
+  #   fields:
+  #     angle: "Rewritten for this lecture; never copied from source metadata."
+  remove: []
+  # - route_id: route-example-l04-superseded
+  #   reason: "Superseded by route-example-l04-new; nothing else covers it."
+
+# The reviewed FINAL study map, or omit the key when placements do not change.
+# study_map:
+#   id: study-map-example-l04
+#   type: study-map
+#   plan_template_version: 1
+#   unit_id: unit-example-l04
+#   status: ready
+#   current_stage: stage-example-l04-orientation
+#   source_plan:
+#     path: work/active/workspace-example/outputs/l04-coverage-audit.md
+#     provenance: operator
+#   detours: []
+#   stages: []
+#   shelving:
+#     state: none
+
+# Replacement dossier, required when routes are added, removed, or changed
+# evidentially on a unit with an approved synthesis. Omit otherwise.
+# claim_evidence for every covers edge this revision creates, repairs, or
+# removes (Phase B lineage); the import refuses without admitted evidence.
+# claim_evidence: []
+# material_synthesis:
+#   id: material-synthesis-example-l04
+#   type: unit-material-synthesis
+#   unit_id: unit-example-l04
+#   status: approved
+#   basis: {}
+#   route_assessments: []
+#   comparisons: []
+#   concept_groups: []
+
+# One entry per change the preflight flags under semantic_ack_required.
+# acknowledgments:
+#   - kind: demotion
+#     target: route-example-l04-deck
+#     reason: "Superseded by the new derivation; the tutorial keeps the drill."

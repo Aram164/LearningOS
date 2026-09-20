@@ -19,6 +19,10 @@ from learning_os.contracts.gateway import (
     intent_sha256,
     verified_gateway_snapshot,
 )
+from learning_os.diagnostics import conventions as diag_conventions
+from learning_os.diagnostics import tracer as diag_tracer
+from learning_os.diagnostics.context import record_debug, trace_context_from_env
+from learning_os.diagnostics.store import bind_store as _bind_diag_store
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.transactions import (
     ReplayEvidenceError,
@@ -45,6 +49,7 @@ _CONTENT_BOUND_V2 = frozenset({
     "masters-planning.catalog.update",
     "masters-planning.comparison.publish",
     "unit.material-synthesis.publish",
+    "unit.plan.revise",
 })
 
 #: Capabilities admitted to ``direct-user-gesture`` approval from any channel.
@@ -297,6 +302,10 @@ def _dispatch(
     captured, errors = io.StringIO(), io.StringIO()
     with contextlib.redirect_stdout(captured), contextlib.redirect_stderr(errors):
         code = handler(namespace)
+    diag_tracer.emit_event(
+        diag_conventions.EVENT_HANDLER_COMPLETED,
+        status="ok" if code == 0 else "error",
+        attrs={"capability": definition.name, "exit_code": code})
 
     text, complaint = captured.getvalue().strip(), errors.getvalue().strip()
     if code:
@@ -316,6 +325,86 @@ def _dispatch(
             f"{definition.name} reported success with a non-object JSON result"
         )
     return 0, result
+
+
+def prepare_review_envelope(capability_name: str, payload: dict,
+                            snapshot: str, revisions: dict) -> dict:
+    """Prepare a recoverable request during preflight, while its lock is held."""
+    import uuid
+
+    envelope = {
+        "schema_version": 2,
+        "request_id": f"request-reviewed-{uuid.uuid4().hex}",
+        "idempotency_key": f"reviewed-{uuid.uuid4().hex}",
+        "capability": capability_name,
+        "channel": "codex",
+        "expected_snapshot": snapshot,
+        "expected_revisions": revisions,
+        "payload": payload,
+        "approval": {"kind": "operator-approval", "subject_sha256": ""},
+    }
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    return envelope
+
+
+def reviewed_envelope_apply(*, root: Path, capability_name: str, payload: dict,
+                            reviewed_content: bytes, reviewed_sha256: str,
+                            review_report: str | None, parser_factory) -> int:
+    """Dispatch the saved preflight request without refreshing its authority.
+
+    The caller parsed exactly reviewed_content. The saved report retains the
+    complete envelope, including its identity, for exact retry after a lost
+    response. Neither snapshot nor revisions are silently rebased here.
+    """
+    import argparse as _argparse
+    import tempfile as _tempfile
+
+    if parser_factory is None:
+        print("los: reviewed apply needs the CLI parser factory", file=sys.stderr)
+        return 2
+    actual = "sha256:" + hashlib.sha256(reviewed_content).hexdigest()
+    if actual != reviewed_sha256:
+        print("los: reviewed bytes changed since --check; re-run --check, review "
+              "the new report and its SHA, then apply that SHA", file=sys.stderr)
+        print(json.dumps({"expected": reviewed_sha256, "actual": actual}),
+              file=sys.stderr)
+        return 2
+    if not review_report:
+        print("los: reviewed apply requires --review-report with the saved --check JSON",
+              file=sys.stderr)
+        return 2
+    try:
+        report = _read_structured_file(review_report)
+        envelope = report.get("gateway_envelope")
+        if not isinstance(envelope, dict):
+            raise WriteRefused("review report has no prepared gateway envelope")
+        _validate_capability_envelope(root, envelope, kind="request")
+        _context_from_v2(envelope)
+        if report.get("ok") is not True or report.get("mode") != "check" \
+                or report.get("reviewed_file_sha256") != actual \
+                or envelope.get("capability") != capability_name \
+                or envelope.get("payload") != payload \
+                or envelope.get("expected_snapshot") != report.get("expected_snapshot") \
+                or envelope.get("expected_revisions") != report.get("expected_revisions"):
+            raise WriteRefused("review report does not match the exact reviewed input and guards")
+    except (OSError, ValueError, WriteRefused) as exc:
+        print(f"los: {exc}", file=sys.stderr)
+        return 2
+    fd, tmp_name = _tempfile.mkstemp(prefix="learningos-reviewed-", suffix=".json")
+    try:
+        with open(fd, "w", encoding="utf-8") as handle:
+            json.dump(envelope, handle, ensure_ascii=False)
+        args = _argparse.Namespace(
+            root=str(root),
+            name=capability_name,
+            payload_file=tmp_name,
+            replay_only=False,
+            _parser_factory=parser_factory,
+        )
+        return cmd_capability(args)
+    finally:
+        with contextlib.suppress(OSError):
+            Path(tmp_name).unlink()
 
 
 def _validate_capability_envelope(root: Path, envelope: dict, *, kind: str) -> None:
@@ -416,6 +505,22 @@ def _v2_response(
     result: dict | None = None,
     error: dict | None = None,
 ) -> dict:
+    # Phase 4A: the persisted response summary. IDs and codes only — never
+    # `result` (domain facts may echo learner content) and never the error
+    # message (validator text may quote canonical prose). The Operations
+    # view and the resolver rebuild responses from this alone.
+    diag_tracer.emit_event(
+        diag_conventions.EVENT_RESPONSE_EMITTED,
+        status="ok" if ok else "error",
+        attrs={
+            "ok": ok,
+            "code": (error or {}).get("code"),
+            "retryable": (error or {}).get("retryable", False),
+            "replayed": replayed,
+            "transaction_id": transaction_id,
+            "receipt_path": receipt_path,
+            "snapshot_after": snapshot_after,
+        })
     return {
         "schema_version": 2,
         "request_id": str(envelope.get("request_id") or "invalid-request"),
@@ -639,8 +744,40 @@ def _replay_response(root: Path, envelope: dict,
     )
 
 
+def _close_attempt(attempt, code: int, status: str,
+                   attrs: dict | None = None) -> int:
+    """Close the attempt span and report the exit code unchanged.
+
+    The response emission is recorded here — the one place every gateway
+    return funnels through — so no return site can forget its span.
+    """
+    stage = (attrs or {}).get("stage")
+    if status == "error" and stage in diag_conventions.FAILURE_STAGES:
+        diag_tracer.emit_event(
+            diag_conventions.EVENT_STAGE_FAILED,
+            span_id=attempt.span_id, context=attempt.context,
+            stage=stage, status="error",
+            attrs={"exit_code": code})
+    attempt.close(status, {"exit_code": code, **(attrs or {})})
+    return code
+
+
 def cmd_capability(args) -> int:
+    # Research track #2, Phase 1: observe the UI-propagated trace context.
+    # Pure env read plus an opt-in debug record; behavior is identical when
+    # tracing is absent, malformed, or its sink fails. Never an input to any
+    # guard, hash, receipt, or ledger below.
+    record_debug(trace_context_from_env(), operation="capability",
+                 extra={"capability": getattr(args, "name", None)})
     root = _root(args)
+    # Phase 3A: bind this repository's disposable trace store first, so the
+    # attempt span below persists like every later record. Binding is a pure
+    # path assignment; persistence itself stays best-effort.
+    _bind_diag_store(root)
+    # Phase 2A: one attempt span per gateway invocation. All emissions below
+    # are sink-gated no-ops by default; every return below closes the span.
+    attempt = diag_tracer.begin_attempt(
+        {"capability": getattr(args, "name", None)})
     definitions = command_definitions(root)
     # Preserve the legacy no-I/O refusal for an unknown name when there is no
     # envelope to classify. If a real V2 envelope exists, read it so the same
@@ -648,13 +785,14 @@ def cmd_capability(args) -> int:
     if args.name not in definitions and args.payload_file != "-" \
             and not Path(args.payload_file).expanduser().is_file():
         print(f"los: unknown or non-public capability: {args.name}", file=sys.stderr)
-        return 2
+        return _close_attempt(attempt, 2, "error", {"stage": "core.admission"})
     envelope = _read_structured_file(args.payload_file)
     is_v2 = envelope.get("schema_version") == 2
     try:
         _validate_capability_envelope(root, envelope, kind="request")
     except WriteRefused as exc:
         if not is_v2:
+            _close_attempt(attempt, 2, "error", {"stage": "core.admission"})
             raise
         response = _v2_response(
             envelope,
@@ -663,7 +801,10 @@ def cmd_capability(args) -> int:
         )
         _validate_capability_envelope(root, response, kind="result")
         print(json.dumps(response, indent=2, ensure_ascii=False))
-        return 2
+        return _close_attempt(attempt, 2, "error", {"stage": "core.admission"})
+    attempt.event(diag_conventions.EVENT_ENVELOPE_VALIDATED,
+                  attrs={"request_id": envelope.get("request_id"),
+                         "idempotency_key": envelope.get("idempotency_key")})
     if envelope.get("capability") != args.name:
         if is_v2:
             response = _v2_response(
@@ -676,9 +817,9 @@ def cmd_capability(args) -> int:
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
-            return 2
+            return _close_attempt(attempt, 2, "error", {"stage": "core.admission"})
         print("los: envelope capability does not match requested capability", file=sys.stderr)
-        return 2
+        return _close_attempt(attempt, 2, "error", {"stage": "core.admission"})
     # ``command_definitions`` is the public allowlist.  V2 always gets a typed
     # response, including when the requested name has no declaration.
     if args.name not in definitions:
@@ -693,9 +834,9 @@ def cmd_capability(args) -> int:
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
-            return 2
+            return _close_attempt(attempt, 2, "error", {"stage": "core.admission"})
         print(f"los: unknown or non-public capability: {args.name}", file=sys.stderr)
-        return 2
+        return _close_attempt(attempt, 2, "error", {"stage": "core.admission"})
     payload = envelope.get("payload", {})
     request_id = envelope["request_id"]
     # Every capability takes the same path: declared payload schema, then the
@@ -717,7 +858,7 @@ def cmd_capability(args) -> int:
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
-            return 2
+            return _close_attempt(attempt, 2, "error", {"stage": "core.approval"})
         if context.approval_kind == "direct-user-gesture" \
                 and not gesture_allowed(context.capability, context.channel):
             # The gesture kind means the user herself acted, so it is
@@ -737,7 +878,8 @@ def cmd_capability(args) -> int:
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
-            return 2
+            return _close_attempt(attempt, 2, "error", {"stage": "core.approval"})
+        attempt.event(diag_conventions.EVENT_APPROVAL_PASSED)
         # Replay lookup, evidence validation, response construction, and
         # session-ledger repair are one critical section under the repository
         # operator lock — the same lock every ordinary write-handling command
@@ -762,7 +904,9 @@ def cmd_capability(args) -> int:
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
-            return 2
+            attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
+                          status="error", attrs={"outcome": "conflict"})
+            return _close_attempt(attempt, 2, "error", {"stage": "core.replay"})
         except (ReplayEvidenceError, _ReplayRecoveryError) as exc:
             # Fail closed. Evidence is contradictory or the original write
             # already happened; rerunning the handler here would risk
@@ -776,7 +920,9 @@ def cmd_capability(args) -> int:
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
-            return 2
+            attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
+                          status="error", attrs={"outcome": "evidence-error"})
+            return _close_attempt(attempt, 2, "error", {"stage": "core.replay"})
         except TransactionFailure as exc:
             response = _v2_response(
                 envelope,
@@ -785,10 +931,14 @@ def cmd_capability(args) -> int:
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
-            return 2
+            attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
+                          status="error", attrs={"outcome": "lookup-failed"})
+            return _close_attempt(attempt, 2, "error", {"stage": "core.replay"})
+        attempt.event(diag_conventions.EVENT_REPLAY_CHECKED,
+                      attrs={"outcome": "hit" if replay is not None else "miss"})
         if replay is not None:
             print(json.dumps(response, indent=2, ensure_ascii=False))
-            return 0
+            return _close_attempt(attempt, 0, "ok", {"replayed": True})
         if args.replay_only:
             # A persisted UI confirmation is only untrusted settings JSON until
             # Core proves that this exact approved intent is present in the
@@ -804,7 +954,7 @@ def cmd_capability(args) -> int:
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
-            return 2
+            return _close_attempt(attempt, 2, "error", {"stage": "core.replay"})
         try:
             # One lock spans the approved-state comparison and the handler.
             # Named handlers reuse this lock, so their historical in-lock
@@ -827,7 +977,9 @@ def cmd_capability(args) -> int:
                     )
                     _validate_capability_envelope(root, response, kind="result")
                     print(json.dumps(response, indent=2, ensure_ascii=False))
-                    return 3
+                    return _close_attempt(
+                        attempt, 3, "error", {"stage": "core.snapshot_guard"})
+                attempt.event(diag_conventions.EVENT_SNAPSHOT_GUARD_PASSED)
                 with gateway_request_context(context), verified_gateway_snapshot(
                     root, actual_snapshot
                 ):
@@ -853,7 +1005,8 @@ def cmd_capability(args) -> int:
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
-            return 3
+            return _close_attempt(
+                attempt, 3, "error", {"stage": "core.snapshot_guard"})
         except TransactionFailure as exc:
             code, result = 2, {"error": str(exc)}
         except ValueError as exc:
@@ -868,7 +1021,9 @@ def cmd_capability(args) -> int:
             )
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
-            return 2
+            # The precise stage is already on record: the transaction span
+            # names the boundary that broke; this close carries the outcome.
+            return _close_attempt(attempt, 2, "error", {"code": "INTERNAL_FAILURE"})
         confirmation = result if code == 0 else {}
         complaint = str(result.get("error") or f"{args.name} failed")
         response = _v2_response(
@@ -883,7 +1038,9 @@ def cmd_capability(args) -> int:
         )
         _validate_capability_envelope(root, response, kind="result")
         print(json.dumps(response, indent=2, ensure_ascii=False))
-        return code
+        return _close_attempt(
+            attempt, code, "ok" if code == 0 else "error",
+            {"replayed": bool(confirmation.get("replayed", False))} if code == 0 else {})
 
     try:
         code, result = _dispatch(
@@ -909,4 +1066,4 @@ def cmd_capability(args) -> int:
     }
     _validate_capability_envelope(root, response, kind="result")
     print(json.dumps(response, indent=2, ensure_ascii=False))
-    return code
+    return _close_attempt(attempt, code, "ok" if code == 0 else "error")

@@ -304,3 +304,22 @@ def test_material_uri_unresolved_is_warning_not_error(mini_repo):
     issues = run(mini_repo)
     assert "URI-MATERIAL" in codes(issues, "W")
     assert "URI-MATERIAL" not in codes(issues, "E")
+
+
+def test_compact_mode_without_report_keeps_warning_details(mini_repo, repo_root):
+    """Compact verification stays readable without hiding the warning debt."""
+    import subprocess
+    import sys
+
+    script = repo_root / "tools" / "validate.py"
+    proc = subprocess.run(
+        [sys.executable, str(script), "--compact", "--no-report",
+         "--root", str(mini_repo)],
+        text=True, capture_output=True,
+    )
+    assert proc.returncode == 0, proc.stderr
+    lines = [line for line in proc.stdout.splitlines() if line.strip()]
+    for issue in run(mini_repo):
+        assert str(issue) in proc.stdout
+    assert lines[-1].endswith("OK") or "OK (" in lines[-1]
+    assert "warning(s)" in lines[-1]

@@ -42,6 +42,9 @@ from .contracts.write_scopes import (
     scope_matches,
     write_target,
 )
+from .diagnostics import conventions as diag_conventions
+from .diagnostics import tracer as diag_tracer
+from .diagnostics.store import bind_store as _bind_diag_store
 from .errors import TransactionFailure
 
 # One digest, one root list, shared with the projection (see fingerprint.py).
@@ -777,6 +780,10 @@ class TransactionService:
     ) -> TransactionResult:
         if not capability or not capability.strip():
             raise TransactionFailure("transaction capability must be named")
+        _bind_diag_store(self.root)
+        diag_tracer.emit_event(
+            diag_conventions.EVENT_TRANSACTION_STARTED,
+            attrs={"capability": capability})
         request = gateway_request or current_gateway_request()
         if request is not None:
             if request.capability != capability:
@@ -788,6 +795,10 @@ class TransactionService:
                 raise TransactionFailure("gateway request authority is unsupported")
             if request.approval_subject_sha256 != request.intent_sha256 \
                     or not re.fullmatch(r"sha256:[a-f0-9]{64}", request.intent_sha256):
+                diag_tracer.emit_event(
+                    diag_conventions.EVENT_STAGE_FAILED,
+                    stage="core.approval", status="error",
+                    attrs={"error": "approval not bound to intent"})
                 raise TransactionFailure(
                     "gateway approval is not bound to the transaction intent"
                 )
@@ -989,6 +1000,10 @@ class TransactionService:
                 )
             approved_snapshot = approved_snapshot or request.expected_snapshot
         if approved_snapshot is not None and approved_snapshot != snapshot_before_id:
+            diag_tracer.emit_event(
+                diag_conventions.EVENT_STAGE_FAILED,
+                stage="core.snapshot_guard", status="error",
+                attrs={"error": "snapshot changed since approval"})
             raise TransactionSnapshotConflict(
                 approved_snapshot,
                 snapshot_before_id,
@@ -997,6 +1012,11 @@ class TransactionService:
         # its historical precedence when the same concurrent write also moved
         # an artifact revision.
         if conflicts:
+            diag_tracer.emit_event(
+                diag_conventions.EVENT_STAGE_FAILED,
+                stage="core.revision_guard", status="error",
+                attrs={"error": "artifact revision moved",
+                       "artifacts": sorted(conflicts)})
             raise TransactionConflict(conflicts)
 
         inflight_dir = self.root / "operations" / "transactions" / ".inflight" / transaction_id
@@ -1028,6 +1048,7 @@ class TransactionService:
 
         try:
             commit_reached = False
+            failed_stage = "core.commit"
             inflight_dir.mkdir(parents=True, exist_ok=True)
             intent = {
                 "transaction_id": transaction_id, 
@@ -1053,14 +1074,25 @@ class TransactionService:
                 if path.is_dir():
                     raise TransactionFailure(f"transaction refuses to delete directory: {path}")
                 path.unlink(missing_ok=True)
+            failed_stage = "core.validation"
             if validate_state is not None:
                 errors = list(validate_state())
                 if errors:
                     preview = "; ".join(str(issue) for issue in errors[:6])
+                    diag_tracer.emit_event(
+                        diag_conventions.EVENT_STAGE_FAILED,
+                        stage="core.validation", status="error",
+                        attrs={"error": preview[:160]})
                     raise TransactionFailure(
                         f"transaction failed canonical validation: {preview}"
                     )
+            diag_tracer.emit_event(diag_conventions.EVENT_VALIDATION_PASSED)
+            failed_stage = "core.projection"
+            diag_tracer.emit_event(diag_conventions.EVENT_PROJECTION_STARTED)
             projected_snapshot = publish() if publish is not None else None
+            diag_tracer.emit_event(
+                diag_conventions.EVENT_PROJECTION_PUBLISHED,
+                attrs={"snapshot": projected_snapshot})
 
             snapshot_after = take_fingerprint()
             snapshot_after_id = f"sha256:{snapshot_after}"
@@ -1070,6 +1102,7 @@ class TransactionService:
                     "canonical state changed during projection publication "
                     f"(projected {projected_snapshot}, actual {snapshot_after_id})"
                 )
+            failed_stage = "core.commit"
             if request is not None and idempotency_path is not None \
                     and idempotency_entries is not None:
                 idempotency_entries[request.idempotency_key] = {
@@ -1088,6 +1121,7 @@ class TransactionService:
                 ).encode("utf-8")
                 _atomic_write_bytes(idempotency_path, idempotency_content)
                 normalized_writes[idempotency_path] = idempotency_content
+            failed_stage = "core.receipt"
             rows = []
             for path, after in normalized_writes.items():
                 if path == ledger_path or path == idempotency_path:
@@ -1173,6 +1207,16 @@ class TransactionService:
                 raise TransactionFailure(f"receipt path already exists: {receipt_path}")
             _atomic_write_bytes(receipt_path, _receipt_text(receipt).encode("utf-8"))
             commit_reached = True
+            # The irrevocable point: receipt bytes are durable and the except
+            # path below no longer rolls back. `core.transaction.committed`
+            # names exactly this line, nothing earlier.
+            diag_tracer.emit_event(
+                diag_conventions.EVENT_CORE_TRANSACTION_COMMITTED,
+                attrs={"transaction_id": transaction_id,
+                       "snapshot_after": snapshot_after_id})
+            diag_tracer.emit_event(
+                diag_conventions.EVENT_RECEIPT_PERSISTED,
+                attrs={"receipt": _safe_relative(self.root, receipt_path)})
 
             # Bookkeeping is part of the commit boundary. If it fails, remove
             # the newly-created receipt together with the canonical writes so
@@ -1196,9 +1240,23 @@ class TransactionService:
             )
         except Exception as exc:
             if commit_reached:
+                diag_tracer.emit_event(
+                    diag_conventions.EVENT_STAGE_FAILED,
+                    stage="core.commit", status="error",
+                    attrs={"error": "post-commit hook failed after commit",
+                           "committed": True})
                 raise TransactionFailure(f"transaction committed but post-commit hooks failed: {exc}") from exc
 
+            diag_tracer.emit_event(
+                diag_conventions.EVENT_STAGE_FAILED,
+                stage=failed_stage, status="error",
+                attrs={"error": str(exc)[:160]})
+            diag_tracer.emit_event(diag_conventions.EVENT_ROLLBACK_STARTED)
             rollback_failures = rollback()
+            diag_tracer.emit_event(
+                diag_conventions.EVENT_ROLLBACK_COMPLETED,
+                status="ok" if not rollback_failures else "error",
+                attrs={"failures": sorted(rollback_failures)})
             if rollback_failures:
                 raise TransactionFailure(
                     f"{exc}; rollback incomplete for: {', '.join(rollback_failures)}"
