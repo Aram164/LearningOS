@@ -1,0 +1,39 @@
+schema_version: 2
+id: transaction-20260920-034916-001
+type: transaction-receipt
+status: committed
+capability: unit.plan.revise
+committed_at: '2026-09-20T03:49:16+02:00'
+snapshot_before: sha256:24197f662054e676d03534479cf30a14b9594864a27ea0484a11e0d0e3fdcb71
+snapshot_after: sha256:ea5be3f9c1fd81f296589ef86dd71f70ad828879604268c9bb09bf2acb269535
+expected_revisions:
+  unit-aml-exam-prep: 7
+artifact_revisions:
+  unit-aml-exam-prep:
+    before: 7
+    after: 8
+writes:
+- path: curriculum/modules/module-hu-aml/units/unit-aml-exam-prep/study-map.yaml
+  sha256_before: 39f6b2e7f3962935bc80671f91405329cd2ef48524392edf48e823de740cf78a
+  sha256_after: e23179d05d1dce9b7f2f6d559654427ac504d3be476e51b50648618dc86e478c
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.plan.revise
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: codex
+  request_id: request-reviewed-7d2f9f9cd1aa4cd8a1ad977b7cbf7cc5
+  idempotency_key: reviewed-496a2e8deb0b45afb1d8495870f98244
+  intent_sha256: sha256:ced6f79053af0400bdcb1b783ce95667c2ecc460414dc33b7a5c6922bdd1a467
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:ced6f79053af0400bdcb1b783ce95667c2ecc460414dc33b7a5c6922bdd1a467

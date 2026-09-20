@@ -1926,21 +1926,42 @@ def test_topics_are_independent_of_thematic_groups(repo_root):
 def test_library_view_reports_unclassified_rather_than_hiding_it(repo_root):
     """Sparse is the honest state under on-use population, so it must be visible.
 
-    A faceted browser that showed only classified sources would silently imply
-    the Library is smaller than it is, and would create pressure to bulk-backfill
+    A browser that showed only classified sources would silently imply the
+    Library is smaller than it is, and would create pressure to bulk-backfill
     topics — the exact judgment-inventing pass ADR-005 forbids.
+
+    The view became a folder tree (domain -> modules/material types) rather than
+    five counted facets, so the headings this once pinned are gone. The two
+    properties it was actually defending are not, and are asserted harder here:
+    the unclassified state is still stated in full, and every source is still
+    enumerated — which the tree must satisfy for ALL sources, not a sample,
+    because a folder tree's whole claim is that nothing is missing.
     """
     from learning_os.genout import build_library
     repo = load_repo(repo_root)
     view = build_library(repo, "T1")
-    assert "## By topic" in view and "## By domain" in view
-    assert "## By purpose" in view and "## By form" in view
-    assert "## By current use" in view
-    assert "Not yet classified by topic" in view
-    # enumerate, don't count: buckets must list their members
-    assert "## Members" in view
-    for sid in list(repo.sources)[:3]:
-        assert f"`{sid}`" in view, f"{sid} appears in no bucket listing"
+
+    # The domains are the top level, and the facets that do not shape the tree
+    # survive as the appendix rather than being dropped.
+    for group in repo.thematic_groups.values():
+        assert f"## {group['title']}/" in view, f"{group['title']} has no folder"
+    assert "## Other ways in" in view
+    assert "**By purpose**" in view and "**By topic**" in view
+
+    # Sparsity is stated, not hidden, and ADR-005 is named as the reason.
+    untopiced = [s for s in repo.sources.values() if not (s.get("topics") or [])]
+    if untopiced:
+        assert "carry no topic" in view and "ADR-005" in view
+
+    # Enumerate, don't count — now for every source, not the first three.
+    missing = [sid for sid in repo.sources if f"`{sid}`" not in view]
+    assert not missing, (
+        f"{len(missing)} source(s) appear in no folder: {missing[:5]}"
+    )
+
+    # And the view says so itself, rather than leaving it to be trusted.
+    assert f"**{len(repo.sources)} sources.**" in view
+    assert "reachable" in view
 
 
 def test_source_feedback_can_name_a_resource(mini_repo):

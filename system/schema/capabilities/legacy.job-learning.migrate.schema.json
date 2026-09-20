@@ -9,9 +9,6 @@
     "plan_sha256"
   ],
   "properties": {
-    "approve": {
-      "type": "boolean"
-    },
     "plan_sha256": {
       "type": "string",
       "pattern": "^sha256:[a-f0-9]{64}$"

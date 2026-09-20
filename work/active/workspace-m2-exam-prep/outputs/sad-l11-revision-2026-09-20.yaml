@@ -1,0 +1,791 @@
+unit_id: unit-m2-sad-l11
+plan_contract:
+  version: 1
+  plan_template_version: 1
+  coverage_audit: work/active/workspace-m2-exam-prep/outputs/sad-l11-revise-audit-2026-09-20.md
+  checks:
+    local_inventory_complete: true
+    linked_inventory_complete: true
+    materials_opened_and_content_checked: true
+    current_and_prior_scope_reconciled: true
+    duplicates_and_numbering_checked: true
+    exclusions_and_unresolved_gaps_recorded: true
+study_map:
+  id: study-map-m2-sad-l11
+  type: study-map
+  plan_template_version: 1
+  unit_id: unit-m2-sad-l11
+  status: not-started
+  current_stage: stage-sad-l11-pipeline
+  source_plan:
+    path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+    provenance: operator
+  detours: []
+  shelving:
+    state: none
+  stages:
+  - id: stage-sad-l11-pipeline
+    number: 1
+    title: The data-science pipeline
+    status: pending
+    objective: Data acquisition, cleaning, integration, exploration, feature construction, modeling, validation,
+      communication, and action are coupled steps; modeling is only one part of the work.
+    done_when:
+    - 'Reproduce without notes: Data acquisition, cleaning, integration, exploration, feature construction,
+      modeling, validation, communication, and action are coupled steps; modeling is only one part of the
+      work.'
+    exam_critical: true
+    concepts:
+    - concept-ml-lifecycle
+    scope_triage: required-now
+    resources:
+    - kind: read
+      label: Current L11 data-science introduction deck
+      locator: lecture-slides/11_datascience_intro.pdf, PDF pp. 3-9
+      angle: The current lecture's focused reading for the data-science pipeline.
+      angle_detail: Read physical PDF pages 3-9 for this stage. Printed slide labels may differ. This slice
+        focuses the existing deck route; the complete lecture remains accessible through the unit material
+        menu.
+      scope_triage: required-now
+      route_id: route-739f3af86a81ba6168a13cda
+      source_id: source-sad-ss26-lectures
+    - material_ref:
+        route_id: route-ef56936eca783d424d37e8f9
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-ef56936eca783d424d37e8f9
+    - material_ref:
+        route_id: route-4bef9e4af486bc5c7c1517db
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-4bef9e4af486bc5c7c1517db
+    - material_ref:
+        route_id: route-a848504ea89949cfbedc08aa
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-a848504ea89949cfbedc08aa
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-pipeline/notes.md
+    attachments: []
+    source_feedback: []
+  - id: stage-sad-l11-tasks
+    number: 2
+    title: Supervised and unsupervised tasks
+    status: pending
+    objective: Classification predicts categories, regression predicts quantities, and unsupervised methods
+      seek structure without labels; the learning setup must match the target and available supervision.
+    done_when:
+    - 'Reproduce without notes: Classification predicts categories, regression predicts quantities, and
+      unsupervised methods seek structure without labels; the learning setup must match the target and available
+      supervision.'
+    - Work Geron Ch 1 exercises - the L11 vocabulary tested back, and record every miss with the step it
+      failed at.
+    exam_critical: true
+    concepts:
+    - concept-supervised-learning
+    scope_triage: required-now
+    resources:
+    - kind: read
+      label: Current L11 data-science introduction deck
+      locator: lecture-slides/11_datascience_intro.pdf, PDF pp. 12-20
+      angle: The current lecture's focused reading for supervised and unsupervised tasks.
+      angle_detail: Read physical PDF pages 12-20 for this stage. Printed slide labels may differ. This
+        slice focuses the existing deck route; the complete lecture remains accessible through the unit
+        material menu.
+      scope_triage: required-now
+      route_id: route-739f3af86a81ba6168a13cda
+      source_id: source-sad-ss26-lectures
+    - material_ref:
+        route_id: route-ef56936eca783d424d37e8f9
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-ef56936eca783d424d37e8f9
+    - material_ref:
+        route_id: route-15a92bbc0ec66bf68eb86eac
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-15a92bbc0ec66bf68eb86eac
+    - material_ref:
+        route_id: route-86eed70f7803c597932af9c1
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-86eed70f7803c597932af9c1
+    - material_ref:
+        route_id: route-2bdf11076ffaaefabed7412e
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-2bdf11076ffaaefabed7412e
+    - material_ref:
+        route_id: route-fa9edc00207a51728087b339
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: practise
+      scope_triage: helpful-now
+      route_id: route-fa9edc00207a51728087b339
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-tasks/notes.md
+    attachments: []
+    source_feedback: []
+  - id: stage-sad-l11-representation
+    number: 3
+    title: Data types, features, and representation
+    status: pending
+    objective: Structured, text, image, graph, and temporal data require different preprocessing and representations;
+      domain knowledge determines which transformations preserve useful information.
+    done_when:
+    - 'Reproduce without notes: Structured, text, image, graph, and temporal data require different preprocessing
+      and representations; domain knowledge determines which transformations preserve useful information.'
+    exam_critical: true
+    concepts:
+    - concept-supervised-learning
+    scope_triage: required-now
+    resources:
+    - kind: read
+      label: Current L11 data-science introduction deck
+      locator: lecture-slides/11_datascience_intro.pdf, PDF pp. 10-11,27
+      angle: The current lecture's focused reading for data types, features, and representation.
+      angle_detail: Read physical PDF pages 10-11,27 for this stage. Printed slide labels may differ. This
+        slice focuses the existing deck route; the complete lecture remains accessible through the unit
+        material menu.
+      scope_triage: required-now
+      route_id: route-739f3af86a81ba6168a13cda
+      source_id: source-sad-ss26-lectures
+    - material_ref:
+        route_id: route-ef56936eca783d424d37e8f9
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-ef56936eca783d424d37e8f9
+    - material_ref:
+        route_id: route-2bdf11076ffaaefabed7412e
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-2bdf11076ffaaefabed7412e
+    - material_ref:
+        route_id: route-a848504ea89949cfbedc08aa
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-a848504ea89949cfbedc08aa
+    - material_ref:
+        route_id: route-b92b4a34896b81806c17af27
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-b92b4a34896b81806c17af27
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-representation/notes.md
+    attachments: []
+    source_feedback: []
+  - id: stage-sad-l11-resampling
+    number: 4
+    title: Train, validation, test, cross-validation, and bootstrap
+    status: pending
+    objective: Separate data roles prevent evaluation leakage; repeated splits, cross-validation, and bootstrap
+      estimate different aspects of out-of-sample uncertainty.
+    done_when:
+    - 'Reproduce without notes: Separate data roles prevent evaluation leakage; repeated splits, cross-validation,
+      and bootstrap estimate different aspects of out-of-sample uncertainty.'
+    exam_critical: true
+    concepts:
+    - concept-bootstrap
+    - concept-cross-validation
+    scope_triage: required-now
+    resources:
+    - kind: read
+      label: Current L11 data-science introduction deck
+      locator: lecture-slides/11_datascience_intro.pdf, PDF pp. 22-26,44-46
+      angle: The current lecture's focused reading for train, validation, test, cross-validation, and bootstrap.
+      angle_detail: Read physical PDF pages 22-26,44-46 for this stage. Printed slide labels may differ.
+        This slice focuses the existing deck route; the complete lecture remains accessible through the
+        unit material menu.
+      scope_triage: required-now
+      route_id: route-739f3af86a81ba6168a13cda
+      source_id: source-sad-ss26-lectures
+    - material_ref:
+        route_id: route-15a92bbc0ec66bf68eb86eac
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-15a92bbc0ec66bf68eb86eac
+    - material_ref:
+        route_id: route-3857218e50e782951579fa76
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-3857218e50e782951579fa76
+    - material_ref:
+        route_id: route-cef1e018f91cbdc4c1a2b8e6
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-cef1e018f91cbdc4c1a2b8e6
+    - material_ref:
+        route_id: route-0572fd5f6c01003faa8226d6
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - source_id
+      kind: reference
+      scope_triage: helpful-now
+      route_id: route-0572fd5f6c01003faa8226d6
+    - material_ref:
+        route_id: route-86eed70f7803c597932af9c1
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-86eed70f7803c597932af9c1
+    - material_ref:
+        route_id: route-ad19f7b757106baf204564cc
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-ad19f7b757106baf204564cc
+    - material_ref:
+        route_id: route-4bef9e4af486bc5c7c1517db
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-4bef9e4af486bc5c7c1517db
+    - material_ref:
+        route_id: route-a848504ea89949cfbedc08aa
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-a848504ea89949cfbedc08aa
+    - material_ref:
+        route_id: route-a09696f8181f3ac06a1f50b3
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-a09696f8181f3ac06a1f50b3
+    - material_ref:
+        route_id: route-073e534292fd209e21e05122
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: reference
+      scope_triage: reference-only
+      route_id: route-073e534292fd209e21e05122
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-resampling/notes.md
+    attachments: []
+    source_feedback: []
+  - id: stage-sad-l11-objectives
+    number: 5
+    title: Loss functions, hypotheses, and inductive bias
+    status: pending
+    objective: A learner searches a hypothesis space using an objective; architecture, regularization, features,
+      and optimization encode assumptions about which solutions should generalize.
+    done_when:
+    - 'Reproduce without notes: A learner searches a hypothesis space using an objective; architecture,
+      regularization, features, and optimization encode assumptions about which solutions should generalize.'
+    exam_critical: true
+    concepts:
+    - concept-regularization
+    - concept-supervised-learning
+    scope_triage: required-now
+    resources:
+    - kind: read
+      label: Current L11 data-science introduction deck
+      locator: lecture-slides/11_datascience_intro.pdf, PDF pp. 28-32,40-41
+      angle: The current lecture's focused reading for loss functions, hypotheses, and inductive bias.
+      angle_detail: Read physical PDF pages 28-32,40-41 for this stage. Printed slide labels may differ.
+        This slice focuses the existing deck route; the complete lecture remains accessible through the
+        unit material menu.
+      scope_triage: required-now
+      route_id: route-739f3af86a81ba6168a13cda
+      source_id: source-sad-ss26-lectures
+    - material_ref:
+        route_id: route-ef56936eca783d424d37e8f9
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-ef56936eca783d424d37e8f9
+    - material_ref:
+        route_id: route-15a92bbc0ec66bf68eb86eac
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-15a92bbc0ec66bf68eb86eac
+    - material_ref:
+        route_id: route-cef1e018f91cbdc4c1a2b8e6
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-cef1e018f91cbdc4c1a2b8e6
+    - material_ref:
+        route_id: route-2c0ff06a7bde485d18ff75cf
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-2c0ff06a7bde485d18ff75cf
+    - material_ref:
+        route_id: route-b92b4a34896b81806c17af27
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-b92b4a34896b81806c17af27
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-objectives/notes.md
+    attachments: []
+    source_feedback: []
+  - id: stage-sad-l11-evaluation
+    number: 6
+    title: Evaluation metrics and class imbalance
+    status: pending
+    objective: Accuracy, precision, recall, F1, macro/micro/weighted aggregation, and regression losses
+      answer different questions; metric choice follows costs, prevalence, and deployment context. Compare
+      threshold curves and distinguish ROC-AUC from precision-recall AUC.
+    done_when:
+    - 'Reproduce without notes: Accuracy, precision, recall, F1, macro/micro/weighted aggregation, and regression
+      losses answer different questions; metric choice follows costs, prevalence, and deployment context.'
+    - Work Blatt 5, Aufgabe 3 — multiclass evaluation metrics, then the remaining 2, and record every miss
+      with the step it failed at.
+    - 'From the scored examples in L11 PDF p. 37, calculate TPR, FPR, precision and recall at two thresholds;
+      label ROC and PR axes correctly and explain what each AUC summarizes. Source correction: L11 PDF p.
+      38 (printed 39) calls a precision-recall plot ROC. ROC plots TPR against FPR; a precision-recall curve
+      plots precision against recall. Specify which curve an AUC measures.'
+    exam_critical: true
+    concepts:
+    - concept-classification-metrics
+    scope_triage: required-now
+    resources:
+    - kind: read
+      label: Current L11 data-science introduction deck
+      locator: lecture-slides/11_datascience_intro.pdf, PDF pp. 29-30,33-38
+      angle: Classification metrics, threshold curves and a ROC/PR terminology correction.
+      angle_detail: 'Read physical PDF pages 29-30,33-38 for this stage. Printed slide labels may differ.
+        This slice focuses the existing deck route; the complete lecture remains accessible through the
+        unit material menu. Source correction: L11 PDF p. 38 (printed 39) calls a precision-recall plot
+        ROC. ROC plots TPR against FPR; a precision-recall curve plots precision against recall. Specify
+        which curve an AUC measures.'
+      scope_triage: required-now
+      route_id: route-739f3af86a81ba6168a13cda
+      source_id: source-sad-ss26-lectures
+    - material_ref:
+        route_id: route-7727f3ae5952b397465b1a0b
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: practise
+      scope_triage: required-now
+      route_id: route-7727f3ae5952b397465b1a0b
+    - material_ref:
+        route_id: route-c12dd6c50887bfd88572d36f
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: practise
+      scope_triage: required-now
+      route_id: route-c12dd6c50887bfd88572d36f
+    - material_ref:
+        route_id: route-6d40fed8b4e410539a045c51
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: practise
+      scope_triage: required-now
+      route_id: route-6d40fed8b4e410539a045c51
+    - material_ref:
+        route_id: route-ef56936eca783d424d37e8f9
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-ef56936eca783d424d37e8f9
+    - material_ref:
+        route_id: route-3857218e50e782951579fa76
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-3857218e50e782951579fa76
+    - material_ref:
+        route_id: route-0572fd5f6c01003faa8226d6
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - source_id
+      kind: reference
+      scope_triage: helpful-now
+      route_id: route-0572fd5f6c01003faa8226d6
+    - material_ref:
+        route_id: route-86eed70f7803c597932af9c1
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-86eed70f7803c597932af9c1
+    - material_ref:
+        route_id: route-4bef9e4af486bc5c7c1517db
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-4bef9e4af486bc5c7c1517db
+    - material_ref:
+        route_id: route-081414547c6db9ae902f6ef8
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-081414547c6db9ae902f6ef8
+    - material_ref:
+        route_id: route-a09696f8181f3ac06a1f50b3
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-a09696f8181f3ac06a1f50b3
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-evaluation/notes.md
+    attachments: []
+    source_feedback: []
+  - id: stage-sad-l11-generalization
+    number: 7
+    title: Underfitting, overfitting, and bias-variance
+    status: pending
+    objective: Model complexity trades approximation bias against sensitivity to samples; data volume, regularization,
+      validation, and compute shape the attainable generalization performance.
+    done_when:
+    - 'Reproduce without notes: Model complexity trades approximation bias against sensitivity to samples;
+      data volume, regularization, validation, and compute shape the attainable generalization performance.'
+    - Work Geron Ch 1 exercises - the L11 vocabulary tested back, and record every miss with the step it
+      failed at.
+    exam_critical: true
+    concepts:
+    - concept-bias-variance-tradeoff
+    - concept-variance
+    scope_triage: required-now
+    resources:
+    - kind: read
+      label: Current L11 data-science introduction deck
+      locator: lecture-slides/11_datascience_intro.pdf, PDF pp. 40-46
+      angle: The current lecture's focused reading for underfitting, overfitting, and bias-variance.
+      angle_detail: Read physical PDF pages 40-46 for this stage. Printed slide labels may differ. This
+        slice focuses the existing deck route; the complete lecture remains accessible through the unit
+        material menu.
+      scope_triage: required-now
+      route_id: route-739f3af86a81ba6168a13cda
+      source_id: source-sad-ss26-lectures
+    - material_ref:
+        route_id: route-15a92bbc0ec66bf68eb86eac
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-15a92bbc0ec66bf68eb86eac
+    - material_ref:
+        route_id: route-5140829c57cb7f682e5d916f
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-5140829c57cb7f682e5d916f
+    - material_ref:
+        route_id: route-3857218e50e782951579fa76
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-3857218e50e782951579fa76
+    - material_ref:
+        route_id: route-cef1e018f91cbdc4c1a2b8e6
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-cef1e018f91cbdc4c1a2b8e6
+    - material_ref:
+        route_id: route-86eed70f7803c597932af9c1
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-86eed70f7803c597932af9c1
+    - material_ref:
+        route_id: route-ad19f7b757106baf204564cc
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-ad19f7b757106baf204564cc
+    - material_ref:
+        route_id: route-4bef9e4af486bc5c7c1517db
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-4bef9e4af486bc5c7c1517db
+    - material_ref:
+        route_id: route-2bdf11076ffaaefabed7412e
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-2bdf11076ffaaefabed7412e
+    - material_ref:
+        route_id: route-fa9edc00207a51728087b339
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: practise
+      scope_triage: helpful-now
+      route_id: route-fa9edc00207a51728087b339
+    - material_ref:
+        route_id: route-b92b4a34896b81806c17af27
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - source_id
+      kind: read
+      scope_triage: helpful-now
+      route_id: route-b92b4a34896b81806c17af27
+    - material_ref:
+        route_id: route-073e534292fd209e21e05122
+        inherit:
+        - label
+        - locator
+        - angle
+        - angle_detail
+        - vault_path
+        - source_id
+      kind: reference
+      scope_triage: reference-only
+      route_id: route-073e534292fd209e21e05122
+    working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l11/stages/stage-sad-l11-generalization/notes.md
+    attachments: []
+    source_feedback: []

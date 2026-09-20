@@ -248,6 +248,24 @@ commands:
     - note body is never modified
     - evidence is append-only
     - existing entries are never rewritten or removed
+  unit.plan.revise:
+    handler: unit_plan_revise
+    cli_command: unit-plan-revise
+    writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - operations/transactions/lineage.yaml
+    invariants:
+    - bounded to one existing unit
+    - compact patch names only what changes; unrelated routes are carried forward internally
+    - route add/update/remove operations use stable IDs and reject ambiguity
+    - route additions, removals and evidential changes require a replacement synthesis dossier validated against staged state
+    - context-dependent changes require documented acknowledgments
+    - artifact IDs cover exactly the semantic owners the revision touches
+    - external revision files are bound to their exact bytes by SHA-256 before use
+    - one transaction and one receipt cover the complete revision
   unit.map.import:
     handler: unit_map_import
     cli_command: unit-map-import

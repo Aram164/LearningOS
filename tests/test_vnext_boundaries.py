@@ -113,6 +113,7 @@ def _synthesis(root: Path) -> dict:
             "exercise_value": "Includes a small worked calculation.",
             "best_for": "Checking the lecture's core derivation.",
             "limitations": "Does not cover continuous variables.",
+            "scope_of_absence": "lecture-01.pdf, PDF p. 1 of 1",
             "evidence": [{"locator": "lecture-01.pdf p.1", "checksum": checksum}],
         }],
         "comparisons": [],
@@ -143,13 +144,61 @@ def test_material_synthesis_covers_routes_and_derives_staleness(mini_repo):
         "status": "current", "reasons": [],
     }
 
+    # Prose is outside the basis. Rewording an angle is how a wrong judgment
+    # gets corrected in the canonical place, and it must not cost a whole
+    # unit's reviewed dossier — the old whole-row hash made exactly that edit
+    # stale everything, so corrections migrated into the ungoverned study map.
     source_map = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
     changed = yaml.safe_load(source_map.read_text(encoding="utf-8"))
     changed["sources"][0]["unit_routes"][0]["angle"] = "A changed route judgment."
     write_yaml(source_map, changed)
+    assert material_synthesis_freshness(mini_repo, "unit-demo-l01", value) == {
+        "status": "current", "reasons": [],
+    }
+
+    # A canonical prose fix travels through a gateway transaction, which bumps
+    # the module's logical revision. The dossier must survive that too: the
+    # old compared-revision guard staled every dossier in the module at this
+    # point, including units the edit never touched.
+    from learning_os.revisions import (
+        dump_revisions,
+        load_revisions,
+        revision_ledger_path,
+    )
+    ledger_path = revision_ledger_path(mini_repo)
+    ledger_path.parent.mkdir(parents=True, exist_ok=True)
+    revisions = load_revisions(mini_repo)
+    revisions["module-demo"] = revisions.get("module-demo", 0) + 1
+    ledger_path.write_text(dump_revisions(revisions), encoding="utf-8")
+    assert material_synthesis_freshness(mini_repo, "unit-demo-l01", value) == {
+        "status": "current", "reasons": [],
+    }
+
+    # What the dossier does rest on still stales it: a coverage claim the
+    # assessments were written against is gone.
+    changed["sources"][0]["unit_routes"][0]["covers"] = ["knowledge-demo-l01-extra"]
+    write_yaml(source_map, changed)
     freshness = material_synthesis_freshness(mini_repo, "unit-demo-l01", value)
     assert freshness["status"] == "stale"
     assert "route_set_checksum" in freshness["reasons"]
+
+
+def test_material_basis_refuses_an_unclassified_route_field():
+    """A new source-map field must be classified before it can ride the basis.
+
+    Silently hashing it would make some future prose field stale every dossier
+    again; silently dropping it could hide a real evidential change. Neither is
+    a decision this module gets to make on its own.
+    """
+    from learning_os.materials_resolution import evidential_route_projection
+
+    route = {"id": "route-demo", "source_id": "source-demo", "locator": "a.pdf",
+             "covers": ["knowledge-demo"], "scope": "current", "angle": "prose"}
+    assert "angle" not in evidential_route_projection(route)
+    assert evidential_route_projection(route)["covers"] == ["knowledge-demo"]
+
+    with pytest.raises(ValueError, match="not classified for the material basis"):
+        evidential_route_projection({**route, "reading_time": "20 minutes"})
 
 
 def test_material_synthesis_hashes_every_file_in_a_multi_file_route(mini_repo):

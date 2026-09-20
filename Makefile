@@ -12,7 +12,7 @@ VENV   := .venv
 # Homebrew "externally-managed-environment" errors on macOS.
 PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYTHON))
 
-.PHONY: help check warnings views materials inventory verify-materials contract test test-fast bench lint code-check all setup hooks garden status system-check stress
+.PHONY: help check warnings views materials inventory verify-materials contract test test-fast bench lint code-check all setup hooks garden status plan-check system-check stress
 
 help:
 	@echo "make check  - validate the repository (schemas + semantic rules)"
@@ -34,6 +34,7 @@ help:
 	@echo "make test   - run the complete test suite, including full-repository checks"
 	@echo "make lint   - run the defect-oriented static checks used by CI"
 	@echo "make code-check - verify Core reachability, dependency cycles, and entrypoint direction"
+	@echo "make plan-check - verify a curriculum revision (focused tests, no UI build)"
 	@echo "make system-check - verify Core and the sibling Obsidian UI as one release pair"
 	@echo "make stress - system-check + production/fuzz/concurrency stress + online URL audit"
 	@echo "make all    - check + views + materials + test"
@@ -64,6 +65,17 @@ verify-materials:
 contract:
 	$(PY) tools/schema_contract.py
 	$(PY) tools/manifest_contract.py
+
+# Risk-based verification for a curriculum-only plan revision: full offline
+# validation, the warning gate, the focused curriculum suites, projection
+# regeneration, and a clean diff. Shared Core, schema, gateway, or UI changes
+# still require the full paired `make system-check` release gate.
+plan-check:
+	$(PY) tools/validate.py --compact
+	$(PY) tools/warning_baseline.py --check
+	$(PY) -m pytest -q tests/test_curriculum_v2.py tests/test_unit_plan_revision.py tests/test_module_plan_warning_gate.py tests/test_vnext_boundaries.py
+	$(PY) tools/generate.py
+	git diff --check
 
 garden: views
 	@echo "Garden index rebuilt -> generated/nebula.md"

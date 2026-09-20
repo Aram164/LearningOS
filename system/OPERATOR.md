@@ -172,6 +172,7 @@ Skills and projects use modules and units without false academic metadata.
     creation templates.
 16. A plan is created **and revised** through the declared capabilities —
     `module.plan.import` for a module's source map and its units,
+    `unit.plan.revise` for one existing unit's reviewed material revision,
     `unit.map.import` for one unit's study map, or `route.patch` for one
     existing route's descriptive material fields — never by writing the canonical
     file directly. Drafting happens outside the repository

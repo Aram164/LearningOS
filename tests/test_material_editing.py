@@ -251,3 +251,28 @@ def test_explicit_override_equal_to_owner_is_not_updated_and_patch_replays(mini_
     resources = load_repo(mini_repo).study_maps[smid].data["stages"][0]["resources"]
     assert resources[0]["angle_detail"] == changes["angle_detail"]
     assert resources[1]["angle_detail"] == old_detail
+
+
+def test_route_patch_check_reports_envelope_ready_apply_values(mini_repo):
+    repo, rid, smid = material_fixture(mini_repo)
+    unit_id = repo.study_maps[smid].unit_id
+    changes = {"angle": "A check-then-apply explanation"}
+    check = run_los(mini_repo, "route-patch", unit_id, rid,
+                    "--changes", json.dumps(changes), "--check")
+    assert check.returncode == 0, check.stderr
+    report = json.loads(check.stdout)
+    assert report["canonical_files_written"] == 0
+    hint = report["next"]
+    assert hint["apply_via"] == "GatewayEnvelopeV2"
+    assert hint["capability"] == "route.patch"
+    assert hint["payload"] == {"unit_id": unit_id, "route_id": rid, "changes": changes}
+    assert hint["expected_snapshot"] == report["snapshot_id"]
+    assert hint["expected_revisions"] == report["expected_revisions"]
+    before = canonical_fingerprint(mini_repo)
+    guard_args = ["--expected-snapshot", hint["expected_snapshot"]]
+    for aid, rev in hint["expected_revisions"].items():
+        guard_args += ["--expected-revision", f"{aid}={rev}"]
+    direct = run_los(mini_repo, "route-patch", unit_id, rid,
+                     "--changes", json.dumps(changes), *guard_args)
+    assert direct.returncode != 0
+    assert canonical_fingerprint(mini_repo) == before

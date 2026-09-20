@@ -1,0 +1,39 @@
+schema_version: 2
+id: transaction-20260920-040403-001
+type: transaction-receipt
+status: committed
+capability: unit.plan.revise
+committed_at: '2026-09-20T04:04:03+02:00'
+snapshot_before: sha256:9ec1a0cb4993b8764614ebe350d2a5efad07cf77aa2f10deb6c8247263f26400
+snapshot_after: sha256:b567f58f64379cc0dd715658708aeb7d703dba0b7da7cb567e144a1883036f9d
+expected_revisions:
+  unit-m2-sad-l02: 12
+artifact_revisions:
+  unit-m2-sad-l02:
+    before: 12
+    after: 13
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/study-map.yaml
+  sha256_before: 9a77b5d6a133a745e43443ad81a0189649fc373ab984f086e9a7e0f8143b3df2
+  sha256_after: 40772cbfd31bb5f886a8ede1df702d95d1f1b22b3467175fb9645cb52683419a
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.plan.revise
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: codex
+  request_id: request-reviewed-0e4182d0847643279b21a6afc4100e73
+  idempotency_key: reviewed-299cf9f681d04d019ebc5b869facc6f6
+  intent_sha256: sha256:eb8a1606531f2ed80efaed5fe21184ae3556ce9b818768b95e316aa5372b0e62
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:eb8a1606531f2ed80efaed5fe21184ae3556ce9b818768b95e316aa5372b0e62

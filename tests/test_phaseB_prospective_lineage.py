@@ -258,6 +258,15 @@ def _write_demo_plan(mini_repo, tmp_path):
         "nodes": [{"id": "knowledge-demo-alpha", "title": "Alpha",
                    "summary": "First node."}],
     }
+    # A unit that gains a knowledge map must name its stages' nodes, or the
+    # plan shadow gate refuses: an unlinkable stage is the finding the
+    # STAGE-NODE-UNLINKED rule exists for, not test scaffolding to exempt.
+    map_path = (mini_repo / "curriculum/modules/module-demo/units"
+                / "unit-demo-l01/study-map.yaml")
+    study_map = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    study_map["stages"][0]["knowledge_node_id"] = "knowledge-demo-alpha"
+    map_path.write_text(yaml.safe_dump(study_map, sort_keys=False,
+                                       allow_unicode=True), encoding="utf-8")
     audit_rel = "work/active/workspace-demo/outputs/demo-b-coverage-audit.md"
     audit = mini_repo / audit_rel
     audit.parent.mkdir(parents=True, exist_ok=True)
@@ -706,6 +715,21 @@ def test_post_commit_supported_end_to_end_via_gateway(mini_repo, tmp_path):
     assert refused.returncode == 1
     assert "without claim evidence" in refused.stderr
     package_data["claim_evidence"] = evidence
+    # The semantic review gate (unit revisions, Step 9) names menu shrinkage
+    # explicitly: a removal-only package carries its own acknowledgment.
+    package_data["acknowledgments"] = [{
+        "kind": "coverage-reduction", "target": "unit-demo-l01",
+        "reason": "Withdrawing the superseded rich route to its legacy edge; "
+                  "lineage records the withdrawal.",
+    }, {
+        "kind": "coverage-loss", "target": "knowledge-demo-alpha",
+        "reason": "The legacy edge carries no covers claim; the node is "
+                  "deliberately uncovered until its replacement route lands.",
+    }, {
+        "kind": "demotion", "target": "route-demo-rich",
+        "reason": "Withdrawing the current route to its legacy edge; the "
+                  "withdrawal is the point of this package.",
+    }]
     write_yaml(package, package_data)
     removed = approved_v2_cli(
         mini_repo, "module-plan-import", "module-demo",

@@ -43,8 +43,10 @@ Read the applicable contracts before acting, according to the task:
 
 - **Lookup or study support:** use compact bootstrap, then `inspect`, `search`,
   `related`, or `note-read` for the relevant records. Batch known record IDs in
-  one `inspect` call. Read the relevant workspace and coordination facts when
-  they bear on the question. For cross-domain discovery, consult the **At a
+  one `inspect` call. Return to interrupted study with `los resume` (one
+  screen: stage, requirement, observations, open items, exam sittings)
+  instead of re-deriving state. Read the relevant workspace and coordination
+  facts when they bear on the question. For cross-domain discovery, consult the **At a
   glance** block of the current `generated/domain-atlas.md` before narrowing.
 - **An authorized mutation:** fetch `capabilities NAME --json`, then read the
   owning sections of `system/ARCHITECTURE.md` and `system/WORKFLOWS.md`, the

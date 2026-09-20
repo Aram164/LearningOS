@@ -9,9 +9,6 @@
     "candidate_module_id"
   ],
   "properties": {
-    "approve": {
-      "type": "boolean"
-    },
     "candidate_module_id": {
       "type": "string"
     },

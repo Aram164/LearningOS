@@ -277,6 +277,7 @@ def test_approved_synthesis_projects_strictly_and_indexes_by_unit(mini_repo):
             "exercise_value": "Contains one worked calculation.",
             "best_for": "Rebuilding the derivation.",
             "limitations": "Does not cover continuous variables.",
+            "scope_of_absence": "lecture-01.pdf, PDF p. 1 of 1",
             "evidence": [{"locator": route["locator"], "checksum": checksum}],
         }],
         "comparisons": [],
@@ -324,8 +325,11 @@ def test_approved_synthesis_projects_strictly_and_indexes_by_unit(mini_repo):
     assert "/unit_material_syntheses/0/freshness" in message
     assert "raw_detail" in message
 
+    # An evidential change, not a prose one: rewording an angle no longer
+    # stales a dossier, because the correction belongs on the route and the
+    # old whole-row hash punished putting it there.
     source_map = yaml.safe_load(source_map_path.read_text(encoding="utf-8"))
-    source_map["sources"][0]["unit_routes"][0]["angle"] = "Changed evidence basis."
+    source_map["sources"][0]["unit_routes"][0]["covers"] = ["knowledge-demo-other"]
     write_yaml(source_map_path, source_map)
 
     stale_manifest = build_manifest(load_repo(mini_repo), "T2")

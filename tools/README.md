@@ -21,6 +21,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `validate.py` | supported gate | Offline/online canonical validator. |
 | `generate.py` | supported gate | Deterministic generated-view publisher. |
 | `warning_baseline.py` | supported gate | No-new-warning policy. |
+| `verify_plan_receipt.py` | supported gate | Receipt/projection check for one plan transaction (`make plan-check`). |
 | `code_reachability.py` | supported code gate | Static, code-only import/reachability report. |
 | `schema_contract.py` | supported contract tool | Stored-record contract check and deliberate bump entrypoint. |
 | `tree_contract.py` | supported contract tool | Renders ARCHITECTURE §3.2 from the tree contract; `--check` is what `make check` compares. |
@@ -32,7 +33,9 @@ runtime coverage; the exact roots and historical allowlist live in
 | `assemble_lecture_study_maps.py` | bounded authoring tool | Builds review drafts from already-authored maps; never a general canonical writer. |
 | `build_materials_index.py` | bounded materials maintenance | Builds plain-text material catalogues; its HTML surface is retired unless explicitly requested. |
 | `build_materials_tree.py` | bounded materials maintenance | Maintains the physical topic tree and `.flat` compatibility links. |
+| `material_text.py` | bounded authoring tool | Digest-keyed page-text cache for local materials; read cached pages instead of re-extracting. |
 | `material_toc.py` | bounded authoring tool | Reads local material structure while authoring or checking exact locators. |
+| `material_summarize.py` | bounded authoring tool | Admits reviewed chapter summaries into the digest-keyed summary cache. |
 | `materials_manifest.py` | bounded integrity tool | Builds/verifies the external-material checksum inventory. |
 | `ingest_transcript.py` | bounded materials maintenance | Fetches third-party video captions into the managed materials tree as timestamp-addressable transcripts; writes only under `LearningOS/materials/`, never canonical state. |
 | `refresh_amls_fixture.py` | bounded fixture maintenance | Refreshes the checked-in AMLS paper inventory when its external source changes. |
@@ -40,6 +43,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `plan_write_audit.py` | read-only diagnostic | Reports plan changes without same-commit gateway receipts. |
 | `lift_angle_out_of_locator.py` | compatibility repair | Bounded repair for the former fused locator/angle representation. |
 | `normalise_material_uris.py` | compatibility repair | Bounded conversion from former physical-path material URIs to ID-based URIs. |
+| `diagnostics_prune.py` | bounded maintenance | Prunes the disposable diagnostics trace store to its retention bound. |
 
 The `materials_index/` package is private implementation for
 `build_materials_index.py`.  The `learning_os/` package structure and allowed

@@ -354,6 +354,97 @@ def stable_checksum(value: Any) -> str:
     return sha256_bytes(payload.encode("utf-8"))
 
 
+# What a reviewed dossier actually rests on. `route_material_checksum` pins the
+# material's bytes; these pin the route's own claims about that material — what
+# was read (`locator`), what it is (`format`), what it is said to cover, and
+# whether it is in scope at all.
+EVIDENTIAL_ROUTE_FIELDS = (
+    "id",
+    "unit_id",
+    "source_id",
+    "locator",
+    "url",
+    "vault_path",
+    "format",
+    "covers",
+    "scope",
+    "exposes_solutions_for",
+)
+
+# What it does not rest on. Hashing whole route rows meant a prose-only edit —
+# correcting a wrong `angle` — staled an entire unit's dossier, so the system
+# rewarded recording the correction anywhere except the canonical route. `depth`
+# and `requires_assets` classify how to use a material rather than assert what
+# it contains, and no assessment cites either.
+EXEMPT_ROUTE_FIELDS = (
+    "angle",
+    "angle_detail",
+    "title",
+    "depth",
+    "requires_assets",
+)
+
+
+def evidential_route_projection(route: dict[str, Any]) -> dict[str, Any]:
+    """One route reduced to the fields a reviewed dossier depends on.
+
+    Both lists are exhaustive on purpose. A field belonging to neither raises,
+    so a new source-map field has to be classified once — deliberately, in this
+    module — instead of silently joining the basis or silently escaping it.
+    """
+    unknown = sorted(set(route) - set(EVIDENTIAL_ROUTE_FIELDS) - set(EXEMPT_ROUTE_FIELDS))
+    if unknown:
+        raise ValueError(
+            f"route fields are not classified for the material basis: {unknown}. "
+            "Add each to EVIDENTIAL_ROUTE_FIELDS or EXEMPT_ROUTE_FIELDS in "
+            "learning_os.materials_resolution."
+        )
+    return {key: route[key] for key in EVIDENTIAL_ROUTE_FIELDS if key in route}
+
+
+# The same classification one level up. A source record's standing in the module
+# is evidential — `role` is what "scope authority" is read from. Its `priority`
+# ordering and its `why`/`when` prose are not, and `unit_routes` is projected
+# separately so a route belonging to some other unit cannot stale this one.
+EVIDENTIAL_SOURCE_FIELDS = ("source_id", "role")
+EXEMPT_SOURCE_FIELDS = ("priority", "why", "when", "unit_routes")
+
+
+def evidential_source_map_projection(
+    source_map: dict[str, Any],
+    unit_id: str,
+) -> dict[str, Any]:
+    """The module source map reduced to what one unit's dossier rests on.
+
+    Hashing the file's bytes made every dossier in a module depend on every
+    word in it: correcting an angle on some other unit's route staled this
+    unit too. Only the sources this unit actually routes to are projected, and
+    only their standing — never their prose.
+    """
+    sources: list[dict[str, Any]] = []
+    for source in source_map.get("sources", []) or []:
+        if not isinstance(source, dict):
+            continue
+        routes = source.get("unit_routes", []) or []
+        if not any(isinstance(route, dict) and route.get("unit_id") == unit_id
+                   for route in routes):
+            continue
+        unknown = sorted(set(source) - set(EVIDENTIAL_SOURCE_FIELDS)
+                         - set(EXEMPT_SOURCE_FIELDS))
+        if unknown:
+            raise ValueError(
+                f"source fields are not classified for the material basis: {unknown}. "
+                "Add each to EVIDENTIAL_SOURCE_FIELDS or EXEMPT_SOURCE_FIELDS in "
+                "learning_os.materials_resolution."
+            )
+        sources.append({key: source[key] for key in EVIDENTIAL_SOURCE_FIELDS
+                        if key in source})
+    return {
+        "module_id": source_map.get("module_id"),
+        "sources": sorted(sources, key=lambda row: str(row.get("source_id"))),
+    }
+
+
 def route_material_checksum(repo: Repo, route: dict[str, Any],
                             cache: dict[Path, str] | None = None) -> str:
     """Freshness token for the exact material one route binds.

@@ -59,9 +59,14 @@ from learning_os.commands.material import (  # noqa: E402
     cmd_plan_edit_context,
     cmd_route_patch,
 )
-from learning_os.commands.module import cmd_module_list, cmd_module_plan_import  # noqa: E402
+from learning_os.commands.module import (  # noqa: E402
+    cmd_module_list,
+    cmd_module_plan_import,
+    cmd_unit_plan_revise,
+)
 from learning_os.commands.note import cmd_note_evidence, cmd_note_revise  # noqa: E402
 from learning_os.commands.observation import cmd_observation_append, cmd_observe  # noqa: E402
+from learning_os.commands.operations import cmd_operations  # noqa: E402
 from learning_os.commands.path import (  # noqa: E402
     cmd_path_attach,
     cmd_path_note,
@@ -574,6 +579,8 @@ def build_parser() -> argparse.ArgumentParser:
                        help="1 to 20 distinct routes of this unit, in requested order")
     route.add_argument("--stage-id", default=None,
                        help="one stage's own flags and placements, without the whole map")
+    p.add_argument("--audit", action="store_true",
+                   help="attach the deterministic unit planning audit to the full context")
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_plan_edit_context)
 
@@ -661,7 +668,44 @@ def build_parser() -> argparse.ArgumentParser:
                    help="run contract, routing, and shadow-repository validation without writing")
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
-    p.set_defaults(func=cmd_module_plan_import)
+    p.add_argument(
+        "--apply-reviewed-sha256", type=sha256_value, default=None,
+        metavar="SHA256",
+        help="apply the exact reviewed file bytes through GatewayEnvelopeV2 "
+             "without hand-assembling an envelope",
+    )
+    p.set_defaults(func=cmd_module_plan_import, _parser_factory=build_parser)
+    p.add_argument("--review-report", help="saved --check JSON; required for reviewed apply and exact retries")
+
+    p = sub.add_parser("unit-plan-revise",
+                       help="revise one existing lecture from a compact reviewed patch")
+    p.add_argument("unit_id")
+    unit_revision_source = p.add_mutually_exclusive_group(required=True)
+    unit_revision_source.add_argument(
+        "--file",
+        help="reviewed compact YAML revision for one existing unit",
+    )
+    unit_revision_source.add_argument(
+        "--record",
+        type=json_object,
+        help="inline revision object; the GatewayEnvelopeV2 content-bound form",
+    )
+    p.add_argument(
+        "--file-sha256", type=sha256_value, default=None,
+        help="SHA-256 of the exact revision-file bytes approved for import",
+    )
+    p.add_argument("--check", action="store_true",
+                   help="run contract, routing, and shadow-repository validation without writing")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.add_argument(
+        "--apply-reviewed-sha256", type=sha256_value, default=None,
+        metavar="SHA256",
+        help="apply the exact reviewed revision bytes through GatewayEnvelopeV2 "
+             "without hand-assembling an envelope",
+    )
+    p.set_defaults(func=cmd_unit_plan_revise, _parser_factory=build_parser)
+    p.add_argument("--review-report", help="saved --check JSON; required for reviewed apply and exact retries")
 
     p = sub.add_parser("note-revise",
                        help="replace one existing note after explicit full-file review")
@@ -883,6 +927,13 @@ def build_parser() -> argparse.ArgumentParser:
                    help="optimistic concurrency token from manifest _generated.snapshot_id")
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_path_attach)
+
+    p = sub.add_parser("operations", help="list recent causal operations or explain one request id")
+    p.add_argument("--request-id", default=None,
+                   help="explain one request instead of listing recent operations")
+    p.add_argument("--limit", type=int, default=20,
+                   help="newest operations to list (at most 50)")
+    p.set_defaults(func=cmd_operations)
 
     return parser
 

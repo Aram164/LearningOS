@@ -22,6 +22,7 @@ import json
 import os
 import re
 import shutil
+import stat
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
 from pathlib import Path
@@ -42,7 +43,23 @@ from .contracts.write_scopes import (
     scope_matches,
     write_target,
 )
-from .errors import TransactionFailure
+from .diagnostics import conventions as diag_conventions
+from .diagnostics import tracer as diag_tracer
+from .diagnostics.store import bind_store as _bind_diag_store
+from .errors import (
+    PostCommitFailure,
+    ProjectionFailure,
+    ReplayEvidenceError,
+    TransactionFailure,
+    TransactionIdempotencyConflict,
+    TransactionRecoveryConflict,
+)
+from .evidence import (
+    _default_authority_root,
+    _idempotency_ledger_path,
+    _load_idempotency_entries,
+    verify_committed_evidence,
+)
 
 # One digest, one root list, shared with the projection (see fingerprint.py).
 # Re-exported here because the receipt fields and every existing caller name it
@@ -56,6 +73,7 @@ __all__ = [
     "TransactionConflict",
     "TransactionFailure",
     "TransactionIdempotencyConflict",
+    "TransactionRecoveryConflict",
     "TransactionResult",
     "TransactionSnapshotConflict",
     "TransactionScopeError",
@@ -85,10 +103,6 @@ class TransactionScopeError(TransactionFailure):
     """A transaction target is unsafe or outside its declared capability."""
 
 
-class TransactionIdempotencyConflict(TransactionFailure):
-    """An idempotency key was reused for a different approved intent."""
-
-
 class TransactionSnapshotConflict(TransactionFailure):
     """The approved projection no longer names the canonical state."""
 
@@ -99,18 +113,6 @@ class TransactionSnapshotConflict(TransactionFailure):
             "canonical snapshot conflict "
             f"(expected {expected}, actual {actual})"
         )
-
-
-class ReplayEvidenceError(TransactionFailure):
-    """A persisted success claim does not match its own recorded evidence.
-
-    Raised by ``replay_for_request`` whenever the idempotency ledger row and
-    its named receipt disagree, are malformed, or fail schema validation.
-    Always non-retryable: the underlying write may or may not have happened,
-    but the *evidence* is contradictory, so the only safe response is a
-    refusal that preserves everything for manual reconciliation. The original
-    capability handler must never run in response to this.
-    """
 
 
 @dataclass(frozen=True)
@@ -150,49 +152,6 @@ def _sha256_bytes(value: bytes | None) -> str | None:
     return hashlib.sha256(value).hexdigest() if value is not None else None
 
 
-def _idempotency_ledger_path(root: Path) -> Path:
-    return root / "operations" / "transactions" / "idempotency.yaml"
-
-
-def _load_idempotency_entries(root: Path) -> dict[str, dict]:
-    path = _idempotency_ledger_path(root)
-    if not path.exists() and not path.is_symlink():
-        return {}
-    try:
-        from .loading.yamlio import UniqueKeySafeLoader
-
-        data = yaml.load(read_text_inside(root, path), Loader=UniqueKeySafeLoader)
-    except (OSError, PathBoundaryError, yaml.YAMLError) as exc:
-        raise TransactionFailure(f"idempotency ledger is unreadable: {path}: {exc}") from exc
-    if not isinstance(data, dict) or data.get("schema_version") != 1 \
-            or data.get("type") != "transaction-idempotency-ledger":
-        raise TransactionFailure("idempotency ledger has an unsupported contract")
-    entries = data.get("entries")
-    if not isinstance(entries, dict):
-        raise TransactionFailure("idempotency ledger entries must be a mapping")
-    normalized: dict[str, dict] = {}
-    for key, row in entries.items():
-        if not isinstance(key, str) or not key or not isinstance(row, dict):
-            raise TransactionFailure("idempotency ledger contains an invalid entry")
-        required = {
-            "request_id", "capability", "channel", "intent_sha256", "transaction_id",
-            "receipt_path", "revisions", "snapshot_before", "snapshot_after",
-        }
-        if set(row) != required or not all(isinstance(row.get(name), str) for name in (
-            "request_id", "capability", "channel", "intent_sha256", "transaction_id",
-            "receipt_path", "snapshot_before", "snapshot_after",
-        )) or not isinstance(row.get("revisions"), dict):
-            raise TransactionFailure(f"idempotency ledger entry is malformed: {key}")
-        if any(
-            not isinstance(artifact, str) or isinstance(revision, bool)
-            or not isinstance(revision, int) or revision < 0
-            for artifact, revision in row["revisions"].items()
-        ):
-            raise TransactionFailure(f"idempotency ledger revisions are malformed: {key}")
-        normalized[key] = dict(row)
-    return normalized
-
-
 def _dump_idempotency_entries(entries: Mapping[str, Mapping]) -> str:
     return yaml.safe_dump(
         {
@@ -206,95 +165,6 @@ def _dump_idempotency_entries(entries: Mapping[str, Mapping]) -> str:
     )
 
 
-def _default_authority_root(root: Path) -> Path | None:
-    implicit_catalogue = root / "system" / "contracts" / "capabilities.yaml"
-    return root if implicit_catalogue.is_file() else None
-
-
-def _proven_delivery_delegation(root: Path, receipt: Mapping) -> set[str]:
-    """Return the domain capabilities this receipt's bound delivery actually proves.
-
-    An ``ai-action.delivery.apply`` receipt may claim delegated grants, but a
-    claim in the receipt under review is not evidence of itself. This
-    re-reads and hash-verifies the exact approved delivery the receipt names
-    (the same binding ``apply_delivery`` performed at commit time) and treats
-    only the capability names its own operations record as proven. It never
-    trusts ``receipt["authority"]`` for this — that is precisely the field
-    being checked.
-    """
-    metadata = receipt.get("metadata")
-    delivery_id = metadata.get("delivery_id") if isinstance(metadata, dict) else None
-    approved = metadata.get("approved_delivery") if isinstance(metadata, dict) else None
-    delivery_sha256 = approved.get("delivery_sha256") if isinstance(approved, dict) else None
-    artifact_sha256 = approved.get("artifact_sha256") if isinstance(approved, dict) else None
-    if not isinstance(delivery_id, str) or not delivery_id \
-            or not isinstance(delivery_sha256, str) \
-            or not isinstance(artifact_sha256, dict):
-        raise ReplayEvidenceError(
-            "idempotent receipt for ai-action.delivery.apply carries no bound "
-            "delivery evidence to prove its delegated authority"
-        )
-
-    from .ai_actions.binding import read_bound_delivery
-    from .ai_actions.errors import AIActionError
-    from .ai_actions.storage import FilesystemAIActionRepository
-
-    # Resolving the id is inside the guard too: the exchange-identifier rule is
-    # stricter than the receipt schema's `safeArtifactId` (which accepts a
-    # two-character id the repository refuses), so a schema-valid receipt can
-    # still make this raise. Letting an AIActionError escape here would leave
-    # the gateway with an unhandled traceback instead of a typed refusal.
-    try:
-        directory = FilesystemAIActionRepository(root).delivery_dir(delivery_id)
-        delivery, _artifacts = read_bound_delivery(
-            directory, delivery_sha256=delivery_sha256, artifact_sha256=artifact_sha256,
-        )
-    except AIActionError as exc:
-        raise ReplayEvidenceError(
-            f"cannot re-verify the delivery this receipt claims: {exc}"
-        ) from exc
-
-    # The delivery must be the one whose request this transaction actually
-    # wrote. `metadata.delivery_id` is part of the evidence under review, so on
-    # its own it only proves that *some* real delivery has those bytes: a
-    # tampered receipt could point at an unrelated delivery that happens to
-    # carry the capability it wants proven. Every `ai-action.delivery.apply`
-    # transaction writes its request record, and a delivery names that same
-    # request, so requiring the two to agree ties the delivery back to a write
-    # row this receipt cannot invent.
-    request_id = delivery.get("request_id")
-    if not isinstance(request_id, str) or not request_id:
-        raise ReplayEvidenceError("bound delivery for this receipt names no request")
-    written_paths = {
-        row.get("path") for row in receipt.get("writes") or () if isinstance(row, dict)
-    }
-    if f"operations/ai-actions/requests/{request_id}/request.yaml" not in written_paths:
-        raise ReplayEvidenceError(
-            "the delivery this receipt names belongs to a different request than "
-            "the one this transaction wrote"
-        )
-
-    operations = delivery.get("operations")
-    if not isinstance(operations, list):
-        raise ReplayEvidenceError("bound delivery for this receipt has no operations")
-    proven: set[str] = set()
-    for operation in operations:
-        if not isinstance(operation, dict) or not isinstance(operation.get("capability"), str):
-            raise ReplayEvidenceError("bound delivery for this receipt has a malformed operation")
-        proven.add(operation["capability"])
-    # `garden.update` bookkeeping (the AI-side state file) is written on every
-    # pilot delivery except a whole-unit material-synthesis delivery, whether
-    # or not an explicit `garden.update` operation is present — see
-    # `AIActionService.apply_delivery`. The `action_id` that decides it is read
-    # from the hash-verified delivery, never from the receipt's own metadata:
-    # metadata is part of the evidence under review, so letting it name the
-    # action would let a tampered receipt grant itself this scope by writing a
-    # different action id.
-    if delivery.get("action_id") != "unit.compare-materials":
-        proven.add("garden.update")
-    return proven
-
-
 def replay_for_request(
     root: Path,
     request: GatewayRequestContext,
@@ -303,238 +173,18 @@ def replay_for_request(
 ) -> TransactionResult | None:
     """Return the original committed receipt for an exact approved retry.
 
-    Every cross-binding below runs before anything is returned, and a
-    mismatch or malformed value always raises rather than silently choosing a
-    lenient reading. ``None`` means only one thing: no ledger row exists for
-    this idempotency key at all — every other outcome is either a validated
-    replay or an exception. Nothing here invokes a capability handler.
+    Verification itself lives in :mod:`learning_os.evidence`, shared with
+    the Diagnostics resolver so the Gateway and Operations can never
+    disagree about what a receipt proves. ``None`` means only one thing:
+    no ledger row exists for this idempotency key at all — every other
+    outcome is either a validated replay or an exception. Nothing here
+    invokes a capability handler.
     """
-    row = _load_idempotency_entries(root).get(request.idempotency_key)
-    if row is None:
+    verified = verify_committed_evidence(
+        root, request, authority_root=authority_root)
+    if verified is None:
         return None
-    if row["capability"] != request.capability \
-            or row["intent_sha256"] != request.intent_sha256:
-        raise TransactionIdempotencyConflict(
-            "idempotency key was already used for a different approved intent"
-        )
-    if row["request_id"] != request.request_id:
-        raise ReplayEvidenceError(
-            "idempotency ledger records a different request id for this key"
-        )
-    if row["channel"] != request.channel:
-        raise ReplayEvidenceError(
-            "idempotency ledger records a different channel for this key"
-        )
-
-    receipt_relative = str(row["receipt_path"])
-    try:
-        receipt_path, normalized = write_target(root, root / receipt_relative)
-    except WriteScopeError as exc:
-        raise ReplayEvidenceError(
-            f"idempotency ledger names an unsafe receipt: {exc}"
-        ) from exc
-    if normalized != receipt_relative or not receipt_path.is_file():
-        raise ReplayEvidenceError(
-            "idempotency ledger names a missing or non-canonical receipt"
-        )
-
-    from .loading.yamlio import UniqueKeySafeLoader
-
-    try:
-        receipt = yaml.load(read_text_inside(root, receipt_path), Loader=UniqueKeySafeLoader)
-    except (OSError, PathBoundaryError, yaml.YAMLError) as exc:
-        raise ReplayEvidenceError(f"idempotent receipt is unreadable: {exc}") from exc
-    if not isinstance(receipt, dict):
-        raise ReplayEvidenceError("idempotent receipt is not a mapping")
-
-    schema_root = authority_root or _default_authority_root(root) or root
-    schema_path = schema_root / "system" / "schema" / "transaction-receipt.schema.json"
-    if not schema_path.is_file():
-        raise ReplayEvidenceError(
-            "no transaction receipt schema available to verify replay evidence"
-        )
-    receipt_schema = json.loads(schema_path.read_text(encoding="utf-8"))
-    schema_errors = sorted(
-        Draft202012Validator(receipt_schema).iter_errors(receipt),
-        key=lambda error: list(error.path),
-    )
-    if schema_errors:
-        detail = "; ".join(
-            f"{'/'.join(str(part) for part in error.path) or '<receipt>'}: {error.message}"
-            for error in schema_errors[:4]
-        )
-        raise ReplayEvidenceError(f"idempotent receipt fails schema validation: {detail}")
-
-    if receipt.get("schema_version") != 2:
-        raise ReplayEvidenceError("idempotent receipt is not a GatewayEnvelopeV2 receipt")
-    if receipt.get("id") != row["transaction_id"]:
-        raise ReplayEvidenceError("idempotent receipt id does not match its ledger entry")
-    if receipt.get("capability") != request.capability:
-        raise ReplayEvidenceError("idempotent receipt names a different capability")
-    if receipt.get("status") != "committed":
-        raise ReplayEvidenceError("idempotent receipt is not committed")
-
-    receipt_request = receipt.get("request")
-    if not isinstance(receipt_request, dict):
-        raise ReplayEvidenceError("idempotent receipt has no request record")
-    if receipt_request.get("idempotency_key") != request.idempotency_key:
-        raise ReplayEvidenceError("idempotent receipt does not match its ledger entry")
-    if receipt_request.get("intent_sha256") != request.intent_sha256:
-        raise ReplayEvidenceError("idempotent receipt does not match its ledger entry")
-    if receipt_request.get("request_id") != request.request_id:
-        raise ReplayEvidenceError("idempotent receipt names a different request id")
-    if receipt_request.get("channel") != request.channel:
-        raise ReplayEvidenceError("idempotent receipt names a different channel")
-    approval = receipt_request.get("approval")
-    approval_subject = approval.get("subject_sha256") if isinstance(approval, dict) else None
-    if approval_subject != request.approval_subject_sha256:
-        raise ReplayEvidenceError(
-            "idempotent receipt approval subject does not match this request"
-        )
-
-    if receipt.get("snapshot_before") != row["snapshot_before"] \
-            or receipt.get("snapshot_after") != row["snapshot_after"]:
-        raise ReplayEvidenceError("idempotent receipt snapshot does not match its ledger entry")
-
-    artifact_revisions = receipt.get("artifact_revisions")
-    if not isinstance(artifact_revisions, dict):
-        raise ReplayEvidenceError("idempotent receipt has no artifact revisions")
-    for artifact, after in row["revisions"].items():
-        entry = artifact_revisions.get(artifact)
-        if not isinstance(entry, dict) or entry.get("after") != after:
-            raise ReplayEvidenceError(
-                f"idempotent receipt artifact revision does not match its ledger entry: {artifact}"
-            )
-
-    # The live revision ledger must not contradict this receipt.
-    #
-    # Everything above cross-binds the ledger *row* against the receipt; until
-    # this check, nothing compared either against `revisions.yaml` itself, so a
-    # rolled-back or hand-edited revision ledger replayed cleanly. Revisions
-    # only ever increase, so an artifact standing below the value this
-    # transaction recorded is provable mutation — the one thing about these
-    # shared, multi-entry ledgers a single receipt *can* prove. (The
-    # idempotency ledger needs no equivalent: its row for this key is already
-    # cross-bound field by field above.)
-    live_revisions = load_revisions(root)
-    for artifact, after in row["revisions"].items():
-        current = live_revisions.get(artifact, 0)
-        if current < after:
-            raise ReplayEvidenceError(
-                f"the artifact revision ledger contradicts this receipt: {artifact} "
-                f"stands at {current}, below the {after} this transaction recorded"
-            )
-
-    writes = receipt.get("writes")
-    if not isinstance(writes, list) or not writes:
-        raise ReplayEvidenceError("idempotent receipt records no writes")
-
-    # A transaction's writes are not always all authorized by its own top-level
-    # capability: `ai-action.delivery.apply`, for example, writes its own
-    # service-owned bookkeeping directly but delegates the canonical write to
-    # whatever domain capability originally owns that destination (recorded in
-    # `write_authorities` at commit time). But the receipt's own
-    # `authority.grants` is a claim made by the same untrusted evidence under
-    # review here — it can never be trusted merely because every named
-    # capability is a real, known catalogue entry. An ordinary gateway receipt
-    # may claim exactly the one grant its own top-level capability produced;
-    # an `ai-action.delivery.apply` receipt may additionally claim delegated
-    # domain grants, but only ones proven by re-reading and hash-verifying the
-    # exact approved delivery this receipt names, never merely asserted.
-    authority = receipt.get("authority")
-    grants = authority.get("grants") if isinstance(authority, dict) else None
-    if not isinstance(grants, list) or not grants:
-        raise ReplayEvidenceError("idempotent receipt has no authority grants")
-
-    resolved_authority_root = authority_root or _default_authority_root(root)
-    allowed_scopes: list[str] = []
-    if resolved_authority_root is not None:
-        from .contracts.capability_catalog import (
-            command_definitions,
-            domain_capability_definitions,
-        )
-
-        scopes_by_capability = {
-            name: definition.writes
-            for name, definition in {
-                **command_definitions(resolved_authority_root, include_internal=True),
-                **domain_capability_definitions(resolved_authority_root),
-            }.items()
-        }
-
-        def catalog_scopes_for(name: str) -> tuple[str, ...]:
-            scopes = scopes_by_capability.get(name)
-            if scopes is None:
-                raise ReplayEvidenceError(
-                    f"idempotent receipt names an unknown write authority: {name}"
-                )
-            return scopes
-
-        granted_capabilities: list[str] = []
-        for grant in grants:
-            if not isinstance(grant, dict):
-                raise ReplayEvidenceError("idempotent receipt authority grant is malformed")
-            granted_capability = grant.get("capability")
-            declared = grant.get("declared_writes")
-            if not isinstance(granted_capability, str) or not isinstance(declared, list):
-                raise ReplayEvidenceError("idempotent receipt authority grant is malformed")
-            if tuple(declared) != tuple(catalog_scopes_for(granted_capability)):
-                raise ReplayEvidenceError(
-                    "idempotent receipt authority grant does not match the declared "
-                    f"capability scope: {granted_capability}"
-                )
-            granted_capabilities.append(granted_capability)
-
-        if request.capability == "ai-action.delivery.apply":
-            if "ai-action.delivery.apply" not in granted_capabilities:
-                raise ReplayEvidenceError(
-                    "idempotent receipt for ai-action.delivery.apply carries no grant "
-                    "for its own top-level capability"
-                )
-            delegated = sorted(
-                {c for c in granted_capabilities if c != "ai-action.delivery.apply"}
-            )
-            if delegated:
-                proven = _proven_delivery_delegation(root, receipt)
-                unproven = [c for c in delegated if c not in proven]
-                if unproven:
-                    raise ReplayEvidenceError(
-                        "idempotent receipt claims AI-action delegated authority its "
-                        f"bound delivery does not prove: {', '.join(unproven)}"
-                    )
-        elif granted_capabilities != [request.capability]:
-            raise ReplayEvidenceError(
-                "idempotent receipt authority grants must carry exactly the top-level "
-                "request capability"
-            )
-
-        for granted_capability in granted_capabilities:
-            allowed_scopes.extend(catalog_scopes_for(granted_capability))
-
-    for entry in writes:
-        if not isinstance(entry, dict):
-            raise ReplayEvidenceError("idempotent receipt write row is malformed")
-        relative = entry.get("path")
-        if not isinstance(relative, str) or not relative:
-            raise ReplayEvidenceError("idempotent receipt write row names no path")
-        try:
-            _write_path, normalized_write = write_target(root, root / relative)
-        except WriteScopeError as exc:
-            raise ReplayEvidenceError(
-                f"idempotent receipt write path is unsafe: {exc}"
-            ) from exc
-        if normalized_write != relative:
-            raise ReplayEvidenceError(
-                f"idempotent receipt write path is not canonical: {relative}"
-            )
-        if resolved_authority_root is not None and not any(
-            scope_matches(relative, pattern) for pattern in allowed_scopes
-        ):
-            raise ReplayEvidenceError(
-                "idempotent receipt write path is outside its capability's "
-                f"declared scope: {relative}"
-            )
-
+    receipt, row, receipt_path = verified
     return TransactionResult(
         transaction_id=str(row["transaction_id"]),
         receipt_path=receipt_path,
@@ -633,106 +283,561 @@ def _discard_stale_projection(root: Path, problems: list[str]) -> None:
             f"undone state, and it could not be discarded ({exc}); run `make views`")
 
 
+def _update_intent_after(inflight_dir: Path, relative: str,
+                         content: bytes) -> None:
+    """Complete one journal entry's intended post-state, durably.
+
+    The idempotency ledger's after-image is computed after projection (it
+    embeds snapshot_after), so its journal entry starts without `after`
+    and is completed here, strictly before those bytes are written. The
+    rewrite is atomic: a crash leaves either the previous intent (entry
+    without `after`, treated as unprovable) or the completed one, never a
+    torn journal.
+    """
+    intent_path = inflight_dir / "intent.json"
+    try:
+        intent = json.loads(intent_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError) as exc:
+        raise TransactionFailure(
+            f"transaction cannot update its recovery journal: {exc}"
+        ) from exc
+    if not isinstance(intent, dict) or not isinstance(intent.get("paths"), list):
+        raise TransactionFailure("transaction recovery journal is malformed")
+    for entry in intent["paths"]:
+        if isinstance(entry, dict) and entry.get("path") == relative:
+            entry["after"] = {
+                "kind": "file",
+                "sha256": f"sha256:{hashlib.sha256(content).hexdigest()}",
+            }
+            break
+    else:
+        raise TransactionFailure(
+            f"transaction recovery journal has no entry for {relative}"
+        )
+    _atomic_write_bytes(intent_path, json.dumps(intent).encode("utf-8"))
+
+
+def _inspect_live_path(path: Path) -> tuple[str, str | None]:
+    """Hostile-safe state of one filesystem path. Never follows symlinks.
+
+    Returns ``("absent", None)``, ``("file", hex-digest)``, or
+    ``("other", detail)``. Anything unstatable or unreadable is "other":
+    recovery fails closed rather than guessing about state it cannot read.
+    """
+    try:
+        st = path.lstat()
+    except FileNotFoundError:
+        return ("absent", None)
+    except OSError:
+        return ("other", "unstatable")
+    if stat.S_ISLNK(st.st_mode):
+        return ("other", "symlink")
+    if stat.S_ISDIR(st.st_mode):
+        return ("other", "directory")
+    if not stat.S_ISREG(st.st_mode):
+        return ("other", "special")
+    try:
+        digest = hashlib.sha256(path.read_bytes()).hexdigest()
+    except OSError:
+        return ("other", "unreadable")
+    return ("file", digest)
+
+
+def _resolve_journaled(root: Path, relative: object) -> Path | None:
+    """The live path a journal entry names, or None when corrupt.
+
+    Lexical validation plus a containment check. A terminal symlink is NOT
+    resolved here — inspection classifies it as unexpected without ever
+    following it.
+    """
+    if not isinstance(relative, str) or not relative.strip() \
+            or os.path.isabs(relative):
+        return None
+    candidate = root / relative
+    try:
+        if candidate.is_symlink():
+            return candidate
+        resolved = candidate.resolve()
+    except OSError:
+        return None
+    root_resolved = root.resolve()
+    if resolved != root_resolved and root_resolved not in resolved.parents:
+        return None
+    return candidate
+
+
+def _strip_journal_digest(value: object) -> str | None:
+    if isinstance(value, str) and re.fullmatch(r"sha256:[0-9a-f]{64}", value):
+        return value[len("sha256:"):]
+    return None
+
+
+_JOURNAL_BACKUP_ID = re.compile(r"[A-Za-z0-9_.-]+")
+
+
+def _valid_journal_side(side: object, *, need_backup: bool) -> bool:
+    if not isinstance(side, dict):
+        return False
+    kind = side.get("kind")
+    if kind == "absent":
+        return True
+    if kind != "file":
+        return False
+    if _strip_journal_digest(side.get("sha256")) is None:
+        return False
+    if not need_backup:
+        return True
+    backup_id = side.get("backup_id")
+    return isinstance(backup_id, str) \
+        and _JOURNAL_BACKUP_ID.fullmatch(backup_id) is not None \
+        and backup_id not in (".", "..")
+
+
+def _matches_journal_side(kind: str, digest: str | None, side: dict) -> bool:
+    if side.get("kind") == "absent":
+        return kind == "absent"
+    return kind == "file" and digest == _strip_journal_digest(side.get("sha256"))
+
+
+def _inspect_commit_receipt(root: Path, intent: Mapping) -> tuple[str, str]:
+    """VALID_COMMIT, ABSENT, or CONTRADICTORY for the journal's receipt.
+
+    A file merely existing proves nothing: the receipt must parse,
+    validate against the receipt schema, name this journal's transaction,
+    and read committed — reached through a canonical, non-symlink path.
+    Returns the verdict plus a short structural note.
+    """
+    relative = intent.get("receipt_path")
+    if not isinstance(relative, str) or not relative.strip():
+        return ("CONTRADICTORY", "the journal names no receipt")
+    if os.path.isabs(relative):
+        return ("CONTRADICTORY", "the journal names an absolute receipt path")
+    candidate = root / relative
+    try:
+        if candidate.is_symlink():
+            return ("CONTRADICTORY", "the receipt path is a symlink")
+    except OSError:
+        return ("CONTRADICTORY", "the receipt path cannot be inspected")
+    try:
+        resolved = candidate.resolve()
+    except OSError:
+        return ("CONTRADICTORY", "the receipt path cannot be resolved")
+    root_resolved = root.resolve()
+    if resolved != root_resolved and root_resolved not in resolved.parents:
+        return ("CONTRADICTORY", "the receipt path escapes the repository")
+    if not candidate.exists():
+        return ("ABSENT", "")
+    try:
+        from .loading.yamlio import UniqueKeySafeLoader
+
+        data = yaml.load(
+            read_text_inside(root, candidate), Loader=UniqueKeySafeLoader)
+    except (OSError, PathBoundaryError, yaml.YAMLError):
+        return ("CONTRADICTORY", "the receipt is unreadable")
+    if not isinstance(data, dict):
+        return ("CONTRADICTORY", "the receipt is not a mapping")
+    schema_root = _default_authority_root(root) or root
+    schema_path = schema_root / "system" / "schema" / "transaction-receipt.schema.json"
+    if not schema_path.is_file():
+        return ("CONTRADICTORY", "no receipt schema can verify the receipt")
+    try:
+        schema = json.loads(schema_path.read_text(encoding="utf-8"))
+        invalid = list(Draft202012Validator(schema).iter_errors(data))
+    except (OSError, ValueError):
+        return ("CONTRADICTORY", "the receipt schema cannot be read")
+    if invalid:
+        return ("CONTRADICTORY", "the receipt fails schema validation")
+    if data.get("id") != intent.get("transaction_id"):
+        return ("CONTRADICTORY", "the receipt names a different transaction")
+    if data.get("status") != "committed":
+        return ("CONTRADICTORY", "the receipt is not committed")
+    return ("VALID_COMMIT", "")
+
+
+def _conflict_message(transaction_id: str, journal_rel: str, summary: str,
+                      conflicts: list[dict]) -> str:
+    shown = "; ".join(
+        f"{entry['path']} ({entry['reason']})" for entry in conflicts[:5]
+    )
+    more = f"; and {len(conflicts) - 5} more" if len(conflicts) > 5 else ""
+    return (
+        f"a previous run of transaction {transaction_id} was interrupted "
+        f"mid-write and {summary}: {shown}{more}. No conflicting path was "
+        f"modified and the recovery journal was preserved under {journal_rel} "
+        f"for diagnosis — reconcile the paths by hand, remove the stale "
+        f"journal directory once every path is deliberately placed, and re-run"
+    )
+
+
+def _remove_journal(tx_dir: Path, transaction_id: str, journal_rel: str) -> None:
+    try:
+        shutil.rmtree(tx_dir)
+    except OSError as exc:
+        raise TransactionRecoveryConflict(
+            f"transaction {transaction_id} was reconciled but its recovery "
+            f"journal at {journal_rel} could not be removed ({exc}); no "
+            f"canonical path is affected and the next run retries the cleanup",
+            transaction_id=transaction_id,
+            conflicts=[{"path": journal_rel, "reason": "RESTORE_IO_FAILED",
+                        "detail": "journal cleanup failed"}],
+        ) from exc
+
+
+def _preflight_v2_entry(root: Path, tx_dir: Path, entry: object
+                        ) -> tuple[dict | None, dict | None]:
+    """Classify one version-2 journal entry without touching anything.
+
+    Returns (action, None) where action restores or no-ops the path, or
+    (None, conflict) describing why the path is unprovable.
+    """
+    relative = entry.get("path") if isinstance(entry, dict) else None
+    path = _resolve_journaled(root, relative)
+    if path is None or not isinstance(entry, dict):
+        return None, {"path": str(relative), "reason": "CORRUPT_JOURNAL",
+                      "detail": "journal entry names an unsafe path"}
+    rel = str(relative)
+    before = entry.get("before")
+    after = entry.get("after")
+    if not _valid_journal_side(before, need_backup=True) \
+            or (after is not None
+                and not _valid_journal_side(after, need_backup=False)):
+        return None, {"path": rel, "reason": "CORRUPT_JOURNAL",
+                      "detail": "journal entry is malformed"}
+    if before["kind"] == "file":
+        backup_id = before["backup_id"]
+        backup_path = tx_dir / backup_id
+        try:
+            inside = tx_dir.resolve() in backup_path.resolve().parents
+        except OSError:
+            inside = False
+        if not inside:
+            return None, {"path": rel, "reason": "CORRUPT_JOURNAL",
+                          "detail": f"backup {backup_id} escapes the journal"}
+        try:
+            backup_bytes = backup_path.read_bytes()
+        except OSError:
+            return None, {"path": rel, "reason": "BACKUP_HASH_MISMATCH",
+                          "detail": f"backup {backup_id} is missing"}
+        if hashlib.sha256(backup_bytes).hexdigest() \
+                != _strip_journal_digest(before["sha256"]):
+            return None, {"path": rel, "reason": "BACKUP_HASH_MISMATCH",
+                          "detail": f"backup {backup_id} disagrees with the journal"}
+    kind, observed = _inspect_live_path(path)
+    if _matches_journal_side(kind, observed, before):
+        return {"path": path, "before": before, "after": after,
+                "restore": False}, None
+    if after is not None and _matches_journal_side(kind, observed, after):
+        return {"path": path, "before": before, "after": after,
+                "restore": True}, None
+    if kind == "other":
+        return None, {"path": rel, "reason": "UNEXPECTED_FILE_TYPE",
+                      "detail": f"live path is {observed}"}
+    current = "absent" if kind == "absent" else f"file@{observed[:12]}"
+    return None, {"path": rel, "reason": "DIVERGED_FROM_TRANSACTION",
+                  "detail": f"live {current} matches neither recorded side"}
+
+
+def _reconcile_v2_journal(root: Path, tx_dir: Path, intent: dict) -> None:
+    """Compare-and-undo recovery for one schema-2 journal.
+
+    Either fully unwinds the crashed transaction (every path proven back
+    at its pre-state, journal removed) or raises
+    TransactionRecoveryConflict having changed nothing — except a
+    mid-restore crash or IO failure, which the next run completes
+    idempotently because restored paths read as pre-state.
+    """
+    raw_id = intent.get("transaction_id")
+    transaction_id = raw_id if isinstance(raw_id, str) and raw_id else tx_dir.name
+    journal_rel = _safe_relative(root, tx_dir)
+    entries = intent.get("paths")
+    if not isinstance(entries, list):
+        conflicts = [{"path": journal_rel, "reason": "CORRUPT_JOURNAL",
+                      "detail": "journal lists no paths"}]
+        raise TransactionRecoveryConflict(
+            _conflict_message(transaction_id, journal_rel,
+                              "its journal lists no paths", conflicts),
+            transaction_id=transaction_id, conflicts=conflicts)
+    verdict, detail = _inspect_commit_receipt(root, intent)
+    raw_receipt = intent.get("receipt_path")
+    receipt_ref = raw_receipt if isinstance(raw_receipt, str) and raw_receipt \
+        else journal_rel
+    if verdict == "VALID_COMMIT":
+        _remove_journal(tx_dir, transaction_id, journal_rel)
+        return
+    if verdict == "CONTRADICTORY":
+        conflicts = [{"path": receipt_ref, "reason": "INVALID_COMMIT_RECEIPT",
+                      "detail": detail or "receipt contradicts the journal"}]
+        raise TransactionRecoveryConflict(
+            _conflict_message(transaction_id, journal_rel,
+                              "its commit receipt is contradictory", conflicts),
+            transaction_id=transaction_id, conflicts=conflicts)
+    # PASS 1 — read-only preflight over every path. One conflict anywhere
+    # stops the whole unwind before a single byte changes.
+    plan = []
+    conflicts = []
+    for entry in entries:
+        action, conflict = _preflight_v2_entry(root, tx_dir, entry)
+        if conflict is not None:
+            conflicts.append(conflict)
+        else:
+            plan.append(action)
+    if conflicts:
+        raise TransactionRecoveryConflict(
+            _conflict_message(
+                transaction_id, journal_rel,
+                f"{len(conflicts)} of {len(entries)} paths cannot be proven "
+                f"transaction-owned", conflicts),
+            transaction_id=transaction_id, conflicts=conflicts)
+    # PASS 2 — restore proven-owned paths, rechecking each first so a
+    # mutation between preflight and restore fails closed instead of
+    # clobbering it. Cooperative LearningOS writers hold the operator
+    # lock across recovery, so this recheck only ever fires on
+    # non-cooperative filesystem mutation mid-run.
+    restores = [action for action in plan if action["restore"]]
+    for action in restores:
+        path, before, after = action["path"], action["before"], action["after"]
+        kind, observed = _inspect_live_path(path)
+        if after is None or not _matches_journal_side(kind, observed, after):
+            conflict = {"path": _safe_relative(root, path),
+                        "reason": "DIVERGED_FROM_TRANSACTION",
+                        "detail": "path changed during recovery"}
+            raise TransactionRecoveryConflict(
+                _conflict_message(transaction_id, journal_rel,
+                                  "a path changed during recovery", [conflict]),
+                transaction_id=transaction_id, conflicts=[conflict])
+        try:
+            if before["kind"] == "absent":
+                path.unlink()
+            else:
+                blob = (tx_dir / before["backup_id"]).read_bytes()
+                if hashlib.sha256(blob).hexdigest() \
+                        != _strip_journal_digest(before["sha256"]):
+                    conflict = {"path": _safe_relative(root, path),
+                                "reason": "BACKUP_HASH_MISMATCH",
+                                "detail": "backup changed during recovery"}
+                    raise TransactionRecoveryConflict(
+                        _conflict_message(transaction_id, journal_rel,
+                                          "a backup changed during recovery",
+                                          [conflict]),
+                        transaction_id=transaction_id, conflicts=[conflict])
+                _atomic_write_bytes(path, blob)
+        except OSError as exc:
+            conflict = {"path": _safe_relative(root, path),
+                        "reason": "RESTORE_IO_FAILED",
+                        "detail": f"restore could not be written: {exc}"}
+            raise TransactionRecoveryConflict(
+                _conflict_message(transaction_id, journal_rel,
+                                  "a proven-safe restore could not be written",
+                                  [conflict]),
+                transaction_id=transaction_id, conflicts=[conflict]) from exc
+    # PASS 3 — prove the footprint is fully pre-state before dropping the
+    # evidence that describes it.
+    drifted = []
+    for action in plan:
+        kind, observed = _inspect_live_path(action["path"])
+        if not _matches_journal_side(kind, observed, action["before"]):
+            drifted.append({"path": _safe_relative(root, action["path"]),
+                            "reason": "DIVERGED_FROM_TRANSACTION",
+                            "detail": "path changed during recovery"})
+    if drifted:
+        raise TransactionRecoveryConflict(
+            _conflict_message(transaction_id, journal_rel,
+                              "a path changed during recovery", drifted),
+            transaction_id=transaction_id, conflicts=drifted)
+    problems: list[str] = []
+    _discard_stale_projection(root, problems)
+    if problems:
+        raise TransactionRecoveryConflict(
+            f"transaction {transaction_id} was unwound but its stale "
+            f"projection could not be discarded ({problems[0][:160]}); no "
+            f"canonical path is affected, the journal was preserved under "
+            f"{journal_rel}, and the next run retries the cleanup",
+            transaction_id=transaction_id,
+            conflicts=[{"path": "generated/manifest.json",
+                        "reason": "RESTORE_IO_FAILED",
+                        "detail": "stale projection could not be discarded"}])
+    _remove_journal(tx_dir, transaction_id, journal_rel)
+
+
+def _reconcile_v1_journal(root: Path, tx_dir: Path, intent: dict) -> None:
+    """Fail-closed handling for a version-1 (undo-only) journal.
+
+    Version 1 records pre-state but no post-state, so a diverged path
+    cannot distinguish crashed bytes from foreign bytes. Clean only what
+    is provably already rolled back; anything else conflicts with the
+    journal preserved. A `created` file that exists is NEVER unlinked:
+    nobody can prove who owns those bytes.
+    """
+    raw_id = intent.get("transaction_id")
+    transaction_id = raw_id if isinstance(raw_id, str) and raw_id else tx_dir.name
+    journal_rel = _safe_relative(root, tx_dir)
+    verdict, detail = _inspect_commit_receipt(root, intent)
+    raw_receipt = intent.get("receipt_path")
+    receipt_ref = raw_receipt if isinstance(raw_receipt, str) and raw_receipt \
+        else journal_rel
+    if verdict == "VALID_COMMIT":
+        _remove_journal(tx_dir, transaction_id, journal_rel)
+        return
+    if verdict == "CONTRADICTORY":
+        conflicts = [{"path": receipt_ref, "reason": "INVALID_COMMIT_RECEIPT",
+                      "detail": detail or "receipt contradicts the journal"}]
+        raise TransactionRecoveryConflict(
+            _conflict_message(transaction_id, journal_rel,
+                              "its commit receipt is contradictory", conflicts),
+            transaction_id=transaction_id, conflicts=conflicts)
+    rows = intent.get("backups")
+    if not isinstance(rows, list):
+        conflicts = [{"path": journal_rel, "reason": "CORRUPT_JOURNAL",
+                      "detail": "journal lists no backups"}]
+        raise TransactionRecoveryConflict(
+            _conflict_message(transaction_id, journal_rel,
+                              "its journal lists no backups", conflicts),
+            transaction_id=transaction_id, conflicts=conflicts)
+    unprovable = []
+    for row in rows:
+        relative = row.get("path") if isinstance(row, dict) else None
+        path = _resolve_journaled(root, relative)
+        if path is None or not isinstance(row, dict):
+            unprovable.append(
+                {"path": str(relative), "reason": "CORRUPT_JOURNAL",
+                 "detail": "journal entry names an unsafe path"})
+            continue
+        rel = str(relative)
+        created = row.get("created") is True
+        backup_id = row.get("backup_id")
+        has_backup = isinstance(backup_id, str) and backup_id != ""
+        if created == has_backup:
+            unprovable.append(
+                {"path": rel, "reason": "CORRUPT_JOURNAL",
+                 "detail": "journal entry is malformed"})
+            continue
+        if created:
+            kind, _observed = _inspect_live_path(path)
+            if kind != "absent":
+                unprovable.append(
+                    {"path": rel, "reason": "LEGACY_JOURNAL_UNPROVABLE",
+                     "detail": "a version-1 journal cannot prove who owns "
+                              "these bytes; never deleted"})
+            continue
+        backup_path = tx_dir / backup_id
+        try:
+            inside = tx_dir.resolve() in backup_path.resolve().parents
+        except OSError:
+            inside = False
+        if not inside:
+            unprovable.append(
+                {"path": rel, "reason": "CORRUPT_JOURNAL",
+                 "detail": f"backup {backup_id} escapes the journal"})
+            continue
+        try:
+            blob = backup_path.read_bytes()
+        except OSError:
+            unprovable.append(
+                {"path": rel, "reason": "LEGACY_JOURNAL_UNPROVABLE",
+                 "detail": f"backup {backup_id} is missing"})
+            continue
+        kind, observed = _inspect_live_path(path)
+        if kind != "file" or observed != hashlib.sha256(blob).hexdigest():
+            unprovable.append(
+                {"path": rel, "reason": "LEGACY_JOURNAL_UNPROVABLE",
+                 "detail": "live bytes differ from the recorded pre-state"})
+    if unprovable:
+        raise TransactionRecoveryConflict(
+            _conflict_message(
+                transaction_id, journal_rel,
+                f"its version-1 journal cannot prove {len(unprovable)} of "
+                f"{len(rows)} paths already rolled back", unprovable),
+            transaction_id=transaction_id, conflicts=unprovable)
+    problems: list[str] = []
+    _discard_stale_projection(root, problems)
+    if problems:
+        raise TransactionRecoveryConflict(
+            f"transaction {transaction_id} was reconciled but its stale "
+            f"projection could not be discarded ({problems[0][:160]}); no "
+            f"canonical path is affected, the journal was preserved under "
+            f"{journal_rel}, and the next run retries the cleanup",
+            transaction_id=transaction_id,
+            conflicts=[{"path": "generated/manifest.json",
+                        "reason": "RESTORE_IO_FAILED",
+                        "detail": "stale projection could not be discarded"}])
+    _remove_journal(tx_dir, transaction_id, journal_rel)
+
+
 def reconcile_inflight_transactions(root: Path) -> None:
-    """Roll back any transaction a dead process left half-applied.
+    """Unwind any transaction a dead process left half-applied, provably.
 
     Runs while the operator lock is held, before the command that acquired it
     does anything, so a crashed predecessor's partial write is undone before it
     can be read as canonical state.
 
+    Compare-and-undo: recovery may modify a path only while it can prove the
+    path is still either the crashed transaction's exact post-state (safe to
+    undo) or its original pre-state (already undone, a no-op). A path
+    matching neither is foreign state a later writer owns: recovery touches
+    nothing, preserves the journal, and raises
+    TransactionRecoveryConflict. When evidence is insufficient, preserve
+    state and report ambiguity rather than guessing.
+
     CRASH RECOVERY BOUNDARY:
-    Recovery restores a transaction, not a set of files. The commit boundary
-    is exactly the successful writing of the transaction receipt file.
-    - If a crash happens BEFORE the receipt is written, the transaction is
-      uncommitted. Recovery uses intent.json backups to roll back all canonical
-      files to their pre-transaction state.
-    - If a crash happens AFTER the receipt is written, the transaction is
-      committed. Recovery preserves the canonical files and the receipt, and
-      simply cleans up the .inflight journal. An acknowledged commit is never undone.
+    The commit boundary is exactly a valid, matching, committed receipt at
+    the journal's receipt path — a file merely existing there proves
+    nothing. A valid receipt means the transaction committed: never roll
+    back, just clean the stale journal. No receipt means compare-and-undo;
+    a contradictory receipt means conflict with everything preserved.
 
-    Nothing here is allowed to fail quietly. A recovery that cannot restore a
-    file leaves the repository in exactly the half-applied state it was called
-    to repair, and a caller that proceeds anyway then reads that state as
-    authored truth — the failure this whole mechanism exists to prevent. So
-    every problem is collected and raised, and the record is left on disk for
-    the next attempt rather than deleted.
-
-    Idempotent by construction: restoring a file to bytes it already holds is a
-    no-op, and a record is removed only once its own rollback has fully
-    succeeded, so running twice does the same thing as running once.
+    Journals unwind newest first, so stacked crashes resolve from the latest
+    backwards instead of deadlocking. Recovery is restart-idempotent: paths
+    restored by an interrupted run read as pre-state, so the next run
+    finishes them as no-ops and continues. Version-1 journals (pre-state
+    only, no post-state hashes) are handled conservatively: cleaned when
+    provably already rolled back, conflicted otherwise, never blindly
+    replayed.
     """
     inflight_dir = root / "operations" / "transactions" / ".inflight"
     if not inflight_dir.is_dir():
         return
-
-    problems: list[str] = []
-    rolled_back = False
-    for tx_dir in sorted(inflight_dir.iterdir()):
-        if not tx_dir.is_dir():
-            continue
+    # Newest first: stacked journals unwind from the latest crash backwards.
+    # Transaction ids sort chronologically, so descending names unwinds the
+    # stack instead of reading a newer transaction's bytes as foreign.
+    tx_dirs = sorted(
+        (entry for entry in inflight_dir.iterdir()
+         if entry.is_dir() and not entry.is_symlink()),
+        reverse=True,
+    )
+    for tx_dir in tx_dirs:
         intent_path = tx_dir / "intent.json"
-        if not intent_path.is_file():
-            # The intent is written before the first canonical replacement, so
-            # its absence means the crash happened before anything changed.
-            # Only the staged backups are here, and they describe nothing.
+        if intent_path.is_symlink() or not intent_path.is_file():
+            # The intent is written before the first canonical replacement,
+            # so its absence means the crash happened before anything
+            # changed. Only staged backups are here, describing nothing.
             shutil.rmtree(tx_dir, ignore_errors=True)
             continue
         try:
             intent = json.loads(intent_path.read_text(encoding="utf-8"))
         except (OSError, ValueError) as exc:
-            problems.append(f"{tx_dir.name}: its record of what to undo is unreadable ({exc})")
-            continue
-
-        receipt_relative = intent.get("receipt_path")
-        if isinstance(receipt_relative, str) and receipt_relative:
-            receipt_file = (root / receipt_relative).resolve()
-            if root.resolve() in receipt_file.parents and receipt_file.is_file():
-                try:
-                    shutil.rmtree(tx_dir)
-                except OSError as exc:
-                    problems.append(f"{tx_dir.name}: cleanup of committed transaction failed: {exc}")
-                continue
-
-        failures: list[str] = []
-        for row in reversed(intent.get("backups", [])):
-            relative = row.get("path")
-            if not isinstance(relative, str) or not relative:
-                failures.append("a record entry names no path")
-                continue
-            path = (root / relative).resolve()
-            if root.resolve() not in path.parents:
-                failures.append(f"{relative} resolves outside the repository")
-                continue
-            try:
-                if row.get("created"):
-                    # The transaction created this file; undoing means removing it.
-                    path.unlink(missing_ok=True)
-                elif row.get("backup_id"):
-                    backup_file = tx_dir / str(row["backup_id"])
-                    if not backup_file.is_file():
-                        failures.append(f"{relative}: its backup copy is missing")
-                        continue
-                    _atomic_write_bytes(path, backup_file.read_bytes())
-                else:
-                    failures.append(f"{relative}: the record says neither created nor backed up")
-            except OSError as exc:
-                failures.append(f"{relative}: {exc}")
-
-        if failures:
-            problems.append(f"{tx_dir.name}: " + "; ".join(failures))
-            continue
-        rolled_back = True
-        shutil.rmtree(tx_dir, ignore_errors=True)
-
-    if rolled_back:
-        _discard_stale_projection(root, problems)
-
-    if problems:
-        raise TransactionFailure(
-            "a previous run was interrupted mid-write and could not be rolled back; "
-            "the repository may hold part of an unfinished change. Resolve these before "
-            "writing again — the rollback records are preserved under "
-            f"operations/transactions/.inflight/: {'; '.join(problems)}")
+            raise TransactionRecoveryConflict(
+                f"transaction {tx_dir.name} left a recovery journal that "
+                f"cannot be read ({exc}); nothing was modified and the "
+                f"journal was preserved under "
+                f"{_safe_relative(root, tx_dir)} for diagnosis",
+                transaction_id=tx_dir.name,
+                conflicts=[{
+                    "path": _safe_relative(root, intent_path),
+                    "reason": "UNREADABLE_JOURNAL",
+                    "detail": "journal cannot be read"}],
+            ) from exc
+        if not isinstance(intent, dict):
+            journal_rel = _safe_relative(root, tx_dir)
+            conflicts = [{"path": journal_rel, "reason": "CORRUPT_JOURNAL",
+                          "detail": "journal is not a mapping"}]
+            raise TransactionRecoveryConflict(
+                _conflict_message(tx_dir.name, journal_rel,
+                                  "its journal is not a mapping", conflicts),
+                transaction_id=tx_dir.name, conflicts=conflicts)
+        if intent.get("schema_version", 1) == 2:
+            _reconcile_v2_journal(root, tx_dir, intent)
+        else:
+            _reconcile_v1_journal(root, tx_dir, intent)
 
 
 class TransactionService:
@@ -777,6 +882,10 @@ class TransactionService:
     ) -> TransactionResult:
         if not capability or not capability.strip():
             raise TransactionFailure("transaction capability must be named")
+        _bind_diag_store(self.root)
+        diag_tracer.emit_event(
+            diag_conventions.EVENT_TRANSACTION_STARTED,
+            attrs={"capability": capability})
         request = gateway_request or current_gateway_request()
         if request is not None:
             if request.capability != capability:
@@ -788,6 +897,10 @@ class TransactionService:
                 raise TransactionFailure("gateway request authority is unsupported")
             if request.approval_subject_sha256 != request.intent_sha256 \
                     or not re.fullmatch(r"sha256:[a-f0-9]{64}", request.intent_sha256):
+                diag_tracer.emit_event(
+                    diag_conventions.EVENT_STAGE_FAILED,
+                    stage="core.approval", status="error",
+                    attrs={"error": "approval not bound to intent"})
                 raise TransactionFailure(
                     "gateway approval is not bound to the transaction intent"
                 )
@@ -989,6 +1102,10 @@ class TransactionService:
                 )
             approved_snapshot = approved_snapshot or request.expected_snapshot
         if approved_snapshot is not None and approved_snapshot != snapshot_before_id:
+            diag_tracer.emit_event(
+                diag_conventions.EVENT_STAGE_FAILED,
+                stage="core.snapshot_guard", status="error",
+                attrs={"error": "snapshot changed since approval"})
             raise TransactionSnapshotConflict(
                 approved_snapshot,
                 snapshot_before_id,
@@ -997,6 +1114,11 @@ class TransactionService:
         # its historical precedence when the same concurrent write also moved
         # an artifact revision.
         if conflicts:
+            diag_tracer.emit_event(
+                diag_conventions.EVENT_STAGE_FAILED,
+                stage="core.revision_guard", status="error",
+                attrs={"error": "artifact revision moved",
+                       "artifacts": sorted(conflicts)})
             raise TransactionConflict(conflicts)
 
         inflight_dir = self.root / "operations" / "transactions" / ".inflight" / transaction_id
@@ -1028,19 +1150,50 @@ class TransactionService:
 
         try:
             commit_reached = False
+            failed_stage = "core.commit"
             inflight_dir.mkdir(parents=True, exist_ok=True)
-            intent = {
-                "transaction_id": transaction_id, 
+            # Compare-and-undo journal (schema v2): for every mutated path,
+            # the pre-state (with its backup blob) AND the intended
+            # post-state hash. Recovery restores a path only while the live
+            # file still equals one of the two recorded sides; anything
+            # else is foreign state a later writer owns and must never be
+            # touched. The journal and all backups are durable before the
+            # first canonical mutation below.
+            delete_set = set(delete_paths)
+            intent: dict = {
+                "schema_version": 2,
+                "transaction_id": transaction_id,
                 "receipt_path": _safe_relative(self.root, receipt_path),
-                "backups": []
+                "paths": [],
             }
             for i, (path, old) in enumerate(backups.items()):
-                row = {"path": _safe_relative(self.root, path), "created": old is None}
-                if old is not None:
+                if old is None:
+                    before: dict = {"kind": "absent"}
+                else:
                     backup_id = f"backup-{i}"
-                    row["backup_id"] = backup_id
                     _atomic_write_bytes(inflight_dir / backup_id, old)
-                intent["backups"].append(row)
+                    before = {
+                        "kind": "file",
+                        "sha256": f"sha256:{_sha256_bytes(old)}",
+                        "backup_id": backup_id,
+                    }
+                entry: dict = {
+                    "path": _safe_relative(self.root, path),
+                    "before": before,
+                }
+                if path in delete_set:
+                    entry["after"] = {"kind": "absent"}
+                elif path in normalized_writes:
+                    entry["after"] = {
+                        "kind": "file",
+                        "sha256": f"sha256:{_sha256_bytes(normalized_writes[path])}",
+                    }
+                # Otherwise the entry carries no `after`: the idempotency
+                # ledger's after-image is computed after projection (it
+                # embeds snapshot_after) and completed by
+                # _update_intent_after before that write lands. Until then
+                # recovery treats anything but `before` as unprovable.
+                intent["paths"].append(entry)
             _atomic_write_bytes(inflight_dir / "intent.json", json.dumps(intent).encode("utf-8"))
 
             for path, content in normalized_writes.items():
@@ -1053,14 +1206,29 @@ class TransactionService:
                 if path.is_dir():
                     raise TransactionFailure(f"transaction refuses to delete directory: {path}")
                 path.unlink(missing_ok=True)
+            failed_stage = "core.validation"
             if validate_state is not None:
                 errors = list(validate_state())
                 if errors:
                     preview = "; ".join(str(issue) for issue in errors[:6])
+                    # Telemetry carries the tag and the count, never the
+                    # preview: validator text may quote canonical prose. The
+                    # detail still travels to the caller on the exception.
+                    diag_tracer.emit_event(
+                        diag_conventions.EVENT_STAGE_FAILED,
+                        stage="core.validation", status="error",
+                        attrs={"error": "canonical validation failed",
+                               "issues": len(errors)})
                     raise TransactionFailure(
                         f"transaction failed canonical validation: {preview}"
                     )
+            diag_tracer.emit_event(diag_conventions.EVENT_VALIDATION_PASSED)
+            failed_stage = "core.projection"
+            diag_tracer.emit_event(diag_conventions.EVENT_PROJECTION_STARTED)
             projected_snapshot = publish() if publish is not None else None
+            diag_tracer.emit_event(
+                diag_conventions.EVENT_PROJECTION_PUBLISHED,
+                attrs={"snapshot": projected_snapshot})
 
             snapshot_after = take_fingerprint()
             snapshot_after_id = f"sha256:{snapshot_after}"
@@ -1070,6 +1238,7 @@ class TransactionService:
                     "canonical state changed during projection publication "
                     f"(projected {projected_snapshot}, actual {snapshot_after_id})"
                 )
+            failed_stage = "core.commit"
             if request is not None and idempotency_path is not None \
                     and idempotency_entries is not None:
                 idempotency_entries[request.idempotency_key] = {
@@ -1086,8 +1255,13 @@ class TransactionService:
                 idempotency_content = _dump_idempotency_entries(
                     idempotency_entries
                 ).encode("utf-8")
+                # The journal leads the mutation it describes: record the
+                # after-image before these bytes land.
+                _update_intent_after(
+                    inflight_dir, _idempotency_relative, idempotency_content)
                 _atomic_write_bytes(idempotency_path, idempotency_content)
                 normalized_writes[idempotency_path] = idempotency_content
+            failed_stage = "core.receipt"
             rows = []
             for path, after in normalized_writes.items():
                 if path == ledger_path or path == idempotency_path:
@@ -1173,6 +1347,16 @@ class TransactionService:
                 raise TransactionFailure(f"receipt path already exists: {receipt_path}")
             _atomic_write_bytes(receipt_path, _receipt_text(receipt).encode("utf-8"))
             commit_reached = True
+            # The irrevocable point: receipt bytes are durable and the except
+            # path below no longer rolls back. `core.transaction.committed`
+            # names exactly this line, nothing earlier.
+            diag_tracer.emit_event(
+                diag_conventions.EVENT_CORE_TRANSACTION_COMMITTED,
+                attrs={"transaction_id": transaction_id,
+                       "snapshot_after": snapshot_after_id})
+            diag_tracer.emit_event(
+                diag_conventions.EVENT_RECEIPT_PERSISTED,
+                attrs={"receipt": _safe_relative(self.root, receipt_path)})
 
             # Bookkeeping is part of the commit boundary. If it fails, remove
             # the newly-created receipt together with the canonical writes so
@@ -1196,9 +1380,41 @@ class TransactionService:
             )
         except Exception as exc:
             if commit_reached:
-                raise TransactionFailure(f"transaction committed but post-commit hooks failed: {exc}") from exc
+                diag_tracer.emit_event(
+                    diag_conventions.EVENT_STAGE_FAILED,
+                    stage="core.commit", status="error",
+                    attrs={"error": "post-commit hook failed after commit",
+                           "committed": True})
+                raise PostCommitFailure(
+                    f"transaction committed but post-commit hooks failed: {exc}",
+                    transaction_id=transaction_id,
+                    receipt_path=_safe_relative(self.root, receipt_path),
+                    snapshot_after=snapshot_after_id,
+                ) from exc
 
+            # Telemetry carries the exception kind, never its body: messages
+            # quote paths, errno text, and handler prose. The body still
+            # travels to the caller on the re-raised exception.
+            diag_tracer.emit_event(
+                diag_conventions.EVENT_STAGE_FAILED,
+                stage=failed_stage, status="error",
+                attrs={"error": type(exc).__name__})
+            diag_tracer.emit_event(diag_conventions.EVENT_ROLLBACK_STARTED)
             rollback_failures = rollback()
+            diag_tracer.emit_event(
+                diag_conventions.EVENT_ROLLBACK_COMPLETED,
+                status="ok" if not rollback_failures else "error",
+                attrs={"failures": sorted(rollback_failures)})
+            if failed_stage == "core.projection":
+                # Typed projection provenance: the gateway classifies by
+                # subsystem and rollback outcome, never by exception prose.
+                # Message text stays byte-identical to the untyped path.
+                if rollback_failures:
+                    raise ProjectionFailure(
+                        f"{exc}; rollback incomplete for: {', '.join(rollback_failures)}",
+                        rollback_complete=False,
+                    ) from exc
+                raise ProjectionFailure(str(exc), rollback_complete=True) from exc
             if rollback_failures:
                 raise TransactionFailure(
                     f"{exc}; rollback incomplete for: {', '.join(rollback_failures)}"
