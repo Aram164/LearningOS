@@ -17,6 +17,7 @@ from learning_os.derived import (
     DerivedError,
     NodeSpec,
     evaluate,
+    evaluate_many,
 )
 
 
@@ -258,6 +259,27 @@ def test_non_serializable_value_is_loud(tmp_path: Path):
     registry = {"a": (_spec("a", producer), lambda ctx: {"bad": object()})}
     with pytest.raises(DerivedError):
         evaluate(tmp_path, "a", registry=registry, inputs={})
+
+
+def test_evaluate_many_shares_one_session(tmp_path: Path):
+    producer = _producer(tmp_path)
+    calls: list[str] = []
+
+    def build(ctx):
+        calls.append(ctx.spec.id)
+        return {"id": ctx.spec.id}
+
+    registry = {
+        "shared": (_spec("shared", producer), build),
+        "left": (_spec("left", producer, dependencies=("shared",)), build),
+        "right": (_spec("right", producer, dependencies=("shared",)), build),
+    }
+    trace: list = []
+    results = evaluate_many(tmp_path, ["left", "right"], registry=registry, inputs={}, trace=trace)
+    assert sorted(results) == ["left", "right"]
+    assert sorted(calls) == ["left", "right", "shared"]
+    assert [(event.node, event.status) for event in trace] == [
+        ("shared", "rebuilt"), ("left", "rebuilt"), ("right", "rebuilt")]
 
 
 def test_trace_is_optional_and_diagnostic_only(tmp_path: Path):

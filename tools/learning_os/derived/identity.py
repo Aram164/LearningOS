@@ -10,7 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import os
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from pathlib import Path, PurePosixPath
 
 from ..pathing import PathBoundaryError, read_bytes_inside
@@ -89,6 +89,35 @@ def digest_paths(root: Path, paths: Sequence[str]) -> str:
         digest.update(relative.as_posix().encode("utf-8"))
         digest.update(b"\0")
         digest.update(digest_file(root, root.joinpath(*relative.parts)).encode("ascii"))
+        digest.update(b"\0")
+    return digest.hexdigest()
+
+
+def digest_matching_files(root: Path, paths: Iterable[Path]) -> str:
+    """Digest an explicit file set: sorted relative paths plus contents.
+
+    Loader-faithful selection is the caller's job (mirror the loader's
+    glob/rglob exactly, including its missing-dir tolerance); hashing is
+    shared here. A rename moves the digest even when bytes are identical.
+    Members must sit under ``root`` lexically; a member outside it is a
+    programming bug and fails closed. Missing members digest distinctly
+    (never silently dropped), so callers must pass the full selected set.
+    """
+    relatives: set[str] = set()
+    for path in paths:
+        candidate = path if path.is_absolute() else root / path
+        try:
+            rel = candidate.relative_to(root)
+        except ValueError as exc:
+            raise DerivedError(f"derived input escapes its root: {path}") from exc
+        if not rel.parts or any(part in {"", ".", ".."} for part in rel.parts):
+            raise DerivedError(f"derived input is not normalized under root: {path}")
+        relatives.add(rel.as_posix())
+    digest = hashlib.sha256()
+    for rel in sorted(relatives):
+        digest.update(rel.encode("utf-8"))
+        digest.update(b"\0")
+        digest.update(digest_file(root, root / rel).encode("ascii"))
         digest.update(b"\0")
     return digest.hexdigest()
 

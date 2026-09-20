@@ -27,6 +27,16 @@ class DerivedError(ValueError):
 #: without requiring each producer to know about it.
 ENGINE_VERSION = 1
 
+#: Implementation files every derived evaluation depends on. Consumers
+#: include these in their node producer lists so substrate changes
+#: invalidate cached values without a manual version bump.
+DERIVED_SUBSTRATE_FILES = (
+    "tools/learning_os/derived/engine.py",
+    "tools/learning_os/derived/identity.py",
+    "tools/learning_os/derived/model.py",
+    "tools/learning_os/derived/store.py",
+)
+
 
 @dataclass(frozen=True)
 class InputRef:

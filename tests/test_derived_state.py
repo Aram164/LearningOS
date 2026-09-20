@@ -161,6 +161,44 @@ def test_digest_paths_is_order_independent_and_missing_aware(tmp_path: Path):
     assert digest_paths(tmp_path, ["a.md", "gone.md"]) != digest_paths(tmp_path, ["a.md", "b.md"])
 
 
+def test_digest_matching_files_covers_paths_and_bytes(tmp_path: Path):
+    from learning_os.derived import digest_matching_files
+
+    first = tmp_path / "a.md"
+    second = tmp_path / "sub" / "b.md"
+    second.parent.mkdir()
+    first.write_text("one", encoding="utf-8")
+    second.write_text("two", encoding="utf-8")
+    base = digest_matching_files(tmp_path, [first, second])
+    assert base == digest_matching_files(tmp_path, [second, first])
+    assert base == digest_matching_files(tmp_path, [first, second, first])
+    second.write_text("changed", encoding="utf-8")
+    assert digest_matching_files(tmp_path, [first, second]) != base
+    moved = tmp_path / "c.md"
+    first.rename(moved)
+    assert digest_matching_files(tmp_path, [moved, second]) != base
+
+
+def test_digest_matching_files_distinguishes_absence(tmp_path: Path):
+    from learning_os.derived import digest_matching_files
+
+    present = tmp_path / "a.md"
+    present.write_text("x", encoding="utf-8")
+    with_file = digest_matching_files(tmp_path, [present])
+    present.unlink()
+    assert digest_matching_files(tmp_path, [present]) != with_file
+    assert digest_matching_files(tmp_path, []) != with_file
+
+
+def test_digest_matching_files_rejects_escape(tmp_path: Path):
+    from learning_os.derived import digest_matching_files
+
+    with pytest.raises(DerivedError):
+        digest_matching_files(tmp_path, [tmp_path / ".." / "outside.md"])
+    with pytest.raises(DerivedError):
+        digest_matching_files(tmp_path, [Path("/abs.md")])
+
+
 def test_digest_producer_files_fails_closed(tmp_path: Path):
     (tmp_path / "tools").mkdir()
     (tmp_path / "tools" / "producer.py").write_text("v1", encoding="utf-8")
