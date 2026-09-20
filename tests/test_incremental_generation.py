@@ -544,6 +544,141 @@ def test_corrupt_backlinks_blob_heals_without_cascade(tmp_path: Path):
     }
 
 
+# ---------------------------------------------------------------------------
+# D. Real-repo replay: scenarios A-F on a disposable copy.
+# ---------------------------------------------------------------------------
+
+REPLAY_NOTE = "knowledge/notes/algorithms/note-algo2-amortized-analysis-exercise-bank.md"
+
+
+def _copy_live_tree(tmp_path: Path) -> Path:
+    import shutil
+
+    copy = tmp_path / "live-copy"
+    shutil.copytree(
+        REPO_ROOT, copy,
+        ignore=shutil.ignore_patterns(
+            ".git", ".venv", "generated", "__pycache__", ".pytest_cache",
+            ".ruff_cache", ".DS_Store"),
+    )
+    return copy
+
+
+def _replay_rerun(copy: Path) -> dict[str, tuple[str, str]]:
+    trace: list = []
+    comparison = compare_shadow_generation(load_repo(copy), STAMP, trace=trace)
+    assert comparison.equivalent, comparison.artifacts
+    return _trace_summary(trace)
+
+
+@pytest.mark.full_repo
+def test_real_repo_replay_scenarios(tmp_path: Path):
+    copy = _copy_live_tree(tmp_path)
+    relations_file = copy / "knowledge" / "concept-relations.yaml"
+    source_file = sorted((copy / "sources" / "registry").glob("*.yaml"))[0]
+    workspace_file = sorted((copy / "work" / "active").glob("*/CONTEXT.md"))[0]
+    note_file = copy / REPLAY_NOTE
+    pristine = {
+        path: path.read_bytes()
+        for path in (note_file, relations_file, workspace_file, source_file)
+    }
+
+    def restore():
+        for path, data in pristine.items():
+            path.write_bytes(data)
+
+    # Scenario A: cold then warm on the pristine copy.
+    assert _replay_rerun(copy) == {
+        BACKLINKS_SEMANTIC_ID: ("rebuilt", "cache-miss"),
+        CONCEPT_MAP_BODY_ID: ("rebuilt", "cache-miss"),
+        DEPENDENCY_REPORT_BODY_ID: ("rebuilt", "cache-miss"),
+    }
+    all_hit = {
+        BACKLINKS_SEMANTIC_ID: ("hit", "node-key-equal"),
+        CONCEPT_MAP_BODY_ID: ("hit", "node-key-equal"),
+        DEPENDENCY_REPORT_BODY_ID: ("hit", "node-key-equal"),
+    }
+    assert _replay_rerun(copy) == all_hit
+
+    # Scenario B: note prose append (no new links).
+    note_file.write_text(
+        note_file.read_text(encoding="utf-8") + "\nReplay probe sentence without links.\n",
+        encoding="utf-8")
+    assert _replay_rerun(copy) == {
+        BACKLINKS_SEMANTIC_ID: ("rebuilt", "node-key-changed-output-same"),
+        CONCEPT_MAP_BODY_ID: ("hit", "node-key-equal"),
+        DEPENDENCY_REPORT_BODY_ID: ("hit", "node-key-equal"),
+    }
+    restore()
+    assert _replay_rerun(copy) == {
+        BACKLINKS_SEMANTIC_ID: ("rebuilt", "node-key-changed-output-same"),
+        CONCEPT_MAP_BODY_ID: ("hit", "node-key-equal"),
+        DEPENDENCY_REPORT_BODY_ID: ("hit", "node-key-equal"),
+    }
+
+    # Scenario C: note concept metadata gains an entry.
+    meta, body = parse_frontmatter(note_file.read_text(encoding="utf-8"), note_file)
+    concepts = list(meta.get("concepts", []) or [])
+    concepts.append("concept-replay-probe")
+    meta["concepts"] = concepts
+    note_file.write_text(
+        "---\n" + yaml.safe_dump(meta, sort_keys=False).rstrip() + "\n---\n\n" + body.lstrip(),
+        encoding="utf-8")
+    assert _replay_rerun(copy) == {
+        BACKLINKS_SEMANTIC_ID: ("rebuilt", "node-key-changed-output-changed"),
+        CONCEPT_MAP_BODY_ID: ("hit", "node-key-equal"),
+        DEPENDENCY_REPORT_BODY_ID: ("rebuilt", "node-key-changed-output-same"),
+    }
+    restore()
+    assert _replay_rerun(copy) == {
+        BACKLINKS_SEMANTIC_ID: ("rebuilt", "node-key-changed-output-changed"),
+        CONCEPT_MAP_BODY_ID: ("hit", "node-key-equal"),
+        DEPENDENCY_REPORT_BODY_ID: ("rebuilt", "node-key-changed-output-same"),
+    }
+
+    # Scenario D: a new requires edge between two real concepts.
+    repo = load_repo(copy)
+    first, second = sorted(repo.concepts)[:2]
+    data = yaml.safe_load(relations_file.read_text(encoding="utf-8"))
+    data["relations"].append({"from": first, "type": "requires", "to": second})
+    write_yaml(relations_file, data)
+    assert _replay_rerun(copy) == {
+        BACKLINKS_SEMANTIC_ID: ("rebuilt", "node-key-changed-output-changed"),
+        CONCEPT_MAP_BODY_ID: ("rebuilt", "node-key-changed-output-changed"),
+        DEPENDENCY_REPORT_BODY_ID: ("rebuilt", "node-key-changed-output-changed"),
+    }
+    restore()
+    assert _replay_rerun(copy) == {
+        BACKLINKS_SEMANTIC_ID: ("rebuilt", "node-key-changed-output-changed"),
+        CONCEPT_MAP_BODY_ID: ("rebuilt", "node-key-changed-output-changed"),
+        DEPENDENCY_REPORT_BODY_ID: ("rebuilt", "node-key-changed-output-changed"),
+    }
+
+    # Scenario E: workspace body prose append.
+    workspace_file.write_text(
+        workspace_file.read_text(encoding="utf-8") + "\nReplay probe sentence.\n",
+        encoding="utf-8")
+    assert _replay_rerun(copy) == {
+        BACKLINKS_SEMANTIC_ID: ("rebuilt", "node-key-changed-output-same"),
+        CONCEPT_MAP_BODY_ID: ("hit", "node-key-equal"),
+        DEPENDENCY_REPORT_BODY_ID: ("rebuilt", "node-key-changed-output-same"),
+    }
+    restore()
+    assert _replay_rerun(copy) == {
+        BACKLINKS_SEMANTIC_ID: ("rebuilt", "node-key-changed-output-same"),
+        CONCEPT_MAP_BODY_ID: ("hit", "node-key-equal"),
+        DEPENDENCY_REPORT_BODY_ID: ("rebuilt", "node-key-changed-output-same"),
+    }
+
+    # Scenario F: an unrelated source title change.
+    data = yaml.safe_load(source_file.read_text(encoding="utf-8"))
+    data["sources"][0]["title"] = data["sources"][0]["title"] + " (replay probe)"
+    write_yaml(source_file, data)
+    assert _replay_rerun(copy) == all_hit
+    restore()
+    assert _replay_rerun(copy) == all_hit
+
+
 @pytest.mark.full_repo
 def test_splits_are_byte_identical_on_real_repo():
     repo = load_repo(REPO_ROOT)
