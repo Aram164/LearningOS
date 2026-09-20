@@ -43,6 +43,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `plan_write_audit.py` | read-only diagnostic | Reports plan changes without same-commit gateway receipts. |
 | `lift_angle_out_of_locator.py` | compatibility repair | Bounded repair for the former fused locator/angle representation. |
 | `normalise_material_uris.py` | compatibility repair | Bounded conversion from former physical-path material URIs to ID-based URIs. |
+| `diagnostics_prune.py` | bounded maintenance | Prunes the disposable diagnostics trace store to its retention bound. |
 
 The `materials_index/` package is private implementation for
 `build_materials_index.py`.  The `learning_os/` package structure and allowed
