@@ -255,9 +255,9 @@ stages:
   resources:
   - kind: read
     label: Current L11 data-science introduction deck
-    locator: lecture-slides/11_datascience_intro.pdf, PDF pp. 24-26,44-46
+    locator: lecture-slides/11_datascience_intro.pdf, PDF pp. 22-26,44-46
     angle: The current lecture's focused reading for train, validation, test, cross-validation, and bootstrap.
-    angle_detail: Read physical PDF pages 24-26,44-46 for this stage. Printed slide labels may differ.
+    angle_detail: Read physical PDF pages 22-26,44-46 for this stage. Printed slide labels may differ.
       This slice focuses the existing deck route; the complete lecture remains accessible through the
       unit material menu.
     scope_triage: required-now
