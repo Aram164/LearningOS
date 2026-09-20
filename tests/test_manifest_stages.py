@@ -30,6 +30,7 @@ from learning_os.genout.manifest import (
     project_manifest_records,
     publish_manifest_metadata,
 )
+from learning_os.genout.modules_view import _academic_deadlines
 from learning_os.genout.projection import (
     build_indexes,
     build_module_concept_edges,
@@ -106,6 +107,9 @@ def _assemble_via_stages(repo, generated_at, backlinks) -> dict:
         progress=progress,
         inbox_items=count_inbox_items(repo.root),
         adoption=adoption_counts(repo),
+        project_aliases=repo.project_aliases,
+        resume_pointer=repo.resume_pointer,
+        academic_deadlines=_academic_deadlines(repo),
     )
     return {
         "_generated": publish_manifest_metadata(repo, generated_at),
