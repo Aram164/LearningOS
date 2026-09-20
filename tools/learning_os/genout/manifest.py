@@ -114,6 +114,37 @@ def project_manifest_prerequisites(
     }
 
 
+#: Published record-group sequence. Record order is part of the published
+#: file; both the production projector and the derived shadow splice
+#: through this order so the two cannot drift.
+RECORD_SPLICE_ORDER = (
+    "notes",
+    "concepts",
+    "sources",
+    "projects",
+    "project_relationships",
+    "project_aliases",
+    "modules",
+    "collections",
+    "workspaces",
+    "learning_paths",
+    "programs",
+    "units",
+    "study_maps",
+    "source_maps",
+    "unit_material_syntheses",
+    "coordination",
+)
+
+
+def splice_manifest_records(groups: dict[str, list]) -> list[dict]:
+    """Concatenate per-domain record groups in published order."""
+    records: list[dict] = []
+    for name in RECORD_SPLICE_ORDER:
+        records.extend(groups[name])
+    return records
+
+
 def project_manifest_records(
     repo: Repo,
     projected_revision: Callable[[str, dict | None], int],
@@ -124,26 +155,26 @@ def project_manifest_records(
     """Every canonical record in published order.
 
     Record order is part of the published file. Each projector owns one
-    domain's shape; this list owns the sequence they appear in.
+    domain's shape; RECORD_SPLICE_ORDER owns the sequence they appear in.
     """
-    return [
-        *project_notes(repo),
-        *project_concepts(repo),
-        *project_sources(repo, projected_revision),
-        *project_projects(repo, projected_revision),
-        *project_project_relationships(repo),
-        *project_project_aliases(repo),
-        *project_modules(repo, projected_revision),
-        *project_collections(repo, projected_revision),
-        *project_workspaces(repo, projected_revision),
-        *project_learning_paths(repo, projected_revision),
-        *project_programs(repo, projected_revision),
-        *project_units(repo, projected_revision, unit_to_projects),
-        *project_study_maps(repo, projected_revision, source_maps),
-        *source_maps,
-        *unit_material_syntheses,
-        *project_coordination(repo),
-    ]
+    return splice_manifest_records({
+        "notes": project_notes(repo),
+        "concepts": project_concepts(repo),
+        "sources": project_sources(repo, projected_revision),
+        "projects": project_projects(repo, projected_revision),
+        "project_relationships": project_project_relationships(repo),
+        "project_aliases": project_project_aliases(repo),
+        "modules": project_modules(repo, projected_revision),
+        "collections": project_collections(repo, projected_revision),
+        "workspaces": project_workspaces(repo, projected_revision),
+        "learning_paths": project_learning_paths(repo, projected_revision),
+        "programs": project_programs(repo, projected_revision),
+        "units": project_units(repo, projected_revision, unit_to_projects),
+        "study_maps": project_study_maps(repo, projected_revision, source_maps),
+        "source_maps": list(source_maps),
+        "unit_material_syntheses": list(unit_material_syntheses),
+        "coordination": project_coordination(repo),
+    })
 
 
 def build_manifest_relations(repo: Repo) -> list[dict]:
@@ -247,6 +278,9 @@ def assemble_manifest_semantic_payload(
     progress: dict,
     inbox_items: int,
     adoption: dict,
+    project_aliases: dict[str, str],
+    resume_pointer: dict | None,
+    academic_deadlines: list[dict],
 ) -> dict:
     """The complete semantic body: every payload key except ``_generated``."""
     return {
@@ -266,13 +300,13 @@ def assemble_manifest_semantic_payload(
         # subset of this list (registered attempts only) and a second shape for
         # the same facts. `exam_spine` survives as the helper behind
         # the Markdown views and `los.py status --json` (ADR-006, 2026-08-03).
-        "academic_deadlines": _academic_deadlines(repo),
+        "academic_deadlines": academic_deadlines,
         "thematic_groups": thematic_groups,
         "topics": topics_v2,
         "topic_packs": collections["topic_packs"],
         "projects": collections["projects"],
         "project_relationships": collections["project_relationships"],
-        "project_aliases": dict(sorted(repo.project_aliases.items())),
+        "project_aliases": dict(sorted(project_aliases.items())),
         "artifact_revisions": dict(sorted(artifact_revisions.items())),
         "programs": collections["programs"],
         "semesters": semesters_v2,
@@ -283,7 +317,7 @@ def assemble_manifest_semantic_payload(
         "module_concept_edges": module_concept_edges,
         "module_source_maps": collections["module_source_maps"],
         "unit_material_syntheses": unit_material_syntheses_v2,
-        "resume_pointer": dict(repo.resume_pointer or {}),
+        "resume_pointer": dict(resume_pointer or {}),
         "garden_entries": garden_entries,
         "review_items": review_items,
         "ai_actions": ai_projection["ai_actions"],
@@ -395,6 +429,9 @@ def build_manifest(repo: Repo, generated_at: str, backlinks: dict | None = None,
             progress=progress,
             inbox_items=inbox_items,
             adoption=adoption,
+            project_aliases=repo.project_aliases,
+            resume_pointer=repo.resume_pointer,
+            academic_deadlines=_academic_deadlines(repo),
         ),
     }
     # The published shape is a versioned interface, so the producer proves it
