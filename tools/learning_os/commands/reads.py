@@ -8,7 +8,7 @@ import re
 import sys
 from pathlib import PurePosixPath
 
-from learning_os.derived import evaluate
+from learning_os.derived import DerivedError, evaluate
 from learning_os.errors import unreadable_refusal
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.genout.atlas import ATLAS_DOMAINS
@@ -195,12 +195,6 @@ def cmd_note_read(args) -> int:
         return _refusal(exc)
 
 
-#: Staged rollout for the derived-state search index: the builders land
-#: with the flag off (dead branch, zero behavior change); the cutover
-#: commit removes the flag and always takes the indexed path.
-USE_SEARCH_INDEX = False
-
-
 def _match_verified(items, terms):
     """Run the current regex verification over admitted note bytes.
 
@@ -297,9 +291,14 @@ def content_search(args) -> int:
             if note_failures:
                 raise WriteRefused(unreadable_refusal(root, note_failures, "search"))
             ordered = sorted(repo.notes.values(), key=lambda row: row.id)
-            if USE_SEARCH_INDEX:
+            try:
                 matches = _indexed_content_search(root, ordered, terms, raw_terms)
-            else:
+            except DerivedError:
+                # The index is a pure accelerator: any cache failure
+                # (tampering already self-healed before raising) falls
+                # back to the exhaustive implementation, never to a
+                # partial answer. Bytes/symlink refusals are not
+                # DerivedError and still propagate unchanged.
                 matches = _exhaustive_content_search(root, ordered, terms)
             return _print_stable(root, snapshot, {
                 "contract": "note-content-search", "items": matches[offset:offset + limit],
