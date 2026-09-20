@@ -44,6 +44,24 @@ BLOBS_DIRNAME = "blobs"
 _BLOB_RE = re.compile(r"[0-9a-f]{64}")
 
 
+def _state_payload(states: dict[str, NodeState]) -> dict:
+    """State file content: the GEN-HEADER warning block plus node entries."""
+    return {
+        "_generated": {
+            "warning": (
+                "GENERATED file - do not edit; "
+                "delete generated/derived-state/ to reset the cache"
+            ),
+            "generator": "learning_os.derived.store",
+        },
+        "schema_version": STATE_SCHEMA_VERSION,
+        "nodes": {
+            key: {"node_key": item.node_key, "output_sha256": item.output_sha256, "blob": item.blob}
+            for key, item in states.items()
+        },
+    }
+
+
 def derived_dir(root: Path) -> Path:
     """The derived-state directory (not created as a side effect)."""
     return root / "generated" / DERIVED_TOP_DIR
@@ -128,14 +146,9 @@ def invalidate(root: Path, node_id: str) -> None:
     if node_id not in states:
         return
     del states[node_id]
-    payload = {
-        "schema_version": STATE_SCHEMA_VERSION,
-        "nodes": {
-            key: {"node_key": item.node_key, "output_sha256": item.output_sha256, "blob": item.blob}
-            for key, item in states.items()
-        },
-    }
-    _atomic_write(_checked_store_dir(root, DERIVED_TOP_DIR) / STATE_FILENAME, canonical_bytes(payload))
+    _atomic_write(
+        _checked_store_dir(root, DERIVED_TOP_DIR) / STATE_FILENAME,
+        canonical_bytes(_state_payload(states)))
 
 
 def lookup(root: Path, node_id: str) -> tuple[NodeState, Any] | None:
@@ -212,12 +225,7 @@ def store_node(root: Path, node_id: str, *, node_key: str, value: Any) -> NodeSt
     states = read_state(root)
     state = NodeState(node_key=node_key, output_sha256=digest, blob=f"{BLOBS_DIRNAME}/{digest}")
     states[node_id] = state
-    payload = {
-        "schema_version": STATE_SCHEMA_VERSION,
-        "nodes": {
-            key: {"node_key": item.node_key, "output_sha256": item.output_sha256, "blob": item.blob}
-            for key, item in states.items()
-        },
-    }
-    _atomic_write(_checked_store_dir(root, DERIVED_TOP_DIR) / STATE_FILENAME, canonical_bytes(payload))
+    _atomic_write(
+        _checked_store_dir(root, DERIVED_TOP_DIR) / STATE_FILENAME,
+        canonical_bytes(_state_payload(states)))
     return state
