@@ -41,7 +41,10 @@ class TraceEvent:
 
     node: str
     status: str  # "hit" | "rebuilt"
-    reason: str  # "node-key-equal" | "cache-miss" | "node-key-changed"
+    # identity-hit | cold-miss | stale-key with same output (pruned
+    # upstream: dependents are unaffected) | stale-key with new output.
+    reason: str  # "node-key-equal" | "cache-miss"
+    #            | "node-key-changed-output-same" | "node-key-changed-output-changed"
     node_key: str
     output_sha256: str
     previous_output_sha256: str | None = None
@@ -112,10 +115,15 @@ class _Session:
             root=self.root, spec=spec, inputs=resolved, dependencies=dependencies))
         output = digest_bytes(canonical_bytes(value))
         store_node(self.root, node_id, node_key=key, value=value)
+        if previous is None:
+            reason = "cache-miss"
+        elif previous.output_sha256 == output:
+            reason = "node-key-changed-output-same"
+        else:
+            reason = "node-key-changed-output-changed"
         return self._finish(
-            node_id, value, output, "rebuilt",
-            "node-key-changed" if previous is not None else "cache-miss",
-            key, previous.output_sha256 if previous is not None else None)
+            node_id, value, output, "rebuilt", reason, key,
+            previous.output_sha256 if previous is not None else None)
 
     def _finish(self, node_id: str, value: Any, output: str, status: str,
                 reason: str, key: str, previous_output: str | None) -> Evaluation:
