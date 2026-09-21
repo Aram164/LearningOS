@@ -680,8 +680,8 @@ def test_real_repo_replay_scenarios(tmp_path: Path):
 
 
 @pytest.mark.full_repo
-def test_splits_are_byte_identical_on_real_repo():
-    repo = load_repo(REPO_ROOT)
+def test_splits_are_byte_identical_on_real_repo(real_repo):
+    repo = real_repo
     old_backlinks = build_backlinks(repo, STAMP)
     assert publish_backlinks(repo, build_backlinks_semantic(repo), STAMP) == old_backlinks
     assert _backlinks_bytes(

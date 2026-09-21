@@ -24,6 +24,7 @@ TOOLS_ROOT = Path(__file__).resolve().parent
 # deliberately a gate failure until its lifecycle is classified in this list
 # and in tools/README.md.
 ENTRYPOINTS = (
+    "affected_tests.py",
     "assemble_lecture_study_maps.py",
     "build_materials_index.py",
     "build_materials_tree.py",

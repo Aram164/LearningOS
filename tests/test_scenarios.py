@@ -39,9 +39,9 @@ def test_scenario_7_exam_attempt_lifecycle(mini_repo):
 
 
 @pytest.mark.full_repo
-def test_scenario_7_on_real_repo(repo_root):
+def test_scenario_7_on_real_repo(real_repo):
     """The real modules.yaml exercises withdrawal + second sitting + Kombimodul."""
-    repo = load_repo(repo_root)
+    repo = real_repo
     assert repo.modules, "modules.yaml is empty"
     has_withdrawal = any(
         any(a.get("result") == "withdrawn" for a in m.get("attempts", []) or [])
@@ -112,6 +112,18 @@ def _is_admin_fact_context(value: str) -> bool:
     return _ARTIFACT_DATE_CUE.search(value) is None
 
 
+def _variant_pattern(forms: dict[str, set[str]]) -> re.Pattern[str]:
+    """One alternation over every owned date spelling, longest first.
+
+    The scan below runs per line of ~40k live-tree lines; a single C-level
+    regex search rejects lines containing no owned date before the per-iso
+    Python loop and its cell splitting run. Yield-identical: a line with no
+    variant substring can never yield, whatever its context.
+    """
+    alts = sorted({v for vs in forms.values() for v in vs}, key=len, reverse=True)
+    return re.compile("|".join(re.escape(v) for v in alts))
+
+
 def _matching_variant(value: str, variants: set[str]) -> str | None:
     return next(
         (variant for variant in sorted(variants, key=len, reverse=True) if variant in value),
@@ -119,7 +131,7 @@ def _matching_variant(value: str, variants: set[str]) -> str | None:
     )
 
 
-def _yaml_admin_date_mentions(value, forms, *, keys=()):
+def _yaml_admin_date_mentions(value, forms, pattern, *, keys=()):
     """Yield owned dates used in an administrative YAML field or sentence."""
 
     if isinstance(value, dict):
@@ -127,14 +139,17 @@ def _yaml_admin_date_mentions(value, forms, *, keys=()):
             yield from _yaml_admin_date_mentions(
                 child,
                 forms,
+                pattern,
                 keys=(*keys, str(key)),
             )
         return
     if isinstance(value, list):
         for child in value:
-            yield from _yaml_admin_date_mentions(child, forms, keys=keys)
+            yield from _yaml_admin_date_mentions(child, forms, pattern, keys=keys)
         return
     scalar = str(value)
+    if not pattern.search(scalar):
+        return
     context = " ".join((*keys, scalar))
     if not _is_admin_fact_context(context):
         return
@@ -143,7 +158,7 @@ def _yaml_admin_date_mentions(value, forms, *, keys=()):
             yield iso, variant, "/".join(keys) or "<root>"
 
 
-def _markdown_admin_date_mentions(text: str, forms):
+def _markdown_admin_date_mentions(text: str, forms, pattern):
     """Yield contextual date mentions while keeping audit cells independent."""
 
     section = ""
@@ -151,6 +166,8 @@ def _markdown_admin_date_mentions(text: str, forms):
         heading = re.match(r"^\s{0,3}#{1,6}\s+(.*)$", line)
         if heading:
             section = heading.group(1)
+        if not pattern.search(line):
+            continue
         cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
         is_table = line.lstrip().startswith("|") and len(cells) > 1
         for iso, variants in forms.items():
@@ -174,6 +191,7 @@ def _admin_date_offences(repo_root):
 
     forms = _owned_admin_dates(repo_root)
     assert forms, "no owned admin dates found — the collector is broken"
+    pattern = _variant_pattern(forms)
 
     targets = [repo_root / "work" / "COORDINATION.md"]
     for workspace in (repo_root / "work" / "active").glob("*"):
@@ -190,15 +208,22 @@ def _admin_date_offences(repo_root):
             continue
         text = path.read_text(encoding="utf-8", errors="replace")
         if path.suffix == ".yaml":
+            if "\\" not in text and not pattern.search(text):
+                # No owned spelling can survive parsing: a mention needs a
+                # variant substring in a scalar, scalars come from this text,
+                # YAML folding only inserts whitespace (which breaks contiguous
+                # date spellings rather than forming them), and only escape
+                # sequences — absent here — could join non-contiguous text.
+                continue
             data = yaml.safe_load(text)
-            mentions = _yaml_admin_date_mentions(data, forms)
+            mentions = _yaml_admin_date_mentions(data, forms, pattern)
             for iso, variant, field in mentions:
                 offences.append(
                     f"{path.relative_to(repo_root)} field {field} restates {iso} "
                     f"as '{variant}'"
                 )
         else:
-            mentions = _markdown_admin_date_mentions(text, forms)
+            mentions = _markdown_admin_date_mentions(text, forms, pattern)
             for iso, variant, line in mentions:
                 offences.append(
                     f"{path.relative_to(repo_root)}:{line} restates {iso} "
@@ -292,9 +317,9 @@ def test_scenario_4_file_move_keeps_id(mini_repo):
 
 
 @pytest.mark.full_repo
-def test_scenario_2_contextual_judgment_no_scalar_rating(repo_root):
+def test_scenario_2_contextual_judgment_no_scalar_rating(real_repo):
     """Source evaluations are contextual; no universal scalar rating field exists."""
-    repo = load_repo(repo_root)
+    repo = real_repo
     for source in repo.sources.values():
         assert "rating" not in source and "score" not in source
         for ev in source.get("evaluations", []) or []:
@@ -302,10 +327,10 @@ def test_scenario_2_contextual_judgment_no_scalar_rating(repo_root):
 
 
 @pytest.mark.full_repo
-def test_crosswalk_judgments_not_only_in_notes(repo_root):
+def test_crosswalk_judgments_not_only_in_notes(real_repo):
     """Scenario 8 spot-check: crosswalk notes exist AND source records carry
     evaluations — the judgments do not live only in the narrative note."""
-    repo = load_repo(repo_root)
+    repo = real_repo
     crosswalk_notes = [n for n in repo.notes.values() if n.meta.get("role") == "crosswalk"]
     if not crosswalk_notes:
         return  # nothing to check yet

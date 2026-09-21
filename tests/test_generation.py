@@ -151,9 +151,8 @@ def test_generated_is_gitignored(repo_root):
 
 
 @pytest.mark.full_repo
-def test_real_repo_generates_and_selector_views_present(repo_root):
-    repo = load_repo(repo_root)
-    outputs = generate_all(repo, generated_at="T1")
+def test_real_repo_generates_and_selector_views_present(real_generated):
+    outputs = real_generated
     src_index = outputs["source-index.md"]
     assert "## Selector view — per lecture" in src_index
     assert "## Selector view — per concept" in src_index
@@ -164,8 +163,8 @@ def test_real_repo_generates_and_selector_views_present(repo_root):
 
 
 @pytest.mark.full_repo
-def test_real_manifest_exposes_unregistered_sittings_and_registration_gate(repo_root):
-    manifest = json.loads(generate_all(load_repo(repo_root), generated_at="T1")["manifest.json"])
+def test_real_manifest_exposes_unregistered_sittings_and_registration_gate(real_manifest):
+    manifest = real_manifest
     deadlines = manifest["academic_deadlines"]
     pending = {(row.get("module_id"), row.get("start_date"), row.get("end_date"))
                for row in deadlines

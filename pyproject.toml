@@ -31,6 +31,15 @@ pythonpath = ["tools"]
 testpaths = ["tests"]
 markers = [
   "full_repo: exercises the checked-in repository state rather than a synthetic fixture",
+  # Area groups (tests/group_map.py; applied at collection by conftest.py).
+  "studyplan: curriculum, study maps, routes, units, plan revisions",
+  "materials: materials farm, attachments, slices, summaries, ingestion",
+  "synthesis: semantics, synthesis, dossiers, goals, runtime",
+  "generation: generation, projections, views, derived state, search",
+  "contracts: contracts, manifest, normative corpus, UI contract mirror",
+  "gateway: gateways, CLI, capabilities, transactions, recovery, operations",
+  "validation: validation, hygiene, perimeter, audits, architecture guards",
+  "migrations: migrations and multi-year format compatibility",
 ]
 
 # Linting (engineering review 2026-08-18, item 12; added 2026-08-21).

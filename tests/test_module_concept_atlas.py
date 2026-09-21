@@ -168,19 +168,23 @@ def test_cross_module_concepts_are_exactly_those_in_more_than_one_module():
 # ---- the live repository ---------------------------------------------------
 
 @pytest.mark.full_repo
-def test_the_live_projection_is_deterministic_and_fully_evidenced(repo_root):
-    from learning_os.genout.common import stable_generated_at
+def test_the_live_projection_is_deterministic_and_fully_evidenced(real_repo, real_manifest):
     from learning_os.genout.manifest import build_manifest
     from learning_os.genout.outputs import build_backlinks
-    from learning_os.loader import load_repo
 
-    repo = load_repo(repo_root)
-    generated_at = stable_generated_at(repo_root)
-    first = build_manifest(repo, generated_at, build_backlinks(repo, generated_at))
-    second = build_manifest(repo, generated_at, build_backlinks(repo, generated_at))
+    # The shared snapshot is the first build; determinism still needs a second
+    # independent build with the same stamp, read back from the first.
+    first = real_manifest
+    generated_at = first["_generated"]["generated_at"]
+    second = build_manifest(real_repo, generated_at, build_backlinks(real_repo, generated_at))
     edges = first["module_concept_edges"]
 
-    assert json.dumps(edges) == json.dumps(second["module_concept_edges"])
+    # sort_keys: the shared snapshot is parsed from the production bytes, which
+    # serialize with sort_keys=True, while the fresh build holds insertion
+    # order. Production normalizes key order away, so the comparison does too;
+    # every key and value on both sides is still compared.
+    assert json.dumps(edges, sort_keys=True) == json.dumps(
+        second["module_concept_edges"], sort_keys=True)
     assert edges, "the crossing published nothing"
 
     known_modules = {m["id"] for m in first["modules"]}
@@ -205,16 +209,9 @@ def test_the_live_projection_is_deterministic_and_fully_evidenced(repo_root):
 
 
 @pytest.mark.full_repo
-def test_the_concept_indexes_agree_with_the_edges(repo_root):
+def test_the_concept_indexes_agree_with_the_edges(real_manifest):
     """The divergence that let two indexes ship empty cannot recur."""
-    from learning_os.genout.common import stable_generated_at
-    from learning_os.genout.manifest import build_manifest
-    from learning_os.genout.outputs import build_backlinks
-    from learning_os.loader import load_repo
-
-    repo = load_repo(repo_root)
-    generated_at = stable_generated_at(repo_root)
-    manifest = build_manifest(repo, generated_at, build_backlinks(repo, generated_at))
+    manifest = real_manifest
     edges, indexes = manifest["module_concept_edges"], manifest["indexes"]
 
     expected_module_to_concepts: dict[str, set[str]] = {}
@@ -230,16 +227,8 @@ def test_the_concept_indexes_agree_with_the_edges(repo_root):
 
 
 @pytest.mark.full_repo
-def test_the_repaired_indexes_are_no_longer_empty(repo_root):
+def test_the_repaired_indexes_are_no_longer_empty(real_manifest):
     """`unit_to_concepts` and `concept_to_units` shipped as {} from v2 to v7."""
-    from learning_os.genout.common import stable_generated_at
-    from learning_os.genout.manifest import build_manifest
-    from learning_os.genout.outputs import build_backlinks
-    from learning_os.loader import load_repo
-
-    repo = load_repo(repo_root)
-    generated_at = stable_generated_at(repo_root)
-    indexes = build_manifest(
-        repo, generated_at, build_backlinks(repo, generated_at))["indexes"]
+    indexes = real_manifest["indexes"]
     assert indexes["unit_to_concepts"], "unit_to_concepts is empty again"
     assert indexes["concept_to_units"], "concept_to_units is empty again"

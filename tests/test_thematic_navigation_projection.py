@@ -135,10 +135,8 @@ def test_validator_rejects_unknown_thematic_group_references(mini_repo):
 
 
 @pytest.mark.full_repo
-def test_real_repository_navigation_projection_is_complete(repo_root):
-    manifest = json.loads(
-        generate_all(load_repo(repo_root), generated_at="T1")["manifest.json"]
-    )
+def test_real_repository_navigation_projection_is_complete(real_manifest):
+    manifest = real_manifest
     # ADR-007: eight subject groups, ordered so a reader meets the foundations
     # before what is built on them. No group names an era, a module or a format.
     assert [group["title"] for group in manifest["thematic_groups"]] == [

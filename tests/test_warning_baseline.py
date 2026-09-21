@@ -288,8 +288,11 @@ def test_ws_neglect_is_visible_but_baseline_exempt(mini_repo):
 # ---- the live repository ---------------------------------------------------
 
 @pytest.mark.full_repo
-def test_the_recorded_baseline_still_matches_this_repository():
-    current, errors = wb.collect(ROOT)
+def test_the_recorded_baseline_still_matches_this_repository(real_issues):
+    # wb.collect() is wired load->validate->signatures and is covered on
+    # synthetic repos above; here only the signatures of the live tree matter,
+    # so reuse the shared session validation instead of re-running it.
+    current, errors = wb.signatures_from_issues(real_issues)
     baseline, meta = wb.load_baseline(ROOT)
     assert meta, "no baseline recorded"
     assert errors == [], "\n".join(errors)

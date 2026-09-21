@@ -16,9 +16,7 @@ from urllib.parse import urlparse
 
 import pytest
 
-from learning_os.genout import generate_all
 from learning_os.genout.materials import _safe_material_locator
-from learning_os.loader import load_repo
 
 _FILE_SHAPED = re.compile(r"^[^./][^/]*\.[^./]+$")
 
@@ -70,7 +68,7 @@ def test_material_locator_fuzz_accepts_one_file_and_refuses_hostile_compounds():
 
 
 @pytest.mark.full_repo
-def test_real_stage_open_targets_are_files_or_safe_websites(repo_root: Path):
+def test_real_stage_open_targets_are_files_or_safe_websites(repo_root: Path, real_manifest):
     """Every production stage target is exact, and local bytes are checked when mounted.
 
     The materials tree is intentionally not stored in Git and is absent on the
@@ -79,11 +77,7 @@ def test_real_stage_open_targets_are_files_or_safe_websites(repo_root: Path):
     same source falls back safely.  A provisioned workstation additionally
     proves that every exposed local target resolves to a regular file.
     """
-    manifest = json.loads(
-        generate_all(load_repo(repo_root), generated_at="RESOURCE-INTEGRITY")[
-            "manifest.json"
-        ]
-    )
+    manifest = real_manifest
     learning_root = repo_root.parent
     materials_available = (learning_root / "materials").is_dir()
     unique_resources = {

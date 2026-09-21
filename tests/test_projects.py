@@ -7,20 +7,11 @@ from pathlib import Path
 
 import pytest
 
-from learning_os.genout import build_backlinks, build_manifest, stable_generated_at
-from learning_os.loader import load_repo
-
 pytestmark = pytest.mark.full_repo
 
 
-def manifest(root: Path) -> dict:
-    repo = load_repo(root)
-    at = stable_generated_at(root)
-    return build_manifest(repo, at, build_backlinks(repo, at))
-
-
-def test_bachelor_thesis_is_a_first_class_project(repo_root: Path):
-    data = manifest(repo_root)
+def test_bachelor_thesis_is_a_first_class_project(real_manifest):
+    data = real_manifest
     assert [row["id"] for row in data["projects"]] == ["project-bachelor-thesis"]
     assert "module-project-bachelor-thesis" not in {row["id"] for row in data["modules"]}
     assert data["project_aliases"]["module-project-bachelor-thesis"] == "project-bachelor-thesis"
