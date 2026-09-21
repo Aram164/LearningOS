@@ -150,6 +150,66 @@ def compact_bootstrap(args) -> int:
         return _refusal(exc)
 
 
+def brief_bootstrap(args) -> int:
+    """One-page session entry: guards, resume, owed work, deadlines, expands.
+
+    The plan-edit-context-brief shape applied to startup: identities and
+    runnable commands, never collections or prose. Owed study maps name the
+    units to prep, active maps name the stages to resume, deadlines carry
+    the structured exam spine, and every follow-up read is a listed
+    command. Single page by construction: paging belongs to --compact.
+    """
+    if getattr(args, "compact", False):
+        return _refusal("bootstrap takes one of --brief, --compact")
+    if args.offset:
+        return _refusal("bootstrap --brief is a single page; "
+                        "page the collections with --compact instead")
+    root = _root(args)
+    try:
+        with _operator_lock(root):
+            snapshot = _snapshot(root, args.expected_snapshot)
+            manifest = _fresh_manifest(root)
+            units = sorted(manifest.get("units", []),
+                           key=lambda row: row["id"])
+            owed = sorted(row["id"] for row in units
+                          if row.get("needs_study_map"))
+            # Resumable work only: paused maps are shelved tracks, not
+            # candidates for the next session. Full bootstrap still lists
+            # them; the brief names what can actually start.
+            active = sorted(
+                ({"id": row["id"], "unit_id": row.get("unit_id"),
+                  "status": row.get("status"),
+                  "current_stage": row.get("current_stage")}
+                 for row in manifest.get("study_maps", [])
+                 if row.get("status") in {"active", "ready"}),
+                key=lambda row: row["id"])
+            deadlines = manifest.get("academic_deadlines", [])
+            return _print_stable(root, snapshot, {
+                "contract": "bootstrap-brief",
+                "resume_pointer": manifest.get("resume_pointer", {}),
+                "counts": manifest.get("counts", {}),
+                "owed_study_maps": owed,
+                "active_study_maps": active,
+                "academic_deadlines": deadlines,
+                "deadline_count": len(deadlines),
+                "domain_atlas": _domain_glance(manifest),
+                "expand": {
+                    "full_compact": "bootstrap --compact",
+                    "continuation": "bootstrap --compact --offset NEXT_OFFSET --expected-snapshot SNAPSHOT",
+                    "resume": "resume --json",
+                    "inspect": "inspect ID",
+                    "note_read": "note-read NOTE_ID",
+                    "content_search": "search QUERY --type note --content",
+                    "material_context": "material-context QUERY",
+                    "capability_detail": "capabilities NAME --json",
+                    "plan_brief": [f"plan-edit-context {unit_id} --brief"
+                                   for unit_id in owed],
+                },
+            })
+    except (WriteRefused, OSError) as exc:
+        return _refusal(exc)
+
+
 def _note_bytes(root, note):
     path = note.path
     owner = root / "knowledge" / "notes"
@@ -317,6 +377,52 @@ ASSESSMENT_TEXT_FIELDS = ("contribution", "assumptions", "notation",
                           "exercise_value", "best_for", "limitations",
                           "locator")
 
+# The declared source-feedback vocabulary, grouped for ranking. Positive
+# values say the source served; mismatch values say it did not fit this
+# use. "skipped" is recorded evidence about the stage, not about the
+# source, so it is reported and never ranks.
+POSITIVE_FEEDBACK = frozenset({"helpful", "useful-for-derivation",
+                               "useful-for-review"})
+MISMATCH_FEEDBACK = frozenset({"too-advanced", "wrong-perspective"})
+
+
+def _use_evidence(repo):
+    """Recorded stage-use evidence per source id: raw feedback counts.
+
+    Canonical study-map data, so the read's snapshot guard already binds
+    it — no observation entry is owed. Counts only; grouping into
+    positive/mismatch happens at rank time from the sets above, so a new
+    vocabulary value degrades to reported-but-unranked, never to a crash
+    or a silent demotion.
+    """
+    tallies: dict[str, dict[str, int]] = {}
+    for study_map in repo.study_maps.values():
+        stages = study_map.data.get("stages", []) or []
+        for stage in stages:
+            if not isinstance(stage, dict):
+                continue
+            for entry in stage.get("source_feedback", []) or []:
+                if not isinstance(entry, dict):
+                    continue
+                source_id = entry.get("source_id")
+                if not source_id:
+                    continue
+                tally = tallies.setdefault(source_id, {})
+                value = entry.get("feedback")
+                if not value:
+                    continue
+                tally[value] = tally.get(value, 0) + 1
+    return tallies
+
+
+def _evidence_label(tally):
+    positive = sum(count for value, count in tally.items()
+                   if value in POSITIVE_FEEDBACK)
+    mismatch = sum(count for value, count in tally.items()
+                   if value in MISMATCH_FEEDBACK)
+    return {"counts": dict(sorted(tally.items())),
+            "positive": positive, "mismatch": mismatch}
+
 
 def _resolve_concept(repo, raw):
     """A concept id or declared alias, matched case-insensitively."""
@@ -411,7 +517,10 @@ def cmd_material_context(args) -> int:
     Corpus: durable analysis notes plus the route assessments of approved
     unit syntheses. Matching is deterministic lexical AND over terms, with
     declared concept aliases, purpose substrings, and unit scope as filters.
-    Order is stable (notes by id, then assessments by unit and route).
+    Ranking is recorded stage use-evidence per source (positive feedback
+    first, mismatch feedback last); ties keep stable order (notes by id,
+    then assessments by unit and route), which is the whole answer until
+    feedback exists.
     Freshness is observed live per result: notes carry source freshness,
     assessments carry their dossier's current freshness next to the stored
     review status. Review state and resolution are reported, never
@@ -478,6 +587,10 @@ def cmd_material_context(args) -> int:
                      if _note_purpose_hit(note.meta["material_analysis"], args.purpose)]
             assessments = [row for row in assessments
                            if _assessment_purpose_hit(row[2], args.purpose)]
+            # Use evidence is deliberately global: feedback says a source
+            # served in some stage, which bears on every result bound to
+            # that source, however the query scoped the pool.
+            evidence = _use_evidence(repo)
             pool = {
                 "analysis_notes": len(notes),
                 "assessments": len(assessments),
@@ -513,10 +626,13 @@ def cmd_material_context(args) -> int:
                     reasons["purpose"] = args.purpose
                 if args.unit:
                     reasons["unit"] = args.unit
+                use_evidence = _evidence_label(
+                    evidence.get(binding.get("source_id")) or {})
                 items.append({
                     "origin": "analysis-note",
                     "id": note.id, "title": note.meta.get("title", note.id),
                     "path": note.path.relative_to(root).as_posix(),
+                    "use_evidence": use_evidence,
                     "match": {**reasons,
                               "snippets": verified[0]["snippets"] if verified else []},
                     "source": {
@@ -574,6 +690,8 @@ def cmd_material_context(args) -> int:
                 items.append({
                     "origin": "unit-assessment",
                     "unit_id": unit_id, "synthesis_id": synthesis_id,
+                    "use_evidence": _evidence_label(
+                        evidence.get(assessment.get("source_id")) or {}),
                     "route_id": assessment.get("route_id"),
                     "source_id": assessment.get("source_id"),
                     "locator": assessment.get("locator"),
@@ -587,6 +705,12 @@ def cmd_material_context(args) -> int:
                         "route_id": assessment.get("route_id"),
                     },
                 })
+            # Stable sort: evidence ranks, ties keep insertion order
+            # (notes by id, then assessments by unit and route). Without
+            # recorded feedback every key is (0, 0) and the order is
+            # exactly the pre-ranking stable order.
+            items.sort(key=lambda row: (-row["use_evidence"]["positive"],
+                                        row["use_evidence"]["mismatch"]))
             observed = _observations_digest(observations)
             expected_observations = getattr(args, "expected_observations", None)
             if expected_observations is not None and expected_observations != observed:
@@ -594,7 +718,12 @@ def cmd_material_context(args) -> int:
                     "material observed by this query changed between pages; "
                     "re-run from offset 0")
             payload = {
-                "contract": "material-context", "items": items[offset:offset + limit],
+                "contract": "material-context",
+                "ranked_by": ("recorded stage use-evidence per source: "
+                              "positive feedback first, mismatch feedback "
+                              "last; ties keep stable order (notes by id, "
+                              "then assessments by unit and route)"),
+                "items": items[offset:offset + limit],
                 "total": len(items),
                 "next_offset": offset + limit if offset + limit < len(items) else None,
                 "observations_sha256": observed,

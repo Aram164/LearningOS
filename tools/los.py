@@ -165,6 +165,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_capabilities)
 
     p = sub.add_parser("bootstrap", help="machine bootstrap with active learning paths")
+    p.add_argument("--brief", action="store_true", help="one-page session entry: guards, resume, owed work, deadlines, expands")
     p.add_argument("--compact", action="store_true", help="bounded startup summaries; details stay available through inspect")
     p.add_argument("--offset", type=int, default=0)
     p.add_argument("--limit", type=int, default=20)

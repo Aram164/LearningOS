@@ -14,7 +14,7 @@ from learning_os.loader import load_repo
 from learning_os.pathing import PathBoundaryError, read_text_inside
 from learning_os.rules import validate
 
-from .reads import compact_bootstrap, content_search, inspect_batch, record_payload
+from .reads import brief_bootstrap, compact_bootstrap, content_search, inspect_batch, record_payload
 from .support import _delegate, _fresh_manifest, _operator_lock, _print_rows, _publish, _root
 
 # The OPERATOR contract (system/OPERATOR.md) — what `los.py capabilities`
@@ -188,6 +188,8 @@ def cmd_capabilities(args) -> int:
 
 def cmd_bootstrap(args) -> int:
     root = _root(args)
+    if getattr(args, "brief", False):
+        return brief_bootstrap(args)
     if getattr(args, "compact", False):
         return compact_bootstrap(args)
     manifest = _fresh_manifest(root)

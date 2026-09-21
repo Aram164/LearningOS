@@ -271,6 +271,8 @@ def test_assessment_items_carry_live_dossier_freshness(mini_repo, tmp_path):
     items = [row for row in result["items"] if row["origin"] == "unit-assessment"]
     assert len(items) == 1
     assert items[0]["review_status"] == "deep-reviewed"
+    assert items[0]["use_evidence"] == {"counts": {}, "positive": 0,
+                                        "mismatch": 0}
     assert items[0]["freshness"] == {"status": "current", "reasons": []}
     # A governed note edit stales the referencing dossier; the stored
     # review status is still reported, now with its freshness warning.
@@ -291,3 +293,74 @@ def test_assessment_items_carry_live_dossier_freshness(mini_repo, tmp_path):
     assert items[0]["review_status"] == "deep-reviewed"
     assert items[0]["freshness"]["status"] == "stale"
     assert "analysis-refs-stale" in items[0]["freshness"]["reasons"]
+
+
+def _register_source(root: Path, source_id: str, title: str):
+    registry_path = root / "sources/sources.yaml"
+    registry = yaml.safe_load(registry_path.read_text(encoding="utf-8"))
+    registry["sources"].append({"id": source_id, "title": title,
+                                "type": "paper", "authors": ["B. Author"]})
+    write_yaml(registry_path, registry)
+
+
+def _record_feedback(root: Path, entries: list[dict]):
+    sm_path = (root / "curriculum/modules/module-demo/units/unit-demo-l01"
+               / "study-map.yaml")
+    data = yaml.safe_load(sm_path.read_text(encoding="utf-8"))
+    data["stages"][0].setdefault("source_feedback", []).extend(entries)
+    write_yaml(sm_path, data)
+
+
+def test_recorded_use_evidence_ranks_and_labels_results(mini_repo):
+    add_curriculum(mini_repo)
+    _register_source(mini_repo, "source-demo-paper", "Demo Paper")
+    book = _seed_material(mini_repo, "book.pdf", b"book bytes")
+    paper = _seed_material(mini_repo, "paper.pdf", b"paper bytes")
+    body_a = "Shared density intuition from the book.\n"
+    body_b = "Shared density intuition from the paper.\n"
+    _plant_note(mini_repo, "note-rank-aaa", body_a,
+                _binding("book.pdf", book, body_a))
+    _plant_note(mini_repo, "note-rank-zzz", body_b,
+                _binding("paper.pdf", paper, body_b,
+                         source_id="source-demo-paper"))
+    _record_feedback(mini_repo, [
+        {"source_id": "source-demo-paper", "feedback": "helpful",
+         "recorded": "2026-09-21"},
+        {"source_id": "source-demo-paper", "feedback": "useful-for-review",
+         "recorded": "2026-09-21"},
+        {"source_id": "source-demo-book", "feedback": "too-advanced",
+         "recorded": "2026-09-21"},
+        {"source_id": "source-demo-book", "feedback": "skipped",
+         "recorded": "2026-09-21"},
+    ])
+    result = _context(mini_repo, "density")
+    # Stable order would list aaa first; positive evidence promotes zzz.
+    assert [row["id"] for row in result["items"]] == ["note-rank-zzz",
+                                                     "note-rank-aaa"]
+    first, second = result["items"]
+    assert first["use_evidence"] == {
+        "counts": {"helpful": 1, "useful-for-review": 1},
+        "positive": 2, "mismatch": 0}
+    assert second["use_evidence"] == {
+        "counts": {"skipped": 1, "too-advanced": 1},
+        "positive": 0, "mismatch": 1}
+    assert "use-evidence" in result["ranked_by"]
+
+
+def test_ranking_keeps_stable_order_without_recorded_feedback(mini_repo):
+    book = _seed_material(mini_repo, "book.pdf", b"book bytes")
+    paper = _seed_material(mini_repo, "paper.pdf", b"paper bytes")
+    body_a = "Shared density intuition from the book.\n"
+    body_b = "Shared density intuition from the paper.\n"
+    _plant_note(mini_repo, "note-rank-aaa", body_a,
+                _binding("book.pdf", book, body_a))
+    _plant_note(mini_repo, "note-rank-zzz", body_b,
+                _binding("paper.pdf", paper, body_b,
+                         source_id="source-demo-paper"))
+    result = _context(mini_repo, "density")
+    assert [row["id"] for row in result["items"]] == ["note-rank-aaa",
+                                                     "note-rank-zzz"]
+    for row in result["items"]:
+        assert row["use_evidence"] == {"counts": {}, "positive": 0,
+                                       "mismatch": 0}
+    assert "use-evidence" in result["ranked_by"]

@@ -2,7 +2,8 @@
 import json
 
 import pytest
-from repo_builders import run_los
+import yaml
+from repo_builders import add_curriculum, run_los, write_yaml
 
 from learning_os.loader import load_repo
 
@@ -352,3 +353,51 @@ def test_search_succeeds_despite_malformed_project(mini_repo):
         assert len(payload.get("items", [])) > 0
     finally:
         module_path.write_text(original_module_text, encoding="utf-8")
+
+
+def test_brief_startup_is_one_guarded_page_with_runnable_expands(mini_repo):
+    add_curriculum(mini_repo)
+    brief = run_los(mini_repo, "bootstrap", "--brief")
+    assert brief.returncode == 0, brief.stderr
+    data = json.loads(brief.stdout)
+    assert data["contract"] == "bootstrap-brief"
+    assert data["snapshot_id"].startswith("sha256:")
+    assert "resume_pointer" in data and "counts" in data
+    # The mapped demo unit owes nothing; its active map is resumable.
+    assert data["owed_study_maps"] == []
+    assert [row["id"] for row in data["active_study_maps"]] == ["study-map-demo-l01"]
+    assert data["active_study_maps"][0]["current_stage"] == "stage-demo"
+    assert data["deadline_count"] == len(data["academic_deadlines"]) > 0
+    assert {row["module_id"] for row in data["academic_deadlines"]
+            if row.get("module_id")} == {"module-demo"}
+    expands = data["expand"]
+    for key in ("full_compact", "continuation", "resume", "inspect",
+                "note_read", "content_search", "material_context",
+                "capability_detail"):
+        assert expands[key], key
+    assert expands["plan_brief"] == []
+    assert len(brief.stdout.encode()) < 65536
+    # A second unit without a map is owed, with its own prep command.
+    module_path = mini_repo / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module["unit_order"].append("unit-demo-l02")
+    write_yaml(module_path, module)
+    write_yaml(mini_repo / "curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml", {
+        "id": "unit-demo-l02", "type": "unit", "module_id": "module-demo",
+        "kind": "lecture", "title": "Variance", "order": 2,
+        "scope": "The lecture as taught.", "status": "active",
+        "scope_sources": [], "artifacts": {}, "workspace_ids": [],
+    })
+    again = run_los(mini_repo, "bootstrap", "--brief")
+    assert again.returncode == 0, again.stderr
+    owed = json.loads(again.stdout)
+    assert owed["owed_study_maps"] == ["unit-demo-l02"]
+    assert owed["expand"]["plan_brief"] == ["plan-edit-context unit-demo-l02 --brief"]
+
+
+def test_brief_startup_refuses_paging_and_mixed_modes(mini_repo):
+    for args in (("bootstrap", "--brief", "--offset", "1"),
+                 ("bootstrap", "--brief", "--compact")):
+        result = run_los(mini_repo, *args)
+        assert result.returncode != 0
+        assert not result.stdout

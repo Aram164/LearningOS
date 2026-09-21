@@ -26,6 +26,7 @@ queries:
     result: bootstrap
     invariants:
     - compact mode returns bounded summary pages with snapshot-bound continuation
+    - brief mode returns one session-entry page with resume, counts, owed study maps, resumable stages, deadlines, domain glance, and runnable expands
     - full material routes remain available through inspect; no source or angle is removed
   note.content:
     handler: note_read
@@ -45,8 +46,9 @@ queries:
     invariants:
     - read-only; touches no repository file
     - searches durable analysis notes plus the route assessments of approved unit syntheses
-    - deterministic lexical AND matching; stable order (notes by id, then assessments by unit and route)
-    - concept filter resolves declared ids and aliases; purpose and unit narrow without ranking
+    - deterministic lexical AND matching; concept filter resolves declared ids and aliases; purpose and unit narrow
+    - ranked by recorded stage use-evidence per source (positive feedback first, mismatch feedback last); ties keep stable order (notes by id, then assessments by unit and route)
+    - use evidence is canonical study-map data under the snapshot guard; skipped is reported, never ranking
     - unit-scoped analysis notes follow current source-map routes, independently of synthesis approval
     - excerpts are bounded (8 note snippets, 3 assessment fields); default 5 items, at most 20
     - source freshness is observed live per result; review state and resolution are reported, never inferred
