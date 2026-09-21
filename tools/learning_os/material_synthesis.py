@@ -7,6 +7,7 @@ returns the one canonical file that a gateway transaction may publish.
 
 from __future__ import annotations
 
+import hashlib
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -141,6 +142,51 @@ def current_unit_material_basis(
     }
 
 
+#: Freshness reason when a referenced analysis note moved past its approval.
+ANALYSIS_REFS_STALE = "analysis-refs-stale"
+
+
+def _analysis_ref_problem(root: Path, repo, ref: dict) -> str | None:
+    """Why an analysis ref no longer names its approved evidence, else None.
+
+    The ref pins the note revision the approver saw plus the exact anchor
+    and inspected material identity. A later note edit, a retargeted
+    anchor, or a changed inspected range all invalidate the ref — the
+    dossier keeps its prose but must be re-reviewed before it can claim
+    this evidence again. Shape is the schema's job; this checks the live
+    binding against the recorded one.
+    """
+    if not isinstance(ref, dict):
+        return "ref is not an object"
+    note = (repo.notes or {}).get(ref.get("note_id"))
+    if note is None:
+        return "note is missing"
+    binding = note.meta.get("material_analysis")
+    if not isinstance(binding, dict):
+        return "note carries no material analysis"
+    if artifact_revision(root, note.id) != ref.get("note_revision"):
+        return "note was revised after approval"
+    try:
+        live_digest = f"sha256:{hashlib.sha256(note.path.read_bytes()).hexdigest()}"
+    except OSError:
+        return "note bytes are unreadable"
+    if live_digest != ref.get("note_digest"):
+        return "note bytes differ from the approved content"
+    wanted = ref.get("anchor") or {}
+    anchors = binding.get("anchors") or []
+    if not any(isinstance(item, dict)
+               and item.get("topic") == wanted.get("topic")
+               and item.get("purpose") == wanted.get("purpose")
+               and item.get("locator") == wanted.get("locator")
+               for item in anchors):
+        return "anchor is not among the note's recorded anchors"
+    if binding.get("material") != ref.get("material"):
+        return "material identity differs from the note's binding"
+    if binding.get("inspected_range") != ref.get("inspected_range"):
+        return "inspected range differs from the note's binding"
+    return None
+
+
 def validate_unit_material_synthesis(
     root: Path,
     unit_id: str,
@@ -234,6 +280,13 @@ def validate_unit_material_synthesis(
             if evidence.get("checksum") != expected_checksum:
                 raise MaterialSynthesisError(
                     f"{row['route_id']} evidence checksum does not match its material basis"
+                )
+        for ref in row.get("analysis_refs", []) or []:
+            problem = _analysis_ref_problem(root, repo, ref)
+            if problem is not None:
+                raise MaterialSynthesisError(
+                    f"{row['route_id']} analysis ref to {ref.get('note_id')} "
+                    f"is no longer the approved evidence ({problem}); re-review the dossier"
                 )
     seen_comparisons: set[tuple[str, str, str]] = set()
     for comparison in value["comparisons"]:
@@ -486,6 +539,14 @@ def material_synthesis_freshness(
     for field in _COMPARED_BASIS_FIELDS:
         if basis.get(field) != current.get(field):
             reasons.append(field)
+    refs = [ref for row in value.get("route_assessments", []) or []
+            if isinstance(row, dict)
+            for ref in (row.get("analysis_refs", []) or [])]
+    if refs:
+        notes_repo = repo if repo is not None else load_repo(root)
+        if any(_analysis_ref_problem(root, notes_repo, ref) is not None
+               for ref in refs):
+            reasons.append(ANALYSIS_REFS_STALE)
     return {"status": "current" if not reasons else "stale", "reasons": reasons}
 
 

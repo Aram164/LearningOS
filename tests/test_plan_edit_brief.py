@@ -43,6 +43,8 @@ def _seed_material(root: Path, name: str, data: bytes) -> str:
 
 
 def _seed_unit(root: Path):
+    from learning_os.material_synthesis import current_unit_material_basis
+
     add_curriculum(root)
     digest = _seed_material(root, "deck.pdf", b"%PDF brief\n")
     _plant_note(root, "note-brief-density", ANALYSIS_BODY, {
@@ -55,11 +57,20 @@ def _seed_unit(root: Path):
         "frozen_input_sha256": hashlib.sha256(ANALYSIS_BODY.encode("utf-8")).hexdigest(),
         "frozen_input_bytes": len(ANALYSIS_BODY.encode("utf-8")),
     })
+    map_path = root / "curriculum/modules/module-demo/source-map.yaml"
+    source_map = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    source_map["sources"][0]["unit_routes"] = [{
+        "id": "route-demo-density", "unit_id": "unit-demo-l01",
+        "title": "Density", "locator": "deck.pdf, pp. 1-3",
+        "depth": "core", "scope": "current",
+    }]
+    write_yaml(map_path, source_map)
     unit_dir = root / "curriculum/modules/module-demo/units/unit-demo-l01"
     write_yaml(unit_dir / "material-synthesis.yaml", {
         "schema_version": 1, "id": "material-synthesis-demo-l01",
         "type": "unit-material-synthesis", "unit_id": "unit-demo-l01",
         "status": "approved",
+        "basis": current_unit_material_basis(root, "unit-demo-l01"),
         "route_assessments": [{
             "route_id": "route-demo-density",
             "source_id": "source-demo-book",
@@ -70,14 +81,6 @@ def _seed_unit(root: Path):
             "best_for": "A worked example of uniform density integration.",
         }],
     })
-    map_path = root / "curriculum/modules/module-demo/source-map.yaml"
-    source_map = yaml.safe_load(map_path.read_text(encoding="utf-8"))
-    source_map["sources"][0]["unit_routes"] = [{
-        "id": "route-demo-density", "unit_id": "unit-demo-l01",
-        "title": "Density", "locator": "deck.pdf, pp. 1-3",
-        "depth": "core", "scope": "current",
-    }]
-    write_yaml(map_path, source_map)
 
 
 def _brief(root: Path, *args: str) -> dict:
@@ -108,6 +111,7 @@ def test_brief_carries_preparation_without_bodies(mini_repo):
     assert refs[0]["review"] == "unreviewed"
     assert payload["analysis_refs"]["approved_assessment_routes"] == [
         "route-demo-density"]
+    assert payload["analysis_refs"]["stale_assessment_routes"] == []
     assert ANALYSIS_BODY.splitlines()[2] not in json.dumps(payload)
     assert sorted(payload["artifact_revisions"]) == [
         "module-demo", "study-map-demo-l01", "unit-demo-l01"]
@@ -136,6 +140,19 @@ def test_brief_expand_commands_run_as_printed(mini_repo):
     proc = run_los(mini_repo, *argv)
     assert proc.returncode == 0, proc.stderr
     assert json.loads(proc.stdout)["items"]
+
+
+def test_brief_splits_stale_assessment_routes(mini_repo):
+    _seed_unit(mini_repo)
+    assert _brief(mini_repo)["analysis_refs"]["approved_assessment_routes"] == [
+        "route-demo-density"]
+    map_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
+    source_map = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    source_map["sources"][0]["unit_routes"][0]["locator"] = "deck.pdf, pp. 4-6"
+    write_yaml(map_path, source_map)
+    refs = _brief(mini_repo)["analysis_refs"]
+    assert refs["approved_assessment_routes"] == []
+    assert refs["stale_assessment_routes"] == ["route-demo-density"]
 
 
 def test_brief_refuses_selectors_and_audit(mini_repo):

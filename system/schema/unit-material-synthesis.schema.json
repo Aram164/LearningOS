@@ -81,6 +81,11 @@
           "evidence": {
             "type": "array",
             "items": {"$ref": "https://learningos.local/schema/material-comparison-defs.schema.json#/$defs/evidence"}
+          },
+          "analysis_refs": {
+            "description": "References to durable source-analysis notes whose prose this assessment reuses instead of copying. Each ref pins the note revision the approver saw; a later note edit stales the dossier until re-review.",
+            "type": "array",
+            "items": {"$ref": "#/$defs/analysisRef"}
           }
         },
         "allOf": [
@@ -153,6 +158,36 @@
       }
     }
   }
+    },
+    "analysisRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["note_id", "note_revision", "note_digest", "anchor", "material", "inspected_range"],
+      "properties": {
+        "note_id": {"type": "string", "pattern": "^note-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+        "note_revision": {"type": "integer", "minimum": 0},
+        "note_digest": {"$ref": "https://learningos.local/schema/material-comparison-defs.schema.json#/$defs/sha256"},
+        "anchor": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["topic", "purpose", "locator"],
+          "properties": {
+            "topic": {"type": "string", "minLength": 1},
+            "purpose": {"type": "string", "minLength": 1},
+            "locator": {"type": "string", "minLength": 1}
+          }
+        },
+        "material": {"type": "string", "minLength": 1},
+        "inspected_range": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["start", "end"],
+          "properties": {
+            "start": {"type": "integer", "minimum": 1},
+            "end": {"type": "integer", "minimum": 1}
+          }
+        }
+      }
     }
   }
 }

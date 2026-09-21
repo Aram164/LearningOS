@@ -19,6 +19,7 @@ from learning_os.material_refs import (
     persist_route_ids,
     unit_routes,
 )
+from learning_os.material_synthesis import material_synthesis_freshness
 from learning_os.transactions import artifact_revision
 
 from .module import _module_plan_validation_errors
@@ -331,15 +332,29 @@ def _brief_analysis_refs(root, repo, unit, routes) -> dict:
             "freshness": _freshness_label(root, binding),
             "path": note.path.relative_to(root).as_posix(),
         })
-    assessed = sorted({
-        row[2].get("route_id")
-        for row in _approved_assessments(repo) if row[1] == unit.id
-        if isinstance(row[2].get("route_id"), str)})
+    assessed: list[str] = []
+    stale: list[str] = []
+    freshness_by_synthesis: dict[str, dict] = {}
+    for synthesis_id, row_unit, assessment in _approved_assessments(repo):
+        if row_unit != unit.id:
+            continue
+        route_id = assessment.get("route_id")
+        if not isinstance(route_id, str):
+            continue
+        fresh = freshness_by_synthesis.get(synthesis_id)
+        if fresh is None:
+            dossier = repo.unit_material_syntheses.get(synthesis_id)
+            fresh = material_synthesis_freshness(
+                root, unit.id, dossier if isinstance(dossier, dict) else {},
+                repo=repo)
+            freshness_by_synthesis[synthesis_id] = fresh
+        (assessed if fresh["status"] == "current" else stale).append(route_id)
     by_resolution: dict = {}
     for ref in refs:
         by_resolution[ref["resolution"]] = by_resolution.get(ref["resolution"], 0) + 1
     return {"analysis_notes": refs,
-            "approved_assessment_routes": assessed,
+            "approved_assessment_routes": sorted(assessed),
+            "stale_assessment_routes": sorted(stale),
             "analysis_by_resolution": by_resolution}
 
 

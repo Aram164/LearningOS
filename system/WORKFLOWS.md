@@ -622,9 +622,10 @@ locator sharpened, an angle written, a source routed to a stage it was missing
 from, a stage's material menu extended.
 
 For one existing material's title, locator, angle, angle detail, URL or vault
-path, use the bounded `route.patch` capability. Read `plan-edit-context UNIT_ID
---route-id ROUTE_ID`, then run `route-patch UNIT_ID ROUTE_ID --changes JSON
---check`. To read several routes at once, pass `--route-ids` with 1 to 20
+path, use the bounded `route.patch` capability. Start from
+`plan-edit-context UNIT_ID --brief` for the route ids, guards, and applicable
+checks, expand `plan-edit-context UNIT_ID --route-id ROUTE_ID`, then run
+`route-patch UNIT_ID ROUTE_ID --changes JSON --check`. To read several routes at once, pass `--route-ids` with 1 to 20
 exact route ids: the batch shares the unit snapshot and revision guards,
 preserves request order, and refuses atomically. The preflight returns the concrete field diff, affected files,
 snapshot, and exact expected revisions. Apply those same changes through a
@@ -693,7 +694,10 @@ without refreshing its snapshot, revisions or retry identity.
    `module.plan.import` additionally requires a coverage audit under
    `work/active/` carrying the literal headings `## Local`, `## Linked` and
    `## Completeness`, with all six `plan_contract.checks` true. Start from
-   `system/templates/plan-coverage-audit.template.md`.
+   `system/templates/plan-coverage-audit.template.md`. The audit may carry a
+   fenced `inventory-v1` block of scoped roots and disposition rows; the
+   preflight then reconciles rows against observed bytes and binds the set
+   to the saved report (PLAN-CREATION-SOP.md Gate 1).
 
    For work *inside* a stage — `stage-progress`, `stage-note`,
    `source-feedback`, `detour-create` — this section does not apply; that is

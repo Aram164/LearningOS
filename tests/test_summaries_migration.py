@@ -84,6 +84,20 @@ def _seed(mini_repo: Path) -> Path:
     # The migrate phase dispatches through <root>/tools/los.py; link the
     # real CLI (its learning_os imports resolve venv-wide, as in prod).
     (mini_repo / "tools" / "los.py").symlink_to(REAL_TOOLS / "los.py")
+    # Retired migrations replay only against their own generation: declare
+    # the historical contract version so the lifecycle guard admits this
+    # fixture (same pattern as the route-identity migration tests). The
+    # fingerprint stays the live one: the migrate phase transacts through
+    # the gateway, and post-commit validation compares schema bytes, not
+    # the replay generation.
+    live_contract = yaml.safe_load(
+        (Path(__file__).resolve().parent.parent / "system" / "contracts" /
+         "data-contract.yaml").read_text(encoding="utf-8"))
+    (mini_repo / "system" / "contracts" / "data-contract.yaml").write_text(
+        yaml.safe_dump({"contract_version": 35,
+                        "schema_fingerprint":
+                            live_contract["schema_fingerprint"]}),
+        encoding="utf-8")
     return cache
 
 
@@ -171,3 +185,15 @@ def test_migrate_refuses_without_apply_and_after_tampering(mini_repo):
     assert tampered.returncode == 2
     assert "frozen input changed" in tampered.stderr
     assert list((mini_repo / "knowledge" / "notes").rglob("note-file-*.md")) == []
+
+
+def test_migrate_is_retired_on_newer_declared_contracts(mini_repo):
+    _seed(mini_repo)
+    live = Path(__file__).resolve().parent.parent / "system" / "contracts" / \
+        "data-contract.yaml"
+    (mini_repo / "system" / "contracts" / "data-contract.yaml").write_text(
+        live.read_text(encoding="utf-8"), encoding="utf-8")
+    frozen = _run(mini_repo, "freeze", "--apply")
+    assert frozen.returncode == 2
+    assert "is retired" in frozen.stdout
+    assert not (mini_repo / "operations" / "migrations").exists()

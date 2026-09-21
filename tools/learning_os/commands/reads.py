@@ -15,6 +15,7 @@ from learning_os.genout.atlas import ATLAS_DOMAINS
 from learning_os.loader import load_repo
 from learning_os.loading import Repo, load_notes
 from learning_os.material_analysis import observe_local_material
+from learning_os.material_synthesis import material_synthesis_freshness
 from learning_os.search.index import NoteBlob, build_registry
 from learning_os.search.model import POSTINGS_NODE_ID
 from learning_os.search.query import candidates
@@ -356,15 +357,33 @@ def _approved_assessments(repo):
     return found
 
 
-def _freshness_label(root, binding):
-    """Live source freshness: current, stale, or unreadable. Never inferred."""
+def _freshness_label(root, binding, observations=None):
+    """Live source freshness: current, stale, or unreadable. Never inferred.
+
+    When `observations` is given, the observed bytes (or their absence)
+    are recorded under the material relpath so a paged continuation can
+    prove the external state it pages over did not move between pages.
+    """
+    material = str(binding.get("material") or "")
     observation = observe_local_material(
-        root.parent / "materials", str(binding.get("material") or ""),
+        root.parent / "materials", material,
         str(binding.get("recorded_source_digest") or ""))
+    if observations is not None:
+        live = observation.get("live_digest")
+        observations[f"material:{material}"] = \
+            live if live is not None else observation["status"]
     status = observation["status"]
     if status in ("current", "stale"):
         return status
     return "unreadable"
+
+
+def _observations_digest(observations: dict) -> str:
+    encoded = json.dumps(
+        {key: observations[key] for key in sorted(observations)},
+        ensure_ascii=False, sort_keys=True,
+        separators=(",", ":")).encode("utf-8")
+    return f"sha256:{hashlib.sha256(encoded).hexdigest()}"
 
 
 def _note_purpose_hit(binding, purpose):
@@ -393,13 +412,22 @@ def cmd_material_context(args) -> int:
     unit syntheses. Matching is deterministic lexical AND over terms, with
     declared concept aliases, purpose substrings, and unit scope as filters.
     Order is stable (notes by id, then assessments by unit and route).
-    Freshness is observed live per result; review state and resolution are
-    reported, never inferred. An empty result describes the searched
-    records only — never proof that no source explains the topic.
+    Freshness is observed live per result: notes carry source freshness,
+    assessments carry their dossier's current freshness next to the stored
+    review status. Review state and resolution are reported, never
+    inferred. Every response binds the external observations it used
+    (`observations_sha256`); a continuation re-verifies them, so pages
+    never describe different source states under one identity. An empty
+    result describes the searched records only — never proof that no
+    source explains the topic.
     """
     root = _root(args)
     try:
         offset, limit = _window(args, 20)
+        if offset and not getattr(args, "expected_observations", None):
+            raise WriteRefused(
+                "continuation requires --expected-observations from the "
+                "previous response")
         raw_terms = (args.query or "").split()
         terms = [re.compile(re.escape(term), re.IGNORECASE) for term in raw_terms]
         if not terms:
@@ -455,6 +483,8 @@ def cmd_material_context(args) -> int:
                 if note.meta.get("semantic_review") == "unreviewed":
                     pool["analysis_unreviewed"] += 1
             items = []
+            observations: dict[str, str] = {}
+            dossier_freshness: dict[str, dict] = {}
             for note in notes:
                 raw = _note_bytes(root, note)
                 text = raw.decode("utf-8")
@@ -483,7 +513,7 @@ def cmd_material_context(args) -> int:
                     "source": {
                         "ref": binding.get("material"),
                         "pages": [inspected.get("start"), inspected.get("end")],
-                        "freshness": _freshness_label(root, binding),
+                        "freshness": _freshness_label(root, binding, observations),
                     },
                     "review": {
                         "semantic_review": note.meta.get("semantic_review"),
@@ -513,6 +543,15 @@ def cmd_material_context(args) -> int:
                 if args.unit:
                     reasons["unit"] = args.unit
                 origin = repo.unit_material_synthesis_origins.get(synthesis_id)
+                fresh = dossier_freshness.get(synthesis_id)
+                if fresh is None:
+                    dossier = repo.unit_material_syntheses.get(synthesis_id)
+                    fresh = material_synthesis_freshness(
+                        root, unit_id, dossier
+                        if isinstance(dossier, dict) else {}, repo=repo)
+                    dossier_freshness[synthesis_id] = fresh
+                    observations[f"dossier:{synthesis_id}"] = (
+                        f"{fresh['status']}:{','.join(fresh['reasons'])}")
                 items.append({
                     "origin": "unit-assessment",
                     "unit_id": unit_id, "synthesis_id": synthesis_id,
@@ -520,6 +559,7 @@ def cmd_material_context(args) -> int:
                     "source_id": assessment.get("source_id"),
                     "locator": assessment.get("locator"),
                     "review_status": assessment.get("review_status"),
+                    "freshness": fresh,
                     "concept_ids": assessment.get("concept_ids") or [],
                     "match": {**reasons, "excerpts": excerpts},
                     "open": {
@@ -528,10 +568,17 @@ def cmd_material_context(args) -> int:
                         "route_id": assessment.get("route_id"),
                     },
                 })
+            observed = _observations_digest(observations)
+            expected_observations = getattr(args, "expected_observations", None)
+            if expected_observations is not None and expected_observations != observed:
+                raise WriteRefused(
+                    "material observed by this query changed between pages; "
+                    "re-run from offset 0")
             payload = {
                 "contract": "material-context", "items": items[offset:offset + limit],
                 "total": len(items),
                 "next_offset": offset + limit if offset + limit < len(items) else None,
+                "observations_sha256": observed,
                 "searched": {
                     "query_terms": raw_terms, "concept": concept_id,
                     "purpose": args.purpose, "unit": args.unit,
