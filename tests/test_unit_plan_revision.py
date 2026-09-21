@@ -12,6 +12,15 @@ from pathlib import Path
 
 import pytest
 import yaml
+from repo_builders import (
+    _audit,
+    _compact_revision,
+    _compact_setup,
+    _plan_contract,
+    _sliced_route,
+    _sliced_unit,
+    _valid_dossier,
+)
 
 from learning_os.contracts import perimeter as pm
 
@@ -121,128 +130,6 @@ def test_preflight_sees_the_same_perimeter_as_live(mini_repo: Path):
     assert any(i.code == "UNDECLARED" for i in pm.check(mini_repo))
     failures = _module_plan_validation_errors(mini_repo, {})
     assert any("PERIMETER-UNDECLARED" in line for line in failures), failures
-
-
-def _sliced_route(route_id: str, locator: str, scope: str = "current") -> dict:
-    # Canonical shape: `source_id` lives on the parent source entry, never
-    # inside `unit_routes` (the schema forbids it there).
-    return {
-        "id": route_id,
-        "unit_id": "unit-demo-l01",
-        "title": f"Route {route_id}",
-        "format": "book",
-        "angle": "A synthetic angle.",
-        "angle_detail": "A synthetic angle in long form for this lecture.",
-        "covers": ["knowledge-demo-expectation"],
-        "depth": "derivation",
-        "scope": scope,
-        "locator": locator,
-    }
-
-
-def _sliced_unit(root: Path, routes: list[dict]) -> None:
-    from repo_builders import add_curriculum, write_minimal_pdf, write_yaml
-
-    add_curriculum(root)
-    unit_path = root / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
-    unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
-    unit["knowledge_map"] = {
-        "summary": "Expected value connects outcomes to probability weights.",
-        "nodes": [
-            {"id": "knowledge-demo-outcomes", "title": "Outcomes",
-             "summary": "A variable maps outcomes to values."},
-            {"id": "knowledge-demo-expectation", "title": "Expectation",
-             "summary": "Expectation is a probability-weighted average."},
-        ],
-    }
-    write_yaml(unit_path, unit)
-    source_map_path = root / "curriculum/modules/module-demo/source-map.yaml"
-    source_map = yaml.safe_load(source_map_path.read_text(encoding="utf-8"))
-    source_map["sources"][0]["unit_routes"] = routes
-    write_yaml(source_map_path, source_map)
-    registry_path = root / "sources/sources.yaml"
-    registry = yaml.safe_load(registry_path.read_text(encoding="utf-8"))
-    registry["sources"][0]["material"] = "material://source-demo-book/"
-    write_yaml(registry_path, registry)
-    write_minimal_pdf(root.parent / "materials/source-demo-book/lecture-01.pdf",
-                      ["expected-value lecture"])
-
-
-def _valid_dossier(root: Path, route_id: str, locator: str) -> dict:
-    from learning_os.material_synthesis import current_unit_material_basis
-
-    basis = current_unit_material_basis(root, "unit-demo-l01")
-    basis = {**basis, "ai_provenance": {
-        "request_id": "ai-request-slice-demo",
-        "delivery_id": "ai-delivery-demo",
-        "provider": "manual-bundle",
-    }}
-    checksum = basis["material_checksums"][route_id]
-    return {
-        "schema_version": 1,
-        "id": "material-synthesis-demo-l01",
-        "type": "unit-material-synthesis",
-        "unit_id": "unit-demo-l01",
-        "status": "approved",
-        "basis": basis,
-        "route_assessments": [{
-            "route_id": route_id,
-            "source_id": "source-demo-book",
-            "locator": locator,
-            "review_status": "deep-reviewed",
-            "concept_ids": ["concept-expected-value"],
-            "contribution": "A direct derivation of the weighted sum.",
-            "assumptions": "Finite discrete outcomes are assumed.",
-            "notation": "Uses uppercase X and lowercase outcome values.",
-            "exercise_value": "Includes a small worked calculation.",
-            "best_for": "Checking the lecture's core derivation.",
-            "limitations": "Does not cover continuous variables.",
-            "scope_of_absence": "lecture-01.pdf, PDF p. 1 of 1",
-            "evidence": [{"locator": "lecture-01.pdf p.1",
-                          "checksum": checksum}],
-        }],
-        "comparisons": [],
-        "concept_groups": [
-            {"concept_id": "concept-variance",
-             "local_node_ids": ["knowledge-demo-outcomes"],
-             "related_unit_ids": [],
-             "bridge_note_ids": [],
-             "narrative": "Outcomes feed later dispersion measures."},
-            {"concept_id": "concept-expected-value",
-             "local_node_ids": ["knowledge-demo-expectation"],
-             "related_unit_ids": ["unit-demo-l01"],
-             "bridge_note_ids": ["note-demo"],
-             "narrative": "The local derivation is the canonical concept."},
-        ],
-    }
-
-
-def _audit(mini_repo: Path) -> str:
-    audit_rel = "work/active/workspace-demo/outputs/demo-coverage-audit.md"
-    audit = mini_repo / audit_rel
-    audit.parent.mkdir(parents=True, exist_ok=True)
-    audit.write_text(
-        "# Complete demo coverage audit\n\n## Local inventory\n\nDone.\n\n"
-        "## Linked inventory\n\nDone.\n\n## Completeness sign-off\n\nDone.\n",
-        encoding="utf-8",
-    )
-    return audit_rel
-
-
-def _plan_contract(audit_rel: str) -> dict:
-    return {
-        "version": 2,
-        "plan_template_version": 1,
-        "coverage_audit": audit_rel,
-        "checks": {
-            "local_inventory_complete": True,
-            "linked_inventory_complete": True,
-            "materials_opened_and_content_checked": True,
-            "current_and_prior_scope_reconciled": True,
-            "duplicates_and_numbering_checked": True,
-            "exclusions_and_unresolved_gaps_recorded": True,
-        },
-    }
 
 
 def test_route_change_with_stale_dossier_fails_closed(mini_repo: Path):
@@ -366,40 +253,6 @@ def test_route_change_with_replacement_applies_atomically(mini_repo, tmp_path):
     assert report["synthesis"]["unit-demo-l01"]["after"]["fresh"] is True
     assert report["expected_snapshot"].startswith("sha256:")
     assert report["semantic_ack_required"] == []
-
-
-def _compact_revision(mini_repo: Path, **overrides) -> dict:
-    revision = {
-        "unit_id": "unit-demo-l01",
-        "plan_contract": {
-            "version": 1,
-            "plan_template_version": 1,
-            "coverage_audit": _audit(mini_repo),
-            "checks": {
-                "local_inventory_complete": True,
-                "linked_inventory_complete": True,
-                "materials_opened_and_content_checked": True,
-                "current_and_prior_scope_reconciled": True,
-                "duplicates_and_numbering_checked": True,
-                "exclusions_and_unresolved_gaps_recorded": True,
-            },
-        },
-        "route_changes": {"add": [], "update": [], "remove": []},
-    }
-    revision.update(overrides)
-    return revision
-
-
-def _compact_setup(mini_repo: Path):
-    _sliced_unit(mini_repo, [_sliced_route("route-demo-book", "lecture-01.pdf")])
-    good = _valid_dossier(mini_repo, "route-demo-book", "lecture-01.pdf")
-    from learning_os.material_synthesis import synthesis_destination
-    synthesis_destination(mini_repo, "unit-demo-l01").write_text(
-        yaml.safe_dump(good, sort_keys=False), encoding="utf-8")
-    _audit(mini_repo)
-    from learning_os.warning_baseline import collect, write_baseline
-    write_baseline(mini_repo, collect(mini_repo)[0], "unit revision fixture")
-    return good
 
 
 def test_compact_revision_checks_one_lecture(mini_repo, tmp_path):

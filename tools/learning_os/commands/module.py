@@ -24,13 +24,14 @@ from learning_os.masters_planning import (
     MastersPlanningError,
     prepare_master_promotion,
 )
+from learning_os.material_analysis import observe_local_material
 from learning_os.material_refs import MaterialReferenceError, expand_map
 from learning_os.material_synthesis import (
     MaterialSynthesisError,
     synthesis_destination,
     validate_unit_material_synthesis,
 )
-from learning_os.materials_resolution import evidential_route_projection
+from learning_os.materials_resolution import evidential_route_projection, sha256_file
 from learning_os.render import replace_h2_section as _replace_h2_section
 from learning_os.revisions import load_revisions
 from learning_os.rules import validate
@@ -390,7 +391,288 @@ def _coverage_audit_problems(root: Path, contract: dict) -> list[str]:
         for key in _PLAN_COMPLETENESS_CHECKS:
             if checks.get(key) is not True:
                 problems.append(f"plan_contract.checks.{key} must be true")
+    if isinstance(audit_ref, str) and audit_ref.strip():
+        problems.extend(_structured_inventory_problems(root, audit_ref))
     return problems
+
+
+#: Fenced YAML block inside the coverage audit carrying machine-checkable
+#: disposition rows. Additive: an audit without the block keeps the legacy
+#: marker + boolean path, so old packages stay readable during rollout.
+_INVENTORY_FENCE = "```inventory-v1"
+_INVENTORY_ROW_DISPOSITIONS = ("routed", "linked", "out-of-scope", "duplicate")
+
+
+def _inventory_block(audit_text: str) -> tuple[dict | None, list[str]]:
+    """Parse the structured inventory block, or (None, []) when absent."""
+    opens = [i for i in range(len(audit_text))
+             if audit_text.startswith(_INVENTORY_FENCE, i)]
+    if not opens:
+        return None, []
+    if len(opens) > 1:
+        return None, ["coverage audit carries more than one inventory-v1 block"]
+    start = opens[0] + len(_INVENTORY_FENCE)
+    close = audit_text.find("```", start)
+    if close < 0:
+        return None, ["coverage audit inventory-v1 block is never closed"]
+    try:
+        block = yaml.safe_load(audit_text[start:close])
+    except yaml.YAMLError as exc:
+        return None, [f"coverage audit inventory-v1 block is not YAML: {exc}"]
+    if not isinstance(block, dict):
+        return None, ["coverage audit inventory-v1 block must be a mapping"]
+    return block, []
+
+
+def _enumerate_inventory_roots(materials: Path, roots: list) -> tuple[dict[str, str], list[str]]:
+    """Live file set under explicitly scoped material roots: relpath -> sha256.
+
+    Only the declared roots are walked; dotfiles and symlinks are skipped.
+    A root that is not an observable directory fails the preflight instead
+    of silently narrowing the scope the audit claims to cover.
+    """
+    observed: dict[str, str] = {}
+    problems: list[str] = []
+    try:
+        boundary = materials.resolve()
+    except OSError as exc:
+        return {}, [f"material inventory cannot resolve the materials tree: {exc}"]
+    cache: dict[Path, str] = {}
+    for entry in roots:
+        if not isinstance(entry, str) or not entry.strip():
+            problems.append("material inventory roots must be nonempty strings")
+            continue
+        try:
+            target = (materials / entry).resolve()
+            target.relative_to(boundary)
+        except (OSError, ValueError):
+            problems.append(f"material inventory root escapes the materials tree: {entry}")
+            continue
+        if not target.is_dir():
+            problems.append(f"material inventory root is not observable: {entry}")
+            continue
+        for path in sorted(target.rglob("*")):
+            if not path.is_file() or path.is_symlink():
+                continue
+            if any(part.startswith(".") for part in path.relative_to(target).parts):
+                continue
+            rel = path.relative_to(boundary).as_posix()
+            try:
+                observed[rel] = sha256_file(path, cache).removeprefix("sha256:")
+            except OSError:
+                problems.append(f"material inventory cannot read observed file: {rel}")
+    return observed, problems
+
+
+def _inventory_row_problems(block: dict, observed: dict[str, str],
+                            materials: Path) -> list[str]:
+    """Row shape, scope, digest, and duplicate-bytes rules for one inventory."""
+    problems: list[str] = []
+    rows = block.get("rows")
+    if not isinstance(rows, list):
+        return ["coverage audit inventory-v1 block needs a rows list"]
+    roots = [r for r in (block.get("roots") or []) if isinstance(r, str)]
+    seen: dict[str, dict] = {}
+    local_rows: dict[str, dict] = {}
+    for index, row in enumerate(rows):
+        label = f"inventory row {index}"
+        if not isinstance(row, dict):
+            problems.append(f"{label} must be a mapping")
+            continue
+        kind = row.get("kind", "local")
+        if kind not in ("local", "linked"):
+            problems.append(f"{label} kind must be local or linked")
+            continue
+        disposition = row.get("disposition")
+        if disposition not in _INVENTORY_ROW_DISPOSITIONS:
+            problems.append(
+                f"{label} disposition must be one of "
+                f"{', '.join(_INVENTORY_ROW_DISPOSITIONS)}")
+            continue
+        if kind == "linked":
+            for field in ("path", "sha256", "duplicate_of"):
+                if row.get(field) is not None:
+                    problems.append(
+                        f"{label} is linked: {field} would impersonate observed bytes")
+            if disposition not in ("linked", "out-of-scope"):
+                problems.append(f"{label} is linked but disposed as {disposition}")
+            if not isinstance(row.get("reference"), str) or not row["reference"].strip():
+                problems.append(f"{label} is linked but names no reference")
+            continue
+        if disposition == "linked":
+            problems.append(f"{label} observes local bytes but is disposed as linked")
+            continue
+        path = row.get("path")
+        observation = observe_local_material(materials, path, "")
+        if observation["status"] == "outside-boundary":
+            problems.append(f"{label} path escapes the materials tree: {path}")
+            continue
+        if not any(path == root or path.startswith(root.rstrip("/") + "/")
+                   for root in roots):
+            problems.append(f"{label} path is outside the declared roots: {path}")
+            continue
+        if path in seen:
+            problems.append(f"inventory row repeats path: {path}")
+            continue
+        seen[path] = row
+        local_rows[path] = row
+        recorded = row.get("sha256")
+        if not isinstance(recorded, str) or len(recorded) != 64:
+            problems.append(f"{label} needs the observed 64-hex sha256 for {path}")
+            continue
+        live = observed.get(path)
+        if live is None:
+            problems.append(f"inventory row names an unobserved file: {path}")
+        elif live.lower() != recorded.lower():
+            problems.append(f"inventory digest differs from observed bytes: {path}")
+    for rel in sorted(observed):
+        if rel not in seen:
+            problems.append(f"material inventory lacks a row for observed file: {rel}")
+    by_digest: dict[str, list[str]] = {}
+    for path, row in local_rows.items():
+        recorded = row.get("sha256")
+        if isinstance(recorded, str) and len(recorded) == 64:
+            by_digest.setdefault(recorded.lower(), []).append(path)
+    for _digest, paths in sorted(by_digest.items()):
+        if len(paths) < 2:
+            continue
+        canonical = [p for p in paths
+                     if local_rows[p].get("disposition") != "duplicate"]
+        if len(canonical) != 1:
+            problems.append(
+                "duplicate bytes need exactly one canonical row and "
+                f"duplicate dispositions: {', '.join(sorted(paths))}")
+            continue
+        for path in sorted(paths):
+            row = local_rows[path]
+            if row.get("disposition") != "duplicate":
+                continue
+            target = row.get("duplicate_of")
+            if target not in paths:
+                problems.append(
+                    f"inventory row {path} duplicate_of must name a row "
+                    f"with equal bytes: {target}")
+    return problems
+
+
+def _structured_inventory_problems(root: Path, audit_ref: str) -> list[str]:
+    """Reconcile the audit's structured inventory against observed bytes.
+
+    Returns [] for a legacy audit without an inventory-v1 block. A present
+    block must enumerate exactly the observed local set: missing rows,
+    unobserved rows, digest drift, and undeclared duplicate bytes all fail.
+    """
+    audit = (root / audit_ref).resolve()
+    try:
+        audit.relative_to(root.resolve())
+    except ValueError:
+        return []
+    if not audit.is_file():
+        return []
+    block, problems = _inventory_block(audit.read_text(encoding="utf-8"))
+    if problems or block is None:
+        return problems
+    roots = block.get("roots")
+    if not isinstance(roots, list) or not roots:
+        return ["coverage audit inventory-v1 block needs a nonempty roots list"]
+    materials = root.parent / "materials"
+    observed, problems = _enumerate_inventory_roots(materials, roots)
+    if problems:
+        return problems
+    return _inventory_row_problems(block, observed, materials)
+
+
+def _inventory_view(block: dict) -> dict:
+    """The human audit view, generated from the structured rows."""
+    local, linked = [], []
+    for row in block.get("rows") or []:
+        if not isinstance(row, dict):
+            continue
+        if row.get("kind", "local") == "linked":
+            linked.append({"reference": row.get("reference"),
+                           "disposition": row.get("disposition"),
+                           "observed": row.get("observed")})
+        else:
+            digest = row.get("sha256") or ""
+            local.append({"path": row.get("path"),
+                          "disposition": row.get("disposition"),
+                          "sha256": digest[:12]})
+    local.sort(key=lambda row: str(row.get("path")))
+    linked.sort(key=lambda row: str(row.get("reference")))
+    return {"local": local, "linked": linked}
+
+
+def _observed_material_binding(root: Path, contract: dict) -> tuple[dict | None, list[str]]:
+    """Bind the observed material set to the preflight report.
+
+    Returns (None, []) for a legacy audit without an inventory-v1 block.
+    Otherwise the fragment carries the observed-set digest the reviewed
+    apply re-verifies, plus the generated human view of the rows.
+    """
+    audit_ref = contract.get("coverage_audit")
+    if not isinstance(audit_ref, str) or not audit_ref.strip():
+        return None, []
+    audit = (root / audit_ref).resolve()
+    try:
+        audit.relative_to(root.resolve())
+    except ValueError:
+        return None, []
+    if not audit.is_file():
+        return None, []
+    block, problems = _inventory_block(audit.read_text(encoding="utf-8"))
+    if problems or block is None:
+        return None, problems
+    roots = block.get("roots")
+    if not isinstance(roots, list) or not roots:
+        return None, ["coverage audit inventory-v1 block needs a nonempty roots list"]
+    materials = root.parent / "materials"
+    observed, problems = _enumerate_inventory_roots(materials, roots)
+    if problems:
+        return None, problems
+    problems = _inventory_row_problems(block, observed, materials)
+    if problems:
+        return None, problems
+    digest = hashlib.sha256(json.dumps(
+        {"roots": sorted(str(r) for r in roots),
+         "files": {path: observed[path] for path in sorted(observed)}},
+        ensure_ascii=False, sort_keys=True,
+        separators=(",", ":")).encode("utf-8")).hexdigest()
+    return ({"observed_material": {
+                "sha256": f"sha256:{digest}",
+                "roots": sorted(str(r) for r in roots),
+                "local_files": len(observed),
+                "rows": len(block.get("rows") or []),
+             },
+             "inventory_view": _inventory_view(block)}, [])
+
+
+def _verify_observed_material(root: Path, contract: dict,
+                              review_report: str | None) -> str | None:
+    """Refuse a reviewed apply whose material moved since --check, else None.
+
+    Legacy reports without an observed-material binding skip this check;
+    old packages stay applicable. A present binding is recomputed live and
+    must match exactly, or the operator re-runs --check on current bytes.
+    """
+    if not review_report:
+        return None
+    try:
+        with open(review_report, encoding="utf-8") as handle:
+            report = json.load(handle)
+    except (OSError, ValueError):
+        return None
+    binding = report.get("observed_material") if isinstance(report, dict) else None
+    if not isinstance(binding, dict) or not binding.get("sha256"):
+        return None
+    fragment, problems = _observed_material_binding(root, contract)
+    if problems or fragment is None:
+        detail = f": {problems[0]}" if problems else ""
+        return ("material inventory changed since --check; re-run --check, "
+                f"review the new report, then apply that report{detail}")
+    if fragment["observed_material"]["sha256"] != binding["sha256"]:
+        return ("relevant material changed since --check; re-run --check, "
+                "review the new report, then apply that report")
+    return None
 
 
 def _ack_shape_problems(acknowledgments) -> list[str]:
@@ -1486,6 +1768,12 @@ def cmd_module_plan_import(args) -> int:
             print("los: --apply-reviewed-sha256 applies a --file plan package",
                   file=sys.stderr)
             return 2
+        stale_material = _verify_observed_material(
+            root, package.get("plan_contract") or {},
+            getattr(args, "review_report", None))
+        if stale_material:
+            print(f"los: {stale_material}", file=sys.stderr)
+            return 2
         return reviewed_envelope_apply(
             root=root,
             capability_name="module.plan.import",
@@ -1718,6 +2006,16 @@ def cmd_module_plan_import(args) -> int:
                 for p, content in writes.items()}
             result["gateway_envelope"] = prepare_review_envelope(
                 capability, payload, result["expected_snapshot"], result["expected_revisions"])
+            fragment, inventory_problems = _observed_material_binding(
+                root, package.get("plan_contract") or {})
+            if inventory_problems:
+                print("los: module plan inventory preflight failed; "
+                      "no canonical files were written", file=sys.stderr)
+                for problem in inventory_problems:
+                    print(f"- {problem}", file=sys.stderr)
+                return 1
+            if fragment is not None:
+                result.update(fragment)
         else:
             if getattr(args, "_minimal_writes", False):
                 artifact_ids = _minimal_artifact_ids(
@@ -2020,6 +2318,12 @@ def _unit_plan_revise_locked(args) -> int:
             return 2
         from learning_os.commands.capability import reviewed_envelope_apply
 
+        stale_material = _verify_observed_material(
+            root, revision.get("plan_contract") or {},
+            getattr(args, "review_report", None))
+        if stale_material:
+            print(f"los: {stale_material}", file=sys.stderr)
+            return 2
         return reviewed_envelope_apply(
             root=root, capability_name="unit.plan.revise",
             payload={"unit_id": args.unit_id, "record": revision},

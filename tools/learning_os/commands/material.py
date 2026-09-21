@@ -22,7 +22,13 @@ from learning_os.material_refs import (
 from learning_os.transactions import artifact_revision
 
 from .module import _module_plan_validation_errors
-from .reads import _print_stable, _snapshot
+from .reads import (
+    _analysis_notes,
+    _approved_assessments,
+    _freshness_label,
+    _print_stable,
+    _snapshot,
+)
 from .support import (
     WriteRefused,
     _dump_yaml,
@@ -302,6 +308,116 @@ def _unit_audit(root, repo, unit) -> dict:
     }
 
 
+def _brief_analysis_refs(root, repo, unit, routes) -> dict:
+    """Reusable analysis references for one unit's sources: ids, never bodies.
+
+    The same durable records material-context searches — analysis notes
+    bound to this unit's source ids plus approved unit assessments — as
+    identifiers with freshness, review, and resolution labels. Follow-up
+    reads fetch bodies through the expand commands, never from here.
+    """
+    unit_source_ids = {r.get("source_id") for r in routes if r.get("source_id")}
+    refs = []
+    for note in _analysis_notes(repo):
+        binding = note.meta["material_analysis"]
+        if binding.get("source_id") not in unit_source_ids:
+            continue
+        refs.append({
+            "note_id": note.id,
+            "source_id": binding.get("source_id"),
+            "resolution": binding.get("resolution"),
+            "review": note.meta.get("semantic_review"),
+            "inspected_range": binding.get("inspected_range") or {},
+            "freshness": _freshness_label(root, binding),
+            "path": note.path.relative_to(root).as_posix(),
+        })
+    assessed = sorted({
+        row[2].get("route_id")
+        for row in _approved_assessments(repo) if row[1] == unit.id
+        if isinstance(row[2].get("route_id"), str)})
+    by_resolution: dict = {}
+    for ref in refs:
+        by_resolution[ref["resolution"]] = by_resolution.get(ref["resolution"], 0) + 1
+    return {"analysis_notes": refs,
+            "approved_assessment_routes": assessed,
+            "analysis_by_resolution": by_resolution}
+
+
+def _brief_payload(root, repo, unit, routes, study_map, artifacts) -> dict:
+    """The brief preparation form: what the next command needs, nothing else.
+
+    Identities, guards, id inventories, the audit's missing-evidence lists,
+    reusable analysis references, required follow-up inputs, applicable
+    preflight checks, and explicit expandable commands. Full route bodies,
+    the study map, and analysis prose stay behind the expand references.
+    """
+    route_ids = sorted(r["id"] for r in routes if r.get("id"))
+    stages = study_map.data.get("stages", []) if study_map else []
+    stage_rows = [s for s in stages if isinstance(s, dict)]
+    stage_ids = sorted(s["id"] for s in stage_rows if s.get("id"))
+    batches = [
+        f"los plan-edit-context {unit.id} --route-ids "
+        + " ".join(route_ids[i:i + MAX_BATCH_ROUTES])
+        for i in range(0, len(route_ids), MAX_BATCH_ROUTES)]
+    return {
+        "contract": "plan-edit-context-brief",
+        "unit_id": unit.id,
+        "module_id": unit.module_id,
+        "artifact_revisions": _guard_rows(root, artifacts),
+        "inventory": {
+            "route_ids": route_ids,
+            "stage_ids": stage_ids,
+            "route_count": len(route_ids),
+            "stage_count": len(stage_ids),
+            "placement_count": sum(
+                len(s.get("resources", []) or []) for s in stage_rows),
+        },
+        "unit_audit": _unit_audit(root, repo, unit),
+        "analysis_refs": _brief_analysis_refs(root, repo, unit, routes),
+        "required_inputs": {
+            "route_patch": {
+                "route_id": (f"one of the {len(route_ids)} inventoried route ids"),
+                "changes": {
+                    "fields": sorted(PATCH_FIELDS),
+                    "rules": ("nonempty text per field, at most 16000 characters, "
+                              "declared material fields only"),
+                },
+                "guards": ("artifact_revisions above; the gateway envelope "
+                           "carries the snapshot"),
+            },
+            "plan_replace": {
+                "file": ("reviewed package bytes for unit-plan-revise, "
+                         "unit-map-import, or module-plan-import"),
+                "round_trip": ("save the --check JSON, then apply with "
+                               "--apply-reviewed-sha256 and --review-report"),
+                "guards": ("artifact_revisions above; the saved report carries "
+                           "the exact prepared envelope"),
+            },
+        },
+        "preflight": [
+            {"operation": "route-patch",
+             "check": f"los route-patch {unit.id} ROUTE_ID --changes JSON --check"},
+            {"operation": "unit-plan-revise",
+             "check": f"los unit-plan-revise {unit.id} --file REVISION.yaml --check"},
+            {"operation": "unit-map-import",
+             "check": f"los unit-map-import {unit.id} --file MAP.yaml --check"},
+            {"operation": "module-plan-import",
+             "check": f"los module-plan-import {unit.module_id} --file PLAN.yaml --check"},
+            {"operation": "verify",
+             "check": (".venv/bin/python tools/verify_plan_receipt.py "
+                       f"--report REPORT.json --unit {unit.id}")},
+        ],
+        "expand": {
+            "full": f"los plan-edit-context {unit.id}",
+            "full_audit": f"los plan-edit-context {unit.id} --audit",
+            "route_batches": batches,
+            "stages": {sid: f"los plan-edit-context {unit.id} --stage-id {sid}"
+                       for sid in stage_ids},
+            "analysis_search": f"los material-context QUERY --unit {unit.id}",
+        },
+    }
+
+
 def cmd_plan_edit_context(args) -> int:
     root = _root(args)
     with _operator_lock(root):
@@ -327,6 +443,13 @@ def cmd_plan_edit_context(args) -> int:
             raise WriteRefused(
                 "plan-edit-context --audit attaches to the full unit context, "
                 "not to a route or stage selection")
+        if getattr(args, "brief", False) and any(selectors):
+            raise WriteRefused(
+                "plan-edit-context --brief is the full-unit preparation form; "
+                "expand one route or stage through its listed command instead")
+        if getattr(args, "brief", False) and getattr(args, "audit", False):
+            raise WriteRefused(
+                "plan-edit-context --brief already carries the unit audit")
         if args.route_id:
             payload.update(_route_entry(
                 routes, study_map, source_map, unit, args.route_id))
@@ -342,6 +465,8 @@ def cmd_plan_edit_context(args) -> int:
                             "stage": _stage_entry(study_map, args.stage_id),
                             "scope": "one stage only — universe questions "
                                      "(e.g. no source covers X) need the full unit context"})
+        elif getattr(args, "brief", False):
+            payload = _brief_payload(root, repo, unit, routes, study_map, artifacts)
         else:
             # Present the compact form even before an existing map is migrated.
             # Expansion inputs are included once, never separately per stage.

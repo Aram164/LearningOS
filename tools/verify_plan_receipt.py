@@ -1,18 +1,35 @@
 #!/usr/bin/env python3
-"""Verify one curriculum plan transaction against the live projection.
+"""Resume and verify one curriculum plan transaction from its saved report.
 
-Compact receipt/projection check for `make plan-check`: the generated
-snapshot equals the receipt's `snapshot_after`, every receipt write still
-carries its recorded final checksum, the target unit resolves in the
-manifest, route/placement counts match the preflight report, the synthesis
-is current and complete, and no unrelated artifact moved.
+The saved --check JSON is the durable handoff between draft, review,
+apply, retry, and verification: this command resolves the request and
+receipt identity itself through the idempotency ledger, so a fresh
+process resumes without reconstructing paths, revision guards, envelopes,
+or retry identity. It never writes canonical data and never issues a
+mutation — a failed verification is never permission to apply something
+new. Re-running the saved reviewed apply replays the same receipt when
+canonical state still matches it, and fails closed without a new commit
+when state drifted past the receipt.
+
+The first stdout line is always `state: <name>`:
+
+- committed-and-verified (exit 0): the exact reviewed request committed
+  and every post-commit check agrees with the live projection.
+- committed-but-verification-failed (exit 1): the receipt exists but the
+  live state drifted or the projection is stale; regenerate and re-verify.
+- not-applied-or-stale-preflight (exit 3): no committed receipt for this
+  exact reviewed request; re-run --check, review, then apply.
+- uncertain-requires-replay-lookup (exit 2): the replay lookup itself was
+  inconclusive; reconcile the idempotency ledger by hand.
+- invalid-evidence (exit 2): the report is not a successful preflight for
+  this unit, or the named receipt is not its committed transaction.
 
 Usage:
     .venv/bin/python tools/verify_plan_receipt.py \
-        --receipt operations/transactions/transaction-....yaml \
         --unit unit-m2-sad-l04 \
         --report /tmp/unit-revise-check.json \
-        --expect-artifacts module-x,unit-y
+        [--receipt operations/transactions/transaction-....yaml] \
+        [--expect-artifacts module-x,unit-y]
 """
 
 from __future__ import annotations
@@ -46,7 +63,19 @@ from learning_os.material_synthesis import (  # noqa: E402
     synthesis_destination,
     validate_unit_material_synthesis,
 )
-from learning_os.transactions import TransactionFailure, replay_for_request  # noqa: E402
+from learning_os.transactions import (  # noqa: E402
+    TransactionFailure,
+    TransactionIdempotencyConflict,
+    replay_for_request,
+)
+
+
+class _StalePreflight(Exception):
+    """No committed receipt for this exact reviewed request."""
+
+
+class _UncertainEvidence(Exception):
+    """The replay lookup itself was inconclusive."""
 
 
 def _sha(path: Path) -> str:
@@ -62,7 +91,9 @@ def _same_digest(recorded: str | None, actual_hex: str) -> bool:
 
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--receipt", required=True)
+    parser.add_argument("--receipt", required=False, default=None,
+                        help="expected receipt; when omitted the receipt is "
+                             "resolved from the report through the ledger")
     parser.add_argument("--unit", required=True)
     parser.add_argument("--report", required=True)
     parser.add_argument("--expect-artifacts", default=None)
@@ -73,16 +104,31 @@ def main() -> int:
     try:
         with _operator_lock(root):
             return verify(root, args)
+    except _StalePreflight as exc:
+        print("state: not-applied-or-stale-preflight")
+        print(f"verify-plan-receipt: {exc}; re-run --check, review the new "
+              "report, then apply that report", file=sys.stderr)
+        return 3
+    except _UncertainEvidence as exc:
+        print("state: uncertain-requires-replay-lookup")
+        print(f"verify-plan-receipt: uncertain outcome: {exc}; inspect "
+              "operations/transactions/idempotency.yaml and the receipt it "
+              "names, reconcile by hand, and never re-apply blindly",
+              file=sys.stderr)
+        return 2
     except (OSError, ValueError, yaml.YAMLError, KeyError, TypeError,
             TransactionFailure, WriteRefused) as exc:
+        print("state: invalid-evidence")
         print(f"verify-plan-receipt: invalid verification evidence: {exc}", file=sys.stderr)
         return 2
 
 
 def verify(root: Path, args) -> int:
     failures: list[str] = []
-    receipt_path = (root / args.receipt).resolve() \
-        if not Path(args.receipt).is_absolute() else Path(args.receipt)
+    named_receipt = None
+    if args.receipt:
+        named_receipt = (root / args.receipt).resolve() \
+            if not Path(args.receipt).is_absolute() else Path(args.receipt)
     report = _read_structured_file(args.report)
     if report.get("ok") is not True or report.get("mode") != "check":
         raise ValueError("not a successful preflight report")
@@ -103,9 +149,22 @@ def verify(root: Path, args) -> int:
     if capability == "unit.plan.revise" and envelope["payload"].get("unit_id") != args.unit:
         raise ValueError("request targets another unit")
     # Reuse the production verifier: schema, approval, idempotency ledger,
-    # revision ledger, safe paths, authority scopes and final bytes.
-    replay = replay_for_request(root, _context_from_v2(envelope))
-    if replay is None or replay.receipt_path.resolve() != receipt_path.resolve():
+    # revision ledger, safe paths, authority scopes and final bytes. Request
+    # and receipt identity resolve here, from the report alone — the caller
+    # never reconstructs them.
+    try:
+        replay = replay_for_request(root, _context_from_v2(envelope))
+    except TransactionIdempotencyConflict as exc:
+        raise _StalePreflight(
+            "this idempotency key committed a different approved intent "
+            f"({exc}); this reviewed request never committed") from exc
+    except TransactionFailure as exc:
+        raise _UncertainEvidence(str(exc)) from exc
+    if replay is None:
+        raise _StalePreflight(
+            "no committed receipt exists for this exact reviewed request")
+    receipt_path = replay.receipt_path.resolve()
+    if named_receipt is not None and receipt_path != named_receipt.resolve():
         raise ValueError("receipt is not the committed transaction for this exact reviewed request")
     receipt = replay.receipt
     if receipt["snapshot_before"] != report["expected_snapshot"]:
@@ -203,12 +262,24 @@ def verify(root: Path, args) -> int:
             failures.append(f"artifact set differs: expected={sorted(expected)}, actual={sorted(moved)}")
 
     if failures:
+        print("state: committed-but-verification-failed")
         print("verify-plan-receipt: FAILED", file=sys.stderr)
         for failure in failures:
             print(f"- {failure}", file=sys.stderr)
+        print("verify-plan-receipt: the receipt is committed; this failure is "
+              "post-commit drift or a stale projection, never permission to "
+              "issue a new mutation — regenerate and re-verify, or open a new "
+              "preflight if canonical state must change further",
+              file=sys.stderr)
         return 1
+    print("state: committed-and-verified")
+    try:
+        receipt_rel = receipt_path.relative_to(root.resolve()).as_posix()
+    except ValueError:
+        receipt_rel = str(receipt_path)
     print(f"verify-plan-receipt: ok "
-          f"(snapshot {receipt.get('snapshot_after', '')[:19]}…, "
+          f"(request {envelope.get('request_id')}, receipt {receipt_rel}, "
+          f"snapshot {receipt.get('snapshot_after', '')[:19]}…, "
           f"{len(receipt.get('writes', []) or [])} writes, unit {args.unit})")
     return 0
 
