@@ -179,6 +179,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--limit", type=int, default=5)
     p.add_argument("--offset", type=int, default=0)
     p.add_argument("--expected-snapshot", default=None)
+    p.add_argument("--expected-observations", default=None,
+                   help="observations digest from the previous page; required "
+                        "when continuing past offset 0")
     p.set_defaults(func=cmd_material_context)
 
     p = sub.add_parser("search", help="search the complete fresh projection")

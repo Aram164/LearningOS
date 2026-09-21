@@ -2,8 +2,9 @@
 
 The handler owns authorship/review defaults, preserves body bytes verbatim
 (including leading whitespace, CRLF, and Unicode), replays identical
-requests, and refuses id collisions, frozen-hash mismatches, and resolved
-bindings to unregistered sources.
+requests, and refuses id collisions, frozen-hash mismatches, resolved
+bindings to unregistered sources, and resolved bindings whose material is
+unobservable or unrelated to its source.
 """
 
 from __future__ import annotations
@@ -11,6 +12,7 @@ from __future__ import annotations
 import hashlib
 import json
 
+import yaml
 from gateway_helpers import approved_v2_cli, file_sha256
 
 from learning_os.loader import load_repo
@@ -176,6 +178,13 @@ def test_frozen_hash_mismatch_and_self_promotion_refuse(mini_repo):
     assert not (mini_repo / NOTE_PATH).exists()
 
 
+def _register_material(mini_repo, uri: str):
+    path = mini_repo / "sources" / "sources.yaml"
+    registry = yaml.safe_load(path.read_text(encoding="utf-8"))
+    registry["sources"][0]["material"] = uri
+    path.write_text(yaml.safe_dump(registry, sort_keys=False), encoding="utf-8")
+
+
 def test_resolved_binding_requires_a_registered_source(mini_repo):
     body = BODY.encode("utf-8")
     digest = "ab" * 32
@@ -183,10 +192,51 @@ def test_resolved_binding_requires_a_registered_source(mini_repo):
                      _binding(resolution="resolved", source_id="source-nope",
                               live_source_digest=digest), "resolved-unknown")
     assert unknown.returncode != 0
+    assert "not registered" in unknown.stdout
     assert not (mini_repo / NOTE_PATH).exists()
-    known = _save(mini_repo, body,
-                   _binding(resolution="resolved", source_id="source-demo-book",
-                            live_source_digest=digest), "resolved-known")
+
+
+def test_resolved_binding_verifies_observed_registered_bytes(mini_repo):
+    body = BODY.encode("utf-8")
+    target = mini_repo.parent / "materials" / "demo" / "deck.pdf"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_bytes(b"observed deck bytes")
+    digest = hashlib.sha256(b"observed deck bytes").hexdigest()
+
+    def attempt(key: str, **overrides):
+        return _save(mini_repo, body,
+                      _binding(resolution="resolved", source_id="source-demo-book",
+                               material="demo/deck.pdf",
+                               recorded_source_digest=digest,
+                               live_source_digest=digest, **overrides), key)
+
+    # No registered material on the source: relationship unverifiable.
+    refused = attempt("resolved-unregistered-material")
+    assert refused.returncode != 0
+    assert "registers no local material" in refused.stdout
+    # Registered elsewhere: the bytes are real but not this source's.
+    _register_material(mini_repo, "material://other/")
+    refused = attempt("resolved-unrelated-material")
+    assert refused.returncode != 0
+    assert "not the source's registered file" in refused.stdout
+    # Claimed digest differs from the observed bytes.
+    _register_material(mini_repo, "material://demo/")
+    refused = _save(mini_repo, body,
+                     _binding(resolution="resolved", source_id="source-demo-book",
+                              material="demo/deck.pdf",
+                              recorded_source_digest="ab" * 32,
+                              live_source_digest="ab" * 32), "resolved-drifted")
+    assert refused.returncode != 0
+    assert "not observable at its claimed live digest" in refused.stdout
+    # Missing file with coherent digests: the false-resolved repro.
+    target.unlink()
+    refused = attempt("resolved-missing-file")
+    assert refused.returncode != 0
+    assert "not observable at its claimed live digest" in refused.stdout
+    assert not (mini_repo / NOTE_PATH).exists()
+    # Observed bytes under the registered root: accepted.
+    target.write_bytes(b"observed deck bytes")
+    known = attempt("resolved-known")
     assert known.returncode == 0, known.stdout + known.stderr
     assert load_repo(mini_repo).notes[NOTE_ID].meta[
         "material_analysis"]["source_id"] == "source-demo-book"

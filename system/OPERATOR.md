@@ -71,7 +71,9 @@ bodies. Ask governance questions through `semantic PREDICATE --input k=v`
 question class, examples only) instead of
 re-deriving meaning from scattered YAML. Full `bootstrap` is an explicit
 bulk read, not routine agent startup.
-For plan editing, use `plan-edit-context UNIT_ID`; add `--route-id ROUTE_ID`
+For plan editing, start with `plan-edit-context UNIT_ID --brief`: guards,
+id inventories, missing evidence, reusable analysis refs, preflight checks,
+and runnable expand commands. Add `--route-id ROUTE_ID`
 for one material and its stage-specific overrides. Read several known routes
 with `--route-ids A B ...` (1 to 20 distinct routes of one unit, in order) to
 share one snapshot and load; the batch preserves requested order and refuses

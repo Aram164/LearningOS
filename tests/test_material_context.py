@@ -13,7 +13,10 @@ import json
 from pathlib import Path
 
 import yaml
-from repo_builders import add_curriculum, run_los, write_yaml
+from gateway_helpers import approved_v2_cli, file_sha256
+from repo_builders import _compact_setup, add_curriculum, run_los, write_yaml
+
+from learning_os.material_synthesis import synthesis_destination
 
 ANALYSIS_BODY = """# Density intuition
 
@@ -196,13 +199,95 @@ def test_pagination_continuation_refuses_changed_snapshots(mini_repo):
     first = _context(mini_repo, "density", "--limit", "1")
     assert first["total"] == 2 and len(first["items"]) == 1
     assert first["next_offset"] == 1
+    assert first["observations_sha256"].startswith("sha256:")
     second = _context(mini_repo, "density", "--limit", "1", "--offset", "1",
-                       "--expected-snapshot", first["snapshot_id"])
+                       "--expected-snapshot", first["snapshot_id"],
+                       "--expected-observations", first["observations_sha256"])
     assert [row["id"] for row in second["items"]] == ["note-context-density-pp004-006"]
     assert second["next_offset"] is None
+    assert second["observations_sha256"] == first["observations_sha256"]
     (mini_repo / "knowledge/notes/mathematics/note-context-density-pp004-006.md"
      ).write_text("changed", encoding="utf-8")
     moved = run_los(mini_repo, "material-context", "density", "--limit", "1",
-                     "--offset", "1", "--expected-snapshot", first["snapshot_id"])
+                     "--offset", "1", "--expected-snapshot", first["snapshot_id"],
+                     "--expected-observations", first["observations_sha256"])
     assert moved.returncode == 3
     assert "snapshot" in moved.stderr
+
+
+def test_pagination_binds_observed_material(mini_repo):
+    digest = _seed_material(mini_repo, "deck.pdf", b"live bytes")
+    _plant_note(mini_repo, "note-context-density-pp001-003", ANALYSIS_BODY,
+                 _binding("deck.pdf", digest, ANALYSIS_BODY))
+    _plant_note(mini_repo, "note-context-density-pp004-006",
+                 "More density notes.\n",
+                 _binding("deck2.pdf", "cd" * 32, "More density notes.\n",
+                          resolution="unavailable"))
+    first = _context(mini_repo, "density", "--limit", "1")
+    assert first["total"] == 2
+    # A continuation without the observations binding is refused outright.
+    bare = run_los(mini_repo, "material-context", "density", "--limit", "1",
+                   "--offset", "1", "--expected-snapshot", first["snapshot_id"])
+    assert bare.returncode == 2
+    assert "expected-observations" in bare.stderr
+    # Changed bytes between pages refuse under the same continuation.
+    (mini_repo.parent / "materials" / "deck.pdf").write_bytes(b"drifted bytes")
+    drifted = run_los(mini_repo, "material-context", "density", "--limit", "1",
+                       "--offset", "1", "--expected-snapshot",
+                       first["snapshot_id"], "--expected-observations",
+                       first["observations_sha256"])
+    assert drifted.returncode == 2
+    assert "changed between pages" in drifted.stderr
+    # A fresh first page rebinds to the moved bytes.
+    rebound = _context(mini_repo, "density", "--limit", "1")
+    assert rebound["observations_sha256"] != first["observations_sha256"]
+    assert rebound["items"][0]["source"]["freshness"] == "stale"
+
+
+def _seed_dossier_with_ref(root: Path):
+    _compact_setup(root)
+    anchor = {"topic": "Expected value", "purpose": "derivation",
+              "locator": "lecture-01.pdf p.1"}
+    note_id = "note-context-weighted-derivation"
+    note_path = _plant_note(root, note_id, "Weighted sums derive expectation.\n",
+                            _binding("source-demo-book/lecture-01.pdf",
+                                     "ab" * 32, "Weighted sums derive expectation.\n",
+                                     anchors=[anchor]))
+    note_digest = f"sha256:{hashlib.sha256(note_path.read_bytes()).hexdigest()}"
+    destination = synthesis_destination(root, "unit-demo-l01")
+    dossier = yaml.safe_load(destination.read_text(encoding="utf-8"))
+    dossier["route_assessments"][0]["analysis_refs"] = [{
+        "note_id": note_id, "note_revision": 0, "note_digest": note_digest,
+        "anchor": anchor, "material": "source-demo-book/lecture-01.pdf",
+        "inspected_range": {"start": 1, "end": 3}}]
+    destination.write_text(yaml.safe_dump(dossier, sort_keys=False),
+                           encoding="utf-8")
+    return note_id
+
+
+def test_assessment_items_carry_live_dossier_freshness(mini_repo, tmp_path):
+    note_id = _seed_dossier_with_ref(mini_repo)
+    result = _context(mini_repo, "weighted")
+    items = [row for row in result["items"] if row["origin"] == "unit-assessment"]
+    assert len(items) == 1
+    assert items[0]["review_status"] == "deep-reviewed"
+    assert items[0]["freshness"] == {"status": "current", "reasons": []}
+    # A governed note edit stales the referencing dossier; the stored
+    # review status is still reported, now with its freshness warning.
+    note_path = mini_repo / "knowledge/notes/mathematics" / f"{note_id}.md"
+    revised = tmp_path / "revised.md"
+    revised.write_bytes(note_path.read_bytes() + b"\nEdited.\n")
+    proc = approved_v2_cli(
+        mini_repo, "note-revise", note_id,
+        "--file", str(revised), "--approve",
+        "--file-sha256", file_sha256(revised),
+        artifact_ids=[note_id],
+        idempotency_key="context-dossier-stale",
+    )
+    assert proc.returncode == 0, proc.stderr
+    result = _context(mini_repo, "weighted")
+    items = [row for row in result["items"] if row["origin"] == "unit-assessment"]
+    assert len(items) == 1
+    assert items[0]["review_status"] == "deep-reviewed"
+    assert items[0]["freshness"]["status"] == "stale"
+    assert "analysis-refs-stale" in items[0]["freshness"]["reasons"]

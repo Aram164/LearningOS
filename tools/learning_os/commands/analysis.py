@@ -18,7 +18,8 @@ from pathlib import Path
 import jsonschema
 
 from ..loader import load_repo
-from ..material_analysis import binding_consistent
+from ..material_analysis import binding_consistent, observe_local_material
+from ..materials_resolution import MATERIAL_SCHEME, material_uri_authority
 from .support import (
     WriteRefused,
     _dump_yaml,
@@ -80,6 +81,41 @@ def _destination(root: Path, note_id: str, relpath: object) -> Path:
     return _safe(root, path)
 
 
+def _verify_resolved_material(root: Path, repo, binding: dict) -> None:
+    """A resolved binding claims live registered bytes: observe them.
+
+    Digest agreement proves the agent's story is coherent; this proves it
+    is true. The material must exist and hash to the claimed live digest
+    right now, and it must be the source's registered file or lie under
+    the source's registered directory — compared as resolved filesystem
+    locations so `.flat` id-aliases match their physical targets.
+    """
+    materials = root.parent / "materials"
+    observation = observe_local_material(
+        materials, str(binding.get("material") or ""),
+        str(binding.get("live_source_digest") or ""))
+    if observation["status"] != "current":
+        raise WriteRefused(
+            "resolved material is not observable at its claimed live "
+            f"digest ({observation['status']})")
+    registered = (repo.sources.get(binding.get("source_id")) or {}).get("material")
+    if material_uri_authority(registered) is None:
+        raise WriteRefused("resolved source registers no local material")
+    try:
+        boundary = materials.resolve()
+        base = (repo.materials_root / str(registered)[len(MATERIAL_SCHEME):]).resolve()
+        target = (materials / str(binding.get("material"))).resolve()
+        base.relative_to(boundary)
+        target.relative_to(boundary)
+    except (OSError, ValueError):
+        raise WriteRefused(
+            "resolved material escapes the materials tree") from None
+    if target != base and base not in target.parents:
+        raise WriteRefused(
+            "resolved material is not the source's registered file or "
+            "under its registered directory")
+
+
 def cmd_note_analysis_save(args) -> int:
     root = _root(args)
     analysis = args.analysis
@@ -111,9 +147,10 @@ def cmd_note_analysis_save(args) -> int:
             return 3
         repo = load_repo(root)
         note_id = analysis["id"]
-        if (binding["resolution"] == "resolved"
-                and binding.get("source_id") not in repo.sources):
-            raise WriteRefused("resolved source is not registered")
+        if binding["resolution"] == "resolved":
+            if binding.get("source_id") not in repo.sources:
+                raise WriteRefused("resolved source is not registered")
+            _verify_resolved_material(root, repo, binding)
         existing = repo.notes.get(note_id)
         path = _destination(root, note_id, analysis.get("path"))
         if existing:

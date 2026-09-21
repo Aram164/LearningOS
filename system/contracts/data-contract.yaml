@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 35
-schema_fingerprint: sha256:09e3d9e76eb19e1b1f03d88458ed6046fd9833a3f82e5365fded271663a4a9dd
+contract_version: 36
+schema_fingerprint: sha256:45c14629a38fec83d9ecaacf375a4cccef03e066d33d4858c366706285b1d968
 record_schemas: 32
 history:
 - version: 1
@@ -278,5 +278,12 @@ history:
   adopted: '2026-09-21'
   note: 'note.material_analysis: required frozen_input_bytes records the preserved
     body length (additive; no notes written under v34 yet)'
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 36
+  adopted: '2026-09-21'
+  note: 'unit-material-synthesis route assessments gain optional analysis_refs: pinned
+    note revision, approved-content digest, exact anchor, and inspected material identity
+    per referenced analysis note (additive, no migration)'
   migration: null
   fixture: tests/fixtures/formats/v25/

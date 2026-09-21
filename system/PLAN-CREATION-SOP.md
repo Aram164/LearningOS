@@ -97,9 +97,12 @@ use:
 Full `capabilities --json` and full `bootstrap` are explicit bulk reads for
 tasks that need the complete catalogue or the full projection, not routine
 startup. For plan work, read focused context instead of the full projection:
-`plan-edit-context UNIT_ID` (add `--route-id`/`--route-ids` for routes,
-`--stage-id` for one stage), `inspect ID` for records, `note-read` for note
-bodies.
+`plan-edit-context UNIT_ID --brief` (identities, guards, id inventories,
+missing evidence, reusable analysis refs, preflight checks, and runnable
+expand commands) first, then expand one route, stage, or the full `--audit`
+form only when the task needs complete bodies. Use `inspect ID` for
+records, `note-read` for note bodies, and `material-context QUERY --unit
+UNIT_ID` when the need is an explanation rather than a known file.
 
 Preserve unrelated changes. Read the current module, source map, units, optional
 study maps, workspace, the relevant JSON Schemas, and any earlier plan package
@@ -158,6 +161,17 @@ third-party summaries are discovery aids, not final evidence.
 The count of registered source IDs is not a completeness test. The audit's
 item-by-item inventory is the completeness evidence.
 
+An audit may carry a fenced `inventory-v1` block: explicitly scoped material
+roots plus one disposition row per observed file (`routed`, `linked`,
+`out-of-scope`, `duplicate`). When the block is present the preflight
+enumerates exactly those roots and refuses missing rows, unobserved rows,
+digest drift, and undeclared duplicate bytes; the check report binds the
+observed set and a reviewed apply refuses moved material. Audits without
+the block keep the legacy marker plus boolean path. Either way the agent
+still identifies implicit bibliography references and judges scope,
+duplicates by meaning, and usefulness — code proves row/byte equality,
+never understanding.
+
 ## Gate 2 — reconcile scope and granularity
 
 Use this authority order:
@@ -194,8 +208,18 @@ problem; stale reads require selecting the current source and chapter again.
 Use hits for triage,
 and record an explicit grade — `accept`, `defer`, or `reject` — with a
 one-line reason and the summary digest. On a miss, full-read the chapter,
-decide, and leave a draft summary in the workspace outputs for
-`tools/material_summarize.py --promote`. Summaries select and suggest angles
+decide, and preserve the resulting analysis as a durable reference note
+through `note.analysis.save` — that note, not a cache entry, is the retained
+record. (`--promote` into the digest-keyed summary cache remains only for
+legacy cache maintenance.) When the starting point is an explanation need
+rather than a known chapter, search saved analyses and approved assessments
+with `material-context` instead of guessing file ranges; assessment results
+carry their dossier's live freshness next to the stored review status, and
+every response binds its material observations for paged continuations. A
+unit assessment may reference a durable analysis note through `analysis_refs`
+(note id, pinned note revision, approved-content digest, exact anchor,
+material identity and inspected range) instead of copying its prose; a later
+note edit stales the dossier until re-review. Summaries and referenced analyses select and suggest angles
 only: coverage claims, locators, and routes still require the opened material,
 and a route evidenced only by a summary fails review.
 
@@ -376,13 +400,14 @@ Additional package invariants:
 Choose once before Gates 1–6; do not re-derive the procedure after choosing:
 
 - One material field (title, locator, angle, angle_detail, URL/vault_path)
-  on an existing route: `plan-edit-context UNIT_ID --route-id ROUTE_ID`
-  (or `--route-ids` for 1–20 routes in one snapshot-bound call — prefer the
-  batch over repeated single reads), then `route-patch --check` and gateway
+  on an existing route: `plan-edit-context UNIT_ID --brief` for the route
+  ids, guards, and checks, expand one `--route-id` (or `--route-ids` for
+  1–20 routes in one snapshot-bound call — prefer the batch over repeated
+  single reads), then `route-patch --check` and gateway
   apply per WORKFLOWS §25a. No coverage audit, no plan package.
   Read only OPERATOR Start here and WORKFLOWS §25a.
 - One existing lecture (routes plus map for that unit): `plan-edit-context
-  UNIT_ID --audit`, source reading, coverage audit, one compact
+  UNIT_ID --brief`, source reading, coverage audit, one compact
   `unit-plan-revise` patch, one preflight, one reviewed apply, and
   `make plan-check`. Read OPERATOR Start here, WORKFLOWS §25a, and SOP
   Gates 0–6.
@@ -420,7 +445,10 @@ artifact: the reviewed-file SHA-256, current snapshot, expected revisions,
 artifact IDs, affected and byte-changing files, route/source/placement counts
 before and after, added/updated/removed routes, demotions and promotions,
 unplaced menu routes, synthesis freshness before and after, preserved
-learner-state fields, and `canonical_files_written: 0`. A failure is a
+learner-state fields, and `canonical_files_written: 0`. When the coverage
+audit carries an `inventory-v1` block the report additionally binds the
+observed material set (`observed_material`) with a generated row view
+(`inventory_view`). A failure is a
 rejected plan, not a rollback: correct the package or audit and rerun the check;
 do not patch canonical YAML to make a defective package pass.
 
@@ -477,6 +505,13 @@ the original request identity makes this an exact replay, not another commit.
 The report's `gateway_envelope` can also be passed to `los capability` with
 `--replay-only` to verify recovery without reopening the revision file.
 Do not create a new preflight/request to recover an uncertain application.
+To resume and verify from the saved report alone — after an interruption,
+a lost response, or a session restart — run
+`tools/verify_plan_receipt.py --report REPORT.json --unit UNIT_ID`, which
+resolves the request and receipt identity itself and reports one state:
+`committed-and-verified`, `committed-but-verification-failed`,
+`not-applied-or-stale-preflight`, or `uncertain-requires-replay-lookup`.
+A failed verification is never permission to issue a new mutation.
 
 ## Gate 6 — post-import acceptance
 
@@ -496,10 +531,12 @@ verify the receipt against the projection for the touched unit:
 
 ```bash
 .venv/bin/python tools/verify_plan_receipt.py \
-  --receipt operations/transactions/transaction-ID.yaml \
   --unit UNIT_ID --report /tmp/unit-revise-check.json \
   --expect-artifacts EXACT_COMMIT_ARTIFACT_IDS_FROM_REPORT
 ```
+
+(`--receipt` may still name the expected receipt explicitly; when omitted
+the command resolves it from the report through the idempotency ledger.)
 
 `make system-check` stays mandatory at the shared-code boundary: Core
 changes, schema or manifest-contract changes, gateway changes, UI changes,

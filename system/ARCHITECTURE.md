@@ -341,6 +341,21 @@ Operations that change a note's **conceptual identity** are architectural events
 
 Each requires explicit user approval and leaves an explicit trail: the successor note declares `supersedes: [note-old-id]`. The reverse link (superseded-by) is **generated**, not stored — reverse links never become canonical fields. Git preserves the historical text; the repository preserves the semantic identity.
 
+### 5.6 Source-analysis notes
+
+Agent-authored source-chapter analysis is retained as an ordinary durable
+note (`role: reference`, `authorship: operator-drafted`) with an optional
+`material_analysis` binding: source identity, recorded and live source
+digests, inspected range, and retrieval anchors. Notes are saved only
+through the `note.analysis.save` gateway capability, which owns authorship
+and review defaults, refuses collisions, and accepts a `resolved` binding
+only for material it observes at the claimed digest under the source's
+registered material. A unit assessment may reference
+such a note through `analysis_refs` instead of copying its prose; each ref
+pins the note revision and content digest the approver saw, so a later note
+edit stales the dossier until re-review. Saving preserves a draft; it never
+approves its claims or represents the learner's understanding.
+
 ---
 
 ## 6. Concepts
