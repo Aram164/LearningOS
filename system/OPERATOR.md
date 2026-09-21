@@ -51,8 +51,12 @@ Do not recursively discover the repository. Begin with:
 
 ```bash
 python tools/los.py capabilities --compact --json
-python tools/los.py bootstrap --compact
+python tools/los.py bootstrap --brief
 ```
+
+Brief is the default session entry: guards, resume, owed work, deadlines,
+and runnable expands on one page. `--compact` pages the full collections
+when the brief's expands are not enough.
 
 The capability index is discovery only. Before using a capability, fetch its
 complete definition with `capabilities NAME --json`; command details include
