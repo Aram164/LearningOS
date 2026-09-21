@@ -1,0 +1,3 @@
+## 2026-09-21 - [Fast-Pathing Recursive Normalization in YAML Loader]
+**Learning:** In highly recursive functions like YAML type normalization (`_normalize`), executing expensive operations (e.g., inline imports, rare-case type checking) *before* handling common primitive types causes Compounded Overhead. Since YAML scalars are vast in number compared to datetime nodes, this adds severe, measurable latency.
+**Action:** When implementing or optimizing highly recursive structure-walking functions in Python, always match the most common leaf node primitive types (`type(value) in (str, int, float, bool)`) at the very top of the call frame. Defer inline imports and rare type checks to a fallback block after collections (`dict`, `list`) have also been dispatched.
