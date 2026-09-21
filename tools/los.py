@@ -606,6 +606,9 @@ def build_parser() -> argparse.ArgumentParser:
                        help="one stage's own flags and placements, without the whole map")
     p.add_argument("--audit", action="store_true",
                    help="attach the deterministic unit planning audit to the full context")
+    p.add_argument("--brief", action="store_true",
+                   help="brief preparation form: identities, guards, id inventories, "
+                        "missing evidence, analysis refs, preflight checks, expand commands")
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_plan_edit_context)
 
