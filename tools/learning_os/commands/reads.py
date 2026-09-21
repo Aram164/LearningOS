@@ -455,7 +455,16 @@ def cmd_material_context(args) -> int:
             assessments = _approved_assessments(repo)
             if args.unit:
                 assessments = [row for row in assessments if row[1] == args.unit]
-                unit_sources = {row[2].get("source_id") for row in assessments}
+                unit = repo.units[args.unit]
+                source_map = repo.module_source_maps.get(unit.module_id) or {}
+                unit_sources = {
+                    source["source_id"]
+                    for source in source_map.get("sources", []) or []
+                    if isinstance(source, dict) and source.get("source_id")
+                    and any(route == unit.id or (
+                        isinstance(route, dict) and route.get("unit_id") == unit.id
+                    ) for route in source.get("unit_routes", []) or [])
+                }
                 notes = [note for note in _analysis_notes(repo)
                          if note.meta["material_analysis"].get("source_id") in unit_sources]
             else:
@@ -546,12 +555,22 @@ def cmd_material_context(args) -> int:
                 fresh = dossier_freshness.get(synthesis_id)
                 if fresh is None:
                     dossier = repo.unit_material_syntheses.get(synthesis_id)
+                    material_hashes = {}
                     fresh = material_synthesis_freshness(
                         root, unit_id, dossier
-                        if isinstance(dossier, dict) else {}, repo=repo)
+                        if isinstance(dossier, dict) else {}, repo=repo,
+                        cache=material_hashes)
                     dossier_freshness[synthesis_id] = fresh
                     observations[f"dossier:{synthesis_id}"] = (
                         f"{fresh['status']}:{','.join(fresh['reasons'])}")
+                    # Bind the bytes actually read by the shared freshness
+                    # calculation: two different sources can both be stale
+                    # for the same reason. Missing files remove an entry;
+                    # newly available files add one on the next read.
+                    observations.update({
+                        f"dossier-material:{path}": digest
+                        for path, digest in material_hashes.items()
+                    })
                 items.append({
                     "origin": "unit-assessment",
                     "unit_id": unit_id, "synthesis_id": synthesis_id,
