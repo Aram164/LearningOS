@@ -11,7 +11,7 @@ pytest config in [`pyproject.toml`](../pyproject.toml).
 | Group | Files | Covers |
 |---|---|---|
 | `studyplan` | 15 | curriculum, study maps, routes, units, plan revisions, promotion |
-| `materials` | 9 | materials farm, attachments, slices, summaries, ingestion |
+| `materials` | 10 | materials farm, attachments, slices, summaries, ingestion |
 | `synthesis` | 18 | semantics, synthesis, dossiers, goals, runtime, operator questions |
 | `generation` | 12 | generation, projections, views, derived state, search index, Garden |
 | `contracts` | 14 | contracts, manifest, normative corpus, tree contract, UI contract mirror |

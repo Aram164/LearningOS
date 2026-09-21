@@ -17,10 +17,12 @@ links, and rebuilds views. Everything under `generated/` is a disposable view �
 never edit it.
 
 1. **With Claude:** open this folder in a chat and say what you're working on.
-   The operator reads `CLAUDE.md`, then `work/COORDINATION.md` +
-   the relevant `curriculum/modules/*/module.yaml`, then your active workspace, plus the at-a-glance
-   block of `generated/domain-atlas.md` (the cross-domain map). That's the
-   whole interface.
+   The operator starts from `system/OPERATOR.md` via `python tools/los.py
+   capabilities --compact --json` and `python tools/los.py bootstrap --brief`
+   (guards, resume, owed work, deadlines, and runnable expands on one page),
+   then reads your active workspace and the coordination facts behind it, plus
+   the at-a-glance block of `generated/domain-atlas.md` (the cross-domain map).
+   That's the whole interface.
 2. **By hand:** the one-page home is `generated/reading-room.md` (run
    `make views` to refresh) — exams, workspaces, recent notes, queues, all
    linked. Exam facts live in each owning academic module; the full "what should I
@@ -46,11 +48,12 @@ The rest of this file is the full manual; the four commands are under
 
 ## How to use it (the whole manual)
 
-**Start a session:** open this folder in a chat. The operator reads `CLAUDE.md`,
-then `work/COORDINATION.md` + the module-first `curriculum/` tree, then your active
-workspace — plus the at-a-glance block of `generated/domain-atlas.md`, so every
-session starts with the full cross-domain map in view. You just say what
-you're working on.
+**Start a session:** open this folder in a chat. The operator boots from
+`system/OPERATOR.md` with `bootstrap --brief` (guards, resume, owed work,
+deadlines, expands), then reads your active workspace and the coordination
+facts behind it — plus the at-a-glance block of `generated/domain-atlas.md`,
+so every session starts with the full cross-domain map in view. You just say
+what you're working on.
 
 **"What should I do next?"** → the operator rebuilds and reads the coordination
 view (exam spine + every workspace's next action). Recommendations are computed

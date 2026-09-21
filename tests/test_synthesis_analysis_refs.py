@@ -20,6 +20,7 @@ from repo_builders import _compact_setup, _valid_dossier
 from learning_os.material_synthesis import (
     ANALYSIS_REFS_STALE,
     MaterialSynthesisError,
+    current_unit_material_basis,
     material_synthesis_freshness,
     synthesis_destination,
     validate_unit_material_synthesis,
@@ -32,17 +33,18 @@ RANGE = {"start": 1, "end": 1}
 MATERIAL = "source-demo-book/lecture-01.pdf"
 
 
-def _plant_note(root: Path, body: str = "Density prose.\n"):
+def _plant_note(root: Path, body: str = "Density prose.\n", material: str = MATERIAL):
+    digest = hashlib.sha256((root.parent / "materials" / material).read_bytes()).hexdigest()
     meta = {"id": NOTE_ID, "type": "note", "role": "reference",
             "title": "Density analysis", "created": "2026-09-21",
             "state": "rough", "authorship": "operator-drafted",
             "semantic_review": "user-reviewed",
             "material_analysis": {
                 "resolution": "resolved",
-                "material": MATERIAL,
+                "material": material,
                 "source_id": "source-demo-book",
-                "recorded_source_digest": "0" * 64,
-                "live_source_digest": "0" * 64,
+                "recorded_source_digest": digest,
+                "live_source_digest": digest,
                 "inspected_range": dict(RANGE),
                 "anchors": [dict(ANCHOR)],
                 "frozen_input_sha256": hashlib.sha256(body.encode()).hexdigest(),
@@ -191,3 +193,57 @@ def test_dossier_without_refs_is_unaffected(mini_repo):
     assert material_synthesis_freshness(
         mini_repo, "unit-demo-l01", dossier) == {
             "status": "current", "reasons": []}
+
+
+@pytest.mark.parametrize("change", ["changed", "removed"])
+def test_refreshing_route_basis_cannot_reapprove_stale_analysis(mini_repo, change):
+    dossier = _seed(mini_repo, "valid")
+    source = mini_repo.parent / "materials" / MATERIAL
+    if change == "changed":
+        source.write_bytes(source.read_bytes() + b"\nnew edition\n")
+    else:
+        source.unlink()
+    # A new review must not reuse the old interpretation merely by rebinding
+    # the route's basis. The pinned note still describes the previous bytes.
+    dossier["basis"].update(current_unit_material_basis(mini_repo, "unit-demo-l01"))
+    for row in dossier["route_assessments"]:
+        for evidence in row.get("evidence", []):
+            evidence["checksum"] = dossier["basis"]["material_checksums"][row["route_id"]]
+    with pytest.raises(MaterialSynthesisError, match="analysis source is not current"):
+        validate_unit_material_synthesis(mini_repo, "unit-demo-l01", dossier)
+    assert material_synthesis_freshness(mini_repo, "unit-demo-l01", dossier) == {
+        "status": "stale", "reasons": [ANALYSIS_REFS_STALE]}
+
+
+def test_referenced_material_outside_route_basis_binds_continuation(mini_repo):
+    from repo_builders import run_los
+    from test_material_context import _binding, _context
+    from test_material_context import _plant_note as plant_search_note
+
+    dossier = _seed(mini_repo, "valid")
+    material = "source-demo-book/analysis-only.pdf"
+    source = mini_repo.parent / "materials" / material
+    source.write_bytes(b"original analysis material")
+    note = _plant_note(mini_repo, material=material)
+    dossier["route_assessments"][0]["analysis_refs"] = [
+        _ref(_digest_of(note), material=material)]
+    synthesis_destination(mini_repo, "unit-demo-l01").write_text(
+        yaml.safe_dump(dossier, sort_keys=False), encoding="utf-8")
+    body = "Weighted example from another source.\n"
+    plant_search_note(mini_repo, "note-page-one", body,
+                      _binding("unavailable.pdf", "ab" * 32, body,
+                               resolution="unavailable"))
+    first = _context(mini_repo, "weighted", "--limit", "1")
+    assert first["total"] == 2
+    source.write_bytes(b"first changed analysis material")
+    stale = _context(mini_repo, "weighted", "--limit", "1")
+    source.write_bytes(b"second changed analysis material")
+    continued = run_los(
+        mini_repo, "material-context", "weighted", "--offset", "1",
+        "--expected-snapshot", stale["snapshot_id"],
+        "--expected-observations", stale["observations_sha256"])
+    assert continued.returncode == 2, continued.stdout + continued.stderr
+    assert "changed between pages" in continued.stderr
+    fresh = _context(mini_repo, "weighted")
+    assessment = next(row for row in fresh["items"] if row["origin"] == "unit-assessment")
+    assert assessment["freshness"] == {"status": "stale", "reasons": [ANALYSIS_REFS_STALE]}

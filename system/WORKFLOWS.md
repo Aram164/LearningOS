@@ -637,7 +637,7 @@ or membership still requires the full plan path below.
 
 Stored resources may carry `material_ref` with a route ID and an explicit
 `inherit` field list. Core expands these for all learning views and preserves
-them during progress, note, feedback and shelving saves. Work from compact
+them during progress, note, feedback and shelving saves. Work from brief
 `plan-edit-context` output when revising a map; do not copy a full `inspect`
 result into the authored plan. An intentionally different stage explanation
 belongs in a local field, removed from the inheritance list.
@@ -685,7 +685,7 @@ without refreshing its snapshot, revisions or retry identity.
    direct CLI application is disabled"*), so the bare CLI can preflight and
    nothing more. The envelope carries `schema_version: 2`, `request_id`,
    `idempotency_key`, `capability`, `channel`, `expected_snapshot` (from
-   `los.py bootstrap --compact`), `expected_revisions` covering **exactly** every
+   `los.py bootstrap --brief`), `expected_revisions` covering **exactly** every
    artifact the transaction touches — the module plus each unit in the
    package, no more and no fewer — an `approval` whose `subject_sha256` is
    `intent_sha256(envelope)`, and the payload. `approve` never appears in the

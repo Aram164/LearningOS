@@ -41,7 +41,7 @@
 # Keys that were once published and must never come back under this name.
 # `exam_spine` was a strict subset of `academic_deadlines` — a second shape for
 # the same facts (ADR-006, 2026-08-03).
-contract_version: 13
+contract_version: 14
 top_level_keys:
 - _generated
 - academic_deadlines
@@ -98,8 +98,8 @@ index_keys:
 - unit_to_study_map
 - workspace_to_modules
 - workspace_to_units
-schema_path: system/contracts/manifest-v13.schema.json
-schema_sha256: sha256:5de9c6818f0b5c925b382ecf209fe15cadc169b8662419e88be322916821df18
+schema_path: system/contracts/manifest-v14.schema.json
+schema_sha256: sha256:0444c70f2e264a0a9548fe1bbd585a058cc366aa3837508f8544487edd1d735f
 forbidden_top_level_keys:
 - exam_spine
 history:
@@ -183,3 +183,8 @@ history:
   note: route assessments gain optional analysis_refs (pinned note revision, exact
     anchor, inspected material identity); freshness reasons gain analysis-refs-stale
   mirrored_in_ui: contracts/manifest-v13.lock.json
+- version: 14
+  adopted: '2026-09-21'
+  note: schema title names the declared version (was 'manifest v9' since v9); no shape
+    change
+  mirrored_in_ui: contracts/manifest-v14.lock.json

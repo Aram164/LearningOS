@@ -13,6 +13,7 @@ import datetime
 import shutil
 from pathlib import Path
 
+import pytest
 import yaml
 from repo_builders import curriculum_mini as _curriculum_mini
 from repo_builders import moved_only as _moved_only
@@ -70,6 +71,43 @@ def test_manifest_digests_are_deterministic(tmp_path: Path):
     mini = _curriculum_mini(tmp_path)
     repo = load_repo(mini)
     assert manifest_input_digests(mini, repo) == manifest_input_digests(mini, repo)
+
+
+@pytest.mark.parametrize("change", ["note", "source"])
+def test_warm_synthesis_invalidates_referenced_analysis_evidence(mini_repo, change):
+    from test_synthesis_analysis_refs import (
+        MATERIAL,
+        NOTE_ID,
+        _digest_of,
+        _plant_note,
+        _ref,
+        _seed,
+    )
+
+    from learning_os.genout.projection.records_curriculum import project_unit_material_syntheses
+    from learning_os.material_synthesis import synthesis_destination
+
+    dossier = _seed(mini_repo, "valid")
+    # A separately inspected chapter is not part of the unit's route basis.
+    material = "source-demo-book/analysis-only.pdf"
+    target = mini_repo.parent / "materials" / material
+    target.write_bytes((mini_repo.parent / "materials" / MATERIAL).read_bytes())
+    note = _plant_note(mini_repo, material=material)
+    dossier["route_assessments"][0]["analysis_refs"] = [
+        _ref(_digest_of(note), material=material)]
+    write_yaml(synthesis_destination(mini_repo, "unit-demo-l01"), dossier)
+    repo = load_repo(mini_repo)
+    _stage_manifest_producers(mini_repo, repo)
+    _evaluate(mini_repo, repo)
+    if change == "note":
+        note.write_bytes(note.read_bytes() + b"\nRevised explanation.\n")
+    else:
+        target.write_bytes(b"Changed analyzed chapter.")
+    repo = load_repo(mini_repo)
+    result = _evaluate(mini_repo, repo)[SEMANTIC_PAYLOAD_ID].value
+    expected = project_unit_material_syntheses(repo)
+    assert expected[0]["freshness"]["status"] == "stale", NOTE_ID
+    assert result["unit_material_syntheses"] == expected
 
 
 def test_source_edit_moves_only_sources_digest(tmp_path: Path):

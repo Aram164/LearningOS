@@ -171,16 +171,13 @@ exempt:
       declaration. Enforced by tools/release_pair_receipt.py at generate and
       verify time.
 
-  - path: system/contracts/manifest-v6.schema.json
-    reason: superseded projection schema, retained so an older artifact stays readable.
-
-  - path: system/contracts/manifest-v7.schema.json
-    reason: superseded projection schema, retained so an older artifact stays readable.
-
-  - path: system/contracts/manifest-v8.schema.json
+  - path: system/contracts/manifest-v14.schema.json
     reason: >-
       The current projection schema. Named by manifest-contract.yaml and
       enforced through it at build time, so it is not separately registered.
+      Superseded versioned schemas are not retained; their history lives in
+      Git and in manifest-contract.yaml, and every consumer mirrors only the
+      current version.
 
   - path: system/contracts/contract-register.yaml
     reason: >-

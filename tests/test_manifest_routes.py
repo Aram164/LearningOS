@@ -1,4 +1,4 @@
-"""Manifest v7 full-schema and route-identity acceptance tests."""
+"""Manifest full-schema and route-identity acceptance tests."""
 
 from __future__ import annotations
 
@@ -15,7 +15,7 @@ from learning_os.material_synthesis import current_unit_material_basis
 from learning_os.rules import validate
 
 
-def test_v7_projects_stable_route_and_guarded_selection(mini_repo):
+def test_manifest_projects_stable_route_and_guarded_selection(mini_repo):
     route_id, _route = rich_fixture(mini_repo)
     manifest = build_manifest(load_repo(mini_repo), "T1")
 
@@ -39,7 +39,7 @@ def test_v7_projects_stable_route_and_guarded_selection(mini_repo):
     }
 
 
-def test_v7_nested_violation_reports_rfc6901_pointer(mini_repo):
+def test_manifest_nested_violation_reports_rfc6901_pointer(mini_repo):
     add_curriculum(mini_repo)
     manifest = build_manifest(load_repo(mini_repo), "T1")
     manifest["units"][0]["unexpected_field"] = True
@@ -103,7 +103,7 @@ def _add_manifest_project(root):
         "raw_prompt",
     ),
 ])
-def test_v7_rejects_unknown_or_malformed_nested_public_records(
+def test_manifest_rejects_unknown_or_malformed_nested_public_records(
     mini_repo,
     mutate,
     pointer,
@@ -121,7 +121,7 @@ def test_v7_rejects_unknown_or_malformed_nested_public_records(
     assert detail in message
 
 
-def test_v7_exact_schema_hash_drift_fails_closed(mini_repo):
+def test_manifest_exact_schema_hash_drift_fails_closed(mini_repo):
     add_curriculum(mini_repo)
     manifest = build_manifest(load_repo(mini_repo), "T1")
     # The declared schema, not a hardcoded version: this test is about the
