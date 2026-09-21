@@ -51,18 +51,13 @@ def test_the_obligation_is_derived_from_the_records(
 
 
 @pytest.mark.full_repo
-def test_the_count_the_badge_and_the_queue_read_one_answer(repo_root):
+def test_the_count_the_badge_and_the_queue_read_one_answer(real_manifest):
     """The projected flag, the per-module tally and the global count must agree.
 
     They are three consumers of one derivation. Before it they were three
     independent readings of two different facts, and they disagreed by 29.
     """
-    import json
-
-    from learning_os.genout import generate_all
-    from learning_os.loader import load_repo
-
-    manifest = json.loads(generate_all(load_repo(repo_root), "T1")["manifest.json"])
+    manifest = real_manifest
     units = {unit["id"]: unit for unit in manifest["units"]}
 
     owed = {uid for uid, unit in units.items() if unit.get("needs_study_map")}

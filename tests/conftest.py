@@ -2,19 +2,83 @@
 
 from __future__ import annotations
 
+import json
 import shutil
 import textwrap
 from pathlib import Path
 
+import group_map
 import pytest
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
+# Stamp embedded in the shared session snapshots below. No consumer asserts on
+# its value (verified at introduction); it only needs to be stable so the
+# snapshots are built once.
+SHARED_GENERATED_AT = "shared-test-snapshot"
+
 
 @pytest.fixture(scope="session")
 def repo_root() -> Path:
     return REPO_ROOT
+
+
+def pytest_collection_modifyitems(items):
+    """Apply the area-group marker from tests/group_map.py; fail on drift."""
+    errors = group_map.check_map(Path(__file__).resolve().parent)
+    assert not errors, (
+        "tests/group_map.py is out of step with tests/: "
+        + "; ".join(errors))
+    for item in items:
+        name = Path(str(item.fspath)).name
+        group = group_map.FILE_TO_GROUP.get(name)
+        if group is not None:
+            item.add_marker(getattr(pytest.mark, group))
+
+
+@pytest.fixture(scope="session")
+def real_repo():
+    """The checked-in repository, loaded once.
+
+    The suite never mutates the real tree (audited 2026-09-21: every write
+    goes to tmp copies), and ``validate``/``generate_all``/``build_manifest``
+    do not mutate the loaded object apart from idempotent memo caches — so
+    every ``full_repo`` test can share one loaded snapshot instead of each
+    paying ``load_repo`` again. Same assertions, one load.
+    """
+    from learning_os.loader import load_repo
+
+    return load_repo(REPO_ROOT)
+
+
+@pytest.fixture(scope="session")
+def real_issues(real_repo):
+    """``validate()`` over the checked-in repository, computed once."""
+    from learning_os.rules import validate
+
+    return validate(real_repo)
+
+
+@pytest.fixture(scope="session")
+def real_generated(real_repo):
+    """``generate_all()`` over the checked-in repository, computed once."""
+    from learning_os.genout import generate_all
+
+    return generate_all(real_repo, generated_at=SHARED_GENERATED_AT)
+
+
+@pytest.fixture(scope="session")
+def real_manifest(real_generated):
+    """The checked-in manifest, parsed from the shared ``generate_all``.
+
+    ``generate_all(repo, at)["manifest.json"]`` parses to the same keys and
+    values as ``build_manifest(repo, at, build_backlinks(repo, at))``
+    (verified 2026-09-21) — key order follows production's sorted
+    serialization, which is what every consumer reads. Same content the
+    direct builders produce, without rebuilding it per test.
+    """
+    return json.loads(real_generated["manifest.json"])
 
 
 @pytest.fixture()

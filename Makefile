@@ -12,7 +12,7 @@ VENV   := .venv
 # Homebrew "externally-managed-environment" errors on macOS.
 PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYTHON))
 
-.PHONY: help check warnings views materials inventory verify-materials contract test test-fast bench lint code-check all setup hooks garden status plan-check projection-check system-check stress
+.PHONY: help check warnings views materials inventory verify-materials contract test test-fast test-group test-affected bench lint code-check all setup hooks garden status plan-check projection-check system-check stress
 
 help:
 	@echo "make check  - validate the repository (schemas + semantic rules)"
@@ -30,6 +30,8 @@ help:
 	@echo "                (manifest_contract.py) - different contracts, different consumers"
 	@echo "make garden - rebuild views, then point at the Nebula (Garden index)"
 	@echo "make test-fast - run tests that do not load the checked-in repository state"
+	@echo "make test-group G=<area> - run one area group (see tests/GROUPS.md)"
+	@echo "make test-affected [BASE=main] - run the groups touched by this branch"
 	@echo "make bench    - run the read-only benchmark scripts (never a gate, no thresholds)"
 	@echo "make test   - run the complete test suite, including full-repository checks"
 	@echo "make lint   - run the defect-oriented static checks used by CI"
@@ -86,6 +88,20 @@ test:
 
 test-fast:
 	$(PY) -m pytest -q -m "not full_repo"
+
+# One area group only, e.g. `make test-group G=gateway`. Groups are defined in
+# tests/group_map.py and applied as markers by tests/conftest.py.
+test-group:
+	@test -n "$(G)" || { echo "usage: make test-group G=<area>" >&2; exit 2; }
+	$(PY) -m pytest -q -m "$(G)"
+
+# The groups touched by this branch (commits against BASE plus uncommitted
+# changes). A change to shared machinery reruns everything — see tests/GROUPS.md.
+BASE ?= main
+test-affected:
+	files=`$(PY) tools/affected_tests.py --base "$(BASE)"`; \
+	if [ -z "$$files" ]; then echo "affected: no changes detected"; \
+	else $(PY) -m pytest -q $$files; fi
 
 # Discoverability only: the read-only benchmark scripts are noisy by nature,
 # so they are runnable but never a gate and never part of check/CI.

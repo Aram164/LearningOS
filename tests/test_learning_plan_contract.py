@@ -16,7 +16,6 @@ from learning_os.contracts import (
     validate_contract,
 )
 from learning_os.contracts.capability_catalog import query_definitions
-from learning_os.loader import load_repo
 
 SHARED_PLAN_SCHEMA = "https://learningos.local/schema/learning-plan-v1"
 
@@ -67,8 +66,8 @@ def test_curriculum_import_refuses_the_unreplaced_source_plan_placeholder():
 
 
 @pytest.mark.full_repo
-def test_every_active_curriculum_plan_uses_current_template(repo_root):
-    repo = load_repo(repo_root)
+def test_every_active_curriculum_plan_uses_current_template(real_repo):
+    repo = real_repo
     assert repo.study_maps
     for study_map in repo.study_maps.values():
         assert study_map.data["plan_template_version"] == 1, study_map.path

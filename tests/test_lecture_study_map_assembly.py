@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import assemble_lecture_study_maps as assembler
+import pytest
 
 
 def _unit() -> dict:
@@ -109,6 +110,7 @@ def test_assembly_refuses_invisible_or_unrouted_stages():
     assert any("has no concept coverage" in problem for problem in problems)
 
 
+@pytest.mark.full_repo
 def test_curated_edges_still_name_live_nodes_and_concepts(repo_root):
     """A renamed node or concept must fail before the next bulk draft is written."""
     manifest = assembler._manifest(repo_root)

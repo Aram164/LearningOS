@@ -1101,12 +1101,12 @@ def _amls_inventory() -> dict:
 
 
 @pytest.mark.full_repo
-def test_amls_complete_paper_inventory_is_wired_per_lecture(repo_root):
+def test_amls_complete_paper_inventory_is_wired_per_lecture(real_repo):
     inventory = _amls_inventory()
     assert inventory["totals"]["curated"] == 60
     assert inventory["totals"]["bibliography"] == 283
 
-    repo = load_repo(repo_root)
+    repo = real_repo
     source = repo.sources["source-amls-ss26-lectures"]
     assert source["material"] == "material://source-amls-ss26-lectures"
     assert source["identifiers"]["paper-reading-list"].endswith(
@@ -1714,9 +1714,9 @@ def test_material_resource_projection_refuses_compound_and_unsafe_uris(
 
 
 @pytest.mark.full_repo
-def test_aml_units_and_exam_stages_keep_the_reviewed_sequence(repo_root):
+def test_aml_units_and_exam_stages_keep_the_reviewed_sequence(real_repo):
     """Expanded material menus must not rearrange the AML learning surface."""
-    repo = load_repo(repo_root)
+    repo = real_repo
     module = repo.modules["module-hu-aml"]
     expected_units = [
         *[f"unit-aml-l{lecture:02d}" for lecture in range(1, 12)],
@@ -1755,9 +1755,9 @@ def test_aml_units_and_exam_stages_keep_the_reviewed_sequence(repo_root):
 
 
 @pytest.mark.full_repo
-def test_sad_lectures_are_knowledge_maps_with_complete_material_menus(repo_root):
+def test_sad_lectures_are_knowledge_maps_with_complete_material_menus(repo_root, real_repo):
     """SaD follows the same choose-a-source semantics as AML, lecture by lecture."""
-    repo = load_repo(repo_root)
+    repo = real_repo
     module_dir = (
         repo_root
         / "curriculum/modules/module-hu-m2-statistik-analysis"
@@ -1821,14 +1821,14 @@ def test_sad_lectures_are_knowledge_maps_with_complete_material_menus(repo_root)
 
 
 @pytest.mark.full_repo
-def test_amls_bundle_resources_carry_stable_ids(repo_root):
+def test_amls_bundle_resources_carry_stable_ids(real_repo):
     """A bundled source must be addressable item by item, not just as a bundle.
 
     `source-amls-ss26-lectures` backs ~96 stage resources. Without per-resource
     identity, every judgment about any of them files under one source id, so
     "SystemML was excellent" and "TASO was unnecessary" become the same record.
     """
-    repo = load_repo(repo_root)
+    repo = real_repo
     ided, bare = [], []
     for study_map in repo.study_maps.values():
         if not str(study_map.data.get("id", "")).startswith("study-map-amls"):
@@ -1849,7 +1849,7 @@ def test_amls_bundle_resources_carry_stable_ids(repo_root):
 
 
 @pytest.mark.full_repo
-def test_a_paper_cited_by_two_lectures_shares_one_resource_id(repo_root):
+def test_a_paper_cited_by_two_lectures_shares_one_resource_id(real_repo):
     """Identity belongs to the paper, not to the citation.
 
     AMLS cites "Attention Is All You Need" from both L04 and L07, and the
@@ -1858,7 +1858,7 @@ def test_a_paper_cited_by_two_lectures_shares_one_resource_id(repo_root):
     a paper instead of accumulating on the paper — which is the reuse ADR-009
     is for. This test fails if someone "fixes" the duplicate ids.
     """
-    repo = load_repo(repo_root)
+    repo = real_repo
     by_id = {}
     for study_map in repo.study_maps.values():
         for stage in study_map.data.get("stages", []) or []:
@@ -1879,7 +1879,7 @@ def test_a_paper_cited_by_two_lectures_shares_one_resource_id(repo_root):
 
 
 @pytest.mark.full_repo
-def test_topics_are_a_closed_vocabulary(repo_root):
+def test_topics_are_a_closed_vocabulary(real_repo, real_issues):
     """An unlisted topic must be an error, or the facet decays into tag soup.
 
     The whole reason `topics` is a controlled vocabulary rather than free tags is
@@ -1887,8 +1887,7 @@ def test_topics_are_a_closed_vocabulary(repo_root):
     within a year. That only holds if the validator actually refuses unknown
     values.
     """
-    from learning_os.rules import validate as _validate
-    repo = load_repo(repo_root)
+    repo = real_repo
     assert repo.topics, "sources/topics.yaml did not load"
     for tid in repo.topics:
         assert tid.startswith("topic-")
@@ -1896,11 +1895,11 @@ def test_topics_are_a_closed_vocabulary(repo_root):
     for source in repo.sources.values():
         for tid in source.get("topics", []) or []:
             assert tid in repo.topics, f"{source['id']} uses unknown topic {tid}"
-    assert not [i for i in _validate(repo) if i.severity == "E"]
+    assert not [i for i in real_issues if i.severity == "E"]
 
 
 @pytest.mark.full_repo
-def test_topics_are_independent_of_thematic_groups(repo_root):
+def test_topics_are_independent_of_thematic_groups(real_repo):
     """One identity, many classifications — the point of the facet.
 
     If topics could only come from a source's own domain, the polyhierarchy
@@ -1908,7 +1907,7 @@ def test_topics_are_independent_of_thematic_groups(repo_root):
     This asserts at least one source carries a topic whose display domain is not
     among that source's own thematic groups.
     """
-    repo = load_repo(repo_root)
+    repo = real_repo
     crossing = []
     for source in repo.sources.values():
         groups = set(source.get("thematic_group_ids", []) or [])
@@ -1923,7 +1922,7 @@ def test_topics_are_independent_of_thematic_groups(repo_root):
 
 
 @pytest.mark.full_repo
-def test_library_view_reports_unclassified_rather_than_hiding_it(repo_root):
+def test_library_view_reports_unclassified_rather_than_hiding_it(real_repo):
     """Sparse is the honest state under on-use population, so it must be visible.
 
     A browser that showed only classified sources would silently imply the
@@ -1938,7 +1937,7 @@ def test_library_view_reports_unclassified_rather_than_hiding_it(repo_root):
     because a folder tree's whole claim is that nothing is missing.
     """
     from learning_os.genout import build_library
-    repo = load_repo(repo_root)
+    repo = real_repo
     view = build_library(repo, "T1")
 
     # The domains are the top level, and the facets that do not shape the tree

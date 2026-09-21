@@ -36,8 +36,8 @@ def test_living_docs_cannot_copy_a_manifest_version(mini_repo):
 
 
 @pytest.mark.full_repo
-def test_real_repository_has_no_errors(repo_root):
-    issues = run(repo_root)
+def test_real_repository_has_no_errors(real_issues):
+    issues = real_issues
     errors = [str(i) for i in issues if i.severity == "E"]
     assert errors == [], errors
 
