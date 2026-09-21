@@ -42,6 +42,7 @@ from learning_os.commands.ai import (  # noqa: E402
     cmd_ai_action_status,
     cmd_ai_action_validate_delivery,
 )
+from learning_os.commands.analysis import cmd_note_analysis_save  # noqa: E402
 from learning_os.commands.atlas import (  # noqa: E402
     cmd_atlas_context,
     cmd_atlas_question_save,
@@ -569,6 +570,17 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_atlas_question_save)
+
+    p = sub.add_parser("note-analysis-save", help="preserve one source analysis as a durable reference note")
+    p.add_argument("--analysis", required=True, type=json_object)
+    p.add_argument("--body-file", required=True)
+    p.add_argument(
+        "--body-file-sha256", type=sha256_value, default=None,
+        help="SHA-256 of the exact analysis bytes approved for preservation",
+    )
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_note_analysis_save)
 
     p = sub.add_parser("plan-edit-context", help="read compact plan or one material's edit context")
     p.add_argument("unit_id")

@@ -23,9 +23,12 @@ Usage:
 
 --read returns one source-bound chapter summary for triage, without reading
 cached pages or generating new analysis. Exit 0 means a hit, 1 means missing
-or stale, and 2 means refused. Legacy summaries remain readable with an
-explicit unrecorded-integrity label; newly promoted summaries carry a body
-checksum. Neither checksum nor source freshness certifies semantic quality.
+or stale, and 2 means refused. A durable analysis note for the exact source
+and range is served first (store "durable-note"); otherwise the summary
+cache serves (store "summary-cache"). Legacy cache summaries remain
+readable with an explicit unrecorded-integrity label; newly promoted
+summaries carry a body checksum. Neither checksum nor source freshness
+certifies semantic quality.
 
 --audit is read-only and deliberately narrow: a summary is stale if and
 only if the live material bytes no longer hash to its recorded digest.
@@ -87,8 +90,55 @@ def _bounded_bytes(path: Path, limit: int) -> bytes:
     return data
 
 
+def _durable_match(repo_root: Path, material: str, digest: str,
+                   span: tuple[int, int]):
+    """A durable analysis note for this exact source and range, or None.
+
+    Returns (note id, binding, body bytes) for the deterministically first
+    match. A body that fails its frozen hash is damage, not a miss, and
+    refuses. Loader or read failures fall through to the cache path.
+    """
+    try:
+        from learning_os.loader import load_repo
+    except ImportError:
+        return None
+    try:
+        repo = load_repo(Path(repo_root))
+    except Exception:
+        return None
+    matches = []
+    for note in repo.notes.values():
+        binding = note.meta.get("material_analysis")
+        if not isinstance(binding, dict):
+            continue
+        if (binding.get("material") != material
+                or binding.get("recorded_source_digest") != digest):
+            continue
+        inspected = binding.get("inspected_range") or {}
+        if [inspected.get("start"), inspected.get("end")] != list(span):
+            continue
+        matches.append(note)
+    if not matches:
+        return None
+    matches.sort(key=lambda note: note.id)
+    note = matches[0]
+    binding = note.meta["material_analysis"]
+    length = binding.get("frozen_input_bytes")
+    try:
+        raw = note.path.read_bytes()
+    except OSError:
+        return None
+    if not isinstance(length, int) or len(raw) < length:
+        raise ValueError("durable analysis body is damaged")
+    body = raw[-length:]
+    if hashlib.sha256(body).hexdigest() != binding.get("frozen_input_sha256"):
+        raise ValueError("durable analysis body checksum mismatch")
+    return note.id, binding, body
+
+
 def _read_summary(cache_dir: Path, base: Path, material: str,
-                  span: tuple[int, int], expected: str | None) -> int:
+                  span: tuple[int, int], expected: str | None,
+                  repo_root: Path | None = None) -> int:
     """Read exactly one chapter, checking live source bytes before and after."""
     result = {"material": material, "page_range": list(span),
               "purpose": "chapter-triage", "primary_evidence_required": True}
@@ -114,6 +164,17 @@ def _read_summary(cache_dir: Path, base: Path, material: str,
         if expected is not None and expected.lower() != digest:
             return emit("stale", 1, expected_sha256=expected.lower(),
                         reason="source bytes changed; select the current chapter before reuse")
+        durable = _durable_match(repo_root or REPO, material, digest, span)
+        if durable is not None:
+            note_id, binding, durable_body = durable
+            if not source_unchanged():
+                raise ValueError("source changed during lookup; retry")
+            return emit("hit", 0, source_fresh=True, store="durable-note",
+                        note_id=note_id, resolution=binding.get("resolution"),
+                        integrity="verified",
+                        summary_sha256=hashlib.sha256(durable_body).hexdigest(),
+                        model=binding.get("model"), built=binding.get("built"),
+                        summary=durable_body.decode("utf-8"))
         target = cache_dir / digest / f"pages-{span[0]}-{span[1]}"
         target.resolve().relative_to(cache_dir.resolve())
         meta_path, body_path = target / "meta.json", target / "summary.md"
@@ -141,7 +202,7 @@ def _read_summary(cache_dir: Path, base: Path, material: str,
             raise ValueError("summary content checksum mismatch")
         if not source_unchanged():
             raise ValueError("source changed during lookup; retry")
-        return emit("hit", 0, source_fresh=True,
+        return emit("hit", 0, source_fresh=True, store="summary-cache",
                     integrity="verified" if recorded is not None else "legacy-unrecorded",
                     summary_sha256=body_digest, model=meta["model"],
                     built=meta.get("built"), summary=summary)

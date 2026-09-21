@@ -217,6 +217,134 @@
           ]
         }
       }
+    },
+    "material_analysis": {
+      "description": "Provenance binding for a durable source-chapter analysis. Only resolution 'resolved' claims a current registered source; every other resolution preserves the prose without impersonating one.",
+      "type": "object",
+      "required": [
+        "resolution",
+        "material",
+        "recorded_source_digest",
+        "inspected_range",
+        "frozen_input_sha256",
+        "frozen_input_bytes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "resolution": {
+          "enum": [
+            "resolved",
+            "unresolved",
+            "unavailable",
+            "stale"
+          ]
+        },
+        "material": {
+          "description": "Recorded material relpath. Existence is not claimed.",
+          "type": "string",
+          "minLength": 1
+        },
+        "source_id": {
+          "type": "string",
+          "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "recorded_source_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "live_source_digest": {
+          "description": "Digest observed during binding. Absent when the source bytes were unobservable.",
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "inspected_range": {
+          "type": "object",
+          "required": [
+            "start",
+            "end"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "start": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "end": {
+              "type": "integer",
+              "minimum": 1
+            }
+          }
+        },
+        "anchors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "topic",
+              "purpose",
+              "locator"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "topic": {
+                "type": "string",
+                "minLength": 1
+              },
+              "purpose": {
+                "type": "string",
+                "minLength": 1
+              },
+              "locator": {
+                "type": "string",
+                "minLength": 1
+              },
+              "note": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "frozen_input_sha256": {
+          "description": "sha256 of the frozen input bytes this note body preserves.",
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "frozen_input_bytes": {
+          "description": "Length in bytes of the preserved body: the note body is exactly the file's last N bytes.",
+          "type": "integer",
+          "minimum": 1
+        },
+        "model": {
+          "type": "string"
+        },
+        "built": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "resolution": {
+                "const": "resolved"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "source_id"
+            ]
+          },
+          "else": {
+            "not": {
+              "required": [
+                "source_id"
+              ]
+            }
+          }
+        }
+      ]
     }
   },
   "allOf": [

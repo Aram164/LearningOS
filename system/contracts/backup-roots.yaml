@@ -28,6 +28,11 @@ roots:
       - operations/transactions
       - operations/ai-actions
       - operations/legacy
+      # Migration evidence (frozen inputs, mapping reports, migration
+      # manifests) is required to audit or resume a migration after a
+      # restore; without this listing a restore could not prove what the
+      # canonical notes were migrated from.
+      - operations/migrations
       - system/contracts
       - system/schema
       # Archived workspaces are canonical operational state, not history: the

@@ -36,7 +36,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `build_materials_tree.py` | bounded materials maintenance | Maintains the physical topic tree and `.flat` compatibility links. |
 | `material_text.py` | bounded authoring tool | Digest-keyed page-text cache for local materials; read cached pages instead of re-extracting. |
 | `material_toc.py` | bounded authoring tool | Reads local material structure while authoring or checking exact locators. |
-| `material_summarize.py` | bounded authoring tool | Admits reviewed chapter summaries; `--read --material PATH --pages START-END` returns one reusable summary with live source checks, explicit hit/missing/stale/refused status, and content integrity. |
+| `material_summarize.py` | bounded authoring tool | Admits reviewed chapter summaries; `--read --material PATH --pages START-END` returns one reusable summary with live source checks, explicit hit/missing/stale/refused status, and content integrity — serving a durable analysis note first when one binds the exact source and range. |
 | `materials_manifest.py` | bounded integrity tool | Builds/verifies the external-material checksum inventory. |
 | `ingest_transcript.py` | bounded materials maintenance | Fetches third-party video captions into the managed materials tree as timestamp-addressable transcripts; writes only under `LearningOS/materials/`, never canonical state. |
 | `refresh_amls_fixture.py` | bounded fixture maintenance | Refreshes the checked-in AMLS paper inventory when its external source changes. |
@@ -68,6 +68,7 @@ contract is newer than the last generation it understands.
 | `standardize_plan_template_v10.py` | retired after v10 | Historical plan-template standardization. |
 | `route_identity_v13.py` | apply retired after v13; compatibility planner retained | The public compatibility command still imports its deterministic planner and fails closed on current apply. |
 | `job_quarantine_collapse.py` | compatibility planner; direct apply always refused | The gateway-bound legacy Job capability reuses its plan and before-image verification. |
+| `summaries_to_notes_v1.py` | one-shot; direct operator execution through v35 | Freeze, map, and migrate legacy summary-cache entries to durable analysis notes via note.analysis.save; refuses changed inputs and retires by lifecycle after v35. |
 
 When the current contract needs a data rewrite, add a new migration with a new
 identifier and supported-through declaration.  Do not revive or broaden a

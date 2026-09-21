@@ -66,8 +66,13 @@ PACKAGE_ROOTS: Mapping[str, str] = {
 
 # Completed migrations stay executable as historical evidence, but are not
 # standing runtime dependencies.  Current data-contract v14 makes each listed
-# migration's apply path fail closed through migration_lifecycle.py.
+# migration's apply path fail closed through migration_lifecycle.py.  A live
+# one-shot migration executed directly by the operator (never imported) is
+# listed here instead, with its lifecycle bound, until it retires the same way.
 UNREACHABLE_ALLOWLIST: Mapping[str, str] = {
+    "migrations.summaries_to_notes_v1": (
+        "one-shot summary migration, directly executed (through v35)"
+    ),
     "migrations.curriculum_v2": "retired module-first migration (through v0)",
     "migrations.library_taxonomy_v1": "retired taxonomy migration (through v1)",
     "migrations.projects_v1": "retired project migration (through v0)",

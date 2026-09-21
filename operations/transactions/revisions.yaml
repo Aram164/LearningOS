@@ -36,6 +36,19 @@ revisions:
   module-job-python-engineering: 1
   module-job-rust-engineering: 1
   module-project-bachelor-thesis: 1
+  note-06-random-variables-pp005-008: 1
+  note-06-random-variables-pp009-013: 1
+  note-06-random-variables-pp015-023: 1
+  note-06-random-variables-pp024-032: 1
+  note-06-random-variables-pp034-042: 1
+  note-06-random-variables-pp044-050: 1
+  note-06-random-variables-pp052-060: 1
+  note-11-datascience-intro-pp003-011: 1
+  note-11-datascience-intro-pp012-020: 1
+  note-11-datascience-intro-pp021-032: 1
+  note-11-datascience-intro-pp033-038: 1
+  note-11-datascience-intro-pp039-046: 1
+  note-11-datascience-intro-pp047-049: 1
   note-pandas-groupby-signatures: 1
   note-pandas-polars-aggregation-contentions: 3
   note-skrub-dataop-dag: 1

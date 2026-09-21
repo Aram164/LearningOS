@@ -9,6 +9,7 @@ import sys
 from pathlib import Path
 
 import pytest
+import yaml
 
 TOOLS = Path(__file__).resolve().parents[1] / "tools"
 
@@ -241,3 +242,63 @@ def test_summary_lookup_refuses_source_race_or_escape(tmp_path, capsys, monkeypa
     assert "changed during lookup" in json.loads(capsys.readouterr().out)["reason"]
     assert ms.main([*args, "--material", "../outside.pdf"]) == 2
     assert json.loads(capsys.readouterr().out)["status"] == "refused"
+
+
+def _plant_analysis_note(mini_repo, material, digest, span, body: bytes):
+    note_id = "note-adapter-demo-pp1-3"
+    meta = {"id": note_id, "type": "note", "role": "reference",
+            "title": "Adapter demo", "created": "2026-09-21",
+            "state": "rough", "authorship": "operator-drafted",
+            "semantic_review": "unreviewed",
+            "material_analysis": {
+                "resolution": "unresolved", "material": material,
+                "recorded_source_digest": digest,
+                "inspected_range": {"start": span[0], "end": span[1]},
+                "frozen_input_sha256": hashlib.sha256(body).hexdigest(),
+                "frozen_input_bytes": len(body)}}
+    path = mini_repo / "knowledge/notes/mathematics" / f"{note_id}.md"
+    front = "---\n" + yaml.safe_dump(meta, sort_keys=False).rstrip() + "\n---\n\n"
+    path.write_bytes(front.encode("utf-8") + body)
+    return note_id, path
+
+
+def test_read_prefers_durable_note_with_identical_bytes(
+        mini_repo, tmp_path, capsys):
+    ms, live, target, digest, args = _read_fixture(tmp_path, capsys)
+    cached = (target / "summary.md").read_bytes()
+    note_id, _ = _plant_analysis_note(
+        mini_repo, "deck/ch.pdf", digest, (1, 3), cached)
+    cache, base = target.parent.parent, live.parent.parent
+    assert ms._read_summary(cache, base, "deck/ch.pdf", (1, 3), None,
+                            mini_repo) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["status"] == "hit"
+    assert result["store"] == "durable-note"
+    assert result["note_id"] == note_id
+    assert result["summary"].encode("utf-8") == cached
+
+
+def test_read_falls_back_to_cache_without_durable_match(
+        mini_repo, tmp_path, capsys):
+    ms, live, target, digest, args = _read_fixture(tmp_path, capsys)
+    cache, base = target.parent.parent, live.parent.parent
+    assert ms._read_summary(cache, base, "deck/ch.pdf", (1, 3), None,
+                            mini_repo) == 0
+    result = json.loads(capsys.readouterr().out)
+    assert result["status"] == "hit"
+    assert result["store"] == "summary-cache"
+    assert result["summary"] == (target / "summary.md").read_text()
+
+
+def test_read_refuses_tampered_durable_body(mini_repo, tmp_path, capsys):
+    ms, live, target, digest, args = _read_fixture(tmp_path, capsys)
+    _, path = _plant_analysis_note(
+        mini_repo, "deck/ch.pdf", digest, (1, 3),
+        (target / "summary.md").read_bytes())
+    with path.open("ab") as handle:
+        handle.write(b"tampered")
+    cache, base = target.parent.parent, live.parent.parent
+    assert ms._read_summary(cache, base, "deck/ch.pdf", (1, 3), None,
+                            mini_repo) == 2
+    result = json.loads(capsys.readouterr().out)
+    assert result["status"] == "refused" and "summary" not in result
