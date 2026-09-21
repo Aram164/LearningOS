@@ -38,6 +38,10 @@ def project_notes(repo: Repo) -> list[dict]:
             # the two fields above are: an interface cannot show a question it
             # never receives, and a question nobody can find is not persisted.
             "atlas_question": note.meta.get("atlas_question"),
+            # The provenance binding of a durable source-chapter analysis.
+            # Projected for the same reason: retrieval and review interfaces
+            # cannot show bindings they never receive.
+            "material_analysis": note.meta.get("material_analysis"),
         })
     return records
 

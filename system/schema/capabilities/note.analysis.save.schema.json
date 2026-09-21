@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/note.analysis.save.schema.json",
+  "title": "payload for capability note.analysis.save",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "analysis",
+    "body_file"
+  ],
+  "properties": {
+    "analysis": {
+      "type": "object"
+    },
+    "body_file": {
+      "type": "string"
+    },
+    "body_file_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    }
+  },
+  "dependentRequired": {
+    "body_file": [
+      "body_file_sha256"
+    ],
+    "body_file_sha256": [
+      "body_file"
+    ]
+  }
+}

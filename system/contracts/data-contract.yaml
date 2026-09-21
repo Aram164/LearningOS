@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 33
-schema_fingerprint: sha256:a038fa0224d4d94d1bd644d430cb01063e4c53573eb1dfae5318c1c80e230f63
+contract_version: 35
+schema_fingerprint: sha256:09e3d9e76eb19e1b1f03d88458ed6046fd9833a3f82e5365fded271663a4a9dd
 record_schemas: 32
 history:
 - version: 1
@@ -266,5 +266,17 @@ history:
   adopted: '2026-09-20'
   note: 'add optional node_scaffold_note to study-map resource (v1 + legacy): records
     deliberate scaffolding placements; no existing data invalidated, no migration'
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 34
+  adopted: '2026-09-21'
+  note: 'note: optional material_analysis provenance binding for durable source-chapter
+    analyses (additive; existing notes validate unchanged)'
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 35
+  adopted: '2026-09-21'
+  note: 'note.material_analysis: required frozen_input_bytes records the preserved
+    body length (additive; no notes written under v34 yet)'
   migration: null
   fixture: tests/fixtures/formats/v25/

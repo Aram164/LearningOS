@@ -230,6 +230,16 @@ commands:
     - Stratum remains an external sibling codebase and appears only as optional prose learning anchors
     - no concept relations, source evaluations, completion, or mastery are inferred
     - the old boundary deletion and all ordinary program, module, map, note, probe, source, concept, and provenance writes commit atomically with one receipt
+  note.analysis.save:
+    handler: note_analysis_save
+    cli_command: note-analysis-save
+    writes:
+    - knowledge/notes/**
+    invariants:
+    - handler owns authorship and review defaults; input can never self-promote to user-reviewed
+    - body bytes are preserved verbatim and must match frozen_input_sha256
+    - identical requests replay without a second note; id collision with different analysis refuses
+    - saving preserves bytes; it never approves coverage, adopts plans, or records mastery
   note.revise:
     handler: note_revise
     cli_command: note-revise
