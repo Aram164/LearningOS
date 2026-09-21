@@ -14,6 +14,7 @@ from typing import Any
 
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.loader import load_repo
+from learning_os.material_analysis import observe_local_material
 from learning_os.material_slices import parse_locator_page_ranges
 from learning_os.materials_resolution import (
     MATERIAL_SUFFIX_TOKEN,
@@ -146,7 +147,8 @@ def current_unit_material_basis(
 ANALYSIS_REFS_STALE = "analysis-refs-stale"
 
 
-def _analysis_ref_problem(root: Path, repo, ref: dict) -> str | None:
+def _analysis_ref_problem(root: Path, repo, ref: dict, *,
+                          cache: dict[Path, str] | None = None) -> str | None:
     """Why an analysis ref no longer names its approved evidence, else None.
 
     The ref pins the note revision the approver saw plus the exact anchor
@@ -184,6 +186,11 @@ def _analysis_ref_problem(root: Path, repo, ref: dict) -> str | None:
         return "material identity differs from the note's binding"
     if binding.get("inspected_range") != ref.get("inspected_range"):
         return "inspected range differs from the note's binding"
+    observation = observe_local_material(
+        root.parent / "materials", str(binding.get("material") or ""),
+        str(binding.get("recorded_source_digest") or ""), cache=cache)
+    if observation["status"] != "current":
+        return f"analysis source is not current ({observation['status']})"
     return None
 
 
@@ -240,7 +247,8 @@ def validate_unit_material_synthesis(
             )
 
     basis = value["basis"]
-    current = current_unit_material_basis(root, unit_id, repo=repo)
+    material_cache: dict[Path, str] = {}
+    current = current_unit_material_basis(root, unit_id, repo=repo, cache=material_cache)
     for field in _COMPARED_BASIS_FIELDS:
         if basis.get(field) != current[field]:
             raise MaterialSynthesisError(f"dossier basis is stale at {field}")
@@ -282,7 +290,7 @@ def validate_unit_material_synthesis(
                     f"{row['route_id']} evidence checksum does not match its material basis"
                 )
         for ref in row.get("analysis_refs", []) or []:
-            problem = _analysis_ref_problem(root, repo, ref)
+            problem = _analysis_ref_problem(root, repo, ref, cache=material_cache)
             if problem is not None:
                 raise MaterialSynthesisError(
                     f"{row['route_id']} analysis ref to {ref.get('note_id')} "
@@ -526,6 +534,8 @@ def material_synthesis_freshness(
     cache: dict[Path, str] | None = None,
 ) -> dict[str, Any]:
     """Return derived freshness without trusting a stored status flag."""
+    if cache is None:
+        cache = {}
     reasons: list[str] = []
     try:
         current = current_unit_material_basis(root, unit_id, repo=repo, cache=cache)
@@ -544,8 +554,11 @@ def material_synthesis_freshness(
             for ref in (row.get("analysis_refs", []) or [])]
     if refs:
         notes_repo = repo if repo is not None else load_repo(root)
-        if any(_analysis_ref_problem(root, notes_repo, ref) is not None
-               for ref in refs):
+        # Observe every reference, even after one proves stale: callers bind
+        # all observed source bytes into continuation identities.
+        problems = [_analysis_ref_problem(root, notes_repo, ref, cache=cache)
+                    for ref in refs]
+        if any(problem is not None for problem in problems):
             reasons.append(ANALYSIS_REFS_STALE)
     return {"status": "current" if not reasons else "stale", "reasons": reasons}
 

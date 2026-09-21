@@ -211,7 +211,7 @@ def rich_fixture(root):
 
     Returns the deterministic route id and the route dict. Public because
     several test modules share it; behaviour is unchanged from the helper
-    that lived in `test_manifest_v7_routes.py`.
+    that lived in `test_manifest_routes.py`.
     """
     add_curriculum(root)
     _add_material_overview(root)

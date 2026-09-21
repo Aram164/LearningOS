@@ -29,19 +29,20 @@ Claude is the primary mechanical operator and retrieval assistant for Learning O
 
 ## 2. Bootstrap order
 
-Start with `system/OPERATOR.md` and its compact discovery commands. Consult
+Start with `system/OPERATOR.md` and its brief session entry (`capabilities
+--compact --json`, then `bootstrap --brief`). Consult
 `system/contracts/normative-corpus.yaml` before treating a document as binding.
 `CLAUDE.md` at the repository root links to this file; do not read both copies.
 The complete catalogue and full bootstrap remain available for bulk work, but
 are not the default context for an agent task.
-For material maintenance, prefer `plan-edit-context UNIT_ID --route-id ROUTE_ID`
-and the reviewed `route.patch` preflight/apply workflow in WORKFLOWS §25a.
-Use compact `plan-edit-context UNIT_ID` for map edits. Core expands shared
+For material maintenance, start from `plan-edit-context UNIT_ID --brief`, expand
+one material with `--route-id ROUTE_ID`, and follow the reviewed `route.patch`
+preflight/apply workflow in WORKFLOWS §25a. Core expands shared
 material references for the app; the agent should not reproduce those copies.
 
 Read the applicable contracts before acting, according to the task:
 
-- **Lookup or study support:** use compact bootstrap, then `inspect`, `search`,
+- **Lookup or study support:** use `bootstrap --brief`, then `inspect`, `search`,
   `related`, or `note-read` for the relevant records. Batch known record IDs in
   one `inspect` call. Return to interrupted study with `los resume` (one
   screen: stage, requirement, observations, open items, exam sittings)

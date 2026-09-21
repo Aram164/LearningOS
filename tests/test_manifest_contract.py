@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 
 import pytest
 import yaml
@@ -45,6 +46,20 @@ def test_built_manifest_matches_the_declared_contract(mini_repo):
 def test_generated_manifest_announces_the_declared_version(mini_repo):
     manifest = json.loads(generate_all(load_repo(mini_repo), "T1")["manifest.json"])
     assert manifest["_generated"]["contract_version"] == declared_version(mini_repo)
+
+
+def test_schema_title_names_the_declared_version(mini_repo):
+    """The versioned schema file must say which version it is.
+
+    The title read "manifest v9" from v9 through v13 because nothing checked
+    it — every bump copied the file and updated $id and const, never the
+    title. Read from the declaration, so this cannot pin a stale literal.
+    """
+    contract = yaml.safe_load(contract_path(mini_repo).read_text(encoding="utf-8"))
+    schema = json.loads((mini_repo / contract["schema_path"]).read_text(encoding="utf-8"))
+    version = contract["contract_version"]
+    assert schema["title"] == f"LearningOS atomic manifest v{version}"
+    assert schema["$id"].endswith(f"/manifest-v{version}.schema.json")
 
 
 def test_topics_is_part_of_the_contract(mini_repo):
@@ -93,7 +108,7 @@ def test_schema_path_must_stay_inside_the_repository(mini_repo):
     """A contract cannot redirect producer validation to arbitrary bytes."""
     manifest = _manifest(mini_repo)
     contract = yaml.safe_load(contract_path(mini_repo).read_text(encoding="utf-8"))
-    contract["schema_path"] = "../manifest-v8.schema.json"
+    contract["schema_path"] = "../escape.schema.json"
     contract_path(mini_repo).write_text(
         yaml.safe_dump(contract, sort_keys=False), encoding="utf-8")
 
@@ -103,7 +118,7 @@ def test_schema_path_must_stay_inside_the_repository(mini_repo):
     assert "schema_path must be repository-relative" in message
 
 
-def test_v8_schema_rejects_an_edge_without_evidence(mini_repo):
+def test_schema_rejects_an_edge_without_evidence(mini_repo):
     manifest = _manifest(mini_repo)
     manifest["module_concept_edges"] = [{
         "module_id": "module-demo",
@@ -118,7 +133,7 @@ def test_v8_schema_rejects_an_edge_without_evidence(mini_repo):
     assert "non-empty" in message
 
 
-def test_v8_schema_rejects_an_undeclared_edge_field(mini_repo):
+def test_schema_rejects_an_undeclared_edge_field(mini_repo):
     manifest = _manifest(mini_repo)
     manifest["module_concept_edges"] = [{
         "module_id": "module-demo",
@@ -168,25 +183,31 @@ def test_bump_escape_hatch_lets_the_shape_be_inspected(mini_repo):
 
 
 def test_bump_selects_and_hashes_the_new_versions_schema(mini_repo):
-    """Regression: a bump must never retain the previous schema pointer."""
+    """Regression: a bump must never retain the previous schema pointer.
+
+    The successor schema is staged in the synthetic repo (a copy of the
+    current one), because superseded versioned schemas are not retained on
+    disk — the test proves the bump selects the new pointer, not that old
+    files exist.
+    """
     path = contract_path(mini_repo)
     contract = yaml.safe_load(path.read_text(encoding="utf-8"))
-    v7_schema = mini_repo / "system/contracts/manifest-v7.schema.json"
-    contract.update({
-        "contract_version": 7,
-        "schema_path": "system/contracts/manifest-v7.schema.json",
-        "schema_sha256": f"sha256:{hashlib.sha256(v7_schema.read_bytes()).hexdigest()}",
-    })
-    path.write_text(yaml.safe_dump(contract, sort_keys=False), encoding="utf-8")
+    current = int(contract["contract_version"])
+    successor = current + 1
+    successor_rel = f"system/contracts/manifest-v{successor}.schema.json"
+    shutil.copyfile(
+        mini_repo / contract["schema_path"],
+        mini_repo / successor_rel,
+    )
     manifest = _manifest(mini_repo, enforce_contract=False)
 
-    updated = bump(manifest, mini_repo, "test v8 bump")
-    v8_schema = mini_repo / "system/contracts/manifest-v8.schema.json"
+    updated = bump(manifest, mini_repo, f"test v{successor} bump")
+    successor_schema = mini_repo / successor_rel
 
-    assert updated["contract_version"] == 8
-    assert updated["schema_path"] == "system/contracts/manifest-v8.schema.json"
+    assert updated["contract_version"] == successor
+    assert updated["schema_path"] == successor_rel
     assert updated["schema_sha256"] == (
-        f"sha256:{hashlib.sha256(v8_schema.read_bytes()).hexdigest()}"
+        f"sha256:{hashlib.sha256(successor_schema.read_bytes()).hexdigest()}"
     )
 
 

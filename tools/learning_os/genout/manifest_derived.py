@@ -47,6 +47,7 @@ from ..errors import TransactionFailure
 from ..garden import garden_id, project_garden_entries
 from ..githistory import GitSnapshot, fresh_git_snapshot
 from ..loader import Repo, load_repo
+from ..material_analysis import observe_local_material
 from ..materials_resolution import MATERIAL_SCHEME, MATERIAL_SUFFIX_TOKEN
 from ..materials_resolution import leading_material_locator as _leading_locator
 from ..materials_resolution import material_location as _material_location
@@ -422,6 +423,39 @@ def materials_digest(root: Path, repo: Repo) -> str:
     return digest.hexdigest()
 
 
+def analysis_evidence_digest(root: Path, repo: Repo) -> str:
+    """Pin the note bytes and local sources read by synthesis analysis refs.
+
+    Note projections omit most body text, and an analyzed chapter need not
+    belong to a current route. Neither projected notes nor route-material
+    inputs alone cover these freshness dependencies.
+    """
+    note_ids = {
+        ref.get("note_id")
+        for dossier in repo.unit_material_syntheses.values()
+        for row in dossier.get("route_assessments", []) or [] if isinstance(row, dict)
+        for ref in row.get("analysis_refs", []) or [] if isinstance(ref, dict)
+        if isinstance(ref.get("note_id"), str)
+    }
+    evidence = {}
+    cache: dict[Path, str] = {}
+    for note_id in sorted(note_ids):
+        note = repo.notes.get(note_id)
+        if note is None:
+            evidence[note_id] = {"note": "missing"}
+            continue
+        binding = note.meta.get("material_analysis")
+        if not isinstance(binding, dict):
+            binding = {}
+        evidence[note_id] = {
+            "note": digest_matching_files(root, [note.path]),
+            "source": observe_local_material(
+                root.parent / "materials", str(binding.get("material") or ""),
+                str(binding.get("recorded_source_digest") or ""), cache=cache),
+        }
+    return digest_bytes(canonical_bytes(evidence))
+
+
 def study_map_presence_digest(root: Path) -> str:
     """Which units carry a study map — presence only, never content."""
     relatives = sorted(
@@ -551,6 +585,7 @@ def manifest_input_digests(
         "manifest.working_notes": working_notes_digest(root, repo, table),
         "manifest.notes_git": notes_git_digest(root, table),
         "manifest.materials": materials_digest(root, repo),
+        "manifest.analysis_evidence": analysis_evidence_digest(root, repo),
         "manifest.today": today_digest(),
         # The contract closure is an input even though no semantic node
         # names it: the snapshot transaction compares the whole map
@@ -991,6 +1026,7 @@ def manifest_registry(repo: Repo, git: GitSnapshot | None = None) -> Registry:
                 producer_files=_node(
                     (*_proj("records_curriculum"),
                      "tools/learning_os/material_synthesis.py",
+                     "tools/learning_os/material_analysis.py",
                      "tools/learning_os/materials_resolution.py",
                      *_ROUTES, *_REVISIONS,
                      *_load("curriculum"), *_LOADING_BASE)
@@ -1000,6 +1036,7 @@ def manifest_registry(repo: Repo, git: GitSnapshot | None = None) -> Registry:
                     "gen.units",
                     "manifest.revisions",
                     "manifest.materials",
+                    "manifest.analysis_evidence",
                 ),
                 dependencies=(SOURCE_MAPS_ID,),
             ),

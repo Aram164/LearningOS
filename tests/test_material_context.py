@@ -249,9 +249,11 @@ def _seed_dossier_with_ref(root: Path):
     anchor = {"topic": "Expected value", "purpose": "derivation",
               "locator": "lecture-01.pdf p.1"}
     note_id = "note-context-weighted-derivation"
+    material = "source-demo-book/lecture-01.pdf"
+    digest = hashlib.sha256((root.parent / "materials" / material).read_bytes()).hexdigest()
     note_path = _plant_note(root, note_id, "Weighted sums derive expectation.\n",
-                            _binding("source-demo-book/lecture-01.pdf",
-                                     "ab" * 32, "Weighted sums derive expectation.\n",
+                            _binding(material,
+                                     digest, "Weighted sums derive expectation.\n",
                                      anchors=[anchor]))
     note_digest = f"sha256:{hashlib.sha256(note_path.read_bytes()).hexdigest()}"
     destination = synthesis_destination(root, "unit-demo-l01")

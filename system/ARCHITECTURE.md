@@ -231,8 +231,9 @@ instead of repeating selected fields. The explicit field list preserves absent
 fields and stage-specific overrides; priority, action kind, resource identity,
 feedback and progress stay stage-owned. The loader expands references within
 the same module and unit, refusing missing or ambiguous routes and overlapping
-inherited/local fields. Runtime consumers and manifest v9 retain their complete
-expanded shape. Editing context exposes the compact shape with its route
+inherited/local fields. Runtime consumers and the manifest declared in
+`system/contracts/manifest-contract.yaml` retain their complete expanded
+shape. Editing context exposes the compact shape with its route
 definitions once; ordinary state saves preserve that storage form.
 | Legacy module snapshot | `records/modules.yaml` | compatibility/migration only |
 | Coordination facts | `work/COORDINATION.md` | fixed |
@@ -353,7 +354,10 @@ only for material it observes at the claimed digest under the source's
 registered material. A unit assessment may reference
 such a note through `analysis_refs` instead of copying its prose; each ref
 pins the note revision and content digest the approver saw, so a later note
-edit stales the dossier until re-review. Saving preserves a draft; it never
+edit stales the dossier until re-review. Referenced analysis also requires
+its inspected source bytes to remain current; refreshing a route's material
+basis does not renew an interpretation of older bytes. The derived projection
+binds both the referenced note and its observed source. Saving preserves a draft; it never
 approves its claims or represents the learner's understanding.
 
 ---
@@ -711,6 +715,7 @@ Projects live under `projects/registry/` and are independent from curriculum
 modules. A project may have no fixed structure, a linear structure, parallel
 workstreams, or nested steps. Project relationships are explicit records under
 `projects/relations/`; aliases preserve old deep links during compatibility
-gates. The current manifest-v5 projection exposes Projects together with
+gates. The manifest projection declared in `system/contracts/manifest-contract.yaml`
+exposes Projects together with
 Core-owned Review and Garden state. Projection changes remain producer-owned
 and must be mirrored in the UI contract lock in the same release.

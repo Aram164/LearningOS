@@ -228,7 +228,9 @@ maps, complete rich source routing, optional study maps, and workspace joins), f
 audit, build from the canonical template, and require the no-write gate
 `.venv/bin/python tools/los.py module-plan-import MODULE_ID --file PLAN.yaml
 --check` to pass before applying the same package with `--expected-snapshot`.
-The gateway never deletes units or creates durable notes.
+`module-plan-import` never deletes units and never creates durable notes; the
+capabilities that do create durable notes are `note.analysis.save` (source
+analysis) and `atlas.question.save` (learner questions).
 
 An explicitly reviewed semantic replacement of one existing durable note uses
 `los note-revise NOTE_ID --file REVISED.md --approve --expected-snapshot

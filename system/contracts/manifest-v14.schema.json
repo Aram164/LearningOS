@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://learningos.local/contracts/manifest-v10.schema.json",
-  "title": "LearningOS atomic manifest v9",
+  "$id": "https://learningos.local/contracts/manifest-v14.schema.json",
+  "title": "LearningOS atomic manifest v14",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -300,13 +300,13 @@
                   "uniqueItems": true,
                   "items": {
                     "enum": [
-                      "unit_revision",
                       "source_map_revision",
                       "source_map_checksum",
                       "route_set_checksum",
                       "material_checksums",
                       "policy",
-                      "current-basis-unavailable"
+                      "current-basis-unavailable",
+                      "analysis-refs-stale"
                     ]
                   }
                 }
@@ -874,7 +874,8 @@
         "reviewed",
         "transcription",
         "semantic_review",
-        "atlas_question"
+        "atlas_question",
+        "material_analysis"
       ],
       "properties": {
         "id": {
@@ -1087,6 +1088,132 @@
               ]
             }
           }
+        },
+        "material_analysis": {
+          "type": [
+            "object",
+            "null"
+          ],
+          "required": [
+            "resolution",
+            "material",
+            "recorded_source_digest",
+            "inspected_range",
+            "frozen_input_sha256",
+            "frozen_input_bytes"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "resolution": {
+              "enum": [
+                "resolved",
+                "unresolved",
+                "unavailable",
+                "stale"
+              ]
+            },
+            "material": {
+              "type": "string",
+              "minLength": 1
+            },
+            "source_id": {
+              "type": "string",
+              "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"
+            },
+            "recorded_source_digest": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "live_source_digest": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "inspected_range": {
+              "type": "object",
+              "required": [
+                "start",
+                "end"
+              ],
+              "additionalProperties": false,
+              "properties": {
+                "start": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "end": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              }
+            },
+            "anchors": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "topic",
+                  "purpose",
+                  "locator"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "topic": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "purpose": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "locator": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "note": {
+                    "type": "string"
+                  }
+                }
+              }
+            },
+            "frozen_input_sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "frozen_input_bytes": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "model": {
+              "type": "string"
+            },
+            "built": {
+              "type": "string",
+              "format": "date"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "resolution": {
+                    "const": "resolved"
+                  }
+                }
+              },
+              "then": {
+                "required": [
+                  "source_id"
+                ]
+              },
+              "else": {
+                "not": {
+                  "required": [
+                    "source_id"
+                  ]
+                }
+              }
+            }
+          ]
         }
       }
     },
@@ -1873,7 +2000,7 @@
       ],
       "properties": {
         "contract_version": {
-          "const": 10
+          "const": 14
         },
         "generated_at": {
           "type": "string"

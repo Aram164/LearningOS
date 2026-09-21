@@ -15,7 +15,8 @@ from pathlib import Path
 
 
 def observe_local_material(materials_root: Path, material: str,
-                           recorded_digest: str) -> dict:
+                           recorded_digest: str, *,
+                           cache: dict[Path, str] | None = None) -> dict:
     """Observe one recorded material relpath against current bytes.
 
     Returns status `current` (live bytes hash to the recorded digest),
@@ -37,14 +38,21 @@ def observe_local_material(materials_root: Path, material: str,
         return {"status": "outside-boundary", "material": material}
     if target.is_symlink() or not target.is_file():
         return {"status": "missing", "material": material}
-    try:
-        digest = hashlib.sha256()
-        with target.open("rb") as handle:
-            for block in iter(lambda: handle.read(1 << 20), b""):
-                digest.update(block)
-    except OSError:
-        return {"status": "missing", "material": material}
-    live = digest.hexdigest()
+    cached = cache.get(target) if cache is not None else None
+    if cached is None:
+        try:
+            digest = hashlib.sha256()
+            with target.open("rb") as handle:
+                for block in iter(lambda: handle.read(1 << 20), b""):
+                    digest.update(block)
+        except OSError:
+            return {"status": "missing", "material": material}
+        live = digest.hexdigest()
+        if cache is not None:
+            # Same per-read cache format as materials_resolution.sha256_file.
+            cache[target] = f"sha256:{live}"
+    else:
+        live = cached.removeprefix("sha256:")
     return {
         "status": "current" if live == recorded_digest else "stale",
         "material": material,
