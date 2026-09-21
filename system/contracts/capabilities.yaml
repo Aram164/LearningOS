@@ -47,10 +47,11 @@ queries:
     - searches durable analysis notes plus the route assessments of approved unit syntheses
     - deterministic lexical AND matching; stable order (notes by id, then assessments by unit and route)
     - concept filter resolves declared ids and aliases; purpose and unit narrow without ranking
+    - unit-scoped analysis notes follow current source-map routes, independently of synthesis approval
     - excerpts are bounded (8 note snippets, 3 assessment fields); default 5 items, at most 20
     - source freshness is observed live per result; review state and resolution are reported, never inferred
     - empty results describe the searched records only, never the absence of an explanation
-    - continuation reuses the snapshot guard; changed snapshots refuse mixed pages
+    - continuation requires the snapshot and observations_sha256 guards; changed canonical data or observed material bytes refuse mixed pages, even when an assessment remains stale
   plan.template:
     handler: plan_template
     result: plan-template-v1
