@@ -190,6 +190,8 @@ hidden:
       purpose: Codex project configuration
     - path: .gitignore
       purpose: ignores generated/*, bases/, and the local environment
+    - path: .jules
+      purpose: AI agent critical learnings directory
 
   ephemeral:
     - path: .git
