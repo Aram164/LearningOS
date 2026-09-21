@@ -90,7 +90,10 @@ from learning_os.commands.query import (  # noqa: E402
     cmd_status,
     cmd_validate,
 )
-from learning_os.commands.reads import cmd_note_read  # noqa: E402
+from learning_os.commands.reads import (  # noqa: E402
+    cmd_material_context,
+    cmd_note_read,
+)
 from learning_os.commands.resume import cmd_resume  # noqa: E402
 from learning_os.commands.review import (  # noqa: E402
     cmd_session_end,
@@ -167,6 +170,16 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--limit", type=int, default=20)
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_bootstrap)
+
+    p = sub.add_parser("material-context", help="find saved explanations by need, with freshness and review state")
+    p.add_argument("query")
+    p.add_argument("--concept", default=None, help="concept id or declared alias filter")
+    p.add_argument("--purpose", default=None, help="purpose substring filter (anchors, best use, exercise value)")
+    p.add_argument("--unit", default=None, help="unit scope for assessments and linked analyses")
+    p.add_argument("--limit", type=int, default=5)
+    p.add_argument("--offset", type=int, default=0)
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_material_context)
 
     p = sub.add_parser("search", help="search the complete fresh projection")
     p.add_argument("query")

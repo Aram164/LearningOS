@@ -12,7 +12,9 @@ from learning_os.derived import DerivedError, evaluate
 from learning_os.errors import unreadable_refusal
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.genout.atlas import ATLAS_DOMAINS
+from learning_os.loader import load_repo
 from learning_os.loading import Repo, load_notes
+from learning_os.material_analysis import observe_local_material
 from learning_os.search.index import NoteBlob, build_registry
 from learning_os.search.model import POSTINGS_NODE_ID
 from learning_os.search.query import candidates
@@ -305,5 +307,243 @@ def content_search(args) -> int:
                 "total": len(matches),
                 "next_offset": offset + limit if offset + limit < len(matches) else None,
             })
+    except (WriteRefused, OSError, UnicodeError) as exc:
+        return _refusal(exc)
+
+
+# ------------------------------------------------------- material context
+ASSESSMENT_TEXT_FIELDS = ("contribution", "assumptions", "notation",
+                          "exercise_value", "best_for", "limitations",
+                          "locator")
+
+
+def _resolve_concept(repo, raw):
+    """A concept id or declared alias, matched case-insensitively."""
+    if raw in repo.concepts:
+        return raw
+    lowered = raw.casefold()
+    hits = [cid for cid, concept in repo.concepts.items()
+            if isinstance(concept, dict)
+            and any(str(alias).casefold() == lowered
+                    for alias in (concept.get("aliases") or []))]
+    if len(hits) == 1:
+        return hits[0]
+    if not hits:
+        raise WriteRefused(f"unknown concept: {raw!r} matches no id or declared alias")
+    raise WriteRefused(f"concept {raw!r} is ambiguous across {len(hits)} concepts; use an id")
+
+
+def _analysis_notes(repo):
+    return sorted((note for note in repo.notes.values()
+                   if isinstance(note.meta.get("material_analysis"), dict)),
+                  key=lambda note: note.id)
+
+
+def _approved_assessments(repo):
+    found = []
+    for synthesis_id in sorted(repo.unit_material_syntheses):
+        data = repo.unit_material_syntheses[synthesis_id]
+        if not isinstance(data, dict) or data.get("status") != "approved":
+            continue
+        unit_id = data.get("unit_id")
+        assessments = data.get("route_assessments")
+        if not isinstance(assessments, list):
+            continue
+        for assessment in assessments:
+            if isinstance(assessment, dict):
+                found.append((synthesis_id, unit_id, assessment))
+    found.sort(key=lambda row: (row[1] or "", row[2].get("route_id") or ""))
+    return found
+
+
+def _freshness_label(root, binding):
+    """Live source freshness: current, stale, or unreadable. Never inferred."""
+    observation = observe_local_material(
+        root.parent / "materials", str(binding.get("material") or ""),
+        str(binding.get("recorded_source_digest") or ""))
+    status = observation["status"]
+    if status in ("current", "stale"):
+        return status
+    return "unreadable"
+
+
+def _note_purpose_hit(binding, purpose):
+    if purpose is None:
+        return True
+    wanted = purpose.casefold()
+    anchors = binding.get("anchors")
+    if not isinstance(anchors, list):
+        return False
+    return any(wanted in str(anchor.get("purpose", "")).casefold()
+               for anchor in anchors if isinstance(anchor, dict))
+
+
+def _assessment_purpose_hit(assessment, purpose):
+    if purpose is None:
+        return True
+    wanted = purpose.casefold()
+    return any(wanted in str(assessment.get(field) or "").casefold()
+               for field in ("best_for", "exercise_value"))
+
+
+def cmd_material_context(args) -> int:
+    """Find saved explanations from an explanation need.
+
+    Corpus: durable analysis notes plus the route assessments of approved
+    unit syntheses. Matching is deterministic lexical AND over terms, with
+    declared concept aliases, purpose substrings, and unit scope as filters.
+    Order is stable (notes by id, then assessments by unit and route).
+    Freshness is observed live per result; review state and resolution are
+    reported, never inferred. An empty result describes the searched
+    records only — never proof that no source explains the topic.
+    """
+    root = _root(args)
+    try:
+        offset, limit = _window(args, 20)
+        raw_terms = (args.query or "").split()
+        terms = [re.compile(re.escape(term), re.IGNORECASE) for term in raw_terms]
+        if not terms:
+            raise WriteRefused("material context requires a nonempty query")
+        with _operator_lock(root):
+            snapshot = _snapshot(root, args.expected_snapshot)
+            repo = load_repo(root)
+            note_dir = root / "knowledge" / "notes"
+            note_failures = [
+                (path, message) for path, message in repo.parse_failures
+                if path.is_relative_to(note_dir)
+            ]
+            if note_failures:
+                raise WriteRefused(unreadable_refusal(root, note_failures, "context"))
+            synthesis_failures = [
+                (path, message) for path, message in repo.parse_failures
+                if path.name == "material-synthesis.yaml"
+            ]
+            if synthesis_failures:
+                raise WriteRefused(unreadable_refusal(root, synthesis_failures, "context"))
+            concept_id = _resolve_concept(repo, args.concept) \
+                if args.concept else None
+            if args.unit and args.unit not in repo.units:
+                raise WriteRefused(f"unknown unit: {args.unit!r}")
+            assessments = _approved_assessments(repo)
+            if args.unit:
+                assessments = [row for row in assessments if row[1] == args.unit]
+                unit_sources = {row[2].get("source_id") for row in assessments}
+                notes = [note for note in _analysis_notes(repo)
+                         if note.meta["material_analysis"].get("source_id") in unit_sources]
+            else:
+                notes = _analysis_notes(repo)
+            if concept_id is not None:
+                notes = [note for note in notes
+                         if concept_id in (note.meta.get("concepts") or [])]
+                assessments = [row for row in assessments
+                               if concept_id in (row[2].get("concept_ids") or [])]
+            notes = [note for note in notes
+                     if _note_purpose_hit(note.meta["material_analysis"], args.purpose)]
+            assessments = [row for row in assessments
+                           if _assessment_purpose_hit(row[2], args.purpose)]
+            pool = {
+                "analysis_notes": len(notes),
+                "assessments": len(assessments),
+                "analysis_by_resolution": {},
+                "analysis_unreviewed": 0,
+            }
+            for note in notes:
+                binding = note.meta["material_analysis"]
+                resolution = binding.get("resolution")
+                pool["analysis_by_resolution"][resolution] = \
+                    pool["analysis_by_resolution"].get(resolution, 0) + 1
+                if note.meta.get("semantic_review") == "unreviewed":
+                    pool["analysis_unreviewed"] += 1
+            items = []
+            for note in notes:
+                raw = _note_bytes(root, note)
+                text = raw.decode("utf-8")
+                matched = [raw_term for raw_term, regex in zip(raw_terms, terms, strict=True)
+                           if regex.search(text)]
+                if len(matched) != len(raw_terms):
+                    continue
+                binding = note.meta["material_analysis"]
+                inspected = binding.get("inspected_range") or {}
+                verified = _match_verified(
+                    [(note.id, note.meta.get("title", note.id),
+                      note.path.relative_to(root).as_posix(), raw)], terms)
+                reasons = {"terms": matched}
+                if concept_id is not None:
+                    reasons["concept"] = concept_id
+                if args.purpose:
+                    reasons["purpose"] = args.purpose
+                if args.unit:
+                    reasons["unit"] = args.unit
+                items.append({
+                    "origin": "analysis-note",
+                    "id": note.id, "title": note.meta.get("title", note.id),
+                    "path": note.path.relative_to(root).as_posix(),
+                    "match": {**reasons,
+                              "snippets": verified[0]["snippets"] if verified else []},
+                    "source": {
+                        "ref": binding.get("material"),
+                        "pages": [inspected.get("start"), inspected.get("end")],
+                        "freshness": _freshness_label(root, binding),
+                    },
+                    "review": {
+                        "semantic_review": note.meta.get("semantic_review"),
+                        "resolution": binding.get("resolution"),
+                    },
+                    "anchors": binding.get("anchors") or [],
+                })
+            for synthesis_id, unit_id, assessment in assessments:
+                joined = "\n".join(str(assessment.get(field) or "")
+                                   for field in ASSESSMENT_TEXT_FIELDS)
+                matched = [raw_term for raw_term, regex in zip(raw_terms, terms, strict=True)
+                           if regex.search(joined)]
+                if len(matched) != len(raw_terms):
+                    continue
+                excerpts = []
+                for field in ASSESSMENT_TEXT_FIELDS:
+                    if len(excerpts) >= 3:
+                        break
+                    value = str(assessment.get(field) or "")
+                    if value and any(regex.search(value) for regex in terms):
+                        excerpts.append({"field": field, "text": value[:200]})
+                reasons = {"terms": matched}
+                if concept_id is not None:
+                    reasons["concept"] = concept_id
+                if args.purpose:
+                    reasons["purpose"] = args.purpose
+                if args.unit:
+                    reasons["unit"] = args.unit
+                origin = repo.unit_material_synthesis_origins.get(synthesis_id)
+                items.append({
+                    "origin": "unit-assessment",
+                    "unit_id": unit_id, "synthesis_id": synthesis_id,
+                    "route_id": assessment.get("route_id"),
+                    "source_id": assessment.get("source_id"),
+                    "locator": assessment.get("locator"),
+                    "review_status": assessment.get("review_status"),
+                    "concept_ids": assessment.get("concept_ids") or [],
+                    "match": {**reasons, "excerpts": excerpts},
+                    "open": {
+                        "synthesis": origin.relative_to(root).as_posix()
+                        if origin is not None else None,
+                        "route_id": assessment.get("route_id"),
+                    },
+                })
+            payload = {
+                "contract": "material-context", "items": items[offset:offset + limit],
+                "total": len(items),
+                "next_offset": offset + limit if offset + limit < len(items) else None,
+                "searched": {
+                    "query_terms": raw_terms, "concept": concept_id,
+                    "purpose": args.purpose, "unit": args.unit,
+                    "analysis_notes": len(_analysis_notes(repo)),
+                    "assessments": len(_approved_assessments(repo)),
+                },
+                "pool": pool,
+            }
+            if not items:
+                payload["empty"] = (
+                    "no match in the searched records; this never proves "
+                    "no source explains the topic")
+            return _print_stable(root, snapshot, payload)
     except (WriteRefused, OSError, UnicodeError) as exc:
         return _refusal(exc)
