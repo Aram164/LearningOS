@@ -38,6 +38,19 @@ queries:
     result: note-content-search
     invariants:
     - content mode searches complete registered durable notes and returns bounded line snippets
+  material.context:
+    handler: material_context
+    cli_command: material-context
+    result: material-context
+    invariants:
+    - read-only; touches no repository file
+    - searches durable analysis notes plus the route assessments of approved unit syntheses
+    - deterministic lexical AND matching; stable order (notes by id, then assessments by unit and route)
+    - concept filter resolves declared ids and aliases; purpose and unit narrow without ranking
+    - excerpts are bounded (8 note snippets, 3 assessment fields); default 5 items, at most 20
+    - source freshness is observed live per result; review state and resolution are reported, never inferred
+    - empty results describe the searched records only, never the absence of an explanation
+    - continuation reuses the snapshot guard; changed snapshots refuse mixed pages
   plan.template:
     handler: plan_template
     result: plan-template-v1
