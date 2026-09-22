@@ -287,7 +287,7 @@ commands:
     - bounded to one existing unit
     - compact patch names only what changes; unrelated routes are carried forward internally
     - route add/update/remove operations use stable IDs and reject ambiguity
-    - route additions, removals and evidential changes require a replacement synthesis dossier validated against staged state
+    - when the unit already has a material-synthesis dossier, route additions, removals and evidential changes require a replacement dossier validated against staged state; without an existing dossier no replacement is required
     - context-dependent changes require documented acknowledgments
     - artifact IDs cover exactly the semantic owners the revision touches
     - external revision files are bound to their exact bytes by SHA-256 before use

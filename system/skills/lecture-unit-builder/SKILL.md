@@ -56,7 +56,7 @@ clean Q/A separation; self-test → `role: mock-exam`, with solutions, difficult
 aliases), relations (§5), sources (§6a).
 
 **Close the loop:** the acceptance gate is OPERATOR rule 13, not a stricter
-local one — `python tools/validate.py` to **zero errors**, then
+local one — `python tools/validate.py --compact` to **zero errors**, then
 `python tools/warning_baseline.py --check` for **no new or grown warning
 signature**. The measured baseline warnings stay visible and never block;
 demanding zero of them would make this skill unrunnable against the system as

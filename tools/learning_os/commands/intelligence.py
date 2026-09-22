@@ -24,7 +24,7 @@ from learning_os.semantics.goals import (
 )
 from learning_os.semantics.scan import _read_goal_ledger, intelligence_scan
 
-from .support import _root
+from .support import _json_layout, _root
 
 
 def _route_modules(repo) -> dict[str, str]:
@@ -175,7 +175,7 @@ def cmd_intelligence_scan(args) -> int:
 
         print(json.dumps(
             {"goals": [goal_to_dict(goal) for goal in goals]},
-            indent=2, sort_keys=True, ensure_ascii=False))
+            **_json_layout(), sort_keys=True, ensure_ascii=False))
         return 0
     if not goals:
         print("intelligence scan: no candidates — "

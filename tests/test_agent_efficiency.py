@@ -3,13 +3,81 @@
 from __future__ import annotations
 
 import json
+import re
+import shlex
+import subprocess
+import sys
+from contextlib import redirect_stdout
+from io import StringIO
+from pathlib import Path
 from types import SimpleNamespace
 
 import pytest
 from repo_builders import run_los
 
-from learning_os.commands import query, reads
+from learning_os import fingerprint
+from learning_os.commands import query, reads, support
 from learning_os.loader import load_repo
+
+
+def test_entry_doc_commands_execute_through_the_declared_gateway(mini_repo, tmp_path):
+    """Run the entry docs' concrete commands, including one governed write."""
+    from gateway_helpers import approved_v2_envelope
+    from repo_builders import add_curriculum
+
+    from learning_os.warning_baseline import collect, write_baseline
+
+    root = Path(__file__).resolve().parents[1]
+    operator = (root / "system/OPERATOR.md").read_text(encoding="utf-8")
+    claude = (root / "system/CLAUDE.md").read_text(encoding="utf-8")
+    blocks = re.findall(r"```bash\n(.*?)\n```", operator, flags=re.DOTALL)
+    commands = [line for block in blocks for line in block.splitlines() if line.strip()]
+    assert commands == [
+        "python tools/warning_baseline.py --check",
+        "python tools/los.py capabilities --compact --json",
+        "python tools/los.py bootstrap --brief",
+        "python tools/los.py capabilities stage.progress.update --json",
+        "python tools/los.py capability stage.progress.update --payload-file ENVELOPE.json",
+    ]
+    bootstrap_section = claude.split("## 2. Bootstrap order", 1)[1].split("## 3.", 1)[0]
+    assert "capabilities --compact --json" in " ".join(bootstrap_section.split())
+    assert "bootstrap --brief" in " ".join(bootstrap_section.split())
+    assert "python tools/validate.py --compact" in claude
+    assert "python tools/warning_baseline.py --check" in claude
+
+    add_curriculum(mini_repo)
+    write_baseline(mini_repo, collect(mini_repo)[0], "entry-doc fixture")
+    envelope = approved_v2_envelope(
+        mini_repo, capability="stage.progress.update",
+        payload={"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
+                 "status": "complete"},
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="entry-doc-stage-progress",
+    )
+    envelope_path = tmp_path / "ENVELOPE.json"
+    envelope_path.write_text(json.dumps(envelope), encoding="utf-8")
+    for command in commands:
+        executable, script, *args = shlex.split(command)
+        assert executable == "python"
+        args = [str(envelope_path) if arg == "ENVELOPE.json" else arg
+                for arg in args]
+        proc = subprocess.run(
+            [sys.executable, str(root / script), "--root", str(mini_repo), *args],
+            capture_output=True, text=True, timeout=120,
+        )
+        assert proc.returncode == 0, (command, proc.stdout, proc.stderr)
+        if script.endswith("los.py"):
+            body = json.loads(proc.stdout)
+            if args[0] == "capability":
+                assert body["ok"] is True
+                assert body["receipt_path"]
+    validation = subprocess.run(
+        [sys.executable, str(root / "tools/validate.py"), "--compact",
+         "--root", str(mini_repo)],
+        capture_output=True, text=True, timeout=120,
+    )
+    assert validation.returncode == 0, validation.stdout + validation.stderr
+    assert "0 error" in validation.stdout
 
 
 def test_compact_catalogue_preserves_all_public_names_and_rules(mini_repo):
@@ -130,7 +198,7 @@ def test_batch_matches_single_reads_and_preserves_requested_order(mini_repo):
 def test_batch_builds_once_and_preserves_aliases(mini_repo, monkeypatch, capsys):
     calls = []
 
-    def manifest(root):
+    def manifest(root, *, snapshot_id=None):
         calls.append(root)
         return {"project_aliases": {"old": "new"}, "records": [{"id": "new"}]}
 
@@ -145,11 +213,60 @@ def test_batch_builds_once_and_preserves_aliases(mini_repo, monkeypatch, capsys)
 
 
 def test_batch_refuses_changed_snapshot_before_emitting_records(mini_repo, monkeypatch, capsys):
-    monkeypatch.setattr(reads, "_fresh_manifest", lambda root: {"records": [{"id": "a"}]})
+    monkeypatch.setattr(reads, "_fresh_manifest", lambda root, **kwargs: {"records": [{"id": "a"}]})
     fingerprints = iter(["a" * 64, "b" * 64])
     monkeypatch.setattr(reads, "canonical_fingerprint", lambda root: next(fingerprints))
     assert query.cmd_inspect(SimpleNamespace(root=str(mini_repo), id="a", more_ids=["a"])) == 3
     assert not capsys.readouterr().out
+
+
+def test_json_layout_follows_stream_and_inspect_json_is_equivalent(mini_repo, monkeypatch):
+    class Terminal(StringIO):
+        def isatty(self):
+            return True
+
+    terminal, pipe = Terminal(), StringIO()
+    assert support._json_layout(terminal) == {"indent": 2}
+    assert support._json_layout(pipe) == {"separators": (",", ":")}
+    monkeypatch.setattr(query, "_fresh_manifest", lambda root: {
+        "records": [{"id": "record-demo", "title": "Demo"}],
+    })
+    args = SimpleNamespace(root=str(mini_repo), id="record-demo", more_ids=[])
+    for stream in (terminal, pipe):
+        with redirect_stdout(stream):
+            assert query.cmd_inspect(args) == 0
+    assert json.loads(terminal.getvalue()) == json.loads(pipe.getvalue())
+    assert "\n  " in terminal.getvalue()
+    assert "\n  " not in pipe.getvalue()
+
+
+@pytest.mark.parametrize("command", ["brief", "compact", "inspect"])
+def test_bounded_read_hashes_twice_with_seeded_manifest(
+    mini_repo, monkeypatch, capsys, command,
+):
+    original = fingerprint.canonical_fingerprint
+    calls = []
+
+    def counted(root):
+        calls.append(root)
+        return original(root)
+
+    monkeypatch.setattr(reads, "canonical_fingerprint", counted)
+    monkeypatch.setattr(fingerprint, "canonical_fingerprint", counted)
+    if command == "inspect":
+        repo = load_repo(mini_repo)
+        args = SimpleNamespace(root=str(mini_repo), id=next(iter(repo.notes)),
+                               more_ids=[next(iter(repo.concepts))])
+        invoke = reads.inspect_batch
+    else:
+        args = SimpleNamespace(root=str(mini_repo), expected_snapshot=None,
+                               offset=0, limit=10)
+        invoke = reads.brief_bootstrap if command == "brief" else reads.compact_bootstrap
+
+    assert invoke(args) == 0
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["snapshot_id"].startswith("sha256:")
+    assert len(calls) == 2
 
 
 def test_batch_refuses_missing_id_and_oversized_requests(mini_repo):

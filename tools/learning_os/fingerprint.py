@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import hashlib
 import os
+import re
 import weakref
 from pathlib import Path
 from typing import TYPE_CHECKING
@@ -40,6 +41,17 @@ CANONICAL_ROOTS = (
 )
 
 _SOURCE_FINGERPRINTS: weakref.WeakKeyDictionary[Repo, str] = weakref.WeakKeyDictionary()
+
+
+def seed_source_fingerprint(repo: Repo, snapshot_id: str) -> None:
+    """Reuse a locked read's start snapshot while building its fresh manifest.
+
+    The caller must keep the end-of-read fingerprint check: an external edit
+    during the build still invalidates the result. No cache survives this Repo.
+    """
+    if not re.fullmatch(r"sha256:[a-f0-9]{64}", snapshot_id):
+        raise ValueError("source fingerprint seed must be a SHA-256 snapshot ID")
+    _SOURCE_FINGERPRINTS[repo] = snapshot_id.removeprefix("sha256:")
 
 
 def canonical_fingerprint(root: Path) -> str:

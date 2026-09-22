@@ -22,7 +22,11 @@ from learning_os.contracts.gateway import (
     current_gateway_request,
     gateway_snapshot_is_verified,
 )
-from learning_os.fingerprint import canonical_fingerprint, source_fingerprint
+from learning_os.fingerprint import (
+    canonical_fingerprint,
+    seed_source_fingerprint,
+    source_fingerprint,
+)
 from learning_os.genout import (
     build_backlinks,
     build_manifest,
@@ -168,7 +172,9 @@ def _expected_ok(root: Path, expected: str | None) -> bool:
         # Both facts are true; the one that decides the outcome goes first.
         print("los: canonical writes must use GatewayEnvelopeV2; direct CLI "
               "application is disabled — reloading will not change this. The "
-              "supplied snapshot is also out of date.", file=sys.stderr)
+              "supplied snapshot is also out of date. Submit the write with "
+              "`los capability NAME --payload-file ENVELOPE.json` "
+              "(envelope: WORKFLOWS §25a step 4).", file=sys.stderr)
         print(json.dumps({"expected": expected, "actual": actual}), file=sys.stderr)
         return False
     print("los: projection conflict — authored files changed since the app loaded; "
@@ -178,8 +184,7 @@ def _expected_ok(root: Path, expected: str | None) -> bool:
 
 
 def _publish(root: Path) -> None:
-    repo = load_repo(root)
-    write_outputs(repo, generate_all(repo))
+    _publish_repo(load_repo(root))
 
 
 def _publish_repo(repo) -> None:
@@ -195,15 +200,33 @@ def _path_or_error(root: Path, path_id: str):
     return repo, learning_path
 
 
-def _fresh_manifest(root: Path) -> dict:
+def _fresh_manifest(root: Path, *, snapshot_id: str | None = None) -> dict:
     repo = load_repo(root)
+    if snapshot_id is not None:
+        seed_source_fingerprint(repo, snapshot_id)
     generated_at = stable_generated_at(root)
     backlinks = build_backlinks(repo, generated_at)
     return build_manifest(repo, generated_at, backlinks)
 
 
+def _json_layout(stream=None) -> dict:
+    """Indented JSON for a person at a terminal, compact JSON on a pipe.
+
+    Agents and the UI read through pipes, where indentation was 15-22% of
+    the bytes of inspect, resume, search and semantic output and carried no
+    information (measured 2026-09-22). Any JSON parser reads both forms.
+    """
+    if stream is None:
+        stream = sys.stdout
+    try:
+        interactive = stream.isatty()
+    except (AttributeError, ValueError):
+        interactive = False
+    return {"indent": 2} if interactive else {"separators": (",", ":")}
+
+
 def _print_rows(rows: list[dict]) -> int:
-    print(json.dumps(rows, indent=2, sort_keys=True, ensure_ascii=False))
+    print(json.dumps(rows, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
 
@@ -374,9 +397,14 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
     report a receipt for a write that did not happen.
     """
     if current_gateway_request() is None:
+        # Name the way through, not only the refusal: the bare named command
+        # is what agents find first, and without a pointer the envelope format
+        # has to be reverse-engineered from the gateway source.
         return 2, [
             "canonical writes must use GatewayEnvelopeV2; direct CLI application "
-            "is disabled"
+            f"is disabled — apply it with `los capability {capability} "
+            f"--payload-file ENVELOPE.json` (payload schema: `los capabilities "
+            f"{capability} --json`; envelope: WORKFLOWS §25a step 4)"
         ], {}
     service = TransactionService(root)
     delete_paths = tuple(Path(path) for path in deletes)

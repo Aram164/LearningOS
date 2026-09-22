@@ -15,7 +15,15 @@ from learning_os.pathing import PathBoundaryError, read_text_inside
 from learning_os.rules import validate
 
 from .reads import brief_bootstrap, compact_bootstrap, content_search, inspect_batch, record_payload
-from .support import _delegate, _fresh_manifest, _operator_lock, _print_rows, _publish, _root
+from .support import (
+    _delegate,
+    _fresh_manifest,
+    _json_layout,
+    _operator_lock,
+    _print_rows,
+    _publish,
+    _root,
+)
 
 # The OPERATOR contract (system/OPERATOR.md) — what `los.py capabilities`
 # announces about the gateway itself. This is a third, independent version:
@@ -85,7 +93,7 @@ def cmd_status(args) -> int:
     }
 
     if args.json:
-        print(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False))
+        print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False))
         return 0
 
     c = payload["counts"]
@@ -176,7 +184,7 @@ def cmd_capabilities(args) -> int:
     if compact or name:
         print(json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
         return 0
-    print(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False)
+    print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
           if args.json else "\n".join(
               [f"LearningOS operator contract v{payload['contract_version']}",
                f"  gateway: {payload['gateway']}",
@@ -205,7 +213,7 @@ def cmd_bootstrap(args) -> int:
         "resume_pointer": manifest.get("resume_pointer", {}),
         "next": "Resume the pointer or choose any visible module and unit.",
     }
-    print(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False))
+    print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
 
@@ -221,7 +229,7 @@ def cmd_search(args) -> int:
         hay = json.dumps(rec, ensure_ascii=False).lower()
         if all(word in hay for word in words):
             matches.append({k: rec.get(k) for k in ("id", "type", "title", "path", "status")})
-    print(json.dumps(matches[:args.limit], indent=2, sort_keys=True, ensure_ascii=False))
+    print(json.dumps(matches[:args.limit], **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
 
@@ -233,7 +241,7 @@ def cmd_inspect(args) -> int:
     if payload is None:
         print(f"los: record not found: {args.id}", file=sys.stderr)
         return 2
-    print(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False))
+    print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
 
@@ -271,7 +279,7 @@ def cmd_related(args) -> int:
             ids.add(relation.get("from_project_id"))
     out = [{k: by_id[rid].get(k) for k in ("id", "type", "title", "path")}
            for rid in sorted(ids) if rid in by_id]
-    print(json.dumps(out, indent=2, sort_keys=True, ensure_ascii=False))
+    print(json.dumps(out, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
 

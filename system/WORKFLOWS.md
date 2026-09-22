@@ -102,7 +102,7 @@ list to also update.
    - campus-license or paid: leave URL-only until Aram pulls/decides.
 3. **List it (optional):** if it belongs in a curated per-domain list, add an
    entry to the matching `sources/collections/<name>.yaml` (workflow 6b).
-4. **Verify:** `python tools/validate.py` then `python tools/generate.py`.
+4. **Verify:** `python tools/validate.py --compact` then `python tools/generate.py`.
 
 **Source-completeness gate (mandatory):** before importing a plan, enumerate
 every learning source named by its authoritative templates, bibliographies,
@@ -445,7 +445,7 @@ Modules and workspaces are deliberately decoupled: one module may spawn several 
    prospective sea.
 3. **Open the first workspace(s).** Create one workspace per distinct effort (workflow 1) — not one per module. A combined module examined under a single grade may still be one exam-prep workspace; an independent project gets its own. A course is not a continuous effort, so `standing: false`.
 4. **Wire dependencies, if any.** If the new effort waits on or feeds another, record that in `COORDINATION.md` Dependencies (workflow 9). No exam dates here — they live in the owning academic module.
-5. **Rebuild and validate** (`python tools/generate.py`, then `python tools/validate.py`).
+5. **Rebuild and validate** (`python tools/generate.py`, then `python tools/validate.py --compact`).
 
 Check before creating: never open a workspace before its module record exists, and never mint a second record for a module already present.
 

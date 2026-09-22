@@ -44,7 +44,9 @@ frontmatter and a home, never a rewrite, a polish, or a tidier conclusion.
 **Register only what is genuinely new** (§4 concepts with German aliases, §5
 relations, §6a sources). Wire on use; never bulk-backfill.
 
-**Finish the loop.** `python tools/validate.py` to 0 errors, 0 warnings, then
+**Finish the loop.** `python tools/validate.py --compact` to 0 errors and
+`python tools/warning_baseline.py --check` to no new or grown warning signature
+(OPERATOR rule 13 — the baselined warnings never block), then
 `python tools/generate.py`. A promoted note now participates in the canon and
 its garden file is gone from the working tree — its history stays in Git.
 

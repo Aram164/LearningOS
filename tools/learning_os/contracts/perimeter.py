@@ -164,7 +164,24 @@ def _observed(wrapper: Path, perimeter: Perimeter) -> list[tuple[str, Path]]:
     return found
 
 
-def _shadowed_by(candidate: Path, managed_roots: list[Path]) -> str | None:
+def _managed_sizes(managed_roots: list[Path]) -> dict[int, list[Path]]:
+    """Managed files grouped by size, in walk order: one walk per check.
+
+    The walk used to be repeated once for every file found at the two levels.
+    """
+    sizes: dict[int, list[Path]] = {}
+    for managed in managed_roots:
+        if not managed.is_dir():
+            continue
+        for path in managed.rglob("*"):
+            if path.is_file():
+                size = _size_or_none(path)
+                if size is not None:
+                    sizes.setdefault(size, []).append(path)
+    return sizes
+
+
+def _shadowed_by(candidate: Path, managed_sizes: dict[int, list[Path]]) -> str | None:
     """The managed copy ``candidate`` duplicates, if one exists.
 
     Size first, hash second. The managed tree is ~1,155 files; hashing it whole
@@ -176,13 +193,7 @@ def _shadowed_by(candidate: Path, managed_roots: list[Path]) -> str | None:
     except OSError:
         return None
 
-    collisions = [
-        path
-        for managed in managed_roots
-        if managed.is_dir()
-        for path in managed.rglob("*")
-        if path.is_file() and _size_or_none(path) == size
-    ]
+    collisions = managed_sizes.get(size, [])
     if not collisions:
         return None
 
@@ -245,12 +256,17 @@ def check(root: Path) -> list[PerimeterIssue]:
         ))
 
     for relative in sorted(declared - observed_paths):
+        # Name the directory that was looked in: when only LearningOS/ is
+        # mounted (an agent VM, a partial checkout) the wrapper root is not
+        # semestercontext/, and the bare relative path hides exactly that.
         issues.append(PerimeterIssue(
-            "MISSING", f"declared but not on disk: '{relative}'",
+            "MISSING",
+            f"declared but not on disk: '{relative}' (wrapper root: {wrapper})",
             PERIMETER_RELATIVE))
 
     # Material and duplication rules apply to every file at these levels,
     # declared or pending — a declared stray is still a stray.
+    managed_sizes: dict[int, list[Path]] | None = None
     for relative, path in observed:
         if not path.is_file() or path.is_symlink():
             continue
@@ -260,7 +276,9 @@ def check(root: Path) -> list[PerimeterIssue]:
         severity = "W" if known else "E"
         awaiting = " (declared in pending_disposition)" if known else ""
 
-        shadow = _shadowed_by(path, managed_roots)
+        if managed_sizes is None:
+            managed_sizes = _managed_sizes(managed_roots)
+        shadow = _shadowed_by(path, managed_sizes)
         if shadow:
             issues.append(PerimeterIssue(
                 "SHADOW",

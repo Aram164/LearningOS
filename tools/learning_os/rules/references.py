@@ -8,7 +8,7 @@ from typing import Literal
 
 from ..loader import EVIDENCE_SCHEMES
 from ..routes import exact_selection_matches, iter_route_references
-from .common import CANONICAL_TREES, MD_LINK_RE, WORKSPACE_TOKEN_RE, _in_garden, _in_quarantine
+from .common import MD_LINK_RE, WORKSPACE_TOKEN_RE
 
 
 @dataclass(frozen=True)
@@ -595,17 +595,11 @@ class ChecksReferences:
                         )
 
     def check_links(self):
-        r = self.repo
-        for tree in CANONICAL_TREES:
-            base = r.root / tree
-            if not base.is_dir():
+        for f, text in self._canonical_texts():
+            if f.suffix != ".md":
                 continue
-            for f in sorted(base.rglob("*.md")):
-                if _in_garden(r.root, f) or _in_quarantine(r.root, f):
-                    continue
-                text = f.read_text(encoding="utf-8", errors="replace")
-                for target in MD_LINK_RE.findall(text):
-                    self._check_link(target, f)
+            for target in MD_LINK_RE.findall(text):
+                self._check_link(target, f)
 
     def _check_link(self, target: str, source_file: Path):
         where = self._rel(source_file)

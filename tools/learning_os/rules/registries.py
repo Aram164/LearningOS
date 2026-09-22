@@ -6,12 +6,9 @@ import re
 
 from ..loader import PREREQUISITE_RELATIONS, RELATION_TYPES
 from .common import (
-    CANONICAL_TREES,
     COORDINATION_SECTIONS,
     ISO_DATE_RE,
     JUDGMENT_HEADERS,
-    _in_garden,
-    _in_quarantine,
 )
 
 
@@ -153,23 +150,14 @@ class ChecksRegistries:
     def check_ownership(self):
         r = self.repo
         # No canonical file references generated/ as input
-        for tree in CANONICAL_TREES:
-            base = r.root / tree
-            if not base.is_dir():
-                continue
-            for f in sorted(base.rglob("*")):
-                if f.suffix.lower() not in (".md", ".yaml", ".yml") or not f.is_file():
-                    continue
-                if _in_garden(r.root, f) or _in_quarantine(r.root, f):
-                    continue
-                text = f.read_text(encoding="utf-8", errors="replace")
-                # Only the repository's own generated/ tree counts — 'generated/'
-                # inside URLs or longer paths (e.g. sklearn.org/modules/generated/)
-                # must not be preceded by a slash or word character.
-                if re.search(r"(?<![\w/])generated/", text):
-                    self.err("GEN-INPUT",
-                             "canonical file references 'generated/' — generated files are never inputs",
-                             self._rel(f))
+        for f, text in self._canonical_texts():
+            # Only the repository's own generated/ tree counts — 'generated/'
+            # inside URLs or longer paths (e.g. sklearn.org/modules/generated/)
+            # must not be preceded by a slash or word character.
+            if re.search(r"(?<![\w/])generated/", text):
+                self.err("GEN-INPUT",
+                         "canonical file references 'generated/' — generated files are never inputs",
+                         self._rel(f))
         # No file under generated/ tracked by git (except .gitkeep)
         tracked = self._git(["ls-files", "generated/"])
         for line in tracked.splitlines():

@@ -77,7 +77,12 @@ re-deriving meaning from scattered YAML. Full `bootstrap` is an explicit
 bulk read, not routine agent startup.
 For plan editing, start with `plan-edit-context UNIT_ID --brief`: guards,
 id inventories, missing evidence, reusable analysis refs, preflight checks,
-and runnable expand commands. Add `--route-id ROUTE_ID`
+and runnable expand commands.
+The brief's `unit_audit.synthesis.replacement_required_if_evidential_routes_change`
+reports whether an existing dossier needs replacement if a proposed route change
+alters evidence; `fresh` reports the dossier's current validity separately.
+The actual revision preflight decides whether the proposed change is evidential.
+Add `--route-id ROUTE_ID`
 for one material and its stage-specific overrides. Read several known routes
 with `--route-ids A B ...` (1 to 20 distinct routes of one unit, in order) to
 share one snapshot and load; the batch preserves requested order and refuses
@@ -206,12 +211,17 @@ Record actual choices in `source_selections`. If ordered tracking would help,
 the unit may then have at most one current study map using only those choices.
 Work in its stages while preserving independent state for every other unit.
 
+These are gateway capabilities: `unit.source-selection.set`, `unit.note.append`,
+`stage.progress.update`, `source.feedback.record`, `detour.create` (named
+commands `unit-source-selection`, `unit-note`, `stage-progress`,
+`source-feedback`, `detour-create`). Run bare, a named command never writes:
+every canonical write refuses without a GatewayEnvelopeV2. Read the payload
+schema, then submit one envelope (fields and intent hash: WORKFLOWS §25a,
+step 4):
+
 ```bash
-python tools/los.py unit-source-selection UNIT_ID SOURCE_ID LOCATOR select --purpose "Why this angle fits"
-python tools/los.py unit-note UNIT_ID --text "..." --stage-id STAGE_ID --expected-snapshot SNAPSHOT
-python tools/los.py stage-progress UNIT_ID STAGE_ID complete --expected-snapshot SNAPSHOT
-python tools/los.py source-feedback UNIT_ID STAGE_ID SOURCE_ID helpful --expected-snapshot SNAPSHOT
-python tools/los.py detour-create UNIT_ID STAGE_ID --title "Gap" --classification required-now --expected-snapshot SNAPSHOT
+python tools/los.py capabilities stage.progress.update --json
+python tools/los.py capability stage.progress.update --payload-file ENVELOPE.json
 ```
 
 `unit-source-selection` accepts only a rich material route already exposed on
@@ -227,14 +237,15 @@ maps, complete rich source routing, optional study maps, and workspace joins), f
 [`PLAN-CREATION-SOP.md`](PLAN-CREATION-SOP.md). Complete its material-coverage
 audit, build from the canonical template, and require the no-write gate
 `.venv/bin/python tools/los.py module-plan-import MODULE_ID --file PLAN.yaml
---check` to pass before applying the same package with `--expected-snapshot`.
+--check` to pass before applying the same package through the
+`module.plan.import` capability (WORKFLOWS §25a).
 `module-plan-import` never deletes units and never creates durable notes; the
 capabilities that do create durable notes are `note.analysis.save` (source
 analysis) and `atlas.question.save` (learner questions).
 
 An explicitly reviewed semantic replacement of one existing durable note uses
-`los note-revise NOTE_ID --file REVISED.md --approve --expected-snapshot
-SNAPSHOT`. It preserves the note's ID, path, and role; moves, merges, splits,
+the `note.revise` capability (named command `note-revise NOTE_ID --file
+REVISED.md`). It preserves the note's ID, path, and role; moves, merges, splits,
 and role changes remain outside this capability.
 
 A stage owns its working note, attachments, exact resources, source-use

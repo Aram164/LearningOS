@@ -2,9 +2,8 @@
 
 `los resume` compiles the five-field bookmark into the screen a returning
 operator actually needs: stage, requirement, evidence spec against what
-was recorded, open items, last result, and the exam sitting. Pure builder
-plus content-addressed cache (same hash-key discipline as the semantic
-dossiers); the command itself only resolves and renders.
+was recorded, open items, last result, and the exam sitting. The pure
+builder keeps content-addressed keys; the command resolves and renders.
 """
 
 from __future__ import annotations
@@ -20,8 +19,6 @@ from repo_builders import _add_material_overview, add_curriculum, run_los, write
 from learning_os.genout.resume_dossier import (
     ResumeDossierError,
     build_resume_dossier,
-    load_resume_dossier,
-    store_resume_dossier,
 )
 
 MAP = "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
@@ -99,26 +96,9 @@ def test_top_cluster_moves_the_digest():
     assert build_resume_dossier(**_inputs(top_cluster=None)) == missing
 
 
-def test_top_cluster_round_trips_through_the_cache(tmp_path: Path):
-    dossier = build_resume_dossier(**_inputs(top_cluster=_cluster()))
-    path = store_resume_dossier(tmp_path, dossier)
-    assert load_resume_dossier(path) == dossier
-
-
 def test_builder_refuses_a_non_mapping_top_cluster():
     with pytest.raises(ResumeDossierError):
         build_resume_dossier(**_inputs(top_cluster="cluster-abc"))
-
-
-def test_cache_round_trips_and_refuses_poison(tmp_path: Path):
-    dossier = build_resume_dossier(**_inputs())
-    path = store_resume_dossier(tmp_path, dossier)
-    assert load_resume_dossier(path) == dossier
-    raw = json.loads(path.read_text(encoding="utf-8"))
-    raw["content"]["open-items"].append("forged hindsight")
-    path.write_text(json.dumps(raw), encoding="utf-8")
-    with pytest.raises(ResumeDossierError, match="hashes"):
-        load_resume_dossier(path)
 
 
 def _runtime_repo(mini_repo: Path) -> Path:
@@ -149,6 +129,7 @@ def test_resume_renders_the_pointer_stage(mini_repo: Path):
     assert "req-demo-l01-demo" in text.stdout
     assert "los observe req-demo-l01-demo" in text.stdout
     assert "2026-10-09" in text.stdout
+    assert not list((mini_repo / "generated/dossiers").glob("*-resume-*.json"))
 
 
 def test_resume_json_carries_the_top_cluster_section(mini_repo: Path):

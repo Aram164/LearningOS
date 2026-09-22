@@ -248,7 +248,12 @@ def _unit_audit(root, repo, unit) -> dict:
         destination = synthesis_destination(root, unit.id)
     except MaterialSynthesisError:
         destination = None
-    synthesis: dict = {"present": bool(destination and destination.is_file()),
+    present = bool(destination and destination.is_file())
+    synthesis: dict = {"present": present,
+                       "replacement_required_if_evidential_routes_change": present,
+                       "replacement_reason": (
+                           "an existing dossier needs a staged replacement when evidential routes change"
+                           if present else "no existing dossier requires replacement"),
                        "fresh": False, "detail": None,
                        "deep_reviewed": 0, "screened": 0,
                        "unevaluated": 0, "unavailable": 0}

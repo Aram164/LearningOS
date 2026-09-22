@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import time
 from pathlib import Path
@@ -106,7 +107,8 @@ class ChecksHygiene:
     def _git(self, args: list[str]) -> str:
         try:
             out = subprocess.run(["git", *args], cwd=self.repo.root, capture_output=True,
-                                 text=True, timeout=30)
+                                 text=True, timeout=30,
+                                 env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"})
             return out.stdout
         except Exception:  # noqa: BLE001
             return ""

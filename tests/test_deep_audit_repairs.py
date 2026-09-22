@@ -191,6 +191,24 @@ def test_generated_symlink_is_refused_before_any_publication(mini_repo: Path):
     assert not (outside / "probe.md").exists()
 
 
+def test_generated_cache_symlink_is_refused_before_any_publication(mini_repo: Path):
+    generated = mini_repo / "generated"
+    marker = generated / "marker.md"
+    marker.write_text("original\n", encoding="utf-8")
+    cache = generated / "text-cache" / "nested"
+    cache.mkdir(parents=True)
+    outside = mini_repo.parent / "outside-cache"
+    outside.write_text("outside\n", encoding="utf-8")
+    (cache / "z-link").symlink_to(outside)
+    (cache / "a-link").symlink_to(outside)
+
+    with pytest.raises(TransactionFailure, match=r"symbolic link: text-cache/nested/a-link"):
+        write_outputs(load_repo(mini_repo), {"manifest.json": "new\n"})
+    assert marker.read_text(encoding="utf-8") == "original\n"
+    assert not (generated / "manifest.json").exists()
+    assert outside.read_text(encoding="utf-8") == "outside\n"
+
+
 def test_git_dirty_state_covers_every_canonical_root(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ):

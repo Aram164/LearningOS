@@ -140,7 +140,7 @@ def _git_state(root: Path) -> tuple[str | None, bool]:
         return None, False
 
     try:
-        env = {**os.environ, "LC_ALL": "C"}
+        env = {**os.environ, "LC_ALL": "C", "GIT_OPTIONAL_LOCKS": "0"}
         if git_dir and "GIT_DIR" not in env:
             env["GIT_DIR"] = git_dir
 

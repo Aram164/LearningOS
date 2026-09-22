@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import re
 import shutil
 import subprocess
@@ -12,6 +13,7 @@ import pytest
 from stress_check import _generation_stress
 
 from learning_os.genout import generate_all, write_outputs
+from learning_os.genout.outputs import _KEEP_TOP_DIRS
 from learning_os.loader import load_repo
 
 TIMESTAMP_LINE = re.compile(r"^> Generated: .*$", re.MULTILINE)
@@ -80,6 +82,24 @@ def test_projection_rebuild_keeps_sibling_caches(mini_repo):
     assert kept.read_text(encoding="utf-8") == "cached page"
     assert summary.exists()
     assert dossier.exists()
+    assert not stale.exists()
+
+
+def test_projection_rebuild_keeps_every_owned_cache_directory(mini_repo):
+    gen = mini_repo / "generated"
+    kept = []
+    for name in sorted(_KEEP_TOP_DIRS):
+        path = gen / name / "nested" / "cache.txt"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(name, encoding="utf-8")
+        kept.append((path, name))
+    stale = gen / "stale.md"
+    stale.write_text("stale", encoding="utf-8")
+
+    write_outputs(load_repo(mini_repo), {"manifest.json": "new\n"})
+
+    for path, name in kept:
+        assert path.read_text(encoding="utf-8") == name
     assert not stale.exists()
 
 
@@ -361,6 +381,32 @@ def test_successful_git_queries_publish_answer(tmp_path, monkeypatch, status, di
 
     monkeypatch.setattr(subprocess, "run", run)
     assert _git_state(tmp_path) == ("deadbeef", dirty)
+
+
+def test_git_state_reads_without_refreshing_index_or_leaving_lock(tmp_path):
+    """A stat-only change stays clean without a read-side Git index write."""
+    from learning_os.genout.common import _git_state
+
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "config", "user.name", "Test"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "config", "user.email", "test@example.com"],
+                   cwd=tmp_path, check=True)
+    tracked = tmp_path / "knowledge" / "concepts.yaml"
+    tracked.parent.mkdir()
+    tracked.write_text("concepts: []\n", encoding="utf-8")
+    subprocess.run(["git", "add", "knowledge/concepts.yaml"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "commit", "-qm", "initial"], cwd=tmp_path, check=True)
+
+    index = tmp_path / ".git" / "index"
+    before = index.read_bytes()
+    stamp = tracked.stat()
+    os.utime(tracked, ns=(stamp.st_atime_ns, stamp.st_mtime_ns + 2_000_000_000))
+
+    revision, dirty = _git_state(tmp_path)
+    assert len(revision) == 40
+    assert dirty is False
+    assert index.read_bytes() == before
+    assert not (tmp_path / ".git" / "index.lock").exists()
 
 
 @pytest.mark.parametrize("marker", ["-", "*", "+", "1.", "12.", "1)", "12)"])

@@ -16,7 +16,7 @@
 > 6. **Answer exam questions from the owning partitioned academic module; answer "what next" from the current atomic manifest plus the freshly rebuilt coordination view** — never from stored prose copies or the global resume pointer alone. The manifest version belongs to `system/contracts/manifest-contract.yaml`; do not copy it into prose.
 > 7. **Never declare mastery** — show evidence trails or their documented absence.
 > 8. **External code stays external** (§13) — LearningOS never indexes, validates, or manages sibling repositories such as `Stratum/`; inspect relevant code only when the current task needs it.
-> 9. **Run `python tools/validate.py` after any batch of edits** and before ending a session. Work is not done until it prints **0 errors** and `python tools/warning_baseline.py --check` reports **no new warning signature**. Existing warnings stay visible and never block — they are the deferred content debt of CRITIQUE-POINTS §1, and the baseline is what separates them from a warning you just introduced.
+> 9. **Run `python tools/validate.py --compact` after any batch of edits** and before ending a session. Work is not done until it prints **0 errors** and `python tools/warning_baseline.py --check` reports **no new warning signature**. Existing warnings stay visible (counted in the summary line, listed in `generated/reports/validation-report.md`) and never block — they are the deferred content debt of CRITIQUE-POINTS §1, and the baseline is what separates them from a warning you just introduced.
 > 10. **When unsure: least destructive reversible action, then ask.** The tiebreaker is always "reduce organizational burden rather than create it."
 > 11. **Study state belongs to module → unit → current map → stage.** Workspaces coordinate through explicit IDs. Never collapse many active units into one global path or infer joins from prose.
 > 12. **General AI is read-only.** Canonical writes use an action-specific gateway capability, current snapshot, post-action scope check, validation, and regeneration. Session closure stages only the gateway ledger and never the protected Canvas files.
@@ -289,7 +289,7 @@ specific garden note — the operator:
    canonical note, so it follows the visible-review rules (§4);
 5. moves the approved note into the Fortress, adds the frontmatter, and registers
    new concepts/sources only as needed;
-6. runs `python tools/validate.py` and rebuilds views; the promoted idea now
+6. runs `python tools/validate.py --compact` and rebuilds views; the promoted idea now
    participates in the canon, and its garden file is removed (its history stays
    in Git).
 
