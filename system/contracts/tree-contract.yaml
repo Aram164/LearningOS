@@ -192,6 +192,8 @@ hidden:
       purpose: ignores generated/*, bases/, and the local environment
 
   ephemeral:
+    - path: .jules
+      purpose: Jules/Bolt learning and memory
     - path: .git
       purpose: the git directory itself
       must_be_ignored: false
