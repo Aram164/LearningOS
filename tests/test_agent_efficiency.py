@@ -30,6 +30,8 @@ def test_entry_doc_commands_execute_through_the_declared_gateway(mini_repo, tmp_
     root = Path(__file__).resolve().parents[1]
     operator = (root / "system/OPERATOR.md").read_text(encoding="utf-8")
     claude = (root / "system/CLAUDE.md").read_text(encoding="utf-8")
+    agents = (root / "AGENTS.md").read_text(encoding="utf-8")
+    readme = " ".join((root / "README.md").read_text(encoding="utf-8").split())
     blocks = re.findall(r"```bash\n(.*?)\n```", operator, flags=re.DOTALL)
     commands = [line for block in blocks for line in block.splitlines() if line.strip()]
     assert commands == [
@@ -39,6 +41,9 @@ def test_entry_doc_commands_execute_through_the_declared_gateway(mini_repo, tmp_
         "python tools/los.py capabilities stage.progress.update --json",
         "python tools/los.py capability stage.progress.update --payload-file ENVELOPE.json",
     ]
+    for command in commands[1:3]:
+        assert command in agents
+        assert command in readme
     bootstrap_section = claude.split("## 2. Bootstrap order", 1)[1].split("## 3.", 1)[0]
     assert "capabilities --compact --json" in " ".join(bootstrap_section.split())
     assert "bootstrap --brief" in " ".join(bootstrap_section.split())

@@ -4,13 +4,15 @@ from __future__ import annotations
 
 import copy
 import json
+import re
+import shlex
 import subprocess
 import sys
 from pathlib import Path
 
 import pytest
 import yaml
-from gateway_helpers import approved_v2_cli, file_sha256, request_artifact_id
+from gateway_helpers import approved_v2_cli, approved_v2_envelope, file_sha256, request_artifact_id
 from repo_builders import _add_material_overview, add_curriculum, run_los, write_yaml
 
 from learning_os.contracts.manifest_contract import declared_version
@@ -610,12 +612,29 @@ def test_module_plan_import_adds_units_sources_and_workspace_join(mini_repo, tmp
                         str(package))
     assert unguarded.returncode == 2
     snapshot = f"sha256:{source_fingerprint(load_repo(mini_repo))}"
-    proc = approved_v2_cli(
-        mini_repo, "module-plan-import", "module-demo", "--file", str(package),
-        "--file-sha256", file_sha256(package),
+    # Execute the literal gateway example in WORKFLOWS §25a against this
+    # reviewed disposable package, so the agent-facing syntax cannot drift.
+    workflows = (ROOT / "system/WORKFLOWS.md").read_text(encoding="utf-8")
+    section = workflows.split("## 25a. Revise an existing plan", 1)[1].split("## 26.", 1)[0]
+    example = re.search(r"```bash\n\s*([^\n]+)\n\s*```", section)
+    assert example is not None
+    words = shlex.split(example.group(1))
+    assert words == ["python", "tools/los.py", "capability", "module.plan.import",
+                     "--payload-file", "envelope.json"]
+    envelope = approved_v2_envelope(
+        mini_repo, capability="module.plan.import",
+        payload={"module_id": "module-demo", "file": str(package),
+                 "file_sha256": file_sha256(package)},
         artifact_ids=["module-demo", "unit-demo-l02"],
         idempotency_key="curriculum-module-plan-import",
         expected_snapshot=snapshot,
+    )
+    envelope_file = tmp_path / "envelope.json"
+    envelope_file.write_text(json.dumps(envelope), encoding="utf-8")
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / words[1]), "--root", str(mini_repo),
+         *words[2:-1], str(envelope_file)],
+        capture_output=True, text=True, timeout=120,
     )
     assert proc.returncode == 0, proc.stderr
     repo = load_repo(mini_repo)
