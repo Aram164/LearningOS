@@ -209,11 +209,6 @@ class Repo:
         """External project working trees addressed by ``project://`` URIs."""
         return self.learningos_root / "projects"
 
-    @property
-    def project_registry_root(self) -> Path:
-        """Canonical first-class project records inside the repository."""
-        return self.root / "projects"
-
     def active_workspaces(self) -> list[Workspace]:
         return [w for w in self.workspaces.values() if not w.archived]
 
@@ -222,9 +217,6 @@ class Repo:
 
     def active_learning_paths(self) -> list[LearningPath]:
         return [p for p in self.learning_paths.values() if not p.archived]
-
-    def current_study_maps(self) -> list[StudyMap]:
-        return list(self.study_maps.values())
 
 
 def _register(repo: Repo, family: dict, rec_id: str, record, origin: Path,

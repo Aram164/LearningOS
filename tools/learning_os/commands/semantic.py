@@ -14,6 +14,8 @@ import sys
 from learning_os.semantics.predicates import PREDICATES, evaluate
 from learning_os.semantics.recipes import RecipeError, recipes_for
 
+from .support import _json_layout
+
 
 def _coerce(raw: str) -> object:
     """One ``--input k=v`` value. JSON first (numbers, booleans, arrays,
@@ -35,7 +37,7 @@ def cmd_semantic(args) -> int:
             print(f"los: {exc}", file=sys.stderr)
             return 2
         print(json.dumps({"class": args.recipe, "recipes": rows},
-                         indent=2, sort_keys=True, ensure_ascii=False))
+                         **_json_layout(), sort_keys=True, ensure_ascii=False))
         return 0
     if args.list:
         print(json.dumps(
@@ -44,7 +46,7 @@ def cmd_semantic(args) -> int:
               "authority": PREDICATES[name].authority,
               "description": PREDICATES[name].description}
              for name in sorted(PREDICATES)],
-            indent=2, sort_keys=True, ensure_ascii=False))
+            **_json_layout(), sort_keys=True, ensure_ascii=False))
         return 0
     name = args.predicate
     if name not in PREDICATES:
@@ -66,5 +68,5 @@ def cmd_semantic(args) -> int:
         return 2
     print(json.dumps({"predicate": name, "verdict": verdict,
                       "inputs": inputs},
-                     indent=2, sort_keys=True, ensure_ascii=False))
+                     **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0

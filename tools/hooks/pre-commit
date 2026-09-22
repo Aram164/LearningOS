@@ -2,8 +2,12 @@
 # Learning OS v3 — pre-commit gate (canonical copy: tools/hooks/pre-commit).
 #
 # Blocks the commit if defect-oriented static checks or the offline validator
-# report errors. Warnings are printed but never block (mirrors validate.py
-# semantics: FAIL = errors only).
+# report errors. Warnings never block (mirrors validate.py semantics: FAIL =
+# errors only). The run is --compact: errors, operational advisories and one
+# summary line print; the complete warning list is written to
+# generated/reports/validation-report.md instead of the console, because a
+# commit made by an agent otherwise carries every already-baselined warning
+# into its context (407 warnings, 180 KB, measured 2026-09-22).
 #
 # Install (once per clone):
 #   cp tools/hooks/pre-commit .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit
@@ -31,7 +35,7 @@ else
     PY="$(command -v python3 || command -v python)"
 fi
 if [ -z "$PY" ]; then
-    echo "pre-commit: no python found — commit blocked (run 'make setup', or install Python 3.10+, or use --no-verify)." >&2
+    echo "pre-commit: no python found — commit blocked (run 'make setup', or install Python 3.12+, or use --no-verify)." >&2
     exit 1
 fi
 
@@ -42,7 +46,7 @@ if ! "$PY" -m ruff check tools tests; then
     exit 1
 fi
 
-"$PY" tools/validate.py --no-report
+"$PY" tools/validate.py --compact
 STATUS=$?
 if [ $STATUS -ne 0 ]; then
     echo "" >&2

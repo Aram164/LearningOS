@@ -79,8 +79,9 @@ never in prose copies.
 
 **An effort ends:** its workspace is archived whole; the durable notes stay.
 
-**Trust but verify:** `python tools/validate.py` after any batch of edits
-(session-end habit). Never edit anything under the generated output tree —
+**Trust but verify:** `python tools/validate.py --compact` after any batch of
+edits (session-end habit); the full warning list lands in
+`generated/reports/validation-report.md`. Never edit anything under the generated output tree —
 it's a disposable view; delete it freely.
 
 ## Without the operator (human fallback — no Claude needed)

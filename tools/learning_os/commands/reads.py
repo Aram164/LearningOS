@@ -76,7 +76,7 @@ def inspect_batch(args) -> int:
     try:
         with _operator_lock(root):
             snapshot = _snapshot(root)
-            manifest = _fresh_manifest(root)
+            manifest = _fresh_manifest(root, snapshot_id=snapshot)
             records = []
             for record_id in ids:
                 record = record_payload(manifest, record_id)
@@ -126,7 +126,7 @@ def compact_bootstrap(args) -> int:
         offset, limit = _window(args, 50)
         with _operator_lock(root):
             snapshot = _snapshot(root, args.expected_snapshot)
-            manifest = _fresh_manifest(root)
+            manifest = _fresh_manifest(root, snapshot_id=snapshot)
             fields = ("id", "title", "status", "module_id", "program_id", "unit_id",
                       "current_study_map", "current_stage", "needs_study_map")
             collections = {}
@@ -168,7 +168,7 @@ def brief_bootstrap(args) -> int:
     try:
         with _operator_lock(root):
             snapshot = _snapshot(root, args.expected_snapshot)
-            manifest = _fresh_manifest(root)
+            manifest = _fresh_manifest(root, snapshot_id=snapshot)
             units = sorted(manifest.get("units", []),
                            key=lambda row: row["id"])
             owed = sorted(row["id"] for row in units

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -247,9 +248,11 @@ def cmd_session_end(args) -> int:
     # `validate.py` resolves its repository from its own location unless told
     # otherwise, so a bare `cwd=root` would validate the repository the tools
     # live in — not the one this session touched. Pass the root explicitly.
+    # --compact: a failed close prints its errors and the summary line, not
+    # every baselined warning; the full list is in the validation report.
     validation = subprocess.run(
-        [sys.executable, str(TOOLS / "validate.py"), "--root", str(root)], cwd=root,
-        capture_output=True, text=True)
+        [sys.executable, str(TOOLS / "validate.py"), "--compact", "--root", str(root)],
+        cwd=root, capture_output=True, text=True)
     if validation.returncode != 0:
         print(validation.stdout, end="")
         print(validation.stderr, end="", file=sys.stderr)
@@ -264,7 +267,8 @@ def cmd_session_end(args) -> int:
         _publish(root)
     all_changed = subprocess.run(
         ["git", "status", "--porcelain", "--untracked-files=all", "--", "."],
-        cwd=root, capture_output=True, text=True, timeout=30).stdout.splitlines()
+        cwd=root, capture_output=True, text=True, timeout=30,
+        env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"}).stdout.splitlines()
     owned = [line for line in all_changed if line[3:] in touched]
     unrelated = [line for line in all_changed if line[3:] not in touched]
     payload = {"ok": True, "touched": touched, "owned_changes": owned,

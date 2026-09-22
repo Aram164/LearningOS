@@ -39,7 +39,8 @@ def _git(
         out = subprocess.run(
             ["git", *args],
             cwd=root, capture_output=True, text=True, timeout=120,
-            env=None if git_dir is None else {**os.environ, "GIT_DIR": git_dir})
+            env={**os.environ, "GIT_OPTIONAL_LOCKS": "0",
+                 **({} if git_dir is None else {"GIT_DIR": git_dir})})
     except (OSError, subprocess.SubprocessError, UnicodeError) as exc:
         detail = getattr(exc, "stderr", None) or ""
         if isinstance(detail, bytes):

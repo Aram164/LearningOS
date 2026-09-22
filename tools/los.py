@@ -1,27 +1,27 @@
 #!/usr/bin/env python3
 """Learning OS CLI — the stable machine gateway for interface layers (ADR-006).
 
-    python tools/los.py status            # one-screen repository state
-    python tools/los.py bootstrap         # AI/app startup contract + active paths
-    python tools/los.py status --json     # same, machine-readable (stable keys)
-    python tools/los.py validate          # delegate to tools/validate.py
-    python tools/los.py generate          # delegate to tools/generate.py
-    python tools/los.py path-note ...     # save stage-bound working notes
-    python tools/los.py path-progress ... # advance the ordered path
-    python tools/los.py capture ...       # drop an unrelated capture into work/inbox/
+Agents start here (system/OPERATOR.md):
+
+    python tools/los.py capabilities --compact --json  # what exists
+    python tools/los.py bootstrap --brief              # session entry, one page
+    python tools/los.py capabilities NAME --json       # one capability + payload schema
+    python tools/los.py inspect ID [ID ...]            # records, one fresh projection
+    python tools/los.py status                         # one-screen repository state
+
+`bootstrap` without --brief/--compact prints the complete projection
+(megabytes): a bulk read, never a session start.
+
+Every canonical write is a capability applied as a GatewayEnvelopeV2 through
+`capability NAME --payload-file ENVELOPE.json` (WORKFLOWS §25a). Run bare, a
+named write command only preflights (`--check`) or refuses. `validate` and
+`generate` delegate to tools/validate.py and tools/generate.py, so there is
+exactly one implementation of every rule.
 
 Interface layers (the Obsidian UI project, scripts, agents) call THESE
-commands instead of parsing YAML or reimplementing rules. The Python loader
-remains the single authority; `validate` and `generate` are thin delegations
-to the canonical scripts, so there is exactly one implementation of every
-rule.
-
-Deliberately NOT here (OPERATOR.md, CLAUDE.md §3–§5, §14): anything requiring operator
-judgment — routing inbox items, creating notes and assigning roles, harvesting
-the Garden, finishing sessions, semantic edits. `capture` is the one write
-because it is judgment-free: it puts bytes in `work/inbox/`, where routing is
-explicitly the operator's job. Exit codes: 0 ok · 1 validation errors ·
-2 usage/environment error · 3 optimistic-concurrency conflict.
+commands instead of parsing YAML or reimplementing rules. Exit codes: 0 ok ·
+1 validation errors · 2 usage/environment error · 3 optimistic-concurrency
+conflict.
 """
 
 from __future__ import annotations

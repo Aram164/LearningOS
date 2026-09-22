@@ -52,10 +52,6 @@ def bind_store(root: Path | None) -> None:
     _bound_root = Path(root).resolve() if root is not None else None
 
 
-def bound_root() -> Path | None:
-    return _bound_root
-
-
 def persist_record(record: dict) -> None:
     """Append one span/event record to the bound store, else do nothing.
 

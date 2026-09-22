@@ -168,11 +168,10 @@ sitting, and the single top-ranked goal cluster (best-effort, read-only;
 seeing it files nothing) as `context://<unit-id>/resume-dossier@<digest>`,
 resolved from the pointer, the last result, or the last touch, in that
 labeled order.
-Readers: `tools/learning_os/genout/resume_dossier.py`, proven by
-`tests/test_resume_dossier.py`. Dossiers live under
-`generated/dossiers/`, covered by the existing no-hand-edit path — no
-canonical file may reference them, and the builder plus the store take
-explicit paths and never walk the repository. Readers:
+The resume builder is `tools/learning_os/genout/resume_dossier.py`, proven by
+`tests/test_resume_dossier.py`; `los resume` renders its result without storing
+a cache file. Semantic dossiers live under `generated/dossiers/`, covered by
+the existing no-hand-edit path — no canonical file may reference them. Readers:
 `tools/learning_os/semantics/dossiers.py`, proven by
 `tests/test_context_dossiers.py`. Served by the read-only
 `los dossier UNIT_ID` caller (`tools/learning_os/commands/dossier.py`,

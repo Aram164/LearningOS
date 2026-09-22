@@ -95,7 +95,8 @@ def dirty_paths() -> set[str]:
     try:
         proc = subprocess.run(
             ["git", "status", "--porcelain=v1", "-z", "--untracked-files=all", "--", "."],
-            cwd=ROOT, capture_output=True, timeout=30)
+            cwd=ROOT, capture_output=True, timeout=30,
+            env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"})
     except subprocess.TimeoutExpired as exc:
         raise GitStatusError(f"git status timed out: {exc}") from exc
     except OSError as exc:

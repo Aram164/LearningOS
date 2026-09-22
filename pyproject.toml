@@ -10,6 +10,9 @@ requires-python = ">=3.12"
 dependencies = [
   "PyYAML",
   "jsonschema>=4",
+  # material_slices, material_text and material_toc import it and tell the
+  # operator "make setup" provides it; without this line it did not.
+  "pypdf",
 ]
 
 [project.optional-dependencies]

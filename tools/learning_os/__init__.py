@@ -5,10 +5,22 @@ See system/BUILD-SPEC.md Steps 3-5; rules in system/VALIDATION.md.
 """
 
 import sys as _sys
-import tomllib as _tomllib
 from importlib.metadata import PackageNotFoundError as _PackageNotFoundError
 from importlib.metadata import version as _distribution_version
 from pathlib import Path as _Path
+
+if _sys.version_info < (3, 12):  # noqa: UP036 - the guard exists for older interpreters
+    # pyproject.toml declares requires-python >= 3.12. Without this guard an
+    # older interpreter (a CI image, an agent VM) dies on `import tomllib`
+    # deep in the import chain, which reads as "the CLI cannot run here" and
+    # sends the operator back to re-deriving state from files.
+    raise ImportError(
+        f"LearningOS needs Python >= 3.12; this is {_sys.version.split()[0]}. "
+        "Use the project venv (`make setup`), or build one outside the "
+        "repository: `uv venv --python 3.12 ~/losvenv && uv pip install "
+        "--python ~/losvenv/bin/python PyYAML 'jsonschema>=4' pypdf`, then run "
+        "the tool with ~/losvenv/bin/python."
+    )
 
 
 def _declared_version() -> str:
@@ -20,8 +32,10 @@ def _declared_version() -> str:
     """
     pyproject = _Path(__file__).resolve().parents[2] / "pyproject.toml"
     if pyproject.is_file():
+        import tomllib
+
         with pyproject.open("rb") as stream:
-            project = _tomllib.load(stream).get("project", {})
+            project = tomllib.load(stream).get("project", {})
         value = project.get("version") if isinstance(project, dict) else None
         if isinstance(value, str) and value.strip():
             return value.strip()

@@ -149,6 +149,18 @@ def test_route_change_with_stale_dossier_fails_closed(mini_repo: Path):
     with pytest.raises(MaterialSynthesisError, match="coverage mismatch"):
         validate_unit_material_synthesis(mini_repo, "unit-demo-l01", stale)
 
+    from repo_builders import run_los
+
+    from learning_os.material_synthesis import synthesis_destination
+    synthesis_destination(mini_repo, "unit-demo-l01").write_text(
+        yaml.safe_dump(stale, sort_keys=False), encoding="utf-8")
+    context = run_los(mini_repo, "plan-edit-context", "unit-demo-l01", "--brief")
+    assert context.returncode == 0, context.stderr
+    synthesis = json.loads(context.stdout)["unit_audit"]["synthesis"]
+    assert synthesis["present"] is True
+    assert synthesis["fresh"] is False
+    assert synthesis["replacement_required_if_evidential_routes_change"] is True
+
 
 def _changed_scope_map(mini_repo: Path) -> dict:
     source_map_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
@@ -262,6 +274,12 @@ def test_compact_revision_checks_one_lecture(mini_repo, tmp_path):
     from repo_builders import run_los, write_yaml
 
     _compact_setup(mini_repo)
+    context = run_los(mini_repo, "plan-edit-context", "unit-demo-l01", "--brief")
+    assert context.returncode == 0, context.stderr
+    synthesis = json.loads(context.stdout)["unit_audit"]["synthesis"]
+    assert synthesis["present"] is True
+    assert synthesis["fresh"] is True
+    assert synthesis["replacement_required_if_evidential_routes_change"] is True
     revision_file = tmp_path / "l04-revision.yaml"
     write_yaml(revision_file, _compact_revision(
         mini_repo,
@@ -280,6 +298,39 @@ def test_compact_revision_checks_one_lecture(mini_repo, tmp_path):
     assert report["routes_updated"] == ["route-demo-book"]
     assert report["synthesis"]["unit-demo-l01"]["after"]["fresh"] is True
     assert report["expected_revisions"] == {"module-demo": 0}
+
+
+def test_missing_dossier_does_not_require_replacement_for_route_addition(
+    mini_repo, tmp_path,
+):
+    """The briefing and real revision preflight agree on an absent dossier."""
+    from repo_builders import run_los, write_yaml
+
+    _sliced_unit(mini_repo, [_sliced_route("route-demo-book", "lecture-01.pdf")])
+    from learning_os.warning_baseline import collect, write_baseline
+    write_baseline(mini_repo, collect(mini_repo)[0], "unit revision fixture")
+    context = run_los(mini_repo, "plan-edit-context", "unit-demo-l01", "--brief")
+    assert context.returncode == 0, context.stderr
+    synthesis = json.loads(context.stdout)["unit_audit"]["synthesis"]
+    assert synthesis["present"] is False
+    assert synthesis["fresh"] is False
+    assert synthesis["replacement_required_if_evidential_routes_change"] is False
+    assert "no existing dossier" in synthesis["replacement_reason"]
+
+    route = _sliced_route("route-demo-new", "lecture-01.pdf, PDF p. 1",
+                          scope="complementary")
+    revision = _compact_revision(mini_repo, route_changes={"add": [
+        {"source_id": "source-demo-book", "route": route},
+    ]}, claim_evidence=[{
+        "claim_id": "covers:route-demo-new",
+        "evidence": [{"kind": "route-locator", "ref": "lecture-01.pdf"}],
+    }])
+    path = tmp_path / "add-without-dossier.yaml"
+    write_yaml(path, revision)
+    checked = run_los(mini_repo, "unit-plan-revise", "unit-demo-l01",
+                      "--file", str(path), "--check")
+    assert checked.returncode == 0, checked.stderr
+    assert json.loads(checked.stdout)["routes_added"] == ["route-demo-new"]
 
 
 def test_compact_revision_route_ops_fail_closed(mini_repo, tmp_path):

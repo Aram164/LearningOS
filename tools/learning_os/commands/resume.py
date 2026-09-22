@@ -18,7 +18,6 @@ from learning_os.genout.modules_view import _academic_deadlines
 from learning_os.genout.resume_dossier import (
     ResumeDossierError,
     build_resume_dossier,
-    store_resume_dossier,
 )
 from learning_os.githistory import GitHistoryError
 from learning_os.learning_runtime import (
@@ -29,7 +28,7 @@ from learning_os.learning_runtime import (
 from learning_os.loader import load_repo
 from learning_os.semantics.goals import stale_observations
 
-from .support import _root
+from .support import _json_layout, _root
 
 
 def _live_observations(observations: list[dict]) -> list[dict]:
@@ -304,15 +303,11 @@ def cmd_resume(args) -> int:
     except ResumeDossierError as exc:
         print(f"los: {exc}", file=sys.stderr)
         return 2
-    try:
-        store_resume_dossier(root, dossier)
-    except ResumeDossierError:
-        pass  # the screen is the deliverable; the cache is best-effort
     if args.json:
         print(json.dumps(
             {"key": dossier.key, "via": via,
              "content": {section: value for section, value in dossier.content}},
-            indent=2, sort_keys=True, ensure_ascii=False))
+            **_json_layout(), sort_keys=True, ensure_ascii=False))
         return 0
     print(_render(dossier, requirement, observations, open_items, sittings,
                   titles, via_detail, len(stale_here), top_cluster))

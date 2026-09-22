@@ -241,6 +241,7 @@ def _git_provenance(root: Path) -> dict[str, Any]:
             return subprocess.run(
                 ["git", "-C", str(root), *args],
                 capture_output=True, text=True, check=False, timeout=10,
+                env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"},
             )
         except (OSError, subprocess.SubprocessError):
             return None

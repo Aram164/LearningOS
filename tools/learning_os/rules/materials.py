@@ -27,7 +27,6 @@ import yaml
 
 from ..loading.yamlio import UniqueKeySafeLoader
 from ..pathing import PathBoundaryError, read_text_inside, resolve_symlinks_inside
-from .common import CANONICAL_TREES, _in_garden, _in_quarantine
 
 # Material filenames legitimately contain spaces ("unser skript.pdf"), so a
 # whitespace-delimited pattern silently truncates them. Delimited forms are
@@ -251,22 +250,9 @@ class ChecksMaterials:
         in source records, stage resources, note frontmatter and prose links, and
         a new carrier field should not silently escape the integrity check.
         """
-        root = self.repo.root
         found: set[str] = set()
-        for tree in CANONICAL_TREES:
-            base = root / tree
-            if not base.is_dir():
-                continue
-            for path in base.rglob("*"):
-                if path.suffix.lower() not in {".md", ".yaml", ".yml"}:
-                    continue
-                if not path.is_file():
-                    continue
-                if _in_garden(root, path) or _in_quarantine(root, path):
-                    continue
-                text = path.read_text(encoding="utf-8", errors="replace")
-                if "material://" not in text:
-                    continue
+        for _path, text in self._canonical_texts():
+            if "material://" in text:
                 found |= _uris_in(text)
         found.discard("")
         return found

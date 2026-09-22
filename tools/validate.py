@@ -52,8 +52,12 @@ def main() -> int:
                     and issue.code not in BASELINE_EXEMPT_WARNINGS:
                 continue
             print(issue)
+        # Name where the suppressed warnings went, so neither a person nor an
+        # agent has to rerun without --compact to find them.
+        report_hint = "" if args.no_report else \
+            "; warning list: generated/reports/validation-report.md"
         print(f"{len(errors)} error(s), {len(warnings)} warning(s) — "
-              f"{'FAIL' if errors else 'OK'} ({elapsed:.1f}s)")
+              f"{'FAIL' if errors else 'OK'} ({elapsed:.1f}s){report_hint}")
     else:
         for issue in issues:
             print(issue)

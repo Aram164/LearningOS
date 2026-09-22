@@ -20,7 +20,7 @@ from ..learning_runtime import (
     runtime_review_fingerprint,
 )
 from ..loader import Repo
-from .common import Issue
+from .common import CANONICAL_TREES, Issue, _in_garden, _in_quarantine
 from .contract import ChecksContract
 from .curriculum import ChecksCurriculum
 from .generated import ChecksGenerated
@@ -51,6 +51,7 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         # `2026-13-45` validated clean on the most operationally critical field
         # in the repository — exam dates. One checker serves every validator.
         self._format_checker = jsonschema.FormatChecker()
+        self._canonical_text_cache: list[tuple[Path, str]] | None = None
         try:
             self.schema_registry = schema_registry(
                 self.repo.root / "system" / "schema"
@@ -107,6 +108,30 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         for e in sorted(validator.iter_errors(instance), key=str):
             locator = "/".join(str(p) for p in e.absolute_path)
             self.err("SCHEMA", f"{name}: {e.message} (at {locator or 'root'})", where)
+
+    def _canonical_texts(self) -> list[tuple[Path, str]]:
+        """Every canonical Markdown/YAML file and its text, read once per run.
+
+        The ownership sweep, the material-integrity sweep and the link check
+        each used to walk and read these ~1,200 files on their own. Garden
+        and quarantine stay excluded exactly as each sweep excluded them.
+        """
+        if self._canonical_text_cache is None:
+            root = self.repo.root
+            rows: list[tuple[Path, str]] = []
+            for tree in CANONICAL_TREES:
+                base = root / tree
+                if not base.is_dir():
+                    continue
+                for path in sorted(base.rglob("*")):
+                    if path.suffix.lower() not in (".md", ".yaml", ".yml") \
+                            or not path.is_file():
+                        continue
+                    if _in_garden(root, path) or _in_quarantine(root, path):
+                        continue
+                    rows.append((path, path.read_text(encoding="utf-8", errors="replace")))
+            self._canonical_text_cache = rows
+        return self._canonical_text_cache
 
     def _rel(self, p: Path) -> str:
         try:
