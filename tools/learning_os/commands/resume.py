@@ -11,9 +11,11 @@ from __future__ import annotations
 
 import datetime as _dt
 import json
+import re
 import sys
 from pathlib import Path
 
+from learning_os.genout.common import _first_para
 from learning_os.genout.modules_view import _academic_deadlines
 from learning_os.genout.resume_dossier import (
     ResumeDossierError,
@@ -234,6 +236,40 @@ def _open_items(root: Path, repo, unit_id: str, stage_id: str,
     return tuple(items[:8])
 
 
+def _recorded_aims(repo, module_id: str, unit_id: str) -> list[tuple[str, str, str]]:
+    """At most two sourced planning excerpts; neither is a fresh priority."""
+    aims: list[tuple[str, str, str]] = []
+
+    def excerpt(value: str, limit: int) -> str:
+        value = value.replace("**", "").replace("`", "")
+        if len(value) <= limit:
+            return value
+        prefix = value[:limit]
+        sentences = [match.end() for match in re.finditer(r"[.!?](?:\s|$)", prefix)
+                     if match.end() >= limit // 2]
+        return (prefix[:sentences[-1]].rstrip() if sentences else
+                prefix.rsplit(" ", 1)[0]) + "…"
+
+    if repo.coordination is not None:
+        priority = _first_para(repo.coordination.section("Priorities"))
+        if priority:
+            date = re.search(r"\b\d{4}-\d{2}-\d{2}\b", priority)
+            label = f"Coordination decision {date.group()}" if date else "Coordination priorities (undated)"
+            aims.append((label, excerpt(priority, 260), "work/COORDINATION.md#Priorities"))
+    owning = [ws for ws in repo.workspaces.values()
+              if not ws.archived and ws.status == "active"
+              and (unit_id in (ws.meta.get("unit_ids") or [])
+                   or module_id in (ws.meta.get("module_ids") or []))]
+    owning.sort(key=lambda ws: (unit_id not in (ws.meta.get("unit_ids") or []), ws.id))
+    if owning:
+        workspace = owning[0]
+        next_action = _first_para(workspace.section("Next Action"))
+        if next_action:
+            source = workspace.path.relative_to(repo.root).as_posix() + "#Next-Action"
+            aims.append((f"Workspace {workspace.id}", excerpt(next_action, 450), source))
+    return aims
+
+
 def cmd_resume(args) -> int:
     """Compile and print the return-to-study screen. Read-only."""
     root = _root(args)
@@ -309,8 +345,9 @@ def cmd_resume(args) -> int:
              "content": {section: value for section, value in dossier.content}},
             **_json_layout(), sort_keys=True, ensure_ascii=False))
         return 0
+    aims = _recorded_aims(repo, module_id, unit_id)
     print(_render(dossier, requirement, observations, open_items, sittings,
-                  titles, via_detail, len(stale_here), top_cluster))
+                  titles, via_detail, len(stale_here), top_cluster, aims))
     return 0
 
 
@@ -331,10 +368,17 @@ def _ago(day: str) -> str:
 
 def _render(dossier, requirement, observations, open_items, sittings,
             titles, via_detail: str, stale_count: int = 0,
-            top_cluster: dict | None = None) -> str:
+            top_cluster: dict | None = None,
+            recorded_aims: list[tuple[str, str, str]] | None = None) -> str:
     today = _dt.date.today()
     lines = [f"{titles['module']} · {titles['unit']} · {dossier.stage_id}",
              f"  ({via_detail})", ""]
+    if recorded_aims:
+        lines.append("  Recorded aims (compare with current dates and state):")
+        for label, excerpt, source in recorded_aims[:2]:
+            lines.append(f"    {label}: {excerpt}")
+            lines.append(f"      source: {source}")
+        lines.append("")
     if isinstance(requirement, dict):
         capability = requirement.get("capability", {})
         concept = str(requirement.get("concept", ""))

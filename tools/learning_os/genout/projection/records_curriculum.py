@@ -227,21 +227,16 @@ def project_unit_material_syntheses(repo: Repo) -> list[dict]:
 
     # Local import avoids a package-initialization cycle: the synthesis module
     # is a domain service and this is a projection of its output.
-    from ...material_synthesis import (
-        material_synthesis_completeness,
-        material_synthesis_freshness,
-    )
+    from ...material_synthesis import material_synthesis_completeness
+    from .records_library import current_synthesis_freshness
 
-    cache: dict = {}
     return [
         {
             **dict(repo.unit_material_syntheses[synthesis_id]),
-            "freshness": material_synthesis_freshness(
-                repo.root,
-                str(repo.unit_material_syntheses[synthesis_id].get("unit_id", "")),
+            "freshness": current_synthesis_freshness(
+                repo,
+                synthesis_id,
                 repo.unit_material_syntheses[synthesis_id],
-                repo=repo,
-                cache=cache,
             ),
             "completeness": material_synthesis_completeness(
                 repo.root,

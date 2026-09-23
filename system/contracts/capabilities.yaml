@@ -441,6 +441,17 @@ commands:
     invariants:
     - feedback is contextual
     - source identity is unchanged
+  source.intake.record:
+    handler: source_intake_record
+    cli_command: source-intake
+    writes:
+    - sources/sources.yaml
+    - sources/registry/**
+    invariants:
+    - creates a metadata-only source or corrects intake-owned fields of an existing one
+    - source identity is stable; evaluations, topics, material and every route, selection, note, feedback and observation are unchanged
+    - a check run returns the field-level diff; apply is bound to that diff's hash, the snapshot and each record's revision
+    - explicitly approved; one transaction and one receipt cover the batch
   detour.create:
     handler: detour_create
     cli_command: detour-create

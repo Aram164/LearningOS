@@ -26,6 +26,16 @@ from learning_os.semantics.scan import _read_goal_ledger, intelligence_scan
 
 from .support import _json_layout, _root
 
+#: Brief cap: at most this many ranked groups, whatever the tiers hold. The
+#: top two tiers alone held 61 groups on 2026-09-23, so a tier cutoff cannot
+#: bound the page -- only a rank cutoff can.
+BRIEF_GROUP_LIMIT = 5
+
+#: Member goal ids sampled per brief group summary. The rest count toward
+#: ``omitted_members`` and never print: a summary stays a summary even for
+#: the largest cluster.
+BRIEF_MEMBER_SAMPLE = 6
+
 
 def _route_modules(repo) -> dict[str, str]:
     """Route id to owning module id, from the loaded source maps."""
@@ -156,8 +166,64 @@ def _tier_label(row: RankedCluster) -> str:
     return "no dated pressure"
 
 
+def _full_result_route(args) -> str:
+    """The runnable command for the un-truncated scan behind a brief page."""
+    parts = ["intelligence-scan"]
+    if getattr(args, "days", 30) != 30:
+        parts += ["--days", str(args.days)]
+    return " ".join([*parts, "--json"])
+
+
+def _brief_group_summary(number: int, row: RankedCluster) -> dict:
+    """One bounded ranked-group summary for the brief page."""
+    cluster = row.cluster
+    members = list(cluster.member_ids)
+    sample = members[:BRIEF_MEMBER_SAMPLE]
+    return {
+        "rank": number,
+        "cluster_id": cluster.cluster_id,
+        "detector": cluster.detector,
+        "title": cluster.title,
+        "tier": row.tier,
+        "tier_label": _tier_label(row),
+        "nearest_sitting": row.nearest_sitting,
+        "days_until": row.days_until,
+        "member_count": len(members),
+        "sample_goal_ids": sample,
+        "omitted_members": len(members) - len(sample),
+    }
+
+
+def _print_brief_json(args, goals, ranked) -> int:
+    """At most five ranked groups plus totals; the agent entry path.
+
+    Bounded by rank, never by tier: even when every shown group bears on
+    an exam, the page stays five summaries. The omitted counts and
+    ``full_result`` route to the complete scan; the full ``--json`` shape
+    is untouched for consumers that need every goal.
+    """
+    shown = list(ranked[:BRIEF_GROUP_LIMIT])
+    summaries = [_brief_group_summary(number, row)
+                 for number, row in enumerate(shown, start=1)]
+    shown_goals = sum(item["member_count"] for item in summaries)
+    print(json.dumps(
+        {"contract": "intelligence-scan-brief",
+         "groups": summaries,
+         "total_groups": len(ranked),
+         "total_goals": len(goals),
+         "omitted_groups": len(ranked) - len(shown),
+         "omitted_goals": len(goals) - shown_goals,
+         "full_result": _full_result_route(args)},
+        **_json_layout(), sort_keys=True, ensure_ascii=False))
+    return 0
+
+
 def cmd_intelligence_scan(args) -> int:
-    """Run one observation loop: observe, interpret, propose."""
+    """Run one observation loop: observe, interpret, propose.
+
+    ``--brief`` caps the page at five ranked groups plus totals; with
+    ``--json`` that is the agent entry path.
+    """
     if args.days < 0:
         print("intelligence scan: --days is never negative")
         return 2
@@ -171,6 +237,8 @@ def cmd_intelligence_scan(args) -> int:
         print(f"intelligence scan: cannot rank the queue: {exc}", file=sys.stderr)
         return 2
     if args.json:
+        if getattr(args, "brief", False):
+            return _print_brief_json(args, goals, ranked)
         from learning_os.semantics.goals import goal_to_dict
 
         print(json.dumps(
@@ -182,7 +250,7 @@ def cmd_intelligence_scan(args) -> int:
               "nothing moved that the detectors cover")
         return 0
     print(f"intelligence scan: {len(goals)} candidate(s) in "
-          f"{len(ranked)} group(s) — filing is yours:")
+          f"{len(ranked)} group(s) — review before Aram decides:")
     attention = [row for row in ranked if row.tier <= 2]
     upcoming = [row.days_until for row in attention
                 if row.days_until is not None]
@@ -190,8 +258,12 @@ def cmd_intelligence_scan(args) -> int:
         urgent_goals = sum(len(row.cluster.member_ids) for row in attention)
         print(f"{len(attention)} group(s), {urgent_goals} goal(s), bear on a "
               f"sitting in the next {min(upcoming)}d.")
+    brief = getattr(args, "brief", False)
+    # `visible`, not `shown`: the loop body below reuses `shown` for the
+    # per-group member sample string.
+    visible = list(ranked[:BRIEF_GROUP_LIMIT]) if brief else list(ranked)
     by_id = {goal.goal_id: goal for goal in goals}
-    for number, row in enumerate(ranked, start=1):
+    for number, row in enumerate(visible, start=1):
         cluster = row.cluster
         print(f"{number}. [{_tier_label(row)}] {cluster.title}")
         members = list(cluster.member_ids)
@@ -202,7 +274,12 @@ def cmd_intelligence_scan(args) -> int:
             if len(members) > 6:
                 shown += f" … +{len(members) - 6} more"
             print(f"   goals ({len(members)}): {shown}")
-    print("Decide per goal id: los goal <id> --reject|--defer|--close")
+    if brief and len(ranked) > len(visible):
+        omitted = len(goals) - sum(len(row.cluster.member_ids) for row in visible)
+        print(f"({len(ranked) - len(visible)} more group(s), {omitted} goal(s) "
+              "omitted -- rerun without --brief for the full queue)")
+    print("Record Aram's explicit decision per goal id: "
+          "los goal <id> --reject|--defer|--close")
     if hidden:
         print(f"({hidden} decided goal(s) stay hidden — see `los goal`)")
     return 0

@@ -132,6 +132,31 @@ def test_resume_renders_the_pointer_stage(mini_repo: Path):
     assert not list((mini_repo / "generated/dossiers").glob("*-resume-*.json"))
 
 
+def test_resume_shows_dated_recorded_aim_and_owning_workspace(mini_repo: Path):
+    root = _runtime_repo(mini_repo)
+    coordination = root / "work/COORDINATION.md"
+    coordination.parent.mkdir(parents=True, exist_ok=True)
+    coordination.write_text("---\nid: coordination\ntype: coordination\n---\n"
+                            "# Coordination\n\n## Priorities\n\n"
+                            "Decision 2026-08-14 by Aram. Keep two tracks in parallel.\n",
+                            encoding="utf-8")
+    workspace = root / "work/active/workspace-demo/CONTEXT.md"
+    workspace.parent.mkdir(parents=True, exist_ok=True)
+    workspace.write_text("---\nid: workspace-demo\ntype: workspace\n"
+                         "title: Demo plan\ncreated: '2026-08-14'\nstatus: active\n"
+                         "module_ids: [module-demo]\n---\n# Demo\n\n"
+                         "## Objective\n\nStudy.\n\n## Current Scope\n\nDemo.\n\n"
+                         "## Open Questions\n\nNone.\n\n## Next Action\n\n"
+                         "Try one closed-book problem.\n", encoding="utf-8")
+    proc = run_los(root, "resume")
+    assert proc.returncode == 0, proc.stderr
+    assert "Coordination decision 2026-08-14" in proc.stdout
+    assert "work/COORDINATION.md#Priorities" in proc.stdout
+    assert "Try one closed-book problem" in proc.stdout
+    assert "workspace-demo/CONTEXT.md#Next-Action" in proc.stdout
+    assert "compare with current dates and state" in proc.stdout
+
+
 def test_resume_json_carries_the_top_cluster_section(mini_repo: Path):
     """The screen files nothing, but the top cluster rides along when the
     scan can run — and degrades to an explicit null when it cannot."""

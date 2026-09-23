@@ -71,6 +71,68 @@
               "type": "string"
             }
           },
+          "discovery": {
+            "description": "Optional metadata-only provenance (two-pass intake): which list or page this shelf came from and what it may be good for. Never a claim about coverage, quality or fit; examination keeps it as provenance.",
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "observed",
+              "basis",
+              "possible_use"
+            ],
+            "properties": {
+              "observed": {
+                "type": "string",
+                "format": "date"
+              },
+              "basis": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "kind",
+                    "ref"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "enum": [
+                        "list-entry",
+                        "landing-page",
+                        "catalogue-entry",
+                        "playlist-metadata",
+                        "table-of-contents"
+                      ]
+                    },
+                    "ref": {
+                      "type": "string",
+                      "pattern": "^(https?://\\S+|\\S+#L[0-9]+)$"
+                    }
+                  }
+                }
+              },
+              "origins": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^(https?://\\S+|\\S+#L[0-9]+)$"
+                }
+              },
+              "possible_use": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "child_titles": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
           "evaluations": {
             "type": "array",
             "items": {

@@ -51,6 +51,7 @@ _CONTENT_BOUND_V2 = frozenset({
     "legacy.archive.lock.publish",
     "masters-planning.catalog.update",
     "masters-planning.comparison.publish",
+    "source.intake.record",
     "unit.material-synthesis.publish",
     "unit.plan.revise",
 })

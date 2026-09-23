@@ -23,6 +23,7 @@ revisions:
   concept-selection-family: 1
   concept-skrub: 1
   job-quarantine-collapse-v1: 1
+  master-planning-catalog: 1
   material-synthesis-m2-sad-l03: 3
   material-synthesis-m2-sad-l03-pilot: 1
   material-synthesis-m2-sad-l04: 4
@@ -72,14 +73,62 @@ revisions:
   program-job-boundary: 1
   program-thesis-projects: 1
   project-bachelor-thesis: 1
+  source-3b1b-neural-networks: 1
+  source-algo2-frankfurt-klausuren: 1
+  source-amls-prior-archives: 1
+  source-analysis-klausuren-extern: 1
+  source-arora-barak: 1
+  source-bermbach-csb: 1
+  source-blitzstein-hwang: 1
+  source-caltech-lfd: 1
+  source-captum: 1
+  source-cmu-10414: 1
+  source-cmu-15445: 1
+  source-cmu-15451-splay-notes: 1
+  source-cs229-2018-videos: 1
+  source-cs229-notes: 1
+  source-cs229-project-archive: 1
+  source-cs231n-notes: 1
+  source-eecs498: 1
+  source-esl: 1
+  source-frankfurt-algo2-course: 1
+  source-guo-cpython-internals: 1
+  source-hogan-knowledge-graphs: 1
+  source-islp: 1
+  source-kaggle-winning-solutions: 1
+  source-karpathy-micrograd: 1
+  source-kit-algorithmen2: 1
   source-map-job-engineering-tools: 1
   source-map-job-git: 1
   source-map-job-polars: 1
   source-map-job-python-engineering: 1
   source-map-job-rust-engineering: 1
+  source-mit-18100a: 1
+  source-mit-6034-quizzes: 1
+  source-mit-6036: 1
+  source-mit-6172: 1
+  source-mit-6s191: 1
+  source-mit-missing-semester: 1
+  source-mlc-book: 1
+  source-mlsysbook-vol1: 1
+  source-mmds-book: 1
+  source-mml: 1
+  source-murphy-pml1: 1
+  source-ng-coursera: 1
+  source-nielsen-nndl: 1
+  source-nyu-dl: 1
   source-polars-definitive-guide: 1
+  source-pydata-handbook: 1
+  source-rohrer-e2eml: 1
+  source-sad-klausuren-extern: 1
   source-scalable-dataframe-systems-paper: 1
+  source-sklearn-user-guide: 1
+  source-skrub: 1
+  source-stat110: 1
   source-stratum-paper: 1
+  source-sutton-barto-rl: 1
+  source-toussaint-optimization-script: 1
+  source-tu-python-ml-course: 1
   stage-git-01-snapshots-objects-the-commit-dag-and-refs: 1
   stage-git-02-the-state-triangle-working-tree-index-and-head: 1
   stage-git-03-intentional-staging-and-atomic-commits: 1

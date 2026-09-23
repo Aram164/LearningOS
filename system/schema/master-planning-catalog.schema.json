@@ -44,7 +44,12 @@
           "privacy_class": {"const": "academic-only"},
           "provenance": {"type": "array", "minItems": 1, "items": {"type": "string", "minLength": 1}},
           "fact_state": {"$ref": "#/$defs/factState"},
-          "canonical_source_id": {"type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+          "canonical_source_id": {"type": "string", "pattern": "^source-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "url": {"type": "string", "format": "uri"},
+          "identifiers": {"type": "object", "additionalProperties": {"type": "string"}},
+          "child_titles": {"type": "object", "additionalProperties": {"type": "string", "minLength": 1}},
+          "possible_use": {"type": "string", "minLength": 1, "maxLength": 200},
+          "type": {"enum": ["book", "paper", "lecture", "course", "video", "website", "documentation", "software", "conversation", "other"]}
         }
       }
     },

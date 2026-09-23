@@ -1,0 +1,938 @@
+# Reviewed dispositions for the library reconciliation. Written by
+# tools/library_reconciliation.py merge/freeze; edit decisions, not layout.
+schema: library-reconciliation-dispositions/v1
+reviewed_input_hashes: {}
+objects:
+- id: source-3b1b-essence-of-calculus
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:130:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-m2-an04:25:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an07:24:s1', role: reference, basis: source-id}
+- id: source-3b1b-linear-algebra
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:52:u1', role: landing, basis: exact-url}
+- id: source-3b1b-neural-networks
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:51:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-aml-dl-amls:26:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-m2-chat1:473:u1', role: landing, basis: exact-url}
+- id: source-abbott-understanding-analysis
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:198:p1', role: local, basis: material-moves, note: LearningOS/materials/source-abbott-understanding-analysis/abbott.pdf}
+  - {ref: 'ws-m2-an02:25:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an03:27:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an04:27:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an05:26:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:26:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:25:s1', role: reference, basis: source-id}
+- id: source-ableitinger-musterloesungen
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-an00:33:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an09:27:s1', role: reference, basis: source-id}
+- id: source-albumentations-docs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:218:u1', role: landing, basis: exact-url}
+- id: source-algo2-frankfurt-klausuren
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:317:p1', role: local, basis: material-moves, note: LearningOS/materials/source-algo2-frankfurt-klausuren}
+- id: source-amls-prior-archives
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:126:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:126:u2', role: companion, basis: exact-identifier}
+  - {ref: 'm-ml:101:u2', role: landing, basis: exact-url}
+- id: source-amls-ss26-lectures
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:125:u1', role: landing, basis: exact-url}
+- id: source-analysis-drill-blaetter-extern
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-an02:29:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an03:23:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an04:31:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an05:30:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:31:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an07:29:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:30:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an09:28:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-chat8:49:p2', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:51:p2', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:55:p2', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:115:p2', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:151:p2', role: local, basis: manifest-basename}
+- id: source-analysis-grundlagen-handouts
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-an01:24:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an01:24:p2', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an01:24:s1', role: reference, basis: source-id}
+- id: source-analysis-klausuren-extern
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:297:p1', role: local, basis: material-moves, note: LearningOS/materials/source-analysis-klausuren-extern}
+  - {ref: 'lr:298:p1', role: local, basis: material-moves, note: LearningOS/materials/source-analysis-klausuren-extern}
+  - {ref: 'lr:299:p2', role: local, basis: manifest-basename}
+  - {ref: 'lr:301:p1', role: local, basis: manifest-basename}
+  - {ref: 'lr:302:p1', role: local, basis: manifest-basename}
+  - {ref: 'lr:303:p1', role: local, basis: manifest-basename}
+  - {ref: 'lr:304:p1', role: local, basis: manifest-basename}
+  - {ref: 'lr:305:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an09:25:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an09:26:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-chat8:58:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:177:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:177:p2', role: local, basis: material-moves, note: LearningOS/materials/source-analysis-klausuren-extern}
+- id: source-analysis-skript
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:293:p1', role: local, basis: manifest-basename}
+  - {ref: 'lr:298:p2', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an00:30:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an00:30:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an00:31:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an00:31:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an00:32:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an00:32:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an00:59:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an00:60:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an00:65:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an01:22:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an01:23:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an02:21:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an02:22:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an03:21:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an03:22:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an04:23:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an04:24:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an05:23:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an05:24:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:23:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:24:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an07:22:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an07:23:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:22:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:23:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an09:24:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-chat8:6:p1', role: local, basis: material-moves, note: LearningOS/materials/source-analysis-skript}
+  - {ref: 'ws-m2-chat8:32:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:47:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:48:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:48:p2', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:50:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:52:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:56:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:57:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:174:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:175:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:178:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:219:p1', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:272:p1', role: local, basis: manifest-basename}
+- id: source-asimov-nn-zoo
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:61:u1', role: landing, basis: exact-url}
+- id: source-augmix
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:248:u1', role: landing, basis: exact-url}
+- id: source-automate-boring-stuff
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:185:p1', role: local, basis: inventory-size}
+- id: source-awesome-ml-books
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:232:u1', role: landing, basis: exact-url}
+- id: source-batchelder-names
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:364:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:364:u2', role: companion, basis: exact-identifier}
+- id: source-bendersky-normal-equation
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:55:u1', role: landing, basis: exact-url}
+- id: source-berkeley-cs189
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:188:u1', role: landing, basis: exact-url}
+- id: source-bishop-prml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:16:u1', role: landing, basis: exact-url}
+  - {ref: 'm-ml:192:u1', role: companion, basis: exact-identifier}
+- id: source-boyd-convex-optimization
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:37:u1', role: landing, basis: exact-url}
+  - {ref: 'm-ml:20:u1', role: landing, basis: exact-url}
+- id: source-brandon-foltz
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:120:u1', role: landing, basis: exact-url}
+- id: source-calmcode-sklearn
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:103:u1', role: landing, basis: exact-url}
+- id: source-caltech-lfd
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:267:u1', role: landing, basis: exact-url}
+  - {ref: 'm-ml:189:u1', role: landing, basis: exact-url}
+- id: source-captum
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:217:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-aml-dl-amls:27:u2', role: landing, basis: exact-url}
+- id: source-clrs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:181:p1', role: local, basis: material-moves, note: LearningOS/materials/source-clrs/clrs-de.pdf}
+  - {ref: 'ws-algo2-chat9:32:p1', role: local, basis: material-moves, note: LearningOS/materials/source-clrs/clrs-de.pdf}
+- id: source-cmu-10414
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:341:u1', role: companion, basis: exact-identifier}
+  - {ref: 'lr:341:u2', role: companion, basis: exact-identifier}
+  - {ref: 'm-dataeng:88:u1', role: landing, basis: exact-url}
+- id: source-cmu-15445
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-dataeng:13:u1', role: landing, basis: exact-url}
+  - {ref: 'm-dataeng:181:u1', role: landing, basis: exact-url}
+- id: source-cmu-15451-splay-notes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:329:u1', role: landing, basis: exact-url}
+- id: source-corey-schafer-oop
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:372:u1', role: landing, basis: exact-url}
+- id: source-cornell-cs6120
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-runtime:25:u1', role: landing, basis: exact-url}
+- id: source-cs229-2022-videos
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:114:u1', role: landing, basis: exact-url}
+- id: source-cs229-notes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:180:p1', role: local, basis: material-moves, note: LearningOS/materials/source-cs229-notes/cs229-notes.pdf}
+- id: source-cs229-problem-sets
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:264:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:264:u2', role: companion, basis: exact-identifier}
+  - {ref: 'm-ml:91:u1', role: landing, basis: exact-url}
+  - {ref: 'm-ml:190:u1', role: landing, basis: exact-url}
+- id: source-cs229-project-archive
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:231:u2', role: companion, basis: exact-identifier}
+- id: source-cs231n-2017-videos
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:123:u1', role: landing, basis: exact-url}
+- id: source-cs231n-notes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:191:u1', role: landing, basis: exact-url}
+- id: source-cs4780
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:113:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:113:u2', role: companion, basis: exact-identifier}
+  - {ref: 'lr:266:u1', role: companion, basis: exact-identifier}
+- id: source-cs4780-homeworks
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:266:p1', role: local, basis: material-moves, note: LearningOS/materials/source-cs4780-homeworks}
+- id: source-cygan-parameterized
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-algo:19:u1', role: landing, basis: exact-url}
+  - {ref: 'm-algo:45:u1', role: landing, basis: exact-url}
+- id: source-d2l
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:30:u1', role: landing, basis: exact-url}
+- id: source-data-gov
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:240:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:240:u2', role: companion, basis: exact-identifier}
+- id: source-data-school-sklearn
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:102:u1', role: landing, basis: exact-url}
+- id: source-deitmar-uebungsbuch
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-an01:28:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an02:28:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an03:25:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:30:s1', role: reference, basis: source-id}
+- id: source-distill-momentum
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:60:u1', role: landing, basis: exact-url}
+- id: source-docker-get-started
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:223:u1', role: landing, basis: exact-url}
+- id: source-domingos-useful-things
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:57:u1', role: landing, basis: exact-url}
+- id: source-duckdb-python-docs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:220:u1', role: landing, basis: exact-url}
+- id: source-eecs498
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:122:u1', role: landing, basis: exact-url}
+- id: source-esl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:179:p1', role: local, basis: material-moves, note: LearningOS/materials/source-esl/esl.pdf}
+- id: source-fahrmeir-arbeitsbuch
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:260:p1', role: local, basis: material-moves, note: LearningOS/materials/source-fahrmeir-arbeitsbuch/arbeitsbuch.pdf}
+- id: source-fahrmeir-statistik
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:163:p1', role: local, basis: material-moves, note: LearningOS/materials/source-fahrmeir-statistik/statistik.pdf}
+  - {ref: 'lr:260:p2', role: local, basis: material-moves, note: LearningOS/materials/source-fahrmeir-statistik/statistik.pdf}
+- id: source-fairlearn-docs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:222:u1', role: landing, basis: exact-url}
+- id: source-fau-klausur-ws1415
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:283:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:283:p1', role: local, basis: material-moves, note: LearningOS/materials/source-fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf}
+- id: source-fiset-graph-theory
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:136:u1', role: landing, basis: exact-url}
+- id: source-forster-wessoly
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:197:p1', role: local, basis: material-moves, note: LearningOS/materials/source-forster-wessoly/forster-wessoly.pdf}
+  - {ref: 'ws-m2-an01:27:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an02:27:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an03:24:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an04:29:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an05:28:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:29:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an07:27:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:28:s1', role: reference, basis: source-id}
+- id: source-fortmann-roe-bias-variance
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:58:u1', role: landing, basis: exact-url}
+- id: source-frankfurt-algo2-course
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:317:u2', role: landing, basis: exact-url}
+  - {ref: 'lr:328:u1', role: landing, basis: exact-url}
+- id: source-fritzsche-trainingsbuch
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-an00:34:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an03:29:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:31:s1', role: reference, basis: source-id}
+- id: source-gallager-stochastic-processes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:26:u1', role: companion, basis: exact-identifier}
+- id: source-geron-handson
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:200:p1', role: local, basis: material-moves, note: LearningOS/materials/source-geron-handson/geron-copy2.pdf}
+  - {ref: 'lr:269:p1', role: local, basis: material-moves, note: LearningOS/materials/source-geron-handson/geron-copy2.pdf}
+- id: source-goodfellow-dl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:186:u1', role: landing, basis: exact-url}
+  - {ref: 'm-ml:31:u1', role: landing, basis: exact-url}
+- id: source-google-colab
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:230:u1', role: landing, basis: exact-url}
+- id: source-google-dataset-search
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:238:u1', role: landing, basis: exact-url}
+- id: source-google-ml-crash-course
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:104:u1', role: landing, basis: exact-url}
+- id: source-google-sre-book
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-bench:26:u1', role: landing, basis: exact-url}
+- id: source-gpu-mode-lectures
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-runtime:56:u1', role: landing, basis: exact-url}
+  - {ref: 'm-runtime:127:u1', role: landing, basis: exact-url}
+- id: source-grad-cam
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:247:u1', role: landing, basis: exact-url}
+- id: source-grieser-analysis1
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-an01:26:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an02:26:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an03:28:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an04:28:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an05:29:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:27:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an07:28:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:29:s1', role: reference, basis: source-id}
+- id: source-hettinger-super
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:363:u1', role: landing, basis: exact-url}
+- id: source-hinton-nnml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:105:u1', role: landing, basis: exact-url}
+- id: source-hogan-knowledge-graphs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-dataeng:116:u1', role: landing, basis: exact-url}
+- id: source-htsym-scaling-book
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:204:u2', role: landing, basis: exact-url}
+- id: source-huyen-dmls
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:201:p1', role: local, basis: material-moves, note: LearningOS/materials/source-huyen-dmls/designing-ml-systems.pdf}
+- id: source-islp-community-solutions
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:265:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:265:u2', role: companion, basis: exact-identifier}
+  - {ref: 'lr:265:u3', role: companion, basis: exact-identifier}
+- id: source-jbstatistics
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:118:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-m2-chat1:331:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-m2-chat1:408:u1', role: landing, basis: exact-url}
+- id: source-jeff-erickson-algorithms
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:135:u1', role: landing, basis: exact-url}
+  - {ref: 'm-algo:16:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-algo2-chat9:33:u1', role: landing, basis: exact-url}
+- id: source-jurafsky-slp3
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:113:u1', role: landing, basis: exact-url}
+- id: source-kaggle-datasets
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:239:u1', role: landing, basis: exact-url}
+- id: source-kaptur-byterun
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:380:u1', role: landing, basis: exact-url}
+- id: source-kit-algorithmen2
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:327:u1', role: landing, basis: exact-url}
+- id: source-kleinberg-tardos
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:199:p1', role: local, basis: manifest-basename}
+- id: source-kleppmann-ddia
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-dataeng:137:u1', role: landing, basis: exact-url}
+- id: source-kroese-dsml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:177:p1', role: local, basis: material-moves, note: LearningOS/materials/source-kroese-dsml/kroese.pdf}
+- id: source-lebl-basic-analysis
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:183:p1', role: local, basis: material-moves, note: LearningOS/materials/source-lebl-basic-analysis/realanal.pdf}
+  - {ref: 'lr:183:p2', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-an01:25:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an02:24:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an03:26:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an04:26:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an05:25:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:25:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an07:26:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:24:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-chat8:35:p2', role: local, basis: manifest-basename}
+  - {ref: 'ws-m2-chat8:35:p3', role: local, basis: manifest-basename}
+- id: source-mit-1805
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:262:u1', role: landing, basis: exact-url}
+- id: source-mit-1806
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:128:u1', role: landing, basis: exact-url}
+- id: source-mit-18100a
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:129:p1', role: local, basis: material-moves, note: LearningOS/materials/source-mit-18100a/mit18_100af20_lec_full2.pdf}
+  - {ref: 'ws-m2-an01:29:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an02:23:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:26:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-chat8:34:p1', role: local, basis: manifest-basename}
+- id: source-mit-18650
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:95:u1', role: landing, basis: exact-url}
+- id: source-mit-18657
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:103:u1', role: landing, basis: exact-url}
+- id: source-mit-18s096-matrix-calculus
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:148:u1', role: landing, basis: exact-url}
+- id: source-mit-6006
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:319:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:319:u2', role: companion, basis: exact-identifier}
+  - {ref: 'm-algo:132:u2', role: landing, basis: exact-url}
+- id: source-mit-6036
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:268:u2', role: companion, basis: exact-identifier}
+  - {ref: 'lr:268:u3', role: companion, basis: exact-identifier}
+  - {ref: 'lr:268:u4', role: companion, basis: exact-identifier}
+- id: source-mit-6041sc
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:117:u1', role: landing, basis: exact-url}
+- id: source-mit-6046j
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:134:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:318:u1', role: companion, basis: exact-identifier}
+  - {ref: 'lr:318:u2', role: companion, basis: exact-identifier}
+  - {ref: 'm-algo:132:u1', role: landing, basis: exact-url}
+- id: source-mit-6824
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-dataeng:99:u1', role: landing, basis: exact-url}
+- id: source-mit-6s191
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:94:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:94:u2', role: companion, basis: exact-identifier}
+  - {ref: 'lr:94:u3', role: companion, basis: exact-identifier}
+  - {ref: 'm-ml:43:u1', role: landing, basis: exact-url}
+- id: source-mit-d4m-big-data
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:149:u1', role: landing, basis: exact-url}
+- id: source-mit-machine-vision
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:151:u1', role: landing, basis: exact-url}
+- id: source-mit-understanding-world-data
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:150:u1', role: landing, basis: exact-url}
+- id: source-mit-visual-navigation
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:152:u1', role: landing, basis: exact-url}
+- id: source-mitx-686x
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:147:u1', role: landing, basis: exact-url}
+- id: source-mlsysbook-vol1
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:203:p1', role: local, basis: material-moves, note: LearningOS/materials/source-mlsysbook-vol1/MLSysBook-Vol1-2026.pdf}
+  - {ref: 'lr:343:p1', role: local, basis: material-moves, note: LearningOS/materials/source-mlsysbook-vol1/MLSysBook-Vol1-2026.pdf}
+- id: source-mlsysbook-vol2
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:203:p2', role: local, basis: manifest-basename}
+  - {ref: 'lr:343:p2', role: local, basis: manifest-basename}
+- id: source-mmds-book
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-algo:56:u1', role: landing, basis: exact-url}
+  - {ref: 'm-dataeng:51:u2', role: landing, basis: exact-url}
+- id: source-mml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:175:u1', role: landing, basis: exact-url}
+  - {ref: 'm-ml:21:u1', role: landing, basis: exact-url}
+- id: source-mohri-foundations-ml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:14:u1', role: landing, basis: exact-url}
+- id: source-murphy-pml1
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:176:p1', role: local, basis: material-moves, note: LearningOS/materials/source-murphy-pml1/pml1.pdf}
+- id: source-ng-coursera
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:116:u2', role: companion, basis: exact-identifier}
+  - {ref: 'lr:270:u1', role: companion, basis: exact-identifier}
+- id: source-numpy-subclassing-docs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:373:u1', role: landing, basis: exact-url}
+- id: source-nyu-dl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:127:u1', role: landing, basis: exact-url}
+- id: source-ohlbach-eisinger-beweise
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-an00:35:s2', role: reference, basis: source-id}
+- id: source-open-data-structures
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-algo:141:u1', role: landing, basis: exact-url}
+- id: source-openintro-statistics
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:165:p1', role: local, basis: material-moves, note: LearningOS/materials/source-openintro-statistics/openintro.pdf}
+- id: source-pandas-subclassing-docs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:373:u2', role: landing, basis: exact-url}
+- id: source-patrick-loeber-pytorch-cnn
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:101:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:101:u2', role: companion, basis: exact-identifier}
+  - {ref: 'ws-m2-chat1:511:u1', role: landing, basis: exact-url}
+- id: source-pitman-probability
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:168:p1', role: local, basis: material-moves, note: LearningOS/materials/source-pitman-probability/pitman.pdf}
+- id: source-pouyanfar-dl-survey
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:252:u1', role: landing, basis: exact-url}
+- id: source-prince-udl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-ml:29:u1', role: landing, basis: exact-url}
+- id: source-prisma-method
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:352:u1', role: landing, basis: exact-url}
+- id: source-professor-leonard
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:132:u1', role: companion, basis: exact-identifier}
+  - {ref: 'ws-m2-an02:30:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an04:30:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:28:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-chat8:31:u1', role: companion, basis: exact-identifier}
+- id: source-python-docs-classes-mro
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:374:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:374:u2', role: companion, basis: exact-identifier}
+- id: source-python-tutor
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:366:u1', role: landing, basis: exact-url}
+- id: source-pytorch-tutorials
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:226:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-aml-dl-amls:27:u1', role: landing, basis: exact-url}
+- id: source-realpython-legb
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:365:u1', role: landing, basis: exact-url}
+- id: source-redbook
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-bench:46:u1', role: landing, basis: exact-url}
+- id: source-reducible-fft
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:137:u1', role: landing, basis: exact-url}
+- id: source-ross-first-course
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:170:p1', role: local, basis: material-moves, note: LearningOS/materials/source-ross-first-course/ross.pdf}
+- id: source-rudin-principles
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:184:p1', role: local, basis: inventory-size}
+- id: source-sad-2025-recordings
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:100:p1', role: local, basis: material-moves, note: LearningOS/materials/source-sad-2025-recordings}
+  - {ref: 'ws-m2-chat1:226:p1', role: local, basis: material-moves, note: LearningOS/materials/source-sad-2025-recordings}
+  - {ref: 'ws-m2-chat1:306:p1', role: local, basis: material-moves, note: LearningOS/materials/source-sad-2025-recordings}
+  - {ref: 'ws-m2-chat1:331:p1', role: local, basis: material-moves, note: LearningOS/materials/source-sad-2025-recordings}
+  - {ref: 'ws-m2-chat1:408:p1', role: local, basis: material-moves, note: LearningOS/materials/source-sad-2025-recordings}
+  - {ref: 'ws-m2-chat1:441:p1', role: local, basis: material-moves, note: LearningOS/materials/source-sad-2025-recordings}
+  - {ref: 'ws-m2-chat1:475:p1', role: local, basis: material-moves, note: LearningOS/materials/source-sad-2025-recordings}
+- id: source-sad-klausuren-extern
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:284:p1', role: local, basis: manifest-basename}
+  - {ref: 'lr:285:p1', role: local, basis: manifest-basename}
+  - {ref: 'lr:286:p1', role: local, basis: manifest-basename}
+  - {ref: 'lr:287:p1', role: local, basis: manifest-basename}
+- id: source-schaums-probability
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:171:p1', role: local, basis: material-moves, note: LearningOS/materials/source-schaums-probability/schaums-probability.pdf}
+- id: source-schrijver-combinatorial-notes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:48:u1', role: landing, basis: exact-url}
+- id: source-setosa-ols
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:60:u2', role: landing, basis: exact-url}
+- id: source-sklearn-user-guide
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:229:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:229:u2', role: companion, basis: exact-identifier}
+  - {ref: 'm-ml:49:u1', role: landing, basis: exact-url}
+- id: source-software-foundations
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-runtime:14:u1', role: landing, basis: exact-url}
+- id: source-ssbd-understanding-ml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:13:u1', role: landing, basis: exact-url}
+  - {ref: 'm-ml:61:u1', role: landing, basis: exact-url}
+- id: source-stanford-cs149
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:342:u1', role: companion, basis: exact-identifier}
+  - {ref: 'lr:342:u2', role: companion, basis: exact-identifier}
+- id: source-strang-calculus
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:133:p1', role: local, basis: material-moves, note: LearningOS/materials/source-strang-calculus}
+  - {ref: 'ws-m2-an05:27:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an06:32:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an07:25:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-an08:27:s1', role: reference, basis: source-id}
+  - {ref: 'ws-m2-chat8:31:p1', role: local, basis: material-moves, note: LearningOS/materials/source-strang-calculus}
+- id: source-sutton-barto-rl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:187:p1', role: local, basis: manifest-basename}
+  - {ref: 'm-ml:62:u1', role: landing, basis: exact-url}
+- id: source-timm
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:219:u1', role: landing, basis: exact-url}
+- id: source-torchvision-transforms-docs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:216:u1', role: landing, basis: exact-url}
+  - {ref: 'ws-aml-dl-amls:28:u1', role: landing, basis: exact-url}
+- id: source-toussaint-optimization-script
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:35:u1', role: landing, basis: exact-url}
+- id: source-tu-python-ml-course
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:99:u1', role: landing, basis: exact-url}
+- id: source-tuwien-ad2-fibonacci
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:321:u1', role: landing, basis: exact-url}
+- id: source-ultrascale-playbook
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:204:u1', role: landing, basis: exact-url}
+  - {ref: 'm-runtime:120:u1', role: landing, basis: exact-url}
+- id: source-velleman-how-to-prove-it
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-an00:35:s1', role: reference, basis: source-id}
+- id: source-vershynin-hdp
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:16:u1', role: landing, basis: exact-url}
+- id: source-wayne-kt-slides
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:330:u1', role: landing, basis: exact-url}
+- id: source-williamson-shmoys
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-math:57:u1', role: landing, basis: exact-url}
+- id: source-zacharski-data-mining
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:189:u1', role: landing, basis: exact-url}
+  - {ref: 'lr:189:p1', role: local, basis: manifest-basename}
+- id: source-zedstatistics
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:121:u1', role: landing, basis: exact-url}
+- id: out-of-scope:internal-document
+  kind: out-of-scope
+  reason: Internal plan or note document (moved per migration/path-map.csv)
+  occurrences:
+  - {ref: 'lr:54:p1', basis: path-map, note: knowledge/notes/cross-domain/note-regression-sad-aml-islp-bridge.md}
+  - {ref: 'lr:54:p2', basis: path-map, note: knowledge/notes/mathematics/note-sad-probability-inference-deep-plan.md}
+  - {ref: 'lr:54:p3', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+  - {ref: 'lr:102:p1', basis: path-map, note: archive/workspaces/2026/workspace-mlprov/inputs/Sklearn-5h-Crash-Plan.md}
+  - {ref: 'lr:125:p1', basis: path-map, note: curriculum/modules/module-hu-amls/source-map.yaml + sources/registry/ml-systems.yaml}
+  - {ref: 'lr:156:p1', basis: path-map, note: sources/sources.yaml evaluations (L05/L06/L07 rows only; note + remaining rows Stage 2)}
+  - {ref: 'lr:158:p1', basis: path-map, note: knowledge/notes/mathematics/note-sad-source-crosswalk.md + sources/sources.yaml evaluations}
+  - {ref: 'lr:158:p2', basis: path-map, note: work/active/workspace-m2-exam-prep/inputs/SaD-Module-Overview.md}
+  - {ref: 'lr:203:p3', basis: path-map, note: curriculum/modules/module-hu-amls/source-map.yaml + sources/registry/ml-systems.yaml}
+  - {ref: 'lr:221:p1', basis: path-map, note: archive/workspaces/2026/workspace-mlprov/inputs/Sklearn-5h-Crash-Plan.md}
+  - {ref: 'lr:224:p1', basis: path-map, note: knowledge/notes/data-systems/note-skrub-dataop-dag.md}
+  - {ref: 'lr:224:p2', basis: path-map, note: knowledge/notes/data-systems/note-skrub-evaluation-engine.md}
+  - {ref: 'lr:256:p1', basis: path-map, note: sources/sources.yaml evaluations (L05/L06/L07 rows only; note + remaining rows Stage 2)}
+  - {ref: 'lr:311:p1', basis: path-map, note: work/active/workspace-algo2-exam-prep/inputs/Chat9_Algo2_Plan.md}
+  - {ref: 'lr:385:p1', basis: path-map, note: knowledge/notes/cross-domain/note-regression-sad-aml-islp-bridge.md}
+  - {ref: 'lr:385:p2', basis: path-map, note: knowledge/notes/mathematics/note-sad-probability-inference-deep-plan.md}
+  - {ref: 'lr:385:p3', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+  - {ref: 'lr:385:p4', basis: path-map, note: work/active/workspace-aml-exam-prep/inputs/DL-AMLS-Learning-Plan.md}
+  - {ref: 'm-algo:3:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-MODULE-MENU.md}
+  - {ref: 'm-algo:91:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-DATAENG-RESOURCES.md}
+  - {ref: 'm-algo:110:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-DATAENG-RESOURCES.md}
+  - {ref: 'm-bench:3:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-MODULE-MENU.md}
+  - {ref: 'm-bench:3:p2', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-ALGO-RESOURCES.md}
+  - {ref: 'm-bench:3:p3', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-DATAENG-RESOURCES.md}
+  - {ref: 'm-bench:17:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-DATAENG-RESOURCES.md}
+  - {ref: 'm-bench:25:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-DATAENG-RESOURCES.md}
+  - {ref: 'm-bench:45:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-DATAENG-RESOURCES.md}
+  - {ref: 'm-bench:48:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-ALGO-RESOURCES.md}
+  - {ref: 'm-bench:59:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-ALGO-RESOURCES.md}
+  - {ref: 'm-bench:77:p2', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-MODULE-MENU.md}
+  - {ref: 'm-dataeng:3:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-MODULE-MENU.md}
+  - {ref: 'm-dataeng:177:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/Ultimate-Index.md}
+  - {ref: 'm-math:3:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-MODULE-MENU.md}
+  - {ref: 'm-math:19:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-ML-RESOURCES.md}
+  - {ref: 'm-math:39:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-ML-RESOURCES.md}
+  - {ref: 'm-ml:3:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-MODULE-MENU.md}
+  - {ref: 'm-ml:4:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-DATAENG-RESOURCES.md}
+  - {ref: 'm-runtime:3:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-MODULE-MENU.md}
+  - {ref: 'm-runtime:3:p2', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-DATAENG-RESOURCES.md}
+  - {ref: 'm-runtime:70:p1', basis: path-map-basename, note: archive/workspaces/2026/workspace-masters-planning-v2/inputs/MASTERS-ALGO-RESOURCES.md}
+  - {ref: 'ws-aml-dl-amls:56:p1', basis: path-map, note: knowledge/notes/machine-learning/note-aml-l02-knn-bias-variance.md}
+  - {ref: 'ws-m2-chat1:5:p1', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+  - {ref: 'ws-m2-chat1:6:p1', basis: path-map-basename, note: sources/sources.yaml evaluations (L05/L06/L07 rows only; note + remaining rows Stage 2)}
+  - {ref: 'ws-m2-chat1:12:p1', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+  - {ref: 'ws-m2-chat1:13:p1', basis: path-map, note: sources/sources.yaml evaluations (L05/L06/L07 rows only; note + remaining rows Stage 2)}
+  - {ref: 'ws-m2-chat1:14:p1', basis: path-map, note: knowledge/notes/machine-learning/note-aml-l02-knn-bias-variance.md}
+  - {ref: 'ws-m2-chat1:15:p1', basis: path-map, note: knowledge/notes/cross-domain/note-regression-sad-aml-islp-bridge.md}
+  - {ref: 'ws-m2-chat1:16:p1', basis: path-map, note: knowledge/notes/mathematics/note-sad-probability-inference-deep-plan.md}
+  - {ref: 'ws-m2-chat1:381:p1', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+  - {ref: 'ws-m2-chat1:443:p1', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+  - {ref: 'ws-m2-chat1:481:p1', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+  - {ref: 'ws-m2-chat1:557:p1', basis: path-map, note: archive/workspaces/2026/workspace-semester-brain-sose26/inputs/LEARNING-RESOURCES.md}
+  - {ref: 'ws-m2-chat1:597:p1', basis: path-map, note: archive/workspaces/2026/workspace-semester-brain-sose26/inputs/SEMESTER-STATUS.md}
+  - {ref: 'ws-m2-chat1:623:p1', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+  - {ref: 'ws-m2-chat8:22:p1', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+  - {ref: 'ws-m2-chat8:42:p5', basis: path-map, note: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml + sources/registry/mathematics.yaml}
+  - {ref: 'ws-m2-chat8:187:p1', basis: path-map, note: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md}
+- id: out-of-scope:module-descriptor
+  kind: out-of-scope
+  reason: 'TU Moses module description: candidate-module evidence, not a learning source'
+  occurrences:
+  - {ref: 'm-algo:9:u1', basis: moses-host}
+  - {ref: 'm-algo:21:u1', basis: moses-host}
+  - {ref: 'm-algo:31:u1', basis: moses-host}
+  - {ref: 'm-algo:41:u1', basis: moses-host}
+  - {ref: 'm-algo:51:u1', basis: moses-host}
+  - {ref: 'm-algo:62:u1', basis: moses-host}
+  - {ref: 'm-algo:73:u1', basis: moses-host}
+  - {ref: 'm-algo:83:u1', basis: moses-host}
+  - {ref: 'm-algo:93:u1', basis: moses-host}
+  - {ref: 'm-algo:93:u2', basis: moses-host}
+  - {ref: 'm-algo:105:u1', basis: moses-host}
+  - {ref: 'm-algo:105:u2', basis: moses-host}
+  - {ref: 'm-bench:9:u1', basis: moses-host}
+  - {ref: 'm-bench:19:u1', basis: moses-host}
+  - {ref: 'm-bench:30:u1', basis: moses-host}
+  - {ref: 'm-bench:41:u1', basis: moses-host}
+  - {ref: 'm-bench:51:u1', basis: moses-host}
+  - {ref: 'm-bench:61:u1', basis: moses-host}
+  - {ref: 'm-dataeng:9:u1', basis: moses-host}
+  - {ref: 'm-dataeng:21:u1', basis: moses-host}
+  - {ref: 'm-dataeng:33:u1', basis: moses-host}
+  - {ref: 'm-dataeng:44:u1', basis: moses-host}
+  - {ref: 'm-dataeng:55:u1', basis: moses-host}
+  - {ref: 'm-dataeng:65:u1', basis: moses-host}
+  - {ref: 'm-dataeng:74:u1', basis: moses-host}
+  - {ref: 'm-dataeng:84:u1', basis: moses-host}
+  - {ref: 'm-dataeng:94:u1', basis: moses-host}
+  - {ref: 'm-dataeng:103:u1', basis: moses-host}
+  - {ref: 'm-dataeng:112:u1', basis: moses-host}
+  - {ref: 'm-dataeng:123:u1', basis: moses-host}
+  - {ref: 'm-dataeng:133:u1', basis: moses-host}
+  - {ref: 'm-dataeng:143:u1', basis: moses-host}
+  - {ref: 'm-dataeng:152:u1', basis: moses-host}
+  - {ref: 'm-math:9:u1', basis: moses-host}
+  - {ref: 'm-math:21:u1', basis: moses-host}
+  - {ref: 'm-math:31:u1', basis: moses-host}
+  - {ref: 'm-math:42:u1', basis: moses-host}
+  - {ref: 'm-math:53:u1', basis: moses-host}
+  - {ref: 'm-math:64:u1', basis: moses-host}
+  - {ref: 'm-math:75:u1', basis: moses-host}
+  - {ref: 'm-ml:10:u1', basis: moses-host}
+  - {ref: 'm-ml:10:u2', basis: moses-host}
+  - {ref: 'm-ml:23:u1', basis: moses-host}
+  - {ref: 'm-ml:23:u2', basis: moses-host}
+  - {ref: 'm-ml:34:u1', basis: moses-host}
+  - {ref: 'm-ml:34:u2', basis: moses-host}
+  - {ref: 'm-ml:45:u1', basis: moses-host}
+  - {ref: 'm-ml:55:u1', basis: moses-host}
+  - {ref: 'm-ml:65:u1', basis: moses-host}
+  - {ref: 'm-ml:75:u1', basis: moses-host}
+  - {ref: 'm-ml:87:u1', basis: moses-host}
+  - {ref: 'm-ml:97:u1', basis: moses-host}
+  - {ref: 'm-ml:109:u1', basis: moses-host}
+  - {ref: 'm-ml:109:u2', basis: moses-host}
+  - {ref: 'm-ml:109:u3', basis: moses-host}
+  - {ref: 'm-ml:121:u1', basis: moses-host}
+  - {ref: 'm-ml:134:u1', basis: moses-host}
+  - {ref: 'm-ml:144:u1', basis: moses-host}
+  - {ref: 'm-ml:153:u1', basis: moses-host}
+  - {ref: 'm-ml:153:u2', basis: moses-host}
+  - {ref: 'm-ml:153:u3', basis: moses-host}
+  - {ref: 'm-ml:161:u1', basis: moses-host}
+  - {ref: 'm-runtime:9:u1', basis: moses-host}
+  - {ref: 'm-runtime:20:u1', basis: moses-host}
+  - {ref: 'm-runtime:31:u1', basis: moses-host}
+  - {ref: 'm-runtime:41:u1', basis: moses-host}
+  - {ref: 'm-runtime:51:u1', basis: moses-host}
+  - {ref: 'm-runtime:62:u1', basis: moses-host}

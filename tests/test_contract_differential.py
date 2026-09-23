@@ -1,7 +1,7 @@
 """Prototype: Python jsonschema vs Ajv standalone differential agreement.
 
 Paired-gate test: needs the sibling UI checkout (which carries the checked-in
-Ajv validator), node, and the v13 bundle. Skips with an explicit reason when
+Ajv validator), node, and the v15 bundle. Skips with an explicit reason when
 the UI sibling or node is absent, so Core stays usable alone; a missing
 checked-in validator is a failure, never a skip. Verdict booleans are
 compared, not error sets (Ajv reports short; Python reports all).
@@ -24,7 +24,7 @@ from learning_os.contracts.json_schema import schema_registry
 
 pytestmark = pytest.mark.full_repo
 
-V14_REL = "system/contracts/manifest-v14.schema.json"
+V15_REL = "system/contracts/manifest-v15.schema.json"
 VALIDATOR_REL = "contract-prototype/generated/manifest.validator.cjs"
 VERDICT_REL = "scripts/ajv-verdict.mjs"
 FIXTURE_REL = "fixture-vault/generated/manifest.json"
@@ -49,7 +49,7 @@ def _paired_ui(repo_root: Path) -> Path:
 
 
 def _python_validator(repo_root: Path) -> Draft202012Validator:
-    schema = json.loads((repo_root / V14_REL).read_text(encoding="utf-8"))
+    schema = json.loads((repo_root / V15_REL).read_text(encoding="utf-8"))
     return Draft202012Validator(
         schema,
         registry=schema_registry(repo_root / "system" / "schema"),
@@ -264,7 +264,7 @@ def test_differential_agreement(repo_root: Path, tmp_path: Path) -> None:
 
 def _format_subschemas(repo_root: Path, tmp_path: Path) -> dict[str, dict]:
     del tmp_path
-    bundle = json.loads(build_bundle(repo_root / V14_REL, repo_root / "system" / "schema"))
+    bundle = json.loads(build_bundle(repo_root / V15_REL, repo_root / "system" / "schema"))
     found: dict[str, dict] = {}
 
     def visit(node: Any) -> None:
@@ -323,7 +323,7 @@ def test_prototype_lock_matches_production_lock(repo_root: Path) -> None:
     """Every scalar the generator emits must equal the hand-mirrored lock."""
 
     ui = _paired_ui(repo_root)
-    production = json.loads((ui / "contracts" / "manifest-v14.lock.json").read_text(
+    production = json.loads((ui / "contracts" / "manifest-v15.lock.json").read_text(
         encoding="utf-8"))
     prototype = json.loads((ui / "contract-prototype" / "generated"
                             / "manifest.prototype.lock.json").read_text(encoding="utf-8"))

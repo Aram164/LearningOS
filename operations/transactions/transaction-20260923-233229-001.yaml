@@ -1,0 +1,136 @@
+schema_version: 2
+id: transaction-20260923-233229-001
+type: transaction-receipt
+status: committed
+capability: source.intake.record
+committed_at: '2026-09-23T23:32:29+02:00'
+snapshot_before: sha256:0a56a7ecf8e532b0672c4ce6c5c19d7ca4a51dbf82234298376f21ecf578e84b
+snapshot_after: sha256:566ad014e30ee43138f75d863324a95c530a64ab0dc10648df71dbf815baa566
+expected_revisions:
+  source-cs229-2018-videos: 0
+  source-kaggle-winning-solutions: 0
+  source-mit-missing-semester: 0
+  source-skrub: 0
+  source-3b1b-neural-networks: 0
+  source-algo2-frankfurt-klausuren: 0
+  source-amls-prior-archives: 0
+  source-analysis-klausuren-extern: 0
+  source-arora-barak: 0
+  source-bermbach-csb: 0
+  source-blitzstein-hwang: 0
+  source-caltech-lfd: 0
+  source-captum: 0
+  source-cmu-10414: 0
+  source-cmu-15445: 0
+  source-cmu-15451-splay-notes: 0
+  source-cs229-notes: 0
+  source-cs229-project-archive: 0
+  source-cs231n-notes: 0
+  source-eecs498: 0
+artifact_revisions:
+  source-3b1b-neural-networks:
+    before: 0
+    after: 1
+  source-algo2-frankfurt-klausuren:
+    before: 0
+    after: 1
+  source-amls-prior-archives:
+    before: 0
+    after: 1
+  source-analysis-klausuren-extern:
+    before: 0
+    after: 1
+  source-arora-barak:
+    before: 0
+    after: 1
+  source-bermbach-csb:
+    before: 0
+    after: 1
+  source-blitzstein-hwang:
+    before: 0
+    after: 1
+  source-caltech-lfd:
+    before: 0
+    after: 1
+  source-captum:
+    before: 0
+    after: 1
+  source-cmu-10414:
+    before: 0
+    after: 1
+  source-cmu-15445:
+    before: 0
+    after: 1
+  source-cmu-15451-splay-notes:
+    before: 0
+    after: 1
+  source-cs229-2018-videos:
+    before: 0
+    after: 1
+  source-cs229-notes:
+    before: 0
+    after: 1
+  source-cs229-project-archive:
+    before: 0
+    after: 1
+  source-cs231n-notes:
+    before: 0
+    after: 1
+  source-eecs498:
+    before: 0
+    after: 1
+  source-kaggle-winning-solutions:
+    before: 0
+    after: 1
+  source-mit-missing-semester:
+    before: 0
+    after: 1
+  source-skrub:
+    before: 0
+    after: 1
+writes:
+- path: sources/registry/algorithms.yaml
+  sha256_before: 4ce5a0c038e799d532d04abf0c59bd43e745131f9b35755c8337e1c3829b3eaa
+  sha256_after: bac3ba559664811c533575f5197f199aa46d95cfc83f847cd62692dcb9aae9f6
+  created: false
+- path: sources/registry/data-systems.yaml
+  sha256_before: 6f55e53fc8dbae2ce7c8330916ec2ca058387c0363981f9ebda2d378affa423d
+  sha256_after: 7163c533b4244d52af232040c5010340799f68a8cb17a9afa941d2dc673eed91
+  created: false
+- path: sources/registry/machine-learning.yaml
+  sha256_before: 0b5d11aa0a9c78f71152f4c54031a1691bff7904f691fb5098779673aecd351d
+  sha256_after: 4f806e8cc560cec123063802b46cd441412f5074c81d3f23cf88bd3eb4566c9a
+  created: false
+- path: sources/registry/mathematics.yaml
+  sha256_before: cb7b2200587fc115c236f13b3bd4073f961c9863749714e55bd32151d04d8949
+  sha256_after: ea7d228cf57a85d2a2a015f2c34bb21490082cfe7465a9f0dd914e306627bcda
+  created: false
+- path: sources/registry/method-admin.yaml
+  sha256_before: 8bf7f7d4602947871a719e5d018254071a340a58e71e81faf2f104becd653aab
+  sha256_after: 13780869fcb86545050cae8d9200f1c66077e746b4048fea5365eb46b2d9085c
+  created: false
+- path: sources/registry/ml-systems.yaml
+  sha256_before: 40fe22e3c779a3f21aeda269f3d7fcf80f432df794972141fb76d4bed9a62040
+  sha256_after: f9479b09d9860b67471991d78171aafa2b6063637f3e71485afb8ba7cc4de28a
+  created: false
+- path: sources/registry/software.yaml
+  sha256_before: 66949866ceb04e13bb4f2c4a889f25289c0ab7b47c50236ea5121a83199ca2e9
+  sha256_after: e5786cd196c6af35c92793df17eca86fbef83a951830a5cc4093ba4e7a6831a9
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: source.intake.record
+    declared_writes:
+    - sources/sources.yaml
+    - sources/registry/**
+request:
+  channel: operator
+  request_id: request-step8-intake-batch1-20260923
+  idempotency_key: step8-intake-batch1-20260923
+  intent_sha256: sha256:eda0e11cfb14f31e4b317777877910fb9360801c3e00350634b0c171ccbf83c9
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:eda0e11cfb14f31e4b317777877910fb9360801c3e00350634b0c171ccbf83c9

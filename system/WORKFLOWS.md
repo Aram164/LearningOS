@@ -89,10 +89,14 @@ The single path for EVERY new find — course, video, book, blog, paper, tool.
 This replaces the legacy LEARNING-RESOURCES intake protocol; there is no other
 list to also update.
 
-1. **Register** the source (steps 1–5 above) in `sources/sources.yaml` or a
-   `sources/registry/*.yaml` partition. One record per teaching object; the
+1. **Register** the source (steps 1–5 above) through its gateway, never by
+   editing the registry file directly. One record per teaching object; the
    one-line "why it earns its place" goes into the evaluation, never into a
-   note or plan file.
+   note or plan file. A find shelved from a list or page before anything is
+   examined registers metadata-only through `source.intake.record`
+   (`los source-intake`), which requires `discovery` provenance and refuses
+   evaluations; an examination that overturns the shelf corrects the record
+   through the same capability.
 2. **Place the material:**
    - web-native (ALL videos, courses, blogs, interactive): `url` on the record
      — videos are never downloaded;
@@ -103,6 +107,17 @@ list to also update.
 3. **List it (optional):** if it belongs in a curated per-domain list, add an
    entry to the matching `sources/collections/<name>.yaml` (workflow 6b).
 4. **Verify:** `python tools/validate.py --compact` then `python tools/generate.py`.
+
+**Video intake and examination.** At intake, use only the title, publisher,
+description and known course or playlist structure to place a provisional
+record. A course or playlist is one source with its known videos as titled
+child links; a standalone video is its own source. Do not transcribe a backlog.
+When a video is selected for actual study, use Gemini Notebook to extract and
+examine its content, then verify the relevant claims against the exact video
+and timestamps before approving a durable analysis. Save what it covers, what
+the learner should use and the evidence through the existing material-analysis
+path; correct the provisional shelf if that examination changes the judgment.
+The caption-import maintenance tool is not the examination path for this intake.
 
 **Source-completeness gate (mandatory):** before importing a plan, enumerate
 every learning source named by its authoritative templates, bibliographies,

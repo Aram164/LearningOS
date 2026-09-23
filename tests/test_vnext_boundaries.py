@@ -1849,6 +1849,64 @@ def test_quarantined_workspaces_stay_out_of_the_inventory(mini_repo, tmp_path):
     assert not [row for row in manifest["entries"] if "workspace-sealed" in row["path"]]
 
 
+def test_populated_catalogue_leaves_normal_surfaces_byte_identical(mini_repo):
+    """R9: step 6 must prove candidates never leak into ordinary use.
+
+    With a populated catalogue present, the ordinary manifest's content, the
+    loader inventory and validation are byte- and issue-identical to the
+    catalogue's absence. The interface's search, workload and recommendations
+    read only the atomic manifest, so identical content bytes there prove those
+    surfaces too; the dashboard still opens only on an explicit gesture and
+    declares every isolation flag false. Only the tree-attesting fingerprint
+    in `_generated` moves, as it must — it attests every file, quarantine
+    included.
+    """
+    from learning_os.genout import build_manifest
+    from learning_os.loader import load_repo
+    from learning_os.masters_planning import (
+        master_catalog_destination,
+        masters_planning_dashboard,
+    )
+    from learning_os.rules import validate
+
+    def snapshot():
+        repo = load_repo(mini_repo)
+        built = build_manifest(repo, "T1")
+        manifest = json.dumps(
+            {key: built[key] for key in built if key != "_generated"},
+            sort_keys=True)
+        inventory = {
+            "sources": sorted(repo.sources),
+            "modules": sorted(getattr(repo, "modules", {})),
+            "notes": sorted(getattr(repo, "notes", {})),
+        }
+        issues = sorted(
+            (issue.severity, issue.code, issue.message)
+            for issue in validate(repo) if issue.severity == "E")
+        return manifest, inventory, issues
+
+    before = snapshot()
+    assert before[2] == []
+    catalog = _catalog()
+    catalog["candidate_sources"][0]["url"] = "https://example.invalid/cs000/"
+    catalog["candidate_sources"][0]["identifiers"] = {
+        "lec-01": "https://example.invalid/cs000/lec01"}
+    catalog["candidate_sources"][0]["child_titles"] = {"lec-01": "Lecture 1"}
+    catalog["candidate_sources"][0]["possible_use"] = "Possibly the attention block."
+    catalog["candidate_sources"][0]["type"] = "course"
+    catalog["comparison_ids"] = []
+    destination = master_catalog_destination(mini_repo)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    write_yaml(destination, validate_master_catalog(mini_repo, catalog))
+    assert snapshot() == before
+    with pytest.raises(MastersPlanningError, match="explicit access gesture"):
+        masters_planning_dashboard(mini_repo, confirmed=False)
+    opened = masters_planning_dashboard(mini_repo, confirmed=True)
+    assert opened["catalog"]["candidate_sources"][0]["url"] == \
+        "https://example.invalid/cs000/"
+    assert all(value is False for value in opened["isolation"].values())
+
+
 @pytest.mark.full_repo
 def test_the_live_contract_covers_every_canonical_input(repo_root):
     """The check the synthetic fixtures cannot make: run it on the real tree.

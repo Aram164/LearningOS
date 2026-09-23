@@ -2743,6 +2743,95 @@ entries:
       unit-m2-sad-l05: 6
     snapshot_before: sha256:c0a6199c8c48eb0e1c9b5c7427dfba9a2b644a6673742cf79190d3fc24101917
     snapshot_after: sha256:72337cea1a30ff4ec336958d8a27340bc90a5635a4b779ed8546e60cc83c6ce7
+  step6-catalog-populate-20260923:
+    request_id: request-step6-catalog-populate-20260923
+    capability: masters-planning.catalog.update
+    channel: operator
+    intent_sha256: sha256:8a32f72abb67a9f6786357b20c62dd9ee2f76b7ab82f047d574b4a149394dc86
+    transaction_id: transaction-20260923-232956-001
+    receipt_path: operations/transactions/transaction-20260923-232956-001.yaml
+    revisions:
+      master-planning-catalog: 1
+    snapshot_before: sha256:36d4e608c02af74a514eae9328b8095ff1d0ece4600be5092a3515b35884f5b6
+    snapshot_after: sha256:0a56a7ecf8e532b0672c4ce6c5c19d7ca4a51dbf82234298376f21ecf578e84b
+  step8-intake-batch1-20260923:
+    request_id: request-step8-intake-batch1-20260923
+    capability: source.intake.record
+    channel: operator
+    intent_sha256: sha256:eda0e11cfb14f31e4b317777877910fb9360801c3e00350634b0c171ccbf83c9
+    transaction_id: transaction-20260923-233229-001
+    receipt_path: operations/transactions/transaction-20260923-233229-001.yaml
+    revisions:
+      source-3b1b-neural-networks: 1
+      source-algo2-frankfurt-klausuren: 1
+      source-amls-prior-archives: 1
+      source-analysis-klausuren-extern: 1
+      source-arora-barak: 1
+      source-bermbach-csb: 1
+      source-blitzstein-hwang: 1
+      source-caltech-lfd: 1
+      source-captum: 1
+      source-cmu-10414: 1
+      source-cmu-15445: 1
+      source-cmu-15451-splay-notes: 1
+      source-cs229-2018-videos: 1
+      source-cs229-notes: 1
+      source-cs229-project-archive: 1
+      source-cs231n-notes: 1
+      source-eecs498: 1
+      source-kaggle-winning-solutions: 1
+      source-mit-missing-semester: 1
+      source-skrub: 1
+    snapshot_before: sha256:0a56a7ecf8e532b0672c4ce6c5c19d7ca4a51dbf82234298376f21ecf578e84b
+    snapshot_after: sha256:566ad014e30ee43138f75d863324a95c530a64ab0dc10648df71dbf815baa566
+  step8-intake-batch2-20260923:
+    request_id: request-step8-intake-batch2-20260923
+    capability: source.intake.record
+    channel: operator
+    intent_sha256: sha256:1e47b2b2bc86b3d83a3c53c9af214b777eeccebea4bb6ef1991083ba90444763
+    transaction_id: transaction-20260923-233245-001
+    receipt_path: operations/transactions/transaction-20260923-233245-001.yaml
+    revisions:
+      source-esl: 1
+      source-frankfurt-algo2-course: 1
+      source-guo-cpython-internals: 1
+      source-hogan-knowledge-graphs: 1
+      source-islp: 1
+      source-karpathy-micrograd: 1
+      source-kit-algorithmen2: 1
+      source-mit-18100a: 1
+      source-mit-6034-quizzes: 1
+      source-mit-6036: 1
+      source-mit-6172: 1
+      source-mit-6s191: 1
+      source-mlc-book: 1
+      source-mlsysbook-vol1: 1
+      source-mmds-book: 1
+      source-mml: 1
+      source-murphy-pml1: 1
+      source-ng-coursera: 1
+      source-nielsen-nndl: 1
+      source-nyu-dl: 1
+    snapshot_before: sha256:566ad014e30ee43138f75d863324a95c530a64ab0dc10648df71dbf815baa566
+    snapshot_after: sha256:0cdd8412c8d340aff263c8d0e34fcfed38a7f02fa1bea06d7b0452e5abd6d7df
+  step8-intake-batch3-20260923:
+    request_id: request-step8-intake-batch3-20260923
+    capability: source.intake.record
+    channel: operator
+    intent_sha256: sha256:f01ab8327e1c44ea2f6adecf7502ec425e8945bc9e33f4c3f33c4da9f4448aed
+    transaction_id: transaction-20260923-233258-001
+    receipt_path: operations/transactions/transaction-20260923-233258-001.yaml
+    revisions:
+      source-pydata-handbook: 1
+      source-rohrer-e2eml: 1
+      source-sad-klausuren-extern: 1
+      source-sklearn-user-guide: 1
+      source-stat110: 1
+      source-sutton-barto-rl: 1
+      source-toussaint-optimization-script: 1
+      source-tu-python-ml-course: 1
+    snapshot_before: sha256:0cdd8412c8d340aff263c8d0e34fcfed38a7f02fa1bea06d7b0452e5abd6d7df
+    snapshot_after: sha256:906bb86a5456427eed821e5682895441985ffb3c81522b92f3c749ff74012c3b
   summaries-migrate-note-06-random-variables-pp005-008:
     request_id: request-summaries-migrate-note-06-random-variables-pp005-008
     capability: note.analysis.save

@@ -494,6 +494,23 @@ class ChecksReferences:
                         "sources/topics.yaml deliberately, or use an existing one",
                         self._origin_for("source", str(sid)),
                     )
+            # Two-pass intake (data 39): child titles name identifier labels,
+            # so a title without its address is a dangling pointer. Labels
+            # without titles are fine — identifiers predate discovery.
+            discovery = source.get("discovery")
+            if isinstance(discovery, dict):
+                identifiers = source.get("identifiers")
+                labels = identifiers if isinstance(identifiers, dict) else {}
+                titles = discovery.get("child_titles")
+                if isinstance(titles, dict):
+                    for label in sorted(titles):
+                        if label not in labels:
+                            self.err(
+                                "REF-CHILD-TITLE",
+                                f"source '{sid}' discovery.child_titles key '{label}' "
+                                "has no matching identifiers label",
+                                self._origin_for("source", str(sid)),
+                            )
             mat = source.get("material")
             if mat:
                 self._check_uri(mat, f"sources registry ({source.get('id')})")

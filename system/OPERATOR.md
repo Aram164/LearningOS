@@ -63,6 +63,35 @@ complete definition with `capabilities NAME --json`; command details include
 the declared payload schema. The complete catalogue remains available through
 `capabilities --json` when the task needs it.
 
+Decide which read answers the question before reading:
+
+- A named record → `inspect ID`. A named stage →
+  `plan-edit-context UNIT_ID --stage-id STAGE_ID`; `inspect STAGE_ID` does not
+  resolve stages. Before changing a plan, start with
+  `plan-edit-context UNIT_ID --brief`.
+- A material question → saved context first (`material-context`), else one
+  exact span (`material-span UNIT_ID ROUTE_ID`); never trawl.
+- A new video → title/description and course/playlist membership for provisional
+  intake. Examine with Gemini Notebook only when selected for use, verify
+  against exact video timestamps, then save the bounded analysis; see
+  `system/WORKFLOWS.md` §6a.
+- An open "what next?" → `bootstrap --brief`, then the named workspace plus
+  `inspect WORKSPACE_ID`; use `inspect coordination` when priorities matter.
+  The brief reports where study stopped and recorded workspace options; neither
+  chooses the next priority for Aram.
+- What changed, what wants a decision → `intelligence-scan --brief --json`:
+  five ranked groups plus totals, the agent entry path. The full queue only
+  for explicit bulk review; inspect a named route or unit first.
+- Coordination decisions and workspace next actions are recorded evidence.
+  Show their source and decision date when present, then compare them with
+  current status, deadlines, and newer decisions. Ask Aram when they conflict
+  or his current intent remains unclear. `resume` shows up to two sourced,
+  dated recorded-aim excerpts beside its stage; they are context, not a new
+  learner choice.
+- A detector candidate is a signal, never an instruction. `los goal <id>
+  --reject|--defer|--close` records Aram's explicit decision; do not choose
+  a disposition on his behalf.
+
 Compact startup preserves complete material access through `inspect ID`.
 Its `domain_atlas` glance summarizes all projected notes and shelves across
 domains, independently of pagination; open the domain atlas for the full map.
