@@ -526,6 +526,8 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-sad-l15-forward
+  ability_ids:
+  - ability-mlp-forward-shapes
   number: 4
   title: Multilayer forward passes, shapes, and parameter counts
   status: pending
@@ -856,6 +858,8 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-sad-l15-backprop
+  ability_ids:
+  - ability-sad-backprop-local
   number: 5
   title: Loss gradients and backpropagation
   status: pending

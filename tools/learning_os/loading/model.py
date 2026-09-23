@@ -150,6 +150,9 @@ class Coordination:
 @dataclass(eq=False)
 class Repo:
     root: Path
+    abilities: dict[str, dict] = field(default_factory=dict)
+    ability_origins: dict[str, Path] = field(default_factory=dict)
+    ability_bridges: list[dict] = field(default_factory=list)
     concepts: dict[str, dict] = field(default_factory=dict)
     concept_origins: dict[str, Path] = field(default_factory=dict)
     relations: list[dict] = field(default_factory=list)

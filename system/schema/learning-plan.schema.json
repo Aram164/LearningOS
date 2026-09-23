@@ -207,6 +207,11 @@
             "pattern": "^concept-[a-z0-9]+(?:-[a-z0-9]+)*$"
           }
         },
+        "ability_ids": {
+          "description": "Ability identities this stage provides a route to; progress never grants evidence.",
+          "type": "array", "uniqueItems": true,
+          "items": {"type": "string", "pattern": "^ability-[a-z0-9]+(?:-[a-z0-9]+)*$"}
+        },
         "scope_triage": {
           "enum": [
             "required-now",

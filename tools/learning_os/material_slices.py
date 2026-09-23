@@ -199,6 +199,8 @@ def _read_pdf_part(route_id: str, material_uri: str, path: Path, locator: str) -
 
 def _pdf_part_for_pages(route_id: str, material_uri: str, path: Path, reader: Any,
                         total: int, pages: tuple[int, ...], status: str) -> SlicePart:
+    if status == "out-of-range":
+        raise SliceResolutionError(route_id, f"requested locator pages are outside this {total}-page file")
     raw: list[tuple[int, str]] = []
     for page in pages:
         try:

@@ -175,13 +175,13 @@ revisions:
   stage-rust-19-pull-based-advanced-clinic-unsafe-macros-and-typ: 1
   study-map-aml-l01: 3
   study-map-aml-l02: 3
-  study-map-aml-l03: 4
+  study-map-aml-l03: 5
   study-map-aml-l04: 4
   study-map-aml-l05: 4
   study-map-aml-l06: 4
   study-map-aml-l07: 3
   study-map-aml-l08: 3
-  study-map-aml-l09: 3
+  study-map-aml-l09: 4
   study-map-aml-l10: 5
   study-map-aml-l11: 3
   study-map-job-engineering-tools-fluency: 2
@@ -202,7 +202,7 @@ revisions:
   study-map-m2-sad-exam-prep: 2
   study-map-m2-sad-l01: 4
   study-map-m2-sad-l02: 5
-  study-map-m2-sad-l03: 7
+  study-map-m2-sad-l03: 8
   study-map-m2-sad-l04: 7
   study-map-m2-sad-l05: 6
   study-map-m2-sad-l06: 8
@@ -214,18 +214,18 @@ revisions:
   study-map-m2-sad-l12: 5
   study-map-m2-sad-l13: 5
   study-map-m2-sad-l14: 5
-  study-map-m2-sad-l15: 5
+  study-map-m2-sad-l15: 6
   unit-algo2-exam-prep: 2
   unit-aml-exam-prep: 8
   unit-aml-l01: 6
   unit-aml-l02: 6
-  unit-aml-l03: 6
+  unit-aml-l03: 7
   unit-aml-l04: 6
   unit-aml-l05: 6
   unit-aml-l06: 6
   unit-aml-l07: 6
   unit-aml-l08: 5
-  unit-aml-l09: 5
+  unit-aml-l09: 6
   unit-aml-l10: 8
   unit-aml-l11: 7
   unit-job-engineering-tools-fluency: 2
@@ -255,7 +255,7 @@ revisions:
   unit-m2-sad-exam-prep: 11
   unit-m2-sad-l01: 9
   unit-m2-sad-l02: 13
-  unit-m2-sad-l03: 22
+  unit-m2-sad-l03: 23
   unit-m2-sad-l04: 27
   unit-m2-sad-l05: 15
   unit-m2-sad-l06: 22
@@ -267,5 +267,5 @@ revisions:
   unit-m2-sad-l12: 12
   unit-m2-sad-l13: 11
   unit-m2-sad-l14: 15
-  unit-m2-sad-l15: 15
+  unit-m2-sad-l15: 16
   workspace-thesis-mle-medical: 1

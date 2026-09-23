@@ -1,0 +1,42 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/ability.candidate.append.schema.json",
+  "title": "payload for capability ability.candidate.append",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "carries",
+    "changes",
+    "from_ability",
+    "kind",
+    "source_ref",
+    "to_ability"
+  ],
+  "properties": {
+    "carries": {
+      "type": "string"
+    },
+    "changes": {
+      "type": "string"
+    },
+    "condition": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "from_ability": {
+      "type": "string"
+    },
+    "kind": {
+      "type": "string"
+    },
+    "source_ref": {
+      "type": "string"
+    },
+    "to_ability": {
+      "type": "string"
+    }
+  }
+}

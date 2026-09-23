@@ -19,9 +19,9 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 36
-schema_fingerprint: sha256:45c14629a38fec83d9ecaacf375a4cccef03e066d33d4858c366706285b1d968
-record_schemas: 32
+contract_version: 38
+schema_fingerprint: sha256:b3b5d31a35fcba1afe3b7f5a4c8191ee80bd15fac73cac2791a8ae0f3a735374
+record_schemas: 35
 history:
 - version: 1
   adopted: '2026-08-07'
@@ -285,5 +285,18 @@ history:
   note: 'unit-material-synthesis route assessments gain optional analysis_refs: pinned
     note revision, approved-content digest, exact anchor, and inspected material identity
     per referenced analysis note (additive, no migration)'
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 37
+  adopted: '2026-09-23'
+  note: Add independent ability records, optional stage links, confirmed observations
+    with conditions and evidence criteria, tentative connection candidates, and source-bound
+    reviewed bridges
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 38
+  adopted: '2026-09-23'
+  note: Allow stable ability identities to retire while preserving historical observations
+    (additive; existing records remain active)
   migration: null
   fixture: tests/fixtures/formats/v25/

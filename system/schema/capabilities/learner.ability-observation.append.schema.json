@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/learner.ability-observation.append.schema.json",
+  "title": "payload for capability learner.ability-observation.append",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ability",
+    "activity",
+    "assistance",
+    "claim",
+    "confirmation_ref",
+    "result",
+    "work_ref",
+    "workspace"
+  ],
+  "properties": {
+    "ability": {
+      "type": "string"
+    },
+    "activity": {
+      "type": "string"
+    },
+    "assistance": {
+      "type": "string"
+    },
+    "claim": {
+      "type": "string"
+    },
+    "condition": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "condition_not_met": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "confirmation_ref": {
+      "type": "string"
+    },
+    "evidence_tag": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "result": {
+      "type": "string"
+    },
+    "supersedes": {
+      "type": "string"
+    },
+    "work_ref": {
+      "type": "string"
+    },
+    "workspace": {
+      "type": "string"
+    }
+  }
+}

@@ -336,6 +336,8 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-aml-l03-solution
+  ability_ids:
+  - ability-aml-ols-simple
   number: 3
   title: Closed-form least-squares solution
   status: pending

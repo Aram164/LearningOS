@@ -67,8 +67,8 @@ _CONTENT_BOUND_V2 = frozenset({
 #: Canonical semantics, plan structure and content are not on this list. Some
 #: of them are admitted through ``UI_REVIEWED_ALLOWLIST`` below, which is a
 #: narrower thing: the same approval kind, restricted to the ``ui`` channel,
-#: for the four workflows where the application shows the exact change before
-#: an explicit Save or Apply. Everything else — every agent-origin semantic
+#: for the workflows where the application shows the exact change before an
+#: explicit Save or Apply. Everything else — every agent-origin semantic
 #: write — keeps the approved operator/delivery path.
 #:
 #: Until 2026-09-13 this list held only the three writers that happened to
@@ -115,9 +115,10 @@ GESTURE_ALLOWLIST = frozenset({
 #: that legibly is still refusing it, and a readable refusal does not satisfy
 #: a current, binding architecture decision (review
 #: `workbench/audits/repair-review-2026-09-13`, D1). The same reasoning covers
-#: the other three: shelving *preparation* applies nothing at all, shelving
-#: *application* and a study-map import each show the exact change first and
-#: then wait for a deliberate control.
+#: the rest: shelving *preparation* applies nothing at all, while shelving
+#: *application*, a study-map import, and the two append-only ability records
+#: (a confirmed claim and a tentative connection, added 2026-09-23) each show
+#: the exact change first and then wait for a deliberate control.
 #:
 #: **A deliberate Save or Apply on an exact visible preview is the review.**
 #: That is what these contracts already meant by explicit approval; the review
@@ -144,6 +145,19 @@ UI_REVIEWED_ALLOWLIST = frozenset({
     "review.apply",
     # A reviewed map file, after its no-write `--check` preflight.
     "unit.map.import",
+    # Aram's own ability claim, recorded from Review only after the exact
+    # record — claim, result, assistance, conditions, criteria, work pointer —
+    # is on screen, with "Confirm & record" as the deliberate control. Its
+    # confirmation pointer names that app request, so the receipt is the
+    # confirmation. Append-only: corrections supersede, never rewrite, and the
+    # reviewed ability identity is still bound by its claim, conditions, and criteria hash.
+    # Admitted over `ui` only (Aram, 2026-09-23): an agent that records a
+    # claim Aram confirmed in conversation keeps the operator path.
+    "learner.ability-observation.append",
+    # A tentative connection Aram noticed, recorded from the same exact
+    # preview. It carries no evidence and never changes a reviewed bridge,
+    # readiness or transfer; promotion to a bridge stays an operator review.
+    "ability.candidate.append",
 })
 
 #: Channels a reviewed-UI admission accepts. One entry, deliberately.
