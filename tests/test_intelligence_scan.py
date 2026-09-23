@@ -9,6 +9,7 @@ proving the command works on the checked-in state.
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -459,3 +460,67 @@ def test_missing_evidence_resolves_once_for_all_claims_sharing_it(
     obs = collect_observations(mini_repo, days=0)
     assert calls == ["file:work/gone.md"]
     assert sorted(claim for claim, _keys in obs.stale_claims) == sorted(made)
+
+
+def test_brief_json_on_a_quiet_repo_is_empty_but_totalled(mini_repo):
+    proc = subprocess.run(
+        [sys.executable, str(LOS), "--root", str(mini_repo),
+         "intelligence-scan", "--brief", "--json"],
+        capture_output=True, text=True, timeout=180)
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout) == {
+        "contract": "intelligence-scan-brief", "groups": [],
+        "omitted_goals": 0, "omitted_groups": 0,
+        "total_goals": 0, "total_groups": 0,
+        "full_result": "intelligence-scan --json",
+    }
+
+
+@pytest.mark.full_repo
+def test_brief_json_caps_the_checked_in_queue_at_five():
+    root = Path(__file__).resolve().parent.parent
+    proc = subprocess.run(
+        [sys.executable, str(LOS), "--root", str(root),
+         "intelligence-scan", "--brief", "--json"],
+        capture_output=True, text=True, timeout=300)
+    assert proc.returncode == 0, proc.stderr
+    payload = json.loads(proc.stdout)
+    assert payload["contract"] == "intelligence-scan-brief"
+    groups = payload["groups"]
+    assert len(groups) <= 5
+    assert payload["total_groups"] == len(groups) + payload["omitted_groups"]
+    assert payload["total_goals"] == (
+        sum(group["member_count"] for group in groups) + payload["omitted_goals"])
+    assert payload["full_result"] == "intelligence-scan --json"
+    for rank, group in enumerate(groups, start=1):
+        assert group["rank"] == rank
+        assert {"cluster_id", "detector", "title", "tier", "tier_label",
+               "nearest_sitting", "days_until", "member_count",
+               "sample_goal_ids", "omitted_members"} <= set(group)
+        assert len(group["sample_goal_ids"]) <= 6
+        assert (len(group["sample_goal_ids"]) + group["omitted_members"]
+                == group["member_count"])
+    # Ranks follow the full queue's order.
+    full = subprocess.run(
+        [sys.executable, str(LOS), "--root", str(root), "intelligence-scan"],
+        capture_output=True, text=True, timeout=300)
+    assert full.returncode == 0, full.stderr
+    titles = [line.split("] ", 1)[1] for line in full.stdout.splitlines()
+              if re.match(r"^\d+\. \[", line)]
+    assert [group["title"] for group in groups] == titles[:len(groups)]
+
+
+@pytest.mark.full_repo
+def test_brief_human_page_shows_five_groups_then_the_omitted_tail():
+    root = Path(__file__).resolve().parent.parent
+    proc = subprocess.run(
+        [sys.executable, str(LOS), "--root", str(root),
+         "intelligence-scan", "--brief"],
+        capture_output=True, text=True, timeout=300)
+    assert proc.returncode == 0, proc.stderr
+    rows = [line for line in proc.stdout.splitlines()
+            if re.match(r"^\d+\. \[", line)]
+    assert len(rows) <= 5
+    total = int(re.search(r"in (\d+) group", proc.stdout.splitlines()[0]).group(1))
+    if total > 5:
+        assert "omitted -- rerun without --brief for the full queue" in proc.stdout

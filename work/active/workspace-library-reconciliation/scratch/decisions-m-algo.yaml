@@ -1,0 +1,365 @@
+# Manual dispositions for MASTERS-ALGO-RESOURCES.md (origin key m-algo).
+schema: library-reconciliation-dispositions/v1
+objects:
+- id: source-kleinberg-tardos
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-algo:13:e1', role: mention}
+  - {ref: 'm-algo:135:e1', role: mention, note: "the book's solved exercises"}
+- id: source-arora-barak
+  kind: existing-active-source
+  extra_mentions: ['m-algo:39']
+  occurrences:
+  - {ref: 'm-algo:25:u1', role: companion, title: "Draft book PDF (Princeton)"}
+- id: source-mitzenmacher-upfal
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-algo:35:e1', role: mention}
+- id: source-mcgeoch-experimental-algorithmics
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-algo:67:e1', role: mention}
+- id: source-cygan-parameterized
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-algo:134:e1', role: mention, note: "the book's exercises and hints"}
+- id: source-mit-6824
+  kind: existing-active-source
+  extra_mentions: ['m-algo:91', 'm-algo:102']
+  occurrences: []
+- id: candidate-source-stanford-cs261
+  kind: new-masters-candidate
+  title: "Stanford CS261 — A Second Course in Algorithms (Roughgarden)"
+  type: course
+  occurrences:
+  - {ref: 'm-algo:14:u1', role: landing, title: "Lecture notes and videos"}
+  - {ref: 'm-algo:136:u1', role: companion, title: "Roughgarden's site (CS161/CS261 problem sets)"}
+- id: candidate-source-mit-6854
+  kind: new-masters-candidate
+  title: "MIT 6.854 — Advanced Algorithms (Karger)"
+  type: course
+  occurrences:
+  - {ref: 'm-algo:15:e1', role: mention}
+- id: candidate-source-de-berg-computational-geometry
+  kind: new-masters-candidate
+  title: "de Berg, Cheong, van Kreveld & Overmars — Computational Geometry: Algorithms and Applications"
+  type: book
+  occurrences:
+  - {ref: 'm-algo:17:e1', role: mention}
+- id: candidate-source-handbook-comsoc
+  kind: new-masters-candidate
+  title: "Brandt et al. (eds.) — Handbook of Computational Social Choice"
+  type: book
+  occurrences:
+  - {ref: 'm-algo:18:u1', role: landing}
+- id: candidate-source-cmu-15855
+  kind: new-masters-candidate
+  title: "CMU 15-855 — Graduate Computational Complexity (O'Donnell)"
+  type: course
+  occurrences:
+  - {ref: 'm-algo:26:u1', role: landing, title: "Lecture videos (YouTube playlist)"}
+  - {ref: 'm-algo:133:e1', role: mention, note: "the course's homework sets"}
+- id: candidate-source-sipser-toc
+  kind: new-masters-candidate
+  title: "Sipser — Introduction to the Theory of Computation"
+  type: book
+  occurrences:
+  - {ref: 'm-algo:27:e1', role: mention}
+- id: candidate-source-papadimitriou-complexity
+  kind: new-masters-candidate
+  title: "Papadimitriou — Computational Complexity"
+  type: book
+  occurrences:
+  - {ref: 'm-algo:28:e1', role: mention}
+- id: candidate-source-cook-theorem-proving
+  kind: new-masters-candidate
+  title: "Cook — The Complexity of Theorem-Proving Procedures (1971)"
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:29:e1', role: mention}
+- id: candidate-source-karp-reducibility
+  kind: new-masters-candidate
+  title: "Karp — Reducibility Among Combinatorial Problems (1972)"
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:29:e1', role: mention}
+- id: candidate-source-shamir-ip-pspace
+  kind: new-masters-candidate
+  title: "Shamir — IP = PSPACE (1992)"
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:29:e1', role: mention}
+- id: candidate-source-motwani-raghavan
+  kind: new-masters-candidate
+  title: "Motwani & Raghavan — Randomized Algorithms"
+  type: book
+  occurrences:
+  - {ref: 'm-algo:36:e1', role: mention}
+- id: candidate-source-alon-spencer
+  kind: new-masters-candidate
+  title: "Alon & Spencer — The Probabilistic Method"
+  type: book
+  occurrences:
+  - {ref: 'm-algo:37:e1', role: mention}
+- id: candidate-source-mit-6856
+  kind: new-masters-candidate
+  title: "MIT 6.856J — Randomized Algorithms (Karger, OCW Fall 2002)"
+  type: course
+  occurrences:
+  - {ref: 'm-algo:38:u1', role: landing}
+- id: candidate-source-karger-min-cut
+  kind: new-masters-candidate
+  title: "Karger — Global Min-Cuts in RNC (min-cut paper)"
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:39:e1', role: mention}
+- id: candidate-source-niedermeier-fpt
+  kind: new-masters-candidate
+  title: "Niedermeier — Invitation to Fixed-Parameter Algorithms"
+  type: book
+  occurrences:
+  - {ref: 'm-algo:46:e1', role: mention}
+- id: candidate-source-downey-fellows
+  kind: new-masters-candidate
+  title: "Downey & Fellows — Fundamentals of Parameterized Complexity"
+  type: book
+  occurrences:
+  - {ref: 'm-algo:47:e1', role: mention}
+- id: candidate-source-pace-challenge
+  kind: new-masters-candidate
+  title: "PACE Challenge (parameterized algorithms implementation challenge)"
+  type: website
+  extra_mentions: ['m-algo:68']
+  occurrences:
+  - {ref: 'm-algo:48:u1', role: landing}
+  - {ref: 'm-algo:147:u1', role: duplicate, note: "winning solvers are linked per year from the same site"}
+- id: candidate-source-color-coding
+  kind: new-masters-candidate
+  title: "Alon, Yuster & Zwick — Color-Coding (JACM 1995)"
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:49:e1', role: mention}
+- id: candidate-source-stanford-cs168
+  kind: new-masters-candidate
+  title: "Stanford CS168 — The Modern Algorithmic Toolbox (Roughgarden & Valiant)"
+  type: course
+  occurrences:
+  - {ref: 'm-algo:55:u1', role: landing}
+- id: candidate-source-muthukrishnan-data-streams
+  kind: new-masters-candidate
+  title: "Muthukrishnan — Data Streams: Algorithms and Applications"
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:57:u1', role: landing}
+- id: candidate-source-demaine-cache-oblivious
+  kind: new-masters-candidate
+  title: "Demaine — Cache-Oblivious Algorithms and Data Structures (survey)"
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:58:u1', role: landing}
+- id: candidate-source-gusfield-strings
+  kind: new-masters-candidate
+  title: "Gusfield — Algorithms on Strings, Trees, and Sequences"
+  type: book
+  occurrences:
+  - {ref: 'm-algo:59:e1', role: mention}
+- id: candidate-source-easley-kleinberg-networks
+  kind: new-masters-candidate
+  title: "Easley & Kleinberg — Networks, Crowds, and Markets"
+  type: book
+  occurrences:
+  - {ref: 'm-algo:60:u1', role: landing}
+- id: candidate-source-sanders-basic-toolbox
+  kind: new-masters-candidate
+  title: "Sanders, Mehlhorn, Dietzfelbinger & Dementiev — Sequential and Parallel Algorithms and Data Structures: The Basic Toolbox"
+  type: book
+  note: "a different, newer book than the registered German Grundwerkzeuge (source-dms-grundwerkzeuge)"
+  occurrences:
+  - {ref: 'm-algo:66:u1', role: landing}
+- id: candidate-source-dimacs-challenges
+  kind: new-masters-candidate
+  title: "DIMACS Implementation Challenges"
+  type: website
+  occurrences:
+  - {ref: 'm-algo:68:e1', role: mention}
+- id: candidate-source-gurobi
+  kind: new-masters-candidate
+  title: "Gurobi optimizer and modelling tutorials"
+  type: software
+  occurrences:
+  - {ref: 'm-algo:69:e1', role: mention}
+- id: candidate-source-highs
+  kind: new-masters-candidate
+  title: "HiGHS (open-source LP/MIP solver)"
+  type: software
+  occurrences:
+  - {ref: 'm-algo:69:e1', role: mention}
+- id: candidate-source-bentley-programming-pearls
+  kind: new-masters-candidate
+  title: "Bentley — Programming Pearls"
+  type: book
+  occurrences:
+  - {ref: 'm-algo:70:e1', role: mention}
+- id: candidate-source-automata-logics-infinite-games
+  kind: new-masters-candidate
+  title: "Grädel, Thomas & Wilke (eds.) — Automata, Logics, and Infinite Games (LNCS 2500)"
+  type: book
+  occurrences:
+  - {ref: 'm-algo:77:e1', role: mention}
+- id: candidate-source-graedel-rwth-scripts
+  kind: new-masters-candidate
+  title: "Grädel — lecture scripts: Automata, Games and Logic; Algorithmic Model Theory (RWTH)"
+  type: lecture
+  occurrences:
+  - {ref: 'm-algo:78:u1', role: landing}
+- id: candidate-source-baier-katoen
+  kind: new-masters-candidate
+  title: "Baier & Katoen — Principles of Model Checking"
+  type: book
+  occurrences:
+  - {ref: 'm-algo:79:e1', role: mention}
+- id: candidate-source-thomas-languages-automata-logic
+  kind: new-masters-candidate
+  title: "Thomas — Languages, Automata, and Logic (handbook chapter)"
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:80:e1', role: mention}
+- id: candidate-source-spot
+  kind: new-masters-candidate
+  title: "Spot (LTL and ω-automata library)"
+  type: software
+  occurrences:
+  - {ref: 'm-algo:81:e1', role: mention}
+- id: candidate-source-owl-automata
+  kind: new-masters-candidate
+  title: "Owl (ω-automata library)"
+  type: software
+  occurrences:
+  - {ref: 'm-algo:81:e1', role: mention}
+- id: candidate-source-oink
+  kind: new-masters-candidate
+  title: "Oink (parity game solver)"
+  type: software
+  occurrences:
+  - {ref: 'm-algo:81:e1', role: mention}
+- id: candidate-source-lynch-distributed-algorithms
+  kind: new-masters-candidate
+  title: "Lynch — Distributed Algorithms"
+  type: book
+  extra_mentions: ['m-algo:97']
+  occurrences:
+  - {ref: 'm-algo:87:e1', role: mention}
+- id: candidate-source-fokkink-distributed-algorithms
+  kind: new-masters-candidate
+  title: "Fokkink — Distributed Algorithms: An Intuitive Approach"
+  type: book
+  extra_mentions: ['m-algo:97']
+  occurrences:
+  - {ref: 'm-algo:88:e1', role: mention}
+- id: candidate-source-flp-impossibility
+  kind: new-masters-candidate
+  title: "Fischer, Lynch & Paterson — Impossibility of Distributed Consensus with One Faulty Process (JACM 1985)"
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:89:e1', role: mention}
+- id: candidate-source-lamport-time-clocks
+  kind: new-masters-candidate
+  title: "Lamport — Time, Clocks, and the Ordering of Events in a Distributed System (CACM 1978)"
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:89:e1', role: mention}
+- id: candidate-source-paxos-made-simple
+  kind: new-masters-candidate
+  title: "Lamport — Paxos Made Simple"
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:89:e1', role: mention}
+- id: candidate-source-tla-plus
+  kind: new-masters-candidate
+  title: "TLA+ video course and hyperbook (Lamport)"
+  type: course
+  occurrences:
+  - {ref: 'm-algo:90:u1', role: landing}
+  - {ref: 'm-algo:102:e1', role: duplicate, note: "back-reference to §8"}
+  - {ref: 'm-algo:150:u1', role: companion, title: "TLA+ Examples repository"}
+- id: candidate-source-attiya-welch
+  kind: new-masters-candidate
+  title: "Attiya & Welch — Distributed Computing"
+  type: book
+  occurrences:
+  - {ref: 'm-algo:97:e1', role: mention, note: "the row also points back to Lynch and Fokkink"}
+- id: candidate-source-cachin-reliable-distributed
+  kind: new-masters-candidate
+  title: "Cachin, Guerraoui & Rodrigues — Introduction to Reliable and Secure Distributed Programming"
+  type: book
+  occurrences:
+  - {ref: 'm-algo:98:e1', role: mention}
+- id: candidate-source-dijkstra-self-stabilizing
+  kind: new-masters-candidate
+  title: "Dijkstra — Self-stabilizing Systems in Spite of Distributed Control (CACM 1974)"
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:99:e1', role: mention}
+- id: candidate-source-dolev-self-stabilization
+  kind: new-masters-candidate
+  title: "Dolev — Self-Stabilization (MIT Press)"
+  type: book
+  occurrences:
+  - {ref: 'm-algo:99:e1', role: mention}
+- id: candidate-source-suomela-local-algorithms
+  kind: new-masters-candidate
+  title: "Suomela — Survey of Local Algorithms (ACM CSUR 2013)"
+  type: paper
+  occurrences:
+  - {ref: 'm-algo:101:e1', role: mention}
+- id: candidate-source-cp-algorithms
+  kind: new-masters-candidate
+  title: "CP-Algorithms (algorithm implementation reference)"
+  type: website
+  occurrences:
+  - {ref: 'm-algo:140:u1', role: landing}
+- id: candidate-source-exercism
+  kind: new-masters-candidate
+  title: "Exercism (programming exercises)"
+  type: website
+  occurrences:
+  - {ref: 'm-algo:142:e1', role: mention}
+- id: candidate-source-project-euler
+  kind: new-masters-candidate
+  title: "Project Euler (mathematical programming problems)"
+  type: website
+  occurrences:
+  - {ref: 'm-algo:142:e1', role: mention}
+- id: candidate-source-codeforces
+  kind: new-masters-candidate
+  title: "Codeforces (competitive programming)"
+  type: website
+  occurrences:
+  - {ref: 'm-algo:143:e1', role: mention}
+- id: candidate-source-atcoder
+  kind: new-masters-candidate
+  title: "AtCoder (competitive programming)"
+  type: website
+  occurrences:
+  - {ref: 'm-algo:143:e1', role: mention}
+- id: candidate-source-kahip
+  kind: new-masters-candidate
+  title: "KaHIP / KaMIS (Karlsruhe graph partitioning and independent sets)"
+  type: software
+  occurrences:
+  - {ref: 'm-algo:148:u1', role: landing}
+- id: candidate-source-networkit
+  kind: new-masters-candidate
+  title: "NetworKit (scalable network analysis)"
+  type: software
+  occurrences:
+  - {ref: 'm-algo:149:u1', role: landing}
+- id: unresolved:unspecific-reference
+  kind: unresolved
+  reason: "Names a body of work or a family of items rather than an identifiable teaching object; resolve when the module is chosen"
+  occurrences:
+  - {ref: 'm-algo:100:e1', note: "Schmid's SIGCOMM/INFOCOM work on self-adjusting networks"}
+- id: out-of-scope:planning-note
+  kind: out-of-scope
+  reason: "Planning, cross-reference or strategy note inside a resource list; not a teaching object"
+  occurrences: ['m-algo:71:e1', 'm-algo:103:e1', 'm-algo:109:e1', 'm-algo:111:e1', 'm-algo:117:e1', 'm-algo:118:e1', 'm-algo:119:e1', 'm-algo:120:e1', 'm-algo:121:e1', 'm-algo:122:e1']

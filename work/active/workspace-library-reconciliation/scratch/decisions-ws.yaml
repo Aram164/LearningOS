@@ -1,0 +1,110 @@
+# Manual dispositions for the preserved plan inputs of the active workspaces (origin keys ws-*).
+schema: library-reconciliation-dispositions/v1
+objects:
+- id: source-clrs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-algo2-chat9:32:p2', role: local, note: "English 3rd edition (clrs-en3.pdf)"}
+- id: source-dms-grundwerkzeuge
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-algo2-chat9:32:p3', role: local}
+- id: source-algo2-frankfurt-klausuren
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-algo2-chat9:39:u1', role: landing}
+- id: source-nielsen-nndl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-aml-dl-amls:19:u1', role: child, title: "Chapter 1"}
+- id: source-cs231n-notes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-aml-dl-amls:25:u1', role: child, title: "ConvNets notes"}
+  - {ref: 'ws-aml-dl-amls:25:u2', role: child, title: "Understanding and visualizing CNNs"}
+- id: source-tu-python-ml-course
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-chat1:275:u1', role: child, title: "Sheet 4 (linear algebra in Python)"}
+  - {ref: 'ws-m2-chat1:477:u1', role: child, title: "Sheet 5 (autograd, Numba, Cython)"}
+- id: source-3b1b-neural-networks
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-chat1:473:u2', role: alias, note: "the same videos hosted on KI-Campus"}
+- id: source-mit-18100a
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-chat8:34:u1', role: companion, title: "Lecture videos (YouTube playlist)"}
+- id: source-rudin-principles
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-chat8:35:p1', role: local}
+- id: source-forster-wessoly
+  kind: existing-active-source
+  extra_mentions: ['ws-m2-chat8:33']
+  occurrences: []
+- id: source-fritzsche-trainingsbuch
+  kind: existing-active-source
+  extra_mentions: ['ws-m2-chat8:33']
+  occurrences: []
+- id: source-deitmar-uebungsbuch
+  kind: existing-active-source
+  extra_mentions: ['ws-m2-chat8:33']
+  occurrences: []
+- id: source-analysis-grundlagen-handouts
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-chat8:46:p1', role: local, note: "renamed on disk: Mengen-und-Abbildungen.pdf"}
+  - {ref: 'ws-m2-chat8:46:p2', role: local, note: "renamed on disk: Relationen.pdf"}
+  - {ref: 'ws-m2-chat8:53:p1', role: local, note: "renamed on disk: Maths220_Proofs-in-Calculus.pdf"}
+  - {ref: 'ws-m2-chat8:133:p1', role: local, note: "renamed on disk: Maths220_Proofs-in-Calculus.pdf"}
+- id: source-analysis-drill-blaetter-extern
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'ws-m2-chat8:49:p1', role: local, note: "renamed on disk: Grenzwerte-von-Folgen.pdf"}
+  - {ref: 'ws-m2-chat8:49:p3', role: local, note: "renamed on disk: auf-2-2_Folgen_Loesungen.pdf"}
+  - {ref: 'ws-m2-chat8:49:p4', role: local, note: "renamed on disk: Bestimmt_Scan.pdf"}
+  - {ref: 'ws-m2-chat8:51:p1', role: local, note: "renamed on disk: KIT_Blatt-Reihen.pdf"}
+  - {ref: 'ws-m2-chat8:51:p3', role: local, note: "renamed on disk: auf-2-3_Reihen_Loesungen.pdf"}
+  - {ref: 'ws-m2-chat8:54:p1', role: local, note: "renamed on disk: u10_Loesung.pdf"}
+  - {ref: 'ws-m2-chat8:54:p2', role: local, note: "renamed on disk: IngMath2_Aufgaben.pdf"}
+  - {ref: 'ws-m2-chat8:55:p1', role: local, note: "renamed on disk: Aufgabensammlung-M1_Loesung.pdf"}
+  - {ref: 'ws-m2-chat8:114:p1', role: local, note: "renamed on disk: Bestimmt_Scan.pdf"}
+  - {ref: 'ws-m2-chat8:115:p1', role: local, note: "renamed on disk: auf-2-2_Folgen_Loesungen.pdf"}
+  - {ref: 'ws-m2-chat8:115:p3', role: duplicate, note: "the same file named twice in the step"}
+  - {ref: 'ws-m2-chat8:151:p1', role: local, note: "renamed on disk: IngMath2_Aufgaben.pdf"}
+- id: source-kaggle-winning-solutions
+  kind: new-active-source
+  title: "Kaggle — Winning solutions of Kaggle competitions (curated notebook)"
+  type: website
+  shelf: thematic-group-machine-learning
+  note: "named in the supervisor's thesis brief (study winning-solution write-ups)"
+  occurrences:
+  - {ref: 'ws-thesis-brief:14:u1', role: landing}
+- id: out-of-scope:internal-document
+  kind: out-of-scope
+  reason: "Internal plan or note document (moved per migration/path-map.csv)"
+  occurrences:
+  - {ref: 'ws-m2-an-index:3:p1', note: "the workspace's own inputs folder"}
+  - {ref: 'ws-m2-an-index:14:p1', note: "the module's canonical source map"}
+  - 'ws-m2-an-index:33:p1'
+  - 'ws-m2-an-index:34:p1'
+  - 'ws-m2-an-index:35:p1'
+  - 'ws-m2-an-index:36:p1'
+  - 'ws-m2-an-index:37:p1'
+  - 'ws-m2-an-index:38:p1'
+  - 'ws-m2-an-index:39:p1'
+  - 'ws-m2-an-index:40:p1'
+  - 'ws-m2-an-index:41:p1'
+  - 'ws-m2-an-index:42:p1'
+  - {ref: 'ws-m2-chat1:18:p1', note: "pattern for the per-lecture unit folders, now knowledge notes"}
+  - {ref: 'ws-m2-chat1:444:p1', note: "a per-lecture unit folder, now knowledge notes"}
+- id: out-of-scope:folder-reference
+  kind: out-of-scope
+  reason: "Folder named as a location in prose; the files it held are dispositioned through their own occurrences"
+  occurrences: ['ws-m2-chat8:23:p1', 'ws-m2-chat8:33:p1', 'ws-m2-chat8:33:p2', 'ws-m2-chat8:40:p1', 'ws-m2-chat8:42:p1', 'ws-m2-chat8:42:p2', 'ws-m2-chat8:42:p3', 'ws-m2-chat8:42:p4']
+- id: out-of-scope:project-data
+  kind: out-of-scope
+  reason: "A project's own data folder, not a learning source"
+  occurrences:
+  - {ref: 'ws-aml-dl-amls:53:p1', note: "AMLS image-detection project validation set"}

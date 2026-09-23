@@ -171,7 +171,7 @@ exempt:
       declaration. Enforced by tools/release_pair_receipt.py at generate and
       verify time.
 
-  - path: system/contracts/manifest-v14.schema.json
+  - path: system/contracts/manifest-v15.schema.json
     reason: >-
       The current projection schema. Named by manifest-contract.yaml and
       enforced through it at build time, so it is not separately registered.

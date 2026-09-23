@@ -1,0 +1,360 @@
+# Manual dispositions for MASTERS-RUNTIME-RESOURCES.md (origin key m-runtime).
+schema: library-reconciliation-dispositions/v1
+objects:
+- id: source-pierce-tapl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-runtime:13:e1', role: mention}
+  - {ref: 'm-runtime:46:e1', role: duplicate, note: "back-reference to §1"}
+- id: source-software-foundations
+  kind: existing-active-source
+  extra_mentions: ['m-runtime:69']
+  occurrences:
+  - {ref: 'm-runtime:90:e1', role: duplicate, note: "back-reference to §1; its exercises"}
+- id: source-cornell-cs6120
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-runtime:38:e1', role: duplicate, note: "back-reference to §2"}
+  - {ref: 'm-runtime:93:e1', role: mention, note: "the course's implementation tasks on the Bril IR"}
+- id: source-compiler-construction-shelf
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-runtime:35:e1', role: mention, note: "the shelf holds the 2006 (2nd) edition the row names"}
+- id: source-kirk-hwu-pmpp
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-runtime:55:e1', role: mention}
+  - {ref: 'm-runtime:128:e1', role: duplicate}
+- id: candidate-source-plfa
+  kind: new-masters-candidate
+  title: "Wadler, Kokke & Siek — Programming Language Foundations in Agda (PLFA)"
+  type: book
+  extra_mentions: ['m-runtime:49']
+  occurrences:
+  - {ref: 'm-runtime:15:u1', role: landing}
+- id: candidate-source-wadler-propositions-as-types
+  kind: new-masters-candidate
+  title: "Wadler — Propositions as Types (CACM 2015)"
+  type: paper
+  note: "the row also names the talk on YouTube without a link"
+  occurrences:
+  - {ref: 'm-runtime:16:u1', role: landing}
+- id: candidate-source-oplss
+  kind: new-masters-candidate
+  title: "OPLSS — Oregon Programming Languages Summer School (video archive)"
+  type: video
+  occurrences:
+  - {ref: 'm-runtime:17:u1', role: landing}
+- id: candidate-source-elevate
+  kind: new-masters-candidate
+  title: "Hagedorn et al. — Achieving High-Performance the Functional Way (ELEVATE, ICFP 2020)"
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:18:u1', role: companion, title: "Steuwer's publication list"}
+- id: candidate-source-rise-shine
+  kind: new-masters-candidate
+  title: "RISE & Shine (Steuwer et al.)"
+  type: paper
+  extra_mentions: ['m-runtime:18']
+  occurrences: []
+- id: candidate-source-appel-modern-compiler
+  kind: new-masters-candidate
+  title: "Appel — Modern Compiler Implementation in ML (or Java/C)"
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:24:e1', role: mention}
+- id: candidate-source-llvm-kaleidoscope
+  kind: new-masters-candidate
+  title: "LLVM Kaleidoscope tutorial"
+  type: documentation
+  occurrences:
+  - {ref: 'm-runtime:26:u1', role: landing}
+- id: candidate-source-mlir-toy
+  kind: new-masters-candidate
+  title: "MLIR Toy tutorial"
+  type: documentation
+  occurrences:
+  - {ref: 'm-runtime:26:u2', role: landing}
+  - {ref: 'm-runtime:104:e1', role: duplicate, note: "MLIR examples in the LLVM monorepo, pointing back to §2"}
+- id: candidate-source-cooper-torczon
+  kind: new-masters-candidate
+  title: "Cooper & Torczon — Engineering a Compiler (3rd ed.)"
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:27:e1', role: mention}
+- id: candidate-source-crafting-interpreters
+  kind: new-masters-candidate
+  title: "Nystrom — Crafting Interpreters"
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:28:u1', role: landing}
+  - {ref: 'm-runtime:98:u1', role: companion, title: "Book code repository"}
+- id: candidate-source-cytron-ssa
+  kind: new-masters-candidate
+  title: "Cytron et al. — Efficiently Computing Static Single Assignment Form (TOPLAS 1991)"
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:29:e1', role: mention}
+- id: candidate-source-chaitin-register-allocation
+  kind: new-masters-candidate
+  title: "Chaitin — Register Allocation & Spilling via Graph Coloring (1982)"
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:29:e1', role: mention}
+- id: candidate-source-allen-kennedy
+  kind: new-masters-candidate
+  title: "Allen & Kennedy — Optimizing Compilers for Modern Architectures"
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:36:e1', role: mention}
+- id: candidate-source-muchnick
+  kind: new-masters-candidate
+  title: "Muchnick — Advanced Compiler Design and Implementation"
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:37:e1', role: mention}
+- id: candidate-source-llvm-paper
+  kind: new-masters-candidate
+  title: "Lattner & Adve — LLVM: A Compilation Framework for Lifelong Program Analysis & Transformation (CGO 2004)"
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:39:e1', role: mention}
+- id: candidate-source-mlir-paper
+  kind: new-masters-candidate
+  title: "Lattner et al. — MLIR: Scaling Compiler Infrastructure for Domain Specific Computation (CGO 2021)"
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:39:e1', role: mention}
+- id: candidate-source-selinger-lambda-notes
+  kind: new-masters-candidate
+  title: "Selinger — Lecture Notes on the Lambda Calculus"
+  type: lecture
+  occurrences:
+  - {ref: 'm-runtime:45:u1', role: landing}
+- id: candidate-source-sorensen-urzyczyn
+  kind: new-masters-candidate
+  title: "Sørensen & Urzyczyn — Lectures on the Curry-Howard Isomorphism"
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:47:e1', role: mention}
+- id: candidate-source-barendregt-lambda-typed
+  kind: new-masters-candidate
+  title: "Barendregt — Lambda Calculi with Types (handbook chapter)"
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:48:e1', role: mention}
+- id: candidate-source-learn-you-a-haskell
+  kind: new-masters-candidate
+  title: "Learn You a Haskell for Great Good!"
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:49:u1', role: landing}
+- id: candidate-source-hutton-programming-haskell
+  kind: new-masters-candidate
+  title: "Hutton — Programming in Haskell"
+  type: book
+  extra_mentions: ['m-runtime:49']
+  occurrences: []
+- id: candidate-source-cuda-programming-guide
+  kind: new-masters-candidate
+  title: "NVIDIA CUDA C++ Programming Guide"
+  type: documentation
+  occurrences:
+  - {ref: 'm-runtime:57:e1', role: mention}
+- id: candidate-source-cuda-best-practices
+  kind: new-masters-candidate
+  title: "NVIDIA CUDA C++ Best Practices Guide"
+  type: documentation
+  occurrences:
+  - {ref: 'm-runtime:57:e1', role: mention}
+- id: candidate-source-triton
+  kind: new-masters-candidate
+  title: "Triton (GPU kernel language) and tutorials"
+  type: software
+  occurrences:
+  - {ref: 'm-runtime:58:u1', role: landing}
+  - {ref: 'm-runtime:130:u1', role: duplicate, note: "section B names the tutorials again"}
+- id: candidate-source-flashattention
+  kind: new-masters-candidate
+  title: "Dao et al. — FlashAttention (2022)"
+  type: paper
+  extra_mentions: ['m-runtime:130']
+  occurrences: []
+- id: candidate-source-horace-he-brrr
+  kind: new-masters-candidate
+  title: "He — Making Deep Learning Go Brrrr From First Principles"
+  type: website
+  occurrences:
+  - {ref: 'm-runtime:59:e1', role: mention}
+  - {ref: 'm-runtime:129:u1', role: landing}
+- id: candidate-source-concrete-semantics
+  kind: new-masters-candidate
+  title: "Nipkow & Klein — Concrete Semantics with Isabelle/HOL"
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:66:u1', role: landing}
+- id: candidate-source-isabelle-tutorials
+  kind: new-masters-candidate
+  title: "Isabelle tutorials (Prog-Prove; Tutorial on Isabelle/HOL)"
+  type: documentation
+  occurrences:
+  - {ref: 'm-runtime:67:u1', role: landing}
+- id: candidate-source-lean4-theorem-proving
+  kind: new-masters-candidate
+  title: "Theorem Proving in Lean 4"
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:69:e1', role: mention}
+- id: candidate-source-stanford-cs143
+  kind: new-masters-candidate
+  title: "Stanford CS143 — Compilers (Cool compiler assignments)"
+  type: course
+  occurrences:
+  - {ref: 'm-runtime:91:u1', role: landing}
+- id: candidate-source-mit-6035
+  kind: new-masters-candidate
+  title: "MIT 6.035 — Computer Language Engineering (OCW)"
+  type: course
+  occurrences:
+  - {ref: 'm-runtime:92:e1', role: mention}
+- id: candidate-source-chibicc
+  kind: new-masters-candidate
+  title: "chibicc (a small C compiler, commit by commit)"
+  type: software
+  occurrences:
+  - {ref: 'm-runtime:97:u1', role: landing}
+- id: candidate-source-plzoo
+  kind: new-masters-candidate
+  title: "PL Zoo (Bauer)"
+  type: software
+  occurrences:
+  - {ref: 'm-runtime:99:u1', role: landing}
+- id: candidate-source-write-you-a-haskell
+  kind: new-masters-candidate
+  title: "Diehl — Write You a Haskell"
+  type: website
+  occurrences:
+  - {ref: 'm-runtime:100:u1', role: landing}
+- id: candidate-source-qbe
+  kind: new-masters-candidate
+  title: "QBE (compiler backend)"
+  type: software
+  occurrences:
+  - {ref: 'm-runtime:101:u1', role: landing}
+- id: candidate-source-egg
+  kind: new-masters-candidate
+  title: "egg and egglog (e-graph rewriting)"
+  type: software
+  note: "the row also names the egg paper (POPL 2021) without a link"
+  occurrences:
+  - {ref: 'm-runtime:102:u1', role: landing}
+- id: candidate-source-rise-lang
+  kind: new-masters-candidate
+  title: "rise-lang / ELEVATE (IR and rewrite-strategy language, code)"
+  type: software
+  occurrences:
+  - {ref: 'm-runtime:103:u1', role: landing}
+- id: candidate-source-nand2tetris
+  kind: new-masters-candidate
+  title: "Nand2Tetris"
+  type: course
+  occurrences:
+  - {ref: 'm-runtime:108:u1', role: landing}
+- id: candidate-source-ostep
+  kind: new-masters-candidate
+  title: "Arpaci-Dusseau — Operating Systems: Three Easy Pieces (OSTEP)"
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:109:e1', role: mention}
+- id: candidate-source-mit-6828
+  kind: new-masters-candidate
+  title: "MIT 6.1810 / 6.828 — Operating System Engineering (OCW, xv6 labs)"
+  type: course
+  occurrences:
+  - {ref: 'm-runtime:110:e1', role: mention}
+- id: candidate-source-stas-ml-engineering
+  kind: new-masters-candidate
+  title: "Bekman — Machine Learning Engineering Open Book"
+  type: book
+  occurrences:
+  - {ref: 'm-runtime:121:u1', role: landing}
+- id: candidate-source-mixed-precision-training
+  kind: new-masters-candidate
+  title: "Micikevicius et al. — Mixed Precision Training (2018)"
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:122:e1', role: mention}
+- id: candidate-source-megatron-lm
+  kind: new-masters-candidate
+  title: "Shoeybi et al. — Megatron-LM (2019)"
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:122:e1', role: mention}
+  - {ref: 'm-runtime:123:u1', role: companion, title: "NVIDIA/Megatron-LM repository"}
+- id: candidate-source-gpipe
+  kind: new-masters-candidate
+  title: "Huang et al. — GPipe"
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:122:e1', role: mention}
+- id: candidate-source-pipedream
+  kind: new-masters-candidate
+  title: "Narayanan et al. — PipeDream"
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:122:e1', role: mention}
+- id: candidate-source-zero
+  kind: new-masters-candidate
+  title: "Rajbhandari et al. — ZeRO (SC 2020)"
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:122:e1', role: mention}
+- id: candidate-source-efficient-large-scale-lm-training
+  kind: new-masters-candidate
+  title: "Narayanan et al. — Efficient Large-Scale Language Model Training on GPU Clusters (SC 2021)"
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:122:e1', role: mention}
+- id: candidate-source-pytorch-fsdp
+  kind: new-masters-candidate
+  title: "Zhao et al. — PyTorch FSDP (2023)"
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:122:e1', role: mention}
+- id: candidate-source-nanotron
+  kind: new-masters-candidate
+  title: "nanotron (Hugging Face)"
+  type: software
+  occurrences:
+  - {ref: 'm-runtime:123:u2', role: landing}
+- id: candidate-source-pope-scaling-inference
+  kind: new-masters-candidate
+  title: "Pope et al. — Efficiently Scaling Transformer Inference (MLSys 2023)"
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:134:e1', role: mention}
+- id: candidate-source-pagedattention
+  kind: new-masters-candidate
+  title: "Kwon et al. — Efficient Memory Management for LLM Serving with PagedAttention (SOSP 2023)"
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:135:e1', role: mention}
+- id: candidate-source-speculative-decoding
+  kind: new-masters-candidate
+  title: "Leviathan et al. — Fast Inference from Transformers via Speculative Decoding (2023)"
+  type: paper
+  occurrences:
+  - {ref: 'm-runtime:135:e1', role: mention}
+- id: unresolved:unspecific-reference
+  kind: unresolved
+  reason: "Names a body of work or a family of items rather than an identifiable teaching object; resolve when the module is chosen"
+  occurrences:
+  - {ref: 'm-runtime:68:e1', note: "Nipkow's embedding notes or a standard survey on deep vs. shallow embeddings"}
+- id: out-of-scope:course-logistics
+  kind: out-of-scope
+  reason: "Course administration (Moodle, topic lists, chair pages); not a teaching object"
+  occurrences: ['m-runtime:82:u1']
+- id: out-of-scope:planning-note
+  kind: out-of-scope
+  reason: "Planning, cross-reference or strategy note inside a resource list; not a teaching object"
+  occurrences: ['m-runtime:60:e1', 'm-runtime:76:e1', 'm-runtime:77:e1', 'm-runtime:78:e1', 'm-runtime:79:e1', 'm-runtime:80:e1', 'm-runtime:136:e1']

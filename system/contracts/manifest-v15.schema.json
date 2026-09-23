@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://learningos.local/contracts/manifest-v14.schema.json",
-  "title": "LearningOS atomic manifest v14",
+  "$id": "https://learningos.local/contracts/manifest-v15.schema.json",
+  "title": "LearningOS atomic manifest v15",
   "type": "object",
   "additionalProperties": false,
   "required": [
@@ -1277,7 +1277,9 @@
         "year",
         "identifiers",
         "roles",
-        "evaluations"
+        "evaluations",
+        "discovery",
+        "examination"
       ],
       "properties": {
         "id": {
@@ -1390,6 +1392,36 @@
           "items": {
             "$ref": "#/$defs/sourceEvaluation"
           }
+        },
+        "discovery": {
+          "anyOf": [
+            {"$ref": "https://learningos.local/schema/sources.schema.json#/properties/sources/items/properties/discovery"},
+            {"type": "null"}
+          ]
+        },
+        "examination": {
+          "$ref": "#/$defs/sourceExamination"
+        }
+      }
+    },
+    "sourceExamination": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "evaluated",
+        "approved_analysis_count",
+        "metadata_placed"
+      ],
+      "properties": {
+        "evaluated": {
+          "type": "boolean"
+        },
+        "approved_analysis_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "metadata_placed": {
+          "type": "boolean"
         }
       }
     },
@@ -2000,7 +2032,7 @@
       ],
       "properties": {
         "contract_version": {
-          "const": 14
+          "const": 15
         },
         "generated_at": {
           "type": "string"

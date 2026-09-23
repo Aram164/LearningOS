@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 38
-schema_fingerprint: sha256:b3b5d31a35fcba1afe3b7f5a4c8191ee80bd15fac73cac2791a8ae0f3a735374
+contract_version: 39
+schema_fingerprint: sha256:a1dc8c8a8fbccb65752d74b7506247f6d7f1cfd8d79e2cb82ea166beddf39742
 record_schemas: 35
 history:
 - version: 1
@@ -298,5 +298,12 @@ history:
   adopted: '2026-09-23'
   note: Allow stable ability identities to retire while preserving historical observations
     (additive; existing records remain active)
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 39
+  adopted: '2026-09-23'
+  note: sources gain optional metadata-only discovery provenance with child titles
+    (two-pass intake); Master's candidates gain url, identifiers, child titles, possible
+    use and type (additive; existing records stay valid)
   migration: null
   fixture: tests/fixtures/formats/v25/

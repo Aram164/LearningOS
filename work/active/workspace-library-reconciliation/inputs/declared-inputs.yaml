@@ -1,0 +1,160 @@
+# Declared inputs for the library reconciliation (two-pass source intake plan,
+# step 2). Paths are relative to the LearningOS umbrella (the directory holding
+# repository/, legacy/ and materials/). Nothing outside this list is read, and
+# no directory is scanned recursively: each file is named exactly, and the two
+# registry directories are listed only to prove that no partition was missed.
+#
+# Only `origins` produce occurrences that need a disposition. `targets` are
+# where an occurrence can go; `resolvers` translate pre-v3 local paths. Their
+# hashes are recorded too, because a disposition that names an existing source
+# is only true against the registry it was checked against.
+schema: library-reconciliation-inputs/v1
+base: umbrella
+baseline: inputs/baseline-2026-09-23.yaml   # relative to this workspace
+
+origins:
+  # --- the old central resource index (pre-v3, frozen) -----------------------
+  - key: lr
+    path: legacy/LEARNING-RESOURCES.md
+    kind: resource-list
+    scope: active
+    entries: true
+    skip_table_headers: [Tag, Status]      # the tag legend and the status vocabulary
+    note: Migrated 2026-07-17 per migration/unresolved.md; this pass checks that claim item by item.
+
+  # --- the six preserved Master's resource lists (quarantine copies) ----------
+  - key: m-algo
+    path: repository/curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning/inputs/MASTERS-ALGO-RESOURCES.md
+    kind: resource-list
+    scope: masters
+    entries: true
+  - key: m-bench
+    path: repository/curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning/inputs/MASTERS-BENCHMARKING-RESOURCES.md
+    kind: resource-list
+    scope: masters
+    entries: true
+  - key: m-dataeng
+    path: repository/curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning/inputs/MASTERS-DATAENG-RESOURCES.md
+    kind: resource-list
+    scope: masters
+    entries: true
+  - key: m-math
+    path: repository/curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning/inputs/MASTERS-MATH-RESOURCES.md
+    kind: resource-list
+    scope: masters
+    entries: true
+  - key: m-ml
+    path: repository/curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning/inputs/MASTERS-ML-RESOURCES.md
+    kind: resource-list
+    scope: masters
+    entries: true
+  - key: m-runtime
+    path: repository/curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning/inputs/MASTERS-RUNTIME-RESOURCES.md
+    kind: resource-list
+    scope: masters
+    entries: true
+
+  # --- preserved plan inputs of the active workspaces --------------------------
+  # Plan documents, not resource lists: only their locators (URLs, local file
+  # names, registered source IDs) are occurrences. Their prose bullets are plan
+  # steps and are deliberately not treated as named items.
+  - {key: ws-algo2-chat9, path: repository/work/active/workspace-algo2-exam-prep/inputs/Chat9_Algo2_Plan.md, kind: plan-input, scope: active, entries: false}
+  - {key: ws-aml-dl-amls, path: repository/work/active/workspace-aml-exam-prep/inputs/DL-AMLS-Learning-Plan.md, kind: plan-input, scope: active, entries: false}
+  - {key: ws-amls-chat2, path: repository/work/active/workspace-amls-exam-prep/inputs/Chat2_AMLS_Theory_Plan.md, kind: plan-input, scope: active, entries: false}
+  - {key: ws-m2-an00, path: repository/work/active/workspace-m2-exam-prep/inputs/AN_00_proof_presentation.md, kind: plan-input, scope: active, entries: false}
+  - {key: ws-m2-an01, path: repository/work/active/workspace-m2-exam-prep/inputs/AN_01_foundations.md, kind: plan-input, scope: active, entries: false}
+  - {key: ws-m2-an02, path: repository/work/active/workspace-m2-exam-prep/inputs/AN_02_sequences.md, kind: plan-input, scope: active, entries: false}
+  - {key: ws-m2-an03, path: repository/work/active/workspace-m2-exam-prep/inputs/AN_03_series.md, kind: plan-input, scope: active, entries: false}
+  - {key: ws-m2-an04, path: repository/work/active/workspace-m2-exam-prep/inputs/AN_04_limits_continuity.md, kind: plan-input, scope: active, entries: false}
+  - {key: ws-m2-an05, path: repository/work/active/workspace-m2-exam-prep/inputs/AN_05_exp_log_uniform.md, kind: plan-input, scope: active, entries: false}
+  - {key: ws-m2-an06, path: repository/work/active/workspace-m2-exam-prep/inputs/AN_06_differentiation.md, kind: plan-input, scope: active, entries: false}
+  - {key: ws-m2-an07, path: repository/work/active/workspace-m2-exam-prep/inputs/AN_07_taylor.md, kind: plan-input, scope: active, entries: false}
+  - {key: ws-m2-an08, path: repository/work/active/workspace-m2-exam-prep/inputs/AN_08_integration.md, kind: plan-input, scope: active, entries: false}
+  - {key: ws-m2-an09, path: repository/work/active/workspace-m2-exam-prep/inputs/AN_09_exam_transfer.md, kind: plan-input, scope: active, entries: false}
+  - {key: ws-m2-an-index, path: repository/work/active/workspace-m2-exam-prep/inputs/AN_Node_Plans_INDEX.md, kind: plan-input, scope: active, entries: false}
+  - {key: ws-m2-chat1, path: repository/work/active/workspace-m2-exam-prep/inputs/Chat1_Foundations_AML_SaD_Plan.md, kind: plan-input, scope: active, entries: false}
+  - {key: ws-m2-chat8, path: repository/work/active/workspace-m2-exam-prep/inputs/Chat8_Analysis_SaD_Plan.md, kind: plan-input, scope: active, entries: false}
+  - {key: ws-thesis-brief, path: repository/work/active/workspace-thesis-mle-medical/inputs/original-thesis-brief.md, kind: plan-input, scope: active, entries: false}
+
+targets:
+  registry:
+    directory: repository/sources/registry
+    consolidated: repository/sources/sources.yaml
+    files:
+      - algorithms.yaml
+      - data-systems.yaml
+      - degree-anchors.yaml
+      - external-shelf.yaml
+      - external-supplements.yaml
+      - machine-learning.yaml
+      - mathematics.yaml
+      - method-admin.yaml
+      - ml-systems.yaml
+      - optimization.yaml
+      - software.yaml
+      - stage2-sources.yaml
+      - stage2b-unsorted-intake.yaml
+  collections:
+    directory: repository/sources/collections
+    files:
+      - algorithms-bookshelf.yaml
+      - algorithms-lecture-series.yaml
+      - exam-practice-banks.yaml
+      - math-bookshelf.yaml
+      - math-lecture-series.yaml
+      - ml-bookshelf.yaml
+      - ml-broaden-later.yaml
+      - ml-explainers.yaml
+      - ml-lecture-series.yaml
+      - ml-systems-bookshelf.yaml
+      - ml-systems-lecture-series.yaml
+      - papers-shelf.yaml
+      - programming-bookshelf.yaml
+      - programming-video-courses.yaml
+      - project-toolbox.yaml
+      - python-internals-shelf.yaml
+  masters_collections:
+    - repository/curriculum/quarantine/masters-planning/sources/degree-module-anchors.yaml
+  masters_catalog: repository/curriculum/quarantine/masters-planning/catalog.yaml   # absent at baseline
+  materials_manifest: repository/records/materials-manifest.yaml
+  materials_placement: repository/tools/build_materials_tree.py                   # PLACEMENT map only, read as data
+
+resolvers:
+  path_map: repository/migration/path-map.csv
+  material_moves: repository/migration/material-moves.csv
+  inventory: repository/migration/inventory.json
+
+# Byte-identical copies, verified by hash on every run and not enumerated twice.
+identical_copies:
+  - {path: legacy/Masters-Planning/MASTERS-ALGO-RESOURCES.md, same_as: m-algo}
+  - {path: legacy/Masters-Planning/MASTERS-BENCHMARKING-RESOURCES.md, same_as: m-bench}
+  - {path: legacy/Masters-Planning/MASTERS-DATAENG-RESOURCES.md, same_as: m-dataeng}
+  - {path: legacy/Masters-Planning/MASTERS-MATH-RESOURCES.md, same_as: m-math}
+  - {path: legacy/Masters-Planning/MASTERS-ML-RESOURCES.md, same_as: m-ml}
+  - {path: legacy/Masters-Planning/MASTERS-RUNTIME-RESOURCES.md, same_as: m-runtime}
+
+# Known material deliberately outside this pass. Named so the boundary is
+# visible; nothing here is silently dropped.
+not_declared:
+  - path: repository/curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning/inputs/MASTERS-MODULE-MENU.md
+    reason: Module-catalogue deliberation; all 105 links are moseskonto module descriptions (module facts, not learning sources). Candidate-module evidence for step 6.
+  - path: repository/curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning/inputs/MTS-Ground-Truth.md
+    reason: Verified module facts; its one link is the StuPO PDF, a degree regulation already held as material.
+  - path: repository/curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning/inputs/MASTERS-MODULE-PLAN.md
+    reason: Semester plan; no links.
+  - path: repository/curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning/inputs/MASTERS-STATUS.md
+    reason: Status log; no links.
+  - path: repository/curriculum/quarantine/masters-planning/workspaces/workspace-degree-planning/inputs/DEGREE-WIRING.md
+    reason: Cross-module wiring; no links.
+  - path: legacy/Masters-Planning/Ultimate-Index.md
+    reason: Bulk external catalogue (OSSU + "600 free online courses"), 151 links, never curated into a list; a near-copy is preserved at materials/_unsorted/Ultimate-Index.md. Needs Aram's decision before any intake.
+  - path: legacy/Plans/
+    reason: Frozen pre-v3 plan files with links embedded at point of use (e.g. the StatQuest sets the index points to). Their durable content moved to notes (migration/path-map.csv); scanning the frozen tree is outside this pass.
+  - path: legacy/Job/
+    reason: Preserved Job source after the ADR-013 migration; inactive.
+  - path: repository/curriculum/modules/*/source-map.yaml
+    reason: Every entry already resolves to a registered source ID (validator REF rules), so a source map cannot hold an unaccounted item.
+  - path: repository/work/active/*/outputs/
+    reason: Plans and coverage audits derived from the declared plan inputs.
+  - path: materials/_unsorted/
+    reason: Unregistered files on disk; they are counted from the materials manifest in the report, not reconciled item by item.

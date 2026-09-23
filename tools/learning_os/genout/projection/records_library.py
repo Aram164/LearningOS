@@ -12,8 +12,83 @@ from .grouping import ordered_thematic_group_ids, source_thematic_groups
 Revision = Callable[..., int]
 
 
+def current_synthesis_freshness(repo: Repo, synthesis_id: str, dossier: dict) -> dict:
+    """One memoized dossier-freshness verdict per build, shared by projectors.
+
+    F13: the curriculum projector publishes every dossier's freshness and the
+    library projector counts current dossiers per source; both must read the
+    same verdict, or one build hashes every material file twice. Memoized on
+    the repo like the session compiler's route map: the loader output is
+    immutable within a build, and each repo object carries its own memo.
+    """
+    # Local import avoids a package-initialization cycle: the synthesis module
+    # is a domain service and this is a projection of its output.
+    from ...material_synthesis import material_synthesis_freshness
+
+    memo = getattr(repo, "_projected_synthesis_freshness", None)
+    if memo is None:
+        memo = {}
+        try:
+            repo._projected_synthesis_freshness = memo
+        except AttributeError:  # a Repo that refuses attributes still works
+            pass
+    shared = getattr(repo, "_projected_material_cache", None)
+    if shared is None:
+        shared = {}
+        try:
+            repo._projected_material_cache = shared
+        except AttributeError:
+            pass
+    if synthesis_id not in memo:
+        memo[synthesis_id] = material_synthesis_freshness(
+            repo.root, str(dossier.get("unit_id", "")), dossier,
+            repo=repo, cache=shared)
+    return memo[synthesis_id]
+
+
+def _approved_analysis_counts(repo: Repo) -> dict[str, int]:
+    """Distinct current approved assessment routes per source (D13, R6).
+
+    A route counts when an approved dossier assesses it while its dossier is
+    current; stale dossiers are retained evidence, not examination. The route's
+    own source id is authoritative, never the assessment row's copy of it.
+    Memoized on the repo like the session compiler's route map: the loader
+    output is immutable, and the projector may run twice in one build.
+    """
+    # Local import avoids a package-initialization cycle: route references are
+    # a domain service, this is a projection of them.
+    from ...routes import iter_route_references
+
+    cached = getattr(repo, "_library_approved_analysis_counts", None)
+    if cached is not None:
+        return cached
+    route_source = {ref.route_id: ref.source_id for ref in iter_route_references(repo)}
+    per_source: dict[str, set[str]] = {}
+    for synthesis_id in sorted(repo.unit_material_syntheses):
+        dossier = repo.unit_material_syntheses[synthesis_id]
+        if not isinstance(dossier, dict) or dossier.get("status") != "approved":
+            continue
+        fresh = current_synthesis_freshness(repo, synthesis_id, dossier)
+        if fresh.get("status") != "current":
+            continue
+        for row in dossier.get("route_assessments") or []:
+            if not isinstance(row, dict):
+                continue
+            route_id = row.get("route_id")
+            source_id = route_source.get(route_id) if isinstance(route_id, str) else None
+            if source_id:
+                per_source.setdefault(source_id, set()).add(route_id)
+    counts = {sid: len(routes) for sid, routes in per_source.items()}
+    try:
+        repo._library_approved_analysis_counts = counts
+    except AttributeError:  # a Repo that refuses attributes still works
+        pass
+    return counts
+
+
 def project_sources(repo: Repo, revision: Revision) -> list[dict]:
     thematic_groups = source_thematic_groups(repo)
+    analyses = _approved_analysis_counts(repo)
     records = []
     for sid in sorted(repo.sources):
         s = repo.sources[sid]
@@ -43,6 +118,20 @@ def project_sources(repo: Repo, revision: Revision) -> list[dict]:
             "identifiers": dict(s.get("identifiers", {}) or {}),
             "roles": sorted({str(r) for ev in (s.get("evaluations") or [])
                              for r in (ev.get("roles") or [])}),
+            # Intake provenance is a bounded, factual navigation aid for an
+            # agent's first read. Without it, `inspect source-id` knows only
+            # that a source exists and has to reopen canonical registry YAML
+            # to learn why it was shelved or what known child titles it holds.
+            "discovery": s.get("discovery"),
+            # Examination state, separate from the evaluations themselves: the
+            # Library marks a metadata-only source "placed from metadata" while
+            # this says none exists. Always published, so the interface can
+            # tell "not examined" from "this build predates examination".
+            "examination": {
+                "evaluated": bool(s.get("evaluations")),
+                "approved_analysis_count": analyses.get(sid, 0),
+                "metadata_placed": bool(s.get("discovery")),
+            },
             # `useful_sections` is where the reading plan actually lives ("read
             # ch. 3 for X") — projected with its concept links so an interface
             # can turn a source into a navigable table of contents.

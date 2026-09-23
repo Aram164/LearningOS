@@ -401,3 +401,62 @@ def test_brief_startup_refuses_paging_and_mixed_modes(mini_repo):
         result = run_los(mini_repo, *args)
         assert result.returncode != 0
         assert not result.stdout
+
+
+def test_brief_pointer_state_confirmed_when_the_pointer_resolves(mini_repo):
+    add_curriculum(mini_repo)
+    brief = run_los(mini_repo, "bootstrap", "--brief")
+    assert brief.returncode == 0, brief.stderr
+    data = json.loads(brief.stdout)
+    assert data["pointer_state"] == "confirmed"
+    assert data["pointer_state_note"].startswith("confirmed =")
+    # A confirmed stop is not a priority choice: workspace options remain.
+    assert [row["workspace_id"] for row in data["recorded_options"]] == ["workspace-demo"]
+    assert "not current priorities" in data["recorded_options_note"]
+    assert data["expand"]["coordination"] == "inspect coordination"
+    assert data["expand"]["intelligence_scan"] == "intelligence-scan --brief --json"
+    assert [row["id"] for row in data["active_study_maps"]] == ["study-map-demo-l01"]
+    # The brief agrees with resume about what the pointer means.
+    resumed = run_los(mini_repo, "resume", "--json")
+    assert resumed.returncode == 0, resumed.stderr
+    assert json.loads(resumed.stdout)["via"] == "resume pointer"
+
+
+def test_brief_pointer_missing_shows_unranked_recorded_options(mini_repo):
+    add_curriculum(mini_repo)
+    (mini_repo / "curriculum/resume.yaml").unlink()
+    # A second active track: the page must show both, never pick one.
+    second = mini_repo / "work/active/workspace-second/CONTEXT.md"
+    second.parent.mkdir(parents=True)
+    second.write_text(
+        "---\nid: workspace-second\ntype: workspace\ntitle: Second\n"
+        "status: active\n---\n\n## Objective\n\nSecond.\n\n"
+        "## Next Action\n\nDo the second thing.\n", encoding="utf-8")
+    brief = run_los(mini_repo, "bootstrap", "--brief")
+    assert brief.returncode == 0, brief.stderr
+    data = json.loads(brief.stdout)
+    assert data["pointer_state"] == "missing"
+    assert data["recorded_options"] == [
+        {"workspace_id": "workspace-demo",
+         "next_action": "Do the demo thing.",
+         "source": "work/active/workspace-demo/CONTEXT.md"},
+        {"workspace_id": "workspace-second",
+         "next_action": "Do the second thing.",
+         "source": "work/active/workspace-second/CONTEXT.md"},
+    ]
+    for option in data["recorded_options"]:
+        assert set(option) == {"workspace_id", "next_action", "source"}
+    assert [row["id"] for row in data["active_study_maps"]] == ["study-map-demo-l01"]
+
+
+def test_brief_pointer_invalid_matches_missing(mini_repo):
+    add_curriculum(mini_repo)
+    pointer_path = mini_repo / "curriculum/resume.yaml"
+    pointer = yaml.safe_load(pointer_path.read_text(encoding="utf-8"))
+    pointer["stage_id"] = "stage-no-such-stage"
+    write_yaml(pointer_path, pointer)
+    brief = run_los(mini_repo, "bootstrap", "--brief")
+    assert brief.returncode == 0, brief.stderr
+    data = json.loads(brief.stdout)
+    assert data["pointer_state"] == "invalid"
+    assert [opt["workspace_id"] for opt in data["recorded_options"]] == ["workspace-demo"]

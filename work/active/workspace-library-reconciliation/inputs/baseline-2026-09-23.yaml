@@ -1,0 +1,46 @@
+# Frozen baseline for the two-pass source intake plan, step 1.
+# Recorded 2026-09-23T18:57Z by Claude (Cowork) before any change.
+# Every value below was observed with a command in this session; none is copied
+# from prose. The reconciliation report repeats this file verbatim.
+recorded_at: '2026-09-23T18:57:34Z'
+repositories:
+  core:
+    path: LearningOS/repository
+    branch_before: codex/learningos-shared-context-atlas
+    branch_for_this_work: claude/two-pass-source-intake
+    head: 8a2fa55123d2f9c8672da9dd9dd0c261d280b279
+    head_subject: 'feat: add governed ability evidence and bounded material reads'
+    worktree: clean (git status --short printed nothing)
+  ui:
+    path: LearningOS/obsidian-ui
+    branch_before: codex/learningos-shared-context-atlas
+    branch_for_this_work: claude/two-pass-source-intake
+    head: 07b5adf8f7c3d2eead479737a70c7d523992e9ef
+    head_subject: 'feat: add ability Atlas, Review, and bounded material excerpts'
+    worktree: clean (git status --short printed nothing)
+contracts:
+  data_contract_version: 38            # system/contracts/data-contract.yaml
+  manifest_contract_version: 14        # system/contracts/manifest-contract.yaml
+  capability_contract_version: 2       # los.py capabilities --compact --json
+  cli_protocol: 6                      # los.py capabilities --compact --json
+  ui_manifest_contract_version: 14     # obsidian-ui/src/contracts/manifest.ts MANIFEST_CONTRACT_VERSION
+  ui_manifest_lock: obsidian-ui/contracts/manifest-v14.lock.json
+bootstrap_brief:
+  snapshot_id: sha256:1abeaf090b4ab26b1938237f7f1ab3f6e9373687ada164959830b96f87d3d32c
+  counts: {sources: 256, collections: 16, topics: 38, sources_with_topics: 5, thematic_groups: 8,
+           modules: 13, units: 76, workspaces_active: 5}
+validation:
+  environment: >-
+    Cowork VM, Python 3.12.14 (~/losvenv), only LearningOS/ mounted; the
+    wrapper semestercontext/ is not visible, so the perimeter check reports its
+    seven wrapper entries as missing. These are environment errors, not
+    repository defects, and they are identical before and after this work.
+  command: python tools/validate.py --compact --no-report
+  errors: 7
+  error_codes: {PERIMETER-MISSING: 7}
+  warnings: 407
+  warning_baseline_check: >-
+    python tools/warning_baseline.py --check: 404 warnings across 19
+    signatures against the recorded baseline of 485 across 38 (2026-09-18);
+    19 signatures repaired, none new or grown. Exit 1 only because of the 7
+    environment errors above.

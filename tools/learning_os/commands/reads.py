@@ -150,6 +150,66 @@ def compact_bootstrap(args) -> int:
         return _refusal(exc)
 
 
+#: What the brief's ``pointer_state`` means. A confirmed pointer is the
+#: learner's last explicit study action -- where study stopped -- never a
+#: recommendation. The note ships in the payload so an agent reading only
+#: this page cannot mistake one for the other.
+POINTER_STATE_NOTE = "confirmed = where study stopped, not a recommendation"
+
+
+def _pointer_state(manifest, pointer) -> str:
+    """confirmed/missing/invalid for the brief page; the same rule as resume.
+
+    Mirrors ``resume._resolve_stage``'s validity check against the manifest
+    instead of the loaded repo, so the brief and resume cannot disagree:
+    the pointer counts only when its module, unit, map, and stage all
+    resolve and link together. Status plays no part here, exactly as in
+    resume -- a pointer to a paused map is still where study stopped.
+    """
+    if not isinstance(pointer, dict) or not pointer:
+        return "missing"
+    units = {row.get("id"): row for row in manifest.get("units", [])
+             if isinstance(row, dict)}
+    maps = {row.get("id"): row for row in manifest.get("study_maps", [])
+            if isinstance(row, dict)}
+    unit = units.get(str(pointer.get("unit_id") or ""))
+    study_map = maps.get(str(pointer.get("study_map_id") or ""))
+    stages = study_map.get("stages", []) \
+        if isinstance(study_map, dict) else []
+    stage_ids = {stage.get("id") for stage in stages
+                 if isinstance(stage, dict)}
+    if (isinstance(unit, dict) and isinstance(study_map, dict)
+            and unit.get("module_id") == pointer.get("module_id")
+            and study_map.get("unit_id") == unit.get("id")
+            and study_map.get("module_id") == unit.get("module_id")
+            and pointer.get("stage_id") in stage_ids):
+        return "confirmed"
+    return "invalid"
+
+
+def _recorded_options(manifest) -> list[dict]:
+    """Every active track's recorded next action, in id order, unranked.
+
+    Shown regardless of pointer state: the pointer says where study stopped,
+    not which active workspace to choose next. Each active workspace's own
+    next action carries its id and source path, never a derived ranking. A
+    workspace with no recorded action still appears, with an empty action,
+    so no track silently drops out of the page.
+    """
+    options = []
+    for record in manifest.get("records", []):
+        if not isinstance(record, dict) or record.get("type") != "workspace":
+            continue
+        if record.get("archived") or record.get("status") != "active":
+            continue
+        options.append({
+            "workspace_id": record.get("id"),
+            "next_action": record.get("next_action") or "",
+            "source": record.get("path") or "",
+        })
+    return sorted(options, key=lambda row: str(row["workspace_id"]))
+
+
 def brief_bootstrap(args) -> int:
     """One-page session entry: guards, resume, owed work, deadlines, expands.
 
@@ -184,9 +244,18 @@ def brief_bootstrap(args) -> int:
                  if row.get("status") in {"active", "ready"}),
                 key=lambda row: row["id"])
             deadlines = manifest.get("academic_deadlines", [])
+            pointer = manifest.get("resume_pointer", {})
+            state = _pointer_state(manifest, pointer)
             return _print_stable(root, snapshot, {
                 "contract": "bootstrap-brief",
-                "resume_pointer": manifest.get("resume_pointer", {}),
+                "resume_pointer": pointer,
+                "pointer_state": state,
+                "pointer_state_note": POINTER_STATE_NOTE,
+                "recorded_options": _recorded_options(manifest),
+                "recorded_options_note": (
+                    "workspace next actions are recorded options, not current "
+                    "priorities; compare with current dates and state"
+                ),
                 "counts": manifest.get("counts", {}),
                 "owed_study_maps": owed,
                 "active_study_maps": active,
@@ -198,6 +267,8 @@ def brief_bootstrap(args) -> int:
                     "continuation": "bootstrap --compact --offset NEXT_OFFSET --expected-snapshot SNAPSHOT",
                     "resume": "resume --json",
                     "inspect": "inspect ID",
+                    "coordination": "inspect coordination",
+                    "intelligence_scan": "intelligence-scan --brief --json",
                     "note_read": "note-read NOTE_ID",
                     "content_search": "search QUERY --type note --content",
                     "material_context": "material-context QUERY",

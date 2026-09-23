@@ -11,11 +11,13 @@ import copy
 import datetime as dt
 import difflib
 import hashlib
+import ipaddress
 import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlsplit
 
 import yaml
 
@@ -31,6 +33,16 @@ class MastersPlanningError(ValueError):
 _FORBIDDEN_KEYS = frozenset({
     "job", "employer", "credential", "credentials", "account", "account_id",
     "private_url", "secret", "token", "application_material", "contact_details",
+})
+
+# Hosts that are personal storage, not public course material (D15). Exact
+# set, never a heuristic: anything login-only beyond these is the approver's
+# call, and anything here is refused with the candidate named.
+_PERSONAL_LINK_HOSTS = frozenset({
+    "drive.google.com", "docs.google.com",
+    "dropbox.com", "www.dropbox.com", "dl.dropboxusercontent.com",
+    "onedrive.live.com", "1drv.ms",
+    "localhost", "127.0.0.1", "0.0.0.0", "::1",
 })
 
 _PROMOTION_VERIFICATION_MAX_AGE_DAYS = 30
@@ -417,6 +429,34 @@ def _append_source_record(
     return rendered
 
 
+def _catalog_link_problem(url: str) -> str | None:
+    """Why a prospective-candidate URL is not catalogue material, if it is not.
+
+    Academic-only admits public course URLs and refuses personal links (D15):
+    anything that is not an http(s) URL with a public host. Exact checks only —
+    scheme, host set, IP literal — so the refusal never depends on guessing
+    whether an unknown host needs a login.
+    """
+    if not isinstance(url, str):
+        return f"not a URL: {url!r}"
+    try:
+        parts = urlsplit(url)
+    except ValueError:
+        return f"not a parseable URL: {url}"
+    if parts.scheme not in ("http", "https"):
+        return f"scheme '{parts.scheme}' is not a public web link: {url}"
+    host = (parts.hostname or "").casefold()
+    if not host:
+        return f"URL has no host: {url}"
+    if host in _PERSONAL_LINK_HOSTS:
+        return f"personal-storage host '{host}' is not catalogue material: {url}"
+    try:
+        ipaddress.ip_address(host)
+    except ValueError:
+        return None
+    return f"IP-literal host '{host}' is not catalogue material: {url}"
+
+
 def validate_master_catalog(
     root: Path,
     value: dict[str, Any],
@@ -449,6 +489,21 @@ def validate_master_catalog(
             raise MastersPlanningError(
                 f"{module['id']} has a canonical mapping but is not promoted"
             )
+    for source in value["candidate_sources"]:
+        titles = source.get("child_titles") or {}
+        labels = source.get("identifiers") or {}
+        for label in sorted(titles):
+            if label not in labels:
+                raise MastersPlanningError(
+                    f"{source['id']} child_titles key '{label}' "
+                    "has no matching identifiers label"
+                )
+        links = [source["url"]] if source.get("url") else []
+        links += [address for address in labels.values() if isinstance(address, str)]
+        for link in links:
+            problem = _catalog_link_problem(link)
+            if problem is not None:
+                raise MastersPlanningError(f"{source['id']}: {problem}")
     repo = load_repo(root)
     for source in value["candidate_sources"]:
         canonical = source.get("canonical_source_id")

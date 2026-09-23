@@ -1,0 +1,344 @@
+# Manual dispositions for MASTERS-BENCHMARKING-RESOURCES.md (origin key m-bench).
+schema: library-reconciliation-dispositions/v1
+objects:
+- id: source-bermbach-csb
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-bench:11:u1', role: duplicate, note: "the module profile links the same book website"}
+  - {ref: 'm-bench:13:u1', role: companion, title: "Companion website"}
+- id: source-jain-performance-analysis
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'm-bench:14:e1', role: mention}
+- id: source-kleppmann-ddia
+  kind: existing-active-source
+  extra_mentions: ['m-bench:25']
+  occurrences: []
+- id: source-mcgeoch-experimental-algorithmics
+  kind: existing-active-source
+  extra_mentions: ['m-bench:48']
+  occurrences: []
+- id: candidate-source-georges-rigorous-java-performance
+  kind: new-masters-candidate
+  title: "Georges et al. — Statistically Rigorous Java Performance Evaluation (OOPSLA 2007)"
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:15:e1', role: mention}
+- id: candidate-source-kalibera-jones-rigorous-benchmarking
+  kind: new-masters-candidate
+  title: "Kalibera & Jones — Rigorous Benchmarking in Reasonable Time"
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:15:e1', role: mention}
+- id: candidate-source-huppler-good-benchmark
+  kind: new-masters-candidate
+  title: "Huppler — The Art of Building a Good Benchmark (TPCTC 2009)"
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:15:e1', role: mention}
+- id: candidate-source-hoefler-belli-scientific-benchmarking
+  kind: new-masters-candidate
+  title: "Hoefler & Belli — Scientific Benchmarking of Parallel Computing Systems (SC 2015)"
+  type: paper
+  extra_mentions: ['m-bench:48']
+  occurrences:
+  - {ref: 'm-bench:15:e1', role: mention}
+- id: candidate-source-ycsb
+  kind: new-masters-candidate
+  title: "YCSB — Yahoo! Cloud Serving Benchmark (and Cooper et al., SoCC 2010)"
+  type: software
+  occurrences:
+  - {ref: 'm-bench:16:u1', role: landing}
+- id: candidate-source-tpc-benchmarks
+  kind: new-masters-candidate
+  title: "TPC benchmarks (TPC-C, TPC-H, TPC-DS)"
+  type: website
+  extra_mentions: ['m-bench:94']
+  occurrences:
+  - {ref: 'm-bench:16:u2', role: landing}
+- id: candidate-source-gregg-systems-performance
+  kind: new-masters-candidate
+  title: "Gregg — Systems Performance (2nd ed.)"
+  type: book
+  extra_mentions: ['m-bench:17']
+  occurrences: []
+- id: candidate-source-aws-builders-library
+  kind: new-masters-candidate
+  title: "Amazon Builders' Library"
+  type: website
+  occurrences:
+  - {ref: 'm-bench:23:u1', role: landing}
+  - {ref: 'm-bench:65:e1', role: duplicate, note: "back-reference to §1–§2; also names Nygard"}
+- id: candidate-source-nygard-release-it
+  kind: new-masters-candidate
+  title: "Nygard — Release It! (2nd ed.)"
+  type: book
+  extra_mentions: ['m-bench:65']
+  occurrences:
+  - {ref: 'm-bench:24:e1', role: mention}
+- id: candidate-source-fox-brewer-harvest-yield
+  kind: new-masters-candidate
+  title: "Fox & Brewer — Harvest, Yield, and Scalable Tolerant Systems (1999)"
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:27:e1', role: mention}
+- id: candidate-source-mcsherry-cost
+  kind: new-masters-candidate
+  title: "McSherry, Isard & Murray — Scalability! But at what COST? (HotOS 2015)"
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:27:e1', role: mention}
+- id: candidate-source-highscalability
+  kind: new-masters-candidate
+  title: "High Scalability (architecture case-study archive)"
+  type: website
+  note: "the row also names the engineering blogs of Netflix, Cloudflare and Discord without links"
+  occurrences:
+  - {ref: 'm-bench:28:u1', role: landing}
+- id: candidate-source-green-software-practitioner
+  kind: new-masters-candidate
+  title: "Green Software Foundation — Green Software Practitioner course"
+  type: course
+  occurrences:
+  - {ref: 'm-bench:34:u1', role: landing}
+- id: candidate-source-sci-specification
+  kind: new-masters-candidate
+  title: "Software Carbon Intensity (SCI) specification"
+  type: documentation
+  extra_mentions: ['m-bench:34']
+  occurrences: []
+- id: candidate-source-building-green-software
+  kind: new-masters-candidate
+  title: "Currie, Hsu & Bergman — Building Green Software (O'Reilly 2024)"
+  type: book
+  occurrences:
+  - {ref: 'm-bench:35:e1', role: mention}
+- id: candidate-source-gupta-chasing-carbon
+  kind: new-masters-candidate
+  title: "Gupta et al. — Chasing Carbon: The Elusive Environmental Footprint of Computing (HPCA 2021)"
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:36:e1', role: mention}
+- id: candidate-source-patterson-carbon-emissions
+  kind: new-masters-candidate
+  title: "Patterson et al. — Carbon Emissions and Large Neural Network Training (2021)"
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:36:e1', role: mention}
+- id: candidate-source-patterson-carbon-plateau
+  kind: new-masters-candidate
+  title: "Patterson et al. — The Carbon Footprint of Machine Learning Training Will Plateau, Then Shrink"
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:36:e1', role: mention}
+- id: candidate-source-strubell-energy-policy
+  kind: new-masters-candidate
+  title: "Strubell et al. — Energy and Policy Considerations for Deep Learning in NLP (ACL 2019)"
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:36:e1', role: mention}
+- id: candidate-source-hotcarbon
+  kind: new-masters-candidate
+  title: "HotCarbon workshop (proceedings)"
+  type: website
+  occurrences:
+  - {ref: 'm-bench:37:u1', role: landing}
+- id: candidate-source-codecarbon
+  kind: new-masters-candidate
+  title: "CodeCarbon (energy and emissions tracking for ML workloads)"
+  type: software
+  occurrences:
+  - {ref: 'm-bench:38:u1', role: landing}
+  - {ref: 'm-bench:99:u1', role: companion, title: "Code repository"}
+- id: candidate-source-intel-rapl
+  kind: new-masters-candidate
+  title: "Intel RAPL energy measurement (via perf/powercap)"
+  type: documentation
+  extra_mentions: ['m-bench:38']
+  occurrences: []
+- id: candidate-source-cloud-carbon-footprint
+  kind: new-masters-candidate
+  title: "Cloud Carbon Footprint (tool)"
+  type: software
+  extra_mentions: ['m-bench:38']
+  occurrences: []
+- id: candidate-source-spj-great-research-paper
+  kind: new-masters-candidate
+  title: "Peyton Jones — How to Write a Great Research Paper (talk and slides)"
+  type: video
+  occurrences:
+  - {ref: 'm-bench:45:u1', role: landing}
+- id: candidate-source-zobel-writing-for-cs
+  kind: new-masters-candidate
+  title: "Zobel — Writing for Computer Science (Springer)"
+  type: book
+  extra_mentions: ['m-bench:45']
+  occurrences: []
+- id: candidate-source-pavlo-self-driving-dbms
+  kind: new-masters-candidate
+  title: "Pavlo et al. — Self-Driving Database Management Systems (CIDR 2017)"
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:47:e1', role: mention}
+- id: candidate-source-chaudhuri-self-tuning-dbs
+  kind: new-masters-candidate
+  title: "Chaudhuri & Narasayya — Self-Tuning Database Systems: A Decade of Progress (VLDB 2007)"
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:47:e1', role: mention}
+- id: candidate-source-hellerstein-architecture-dbs
+  kind: new-masters-candidate
+  title: "Hellerstein, Stonebraker & Hamilton — Architecture of a Database System"
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:47:e1', role: mention}
+- id: candidate-source-deequ-paper
+  kind: new-masters-candidate
+  title: "Schelter et al. — Automating Large-Scale Data Quality Verification (VLDB 2018, Deequ)"
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:47:e1', role: mention}
+- id: candidate-source-mlinspect-cidr2021
+  kind: new-masters-candidate
+  title: "Grafberger, Guha, Stoyanovich & Schelter — mlinspect: Lightweight Inspection of Native Machine Learning Pipelines (CIDR 2021)"
+  type: paper
+  note: "a different paper of the same family as the registered source-mlinspect-debugging"
+  occurrences:
+  - {ref: 'm-bench:47:e1', role: mention}
+- id: candidate-source-sigmod-reproducibility
+  kind: new-masters-candidate
+  title: "SIGMOD Availability & Reproducibility Initiative (ACM artifact badging)"
+  type: website
+  occurrences:
+  - {ref: 'm-bench:48:u1', role: landing}
+  - {ref: 'm-bench:98:u1', role: duplicate}
+- id: candidate-source-crovella-krishnamurthy
+  kind: new-masters-candidate
+  title: "Crovella & Krishnamurthy — Internet Measurement: Infrastructure, Traffic and Applications"
+  type: book
+  occurrences:
+  - {ref: 'm-bench:55:e1', role: mention}
+- id: candidate-source-paxson-sound-measurement
+  kind: new-masters-candidate
+  title: "Paxson — Strategies for Sound Internet Measurement (IMC 2004)"
+  type: paper
+  occurrences:
+  - {ref: 'm-bench:56:e1', role: mention}
+- id: candidate-source-ripe-atlas
+  kind: new-masters-candidate
+  title: "RIPE Atlas (measurement infrastructure)"
+  type: website
+  occurrences:
+  - {ref: 'm-bench:57:e1', role: mention}
+- id: candidate-source-caida
+  kind: new-masters-candidate
+  title: "CAIDA datasets and tools"
+  type: website
+  occurrences:
+  - {ref: 'm-bench:57:e1', role: mention}
+- id: candidate-source-tene-how-not-to-measure-latency
+  kind: new-masters-candidate
+  title: "Tene — How NOT to Measure Latency (talk; coordinated omission)"
+  type: video
+  extra_mentions: ['m-bench:90']
+  occurrences:
+  - {ref: 'm-bench:58:e1', role: mention}
+- id: candidate-source-benchbase
+  kind: new-masters-candidate
+  title: "BenchBase (CMU multi-DBMS benchmarking framework)"
+  type: software
+  occurrences:
+  - {ref: 'm-bench:89:u1', role: landing}
+- id: candidate-source-wrk2
+  kind: new-masters-candidate
+  title: "wrk2 (constant-throughput HTTP load generator)"
+  type: software
+  occurrences:
+  - {ref: 'm-bench:90:u1', role: landing}
+- id: candidate-source-jmh
+  kind: new-masters-candidate
+  title: "JMH (Java Microbenchmark Harness)"
+  type: software
+  occurrences:
+  - {ref: 'm-bench:91:e1', role: mention}
+- id: candidate-source-google-benchmark
+  kind: new-masters-candidate
+  title: "google/benchmark (C++ microbenchmarking)"
+  type: software
+  occurrences:
+  - {ref: 'm-bench:91:e1', role: mention}
+- id: candidate-source-criterion-rs
+  kind: new-masters-candidate
+  title: "criterion.rs (Rust benchmarking)"
+  type: software
+  occurrences:
+  - {ref: 'm-bench:91:e1', role: mention}
+- id: candidate-source-hyperfine
+  kind: new-masters-candidate
+  title: "hyperfine (command-line benchmarking)"
+  type: software
+  occurrences:
+  - {ref: 'm-bench:91:e1', role: mention}
+- id: candidate-source-flamegraph
+  kind: new-masters-candidate
+  title: "FlameGraph (Brendan Gregg) and perf examples"
+  type: software
+  occurrences:
+  - {ref: 'm-bench:92:u1', role: landing}
+- id: candidate-source-mlperf
+  kind: new-masters-candidate
+  title: "MLPerf (MLCommons) benchmarks"
+  type: website
+  occurrences:
+  - {ref: 'm-bench:93:u1', role: landing}
+- id: candidate-source-duckdb-tpc-extensions
+  kind: new-masters-candidate
+  title: "DuckDB tpch/tpcds extensions (TPC data generators)"
+  type: software
+  occurrences:
+  - {ref: 'm-bench:94:e1', role: mention}
+- id: candidate-source-scaphandre
+  kind: new-masters-candidate
+  title: "Scaphandre (RAPL-based power agent)"
+  type: software
+  occurrences:
+  - {ref: 'm-bench:99:u2', role: landing}
+- id: candidate-source-kepler
+  kind: new-masters-candidate
+  title: "Kepler (Kubernetes energy metrics)"
+  type: software
+  occurrences:
+  - {ref: 'm-bench:99:u3', role: landing}
+- id: candidate-source-spec-benchmarks
+  kind: new-masters-candidate
+  title: "SPEC benchmarks (run and reporting rules)"
+  type: website
+  occurrences:
+  - {ref: 'm-bench:100:u1', role: landing}
+- id: source-mit-missing-semester
+  kind: new-active-source
+  title: "MIT — The Missing Semester of Your CS Education"
+  type: course
+  shelf: thematic-group-software
+  note: "⚠ already used by the active study map of unit-job-engineering-tools-fluency through inline URLs without a source ID (found outside the declared inputs)"
+  occurrences:
+  - {ref: 'm-bench:104:e1', role: mention}
+- id: candidate-source-ostep
+  kind: new-masters-candidate
+  title: "Arpaci-Dusseau — Operating Systems: Three Easy Pieces (OSTEP)"
+  type: book
+  note: "⚠ likely needed by an operating-systems module in the bachelor; register actively when such a module's plan is built"
+  occurrences:
+  - {ref: 'm-bench:105:e1', role: mention, note: "the book's homework simulators"}
+- id: out-of-scope:planning-note
+  kind: out-of-scope
+  reason: "Planning, cross-reference or strategy note inside a resource list; not a teaching object"
+  occurrences: ['m-bench:39:e1', 'm-bench:49:e1', 'm-bench:67:e1', 'm-bench:73:e1', 'm-bench:74:e1', 'm-bench:75:e1', 'm-bench:76:e1']
+- id: out-of-scope:venue
+  kind: out-of-scope
+  reason: "Publication venue or proceedings index; papers are chosen from it at use time, so it is not itself a teaching object"
+  occurrences: ['m-bench:66:e1', 'm-algo:109:e1']
+- id: out-of-scope:folder-reference
+  kind: out-of-scope
+  reason: "Folder named as a location in prose; the files it held are dispositioned through their own occurrences"
+  occurrences: ['m-bench:77:p1']

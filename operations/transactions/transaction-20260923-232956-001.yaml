@@ -1,0 +1,35 @@
+schema_version: 2
+id: transaction-20260923-232956-001
+type: transaction-receipt
+status: committed
+capability: masters-planning.catalog.update
+committed_at: '2026-09-23T23:29:56+02:00'
+snapshot_before: sha256:36d4e608c02af74a514eae9328b8095ff1d0ece4600be5092a3515b35884f5b6
+snapshot_after: sha256:0a56a7ecf8e532b0672c4ce6c5c19d7ca4a51dbf82234298376f21ecf578e84b
+expected_revisions:
+  master-planning-catalog: 0
+artifact_revisions:
+  master-planning-catalog:
+    before: 0
+    after: 1
+writes:
+- path: curriculum/quarantine/masters-planning/catalog.yaml
+  sha256_before: null
+  sha256_after: f1ecec2329c0f695935cc1fe65a35f295f1bb3ac0fa0a58725cf8df15840ea13
+  created: true
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: masters-planning.catalog.update
+    declared_writes:
+    - curriculum/quarantine/masters-planning/catalog.yaml
+request:
+  channel: operator
+  request_id: request-step6-catalog-populate-20260923
+  idempotency_key: step6-catalog-populate-20260923
+  intent_sha256: sha256:8a32f72abb67a9f6786357b20c62dd9ee2f76b7ab82f047d574b4a149394dc86
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:8a32f72abb67a9f6786357b20c62dd9ee2f76b7ab82f047d574b4a149394dc86
