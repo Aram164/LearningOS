@@ -1,0 +1,25 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/ability-context-v1",
+  "title": "Ability context response",
+  "x-governs": "artifact",
+  "type": "object",
+  "required": ["schema_version", "snapshot_id", "contract"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "snapshot_id": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "contract": {"const": "ability-context-v1"},
+    "abilities": {"type": "array", "maxItems": 50},
+    "ability": {"type": "object"},
+    "bridges": {"type": "array"},
+    "candidate_connections": {"type": "array", "maxItems": 20},
+    "candidate_connection_count": {"type": "integer", "minimum": 0},
+    "focus": {"type": "string"},
+    "state": {"type": "string"},
+    "reason": {"type": "string"},
+    "total": {"type": "integer", "minimum": 0},
+    "truncated": {"type": "boolean"},
+    "expand": {},
+    "schema": {}
+  }
+}

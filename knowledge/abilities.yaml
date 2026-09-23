@@ -1,0 +1,112 @@
+# Independently reviewed ability identities. These do not attest learner work.
+abilities:
+- id: ability-chain-rule-graph
+  title: Apply the chain rule on a computation graph
+  claim: Calculate loss derivatives along each path of a small differentiable graph, sum branch contributions, and show intermediate values and shapes.
+  source: curriculum/modules/module-hu-aml/units/unit-aml-l09/study-map.yaml#stage-aml-l09-chain-rule
+  conditions: [specified differentiable graph and loss, no worked solution shown]
+  evidence_spec: [derivative for each local operation, branch contributions summed correctly, intermediate values and shapes shown]
+  concept_ids: [concept-chain-rule]
+  module_ids: [module-hu-aml, module-hu-m2-statistik-analysis]
+  preparation_routes: []
+  review: {state: reviewed, reviewed_by: codex-ability-review-agent, reviewed_on: '2026-09-23'}
+- id: ability-mlp-forward-shapes
+  title: Calculate a specified network's forward pass and shapes
+  claim: Given a feed-forward network, input, parameters, and activations, calculate layer outputs and keep vector and matrix shapes consistent.
+  source: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/study-map.yaml#stage-sad-l15-forward
+  conditions: [specified network input parameters and activations, no worked solution shown]
+  evidence_spec: [each affine and activation output, compatible dimensions throughout]
+  concept_ids: [concept-backpropagation]
+  module_ids: [module-hu-aml, module-hu-m2-statistik-analysis]
+  preparation_routes: []
+  review: {state: reviewed, reviewed_by: codex-ability-review-agent, reviewed_on: '2026-09-23'}
+- id: ability-aml-backprop-local
+  title: Calculate local backpropagation gradients in AML
+  claim: Given a specified graph and loss, propagate one output derivative backward through local operations and show the resulting parameter gradient.
+  source: curriculum/modules/module-hu-aml/units/unit-aml-l09/study-map.yaml#stage-aml-l09-backprop
+  conditions: [specified differentiable graph and loss, no worked solution shown]
+  evidence_spec: [correct local derivative chain, correct parameter gradient and shape]
+  concept_ids: [concept-backpropagation, concept-chain-rule]
+  module_ids: [module-hu-aml]
+  preparation_routes:
+  - all_of: [ability-chain-rule-graph, ability-mlp-forward-shapes]
+    reason: A correct local backward step uses the chain rule and a known forward computation.
+    source: curriculum/modules/module-hu-aml/units/unit-aml-l09/unit.yaml
+  review: {state: reviewed, reviewed_by: codex-ability-review-agent, reviewed_on: '2026-09-23'}
+- id: ability-sad-backprop-local
+  title: Calculate local backpropagation gradients in SaD
+  claim: Given a specified graph and loss, propagate one output error backward through local operations and show the resulting parameter gradient.
+  source: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/study-map.yaml#stage-sad-l15-backprop
+  conditions: [specified differentiable graph and loss, no worked solution shown]
+  evidence_spec: [correct local derivative chain, correct parameter gradient and shape]
+  concept_ids: [concept-backpropagation, concept-chain-rule]
+  module_ids: [module-hu-m2-statistik-analysis]
+  preparation_routes:
+  - all_of: [ability-chain-rule-graph, ability-mlp-forward-shapes]
+    reason: Error propagation uses the chain rule over the network's forward operations.
+    source: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l15/unit.yaml
+  review: {state: reviewed, reviewed_by: codex-ability-review-agent, reviewed_on: '2026-09-23'}
+- id: ability-aml-backprop-layerwise
+  title: Derive a full MLP backward pass in AML
+  claim: Perform the forward pass and derive dz, dW, db, and da for every layer of a specified network, then explain a parameter update.
+  source: curriculum/modules/module-hu-aml/units/unit-aml-l09/study-map.yaml#stage-aml-l09-backprop
+  conditions: [specified network activation loss parameters and input, no worked solution shown]
+  evidence_spec: [forward values and shapes, dz dW db and da for every layer, correct explanation of a parameter update]
+  concept_ids: [concept-backpropagation, concept-chain-rule]
+  module_ids: [module-hu-aml]
+  preparation_routes:
+  - all_of: [ability-chain-rule-graph, ability-mlp-forward-shapes, ability-aml-backprop-local]
+    reason: Full layerwise derivation extends a correct local backward step through every layer.
+    source: curriculum/modules/module-hu-aml/units/unit-aml-l09/unit.yaml
+  - all_of: [ability-chain-rule-graph, ability-mlp-forward-shapes, ability-sad-backprop-local]
+    reason: Local transfer from SaD can prepare the shared derivative mechanism, while AML's full pass still needs its own work.
+    source: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md
+  review: {state: reviewed, reviewed_by: codex-ability-review-agent, reviewed_on: '2026-09-23'}
+- id: ability-sad-ols-simple
+  title: Derive simple least squares in SaD
+  claim: Derive the ordinary least-squares slope and intercept for one predictor by minimizing vertical squared residuals.
+  source: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/study-map.yaml#stage-sad-l03-simple-regression
+  conditions: [one predictor with nonzero variance, intercept included, vertical squared residuals]
+  evidence_spec: [objective and derivative, slope and intercept with predictor and response roles clear]
+  concept_ids: [concept-linear-regression]
+  module_ids: [module-hu-m2-statistik-analysis]
+  preparation_routes: []
+  review: {state: reviewed, reviewed_by: codex-ability-review-agent, reviewed_on: '2026-09-23'}
+- id: ability-aml-ols-simple
+  title: Derive simple least squares in AML
+  claim: Derive the ordinary least-squares weight and bias for one predictor by minimizing vertical squared residuals.
+  source: curriculum/modules/module-hu-aml/units/unit-aml-l03/study-map.yaml#stage-aml-l03-solution
+  conditions: [one predictor with nonzero variance, intercept included, vertical squared residuals]
+  evidence_spec: [objective and derivative, weight and bias with predictor and response roles clear]
+  concept_ids: [concept-linear-regression]
+  module_ids: [module-hu-aml]
+  preparation_routes: []
+  review: {state: reviewed, reviewed_by: codex-ability-review-agent, reviewed_on: '2026-09-23'}
+bridges:
+- from: ability-aml-backprop-local
+  to: ability-sad-backprop-local
+  kind: equivalence
+  carries: A correctly worked local chain-rule parameter gradient on the same graph and loss.
+  changes: AML continues to a full layerwise dz/dW/db/da derivation; SaD emphasizes an overview and focused ReLU task. Neither extension follows from this bridge.
+  conditions: [specified differentiable graph and loss, no worked solution shown]
+  source: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md
+  source_sha256: sha256:0600bb48b0bbf14312044811442615b20a6e1bc9924c2fc86b7a5f9ff90fe245
+  review: {state: reviewed, reviewed_by: codex-ability-review-agent, reviewed_on: '2026-09-23'}
+- from: ability-sad-backprop-local
+  to: ability-aml-backprop-layerwise
+  kind: extension
+  carries: Local chain-rule gradients are useful preparation.
+  changes: The AML target requires every layer's dz, dW, db, and da plus a parameter update, demonstrated separately.
+  conditions: [specified network activation loss parameters and input]
+  source: knowledge/notes/cross-domain/note-aml-sad-master-wiring.md
+  source_sha256: sha256:0600bb48b0bbf14312044811442615b20a6e1bc9924c2fc86b7a5f9ff90fe245
+  review: {state: reviewed, reviewed_by: codex-ability-review-agent, reviewed_on: '2026-09-23'}
+- from: ability-sad-ols-simple
+  to: ability-aml-ols-simple
+  kind: equivalence
+  carries: The same slope and intercept derivation for one predictor, after translating SaD's k/d to AML's weight/bias notation.
+  changes: SaD correlation causality and inference and AML polynomial features and regularization remain separate.
+  conditions: [one predictor with nonzero variance, intercept included, vertical squared residuals]
+  source: knowledge/notes/cross-domain/note-regression-sad-aml-islp-bridge.md
+  source_sha256: sha256:f799f57ae2be5ff42584748ad15b94e1ebba113691fc8199d74870397bd307dd
+  review: {state: reviewed, reviewed_by: codex-ability-review-agent, reviewed_on: '2026-09-23'}

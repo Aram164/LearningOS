@@ -31,6 +31,11 @@ import sys
 
 from learning_os.ai_actions import AIActionError, StaleDeliveryError  # noqa: E402
 from learning_os.backup_manifest import BackupManifestError  # noqa: E402
+from learning_os.commands.abilities import (  # noqa: E402
+    cmd_ability_candidate_append,
+    cmd_ability_context,
+    cmd_ability_observation_append,
+)
 
 # Command registry: one module per domain, so a behaviour is found by name.
 from learning_os.commands.ai import (  # noqa: E402
@@ -60,6 +65,7 @@ from learning_os.commands.material import (  # noqa: E402
     cmd_plan_edit_context,
     cmd_route_patch,
 )
+from learning_os.commands.material_span import cmd_material_span  # noqa: E402
 from learning_os.commands.module import (  # noqa: E402
     cmd_module_list,
     cmd_module_plan_import,
@@ -184,6 +190,19 @@ def build_parser() -> argparse.ArgumentParser:
                    help="observations digest from the previous page; required "
                         "when continuing past offset 0")
     p.set_defaults(func=cmd_material_context)
+
+    p = sub.add_parser("ability-context", help="read the small ability horizon or expand one ability")
+    p.add_argument("ability_id", nargs="?", help="one ability identity to expand")
+    p.add_argument("--limit", type=int, default=12)
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_ability_context)
+
+    p = sub.add_parser("material-span", help="describe one exact route and optionally inspect local content")
+    p.add_argument("unit_id")
+    p.add_argument("route_id")
+    p.add_argument("--extract", action="store_true")
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_material_span)
 
     p = sub.add_parser("search", help="search the complete fresh projection")
     p.add_argument("query")
@@ -788,6 +807,35 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument('--expected-snapshot', default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_observation_append)
+
+    p = sub.add_parser('ability-observation-append', help='append one learner-confirmed ability claim')
+    p.add_argument('--workspace', required=True)
+    p.add_argument('--ability', required=True)
+    p.add_argument('--claim', required=True, help='the precise claim Aram confirmed')
+    p.add_argument('--work-ref', required=True, help='pointer to the actual attempt')
+    p.add_argument('--confirmation-ref', required=True, help='pointer to Aram\'s confirmation of this claim')
+    p.add_argument('--activity', required=True)
+    p.add_argument('--result', required=True, choices=['correct', 'incorrect', 'partial', 'abandoned'])
+    p.add_argument('--assistance', required=True)
+    p.add_argument('--condition', action='append', default=[])
+    p.add_argument('--evidence-tag', action='append', default=[])
+    p.add_argument('--condition-not-met', action='append', default=[])
+    p.add_argument('--supersedes', default=None)
+    p.add_argument('--expected-snapshot', default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_ability_observation_append)
+
+    p = sub.add_parser('ability-candidate-append', help='capture a tentative ability connection')
+    p.add_argument('--from-ability', required=True)
+    p.add_argument('--to-ability', required=True)
+    p.add_argument('--kind', required=True, choices=['equivalence', 'extension', 'connection'])
+    p.add_argument('--carries', required=True)
+    p.add_argument('--changes', required=True)
+    p.add_argument('--condition', action='append', default=[])
+    p.add_argument('--source-ref', required=True)
+    p.add_argument('--expected-snapshot', default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_ability_candidate_append)
 
     p = sub.add_parser('observe', help="record Aram's own evidence directly; the terminal session is the approval")
     p.add_argument('requirement', help='requirement id from the current study-map stages')

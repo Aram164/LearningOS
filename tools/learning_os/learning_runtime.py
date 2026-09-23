@@ -103,6 +103,8 @@ def runtime_review_fingerprint(stage: dict) -> str:
         "runtime_target": stage.get("runtime_target"),
         "affordances": pairs,
     }
+    if "ability_ids" in stage:
+        payload["ability_ids"] = sorted(stage["ability_ids"])
     data = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
     return "sha256:" + hashlib.sha256(data.encode()).hexdigest()
 

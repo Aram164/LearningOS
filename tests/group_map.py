@@ -47,12 +47,14 @@ GROUPS: dict[str, list[str]] = {
         "test_material_editing.py",
         "test_material_locator_fallback.py",
         "test_material_slices.py",
+        "test_material_span.py",
         "test_material_summaries.py",
         "test_material_text_cache.py",
         "test_materials_manifest.py",
     ],
     # Semantics, synthesis, dossiers, goals, runtime, operator questions.
     "synthesis": [
+        "test_abilities.py",
         "test_agent_tasks.py",
         "test_ai_actions.py",
         "test_context_dossiers.py",

@@ -443,6 +443,8 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-sad-l03-simple-regression
+  ability_ids:
+  - ability-sad-ols-simple
   number: 4
   title: Simple linear regression and least squares
   status: pending

@@ -201,6 +201,8 @@ def brief_bootstrap(args) -> int:
                     "note_read": "note-read NOTE_ID",
                     "content_search": "search QUERY --type note --content",
                     "material_context": "material-context QUERY",
+                    "ability_context": "ability-context",
+                    "material_span": "material-span UNIT_ID ROUTE_ID",
                     "capability_detail": "capabilities NAME --json",
                     "plan_brief": [f"plan-edit-context {unit_id} --brief"
                                    for unit_id in owed],

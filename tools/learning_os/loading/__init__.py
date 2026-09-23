@@ -39,7 +39,7 @@ from .curriculum import (
     load_resume_pointer,
     load_thematic_groups,
 )
-from .knowledge import load_concepts, load_garden, load_notes, load_relations
+from .knowledge import load_abilities, load_concepts, load_garden, load_notes, load_relations
 from .library import load_collections, load_sources, load_topics
 from .model import (
     Coordination,
@@ -101,6 +101,7 @@ def load_repo(root: Path | str) -> Repo:
     repo = Repo(root=root)
 
     load_concepts(repo, root)
+    load_abilities(repo, root)
     load_relations(repo, root)
 
     load_sources(repo, root)

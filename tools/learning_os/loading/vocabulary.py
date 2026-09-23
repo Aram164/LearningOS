@@ -12,7 +12,7 @@ import re
 
 FRONTMATTER_RE = re.compile(r"\A---\s*\n(.*?)\n---\s*\n?", re.DOTALL)
 
-ID_RE = re.compile(r"^(note|concept|source|workspace|module)-[a-z0-9]+(?:-[a-z0-9]+)*$")
+ID_RE = re.compile(r"^(note|concept|ability|source|workspace|module)-[a-z0-9]+(?:-[a-z0-9]+)*$")
 PATH_ID_RE = re.compile(r"^path-[a-z0-9]+(?:-[a-z0-9]+)*$")
 PROGRAM_ID_RE = re.compile(r"^program-[a-z0-9]+(?:-[a-z0-9]+)*$")
 UNIT_ID_RE = re.compile(r"^unit-[a-z0-9]+(?:-[a-z0-9]+)*$")

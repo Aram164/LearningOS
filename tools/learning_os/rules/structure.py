@@ -29,6 +29,9 @@ class ChecksStructure:
         r = self.repo
         self._schema_check("concepts", {"concepts": list(r.concepts.values())},
                            "knowledge/concepts.yaml")
+        self._schema_check("abilities", {"abilities": list(r.abilities.values()),
+                                          "bridges": r.ability_bridges},
+                           "knowledge/abilities.yaml")
         self._schema_check("concept-relations", {"relations": r.relations},
                            "knowledge/concept-relations.yaml")
         self._schema_check("sources", {"sources": list(r.sources.values())},
@@ -90,6 +93,7 @@ class ChecksStructure:
     def check_identity(self):
         families = {
             "note": self.repo.notes, "concept": self.repo.concepts,
+            "ability": self.repo.abilities,
             "source": self.repo.sources, "workspace": self.repo.workspaces,
             "module": self.repo.modules,
         }

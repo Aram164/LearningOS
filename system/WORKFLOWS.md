@@ -248,10 +248,13 @@ his selections — bounded to one unit, stage or workspace and guarded by exact
 artifact revisions.
 
 A second, narrower set carries the same approval kind **only over the `ui`
-channel**: the four workflows where the application shows the exact change
+channel**: the workflows where the application shows the exact change
 before a deliberate Save or Apply — `concept.relations.change` (ADR-017's
-hand-authored connections), `review.prepare`, `review.apply`, and
-`unit.map.import` after its no-write `--check` preflight. That Save is the
+hand-authored connections), `review.prepare`, `review.apply`,
+`unit.map.import` after its no-write `--check` preflight, and the two
+append-only ability records confirmed from Review:
+`learner.ability-observation.append`, whose confirmation pointer names the app
+request, and `ability.candidate.append`, which carries no evidence. That Save is the
 explicit approval those contracts already required. It is not a second
 approval protocol and not an extra confirmation dialog, and the `ui` label is
 provenance inside this trusted local application rather than proof a human was
@@ -265,7 +268,12 @@ Everything else is admitted from no channel at all: module plans, route
 patches, note revision and evidence, material synthesis, AI-action delivery,
 identity migrations. Those keep the full GatewayEnvelopeV2 ceremony through an
 approved operator request, and an agent-origin envelope claiming a gesture for
-*any* capability — including the four reviewed-UI ones — fails closed.
+*any* capability — including the reviewed-UI ones — fails closed.
+
+Ability IDs are stable. Rename the title without changing the ID. To retire an
+identity, retain its registry row with `lifecycle: retired`; its observations
+stay readable, but it cannot receive new observations or candidates and cannot
+support a current ability through a bridge. Do not delete or reuse the ID.
 
 Both sets live in `system/contracts/capabilities.yaml` (`admission:` and
 `admission_channels:`) and `tools/learning_os/commands/capability.py`

@@ -3,6 +3,25 @@ schema_version: 1
 contract_version: 2
 cli_protocol: 6
 queries:
+  ability.context:
+    handler: ability_context
+    cli_command: ability-context
+    result: ability-context-v1
+    schema: system/schema/ability-context.schema.json
+    invariants:
+    - snapshot-bound bounded global horizon with focused expansion
+    - candidate abilities and bridges never affect readiness or evidence transfer
+    - only reviewed equivalence with a current source digest can transfer confirmed evidence under stated conditions
+    - contradictory and corrected work remains inspectable; stage completion grants nothing
+  material.span:
+    handler: material_span
+    cli_command: material-span
+    result: material-span-v1
+    schema: system/schema/material-span.schema.json
+    invariants:
+    - one exact registered route yields common source identity, locator, type, availability, and observed digest
+    - local extraction is on demand and bounded; remote sources are never fetched implicitly
+    - unreadable or changed bytes remain explicit and no semantic judgment is inferred
   runtime.session:
     handler: runtime_session
     result: runtime-session-v1
@@ -108,6 +127,31 @@ queries:
     - reads only the sanitized catalog and approved comparisons
     - absent from normal manifest, search, workload, deadlines, recommendations, and ordinary AI
 commands:
+  ability.candidate.append:
+    handler: ability_candidate_append
+    cli_command: ability-candidate-append
+    admission: direct-user-gesture
+    admission_channels:
+    - ui
+    writes:
+    - knowledge/ability-candidates.jsonl
+    invariants:
+    - appends a provenance-linked tentative connection between known abilities
+    - never changes a reviewed bridge or contributes to readiness or evidence transfer
+    - snapshot and candidate-ledger revision are guarded by a V2 receipt
+  learner.ability-observation.append:
+    handler: ability_observation_append
+    cli_command: ability-observation-append
+    admission: direct-user-gesture
+    admission_channels:
+    - ui
+    writes:
+    - work/active/*/ability-observations.jsonl
+    invariants:
+    - appends only a learner-confirmed precise claim linked to actual work and a confirmation pointer
+    - ability identity must be active and reviewed; evidence binds to its claim, conditions, and criteria hash
+    - corrections preserve prior observations and conflicting work stays visible
+    - snapshot and workspace revision are guarded by a V2 receipt
   learner.observation.append:
     handler: observation_append
     cli_command: observation-append

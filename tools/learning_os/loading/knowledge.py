@@ -31,6 +31,33 @@ def load_concepts(repo: Repo, root: Path) -> None:
         repo.concept_origins.setdefault(cid, origin)
 
 
+def load_abilities(repo: Repo, root: Path) -> None:
+    """Independent ability identities; never inferred from concept tags or stages."""
+    records, origins, failures = _load_registry(
+        root / "knowledge" / "abilities.yaml", root / "knowledge" / "abilities",
+        "abilities", root=root,
+    )
+    repo.parse_failures.extend(failures)
+    for record, origin in zip(records, origins, strict=True):
+        ability_id = _record_id(record)
+        if ability_id is None:
+            repo.parse_failures.append((origin, "ability record with missing or empty id"))
+            continue
+        _register(repo, repo.abilities, ability_id, record, origin, "ability")
+        repo.ability_origins.setdefault(ability_id, origin)
+    # Candidate edges remain visible but cannot affect readiness or transfer.
+    path = root / "knowledge" / "abilities.yaml"
+    if path.exists():
+        from .yamlio import _load_yaml
+        try:
+            data = _load_yaml(path, root)
+            if not isinstance(data, dict) or not isinstance(data.get("bridges"), list):
+                raise LoaderError("ability bridges must contain a bridges array")
+            repo.ability_bridges = data["bridges"]
+        except LoaderError as exc:
+            repo.parse_failures.append((path, str(exc)))
+
+
 def load_relations(repo: Repo, root: Path) -> None:
     """Concept relations (consolidated or partitioned)."""
     records, _, failures = _load_registry(

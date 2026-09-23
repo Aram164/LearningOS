@@ -153,6 +153,9 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         if family == "concept":
             o = r.concept_origins.get(rec_id)
             return self._rel(o) if o else "knowledge/concepts.yaml"
+        if family == "ability":
+            o = r.ability_origins.get(rec_id)
+            return self._rel(o) if o else "knowledge/abilities.yaml"
         if family == "source":
             o = r.source_origins.get(rec_id)
             return self._rel(o) if o else "sources/sources.yaml"
@@ -220,6 +223,21 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
             read_observations(self.repo, collect_requirements(self.repo))
         except RuntimeInputError as exc:
             self.err("LEARNING-RUNTIME", str(exc))
+        from ..abilities import (
+            read_ability_candidates,
+            read_ability_observations,
+            validate_ability_registry,
+        )
+        for issue in validate_ability_registry(self.repo):
+            self.err("ABILITY-REFERENCE", issue, "knowledge/abilities.yaml")
+        try:
+            read_ability_observations(self.repo)
+        except (RuntimeInputError, OSError) as exc:
+            self.err("ABILITY-EVIDENCE", str(exc))
+        try:
+            read_ability_candidates(self.repo)
+        except (RuntimeInputError, OSError) as exc:
+            self.err("ABILITY-CANDIDATE", str(exc))
         self.check_runtime_review()
 
     def check_runtime_review(self) -> None:

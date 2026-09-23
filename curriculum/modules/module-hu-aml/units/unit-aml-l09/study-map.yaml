@@ -142,6 +142,8 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-aml-l09-chain-rule
+  ability_ids:
+  - ability-chain-rule-graph
   number: 2
   title: Chain rule and local gradients
   status: pending
@@ -312,6 +314,9 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-aml-l09-backprop
+  ability_ids:
+  - ability-aml-backprop-local
+  - ability-aml-backprop-layerwise
   number: 3
   title: Layer-wise backpropagation
   status: pending

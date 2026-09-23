@@ -219,10 +219,14 @@ channel, for writes that are the learner's own study record or his own
 choice among authored material — his evidence, captures and Garden seeds,
 progress, session notes, attachments, detours, resource feedback, Atlas
 questions, source selections. **`UI_REVIEWED_ALLOWLIST`** admits it only
-over `channel == "ui"`, for the four workflows where the application shows
+over `channel == "ui"`, for the workflows where the application shows
 the exact change before a deliberate Save or Apply: `concept.relations.change`
 (ADR-017's hand-authored connections), `review.prepare`, `review.apply`,
-and `unit.map.import` after its no-write preflight. That Save *is* the
+`unit.map.import` after its no-write preflight, and, from Review, the two
+append-only ability records — `learner.ability-observation.append` (a claim
+Aram confirms, whose confirmation pointer names that app request) and
+`ability.candidate.append` (a tentative connection that carries nothing).
+That Save *is* the
 explicit approval these contracts already required; the review was
 happening on screen and the envelope had no way to say so. It is not a
 second approval protocol, and a `ui` channel label is provenance inside
