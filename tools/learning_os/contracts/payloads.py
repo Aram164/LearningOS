@@ -18,6 +18,8 @@ import argparse
 import json
 import re
 
+from .batch_notes import bundle_schema as batch_notes_schema
+
 # Owned by the envelope, never by the payload.
 #
 # `approve` is the operator's gesture on the envelope, and the concurrency
@@ -52,49 +54,16 @@ _GATEWAY_INLINE_REQUIRED = {
 }
 
 #: Nested subschemas for object-typed payload fields the CLI parser cannot
-#: express. Argparse declares only that a field IS an object; the registry
-#: states what the gateway requires inside it. Keyed by (capability, field)
-#: so the merge stays scoped, and the generated files remain a deterministic
-#: function of parser plus registry. A nested shape must mirror its handler's
-#: checks, never invent stricter ones: direct CLI use never sees the schema.
+#: express. Argparse declares only that a field IS an object; the registered
+#: fragment states what the gateway requires inside it. Keyed by
+#: (capability, field) so the merge stays scoped, and the generated files
+#: remain a deterministic function of parser plus registry. Each fragment is
+#: built by its own contract module — which the handler imports too — never
+#: written inline here: one source of truth, mirrored nowhere. A nested shape
+#: must mirror its handler's checks, never invent stricter ones: direct CLI
+#: use never sees the schema.
 _NESTED_SCHEMAS: dict[tuple[str, str], dict] = {
-    ("note.analysis.save_batch", "bundle"): {
-        "type": "object",
-        "required": ["notes"],
-        "additionalProperties": False,
-        "properties": {
-            "notes": {
-                "type": "array",
-                "minItems": 1,
-                "maxItems": 20,
-                "items": {
-                    "type": "object",
-                    "required": ["analysis", "body_file", "body_file_sha256"],
-                    "additionalProperties": False,
-                    "properties": {
-                        "analysis": {
-                            "type": "object",
-                            # Mirrors ANALYSIS_FIELDS in commands/analysis.py:
-                            # a field added there must be added here.
-                            "required": ["id", "title", "path", "binding"],
-                            "additionalProperties": False,
-                            "properties": {
-                                "id": {"type": "string"},
-                                "title": {"type": "string"},
-                                "path": {"type": "string"},
-                                "binding": {"type": "object"},
-                            },
-                        },
-                        "body_file": {"type": "string", "minLength": 1},
-                        "body_file_sha256": {
-                            "type": "string",
-                            "pattern": "^sha256:[a-f0-9]{64}$",
-                        },
-                    },
-                },
-            },
-        },
-    },
+    ("note.analysis.save_batch", "bundle"): batch_notes_schema(),
 }
 
 
