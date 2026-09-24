@@ -47,35 +47,59 @@ total.
 
 ## Start here
 
-Do not recursively discover the repository. Begin with:
+Do not recursively discover the repository. Entry is task-shaped: start
+with the read that answers the task.
 
 ```bash
 python tools/los.py capabilities --compact --json
-python tools/los.py bootstrap --brief
 ```
-
-Brief is the default session entry: guards, resume, owed work, deadlines,
-and runnable expands on one page. `--compact` pages the full collections
-when the brief's expands are not enough.
 
 The capability index is discovery only. Before using a capability, fetch its
 complete definition with `capabilities NAME --json`; command details include
 the declared payload schema. The complete catalogue remains available through
 `capabilities --json` when the task needs it.
 
+Pick one entry read; do not stack them:
+
+- A named route → `plan-edit-context UNIT_ID --route-id ROUTE_ID`
+  (or `--route-ids A B ...` for 1–20 routes of one unit in one
+  snapshot-bound call), then `route-patch --check`. The route response
+  already carries the snapshot and exact revision guards; do not read
+  `bootstrap` or the unit brief first.
+- A named stage → `plan-edit-context UNIT_ID --stage-id STAGE_ID`;
+  `inspect STAGE_ID` does not resolve stages.
+- Unit coverage, source-completeness, or unknown route/stage ids →
+  `plan-edit-context UNIT_ID --brief` first (guards, id inventories,
+  missing evidence, reusable analysis refs, preflight checks, runnable
+  expands), then expand one route, stage, or the full `--audit` form
+  only when the task needs complete bodies.
+- An open "what should I work on?" / "what next?" → `bootstrap --brief`,
+  then the named workspace plus `inspect WORKSPACE_ID`; use
+  `inspect coordination` when priorities matter.
+
+`bootstrap --brief` is the open-question entry: guards, resume, owed work,
+deadlines, and runnable expands on one page. `--compact` pages the full
+collections when the brief's expands are not enough. Start with one of
+them, not both as routine startup; expand to the other later only when
+the task needs it. Full `bootstrap` is an explicit bulk read, not routine
+startup.
+
 Decide which read answers the question before reading:
 
 - A named record → `inspect ID`. A named stage →
   `plan-edit-context UNIT_ID --stage-id STAGE_ID`; `inspect STAGE_ID` does not
-  resolve stages. Before changing a plan, start with
-  `plan-edit-context UNIT_ID --brief`.
+  resolve stages. A named route → `plan-edit-context UNIT_ID --route-id
+  ROUTE_ID` (or the `--route-ids` batch); the route response already
+  carries the snapshot and revision guards. Reach for the unit `--brief`
+  only for unit coverage, source-completeness, or unknown ids.
 - A material question → saved context first (`material-context`), else one
   exact span (`material-span UNIT_ID ROUTE_ID`); never trawl.
 - A new video → title/description and course/playlist membership for provisional
   intake. Examine with Gemini Notebook only when selected for use, verify
   against exact video timestamps, then save the bounded analysis; see
   `system/WORKFLOWS.md` §6a.
-- An open "what next?" → `bootstrap --brief`, then the named workspace plus
+- An open "what should I work on?" / "what next?" → `bootstrap --brief`
+  (the open-question entry above), then the named workspace plus
   `inspect WORKSPACE_ID`; use `inspect coordination` when priorities matter.
   The brief reports where study stopped and recorded workspace options; neither
   chooses the next priority for Aram.
@@ -92,7 +116,7 @@ Decide which read answers the question before reading:
   --reject|--defer|--close` records Aram's explicit decision; do not choose
   a disposition on his behalf.
 
-Compact startup preserves complete material access through `inspect ID`.
+Task-shaped entry preserves complete material access through `inspect ID`.
 Its `domain_atlas` glance summarizes all projected notes and shelves across
 domains, independently of pagination; open the domain atlas for the full map.
 Read several known records with `inspect ID1 ID2 ...` (at most 20) to share one
@@ -102,26 +126,28 @@ bodies. Ask governance questions through `semantic PREDICATE --input k=v`
 (`semantic --list` names the 23 registered predicates;
 `semantic --recipe CLASS` shows the worked example procedures for one
 question class, examples only) instead of
-re-deriving meaning from scattered YAML. Full `bootstrap` is an explicit
-bulk read, not routine agent startup.
-For plan editing, start with `plan-edit-context UNIT_ID --brief`: guards,
-id inventories, missing evidence, reusable analysis refs, preflight checks,
-and runnable expand commands.
+re-deriving meaning from scattered YAML.
+For plan editing, start with the focused read: `--route-id ROUTE_ID`
+(or the `--route-ids` batch) for one material and its stage-specific
+overrides, `--stage-id STAGE_ID` for one stage's own flags and placements
+instead of the whole map. Each carries its snapshot and revision guards.
+Read several known routes with `--route-ids A B ...` (1 to 20 distinct
+routes of one unit, in order) to share one snapshot and load; the batch
+preserves requested order and refuses missing, duplicate, or out-of-bounds
+ids without a partial payload. Shared descriptions occur once. Start with
+`plan-edit-context UNIT_ID --brief` only for unit coverage,
+source-completeness, or unknown ids: guards, id inventories, missing
+evidence, reusable analysis refs, preflight checks, and runnable expand
+commands.
 The brief's `unit_audit.synthesis.replacement_required_if_evidential_routes_change`
 reports whether an existing dossier needs replacement if a proposed route change
 alters evidence; `fresh` reports the dossier's current validity separately.
 The actual revision preflight decides whether the proposed change is evidential.
-Add `--route-id ROUTE_ID`
-for one material and its stage-specific overrides. Read several known routes
-with `--route-ids A B ...` (1 to 20 distinct routes of one unit, in order) to
-share one snapshot and load; the batch preserves requested order and refuses
-missing, duplicate, or out-of-bounds ids without a partial payload. Shared
-descriptions occur once. Read one stage's own flags and placements with
-`--stage-id STAGE_ID` instead of the whole map; universe questions still
-need the full unit context. Before changing material details, run `route-patch UNIT_ID ROUTE_ID
---changes JSON --check`, then apply the same changes through `route.patch`
-with the returned snapshot and exact revision guards. Full plan imports are
-for structure, ordering, scope, or resource membership changes.
+Universe questions still need the full unit context. Before changing
+material details, run `route-patch UNIT_ID ROUTE_ID --changes JSON --check`,
+then apply the same changes through `route.patch` with the returned
+snapshot and exact revision guards. Full plan imports are for structure,
+ordering, scope, or resource membership changes.
 Continue a summary page with its returned offset and snapshot. Read saved
 reasoning with `note-read NOTE_ID` (bounded Unicode-character segments) and
 search beyond note summaries with `search QUERY --type note --content`.

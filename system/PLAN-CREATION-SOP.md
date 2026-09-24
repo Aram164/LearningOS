@@ -79,11 +79,12 @@ A plan is complete only when all of the following are true:
 
 ## Gate 0 — establish the contract and repository state
 
-Start compact ([OPERATOR.md](OPERATOR.md) Start here). Run:
+Follow [OPERATOR.md](OPERATOR.md) task-shaped entry; do not run both
+`bootstrap --brief` and `bootstrap --compact` as routine startup — a later,
+needed expansion is allowed. For plan work, run once:
 
 ```bash
 .venv/bin/python tools/los.py capabilities --compact --json
-.venv/bin/python tools/los.py bootstrap --compact
 git status --short
 ```
 
@@ -97,21 +98,27 @@ use:
 Full `capabilities --json` and full `bootstrap` are explicit bulk reads for
 tasks that need the complete catalogue or the full projection, not routine
 startup. For plan work, read focused context instead of the full projection:
-`plan-edit-context UNIT_ID --brief` (identities, guards, id inventories,
-missing evidence, reusable analysis refs, preflight checks, and runnable
-expand commands) first, then expand one route, stage, or the full `--audit`
-form only when the task needs complete bodies. Use `inspect ID` for
-records, `note-read` for note bodies, and `material-context QUERY --unit
-UNIT_ID` when the need is an explanation rather than a known file.
+a named route starts with `plan-edit-context UNIT_ID --route-id ROUTE_ID`
+(or the `--route-ids` batch) and `route-patch --check`; a named stage
+starts with `--stage-id`. Reach for `plan-edit-context UNIT_ID --brief`
+(identities, guards, id inventories, missing evidence, reusable analysis
+refs, preflight checks, and runnable expand commands) only for unit
+coverage, source-completeness, or unknown ids, then expand one route,
+stage, or the full `--audit` form only when the task needs complete bodies.
+Use `inspect ID` for records, `note-read` for note bodies, and
+`material-context QUERY --unit UNIT_ID` when the need is an explanation
+rather than a known file.
 
 Preserve unrelated changes. Read the current module, source map, units, optional
 study maps, workspace, the relevant JSON Schemas, and any earlier plan package
 before drafting. Older plans are evidence about possible coverage, never the
-semantic authority or a required output shape. Copy `snapshot.snapshot_id` from
-`bootstrap --compact` **after** the coverage audit and any in-repository draft
-exist — both live under canonical roots and move the fingerprint (Gate 3). The
-actual import requires the id; a preflight may run without it, but an import
-may not.
+semantic authority or a required output shape. Copy `snapshot_id` from
+the entry read you used **after** the coverage audit and any in-repository draft
+exist — both live under canonical roots and move the fingerprint (Gate 3). For
+structural work that entry read is `bootstrap --compact`, run once, late; for
+single-unit work it is the focused `plan-edit-context` response. Never run
+`bootstrap --brief` for plan work. The actual import requires the id; a
+preflight may run without it, but an import may not.
 
 ## Gate 1 — build the material inventory before writing stages
 
@@ -268,7 +275,7 @@ learner-approved pedagogy.
 **Where a draft goes, and when the snapshot is taken.** OPERATOR rule 16 owns
 this: a draft is never a canonical curriculum file, and only the gateway writes
 one. `work/` is inside the canonical fingerprint, so writing a draft into a
-workspace's `outputs/` *moves the snapshot*. Capture `snapshot.snapshot_id`
+workspace's `outputs/` *moves the snapshot*. Capture `snapshot_id`
 after the draft and the coverage audit exist, not before — an id taken first is
 already stale by the time the import quotes it. A draft that is scratch rather
 than a reviewed record belongs outside the repository (`LearningOS/workbench/`),
@@ -400,11 +407,12 @@ Additional package invariants:
 Choose once before Gates 1–6; do not re-derive the procedure after choosing:
 
 - One material field (title, locator, angle, angle_detail, URL/vault_path)
-  on an existing route: `plan-edit-context UNIT_ID --brief` for the route
-  ids, guards, and checks, expand one `--route-id` (or `--route-ids` for
-  1–20 routes in one snapshot-bound call — prefer the batch over repeated
-  single reads), then `route-patch --check` and gateway
-  apply per WORKFLOWS §25a. No coverage audit, no plan package.
+  on an existing route: `plan-edit-context UNIT_ID --route-id ROUTE_ID`
+  (or `--route-ids` for 1–20 routes in one snapshot-bound call — prefer
+  the batch over repeated single reads), then `route-patch --check` and
+  gateway apply per WORKFLOWS §25a. The route response already carries
+  the snapshot and revision guards. Reach for the unit `--brief` only
+  when the route id is unknown. No coverage audit, no plan package.
   Read only OPERATOR Start here and WORKFLOWS §25a.
 - One existing lecture (routes plus map for that unit): `plan-edit-context
   UNIT_ID --brief`, source reading, coverage audit, one compact
