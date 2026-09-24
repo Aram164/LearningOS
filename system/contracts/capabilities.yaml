@@ -300,6 +300,19 @@ commands:
     - body bytes are preserved verbatim and must match frozen_input_sha256
     - identical requests replay without a second note; id collision with different analysis refuses
     - saving preserves bytes; it never approves coverage, adopts plans, or records mastery
+  note.analysis.save_batch:
+    handler: note_analysis_save_batch
+    cli_command: note-analysis-save-batch
+    writes:
+    - knowledge/notes/**
+    invariants:
+    - handler owns authorship and review defaults; input can never self-promote to user-reviewed
+    - bounded to 1 to 20 notes per batch; every item carries an analysis record and a SHA-256-bound body file
+    - every item is validated before any note is written; one failure refuses the whole batch
+    - body bytes are preserved verbatim and must match frozen_input_sha256
+    - identical notes replay without a second write; id collision with different analysis refuses the batch
+    - one transaction and one receipt cover the complete batch
+    - saving preserves bytes; it never approves coverage, adopts plans, or records mastery
   note.revise:
     handler: note_revise
     cli_command: note-revise
