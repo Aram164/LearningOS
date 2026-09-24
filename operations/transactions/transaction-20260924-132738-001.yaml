@@ -1,0 +1,35 @@
+schema_version: 2
+id: transaction-20260924-132738-001
+type: transaction-receipt
+status: committed
+capability: note.analysis.save
+committed_at: '2026-09-24T13:27:38+02:00'
+snapshot_before: sha256:b6b230a36f20b002fd8f8945eeb2d5681c73139864f5a5bcb285971a80a51809
+snapshot_after: sha256:a5c39dd5c08a61f5ae5a9cfc3d39b688f208dc19d0984bc05cb4e08111f0f4d4
+expected_revisions:
+  note-sad-ue7-historical-exam-prompts-pp077-084: 0
+artifact_revisions:
+  note-sad-ue7-historical-exam-prompts-pp077-084:
+    before: 0
+    after: 1
+writes:
+- path: knowledge/notes/mathematics/note-sad-ue7-historical-exam-prompts-pp077-084.md
+  sha256_before: null
+  sha256_after: d057913c825063799617990674d968a41c7426201968278e669a7ccb687a8ea5
+  created: true
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.analysis.save
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: codex
+  request_id: request-sad-source-angle-7f7779be421f4c55baca43dc6998e19a
+  idempotency_key: sad-source-angle-7f7779be421f4c55baca43dc6998e19a
+  intent_sha256: sha256:0874930efff52828463678f0dd002156ca658be7ed159273c8fe3ca9914e0810
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:0874930efff52828463678f0dd002156ca658be7ed159273c8fe3ca9914e0810

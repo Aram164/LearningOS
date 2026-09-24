@@ -30,7 +30,7 @@ revisions:
   materials-manifest: 1
   module-hu-algo2: 2
   module-hu-aml: 13
-  module-hu-m2-statistik-analysis: 57
+  module-hu-m2-statistik-analysis: 59
   module-job-engineering-tools: 1
   module-job-git: 1
   module-job-polars: 3
@@ -52,6 +52,20 @@ revisions:
   note-11-datascience-intro-pp047-049: 1
   note-pandas-groupby-signatures: 1
   note-pandas-polars-aggregation-contentions: 3
+  note-sad-l05-counting-probability-pp028-030: 1
+  note-sad-l07-2025-geometric-pp038-044: 1
+  note-sad-l07-blitzstein-geom-convention-pp174-178: 1
+  note-sad-l07-distribution-boundary-pp013-014: 1
+  note-sad-l08-2025-gaussian-mle-pp022-030: 1
+  note-sad-l08-clt-pp020-021: 1
+  note-sad-l09-2025-bootstrap-pp068-088: 1
+  note-sad-l09-resampling-p045: 1
+  note-sad-l09-ue6-bootstrap-pp010-013: 1
+  note-sad-l10-2025-bonferroni-pp043-045: 1
+  note-sad-l10-fahrmeir-bonferroni-pp445-446: 1
+  note-sad-l10-islp-fwer-fdr-pp571-581: 1
+  note-sad-l10-testing-discipline-pp056-065: 1
+  note-sad-ue7-historical-exam-prompts-pp077-084: 1
   note-skrub-dataop-dag: 1
   note-skrub-evaluation-engine: 1
   note-stratum-extract-dataframe-op: 1
@@ -306,12 +320,12 @@ revisions:
   unit-m2-sad-l02: 13
   unit-m2-sad-l03: 23
   unit-m2-sad-l04: 27
-  unit-m2-sad-l05: 15
-  unit-m2-sad-l06: 22
-  unit-m2-sad-l07: 18
-  unit-m2-sad-l08: 22
-  unit-m2-sad-l09: 14
-  unit-m2-sad-l10: 12
+  unit-m2-sad-l05: 16
+  unit-m2-sad-l06: 23
+  unit-m2-sad-l07: 20
+  unit-m2-sad-l08: 23
+  unit-m2-sad-l09: 16
+  unit-m2-sad-l10: 14
   unit-m2-sad-l11: 14
   unit-m2-sad-l12: 12
   unit-m2-sad-l13: 11

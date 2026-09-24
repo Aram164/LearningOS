@@ -1,0 +1,35 @@
+schema_version: 2
+id: transaction-20260924-131122-001
+type: transaction-receipt
+status: committed
+capability: note.analysis.save
+committed_at: '2026-09-24T13:11:22+02:00'
+snapshot_before: sha256:1c400860b89f9643717468f4f3588d145af07465940c4aa6524fe3b85b93748e
+snapshot_after: sha256:54b71b306c556e00ff85f7eda32b97407ca2e5fe17fc9b8c8eca7eb7a89a98ca
+expected_revisions:
+  note-sad-l07-distribution-boundary-pp013-014: 0
+artifact_revisions:
+  note-sad-l07-distribution-boundary-pp013-014:
+    before: 0
+    after: 1
+writes:
+- path: knowledge/notes/mathematics/note-sad-l07-distribution-boundary-pp013-014.md
+  sha256_before: null
+  sha256_after: 052d2c36341666a8d3d5941c85add758397c78830f2ed361b7d027b78cbc6c14
+  created: true
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.analysis.save
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: codex
+  request_id: request-sad-source-angle-caeaa663a0934688920c8044ef52bc3f
+  idempotency_key: sad-source-angle-caeaa663a0934688920c8044ef52bc3f
+  intent_sha256: sha256:5a259a9605f1ca3b3ccffb3b5542046880b1139cee6469f03a1a61df1424ed0c
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:5a259a9605f1ca3b3ccffb3b5542046880b1139cee6469f03a1a61df1424ed0c

@@ -30,10 +30,11 @@ stages:
   - kind: read
     label: Current L09 estimation deck
     locator: lecture-slides/09_estimating.pdf, PDF pp. 5-9,16
-    angle: The current lecture's focused reading for statistics, estimators, and estimates.
-    angle_detail: Read physical PDF pages 5-9,16 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Distinguishes a sample statistic as a random rule from its realized estimate and introduces
+      parameter targets.
+    angle_detail: Read lecture-slides/09_estimating.pdf, PDF pp. 5-9,16. Distinguishes a sample statistic
+      as a random rule from its realized estimate and introduces parameter targets. The full lecture and
+      alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
@@ -53,75 +54,6 @@ stages:
     scope_triage: required-now
     route_id: route-1396da832b2294453043b59b
   - material_ref:
-      route_id: route-23f516ac8b071207600e7094
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-23f516ac8b071207600e7094
-  - material_ref:
-      route_id: route-b2d9fca6647fba5c03976147
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-b2d9fca6647fba5c03976147
-  - material_ref:
-      route_id: route-7847d85f81696a1bf1a87cf2
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-7847d85f81696a1bf1a87cf2
-  - material_ref:
-      route_id: route-b574283601c1e7562e4f5071
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-b574283601c1e7562e4f5071
-  - material_ref:
-      route_id: route-5a05efab3330c3386d0d3498
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-5a05efab3330c3386d0d3498
-  - material_ref:
-      route_id: route-7e7b3a34bfd217be831561d1
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-7e7b3a34bfd217be831561d1
-  - material_ref:
       route_id: route-c53fea2ffaf7c83506f57ba8
       inherit:
       - label
@@ -135,18 +67,6 @@ stages:
     angle_detail: Construct the sampling distribution by repeatedly drawing samples and calculating a
       statistic. Separate the fixed population parameter, the estimator as a random variable, and the
       estimate calculated from this sample.
-  - material_ref:
-      route_id: route-602a7c97b64cbe82ff7782a8
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-602a7c97b64cbe82ff7782a8
-    kind: read
-    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-estimator/notes.md
   attachments: []
   source_feedback: []
@@ -169,50 +89,14 @@ stages:
   - kind: read
     label: Current L09 estimation deck
     locator: lecture-slides/09_estimating.pdf, PDF pp. 16-23
-    angle: The current lecture's focused reading for bias, consistency, efficiency, and mean squared error.
-    angle_detail: Read physical PDF pages 16-23 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Defines bias, consistency and mean squared error before interval construction; the properties
+      are about repeated samples.
+    angle_detail: Read lecture-slides/09_estimating.pdf, PDF pp. 16-23. Defines bias, consistency and
+      mean squared error before interval construction; the properties are about repeated samples. The
+      full lecture and alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
-  - material_ref:
-      route_id: route-1396da832b2294453043b59b
-      inherit:
-      - label
-      - locator
-      - vault_path
-      - source_id
-    kind: practise
-    angle: 'Plan-authored comparison: explain why the single observed mean 6 cannot establish bias, consistency
-      or efficiency. Return to Blatt 4 parts (a)-(b) at bootstrap.'
-    angle_detail: 'Plan-authored comparison: explain why the single observed mean 6 cannot establish bias,
-      consistency or efficiency. Return to Blatt 4 parts (a)-(b) at bootstrap.'
-    scope_triage: required-now
-    route_id: route-1396da832b2294453043b59b
-  - material_ref:
-      route_id: route-23f516ac8b071207600e7094
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-23f516ac8b071207600e7094
-  - material_ref:
-      route_id: route-b2d9fca6647fba5c03976147
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-b2d9fca6647fba5c03976147
   - material_ref:
       route_id: route-7847d85f81696a1bf1a87cf2
       inherit:
@@ -225,53 +109,6 @@ stages:
     kind: read
     scope_triage: helpful-now
     route_id: route-7847d85f81696a1bf1a87cf2
-  - material_ref:
-      route_id: route-2d7de4d5907b92c4b2068e88
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-2d7de4d5907b92c4b2068e88
-  - material_ref:
-      route_id: route-4ad419aeb16ac96209d55e97
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-4ad419aeb16ac96209d55e97
-  - material_ref:
-      route_id: route-5a05efab3330c3386d0d3498
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-5a05efab3330c3386d0d3498
-  - material_ref:
-      route_id: route-7e7b3a34bfd217be831561d1
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-7e7b3a34bfd217be831561d1
   - material_ref:
       route_id: route-602a7c97b64cbe82ff7782a8
       inherit:
@@ -306,10 +143,11 @@ stages:
   - kind: read
     label: Current L09 estimation deck
     locator: lecture-slides/09_estimating.pdf, PDF pp. 25-28,33-34
-    angle: The current lecture's focused reading for sampling distributions and standard errors.
-    angle_detail: Read physical PDF pages 25-28,33-34 for this stage. Printed slide labels may differ.
-      This slice focuses the existing deck route; the complete lecture remains accessible through the
-      unit material menu.
+    angle: Uses the sampling distribution of an estimator to explain standard error and its sample-size
+      scaling.
+    angle_detail: Read lecture-slides/09_estimating.pdf, PDF pp. 25-28,33-34. Uses the sampling distribution
+      of an estimator to explain standard error and its sample-size scaling. The full lecture and alternative
+      sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
@@ -328,18 +166,6 @@ stages:
     scope_triage: required-now
     route_id: route-1396da832b2294453043b59b
   - material_ref:
-      route_id: route-23f516ac8b071207600e7094
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-23f516ac8b071207600e7094
-  - material_ref:
       route_id: route-cdfc3800327de87be7846b02
       inherit:
       - label
@@ -352,165 +178,19 @@ stages:
     scope_triage: required-now
     route_id: route-cdfc3800327de87be7846b02
   - material_ref:
-      route_id: route-b2d9fca6647fba5c03976147
+      route_id: route-24878d8caf588583f067be1c
       inherit:
       - label
       - locator
       - angle
       - angle_detail
       - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-b2d9fca6647fba5c03976147
-  - material_ref:
-      route_id: route-7847d85f81696a1bf1a87cf2
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
       - vault_path
-      - source_id
+    route_id: route-24878d8caf588583f067be1c
     kind: read
     scope_triage: helpful-now
-    route_id: route-7847d85f81696a1bf1a87cf2
-  - material_ref:
-      route_id: route-2d7de4d5907b92c4b2068e88
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-2d7de4d5907b92c4b2068e88
-  - material_ref:
-      route_id: route-c53fea2ffaf7c83506f57ba8
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-c53fea2ffaf7c83506f57ba8
-  - material_ref:
-      route_id: route-4ad419aeb16ac96209d55e97
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-4ad419aeb16ac96209d55e97
-  - material_ref:
-      route_id: route-5c3e138d6b1230dcb502e951
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-5c3e138d6b1230dcb502e951
-  - material_ref:
-      route_id: route-b574283601c1e7562e4f5071
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-b574283601c1e7562e4f5071
-  - material_ref:
-      route_id: route-5a05efab3330c3386d0d3498
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-5a05efab3330c3386d0d3498
-  - material_ref:
-      route_id: route-7e7b3a34bfd217be831561d1
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-7e7b3a34bfd217be831561d1
-  - material_ref:
-      route_id: route-5abe09f7b3d60cd13d51460c
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-5abe09f7b3d60cd13d51460c
-  - material_ref:
-      route_id: route-d2abb9562b9f63820e94a1a4
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-d2abb9562b9f63820e94a1a4
-  - material_ref:
-      route_id: route-8d77189ca8ae8b94e0702afa
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-8d77189ca8ae8b94e0702afa
-  - material_ref:
-      route_id: route-747ea93b061275149005b318
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-747ea93b061275149005b318
-  - material_ref:
-      route_id: route-83c5d83dd034abfedd3153bf
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-83c5d83dd034abfedd3153bf
-    kind: practise
-    scope_triage: reference-only
+    node_scaffold_note: Bootstrap resampling is used here to estimate the standard error; its full method
+      is taught in the later bootstrap stage.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-standard-error/notes.md
   attachments: []
   source_feedback: []
@@ -533,27 +213,14 @@ stages:
   - kind: read
     label: Current L09 estimation deck
     locator: lecture-slides/09_estimating.pdf, PDF pp. 29-38
-    angle: The current lecture's focused reading for z confidence intervals.
-    angle_detail: Read physical PDF pages 29-38 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Derives the known-variance Normal interval from standardizing the sample mean, then works the
+      chocolate-bar example.
+    angle_detail: Read lecture-slides/09_estimating.pdf, PDF pp. 29-38. Derives the known-variance Normal
+      interval from standardizing the sample mean, then works the chocolate-bar example. The full lecture
+      and alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
-  - material_ref:
-      route_id: route-1396da832b2294453043b59b
-      inherit:
-      - label
-      - locator
-      - vault_path
-      - source_id
-    kind: practise
-    angle: Construct the known-variance z interval from L09 PDF pp. 35-38. Blatt 4 Aufgabe 2(b) is a bootstrap
-      interval, not a z-interval task; reserve it for bootstrap.
-    angle_detail: Construct the known-variance z interval from L09 PDF pp. 35-38. Blatt 4 Aufgabe 2(b)
-      is a bootstrap interval, not a z-interval task; reserve it for bootstrap.
-    scope_triage: required-now
-    route_id: route-1396da832b2294453043b59b
   - material_ref:
       route_id: route-23f516ac8b071207600e7094
       inherit:
@@ -567,29 +234,6 @@ stages:
     scope_triage: helpful-now
     route_id: route-23f516ac8b071207600e7094
   - material_ref:
-      route_id: route-cdfc3800327de87be7846b02
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: required-now
-    route_id: route-cdfc3800327de87be7846b02
-  - material_ref:
-      route_id: route-b2d9fca6647fba5c03976147
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-b2d9fca6647fba5c03976147
-  - material_ref:
       route_id: route-7847d85f81696a1bf1a87cf2
       inherit:
       - label
@@ -601,120 +245,6 @@ stages:
     kind: read
     scope_triage: helpful-now
     route_id: route-7847d85f81696a1bf1a87cf2
-  - material_ref:
-      route_id: route-2d7de4d5907b92c4b2068e88
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-2d7de4d5907b92c4b2068e88
-  - material_ref:
-      route_id: route-c53fea2ffaf7c83506f57ba8
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-c53fea2ffaf7c83506f57ba8
-  - material_ref:
-      route_id: route-4ad419aeb16ac96209d55e97
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-4ad419aeb16ac96209d55e97
-  - material_ref:
-      route_id: route-5c3e138d6b1230dcb502e951
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-5c3e138d6b1230dcb502e951
-  - material_ref:
-      route_id: route-b574283601c1e7562e4f5071
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-b574283601c1e7562e4f5071
-  - material_ref:
-      route_id: route-7e7b3a34bfd217be831561d1
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-7e7b3a34bfd217be831561d1
-  - material_ref:
-      route_id: route-5abe09f7b3d60cd13d51460c
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-5abe09f7b3d60cd13d51460c
-  - material_ref:
-      route_id: route-d2abb9562b9f63820e94a1a4
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-d2abb9562b9f63820e94a1a4
-  - material_ref:
-      route_id: route-8d77189ca8ae8b94e0702afa
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-8d77189ca8ae8b94e0702afa
-  - material_ref:
-      route_id: route-747ea93b061275149005b318
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-747ea93b061275149005b318
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-z-interval/notes.md
   attachments: []
   source_feedback: []
@@ -737,10 +267,11 @@ stages:
   - kind: read
     label: Current L09 estimation deck
     locator: lecture-slides/09_estimating.pdf, PDF pp. 40-44
-    angle: The current lecture's focused reading for t confidence intervals.
-    angle_detail: Read physical PDF pages 40-44 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Replaces the unknown variance with sample variance and Student t quantiles with n−1 degrees
+      of freedom.
+    angle_detail: Read lecture-slides/09_estimating.pdf, PDF pp. 40-44. Replaces the unknown variance
+      with sample variance and Student t quantiles with n−1 degrees of freedom. The full lecture and alternative
+      sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
@@ -757,17 +288,6 @@ stages:
     scope_triage: helpful-now
     route_id: route-23f516ac8b071207600e7094
   - material_ref:
-      route_id: route-b2d9fca6647fba5c03976147
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-b2d9fca6647fba5c03976147
-  - material_ref:
       route_id: route-7847d85f81696a1bf1a87cf2
       inherit:
       - label
@@ -779,121 +299,6 @@ stages:
     kind: read
     scope_triage: helpful-now
     route_id: route-7847d85f81696a1bf1a87cf2
-  - material_ref:
-      route_id: route-2d7de4d5907b92c4b2068e88
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-2d7de4d5907b92c4b2068e88
-  - material_ref:
-      route_id: route-c53fea2ffaf7c83506f57ba8
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-c53fea2ffaf7c83506f57ba8
-  - material_ref:
-      route_id: route-4ad419aeb16ac96209d55e97
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-4ad419aeb16ac96209d55e97
-  - material_ref:
-      route_id: route-5c3e138d6b1230dcb502e951
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-5c3e138d6b1230dcb502e951
-  - material_ref:
-      route_id: route-b574283601c1e7562e4f5071
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-b574283601c1e7562e4f5071
-  - material_ref:
-      route_id: route-7e7b3a34bfd217be831561d1
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-7e7b3a34bfd217be831561d1
-  - material_ref:
-      route_id: route-d2abb9562b9f63820e94a1a4
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-d2abb9562b9f63820e94a1a4
-  - material_ref:
-      route_id: route-8d77189ca8ae8b94e0702afa
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-8d77189ca8ae8b94e0702afa
-  - material_ref:
-      route_id: route-747ea93b061275149005b318
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-747ea93b061275149005b318
-  - material_ref:
-      route_id: route-83c5d83dd034abfedd3153bf
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-83c5d83dd034abfedd3153bf
-    kind: practise
-    scope_triage: reference-only
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-t-interval/notes.md
   attachments: []
   source_feedback: []
@@ -916,10 +321,11 @@ stages:
   - kind: read
     label: Current L09 estimation deck
     locator: lecture-slides/09_estimating.pdf, PDF pp. 45
-    angle: The current lecture's focused reading for bootstrap estimation.
-    angle_detail: Read physical PDF pages 45 for this stage. Printed slide labels may differ. This slice
-      focuses the existing deck route; the complete lecture remains accessible through the unit material
-      menu.
+    angle: Motivates resampling a statistic beyond closed-form intervals; the slide does not specify with-replacement
+      resampling or percentile endpoints.
+    angle_detail: Read lecture-slides/09_estimating.pdf, PDF pp. 45. Motivates resampling a statistic
+      beyond closed-form intervals; the slide does not specify with-replacement resampling or percentile
+      endpoints. The full lecture and alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
@@ -938,18 +344,6 @@ stages:
     scope_triage: required-now
     route_id: route-1396da832b2294453043b59b
   - material_ref:
-      route_id: route-23f516ac8b071207600e7094
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-23f516ac8b071207600e7094
-  - material_ref:
       route_id: route-cdfc3800327de87be7846b02
       inherit:
       - label
@@ -962,49 +356,19 @@ stages:
     scope_triage: required-now
     route_id: route-cdfc3800327de87be7846b02
   - material_ref:
-      route_id: route-24878d8caf588583f067be1c
+      route_id: route-b2d9fca6647fba5c03976147
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
       - source_id
+    route_id: route-b2d9fca6647fba5c03976147
     kind: read
     scope_triage: helpful-now
-    route_id: route-24878d8caf588583f067be1c
-  - material_ref:
-      route_id: route-5abe09f7b3d60cd13d51460c
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-5abe09f7b3d60cd13d51460c
-  - id: resource-dekking-l09-bootstrap
-    route_id: route-4ad419aeb16ac96209d55e97
-    kind: read
-    label: Dekking Ch 18
-    source_id: source-dekking-mips
-    locator: Ch 18, PDF pp. 275-290
-    angle: Approximate an estimator distribution by resampling from an estimated distribution.
-    angle_detail: Distinguish observations, resamples and the distribution of the resampled statistic
-      before constructing a standard error or interval.
-    scope_triage: helpful-now
-  - material_ref:
-      route_id: route-b574283601c1e7562e4f5071
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-b574283601c1e7562e4f5071
+    locator: 09_point_interval_estimation (1).pdf, physical PDF pp. 68–88
+    angle: Previous-year slides show with-replacement resampling and percentile endpoints that the current
+      lecture only motivates.
+    angle_detail: Page 71 gives the n-of-n with-replacement algorithm and 95% percentile endpoints; pp.
+      82–87 contrast a Normal-based interval with empirical tail trimming. Page 88 says the five-value
+      example is too small for dependable inference. Use after current Blatt 4 and UE6.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-bootstrap/notes.md
   attachments: []
   source_feedback: []
@@ -1026,10 +390,11 @@ stages:
   - kind: read
     label: Current L09 estimation deck
     locator: lecture-slides/09_estimating.pdf, PDF pp. 10-14
-    angle: The current lecture's focused reading for statistical uncertainty versus data bias.
-    angle_detail: Read physical PDF pages 10-14 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Frames inference around the sampled population and data-collection assumptions; narrow model
+      intervals cannot establish representative data.
+    angle_detail: Read lecture-slides/09_estimating.pdf, PDF pp. 10-14. Frames inference around the sampled
+      population and data-collection assumptions; narrow model intervals cannot establish representative
+      data. The full lecture and alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures

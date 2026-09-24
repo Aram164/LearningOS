@@ -1,0 +1,121 @@
+schema_version: 2
+id: transaction-20260924-134511-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-09-24T13:45:11+02:00'
+snapshot_before: sha256:56f7a87e11f979ba11c2860f491a7962307aadd02f2f74ce0a983f11027c0588
+snapshot_after: sha256:d36115f9b9d6bddac23365ca0f736c6c44e9fdfedbf413187c7526900612c815
+expected_revisions:
+  module-hu-m2-statistik-analysis: 57
+  unit-m2-sad-l05: 15
+  unit-m2-sad-l06: 22
+  unit-m2-sad-l07: 18
+  unit-m2-sad-l08: 22
+  unit-m2-sad-l09: 14
+  unit-m2-sad-l10: 12
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 57
+    after: 58
+  unit-m2-sad-l05:
+    before: 15
+    after: 16
+  unit-m2-sad-l06:
+    before: 22
+    after: 23
+  unit-m2-sad-l07:
+    before: 18
+    after: 19
+  unit-m2-sad-l08:
+    before: 22
+    after: 23
+  unit-m2-sad-l09:
+    before: 14
+    after: 15
+  unit-m2-sad-l10:
+    before: 12
+    after: 13
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/module.yaml
+  sha256_before: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  sha256_after: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: 322be58a75520ff0d0976233581e2c6219826d7de2ff4afbc6d4ca458182afa5
+  sha256_after: 508b711cb8ad2d8ad5ea0d5ad52e9c374f14a18478006012b7822db571bfd505
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/study-map.yaml
+  sha256_before: 59dae28c1b40da575803b230d4b25e68bf8b06a2df2058b8af2dd22af95661e5
+  sha256_after: 46def509a637f26930d66f751cc0e0db44f469652aa44382ee1dfa0cd9cd2931
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/unit.yaml
+  sha256_before: d1c377648fe47cfd19cc5a5152163267bef2bff7523784f23155a77558435663
+  sha256_after: d1c377648fe47cfd19cc5a5152163267bef2bff7523784f23155a77558435663
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/study-map.yaml
+  sha256_before: 01c746061c470c939e829bf16d9187f6ee5adf3d9d1f9076b0f4a6f636ee3d99
+  sha256_after: b7e44d76d2d9409e888f3e935db11dc28199862c0bf98199249dadddab8da5b9
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/unit.yaml
+  sha256_before: a7e43b5e5cb25210a1b8c21cc905c93c1a1ff583b023d136d332d450518cd05e
+  sha256_after: a7e43b5e5cb25210a1b8c21cc905c93c1a1ff583b023d136d332d450518cd05e
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/study-map.yaml
+  sha256_before: 8e9755f65857c68d0ce875b2e75e8efc3dbc14e5973e0d1d5f30a77e7bb70b14
+  sha256_after: 4618fe0d72b87e29fa94592a9ae40f95328fc2aaf49ee3f3a20fee24f67dda20
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/unit.yaml
+  sha256_before: 7608966f01dfda65e568c253aceb8602e2ae59483b0f299a1a537b0e270f154b
+  sha256_after: 7608966f01dfda65e568c253aceb8602e2ae59483b0f299a1a537b0e270f154b
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/study-map.yaml
+  sha256_before: 62421549288242df321b470459a4938e396416f86f445c15bd27ad218feb2f9e
+  sha256_after: 23125195a0ed767d5adc0fa86164e9f79eeff3a9d0b369a96627b561daaaf290
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/unit.yaml
+  sha256_before: 051b5f8c281da34d9b2781d49e6c3c958f73ac37def37a23bdcdca610ded3702
+  sha256_after: 051b5f8c281da34d9b2781d49e6c3c958f73ac37def37a23bdcdca610ded3702
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/study-map.yaml
+  sha256_before: 7e024dfa0e4023b7365e4a900e6b57d9f9fba967232aca7e49d7f73dc0232e73
+  sha256_after: 992546641a6bca17d3fba0a3c6595523896b1f29ce4600a91c580f18d163f2a4
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/unit.yaml
+  sha256_before: 76be060a273d17a66b6cd014e48b644fe7b8d0f3d8e622645a5cadb0b2d997a6
+  sha256_after: 76be060a273d17a66b6cd014e48b644fe7b8d0f3d8e622645a5cadb0b2d997a6
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/study-map.yaml
+  sha256_before: 11906e771e5dc4b142d515b944951a1ac813cd019710ddfb1e39e82f7561058e
+  sha256_after: 38a267e1f6e4891e38f73ae1db28394a8819ea39b10d93c134a57cdb51a797d0
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/unit.yaml
+  sha256_before: c58d38e8531985a526a5f88b0b76934fc8052355affa3a715192d51bec268d9c
+  sha256_after: c58d38e8531985a526a5f88b0b76934fc8052355affa3a715192d51bec268d9c
+  created: false
+- path: operations/transactions/lineage.yaml
+  sha256_before: e1c1d06b808c15f0e1932341d008ed3fd2c339482c7114e5159ae0643400dbeb
+  sha256_after: ead458400f383c64f64e240fd8e176817a47f0a079456fdd8baa1ac9aa0fc65c
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: codex
+  request_id: request-reviewed-3e812a01f21c48e991a59687c3544376
+  idempotency_key: reviewed-b20fffb51fbf44858a41c6182fca09a9
+  intent_sha256: sha256:0d8b100e062e7accc2af09e9585b6af9099853b408a35793ae0ac1bdbad8ade4
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:0d8b100e062e7accc2af09e9585b6af9099853b408a35793ae0ac1bdbad8ade4

@@ -1,0 +1,35 @@
+schema_version: 2
+id: transaction-20260924-132613-001
+type: transaction-receipt
+status: committed
+capability: note.analysis.save
+committed_at: '2026-09-24T13:26:13+02:00'
+snapshot_before: sha256:22f0d08e65ef18cc327d726fad61ea95eb664ca7360e8a33e3fbdad1b9844884
+snapshot_after: sha256:b6b230a36f20b002fd8f8945eeb2d5681c73139864f5a5bcb285971a80a51809
+expected_revisions:
+  note-sad-l08-2025-gaussian-mle-pp022-030: 0
+artifact_revisions:
+  note-sad-l08-2025-gaussian-mle-pp022-030:
+    before: 0
+    after: 1
+writes:
+- path: knowledge/notes/mathematics/note-sad-l08-2025-gaussian-mle-pp022-030.md
+  sha256_before: null
+  sha256_after: a9865691166a6693c2dc7e05942446941817475df18b6bb090c0eb975757d0f7
+  created: true
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.analysis.save
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: codex
+  request_id: request-sad-source-angle-d1d22f19c5624dba896559b5ab2bae11
+  idempotency_key: sad-source-angle-d1d22f19c5624dba896559b5ab2bae11
+  intent_sha256: sha256:e4f0fb553eeb5321c84d99a5a8b0bac783f3228f22adffeaa166fa7c93a283e4
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:e4f0fb553eeb5321c84d99a5a8b0bac783f3228f22adffeaa166fa7c93a283e4

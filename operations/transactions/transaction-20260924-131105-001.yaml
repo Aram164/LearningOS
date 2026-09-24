@@ -1,0 +1,35 @@
+schema_version: 2
+id: transaction-20260924-131105-001
+type: transaction-receipt
+status: committed
+capability: note.analysis.save
+committed_at: '2026-09-24T13:11:05+02:00'
+snapshot_before: sha256:0ec477c5bb259cdab149bcccd12a015a09cf693fe05cfc32006ac2d43a6e2b61
+snapshot_after: sha256:1c400860b89f9643717468f4f3588d145af07465940c4aa6524fe3b85b93748e
+expected_revisions:
+  note-sad-l05-counting-probability-pp028-030: 0
+artifact_revisions:
+  note-sad-l05-counting-probability-pp028-030:
+    before: 0
+    after: 1
+writes:
+- path: knowledge/notes/mathematics/note-sad-l05-counting-probability-pp028-030.md
+  sha256_before: null
+  sha256_after: 19b9c8db6eea577bf69ca9be9222ab6480cad6e25f8e54afe0cc6ea382591647
+  created: true
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.analysis.save
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: codex
+  request_id: request-sad-source-angle-1df8867654a542eeb8bacfac77411c9c
+  idempotency_key: sad-source-angle-1df8867654a542eeb8bacfac77411c9c
+  intent_sha256: sha256:010cc67580b849564b79d8038e838bc373db1da6a160ea94aeb670da6bb53eae
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:010cc67580b849564b79d8038e838bc373db1da6a160ea94aeb670da6bb53eae
