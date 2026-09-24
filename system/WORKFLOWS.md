@@ -734,6 +734,36 @@ receipt, and afterwards nothing distinguishes it from a mediated write.
 that way. A migration under `tools/migrations/` is the one legitimate exception,
 and it is legitimate because it is recorded.
 
+## 25b. Save a batch of source analyses
+
+One drafts file produces one reviewable staging dir plus the exact
+gateway envelope; review both, then submit the envelope unchanged.
+
+1. **Draft.** Write UTF-8 JSON:
+   `{"notes": [{"id", "title", "path", "binding", "body"}]}` with bodies
+   inline — 1 to 20 notes, no `frozen_input_*` fields (prep derives every
+   hash from the body bytes). Body bytes are exactly the UTF-8 encoding of
+   each body string: leading whitespace and CRLF survive verbatim.
+2. **Prepare.**
+   `note-analysis-prepare --drafts drafts.json --out <dir>` with the
+   staging dir outside the repository. Prep validates every draft,
+   derives the hashes, dry-checks each note against current state (new
+   vs replay, collisions, resolved-source observability), then stages
+   `bodies/<note-id>.bin` plus `envelope.json` and prints the per-note
+   report. It writes nothing canonical; `bodies/` is rebuilt every run.
+3. **Review** the staged bodies and the envelope. This is the step the
+   gateway cannot do for you.
+4. **Submit** the exact envelope:
+
+   ```bash
+   python tools/los.py capability note.analysis.save_batch --payload-file <out>/envelope.json
+   ```
+
+   Any canonical change between prep and submit surfaces as
+   `STALE_SNAPSHOT` — re-run prep. Tampered or moved staging files are
+   refused by the content hashes and intent binding, never silently
+   accepted.
+
 ## 26. Source routing and feedback
 
 Register one global source identity first. Add a module source-map entry only
