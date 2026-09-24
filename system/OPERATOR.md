@@ -268,6 +268,9 @@ audit, build from the canonical template, and require the no-write gate
 `.venv/bin/python tools/los.py module-plan-import MODULE_ID --file PLAN.yaml
 --check` to pass before applying the same package through the
 `module.plan.import` capability (WORKFLOWS §25a).
+For several existing units, the same command accepts the compact
+`unit_revisions[]` shape in `system/templates/module-plan-revise.template.yaml`;
+it assembles unchanged records internally and keeps the same guarded import.
 `module-plan-import` never deletes units and never creates durable notes; the
 capabilities that do create durable notes are `note.analysis.save` (source
 analysis) and `atlas.question.save` (learner questions).

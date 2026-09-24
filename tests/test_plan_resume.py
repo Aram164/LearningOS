@@ -106,6 +106,50 @@ def test_lost_response_resolves_identity_from_report(mini_repo, tmp_path):
     assert json.loads(replayed.stdout)["receipt_path"] == committed
 
 
+def test_receipt_verifies_when_no_synthesis_was_required(mini_repo, tmp_path):
+    from learning_os.material_synthesis import synthesis_destination
+
+    _compact_setup(mini_repo)
+    synthesis_destination(mini_repo, "unit-demo-l01").unlink()
+    revision_file = _revision_file(mini_repo, tmp_path, "No dossier needed.", "rev.yaml")
+    report = _check(mini_repo, revision_file)
+    assert report["synthesis"]["unit-demo-l01"] == {
+        "before": {"present": False, "fresh": False, "detail": None},
+        "after": {"replaced": False, "fresh": False, "detail": None},
+    }
+    report_file = tmp_path / "review.json"
+    report_file.write_text(json.dumps(report), encoding="utf-8")
+    assert _apply(mini_repo, revision_file, report, report_file).returncode == 0
+    _generate(mini_repo)
+    verified = _verify(mini_repo, report_file)
+    assert verified.returncode == 0, verified.stderr
+    assert verified.stdout.splitlines()[0] == "state: committed-and-verified"
+
+
+def test_receipt_refuses_missing_or_stale_expected_synthesis(mini_repo, tmp_path):
+    from learning_os.material_synthesis import synthesis_destination
+
+    _compact_setup(mini_repo)
+    revision_file = _revision_file(mini_repo, tmp_path, "Dossier expected.", "rev.yaml")
+    report = _check(mini_repo, revision_file)
+    assert report["synthesis"]["unit-demo-l01"]["after"]["fresh"] is True
+    report_file = tmp_path / "review.json"
+    report_file.write_text(json.dumps(report), encoding="utf-8")
+    assert _apply(mini_repo, revision_file, report, report_file).returncode == 0
+    _generate(mini_repo)
+    destination = synthesis_destination(mini_repo, "unit-demo-l01")
+    original = destination.read_text(encoding="utf-8")
+    destination.unlink()
+    missing = _verify(mini_repo, report_file)
+    assert missing.returncode == 1
+    assert "expected synthesis dossier is missing" in missing.stderr
+    destination.write_text(original.replace("status: approved", "status: invalid"),
+                           encoding="utf-8")
+    stale = _verify(mini_repo, report_file)
+    assert stale.returncode == 1
+    assert "synthesis is not current and complete" in stale.stderr
+
+
 def test_unapplied_preflight_reports_stale(mini_repo, tmp_path):
     _compact_setup(mini_repo)
     revision_file = _revision_file(mini_repo, tmp_path, "Angle never applied.", "rev.yaml")

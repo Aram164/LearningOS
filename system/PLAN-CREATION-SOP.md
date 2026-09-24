@@ -437,6 +437,20 @@ Structural or multi-unit change:
   --file work/active/WORKSPACE/outputs/PLAN.yaml --check
 ```
 
+For revisions to several **existing** units in one module, the same command
+also accepts the compact shape in
+`system/templates/module-plan-revise.template.yaml`: `unit_revisions[]` names
+only route changes and stage field patches. It cannot add units, reorder stages,
+change module metadata, or update workspaces; use the full import template for
+those operations. Each `stage_patches[].fields.resources` value is the complete
+final resource array for that stage, so the existing learner-evidence gate still
+protects every evidence-bearing placement. The importer assembles unchanged
+records under one operator lock, then uses the same shadow validation, lineage,
+reviewed-file hash, GatewayEnvelopeV2, receipt, and atomic transaction as a
+full import. Save the compact-file `reviewed_file_sha256` from `--check` for
+`--apply-reviewed-sha256`; `assembled_package_sha256` identifies the internal
+full package and is not the file to approve.
+
 The command checks the plan contract, source routing, schemas, references,
 module ownership, unit order, study-map state, and workspace joins in a shadow
 repository, plus the real-tree perimeter layer — an undeclared sibling fails
