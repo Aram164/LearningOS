@@ -47,7 +47,10 @@ from learning_os.commands.ai import (  # noqa: E402
     cmd_ai_action_status,
     cmd_ai_action_validate_delivery,
 )
-from learning_os.commands.analysis import cmd_note_analysis_save  # noqa: E402
+from learning_os.commands.analysis import (  # noqa: E402
+    cmd_note_analysis_save,
+    cmd_note_analysis_save_batch,
+)
 from learning_os.commands.atlas import (  # noqa: E402
     cmd_atlas_context,
     cmd_atlas_question_save,
@@ -620,6 +623,15 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_note_analysis_save)
+
+    p = sub.add_parser("note-analysis-save-batch", help="preserve up to 20 source analyses atomically under one receipt")
+    p.add_argument("--bundle", required=True, type=json_object,
+                   help='{"notes": [{"analysis": {...}, "body_file": "...", '
+                        '"body_file_sha256": "sha256:..."}]}; every item is '
+                        "validated before any note is written")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_note_analysis_save_batch)
 
     p = sub.add_parser("plan-edit-context", help="read compact plan or one material's edit context")
     p.add_argument("unit_id")

@@ -12,6 +12,7 @@ from __future__ import annotations
 import hashlib
 import json
 
+import pytest
 import yaml
 from gateway_helpers import approved_v2_cli, file_sha256
 
@@ -254,3 +255,235 @@ def test_dishonest_bindings_refuse(mini_repo):
         result = _save(mini_repo, body, binding, key)
         assert result.returncode != 0, key
     assert not (mini_repo / NOTE_PATH).exists()
+
+
+# --------------------------------------------------------------------------
+# Atomic batch saves: one snapshot, every item validated first, one receipt.
+# --------------------------------------------------------------------------
+
+def _binding_for(body: bytes, **overrides):
+    binding = {
+        "resolution": "unresolved",
+        "material": "demo/deck.pdf",
+        "recorded_source_digest": "ab" * 32,
+        "inspected_range": {"start": 1, "end": 3},
+        "frozen_input_sha256": hashlib.sha256(body).hexdigest(),
+        "frozen_input_bytes": len(body),
+    }
+    binding.update(overrides)
+    return binding
+
+
+def _batch_entry(tag: str, text: str, **overrides):
+    body = text.encode("utf-8")
+    note_id = f"note-analysis-batch-{tag}"
+    entry = {
+        "body": body,
+        "binding": _binding_for(body),
+        "note_id": note_id,
+        "path": f"knowledge/notes/mathematics/{note_id}.md",
+        "title": f"Batch analysis {tag}",
+    }
+    entry.update(overrides)
+    return entry
+
+
+def _save_batch(mini_repo, entries, key):
+    notes = []
+    for index, entry in enumerate(entries):
+        body_file = mini_repo / f"batch-body-{key}-{index}.bin"
+        body_file.write_bytes(entry["body"])
+        notes.append({
+            "analysis": {"id": entry["note_id"], "title": entry["title"],
+                         "path": entry["path"], "binding": entry["binding"]},
+            "body_file": str(body_file),
+            "body_file_sha256": file_sha256(body_file),
+        })
+    return approved_v2_cli(
+        mini_repo, "note-analysis-save-batch",
+        "--bundle", json.dumps({"notes": notes}),
+        artifact_ids=[entry["note_id"] for entry in entries],
+        idempotency_key=key,
+    )
+
+
+def _transactions(mini_repo):
+    tx_dir = mini_repo / "operations" / "transactions"
+    return sorted(tx_dir.glob("transaction-*.yaml")) if tx_dir.is_dir() else []
+
+
+def test_batch_mixed_new_and_replayed_reports_one_receipt(mini_repo):
+    replayed = _batch_entry("replay", "kept analysis")
+    created = _batch_entry("created", "new analysis")
+    first = _save(mini_repo, replayed["body"], replayed["binding"],
+                   "batch-mixed-first", note_id=replayed["note_id"],
+                   path=replayed["path"], title=replayed["title"])
+    assert first.returncode == 0, first.stdout + first.stderr
+    before = _transactions(mini_repo)
+    result = _save_batch(mini_repo, [replayed, created], "batch-mixed")
+    assert result.returncode == 0, result.stdout + result.stderr
+    response = json.loads(result.stdout)
+    assert response["ok"] is True and response["replayed"] is False
+    assert response["result"]["created_note_ids"] == [created["note_id"]]
+    assert response["result"]["replayed_note_ids"] == [replayed["note_id"]]
+    assert response["result"]["note_paths"] == {
+        replayed["note_id"]: replayed["path"],
+        created["note_id"]: created["path"],
+    }
+    assert response["transaction_id"]
+    assert (mini_repo / response["receipt_path"]).is_file()
+    assert len(_transactions(mini_repo)) == len(before) + 1
+    raw = (mini_repo / created["path"]).read_bytes()
+    assert raw.endswith(created["body"])
+    assert b"operator-drafted" in raw and b"unreviewed" in raw
+    repo = load_repo(mini_repo)
+    assert repo.notes[created["note_id"]].meta["role"] == "reference"
+    assert repo.notes[replayed["note_id"]].meta["role"] == "reference"
+
+
+def test_batch_one_bad_item_saves_none(mini_repo):
+    good = _batch_entry("good", "good analysis")
+    bad_body = b"bad analysis"
+    bad = _batch_entry("bad", "bad analysis", binding=_binding_for(
+        bad_body, frozen_input_sha256="00" * 32))
+    result = _save_batch(mini_repo, [good, bad], "batch-one-bad")
+    assert result.returncode != 0
+    assert "batch item 1" in result.stdout
+    assert not (mini_repo / good["path"]).exists()
+    assert not (mini_repo / bad["path"]).exists()
+    assert _transactions(mini_repo) == []
+
+
+def test_batch_stale_source_bytes_refuse_the_whole_batch(mini_repo):
+    _register_material(mini_repo, "material://demo/")
+    target = mini_repo.parent / "materials" / "demo" / "deck.pdf"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_bytes(b"current deck bytes")
+    good = _batch_entry("fresh", "fresh analysis")
+    drifted_body = b"drifted analysis"
+    drifted = _batch_entry("drifted", "drifted analysis", binding=_binding_for(
+        drifted_body, resolution="resolved", source_id="source-demo-book",
+        material="demo/deck.pdf", recorded_source_digest="ab" * 32,
+        live_source_digest="ab" * 32))
+    result = _save_batch(mini_repo, [good, drifted], "batch-stale")
+    assert result.returncode != 0
+    assert "not observable at its claimed live digest" in result.stdout
+    assert not (mini_repo / good["path"]).exists()
+    assert not (mini_repo / drifted["path"]).exists()
+    assert _transactions(mini_repo) == []
+
+
+def test_batch_duplicate_ids_refuse(mini_repo):
+    entry = _batch_entry("dup", "duplicated analysis")
+    identical = _save_batch(mini_repo, [entry, dict(entry)], "batch-dup-same")
+    assert identical.returncode != 0
+    assert "twice" in identical.stdout
+    other_body = b"conflicting analysis"
+    conflicting = _batch_entry("dup", "conflicting analysis", binding=_binding_for(
+        other_body))
+    refused = _save_batch(mini_repo, [entry, conflicting], "batch-dup-other")
+    assert refused.returncode != 0
+    assert "twice" in refused.stdout
+    assert not (mini_repo / entry["path"]).exists()
+    assert _transactions(mini_repo) == []
+
+
+def test_batch_fully_replayed_makes_no_write(mini_repo):
+    first_entry = _batch_entry("first", "first analysis")
+    second_entry = _batch_entry("second", "second analysis")
+    for key, entry in (("batch-replay-first-a", first_entry),
+                       ("batch-replay-first-b", second_entry)):
+        saved = _save(mini_repo, entry["body"], entry["binding"], key,
+                       note_id=entry["note_id"], path=entry["path"],
+                       title=entry["title"])
+        assert saved.returncode == 0, saved.stdout + saved.stderr
+    before_files = _transactions(mini_repo)
+    before_bytes = {
+        entry["note_id"]: (mini_repo / entry["path"]).read_bytes()
+        for entry in (first_entry, second_entry)
+    }
+    result = _save_batch(mini_repo, [first_entry, second_entry],
+                          "batch-replay-all")
+    assert result.returncode == 0, result.stdout + result.stderr
+    response = json.loads(result.stdout)
+    assert response["ok"] is True and response["replayed"] is True
+    assert response["result"]["created_note_ids"] == []
+    assert response["result"]["replayed_note_ids"] == [
+        first_entry["note_id"], second_entry["note_id"]]
+    assert response["transaction_id"] is None
+    assert _transactions(mini_repo) == before_files
+    for entry in (first_entry, second_entry):
+        assert (mini_repo / entry["path"]).read_bytes() == before_bytes[
+            entry["note_id"]]
+
+
+def test_batch_failed_transaction_writes_nothing(mini_repo, monkeypatch):
+    import los
+    from learning_os.commands import analysis as analysis_commands
+    from learning_os.commands.capability import _dispatch
+    from learning_os.commands.support import WriteRefused
+    from learning_os.contracts.capability_catalog import command_definitions
+
+    entries = [_batch_entry("txa", "transaction analysis a"),
+               _batch_entry("txb", "transaction analysis b")]
+    notes = []
+    for index, entry in enumerate(entries):
+        body_file = mini_repo / f"batch-body-tx-{index}.bin"
+        body_file.write_bytes(entry["body"])
+        notes.append({
+            "analysis": {"id": entry["note_id"], "title": entry["title"],
+                         "path": entry["path"], "binding": entry["binding"]},
+            "body_file": str(body_file),
+            "body_file_sha256": file_sha256(body_file),
+        })
+    calls = []
+
+    def failing_transaction(root, writes, **kwargs):
+        calls.append((dict(writes), dict(kwargs)))
+        return 2, ["simulated transaction failure"], {}
+
+    monkeypatch.setattr(analysis_commands, "_write_transaction",
+                        failing_transaction)
+    definition = command_definitions(mini_repo)["note.analysis.save_batch"]
+    with pytest.raises(WriteRefused, match="simulated transaction failure"):
+        _dispatch(mini_repo, definition, {"schema_version": 2},
+                  {"bundle": {"notes": notes}},
+                  parser_factory=los.build_parser)
+    assert len(calls) == 1
+    assert len(calls[0][0]) == 2
+    assert calls[0][1]["capability"] == "note.analysis.save_batch"
+    assert sorted(calls[0][1]["artifact_ids"]) == sorted(
+        entry["note_id"] for entry in entries)
+    for entry in entries:
+        assert not (mini_repo / entry["path"]).exists()
+
+
+def test_batch_bounds_refuse(mini_repo):
+    empty = approved_v2_cli(
+        mini_repo, "note-analysis-save-batch",
+        "--bundle", json.dumps({"notes": []}),
+        artifact_ids=["note-analysis-batch-empty"],
+        idempotency_key="batch-empty",
+    )
+    assert empty.returncode != 0
+    assert "non-empty notes list" in empty.stdout
+    many = [_batch_entry(f"n{index}", f"analysis {index}") for index in range(21)]
+    notes = []
+    for index, entry in enumerate(many):
+        body_file = mini_repo / f"batch-body-many-{index}.bin"
+        body_file.write_bytes(entry["body"])
+        notes.append({
+            "analysis": {"id": entry["note_id"], "title": entry["title"],
+                         "path": entry["path"], "binding": entry["binding"]},
+            "body_file": str(body_file),
+            "body_file_sha256": file_sha256(body_file),
+        })
+    oversized = approved_v2_cli(
+        mini_repo, "note-analysis-save-batch",
+        "--bundle", json.dumps({"notes": notes}),
+        artifact_ids=[entry["note_id"] for entry in many],
+        idempotency_key="batch-oversized",
+    )
+    assert oversized.returncode != 0
+    assert "at most 20 per batch" in oversized.stdout
+    assert _transactions(mini_repo) == []

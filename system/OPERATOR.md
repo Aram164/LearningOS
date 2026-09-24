@@ -272,8 +272,9 @@ For several existing units, the same command accepts the compact
 `unit_revisions[]` shape in `system/templates/module-plan-revise.template.yaml`;
 it assembles unchanged records internally and keeps the same guarded import.
 `module-plan-import` never deletes units and never creates durable notes; the
-capabilities that do create durable notes are `note.analysis.save` (source
-analysis) and `atlas.question.save` (learner questions).
+capabilities that do create durable notes are `note.analysis.save` (one source
+analysis), `note.analysis.save_batch` (up to 20 source analyses atomically),
+and `atlas.question.save` (learner questions).
 
 An explicitly reviewed semantic replacement of one existing durable note uses
 the `note.revise` capability (named command `note-revise NOTE_ID --file
