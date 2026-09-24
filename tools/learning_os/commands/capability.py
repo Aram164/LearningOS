@@ -592,9 +592,81 @@ class _ReplayRecoveryError(Exception):
     """The committed receipt cannot prove what the original call wrote."""
 
 
+def _replayed_batch_result(payload: object,
+                           replay: TransactionResult) -> dict:
+    """Recover the original batch breakdown from verified evidence alone.
+
+    A retry carries an envelope proven identical-intent to the approved one,
+    so its bundle is the verified request record, in request order; the
+    validated receipt's ``writes`` prove what the transaction created. The
+    replayed set is exactly the difference — no handler rerun, no live
+    canonical reads. Replayed-note paths come from the bundle rather than
+    the receipt, which is sound only because durable notes are never
+    deleted or moved (``artifact.delete`` is forbidden; ``note.revise``
+    preserves id, path, and role).
+    """
+    if not isinstance(payload, dict) or not isinstance(
+            payload.get("bundle"), dict):
+        raise _ReplayRecoveryError(
+            "replayed batch evidence carries no verified bundle")
+    notes = payload["bundle"].get("notes")
+    if not isinstance(notes, list) or not notes:
+        raise _ReplayRecoveryError(
+            "replayed batch evidence carries no verified notes list")
+    requested: list[tuple[str, str]] = []
+    for item in notes:
+        analysis = item.get("analysis") if isinstance(item, dict) else None
+        if not isinstance(analysis, dict) \
+                or not isinstance(analysis.get("id"), str) \
+                or not isinstance(analysis.get("path"), str):
+            raise _ReplayRecoveryError(
+                "replayed batch evidence carries a malformed bundle item")
+        requested.append((analysis["id"], analysis["path"]))
+    if len({note_id for note_id, _ in requested}) != len(requested):
+        raise _ReplayRecoveryError(
+            "replayed batch evidence carries duplicate note ids")
+    receipt = replay.receipt
+    if not isinstance(receipt, dict):
+        raise _ReplayRecoveryError("replayed evidence carries no receipt")
+    writes = receipt.get("writes")
+    if not isinstance(writes, list):
+        raise _ReplayRecoveryError("replayed batch receipt writes are malformed")
+    by_id = dict(requested)
+    created: set[str] = set()
+    for row in writes:
+        if not isinstance(row, dict) or not isinstance(row.get("path"), str):
+            raise _ReplayRecoveryError(
+                "replayed batch receipt write row is malformed")
+        written = row["path"]
+        if written in _UNPROVABLE_AGGREGATE_LEDGERS:
+            continue
+        if row.get("created") is not True \
+                or not written.startswith("knowledge/notes/") \
+                or ".." in written.split("/") \
+                or not written.endswith(".md"):
+            raise _ReplayRecoveryError(
+                f"replayed batch receipt writes outside knowledge/notes/: "
+                f"{written}")
+        note_id = written.rsplit("/", 1)[-1][:-len(".md")]
+        if note_id not in by_id or by_id[note_id] != written \
+                or note_id in created:
+            raise _ReplayRecoveryError(
+                f"replayed batch receipt write matches no requested note: "
+                f"{written}")
+        created.add(note_id)
+    return {
+        "created_note_ids": [note_id for note_id, _ in requested
+                             if note_id in created],
+        "replayed_note_ids": [note_id for note_id, _ in requested
+                              if note_id not in created],
+        "note_paths": dict(requested),
+    }
+
+
 def _replayed_domain_result(root: Path, capability: str,
-                            replay: TransactionResult) -> dict:
-    """Recover the original domain path from the already-validated receipt.
+                            replay: TransactionResult,
+                            payload: object = None) -> dict:
+    """Recover the original domain facts from the already-validated receipt.
 
     ``replay.receipt`` has already been schema-validated and cross-bound to
     this exact request by ``replay_for_request`` — its capability, status, and
@@ -602,8 +674,11 @@ def _replayed_domain_result(root: Path, capability: str,
     every capture-like capability's receipt must have: exactly one created
     write inside the capability's own directory. Rereading or re-verifying the
     generic fields here would be the "weaker helper" the recovery design
-    forbids.
+    forbids. A batch receipt instead carries the created subset of a verified
+    bundle, recovered with the retry envelope's identical-intent payload.
     """
+    if capability == "note.analysis.save_batch":
+        return _replayed_batch_result(payload, replay)
     try:
         field, prefix = _REPLAY_DOMAIN_RESULT[capability]
     except KeyError:
@@ -771,7 +846,8 @@ def _replay_response(root: Path, envelope: dict,
         "artifact_revisions": dict(replay.revisions),
         "snapshot_after": replay.snapshot_after,
         "replayed": True,
-        **_replayed_domain_result(root, str(envelope.get("capability")), replay),
+        **_replayed_domain_result(root, str(envelope.get("capability")), replay,
+                                  envelope.get("payload")),
     }
     return _v2_response(
         envelope,

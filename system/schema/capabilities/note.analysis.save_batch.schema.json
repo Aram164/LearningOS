@@ -10,7 +10,61 @@
   ],
   "properties": {
     "bundle": {
-      "type": "object"
+      "type": "object",
+      "required": [
+        "notes"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "notes": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 20,
+          "items": {
+            "type": "object",
+            "required": [
+              "analysis",
+              "body_file",
+              "body_file_sha256"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "analysis": {
+                "type": "object",
+                "required": [
+                  "id",
+                  "title",
+                  "path",
+                  "binding"
+                ],
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "binding": {
+                    "type": "object"
+                  }
+                }
+              },
+              "body_file": {
+                "type": "string",
+                "minLength": 1
+              },
+              "body_file_sha256": {
+                "type": "string",
+                "pattern": "^sha256:[a-f0-9]{64}$"
+              }
+            }
+          }
+        }
+      }
     }
   }
 }
