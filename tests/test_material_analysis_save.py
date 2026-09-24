@@ -570,3 +570,27 @@ def test_batch_retry_returns_the_same_breakdown(mini_repo):
     assert second_response["result"]["note_paths"] == (
         first_response["result"]["note_paths"])
     assert _transactions(mini_repo) == receipts_before
+
+
+def test_batch_shape_has_one_source_of_truth(repo_root):
+    import los
+    from learning_os.commands import analysis as analysis_commands
+    from learning_os.contracts import batch_notes
+    from learning_os.contracts.payloads import payload_schema, subparsers
+
+    fresh = payload_schema(
+        "note.analysis.save_batch",
+        subparsers(los.build_parser())["note-analysis-save-batch"])
+    schema_path = (repo_root / "system/schema/capabilities"
+                   / "note.analysis.save_batch.schema.json")
+    on_disk = json.loads(schema_path.read_text(encoding="utf-8"))
+    assert on_disk == fresh
+    assert on_disk["properties"]["bundle"] == batch_notes.bundle_schema()
+    notes_schema = batch_notes.bundle_schema()["properties"]["notes"]
+    assert notes_schema["minItems"] == batch_notes.BATCH_MIN_NOTES
+    assert notes_schema["maxItems"] == batch_notes.BATCH_MAX_NOTES
+    assert analysis_commands.ANALYSIS_FIELDS is batch_notes.ANALYSIS_FIELDS
+    assert analysis_commands.BATCH_FIELDS is batch_notes.BATCH_FIELDS
+    assert analysis_commands.BATCH_ITEM_FIELDS is batch_notes.BATCH_ITEM_FIELDS
+    assert analysis_commands.BATCH_MIN_NOTES == batch_notes.BATCH_MIN_NOTES
+    assert analysis_commands.BATCH_MAX_NOTES == batch_notes.BATCH_MAX_NOTES

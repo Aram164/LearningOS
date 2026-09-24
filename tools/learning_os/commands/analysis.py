@@ -18,6 +18,13 @@ from pathlib import Path
 
 import jsonschema
 
+from ..contracts.batch_notes import (
+    ANALYSIS_FIELDS,
+    BATCH_FIELDS,
+    BATCH_ITEM_FIELDS,
+    BATCH_MAX_NOTES,
+    BATCH_MIN_NOTES,
+)
 from ..loader import load_repo
 from ..material_analysis import binding_consistent, observe_local_material
 from ..materials_resolution import MATERIAL_SCHEME, material_uri_authority
@@ -32,12 +39,6 @@ from .support import (
     _write_transaction,
 )
 
-# Mirrored by the batch nested subschema in contracts/payloads.py
-# (_NESTED_SCHEMAS): a field added here must be added there.
-ANALYSIS_FIELDS = frozenset({"id", "title", "path", "binding"})
-BATCH_FIELDS = frozenset({"notes"})
-BATCH_ITEM_FIELDS = frozenset({"analysis", "body_file", "body_file_sha256"})
-BATCH_MAX_NOTES = 20
 NOTES_PREFIX = Path("knowledge/notes")
 
 
@@ -250,7 +251,7 @@ def _read_batch_items(bundle: object) -> list[tuple[int, dict, dict, bytes]]:
         raise WriteRefused("bundle has unknown fields: "
                            + ", ".join(sorted(str(key) for key in unknown)))
     items = bundle.get("notes")
-    if not isinstance(items, list) or not items:
+    if not isinstance(items, list) or len(items) < BATCH_MIN_NOTES:
         raise WriteRefused("bundle must carry a non-empty notes list")
     if len(items) > BATCH_MAX_NOTES:
         raise WriteRefused(f"batch carries {len(items)} notes; "
