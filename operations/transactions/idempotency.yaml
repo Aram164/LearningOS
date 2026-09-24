@@ -2330,6 +2330,20 @@ entries:
       unit-m2-sad-l11: 14
     snapshot_before: sha256:a2a2330010598f5111b08a0e8cfc7659c9ffe46a83025de6524d448340c87832
     snapshot_after: sha256:a39256f91b1a1a85b2dbe7dd1339ce394e95d2ec216585fc175e03d04103a6fd
+  reviewed-72380ee982194f85b506461eb6e69ee6:
+    request_id: request-reviewed-869db140e1064dbca9e4f1f2d8aeca21
+    capability: module.plan.import
+    channel: codex
+    intent_sha256: sha256:9779242d2b1b4a61c1ec00e0402b82012b303c17f246099e9c7efcb2eb3afae5
+    transaction_id: transaction-20260924-134906-001
+    receipt_path: operations/transactions/transaction-20260924-134906-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 59
+      unit-m2-sad-l07: 20
+      unit-m2-sad-l09: 16
+      unit-m2-sad-l10: 14
+    snapshot_before: sha256:d36115f9b9d6bddac23365ca0f736c6c44e9fdfedbf413187c7526900612c815
+    snapshot_after: sha256:20d52876c7bb2f1289302a8d50cb29979d8ca34a7c62046c39b97bc3ec937c05
   reviewed-728630e495824aba9c20c424e74713ce:
     request_id: request-reviewed-11783007a82345cf89785fd990075b39
     capability: unit.plan.revise
@@ -2374,6 +2388,23 @@ entries:
       unit-job-polars-pandas-fluency: 12
     snapshot_before: sha256:b0a43c85b5a0ba24a479b67abf250a8eb9f0a17621081c36b3ee5d5499e43196
     snapshot_after: sha256:718ce5ffbfa8e57203a431c5c2c359be97807047bb36170ad7e2f04794f1d228
+  reviewed-b20fffb51fbf44858a41c6182fca09a9:
+    request_id: request-reviewed-3e812a01f21c48e991a59687c3544376
+    capability: module.plan.import
+    channel: codex
+    intent_sha256: sha256:0d8b100e062e7accc2af09e9585b6af9099853b408a35793ae0ac1bdbad8ade4
+    transaction_id: transaction-20260924-134511-001
+    receipt_path: operations/transactions/transaction-20260924-134511-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 58
+      unit-m2-sad-l05: 16
+      unit-m2-sad-l06: 23
+      unit-m2-sad-l07: 19
+      unit-m2-sad-l08: 23
+      unit-m2-sad-l09: 15
+      unit-m2-sad-l10: 13
+    snapshot_before: sha256:56f7a87e11f979ba11c2860f491a7962307aadd02f2f74ce0a983f11027c0588
+    snapshot_after: sha256:d36115f9b9d6bddac23365ca0f736c6c44e9fdfedbf413187c7526900612c815
   reviewed-b316ed970ef34c32869dabad53e3c698:
     request_id: request-reviewed-84f28964d7bc4aef907d69531948ed7d
     capability: unit.plan.revise
@@ -2703,6 +2734,160 @@ entries:
       unit-m2-sad-l15: 10
     snapshot_before: sha256:7fb78603646240bc0028caa06b36ea22b615b4850665ab56d407e02412d225aa
     snapshot_after: sha256:f027a6bc13087e73e8061d27462c5f4ef5231795e31e2e3c4ccfb50fe2a83347
+  sad-source-angle-1df8867654a542eeb8bacfac77411c9c:
+    request_id: request-sad-source-angle-1df8867654a542eeb8bacfac77411c9c
+    capability: note.analysis.save
+    channel: codex
+    intent_sha256: sha256:010cc67580b849564b79d8038e838bc373db1da6a160ea94aeb670da6bb53eae
+    transaction_id: transaction-20260924-131105-001
+    receipt_path: operations/transactions/transaction-20260924-131105-001.yaml
+    revisions:
+      note-sad-l05-counting-probability-pp028-030: 1
+    snapshot_before: sha256:0ec477c5bb259cdab149bcccd12a015a09cf693fe05cfc32006ac2d43a6e2b61
+    snapshot_after: sha256:1c400860b89f9643717468f4f3588d145af07465940c4aa6524fe3b85b93748e
+  sad-source-angle-48ee688ff59c4fdc983439fe427fc581:
+    request_id: request-sad-source-angle-48ee688ff59c4fdc983439fe427fc581
+    capability: note.analysis.save
+    channel: codex
+    intent_sha256: sha256:ebc9388090a744a960b32eb7726ec37c50273579b7e2e44da2af1c40fe0f0f19
+    transaction_id: transaction-20260924-132504-001
+    receipt_path: operations/transactions/transaction-20260924-132504-001.yaml
+    revisions:
+      note-sad-l10-2025-bonferroni-pp043-045: 1
+    snapshot_before: sha256:8c6aa2b3292c91eafb017d056e003cbf27f06c7d3b808c21e3c4d87d129115fc
+    snapshot_after: sha256:22f0d08e65ef18cc327d726fad61ea95eb664ca7360e8a33e3fbdad1b9844884
+  sad-source-angle-5994f2fb2b074f7989b5e9f7612af6c7:
+    request_id: request-sad-source-angle-5994f2fb2b074f7989b5e9f7612af6c7
+    capability: note.analysis.save
+    channel: codex
+    intent_sha256: sha256:1cd415bde7090adb420651676df675849524cec9daf486d6101dc558ced23f8b
+    transaction_id: transaction-20260924-132400-001
+    receipt_path: operations/transactions/transaction-20260924-132400-001.yaml
+    revisions:
+      note-sad-l07-blitzstein-geom-convention-pp174-178: 1
+    snapshot_before: sha256:6e45d6f2d3e7063d1e83124653347f7e2befe8f357c80aa0375e4858810a5ee2
+    snapshot_after: sha256:84a37e1a3b179884b54e6952335ecb1b1571519707d80902cd3a04977155baf9
+  sad-source-angle-5ad91dce61c14274bb533b862df4251f:
+    request_id: request-sad-source-angle-5ad91dce61c14274bb533b862df4251f
+    capability: note.analysis.save
+    channel: codex
+    intent_sha256: sha256:95af6ebebdd5313d1fc484c3663178868f7ea587654f54b2c957dcd5badae2f0
+    transaction_id: transaction-20260924-131643-001
+    receipt_path: operations/transactions/transaction-20260924-131643-001.yaml
+    revisions:
+      note-sad-l10-islp-fwer-fdr-pp571-581: 1
+    snapshot_before: sha256:0c9595bb74339299ba616a8480a46b16226efe3d120de4a418d21dce0ba694cd
+    snapshot_after: sha256:7a57831e6e4157a4e6ec8f79e3ae61d6d920c07426c889f52dd1bed171f57207
+  sad-source-angle-6a932d83d3fa488590faf59de602cd9f:
+    request_id: request-sad-source-angle-6a932d83d3fa488590faf59de602cd9f
+    capability: note.analysis.save
+    channel: codex
+    intent_sha256: sha256:0dc1bf3cfc67ad618bf06e95268971d80b19e9eacb5b3a78c33b5306c63814bf
+    transaction_id: transaction-20260924-132442-001
+    receipt_path: operations/transactions/transaction-20260924-132442-001.yaml
+    revisions:
+      note-sad-l09-ue6-bootstrap-pp010-013: 1
+    snapshot_before: sha256:e96793b3e096c2403a4f49a7f5623d9c6be43f251ba0ae94b62d0826179698fe
+    snapshot_after: sha256:8c6aa2b3292c91eafb017d056e003cbf27f06c7d3b808c21e3c4d87d129115fc
+  sad-source-angle-735230fc3422481f9cb2ea4570feed17:
+    request_id: request-sad-source-angle-735230fc3422481f9cb2ea4570feed17
+    capability: note.analysis.save
+    channel: codex
+    intent_sha256: sha256:09096ae6ef2129d1d5d2d5a6b679c405318c20b3b5f2534e152ae13bb3f6db10
+    transaction_id: transaction-20260924-132338-001
+    receipt_path: operations/transactions/transaction-20260924-132338-001.yaml
+    revisions:
+      note-sad-l07-2025-geometric-pp038-044: 1
+    snapshot_before: sha256:7a57831e6e4157a4e6ec8f79e3ae61d6d920c07426c889f52dd1bed171f57207
+    snapshot_after: sha256:6e45d6f2d3e7063d1e83124653347f7e2befe8f357c80aa0375e4858810a5ee2
+  sad-source-angle-7e382d98e3bd4f07a3be21101e943fa8:
+    request_id: request-sad-source-angle-7e382d98e3bd4f07a3be21101e943fa8
+    capability: note.analysis.save
+    channel: codex
+    intent_sha256: sha256:d467598e6a2bb565eb00f737d831b77a1b7b129acea63009cad50a420d7c710a
+    transaction_id: transaction-20260924-131143-001
+    receipt_path: operations/transactions/transaction-20260924-131143-001.yaml
+    revisions:
+      note-sad-l10-testing-discipline-pp056-065: 1
+    snapshot_before: sha256:8b551b1d024f9e38416ebccd2e8dc46e56cfcaa92620102a5f7352ca344ae67d
+    snapshot_after: sha256:0c9595bb74339299ba616a8480a46b16226efe3d120de4a418d21dce0ba694cd
+  sad-source-angle-7f7779be421f4c55baca43dc6998e19a:
+    request_id: request-sad-source-angle-7f7779be421f4c55baca43dc6998e19a
+    capability: note.analysis.save
+    channel: codex
+    intent_sha256: sha256:0874930efff52828463678f0dd002156ca658be7ed159273c8fe3ca9914e0810
+    transaction_id: transaction-20260924-132738-001
+    receipt_path: operations/transactions/transaction-20260924-132738-001.yaml
+    revisions:
+      note-sad-ue7-historical-exam-prompts-pp077-084: 1
+    snapshot_before: sha256:b6b230a36f20b002fd8f8945eeb2d5681c73139864f5a5bcb285971a80a51809
+    snapshot_after: sha256:a5c39dd5c08a61f5ae5a9cfc3d39b688f208dc19d0984bc05cb4e08111f0f4d4
+  sad-source-angle-caeaa663a0934688920c8044ef52bc3f:
+    request_id: request-sad-source-angle-caeaa663a0934688920c8044ef52bc3f
+    capability: note.analysis.save
+    channel: codex
+    intent_sha256: sha256:5a259a9605f1ca3b3ccffb3b5542046880b1139cee6469f03a1a61df1424ed0c
+    transaction_id: transaction-20260924-131122-001
+    receipt_path: operations/transactions/transaction-20260924-131122-001.yaml
+    revisions:
+      note-sad-l07-distribution-boundary-pp013-014: 1
+    snapshot_before: sha256:1c400860b89f9643717468f4f3588d145af07465940c4aa6524fe3b85b93748e
+    snapshot_after: sha256:54b71b306c556e00ff85f7eda32b97407ca2e5fe17fc9b8c8eca7eb7a89a98ca
+  sad-source-angle-cb5cbcea2ce64753ab17a8cb77aacfbf:
+    request_id: request-sad-source-angle-cb5cbcea2ce64753ab17a8cb77aacfbf
+    capability: note.analysis.save
+    channel: codex
+    intent_sha256: sha256:416615edd9abed8739494d9378773ce33256732cc55410015343678d9e300fc3
+    transaction_id: transaction-20260924-131129-001
+    receipt_path: operations/transactions/transaction-20260924-131129-001.yaml
+    revisions:
+      note-sad-l08-clt-pp020-021: 1
+    snapshot_before: sha256:54b71b306c556e00ff85f7eda32b97407ca2e5fe17fc9b8c8eca7eb7a89a98ca
+    snapshot_after: sha256:17fa7d5b930f1f928abc9039165af14f6b0134a697e1502bb5f23235fc5f43b8
+  sad-source-angle-ccee1dba30ad4523a33c9b3ec70b34b0:
+    request_id: request-sad-source-angle-ccee1dba30ad4523a33c9b3ec70b34b0
+    capability: note.analysis.save
+    channel: codex
+    intent_sha256: sha256:7717c9a1e22ff8635e798a985ed8d61f8ea9ff17daf3e09767a7f186daaec157
+    transaction_id: transaction-20260924-132945-001
+    receipt_path: operations/transactions/transaction-20260924-132945-001.yaml
+    revisions:
+      note-sad-l10-fahrmeir-bonferroni-pp445-446: 1
+    snapshot_before: sha256:a5c39dd5c08a61f5ae5a9cfc3d39b688f208dc19d0984bc05cb4e08111f0f4d4
+    snapshot_after: sha256:6ab2679ea7a9405f1e60dfe19f90634c2d14ebbd887b432a557a7d7771a22c19
+  sad-source-angle-d1d22f19c5624dba896559b5ab2bae11:
+    request_id: request-sad-source-angle-d1d22f19c5624dba896559b5ab2bae11
+    capability: note.analysis.save
+    channel: codex
+    intent_sha256: sha256:e4f0fb553eeb5321c84d99a5a8b0bac783f3228f22adffeaa166fa7c93a283e4
+    transaction_id: transaction-20260924-132613-001
+    receipt_path: operations/transactions/transaction-20260924-132613-001.yaml
+    revisions:
+      note-sad-l08-2025-gaussian-mle-pp022-030: 1
+    snapshot_before: sha256:22f0d08e65ef18cc327d726fad61ea95eb664ca7360e8a33e3fbdad1b9844884
+    snapshot_after: sha256:b6b230a36f20b002fd8f8945eeb2d5681c73139864f5a5bcb285971a80a51809
+  sad-source-angle-d3fe751054c949b3aacbe0d0132fc5ef:
+    request_id: request-sad-source-angle-d3fe751054c949b3aacbe0d0132fc5ef
+    capability: note.analysis.save
+    channel: codex
+    intent_sha256: sha256:547240386fcc4368a38e0b570800784170ccd08896d40899811208c27b00b143
+    transaction_id: transaction-20260924-131136-001
+    receipt_path: operations/transactions/transaction-20260924-131136-001.yaml
+    revisions:
+      note-sad-l09-resampling-p045: 1
+    snapshot_before: sha256:17fa7d5b930f1f928abc9039165af14f6b0134a697e1502bb5f23235fc5f43b8
+    snapshot_after: sha256:8b551b1d024f9e38416ebccd2e8dc46e56cfcaa92620102a5f7352ca344ae67d
+  sad-source-angle-d817fa92e222488a88b65f8ca33f94df:
+    request_id: request-sad-source-angle-d817fa92e222488a88b65f8ca33f94df
+    capability: note.analysis.save
+    channel: codex
+    intent_sha256: sha256:4a5b4daa1381f4cd3af9ae6c1c071a46d7483161bd06dc9f47044e872e771dfe
+    transaction_id: transaction-20260924-132421-001
+    receipt_path: operations/transactions/transaction-20260924-132421-001.yaml
+    revisions:
+      note-sad-l09-2025-bootstrap-pp068-088: 1
+    snapshot_before: sha256:84a37e1a3b179884b54e6952335ecb1b1571519707d80902cd3a04977155baf9
+    snapshot_after: sha256:e96793b3e096c2403a4f49a7f5623d9c6be43f251ba0ae94b62d0826179698fe
   sad-video-routes-2026-09-07-apply-v2:
     request_id: sad-video-routes-2026-09-07-apply-v2
     capability: module.plan.import

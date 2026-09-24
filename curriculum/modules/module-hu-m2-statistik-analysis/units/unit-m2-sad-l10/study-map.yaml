@@ -30,11 +30,11 @@ stages:
   - kind: read
     label: Current L10 hypothesis-testing deck
     locator: lecture-slides/10_testing.pdf, PDF pp. 5-9,18-24,29-35
-    angle: The current lecture's focused reading for null model, alternative, statistic, and reference
-      distribution.
-    angle_detail: Read physical PDF pages 5-9,18-24,29-35 for this stage. Printed slide labels may differ.
-      This slice focuses the existing deck route; the complete lecture remains accessible through the
-      unit material menu.
+    angle: Sets a null and alternative, statistic and null reference law before comparing observed evidence
+      with a decision threshold.
+    angle_detail: Read lecture-slides/10_testing.pdf, PDF pp. 5-9,18-24,29-35. Sets a null and alternative,
+      statistic and null reference law before comparing observed evidence with a decision threshold. The
+      full lecture and alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
@@ -51,18 +51,6 @@ stages:
     scope_triage: required-now
     route_id: route-73776780d8ed70192944e3bf
   - material_ref:
-      route_id: route-8c08056418ec7b86504f8e93
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: required-now
-    route_id: route-8c08056418ec7b86504f8e93
-  - material_ref:
       route_id: route-bb0d30a8ac2386c642c3679c
       inherit:
       - label
@@ -75,17 +63,6 @@ stages:
     scope_triage: required-now
     route_id: route-bb0d30a8ac2386c642c3679c
   - material_ref:
-      route_id: route-b51a9ce76538f13c02e94238
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-b51a9ce76538f13c02e94238
-  - material_ref:
       route_id: route-5a22fa30b9f32f4c3d92f2b9
       inherit:
       - label
@@ -97,167 +74,6 @@ stages:
     kind: read
     scope_triage: helpful-now
     route_id: route-5a22fa30b9f32f4c3d92f2b9
-  - material_ref:
-      route_id: route-a5f4d77def369d34f2f8fe23
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-a5f4d77def369d34f2f8fe23
-  - material_ref:
-      route_id: route-335f1041911c33391d4a59b8
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-335f1041911c33391d4a59b8
-  - material_ref:
-      route_id: route-ef9dc248b7aa19966667451e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-ef9dc248b7aa19966667451e
-  - material_ref:
-      route_id: route-9bba0280753490bc6058ad4e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-9bba0280753490bc6058ad4e
-  - material_ref:
-      route_id: route-717bb9971de6075d51ba7e35
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-717bb9971de6075d51ba7e35
-  - material_ref:
-      route_id: route-9a9796659ebc716709622867
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-9a9796659ebc716709622867
-  - material_ref:
-      route_id: route-dde627c3d62ef1533c906370
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-dde627c3d62ef1533c906370
-  - material_ref:
-      route_id: route-431abda7307c32a597e47e16
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-431abda7307c32a597e47e16
-  - material_ref:
-      route_id: route-311488decc0768464dd8385e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-311488decc0768464dd8385e
-  - material_ref:
-      route_id: route-8b2188b37fd35d9a0cee57d3
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-8b2188b37fd35d9a0cee57d3
-  - material_ref:
-      route_id: route-1a6b3340ecdac05103e2a7a7
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-1a6b3340ecdac05103e2a7a7
-  - material_ref:
-      route_id: route-e6ea4c3f70f7709c51290280
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-e6ea4c3f70f7709c51290280
-  - material_ref:
-      route_id: route-95a74dc976d705b6c78350b8
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-95a74dc976d705b6c78350b8
-  - material_ref:
-      route_id: route-d808f7046587125f077155a3
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-d808f7046587125f077155a3
-    kind: practise
-    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-test-model/notes.md
   attachments: []
   source_feedback: []
@@ -304,41 +120,6 @@ stages:
     scope_triage: required-now
     route_id: route-73776780d8ed70192944e3bf
   - material_ref:
-      route_id: route-8c08056418ec7b86504f8e93
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: required-now
-    route_id: route-8c08056418ec7b86504f8e93
-  - material_ref:
-      route_id: route-bb0d30a8ac2386c642c3679c
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: required-now
-    route_id: route-bb0d30a8ac2386c642c3679c
-  - material_ref:
-      route_id: route-b51a9ce76538f13c02e94238
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-b51a9ce76538f13c02e94238
-  - material_ref:
       route_id: route-5a22fa30b9f32f4c3d92f2b9
       inherit:
       - label
@@ -350,171 +131,6 @@ stages:
     kind: read
     scope_triage: helpful-now
     route_id: route-5a22fa30b9f32f4c3d92f2b9
-  - material_ref:
-      route_id: route-a5f4d77def369d34f2f8fe23
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-a5f4d77def369d34f2f8fe23
-  - material_ref:
-      route_id: route-335f1041911c33391d4a59b8
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-335f1041911c33391d4a59b8
-  - material_ref:
-      route_id: route-ef9dc248b7aa19966667451e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-ef9dc248b7aa19966667451e
-  - material_ref:
-      route_id: route-9bba0280753490bc6058ad4e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-9bba0280753490bc6058ad4e
-  - material_ref:
-      route_id: route-717bb9971de6075d51ba7e35
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-717bb9971de6075d51ba7e35
-  - material_ref:
-      route_id: route-9a9796659ebc716709622867
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-9a9796659ebc716709622867
-  - material_ref:
-      route_id: route-431abda7307c32a597e47e16
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-431abda7307c32a597e47e16
-  - material_ref:
-      route_id: route-311488decc0768464dd8385e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-311488decc0768464dd8385e
-  - material_ref:
-      route_id: route-8b2188b37fd35d9a0cee57d3
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-8b2188b37fd35d9a0cee57d3
-  - material_ref:
-      route_id: route-1a6b3340ecdac05103e2a7a7
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-1a6b3340ecdac05103e2a7a7
-  - material_ref:
-      route_id: route-e6ea4c3f70f7709c51290280
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-e6ea4c3f70f7709c51290280
-  - material_ref:
-      route_id: route-95a74dc976d705b6c78350b8
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-95a74dc976d705b6c78350b8
-  - material_ref:
-      route_id: route-da4850b15834791b4688a767
-      inherit:
-      - label
-      - source_id
-      - angle
-      - vault_path
-    route_id: route-da4850b15834791b4688a767
-    kind: read
-    scope_triage: helpful-now
-    locator: §13.5.1 and Algorithm 13.3, physical PDF pp. 584-586
-    angle_detail: Use the two-sample resampling example to construct a null distribution and compare its
-      tail probability with the theoretical t approximation. The contrasting examples show when the two
-      methods agree and when model assumptions change the conclusion. This is a test under the null, not
-      L09’s ordinary estimator bootstrap.
-  - material_ref:
-      route_id: route-d808f7046587125f077155a3
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-d808f7046587125f077155a3
-    kind: practise
-    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-tails-pvalue/notes.md
   attachments: []
   source_feedback: []
@@ -525,10 +141,9 @@ stages:
   objective: Alpha controls false rejection under the null, beta describes missed effects under an alternative,
     and power depends on effect size, noise, sample size, and the decision threshold.
   done_when:
-  - 'Reproduce without notes: Alpha controls false rejection under the null, beta describes missed effects
-    under an alternative, and power depends on effect size, noise, sample size, and the decision threshold.'
-  - Work Blatt 5, Aufgabe 1 — permutation test and t-test comparison, then the remaining 3, and record
-    every miss with the step it failed at.
+  - Draw the truth-by-decision table and state alpha, beta and power=1−beta without notes.
+  - Use OpenIntro §7.4 or Dekking Ch. 26 to calculate power at a specified alternative; record which assumptions
+    and effect size the answer depends on.
   exam_critical: true
   concepts:
   - concept-hypothesis-testing
@@ -537,117 +152,14 @@ stages:
   - kind: read
     label: Current L10 hypothesis-testing deck
     locator: lecture-slides/10_testing.pdf, PDF pp. 10-16,24
-    angle: The current lecture's focused reading for type i error, type ii error, and power.
-    angle_detail: Read physical PDF pages 10-16,24 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Introduces both error types and the decision tradeoff; the later p. 56 sentence reverses the
+      definition of power and needs correction.
+    angle_detail: Read lecture-slides/10_testing.pdf, PDF pp. 10-16,24. Introduces both error types and
+      the decision tradeoff; the later p. 56 sentence reverses the definition of power and needs correction.
+      The full lecture and alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
-  - material_ref:
-      route_id: route-73776780d8ed70192944e3bf
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: required-now
-    route_id: route-73776780d8ed70192944e3bf
-  - material_ref:
-      route_id: route-8c08056418ec7b86504f8e93
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: required-now
-    route_id: route-8c08056418ec7b86504f8e93
-  - material_ref:
-      route_id: route-b51a9ce76538f13c02e94238
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-b51a9ce76538f13c02e94238
-  - material_ref:
-      route_id: route-5a22fa30b9f32f4c3d92f2b9
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-5a22fa30b9f32f4c3d92f2b9
-  - material_ref:
-      route_id: route-9bba0280753490bc6058ad4e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-9bba0280753490bc6058ad4e
-  - material_ref:
-      route_id: route-717bb9971de6075d51ba7e35
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-717bb9971de6075d51ba7e35
-  - material_ref:
-      route_id: route-9a9796659ebc716709622867
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-9a9796659ebc716709622867
-  - material_ref:
-      route_id: route-dde627c3d62ef1533c906370
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-dde627c3d62ef1533c906370
-  - material_ref:
-      route_id: route-431abda7307c32a597e47e16
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-431abda7307c32a597e47e16
   - material_ref:
       route_id: route-335f1041911c33391d4a59b8
       inherit:
@@ -676,18 +188,6 @@ stages:
     angle_detail: Calculate Type II error at a specified alternative, then move that alternative toward
       the null. The exercise shows why power is a function of the actual parameter, not a single guarantee
       attached to the test.
-  - material_ref:
-      route_id: route-d808f7046587125f077155a3
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-d808f7046587125f077155a3
-    kind: practise
-    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-errors-power/notes.md
   attachments: []
   source_feedback: []
@@ -735,18 +235,6 @@ stages:
     scope_triage: required-now
     route_id: route-73776780d8ed70192944e3bf
   - material_ref:
-      route_id: route-8c08056418ec7b86504f8e93
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: required-now
-    route_id: route-8c08056418ec7b86504f8e93
-  - material_ref:
       route_id: route-bb0d30a8ac2386c642c3679c
       inherit:
       - label
@@ -770,157 +258,6 @@ stages:
     kind: read
     scope_triage: helpful-now
     route_id: route-5a22fa30b9f32f4c3d92f2b9
-  - material_ref:
-      route_id: route-a5f4d77def369d34f2f8fe23
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-a5f4d77def369d34f2f8fe23
-  - material_ref:
-      route_id: route-be1fde2be811fcad5b16c694
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-be1fde2be811fcad5b16c694
-  - material_ref:
-      route_id: route-335f1041911c33391d4a59b8
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-335f1041911c33391d4a59b8
-  - material_ref:
-      route_id: route-ef9dc248b7aa19966667451e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-ef9dc248b7aa19966667451e
-  - material_ref:
-      route_id: route-717bb9971de6075d51ba7e35
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-717bb9971de6075d51ba7e35
-  - material_ref:
-      route_id: route-9a9796659ebc716709622867
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-9a9796659ebc716709622867
-  - material_ref:
-      route_id: route-dde627c3d62ef1533c906370
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-dde627c3d62ef1533c906370
-  - material_ref:
-      route_id: route-431abda7307c32a597e47e16
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-431abda7307c32a597e47e16
-  - material_ref:
-      route_id: route-311488decc0768464dd8385e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-311488decc0768464dd8385e
-  - material_ref:
-      route_id: route-1a6b3340ecdac05103e2a7a7
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-1a6b3340ecdac05103e2a7a7
-  - material_ref:
-      route_id: route-e6ea4c3f70f7709c51290280
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-e6ea4c3f70f7709c51290280
-  - material_ref:
-      route_id: route-95a74dc976d705b6c78350b8
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-95a74dc976d705b6c78350b8
-  - material_ref:
-      route_id: route-d808f7046587125f077155a3
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-d808f7046587125f077155a3
-    kind: practise
-    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-z-t/notes.md
   attachments: []
   source_feedback: []
@@ -943,10 +280,10 @@ stages:
   - kind: read
     label: Current L10 hypothesis-testing deck
     locator: lecture-slides/10_testing.pdf, PDF pp. 36-39
-    angle: The current lecture's focused reading for confidence intervals and test duality.
-    angle_detail: Read physical PDF pages 36-39 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Pairs confidence bounds with the matching test decision under the same assumptions.
+    angle_detail: Read lecture-slides/10_testing.pdf, PDF pp. 36-39. Pairs confidence bounds with the
+      matching test decision under the same assumptions. The full lecture and alternative sources remain
+      in the unit material menu.
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
@@ -962,18 +299,6 @@ stages:
     kind: practise
     scope_triage: helpful-now
     route_id: route-431abda7307c32a597e47e16
-  - material_ref:
-      route_id: route-311488decc0768464dd8385e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-311488decc0768464dd8385e
   - material_ref:
       route_id: route-ef9dc248b7aa19966667451e
       inherit:
@@ -1011,25 +336,14 @@ stages:
   - kind: read
     label: Current L10 hypothesis-testing deck
     locator: lecture-slides/10_testing.pdf, PDF pp. 48-51
-    angle: The current lecture's focused reading for chi-square tests for categorical data.
-    angle_detail: Read physical PDF pages 48-51 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Constructs observed-versus-expected count comparisons and the chi-square reference test for
+      categorical data.
+    angle_detail: Read lecture-slides/10_testing.pdf, PDF pp. 48-51. Constructs observed-versus-expected
+      count comparisons and the chi-square reference test for categorical data. The full lecture and alternative
+      sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
-  - material_ref:
-      route_id: route-5a22fa30b9f32f4c3d92f2b9
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-5a22fa30b9f32f4c3d92f2b9
   - material_ref:
       route_id: route-a5f4d77def369d34f2f8fe23
       inherit:
@@ -1043,18 +357,6 @@ stages:
     scope_triage: helpful-now
     route_id: route-a5f4d77def369d34f2f8fe23
   - material_ref:
-      route_id: route-be1fde2be811fcad5b16c694
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-be1fde2be811fcad5b16c694
-  - material_ref:
       route_id: route-335f1041911c33391d4a59b8
       inherit:
       - label
@@ -1066,52 +368,6 @@ stages:
     kind: read
     scope_triage: helpful-now
     route_id: route-335f1041911c33391d4a59b8
-  - material_ref:
-      route_id: route-ef9dc248b7aa19966667451e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-ef9dc248b7aa19966667451e
-  - material_ref:
-      route_id: route-717bb9971de6075d51ba7e35
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-717bb9971de6075d51ba7e35
-  - material_ref:
-      route_id: route-dde627c3d62ef1533c906370
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-dde627c3d62ef1533c906370
-  - material_ref:
-      route_id: route-431abda7307c32a597e47e16
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-431abda7307c32a597e47e16
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-chi-square/notes.md
   attachments: []
   source_feedback: []
@@ -1135,10 +391,11 @@ stages:
   - kind: read
     label: Current L10 hypothesis-testing deck
     locator: lecture-slides/10_testing.pdf, PDF pp. 52-58
-    angle: The current lecture's focused reading for rank and permutation tests.
-    angle_detail: Read physical PDF pages 52-58 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Contrasts rank-based comparison with a permutation distribution formed by reassigning observed
+      group labels; p. 56 misdefines power.
+    angle_detail: Read lecture-slides/10_testing.pdf, PDF pp. 52-58. Contrasts rank-based comparison with
+      a permutation distribution formed by reassigning observed group labels; p. 56 misdefines power.
+      The full lecture and alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
@@ -1155,18 +412,6 @@ stages:
     scope_triage: required-now
     route_id: route-73776780d8ed70192944e3bf
   - material_ref:
-      route_id: route-8c08056418ec7b86504f8e93
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: required-now
-    route_id: route-8c08056418ec7b86504f8e93
-  - material_ref:
       route_id: route-bb0d30a8ac2386c642c3679c
       inherit:
       - label
@@ -1178,69 +423,19 @@ stages:
     kind: practise
     scope_triage: required-now
     route_id: route-bb0d30a8ac2386c642c3679c
-  - material_ref:
-      route_id: route-5a22fa30b9f32f4c3d92f2b9
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-5a22fa30b9f32f4c3d92f2b9
-  - material_ref:
-      route_id: route-a5f4d77def369d34f2f8fe23
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-a5f4d77def369d34f2f8fe23
-  - material_ref:
-      route_id: route-431abda7307c32a597e47e16
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-431abda7307c32a597e47e16
-  - material_ref:
-      route_id: route-da4850b15834791b4688a767
-      inherit:
-      - label
-      - source_id
-      - angle
-      - vault_path
-    route_id: route-da4850b15834791b4688a767
-    kind: read
-    scope_triage: helpful-now
-    locator: §13.5.1 and Algorithm 13.3, physical PDF pp. 584-586
-    angle_detail: Use the two-sample resampling example to construct a null distribution and compare its
-      tail probability with the theoretical t approximation. The contrasting examples show when the two
-      methods agree and when model assumptions change the conclusion. This is a test under the null, not
-      L09’s ordinary estimator bootstrap.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-nonparametric/notes.md
   attachments: []
   source_feedback: []
 - id: stage-sad-l10-multiple
   number: 8
-  title: Multiple testing and false discoveries
+  title: Multiple testing and Bonferroni correction
   status: pending
-  objective: Repeating tests inflates the chance of at least one false positive; family-wise and false-discovery
-    controls answer different error-management questions.
+  objective: Repeated tests inflate the chance of at least one false rejection; choose alpha before looking
+    and apply the Bonferroni per-test threshold alpha/m when controlling this family-wise risk.
   done_when:
-  - 'Reproduce without notes: Repeating tests inflates the chance of at least one false positive; family-wise
-    and false-discovery controls answer different error-management questions.'
+  - Explain why 100 true-null tests at alpha=0.05 yield five expected false rejections, not twenty. Apply
+    alpha/m to a specified family and distinguish the raw p-value from an adjusted p-value.
+  - Explain the current deck’s p-hacking and preregistration warnings. Treat FDR/BH as optional extension.
   exam_critical: true
   concepts:
   - concept-hypothesis-testing
@@ -1250,38 +445,57 @@ stages:
   - kind: read
     label: Current L10 hypothesis-testing deck
     locator: lecture-slides/10_testing.pdf, PDF pp. 60-65
-    angle: The current lecture's focused reading for multiple testing and false discoveries.
-    angle_detail: Read physical PDF pages 60-65 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Warns against repeated-testing false positives, changing alpha after seeing data, selective
+      reporting and p-hacking; it only sketches correction and does not teach FDR.
+    angle_detail: Read physical PDF pp. 60–65 for repeated-testing pitfalls and prespecified alpha. Physical
+      p. 62 wrongly gives 20 expected false positives for 100 true-null tests at alpha=0.05; the expectation
+      is 5. Use alpha/m as the per-test Bonferroni threshold, or min(1,m·p_raw) as an adjusted p-value.
+      The current deck does not teach FDR.
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
   - material_ref:
-      route_id: route-da4850b15834791b4688a767
+      route_id: route-b51a9ce76538f13c02e94238
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
       - source_id
+    route_id: route-b51a9ce76538f13c02e94238
     kind: read
     scope_triage: helpful-now
-    route_id: route-da4850b15834791b4688a767
+    locator: 10_statistical_significance.pdf, physical PDF pp. 43–45
+    angle: The prior-year course deck states the prespecified-alpha rule and the correct Bonferroni threshold
+      α/m.
+    angle_detail: Pages 43–45 connect choosing alpha before testing, many drug variants and false-positive
+      accumulation, then explicitly divide alpha by the number of tests. This repairs the current deck
+      p. 62 wording but does not add FDR to core scope.
   - material_ref:
-      route_id: route-5a22fa30b9f32f4c3d92f2b9
+      route_id: route-sad-l10-fahrmeir-bonferroni
       inherit:
       - label
       - source_id
-      - angle
       - vault_path
-    route_id: route-5a22fa30b9f32f4c3d92f2b9
+    route_id: route-sad-l10-fahrmeir-bonferroni
     kind: read
     scope_triage: helpful-now
-    locator: §10.3 Multiple Testprobleme, physical PDF pp. 445-446
-    angle_detail: Work through why repeating tests inflates the chance of at least one false rejection,
-      then apply Bonferroni. This gives a short German foundation before ISLP’s broader FWER/FDR treatment.
+    locator: Chapter 10 §10.3 Multiple Testprobleme, physical PDF pp. 445–446
+    angle: Quantifies family-wise false-rejection inflation before applying Bonferroni at α/k.
+    angle_detail: The German worked table reaches 0.994 for 100 independent 5% tests; the page then states
+      the per-test α/k threshold. This numerical derivation corrects the current deck p. 62 count and
+      notation. It is Chapter 10, not Chapter 12.
+  - material_ref:
+      route_id: route-sad-l10-islp-multiple-testing
+      inherit:
+      - label
+      - source_id
+      - vault_path
+    route_id: route-sad-l10-islp-multiple-testing
+    kind: read
+    scope_triage: reference-only
+    locator: ISLP Chapter 13, physical PDF pp. 571–581
+    angle: 'Optional extension: separates family-wise error from false-discovery rate and gives Holm/BH
+      procedures.'
+    angle_detail: Pages 571–575 develop FWER, Bonferroni and Holm; pp. 576–581 develop FDR and Benjamini–Hochberg.
+      The current SaD deck does not teach FDR, so this resource is optional reference only.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l10/stages/stage-sad-l10-multiple/notes.md
   attachments: []
   source_feedback: []

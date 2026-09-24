@@ -396,6 +396,57 @@ records:
       idempotency_key: book-routes-import-2026-09-16-retry1
     reviewed_by: ''
     status: supported
+  covers:route-64c6506fd426173a5b124d5a:
+    claim_id: covers:route-64c6506fd426173a5b124d5a
+    claim_kind: route-covers
+    statement: route-64c6506fd426173a5b124d5a covers knowledge-sad-l07-bernoulli-binomial,
+      knowledge-sad-l07-geometric, knowledge-sad-l07-model-selection, knowledge-sad-l07-poisson
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 58
+        unit-m2-sad-l07: 19
+        unit-m2-sad-l08: 23
+        unit-m2-sad-l09: 15
+        unit-m2-sad-l10: 13
+      source_hashes:
+        file:knowledge/notes/mathematics/note-sad-l07-2025-geometric-pp038-044.md: sha256:2fcbbf6795f470567da6ecbf2935bca6f2e30bcd152582c4f9cc5b0fb45fcab4
+      evidence:
+      - route-locator:Ch 4 §4.2 geometric distribution, pdf pp. 144-148
+      - repo-file:knowledge/notes/mathematics/note-sad-l07-2025-geometric-pp038-044.md
+      assumes: []
+    judged_by: codex/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3e812a01f21c48e991a59687c3544376
+      idempotency_key: reviewed-b20fffb51fbf44858a41c6182fca09a9
+    reviewed_by: ''
+    status: supported
+  covers:route-6ffaf5d7ec9d500ff4c5286e:
+    claim_id: covers:route-6ffaf5d7ec9d500ff4c5286e
+    claim_kind: route-covers
+    statement: route-6ffaf5d7ec9d500ff4c5286e covers knowledge-sad-l07-bernoulli-binomial,
+      knowledge-sad-l07-geometric, knowledge-sad-l07-hypergeometric, knowledge-sad-l07-model-selection,
+      knowledge-sad-l07-poisson
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 58
+        unit-m2-sad-l07: 19
+        unit-m2-sad-l08: 23
+        unit-m2-sad-l09: 15
+        unit-m2-sad-l10: 13
+      source_hashes:
+        file:knowledge/notes/mathematics/note-sad-l07-2025-geometric-pp038-044.md: sha256:2fcbbf6795f470567da6ecbf2935bca6f2e30bcd152582c4f9cc5b0fb45fcab4
+      evidence:
+      - route-locator:07_discrete_distributions.pptx (1).pdf
+      - repo-file:knowledge/notes/mathematics/note-sad-l07-2025-geometric-pp038-044.md
+      assumes: []
+    judged_by: codex/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3e812a01f21c48e991a59687c3544376
+      idempotency_key: reviewed-b20fffb51fbf44858a41c6182fca09a9
+    reviewed_by: ''
+    status: supported
   covers:route-78ae1df0aa949bb2a8a872dc:
     claim_id: covers:route-78ae1df0aa949bb2a8a872dc
     claim_kind: route-covers
@@ -835,6 +886,57 @@ records:
       idempotency_key: coursera-retire-sad-2026-09-16
     reviewed_by: ''
     status: withdrawn
+  covers:route-b2d9fca6647fba5c03976147:
+    claim_id: covers:route-b2d9fca6647fba5c03976147
+    claim_kind: route-covers
+    statement: route-b2d9fca6647fba5c03976147 covers knowledge-sad-l09-bootstrap,
+      knowledge-sad-l09-estimator, knowledge-sad-l09-properties, knowledge-sad-l09-standard-error,
+      knowledge-sad-l09-t-interval, knowledge-sad-l09-z-interval
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 58
+        unit-m2-sad-l07: 19
+        unit-m2-sad-l08: 23
+        unit-m2-sad-l09: 15
+        unit-m2-sad-l10: 13
+      source_hashes:
+        file:knowledge/notes/mathematics/note-sad-l09-2025-bootstrap-pp068-088.md: sha256:2d5233a2de5803935d92092ef4a7b006ad293d186eee67dffe5db12690a1a6ac
+      evidence:
+      - route-locator:09_point_interval_estimation (1).pdf
+      - repo-file:knowledge/notes/mathematics/note-sad-l09-2025-bootstrap-pp068-088.md
+      assumes: []
+    judged_by: codex/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3e812a01f21c48e991a59687c3544376
+      idempotency_key: reviewed-b20fffb51fbf44858a41c6182fca09a9
+    reviewed_by: ''
+    status: supported
+  covers:route-b51a9ce76538f13c02e94238:
+    claim_id: covers:route-b51a9ce76538f13c02e94238
+    claim_kind: route-covers
+    statement: route-b51a9ce76538f13c02e94238 covers knowledge-sad-l10-errors-power,
+      knowledge-sad-l10-multiple, knowledge-sad-l10-tails-pvalue, knowledge-sad-l10-test-model
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 58
+        unit-m2-sad-l07: 19
+        unit-m2-sad-l08: 23
+        unit-m2-sad-l09: 15
+        unit-m2-sad-l10: 13
+      source_hashes:
+        file:knowledge/notes/mathematics/note-sad-l10-2025-bonferroni-pp043-045.md: sha256:dd8779d04c7e9e4de20bb691d450c80947faa2f3a59a6de22f5e5cc425441654
+      evidence:
+      - route-locator:10_statistical_significance.pdf
+      - repo-file:knowledge/notes/mathematics/note-sad-l10-2025-bonferroni-pp043-045.md
+      assumes: []
+    judged_by: codex/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3e812a01f21c48e991a59687c3544376
+      idempotency_key: reviewed-b20fffb51fbf44858a41c6182fca09a9
+    reviewed_by: ''
+    status: supported
   covers:route-b574283601c1e7562e4f5071:
     claim_id: covers:route-b574283601c1e7562e4f5071
     claim_kind: route-covers
@@ -2441,6 +2543,31 @@ records:
     admitted_by:
       request_id: request-video-routes-2026-09-15
       idempotency_key: video-routes-import-2026-09-15-retry2
+    reviewed_by: ''
+    status: supported
+  covers:route-sad-l08-2025-gaussian-mle:
+    claim_id: covers:route-sad-l08-2025-gaussian-mle
+    claim_kind: route-covers
+    statement: route-sad-l08-2025-gaussian-mle covers knowledge-sad-l08-likelihood,
+      knowledge-sad-l08-mle
+    derived_from:
+      contract_version: 2
+      revisions:
+        module-hu-m2-statistik-analysis: 58
+        unit-m2-sad-l07: 19
+        unit-m2-sad-l08: 23
+        unit-m2-sad-l09: 15
+        unit-m2-sad-l10: 13
+      source_hashes:
+        file:knowledge/notes/mathematics/note-sad-l08-2025-gaussian-mle-pp022-030.md: sha256:a9865691166a6693c2dc7e05942446941817475df18b6bb090c0eb975757d0f7
+      evidence:
+      - route-locator:physical PDF pp. 22–30
+      - repo-file:knowledge/notes/mathematics/note-sad-l08-2025-gaussian-mle-pp022-030.md
+      assumes: []
+    judged_by: codex/operator-approval
+    admitted_by:
+      request_id: request-reviewed-3e812a01f21c48e991a59687c3544376
+      idempotency_key: reviewed-b20fffb51fbf44858a41c6182fca09a9
     reviewed_by: ''
     status: supported
   covers:route-sad-l08-3b1b-b70d0fa4:

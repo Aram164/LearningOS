@@ -30,10 +30,11 @@ stages:
   - kind: read
     label: Current L07 discrete-distributions deck
     locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 2-4,16,24
-    angle: The current lecture's focused reading for distribution choice from assumptions.
-    angle_detail: Read physical PDF pages 2-4,16,24 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Separates fixed-trial Bernoulli counts, without-replacement draws and stable-rate interval
+      counts before a model is chosen.
+    angle_detail: Read lecture-slides/07_discrete_distributions.pdf, PDF pp. 2-4,16,24. Separates fixed-trial
+      Bernoulli counts, without-replacement draws and stable-rate interval counts before a model is chosen.
+      The full lecture and alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
@@ -61,203 +62,6 @@ stages:
     kind: practise
     scope_triage: required-now
     route_id: route-52083707f01a014c3e2c267b
-  - material_ref:
-      route_id: route-f827266eae5a106a6154442a
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-f827266eae5a106a6154442a
-  - material_ref:
-      route_id: route-6ffaf5d7ec9d500ff4c5286e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-6ffaf5d7ec9d500ff4c5286e
-  - material_ref:
-      route_id: route-3e560269a42e146f88512ee4
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-3e560269a42e146f88512ee4
-  - material_ref:
-      route_id: route-488f203b03208f7a1ae5eaff
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-488f203b03208f7a1ae5eaff
-  - material_ref:
-      route_id: route-58f13d47b87582e36563f616
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-58f13d47b87582e36563f616
-  - material_ref:
-      route_id: route-6522f11efe3a4956621f2692
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-6522f11efe3a4956621f2692
-  - material_ref:
-      route_id: route-64c6506fd426173a5b124d5a
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-64c6506fd426173a5b124d5a
-  - material_ref:
-      route_id: route-9e9215f1bace1b2b1a269f02
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-9e9215f1bace1b2b1a269f02
-  - material_ref:
-      route_id: route-e325141b8971b65116e08790
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-e325141b8971b65116e08790
-  - material_ref:
-      route_id: route-a9a926efa0d8512eca388e80
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-a9a926efa0d8512eca388e80
-  - material_ref:
-      route_id: route-3d9cb15592efe429e13918f5
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-3d9cb15592efe429e13918f5
-  - material_ref:
-      route_id: route-3d403c071c84fe621ef510a3
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-3d403c071c84fe621ef510a3
-  - material_ref:
-      route_id: route-1e3e247b8c6240fbc08376a9
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-1e3e247b8c6240fbc08376a9
-  - material_ref:
-      route_id: route-4e47b0154d49ac739ff3c23e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-4e47b0154d49ac739ff3c23e
-  - material_ref:
-      route_id: route-124b1de843b9b317287c58d2
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-124b1de843b9b317287c58d2
-  - material_ref:
-      route_id: route-48c6ad5e78bcb005c5a15885
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-48c6ad5e78bcb005c5a15885
-  - material_ref:
-      route_id: route-4d9c809542ca696a1f19fd49
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-4d9c809542ca696a1f19fd49
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-model-selection/notes.md
   attachments: []
   source_feedback: []
@@ -280,10 +84,11 @@ stages:
   - kind: read
     label: Current L07 discrete-distributions deck
     locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 4-14
-    angle: The current lecture's focused reading for bernoulli trials and the binomial distribution.
-    angle_detail: Read physical PDF pages 4-14 for this stage. Printed slide labels may differ. This slice
-      focuses the existing deck route; the complete lecture remains accessible through the unit material
-      menu.
+    angle: Builds the Binomial mass function from repeated independent success/failure trials, then gives
+      its mean and variance.
+    angle_detail: Read lecture-slides/07_discrete_distributions.pdf, PDF pp. 4-14. Builds the Binomial
+      mass function from repeated independent success/failure trials, then gives its mean and variance.
+      The full lecture and alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
@@ -312,64 +117,6 @@ stages:
     scope_triage: required-now
     route_id: route-52083707f01a014c3e2c267b
   - material_ref:
-      route_id: route-f827266eae5a106a6154442a
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-f827266eae5a106a6154442a
-  - material_ref:
-      route_id: route-6ffaf5d7ec9d500ff4c5286e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-6ffaf5d7ec9d500ff4c5286e
-  - material_ref:
-      route_id: route-3e560269a42e146f88512ee4
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-3e560269a42e146f88512ee4
-  - material_ref:
-      route_id: route-488f203b03208f7a1ae5eaff
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-488f203b03208f7a1ae5eaff
-  - material_ref:
-      route_id: route-58f13d47b87582e36563f616
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-58f13d47b87582e36563f616
-  - material_ref:
       route_id: route-6522f11efe3a4956621f2692
       inherit:
       - label
@@ -381,157 +128,6 @@ stages:
     kind: read
     scope_triage: helpful-now
     route_id: route-6522f11efe3a4956621f2692
-  - material_ref:
-      route_id: route-64c6506fd426173a5b124d5a
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-64c6506fd426173a5b124d5a
-  - material_ref:
-      route_id: route-9e9215f1bace1b2b1a269f02
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-9e9215f1bace1b2b1a269f02
-  - material_ref:
-      route_id: route-e325141b8971b65116e08790
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-e325141b8971b65116e08790
-  - material_ref:
-      route_id: route-a9a926efa0d8512eca388e80
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-a9a926efa0d8512eca388e80
-  - material_ref:
-      route_id: route-ebf16644b4d589e5cfa9dc54
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-ebf16644b4d589e5cfa9dc54
-  - material_ref:
-      route_id: route-3d9cb15592efe429e13918f5
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-3d9cb15592efe429e13918f5
-  - material_ref:
-      route_id: route-3bd7fda1a5087e4bff5edfbb
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-3bd7fda1a5087e4bff5edfbb
-  - material_ref:
-      route_id: route-3d403c071c84fe621ef510a3
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-3d403c071c84fe621ef510a3
-  - material_ref:
-      route_id: route-1e3e247b8c6240fbc08376a9
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-1e3e247b8c6240fbc08376a9
-  - material_ref:
-      route_id: route-4e47b0154d49ac739ff3c23e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-4e47b0154d49ac739ff3c23e
-  - material_ref:
-      route_id: route-124b1de843b9b317287c58d2
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-124b1de843b9b317287c58d2
-  - material_ref:
-      route_id: route-48c6ad5e78bcb005c5a15885
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-48c6ad5e78bcb005c5a15885
-  - material_ref:
-      route_id: route-4d9c809542ca696a1f19fd49
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-4d9c809542ca696a1f19fd49
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-bernoulli-binomial/notes.md
   attachments: []
   source_feedback: []
@@ -553,10 +149,11 @@ stages:
   - kind: read
     label: Current L07 discrete-distributions deck
     locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 16-22
-    angle: The current lecture's focused reading for hypergeometric sampling without replacement.
-    angle_detail: Read physical PDF pages 16-22 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Uses a finite urn without replacement so each draw changes later chances; contrasts its mean
+      and variance with Binomial sampling.
+    angle_detail: Read lecture-slides/07_discrete_distributions.pdf, PDF pp. 16-22. Uses a finite urn
+      without replacement so each draw changes later chances; contrasts its mean and variance with Binomial
+      sampling. The full lecture and alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
@@ -585,64 +182,6 @@ stages:
     scope_triage: required-now
     route_id: route-52083707f01a014c3e2c267b
   - material_ref:
-      route_id: route-f827266eae5a106a6154442a
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-f827266eae5a106a6154442a
-  - material_ref:
-      route_id: route-6ffaf5d7ec9d500ff4c5286e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-6ffaf5d7ec9d500ff4c5286e
-  - material_ref:
-      route_id: route-3e560269a42e146f88512ee4
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-3e560269a42e146f88512ee4
-  - material_ref:
-      route_id: route-488f203b03208f7a1ae5eaff
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-488f203b03208f7a1ae5eaff
-  - material_ref:
-      route_id: route-58f13d47b87582e36563f616
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-58f13d47b87582e36563f616
-  - material_ref:
       route_id: route-6522f11efe3a4956621f2692
       inherit:
       - label
@@ -654,87 +193,6 @@ stages:
     kind: read
     scope_triage: helpful-now
     route_id: route-6522f11efe3a4956621f2692
-  - material_ref:
-      route_id: route-ebf16644b4d589e5cfa9dc54
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-ebf16644b4d589e5cfa9dc54
-  - material_ref:
-      route_id: route-3d9cb15592efe429e13918f5
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-3d9cb15592efe429e13918f5
-  - material_ref:
-      route_id: route-3bd7fda1a5087e4bff5edfbb
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-3bd7fda1a5087e4bff5edfbb
-  - material_ref:
-      route_id: route-1e3e247b8c6240fbc08376a9
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-1e3e247b8c6240fbc08376a9
-  - material_ref:
-      route_id: route-4e47b0154d49ac739ff3c23e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-4e47b0154d49ac739ff3c23e
-  - material_ref:
-      route_id: route-48c6ad5e78bcb005c5a15885
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-48c6ad5e78bcb005c5a15885
-  - material_ref:
-      route_id: route-4d9c809542ca696a1f19fd49
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-4d9c809542ca696a1f19fd49
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-hypergeometric/notes.md
   attachments: []
   source_feedback: []
@@ -769,151 +227,34 @@ stages:
       Geometric lesson — reference contrast only.
     source_id: source-sad-ss26-lectures
   - material_ref:
-      route_id: route-475a87b6ec22bf8e77f9de71
+      route_id: route-6ffaf5d7ec9d500ff4c5286e
       inherit:
       - label
-      - locator
-      - vault_path
       - source_id
-    kind: reference
-    angle: 'Contrast only: this resource covers fixed-sample models, not Geometric waiting times.'
-    angle_detail: 'Geometric waiting times are complementary preparation here: L07 has no dedicated section
-      and Übungsblatt 3 Aufgabe 2 tests other distributions. The registered Blatt 4 later uses Geometric(p=0.02)
-      in Aufgabe 3(a)(4), PDF p. 3; establish whether counts include the successful trial.'
-    scope_triage: reference-only
-    route_id: route-475a87b6ec22bf8e77f9de71
-    node_scaffold_note: Contrast only — fixed-sample models here, not Geometric waiting times.
-  - material_ref:
-      route_id: route-52083707f01a014c3e2c267b
-      inherit:
-      - label
-      - locator
-      - vault_path
-      - source_id
-    kind: reference
-    angle: 'Contrast only: this resource covers fixed-sample models, not Geometric waiting times.'
-    angle_detail: 'Geometric waiting times are complementary preparation here: L07 has no dedicated section
-      and Übungsblatt 3 Aufgabe 2 tests other distributions. The registered Blatt 4 later uses Geometric(p=0.02)
-      in Aufgabe 3(a)(4), PDF p. 3; establish whether counts include the successful trial.'
-    scope_triage: reference-only
-    route_id: route-52083707f01a014c3e2c267b
-    node_scaffold_note: Contrast only — fixed-sample models here, not Geometric waiting times.
-  - material_ref:
-      route_id: route-3e560269a42e146f88512ee4
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
+    route_id: route-6ffaf5d7ec9d500ff4c5286e
     kind: read
     scope_triage: helpful-now
-    route_id: route-3e560269a42e146f88512ee4
+    locator: 07_discrete_distributions.pptx (1).pdf, physical PDF pp. 38–44
+    angle: The prior-year course deck derives trials-until-first-success Geometric probabilities, including
+      the successful trial.
+    angle_detail: Read pp. 38–42 for the stopping-rule contrast, PMF, CDF and die-roll question. Page
+      43 accidentally says E(X)=0.5 for p=0.5; under its convention E(X)=1/p=2. Page 44 contrasts fixed
+      trials with waiting time. No memorylessness formula is given here.
   - material_ref:
-      route_id: route-58f13d47b87582e36563f616
+      route_id: route-64c6506fd426173a5b124d5a
       inherit:
       - label
-      - locator
-      - angle
-      - angle_detail
       - source_id
+      - vault_path
+    route_id: route-64c6506fd426173a5b124d5a
     kind: read
     scope_triage: helpful-now
-    route_id: route-58f13d47b87582e36563f616
-  - material_ref:
-      route_id: route-6522f11efe3a4956621f2692
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-6522f11efe3a4956621f2692
-  - material_ref:
-      route_id: route-e325141b8971b65116e08790
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-e325141b8971b65116e08790
-  - material_ref:
-      route_id: route-ebf16644b4d589e5cfa9dc54
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-ebf16644b4d589e5cfa9dc54
-  - material_ref:
-      route_id: route-3d9cb15592efe429e13918f5
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-3d9cb15592efe429e13918f5
-  - material_ref:
-      route_id: route-3bd7fda1a5087e4bff5edfbb
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-3bd7fda1a5087e4bff5edfbb
-  - material_ref:
-      route_id: route-1e3e247b8c6240fbc08376a9
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-1e3e247b8c6240fbc08376a9
-  - material_ref:
-      route_id: route-4e47b0154d49ac739ff3c23e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-4e47b0154d49ac739ff3c23e
-  - material_ref:
-      route_id: route-48c6ad5e78bcb005c5a15885
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-48c6ad5e78bcb005c5a15885
+    locator: OpenIntro §4.2 Geometric distribution, physical PDF pp. 144–147
+    angle: Uses the same trials-including-success convention as the prior-year SaD deck and states the
+      correct mean 1/p.
+    angle_detail: The insurance-file example on pp. 145–147 builds (1−p)^(n−1)p from independent Bernoulli
+      trials, gives the mean and variance, and warns that independence is essential. This is the calculation
+      check for the p. 43 prior-year typo.
   - material_ref:
       route_id: route-sad-l07-geometric-blatt4-clt
       inherit:
@@ -926,18 +267,6 @@ stages:
     kind: read
     route_id: route-sad-l07-geometric-blatt4-clt
     scope_triage: helpful-now
-  - material_ref:
-      route_id: route-9e9215f1bace1b2b1a269f02
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-9e9215f1bace1b2b1a269f02
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-geometric/notes.md
   attachments: []
   source_feedback: []
@@ -960,11 +289,10 @@ stages:
   - kind: read
     label: Current L07 discrete-distributions deck
     locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 24-30
-    angle: The current lecture's focused reading for poisson event counts.
-    angle_detail: 'Read physical PDF pages 24-30 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu. — Correction for PDF p. 30 (printed slide 34): the λ=1 example writes e⁻² and ≈0.67,
-      but the correct Poisson value is P(X=2)=e⁻¹/2≈0.18394, close to the exact Binomial 0.18403.'
+    angle: Models interval event counts with a stable rate and gives the Poisson mass and equal mean/variance.
+    angle_detail: Read lecture-slides/07_discrete_distributions.pdf, PDF pp. 24-30. Models interval event
+      counts with a stable rate and gives the Poisson mass and equal mean/variance. The full lecture and
+      alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
@@ -993,29 +321,6 @@ stages:
     scope_triage: required-now
     route_id: route-52083707f01a014c3e2c267b
   - material_ref:
-      route_id: route-f827266eae5a106a6154442a
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-f827266eae5a106a6154442a
-  - material_ref:
-      route_id: route-6ffaf5d7ec9d500ff4c5286e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-6ffaf5d7ec9d500ff4c5286e
-  - material_ref:
       route_id: route-3e560269a42e146f88512ee4
       inherit:
       - label
@@ -1027,169 +332,6 @@ stages:
     kind: read
     scope_triage: helpful-now
     route_id: route-3e560269a42e146f88512ee4
-  - material_ref:
-      route_id: route-488f203b03208f7a1ae5eaff
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-488f203b03208f7a1ae5eaff
-  - material_ref:
-      route_id: route-58f13d47b87582e36563f616
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-58f13d47b87582e36563f616
-  - material_ref:
-      route_id: route-6522f11efe3a4956621f2692
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-6522f11efe3a4956621f2692
-  - material_ref:
-      route_id: route-64c6506fd426173a5b124d5a
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-64c6506fd426173a5b124d5a
-  - material_ref:
-      route_id: route-9e9215f1bace1b2b1a269f02
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-9e9215f1bace1b2b1a269f02
-  - material_ref:
-      route_id: route-ebf16644b4d589e5cfa9dc54
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-ebf16644b4d589e5cfa9dc54
-  - material_ref:
-      route_id: route-3d9cb15592efe429e13918f5
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-3d9cb15592efe429e13918f5
-  - material_ref:
-      route_id: route-3bd7fda1a5087e4bff5edfbb
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-3bd7fda1a5087e4bff5edfbb
-  - material_ref:
-      route_id: route-3d403c071c84fe621ef510a3
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-3d403c071c84fe621ef510a3
-  - material_ref:
-      route_id: route-1e3e247b8c6240fbc08376a9
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-1e3e247b8c6240fbc08376a9
-  - material_ref:
-      route_id: route-4e47b0154d49ac739ff3c23e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-4e47b0154d49ac739ff3c23e
-  - material_ref:
-      route_id: route-48c6ad5e78bcb005c5a15885
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-48c6ad5e78bcb005c5a15885
-  - material_ref:
-      route_id: route-4d9c809542ca696a1f19fd49
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-4d9c809542ca696a1f19fd49
-  - material_ref:
-      route_id: route-dfa420ce94420caba7422260
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-dfa420ce94420caba7422260
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-poisson/notes.md
   attachments: []
   source_feedback: []
@@ -1214,11 +356,12 @@ stages:
   - kind: read
     label: Current L07 discrete-distributions deck
     locator: lecture-slides/07_discrete_distributions.pdf, PDF pp. 18,22,26,29-30
-    angle: The current lecture's focused reading for limits, approximations, and moment signatures.
-    angle_detail: 'Read physical PDF pages 18,22,26,29-30 for this stage. Printed slide labels may differ.
-      This slice focuses the existing deck route; the complete lecture remains accessible through the
-      unit material menu. — Correction for PDF p. 30 (printed slide 34): the λ=1 example writes e⁻² and
-      ≈0.67, but the correct Poisson value is P(X=2)=e⁻¹/2≈0.18394, close to the exact Binomial 0.18403.'
+    angle: States the Binomial-to-Poisson and Hypergeometric-to-Binomial approximations and their parameter
+      conditions; derivations require a complementary source.
+    angle_detail: Read lecture-slides/07_discrete_distributions.pdf, PDF pp. 18,22,26,29-30. States the
+      Binomial-to-Poisson and Hypergeometric-to-Binomial approximations and their parameter conditions;
+      derivations require a complementary source. The full lecture and alternative sources remain in the
+      unit material menu.
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
@@ -1234,54 +377,6 @@ stages:
     kind: practise
     scope_triage: required-now
     route_id: route-52083707f01a014c3e2c267b
-  - material_ref:
-      route_id: route-f827266eae5a106a6154442a
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-f827266eae5a106a6154442a
-  - material_ref:
-      route_id: route-a9a926efa0d8512eca388e80
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-a9a926efa0d8512eca388e80
-  - material_ref:
-      route_id: route-3bd7fda1a5087e4bff5edfbb
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-3bd7fda1a5087e4bff5edfbb
-  - material_ref:
-      route_id: route-4e47b0154d49ac739ff3c23e
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-4e47b0154d49ac739ff3c23e
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l07/stages/stage-sad-l07-relationships/notes.md
   attachments: []
   source_feedback: []

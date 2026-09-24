@@ -679,8 +679,8 @@ sources:
     unit_id: unit-m2-sad-l08
     title: Current L08 Normal, CLT, and likelihood deck
     format: course-material
-    angle: 'Two lectures in one deck: Normal calculations and the CLT, then likelihood and the derivation
-      that turns maximum likelihood into least squares.'
+    angle: The current deck teaches Normal calculations, a no-proof CLT for sums and means, and a Gaussian-error
+      argument for least squares.
     covers:
     - knowledge-sad-l08-normal
     - knowledge-sad-l08-standardization
@@ -692,16 +692,15 @@ sources:
     depth: course-aligned
     scope: current
     locator: lecture-slides/08_normal_distribution.pdf, 38 slides
-    angle_detail: The Gaussian-error derivation at the end is the intellectual centre of the statistics
-      half — it is where L03's least-squares choice is finally justified — and it arrives after the CLT
-      material when attention is lowest. Budget a separate session for the likelihood slides. The LLN-versus-CLT
-      slides are the other high-risk part; they are correct but terse. Dekking Ch 13-14, Ch 21, and §22.3
-      cover both halves in the same notation.
+    angle_detail: Physical PDF pp. 20–22 state the CLT; the LLN contrast comes from L06, not these pages.
+      Pages 29–36 link Gaussian regression errors, independent observations and log-likelihood to squared
+      residuals. Treat the two halves as separate readings and keep the assumptions explicit.
   - id: route-86a1ed6bed9d05cc93b50bad
     unit_id: unit-m2-sad-l09
     title: Current L09 estimation deck
     format: course-material
-    angle: The exam-notation authority for estimator properties and the z/t/bootstrap interval formulas.
+    angle: Defines the current estimator vocabulary and z/t intervals, then opens the door to resampling
+      without giving a bootstrap interval algorithm.
     covers:
     - knowledge-sad-l09-estimator
     - knowledge-sad-l09-properties
@@ -713,17 +712,16 @@ sources:
     depth: course-aligned
     scope: current
     locator: lecture-slides/09_estimating.pdf, 45 slides
-    angle_detail: The deck presents properties and intervals together, so the interval formulas can be
-      learned without the sampling-distribution reasoning that justifies them — which works until a question
-      varies the setup. Fahrmeir §9.2 separates the two deliberately. The final slides on statistical
-      uncertainty versus biased data are conceptual, not computational, and are the kind of point that
-      appears as a short written question.
+    angle_detail: Pages 5–23 distinguish estimators, realized estimates and properties; pp. 29–44 derive
+      analytic Normal and t intervals. Physical p. 45 motivates repeated resampling of estimates but does
+      not say to sample observed values with replacement or how to obtain a percentile interval. Use current
+      Blatt 4 and UE6 for that calculation.
   - id: route-37b273e6be586546e32355cb
     unit_id: unit-m2-sad-l10
     title: Current L10 hypothesis-testing deck
     format: course-material
-    angle: The largest deck in the module and the complete course logic of testing, from null models to
-      multiple testing.
+    angle: The current course sequence for null models, test decisions, parametric and permutation tests,
+      ending with a brief warning about repeated testing and p-hacking.
     covers:
     - knowledge-sad-l10-test-model
     - knowledge-sad-l10-tails-pvalue
@@ -736,12 +734,11 @@ sources:
     depth: course-aligned
     scope: current
     locator: lecture-slides/10_testing.pdf, 65 slides
-    angle_detail: 'Sixty-five slides introducing the entire testing vocabulary at once — null model, statistic,
-      reference distribution, tails, p-value, both error types, power, z/t, chi-square, nonparametric
-      alternatives, confidence-interval duality and multiplicity. The volume is the difficulty. Dekking''s
-      two-chapter split (Ch 25 essentials, Ch 26 elaboration) is the standard way to take the same content
-      in two passes. Duality and multiple testing are both exam-favoured and both sit at the end of the
-      deck. Note explicit z-statistic erratum on printed slide 28: z formula missing sqrt(n).'
+    angle_detail: The deck gives the course notation and procedures. Physical p. 27 (printed slide 28)
+      omits sqrt(n) in the z statistic; the tails and z/t stages retain the corrected calculation. Physical
+      p. 56 mislabels Type II error probability as power; p. 62 overstates expected null false positives
+      and ambiguously writes p′=p/m. The closing pages do not teach FDR or Benjamini–Hochberg; use the
+      prior-year Bonferroni slide or Fahrmeir §10.3 for the correction, with ISLP FDR as optional extension.
   - id: route-739f3af86a81ba6168a13cda
     unit_id: unit-m2-sad-l11
     title: Current L11 data-science introduction deck
@@ -2011,18 +2008,21 @@ sources:
     unit_id: unit-m2-sad-l07
     title: 2025 discrete-distributions deck
     format: course-material
-    angle: Same-topic prior-year deck with a different set of worked examples.
+    angle: Revisits the discrete models at course level and, on physical pp. 38–44, gives the trial-count
+      Geometric derivation missing from the current deck.
     covers:
     - knowledge-sad-l07-model-selection
     - knowledge-sad-l07-bernoulli-binomial
     - knowledge-sad-l07-hypergeometric
     - knowledge-sad-l07-poisson
+    - knowledge-sad-l07-geometric
     depth: advanced-reference
     scope: prior-year
     locator: 07_discrete_distributions.pptx (1).pdf
-    angle_detail: The examples differ from 2026's even where the content matches, which makes this a source
-      of extra worked cases at exactly the right level — closer to the course than any textbook. Verify
-      the formulas against the current deck; notation drifts year to year.
+    angle_detail: Physical pp. 38–42 define X as trials through the first success, give P(X=x)=(1−p)^(x−1)p
+      for x≥1 and its CDF. Page 43 mistakenly says E(X)=0.5 for p=0.5; the correct mean under this convention
+      is 1/p=2. Page 44 compares Binomial, Geometric and Negative Binomial stopping rules. Other examples
+      and notation are prior-year material, so check them against the 2026 deck.
   - id: route-e574e054435be2cb7eb76dcd
     unit_id: unit-m2-sad-l08
     title: 2025 Normal-distribution deck
@@ -2041,34 +2041,39 @@ sources:
     unit_id: unit-m2-sad-l09
     title: 2025 point and interval estimation deck
     format: course-material
-    angle: Prior-year estimation deck with additional worked interval examples.
+    angle: Adds prior-year worked intervals and, on physical pp. 68–88, the with-replacement bootstrap
+      procedure absent from the current deck.
     covers:
     - knowledge-sad-l09-estimator
     - knowledge-sad-l09-properties
     - knowledge-sad-l09-standard-error
     - knowledge-sad-l09-z-interval
     - knowledge-sad-l09-t-interval
+    - knowledge-sad-l09-bootstrap
     depth: advanced-reference
     scope: prior-year
     locator: 09_point_interval_estimation (1).pdf
-    angle_detail: Estimation is a topic where extra worked examples at course level are genuinely scarce
-      — the textbooks either drill mechanically or theorise. This deck sits at the right level. Confirm
-      the interval formulas and notation against the 2026 deck first.
+    angle_detail: Physical p. 71 gives the n-of-n with-replacement algorithm and percentile endpoints;
+      pp. 82–87 compare Normal-based and bootstrap intervals. The five-value example on p. 88 is illustrative
+      but too small for dependable inference. Keep current Blatt 4 and UE6 as the course-aligned calculation,
+      and use this deck for the explicit procedure.
   - id: route-b51a9ce76538f13c02e94238
     unit_id: unit-m2-sad-l10
     title: 2025 statistical-significance deck
     format: course-material
-    angle: Prior-year testing deck, titled around significance rather than testing.
+    angle: The prior-year course deck states the prespecified-alpha rule and the correct Bonferroni threshold
+      α/m.
     covers:
     - knowledge-sad-l10-test-model
     - knowledge-sad-l10-tails-pvalue
     - knowledge-sad-l10-errors-power
+    - knowledge-sad-l10-multiple
     depth: advanced-reference
     scope: prior-year
     locator: 10_statistical_significance.pdf
-    angle_detail: 'The different title reflects a different emphasis: 2025 organised the lecture around
-      what significance means, 2026 around the testing procedure. Reading both gives two framings of the
-      same material, which is useful for a topic this conceptually slippery.'
+    angle_detail: Physical pp. 43–45 prescribe alpha before testing, show false-positive accumulation
+      with many candidate drugs, and give the Bonferroni per-test threshold alpha/m. This is a prior-year
+      correction to current p. 62, not evidence that FDR/BH is core SaD scope.
   - id: route-29f9b98724b103877b374b0c
     unit_id: unit-m2-sad-l13
     title: 2025 instance- and similarity-based pair
@@ -2128,6 +2133,24 @@ sources:
       than the current lecture: use only the section matching a recorded gap, and check terminology against
       the 2026 deck.'
     vault_path: material://source-sad-2025-recordings/15_neural_nets_part2.pdf
+  - id: route-sad-l08-2025-gaussian-mle
+    unit_id: unit-m2-sad-l08
+    title: 2025 SaD L09 pp. 22–30 — Normal-parameter maximum likelihood
+    format: course-material
+    angle: Derives the Normal mean and variance estimators from a log-likelihood, then exposes the n-versus-n−1
+      variance distinction; current L08 instead derives least squares from Gaussian regression errors.
+    angle_detail: Physical PDF pp. 22–25 fix the observed sample and vary the Normal parameters; pp. 26–30
+      differentiate the log-likelihood. This previous-run explanation is an optional bridge from the likelihood
+      principle to L09 estimator properties. Its likelihood notation is not a posterior distribution over
+      parameters, and it does not expand current L08 examination scope.
+    covers:
+    - knowledge-sad-l08-likelihood
+    - knowledge-sad-l08-mle
+    depth: derivation
+    scope: prior-year
+    locator: 09_point_interval_estimation (1).pdf, physical PDF pp. 22–30 (likelihood pp. 22–25; Normal
+      MLE pp. 26–30)
+    vault_path: material://source-sad-2025-recordings/09_point_interval_estimation (1).pdf
 - source_id: source-fahrmeir-statistik
   role: spine
   why: Course-compatible notation and complete descriptive, probability, estimation, and testing coverage.
@@ -2437,18 +2460,16 @@ sources:
     unit_id: unit-m2-sad-l10
     title: Fahrmeir — Bonferroni-Korrektur with the inflation table
     format: book
-    angle: The same correction in the course language, with the inflation shown as numbers.
+    angle: Quantifies family-wise false-rejection inflation before applying Bonferroni at α/k.
     covers:
     - knowledge-sad-l10-multiple
     depth: practice
     scope: complementary
-    locator: 'Kapitel 12, pdf p. 446: the error-inflation table and the Bonferroni-Korrektur at level
-      alpha/k'
-    angle_detail: 'Worth one page next to the ISLP chapter because it is in German, matching the lecture
-      and the exam, and because it makes the problem quantitative first: the table shows the probability
-      of at least one false rejection climbing to 0.994 before the correction is introduced, then states
-      the Bonferroni rule as testing each hypothesis at alpha over k. Seeing 0.994 is what makes the correction
-      feel necessary rather than arbitrary.'
+    locator: Chapter 10 §10.3 Multiple Testprobleme, physical PDF pp. 445–446 (inflation table and Bonferroni
+      threshold α/k)
+    angle_detail: The three-quality-feature example on p. 445 defines the family error event; p. 446 gives
+      1−(1−α)^k for independent tests, a table reaching 0.994 at k=100 and α=0.05, and the α/k threshold.
+      This is Chapter 10, not Chapter 12. It does not teach FDR.
     vault_path: material://source-fahrmeir-statistik/statistik.pdf
 - source_id: source-fritzsche-trainingsbuch
   role: practice
@@ -3697,9 +3718,8 @@ sources:
     unit_id: unit-m2-sad-l10
     title: ISLP Ch 13 - the multiple-testing slide worked out with labs and exercises
     format: book
-    angle: L10's closing slides name family-wise error and false discoveries and stop; this chapter separates
-      the two error-management questions, gives Bonferroni and Holm for FWER and Benjamini-Hochberg for
-      FDR, and ends with a lab and exercise set - the only registered practice for the node.
+    angle: A broad multiple-testing chapter with a separate lab and exercises; FWER and Bonferroni aid
+      the course topic, while FDR and Benjamini–Hochberg are optional depth.
     covers:
     - knowledge-sad-l10-multiple
     - knowledge-sad-l10-nonparametric
@@ -3709,13 +3729,10 @@ sources:
     locator: Chapter 13, pp. 563-602 (false discovery rate p. 564; family-wise error rate p. 571; Bonferroni
       and Holm p. 573; Benjamini-Hochberg p. 581; lab section 13.6 p. 589; exercises section 13.7 p. 599);
       §13.5.1 resampling a two-sample test, physical PDF pp. 584-586
-    angle_detail: 'The most complete multiple-testing treatment on the shelf, and L10''s multiplicity
-      node is one slide. The page map matters: family-wise error rate (p. 571) and Bonferroni/Holm (p.
-      573) are the conservative classical corrections; false discovery rate (p. 564) and Benjamini-Hochberg
-      (p. 581) are the modern alternative that controls a different quantity entirely. Understanding that
-      FWER and FDR are different targets — not competing approximations of one target — is the conceptual
-      point, and it is the kind of distinction a written exam question can turn on. Lab at p. 589, exercises
-      at p. 599.'
+    angle_detail: The current L10 deck warns of false-positive inflation but does not name FWER/FDR or
+      give their algorithms. ISLP pp. 571–575 derives family-wise control with Bonferroni and Holm; pp.
+      576–581 explains false-discovery control and BH. The later lab and exercises are optional practice,
+      not evidence of 2026 SaD exam scope; §13.5.1 pp. 584–586 is a separate resampling-test example.
     vault_path: material://source-islp/islp.pdf
   - id: route-24878d8caf588583f067be1c
     unit_id: unit-m2-sad-l09
@@ -3740,18 +3757,17 @@ sources:
     unit_id: unit-m2-sad-l10
     title: ISLP Chapter 13 — multiple testing, from the problem to the remedies
     format: book
-    angle: A full chapter on the node, at the level the SaD deck pitches it.
+    angle: 'Optional extension: separates family-wise error from false-discovery rate and gives Holm/BH
+      procedures.'
     covers:
     - knowledge-sad-l10-multiple
-    depth: derivation
-    scope: complementary
+    depth: advanced-reference
+    scope: optional
     locator: 'Chapter 13, pdf pp. 564-594: §13.1 hypothesis-testing review, §13.2 the multiple-testing
       problem, §13.3 family-wise error rate, §13.4 false discovery rate'
-    angle_detail: 'Multiple testing had three routes and no dedicated treatment. ISLP gives it a chapter:
-      the review in §13.1 re-establishes the single test, §13.2 shows what breaks when many are run, and
-      §13.3 and §13.4 set family-wise error against the false discovery rate so the two corrections are
-      distinguishable rather than blurred. Read §13.1 only if the L10 material has gone cold; the chapter
-      is otherwise self-contained.'
+    angle_detail: Chapter 13 §13.2 motivates repeated-test errors, §13.3 treats FWER/Bonferroni/Holm,
+      and §13.4 treats FDR/BH. Use the FWER pages only if the short German course sources leave a gap;
+      FDR/BH is optional as Aram decided, not a required outcome of the L10 stage.
     vault_path: material://source-islp/islp.pdf
 - source_id: source-analysis-klausuren-extern
   role: exam-preparation
@@ -4879,6 +4895,7 @@ sources:
     - knowledge-sad-l07-model-selection
     - knowledge-sad-l07-bernoulli-binomial
     - knowledge-sad-l07-poisson
+    - knowledge-sad-l07-geometric
     depth: orientation
     scope: complementary
     locator: Ch 4 §4.2 geometric distribution, pdf pp. 144-148; §4.3 binomial distribution, pdf pp. 149-157;
@@ -4939,8 +4956,8 @@ sources:
     unit_id: unit-m2-sad-l10
     title: OpenIntro Chapters 5–7 — tests by data type
     format: book
-    angle: Teaches the p-value through randomisation before any reference distribution appears, and has
-      the only real power section on the shelf.
+    angle: Builds p-values through randomisation, then works power and sample-size calculations in §7.4
+      alongside z/t and categorical tests.
     covers:
     - knowledge-sad-l10-test-model
     - knowledge-sad-l10-tails-pvalue
@@ -4953,12 +4970,11 @@ sources:
       of fit using chi-square, pdf pp. 229-239; §6.4 testing for independence in two-way tables, pdf pp.
       240-248; Ch 7 §7.1 one-sample means with the t-distribution, pdf pp. 251-261; §7.4 power calculations,
       pdf pp. 278-284
-    angle_detail: '§5.3 builds the null distribution by shuffling the data — the malaria-vaccine simulation
-      from Ch 2 — so a p-value is first seen as a proportion of shuffles at least as extreme as the observed
-      result. Once that is concrete, the z and t reference distributions are recognisable as shortcuts
-      for the same quantity. §7.4 then does what almost nothing else here does: computes power and required
-      sample size explicitly, rather than defining power and moving on. §§6.3-6.4 cover both chi-square
-      variants that L10 names.'
+    angle_detail: §5.3 first shows a p-value as the proportion of random shuffles at least as extreme
+      as the observed result. The later z and t reference laws provide analytic tests under their assumptions.
+      §7.4 computes power and sample size for a difference of means; §§6.3–6.4 give goodness-of-fit and
+      independence chi-square tests. Other shelf sources also discuss power, so use this route for its
+      specific calculation rather than treating it as unique scope evidence.
     vault_path: material://source-openintro-statistics/openintro.pdf
 - source_id: source-sklearn-user-guide
   role: implementation
@@ -5334,8 +5350,8 @@ sources:
     unit_id: unit-m2-sad-l10
     title: Dekking — hypothesis-testing exercises
     format: exercise
-    angle: Splits testing across two chapters — essentials, then elaboration — so the vocabulary is not
-      all introduced at once.
+    angle: Splits testing essentials from later critical regions, Type II error, power and confidence-interval
+      duality, with practice exercises.
     covers:
     - knowledge-sad-l10-test-model
     - knowledge-sad-l10-tails-pvalue

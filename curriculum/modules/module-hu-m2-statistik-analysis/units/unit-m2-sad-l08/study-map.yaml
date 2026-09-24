@@ -34,10 +34,10 @@ stages:
       - source_id
     kind: read
     locator: lecture-slides/08_normal_distribution.pdf, PDF pp. 3-8
-    angle: The current lecture's focused reading for the normal family and its parameters.
-    angle_detail: Read physical PDF pages 3-8 for this stage. Printed slide labels may differ. This slice
-      focuses the existing deck route; the complete lecture remains accessible through the unit material
-      menu.
+    angle: Defines the two Normal parameters and the bell-shaped density, symmetry and empirical proportions.
+    angle_detail: Read lecture-slides/08_normal_distribution.pdf, PDF pp. 3-8. Defines the two Normal
+      parameters and the bell-shaped density, symmetry and empirical proportions. The full lecture and
+      alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
   - material_ref:
@@ -64,168 +64,6 @@ stages:
     kind: practise
     scope_triage: helpful-now
     route_id: route-58469c78c740278168aea71a
-  - material_ref:
-      route_id: route-25e51301ba03eb362122df35
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: required-now
-    route_id: route-25e51301ba03eb362122df35
-  - material_ref:
-      route_id: route-e574e054435be2cb7eb76dcd
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-e574e054435be2cb7eb76dcd
-  - material_ref:
-      route_id: route-51d0b459da178808c6b7b545
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-51d0b459da178808c6b7b545
-  - material_ref:
-      route_id: route-c58e4eb43dc4c166ca3c4822
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-c58e4eb43dc4c166ca3c4822
-  - material_ref:
-      route_id: route-f6444d2615cac483d2060e85
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-f6444d2615cac483d2060e85
-  - material_ref:
-      route_id: route-ca94fdcfeca67be1c4c0bc4d
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-ca94fdcfeca67be1c4c0bc4d
-  - material_ref:
-      route_id: route-cdc87014dbc983f542c2d601
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-cdc87014dbc983f542c2d601
-  - material_ref:
-      route_id: route-b255b45da1a3190feb0ed9e8
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-b255b45da1a3190feb0ed9e8
-  - material_ref:
-      route_id: route-30e6dacfe64cff3a4b173767
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-30e6dacfe64cff3a4b173767
-  - material_ref:
-      route_id: route-ab04cdce370d74cb0570a3d6
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-ab04cdce370d74cb0570a3d6
-  - material_ref:
-      route_id: route-1c01e7c903e30083cbe3009f
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-1c01e7c903e30083cbe3009f
-  - material_ref:
-      route_id: route-59a625c0ac07d2a63c127f57
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-59a625c0ac07d2a63c127f57
-  - material_ref:
-      route_id: route-8f48d8d7623a4b01aac9348f
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-8f48d8d7623a4b01aac9348f
-  - material_ref:
-      route_id: route-deaaba021bfaafb4d0aa6bd8
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-deaaba021bfaafb4d0aa6bd8
-    kind: practise
-    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-normal/notes.md
   attachments: []
   source_feedback: []
@@ -252,10 +90,10 @@ stages:
       - source_id
     kind: read
     locator: lecture-slides/08_normal_distribution.pdf, PDF pp. 9-16
-    angle: The current lecture's focused reading for standardization, cdfs, and quantiles.
-    angle_detail: Read physical PDF pages 9-16 for this stage. Printed slide labels may differ. This slice
-      focuses the existing deck route; the complete lecture remains accessible through the unit material
-      menu.
+    angle: Turns Normal values into standard Normal z-scores and uses the course table for tails and quantiles.
+    angle_detail: Read lecture-slides/08_normal_distribution.pdf, PDF pp. 9-16. Turns Normal values into
+      standard Normal z-scores and uses the course table for tails and quantiles. The full lecture and
+      alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
   - material_ref:
@@ -271,18 +109,6 @@ stages:
     scope_triage: required-now
     route_id: route-b7f7718273784bbb7843acbd
   - material_ref:
-      route_id: route-58469c78c740278168aea71a
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-58469c78c740278168aea71a
-  - material_ref:
       route_id: route-25e51301ba03eb362122df35
       inherit:
       - label
@@ -294,160 +120,6 @@ stages:
     kind: practise
     scope_triage: required-now
     route_id: route-25e51301ba03eb362122df35
-  - material_ref:
-      route_id: route-e574e054435be2cb7eb76dcd
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-e574e054435be2cb7eb76dcd
-  - material_ref:
-      route_id: route-51d0b459da178808c6b7b545
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-51d0b459da178808c6b7b545
-  - material_ref:
-      route_id: route-b40645f2cd94ca740d4201ca
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-b40645f2cd94ca740d4201ca
-  - material_ref:
-      route_id: route-ca94fdcfeca67be1c4c0bc4d
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-ca94fdcfeca67be1c4c0bc4d
-  - material_ref:
-      route_id: route-8f48d8d7623a4b01aac9348f
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-8f48d8d7623a4b01aac9348f
-  - material_ref:
-      route_id: route-cdc87014dbc983f542c2d601
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-cdc87014dbc983f542c2d601
-  - material_ref:
-      route_id: route-b255b45da1a3190feb0ed9e8
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-b255b45da1a3190feb0ed9e8
-  - material_ref:
-      route_id: route-4b2bb29fc4326732f09f4cb5
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-4b2bb29fc4326732f09f4cb5
-  - material_ref:
-      route_id: route-1c01e7c903e30083cbe3009f
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-1c01e7c903e30083cbe3009f
-  - material_ref:
-      route_id: route-d7771b00bdbdbb54115a9c8f
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-d7771b00bdbdbb54115a9c8f
-  - material_ref:
-      route_id: route-59a625c0ac07d2a63c127f57
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-59a625c0ac07d2a63c127f57
-  - material_ref:
-      route_id: route-deaaba021bfaafb4d0aa6bd8
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-deaaba021bfaafb4d0aa6bd8
-    kind: practise
-    scope_triage: helpful-now
-  - material_ref:
-      route_id: route-f6444d2615cac483d2060e85
-      inherit:
-      - label
-      - source_id
-      - angle
-      - vault_path
-    route_id: route-f6444d2615cac483d2060e85
-    kind: read
-    scope_triage: helpful-now
-    locator: §5.4 Normal, physical PDF pp. 248-254
-    angle_detail: Derive the standardization identity and use it to move between a general Normal and
-      the standard Normal. This supplies the reason for the z-score, while Fahrmeir and the workbook supply
-      table practice.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-standardization/notes.md
   attachments: []
   source_feedback: []
@@ -475,10 +147,11 @@ stages:
       - source_id
     kind: read
     locator: lecture-slides/08_normal_distribution.pdf, PDF pp. 18-19
-    angle: The current lecture's focused reading for linear transforms and sums of independent normals.
-    angle_detail: Read physical PDF pages 18-19 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: States how affine changes and independent Normal sums alter mean and variance while retaining
+      Normal shape.
+    angle_detail: Read lecture-slides/08_normal_distribution.pdf, PDF pp. 18-19. States how affine changes
+      and independent Normal sums alter mean and variance while retaining Normal shape. The full lecture
+      and alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
   - material_ref:
@@ -494,18 +167,6 @@ stages:
     scope_triage: required-now
     route_id: route-b7f7718273784bbb7843acbd
   - material_ref:
-      route_id: route-58469c78c740278168aea71a
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-58469c78c740278168aea71a
-  - material_ref:
       route_id: route-51d0b459da178808c6b7b545
       inherit:
       - label
@@ -517,71 +178,12 @@ stages:
     kind: read
     scope_triage: helpful-now
     route_id: route-51d0b459da178808c6b7b545
-  - material_ref:
-      route_id: route-f6444d2615cac483d2060e85
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-f6444d2615cac483d2060e85
-  - material_ref:
-      route_id: route-8f48d8d7623a4b01aac9348f
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-8f48d8d7623a4b01aac9348f
-  - material_ref:
-      route_id: route-30e6dacfe64cff3a4b173767
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-30e6dacfe64cff3a4b173767
-  - material_ref:
-      route_id: route-ab04cdce370d74cb0570a3d6
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-ab04cdce370d74cb0570a3d6
-  - material_ref:
-      route_id: route-1c01e7c903e30083cbe3009f
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-1c01e7c903e30083cbe3009f
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-transform-sum/notes.md
   attachments: []
   source_feedback: []
 - id: stage-sad-l08-clt
   number: 4
-  title: Law of large numbers versus central limit theorem
+  title: Central limit theorem for sums and means; contrast with the L06 LLN
   status: pending
   objective: The LLN concerns convergence of an average to its expectation; the CLT concerns the approximately
     Normal shape and scale of its sampling fluctuations.
@@ -618,10 +220,11 @@ stages:
       - source_id
     kind: read
     locator: lecture-slides/08_normal_distribution.pdf, PDF pp. 20-22
-    angle: The current lecture's focused reading for law of large numbers versus central limit theorem.
-    angle_detail: Read physical PDF pages 20-22 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: States a no-proof CLT for standardized sums/means; the LLN comparison belongs to the earlier
+      L06 deck, not to these slides.
+    angle_detail: Read lecture-slides/08_normal_distribution.pdf, PDF pp. 20-22. States a no-proof CLT
+      for standardized sums/means; the LLN comparison belongs to the earlier L06 deck, not to these slides.
+      The full lecture and alternative sources remain in the unit material menu.
     scope_triage: required-now
     affordance: intervention
     route_id: route-a82f4016ebbdab30e0351c91
@@ -648,19 +251,6 @@ stages:
         names ZGWS in the instructions; it cannot test absence of a theorem cue. The supplied template
         and dataset are separately declared as missing dependencies.
   - material_ref:
-      route_id: route-58469c78c740278168aea71a
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    affordance: intervention
-    route_id: route-58469c78c740278168aea71a
-  - material_ref:
       route_id: route-25e51301ba03eb362122df35
       inherit:
       - label
@@ -673,250 +263,6 @@ stages:
     scope_triage: required-now
     affordance: intervention
     route_id: route-25e51301ba03eb362122df35
-  - material_ref:
-      route_id: route-e574e054435be2cb7eb76dcd
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    affordance: intervention
-    route_id: route-e574e054435be2cb7eb76dcd
-  - material_ref:
-      route_id: route-51d0b459da178808c6b7b545
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    affordance: intervention
-    route_id: route-51d0b459da178808c6b7b545
-  - material_ref:
-      route_id: route-b40645f2cd94ca740d4201ca
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    affordance: evidence
-    route_id: route-b40645f2cd94ca740d4201ca
-    independent_evidence:
-      reviewed_by: codex
-      reviewed_on: '2026-09-13'
-      verified_conditions: []
-      requirement_sha256: sha256:909a4a843694e735bceb74cc74a22e29bcd8874f9e3d173cd003d95c5c7681c9
-      activity_sha256: sha256:f5d5dfdd7fceb94a4eadf9c9fe2769177f5ed1ebcb2d7f33d8f60ec58e5a25ae
-      note: Reviewed task pages 124–133 and 158–160 plus answer pages 155–156 and 161. This broad route
-        includes worked solutions and several skills; it is useful practice but not a bounded independent
-        activity. Separate task-only routes now identify two suitable existing activities.
-  - material_ref:
-      route_id: route-c58e4eb43dc4c166ca3c4822
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    affordance: intervention
-    route_id: route-c58e4eb43dc4c166ca3c4822
-  - material_ref:
-      route_id: route-f6444d2615cac483d2060e85
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    affordance: intervention
-    route_id: route-f6444d2615cac483d2060e85
-  - material_ref:
-      route_id: route-c4a8afb529925b777fde9628
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    affordance: intervention
-    route_id: route-c4a8afb529925b777fde9628
-  - material_ref:
-      route_id: route-ca94fdcfeca67be1c4c0bc4d
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    affordance: intervention
-    route_id: route-ca94fdcfeca67be1c4c0bc4d
-  - material_ref:
-      route_id: route-8f48d8d7623a4b01aac9348f
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    affordance: evidence
-    route_id: route-8f48d8d7623a4b01aac9348f
-    independent_evidence:
-      reviewed_by: codex
-      reviewed_on: '2026-09-13'
-      verified_conditions: []
-      requirement_sha256: sha256:909a4a843694e735bceb74cc74a22e29bcd8874f9e3d173cd003d95c5c7681c9
-      activity_sha256: sha256:80fdfd7c4429243461c9a3d171640b81af003d4b4def31a9b9890dd9732ced09
-      note: Reviewed physical pages 211–213. Exercises 14.1–14.3 explicitly direct use of the central
-        limit theorem; page 212 carries that chapter heading; page 211 already presents theorem-based
-        worked solutions. This broad route cannot establish an uncued attempt.
-  - material_ref:
-      route_id: route-cdc87014dbc983f542c2d601
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    affordance: intervention
-    route_id: route-cdc87014dbc983f542c2d601
-  - material_ref:
-      route_id: route-b255b45da1a3190feb0ed9e8
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    affordance: intervention
-    route_id: route-b255b45da1a3190feb0ed9e8
-  - material_ref:
-      route_id: route-da63f6bf53a890934f68330a
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    affordance: intervention
-    route_id: route-da63f6bf53a890934f68330a
-  - material_ref:
-      route_id: route-30e6dacfe64cff3a4b173767
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    affordance: intervention
-    route_id: route-30e6dacfe64cff3a4b173767
-  - material_ref:
-      route_id: route-ab04cdce370d74cb0570a3d6
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    affordance: intervention
-    route_id: route-ab04cdce370d74cb0570a3d6
-  - material_ref:
-      route_id: route-1c01e7c903e30083cbe3009f
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    affordance: intervention
-    route_id: route-1c01e7c903e30083cbe3009f
-  - material_ref:
-      route_id: route-0bb4d41d9c7165917c14e2e5
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    affordance: intervention
-    route_id: route-0bb4d41d9c7165917c14e2e5
-  - material_ref:
-      route_id: route-42f96974c9b07097dceeb4a8
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    affordance: intervention
-    route_id: route-42f96974c9b07097dceeb4a8
-  - material_ref:
-      route_id: route-d7771b00bdbdbb54115a9c8f
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    affordance: intervention
-    route_id: route-d7771b00bdbdbb54115a9c8f
-  - material_ref:
-      route_id: route-59a625c0ac07d2a63c127f57
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    affordance: intervention
-    route_id: route-59a625c0ac07d2a63c127f57
   - kind: practise
     scope_triage: required-now
     affordance: evidence
@@ -971,6 +317,50 @@ stages:
         prompt. The assigned page and prompt contain no explicit CLT cue and can elicit classification
         plus reasons. Familiarity and assistance remain unknown until reported for the actual attempt;
         the book answer page must not have been read.
+  - material_ref:
+      route_id: route-b40645f2cd94ca740d4201ca
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    affordance: evidence
+    route_id: route-b40645f2cd94ca740d4201ca
+    independent_evidence:
+      reviewed_by: codex
+      reviewed_on: '2026-09-13'
+      verified_conditions: []
+      requirement_sha256: sha256:909a4a843694e735bceb74cc74a22e29bcd8874f9e3d173cd003d95c5c7681c9
+      activity_sha256: sha256:f5d5dfdd7fceb94a4eadf9c9fe2769177f5ed1ebcb2d7f33d8f60ec58e5a25ae
+      note: Reviewed task pages 124–133 and 158–160 plus answer pages 155–156 and 161. This broad route
+        includes worked solutions and several skills; it is useful practice but not a bounded independent
+        activity. Separate task-only routes now identify two suitable existing activities.
+  - material_ref:
+      route_id: route-8f48d8d7623a4b01aac9348f
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - vault_path
+      - source_id
+    kind: practise
+    scope_triage: helpful-now
+    affordance: evidence
+    route_id: route-8f48d8d7623a4b01aac9348f
+    independent_evidence:
+      reviewed_by: codex
+      reviewed_on: '2026-09-13'
+      verified_conditions: []
+      requirement_sha256: sha256:909a4a843694e735bceb74cc74a22e29bcd8874f9e3d173cd003d95c5c7681c9
+      activity_sha256: sha256:80fdfd7c4429243461c9a3d171640b81af003d4b4def31a9b9890dd9732ced09
+      note: Reviewed physical pages 211–213. Exercises 14.1–14.3 explicitly direct use of the central
+        limit theorem; page 212 carries that chapter heading; page 211 already presents theorem-based
+        worked solutions. This broad route cannot establish an uncued attempt.
   - kind: reference
     scope_triage: reference-only
     affordance: intervention
@@ -994,8 +384,8 @@ stages:
   source_feedback: []
   runtime_review:
     reviewed_by: codex
-    reviewed_on: '2026-09-13'
-    fingerprint: sha256:0bb2115b721cc8b14738cf796b41b849f70482249468036f6163c4ef1dd78e67
+    reviewed_on: '2026-09-24'
+    fingerprint: sha256:aedf1b39e0c2fb72634349582c0d9bbce03ab3ebacac35e3a04f74eec8ba6e75
 - id: stage-sad-l08-approximation
   number: 5
   title: Normal approximation and continuity correction
@@ -1020,10 +410,11 @@ stages:
       - source_id
     kind: read
     locator: lecture-slides/08_normal_distribution.pdf, PDF pp. 24-27
-    angle: The current lecture's focused reading for normal approximation and continuity correction.
-    angle_detail: Read physical PDF pages 24-27 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Applies Normal approximations to Binomial and Poisson counts and introduces a half-unit continuity
+      correction.
+    angle_detail: Read lecture-slides/08_normal_distribution.pdf, PDF pp. 24-27. Applies Normal approximations
+      to Binomial and Poisson counts and introduces a half-unit continuity correction. The full lecture
+      and alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
   - material_ref:
@@ -1039,18 +430,6 @@ stages:
     scope_triage: required-now
     route_id: route-b7f7718273784bbb7843acbd
   - material_ref:
-      route_id: route-58469c78c740278168aea71a
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-58469c78c740278168aea71a
-  - material_ref:
       route_id: route-25e51301ba03eb362122df35
       inherit:
       - label
@@ -1062,146 +441,6 @@ stages:
     kind: practise
     scope_triage: required-now
     route_id: route-25e51301ba03eb362122df35
-  - material_ref:
-      route_id: route-51d0b459da178808c6b7b545
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-51d0b459da178808c6b7b545
-  - material_ref:
-      route_id: route-b40645f2cd94ca740d4201ca
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-b40645f2cd94ca740d4201ca
-  - material_ref:
-      route_id: route-c58e4eb43dc4c166ca3c4822
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-c58e4eb43dc4c166ca3c4822
-  - material_ref:
-      route_id: route-c4a8afb529925b777fde9628
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-c4a8afb529925b777fde9628
-  - material_ref:
-      route_id: route-ca94fdcfeca67be1c4c0bc4d
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-ca94fdcfeca67be1c4c0bc4d
-  - material_ref:
-      route_id: route-8f48d8d7623a4b01aac9348f
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-8f48d8d7623a4b01aac9348f
-  - material_ref:
-      route_id: route-cdc87014dbc983f542c2d601
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-cdc87014dbc983f542c2d601
-  - material_ref:
-      route_id: route-da63f6bf53a890934f68330a
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-da63f6bf53a890934f68330a
-  - material_ref:
-      route_id: route-4b2bb29fc4326732f09f4cb5
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-4b2bb29fc4326732f09f4cb5
-  - material_ref:
-      route_id: route-1c01e7c903e30083cbe3009f
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: practise
-    scope_triage: helpful-now
-    route_id: route-1c01e7c903e30083cbe3009f
-  - material_ref:
-      route_id: route-0bb4d41d9c7165917c14e2e5
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-0bb4d41d9c7165917c14e2e5
-  - material_ref:
-      route_id: route-d7771b00bdbdbb54115a9c8f
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-d7771b00bdbdbb54115a9c8f
   - material_ref:
       route_id: route-b255b45da1a3190feb0ed9e8
       inherit:
@@ -1242,67 +481,13 @@ stages:
       - source_id
     kind: read
     locator: lecture-slides/08_normal_distribution.pdf, PDF pp. 29-34
-    angle: The current lecture's focused reading for probability versus likelihood.
-    angle_detail: Read physical PDF pages 29-34 for this stage. Printed slide labels may differ. This
-      slice focuses the existing deck route; the complete lecture remains accessible through the unit
-      material menu.
+    angle: Uses Gaussian regression errors to motivate likelihood as a function of model parameters after
+      observations are fixed.
+    angle_detail: Read lecture-slides/08_normal_distribution.pdf, PDF pp. 29-34. Uses Gaussian regression
+      errors to motivate likelihood as a function of model parameters after observations are fixed. The
+      full lecture and alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
-  - material_ref:
-      route_id: route-1013094b4d04a09a52048f18
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-1013094b4d04a09a52048f18
-  - material_ref:
-      route_id: route-42f96974c9b07097dceeb4a8
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-42f96974c9b07097dceeb4a8
-  - id: resource-dekking-stage-sad-l08-likelihood
-    route_id: route-8f48d8d7623a4b01aac9348f
-    kind: read
-    label: Dekking Ch 21
-    source_id: source-dekking-mips
-    locator: §21.2, PDF pp. 318-322
-    angle: Treat the observed sample as fixed and vary the model parameter.
-    angle_detail: Compare likelihood values and explain why a likelihood is not a probability distribution
-      over the parameter.
-    scope_triage: helpful-now
-  - material_ref:
-      route_id: route-cdc87014dbc983f542c2d601
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-cdc87014dbc983f542c2d601
-  - material_ref:
-      route_id: route-1e60df494cdea8d7b689066e
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-1e60df494cdea8d7b689066e
-    kind: read
-    scope_triage: helpful-now
   - material_ref:
       route_id: route-3c30c32cc585a9450ea0cb62
       inherit:
@@ -1315,81 +500,6 @@ stages:
     route_id: route-3c30c32cc585a9450ea0cb62
     kind: read
     scope_triage: helpful-now
-  - material_ref:
-      route_id: route-bba255d06939fee0964e7711
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-bba255d06939fee0964e7711
-    kind: read
-    scope_triage: reference-only
-  - material_ref:
-      route_id: route-dcca2fcb9c954793598be2ee
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-dcca2fcb9c954793598be2ee
-    kind: read
-    scope_triage: reference-only
-  - material_ref:
-      route_id: route-943f2cdc8ce62e3a7c894fec
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-943f2cdc8ce62e3a7c894fec
-    kind: read
-    scope_triage: reference-only
-  - material_ref:
-      route_id: route-d74a33b5dc1ddb179eb252f8
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-d74a33b5dc1ddb179eb252f8
-    kind: read
-    scope_triage: reference-only
-  - material_ref:
-      route_id: route-ea5b4ef7bbb182677102ed38
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-ea5b4ef7bbb182677102ed38
-    kind: read
-    scope_triage: reference-only
-  - material_ref:
-      route_id: route-1c01e7c903e30083cbe3009f
-      inherit:
-      - label
-      - source_id
-      - angle
-      - vault_path
-    route_id: route-1c01e7c903e30083cbe3009f
-    kind: practise
-    scope_triage: helpful-now
-    locator: §3.4, physical PDF pp. 18-19 (task) and pp. 21-22 (solution)
-    angle_detail: Build the exponential likelihood, take logs, and solve for the rate 1/sample mean before
-      reading the solution. The worked numbers use observations 4, 8, 3, 6, 4. For a continuous model,
-      the likelihood is a product of densities, not the probability of observing those exact values; retain
-      this distinction when reading the solution’s informal wording.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-likelihood/notes.md
   attachments: []
   source_feedback: []
@@ -1424,61 +534,6 @@ stages:
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
   - material_ref:
-      route_id: route-1013094b4d04a09a52048f18
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: reference
-    scope_triage: reference-only
-    route_id: route-1013094b4d04a09a52048f18
-  - material_ref:
-      route_id: route-42f96974c9b07097dceeb4a8
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: watch
-    scope_triage: helpful-now
-    route_id: route-42f96974c9b07097dceeb4a8
-  - id: resource-dekking-stage-sad-l08-mle
-    route_id: route-8f48d8d7623a4b01aac9348f
-    kind: read
-    label: Dekking §22.3 — Gaussian likelihood to least squares
-    source_id: source-dekking-mips
-    locator: §22.3, PDF pp. 338-339
-    angle: Derive least squares from independent Gaussian residuals.
-    angle_detail: Write the product of densities, take logs, fix the common positive variance, and identify
-      which terms are constant in the regression coefficients.
-    scope_triage: helpful-now
-  - material_ref:
-      route_id: route-cdc87014dbc983f542c2d601
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-cdc87014dbc983f542c2d601
-  - material_ref:
-      route_id: route-1e60df494cdea8d7b689066e
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-1e60df494cdea8d7b689066e
-    kind: read
-    scope_triage: helpful-now
-  - material_ref:
       route_id: route-3c30c32cc585a9450ea0cb62
       inherit:
       - label
@@ -1491,80 +546,17 @@ stages:
     kind: read
     scope_triage: helpful-now
   - material_ref:
-      route_id: route-bba255d06939fee0964e7711
+      route_id: route-sad-l08-2025-gaussian-mle
       inherit:
       - label
-      - source_id
       - locator
       - angle
       - angle_detail
-      - vault_path
-    route_id: route-bba255d06939fee0964e7711
-    kind: read
-    scope_triage: reference-only
-  - material_ref:
-      route_id: route-dcca2fcb9c954793598be2ee
-      inherit:
-      - label
       - source_id
-      - locator
-      - angle
-      - angle_detail
       - vault_path
-    route_id: route-dcca2fcb9c954793598be2ee
+    route_id: route-sad-l08-2025-gaussian-mle
     kind: read
-    scope_triage: reference-only
-  - material_ref:
-      route_id: route-943f2cdc8ce62e3a7c894fec
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-943f2cdc8ce62e3a7c894fec
-    kind: read
-    scope_triage: reference-only
-  - material_ref:
-      route_id: route-d74a33b5dc1ddb179eb252f8
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-d74a33b5dc1ddb179eb252f8
-    kind: read
-    scope_triage: reference-only
-  - material_ref:
-      route_id: route-ea5b4ef7bbb182677102ed38
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-      - vault_path
-    route_id: route-ea5b4ef7bbb182677102ed38
-    kind: read
-    scope_triage: reference-only
-  - material_ref:
-      route_id: route-1c01e7c903e30083cbe3009f
-      inherit:
-      - label
-      - source_id
-      - angle
-      - vault_path
-    route_id: route-1c01e7c903e30083cbe3009f
-    kind: practise
     scope_triage: helpful-now
-    locator: §3.4, physical PDF pp. 18-19 (task) and pp. 21-22 (solution)
-    angle_detail: Build the exponential likelihood, take logs, and solve for the rate 1/sample mean before
-      reading the solution. The worked numbers use observations 4, 8, 3, 6, 4. For a continuous model,
-      the likelihood is a product of densities, not the probability of observing those exact values; retain
-      this distinction when reading the solution’s informal wording.
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l08/stages/stage-sad-l08-mle/notes.md
   attachments: []
   source_feedback: []

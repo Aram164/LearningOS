@@ -1,0 +1,35 @@
+schema_version: 2
+id: transaction-20260924-132504-001
+type: transaction-receipt
+status: committed
+capability: note.analysis.save
+committed_at: '2026-09-24T13:25:04+02:00'
+snapshot_before: sha256:8c6aa2b3292c91eafb017d056e003cbf27f06c7d3b808c21e3c4d87d129115fc
+snapshot_after: sha256:22f0d08e65ef18cc327d726fad61ea95eb664ca7360e8a33e3fbdad1b9844884
+expected_revisions:
+  note-sad-l10-2025-bonferroni-pp043-045: 0
+artifact_revisions:
+  note-sad-l10-2025-bonferroni-pp043-045:
+    before: 0
+    after: 1
+writes:
+- path: knowledge/notes/mathematics/note-sad-l10-2025-bonferroni-pp043-045.md
+  sha256_before: null
+  sha256_after: dd8779d04c7e9e4de20bb691d450c80947faa2f3a59a6de22f5e5cc425441654
+  created: true
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.analysis.save
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: codex
+  request_id: request-sad-source-angle-48ee688ff59c4fdc983439fe427fc581
+  idempotency_key: sad-source-angle-48ee688ff59c4fdc983439fe427fc581
+  intent_sha256: sha256:ebc9388090a744a960b32eb7726ec37c50273579b7e2e44da2af1c40fe0f0f19
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:ebc9388090a744a960b32eb7726ec37c50273579b7e2e44da2af1c40fe0f0f19
