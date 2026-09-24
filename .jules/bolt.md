@@ -1,0 +1,3 @@
+## 2025-02-18 - Type Check Short-Circuiting in YAML Normalization
+**Learning:** In highly recursive data transformation functions like YAML normalization (`_normalize` in `yamlio.py`), placing expensive operations such as inline imports (e.g., `import datetime`) before common type checks incurs massive overhead due to the repeated invocation across every node in large documents.
+**Action:** Order exact type matching (`type(x) is y`) for high-frequency primitive leaves (str, int, float, bool) at the top of the function to short-circuit, and defer expensive inline imports until they are strictly required. Ensure `isinstance` is retained for structural types (dict, list) to support subclasses.
