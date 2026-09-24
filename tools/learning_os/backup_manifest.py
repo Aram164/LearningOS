@@ -158,7 +158,11 @@ def _inside(authority: Path, relative: str) -> Path:
     cursor = authority
     for part in (() if relative == "." else rel.parts):
         cursor = cursor / part
-        if cursor.is_symlink():
+        try:
+            is_link = cursor.is_symlink()
+        except OSError as exc:
+            raise BackupManifestError(f"unreadable: {exc}") from exc
+        if is_link:
             raise BackupManifestError(
                 f"backup declaration traverses a symlink: {relative}"
             )
