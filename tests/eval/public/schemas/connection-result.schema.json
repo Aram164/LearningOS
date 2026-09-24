@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos-eval/connection-result.schema.json",
+  "title": "One connection probe's result (one line of runs/<run-id>/connections.jsonl)",
+  "type": "object",
+  "required": ["probe", "phase", "results"],
+  "additionalProperties": false,
+  "properties": {
+    "probe": {"type": "string", "pattern": "^(C[0-9]{2}|A[0-9]{2})$"},
+    "phase": {"enum": ["canon", "before-shelving", "after-shelving"]},
+    "results": {
+      "type": "array",
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "required": ["rank", "target", "reason"],
+        "additionalProperties": false,
+        "properties": {
+          "rank": {"type": "integer", "minimum": 1, "maximum": 10},
+          "target": {"type": "string", "description": "note-…, workspace-…, project-…, garden:<file>, inbox:<file>, stage:<stage-id>, arrival:<id>"},
+          "reason": {"type": "string"},
+          "evidence": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["ref"],
+              "properties": {"ref": {"type": "string"}, "quote": {"type": "string"}}
+            }
+          },
+          "flags": {"type": "array", "items": {"enum": ["outdated", "superseded", "duplicate", "contrast", "tentative"]}},
+          "source": {"enum": ["product:related", "product:search", "product:search-content", "product:semantic", "product:inspect", "product:other", "agent-reading"]}
+        }
+      }
+    },
+    "commands": {"type": "array", "items": {"type": "string"}},
+    "notes": {"type": "string"}
+  }
+}

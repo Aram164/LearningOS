@@ -1,0 +1,35 @@
+# The synthetic evaluation world: who the learner is and when things happen.
+# Everything under corpus/ is PUBLIC consumer material — it is the learner's
+# own history. Nothing in here states which items are related; that judgment
+# lives only in the encrypted oracle.
+
+world_version: 1
+
+learner:
+  name: Noor Haddad
+  # Product documentation names its original user ("Aram"). In this world the
+  # learner is Noor; the product text is left exactly as shipped.
+  pronouns: she/her
+  situation: >-
+    Fourth-semester computer science bachelor student at the (fictional)
+    TU Havelberg. Spring semester 2026 carried Statistical Learning, Database
+    Systems and Operating Systems. Over the summer she deferred the Statistical
+    Learning exam to the October sitting, passed Database Systems, registered
+    for the Operating Systems oral, started a self-study skill module on lazy
+    dataframe engines, and has two side projects: Tessera (a toy dataflow query
+    engine in Rust) and Ledgerline (a personal notes tool with append-only
+    change receipts).
+  git:
+    name: Noor Haddad
+    email: noor.haddad@example.invalid
+
+timeline:
+  start: 2026-04-06
+  as_of: 2026-09-18
+
+product:
+  repository: aram164/learningos
+  # The LearningOS revision the world installs by default. build_world.py
+  # --source-rev overrides it (WORKTREE = the current working tree), which is
+  # how a repair session evaluates a patched product against the same data.
+  pinned_revision: 200a36185fd5c693b4464ce0bdff4be5b89ce584

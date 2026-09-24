@@ -1,0 +1,79 @@
+# First-class projects of the synthetic learner.
+
+projects:
+  - date: 2026-07-30
+    schema_version: 1
+    id: project-tessera
+    type: project
+    revision: 0
+    title: Tessera — a toy dataflow query engine
+    project_type: software
+    status: active
+    root_uri: github://noor-haddad/tessera
+    objective: >-
+      Build a small dataflow query engine in Rust to understand how logical plans
+      are rewritten before execution: a parser for a tiny SQL subset, a logical
+      plan tree, a rule-based optimizer, and a pull-based executor over CSV files.
+    milestone_ids: [milestone-tessera-parser, milestone-tessera-optimizer]
+    linked_module_ids: [module-skill-dataframes, module-tuh-dbsys]
+    unit_ids: [unit-dataframes-lazy-plans]
+    workspace_ids: [workspace-tessera-engine]
+    thematic_group_ids: [thematic-group-data-systems, thematic-group-software]
+    boundaries:
+      confidentiality: public
+      external_code_access: read-only
+      notes: The code lives in its own repository; LearningOS keeps the learning around it.
+    structure:
+      kind: linear
+      nodes:
+        - {id: step-tessera-parser, title: Parser and logical plan, kind: milestone, status: complete}
+        - {id: step-tessera-executor, title: Pull-based executor, kind: milestone, status: complete}
+        - {id: step-tessera-optimizer, title: Rule-based optimizer, kind: milestone, status: active}
+        - {id: step-tessera-cost, title: Cost-based join ordering, kind: milestone, status: planned}
+    decisions:
+      - id: decision-tessera-rules-before-cost
+        title: Rule-based rewrites before any cost model
+        status: decided
+        summary: Implement algebraic rewrite rules first; cost-based join ordering only after the executor is stable.
+        decided_at: 2026-08-04
+  - date: 2026-08-01
+    schema_version: 1
+    id: project-ledgerline
+    type: project
+    revision: 0
+    title: Ledgerline — notes with change receipts
+    project_type: software
+    status: paused
+    root_uri: github://noor-haddad/ledgerline
+    objective: >-
+      A personal notes tool where every change to a note is recorded as an
+      append-only receipt, so any past state can be reconstructed and every
+      edit can be explained.
+    milestone_ids: [milestone-ledgerline-design]
+    linked_module_ids: []
+    unit_ids: []
+    workspace_ids: [workspace-ledgerline]
+    thematic_group_ids: [thematic-group-software]
+    boundaries:
+      confidentiality: private
+      external_code_access: none
+    structure:
+      kind: none
+      nodes: []
+    decisions:
+      - id: decision-ledgerline-pause
+        title: Pause until after the October exams
+        status: decided
+        summary: No Ledgerline work before the Statistical Learning retake and the OS oral.
+        decided_at: 2026-08-24
+
+relations:
+  - id: relationship-tessera-dataframes
+    from_project_id: project-tessera
+    to_id: module-skill-dataframes
+    to_type: module
+    relation_type: informs
+    reason: Studying lazy dataframe engines is the reference for Tessera's optimizer.
+    contribution: Shows which rewrites a production engine applies and in what order.
+
+aliases: {}
