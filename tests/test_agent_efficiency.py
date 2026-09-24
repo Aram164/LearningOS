@@ -37,13 +37,17 @@ def test_entry_doc_commands_execute_through_the_declared_gateway(mini_repo, tmp_
     assert commands == [
         "python tools/warning_baseline.py --check",
         "python tools/los.py capabilities --compact --json",
-        "python tools/los.py bootstrap --brief",
         "python tools/los.py capabilities stage.progress.update --json",
         "python tools/los.py capability stage.progress.update --payload-file ENVELOPE.json",
     ]
-    for command in commands[1:3]:
-        assert command in agents
-        assert command in readme
+    # Task-shaped entry: the unconditional startup read is documented in
+    # every entry doc, the open-question bootstrap likewise, while the
+    # stage.progress pair below is the governed-write example executed
+    # further down.
+    assert commands[1] in agents
+    assert commands[1] in readme
+    assert "bootstrap --brief" in agents
+    assert "bootstrap --brief" in readme
     bootstrap_section = claude.split("## 2. Bootstrap order", 1)[1].split("## 3.", 1)[0]
     assert "capabilities --compact --json" in " ".join(bootstrap_section.split())
     assert "bootstrap --brief" in " ".join(bootstrap_section.split())

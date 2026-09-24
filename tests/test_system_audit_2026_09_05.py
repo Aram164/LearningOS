@@ -610,7 +610,11 @@ def test_the_sop_and_the_contract_agree_on_where_a_draft_goes():
     sop = re.sub(r"\s+", " ", raw)
     assert "OPERATOR rule 16 owns this" in sop
     assert "moves the snapshot" in sop
-    assert "Capture `snapshot.snapshot_id` after the draft" in sop
+    # Both entry reads the SOP cites (bootstrap --compact, plan-edit-context)
+    # emit top-level snapshot_id via _print_stable; the nested
+    # snapshot.snapshot_id belongs to full bootstrap, which plan work no
+    # longer runs.
+    assert "Capture `snapshot_id` after the draft" in sop
     # And the fact that makes the ordering necessary is itself checkable:
     from learning_os.fingerprint import CANONICAL_ROOTS
     assert "work" in CANONICAL_ROOTS
