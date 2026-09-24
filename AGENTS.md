@@ -1,9 +1,11 @@
 # AI operator entry point
 
 Read and obey [`system/OPERATOR.md`](system/OPERATOR.md). Discover capabilities
-with `python tools/los.py capabilities --compact --json`; bootstrap a task with
-`python tools/los.py bootstrap --brief`. Read one capability's complete
-definition with `python tools/los.py capabilities NAME --json`. Do not recursively scan the repository or
+with `python tools/los.py capabilities --compact --json`; start with the entry
+read OPERATOR.md names for the task — a named route or stage starts with its
+focused `plan-edit-context` read, an open question with `bootstrap --brief`.
+Read one capability's complete definition with `python tools/los.py
+capabilities NAME --json`. Do not recursively scan the repository or
 sibling code repositories such as `Stratum/` to infer application state.
 
 Codex reads this file as **planner and reviewer, not executor**: it plans and

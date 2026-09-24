@@ -646,9 +646,11 @@ from, a stage's material menu extended.
 
 For one existing material's title, locator, angle, angle detail, URL or vault
 path, use the bounded `route.patch` capability. Start from
-`plan-edit-context UNIT_ID --brief` for the route ids, guards, and applicable
-checks, expand `plan-edit-context UNIT_ID --route-id ROUTE_ID`, then run
-`route-patch UNIT_ID ROUTE_ID --changes JSON --check`. To read several routes at once, pass `--route-ids` with 1 to 20
+`plan-edit-context UNIT_ID --route-id ROUTE_ID` for the named route — the
+route response already carries the snapshot and revision guards — then run
+`route-patch UNIT_ID ROUTE_ID --changes JSON --check`. Reach for the unit
+`--brief` only when the route id is unknown or the task needs unit
+coverage. To read several routes at once, pass `--route-ids` with 1 to 20
 exact route ids: the batch shares the unit snapshot and revision guards,
 preserves request order, and refuses atomically. The preflight returns the concrete field diff, affected files,
 snapshot, and exact expected revisions. Apply those same changes through a
@@ -660,7 +662,7 @@ or membership still requires the full plan path below.
 
 Stored resources may carry `material_ref` with a route ID and an explicit
 `inherit` field list. Core expands these for all learning views and preserves
-them during progress, note, feedback and shelving saves. Work from brief
+them during progress, note, feedback and shelving saves. Work from focused
 `plan-edit-context` output when revising a map; do not copy a full `inspect`
 result into the authored plan. An intentionally different stage explanation
 belongs in a local field, removed from the inheritance list.
@@ -708,7 +710,8 @@ without refreshing its snapshot, revisions or retry identity.
    direct CLI application is disabled"*), so the bare CLI can preflight and
    nothing more. The envelope carries `schema_version: 2`, `request_id`,
    `idempotency_key`, `capability`, `channel`, `expected_snapshot` (from
-   `los.py bootstrap --brief`), `expected_revisions` covering **exactly** every
+   the entry read: the focused `plan-edit-context` response or `bootstrap`),
+   `expected_revisions` covering **exactly** every
    artifact the transaction touches — the module plus each unit in the
    package, no more and no fewer — an `approval` whose `subject_sha256` is
    `intent_sha256(envelope)`, and the payload. `approve` never appears in the
