@@ -80,8 +80,8 @@ A plan is complete only when all of the following are true:
 ## Gate 0 — establish the contract and repository state
 
 Follow [OPERATOR.md](OPERATOR.md) task-shaped entry; do not run both
-`bootstrap --brief` and `bootstrap --compact` for one task. For plan work,
-run once:
+`bootstrap --brief` and `bootstrap --compact` as routine startup — a later,
+needed expansion is allowed. For plan work, run once:
 
 ```bash
 .venv/bin/python tools/los.py capabilities --compact --json
@@ -112,7 +112,7 @@ rather than a known file.
 Preserve unrelated changes. Read the current module, source map, units, optional
 study maps, workspace, the relevant JSON Schemas, and any earlier plan package
 before drafting. Older plans are evidence about possible coverage, never the
-semantic authority or a required output shape. Copy `snapshot.snapshot_id` from
+semantic authority or a required output shape. Copy `snapshot_id` from
 the entry read you used **after** the coverage audit and any in-repository draft
 exist — both live under canonical roots and move the fingerprint (Gate 3). For
 structural work that entry read is `bootstrap --compact`, run once, late; for
@@ -275,7 +275,7 @@ learner-approved pedagogy.
 **Where a draft goes, and when the snapshot is taken.** OPERATOR rule 16 owns
 this: a draft is never a canonical curriculum file, and only the gateway writes
 one. `work/` is inside the canonical fingerprint, so writing a draft into a
-workspace's `outputs/` *moves the snapshot*. Capture `snapshot.snapshot_id`
+workspace's `outputs/` *moves the snapshot*. Capture `snapshot_id`
 after the draft and the coverage audit exist, not before — an id taken first is
 already stale by the time the import quotes it. A draft that is scratch rather
 than a reviewed record belongs outside the repository (`LearningOS/workbench/`),

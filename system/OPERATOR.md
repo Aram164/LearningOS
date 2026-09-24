@@ -79,9 +79,10 @@ Pick one entry read; do not stack them:
 
 `bootstrap --brief` is the open-question entry: guards, resume, owed work,
 deadlines, and runnable expands on one page. `--compact` pages the full
-collections when the brief's expands are not enough. Run one of them,
-never both for the same task; full `bootstrap` is an explicit bulk read,
-not routine startup.
+collections when the brief's expands are not enough. Start with one of
+them, not both as routine startup; expand to the other later only when
+the task needs it. Full `bootstrap` is an explicit bulk read, not routine
+startup.
 
 Decide which read answers the question before reading:
 
