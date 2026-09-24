@@ -1714,6 +1714,172 @@ def _cmd_master_promotion_import(args) -> int:
     return 0
 
 
+_COMPACT_STAGE_FIELDS = frozenset({
+    "title", "objective", "done_when", "exam_critical", "concepts",
+    "scope_triage", "resources", "runtime_target", "runtime_review",
+})
+
+
+def _assemble_compact_module_revision(repo, module_id: str,
+                                      revision: dict) -> tuple[dict | None, list[str]]:
+    """Expand reviewed unit deltas against one live snapshot for the existing import gate."""
+    problems: list[str] = []
+    allowed = {"module_id", "plan_contract", "unit_revisions", "claim_evidence",
+               "acknowledgments"}
+    if set(revision) - allowed:
+        problems.append(f"compact module revision has unknown fields: {sorted(set(revision) - allowed)}")
+    if module_id not in repo.modules:
+        problems.append(f"module not found: {module_id}")
+    revisions = revision.get("unit_revisions")
+    if not isinstance(revisions, list) or not revisions:
+        problems.append("unit_revisions must be a non-empty list")
+        return None, problems
+    if problems:
+        return None, problems
+    source_map = copy.deepcopy(repo.module_source_maps.get(module_id) or {})
+    entries: list[dict] = []
+    syntheses: list[dict] = []
+    seen_units: set[str] = set()
+    for index, item in enumerate(revisions):
+        where = f"unit_revisions[{index}]"
+        if not isinstance(item, dict):
+            problems.append(f"{where} must be a mapping")
+            continue
+        unknown = set(item) - {"unit_id", "route_changes", "stage_patches",
+                               "material_synthesis"}
+        if unknown:
+            problems.append(f"{where} has unknown fields: {sorted(unknown)}")
+        uid = item.get("unit_id")
+        if not isinstance(uid, str) or uid in seen_units:
+            problems.append(f"{where} needs a distinct unit_id")
+            continue
+        seen_units.add(uid)
+        unit = repo.units.get(uid)
+        if unit is None or unit.module_id != module_id:
+            problems.append(f"{where} targets a unit outside {module_id}: {uid}")
+            continue
+        changes = item.get("route_changes", {})
+        if not isinstance(changes, dict) or set(changes) - {"add", "update", "remove"}:
+            problems.append(f"{where}.route_changes allows only add, update, remove")
+            continue
+        for kind in ("add", "update", "remove"):
+            if not isinstance(changes.get(kind, []), list):
+                problems.append(f"{where}.route_changes.{kind} must be a list")
+        if problems:
+            continue
+        source_map, _, route_problems = _apply_unit_route_changes(
+            source_map, module_id, uid, changes)
+        problems.extend(f"{where}: {problem}" for problem in route_problems)
+        patches = item.get("stage_patches", [])
+        if not isinstance(patches, list):
+            problems.append(f"{where}.stage_patches must be a list")
+            continue
+        current_id = unit.data.get("current_study_map")
+        current_map = repo.study_maps.get(current_id) if current_id else None
+        if patches and current_map is None:
+            problems.append(f"{where} has no current study map to patch")
+            continue
+        study_map = copy.deepcopy(current_map.data) if patches and current_map else None
+        stages = {stage.get("id"): stage for stage in study_map.get("stages", [])
+                  if isinstance(stage, dict)} if study_map else {}
+        seen_stages: set[str] = set()
+        for stage_index, patch in enumerate(patches):
+            stage_where = f"{where}.stage_patches[{stage_index}]"
+            if not isinstance(patch, dict) or set(patch) != {"stage_id", "fields"}:
+                problems.append(f"{stage_where} needs exactly stage_id and fields")
+                continue
+            sid, fields = patch["stage_id"], patch["fields"]
+            if not isinstance(sid, str) or sid in seen_stages or sid not in stages:
+                problems.append(f"{stage_where} names a missing or repeated stage: {sid}")
+                continue
+            seen_stages.add(sid)
+            if not isinstance(fields, dict) or not fields or set(fields) - _COMPACT_STAGE_FIELDS:
+                problems.append(f"{stage_where}.fields must be non-empty and limited to "
+                                f"{sorted(_COMPACT_STAGE_FIELDS)}")
+                continue
+            stages[sid].update(copy.deepcopy(fields))
+        dossier = item.get("material_synthesis")
+        if dossier is not None:
+            if not isinstance(dossier, dict) or dossier.get("unit_id", uid) != uid:
+                problems.append(f"{where}.material_synthesis must belong to {uid}")
+            else:
+                syntheses.append({"unit_id": uid, "dossier": copy.deepcopy(dossier)})
+        if not any(changes.get(kind) for kind in ("add", "update", "remove")) \
+                and not patches and dossier is None:
+            problems.append(f"{where} changes nothing")
+        entries.append({"unit": copy.deepcopy(unit.data), "study_map": study_map})
+    if problems:
+        return None, problems
+    package = {
+        "module_id": module_id,
+        "plan_contract": copy.deepcopy(revision.get("plan_contract")),
+        "module_patch": {}, "source_patches": [], "source_map": source_map,
+        "units": entries, "material_syntheses": syntheses,
+        "claim_evidence": copy.deepcopy(revision.get("claim_evidence", [])),
+        "acknowledgments": copy.deepcopy(revision.get("acknowledgments", [])),
+        "workspace_updates": [],
+    }
+    return package, []
+
+
+def _cmd_compact_module_plan_import(args, root: Path, source: Path,
+                                    revision_bytes: bytes, revision: dict) -> int:
+    """Use the same reviewed module.import transaction for a smaller input."""
+    apply_sha = getattr(args, "apply_reviewed_sha256", None)
+    if apply_sha:
+        if args.check:
+            print("los: --check and --apply-reviewed-sha256 are mutually exclusive",
+                  file=sys.stderr)
+            return 2
+        from learning_os.commands.capability import reviewed_envelope_apply
+        stale_material = _verify_observed_material(
+            root, revision.get("plan_contract") or {},
+            getattr(args, "review_report", None))
+        if stale_material:
+            print(f"los: {stale_material}", file=sys.stderr)
+            return 2
+        return reviewed_envelope_apply(
+            root=root, capability_name="module.plan.import",
+            payload={"module_id": args.module_id, "file": str(source),
+                     "file_sha256": apply_sha},
+            reviewed_content=revision_bytes, reviewed_sha256=apply_sha,
+            review_report=getattr(args, "review_report", None),
+            parser_factory=getattr(args, "_parser_factory", None))
+    with _operator_lock(root):
+        repo = load_repo(root)
+        package, problems = _assemble_compact_module_revision(repo, args.module_id, revision)
+        if problems:
+            print("los: compact module revision failed; no canonical files were written",
+                  file=sys.stderr)
+            for problem in problems:
+                print(f"- {problem}", file=sys.stderr)
+            return 2
+        assembled = _dump_yaml(package).encode("utf-8")
+        fd, tmp_name = tempfile.mkstemp(prefix="learningos-module-revise-", suffix=".yaml")
+        os.close(fd)
+        tmp_path = Path(tmp_name)
+        try:
+            tmp_path.write_bytes(assembled)
+            reviewed_sha = f"sha256:{hashlib.sha256(revision_bytes).hexdigest()}"
+            inner = argparse.Namespace(
+                root=getattr(args, "root", None), module_id=args.module_id,
+                file=str(tmp_path),
+                file_sha256=f"sha256:{hashlib.sha256(assembled).hexdigest()}",
+                promotion=None, check=args.check,
+                expected_snapshot=args.expected_snapshot,
+                expected_revision=list(getattr(args, "expected_revision", []) or []),
+                _parser_factory=getattr(args, "_parser_factory", None),
+                _minimal_writes=True,
+                _review_input=(reviewed_sha,
+                               {"module_id": args.module_id, "file": str(source),
+                                "file_sha256": reviewed_sha}),
+            )
+            return cmd_module_plan_import(inner)
+        finally:
+            with contextlib.suppress(OSError):
+                tmp_path.unlink()
+
+
 def cmd_module_plan_import(args) -> int:
     """Apply one reviewable, module-scoped curriculum plan as a transaction.
 
@@ -1744,6 +1910,9 @@ def cmd_module_plan_import(args) -> int:
         print("los: module plan must be a mapping with the requested module_id",
               file=sys.stderr)
         return 2
+    if "unit_revisions" in package:
+        return _cmd_compact_module_plan_import(args, root, _source,
+                                               package_bytes, package)
     contract_problems = _module_plan_contract_problems(root, package)
     if contract_problems:
         print("los: module plan contract failed; no canonical files were written",

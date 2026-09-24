@@ -240,18 +240,30 @@ def verify(root: Path, args) -> int:
     if live_placements != unit_rows.get("placements_after"):
         failures.append("live placement count does not match the report")
 
+    synthesis = report.get("synthesis", {}).get(args.unit)
+    if not isinstance(synthesis, dict):
+        raise ValueError("report has no synthesis disposition for the target unit")
+    before, after = synthesis.get("before"), synthesis.get("after")
+    if not isinstance(before, dict) or not isinstance(after, dict) \
+            or type(before.get("present")) is not bool \
+            or type(after.get("replaced")) is not bool \
+            or type(after.get("fresh")) is not bool:
+        raise ValueError("report has an invalid synthesis disposition")
+    expected_dossier = before["present"] or after["replaced"]
     try:
         destination = synthesis_destination(root, args.unit)
-    except MaterialSynthesisError:
-        destination = None
-    if destination is not None and destination.is_file():
+    except MaterialSynthesisError as exc:
+        raise ValueError(f"cannot resolve synthesis destination: {exc}") from exc
+    if expected_dossier and not destination.is_file():
+        failures.append(f"expected synthesis dossier is missing: {args.unit}")
+    elif not expected_dossier and destination.exists():
+        failures.append(f"unexpected synthesis dossier for the target unit: {args.unit}")
+    elif expected_dossier and after["fresh"]:
         try:
             dossier = yaml.safe_load(destination.read_text(encoding="utf-8"))
             validate_unit_material_synthesis(root, args.unit, dossier)
         except Exception as exc:
             failures.append(f"synthesis is not current and complete: {exc}")
-    else:
-        failures.append(f"no synthesis dossier for the target unit: {args.unit}")
 
     if args.expect_artifacts:
         expected = {a.strip() for a in args.expect_artifacts.split(",") if a.strip()}

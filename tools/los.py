@@ -689,7 +689,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_unit_map_import)
 
     p = sub.add_parser("module-plan-import",
-                       help="transactionally import a standardized module plan and its units")
+                       help="transactionally import a full module plan or compact existing-unit batch")
     p.add_argument("module_id")
     module_plan_source = p.add_mutually_exclusive_group(required=True)
     module_plan_source.add_argument(

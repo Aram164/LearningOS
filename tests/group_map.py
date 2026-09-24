@@ -28,6 +28,7 @@ GROUPS: dict[str, list[str]] = {
         "test_learning_plan_contract.py",
         "test_master_promotion.py",
         "test_module_lifecycle.py",
+        "test_compact_module_plan_revision.py",
         "test_module_plan_warning_gate.py",
         "test_phaseB_prospective_lineage.py",
         "test_pilot_replay.py",

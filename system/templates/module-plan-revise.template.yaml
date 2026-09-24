@@ -1,0 +1,44 @@
+# Compact, atomic revision of existing units in one module. The importer reads
+# unchanged routes, units and study maps from the guarded live snapshot; do not
+# copy their full records here. Use module-plan-import.template.yaml for new
+# units, module reordering, workspace joins or source-registry changes.
+module_id: module-example
+plan_contract:
+  version: 2
+  plan_template_version: 1
+  coverage_audit: work/active/workspace-example/outputs/coverage-audit.md
+  intentional_reorders: []
+  checks:
+    local_inventory_complete: true
+    linked_inventory_complete: true
+    materials_opened_and_content_checked: true
+    current_and_prior_scope_reconciled: true
+    duplicates_and_numbering_checked: true
+    exclusions_and_unresolved_gaps_recorded: true
+
+unit_revisions:
+  - unit_id: unit-example-l01
+    route_changes:
+      add: []
+      update:
+        - route_id: route-example-l01-book
+          fields:
+            angle: The exact section used for this lecture and what it explains.
+      remove: []
+    stage_patches:
+      - stage_id: stage-example-l01-reading
+        fields:
+          objective: Explain the result under its stated assumptions.
+          # Replacing resources means providing the complete final array for
+          # this stage. Evidence-bearing placements must remain present.
+          # resources: []
+  - unit_id: unit-example-l02
+    stage_patches:
+      - stage_id: stage-example-l02-practice
+        fields:
+          done_when:
+            - Solve one unfamiliar problem and explain each step.
+
+# Include these only when the corresponding change needs them.
+claim_evidence: []
+acknowledgments: []
