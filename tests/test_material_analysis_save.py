@@ -14,7 +14,12 @@ import json
 
 import pytest
 import yaml
-from gateway_helpers import approved_v2_cli, file_sha256
+from gateway_helpers import (
+    approved_v2_cli,
+    approved_v2_envelope,
+    file_sha256,
+    run_v2_capability,
+)
 
 from learning_os.loader import load_repo
 from learning_os.material_analysis import binding_consistent, observe_local_material
@@ -288,7 +293,7 @@ def _batch_entry(tag: str, text: str, **overrides):
     return entry
 
 
-def _save_batch(mini_repo, entries, key):
+def _batch_notes(mini_repo, entries, key):
     notes = []
     for index, entry in enumerate(entries):
         body_file = mini_repo / f"batch-body-{key}-{index}.bin"
@@ -299,6 +304,11 @@ def _save_batch(mini_repo, entries, key):
             "body_file": str(body_file),
             "body_file_sha256": file_sha256(body_file),
         })
+    return notes
+
+
+def _save_batch(mini_repo, entries, key):
+    notes = _batch_notes(mini_repo, entries, key)
     return approved_v2_cli(
         mini_repo, "note-analysis-save-batch",
         "--bundle", json.dumps({"notes": notes}),
@@ -466,24 +476,97 @@ def test_batch_bounds_refuse(mini_repo):
         idempotency_key="batch-empty",
     )
     assert empty.returncode != 0
-    assert "non-empty notes list" in empty.stdout
+    assert "invalid payload" in empty.stdout
     many = [_batch_entry(f"n{index}", f"analysis {index}") for index in range(21)]
-    notes = []
-    for index, entry in enumerate(many):
-        body_file = mini_repo / f"batch-body-many-{index}.bin"
-        body_file.write_bytes(entry["body"])
-        notes.append({
-            "analysis": {"id": entry["note_id"], "title": entry["title"],
-                         "path": entry["path"], "binding": entry["binding"]},
-            "body_file": str(body_file),
-            "body_file_sha256": file_sha256(body_file),
-        })
     oversized = approved_v2_cli(
         mini_repo, "note-analysis-save-batch",
-        "--bundle", json.dumps({"notes": notes}),
+        "--bundle", json.dumps({"notes": _batch_notes(mini_repo, many, "many")}),
         artifact_ids=[entry["note_id"] for entry in many],
         idempotency_key="batch-oversized",
     )
     assert oversized.returncode != 0
-    assert "at most 20 per batch" in oversized.stdout
+    assert "invalid payload" in oversized.stdout
     assert _transactions(mini_repo) == []
+
+
+def test_batch_handler_bounds_refuse_directly():
+    from learning_os.commands.analysis import _read_batch_items
+    from learning_os.commands.support import WriteRefused
+
+    with pytest.raises(WriteRefused, match="non-empty notes list"):
+        _read_batch_items({"notes": []})
+    with pytest.raises(WriteRefused, match="at most 20 per batch"):
+        _read_batch_items({"notes": [{}] * 21})
+
+
+def test_batch_malformed_bundles_are_invalid_payloads(mini_repo):
+    missing_notes = approved_v2_cli(
+        mini_repo, "note-analysis-save-batch",
+        "--bundle", json.dumps({}),
+        artifact_ids=["note-analysis-batch-malformed"],
+        idempotency_key="batch-no-notes",
+    )
+    assert missing_notes.returncode != 0
+    assert "invalid payload" in missing_notes.stdout
+    entry = _batch_entry("unbound", "unbound analysis")
+    notes = _batch_notes(mini_repo, [entry], "unbound")
+    del notes[0]["body_file_sha256"]
+    unbound = approved_v2_cli(
+        mini_repo, "note-analysis-save-batch",
+        "--bundle", json.dumps({"notes": notes}),
+        artifact_ids=[entry["note_id"]],
+        idempotency_key="batch-unbound",
+    )
+    assert unbound.returncode != 0
+    assert "invalid payload" in unbound.stdout
+    untitled = _batch_entry("untitled", "untitled analysis")
+    notes = _batch_notes(mini_repo, [untitled], "untitled")
+    del notes[0]["analysis"]["title"]
+    refused = approved_v2_cli(
+        mini_repo, "note-analysis-save-batch",
+        "--bundle", json.dumps({"notes": notes}),
+        artifact_ids=[untitled["note_id"]],
+        idempotency_key="batch-untitled",
+    )
+    assert refused.returncode != 0
+    assert "invalid payload" in refused.stdout
+    assert _transactions(mini_repo) == []
+
+
+def test_batch_retry_returns_the_same_breakdown(mini_repo):
+    replayed = _batch_entry("retry-kept", "kept analysis")
+    created = _batch_entry("retry-new", "new analysis")
+    saved = _save(mini_repo, replayed["body"], replayed["binding"],
+                   "batch-retry-first", note_id=replayed["note_id"],
+                   path=replayed["path"], title=replayed["title"])
+    assert saved.returncode == 0, saved.stdout + saved.stderr
+    entries = [replayed, created]
+    envelope = approved_v2_envelope(
+        mini_repo,
+        capability="note.analysis.save_batch",
+        payload={"bundle": {"notes": _batch_notes(mini_repo, entries, "retry")}},
+        artifact_ids=[entry["note_id"] for entry in entries],
+        idempotency_key="batch-retry-001",
+    )
+    first = run_v2_capability(mini_repo, envelope)
+    assert first.returncode == 0, first.stdout + first.stderr
+    first_response = json.loads(first.stdout)
+    assert first_response["ok"] is True
+    assert first_response["replayed"] is False
+    receipts_before = _transactions(mini_repo)
+    # The identical envelope bytes: rebuilding would mint a new intent now
+    # that the snapshot and revisions have moved.
+    second = run_v2_capability(mini_repo, envelope)
+    assert second.returncode == 0, second.stdout + second.stderr
+    second_response = json.loads(second.stdout)
+    assert second_response["ok"] is True
+    assert second_response["replayed"] is True
+    assert second_response["transaction_id"] == first_response["transaction_id"]
+    assert second_response["receipt_path"] == first_response["receipt_path"]
+    assert second_response["result"]["created_note_ids"] == (
+        first_response["result"]["created_note_ids"])
+    assert second_response["result"]["replayed_note_ids"] == (
+        first_response["result"]["replayed_note_ids"])
+    assert second_response["result"]["note_paths"] == (
+        first_response["result"]["note_paths"])
+    assert _transactions(mini_repo) == receipts_before

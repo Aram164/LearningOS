@@ -32,6 +32,8 @@ from .support import (
     _write_transaction,
 )
 
+# Mirrored by the batch nested subschema in contracts/payloads.py
+# (_NESTED_SCHEMAS): a field added here must be added there.
 ANALYSIS_FIELDS = frozenset({"id", "title", "path", "binding"})
 BATCH_FIELDS = frozenset({"notes"})
 BATCH_ITEM_FIELDS = frozenset({"analysis", "body_file", "body_file_sha256"})

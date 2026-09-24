@@ -51,6 +51,52 @@ _GATEWAY_INLINE_REQUIRED = {
     "unit.plan.revise": ("record",),
 }
 
+#: Nested subschemas for object-typed payload fields the CLI parser cannot
+#: express. Argparse declares only that a field IS an object; the registry
+#: states what the gateway requires inside it. Keyed by (capability, field)
+#: so the merge stays scoped, and the generated files remain a deterministic
+#: function of parser plus registry. A nested shape must mirror its handler's
+#: checks, never invent stricter ones: direct CLI use never sees the schema.
+_NESTED_SCHEMAS: dict[tuple[str, str], dict] = {
+    ("note.analysis.save_batch", "bundle"): {
+        "type": "object",
+        "required": ["notes"],
+        "additionalProperties": False,
+        "properties": {
+            "notes": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 20,
+                "items": {
+                    "type": "object",
+                    "required": ["analysis", "body_file", "body_file_sha256"],
+                    "additionalProperties": False,
+                    "properties": {
+                        "analysis": {
+                            "type": "object",
+                            # Mirrors ANALYSIS_FIELDS in commands/analysis.py:
+                            # a field added there must be added here.
+                            "required": ["id", "title", "path", "binding"],
+                            "additionalProperties": False,
+                            "properties": {
+                                "id": {"type": "string"},
+                                "title": {"type": "string"},
+                                "path": {"type": "string"},
+                                "binding": {"type": "object"},
+                            },
+                        },
+                        "body_file": {"type": "string", "minLength": 1},
+                        "body_file_sha256": {
+                            "type": "string",
+                            "pattern": "^sha256:[a-f0-9]{64}$",
+                        },
+                    },
+                },
+            },
+        },
+    },
+}
+
 
 def json_object(value: str) -> dict:
     """argparse converter for an argument that IS a structured record.
@@ -150,6 +196,9 @@ def payload_schema(name: str, command_parser: argparse.ArgumentParser) -> dict:
         properties[action.dest] = _json_type(action)
         if action.required or not action.option_strings:
             required.append(action.dest)
+    for (capability_name, field), nested in _NESTED_SCHEMAS.items():
+        if capability_name == name and field in properties:
+            properties[field] = nested
     required.extend(_GATEWAY_INLINE_REQUIRED.get(name, ()))
     schema = {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
