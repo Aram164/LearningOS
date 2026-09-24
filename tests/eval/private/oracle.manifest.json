@@ -1,0 +1,14 @@
+{
+  "sealed": "2026-09-24",
+  "plaintext_sha256": "fdb73d82b83051064295ea0e12fb28346651f0f769d879b034252dfea0c53550",
+  "plaintext_bytes": 32756,
+  "files": [
+    "AUTHOR-NOTES.md",
+    "README.md",
+    "answers.yaml",
+    "relations.yaml",
+    "scenario-expectations.yaml"
+  ],
+  "cipher": "openssl enc -aes-256-cbc -pbkdf2 -iter 600000 -md sha256 -salt",
+  "key_env": "LOS_EVAL_ORACLE_KEY"
+}

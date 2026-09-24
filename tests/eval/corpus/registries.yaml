@@ -1,0 +1,474 @@
+# Canonical registries of the synthetic world (concepts, concept relations,
+# sources, programs). `added:` is the date an entry entered the learner's
+# repository; the world builder replays registry growth along the timeline.
+# The relation registry is deliberately partial, like any real one.
+
+programs:
+  - id: program-bachelors
+    type: program
+    title: Bachelor's (Computer Science, TU Havelberg)
+    kind: academic
+    status: active
+    default: true
+    semester_bound: true
+    semesters:
+      - {id: semester-sose-2026, title: SoSe 2026, status: current, order: 1}
+      - {id: semester-wise-2026, title: WiSe 2026/27, status: future, order: 2}
+  - id: program-skills
+    type: program
+    title: Skills
+    kind: skills
+    status: active
+    default: false
+    semester_bound: false
+    description: Long-running technical skills that are not semester-bound.
+    semesters: []
+
+concepts:
+  # ------------------------------------------------------ probability & statistics
+  - {id: concept-probability, label: Probability, aliases: [Wahrscheinlichkeit, probability axioms]}
+  - {id: concept-conditional-probability, label: Conditional probability, aliases: [bedingte Wahrscheinlichkeit]}
+  - {id: concept-bayes-theorem, label: Bayes' theorem, aliases: [Bayes rule, Satz von Bayes, posterior]}
+  - {id: concept-conditional-independence, label: Conditional independence, aliases: [bedingte Unabhängigkeit], added: 2026-05-02}
+  - {id: concept-maximum-likelihood, label: Maximum likelihood estimation, aliases: [MLE, likelihood, Maximum-Likelihood-Schätzung]}
+  - {id: concept-map-estimation, label: MAP estimation, aliases: [maximum a posteriori, prior], added: 2026-06-02}
+  - {id: concept-hypothesis-testing, label: Hypothesis testing, aliases: [p-value, p-Wert, Hypothesentest, significance level]}
+  - {id: concept-statistical-estimation, label: Statistical estimation, aliases: [point estimation, estimator, unbiased estimator, consistent estimator]}
+  - {id: concept-bias-variance-tradeoff, label: Bias–variance trade-off, aliases: [bias-variance decomposition, Bias-Varianz-Zerlegung], added: 2026-05-26}
+  - {id: concept-normal-distribution, label: Normal distribution, aliases: [Gaussian, Normalverteilung, z-score, standardization]}
+  - {id: concept-central-limit-theorem, label: Central limit theorem, aliases: [CLT, Zentraler Grenzwertsatz]}
+  - {id: concept-kernel-density-estimation, label: Kernel density estimation, aliases: [KDE, Parzen window], added: 2026-06-24}
+  - {id: concept-markov-chains, label: Markov chains, aliases: [stationary distribution, Markov-Kette], added: 2026-07-01}
+  - {id: concept-queueing-theory, label: Queueing theory, aliases: [Little's law, arrival rate], added: 2026-07-06}
+  # ----------------------------------------------------------- linear algebra & calculus
+  - {id: concept-eigendecomposition, label: Eigendecomposition, aliases: [eigenvector, eigenvalue, Eigenwert, Eigenvektor], added: 2026-05-05}
+  - {id: concept-covariance-matrix, label: Covariance matrix, aliases: [Kovarianzmatrix, covariance], added: 2026-05-09}
+  - {id: concept-svd, label: Singular value decomposition, aliases: [SVD, Singulärwertzerlegung], added: 2026-06-08}
+  - {id: concept-low-rank-approximation, label: Low-rank approximation, aliases: [Eckart–Young, truncated SVD], added: 2026-06-10}
+  - {id: concept-chain-rule, label: Chain rule, aliases: [Kettenregel, multivariable chain rule, Jacobian]}
+  - {id: concept-convexity, label: Convexity, aliases: [convex function, Konvexität], added: 2026-05-19}
+  # ------------------------------------------------------------- machine learning
+  - {id: concept-naive-bayes, label: Naive Bayes, aliases: [naiver Bayes-Klassifikator], added: 2026-05-07}
+  - {id: concept-generative-vs-discriminative, label: Generative vs discriminative models, aliases: [generative classifier], added: 2026-05-14}
+  - {id: concept-logistic-regression, label: Logistic regression, aliases: [logistische Regression, sigmoid]}
+  - {id: concept-cross-entropy, label: Cross-entropy, aliases: [log loss, binary cross-entropy, Kreuzentropie]}
+  - {id: concept-mean-squared-error, label: Mean squared error, aliases: [MSE, squared loss]}
+  - {id: concept-linear-regression, label: Linear regression, aliases: [least squares, lineare Regression]}
+  - {id: concept-normal-equation, label: Normal equation, aliases: [Normalgleichung, closed-form least squares]}
+  - {id: concept-gradient-descent, label: Gradient descent, aliases: [Gradientenverfahren, learning rate]}
+  - {id: concept-stochastic-gradient-descent, label: Stochastic gradient descent, aliases: [SGD, minibatch, momentum], added: 2026-07-10}
+  - {id: concept-adaptive-optimizers, label: Adaptive optimizers, aliases: [Adam, RMSprop, AdaGrad], added: 2026-06-05}
+  - {id: concept-backpropagation, label: Backpropagation, aliases: [backprop, Fehlerrückführung], added: 2026-07-08}
+  - {id: concept-batch-normalization, label: Batch normalization, aliases: [BatchNorm], added: 2026-06-12}
+  - {id: concept-regularization, label: Regularization, aliases: [ridge, lasso, L1 penalty, L2 penalty, weight decay, Regularisierung], added: 2026-06-01}
+  - {id: concept-overfitting, label: Overfitting, aliases: [Überanpassung, generalization gap], added: 2026-05-27}
+  - {id: concept-cross-validation, label: Cross-validation, aliases: [k-fold, Kreuzvalidierung], added: 2026-06-16}
+  - {id: concept-data-leakage, label: Data leakage, aliases: [train-test contamination, target leakage], added: 2026-06-19}
+  - {id: concept-pca, label: Principal component analysis, aliases: [PCA, Hauptkomponentenanalyse], added: 2026-06-09}
+  - {id: concept-svm, label: Support vector machines, aliases: [SVM, kernel trick, RBF], added: 2026-06-23}
+  - {id: concept-convolutional-networks, label: Convolutional neural networks, aliases: [CNN, convolution, feature map], added: 2026-07-14}
+  - {id: concept-softmax, label: Softmax, aliases: [logits, temperature scaling], added: 2026-08-12}
+  - {id: concept-hidden-markov-models, label: Hidden Markov models, aliases: [HMM, Viterbi, trellis], added: 2026-07-03}
+  - {id: concept-matrix-factorization, label: Matrix factorization, aliases: [collaborative filtering, recommender systems], added: 2026-08-25}
+  - {id: concept-decision-trees, label: Decision trees, aliases: [information gain, Entscheidungsbaum], added: 2026-05-29}
+  - {id: concept-regression-metrics, label: Regression metrics, aliases: [R², MAE, RMSE], added: 2026-05-22}
+  # ---------------------------------------------------------------- operating systems
+  - {id: concept-cpu-scheduling, label: CPU scheduling, aliases: [Prozessscheduling, round robin, FCFS, time quantum]}
+  - {id: concept-proportional-share, label: Proportional-share scheduling, aliases: [fair-share scheduling, CFS, lottery scheduling, vruntime]}
+  - {id: concept-context-switch, label: Context switch, aliases: [Kontextwechsel]}
+  - {id: concept-priority-inversion, label: Priority inversion, aliases: [priority inheritance]}
+  - {id: concept-virtual-memory, label: Virtual memory, aliases: [virtueller Speicher, paging, page table, TLB]}
+  - {id: concept-page-replacement, label: Page replacement, aliases: [LRU, clock algorithm, Seitenersetzung]}
+  - {id: concept-cpu-caches, label: CPU caches, aliases: [cache line, locality of reference]}
+  - {id: concept-deadlock, label: Deadlock, aliases: [Verklemmung, Coffman conditions]}
+  - {id: concept-synchronization, label: Synchronization, aliases: [semaphore, mutex, producer-consumer, Synchronisation]}
+  - {id: concept-os-kernel, label: Operating-system kernel, aliases: [Betriebssystemkern, kernel mode, system call]}
+  - {id: concept-instruction-pipelining, label: Instruction pipelining, aliases: [pipeline hazard, stall]}
+  - {id: concept-journaling-file-systems, label: Journaling file systems, aliases: [journaling, crash consistency], added: 2026-06-26}
+  - {id: concept-amdahls-law, label: Amdahl's law, aliases: [parallel speedup], added: 2026-07-02}
+  # ------------------------------------------------------------------- ML systems
+  - {id: concept-model-serving, label: Model serving, aliases: [inference serving, dynamic batching], added: 2026-08-14}
+  - {id: concept-kv-cache, label: KV cache, aliases: [key-value cache], added: 2026-08-22}
+  - {id: concept-data-parallel-training, label: Data-parallel training, aliases: [all-reduce, distributed training], added: 2026-08-26}
+  - {id: concept-mixed-precision, label: Mixed-precision training, aliases: [fp16, bf16, loss scaling], added: 2026-08-29}
+  - {id: concept-dominant-resource-fairness, label: Dominant resource fairness, aliases: [DRF], added: 2026-08-17}
+  # --------------------------------------------------------- databases & data engineering
+  - {id: concept-relational-algebra, label: Relational algebra, aliases: [relationale Algebra, selection, projection, join]}
+  - {id: concept-query-optimization, label: Query optimization, aliases: [Anfrageoptimierung, query plan, predicate pushdown]}
+  - {id: concept-join-algorithms, label: Join algorithms, aliases: [hash join, sort-merge join, nested loop join]}
+  - {id: concept-external-sorting, label: External sorting, aliases: [external merge sort]}
+  - {id: concept-db-normalization, label: Database normalization, aliases: [Normalform, 3NF, BCNF, functional dependency]}
+  - {id: concept-transactions-acid, label: Transactions and ACID, aliases: [ACID, Transaktion]}
+  - {id: concept-cap-theorem, label: CAP theorem, aliases: [linearizability], added: 2026-07-22}
+  - {id: concept-two-phase-locking, label: Two-phase locking, aliases: [2PL, Zwei-Phasen-Sperrprotokoll]}
+  - {id: concept-write-ahead-logging, label: Write-ahead logging, aliases: [WAL, ARIES, redo log]}
+  - {id: concept-buffer-management, label: Buffer management, aliases: [buffer pool, Puffer]}
+  - {id: concept-lsm-trees, label: LSM trees, aliases: [log-structured merge tree, compaction, SSTable], added: 2026-07-18}
+  - {id: concept-b-plus-trees, label: B+ trees, aliases: [B+-Baum, index]}
+  - {id: concept-cardinality-estimation, label: Cardinality estimation, aliases: [selectivity estimation, histograms]}
+  - {id: concept-bloom-filters, label: Bloom filters, aliases: [Bloom filter], added: 2026-07-18}
+  - {id: concept-lazy-evaluation, label: Lazy evaluation, aliases: [lazy frame, deferred execution], added: 2026-08-05}
+  - {id: concept-data-provenance, label: Data provenance, aliases: [lineage, why-provenance], added: 2026-08-09}
+  - {id: concept-idempotency, label: Idempotency, aliases: [idempotent, idempotency key], added: 2026-08-02}
+  - {id: concept-stream-processing, label: Stream processing, aliases: [Kafka, consumer lag, backpressure], added: 2026-08-16}
+  - {id: concept-workflow-orchestration, label: Workflow orchestration, aliases: [Airflow, task DAG], added: 2026-08-07}
+  - {id: concept-columnar-storage, label: Columnar storage, aliases: [column store, Parquet, run-length encoding], added: 2026-07-25}
+  # ------------------------------------------------ programming languages & engineering
+  - {id: concept-compiler-structure, label: Compiler structure, aliases: [lexer, parser, AST, intermediate representation]}
+  - {id: concept-compiler-optimization, label: Compiler optimization, aliases: [constant folding, common subexpression elimination, dead code elimination]}
+  - {id: concept-ssa, label: Static single assignment, aliases: [SSA, phi node], added: 2026-06-13}
+  - {id: concept-dynamic-programming, label: Dynamic programming, aliases: [memoization, Dynamische Programmierung]}
+  - {id: concept-automatic-differentiation, label: Automatic differentiation, aliases: [autodiff, dual numbers, forward mode], added: 2026-07-11}
+  - {id: concept-type-inference, label: Type inference, aliases: [unification, Hindley–Milner], added: 2026-06-20}
+  - {id: concept-garbage-collection, label: Garbage collection, aliases: [generational GC], added: 2026-06-27}
+  - {id: concept-regression-testing, label: Regression testing, aliases: [snapshot test, golden file], added: 2026-07-09}
+  - {id: concept-property-based-testing, label: Property-based testing, aliases: [QuickCheck, shrinking], added: 2026-07-16}
+  - {id: concept-event-sourcing, label: Event sourcing, aliases: [append-only log, event log], added: 2026-08-01}
+  - {id: concept-build-systems, label: Build systems, aliases: [incremental build, make, Bazel], added: 2026-08-06}
+  - {id: concept-rust-ownership, label: Rust ownership, aliases: [borrow checker, lifetimes], added: 2026-07-29}
+  - {id: concept-content-addressing, label: Content addressing, aliases: [Merkle DAG, git object model], added: 2026-06-29}
+  - {id: concept-simulated-annealing, label: Simulated annealing, aliases: [annealing schedule], added: 2026-07-20}
+  - {id: concept-visitor-pattern, label: Visitor pattern, aliases: [tree rewriting, AST traversal], added: 2026-08-04}
+  # ------------------------------------------------------------------- learning practice
+  - {id: concept-spaced-repetition, label: Spaced repetition, aliases: [SM-2, Anki, review scheduler]}
+  - {id: concept-study-planning, label: Study planning, aliases: [Lernplan, retake strategy]}
+
+relations:
+  - {from: concept-bayes-theorem, type: builds-on, to: concept-conditional-probability}
+  - {from: concept-naive-bayes, type: requires, to: concept-bayes-theorem, added: 2026-05-07}
+  - {from: concept-logistic-regression, type: requires, to: concept-conditional-probability}
+  - {from: concept-maximum-likelihood, type: derives, to: concept-mean-squared-error, context: "Gaussian noise plus MLE gives the squared loss (Statistical Learning L03)"}
+  - {from: concept-map-estimation, type: builds-on, to: concept-maximum-likelihood, added: 2026-06-02}
+  - {from: concept-overfitting, type: motivates, to: concept-regularization, added: 2026-06-01}
+  - {from: concept-normal-equation, type: contrasts-with, to: concept-gradient-descent}
+  - {from: concept-gradient-descent, type: applies-in, to: concept-linear-regression}
+  - {from: concept-stochastic-gradient-descent, type: builds-on, to: concept-gradient-descent, added: 2026-07-10}
+  - {from: concept-backpropagation, type: requires, to: concept-chain-rule, added: 2026-07-08}
+  - {from: concept-pca, type: requires, to: concept-covariance-matrix, added: 2026-06-09}
+  - {from: concept-pca, type: requires, to: concept-eigendecomposition, added: 2026-06-09}
+  - {from: concept-svd, type: generalizes, to: concept-eigendecomposition, added: 2026-06-08}
+  - {from: concept-low-rank-approximation, type: builds-on, to: concept-svd, added: 2026-06-10}
+  - {from: concept-hidden-markov-models, type: requires, to: concept-markov-chains, added: 2026-07-03}
+  - {from: concept-proportional-share, type: builds-on, to: concept-cpu-scheduling}
+  - {from: concept-context-switch, type: applies-in, to: concept-cpu-scheduling}
+  - {from: concept-page-replacement, type: builds-on, to: concept-virtual-memory}
+  - {from: concept-deadlock, type: requires, to: concept-synchronization}
+  - {from: concept-query-optimization, type: requires, to: concept-relational-algebra}
+  - {from: concept-cardinality-estimation, type: applies-in, to: concept-query-optimization}
+  - {from: concept-join-algorithms, type: applies-in, to: concept-query-optimization}
+  - {from: concept-two-phase-locking, type: requires, to: concept-transactions-acid}
+  - {from: concept-write-ahead-logging, type: applies-in, to: concept-transactions-acid}
+  - {from: concept-lsm-trees, type: requires, to: concept-bloom-filters, added: 2026-07-18}
+  - {from: concept-compiler-optimization, type: builds-on, to: concept-compiler-structure}
+  - {from: concept-ssa, type: applies-in, to: concept-compiler-optimization, added: 2026-06-13}
+  - {from: concept-kv-cache, type: applies-in, to: concept-model-serving, added: 2026-08-22}
+
+sources:
+  # ------------------------------------------------------------ course material
+  - id: source-tuh-statlearn-slides
+    partition: course-material
+    title: TU Havelberg — Statistical Learning lecture slides (SoSe 2026)
+    type: lecture
+    authors: [Prof. Imke Sørensen]
+    material: material://source-tuh-statlearn-slides/L05-generative-classifiers.md
+    evaluations:
+      - concepts: [concept-maximum-likelihood, concept-naive-bayes, concept-regularization, concept-pca]
+        roles: [first-learning]
+        level: intermediate
+        strengths: [defines the exam scope; notation matches the exam]
+        weaknesses: [derivations skip steps; few worked examples]
+  - id: source-tuh-dbsys-slides
+    partition: course-material
+    title: TU Havelberg — Database Systems lecture slides (SoSe 2026)
+    type: lecture
+    authors: [Dr. Jonas Vierling]
+    material: material://source-tuh-dbsys-slides/L08-query-optimization.md
+    evaluations:
+      - concepts: [concept-relational-algebra, concept-query-optimization, concept-transactions-acid]
+        roles: [first-learning]
+        level: intermediate
+        strengths: [exam-aligned; good worked plan-rewrite examples]
+  - id: source-tuh-os-slides
+    partition: course-material
+    title: TU Havelberg — Operating Systems lecture slides (SoSe 2026)
+    type: lecture
+    authors: [Prof. Ada Lindqvist]
+    material: material://source-tuh-os-slides/L02-scheduling.md
+    evaluations:
+      - concepts: [concept-cpu-scheduling, concept-virtual-memory, concept-deadlock]
+        roles: [first-learning]
+        level: introductory
+        strengths: [clear diagrams of scheduling timelines]
+        weaknesses: [CFS treated in two slides only]
+  # --------------------------------------------------------------- mathematics
+  - id: source-strang-linalg
+    partition: mathematics
+    title: Gilbert Strang — Introduction to Linear Algebra (5th ed.)
+    type: book
+    authors: [Gilbert Strang]
+    evaluations:
+      - concepts: [concept-eigendecomposition, concept-svd, concept-low-rank-approximation]
+        roles: [first-learning, derivation]
+        level: introductory
+        strengths: [geometric intuition first, then algebra]
+  - id: source-3b1b-linalg
+    partition: mathematics
+    title: 3Blue1Brown — Essence of Linear Algebra
+    type: video
+    authors: [Grant Sanderson]
+    url: https://www.3blue1brown.com/topics/linear-algebra
+    evaluations:
+      - concepts: [concept-eigendecomposition]
+        roles: [intuition]
+        level: introductory
+        strengths: [best picture of what an eigenvector is]
+  - id: source-wasserstein-asa-2016
+    partition: mathematics
+    title: Wasserstein & Lazar — The ASA Statement on p-Values (2016)
+    type: paper
+    authors: [Ronald L. Wasserstein, Nicole A. Lazar]
+    evaluations:
+      - concepts: [concept-hypothesis-testing]
+        roles: [review]
+        level: intermediate
+        strengths: [lists the six principles; corrects the common misreading]
+  # ----------------------------------------------------------- machine learning
+  - id: source-murphy-pml1
+    partition: machine-learning
+    title: "Kevin Murphy — Probabilistic Machine Learning: An Introduction"
+    type: book
+    authors: [Kevin P. Murphy]
+    evaluations:
+      - concepts: [concept-naive-bayes, concept-maximum-likelihood, concept-map-estimation, concept-bias-variance-tradeoff, concept-regularization]
+        roles: [derivation, review]
+        level: intermediate
+        strengths: [probabilistic view throughout; ridge as MAP made explicit]
+        weaknesses: [dense for a first pass]
+  - id: source-bishop-prml
+    partition: machine-learning
+    title: Christopher Bishop — Pattern Recognition and Machine Learning
+    type: book
+    authors: [Christopher M. Bishop]
+    evaluations:
+      - concepts: [concept-pca, concept-logistic-regression, concept-hidden-markov-models]
+        roles: [derivation]
+        level: advanced
+        strengths: [complete derivations]
+  - id: source-esl
+    partition: machine-learning
+    title: Hastie, Tibshirani, Friedman — The Elements of Statistical Learning
+    type: book
+    authors: [Trevor Hastie, Robert Tibshirani, Jerome Friedman]
+    evaluations:
+      - concepts: [concept-regularization, concept-cross-validation, concept-bias-variance-tradeoff]
+        roles: [reference]
+        level: advanced
+        strengths: [lasso geometry figure; honest about cross-validation pitfalls]
+  - id: source-goodfellow-dl
+    partition: machine-learning
+    title: Goodfellow, Bengio, Courville — Deep Learning
+    type: book
+    authors: [Ian Goodfellow, Yoshua Bengio, Aaron Courville]
+    evaluations:
+      - concepts: [concept-backpropagation, concept-stochastic-gradient-descent, concept-convolutional-networks, concept-batch-normalization]
+        roles: [first-learning, reference]
+        level: intermediate
+        strengths: [chapter 6 computational graphs; chapter 8 optimization]
+  - id: source-ioffe-batchnorm-2015
+    partition: machine-learning
+    title: Ioffe & Szegedy — Batch Normalization (2015)
+    type: paper
+    authors: [Sergey Ioffe, Christian Szegedy]
+    evaluations:
+      - concepts: [concept-batch-normalization]
+        roles: [first-learning]
+        level: intermediate
+        strengths: [original algorithm and the internal-covariate-shift motivation]
+  - id: source-santurkar-batchnorm-2018
+    partition: machine-learning
+    title: Santurkar et al. — How Does Batch Normalization Help Optimization? (2018)
+    type: paper
+    authors: [Shibani Santurkar, Dimitris Tsipras, Andrew Ilyas, Aleksander Madry]
+    evaluations:
+      - concepts: [concept-batch-normalization]
+        roles: [review]
+        level: advanced
+        strengths: [experiments that separate covariate shift from smoothing]
+  - id: source-wilson-adaptive-2017
+    partition: machine-learning
+    title: Wilson et al. — The Marginal Value of Adaptive Gradient Methods (2017)
+    type: paper
+    authors: [Ashia C. Wilson, Rebecca Roelofs, Mitchell Stern, Nathan Srebro, Benjamin Recht]
+    evaluations:
+      - concepts: [concept-adaptive-optimizers, concept-stochastic-gradient-descent]
+        roles: [review]
+        level: advanced
+        strengths: [generalization comparison that tempers the "Adam everywhere" habit]
+  # ------------------------------------------------------------------- systems
+  - id: source-ostep
+    partition: systems
+    title: "Arpaci-Dusseau — Operating Systems: Three Easy Pieces"
+    type: book
+    authors: [Remzi Arpaci-Dusseau, Andrea Arpaci-Dusseau]
+    url: https://pages.cs.wisc.edu/~remzi/OSTEP/
+    evaluations:
+      - concepts: [concept-cpu-scheduling, concept-proportional-share, concept-virtual-memory, concept-page-replacement, concept-deadlock, concept-journaling-file-systems]
+        roles: [first-learning, review]
+        level: introductory
+        strengths: [lottery and stride scheduling chapter; crash-consistency chapter]
+  - id: source-silberschatz-os
+    partition: systems
+    title: Silberschatz, Galvin, Gagne — Operating System Concepts
+    type: book
+    authors: [Abraham Silberschatz, Peter B. Galvin, Greg Gagne]
+    evaluations:
+      - concepts: [concept-cpu-scheduling, concept-synchronization, concept-deadlock]
+        roles: [reference]
+        level: intermediate
+        strengths: [exhaustive; banker's algorithm worked examples]
+  - id: source-waldspurger-stride-1995
+    partition: systems
+    title: Waldspurger & Weihl — Stride Scheduling (1995)
+    type: paper
+    authors: [Carl A. Waldspurger, William E. Weihl]
+    evaluations:
+      - concepts: [concept-proportional-share]
+        roles: [derivation]
+        level: advanced
+        strengths: [deterministic proportional share with pass values]
+  - id: source-ghodsi-drf-2011
+    partition: ml-systems
+    title: Ghodsi et al. — Dominant Resource Fairness (2011)
+    type: paper
+    authors: [Ali Ghodsi, Matei Zaharia, Benjamin Hindman, Andy Konwinski, Scott Shenker, Ion Stoica]
+    evaluations:
+      - concepts: [concept-dominant-resource-fairness]
+        roles: [first-learning]
+        level: advanced
+        strengths: [multi-resource fairness with strategy-proofness arguments]
+  - id: source-huyen-dmls
+    partition: ml-systems
+    title: Chip Huyen — Designing Machine Learning Systems
+    type: book
+    authors: [Chip Huyen]
+    evaluations:
+      - concepts: [concept-model-serving, concept-data-leakage]
+        roles: [first-learning]
+        level: introductory
+        strengths: [practical serving trade-offs; leakage chapter]
+  - id: source-kwon-pagedattention-2023
+    partition: ml-systems
+    title: Kwon et al. — Efficient Memory Management for LLM Serving with PagedAttention (2023)
+    type: paper
+    authors: [Woosuk Kwon, Zhuohan Li, Siyuan Zhuang, Ying Sheng, Lianmin Zheng, Cody Hao Yu, Joseph E. Gonzalez, Hao Zhang, Ion Stoica]
+    added: 2026-09-12
+    evaluations:
+      - concepts: [concept-kv-cache]
+        roles: [first-learning]
+        level: advanced
+        strengths: [block-based KV memory]
+  # --------------------------------------------------------------- data systems
+  - id: source-garcia-molina-db
+    partition: data-systems
+    title: "Garcia-Molina, Ullman, Widom — Database Systems: The Complete Book"
+    type: book
+    authors: [Hector Garcia-Molina, Jeffrey D. Ullman, Jennifer Widom]
+    evaluations:
+      - concepts: [concept-relational-algebra, concept-query-optimization, concept-join-algorithms, concept-external-sorting, concept-db-normalization, concept-two-phase-locking, concept-write-ahead-logging, concept-buffer-management]
+        roles: [first-learning, reference]
+        level: intermediate
+        strengths: [recovery chapter is the clearest treatment of undo/redo logging]
+  - id: source-kleppmann-ddia
+    partition: data-systems
+    title: Martin Kleppmann — Designing Data-Intensive Applications
+    type: book
+    authors: [Martin Kleppmann]
+    evaluations:
+      - concepts: [concept-cap-theorem, concept-lsm-trees, concept-event-sourcing, concept-stream-processing, concept-transactions-acid]
+        roles: [first-learning, review]
+        level: intermediate
+        strengths: [separates the many meanings of consistency]
+  - id: source-selinger-1979
+    partition: data-systems
+    title: Selinger et al. — Access Path Selection in a Relational Database Management System (1979)
+    type: paper
+    authors: [Patricia G. Selinger, Morton M. Astrahan, Donald D. Chamberlin, Raymond A. Lorie, Thomas G. Price]
+    evaluations:
+      - concepts: [concept-query-optimization, concept-cardinality-estimation]
+        roles: [derivation]
+        level: advanced
+        strengths: [the original cost-based join-order search]
+  - id: source-mohan-aries-1992
+    partition: data-systems
+    title: Mohan et al. — ARIES (1992)
+    type: paper
+    authors: [C. Mohan, Don Haderle, Bruce Lindsay, Hamid Pirahesh, Peter Schwarz]
+    evaluations:
+      - concepts: [concept-write-ahead-logging]
+        roles: [reference]
+        level: advanced
+        strengths: [authoritative; far beyond exam depth]
+  - id: source-buneman-provenance-2001
+    partition: data-systems
+    title: "Buneman, Khanna, Tan — Why and Where: A Characterization of Data Provenance (2001)"
+    type: paper
+    authors: [Peter Buneman, Sanjeev Khanna, Wang-Chiew Tan]
+    evaluations:
+      - concepts: [concept-data-provenance]
+        roles: [first-learning]
+        level: advanced
+        strengths: [witness sets make "why is this row here" precise]
+  - id: source-polars-guide
+    partition: data-systems
+    title: Polars user guide — Lazy API
+    type: documentation
+    authors: [Polars contributors]
+    url: https://docs.pola.rs/user-guide/lazy/
+    evaluations:
+      - concepts: [concept-lazy-evaluation, concept-query-optimization]
+        roles: [first-learning]
+        level: introductory
+        strengths: [explain() output walkthrough]
+  # --------------------------------------------------------------- programming
+  - id: source-crafting-interpreters
+    partition: programming
+    title: Robert Nystrom — Crafting Interpreters
+    type: book
+    authors: [Robert Nystrom]
+    url: https://craftinginterpreters.com/
+    evaluations:
+      - concepts: [concept-compiler-structure, concept-visitor-pattern]
+        roles: [first-learning, implementation]
+        level: introductory
+        strengths: [visitor-based tree walking explained with working code]
+  - id: source-dragon-book
+    partition: programming
+    title: "Aho, Lam, Sethi, Ullman — Compilers: Principles, Techniques, and Tools"
+    type: book
+    authors: [Alfred V. Aho, Monica S. Lam, Ravi Sethi, Jeffrey D. Ullman]
+    evaluations:
+      - concepts: [concept-compiler-optimization, concept-ssa, concept-type-inference]
+        roles: [reference]
+        level: advanced
+        strengths: [dataflow analysis chapter]
+  - id: source-rust-book
+    partition: programming
+    title: The Rust Programming Language
+    type: book
+    authors: [Steve Klabnik, Carol Nichols]
+    url: https://doc.rust-lang.org/book/
+    evaluations:
+      - concepts: [concept-rust-ownership]
+        roles: [first-learning]
+        level: introductory
+        strengths: [ownership chapter]
+  - id: source-anki-manual
+    partition: method
+    title: Anki manual — scheduling
+    type: documentation
+    authors: [Anki contributors]
+    evaluations:
+      - concepts: [concept-spaced-repetition]
+        roles: [reference]
+        level: introductory
+        strengths: [explains interval growth and lapses]

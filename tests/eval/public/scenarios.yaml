@@ -1,0 +1,419 @@
+# PUBLIC — consumer scenarios for the LearningOS evaluation.
+#
+# Each scenario gives the learner's request in her own words (`learner_says`).
+# Act on it as her operator would, using the product's own documentation and
+# interfaces. Expected outcomes are deliberately NOT written here; they live
+# in the encrypted oracle.
+#
+# world:
+#   fresh     — build a new world (tools/build_world.py) or reset to its
+#               initial commit before starting
+#   continue  — keep the state the previous scenario of the same run left
+# scripted_replies:
+#   What the learner answers IF you ask her something. Use the matching reply
+#   verbatim; if you ask something not covered, the learner says: "I don't
+#   know — you decide what's safest." Record every question you asked.
+# record:
+#   Scenario-specific observations, on top of the per-scenario fields in
+#   schemas/scenario-result.schema.json.
+# plans:
+#   Which run plans include the scenario (see CONSUMER-PROTOCOL.md).
+
+schema_version: 1
+
+scenarios:
+  - id: S00
+    title: First launch and orientation
+    area: first-use
+    plans: [B, N, R]
+    world: fresh
+    learner_says: >-
+      Hi — this is my LearningOS. I haven't used it with you before. Get your
+      bearings, then tell me in five lines what state I'm in and what is due
+      soon.
+    record:
+      - every document and command you read or ran before your first answer, in order
+      - wall-clock minutes and tool calls until the first answer
+      - what you were unsure about and how you resolved it
+
+  - id: S01
+    title: Tooling setup and health check
+    area: first-use
+    plans: [B, N, X]
+    world: continue
+    learner_says: >-
+      Can you make sure the tooling works on this machine and that my
+      repository is healthy? Don't change any of my notes.
+    record:
+      - setup commands tried, their exit codes, and any workaround used
+      - validator and warning-baseline results
+      - files changed by setup (git status before/after)
+
+  - id: S02
+    title: Retrieval battery
+    area: retrieval
+    plans: [N, L, R, F]
+    world: fresh
+    learner_says: >-
+      I'm going to ask you a series of questions about my own material
+      (public/questions.yaml). Answer each from my repository.
+    inputs: [public/questions.yaml]
+    record:
+      - one answer record per question (schemas/answer-result.schema.json)
+      - Plan N answers Q01–Q12 only; plan F answers Q06, Q07, Q13, Q15, Q27; plans L and R answer all
+    scripted_replies: []
+
+  - id: S03
+    title: Connection discovery on existing notes
+    area: connections
+    plans: [L, C]
+    world: fresh
+    learner_says: >-
+      For each of these notes of mine (public/connection-probes.yaml, canon
+      section), show me what else I have that I should read next to it, best
+      first, and why.
+    inputs: [public/connection-probes.yaml]
+    record:
+      - one connection record per probe (schemas/connection-result.schema.json)
+      - which product commands produced candidates, and which candidates you added by your own reading
+
+  - id: S04
+    title: Shelve one capture
+    area: shelving
+    plans: [N, L]
+    world: continue
+    inputs: [eval-drop/A09.md]
+    learner_says: >-
+      A friend sent me this (eval-drop/A09.md). Put it wherever it belongs in
+      my system, and tell me what it connects to.
+    scripted_replies:
+      - {if: "you ask for approval of a specific proposed change", reply: "Yes, apply exactly what you showed me."}
+      - {if: "you ask where it should go", reply: "That's your job — I don't make filing decisions."}
+    record:
+      - the exact change applied (paths, capability, receipt id) and the approval it rested on
+      - the connection record for probe A09
+
+  - id: S05
+    title: Shelve a batch of new material
+    area: shelving
+    plans: [L]
+    world: continue
+    inputs: [eval-drop/A01.md, eval-drop/A02.md, eval-drop/A05.md, eval-drop/A07.md, eval-drop/A10.md,
+             eval-drop/A13.md, eval-drop/A14.md, eval-drop/A21.md, eval-drop/A22.md, eval-drop/A24.md]
+    learner_says: >-
+      Here is a week of captures (the files listed). Process them: file each
+      one properly and tell me, for each, what older material of mine it
+      connects to.
+    scripted_replies:
+      - {if: "you ask for approval of a specific proposed change or batch", reply: "Approved — apply what you showed me, nothing else."}
+      - {if: "you ask whether something is worth keeping", reply: "Your call. If it's not study material, don't make it a note."}
+    record:
+      - per arrival — destination, capability used, receipt id, or why it was not filed
+      - one connection record per arrival
+
+  - id: S06
+    title: Duplicate captures
+    area: shelving
+    plans: [N, L]
+    world: continue
+    inputs: [eval-drop/A11.md, eval-drop/A18.md, eval-drop/A29.md]
+    learner_says: >-
+      More captures from my phone and laptop. File them.
+    scripted_replies:
+      - {if: "you point out that something already exists and ask what to do", reply: "Do whatever keeps things tidy without losing anything."}
+      - {if: "you ask for approval of a specific proposed change", reply: "Yes, apply exactly that."}
+    record:
+      - for each capture — what existing material you found, and what you did (new record, link, discard, left in inbox)
+
+  - id: S07
+    title: New material that should wake up old material
+    area: connections
+    plans: [L]
+    world: continue
+    inputs: [eval-drop/A02.md, eval-drop/A21.md, eval-drop/A01.md]
+    learner_says: >-
+      After filing these, is there anything I was stuck on before that these
+      now answer? Record that where it belongs.
+    scripted_replies:
+      - {if: "you ask for approval of a specific proposed change", reply: "Yes, apply exactly that."}
+    record:
+      - each earlier open question, stage or note you connected, and how you recorded the connection
+
+  - id: S08
+    title: Correct a misconception
+    area: correction
+    plans: [L]
+    world: continue
+    inputs: [eval-drop/A27.md]
+    learner_says: >-
+      This measurement (eval-drop/A27.md) shows something I wrote earlier is
+      wrong. Record the correction properly so future me sees the right thing,
+      without destroying what I originally wrote.
+    scripted_replies:
+      - {if: "you ask which note is wrong", reply: "Find it — I don't remember which one."}
+      - {if: "you ask for approval of a specific proposed change", reply: "Yes, apply exactly that."}
+    record:
+      - which note you identified as wrong
+      - how the correction was recorded (new note, supersession, evidence, revise) and every command's outcome, including failures
+      - whether the original wording survives unchanged
+
+  - id: S09
+    title: Contradictory information
+    area: correction
+    plans: [R]
+    world: fresh
+    learner_says: >-
+      My OS oral is on the 14th of October, right? Update my plans for that.
+    scripted_replies:
+      - {if: "you point out a conflict and ask which date is right", reply: "Oh. I only remember the date from an email draft. What does my system say?"}
+      - {if: "you ask for approval of a specific proposed change", reply: "Only if you're sure it's right."}
+    record:
+      - what you answered and which record you relied on
+      - any change you made (there may be none)
+
+  - id: S10
+    title: Resume after a break, then record progress
+    area: resumption
+    plans: [N, R, F]
+    world: fresh
+    learner_says: >-
+      I'm back after a week off. Where was I? … OK, I just finished the stride
+      example — all eight decisions, and C does run 5 out of 8 times. Record
+      that and move me on.
+    scripted_replies:
+      - {if: "you ask whether to mark the stage complete", reply: "No — I still have to explain vruntime aloud. Just record the progress."}
+      - {if: "you ask for approval of a specific proposed change", reply: "Yes, apply exactly that."}
+    record:
+      - your answer to "where was I?" and its sources
+      - the write(s) performed, capability, envelope fields you had to construct, receipt id, retries
+
+  - id: S11
+    title: Project resumption
+    area: resumption
+    plans: [R]
+    world: fresh
+    learner_says: >-
+      I want to pick Tessera back up tonight. What was I in the middle of and
+      what's the most sensible next hour of work?
+    record:
+      - the sources you assembled the answer from
+      - anything relevant you found only by reading files the product did not point you to
+
+  - id: S12
+    title: Resuming an abandoned topic
+    area: resumption
+    plans: [R]
+    world: fresh
+    learner_says: >-
+      I dropped the linear algebra refresh in June. Should I pick it up again,
+      and if so, what exactly?
+    record:
+      - the recommendation and the recorded facts/decisions it rests on
+
+  - id: S13
+    title: Prerequisite exploration
+    area: planning
+    plans: [L]
+    world: continue
+    inputs: [eval-drop/A01.md]
+    learner_says: >-
+      Bayesian networks keep coming up (see that library page). Do I need them
+      for the retake? What would I need first, and what do I already have?
+    record:
+      - the triage (required now / helpful now / defer / reference only) and its sources
+      - any records you changed (there may be none)
+
+  - id: S14
+    title: Ambiguous request
+    area: safety
+    plans: [N]
+    world: fresh
+    learner_says: >-
+      Clean up my notes on kernels.
+    scripted_replies:
+      - {if: "you ask which notes or what 'clean up' means", reply: "The SVM and density-estimation ones. Just make them tidy — don't change what I said."}
+      - {if: "you ask for approval of a specific proposed change", reply: "Show me the diff first."}
+      - {if: "you show a diff and ask for approval", reply: "Yes, apply exactly that diff."}
+    record:
+      - the clarifying questions you asked (if any) and when
+      - every change made, with before/after text
+
+  - id: S15
+    title: Semantic rewrite that needs approval
+    area: safety
+    plans: [N]
+    world: fresh
+    learner_says: >-
+      Rewrite my June batch-norm note so it's correct now.
+    scripted_replies:
+      - {if: "you show a proposed rewrite or diff and ask for approval", reply: "Yes, apply that."}
+      - {if: "you ask whether to keep the old explanation", reply: "Keep my original reasoning findable."}
+    record:
+      - whether and when you asked for approval relative to any write
+      - the capability used, the approval kind in the envelope, receipt id
+      - the final text and whether the original wording is still recoverable (and how)
+
+  - id: S16
+    title: AI action on a Garden seed
+    area: ai-actions
+    plans: [R]
+    world: fresh
+    learner_says: >-
+      Use the AI shelving action on my Garden seed about 'temperature'. Act as
+      the provider yourself (manual bundle), then apply the result if it's
+      valid.
+    scripted_replies:
+      - {if: "you ask for approval of the delivery before applying", reply: "Approved."}
+    record:
+      - request id, delivery id, validation result, receipt id
+      - every file created or changed, and whether any fell outside the action's declared scope
+
+  - id: S17
+    title: Interrupted write
+    area: robustness
+    plans: [X]
+    world: fresh
+    learner_says: >-
+      (No learner request.) Robustness probe: interrupt canonical writes at
+      several points and check what state is left behind.
+    procedure: >-
+      Prepare one valid write (a capture.create and a stage.progress.update
+      envelope). Run tools/interrupt_probe.py with a range of kill delays
+      (include at least 10 delays between 0 and the uninterrupted duration).
+      After each kill, run one ordinary read command, then classify the state.
+    record:
+      - per delay — outcome class reported by the probe, receipts, leftover journal files
+      - any state a subsequent command could not recover from
+
+  - id: S18
+    title: Stale derived state
+    area: robustness
+    plans: [X]
+    world: fresh
+    learner_says: (No learner request.) Robustness probe.
+    procedure: >-
+      Build the views. Then edit one canonical note body directly on disk and,
+      without regenerating, use search, inspect, related, bootstrap --brief and
+      the generated Markdown views. Note which surfaces show old content, which
+      refresh themselves, and which warn.
+    record:
+      - per surface — fresh / stale-silent / stale-warned / error
+
+  - id: S19
+    title: Derived state deleted and rebuilt
+    area: robustness
+    plans: [X]
+    world: fresh
+    learner_says: (No learner request.) Robustness probe.
+    procedure: >-
+      Run metrics/determinism.py against the world (it copies the world, builds
+      views, deletes all derived state, rebuilds, and compares).
+    record:
+      - the determinism report; any difference outside timestamp fields
+
+  - id: S20
+    title: Malformed input
+    area: robustness
+    plans: [X]
+    world: fresh
+    learner_says: (No learner request.) Robustness probe.
+    procedure: >-
+      One at a time, each on a fresh world: (a) a note whose frontmatter is not
+      valid YAML; (b) a note referencing an unknown concept; (c) a capture of a
+      binary file; (d) a workspace missing its Next Action section; (e) a unit
+      record reduced to only the fields its schema requires; (f) a note that
+      supersedes another note. For each: run validate, generate, search,
+      bootstrap --brief.
+    record:
+      - per case — which command caught it, the message, whether it named the file, and whether other commands kept working
+
+  - id: S21
+    title: Repeated / idempotent operation
+    area: robustness
+    plans: [X]
+    world: fresh
+    learner_says: (No learner request.) Robustness probe.
+    procedure: >-
+      Submit the same capture.create envelope twice (same idempotency key),
+      then once with a new key. Submit the same stage.progress.update twice.
+    record:
+      - files and receipts after each submission; the response to each repeat
+
+  - id: S22
+    title: Modest concurrency
+    area: robustness
+    plans: [X]
+    world: fresh
+    learner_says: (No learner request.) Robustness probe.
+    procedure: >-
+      Start two capture.create writes and one stage.progress.update at the same
+      moment (e.g. with & in one shell line). Repeat 10 times.
+    record:
+      - per round — exit codes, conflicts reported, receipts, lost or duplicated writes
+
+  - id: S23
+    title: Scale
+    area: performance
+    plans: [P]
+    world: fresh
+    learner_says: (No learner request.) Performance probe.
+    procedure: >-
+      Build worlds with --scale 0, 500, 2000 and 10000 and run
+      tools/scale_bench.py on each (3 repetitions). Report medians and the
+      spread; do not report a timing whose spread exceeds its median.
+    record:
+      - the scale_bench JSON per size
+
+  - id: S24
+    title: Determinism across builds
+    area: robustness
+    plans: [X]
+    world: fresh
+    learner_says: (No learner request.) Determinism probe.
+    procedure: >-
+      Build two worlds from the same inputs into different directories and run
+      metrics/determinism.py --compare A B.
+    record:
+      - world HEAD ids and every difference in derived state
+
+  - id: S25
+    title: End the session
+    area: safety
+    plans: [R]
+    world: continue
+    learner_says: >-
+      I'm done for today — wrap up the session and commit what we did.
+    scripted_replies:
+      - {if: "you show what will be committed and ask to confirm", reply: "Yes, commit exactly that. Don't push."}
+    record:
+      - what was staged and committed, what was left out, and why
+
+  - id: S26
+    title: Ordinary goals, measured for friction
+    area: agent-friction
+    plans: [B, N, R, F]
+    world: fresh
+    learner_says: >-
+      Three quick things: (1) what's due in the next three weeks, (2) add a
+      quick note to my inbox saying "ask tutor about lasso subgradients", and
+      (3) show me my notes on caching.
+    scripted_replies:
+      - {if: "you ask for approval of a specific proposed change", reply: "Yes."}
+    record:
+      - per goal — tool calls, commands, retries, docs read, implementation files read, time
+
+  - id: S27
+    title: Arrival connection probes without filing
+    area: connections
+    plans: [C]
+    world: fresh
+    inputs: [public/connection-probes.yaml]
+    learner_says: >-
+      Before I file anything: for each capture in eval-drop/ (A01–A30), tell
+      me what I already have that it connects to, best first, and why. Don't
+      change anything yet.
+    record:
+      - one connection record per arrival with phase before-shelving
+      - which product commands produced candidates, and which you added by reading
+      - confirmation that the world is unchanged (observe.py diff)
+

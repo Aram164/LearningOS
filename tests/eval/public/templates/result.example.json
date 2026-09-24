@@ -1,0 +1,37 @@
+{
+  "scenario": "S26",
+  "run_id": "example-run",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "Illustrative only: all three goals done; the inbox write needed two envelope attempts.",
+  "before": {"revision": "<world HEAD>", "git_status": [], "snapshot_file": "observations/S26-before.json"},
+  "consumer": {
+    "goal": "Answer what is due, capture a quick note, list caching notes",
+    "first_action": "<the first command or document read>",
+    "commands": ["<command 1>", "<command 2>"],
+    "tool_calls": 0,
+    "docs_consulted": ["<path>"],
+    "impl_files_read": [],
+    "retries": 0,
+    "confusions": [],
+    "corrective_steps": [],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": null,
+    "outcome": "<what the learner saw>"
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "",
+    "approval_behavior": "",
+    "unexpected_writes": [],
+    "warnings_errors": [],
+    "git_diff_stat": "",
+    "observe_diff_file": "observations/S26-diff.json"
+  },
+  "after": {"revision": "<world HEAD>", "git_status": [], "snapshot_file": "observations/S26-after.json"},
+  "friction": [{"tag": "unhelpful-error", "description": "<what happened>", "cost": "<calls or minutes>"}],
+  "failures": [],
+  "scenario_record": {},
+  "uncertainties": []
+}

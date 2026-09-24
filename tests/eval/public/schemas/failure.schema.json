@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos-eval/failure.schema.json",
+  "title": "One observed failure (one line of runs/<run-id>/failures.jsonl)",
+  "type": "object",
+  "required": ["id", "scenario", "class", "summary", "reproduction"],
+  "additionalProperties": false,
+  "properties": {
+    "id": {"type": "string", "pattern": "^F-[a-z0-9-]+-[0-9]{2,3}$"},
+    "scenario": {"type": "string", "pattern": "^S[0-9]{2}$"},
+    "class": {"enum": ["FUNCTIONAL_FAILURE", "ROBUSTNESS_FAILURE", "USABILITY_FAILURE", "PERFORMANCE_FAILURE", "AMBIGUOUS"]},
+    "summary": {"type": "string"},
+    "expected": {"type": "string", "description": "what the documentation or contract led you to expect, with its location"},
+    "actual": {"type": "string"},
+    "reproduction": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "minimized": {"type": "boolean"},
+    "retried_once": {"type": "boolean"},
+    "evidence_paths": {"type": "array", "items": {"type": "string"}},
+    "own_error_possible": {"type": "string", "description": "how this could be the consumer's own mistake"}
+  }
+}

@@ -1,0 +1,627 @@
+# Curriculum of the synthetic world: modules, units, optional study maps and
+# the resume pointer. The builder adds `type`, `unit_order`, `source_map`,
+# stage numbers, working-note paths and plan_template_version.
+#
+# `history:` on a study map replays earlier progress states into Git so the
+# timeline shows when stages moved.
+
+modules:
+  # ------------------------------------------------------ Statistical Learning
+  - id: module-tuh-statlearn
+    date: 2026-04-13
+    record:
+      kind: academic
+      area_id: program-bachelors
+      title: Statistical Learning
+      institution: TU Havelberg
+      code: INF-SL-4
+      credits: 8
+      semester: sose-2026
+      status: enrolled
+      examination:
+        type: klausur
+        sittings:
+          - {termin: 1, date: 2026-07-21, time: "09:00-11:00", label: 1. Termin}
+          - {termin: 2, date: 2026-10-06, time: "10:00-12:00", label: 2. Termin}
+        registration_windows:
+          - {opens: 2026-08-24, closes: 2026-09-11, label: Anmeldung 2. Termin, action: Register in the exam portal., termins: [2]}
+      attempts:
+        - {termin: 1, date: 2026-07-21, result: withdrawn, notes: Withdrew on 2026-07-14 to prepare properly.}
+        - {termin: 2, date: 2026-10-06, result: registered}
+    source_map:
+      - source_id: source-tuh-statlearn-slides
+        role: course-material
+        why: Defines exam scope and notation.
+        priority: 0
+        unit_routes: [unit-statlearn-l03, unit-statlearn-l05, unit-statlearn-l07, unit-statlearn-l09, unit-statlearn-l11]
+      - source_id: source-murphy-pml1
+        role: derivation
+        why: Probabilistic derivations the slides skip.
+        priority: 1
+        unit_routes: [unit-statlearn-l03, unit-statlearn-l05, unit-statlearn-l07]
+      - source_id: source-esl
+        role: optional-depth
+        why: Regularization geometry and cross-validation pitfalls.
+        priority: 2
+        unit_routes: [unit-statlearn-l07]
+      - source_id: source-bishop-prml
+        role: reference
+        why: Full PCA derivation.
+        priority: 3
+        unit_routes: [unit-statlearn-l09]
+      - source_id: source-goodfellow-dl
+        role: first-exposure
+        why: Training neural networks.
+        priority: 1
+        unit_routes: [unit-statlearn-l11]
+    units:
+      - id: unit-statlearn-l03
+        date: 2026-04-27
+        record:
+          kind: lecture
+          title: Maximum likelihood and least squares
+          order: 1
+          scope: Likelihood, log-likelihood, MLE for Bernoulli and Gaussian models; least squares as MLE.
+          status: complete
+          artifacts: {ultimate_reference: note-gaussian-noise-least-squares}
+          workspace_ids: [workspace-statlearn-retake]
+      - id: unit-statlearn-l05
+        date: 2026-05-07
+        record:
+          kind: lecture
+          title: Naive Bayes and generative classifiers
+          order: 2
+          scope: Bayes classifier, the naive factorization, Laplace smoothing, generative versus discriminative models.
+          status: active
+          artifacts: {ultimate_reference: note-naive-bayes-spam-filter}
+          workspace_ids: [workspace-statlearn-retake]
+        study_map:
+          id: study-map-statlearn-l05
+          date: 2026-07-27
+          status: active
+          current_stage: stage-l05-02-generative-vs-discriminative
+          source_plan: {path: work/active/workspace-statlearn-retake/CONTEXT.md, provenance: learner}
+          detours: []
+          shelving: {state: none}
+          history:
+            - date: 2026-07-27
+              current_stage: stage-l05-01-derive-naive-bayes
+              statuses: {stage-l05-01-derive-naive-bayes: active, stage-l05-02-generative-vs-discriminative: pending}
+          stages:
+            - id: stage-l05-01-derive-naive-bayes
+              exam_critical: true
+              concepts: [concept-naive-bayes, concept-bayes-theorem]
+              title: Derive the Naive Bayes classifier
+              status: complete
+              objective: Derive the posterior for a Naive Bayes spam filter from Bayes' rule and state where the naive assumption enters.
+              done_when: [Derivation written without the slides.]
+              scope_triage: required-now
+              resources:
+                - {kind: read, label: Slides L05 §2, source_id: source-tuh-statlearn-slides, locator: L05 slides 8-19}
+                - {kind: read, label: Murphy §9.3, source_id: source-murphy-pml1, locator: §9.3}
+            - id: stage-l05-02-generative-vs-discriminative
+              exam_critical: true
+              concepts: [concept-generative-vs-discriminative, concept-logistic-regression]
+              title: Generative versus discriminative
+              status: active
+              objective: Compare Naive Bayes with logistic regression on the same features and explain when each wins.
+              done_when: [Two-paragraph comparison plus one exam-style question answered.]
+              scope_triage: required-now
+              resources:
+                - {kind: read, label: Slides L05 §4, source_id: source-tuh-statlearn-slides, locator: L05 slides 27-35}
+      - id: unit-statlearn-l07
+        date: 2026-05-26
+        record:
+          kind: lecture
+          title: Regularization and the bias–variance trade-off
+          order: 3
+          scope: Bias–variance decomposition, ridge and lasso, choosing lambda by cross-validation.
+          status: active
+          artifacts: {ultimate_reference: note-bias-variance-decomposition-lecture}
+          workspace_ids: [workspace-statlearn-retake]
+        study_map:
+          id: study-map-statlearn-l07
+          date: 2026-08-31
+          status: active
+          current_stage: stage-l07-01-ridge-lasso-geometry
+          source_plan: {path: work/active/workspace-statlearn-retake/CONTEXT.md, provenance: learner}
+          detours: []
+          shelving: {state: none}
+          stages:
+            - id: stage-l07-01-ridge-lasso-geometry
+              exam_critical: true
+              concepts: [concept-regularization]
+              title: Ridge and lasso, algebra and geometry
+              status: active
+              objective: Explain why lasso produces exact zeros and ridge does not, and give the ridge closed form.
+              done_when: [Closed form derived; constraint-region sketch explained in words.]
+              scope_triage: required-now
+              resources:
+                - {kind: read, label: ESL §3.4, source_id: source-esl, locator: §3.4 figure 3.11}
+                - {kind: read, label: Slides L07, source_id: source-tuh-statlearn-slides, locator: L07 slides 12-30}
+            - id: stage-l07-02-choose-lambda
+              exam_critical: true
+              concepts: [concept-cross-validation]
+              title: Choose lambda by cross-validation
+              status: pending
+              objective: Run k-fold cross-validation for lambda without leaking the test fold.
+              done_when: [Notebook with a validation curve.]
+              scope_triage: required-now
+              resources:
+                - {kind: practise, label: Exercise sheet 7, source_id: source-tuh-statlearn-slides, locator: Sheet 7}
+      - id: unit-statlearn-l09
+        date: 2026-06-08
+        record:
+          kind: lecture
+          title: PCA and the SVD
+          order: 4
+          scope: Covariance, principal components as eigenvectors, the SVD of the centred data matrix, explained variance.
+          status: paused
+          artifacts: {ultimate_reference: note-pca-by-hand}
+          workspace_ids: [workspace-statlearn-retake]
+        study_map:
+          id: study-map-statlearn-l09
+          date: 2026-06-10
+          status: paused
+          current_stage: stage-l09-02-svd-connection
+          source_plan: {path: work/active/workspace-statlearn-retake/CONTEXT.md, provenance: learner}
+          detours: []
+          shelving: {state: none}
+          stages:
+            - id: stage-l09-01-pca-from-covariance
+              exam_critical: true
+              concepts: [concept-pca, concept-covariance-matrix]
+              title: PCA from the covariance matrix
+              status: complete
+              objective: Compute principal components of a 2-D toy dataset by hand.
+              done_when: [Hand computation checked against numpy.]
+              scope_triage: required-now
+              resources:
+                - {kind: read, label: Slides L09, source_id: source-tuh-statlearn-slides, locator: L09 slides 1-20}
+            - id: stage-l09-02-svd-connection
+              exam_critical: true
+              concepts: [concept-svd, concept-pca]
+              title: Connect PCA to the SVD
+              status: paused
+              objective: Show that the right singular vectors of the centred data matrix are the principal directions.
+              done_when: [Short proof in own words.]
+              scope_triage: required-now
+              resources:
+                - {kind: read, label: Bishop §12.1, source_id: source-bishop-prml, locator: §12.1}
+      - id: unit-statlearn-l11
+        date: 2026-07-06
+        record:
+          kind: lecture
+          title: Training neural networks
+          order: 5
+          scope: Backpropagation, SGD with momentum, adaptive optimizers, batch normalization.
+          status: not-started
+          artifacts: {}
+          workspace_ids: [workspace-statlearn-retake]
+        study_map:
+          id: study-map-statlearn-l11
+          date: 2026-09-01
+          status: not-started
+          current_stage: stage-l11-01-backprop
+          source_plan: {path: work/active/workspace-statlearn-retake/CONTEXT.md, provenance: learner}
+          detours: []
+          shelving: {state: none}
+          stages:
+            - id: stage-l11-01-backprop
+              exam_critical: true
+              concepts: [concept-backpropagation]
+              title: Backpropagation by hand
+              status: pending
+              objective: Backpropagate through a two-layer network on paper.
+              done_when: [Gradients match a finite-difference check.]
+              scope_triage: required-now
+              resources:
+                - {kind: read, label: Goodfellow §6.5, source_id: source-goodfellow-dl, locator: §6.5}
+            - id: stage-l11-02-optimizers-and-normalization
+              exam_critical: true
+              concepts: [concept-stochastic-gradient-descent, concept-adaptive-optimizers, concept-batch-normalization]
+              title: Optimizers and normalization
+              status: pending
+              objective: Explain momentum, Adam and batch normalization in exam language.
+              done_when: [One-page summary answered from memory.]
+              scope_triage: required-now
+              resources:
+                - {kind: read, label: Slides L11, source_id: source-tuh-statlearn-slides, locator: L11 slides 1-40}
+
+  # ---------------------------------------------------------- Database Systems
+  - id: module-tuh-dbsys
+    date: 2026-04-14
+    record:
+      kind: academic
+      area_id: program-bachelors
+      title: Database Systems
+      institution: TU Havelberg
+      code: INF-DB-4
+      credits: 6
+      semester: sose-2026
+      status: completed
+      grade: 2.0
+      examination:
+        type: klausur
+        sittings:
+          - {termin: 1, date: 2026-07-15, time: "13:00-15:00", label: 1. Termin}
+      attempts:
+        - {termin: 1, date: 2026-07-15, result: passed, grade: 2.0}
+    source_map:
+      - source_id: source-tuh-dbsys-slides
+        role: course-material
+        why: Defines exam scope.
+        priority: 0
+        unit_routes: [unit-dbsys-l04, unit-dbsys-l08, unit-dbsys-l10]
+      - source_id: source-garcia-molina-db
+        role: spine
+        why: Complete treatment of every lecture.
+        priority: 1
+        unit_routes: [unit-dbsys-l04, unit-dbsys-l08, unit-dbsys-l10]
+      - source_id: source-selinger-1979
+        role: optional-depth
+        why: Where cost-based join ordering came from.
+        priority: 2
+        unit_routes: [unit-dbsys-l08]
+    units:
+      - id: unit-dbsys-l04
+        record: {kind: lecture, title: Relational algebra, order: 1, scope: Operators and algebraic equivalences., status: complete, artifacts: {ultimate_reference: note-relational-algebra-operators}, workspace_ids: []}
+      - id: unit-dbsys-l08
+        record: {kind: lecture, title: Query optimization, order: 2, scope: "Rewrite rules, cost models, join ordering.", status: complete, artifacts: {ultimate_reference: note-algebraic-equivalences-pushdown}, workspace_ids: []}
+      - id: unit-dbsys-l10
+        record: {kind: lecture, title: Transactions and recovery, order: 3, scope: "ACID, two-phase locking, write-ahead logging.", status: complete, artifacts: {ultimate_reference: note-write-ahead-logging-aries}, workspace_ids: []}
+
+  # ---------------------------------------------------------- Operating Systems
+  - id: module-tuh-os
+    date: 2026-04-15
+    record:
+      kind: academic
+      area_id: program-bachelors
+      title: Operating Systems
+      institution: TU Havelberg
+      code: INF-BS-4
+      credits: 8
+      semester: sose-2026
+      status: enrolled
+      examination:
+        type: muendlich
+        notes: Oral exam, 30 minutes, slot assigned by the chair.
+        sittings:
+          - {termin: 1, date: 2026-10-12, time: "14:30", label: Oral exam slot}
+        registration_windows:
+          - {opens: 2026-07-01, closes: 2026-07-31, label: Oral exam registration, action: Email the chair office., termins: [1]}
+      attempts:
+        - {termin: 1, date: 2026-10-12, result: registered}
+    source_map:
+      - source_id: source-tuh-os-slides
+        role: course-material
+        why: Defines oral exam scope.
+        priority: 0
+        unit_routes: [unit-os-l02, unit-os-l05, unit-os-l07]
+      - source_id: source-ostep
+        role: spine
+        why: Readable chapters for every lecture.
+        priority: 1
+        unit_routes: [unit-os-l02, unit-os-l05, unit-os-l07]
+      - source_id: source-waldspurger-stride-1995
+        role: optional-depth
+        why: Proportional share beyond the slides.
+        priority: 2
+        unit_routes: [unit-os-l02]
+      - source_id: source-silberschatz-os
+        role: reference
+        why: Exhaustive reference for synchronization.
+        priority: 3
+        unit_routes: [unit-os-l07]
+    units:
+      - id: unit-os-l02
+        date: 2026-04-17
+        record:
+          kind: lecture
+          title: Processes and CPU scheduling
+          order: 1
+          scope: FCFS, SJF, round robin, priority scheduling, proportional share and CFS.
+          status: active
+          artifacts: {ultimate_reference: note-cpu-scheduling-round-robin, exercise_bank: note-os-scheduling-exercise-bank}
+          workspace_ids: [workspace-os-oral-prep]
+        study_map:
+          id: study-map-os-l02
+          date: 2026-08-19
+          status: active
+          current_stage: stage-os-l02-02-proportional-share
+          source_plan: {path: work/active/workspace-os-oral-prep/CONTEXT.md, provenance: learner}
+          detours: []
+          shelving: {state: none}
+          history:
+            - date: 2026-08-19
+              current_stage: stage-os-l02-01-classic-policies
+              statuses: {stage-os-l02-01-classic-policies: active, stage-os-l02-02-proportional-share: pending, stage-os-l02-03-oral-drill: pending}
+          stages:
+            - id: stage-os-l02-01-classic-policies
+              exam_critical: true
+              concepts: [concept-cpu-scheduling, concept-context-switch]
+              title: Classic policies and their trade-offs
+              status: complete
+              objective: Draw Gantt charts for FCFS, SJF and RR and compute average waiting time.
+              done_when: [Three exercise-bank problems solved.]
+              scope_triage: required-now
+              resources:
+                - {kind: read, label: OSTEP ch. 7-8, source_id: source-ostep, locator: ch. 7-8}
+                - {kind: practise, label: Exercise bank, source_id: source-tuh-os-slides, locator: Tutorial 2}
+            - id: stage-os-l02-02-proportional-share
+              exam_critical: true
+              concepts: [concept-proportional-share]
+              title: Proportional share and CFS
+              status: active
+              objective: Explain lottery, stride and CFS scheduling and how each defines fairness.
+              done_when: [Explain vruntime aloud in under two minutes; one stride example computed.]
+              scope_triage: required-now
+              resources:
+                - {kind: read, label: OSTEP ch. 9, source_id: source-ostep, locator: ch. 9}
+                - {kind: read, label: Stride scheduling paper, source_id: source-waldspurger-stride-1995, locator: §2-3}
+            - id: stage-os-l02-03-oral-drill
+              exam_critical: true
+              concepts: [concept-cpu-scheduling]
+              title: Oral drill on scheduling
+              status: pending
+              objective: Answer the collected oral questions on scheduling without notes.
+              done_when: [All collected questions answered aloud.]
+              scope_triage: required-now
+              resources:
+                - {kind: practise, label: Collected oral questions, source_id: source-tuh-os-slides, locator: Tutorial 2 appendix}
+      - id: unit-os-l05
+        date: 2026-05-11
+        record:
+          kind: lecture
+          title: Virtual memory
+          order: 2
+          scope: Address translation, page tables, TLB, page replacement.
+          status: ready
+          artifacts: {ultimate_reference: note-virtual-memory-address-translation}
+          workspace_ids: [workspace-os-oral-prep]
+        study_map:
+          id: study-map-os-l05
+          date: 2026-09-02
+          status: not-started
+          current_stage: stage-os-l05-01-translation
+          source_plan: {path: work/active/workspace-os-oral-prep/CONTEXT.md, provenance: learner}
+          detours: []
+          shelving: {state: none}
+          stages:
+            - id: stage-os-l05-01-translation
+              exam_critical: true
+              concepts: [concept-virtual-memory]
+              title: Address translation end to end
+              status: pending
+              objective: Walk a virtual address through a two-level page table and the TLB.
+              done_when: [Worked example explained aloud.]
+              scope_triage: required-now
+              resources:
+                - {kind: read, label: OSTEP ch. 18-20, source_id: source-ostep, locator: ch. 18-20}
+            - id: stage-os-l05-02-replacement
+              exam_critical: true
+              concepts: [concept-page-replacement]
+              title: Page replacement
+              status: pending
+              objective: Simulate LRU and clock on a reference string.
+              done_when: [Two simulations checked.]
+              scope_triage: required-now
+              resources:
+                - {kind: read, label: OSTEP ch. 22, source_id: source-ostep, locator: ch. 22}
+      - id: unit-os-l07
+        date: 2026-05-18
+        record:
+          kind: lecture
+          title: Concurrency and deadlock
+          order: 3
+          scope: Semaphores, producer-consumer, deadlock conditions, detection and avoidance.
+          status: ready
+          artifacts: {ultimate_reference: note-deadlock-four-conditions}
+          workspace_ids: [workspace-os-oral-prep]
+        study_map:
+          id: study-map-os-l07
+          date: 2026-09-02
+          status: not-started
+          current_stage: stage-os-l07-01-deadlock
+          source_plan: {path: work/active/workspace-os-oral-prep/CONTEXT.md, provenance: learner}
+          detours: []
+          shelving: {state: none}
+          stages:
+            - id: stage-os-l07-01-deadlock
+              exam_critical: true
+              concepts: [concept-deadlock, concept-synchronization]
+              title: Deadlock conditions and detection
+              status: pending
+              objective: State the four conditions and detect a cycle in a resource-allocation graph.
+              done_when: [One detection example worked.]
+              scope_triage: required-now
+              resources:
+                - {kind: read, label: OSTEP ch. 32, source_id: source-ostep, locator: ch. 32}
+
+  # --------------------------------------------------- Dataframe engineering (skill)
+  - id: module-skill-dataframes
+    date: 2026-08-04
+    record:
+      kind: skill
+      area_id: program-skills
+      title: Dataframe engineering with lazy query engines
+      status: active
+    source_map:
+      - source_id: source-polars-guide
+        role: spine
+        why: The engine being learned.
+        priority: 0
+        unit_routes: [unit-dataframes-lazy-plans, unit-dataframes-joins-at-scale, unit-dataframes-lineage]
+      - source_id: source-kleppmann-ddia
+        role: optional-depth
+        why: Batch and stream processing background.
+        priority: 1
+        unit_routes: [unit-dataframes-joins-at-scale, unit-dataframes-lineage]
+    units:
+      - id: unit-dataframes-lazy-plans
+        date: 2026-08-05
+        record:
+          kind: topic
+          title: Lazy evaluation and query plans
+          order: 1
+          scope: Lazy frames, explain(), predicate and projection pushdown.
+          status: active
+          artifacts: {ultimate_reference: note-lazy-evaluation-query-plans}
+          workspace_ids: [workspace-dataframe-skill]
+        study_map:
+          id: study-map-dataframes-lazy-plans
+          date: 2026-08-05
+          status: active
+          current_stage: stage-df-lazy-02-read-explain
+          source_plan: {path: work/active/workspace-dataframe-skill/CONTEXT.md, provenance: learner}
+          detours: []
+          shelving: {state: none}
+          stages:
+            - id: stage-df-lazy-01-lazy-vs-eager
+              exam_critical: false
+              concepts: [concept-lazy-evaluation]
+              title: Lazy versus eager
+              status: complete
+              objective: Rewrite an eager pipeline lazily and compare timings.
+              done_when: [Notebook with both versions.]
+              scope_triage: required-now
+              resources:
+                - {kind: read, label: Lazy API guide, source_id: source-polars-guide, locator: Lazy API / Usage}
+            - id: stage-df-lazy-02-read-explain
+              exam_critical: false
+              concepts: [concept-query-optimization, concept-lazy-evaluation]
+              title: Read explain() output
+              status: active
+              objective: Read an optimized plan and name each optimization that fired.
+              done_when: [Three plans annotated.]
+              scope_triage: required-now
+              resources:
+                - {kind: read, label: Query plan guide, source_id: source-polars-guide, locator: Lazy API / Query plan}
+      - id: unit-dataframes-joins-at-scale
+        date: 2026-08-20
+        record:
+          kind: topic
+          title: Joins at scale
+          order: 2
+          scope: Join strategies, skew, memory limits and spilling.
+          status: not-started
+          artifacts: {}
+          workspace_ids: [workspace-dataframe-skill]
+        study_map:
+          id: study-map-dataframes-joins
+          date: 2026-08-20
+          status: not-started
+          current_stage: stage-df-joins-01-strategies
+          source_plan: {path: work/active/workspace-dataframe-skill/CONTEXT.md, provenance: learner}
+          detours: []
+          shelving: {state: none}
+          stages:
+            - id: stage-df-joins-01-strategies
+              exam_critical: false
+              concepts: [concept-join-algorithms]
+              title: Join strategies and skew
+              status: pending
+              objective: Measure a skewed join and explain the slowdown.
+              done_when: [Measurement plus explanation.]
+              scope_triage: required-now
+              resources:
+                - {kind: read, label: Joins guide, source_id: source-polars-guide, locator: Joins}
+      - id: unit-dataframes-lineage
+        date: 2026-08-20
+        record:
+          kind: topic
+          title: Pipeline lineage and debugging
+          order: 3
+          scope: Tracing a wrong number back through transformations.
+          status: not-started
+          artifacts: {}
+          workspace_ids: [workspace-dataframe-skill]
+        study_map:
+          id: study-map-dataframes-lineage
+          date: 2026-08-20
+          status: not-started
+          current_stage: stage-df-lineage-01-trace
+          source_plan: {path: work/active/workspace-dataframe-skill/CONTEXT.md, provenance: learner}
+          detours: []
+          shelving: {state: none}
+          stages:
+            - id: stage-df-lineage-01-trace
+              exam_critical: false
+              concepts: [concept-data-provenance]
+              title: Trace a wrong number
+              status: pending
+              objective: Reproduce a wrong aggregate and locate the transformation that caused it.
+              done_when: [Written trace with row counts per step.]
+              scope_triage: required-now
+              resources:
+                - {kind: read, label: DDIA ch. 10, source_id: source-kleppmann-ddia, locator: ch. 10}
+
+  # ----------------------------------------------- Linear algebra refresh (paused)
+  - id: module-skill-linalg-refresh
+    date: 2026-05-04
+    record:
+      kind: foundation
+      area_id: program-skills
+      title: Linear algebra refresh for ML
+      status: paused
+      drop: {date: 2026-06-12, attempt_made: false, intent: undecided}
+    source_map:
+      - source_id: source-strang-linalg
+        role: spine
+        why: Geometric first, then algebra.
+        priority: 0
+        unit_routes: [unit-linalg-eigen, unit-linalg-svd]
+      - source_id: source-3b1b-linalg
+        role: intuition
+        why: Pictures before formulas.
+        priority: 1
+        unit_routes: [unit-linalg-eigen]
+    units:
+      - id: unit-linalg-eigen
+        record: {kind: topic, title: Eigenvectors and eigenvalues, order: 1, scope: "Definition, geometry, diagonalization.", status: complete, artifacts: {ultimate_reference: note-eigenvectors-intuition}, workspace_ids: [workspace-linalg-refresh]}
+      - id: unit-linalg-svd
+        date: 2026-06-08
+        record:
+          kind: topic
+          title: The SVD and low-rank approximation
+          order: 2
+          scope: SVD geometry, relation to eigendecomposition, Eckart–Young.
+          status: paused
+          artifacts: {ultimate_reference: note-svd-geometric}
+          workspace_ids: [workspace-linalg-refresh]
+        study_map:
+          id: study-map-linalg-svd
+          date: 2026-06-08
+          status: paused
+          current_stage: stage-linalg-svd-02-low-rank
+          source_plan: {path: work/active/workspace-linalg-refresh/CONTEXT.md, provenance: learner}
+          detours: []
+          shelving: {state: none}
+          stages:
+            - id: stage-linalg-svd-01-geometry
+              exam_critical: false
+              concepts: [concept-svd]
+              title: SVD as rotate–stretch–rotate
+              status: complete
+              objective: Explain the SVD geometrically for a 2x2 matrix.
+              done_when: [Sketch plus explanation.]
+              scope_triage: required-now
+              resources:
+                - {kind: read, label: Strang §7.1-7.2, source_id: source-strang-linalg, locator: §7.1-7.2}
+            - id: stage-linalg-svd-02-low-rank
+              exam_critical: false
+              concepts: [concept-low-rank-approximation]
+              title: Low-rank approximation
+              status: paused
+              objective: State Eckart–Young and apply it to image compression.
+              done_when: ["Compressed image at ranks 5, 20 and 50 with an error plot."]
+              scope_triage: required-now
+              resources:
+                - {kind: read, label: Strang §7.3, source_id: source-strang-linalg, locator: §7.3}
+
+resume:
+  module_id: module-tuh-os
+  unit_id: unit-os-l02
+  study_map_id: study-map-os-l02
+  stage_id: stage-os-l02-02-proportional-share
+  updated: 2026-09-16

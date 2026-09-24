@@ -1,0 +1,50 @@
+# PUBLIC — connection-discovery probes.
+#
+# For each probe, find the learner's existing material most useful to read
+# next to the query item, rank it, and explain each connection. Record the
+# result exactly as produced (see schemas/connection-result.schema.json). Do not
+# go looking for "the intended answer" afterwards.
+#
+# Target ids you may return (anything else is ignored by the scorer and
+# counted as non-material):
+#   note-…            durable notes
+#   workspace-…       workspaces (active or archived)
+#   project-…         projects
+#   garden:<file>     Garden seeds, e.g. garden:everything-is-a-dag.md
+#   inbox:<file>      unrouted captures, e.g. inbox:20260910-tessera-todo.md
+#   stage:<stage-id>  a stage's working note, e.g. stage:stage-os-l02-02-proportional-share
+#   arrival:<id>      another arrival, once shelved or known to you
+# Concepts and sources may be mentioned in the reason, but are not targets.
+#
+# Canon probes (C..) query an item already in the world. Arrival probes (A..)
+# query a file from eval-drop/ — before or after you shelve it, as the
+# scenario says. Return at most 10 targets per probe, best first. Returning
+# fewer is fine; returning nothing is a valid answer when nothing fits.
+
+schema_version: 1
+
+canon:
+  - {id: C01, query: note-naive-bayes-spam-filter}
+  - {id: C02, query: note-map-estimation-priors}
+  - {id: C03, query: note-parallel-workers-no-speedup}
+  - {id: C04, query: note-cfs-fair-share}
+  - {id: C05, query: note-write-ahead-logging-aries}
+  - {id: C06, query: note-selinger-join-ordering}
+  - {id: C07, query: note-query-optimizer-cost-model}
+  - {id: C08, query: note-low-rank-approximation}
+  - {id: C09, query: note-data-lineage-debugging}
+  - {id: C10, query: note-kv-cache-transformer-serving}
+  - {id: C11, query: note-os-kernel-user-mode}
+  - {id: C12, query: note-db-normalization-3nf}
+  - {id: C13, query: note-acid-consistency}
+  - {id: C14, query: note-spaced-repetition-scheduler}
+  - {id: C15, query: note-buffer-pool-replacement}
+  - {id: C16, query: note-p-values-corrected}
+  - {id: C17, query: note-gradient-descent-from-scratch}
+  - {id: C18, query: note-dynamic-batching-inference}
+  - {id: C19, query: note-softmax-temperature}
+  - {id: C20, query: note-constant-folding-cse}
+
+# Every arrival in eval-drop/ is also a probe; its probe id is the arrival id.
+arrivals: [A01, A02, A03, A04, A05, A06, A07, A08, A09, A10, A11, A12, A13, A14, A15,
+           A16, A17, A18, A19, A20, A21, A22, A23, A24, A25, A26, A27, A28, A29, A30]

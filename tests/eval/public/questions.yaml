@@ -1,0 +1,49 @@
+# PUBLIC — retrieval questions, phrased the way the learner would ask them.
+#
+# Ask each one against a FRESH world (before any scenario has changed it),
+# answer as the learner's operator would, and record the answer together with
+# the evidence you used (record ids and paths; quote the line when it
+# matters). Record format: schemas/answer-result.schema.json.
+#
+# "I don't know" and "the repository does not say" are valid answers when
+# true. Never declare mastery; report evidence or its absence.
+
+schema_version: 1
+
+questions:
+  - {id: Q01, text: "In my housing-price gradient descent exercise, which learning rate blew up, and what eventually fixed it?"}
+  - {id: Q02, text: "Where did I write about treating the words in an email as having nothing to do with each other once you know whether it is spam?"}
+  - {id: Q03, text: "Which of my notes together show that putting an L2 penalty on regression weights amounts to assuming a Gaussian prior? Explain the link in one paragraph."}
+  - {id: Q04, text: "What do I currently think a p-value is, and did I ever believe something different?"}
+  - {id: Q05, text: "Is virtual memory the same thing as swap space?"}
+  - {id: Q06, text: "I haven't studied for a week. Where exactly did I stop, and what was I about to do next?"}
+  - {id: Q07, text: "When exactly is my Operating Systems oral?"}
+  - {id: Q08, text: "What grade did I get in Database Systems?"}
+  - {id: Q09, text: "Am I registered for the Statistical Learning retake, and when is it?"}
+  - {id: Q10, text: "In June I left an open question in my low-rank approximation notes. What was it, and have I answered it since?"}
+  - {id: Q11, text: "Have I actually worked through the derivation that least squares comes from Gaussian noise?"}
+  - {id: Q12, text: "Have I done the stride scheduling exercise?"}
+  - {id: Q13, text: "What is left to do before Tessera's optimizer works?"}
+  - {id: Q14, text: "What did I decide about Ledgerline, and when?"}
+  - {id: Q15, text: "What is my current priority between my subjects and projects?"}
+  - {id: Q16, text: "What does 'kernel' mean in my SVM notes?"}
+  - {id: Q17, text: "Which of my notes are about dividing CPU time fairly between processes?"}
+  - {id: Q18, text: "What is my current understanding of why batch normalization works?"}
+  - {id: Q19, text: "Should I just use Adam for everything?"}
+  - {id: Q20, text: "I once worked out why a job with many more workers barely got faster. What was the reason?"}
+  - {id: Q21, text: "Where did I debug a number that came out too high because a join duplicated rows?"}
+  - {id: Q22, text: "Which of my notes describe the same 'record the change in a log before changing the real thing' idea in different courses?"}
+  - {id: Q23, text: "Have I mastered PCA?"}
+  - {id: Q24, text: "Which source did I note as the clearest on undo/redo logging?"}
+  - {id: Q25, text: "What should I read to understand lottery versus stride scheduling?"}
+  - {id: Q26, text: "What was I doing in the linear algebra refresh before I dropped it, and do I need to go back to it?"}
+  - {id: Q27, text: "What is sitting unprocessed in my inbox, and where does each item belong?"}
+  - {id: Q28, text: "What are my open questions for the OS oral?"}
+  - {id: Q29, text: "Did I write anything about scheduling my own study time?"}
+  - {id: Q30, text: "How long did a context switch take when I measured it?"}
+  - {id: Q31, text: "What accuracy did my spam filter get with and without smoothing?"}
+  - {id: Q32, text: "Is there anything in my notes connecting how a database optimizer estimates row counts with something from my machine-learning course?"}
+  - {id: Q33, text: "When did I decide to do rule-based rewrites before a cost model in Tessera?"}
+  - {id: Q34, text: "Which of the half-formed ideas in my Garden have since been answered by real notes?"}
+  - {id: Q35, text: "Which of my notes contain mistakes that I later corrected?"}
+  - {id: Q36, text: "Do I have duplicate or near-duplicate material on the same topic?"}
