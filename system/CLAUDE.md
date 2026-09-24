@@ -34,9 +34,9 @@ Start with `system/OPERATOR.md` and its task-shaped entry (`capabilities
 Consult `system/contracts/normative-corpus.yaml` before treating a document
 as binding. `CLAUDE.md` at the repository root links to this file; do not
 read both copies. The complete catalogue and full bootstrap remain available
-for bulk work, but are not the default context for an agent task. Run one
-of `bootstrap --brief` and `bootstrap --compact`, never both for the same
-task.
+for bulk work, but are not the default context for an agent task. Start
+with one of `bootstrap --brief` and `bootstrap --compact`, not both as
+routine startup; expand to the other later only when the task needs it.
 For material maintenance, start from `plan-edit-context UNIT_ID --route-id
 ROUTE_ID` (or the `--route-ids` batch) for a named route, `--stage-id` for
 a named stage, and follow the reviewed `route.patch` preflight/apply
