@@ -11,16 +11,21 @@ from __future__ import annotations
 
 import hashlib
 import json
+import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 import yaml
 from gateway_helpers import (
+    LOS,
     approved_v2_cli,
     approved_v2_envelope,
     file_sha256,
     run_v2_capability,
 )
 
+from learning_os.fingerprint import canonical_fingerprint
 from learning_os.loader import load_repo
 from learning_os.material_analysis import binding_consistent, observe_local_material
 
@@ -594,3 +599,199 @@ def test_batch_shape_has_one_source_of_truth(repo_root):
     assert analysis_commands.BATCH_ITEM_FIELDS is batch_notes.BATCH_ITEM_FIELDS
     assert analysis_commands.BATCH_MIN_NOTES == batch_notes.BATCH_MIN_NOTES
     assert analysis_commands.BATCH_MAX_NOTES == batch_notes.BATCH_MAX_NOTES
+
+
+# --------------------------------------------------------------------------
+# Batch preparation: drafts in, staged bodies plus exact envelope out.
+# --------------------------------------------------------------------------
+
+def _draft(note_id: str, text: str, **overrides):
+    entry = {
+        "id": note_id,
+        "title": f"Draft {note_id}",
+        "path": f"knowledge/notes/mathematics/{note_id}.md",
+        "binding": {
+            "resolution": "unresolved",
+            "material": "demo/deck.pdf",
+            "recorded_source_digest": "ab" * 32,
+            "inspected_range": {"start": 1, "end": 3},
+        },
+        "body": text,
+    }
+    entry.update(overrides)
+    return entry
+
+
+def _run_prepare(mini_repo, drafts_arg: str, out_dir, *, stdin_text=None):
+    return subprocess.run(
+        [sys.executable, str(LOS), "--root", str(mini_repo),
+         "note-analysis-prepare", "--drafts", drafts_arg,
+         "--out", str(out_dir)],
+        input=stdin_text, capture_output=True, text=True, timeout=120,
+    )
+
+
+def _staged_bodies(out_dir):
+    bodies = out_dir / "bodies"
+    return sorted(bodies.glob("*.bin")) if bodies.is_dir() else []
+
+
+def test_prepare_then_submit_round_trip(mini_repo, tmp_path):
+    exact = "  \n# Prep analysis — Schmælzung\n\nLine one.\r\nLine two"
+    drafts = {"notes": [
+        _draft("note-analysis-prep-exact", exact),
+        _draft("note-analysis-prep-plain", "plain body"),
+    ]}
+    drafts_file = tmp_path / "drafts.json"
+    drafts_file.write_text(json.dumps(drafts), encoding="utf-8")
+    out = tmp_path / "staging"
+    before = canonical_fingerprint(mini_repo)
+    result = _run_prepare(mini_repo, str(drafts_file), out)
+    assert result.returncode == 0, result.stderr
+    assert canonical_fingerprint(mini_repo) == before
+    report = json.loads(result.stdout)
+    assert report["ok"] is True
+    assert [row["predicted_new"] for row in report["notes"]] == [True, True]
+    assert report["expected_snapshot"] == f"sha256:{before}"
+    assert sorted(report["expected_revisions"]) == [
+        "note-analysis-prep-exact", "note-analysis-prep-plain"]
+    for draft in drafts["notes"]:
+        staged = out / "bodies" / f"{draft['id']}.bin"
+        assert staged.read_bytes() == draft["body"].encode("utf-8")
+    envelope = json.loads((out / "envelope.json").read_text(encoding="utf-8"))
+    assert envelope["capability"] == "note.analysis.save_batch"
+    assert len(envelope["payload"]["bundle"]["notes"]) == 2
+    for item in envelope["payload"]["bundle"]["notes"]:
+        assert file_sha256(Path(item["body_file"])) == item["body_file_sha256"]
+    submitted = run_v2_capability(mini_repo, envelope)
+    assert submitted.returncode == 0, submitted.stdout + submitted.stderr
+    response = json.loads(submitted.stdout)
+    assert response["result"]["created_note_ids"] == [
+        "note-analysis-prep-exact", "note-analysis-prep-plain"]
+    raw = (mini_repo / "knowledge/notes/mathematics"
+           / "note-analysis-prep-exact.md").read_bytes()
+    assert raw.endswith(exact.encode("utf-8"))
+
+
+def test_prepare_reads_drafts_from_stdin(mini_repo, tmp_path):
+    drafts = {"notes": [_draft("note-analysis-prep-stdin", "piped body")]}
+    out = tmp_path / "staging-stdin"
+    result = _run_prepare(mini_repo, "-", out, stdin_text=json.dumps(drafts))
+    assert result.returncode == 0, result.stderr
+    assert (out / "bodies" / "note-analysis-prep-stdin.bin").read_bytes() == b"piped body"
+    assert (out / "envelope.json").is_file()
+
+
+def test_prepare_refuses_bad_drafts(mini_repo, tmp_path):
+    frozen = _draft("note-analysis-prep-frozen", "body")
+    frozen["binding"] = {**frozen["binding"], "frozen_input_sha256": "00" * 32,
+                         "frozen_input_bytes": 4}
+    dup = _draft("note-analysis-prep-dup", "body")
+    untitled = _draft("note-analysis-prep-untitled", "body")
+    del untitled["title"]
+    strange = _draft("note-analysis-prep-strange", "body")
+    strange["reader"] = "no such field"
+    cases = [
+        ("frozen", {"notes": [frozen]}, "must not precompute"),
+        ("dup", {"notes": [dup, dict(dup)]}, "twice"),
+        ("empty", {"notes": [_draft("note-analysis-prep-empty", "")]},
+         "non-empty body"),
+        ("untitled", {"notes": [untitled]}, "non-empty title"),
+        ("strange", {"notes": [strange]}, "unknown fields"),
+        ("empty-list", {"notes": []}, "non-empty notes list"),
+    ]
+    for key, drafts, message in cases:
+        out = tmp_path / f"staging-{key}"
+        drafts_file = tmp_path / f"drafts-{key}.json"
+        drafts_file.write_text(json.dumps(drafts), encoding="utf-8")
+        result = _run_prepare(mini_repo, str(drafts_file), out)
+        assert result.returncode != 0, key
+        assert message in result.stderr, key
+        assert _staged_bodies(out) == [], key
+        assert not (out / "envelope.json").exists(), key
+    many = {"notes": [_draft(f"note-analysis-prep-m{n}", "body")
+                      for n in range(21)]}
+    out = tmp_path / "staging-many"
+    drafts_file = tmp_path / "drafts-many.json"
+    drafts_file.write_text(json.dumps(many), encoding="utf-8")
+    oversized = _run_prepare(mini_repo, str(drafts_file), out)
+    assert oversized.returncode != 0
+    assert "at most 20 per batch" in oversized.stderr
+    yaml_file = tmp_path / "drafts.yaml"
+    yaml_file.write_text("notes: []\n", encoding="utf-8")
+    refused = _run_prepare(mini_repo, str(yaml_file), tmp_path / "staging-yaml")
+    assert refused.returncode != 0
+    assert "must be a UTF-8 JSON file" in refused.stderr
+    broken_file = tmp_path / "drafts-broken.json"
+    broken_file.write_text("{not json", encoding="utf-8")
+    broken = _run_prepare(mini_repo, str(broken_file), tmp_path / "staging-broken")
+    assert broken.returncode != 0
+
+
+def test_prepare_detects_collisions_and_drift(mini_repo, tmp_path):
+    body = BODY.encode("utf-8")
+    first = _save(mini_repo, body, _binding(), "prepare-collision-first")
+    assert first.returncode == 0, first.stdout + first.stderr
+    clashing = _draft(NOTE_ID, "different body")
+    drafts_file = tmp_path / "drafts-clash.json"
+    drafts_file.write_text(json.dumps({"notes": [clashing]}), encoding="utf-8")
+    out = tmp_path / "staging-clash"
+    refused = _run_prepare(mini_repo, str(drafts_file), out)
+    assert refused.returncode != 0
+    assert "collides" in refused.stderr
+    assert _staged_bodies(out) == []
+    assert not (out / "envelope.json").exists()
+    ghost = _draft("note-analysis-prep-ghost", "ghost body", binding={
+        "resolution": "resolved", "source_id": "source-nope",
+        "material": "demo/deck.pdf", "recorded_source_digest": "ab" * 32,
+        "live_source_digest": "ab" * 32,
+        "inspected_range": {"start": 1, "end": 3}})
+    drafts_file = tmp_path / "drafts-ghost.json"
+    drafts_file.write_text(json.dumps({"notes": [ghost]}), encoding="utf-8")
+    unknown = _run_prepare(mini_repo, str(drafts_file), tmp_path / "staging-ghost")
+    assert unknown.returncode != 0
+    assert "not registered" in unknown.stderr
+
+
+def test_prepare_predicts_replays_and_submits(mini_repo, tmp_path):
+    kept = _draft("note-analysis-prep-kept", "kept body")
+    kept_body = kept["body"].encode("utf-8")
+    saved = _save(mini_repo, kept_body, _binding_for(kept_body), "prepare-replay-first",
+                   note_id=kept["id"], path=kept["path"], title=kept["title"])
+    assert saved.returncode == 0, saved.stdout + saved.stderr
+    drafts = {"notes": [kept, _draft("note-analysis-prep-fresh", "fresh body")]}
+    drafts_file = tmp_path / "drafts-replay.json"
+    drafts_file.write_text(json.dumps(drafts), encoding="utf-8")
+    out = tmp_path / "staging-replay"
+    result = _run_prepare(mini_repo, str(drafts_file), out)
+    assert result.returncode == 0, result.stderr
+    report = json.loads(result.stdout)
+    assert [row["predicted_new"] for row in report["notes"]] == [False, True]
+    envelope = json.loads((out / "envelope.json").read_text(encoding="utf-8"))
+    submitted = run_v2_capability(mini_repo, envelope)
+    assert submitted.returncode == 0, submitted.stdout + submitted.stderr
+    response = json.loads(submitted.stdout)
+    assert response["result"]["created_note_ids"] == ["note-analysis-prep-fresh"]
+    assert response["result"]["replayed_note_ids"] == ["note-analysis-prep-kept"]
+
+
+def test_prepare_reprep_cleans_and_stays_outside(mini_repo, tmp_path):
+    out = tmp_path / "staging-twice"
+    first_drafts = {"notes": [_draft("note-analysis-prep-r1", "one"),
+                              _draft("note-analysis-prep-r2", "two")]}
+    first_file = tmp_path / "drafts-twice-1.json"
+    first_file.write_text(json.dumps(first_drafts), encoding="utf-8")
+    first = _run_prepare(mini_repo, str(first_file), out)
+    assert first.returncode == 0, first.stderr
+    assert len(_staged_bodies(out)) == 2
+    second_drafts = {"notes": [_draft("note-analysis-prep-r1", "one")]}
+    second_file = tmp_path / "drafts-twice-2.json"
+    second_file.write_text(json.dumps(second_drafts), encoding="utf-8")
+    second = _run_prepare(mini_repo, str(second_file), out)
+    assert second.returncode == 0, second.stderr
+    assert [path.name for path in _staged_bodies(out)] == [
+        "note-analysis-prep-r1.bin"]
+    inside = _run_prepare(mini_repo, str(second_file), mini_repo / "staging")
+    assert inside.returncode != 0
+    assert "outside the repository" in inside.stderr
+    assert not (mini_repo / "staging").exists()
