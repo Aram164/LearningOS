@@ -1,0 +1,4 @@
+BEFORE scale10000:
+16:48  up 29 days, 11:15, 3 users, load averages: 2.13 2.40 2.67
+AFTER scale10000:
+17:10  up 29 days, 11:37, 3 users, load averages: 1.77 1.80 2.03

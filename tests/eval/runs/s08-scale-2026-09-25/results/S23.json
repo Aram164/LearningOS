@@ -1,0 +1,1177 @@
+{
+  "scenario": "S23",
+  "run_id": "s08-scale-2026-09-25",
+  "classification": "PERFORMANCE_FAILURE",
+  "classification_reason": "search --content median 227.8s at 10116 notes (spread 1.8s), growing superlinearly across sizes (0.36s/116 -> 1.77s/616 -> 11.7s/2116 -> 227.8s/10116); unusable interactively. All other ops stay <= 5.5s and every command at every size exited 0.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec",
+    "derived_digest": "df97c8737d287c93f8e3a048d46ad71f9da0e95cf3cccd0c0bbc8e63032db409",
+    "snapshot_file": "observations/S23-scale0-before.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec",
+    "derived_digest": "96cf3287fec9512db2580297334f99760a06b00846b43afbfeb5ca7238fa7924",
+    "snapshot_file": "observations/S23-scale0-after.json"
+  },
+  "consumer": {
+    "goal": "Measure ordinary LearningOS operation latency at 116/616/2116/10116 notes (scale_bench.py, 3 reps each).",
+    "first_action": "Read SESSION-BRIEF.md, CONSUMER-PROTOCOL.md, scenarios.yaml S23, then scale_bench.py usage; built the four worlds.",
+    "commands": [
+      "python tests/eval/tools/build_world.py --out ~/los-eval/s08-scale-2026-09-25-scale0 --scale 0",
+      "python tests/eval/tools/build_world.py --out ~/los-eval/s08-scale-2026-09-25-scale500 --scale 500",
+      "python tests/eval/tools/build_world.py --out ~/los-eval/s08-scale-2026-09-25-scale2000 --scale 2000",
+      "python tests/eval/tools/build_world.py --out ~/los-eval/s08-scale-2026-09-25-scale10000 --scale 10000",
+      "uptime (before each bench series)",
+      "python tests/eval/tools/observe.py snapshot <world> --label S23-scale{N}-before --out observations/S23-scale{N}-before.json (x4)",
+      "python tests/eval/tools/scale_bench.py --world <scale0 repo> --reps 3 --out evidence/scale-0.json",
+      "python tests/eval/tools/scale_bench.py --world <scale500 repo> --reps 3 --out evidence/scale-500.json",
+      "python tests/eval/tools/scale_bench.py --world <scale2000 repo> --reps 3 --out evidence/scale-2000.json",
+      "python tests/eval/tools/scale_bench.py --world <scale10000 repo> --reps 3 --out evidence/scale-10000.json",
+      "uptime (after each bench series)",
+      "python tests/eval/tools/observe.py snapshot <world> --label S23-scale{N}-after --out observations/S23-scale{N}-after.json (x4)",
+      "python tests/eval/tools/observe.py diff observations/S23-scale{N}-before.json observations/S23-scale{N}-after.json --out observations/S23-scale{N}-diff.json (x4)"
+    ],
+    "tool_calls": 20,
+    "docs_consulted": [
+      "tests/eval/public/SESSION-BRIEF.md",
+      "tests/eval/public/CONSUMER-PROTOCOL.md",
+      "tests/eval/public/scenarios.yaml (S23 entry)",
+      "tests/eval/tools/scale_bench.py (harness work, not product use)",
+      "tests/eval/tools/observe.py --help (harness work, not product use)"
+    ],
+    "impl_files_read": [],
+    "retries": 0,
+    "confusions": [],
+    "corrective_steps": [],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 43,
+    "outcome": "All four bench series completed, 3 reps each, every op exit 0. Full JSON per size in evidence/scale-{0,500,2000,10000}.json and scenario_record below. Content search is the scaling bottleneck."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "No operator writes issued. scale_bench appends one line to note-cfs-fair-share and restores it each rep; observer diffs confirm canonical_digest_changed=false in all four worlds.",
+    "approval_behavior": "Not applicable; no write needing approval was requested.",
+    "projection_activity": "generate.py ran 4x per rep per world (cold, warm, incremental, final); derived/ populated from empty to 1.3MB/22MB/84MB/413MB.",
+    "persistence_activity": "No receipts added, no inflight journals left (receipts_added=[], inflight_after=[] in all diffs).",
+    "derived_changes": "Only change in all four worlds: generated/ files added by bench runs (140/640/2140/10140 files). Canonical files: 0 added/removed/modified everywhere.",
+    "manifest_changes": "None observed.",
+    "unexpected_writes": [],
+    "warnings_errors": [],
+    "git_diff_stat": "Empty in all four worlds (git_status [] before and after; worlds' generated/ output is untracked-or-ignored and HEAD unchanged).",
+    "observe_diff_file": "observations/S23-scale0-diff.json (companion diffs: S23-scale500/2000/10000-diff.json)"
+  },
+  "friction": [],
+  "failures": [],
+  "scenario_record": {
+    "bench_version": 1,
+    "reps": 3,
+    "all_timings_reportable": true,
+    "reportability_rule": "median quoted only when spread (max-min) <= median; all 44 medians satisfy this",
+    "uptime": {
+      "0": "BEFORE scale0:\n16:39  up 29 days, 11:06, 3 users, load averages: 2.94 3.98 3.21\nAFTER scale0:\n16:39  up 29 days, 11:06, 3 users, load averages: 3.45 4.06 3.25",
+      "500": "BEFORE scale500:\n16:41  up 29 days, 11:08, 3 users, load averages: 1.31 3.11 2.98\nAFTER scale500:\n16:42  up 29 days, 11:09, 3 users, load averages: 2.28 3.21 3.02",
+      "2000": "BEFORE scale2000:\n16:43  up 29 days, 11:10, 3 users, load averages: 1.45 2.73 2.85\nAFTER scale2000:\n16:45  up 29 days, 11:11, 3 users, load averages: 2.70 2.79 2.85",
+      "10000": "BEFORE scale10000:\n16:48  up 29 days, 11:15, 3 users, load averages: 2.13 2.40 2.67\nAFTER scale10000:\n17:10  up 29 days, 11:37, 3 users, load averages: 1.77 1.80 2.03"
+    },
+    "sizes": {
+      "0": {
+        "notes": 116,
+        "derived_bytes": 1349738,
+        "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+        "operations": {
+          "generate_cold": {
+            "median_s": 0.363,
+            "min_s": 0.362,
+            "max_s": 0.428,
+            "spread_s": 0.066,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "validate": {
+            "median_s": 0.274,
+            "min_s": 0.273,
+            "max_s": 0.274,
+            "spread_s": 0.001,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "generate_warm": {
+            "median_s": 0.35,
+            "min_s": 0.349,
+            "max_s": 0.356,
+            "spread_s": 0.007,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "search_metadata": {
+            "median_s": 0.375,
+            "min_s": 0.37,
+            "max_s": 0.381,
+            "spread_s": 0.011,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "search_content": {
+            "median_s": 0.361,
+            "min_s": 0.358,
+            "max_s": 0.362,
+            "spread_s": 0.004,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "inspect_note": {
+            "median_s": 0.379,
+            "min_s": 0.377,
+            "max_s": 0.386,
+            "spread_s": 0.009,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "related_note": {
+            "median_s": 0.38,
+            "min_s": 0.377,
+            "max_s": 0.383,
+            "spread_s": 0.006,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "bootstrap_brief": {
+            "median_s": 0.401,
+            "min_s": 0.399,
+            "max_s": 0.411,
+            "spread_s": 0.012,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "resume": {
+            "median_s": 0.235,
+            "min_s": 0.235,
+            "max_s": 0.239,
+            "spread_s": 0.004,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "incremental_generate": {
+            "median_s": 0.354,
+            "min_s": 0.351,
+            "max_s": 0.355,
+            "spread_s": 0.004,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "incremental_search": {
+            "median_s": 0.3,
+            "min_s": 0.295,
+            "max_s": 0.301,
+            "spread_s": 0.006,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          }
+        }
+      },
+      "500": {
+        "notes": 616,
+        "derived_bytes": 21932640,
+        "world_head": "bd7179af032b81b2840413747000d58b6b534088",
+        "operations": {
+          "generate_cold": {
+            "median_s": 0.59,
+            "min_s": 0.586,
+            "max_s": 0.684,
+            "spread_s": 0.098,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "validate": {
+            "median_s": 0.428,
+            "min_s": 0.419,
+            "max_s": 0.43,
+            "spread_s": 0.011,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "generate_warm": {
+            "median_s": 0.568,
+            "min_s": 0.566,
+            "max_s": 0.575,
+            "spread_s": 0.009,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "search_metadata": {
+            "median_s": 0.591,
+            "min_s": 0.589,
+            "max_s": 0.591,
+            "spread_s": 0.002,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "search_content": {
+            "median_s": 1.766,
+            "min_s": 1.745,
+            "max_s": 1.776,
+            "spread_s": 0.031,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "inspect_note": {
+            "median_s": 0.586,
+            "min_s": 0.585,
+            "max_s": 0.59,
+            "spread_s": 0.005,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "related_note": {
+            "median_s": 0.585,
+            "min_s": 0.579,
+            "max_s": 0.585,
+            "spread_s": 0.006,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "bootstrap_brief": {
+            "median_s": 0.647,
+            "min_s": 0.645,
+            "max_s": 0.657,
+            "spread_s": 0.012,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "resume": {
+            "median_s": 0.363,
+            "min_s": 0.363,
+            "max_s": 0.366,
+            "spread_s": 0.003,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "incremental_generate": {
+            "median_s": 0.573,
+            "min_s": 0.569,
+            "max_s": 0.577,
+            "spread_s": 0.008,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "incremental_search": {
+            "median_s": 1.262,
+            "min_s": 1.254,
+            "max_s": 1.274,
+            "spread_s": 0.02,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          }
+        }
+      },
+      "2000": {
+        "notes": 2116,
+        "derived_bytes": 83770356,
+        "world_head": "53163d2cb474038b206a48e91c1caf3d5008303e",
+        "operations": {
+          "generate_cold": {
+            "median_s": 1.347,
+            "min_s": 1.286,
+            "max_s": 1.424,
+            "spread_s": 0.138,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "validate": {
+            "median_s": 0.88,
+            "min_s": 0.845,
+            "max_s": 0.891,
+            "spread_s": 0.046,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "generate_warm": {
+            "median_s": 1.27,
+            "min_s": 1.216,
+            "max_s": 1.271,
+            "spread_s": 0.055,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "search_metadata": {
+            "median_s": 1.251,
+            "min_s": 1.226,
+            "max_s": 1.323,
+            "spread_s": 0.097,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "search_content": {
+            "median_s": 11.688,
+            "min_s": 11.415,
+            "max_s": 11.959,
+            "spread_s": 0.544,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "inspect_note": {
+            "median_s": 1.261,
+            "min_s": 1.21,
+            "max_s": 1.347,
+            "spread_s": 0.137,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "related_note": {
+            "median_s": 1.246,
+            "min_s": 1.242,
+            "max_s": 1.38,
+            "spread_s": 0.138,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "bootstrap_brief": {
+            "median_s": 1.421,
+            "min_s": 1.385,
+            "max_s": 1.434,
+            "spread_s": 0.049,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "resume": {
+            "median_s": 0.763,
+            "min_s": 0.748,
+            "max_s": 0.77,
+            "spread_s": 0.022,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "incremental_generate": {
+            "median_s": 1.289,
+            "min_s": 1.251,
+            "max_s": 1.294,
+            "spread_s": 0.043,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "incremental_search": {
+            "median_s": 8.846,
+            "min_s": 8.79,
+            "max_s": 8.98,
+            "spread_s": 0.19,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          }
+        }
+      },
+      "10000": {
+        "notes": 10116,
+        "derived_bytes": 412662292,
+        "world_head": "cef2e239cf1d75044713a9042157b8d4108893e9",
+        "operations": {
+          "generate_cold": {
+            "median_s": 5.014,
+            "min_s": 5.003,
+            "max_s": 5.041,
+            "spread_s": 0.038,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "validate": {
+            "median_s": 3.289,
+            "min_s": 3.215,
+            "max_s": 3.337,
+            "spread_s": 0.122,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "generate_warm": {
+            "median_s": 4.851,
+            "min_s": 4.756,
+            "max_s": 4.921,
+            "spread_s": 0.165,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "search_metadata": {
+            "median_s": 4.678,
+            "min_s": 4.663,
+            "max_s": 4.837,
+            "spread_s": 0.174,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "search_content": {
+            "median_s": 227.833,
+            "min_s": 226.23,
+            "max_s": 228.079,
+            "spread_s": 1.849,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "inspect_note": {
+            "median_s": 4.665,
+            "min_s": 4.633,
+            "max_s": 4.777,
+            "spread_s": 0.144,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "related_note": {
+            "median_s": 4.675,
+            "min_s": 4.671,
+            "max_s": 4.741,
+            "spread_s": 0.07,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "bootstrap_brief": {
+            "median_s": 5.466,
+            "min_s": 5.463,
+            "max_s": 5.532,
+            "spread_s": 0.069,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "resume": {
+            "median_s": 2.845,
+            "min_s": 2.842,
+            "max_s": 2.897,
+            "spread_s": 0.055,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "incremental_generate": {
+            "median_s": 4.914,
+            "min_s": 4.884,
+            "max_s": 4.921,
+            "spread_s": 0.037,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          },
+          "incremental_search": {
+            "median_s": 169.318,
+            "min_s": 168.129,
+            "max_s": 170.513,
+            "spread_s": 2.384,
+            "exit_codes": [
+              0
+            ],
+            "reportable": true
+          }
+        }
+      }
+    },
+    "scale_bench_json": {
+      "0": {
+        "bench_version": 1,
+        "world": "/Users/aramaljanadi/los-eval/s08-scale-2026-09-25-scale0/LearningOS/repository",
+        "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+        "notes": 116,
+        "reps": 3,
+        "derived_bytes": 1349738,
+        "operations": {
+          "generate_cold": {
+            "median_s": 0.363,
+            "min_s": 0.362,
+            "max_s": 0.428,
+            "samples_s": [
+              0.428,
+              0.363,
+              0.362
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "validate": {
+            "median_s": 0.274,
+            "min_s": 0.273,
+            "max_s": 0.274,
+            "samples_s": [
+              0.273,
+              0.274,
+              0.274
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "generate_warm": {
+            "median_s": 0.35,
+            "min_s": 0.349,
+            "max_s": 0.356,
+            "samples_s": [
+              0.349,
+              0.35,
+              0.356
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "search_metadata": {
+            "median_s": 0.375,
+            "min_s": 0.37,
+            "max_s": 0.381,
+            "samples_s": [
+              0.37,
+              0.375,
+              0.381
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "search_content": {
+            "median_s": 0.361,
+            "min_s": 0.358,
+            "max_s": 0.362,
+            "samples_s": [
+              0.362,
+              0.358,
+              0.361
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "inspect_note": {
+            "median_s": 0.379,
+            "min_s": 0.377,
+            "max_s": 0.386,
+            "samples_s": [
+              0.379,
+              0.386,
+              0.377
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "related_note": {
+            "median_s": 0.38,
+            "min_s": 0.377,
+            "max_s": 0.383,
+            "samples_s": [
+              0.377,
+              0.383,
+              0.38
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "bootstrap_brief": {
+            "median_s": 0.401,
+            "min_s": 0.399,
+            "max_s": 0.411,
+            "samples_s": [
+              0.399,
+              0.411,
+              0.401
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "resume": {
+            "median_s": 0.235,
+            "min_s": 0.235,
+            "max_s": 0.239,
+            "samples_s": [
+              0.235,
+              0.239,
+              0.235
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "incremental_generate": {
+            "median_s": 0.354,
+            "min_s": 0.351,
+            "max_s": 0.355,
+            "samples_s": [
+              0.351,
+              0.354,
+              0.355
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "incremental_search": {
+            "median_s": 0.3,
+            "min_s": 0.295,
+            "max_s": 0.301,
+            "samples_s": [
+              0.295,
+              0.3,
+              0.301
+            ],
+            "exit_codes": [
+              0
+            ]
+          }
+        }
+      },
+      "500": {
+        "bench_version": 1,
+        "world": "/Users/aramaljanadi/los-eval/s08-scale-2026-09-25-scale500/LearningOS/repository",
+        "world_head": "bd7179af032b81b2840413747000d58b6b534088",
+        "notes": 616,
+        "reps": 3,
+        "derived_bytes": 21932640,
+        "operations": {
+          "generate_cold": {
+            "median_s": 0.59,
+            "min_s": 0.586,
+            "max_s": 0.684,
+            "samples_s": [
+              0.684,
+              0.59,
+              0.586
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "validate": {
+            "median_s": 0.428,
+            "min_s": 0.419,
+            "max_s": 0.43,
+            "samples_s": [
+              0.428,
+              0.43,
+              0.419
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "generate_warm": {
+            "median_s": 0.568,
+            "min_s": 0.566,
+            "max_s": 0.575,
+            "samples_s": [
+              0.566,
+              0.568,
+              0.575
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "search_metadata": {
+            "median_s": 0.591,
+            "min_s": 0.589,
+            "max_s": 0.591,
+            "samples_s": [
+              0.591,
+              0.591,
+              0.589
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "search_content": {
+            "median_s": 1.766,
+            "min_s": 1.745,
+            "max_s": 1.776,
+            "samples_s": [
+              1.776,
+              1.766,
+              1.745
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "inspect_note": {
+            "median_s": 0.586,
+            "min_s": 0.585,
+            "max_s": 0.59,
+            "samples_s": [
+              0.59,
+              0.585,
+              0.586
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "related_note": {
+            "median_s": 0.585,
+            "min_s": 0.579,
+            "max_s": 0.585,
+            "samples_s": [
+              0.585,
+              0.579,
+              0.585
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "bootstrap_brief": {
+            "median_s": 0.647,
+            "min_s": 0.645,
+            "max_s": 0.657,
+            "samples_s": [
+              0.657,
+              0.645,
+              0.647
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "resume": {
+            "median_s": 0.363,
+            "min_s": 0.363,
+            "max_s": 0.366,
+            "samples_s": [
+              0.366,
+              0.363,
+              0.363
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "incremental_generate": {
+            "median_s": 0.573,
+            "min_s": 0.569,
+            "max_s": 0.577,
+            "samples_s": [
+              0.569,
+              0.573,
+              0.577
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "incremental_search": {
+            "median_s": 1.262,
+            "min_s": 1.254,
+            "max_s": 1.274,
+            "samples_s": [
+              1.254,
+              1.262,
+              1.274
+            ],
+            "exit_codes": [
+              0
+            ]
+          }
+        }
+      },
+      "2000": {
+        "bench_version": 1,
+        "world": "/Users/aramaljanadi/los-eval/s08-scale-2026-09-25-scale2000/LearningOS/repository",
+        "world_head": "53163d2cb474038b206a48e91c1caf3d5008303e",
+        "notes": 2116,
+        "reps": 3,
+        "derived_bytes": 83770356,
+        "operations": {
+          "generate_cold": {
+            "median_s": 1.347,
+            "min_s": 1.286,
+            "max_s": 1.424,
+            "samples_s": [
+              1.347,
+              1.424,
+              1.286
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "validate": {
+            "median_s": 0.88,
+            "min_s": 0.845,
+            "max_s": 0.891,
+            "samples_s": [
+              0.845,
+              0.891,
+              0.88
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "generate_warm": {
+            "median_s": 1.27,
+            "min_s": 1.216,
+            "max_s": 1.271,
+            "samples_s": [
+              1.216,
+              1.271,
+              1.27
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "search_metadata": {
+            "median_s": 1.251,
+            "min_s": 1.226,
+            "max_s": 1.323,
+            "samples_s": [
+              1.226,
+              1.251,
+              1.323
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "search_content": {
+            "median_s": 11.688,
+            "min_s": 11.415,
+            "max_s": 11.959,
+            "samples_s": [
+              11.415,
+              11.688,
+              11.959
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "inspect_note": {
+            "median_s": 1.261,
+            "min_s": 1.21,
+            "max_s": 1.347,
+            "samples_s": [
+              1.21,
+              1.261,
+              1.347
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "related_note": {
+            "median_s": 1.246,
+            "min_s": 1.242,
+            "max_s": 1.38,
+            "samples_s": [
+              1.38,
+              1.246,
+              1.242
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "bootstrap_brief": {
+            "median_s": 1.421,
+            "min_s": 1.385,
+            "max_s": 1.434,
+            "samples_s": [
+              1.385,
+              1.421,
+              1.434
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "resume": {
+            "median_s": 0.763,
+            "min_s": 0.748,
+            "max_s": 0.77,
+            "samples_s": [
+              0.748,
+              0.763,
+              0.77
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "incremental_generate": {
+            "median_s": 1.289,
+            "min_s": 1.251,
+            "max_s": 1.294,
+            "samples_s": [
+              1.251,
+              1.289,
+              1.294
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "incremental_search": {
+            "median_s": 8.846,
+            "min_s": 8.79,
+            "max_s": 8.98,
+            "samples_s": [
+              8.98,
+              8.846,
+              8.79
+            ],
+            "exit_codes": [
+              0
+            ]
+          }
+        }
+      },
+      "10000": {
+        "bench_version": 1,
+        "world": "/Users/aramaljanadi/los-eval/s08-scale-2026-09-25-scale10000/LearningOS/repository",
+        "world_head": "cef2e239cf1d75044713a9042157b8d4108893e9",
+        "notes": 10116,
+        "reps": 3,
+        "derived_bytes": 412662292,
+        "operations": {
+          "generate_cold": {
+            "median_s": 5.014,
+            "min_s": 5.003,
+            "max_s": 5.041,
+            "samples_s": [
+              5.003,
+              5.041,
+              5.014
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "validate": {
+            "median_s": 3.289,
+            "min_s": 3.215,
+            "max_s": 3.337,
+            "samples_s": [
+              3.215,
+              3.337,
+              3.289
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "generate_warm": {
+            "median_s": 4.851,
+            "min_s": 4.756,
+            "max_s": 4.921,
+            "samples_s": [
+              4.756,
+              4.921,
+              4.851
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "search_metadata": {
+            "median_s": 4.678,
+            "min_s": 4.663,
+            "max_s": 4.837,
+            "samples_s": [
+              4.663,
+              4.837,
+              4.678
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "search_content": {
+            "median_s": 227.833,
+            "min_s": 226.23,
+            "max_s": 228.079,
+            "samples_s": [
+              228.079,
+              227.833,
+              226.23
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "inspect_note": {
+            "median_s": 4.665,
+            "min_s": 4.633,
+            "max_s": 4.777,
+            "samples_s": [
+              4.777,
+              4.633,
+              4.665
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "related_note": {
+            "median_s": 4.675,
+            "min_s": 4.671,
+            "max_s": 4.741,
+            "samples_s": [
+              4.741,
+              4.675,
+              4.671
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "bootstrap_brief": {
+            "median_s": 5.466,
+            "min_s": 5.463,
+            "max_s": 5.532,
+            "samples_s": [
+              5.532,
+              5.463,
+              5.466
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "resume": {
+            "median_s": 2.845,
+            "min_s": 2.842,
+            "max_s": 2.897,
+            "samples_s": [
+              2.897,
+              2.845,
+              2.842
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "incremental_generate": {
+            "median_s": 4.914,
+            "min_s": 4.884,
+            "max_s": 4.921,
+            "samples_s": [
+              4.921,
+              4.884,
+              4.914
+            ],
+            "exit_codes": [
+              0
+            ]
+          },
+          "incremental_search": {
+            "median_s": 169.318,
+            "min_s": 168.129,
+            "max_s": 170.513,
+            "samples_s": [
+              170.513,
+              168.129,
+              169.318
+            ],
+            "exit_codes": [
+              0
+            ]
+          }
+        }
+      }
+    },
+    "evidence_files": [
+      "evidence/scale-0.json",
+      "evidence/scale-500.json",
+      "evidence/scale-2000.json",
+      "evidence/scale-10000.json"
+    ]
+  },
+  "uncertainties": [
+    "Shared-machine load varied during the series (see uptime logs; 10k run under load 1.8-2.7). All spreads are far below their medians, so noise does not explain the 100x+ growth of content search.",
+    "uptime timestamps are machine-local (UTC+2); run.json times are UTC."
+  ]
+}
