@@ -1,0 +1,89 @@
+{
+  "scenario": "S14",
+  "run_id": "s02-novice-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "The ambiguity was surfaced before anything was read in depth or changed ('kernel' means four things in the repository), the learner's wording was left untouched, the only change was shown as a diff and applied byte-for-byte through note.revise with a receipt, and validation stayed clean. Friction: there is no capability for a metadata-only or mechanical tidy; the one note-writing capability is 'note.revise' (a whole-file replacement meant for semantic revisions), so the operator must hand-build a replacement file and trust that nothing else changed; the product has no 'tidy'/lint read to tell what is untidy.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S14-before.json"
+  },
+  "consumer": {
+    "goal": "Clean up the learner's kernel notes without changing what she said.",
+    "first_action": "los search kernel (to see what 'kernels' could refer to before asking)",
+    "commands": [
+      "los search kernel ; los search kernel --type note --content",
+      "(question to learner: which notes / what does 'clean up' mean?)",
+      "los note-read note-svm-kernel-trick ; los note-read note-kernel-density-estimation",
+      "python tools/validate.py | grep -i kernel|svm|density   # nothing",
+      "cat knowledge/garden/kernel-is-an-overloaded-word.md ; grep kernel work/active/workspace-statlearn-retake/CONTEXT.md",
+      "los capabilities note.revise --json ; los note-revise --help",
+      "byte checks (trailing whitespace, final newline, blank runs, tabs) on both notes   # all clean",
+      "diff -u original replacement   # shown to learner",
+      "(question to learner: show me the diff first -> diff shown -> approved)",
+      "los capability note.revise --payload-file envelope-1.json   # ok, transaction-20260925-004555-001",
+      "git diff ; python tools/validate.py --compact ; python tools/warning_baseline.py --check"
+    ],
+    "tool_calls": 7,
+    "docs_consulted": ["CLAUDE.md §4-§6 (note editing rules, already in context)", "los capabilities note.revise --json", "los note-revise --help", "OPERATOR.md (note.revise paragraph, read in S00)"],
+    "impl_files_read": [],
+    "retries": 0,
+    "confusions": [
+      "'kernel' matches four notes in four senses (OS kernel, SVM kernel trick, kernel density estimation, CNN convolution kernels) plus a Garden seed about exactly that overload; the request could not be acted on without asking.",
+      "Both notes were already clean by every check available (validator silent, no whitespace/newline issues); 'tidy' had no product-defined meaning, so the operator had to decide what, if anything, to change.",
+      "note.revise is documented as 'an explicitly reviewed semantic replacement'; it is also the only way to add a metadata link, so a mechanical change goes through the semantic-rewrite gate."
+    ],
+    "corrective_steps": [],
+    "questions_asked_to_learner": [
+      "(after one search, before reading or changing anything) 'Kernel' shows up in four different senses in your notes — the OS kernel, the SVM kernel trick, kernel density estimation and CNN convolution kernels. Which notes do you mean, and what should 'clean up' cover? -> 'The SVM and density-estimation ones. Just make them tidy — don't change what I said.'",
+      "Both are already tidy; the only mechanical change I'd make is linking the SVM note to your StatLearn retake workspace (its 'workspace deferral' refers to that workspace's Deferred list). May I apply it? -> 'Show me the diff first.'",
+      "(diff shown: +contexts: / +- workspace-statlearn-retake in the SVM note's frontmatter; KDE note unchanged) Apply? -> 'Yes, apply exactly that diff.'"
+    ],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 2,
+    "outcome": "Your SVM and KDE notes were already tidy (no validation findings, consistent formatting), so your wording in both is unchanged. One metadata line was added to note-svm-kernel-trick: contexts: workspace-statlearn-retake — linking the note's 'Out of exam scope beyond the definition (workspace deferral)' to the retake workspace's Deferred item 'Kernel methods beyond the SVM definition'. note-kernel-density-estimation: no change (it lists no source; I did not guess one). Receipt transaction-20260925-004555-001. Not committed."
+  },
+  "internal": {
+    "request_ids": ["s14-svm-contexts-1"],
+    "receipts": ["operations/transactions/transaction-20260925-004555-001.yaml"],
+    "transaction_behavior": "One committed transaction on the first attempt: note-svm-kernel-trick revision 0 -> 1, snapshot 82bcffb7... -> 6c480f6a...; replacement file bound by file_sha256.",
+    "approval_behavior": "Diff shown and approved before the write; envelope approval.kind operator-approval with the intent hash. The CLI also has an '--approve' flag on note-revise, but the bare command never writes.",
+    "projection_activity": "Projection republished in the transaction; 138 derived files added (views + derived-state cache).",
+    "persistence_activity": "operations/transactions/{idempotency.yaml, revisions.yaml, transaction-20260925-004555-001.yaml} created.",
+    "derived_changes": "generated/: 138 files added.",
+    "manifest_changes": "manifest rebuilt; note-svm-kernel-trick now carries context workspace-statlearn-retake.",
+    "unexpected_writes": [],
+    "warnings_errors": [],
+    "git_diff_stat": " knowledge/notes/machine-learning/note-svm-kernel-trick.md | 2 ++ ; untracked: 3 files under operations/transactions/",
+    "observe_diff_file": "observations/S14-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [
+      " M knowledge/notes/machine-learning/note-svm-kernel-trick.md",
+      "?? operations/transactions/idempotency.yaml",
+      "?? operations/transactions/revisions.yaml",
+      "?? operations/transactions/transaction-20260925-004555-001.yaml"
+    ],
+    "snapshot_file": "observations/S14-after.json"
+  },
+  "friction": [
+    {"tag": "missing-capability", "description": "No metadata-only or mechanical note edit capability; a one-line frontmatter link requires a whole-file replacement through note.revise, built by hand outside the repository.", "cost": "2 tool calls, manual replacement file"},
+    {"tag": "unclear-terminology", "description": "The product offers no definition or check of 'tidy' beyond the validator, so a vague cleanup request has to be translated by the operator's own judgment.", "cost": "judgment call"}
+  ],
+  "failures": [],
+  "scenario_record": {
+    "clarifying_questions": [
+      {"when": "after one search (tool call 1), before reading note bodies or any change", "question": "Which of the four 'kernel' notes, and what should 'clean up' cover?", "reply": "The SVM and density-estimation ones. Just make them tidy — don't change what I said."},
+      {"when": "before any write", "question": "May I apply this one metadata change?", "reply": "Show me the diff first."},
+      {"when": "after showing the diff, before the write", "question": "Apply this diff?", "reply": "Yes, apply exactly that diff."}
+    ],
+    "changes": [
+      {"path": "knowledge/notes/machine-learning/note-svm-kernel-trick.md", "before": "sources:\n- source-tuh-statlearn-slides\n---", "after": "sources:\n- source-tuh-statlearn-slides\ncontexts:\n- workspace-statlearn-retake\n---", "body_changed": false, "capability": "note.revise", "receipt": "transaction-20260925-004555-001"},
+      {"path": "knowledge/notes/mathematics/note-kernel-density-estimation.md", "before": "(unchanged)", "after": "(unchanged)", "body_changed": false}
+    ]
+  },
+  "uncertainties": [
+    "Whether the learner would count a context link as 'tidying'; it was shown and approved explicitly."
+  ]
+}

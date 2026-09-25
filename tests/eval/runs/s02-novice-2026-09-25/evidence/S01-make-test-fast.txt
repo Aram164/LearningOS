@@ -1,0 +1,1183 @@
+.venv/bin/python -m pytest -q -m "not full_repo"
+....F................................................................... [  3%]
+........................................................................ [  6%]
+......................................................................FF [  9%]
+........F.FF.........s.................................................. [ 12%]
+........................................................................ [ 15%]
+........................................................................ [ 18%]
+........................................F...........F................... [ 22%]
+...............................F.................................F...... [ 25%]
+........................................................................ [ 28%]
+........................................................................ [ 31%]
+........................................................................ [ 34%]
+........................................................................ [ 37%]
+........................................................................ [ 41%]
+........................................................................ [ 44%]
+........................................................................ [ 47%]
+........................................................................ [ 50%]
+.........................ssss.ssss...................................... [ 53%]
+........................................................................ [ 56%]
+....................................F.F.F...Fssssssssss................. [ 60%]
+........................FFFFFFFFFFFFF.FF....FF.......................... [ 63%]
+..................................................................FFF... [ 66%]
+........................................................................ [ 69%]
+........................................................................ [ 72%]
+........................................................................ [ 75%]
+........................................................................ [ 79%]
+........................................................................ [ 82%]
+........................................................................ [ 85%]
+.............................................s.......................... [ 88%]
+...........................ssssss....................................... [ 91%]
+....................................................................sss. [ 94%]
+....s................................................................... [ 97%]
+..............................................                           [100%]
+=================================== FAILURES ===================================
+____________ test_live_extension_bridge_uses_stable_reviewed_source ____________
+
+real_repo = Repo(root=PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository'), abilities={}, ability_origins={}, a...2; resume only the SVD stage,\n  and only as far as the L09 exam scope needs.\n"), duplicate_ids=[], parse_failures=[])
+
+    def test_live_extension_bridge_uses_stable_reviewed_source(real_repo):
+>       bridge = next(row for row in real_repo.ability_bridges
+                      if row["from"] == "ability-sad-backprop-local"
+                      and row["to"] == "ability-aml-backprop-layerwise")
+E       StopIteration
+
+tests/test_abilities.py:132: StopIteration
+__________________ test_resolver_reproduces_ground_truth[S10] __________________
+
+resolved = {'S1': {'scenario': 'S1 successful stage.progress.update', 'request_id': 'request-baseline-s1', 'idempotency_key': 'ba...t_id': 'request-baseline-s4', 'idempotency_key': 'baseline-s4', 'capability': 'stage.progress.update', ...}, ...}, ...}
+code = 'S10'
+
+    @pytest.mark.parametrize("code", sorted(EXPECTED))
+    def test_resolver_reproduces_ground_truth(resolved: dict, code: str):
+>       assert _verdict(resolved[code]) == EXPECTED[code]
+                        ^^^^^^^^^^^^^^
+E       KeyError: 'S10'
+
+tests/test_causal_resolver.py:91: KeyError
+__________________ test_resolver_reproduces_ground_truth[S11] __________________
+
+resolved = {'S1': {'scenario': 'S1 successful stage.progress.update', 'request_id': 'request-baseline-s1', 'idempotency_key': 'ba...t_id': 'request-baseline-s4', 'idempotency_key': 'baseline-s4', 'capability': 'stage.progress.update', ...}, ...}, ...}
+code = 'S11'
+
+    @pytest.mark.parametrize("code", sorted(EXPECTED))
+    def test_resolver_reproduces_ground_truth(resolved: dict, code: str):
+>       assert _verdict(resolved[code]) == EXPECTED[code]
+                        ^^^^^^^^^^^^^^
+E       KeyError: 'S11'
+
+tests/test_causal_resolver.py:91: KeyError
+__________________ test_resolver_reproduces_ground_truth[S7] ___________________
+
+resolved = {'S1': {'scenario': 'S1 successful stage.progress.update', 'request_id': 'request-baseline-s1', 'idempotency_key': 'ba...t_id': 'request-baseline-s4', 'idempotency_key': 'baseline-s4', 'capability': 'stage.progress.update', ...}, ...}, ...}
+code = 'S7'
+
+    @pytest.mark.parametrize("code", sorted(EXPECTED))
+    def test_resolver_reproduces_ground_truth(resolved: dict, code: str):
+>       assert _verdict(resolved[code]) == EXPECTED[code]
+E       AssertionError: assert (None, 'commi...shed', 'none') == ('core.projec...xact-request')
+E         
+E         At index 0 diff: None != 'core.projection'
+E         Use -v to get more diff
+
+tests/test_causal_resolver.py:91: AssertionError
+__________________ test_resolver_reproduces_ground_truth[S9] ___________________
+
+resolved = {'S1': {'scenario': 'S1 successful stage.progress.update', 'request_id': 'request-baseline-s1', 'idempotency_key': 'ba...t_id': 'request-baseline-s4', 'idempotency_key': 'baseline-s4', 'capability': 'stage.progress.update', ...}, ...}, ...}
+code = 'S9'
+
+    @pytest.mark.parametrize("code", sorted(EXPECTED))
+    def test_resolver_reproduces_ground_truth(resolved: dict, code: str):
+>       assert _verdict(resolved[code]) == EXPECTED[code]
+                        ^^^^^^^^^^^^^^
+E       KeyError: 'S9'
+
+tests/test_causal_resolver.py:91: KeyError
+_______________ test_s7_rollback_is_observed_but_never_promoted ________________
+
+resolved = {'S1': {'scenario': 'S1 successful stage.progress.update', 'request_id': 'request-baseline-s1', 'idempotency_key': 'ba...t_id': 'request-baseline-s4', 'idempotency_key': 'baseline-s4', 'capability': 'stage.progress.update', ...}, ...}, ...}
+
+    def test_s7_rollback_is_observed_but_never_promoted(resolved: dict):
+        """The Phase-0 refinement, pinned: rolled-back execution plus an
+        INTERNAL_FAILURE response is AMBIGUOUS, and the exact request must stay
+        recoverable. Telemetry informs; only authority decides."""
+        diagnosis = resolved["S7"]["diagnosis"]
+>       assert diagnosis["first_failure_stage"] == "core.projection"
+E       AssertionError: assert None == 'core.projection'
+
+tests/test_causal_resolver.py:99: AssertionError
+_______________ test_s7_resolves_ambiguous_from_persisted_store ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_s7_resolves_ambiguous_fro0')
+
+    def test_s7_resolves_ambiguous_from_persisted_store(tmp_path: Path):
+        mini = _mini_with_curriculum(tmp_path, "store-s7")
+        generated = mini / "generated"
+        generated.mkdir(exist_ok=True)
+        os.chmod(generated, 0o555)
+        try:
+            proc = _stage_write(mini, "store-s7")
+        finally:
+            os.chmod(generated, 0o755)
+        body = json.loads(proc.stdout)
+>       assert body["error"]["code"] == "INTERNAL_FAILURE"
+               ^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests/test_diagnostic_store.py:202: TypeError
+___________________ test_no_exception_body_reaches_the_store ___________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_no_exception_body_reaches0')
+
+    def test_no_exception_body_reaches_the_store(tmp_path: Path):
+        """Failure-path canary: exception text is caller detail, not telemetry.
+    
+        A chmod projection failure raises with an errno body quoting the absolute
+        target path. The store may record the failure kind; the body must not
+        persist anywhere in it.
+        """
+        from gateway_helpers import approved_v2_envelope, request_artifact_id
+    
+        mini = _mini_with_curriculum(tmp_path, "store-exception-privacy")
+        key = "store-exception-privacy-1"
+        envelope = approved_v2_envelope(
+            mini, capability="garden.seed.create",
+            payload={"title": "Seed probe", "text": "doomed write"},
+            artifact_ids=[request_artifact_id("garden.seed.create", key)],
+            idempotency_key=key)
+        generated = mini / "generated"
+        os.chmod(generated, 0o555)
+        try:
+            proc = subprocess.run(
+                [sys.executable, str(LOS), "--root", str(mini), "capability",
+                 "garden.seed.create", "--payload-file", "-"],
+                input=json.dumps(envelope), capture_output=True, text=True,
+                timeout=120)
+        finally:
+            os.chmod(generated, 0o755)
+        body = json.loads(proc.stdout)
+>       assert body["error"]["code"] == "INTERNAL_FAILURE", body
+               ^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests/test_diagnostic_store.py:475: TypeError
+_________________ test_classification_decides_the_fingerprint __________________
+
+repo_root = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository')
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_classification_decides_th0')
+
+    def test_classification_decides_the_fingerprint(repo_root, tmp_path):
+        from learning_os.contracts.data_contract import fingerprint
+    
+        schema_dir = tmp_path / "schema"
+        shutil.copytree(repo_root / "system" / "schema", schema_dir)
+    
+        base_fingerprint = fingerprint(schema_dir)
+    
+        artifact_schema = None
+        for path in schema_dir.glob("*.schema.json"):
+            if json.loads(path.read_text(encoding="utf-8")).get("x-governs") == "artifact":
+                artifact_schema = path
+                break
+        assert artifact_schema is not None
+    
+        data = json.loads(artifact_schema.read_text(encoding="utf-8"))
+>       data["title"] += " edited"
+        ^^^^^^^^^^^^^
+E       KeyError: 'title'
+
+tests/test_format_fixtures.py:195: KeyError
+_________ test_gateway_v2_projection_failure_carries_typed_provenance __________
+
+mini_repo = PosixPath('/tmp/pytest-of-root/pytest-0/test_gateway_v2_projection_fai0/LearningOS/repository')
+repo_root = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository')
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_gateway_v2_projection_fai0')
+
+    def test_gateway_v2_projection_failure_carries_typed_provenance(
+        mini_repo: Path, repo_root: Path, tmp_path: Path
+    ):
+        """End to end: a projection failure reaches the gateway typed.
+    
+        Read-only generated/ breaks both publication and rollback
+        republication, so rollback is incomplete and the code stays
+        INTERNAL_FAILURE — but the details prove the typed path was taken
+        (subsystem plus rollback outcome) rather than the prose fallback,
+        which never sets details.
+        """
+        generated = mini_repo / "generated"
+        generated.mkdir(exist_ok=True)
+        os.chmod(generated, 0o555)
+        try:
+            envelope = _envelope(mini_repo)
+            refused = _run(repo_root, mini_repo, tmp_path / "projection.json", envelope)
+        finally:
+            os.chmod(generated, 0o755)
+>       assert refused.returncode == 2
+E       assert 0 == 2
+E        +  where 0 = CompletedProcess(args=['/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/.venv/bin/python', '/root/los-eval/...b241012557309ad9eb284f737d49798a60682d5af977935c50b85",\n    "replayed": false\n  },\n  "error": null\n}\n', stderr='').returncode
+
+tests/test_gateway_v2.py:625: AssertionError
+___________________ test_list_reports_verdicts_newest_first ____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_list_reports_verdicts_new0')
+
+    def test_list_reports_verdicts_newest_first(tmp_path: Path):
+        mini = _mini_with_curriculum(tmp_path, "ops-list")
+        _write(mini, "ops-list-ok")
+        _write(mini, "ops-list-stale", expected_snapshot="sha256:" + "0" * 64)
+        code, body = _operations(mini)
+        assert code == 0
+        rows = body["operations"]
+>       assert [row["request_id"] for row in rows] == [
+            "request-ops-list-stale", "request-ops-list-ok"]
+E       AssertionError: assert ['request-ops-list-ok'] == ['request-ops...-ops-list-ok']
+E         
+E         At index 0 diff: 'request-ops-list-ok' != 'request-ops-list-stale'
+E         Right contains one more item: 'request-ops-list-ok'
+E         Use -v to get more diff
+
+tests/test_operations.py:67: AssertionError
+_______________________ test_detail_explains_one_request _______________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_detail_explains_one_reque0')
+
+    def test_detail_explains_one_request(tmp_path: Path):
+        mini = _mini_with_curriculum(tmp_path, "ops-detail")
+        _write(mini, "ops-detail-ok")
+        _write(mini, "ops-detail-stale", expected_snapshot="sha256:" + "0" * 64)
+        code, body = _operations(mini, "--request-id", "request-ops-detail-stale")
+        assert code == 0
+        assert body["request_id"] == "request-ops-detail-stale"
+>       assert body["diagnosis"]["canonical_outcome"] == "NOT_COMMITTED"
+E       AssertionError: assert 'COMMITTED' == 'NOT_COMMITTED'
+E         
+E         - NOT_COMMITTED
+E         ? ----
+E         + COMMITTED
+
+tests/test_operations.py:93: AssertionError
+_____________________ test_list_limit_selects_newest_first _____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_list_limit_selects_newest0')
+
+    def test_list_limit_selects_newest_first(tmp_path: Path):
+        mini = _mini_with_curriculum(tmp_path, "ops-limit-select")
+        _write(mini, "ops-limit-select-1")
+        _write(mini, "ops-limit-select-2", expected_snapshot="sha256:" + "0" * 64)
+        code, body = _operations(mini, "--limit", "1")
+        assert code == 0
+>       assert [row["request_id"] for row in body["operations"]] == [
+            "request-ops-limit-select-2"]
+E       AssertionError: assert ['request-ops-limit-select-1'] == ['request-ops-limit-select-2']
+E         
+E         At index 0 diff: 'request-ops-limit-select-1' != 'request-ops-limit-select-2'
+E         Use -v to get more diff
+
+tests/test_operations.py:114: AssertionError
+___________ test_wrongly_shaped_and_duplicate_authority_is_reported ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_wrongly_shaped_and_duplic0')
+
+    def test_wrongly_shaped_and_duplicate_authority_is_reported(tmp_path: Path):
+        from learning_os.diagnostics.resolver import load_authority_files
+    
+        mini = _mini_with_curriculum(tmp_path, "ops-shapes")
+        _write(mini, "ops-shapes-ok")
+        _write(mini, "ops-shapes-refused", expected_snapshot="sha256:" + "0" * 64)
+        bad = mini / "operations/transactions/transaction-bad-shape.yaml"
+        for content in ("request: broken\nstatus: committed\n", "[]\n",
+                        "request: {}\nrequest: {}\n"):
+            bad.write_text(content, encoding="utf-8")
+            assert bad.relative_to(mini).as_posix() in load_authority_files(mini)[2]
+            code, body = _operations(mini)
+            assert code == 0
+>           assert [row["canonical_outcome"] for row in body["operations"]] == [
+                "NOT_COMMITTED", "COMMITTED"]
+E           AssertionError: assert ['COMMITTED'] == ['NOT_COMMITTED', 'COMMITTED']
+E             
+E             At index 0 diff: 'COMMITTED' != 'NOT_COMMITTED'
+E             Right contains one more item: 'COMMITTED'
+E             Use -v to get more diff
+
+tests/test_operations.py:224: AssertionError
+___ test_pilot_draft_replays_under_current_rules[pilot-l06-ch-a-pp05-08.md] ____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_pilot_draft_replays_under0')
+capsys = <_pytest.capture.CaptureFixture object at 0x7f6be7b59cd0>
+spec = {'digest': '90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca', 'material': 'mathematics/probability-st...ables.pdf', 'deck_pages': 60, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries', ...}
+chapter = {'pages': [5, 8], 'draft': 'ch-a-pp05-08.md', 'grade': 'accept with note', 'source_chars': 3127, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-a-pp05-08.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-a-pp05-08.md'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l06-ch-b-pp09-13.md] ____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_pilot_draft_replays_under1')
+capsys = <_pytest.capture.CaptureFixture object at 0x7f6be70cdfa0>
+spec = {'digest': '90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca', 'material': 'mathematics/probability-st...ables.pdf', 'deck_pages': 60, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries', ...}
+chapter = {'pages': [9, 13], 'draft': 'ch-b-pp09-13.md', 'grade': 'accept', 'source_chars': 2038, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-b-pp09-13.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-b-pp09-13.md'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l06-ch-c-pp15-23.md] ____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_pilot_draft_replays_under2')
+capsys = <_pytest.capture.CaptureFixture object at 0x7f6be709d700>
+spec = {'digest': '90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca', 'material': 'mathematics/probability-st...ables.pdf', 'deck_pages': 60, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries', ...}
+chapter = {'pages': [15, 23], 'draft': 'ch-c-pp15-23.md', 'grade': 'accept with finding F3', 'source_chars': 4294, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-c-pp15-23.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-c-pp15-23.md'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l06-ch-d-pp24-32.md] ____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_pilot_draft_replays_under3')
+capsys = <_pytest.capture.CaptureFixture object at 0x7f6be7264da0>
+spec = {'digest': '90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca', 'material': 'mathematics/probability-st...ables.pdf', 'deck_pages': 60, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries', ...}
+chapter = {'pages': [24, 32], 'draft': 'ch-d-pp24-32.md', 'grade': 'accept with findings F4, F5', 'source_chars': 4499, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-d-pp24-32.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-d-pp24-32.md'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l06-ch-e-pp34-42.md] ____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_pilot_draft_replays_under4')
+capsys = <_pytest.capture.CaptureFixture object at 0x7f6be7264680>
+spec = {'digest': '90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca', 'material': 'mathematics/probability-st...ables.pdf', 'deck_pages': 60, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries', ...}
+chapter = {'pages': [34, 42], 'draft': 'ch-e-pp34-42.md', 'grade': 'accept', 'source_chars': 3039, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-e-pp34-42.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-e-pp34-42.md'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l06-ch-f-pp44-50.md] ____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_pilot_draft_replays_under5')
+capsys = <_pytest.capture.CaptureFixture object at 0x7f6be72641a0>
+spec = {'digest': '90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca', 'material': 'mathematics/probability-st...ables.pdf', 'deck_pages': 60, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries', ...}
+chapter = {'pages': [44, 50], 'draft': 'ch-f-pp44-50.md', 'grade': 'accept', 'source_chars': 3981, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-f-pp44-50.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-f-pp44-50.md'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l06-ch-g-pp52-60.md] ____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_pilot_draft_replays_under6')
+capsys = <_pytest.capture.CaptureFixture object at 0x7f6be7267410>
+spec = {'digest': '90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca', 'material': 'mathematics/probability-st...ables.pdf', 'deck_pages': 60, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries', ...}
+chapter = {'pages': [52, 60], 'draft': 'ch-g-pp52-60.md', 'grade': 'accept', 'source_chars': 5698, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-g-pp52-60.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-g-pp52-60.md'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l11-ch-b-pp03-11.md] ____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_pilot_draft_replays_under7')
+capsys = <_pytest.capture.CaptureFixture object at 0x7f6be4dd2450>
+spec = {'digest': 'b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302', 'material': 'mathematics/probability-st...intro.pdf', 'deck_pages': 49, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries', ...}
+chapter = {'pages': [3, 11], 'draft': 'ch-b-pp03-11.md', 'grade': 'accept', 'source_chars': 3495, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-b-pp03-11.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-b-pp03-11.md'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l11-ch-c-pp12-20.md] ____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_pilot_draft_replays_under8')
+capsys = <_pytest.capture.CaptureFixture object at 0x7f6be7264080>
+spec = {'digest': 'b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302', 'material': 'mathematics/probability-st...intro.pdf', 'deck_pages': 49, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries', ...}
+chapter = {'pages': [12, 20], 'draft': 'ch-c-pp12-20.md', 'grade': 'accept', 'source_chars': 4897, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-c-pp12-20.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-c-pp12-20.md'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l11-ch-d-pp21-32.md] ____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_pilot_draft_replays_under9')
+capsys = <_pytest.capture.CaptureFixture object at 0x7f6be72649b0>
+spec = {'digest': 'b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302', 'material': 'mathematics/probability-st...intro.pdf', 'deck_pages': 49, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries', ...}
+chapter = {'pages': [21, 32], 'draft': 'ch-d-pp21-32.md', 'grade': 'accept', 'source_chars': 6946, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-d-pp21-32.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-d-pp21-32.md'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l11-ch-e-pp33-38.md] ____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_pilot_draft_replays_under10')
+capsys = <_pytest.capture.CaptureFixture object at 0x7f6be7266c00>
+spec = {'digest': 'b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302', 'material': 'mathematics/probability-st...intro.pdf', 'deck_pages': 49, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries', ...}
+chapter = {'pages': [33, 38], 'draft': 'ch-e-pp33-38.md', 'grade': 'accept', 'source_chars': 3347, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-e-pp33-38.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-e-pp33-38.md'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l11-ch-f-pp39-46.md] ____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_pilot_draft_replays_under11')
+capsys = <_pytest.capture.CaptureFixture object at 0x7f6be4dd3290>
+spec = {'digest': 'b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302', 'material': 'mathematics/probability-st...intro.pdf', 'deck_pages': 49, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries', ...}
+chapter = {'pages': [39, 46], 'draft': 'ch-f-pp39-46.md', 'grade': 'accept', 'source_chars': 4208, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-f-pp39-46.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-f-pp39-46.md'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l11-ch-g-pp47-49.md] ____
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_pilot_draft_replays_under12')
+capsys = <_pytest.capture.CaptureFixture object at 0x7f6be4dd09b0>
+spec = {'digest': 'b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302', 'material': 'mathematics/probability-st...intro.pdf', 'deck_pages': 49, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries', ...}
+chapter = {'pages': [47, 49], 'draft': 'ch-g-pp47-49.md', 'grade': 'reject, verified safe by full spot-read', 'source_chars': 2203, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-g-pp47-49.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-g-pp47-49.md'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+___________ test_pilot_triage_ratio_recomputes_from_files[pilot-l06] ___________
+
+name = 'pilot-l06'
+
+    @pytest.mark.parametrize("name", ["pilot-l06", "pilot-l11"])
+    def test_pilot_triage_ratio_recomputes_from_files(name):
+        """Recorded byte ratios match drafts + direct reads on disk."""
+        spec = _manifest(name)
+        draft_bytes = 0
+        for chapter in spec["chapters"]:
+>           raw = (REPO / spec["draft_dir"] / chapter["draft"]).read_bytes()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:145: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1021: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-a-pp05-08.md')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-a-pp05-08.md'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+___________ test_pilot_triage_ratio_recomputes_from_files[pilot-l11] ___________
+
+name = 'pilot-l11'
+
+    @pytest.mark.parametrize("name", ["pilot-l06", "pilot-l11"])
+    def test_pilot_triage_ratio_recomputes_from_files(name):
+        """Recorded byte ratios match drafts + direct reads on disk."""
+        spec = _manifest(name)
+        draft_bytes = 0
+        for chapter in spec["chapters"]:
+>           raw = (REPO / spec["draft_dir"] / chapter["draft"]).read_bytes()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:145: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1021: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-b-pp03-11.md')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-b-pp03-11.md'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+_______ test_pilot_applied_findings_carry_committed_receipts[pilot-l06] ________
+
+name = 'pilot-l06'
+
+    @pytest.mark.parametrize("name", ["pilot-l06", "pilot-l11"])
+    def test_pilot_applied_findings_carry_committed_receipts(name):
+        """Each applied finding links a committed receipt with its write."""
+        spec = _manifest(name)
+        assert spec["receipts"]
+        for expected in spec["receipts"]:
+            receipt = yaml.safe_load(
+>               (REPO / expected["path"]).read_text(encoding="utf-8"))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:192: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/operations/transactions/transaction-20260920-023923-001.yaml')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/operations/transactions/transaction-20260920-023923-001.yaml'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+_______ test_pilot_applied_findings_carry_committed_receipts[pilot-l11] ________
+
+name = 'pilot-l11'
+
+    @pytest.mark.parametrize("name", ["pilot-l06", "pilot-l11"])
+    def test_pilot_applied_findings_carry_committed_receipts(name):
+        """Each applied finding links a committed receipt with its write."""
+        spec = _manifest(name)
+        assert spec["receipts"]
+        for expected in spec["receipts"]:
+            receipt = yaml.safe_load(
+>               (REPO / expected["path"]).read_text(encoding="utf-8"))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:192: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1029: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/operations/transactions/transaction-20260920-025624-001.yaml')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/root/los-eval/s02-novice-2026-09-25/LearningOS/repository/operations/transactions/transaction-20260920-025624-001.yaml'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+_______________ test_later_ledger_write_survives_crash_recovery ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_later_ledger_write_surviv0')
+
+    def test_later_ledger_write_survives_crash_recovery(tmp_path: Path):
+        mini = _mini_with_curriculum(tmp_path, "s10-shape")
+>       _crash_stage_write(mini, "recovery-clobber")
+
+tests/test_recovery_conflicts.py:471: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mini = PosixPath('/tmp/pytest-of-root/pytest-0/test_later_ledger_write_surviv0/s10-shape/LearningOS/repository')
+key = 'recovery-clobber'
+
+    def _crash_stage_write(mini: Path, key: str) -> dict:
+        """A real crashed commit: chmod breaks projection, the v2 journal stays."""
+        from gateway_helpers import approved_v2_envelope
+    
+        envelope = approved_v2_envelope(
+            mini, capability="stage.progress.update",
+            payload={"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
+                     "status": "complete"},
+            artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+            idempotency_key=key)
+        generated = mini / "generated"
+        generated.mkdir(exist_ok=True)
+        os.chmod(generated, 0o555)
+        try:
+            proc = subprocess.run(
+                [sys.executable, str(LOS), "--root", str(mini), "capability",
+                 "stage.progress.update", "--payload-file", "-"],
+                input=json.dumps(envelope), capture_output=True, text=True,
+                timeout=120)
+        finally:
+            os.chmod(generated, 0o755)
+        body = json.loads(proc.stdout)
+>       assert body["error"]["code"] == "INTERNAL_FAILURE", body
+               ^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests/test_recovery_conflicts.py:132: TypeError
+________________ test_untouched_crash_rolls_back_automatically _________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_untouched_crash_rolls_bac0')
+
+    def test_untouched_crash_rolls_back_automatically(tmp_path: Path):
+        mini = _mini_with_curriculum(tmp_path, "clean-crash")
+>       envelope = _crash_stage_write(mini, "recovery-clean")
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_recovery_conflicts.py:493: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mini = PosixPath('/tmp/pytest-of-root/pytest-0/test_untouched_crash_rolls_bac0/clean-crash/LearningOS/repository')
+key = 'recovery-clean'
+
+    def _crash_stage_write(mini: Path, key: str) -> dict:
+        """A real crashed commit: chmod breaks projection, the v2 journal stays."""
+        from gateway_helpers import approved_v2_envelope
+    
+        envelope = approved_v2_envelope(
+            mini, capability="stage.progress.update",
+            payload={"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
+                     "status": "complete"},
+            artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+            idempotency_key=key)
+        generated = mini / "generated"
+        generated.mkdir(exist_ok=True)
+        os.chmod(generated, 0o555)
+        try:
+            proc = subprocess.run(
+                [sys.executable, str(LOS), "--root", str(mini), "capability",
+                 "stage.progress.update", "--payload-file", "-"],
+                input=json.dumps(envelope), capture_output=True, text=True,
+                timeout=120)
+        finally:
+            os.chmod(generated, 0o755)
+        body = json.loads(proc.stdout)
+>       assert body["error"]["code"] == "INTERNAL_FAILURE", body
+               ^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests/test_recovery_conflicts.py:132: TypeError
+__________ test_gateway_reports_recovery_conflict_as_internal_failure __________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_gateway_reports_recovery_0')
+
+    def test_gateway_reports_recovery_conflict_as_internal_failure(tmp_path: Path):
+        from gateway_helpers import approved_v2_envelope
+    
+        mini = _mini_with_curriculum(tmp_path, "gateway-conflict")
+>       _crash_stage_write(mini, "recovery-gateway")
+
+tests/test_recovery_conflicts.py:506: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+mini = PosixPath('/tmp/pytest-of-root/pytest-0/test_gateway_reports_recovery_0/gateway-conflict/LearningOS/repository')
+key = 'recovery-gateway'
+
+    def _crash_stage_write(mini: Path, key: str) -> dict:
+        """A real crashed commit: chmod breaks projection, the v2 journal stays."""
+        from gateway_helpers import approved_v2_envelope
+    
+        envelope = approved_v2_envelope(
+            mini, capability="stage.progress.update",
+            payload={"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
+                     "status": "complete"},
+            artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+            idempotency_key=key)
+        generated = mini / "generated"
+        generated.mkdir(exist_ok=True)
+        os.chmod(generated, 0o555)
+        try:
+            proc = subprocess.run(
+                [sys.executable, str(LOS), "--root", str(mini), "capability",
+                 "stage.progress.update", "--payload-file", "-"],
+                input=json.dumps(envelope), capture_output=True, text=True,
+                timeout=120)
+        finally:
+            os.chmod(generated, 0o755)
+        body = json.loads(proc.stdout)
+>       assert body["error"]["code"] == "INTERNAL_FAILURE", body
+               ^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+tests/test_recovery_conflicts.py:132: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_abilities.py::test_live_extension_bridge_uses_stable_reviewed_source
+FAILED tests/test_causal_resolver.py::test_resolver_reproduces_ground_truth[S10]
+FAILED tests/test_causal_resolver.py::test_resolver_reproduces_ground_truth[S11]
+FAILED tests/test_causal_resolver.py::test_resolver_reproduces_ground_truth[S7]
+FAILED tests/test_causal_resolver.py::test_resolver_reproduces_ground_truth[S9]
+FAILED tests/test_causal_resolver.py::test_s7_rollback_is_observed_but_never_promoted
+FAILED tests/test_diagnostic_store.py::test_s7_resolves_ambiguous_from_persisted_store
+FAILED tests/test_diagnostic_store.py::test_no_exception_body_reaches_the_store
+FAILED tests/test_format_fixtures.py::test_classification_decides_the_fingerprint
+FAILED tests/test_gateway_v2.py::test_gateway_v2_projection_failure_carries_typed_provenance
+FAILED tests/test_operations.py::test_list_reports_verdicts_newest_first - As...
+FAILED tests/test_operations.py::test_detail_explains_one_request - Assertion...
+FAILED tests/test_operations.py::test_list_limit_selects_newest_first - Asser...
+FAILED tests/test_operations.py::test_wrongly_shaped_and_duplicate_authority_is_reported
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-a-pp05-08.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-b-pp09-13.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-c-pp15-23.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-d-pp24-32.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-e-pp34-42.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-f-pp44-50.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-g-pp52-60.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l11-ch-b-pp03-11.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l11-ch-c-pp12-20.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l11-ch-d-pp21-32.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l11-ch-e-pp33-38.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l11-ch-f-pp39-46.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l11-ch-g-pp47-49.md]
+FAILED tests/test_pilot_replay.py::test_pilot_triage_ratio_recomputes_from_files[pilot-l06]
+FAILED tests/test_pilot_replay.py::test_pilot_triage_ratio_recomputes_from_files[pilot-l11]
+FAILED tests/test_pilot_replay.py::test_pilot_applied_findings_carry_committed_receipts[pilot-l06]
+FAILED tests/test_pilot_replay.py::test_pilot_applied_findings_carry_committed_receipts[pilot-l11]
+FAILED tests/test_recovery_conflicts.py::test_later_ledger_write_survives_crash_recovery
+FAILED tests/test_recovery_conflicts.py::test_untouched_crash_rolls_back_automatically
+FAILED tests/test_recovery_conflicts.py::test_gateway_reports_recovery_conflict_as_internal_failure
+34 failed, 2214 passed, 30 skipped, 83 deselected in 651.13s (0:10:51)
+make: *** [Makefile:90: test-fast] Error 1

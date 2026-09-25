@@ -1,0 +1,20 @@
+{
+ "schema_version": 2,
+ "request_id": "s15-batchnorm-revise-1",
+ "idempotency_key": "s15-batchnorm-revise",
+ "capability": "note.revise",
+ "channel": "operator",
+ "expected_snapshot": "sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e",
+ "expected_revisions": {
+  "note-batchnorm-internal-covariate-shift": 0
+ },
+ "payload": {
+  "note_id": "note-batchnorm-internal-covariate-shift",
+  "file": "/tmp/claude-0/-home-user-LearningOS/1292ed61-254d-5ac4-ba21-d0e53e16c86e/scratchpad/S15/note-batchnorm-internal-covariate-shift.md",
+  "file_sha256": "sha256:ad99fa53713a423dcfcbdbe5574824a15bf7c9a6f0af9d0596631a96da6b4846"
+ },
+ "approval": {
+  "kind": "operator-approval",
+  "subject_sha256": "sha256:ba2856251478a19673c99bf44c75cf703afae267074eaa4023e85e80ded99ca4"
+ }
+}
