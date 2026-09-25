@@ -34,3 +34,4 @@ operations/transactions/.inflight/
 # Deleting it changes no canonical behavior; the resolver degrades to
 # authority-only verdicts. Outside the canonical fingerprint roots.
 operations/diagnostics/
+.jules/

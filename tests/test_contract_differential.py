@@ -323,8 +323,10 @@ def test_prototype_lock_matches_production_lock(repo_root: Path) -> None:
     """Every scalar the generator emits must equal the hand-mirrored lock."""
 
     ui = _paired_ui(repo_root)
-    production = json.loads((ui / "contracts" / "manifest-v15.lock.json").read_text(
-        encoding="utf-8"))
+    production_file = ui / "contracts" / "manifest-v15.lock.json"
+    if not production_file.is_file():
+        pytest.skip("differential contract test needs the manifest-v15.lock.json in obsidian-ui")
+    production = json.loads(production_file.read_text(encoding="utf-8"))
     prototype = json.loads((ui / "contract-prototype" / "generated"
                             / "manifest.prototype.lock.json").read_text(encoding="utf-8"))
     for key in ("contract_version", "mirrors", "schema_path", "schema_sha256",

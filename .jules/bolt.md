@@ -1,0 +1,3 @@
+## 2026-09-25 - Exact Type Matching in Highly Recursive Functions
+**Learning:** In highly recursive functions, checking primitive leaf node exact types (`type(value) in (str, int, float, bool)`) is much faster than running deep inheritance chains using `isinstance`, leading to significant performance gains on heavy tree traversal (like YAML normalization). However, it is essential to retain `isinstance()` for collections (`dict`, `list`) to maintain functional correctness when parsing objects (e.g. YAML parser subclasses).
+**Action:** When optimizing tree traversals and normalizations in Python >=3.12, add an early-return check using `type(x) is T` for primitives before collection or expensive class evaluations.
