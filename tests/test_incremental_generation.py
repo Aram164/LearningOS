@@ -149,8 +149,11 @@ def test_rich_fixture_exercises_every_branch(tmp_path: Path):
     backlinks = build_backlinks(repo, STAMP)
     assert backlinks["module_to_workspaces"]["module-demo"] == [
         "workspace-demo", "workspace-regex", "ws-old"]
-    assert {"from": "note-a", "kind": "mentions"} in backlinks["note_incoming"]["note-b"]
-    assert {"from": "note-a", "kind": "superseded-by"} in backlinks["note_incoming"]["note-old"]
+    # note_incoming carries plain incoming-note ids: the published manifest
+    # contract declares it a string array map, and richer entries break every
+    # projection read for a schema-valid note (JF-09).
+    assert backlinks["note_incoming"]["note-b"] == ["note-a"]
+    assert backlinks["note_incoming"]["note-old"] == ["note-a"]
     assert backlinks["workspace_to_notes"]["workspace-dup"] == ["note-a"]
     report = build_dependency_report(repo, backlinks, STAMP)
     assert "cycle detected among" in report
@@ -510,7 +513,9 @@ def test_producer_version_bump_rebuilds_only_its_node(tmp_path: Path):
     repo = load_repo(mini)
     registry = dict(generation_registry(repo))
     spec, build = registry[BACKLINKS_SEMANTIC_ID]
-    registry[BACKLINKS_SEMANTIC_ID] = (replace(spec, version=2), build)
+    # Relative to the declared version: the point is that *a* bump rebuilds,
+    # whatever the absolute number (the constant is at v2 since JF-09).
+    registry[BACKLINKS_SEMANTIC_ID] = (replace(spec, version=spec.version + 1), build)
     from learning_os.derived import evaluate_many
 
     trace: list = []

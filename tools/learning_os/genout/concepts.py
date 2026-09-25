@@ -32,13 +32,14 @@ def build_backlinks_semantic(repo: Repo) -> dict:
             source_to_notes.setdefault(sid, []).append(note.id)
         for wid in note.meta.get("contexts", []) or []:
             workspace_to_notes.setdefault(wid, []).append(note.id)
+        # Plain incoming-note ids: the published manifest contract declares
+        # note_incoming a string array map, and anything richer breaks every
+        # projection read for a schema-valid note (JF-09).
         for target in note.meta.get("supersedes", []) or []:
-            note_incoming.setdefault(target, []).append(
-                {"from": note.id, "kind": "superseded-by"})
+            note_incoming.setdefault(target, []).append(note.id)
         for m in re.finditer(r"note://(note-[a-z0-9-]+)", note.body):
             if m.group(1) != note.id:
-                note_incoming.setdefault(m.group(1), []).append(
-                    {"from": note.id, "kind": "mentions"})
+                note_incoming.setdefault(m.group(1), []).append(note.id)
     for ws in sorted(repo.workspaces.values(), key=lambda w: w.id):
         for nid in ws.meta.get("notes", []) or []:
             lst = workspace_to_notes.setdefault(ws.id, [])
@@ -80,7 +81,7 @@ def build_backlinks_semantic(repo: Repo) -> dict:
     for d in concept_relations.values():
         d["outgoing"].sort(key=lambda e: (e["type"], e["to"]))
         d["incoming"].sort(key=lambda e: (e["type"], e["from"]))
-    for m in (concept_to_notes, source_to_notes, workspace_to_notes,
+    for m in (concept_to_notes, source_to_notes, note_incoming, workspace_to_notes,
               module_to_workspaces, unit_to_workspaces, module_to_units, source_to_units):
         for k in m:
             m[k] = sorted(set(m[k])) if all(isinstance(x, str) for x in m[k]) else m[k]

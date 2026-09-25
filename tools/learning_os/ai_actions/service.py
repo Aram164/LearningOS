@@ -73,6 +73,7 @@ from .support import (
     _read_yaml,
     _sha256_file,
     _snapshot,
+    check_request_id,
     parse_frontmatter_request_id,
 )
 from .types import (
@@ -231,7 +232,14 @@ class AIActionService:
                 f"expected snapshot {expected_snapshot}, current snapshot is {snapshot}"
             )
         now = self.clock()
-        request_id = request_id or f"ai-request-{now:%Y%m%d-%H%M%S}-{uuid4().hex[:6]}"
+        if request_id is not None:
+            # A caller-supplied id that the manifest cannot publish would be
+            # persisted and then break every projection read (JF-08): refuse
+            # before anything is written. The minted default matches by
+            # construction.
+            check_request_id(request_id)
+        else:
+            request_id = f"ai-request-{now:%Y%m%d-%H%M%S}-{uuid4().hex[:6]}"
         original: OriginalArtifact = {
             "id": f"original-{target_id}",
             "canonical_path": target["path"],
