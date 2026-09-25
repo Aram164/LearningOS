@@ -190,6 +190,30 @@ def t_world(ctx):
     return f"HEAD {a['world_head'][:12]}, {a['notes']} notes, {a['commits']} commits"
 
 
+@check("world: final curriculum state equals the corpus")
+def t_final_state(ctx):
+    if "world" not in ctx:
+        raise SkipTest("no world built")
+    cur = load("corpus/curriculum.yaml")
+    checked = 0
+    for mod in cur["modules"]:
+        for unit in mod["units"]:
+            smap = unit.get("study_map")
+            if not smap:
+                continue
+            path = (ctx["world"] / "curriculum/modules" / mod["id"] / "units" / unit["id"]
+                    / "study-map.yaml")
+            built = yaml.safe_load(path.read_text(encoding="utf-8"))
+            assert built["current_stage"] == smap["current_stage"], (smap["id"], built)
+            want = {s["id"]: s["status"] for s in smap["stages"]}
+            got = {s["id"]: s["status"] for s in built["stages"]}
+            assert want == got, (smap["id"], want, got)
+            checked += 1
+    resume = yaml.safe_load((ctx["world"] / "curriculum/resume.yaml").read_text())
+    assert resume["stage_id"] == cur["resume"]["stage_id"], resume
+    return f"{checked} study maps"
+
+
 @check("world: observe snapshot/diff is side-effect free")
 def t_observe(ctx):
     if "world" not in ctx:
@@ -323,6 +347,7 @@ def main(argv=None) -> int:
     t_score_connections()
     t_score_retrieval()
     t_world(ctx)
+    t_final_state(ctx)
     t_observe(ctx)
     t_determinism(ctx)
     t_private_tracked()

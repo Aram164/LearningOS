@@ -96,3 +96,30 @@ add:
 - Repair sessions: failing reproduction first, smallest general fix, no
   special-casing of synthetic content, no weakened tests, full checks before
   every push, before/after metrics in `PATCH_LEDGER.md`.
+
+## Run ledger
+
+Consumer sessions must not open other runs' branches before finishing their
+own. The judge merges every run branch before scoring.
+
+| Session | Plan | Run id | Branch | World HEAD | Notes |
+|---|---|---|---|---|---|
+| 0 | B | `s00-baseline-2026-09-24` | `claude/optimistic-mayer-065kyv` | `9a85f012…` | built before harness change H1 |
+
+## Harness changes
+
+Every change to the world, protocol or scorers after a run started is listed
+here, so the judge can tell a product finding from an artefact of the harness.
+
+- **H1 (2026-09-25).** The world builder wrote a study map's earlier
+  progress state *after* its final state when both carried the same date, so
+  `study-map-os-l02` and `study-map-statlearn-l05` were built one stage behind
+  the corpus (stage 01 current instead of stage 02), disagreeing with the
+  resume pointer. Fixed: history is written first and must be strictly
+  earlier; the self-test now compares every built study map with the corpus.
+  World HEAD at the pinned product revision moved from `9a85f012…` to
+  `13ad2fca…`. Runs on `9a85f012…` (session 0) saw the inconsistent maps; a
+  "resume pointer vs study map" observation from those runs is a harness
+  artefact, though whether the product should flag such a disagreement
+  remains a fair question.
+
