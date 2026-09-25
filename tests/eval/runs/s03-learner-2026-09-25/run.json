@@ -37,7 +37,8 @@
   "python_for_world": "/tmp/evalenv (Python 3.13 venv with pyyaml, jsonschema, pypdf)",
   "world_path": "~/los-eval/s03-learner-2026-09-25",
   "clock": "container clock UTC; world timeline as_of 2026-09-18, real date 2026-09-25",
-  "status": "INTERIM CHECKPOINT — S02, S03, S04 complete; S05 in progress; S06, S07, S08, S13 not yet run"
+  "status": "INTERIM CHECKPOINT 2 — S02–S06 complete; S07 in progress; S08, S13 not yet run",
+  "TRACEPARENT": "The container exports a W3C TRACEPARENT; LearningOS adopted it for every call until mid-S05, after which los ran with it unset (see F-s03-diag-ambiguous-01)."
  },
  "scenarios": [
   "S02",
@@ -50,10 +51,12 @@
   "S13"
  ],
  "deviations": [
-  "Interim checkpoint committed at the user's request mid-run; results exist only for completed scenarios (S02–S04).",
+  "Interim checkpoints were committed at the user's request mid-run.",
   "Agent model identifier deliberately not recorded in this pushed artifact (session policy forbids model ids in repository artifacts).",
   "S03 'fresh' world obtained by `git reset --hard && git clean -fd` inside the world (per protocol §2); gitignored generated views from S02 remained, canonical state was the initial commit.",
   "Generated views (`make views`) were built in S02 with PYTHON=/tmp/evalenv/bin/python because the world has no .venv; this is a derived-state write only.",
-  "Wall-clock minutes come from the container clock and may undercount thinking time between tool calls."
+  "Wall-clock minutes come from the container clock and may undercount thinking time between tool calls.",
+  "From mid-S05 onwards, los was run with TRACEPARENT unset (env -u TRACEPARENT) so that diagnostics stay per-request; earlier traces are merged under the inherited trace id.",
+  "The user explicitly authorized computing the GatewayEnvelopeV2 approval value (intent_sha256) for writes the scripted learner approved; I did this for every write, only after the scripted approval."
  ]
 }

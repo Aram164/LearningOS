@@ -1,0 +1,25 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s05-A22-1",
+ "idempotency_key": "s03-s05-A22-k1",
+ "capability": "stage.note.write",
+ "ok": true,
+ "replayed": false,
+ "transaction_id": "transaction-20260925-004526-001",
+ "receipt_path": "operations/transactions/transaction-20260925-004526-001.yaml",
+ "snapshot_after": "sha256:8e55d400c725fdd1f0f1ffbb3b4f28a34beeb3bbc8c4ca9ac34b7178cc9220de",
+ "result": {
+  "ok": true,
+  "unit_id": "unit-statlearn-l11",
+  "stage_id": "stage-l11-01-backprop",
+  "working_note": "curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l11/stages/stage-l11-01-backprop/notes.md",
+  "transaction_id": "transaction-20260925-004526-001",
+  "receipt_path": "operations/transactions/transaction-20260925-004526-001.yaml",
+  "artifact_revisions": {
+   "unit-statlearn-l11": 1
+  },
+  "snapshot_after": "sha256:8e55d400c725fdd1f0f1ffbb3b4f28a34beeb3bbc8c4ca9ac34b7178cc9220de",
+  "replayed": false
+ },
+ "error": null
+}

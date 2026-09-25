@@ -1,0 +1,20 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s05-A10-1",
+ "idempotency_key": "s03-s05-A10-k1",
+ "capability": "note.revise",
+ "channel": "operator",
+ "expected_snapshot": "sha256:1f6be260872d9233ce94993d8d8d6db518eff172420b4d49884d0fd549916dc9",
+ "expected_revisions": {
+  "note-query-optimizer-cost-model": 0
+ },
+ "approval": {
+  "kind": "operator-approval",
+  "subject_sha256": "sha256:6f0e7496fa44fd970b983d5a055d294a069fdc0b1d9ff2e92cc251a0d1ed2c5a"
+ },
+ "payload": {
+  "note_id": "note-query-optimizer-cost-model",
+  "file": "/tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/S05/A10-note.md",
+  "file_sha256": "sha256:5126b4aa7abca945c3986a85c65576641e37aa67c163749e2c3e47f5ec6c3f2a"
+ }
+}

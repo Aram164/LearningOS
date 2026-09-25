@@ -1,0 +1,20 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s05-A21-1",
+ "idempotency_key": "s03-s05-A21-k1",
+ "capability": "stage.note.write",
+ "channel": "operator",
+ "expected_snapshot": "sha256:51b9983f4a296603e1077041c74a3a2f9695b40c4d652c772fb876aaba66a6f9",
+ "expected_revisions": {
+  "unit-statlearn-l09": 0
+ },
+ "approval": {
+  "kind": "operator-approval",
+  "subject_sha256": "sha256:c3841329504110e6815812cc793f619f045babfa1e9bb44a047a1dbcbf123f43"
+ },
+ "payload": {
+  "unit_id": "unit-statlearn-l09",
+  "stage_id": "stage-l09-02-svd-connection",
+  "text": "\n## 2026-09-26 — L09 slide 24, rewatched for the retake (slide text, filed by the operator)\n\nL09 slide 24: \"Let X be the centred n × d data matrix with SVD X = U S Vᵀ.\nThen the sample covariance is C = XᵀX/(n−1) = V S² Vᵀ/(n−1). Hence the\nprincipal directions are the columns of V and the variance along the i-th\ndirection is s_i²/(n−1). In practice PCA is computed via the SVD of X, which is\nnumerically more stable than forming C.\"\n"
+ }
+}

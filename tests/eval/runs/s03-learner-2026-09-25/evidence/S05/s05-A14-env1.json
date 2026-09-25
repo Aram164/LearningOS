@@ -1,0 +1,20 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s05-A14-1",
+ "idempotency_key": "s03-s05-A14-k1",
+ "capability": "stage.note.write",
+ "channel": "operator",
+ "expected_snapshot": "sha256:ef187df6c698cfd178413390766c706674aa156dbcdf202671dc48bc2901e270",
+ "expected_revisions": {
+  "unit-dataframes-lazy-plans": 0
+ },
+ "approval": {
+  "kind": "operator-approval",
+  "subject_sha256": "sha256:bab02a3e7c0cf328e280994d476099a5264919365e90081836292400bd6f39e3"
+ },
+ "payload": {
+  "unit_id": "unit-dataframes-lazy-plans",
+  "stage_id": "stage-df-lazy-02-read-explain",
+  "text": "\n## 2026-09-24 — plans 2 and 3 (stage note draft)\n\nPlan 2 (group-by after join, then filter on the aggregate):\n- the filter on total > 100 cannot move below the group-by (it needs the sum);\n- the filter on year = 2025 did move below the join into the orders scan;\n- \"PROJECT 4/31 COLUMNS\" on orders — only columns used anywhere survive.\n\nPlan 3 (same subquery used twice):\n- \"CACHE\" node: the shared subplan is computed once and reused.\n\nRule I'm seeing: a filter can move below an operator only if it depends on\nnothing that operator creates.\n"
+ }
+}
