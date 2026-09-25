@@ -117,6 +117,39 @@ def test_duplicate_relation_edge_is_error(mini_repo):
     assert "REL-DUP" in codes(run(mini_repo), "E")
 
 
+def _receipt(path, transaction_id, key):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(yaml.safe_dump({
+        "id": transaction_id,
+        "request": {"idempotency_key": key},
+    }), encoding="utf-8")
+
+
+def test_duplicate_idempotency_key_across_receipts_is_error(mini_repo):
+    """Ledger loss + key reuse commits twice; the pair must be loud (JF-13)."""
+    directory = mini_repo / "operations/transactions"
+    _receipt(directory / "transaction-20260101-000000-001.yaml",
+             "transaction-20260101-000000-001", "shared-key")
+    _receipt(directory / "transaction-20260101-000001-001.yaml",
+             "transaction-20260101-000001-001", "shared-key")
+    messages = [str(i) for i in run(mini_repo) if i.severity == "E"]
+    assert any("duplicate idempotency key 'shared-key'" in m for m in messages), messages
+    _receipt(directory / "transaction-20260101-000001-001.yaml",
+             "transaction-20260101-000001-001", "other-key")
+    messages = [str(i) for i in run(mini_repo) if i.severity == "E"]
+    assert not any("duplicate idempotency key" in m for m in messages), messages
+
+
+def test_unreadable_idempotency_ledger_is_error_but_missing_is_fine(mini_repo):
+    """Commit fails closed on a corrupt ledger; validate must say so (JF-13)."""
+    ledger = mini_repo / "operations/transactions/idempotency.yaml"
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    ledger.write_text("entries: [unclosed\n", encoding="utf-8")
+    assert "TRANSACTION-IDEMPOTENCY" in codes(run(mini_repo), "E")
+    ledger.unlink()
+    assert "TRANSACTION-IDEMPOTENCY" not in codes(run(mini_repo), "E")
+
+
 def _relations(mini_repo, rows):
     """Replace the relation registry with exactly ``rows``."""
     f = mini_repo / "knowledge" / "concept-relations.yaml"
