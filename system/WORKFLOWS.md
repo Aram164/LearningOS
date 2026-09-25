@@ -517,6 +517,10 @@ Routing destinations are already deterministic (ARCHITECTURE §3.3); this is the
 
 When an item is genuinely ambiguous, prefer capturing it into the most likely workspace's `scratch/` over guessing a canonical home (least destructive, then ask); Aram never makes the filing decision — the operator does. Rebuild generated outputs once any registry changed.
 
+Read the inbox through the product, never by catting files: `search`
+matches inbox filenames, and `inbox-read NAME` returns bounded segments
+of one drop (binary drops refuse — they have no text read).
+
 ## 22. End a session
 
 Any learning session that used guarded mutation commands ends deliberately:
@@ -898,3 +902,52 @@ register only adopted resources, create units from confirmed scope, add
 explicit workspace joins, validate, regenerate, and review. The quarantined
 originals and migration mapping remain Git-tracked. No bulk promotion is
 allowed.
+
+## 28. Read an operation (`los operations`)
+
+This is the only surface that explains a write request after the fact.
+`los operations` lists recent causal operations (newest first, `--limit`
+up to 50); `los operations --request-id ID` explains one request with a
+full diagnosis, timeline, and receipt facts. An unknown id answers
+`{"error": "unknown request_id"}` (exit 2).
+
+The diagnosis carries three outcomes plus what must still happen:
+
+- `execution_outcome` — what the instrumentation observed
+  (`committed`, `rolled-back`, `refused`, `transport-lost`, `unknown`).
+  Deliberately the weakest: `rolled-back` means rollback *appeared* to
+  complete, which never proves the write is absent.
+- `canonical_outcome` — what the canonical store definitely did:
+  `COMMITTED` (a receipt verified through the strict resolver),
+  `NOT_COMMITTED` (a definitive no-commit refusal:
+  `INVALID_REQUEST`, `UNKNOWN_CAPABILITY`, `STALE_SNAPSHOT`,
+  `REVISION_CONFLICT`, `OUT_OF_SCOPE`, `AMBIGUOUS_MIGRATION`,
+  `VALIDATION_FAILED`, `PROJECTION_FAILED`, `UNCONFIRMED`,
+  `IDEMPOTENCY_CONFLICT` — the full list is
+  `DEFINITIVE_NO_COMMIT_CODES` in
+  `tools/learning_os/diagnostics/conventions.py`), or `AMBIGUOUS`
+  (the evidence cannot decide — an honest answer that keeps the
+  recovery record open).
+- `projection_outcome` — what re-publication did (`published`,
+  `failed`, `skipped`, `unknown`).
+- `recovery_requirement` — what must still happen: `none` (settled or
+  definitively absent), `verify-observation` (receipt exists, no
+  projection observation yet — run `make views` to settle it), or
+  `reconcile-exact-request` (ambiguous outcome — reconcile that exact
+  request). `needs_attention` is true exactly when this is not `none`.
+
+Settlement rule: a commit settles while the live manifest is at or past
+it — the manifest's receipt is at or after the write's — with reason
+"live manifest is past this commit". A behind or unknown manifest keeps
+`verify-observation`; regenerating views (`make views`) is the
+documented settling step. The learner-facing `ui_outcome` is `SETTLED`
+(committed, nothing owed), `REFUSED` (definitively absent, nothing
+owed), or `BLOCKED` (anything else).
+
+Request ids are caller-chosen and not unique: when one id was reused
+across distinct idempotency keys, the explanation names every distinct
+request instead of silently covering only the first. `failure_stage`
+names the first stage known to have failed (`core.admission`,
+`core.snapshot_guard`, `core.revision_guard`, `core.approval`,
+`core.replay`, `core.validation`, `core.commit`, `core.receipt`,
+`core.projection`, `ui.*`), or null when the operation settled.

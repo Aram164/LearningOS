@@ -6,14 +6,15 @@ import hashlib
 import json
 import re
 import sys
-from pathlib import PurePosixPath
+from pathlib import Path, PurePosixPath
 
 from learning_os.derived import DerivedError, evaluate
 from learning_os.errors import unreadable_refusal
 from learning_os.fingerprint import canonical_fingerprint
+from learning_os.garden import garden_id
 from learning_os.genout.atlas import ATLAS_DOMAINS
 from learning_os.loader import load_repo
-from learning_os.loading import Repo, load_notes
+from learning_os.loading import Repo, load_garden, load_notes
 from learning_os.material_analysis import observe_local_material
 from learning_os.material_synthesis import material_synthesis_freshness
 from learning_os.search.index import NoteBlob, build_registry
@@ -270,6 +271,7 @@ def brief_bootstrap(args) -> int:
                     "coordination": "inspect coordination",
                     "intelligence_scan": "intelligence-scan --brief --json",
                     "note_read": "note-read NOTE_ID",
+                    "inbox_read": "inbox-read NAME",
                     "content_search": "search QUERY --type note --content",
                     "material_context": "material-context QUERY",
                     "ability_context": "ability-context",
@@ -283,16 +285,28 @@ def brief_bootstrap(args) -> int:
         return _refusal(exc)
 
 
-def _note_bytes(root, note):
-    path = note.path
-    owner = root / "knowledge" / "notes"
+def _bytes_inside_owner(root, path, owner, *, escape, symlink):
+    """Read bytes admitted by one owner directory; symlinks always refuse.
+
+    The one admission rule for note, garden, and inbox reads: the resolved
+    target must sit below the owner, and no path component may be a link —
+    even one that would resolve in-tree. Only the refusal wording differs
+    per surface.
+    """
     try:
         path.resolve(strict=True).relative_to(owner.resolve(strict=True))
     except (ValueError, OSError) as exc:
-        raise WriteRefused("note path escapes its knowledge owner") from exc
+        raise WriteRefused(escape) from exc
     if any(part.is_symlink() for part in (path, *path.parents) if part != root.parent):
-        raise WriteRefused("note read refuses symlinks")
+        raise WriteRefused(symlink)
     return path.read_bytes()
+
+
+def _note_bytes(root, note):
+    return _bytes_inside_owner(
+        root, note.path, root / "knowledge" / "notes",
+        escape="note path escapes its knowledge owner",
+        symlink="note read refuses symlinks")
 
 
 def _note_collection(root):
@@ -306,6 +320,35 @@ def _note_collection(root):
     return repo
 
 
+def _garden_note(root, note_id):
+    """The garden seed with one stable id, or None.
+
+    Loaded lazily on a durable-note miss, so the registered-note path —
+    including its parse-only-notes budget — never pays for the garden.
+    Identity is the same ``garden_id`` the manifest projects, so search
+    rows and this read cannot disagree about what an id names.
+    """
+    repo = Repo(root=root)
+    load_garden(repo, root)
+    garden_root = root / "knowledge" / "garden"
+    for note in repo.garden_notes:
+        if garden_id(garden_root, note.path) == note_id:
+            return note
+    return None
+
+
+def _content_envelope(contract, ref_key, ref, relpath, raw, content, offset, limit):
+    return {
+        "contract": contract, ref_key: ref, "path": relpath,
+        "content_sha256": "sha256:" + hashlib.sha256(raw).hexdigest(),
+        "offset": offset, "offset_unit": "unicode_characters",
+        "total_characters": len(content),
+        "start_line": content.count("\n", 0, offset) + 1,
+        "content": content[offset:offset + limit],
+        "next_offset": offset + limit if offset + limit < len(content) else None,
+    }
+
+
 def cmd_note_read(args) -> int:
     root = _root(args)
     try:
@@ -315,18 +358,61 @@ def cmd_note_read(args) -> int:
             repo = _note_collection(root)
             note = repo.notes.get(args.note_id)
             if note is None:
-                raise WriteRefused(f"note not found: {args.note_id}")
+                garden = _garden_note(root, args.note_id)
+                if garden is None:
+                    raise WriteRefused(f"note not found: {args.note_id}")
+                raw = _bytes_inside_owner(
+                    root, garden.path, root / "knowledge" / "garden",
+                    escape="garden path escapes its garden owner",
+                    symlink="garden read refuses symlinks")
+                content = raw.decode("utf-8")
+                return _print_stable(root, snapshot, _content_envelope(
+                    "note-content", "note_id", args.note_id,
+                    garden.path.relative_to(root).as_posix(),
+                    raw, content, offset, limit))
             raw = _note_bytes(root, note)
             content = raw.decode("utf-8")
-            return _print_stable(root, snapshot, {
-                "contract": "note-content", "note_id": note.id,
-                "path": note.path.relative_to(root).as_posix(),
-                "content_sha256": "sha256:" + hashlib.sha256(raw).hexdigest(),
-                "offset": offset, "offset_unit": "unicode_characters",
-                "total_characters": len(content), "start_line": content.count("\n", 0, offset) + 1,
-                "content": content[offset:offset + limit],
-                "next_offset": offset + limit if offset + limit < len(content) else None,
-            })
+            return _print_stable(root, snapshot, _content_envelope(
+                "note-content", "note_id", note.id,
+                note.path.relative_to(root).as_posix(),
+                raw, content, offset, limit))
+    except (WriteRefused, OSError, UnicodeError) as exc:
+        return _refusal(exc)
+
+
+def cmd_inbox_read(args) -> int:
+    """Read a bounded segment of one work/inbox file by inbox-relative name.
+
+    Inbox drops are addressed by name — they have no registry and no stable
+    ids — and may be binary, so non-UTF-8 bytes refuse rather than decode.
+    Discovery lists non-dot files (the same rule as the inbox count); an
+    exact name reads whatever it addresses, dot-files included.
+    """
+    root = _root(args)
+    try:
+        offset, limit = _window(args, 16000)
+        name = args.name
+        if Path(name).is_absolute() or ".." in Path(name).parts:
+            raise WriteRefused(f"inbox name must be relative to work/inbox: {name}")
+        with _operator_lock(root):
+            snapshot = _snapshot(root, args.expected_snapshot)
+            target = root / "work" / "inbox" / name
+            if not target.is_symlink() and not target.is_file():
+                raise WriteRefused(f"inbox item not found: {name}")
+            raw = _bytes_inside_owner(
+                root, target, root / "work" / "inbox",
+                escape=f"inbox item escapes work/inbox: {name}",
+                symlink="inbox read refuses symlinks")
+            try:
+                content = raw.decode("utf-8")
+            except UnicodeError as exc:
+                raise WriteRefused(
+                    f"inbox item is not UTF-8 text and has no text read: {name}"
+                ) from exc
+            return _print_stable(root, snapshot, _content_envelope(
+                "inbox-content", "item", name,
+                target.relative_to(root).as_posix(),
+                raw, content, offset, limit))
     except (WriteRefused, OSError, UnicodeError) as exc:
         return _refusal(exc)
 

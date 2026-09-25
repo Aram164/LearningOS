@@ -21,13 +21,14 @@ from learning_os.genout.resume_dossier import (
     ResumeDossierError,
     build_resume_dossier,
 )
-from learning_os.githistory import GitHistoryError
+from learning_os.githistory import GitHistoryError, last_commit_date
 from learning_os.learning_runtime import (
     RuntimeInputError,
     collect_requirements,
     read_observations,
 )
 from learning_os.loader import load_repo
+from learning_os.pathing import PathBoundaryError, resolved_inside
 from learning_os.semantics.goals import stale_observations
 
 from .support import _json_layout, _root
@@ -171,6 +172,45 @@ def _resolve_stage(repo):
     return (None, "no resumable stage: the resume pointer is missing or stale, "
                   "no results were ever recorded, and no study map was ever "
                   "touched — start any stage to set one")
+
+
+#: Trailing excerpt kept in the dossier: progress notes append, so the
+#: tail is the latest recorded work. Bounded so the screen stays one page.
+STAGE_NOTE_EXCERPT_CHARS = 800
+
+
+def _stage_note_facts(root: Path, stage: dict) -> dict | None:
+    """Bounded facts about one stage's working note, or None.
+
+    None means the stage names no note. A missing or unreadable file is
+    zero lines — "nothing recorded yet", never an error: resume is a
+    best-effort screen, and the validator (not this read) names defects.
+    A note path escaping the tree is also None; serving it would be the
+    defect this read must not add.
+    """
+    if not isinstance(stage, dict):
+        return None
+    rel = stage.get("working_note")
+    if not isinstance(rel, str) or not rel:
+        return None
+    try:
+        candidate = resolved_inside(root, root / rel, strict=False)
+    except PathBoundaryError:
+        return None
+    try:
+        text = candidate.read_text(encoding="utf-8", errors="replace") \
+            if candidate.is_file() else ""
+    except OSError:
+        text = ""
+    excerpt = text[-STAGE_NOTE_EXCERPT_CHARS:]
+    if len(text) > STAGE_NOTE_EXCERPT_CHARS:
+        excerpt = excerpt.split("\n", 1)[-1]
+    try:
+        updated = last_commit_date(root, rel) or None
+    except GitHistoryError:
+        updated = None
+    return {"working_note": rel, "lines": len(text.splitlines()),
+            "updated": updated, "excerpt": excerpt}
 
 
 def _top_cluster(root: Path) -> dict | None:
@@ -330,12 +370,13 @@ def cmd_resume(args) -> int:
         for obs in observations
     ]
     top_cluster = _top_cluster(root)
+    stage_note = _stage_note_facts(root, stage)
     try:
         dossier = build_resume_dossier(
             unit_id=unit_id, module_id=module_id, stage_id=stage_id,
             study_map_id=study_map_id, via=via, requirement=requirement,
             observations=obs_rows, open_items=open_items, sittings=sittings,
-            titles=titles, top_cluster=top_cluster)
+            titles=titles, top_cluster=top_cluster, stage_note=stage_note)
     except ResumeDossierError as exc:
         print(f"los: {exc}", file=sys.stderr)
         return 2
@@ -347,7 +388,8 @@ def cmd_resume(args) -> int:
         return 0
     aims = _recorded_aims(repo, module_id, unit_id)
     print(_render(dossier, requirement, observations, open_items, sittings,
-                  titles, via_detail, len(stale_here), top_cluster, aims))
+                  titles, via_detail, len(stale_here), top_cluster, aims,
+                  stage_note))
     return 0
 
 
@@ -369,7 +411,8 @@ def _ago(day: str) -> str:
 def _render(dossier, requirement, observations, open_items, sittings,
             titles, via_detail: str, stale_count: int = 0,
             top_cluster: dict | None = None,
-            recorded_aims: list[tuple[str, str, str]] | None = None) -> str:
+            recorded_aims: list[tuple[str, str, str]] | None = None,
+            stage_note: dict | None = None) -> str:
     today = _dt.date.today()
     lines = [f"{titles['module']} · {titles['unit']} · {dossier.stage_id}",
              f"  ({via_detail})", ""]
@@ -400,6 +443,17 @@ def _render(dossier, requirement, observations, open_items, sittings,
         noun = "result" if stale_count == 1 else "results"
         lines.append(f"  Changed since  {stale_count} earlier {noun} "
                      "were against a requirement that has since changed.")
+    if isinstance(stage_note, dict) and stage_note.get("working_note"):
+        count = stage_note.get("lines") or 0
+        noun = "line" if count == 1 else "lines"
+        when = f", updated {stage_note['updated']}" if stage_note.get("updated") else ""
+        if count > 0:
+            lines.append(f"  Stage note   {count} {noun} recorded ({stage_note['working_note']}{when})")
+            tail = [line for line in (stage_note.get("excerpt") or "").splitlines()
+                    if line.strip()][-3:]
+            lines.extend(f"               {line[:200]}" for line in tail)
+        else:
+            lines.append(f"  Stage note   nothing recorded yet ({stage_note['working_note']})")
     lines.append("")
     if open_items:
         lines.append(f"  Open here    {open_items[0]}")
@@ -427,6 +481,9 @@ def _render(dossier, requirement, observations, open_items, sittings,
     if isinstance(requirement, dict):
         lines.append(f"  Next         los observe {requirement['id']} --activity <what-you-did> "
                      "--result <correct|incorrect|partial|abandoned>")
+    else:
+        lines.append(f"  Next         los stage-note {dossier.unit_id} {dossier.stage_id} "
+                     "--text <what-you-did>")
     upcoming = [(row.get("start_date", ""), row) for row in sittings
                 if isinstance(row.get("start_date"), str)
                 and row["start_date"] >= today.isoformat()]
