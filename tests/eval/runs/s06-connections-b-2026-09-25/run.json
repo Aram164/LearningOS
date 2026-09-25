@@ -1,0 +1,59 @@
+{
+  "run_id": "s06-connections-b-2026-09-25",
+  "plan": "C",
+  "session_role": "connection experiment B (independent repeat of plan C)",
+  "persona": "operator for the learner Noor Haddad (read-only connection discovery)",
+  "blind": true,
+  "started": "2026-09-25T02:15:44Z",
+  "finished": "2026-09-25T02:45:00Z",
+  "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+  "eval_revision": "658db28d0c389f7ac2e5cbf878d099d4d359ec67",
+  "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+  "world_build": {
+    "builder_version": 1,
+    "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+    "product_revision_requested": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+    "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+    "scale": 0,
+    "seed": 20260924,
+    "timeline": {
+      "start": "2026-04-06",
+      "as_of": "2026-09-18"
+    },
+    "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "commits": 133,
+    "notes": 116,
+    "arrivals": 30,
+    "paths": {
+      "repository": "/Users/aramaljanadi/los-eval/s06-connections-b-2026-09-25/LearningOS/repository",
+      "materials": "/Users/aramaljanadi/los-eval/s06-connections-b-2026-09-25/LearningOS/materials",
+      "drop": "/Users/aramaljanadi/los-eval/s06-connections-b-2026-09-25/eval-drop"
+    },
+    "validation": "0 error(s), 3 warning(s) — OK (0.2s)",
+    "validate_exit": 0,
+    "generate_exit": 0
+  },
+  "model": "claude-opus-5-5 (Claude Code, desktop app)",
+  "environment": {
+    "os": "macOS 26.6.2 (Darwin 25.6.0)",
+    "harness_python": "3.12.13 venv with pyyaml, jsonschema, pypdf",
+    "world_python": "3.14.4 (.venv created by the world's make setup)",
+    "world_path": "~/los-eval/s06-connections-b-2026-09-25",
+    "session_branch": "claude/eval-s06-connections-b-2026-09-25",
+    "session_worktree": "git worktree of LearningOS/repository in the Claude scratchpad"
+  },
+  "scenarios": [
+    "S03",
+    "S27"
+  ],
+  "deviations": [
+    "Harness Python: the protocol example names python3.13, which is not installed here; the harness venv used python3.12. The world's own make setup used the system python3 (3.14.4).",
+    "Prior knowledge: this agent session started with a persistent-memory index in context whose one-line entries describe LearningOS internals (gateway write path, plan route identity, material text extraction, repository topology). The memory files were not opened, and neither scenario needed write-path knowledge, but an unfamiliar consumer would not have had this context. Oracle blindness is unaffected.",
+    "Incidental listings: listing git worktrees (to choose a worktree location) showed the names of other eval session branches (s04b, s05, s07), and listing ~/los-eval showed a conductor directory named oracle. Neither was opened or read; no oracle material was seen.",
+    "S27 reset used the protocol's reset (git reset --hard plus git clean -fd inside the world). Gitignored state from S03 survived: .venv, the installed git hooks, and the generated/derived-state projection cache (490,130 bytes). S27 therefore ran on a canonically fresh world with a warm cache and the tooling already set up; the S27 observer diff shows zero changes of any kind.",
+    "S27 ranking reused the full-corpus reading done in S03 in the same session; the reset world has identical content. The arrival-specific product searches were run fresh against the reset world.",
+    "The world's make setup, run in S03 as a consumer would, installed pre-commit, post-commit and pre-push hooks into the world's .git/hooks. These are outside git status and are not canonical changes.",
+    "The kickoff authorized computing approval values for writes the learner approves; plan C has no writes, so none were computed or needed.",
+    "Operator error outside the product and outside the world: while writing this run.json, an unquoted shell here-document made the shell execute backtick-quoted text from the draft deviation strings. This included git reset --hard and git clean -fd, run in the operator's umbrella checkout, not in the world or the LearningOS repository. No tracked file changed and nothing under LearningOS/ was touched (it is ignored there), but untracked, unignored files in that umbrella checkout were deleted. The run's evidence (the world, the observations, all records) was unaffected: the world was verified unchanged by the S27 diff taken before this happened. Reported to the owner."
+  ]
+}
