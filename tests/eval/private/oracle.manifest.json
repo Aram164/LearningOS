@@ -1,7 +1,7 @@
 {
   "sealed": "2026-09-25",
-  "plaintext_sha256": "24bf168a3ff469904ee274913f88ab8efaa8cad9e1174aa427665bc7b14736db",
-  "plaintext_bytes": 40615,
+  "plaintext_sha256": "de5456ab1502f8c9496d5fb2004f14bb44ef711691aac08d45d2c814c18c6f88",
+  "plaintext_bytes": 42564,
   "files": [
     "AUTHOR-NOTES.md",
     "README.md",
