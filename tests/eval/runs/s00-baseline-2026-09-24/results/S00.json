@@ -1,0 +1,121 @@
+{
+  "scenario": "S00",
+  "run_id": "s00-baseline-2026-09-24",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "A five-line state + due-soon answer was produced from documented read commands (bootstrap --brief, resume, inspect coordination, inspect) in 9 consumer tool calls with zero writes. Friction: the default interpreter (3.11) is refused and no venv exists, so a setup detour was needed before the first read; CLAUDE.md and OPERATOR.md name different sources for 'what next'; and the resume pointer (labelled 'confirmed') disagrees with the study map's current_stage without the product flagging it.",
+  "before": {
+    "revision": "9a85f012bea38e7db8bd76edf6251136f9aa15e1",
+    "git_status": [],
+    "canonical_digest": "c888e80b499ff1091f9bf17f936b85a82fb539545b000cb7df8bded00852436e",
+    "derived_digest": "df97c8737d287c93f8e3a048d46ad71f9da0e95cf3cccd0c0bbc8e63032db409",
+    "snapshot_file": "observations/S00-before.json"
+  },
+  "consumer": {
+    "goal": "Get bearings in an unfamiliar LearningOS installation and tell the learner in five lines what state she is in and what is due soon.",
+    "first_action": "Listed the world repository root and git log (ls -a; git log --oneline | head -5), then read CLAUDE.md (auto-loaded adapter, identical to the host copy) and system/OPERATOR.md (declared entry point).",
+    "commands": [
+      "cd ~/los-eval/s00-baseline-2026-09-24/LearningOS/repository && ls -a && git log --oneline | head -5 && git log --oneline | wc -l",
+      "diff -q CLAUDE.md <host CLAUDE.md>; cat system/OPERATOR.md",
+      "python tools/los.py bootstrap --brief   # exit 1: ImportError 'LearningOS needs Python >= 3.12; this is 3.11.15' with two recovery options",
+      "which uv; uv --version",
+      "uv venv --python 3.12 ~/losvenv && uv pip install --python ~/losvenv/bin/python PyYAML 'jsonschema>=4' pypdf   # verbatim from the error hint, outside the repository",
+      "~/losvenv/bin/python tools/los.py bootstrap --brief   # exit 0, 5269-byte single-line JSON, 1.6 s",
+      "~/losvenv/bin/python tools/los.py resume   # exit 0, human one-screen text",
+      "~/losvenv/bin/python tools/los.py inspect coordination   # exit 0, JSON sections of work/COORDINATION.md",
+      "~/losvenv/bin/python tools/los.py inspect study-map-os-l02 study-map-statlearn-l05   # exit 0, batch JSON with snapshot"
+    ],
+    "tool_calls": 9,
+    "docs_consulted": [
+      "CLAUDE.md (world copy; identical to the copy auto-loaded into the agent context)",
+      "system/OPERATOR.md"
+    ],
+    "impl_files_read": [],
+    "retries": 1,
+    "confusions": [
+      "Which entry to trust for 'what next / what is due': CLAUDE.md hard rule 6 and §7 say to answer from the manifest plus a 'freshly rebuilt coordination view' and to consult generated/domain-atlas.md, but OPERATOR.md (the declared entry point) says bootstrap --brief, then inspect coordination; generated/ is empty in the fresh world. Followed OPERATOR.md; did not rebuild generated views.",
+      "What 'today' is: the world timeline ends 2026-09-18 but the product's resume computes '8 days ago' / '18 days' from the machine clock (2026-09-24). bootstrap --brief itself carries no as-of date and no days-until, and lists past July deadlines alongside future ones; used the machine clock as today.",
+      "Current stage disagreement: bootstrap --brief resume_pointer = stage-os-l02-02-proportional-share with pointer_state 'confirmed', while active_study_maps (and inspect study-map-os-l02) shows current_stage = stage-os-l02-01-classic-policies (active) and stage 02 'pending'. Similarly the StatLearn workspace next action says 'Finish the L05 comparison (stage 2)' while study-map-statlearn-l05 has stage 1 active and stage 2 pending. Neither resume nor the brief flags this.",
+      "resume shows only the exam of the resume pointer's module (OS oral, 18 days); the sooner StatLearn exam (12 days, declared primary priority) appears only in bootstrap --brief academic_deadlines."
+    ],
+    "corrective_steps": [
+      "Created a Python 3.12 venv outside the repository exactly as the ImportError hint suggested (did not run make setup, to keep the orientation read-only; setup is exercised in S01).",
+      "Ran inspect on the two study maps to check the stage disagreement rather than guessing; reported it to the learner as unresolved instead of recording anything."
+    ],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 1.6,
+    "outcome": "Learner sees five lines (evidence/S00-answer.md): where study stopped (OS L02 proportional-share stage, pointer 2026-09-16, no evidence yet) with an explicit caveat that the study maps disagree; her 2026-08-24 priority decision; StatLearn 2. Termin exam Tue 2026-10-06 10:00-12:00 (registered, 12 days); OS oral Mon 2026-10-12 14:30 (registered, 18 days); plus the recorded 'book a timed mock exam first week of October' aim, 7 unrouted inbox items, and that all registration windows are closed."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "None: only read commands were run; no gateway envelope was submitted.",
+    "approval_behavior": "Not exercised (no writes).",
+    "projection_activity": "bootstrap --brief, inspect (batch) returned snapshot_id sha256:24555340... computed in memory; generated/ stayed empty (0 bytes, only .gitkeep) before and after, so read commands do not materialise derived files.",
+    "persistence_activity": "None observed: operations/ai-actions, gateway-requests, diagnostics unchanged (.gitkeep only).",
+    "derived_changes": "none (derived digest unchanged, 0 bytes)",
+    "manifest_changes": "none written; generated/manifest.json does not exist in the fresh world",
+    "unexpected_writes": [],
+    "warnings_errors": [
+      "ImportError on default python 3.11.15: 'LearningOS needs Python >= 3.12 ... Use the project venv (make setup), or build one outside the repository: uv venv --python 3.12 ~/losvenv && uv pip install ...' (actionable)"
+    ],
+    "git_diff_stat": "(empty — world HEAD 9a85f01 unchanged, git status clean)",
+    "observe_diff_file": "observations/S00-diff.json"
+  },
+  "after": {
+    "revision": "9a85f012bea38e7db8bd76edf6251136f9aa15e1",
+    "git_status": [],
+    "canonical_digest": "c888e80b499ff1091f9bf17f936b85a82fb539545b000cb7df8bded00852436e",
+    "derived_digest": "df97c8737d287c93f8e3a048d46ad71f9da0e95cf3cccd0c0bbc8e63032db409",
+    "snapshot_file": "observations/S00-after.json"
+  },
+  "friction": [
+    {
+      "tag": "setup-failure",
+      "description": "Default `python` is 3.11.15 and tools/los.py refuses it; the fresh world has no .venv. The ImportError names two fixes (make setup, or an outside-repo uv venv) so recovery was mechanical, but no read works before setup.",
+      "cost": "3 extra tool calls, <1 minute"
+    },
+    {
+      "tag": "doc-contradiction",
+      "description": "CLAUDE.md hard rule 6 / §7 route 'what next' through a freshly rebuilt coordination view and generated/domain-atlas.md; OPERATOR.md routes it through bootstrap --brief + inspect coordination and says interfaces must not read generated prose. A first-time agent has to pick one.",
+      "cost": "0 calls; decision uncertainty"
+    },
+    {
+      "tag": "other",
+      "description": "Resume pointer is labelled 'confirmed' while the study map's current_stage names an earlier stage (and marks the pointer's stage 'pending'); the discrepancy is only visible by comparing two fields of the brief and inspecting the maps. No command reports it.",
+      "cost": "1 extra tool call"
+    },
+    {
+      "tag": "other",
+      "description": "bootstrap --brief is a single-line JSON blob with no as-of date or days-until and mixes past (July) and future deadlines; resume gives day counts but only for the pointer's module. Computing 'due soon' needed manual date arithmetic across two outputs.",
+      "cost": "1 extra tool call"
+    }
+  ],
+  "failures": [],
+  "scenario_record": {
+    "reads_before_first_answer_in_order": [
+      "CLAUDE.md (auto-loaded; world copy identical)",
+      "ls -a / git log of the world repository",
+      "system/OPERATOR.md",
+      "python tools/los.py bootstrap --brief (failed: Python 3.11)",
+      "which uv",
+      "uv venv + uv pip install (outside repo, per error hint)",
+      "tools/los.py bootstrap --brief",
+      "tools/los.py resume",
+      "tools/los.py inspect coordination",
+      "tools/los.py inspect study-map-os-l02 study-map-statlearn-l05"
+    ],
+    "wall_clock_minutes_until_first_answer": 1.6,
+    "tool_calls_until_first_answer": 9,
+    "unsure_about_and_resolution": [
+      "Which doc governs 'what next' (CLAUDE.md vs OPERATOR.md) -> followed OPERATOR.md, the declared entry point.",
+      "Today's date -> used the machine clock (2026-09-24), which is also what `resume` uses for its day counts.",
+      "Which stage is current -> not resolved by the product; surfaced to the learner as a disagreement between the resume pointer / workspace notes and the study maps.",
+      "Whether to run `make setup` (writes into the repo) -> chose the error hint's outside-the-repository venv to keep orientation read-only."
+    ]
+  },
+  "uncertainties": [
+    "Whether the resume-pointer vs study-map stage disagreement is intended world state (learner never updated stage progress) or a projection issue; not investigated further to avoid reading implementation.",
+    "Whether a real first-time agent would have the CLAUDE.md contract in context: here it was auto-loaded because the host repository carries an identical copy."
+  ]
+}

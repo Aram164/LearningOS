@@ -1,0 +1,35 @@
+schema_version: 2
+id: transaction-20260925-000028-001
+type: transaction-receipt
+status: committed
+capability: capture.create
+committed_at: '2026-09-25T00:00:28+00:00'
+snapshot_before: sha256:2455534070cec3a4eb09fffe96fa61aa792bd862831fe5510ca9740acd37c74c
+snapshot_after: sha256:15aed1b58a7f0df34a4ccbe66682c05ca9775cc625a668a851f68de3b2248843
+expected_revisions:
+  capture-request:s26-inbox-lasso-subgradients-1: 0
+artifact_revisions:
+  capture-request:s26-inbox-lasso-subgradients-1:
+    before: 0
+    after: 1
+writes:
+- path: work/inbox/20260925-000028-ask-tutor-about-lasso-subgradients.md
+  sha256_before: null
+  sha256_after: 5f8d7f0e7bb65a0b8420dccb07b68d6cbe193c526893aad235c1e6008001a3cc
+  created: true
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: capture.create
+    declared_writes:
+    - work/inbox/**
+request:
+  channel: operator
+  request_id: s26-inbox-lasso-subgradients-req1
+  idempotency_key: s26-inbox-lasso-subgradients-1
+  intent_sha256: sha256:129fc8fc1c937724e3a3f6a66ac632d11ee1e2c4c99dab349c6773b82ee09cbc
+  approval:
+    kind: direct-user-gesture
+    subject_sha256: sha256:129fc8fc1c937724e3a3f6a66ac632d11ee1e2c4c99dab349c6773b82ee09cbc

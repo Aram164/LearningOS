@@ -1,0 +1,17 @@
+{
+  "operations": [
+    {
+      "trace_id": "b3374ba2d506605f0e90a7e68fc300f5",
+      "request_id": "req-bad-payload",
+      "capability": "unknown.write",
+      "started_at": 1790292887.1946151,
+      "duration_ms": 16199.7,
+      "attempts": 45,
+      "replayed": true,
+      "first_failure_stage": "core.admission",
+      "canonical_outcome": "AMBIGUOUS",
+      "recovery_requirement": "reconcile-exact-request",
+      "needs_attention": true
+    }
+  ]
+}
