@@ -105,8 +105,8 @@ fails. Same corpus + product revision + scale + seed ⇒ same world HEAD.
 | What | Value |
 |---|---|
 | Product revision installed by default | `200a36185fd5c693b4464ce0bdff4be5b89ce584` (`corpus/world.yaml`) |
-| World HEAD at that revision, scale 0 | `9a85f012bea38e7db8bd76edf6251136f9aa15e1` (the self-test prints it; any corpus or builder change moves it) |
-| Timeline | 2026-04-06 → 2026-09-18, 132 commits, fixed author and dates |
+| World HEAD at that revision, scale 0 | `13ad2fcaa0e478afddba6451e29376ca00f0bc8e` since harness change H1 (see CAMPAIGN.md; the self-test prints it) |
+| Timeline | 2026-04-06 → 2026-09-18, 133 commits, fixed author and dates |
 
 ## Self-tests
 

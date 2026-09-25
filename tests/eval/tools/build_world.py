@@ -322,15 +322,22 @@ class World:
                         **{k: v for k, v in smap_rec.items()
                            if k not in ("id", "stages", "date", "history")},
                         "stages": stages}
-                self.put(smap_rec.get("date", unit.get("date", mod["date"])),
-                         f"{ubase}/study-map.yaml", dump_yaml(srec), f"Study map {srec['id']}")
+                final_date = iso(smap_rec.get("date", unit.get("date", mod["date"])))
+                # Earlier progress states first, each strictly before the final
+                # state: a same-date history entry would overwrite the final
+                # map (both land in one commit, last write wins).
                 for past in smap_rec.get("history", []):
+                    if iso(past["date"]) >= final_date:
+                        raise BuildError(f"{srec['id']}: history date {past['date']} is not "
+                                         f"before the map's final date {final_date}")
                     earlier = json.loads(json.dumps(srec))
                     earlier["current_stage"] = past["current_stage"]
                     for st in earlier["stages"]:
                         st["status"] = past["statuses"].get(st["id"], st["status"])
                     self.put(past["date"], f"{ubase}/study-map.yaml", dump_yaml(earlier),
                              f"Progress in {srec['id']}")
+                self.put(final_date, f"{ubase}/study-map.yaml", dump_yaml(srec),
+                         f"Study map {srec['id']}")
         unused = sorted(set(stage_bodies) - used_stage_bodies)
         if unused:
             raise BuildError(f"stage notes without a stage: {unused}")

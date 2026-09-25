@@ -77,7 +77,7 @@ modules:
           workspace_ids: [workspace-statlearn-retake]
         study_map:
           id: study-map-statlearn-l05
-          date: 2026-07-27
+          date: 2026-09-07
           status: active
           current_stage: stage-l05-02-generative-vs-discriminative
           source_plan: {path: work/active/workspace-statlearn-retake/CONTEXT.md, provenance: learner}
@@ -326,7 +326,7 @@ modules:
           workspace_ids: [workspace-os-oral-prep]
         study_map:
           id: study-map-os-l02
-          date: 2026-08-19
+          date: 2026-08-27
           status: active
           current_stage: stage-os-l02-02-proportional-share
           source_plan: {path: work/active/workspace-os-oral-prep/CONTEXT.md, provenance: learner}
