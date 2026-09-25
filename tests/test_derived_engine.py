@@ -318,3 +318,29 @@ def test_discarded_staging_leaves_the_store_empty(tmp_path: Path):
     assert staging.pending == {}
     assert read_state(tmp_path) == {}
     assert evaluate(tmp_path, "a", registry=registry, inputs={}).status == "rebuilt"
+
+
+def test_one_session_reads_the_state_index_once(tmp_path: Path, monkeypatch):
+    import learning_os.derived.engine as engine_module
+
+    producer = _producer(tmp_path)
+    registry = {
+        f"dep-{i}": (_spec(f"dep-{i}", producer), lambda ctx: {"i": ctx.spec.id})
+        for i in range(5)
+    }
+    registry["root"] = (
+        _spec("root", producer,
+              dependencies=tuple(f"dep-{i}" for i in range(5))),
+        lambda ctx: {"n": len(ctx.dependencies)},
+    )
+    assert evaluate(tmp_path, "root", registry=registry, inputs={}).status == "rebuilt"
+    calls: list[Path] = []
+    real_read_state = engine_module.read_state
+
+    def counted(root: Path):
+        calls.append(root)
+        return real_read_state(root)
+
+    monkeypatch.setattr(engine_module, "read_state", counted)
+    assert evaluate(tmp_path, "root", registry=registry, inputs={}).status == "hit"
+    assert len(calls) == 1

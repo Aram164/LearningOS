@@ -26,6 +26,11 @@ from pathlib import Path
 import pytest
 import yaml
 
+#: The whole module replays the maintainer's own pilot drafts and receipts,
+#: which exist only in this installation — checked-in repository state, so
+#: `full_repo`, not `test-fast` (JF-02).
+pytestmark = pytest.mark.full_repo
+
 REPO = Path(__file__).resolve().parents[1]
 TOOLS = REPO / "tools"
 FIXTURES = REPO / "tests" / "fixtures"
