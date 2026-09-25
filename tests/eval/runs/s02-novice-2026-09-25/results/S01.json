@@ -26,7 +26,10 @@
       "git status --short; git status --short --ignored"
     ],
     "tool_calls": 13,
-    "docs_consulted": ["README.md (Commands, setup and hooks sections)", "Makefile (setup target)"],
+    "docs_consulted": [
+      "README.md (Commands, setup and hooks sections)",
+      "Makefile (setup target)"
+    ],
     "impl_files_read": [],
     "retries": 2,
     "confusions": [
@@ -45,7 +48,9 @@
     "outcome": "Told the learner: your repository is healthy — the validator reports 0 errors, the warning baseline has no new signature, and only two advisory warnings remain (Ledgerline untouched 31 days, linear-algebra refresh untouched 104 days). No note or other tracked file was changed (git status clean before and after). Tooling works after creating a Python 3.12 environment (the machine default 3.11 is refused; I had to delete a half-built .venv). Caveat: the product's quick test suite fails 34 of ~2250 tests here, mostly because tests look for files from another person's repository, and running it left a spurious 'needs attention' operation (req-bad-payload) in your operations log that you did not cause."
   },
   "internal": {
-    "request_ids": ["req-bad-payload (written by the test suite, not by the learner)"],
+    "request_ids": [
+      "req-bad-payload (written by the test suite, not by the learner)"
+    ],
     "receipts": [],
     "transaction_behavior": "No gateway write by the operator. The test suite exercised the gateway against the learner's installation root.",
     "approval_behavior": "None required; no notes changed.",
@@ -74,29 +79,76 @@
     "snapshot_file": "observations/S01-after.json"
   },
   "friction": [
-    {"tag": "setup-failure", "description": "'make setup' uses PYTHON ?= python3; on this machine that is 3.11 and pip rejects the package. The failure leaves a half-built .venv.", "cost": "1 failed command"},
-    {"tag": "unhelpful-error", "description": "Retrying with the README's documented override (make setup PYTHON=python3.12) fails identically because the stale .venv keeps a 3.11 python symlink; neither the Makefile nor the error says to remove .venv.", "cost": "1 failed command + diagnosis (2 tool calls)"},
-    {"tag": "doc-contradiction", "description": "README calls make test-fast 'quick feedback ... no checked-in repository load'; it took 10m51s and ~16 failures are FileNotFoundError on another learner's files (work/active/workspace-m2-exam-prep/outputs/...).", "cost": "11 minutes"},
-    {"tag": "unclear-safety", "description": "Running the documented test suite inside the installation writes into the learner's operational diagnostics store; nothing warns that tests share the installation root.", "cost": "phantom needs-attention operation left behind"},
-    {"tag": "unclear-terminology", "description": "Validator prints '3 warning(s)' while the baseline gate prints '0 warning(s) across 0 signature(s)'; the exemption is not explained in the output.", "cost": "1 confusion"}
+    {
+      "tag": "setup-failure",
+      "description": "'make setup' uses PYTHON ?= python3; on this machine that is 3.11 and pip rejects the package. The failure leaves a half-built .venv.",
+      "cost": "1 failed command"
+    },
+    {
+      "tag": "unhelpful-error",
+      "description": "Retrying with the README's documented override (make setup PYTHON=python3.12) fails identically because the stale .venv keeps a 3.11 python symlink; neither the Makefile nor the error says to remove .venv.",
+      "cost": "1 failed command + diagnosis (2 tool calls)"
+    },
+    {
+      "tag": "doc-contradiction",
+      "description": "README calls make test-fast 'quick feedback ... no checked-in repository load'; it took 10m51s and ~16 failures are FileNotFoundError on another learner's files (work/active/workspace-m2-exam-prep/outputs/...).",
+      "cost": "11 minutes"
+    },
+    {
+      "tag": "unclear-safety",
+      "description": "Running the documented test suite inside the installation writes into the learner's operational diagnostics store; nothing warns that tests share the installation root.",
+      "cost": "phantom needs-attention operation left behind"
+    },
+    {
+      "tag": "unclear-terminology",
+      "description": "Validator prints '3 warning(s)' while the baseline gate prints '0 warning(s) across 0 signature(s)'; the exemption is not explained in the output.",
+      "cost": "1 confusion"
+    }
   ],
-  "failures": ["F-s01-test-trace-leak-01", "F-s01-test-fast-red-02", "F-s01-setup-stale-venv-03"],
+  "failures": [
+    "F-s01-test-trace-leak-01",
+    "F-s01-test-fast-red-02",
+    "F-s01-setup-stale-venv-03"
+  ],
   "scenario_record": {
     "setup_commands": [
-      {"command": "make setup", "exit": 2, "note": "default python3 is 3.11"},
-      {"command": "make setup PYTHON=python3.12", "exit": 2, "note": "stale .venv reused"},
-      {"command": "rm -rf .venv && make setup PYTHON=python3.12", "exit": 0, "note": "workaround"},
-      {"command": "(S00) uv venv --python 3.12 ~/losvenv + PyYAML jsonschema pypdf", "exit": 0, "note": "out-of-repo venv from the product's ImportError message; used for fresh worlds later in this run"}
+      {
+        "command": "make setup",
+        "exit": 2,
+        "note": "default python3 is 3.11"
+      },
+      {
+        "command": "make setup PYTHON=python3.12",
+        "exit": 2,
+        "note": "stale .venv reused"
+      },
+      {
+        "command": "rm -rf .venv && make setup PYTHON=python3.12",
+        "exit": 0,
+        "note": "workaround"
+      },
+      {
+        "command": "(S00) uv venv --python 3.12 ~/losvenv + PyYAML jsonschema pypdf",
+        "exit": 0,
+        "note": "out-of-repo venv from the product's ImportError message; used for fresh worlds later in this run"
+      }
     ],
     "validator": "make check: 0 error(s), 3 warning(s) before views; 0 error(s), 2 warning(s) after make views",
     "warning_baseline": "make warnings: OK — zero errors, no new warning signature (0 baseline-managed warnings; the 2-3 visible ones are exempt advisories)",
     "tests": "make test-fast: exit 2, 34 failed / 2214 passed / 30 skipped / 83 deselected, 10m51s",
     "git_status_before": [],
     "git_status_after": [],
-    "ignored_files_created": [".venv/", ".pytest_cache/", "generated/* (20 files)", "operations/diagnostics/traces.jsonl", "tools/**/__pycache__/"]
+    "ignored_files_created": [
+      ".venv/",
+      ".pytest_cache/",
+      "generated/* (20 files)",
+      "operations/diagnostics/traces.jsonl",
+      "tools/**/__pycache__/"
+    ]
   },
   "uncertainties": [
     "I did not read the tests to find which one writes req-bad-payload, so the reproduction is not minimized below 'make test-fast'.",
-    "Some of the 34 failures (operations ordering, recovery conflicts, pilot replay) may be sensitive to machine speed or to the eval world's replaced data rather than to a product bug; I did not investigate beyond the error lines."
+    "Some of the 34 failures (operations ordering, recovery conflicts, pilot replay) may be sensitive to machine speed or to the eval world's replaced data rather than to a product bug; I did not investigate beyond the error lines.",
+    "Harness follow-up after the scenario (TRACEPARENT unset, same world): make test-fast -> 30 failed / 2218 passed; the 4 test_operations failures were environment-caused. The re-run again wrote traces into the world and left >=20 phantom AMBIGUOUS/needs_attention operations, so the diagnostics leak is independent of TRACEPARENT (see failures.jsonl)."
   ]
 }

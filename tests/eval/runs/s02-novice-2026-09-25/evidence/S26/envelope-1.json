@@ -1,0 +1,16 @@
+{
+ "schema_version": 2,
+ "request_id": "s26-inbox-lasso-1",
+ "idempotency_key": "s26-inbox-lasso",
+ "capability": "capture.create",
+ "channel": "operator",
+ "expected_snapshot": "sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e",
+ "expected_revisions": {},
+ "payload": {
+  "text": "ask tutor about lasso subgradients"
+ },
+ "approval": {
+  "kind": "direct-user-gesture",
+  "subject_sha256": "sha256:cfb176e7791ca33a03217228b157dd18e26529af16dcff3b0d0e3ae6bac1556f"
+ }
+}

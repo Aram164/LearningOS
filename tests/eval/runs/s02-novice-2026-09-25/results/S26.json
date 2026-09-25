@@ -1,0 +1,83 @@
+{
+  "scenario": "S26",
+  "run_id": "s02-novice-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "All three goals were done in 5 tool calls and under a minute of wall time, but only because this session had already learned the entry reads (S00), the envelope and intent-hash recipe (S04, which needed an implementation read) and the request-scoped revision pattern (S06). Even so the inbox write took two submissions, because capture.create requires expected_revisions {'capture-request:<idempotency_key>': 0}, which is documented nowhere (the refusal names it). The 'due in three weeks' filter had to be done by hand over bootstrap --brief's mixed deadline list, and 'los operations' again reports the committed capture as AMBIGUOUS/needs_attention.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S26-before.json"
+  },
+  "consumer": {
+    "goal": "(1) list what is due in the next three weeks, (2) add 'ask tutor about lasso subgradients' to the inbox, (3) show the notes on caching.",
+    "first_action": "los status + los bootstrap --brief (deadlines filtered to 2026-09-25..2026-10-16) + grep of workspace deadlines",
+    "commands": [
+      "G1: los status ; los bootstrap --brief | filter academic_deadlines to [2026-09-25, 2026-10-16] ; grep deadline work/active/*/CONTEXT.md",
+      "G2: los capability capture.create --payload-file envelope-1.json   # INVALID_REQUEST missing 'capture-request:s26-inbox-lasso' (exit 2)",
+      "G2: los capability capture.create --payload-file envelope-2.json   # ok, transaction-20260925-004911-001, work/inbox/20260925-004911-ask-tutor-about-lasso-subgradients.md",
+      "G3: los search caching ; los search cache ; (+ --type note --content)",
+      "G3: los note-read note-caching-everywhere ; los related note-caching-everywhere",
+      "python tools/validate.py --compact ; python tools/warning_baseline.py --check"
+    ],
+    "tool_calls": 5,
+    "docs_consulted": [],
+    "impl_files_read": [],
+    "retries": 1,
+    "confusions": [
+      "bootstrap --brief has no 'next N days' view; past deadlines are interleaved with future ones, so the three-week window was filtered by the operator. Workspace self-set deadlines and next actions (e.g. 'Book a mock exam under timed conditions for the first week of October') are not in academic_deadlines.",
+      "capture.create's request-scoped revision key ('capture-request:<idempotency_key>') differs from garden.seed.create's ('garden-request:<key>'); neither is documented, so even with S06's experience the first submission guessed wrong (empty map).",
+      "'search caching' finds one note; 'search cache' finds four notes and ten content hits; stem variants must be tried by hand."
+    ],
+    "corrective_steps": ["Added the artifact id named by the INVALID_REQUEST message and resubmitted."],
+    "questions_asked_to_learner": [
+      "I'll add one inbox item with exactly the text 'ask tutor about lasso subgradients' via capture.create. OK? -> 'Yes.'"
+    ],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 1,
+    "outcome": "(1) Next three weeks (to 16 Oct): Statistical Learning 2. Termin, Tue 6 Oct 2026 10:00-12:00, registered; Operating Systems oral, Mon 12 Oct 2026 14:30, registered. Your own plan also says to book a timed mock exam for the first week of October (StatLearn workspace next action). (2) Added to your inbox: work/inbox/20260925-004911-ask-tutor-about-lasso-subgradients.md ('ask tutor about lasso subgradients'), receipt transaction-20260925-004911-001. (3) Caching notes: note-caching-everywhere ('The same cache idea in three courses' — CPU caches, DB buffer pool, memoization; you wondered if it is 'more than a pun'); note-cpu-cache-locality (Caches and locality); note-buffer-pool-replacement (Buffer pool management); note-dynamic-programming-memoization (memoization); note-kv-cache-transformer-serving (KV cache in transformer inference). Passing mentions: TLB caching translations (note-virtual-memory-address-translation), cache/TLB cost of a context switch (note-context-switch-cost), cached top levels of B+ trees (note-b-plus-tree-indexes), cached materialized views (note-event-sourcing-append-only)."
+  },
+  "internal": {
+    "request_ids": ["s26-inbox-lasso-1 (refused INVALID_REQUEST)", "s26-inbox-lasso-2 (committed)"],
+    "receipts": ["operations/transactions/transaction-20260925-004911-001.yaml"],
+    "transaction_behavior": "First envelope refused at admission, no write. Second committed: inbox file created, capture-request:s26-inbox-lasso 0 -> 1, snapshot 82bcffb7... -> 2705d1a3....",
+    "approval_behavior": "approval.kind direct-user-gesture (matching capture.create's declared admission), subject = intent hash; learner said 'Yes.' to the exact text first.",
+    "projection_activity": "Projection republished in the transaction; 138 derived files added (views + derived-state cache from the reads).",
+    "persistence_activity": "operations/transactions/{idempotency.yaml, revisions.yaml, transaction-20260925-004911-001.yaml} created.",
+    "derived_changes": "generated/: 138 files added.",
+    "manifest_changes": "inbox count 7 -> 8 in the manifest.",
+    "unexpected_writes": [],
+    "warnings_errors": [
+      "INVALID_REQUEST: expected_revisions must cover exactly every transaction artifact (missing=['capture-request:s26-inbox-lasso'])",
+      "los operations: one merged operation (request s26-inbox-lasso-1, attempts 2, AMBIGUOUS, needs_attention true) although -2 committed (F-s04-operations-merge-04)"
+    ],
+    "git_diff_stat": "untracked: work/inbox/20260925-004911-ask-tutor-about-lasso-subgradients.md and 3 files under operations/transactions/",
+    "observe_diff_file": "observations/S26-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [
+      "?? operations/transactions/idempotency.yaml",
+      "?? operations/transactions/revisions.yaml",
+      "?? operations/transactions/transaction-20260925-004911-001.yaml",
+      "?? work/inbox/20260925-004911-ask-tutor-about-lasso-subgradients.md"
+    ],
+    "snapshot_file": "observations/S26-after.json"
+  },
+  "friction": [
+    {"tag": "hidden-prerequisite", "description": "capture.create needs expected_revisions {'capture-request:<idempotency_key>': 0}; the key differs per capability and is undocumented; learned only from the refusal.", "cost": "1 retry"},
+    {"tag": "needs-implementation-knowledge", "description": "The inbox write was only this short because the intent-hash recipe had been learned from tools/learning_os/contracts/gateway.py in S04; a fresh agent has no documented way to build the envelope for a one-line capture.", "cost": "carried over from S04 (4 tool calls + 1 refused write)"},
+    {"tag": "redundant-calls", "description": "No 'upcoming within N days' read; the deadline window was computed by the operator over the full list.", "cost": "manual filtering"},
+    {"tag": "unstable-output-format", "description": "search is literal substring: 'caching' and 'cache' return different sets.", "cost": "1 extra query"}
+  ],
+  "failures": [],
+  "scenario_record": {
+    "per_goal": [
+      {"goal": "what's due in the next three weeks", "tool_calls": 1, "commands": ["los status", "los bootstrap --brief (filtered)", "grep deadline work/active/*/CONTEXT.md"], "retries": 0, "docs_read": [], "impl_files_read": [], "wall_seconds": 3, "note": "relied on S00's knowledge of bootstrap --brief"},
+      {"goal": "add inbox note", "tool_calls": 2, "commands": ["los capability capture.create (x2)"], "retries": 1, "docs_read": [], "impl_files_read": [], "wall_seconds": 11, "note": "relied on S04's implementation read for the intent hash"},
+      {"goal": "show notes on caching", "tool_calls": 2, "commands": ["los search caching|cache (+ --content)", "los note-read note-caching-everywhere", "los related note-caching-everywhere"], "retries": 0, "docs_read": [], "impl_files_read": [], "wall_seconds": 11}
+    ]
+  },
+  "uncertainties": [
+    "Timings reflect an agent that had already paid the discovery cost earlier in this run; a first-contact agent would need roughly S00's 8 calls plus S04's envelope discovery (about 10 calls including an implementation read) for the same three goals."
+  ]
+}

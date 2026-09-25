@@ -1,0 +1,20 @@
+{
+ "schema_version": 2,
+ "request_id": "s14-svm-contexts-1",
+ "idempotency_key": "s14-svm-contexts",
+ "capability": "note.revise",
+ "channel": "operator",
+ "expected_snapshot": "sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e",
+ "expected_revisions": {
+  "note-svm-kernel-trick": 0
+ },
+ "payload": {
+  "note_id": "note-svm-kernel-trick",
+  "file": "/tmp/claude-0/-home-user-LearningOS/1292ed61-254d-5ac4-ba21-d0e53e16c86e/scratchpad/S14/note-svm-kernel-trick.md",
+  "file_sha256": "sha256:d1ddfaf2faf734d432d4177c7a50e7fb994a00b8bbdb17928125e09a6a545844"
+ },
+ "approval": {
+  "kind": "operator-approval",
+  "subject_sha256": "sha256:92580a65984e7fea035176586e194daf27a269387312073ad936a57c6e07beaa"
+ }
+}

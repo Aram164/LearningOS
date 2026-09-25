@@ -1,0 +1,31 @@
+--- knowledge/notes/machine-learning/note-batchnorm-internal-covariate-shift.md	2026-09-25 00:46:45.745257765 +0000
++++ /tmp/claude-0/-home-user-LearningOS/1292ed61-254d-5ac4-ba21-d0e53e16c86e/scratchpad/S15/note-batchnorm-internal-covariate-shift.md	2026-09-25 00:47:27.793223881 +0000
+@@ -10,6 +10,7 @@
+ - concept-batch-normalization
+ sources:
+ - source-ioffe-batchnorm-2015
++- source-santurkar-batchnorm-2018
+ ---
+ 
+ For each feature in a layer, over the current minibatch:
+@@ -19,6 +20,20 @@
+ γ and β are learned, so the layer can undo the normalization if that is
+ better.
+ 
++Why it works (revised 2026-09-25 from note-batchnorm-why-it-works-contested):
++the internal-covariate-shift story below is the original paper's
++*motivation*, and later work disputes it. Santurkar et al. inject extra shift
++after the batch-norm layers and training is still fast; and measured by their
++own definition, batch norm does not even reduce the shift much. Their
++alternative: batch norm makes the loss landscape smoother (gradients change
++less abruptly between nearby points), so larger steps are safe. (I do not
++fully follow their Lipschitz argument.) For the exam: know the mechanics
++exactly, present the covariate-shift story as the *original motivation*, and
++say that later work disputes it.
++
++Original June explanation, kept as I wrote it (the paper's motivation, now
++disputed):
++
+ Why it works: during training the distribution of each layer's inputs keeps
+ changing because the earlier layers keep changing ("internal covariate
+ shift"). Normalizing every batch removes this shift, so each layer sees a
