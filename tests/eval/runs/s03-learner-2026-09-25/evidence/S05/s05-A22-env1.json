@@ -1,0 +1,20 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s05-A22-1",
+ "idempotency_key": "s03-s05-A22-k1",
+ "capability": "stage.note.write",
+ "channel": "operator",
+ "expected_snapshot": "sha256:875c818d20d8837a6bc72eb6c3a0345928d06b2ebddf9f3c1bfefd015523b580",
+ "expected_revisions": {
+  "unit-statlearn-l11": 0
+ },
+ "approval": {
+  "kind": "operator-approval",
+  "subject_sha256": "sha256:8c8d73342ab314364c2207dd11e0586b99e2d21e0bb55f519131bbb220e6e16c"
+ },
+ "payload": {
+  "unit_id": "unit-statlearn-l11",
+  "stage_id": "stage-l11-01-backprop",
+  "text": "\n## 2026-09-27 — note typed after a talk on JAX (filed by the operator)\n\nSpeaker: \"backprop is just reverse-mode autodiff applied to a scalar loss\".\nReverse mode: one backward sweep per *output*. Forward mode: one sweep per\n*input*. Loss = 1 output, millions of inputs → reverse. jax.jvp vs jax.vjp.\n"
+ }
+}

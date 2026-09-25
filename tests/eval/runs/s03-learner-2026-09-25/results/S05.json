@@ -1,0 +1,278 @@
+{
+ "scenario": "S05",
+ "run_id": "s03-learner-2026-09-25",
+ "classification": "PASS_WITH_FRICTION",
+ "classification_reason": "All ten arrivals were handled: nine filed through receipted gateway writes after one batch approval, one deliberately not filed, and each got a connection list. But the product cannot create a new note from a capture, note.revise has no preview, and almost every cross-course connection came from my reading rather than a product query.",
+ "before": {
+  "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+  "git_status": [
+   " M curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+   "?? operations/transactions/idempotency.yaml",
+   "?? operations/transactions/revisions.yaml",
+   "?? operations/transactions/transaction-20260925-003900-001.yaml"
+  ],
+  "canonical_digest": "b5d7ddb6e88696b4227519bea69c3aaf2870b0813725575e3cc303212958d52d",
+  "derived_digest": "64006addde23e55fa350e0a2aae09e3dca50ebf1dc08d09a987c56910e77f330",
+  "snapshot_file": "observations/S05-before.json"
+ },
+ "consumer": {
+  "goal": "File ten captures (A01, A02, A05, A07, A10, A13, A14, A21, A22, A24) and tell the learner, for each, what older material it connects to.",
+  "first_action": "Read the drop metadata and all ten arrivals, then read ARCHITECTURE §5.3/§5.6, WORKFLOWS §17/§23 and the shelving/review/note-revise capability definitions to find a governed destination for each kind.",
+  "commands": [
+   "read ARCHITECTURE §5.3,§5.6; WORKFLOWS §17",
+   "los shelving-prepare --help",
+   "los shelving-apply --help",
+   "los capabilities review.prepare --json",
+   "ls system/schema; grep shelving in docs",
+   "los note-revise --help",
+   "los capabilities note.revise --json",
+   "los search bayesian network",
+   "los search bayesian network --type note --content --limit 30",
+   "los search graphical model",
+   "los search graphical model --type note --content --limit 30",
+   "los search d-separation",
+   "los search d-separation --type note --content --limit 30",
+   "los search autodiff",
+   "los search autodiff --type note --content --limit 30",
+   "los search reverse mode",
+   "los search reverse mode --type note --content --limit 30",
+   "los search gustafson",
+   "los search gustafson --type note --content --limit 30",
+   "los search cardinality",
+   "los search cardinality --type note --content --limit 30",
+   "los search soft threshold",
+   "los search soft threshold --type note --content --limit 30",
+   "los search fan-out",
+   "los search fan-out --type note --content --limit 30",
+   "los inspect concept-automatic-differentiation concept-cardinality-estimation concept-conditional-independence",
+   "los note-revise note-amdahls-law --file /tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/S05/A13-note.md --file-sha256 sha256:c4c14e046856d2f34c4a08f707bb059c02264cec2b457e57a590b9f74075b299",
+   "los plan-edit-context unit-statlearn-l07 --stage-id stage-l07-01-ridge-lasso-geometry",
+   "los plan-edit-context unit-dataframes-lineage --stage-id stage-df-lineage-01-trace",
+   "los plan-edit-context unit-os-l02 --stage-id stage-os-l02-02-proportional-share",
+   "los plan-edit-context unit-dataframes-lazy-plans --stage-id stage-df-lazy-02-read-explain",
+   "los plan-edit-context unit-statlearn-l09 --stage-id stage-l09-02-svd-connection",
+   "los plan-edit-context unit-statlearn-l11 --stage-id stage-l11-01-backprop",
+   "los bootstrap --brief",
+   "los capability stage.note.write --payload-file env/S05/s05-A02-env1.json",
+   "los bootstrap --brief",
+   "los capability stage.note.write --payload-file env/S05/s05-A05-env1.json",
+   "los bootstrap --brief",
+   "los capability stage.note.write --payload-file env/S05/s05-A07-env1.json",
+   "los bootstrap --brief",
+   "los capability stage.note.write --payload-file env/S05/s05-A14-env1.json",
+   "los bootstrap --brief",
+   "los capability stage.note.write --payload-file env/S05/s05-A21-env1.json",
+   "los bootstrap --brief",
+   "los capability stage.note.write --payload-file env/S05/s05-A22-env1.json",
+   "los bootstrap --brief",
+   "los capability note.revise --payload-file env/S05/s05-A01-env1.json",
+   "los bootstrap --brief",
+   "los capability note.revise --payload-file env/S05/s05-A10-env1.json",
+   "los bootstrap --brief",
+   "los capability note.revise --payload-file env/S05/s05-A13-env1.json",
+   "los bootstrap --brief",
+   "los capability stage.note.write --payload-file /tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/S05/s05-A02-env1.json",
+   "los bootstrap --brief",
+   "los capability stage.note.write --payload-file /tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/S05/s05-A05-env1.json",
+   "los bootstrap --brief",
+   "los capability stage.note.write --payload-file /tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/S05/s05-A07-env1.json",
+   "los bootstrap --brief",
+   "los capability stage.note.write --payload-file /tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/S05/s05-A14-env1.json",
+   "los bootstrap --brief",
+   "los capability stage.note.write --payload-file /tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/S05/s05-A21-env1.json",
+   "los bootstrap --brief",
+   "los capability stage.note.write --payload-file /tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/S05/s05-A22-env1.json",
+   "los bootstrap --brief",
+   "los capability note.revise --payload-file /tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/S05/s05-A01-env1.json",
+   "los bootstrap --brief",
+   "los capability note.revise --payload-file /tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/S05/s05-A10-env1.json",
+   "los bootstrap --brief",
+   "los capability note.revise --payload-file /tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/S05/s05-A13-env1.json",
+   "validate --compact; warning_baseline --check; los generate; los operations"
+  ],
+  "tool_calls": 24,
+  "docs_consulted": [
+   "system/ARCHITECTURE.md §5.3, §5.6",
+   "system/WORKFLOWS.md §17, §23",
+   "los capabilities review.prepare / note.revise --json",
+   "los shelving-prepare / shelving-apply / note-revise --help"
+  ],
+  "impl_files_read": [],
+  "retries": 1,
+  "confusions": [
+   "Durable-understanding captures without an active stage (BN reading page, a friend's guest-lecture notes, a textbook excerpt) have no note-creation capability. WORKFLOWS §17 describes minting a new transcribed note, but no gateway write does that. The shelving path (review.prepare/apply) is admitted only as a UI gesture, and its items-file format is not documented. I appended to the most relevant existing note with note.revise instead (§8: prefer updating an existing note).",
+   "note.revise has no preflight or diff: the bare command only says 'requires --approve after reviewing the full replacement', so the reviewable diff had to be produced outside the product.",
+   "Which expected_revisions key note.revise wants is undocumented; {note_id: 0} happened to be right.",
+   "Arrival dates for A21, A22 and A24 (2026-09-26/27) are after today's date (2026-09-25); I kept them in the provenance headers as given.",
+   "After the writes, `los operations` showed one operation with 21 attempts, all AMBIGUOUS. Root cause: this container exports TRACEPARENT, and every los call adopts its trace and span id (confirmed on a scratch copy); F-s03-diag-ambiguous-01 was updated."
+  ],
+  "corrective_steps": [
+   "My first batch run failed before reaching the gateway because my own script used a relative envelope path ('no such structured input'); fixed and re-ran. This was my own harness error, not a product failure.",
+   "From here on I ran los with TRACEPARENT unset so diagnostics stay per-request (recorded as a deviation)."
+  ],
+  "questions_asked_to_learner": [
+   "Presented the ten-row plan (destination, capability and exact appended text for each; A24 not filed) and asked for approval → scripted reply: 'Approved — apply what you showed me, nothing else.'",
+   "Is the sourdough schedule worth keeping? → treated per scripted reply: 'Your call. If it's not study material, don't make it a note.'"
+  ],
+  "implementation_knowledge_needed": false,
+  "wall_minutes": 7,
+  "outcome": "Nine captures filed with receipts: six into the working notes of the stages they belong to, three appended verbatim (with a provenance header) to an existing note of the learner's. The sourdough schedule was not filed. Each arrival got a ranked list of older material it connects to (connections.jsonl, after-shelving). Validation 0 errors, no new warning signature, views regenerated. Changes remain uncommitted in the world."
+ },
+ "internal": {
+  "request_ids": [
+   "s03-s05-A02-1",
+   "s03-s05-A05-1",
+   "s03-s05-A07-1",
+   "s03-s05-A14-1",
+   "s03-s05-A21-1",
+   "s03-s05-A22-1",
+   "s03-s05-A01-1",
+   "s03-s05-A10-1",
+   "s03-s05-A13-1"
+  ],
+  "receipts": [
+   "transaction-20260925-004511-001",
+   "transaction-20260925-004514-001",
+   "transaction-20260925-004517-001",
+   "transaction-20260925-004520-001",
+   "transaction-20260925-004523-001",
+   "transaction-20260925-004526-001",
+   "transaction-20260925-004529-001",
+   "transaction-20260925-004532-001",
+   "transaction-20260925-004535-001"
+  ],
+  "transaction_behavior": "Nine independent transactions, each with a snapshot guard (fresh snapshot fetched via bootstrap --brief before each), one artifact revision bumped 0→1 (unit for stage notes, note id for note.revise), before/after file hashes in the receipt. note.revise wrote exactly the approved bytes (sha256 matches the replacement file) and left the frontmatter unchanged.",
+  "approval_behavior": "operator-approval over channel operator, subject = intent hash; the learner's batch approval preceded the envelopes. note.revise additionally binds the replacement file by SHA-256.",
+  "projection_activity": "Snapshot advanced with every write; `los generate` republished the manifest once at the end.",
+  "persistence_activity": "9 receipts added; idempotency.yaml and revisions.yaml updated; traces appended (all under the inherited trace id).",
+  "derived_changes": "3 derived files modified (manifest and views), +10 KB.",
+  "manifest_changes": "Republished once after the batch.",
+  "unexpected_writes": [],
+  "warnings_errors": [
+   "validate: 0 errors, 2 warnings (WS-NEGLECT, clock-derived, baseline-exempt)",
+   "los operations: all requests merged into one AMBIGUOUS operation (TRACEPARENT inheritance)"
+  ],
+  "git_diff_stat": "10 files changed, 130 insertions(+), 0 deletions (cumulative with S04's 13 lines); 10 new untracked receipts",
+  "observe_diff_file": "observations/S05-diff.json"
+ },
+ "after": {
+  "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+  "git_status": [
+   " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lazy-plans/stages/stage-df-lazy-02-read-explain/notes.md",
+   " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lineage/stages/stage-df-lineage-01-trace/notes.md",
+   " M curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+   " M curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l07/stages/stage-l07-01-ridge-lasso-geometry/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l09/stages/stage-l09-02-svd-connection/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l11/stages/stage-l11-01-backprop/notes.md",
+   " M knowledge/notes/data-systems/note-query-optimizer-cost-model.md",
+   " M knowledge/notes/mathematics/note-independence-vs-conditional-independence.md",
+   " M knowledge/notes/systems/note-amdahls-law.md",
+   "?? operations/transactions/idempotency.yaml",
+   "?? operations/transactions/revisions.yaml",
+   "?? operations/transactions/transaction-20260925-003900-001.yaml",
+   "?? operations/transactions/transaction-20260925-004511-001.yaml",
+   "?? operations/transactions/transaction-20260925-004514-001.yaml",
+   "?? operations/transactions/transaction-20260925-004517-001.yaml",
+   "?? operations/transactions/transaction-20260925-004520-001.yaml",
+   "?? operations/transactions/transaction-20260925-004523-001.yaml",
+   "?? operations/transactions/transaction-20260925-004526-001.yaml",
+   "?? operations/transactions/transaction-20260925-004529-001.yaml",
+   "?? operations/transactions/transaction-20260925-004532-001.yaml",
+   "?? operations/transactions/transaction-20260925-004535-001.yaml"
+  ],
+  "canonical_digest": "09ec5bc8e47e0b84db6f6b2f0dbedcb2c761cd3fa64b50fcd82317fe6a7cefd3",
+  "derived_digest": "abe421c749d0b582b94a3eafe13d12b79baf3667e690860c675fb7dcec1e20cf",
+  "snapshot_file": "observations/S05-after.json"
+ },
+ "friction": [
+  {
+   "tag": "missing-capability",
+   "description": "No governed way to create a new durable note from a capture (WORKFLOWS §3/§17 describe it; only analysis-notes, atlas questions and UI-only shelving can create notes). Three captures had to be appended to existing notes instead.",
+   "cost": "~5 tool calls of capability/doc reading; a filing compromise"
+  },
+  {
+   "tag": "missing-capability",
+   "description": "note.revise offers no --check/diff; a full replacement file must be assembled by hand and the diff shown to the learner outside the product.",
+   "cost": "2 tool calls"
+  },
+  {
+   "tag": "unclear-safety",
+   "description": "`los operations` presents successful writes as AMBIGUOUS/needs_attention when TRACEPARENT is present in the environment.",
+   "cost": "4 tool calls to diagnose"
+  }
+ ],
+ "failures": [
+  "F-s03-diag-ambiguous-01"
+ ],
+ "scenario_record": {
+  "per_arrival": [
+   {
+    "arrival": "A01",
+    "destination": "knowledge/notes/mathematics/note-independence-vs-conditional-independence.md (appended section)",
+    "capability": "note.revise",
+    "receipt": "transaction-20260925-004529-001"
+   },
+   {
+    "arrival": "A02",
+    "destination": "stage-l07-01-ridge-lasso-geometry working note",
+    "capability": "stage.note.write",
+    "receipt": "transaction-20260925-004511-001"
+   },
+   {
+    "arrival": "A05",
+    "destination": "stage-df-lineage-01-trace working note",
+    "capability": "stage.note.write",
+    "receipt": "transaction-20260925-004514-001"
+   },
+   {
+    "arrival": "A07",
+    "destination": "stage-os-l02-02-proportional-share working note",
+    "capability": "stage.note.write",
+    "receipt": "transaction-20260925-004517-001"
+   },
+   {
+    "arrival": "A10",
+    "destination": "knowledge/notes/data-systems/note-query-optimizer-cost-model.md (appended section)",
+    "capability": "note.revise",
+    "receipt": "transaction-20260925-004532-001"
+   },
+   {
+    "arrival": "A13",
+    "destination": "knowledge/notes/systems/note-amdahls-law.md (appended section)",
+    "capability": "note.revise",
+    "receipt": "transaction-20260925-004535-001"
+   },
+   {
+    "arrival": "A14",
+    "destination": "stage-df-lazy-02-read-explain working note",
+    "capability": "stage.note.write",
+    "receipt": "transaction-20260925-004520-001"
+   },
+   {
+    "arrival": "A21",
+    "destination": "stage-l09-02-svd-connection working note (paused stage)",
+    "capability": "stage.note.write",
+    "receipt": "transaction-20260925-004523-001"
+   },
+   {
+    "arrival": "A22",
+    "destination": "stage-l11-01-backprop working note (pending stage)",
+    "capability": "stage.note.write",
+    "receipt": "transaction-20260925-004526-001"
+   },
+   {
+    "arrival": "A24",
+    "destination": "not filed",
+    "capability": null,
+    "receipt": null,
+    "why": "Sourdough feeding schedule — not study material; per the learner's rule, not made into a note (and not put into the inbox)."
+   }
+  ],
+  "connection_records": "connections.jsonl probes A01, A02, A05, A07, A10, A13, A14, A21, A22, A24 (phase after-shelving)"
+ },
+ "uncertainties": [
+  "Appending a friend's notes (A10) or a textbook excerpt (A13) to a user-authored note changes that note's authorship mix; I marked each section's provenance but did not change the frontmatter (authorship still 'user').",
+  "Whether A05 and A14 complete their stages is the learner's call; I did not update progress."
+ ]
+}

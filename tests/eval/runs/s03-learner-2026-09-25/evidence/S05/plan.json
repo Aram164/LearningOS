@@ -1,0 +1,11 @@
+[
+ {"arrival":"A02","capability":"stage.note.write","unit":"unit-statlearn-l07","stage":"stage-l07-01-ridge-lasso-geometry"},
+ {"arrival":"A05","capability":"stage.note.write","unit":"unit-dataframes-lineage","stage":"stage-df-lineage-01-trace"},
+ {"arrival":"A07","capability":"stage.note.write","unit":"unit-os-l02","stage":"stage-os-l02-02-proportional-share"},
+ {"arrival":"A14","capability":"stage.note.write","unit":"unit-dataframes-lazy-plans","stage":"stage-df-lazy-02-read-explain"},
+ {"arrival":"A21","capability":"stage.note.write","unit":"unit-statlearn-l09","stage":"stage-l09-02-svd-connection"},
+ {"arrival":"A22","capability":"stage.note.write","unit":"unit-statlearn-l11","stage":"stage-l11-01-backprop"},
+ {"arrival":"A01","capability":"note.revise","note":"note-independence-vs-conditional-independence","file":"A01-note.md"},
+ {"arrival":"A10","capability":"note.revise","note":"note-query-optimizer-cost-model","file":"A10-note.md"},
+ {"arrival":"A13","capability":"note.revise","note":"note-amdahls-law","file":"A13-note.md"}
+]

@@ -1,0 +1,17 @@
+{
+  "operations": [
+    {
+      "trace_id": "44fafdf2364addbc4ef55dd120a03f0a",
+      "request_id": "s03-s04-a09-stage-note-1",
+      "capability": "stage.note.write",
+      "started_at": 1790296700.2862165,
+      "duration_ms": 436008.0,
+      "attempts": 21,
+      "replayed": true,
+      "first_failure_stage": "core.approval",
+      "canonical_outcome": "AMBIGUOUS",
+      "recovery_requirement": "reconcile-exact-request",
+      "needs_attention": true
+    }
+  ]
+}
