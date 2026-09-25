@@ -189,8 +189,15 @@ def test_child_receives_the_intended_context(mini_repo: Path, tmp_path: Path):
     assert record["capability"] == "garden.seed.create"
     phases = [row for row in records if row.get("v") == 2]
     assert phases, "the attempt span stream must also be recorded"
-    assert {row["op"] for row in phases} == {TRACE_ID}
-    assert {row["span"] for row in phases} == {SPAN_ID}
+    # Parentage, never identity (JF-04): the child mints its own operation
+    # and attempt spans and records the propagated pair as its parent.
+    # Adopting the parent's ids merged unrelated requests sharing one
+    # ambient trace into a single misreported operation.
+    assert {row["op"] for row in phases} != {TRACE_ID}
+    assert len({row["op"] for row in phases}) == 1
+    assert SPAN_ID not in {row["span"] for row in phases}
+    assert {row["parent_op"] for row in phases} == {TRACE_ID}
+    assert {row["parent_span"] for row in phases} == {SPAN_ID}
 
 
 def test_malformed_context_is_ignored(mini_repo: Path, tmp_path: Path):
@@ -250,14 +257,23 @@ def test_concurrent_operations_cannot_cross_contexts(
 
     with ThreadPoolExecutor(max_workers=4) as pool:
         list(pool.map(attempt, range(4)))
+    # Same parent trace, four attempts: each mints its own operation (JF-04).
+    # Identity is per attempt; only the parent linkage is shared.
+    seen_ops = set()
     for index in range(4):
         records = _debug_records(tmp_path / f"race-{index}.jsonl")
         assert records, f"attempt {index} recorded nothing"
-        ops = {row.get("trace_id", row.get("op")) for row in records}
-        assert ops == {TRACE_ID}, f"attempt {index} leaked operation: {ops}"
-        spans = {row.get("span_id", row.get("span")) for row in records}
-        assert spans == {span_ids[index]}, (
-            f"attempt {index} observed another attempt's span: {spans}")
+        phases = [row for row in records if row.get("v") == 2]
+        assert phases, f"attempt {index} recorded no phases"
+        (op,) = {row["op"] for row in phases}
+        assert op != TRACE_ID, f"attempt {index} adopted its parent trace"
+        assert op not in seen_ops, f"attempt {index} shares an operation: {op}"
+        seen_ops.add(op)
+        spans = {row["span"] for row in phases}
+        assert span_ids[index] not in spans, (
+            f"attempt {index} adopted its parent span: {spans}")
+        assert {row["parent_op"] for row in phases} == {TRACE_ID}
+        assert {row["parent_span"] for row in phases} == {span_ids[index]}
 
 
 def test_observation_hook_cost_is_negligible():

@@ -182,6 +182,12 @@ RECOVERY_REQUIREMENTS = frozenset({
 #: semantic contract Track #3 exists to unify; until then the mirror plus
 #: the drift-failing parity test is the deliberate mechanism. Do not pull
 #: contract generation into Track #2 to fix this sooner.
+#:
+#: IDEMPOTENCY_CONFLICT joined in S12 (JF-19): a refused attempt proves its
+#: own request wrote nothing, and the per-attempt coverage rule already
+#: withholds proof when an earlier attempt is ambiguous. The UI mirror in
+#: contracts/gateway-v2.ts needs the same addition; the parity test fails
+#: until it lands.
 DEFINITIVE_NO_COMMIT_CODES = frozenset({
     "INVALID_REQUEST",
     "UNKNOWN_CAPABILITY",
@@ -192,6 +198,7 @@ DEFINITIVE_NO_COMMIT_CODES = frozenset({
     "VALIDATION_FAILED",
     "PROJECTION_FAILED",
     "UNCONFIRMED",
+    "IDEMPOTENCY_CONFLICT",
 })
 
 # ---------------------------------------------------------------------------

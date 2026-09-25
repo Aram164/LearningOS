@@ -251,6 +251,70 @@ def test_collector_reads_only(mini_repo: Path, tmp_path: Path):
     assert before == after
 
 
+def test_manifest_covers_receipt_positions_the_live_manifest():
+    """Settlement is positional: at-or-past the commit settles (JF-19)."""
+    from learning_os.diagnostics.resolver import manifest_covers_receipt
+
+    receipts = [
+        {"id": "transaction-20260101-000001-001", "snapshot_after": "sha256:aaa"},
+        {"id": "transaction-20260101-000002-001", "snapshot_after": "sha256:bbb"},
+    ]
+    assert manifest_covers_receipt(receipts, "sha256:aaa", "sha256:aaa")
+    assert manifest_covers_receipt(receipts, "sha256:bbb", "sha256:aaa")
+    assert not manifest_covers_receipt(receipts, "sha256:aaa", "sha256:bbb")
+    assert not manifest_covers_receipt(receipts, "sha256:hand-made", "sha256:aaa")
+    assert not manifest_covers_receipt(receipts, None, "sha256:aaa")
+    assert not manifest_covers_receipt([], "sha256:bbb", "sha256:aaa")
+
+
+def test_superseded_commit_settles_without_exact_observation():
+    """A commit the live manifest has moved past is settled (JF-19)."""
+    committed = {"_path": "operations/transactions/transaction-1.yaml"}
+    settled = resolve([], _authority(verified_receipt=committed,
+                                     response_snapshot_after="sha256:aaa",
+                                     superseded_snapshot=True))
+    assert settled.canonical_outcome == "COMMITTED"
+    assert settled.recovery_requirement == "none"
+    assert any("past this commit" in reason for reason in settled.reasons)
+    behind = resolve([], _authority(verified_receipt=committed,
+                                    response_snapshot_after="sha256:aaa",
+                                    superseded_snapshot=False))
+    assert behind.recovery_requirement == "verify-observation"
+
+
+def test_idempotency_conflict_proves_no_commit_for_its_attempt():
+    """A definite conflict retires its own request (JF-19)."""
+    attempt = [
+        {"v": 2, "kind": "span-start", "name": "attempt", "span": "s1", "ts": 1},
+        {"v": 2, "kind": "span-end", "name": "attempt", "span": "s1",
+         "status": "error", "ts": 2},
+    ]
+    diagnosis = resolve(attempt, _authority(
+        response_code="IDEMPOTENCY_CONFLICT",
+        response_codes=["IDEMPOTENCY_CONFLICT"]))
+    assert diagnosis.canonical_outcome == "NOT_COMMITTED"
+    assert diagnosis.recovery_requirement == "none"
+    # The other intent's row contradicts this request's evidence; the
+    # conflict still retires it (ordering before the contradiction branches).
+    contradicted = resolve(attempt, _authority(
+        response_code="IDEMPOTENCY_CONFLICT",
+        response_codes=["IDEMPOTENCY_CONFLICT"],
+        ledger={"x": {"channel": "operator"}},
+        verification_error="intent mismatch"))
+    assert contradicted.canonical_outcome == "NOT_COMMITTED"
+    assert contradicted.recovery_requirement == "none"
+    # ... but never an earlier ambiguous attempt (the S9-S11 rule holds
+    # for the new code too).
+    two_attempts = attempt + [
+        {"v": 2, "kind": "span-start", "name": "attempt", "span": "s2", "ts": 3},
+    ]
+    second = resolve(two_attempts, _authority(
+        response_code="IDEMPOTENCY_CONFLICT",
+        response_codes=["IDEMPOTENCY_CONFLICT"]))
+    assert second.canonical_outcome == "AMBIGUOUS"
+    assert second.recovery_requirement == "reconcile-exact-request"
+
+
 def test_definitive_codes_match_the_ui_contract():
     """Core and UI must retire exactly the same dead requests. The UI list
     is authoritative prose; this test fails the drift, not the intent."""
