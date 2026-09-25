@@ -1,0 +1,83 @@
+{
+  "scenario": "S02",
+  "run_id": "s02-novice-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "All twelve plan-N questions (Q01-Q12) were answered from the repository with record ids and quotes, using only documented read commands (search, search --content, note-read, inspect, related, resume, plan-edit-context) plus one direct read of a stage working note. Friction: search is an unranked case-insensitive substring match (multi-word natural queries return [], 'prior' hits 'priority', 'MAP' hits every study map); 'related' never surfaced the cross-note links the questions turned on (ridge<->MAP, low-rank open question<->matrix factorization); search results do not show deprecated state; the exact stopping point of the current stage is only in a stage working note that no read command returns.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S02-before.json"
+  },
+  "consumer": {
+    "goal": "Answer the learner's questions Q01-Q12 about her own material from her repository, with evidence.",
+    "first_action": "los --help, then los search --help, to learn the read commands",
+    "commands": [
+      "~/losvenv/bin/python tools/los.py --help",
+      "los search --help",
+      "los search / search --type note --content (about 35 queries across the 12 questions)",
+      "los note-read <note-id> (19 notes)",
+      "los inspect <id> [<id> ...] (module-tuh-os, module-tuh-dbsys, module-tuh-statlearn, unit-statlearn-l03, workspace-os-oral-prep, 3 notes)",
+      "los related <id> (6 ids)",
+      "los resume ; los resume --json",
+      "los plan-edit-context unit-os-l02 --stage-id stage-os-l02-02-proportional-share",
+      "los semantic --list",
+      "cat curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md"
+    ],
+    "tool_calls": 29,
+    "docs_consulted": ["system/OPERATOR.md (read in S00)", "los --help", "los search --help"],
+    "impl_files_read": [],
+    "retries": 3,
+    "confusions": [
+      "search 'housing gradient descent learning rate' returned [] although a note titled 'Gradient descent from scratch (housing exercise)' exists; the query is matched as one substring, which no help text says.",
+      "search results carry no relevance order, no snippet and no note state, so deprecated notes (note-p-values-first-take, note-virtual-memory-is-swap) look identical to current ones until opened.",
+      "search --content reports only one snippet per note, often the frontmatter id line (line 2), which does not show why the note matched.",
+      "'related' lists only direct concept/source/workspace neighbours; it does not connect notes that answer each other (low-rank open question -> matrix factorization note; ridge -> MAP note).",
+      "resume says 'Evidence none recorded yet / Open here —' for a stage whose working note records concrete progress ('Stopped at step 4'); there is no product read for stage working notes (inspect does not resolve stages; note-read is for durable notes).",
+      "semantic --list turned out to be rule predicates (AllowedMutation, MasteryDeclared...), not questions about content — a dead end for 'have I worked through X'."
+    ],
+    "corrective_steps": [
+      "Shortened multi-word queries to one or two words.",
+      "Read the stage working note directly by the path that plan-edit-context printed."
+    ],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 13,
+    "outcome": "Twelve answers with evidence (answers.jsonl). Highlights the learner saw: Q01 eta=0.1 blew up, fixed by standardizing features; Q02 note-naive-bayes-spam-filter; Q03 ridge = MAP with Gaussian prior via three notes, lambda = sigma^2/tau^2; Q04 current vs deprecated p-value belief; Q05 no, VM != swap (April note corrected in May); Q06 stopped at step 4 of the stride example on 2026-09-16; Q07 12 Oct 2026 14:30; Q08 2.0; Q09 registered, 6 Oct 2026 10:00-12:00; Q10 recommender open question answered in substance by the August matrix-factorization note but not linked; Q11 derivation note with evidence ref, not reviewed; Q12 started, 3 of 8 decisions done."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "Read-only; no gateway write.",
+    "approval_behavior": "None required.",
+    "projection_activity": "All reads reported snapshot_id sha256:82bcffb7... (same as S00's world).",
+    "persistence_activity": "Read commands populated a derived cache: generated/derived-state/state-v1.json plus 117 blobs (490,130 bytes, gitignored). No diagnostics or operations written.",
+    "derived_changes": "118 files added under generated/derived-state/ (cache only).",
+    "manifest_changes": "none",
+    "unexpected_writes": [],
+    "warnings_errors": [],
+    "git_diff_stat": "(empty)",
+    "observe_diff_file": "observations/S02-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S02-after.json"
+  },
+  "friction": [
+    {"tag": "unhelpful-error", "description": "Multi-word natural-language queries silently return [] (whole-query substring match); no hint to shorten the query.", "cost": "3 retries"},
+    {"tag": "redundant-calls", "description": "Unranked substring search ('prior' -> priority inversion, 'MAP' -> 30+ modules/units/study maps) forced several narrowing queries per question and opening every candidate with note-read.", "cost": "~10 extra commands"},
+    {"tag": "missing-capability", "description": "No read command returns a stage working note; resume reports 'Evidence none / Open here —' while the working note holds the exact stopping point.", "cost": "1 direct file read (cat) by path"},
+    {"tag": "unnecessary-exploration", "description": "'related' does not surface notes that answer or correct each other; the ridge<->MAP and low-rank<->matrix-factorization links had to be found by content search and reading.", "cost": "~4 extra commands"},
+    {"tag": "unclear-terminology", "description": "'semantic' sounded like a semantic search; it evaluates governance rule predicates.", "cost": "1 dead-end call"}
+  ],
+  "failures": [],
+  "scenario_record": {
+    "answers_file": "answers.jsonl",
+    "questions_answered": ["Q01", "Q02", "Q03", "Q04", "Q05", "Q06", "Q07", "Q08", "Q09", "Q10", "Q11", "Q12"],
+    "world": "fresh build into ~/los-eval/s02-novice-2026-09-25-S02 (same HEAD 13ad2fca)"
+  },
+  "uncertainties": [
+    "Q10: whether the August matrix-factorization note counts as the learner 'having answered' the June question is her judgement; I reported the evidence and the missing link.",
+    "Q07: I did not search inbox or garden text for competing dates (content search covers durable notes only)."
+  ]
+}

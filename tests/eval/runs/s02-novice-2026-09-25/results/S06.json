@@ -1,0 +1,102 @@
+{
+  "scenario": "S06",
+  "run_id": "s02-novice-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "All three captures were recognised as duplicates of existing material using product search/inspect plus direct listing of inbox and Garden (neither is searchable). Two were deliberately not filed (content already canonical); the one with new wording went to the Garden via garden.seed.create with a receipt, after approval. Friction: Garden and inbox are invisible to search; there is no capability to append to an existing Garden seed or to clear a processed inbox item, so 'tidy without losing anything' could only be met by adding a second seed; the first envelope was refused for a request-scoped revision key that no document names (the error did name it).",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [
+      " M curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+      "?? operations/transactions/idempotency.yaml",
+      "?? operations/transactions/revisions.yaml",
+      "?? operations/transactions/transaction-20260925-003709-001.yaml"
+    ],
+    "snapshot_file": "observations/S06-before.json"
+  },
+  "consumer": {
+    "goal": "File three phone/laptop captures (A11 flashcard, A18 late-night thought, A29 second capture of a link) without creating clutter or losing anything.",
+    "first_action": "cat eval-drop/A11.md A18.md A29.md",
+    "commands": [
+      "cat eval-drop/A11.md A18.md A29.md",
+      "cat work/inbox/20260903-pvalue-reminder.md work/inbox/20260816-drf-paper-link.md ; ls knowledge/garden/",
+      "los search DAG",
+      "cat knowledge/garden/everything-is-a-dag.md",
+      "los search everything ; los search dag --type garden (-> []) ; los search 'Dominant Resource' ; los search Ghodsi",
+      "los note-read note-dominant-resource-fairness-paper ; los inspect source-ghodsi-drf-2011 ; los inspect note-p-values-corrected ; los search p-value --type note --content",
+      "los garden-seed-create --help ; los capabilities garden.seed.create --json",
+      "los bootstrap --brief (snapshot)",
+      "PROPOSAL shown to learner -> approved",
+      "los capability garden.seed.create --payload-file envelope-a18.json   # INVALID_REQUEST: expected_revisions missing 'garden-request:s06-a18-garden-seed' (exit 2)",
+      "los capability garden.seed.create --payload-file envelope-a18-2.json  # ok, transaction-20260925-004102-001",
+      "python tools/validate.py --compact ; python tools/warning_baseline.py --check ; python tools/generate.py ; grep dag generated/nebula.md",
+      "los operations"
+    ],
+    "tool_calls": 12,
+    "docs_consulted": ["CLAUDE.md §14 (Garden & Harvest, already in context)", "WORKFLOWS §21 (read in S04)", "los garden-seed-create --help", "los capabilities garden.seed.create --json"],
+    "impl_files_read": [],
+    "retries": 1,
+    "confusions": [
+      "Neither the Garden nor the inbox is reachable by 'los search' (search dag --type garden -> []; inbox likewise in S04), so duplicate detection against them needs ls/cat of the directories.",
+      "garden.seed.create only creates; there is no capability to append to an existing seed, and none to retire an inbox item that has already been processed (work/inbox/20260816-drf-paper-link.md stays although the paper is registered and noted).",
+      "expected_revisions for a new Garden seed must name a request-scoped artifact 'garden-request:<idempotency_key>' at revision 0; not documented, but the INVALID_REQUEST error named it exactly.",
+      "INVALID_REQUEST exits 2 while UNCONFIRMED (S04) exited 0 — inconsistent exit codes for refused writes."
+    ],
+    "corrective_steps": [
+      "Added the artifact id named by the error to expected_revisions and resubmitted with a new request_id."
+    ],
+    "questions_asked_to_learner": [
+      "These three already exist in some form: A11 = your corrected p-value note (and the 3 Sep inbox reminder); A18 = your Garden seed 'everything-is-a-dag'; A29 = identical to your 16 Aug inbox capture, and the paper is registered with a note. What do you want me to do? -> 'Do whatever keeps things tidy without losing anything.'",
+      "Proposal: don't file A11 and A29 (nothing new in them); add A18 verbatim as a new Garden seed titled 'Everything is a DAG — second capture (see everything-is-a-dag)' via garden.seed.create. Apply? -> 'Yes, apply exactly that.'"
+    ],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 2,
+    "outcome": "A11 (flashcard: p-value definition): not filed — every sentence is already in note-p-values-corrected ('p = P(test statistic at least as extreme ... | H0 is true)', 'not P(H0 | data)', 'A large p-value does not show H0 is true'). A18 (DAG thought): kept, as a new Garden seed next to your older one (knowledge/garden/everything-is-a-dag-second-capture-see-everything-is-a-dag.md, receipt transaction-20260925-004102-001) because it adds autograd graphs, cycle detection and the wish for one cross-cutting note; related canonical notes: note-build-systems-dag-incremental, note-data-pipeline-orchestration-dag. A29 (DRF link): not filed — same text as your 16 Aug inbox capture; the paper is registered (source-ghodsi-drf-2011) and you already wrote note-dominant-resource-fairness-paper (17 Aug). The old inbox copy is still in work/inbox/ because no command removes processed inbox items."
+  },
+  "internal": {
+    "request_ids": ["s06-a18-garden-seed-1 (refused INVALID_REQUEST)", "s06-a18-garden-seed-2 (committed)"],
+    "receipts": ["operations/transactions/transaction-20260925-004102-001.yaml"],
+    "transaction_behavior": "First envelope refused at admission (INVALID_REQUEST, no write). Second committed atomically: seed file created, request-scoped artifact garden-request:s06-a18-garden-seed 0->1, idempotency and revisions ledgers updated, receipt written.",
+    "approval_behavior": "operator-approval with intent hash; learner approved the exact disposition of all three captures before the write.",
+    "projection_activity": "snapshot c89b45e3... -> 366783dc...; generate.py rebuilt views (5 derived files modified); the new seed appears in generated/nebula.md as 'uncommitted', untagged (the older seed is listed under #cs and #pattern).",
+    "persistence_activity": "operations/transactions/idempotency.yaml and revisions.yaml modified; one receipt added.",
+    "derived_changes": "5 generated files modified (views rebuilt).",
+    "manifest_changes": "manifest rebuilt with the new garden entry.",
+    "unexpected_writes": [],
+    "warnings_errors": [
+      "INVALID_REQUEST: GatewayEnvelopeV2 expected_revisions must cover exactly every transaction artifact (missing=['garden-request:s06-a18-garden-seed'], unexpected=[])",
+      "los operations still shows one merged operation (trace bff87904..., request s04-a09-stage-note-1, attempts 4, AMBIGUOUS, needs_attention true) covering S04 and S06 requests (see F-s04-operations-merge-04)"
+    ],
+    "git_diff_stat": "untracked: knowledge/garden/everything-is-a-dag-second-capture-see-everything-is-a-dag.md, operations/transactions/transaction-20260925-004102-001.yaml; modified untracked ledgers idempotency.yaml, revisions.yaml",
+    "observe_diff_file": "observations/S06-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [
+      " M curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+      "?? knowledge/garden/everything-is-a-dag-second-capture-see-everything-is-a-dag.md",
+      "?? operations/transactions/idempotency.yaml",
+      "?? operations/transactions/revisions.yaml",
+      "?? operations/transactions/transaction-20260925-003709-001.yaml",
+      "?? operations/transactions/transaction-20260925-004102-001.yaml"
+    ],
+    "snapshot_file": "observations/S06-after.json"
+  },
+  "friction": [
+    {"tag": "missing-capability", "description": "No capability to append to an existing Garden seed or to retire a processed inbox item; the lossless option was a second, near-duplicate seed and the stale DRF inbox copy remains.", "cost": "less tidy outcome"},
+    {"tag": "manual-generated-file-inspection", "description": "Garden and inbox are not searchable; duplicates found by ls/cat of knowledge/garden/ and work/inbox/.", "cost": "3 tool calls"},
+    {"tag": "hidden-prerequisite", "description": "garden.seed.create needs expected_revisions {'garden-request:<idempotency_key>': 0}; undocumented, but the refusal named it.", "cost": "1 retry"},
+    {"tag": "unstable-output-format", "description": "Refused writes exit 2 (INVALID_REQUEST) or 0 (UNCONFIRMED in S04); callers cannot rely on the exit code.", "cost": "none here"}
+  ],
+  "failures": [],
+  "scenario_record": {
+    "per_capture": [
+      {"capture": "A11", "existing_material": ["note-p-values-corrected", "note-p-values-first-take (deprecated)", "work/inbox/20260903-pvalue-reminder.md"], "action": "not filed — content fully present in note-p-values-corrected"},
+      {"capture": "A18", "existing_material": ["knowledge/garden/everything-is-a-dag.md", "note-build-systems-dag-incremental", "note-data-pipeline-orchestration-dag"], "action": "new Garden seed via garden.seed.create (verbatim text, explicit title pointing at the older seed); receipt transaction-20260925-004102-001"},
+      {"capture": "A29", "existing_material": ["work/inbox/20260816-drf-paper-link.md (identical text)", "source-ghodsi-drf-2011", "note-dominant-resource-fairness-paper", "note-multi-tenant-gpu-sharing"], "action": "not filed — exact duplicate of an older inbox capture whose paper is already registered and noted; older inbox copy left in place (no removal capability)"}
+    ]
+  },
+  "uncertainties": [
+    "Whether a second Garden seed or no filing at all is the tidier reading of 'without losing anything' for A18.",
+    "I did not add #tags to the new seed, to keep the learner's text verbatim; CLAUDE.md §14 would have allowed inferred tags."
+  ]
+}

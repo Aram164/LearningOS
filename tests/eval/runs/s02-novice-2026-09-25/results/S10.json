@@ -1,0 +1,86 @@
+{
+  "scenario": "S10",
+  "run_id": "s02-novice-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "'Where was I?' was answered precisely (stage, step 4 of the stride example, recorded next steps) and the reported progress was recorded once, through stage.note.write, with a receipt and on the first attempt, without marking the stage complete. Friction: the only progress capability (stage.progress.update) carries a status and nothing else; the evidence path ('los observe <requirement>') needs a requirement the stage does not have; so after recording, 'resume' still says 'Evidence none recorded yet', the pointer still reads 2026-09-16, and the workspace's recorded next action still asks for the stride example — the learner is not visibly 'moved on' by the product.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S10-before.json"
+  },
+  "consumer": {
+    "goal": "Tell the returning learner where she stopped, then record that she finished the stride example (8 decisions, C runs 5/8) and point her at the next step, without completing the stage.",
+    "first_action": "los resume",
+    "commands": [
+      "los resume",
+      "los plan-edit-context unit-os-l02 --stage-id stage-os-l02-02-proportional-share",
+      "cat curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+      "los capabilities stage.progress.update --json",
+      "los capabilities learner.observation.append --json ; los stage-progress --help ; los observation-append --help",
+      "(questions to learner: mark complete? -> no; approve exact note text? -> yes)",
+      "los capability stage.note.write --payload-file envelope-1.json   # ok, transaction-20260925-004247-001",
+      "los resume   # unchanged: Evidence none recorded yet, pointer 2026-09-16",
+      "python tools/validate.py --compact ; python tools/warning_baseline.py --check",
+      "los operations ; cat operations/transactions/transaction-20260925-004247-001.yaml",
+      "los ability-context ; grep requirement system/WORKFLOWS.md ; sed -n 177,215p system/WORKFLOWS.md (§8 Record evidence)",
+      "los observe --help   # requirement id from the current study-map stages — none authored here"
+    ],
+    "tool_calls": 9,
+    "docs_consulted": ["system/WORKFLOWS.md §8 Record evidence", "los capabilities stage.progress.update / learner.observation.append", "los stage-progress --help", "los observation-append --help", "los observe --help"],
+    "impl_files_read": [],
+    "retries": 0,
+    "confusions": [
+      "stage.progress.update takes only {unit_id, stage_id, status in active|paused|complete|skipped|revisit}; there is no field for partial progress, so 'record the progress' without completing has no dedicated capability.",
+      "The evidence ledger ('los observe <requirement>', learner.observation.append) needs a requirement id; resume reports 'Requirement none authored for this stage', so evidence cannot be recorded for this stage.",
+      "stage.note.write is labelled 'compatibility capability only', yet it is the only governed way to put the learner's reported progress next to the stage.",
+      "After the write, resume still shows the pointer as 'updated 2026-09-16 (9 days ago)' and 'Evidence none recorded yet'; the workspace next action ('work one stride-scheduling example by hand') is now stale and no capability updates a workspace next action."
+    ],
+    "corrective_steps": [],
+    "questions_asked_to_learner": [
+      "Should I mark the proportional-share stage complete? -> 'No — I still have to explain vruntime aloud. Just record the progress.'",
+      "I'll append this dated section (shown verbatim: heading, your sentence in quotes, 'Stage not complete yet: still to explain vruntime aloud in under two minutes.') to the stage's working note via stage.note.write. OK? -> 'Yes, apply exactly that.'"
+    ],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 1.5,
+    "outcome": "Where you were: Operating Systems -> L02 'Processes and CPU scheduling' -> stage 2 'Proportional share and CFS' (active, exam-critical). On 2026-09-16 you had computed strides 100/200/40 for A=100, B=50, C=250 tickets and done decisions 1-3, then 'Stopped at step 4'; your note said next: finish the first eight decisions, check C runs 5/8, then explain vruntime aloud in under two minutes. (StatLearn retake on 6 Oct is still your primary priority per the 24 Aug decision.) Recorded: your report is appended to the stage's working note (receipt transaction-20260925-004247-001); the stage stays active. Next: explain vruntime aloud in under two minutes — that is the remaining done-when of this stage; after it, the stage can be marked complete."
+  },
+  "internal": {
+    "request_ids": ["s10-stride-progress-1"],
+    "receipts": ["operations/transactions/transaction-20260925-004247-001.yaml"],
+    "transaction_behavior": "Single committed transaction: snapshot 82bcffb7... -> afb07471..., unit-os-l02 revision 0 -> 1, one write (stage notes.md, sha256 before/after recorded).",
+    "approval_behavior": "operator-approval, subject = intent hash computed as learned in S04 (no implementation read needed this time); learner approved the exact text first.",
+    "projection_activity": "Projection published inside the transaction; 20 generated files added.",
+    "persistence_activity": "operations/transactions/{idempotency.yaml, revisions.yaml, transaction-20260925-004247-001.yaml} created; traces.jsonl appended.",
+    "derived_changes": "generated/: 20 files added.",
+    "manifest_changes": "manifest rebuilt; resume pointer unchanged (still 2026-09-16).",
+    "unexpected_writes": [],
+    "warnings_errors": [],
+    "git_diff_stat": " .../unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md | 7 +++++++ ; untracked: 3 files under operations/transactions/",
+    "observe_diff_file": "observations/S10-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [
+      " M curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+      "?? operations/transactions/idempotency.yaml",
+      "?? operations/transactions/revisions.yaml",
+      "?? operations/transactions/transaction-20260925-004247-001.yaml"
+    ],
+    "snapshot_file": "observations/S10-after.json"
+  },
+  "friction": [
+    {"tag": "missing-capability", "description": "No capability records partial stage progress in a form resume reads; stage.progress.update is status-only and the evidence ledger requires an authored requirement.", "cost": "3 extra capability/help reads; progress invisible to resume"},
+    {"tag": "missing-capability", "description": "No capability to update a workspace's recorded next action, which now contradicts the learner's state.", "cost": "stale recorded option"},
+    {"tag": "manual-generated-file-inspection", "description": "As in S02, the exact stopping point exists only in the stage working note, read by path with cat.", "cost": "1 tool call"}
+  ],
+  "failures": [],
+  "scenario_record": {
+    "where_was_i_answer": "OS L02 stage 2 'Proportional share and CFS'; stopped at step 4 of the stride example on 2026-09-16; next: finish eight decisions, check C = 5/8, explain vruntime aloud < 2 min.",
+    "where_was_i_sources": ["los resume (stage, pointer date, recorded aims, exam)", "los plan-edit-context --stage-id (objective, done_when, working_note path)", "stage working note notes.md (exact stopping point; read with cat)", "work/COORDINATION.md#Priorities via resume"],
+    "writes": [{"capability": "stage.note.write", "request_id": "s10-stride-progress-1", "idempotency_key": "s10-stride-progress", "receipt": "transaction-20260925-004247-001", "retries": 0, "envelope_fields_constructed": ["schema_version", "request_id", "idempotency_key", "capability", "channel=operator", "expected_snapshot (from plan-edit-context)", "expected_revisions {unit-os-l02: 0}", "approval {operator-approval, intent sha256}", "payload {unit_id, stage_id, text, replace=false}"]}],
+    "stage_status_after": "active (unchanged, per learner)"
+  },
+  "uncertainties": [
+    "Whether the learner expected 'move me on' to change the resume pointer or the workspace next action; neither has a capability that fits partial progress."
+  ]
+}

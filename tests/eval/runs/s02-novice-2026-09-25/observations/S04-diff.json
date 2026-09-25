@@ -1,0 +1,80 @@
+{
+  "from": "S04-before",
+  "to": "S04-after",
+  "canonical": {
+    "added": [
+      "operations/transactions/idempotency.yaml",
+      "operations/transactions/revisions.yaml",
+      "operations/transactions/transaction-20260925-003709-001.yaml"
+    ],
+    "removed": [],
+    "modified": [
+      "curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md"
+    ]
+  },
+  "canonical_digest_changed": true,
+  "receipts_added": [
+    "operations/transactions/idempotency.yaml",
+    "operations/transactions/revisions.yaml",
+    "operations/transactions/transaction-20260925-003709-001.yaml"
+  ],
+  "inflight_after": [],
+  "derived": {
+    "added": [
+      "generated/backlinks.json",
+      "generated/concept-canvas.canvas",
+      "generated/concept-index.md",
+      "generated/concept-map.md",
+      "generated/coordination-view.md",
+      "generated/dependency-report.md",
+      "generated/domain-atlas.md",
+      "generated/learner-interpretations.json",
+      "generated/learner-interpretations.md",
+      "generated/learning-requirements.json",
+      "generated/learning-requirements.md",
+      "generated/library.md",
+      "generated/manifest.json",
+      "generated/module-view.md",
+      "generated/nebula.md",
+      "generated/reading-room.md",
+      "generated/reports/health.md",
+      "generated/reports/validation-report.md",
+      "generated/source-index.md",
+      "generated/study-plans.md"
+    ],
+    "removed": [],
+    "modified": [],
+    "bytes_before": 490130,
+    "bytes_after": 985875
+  },
+  "diagnostics_added": [
+    "operations/diagnostics/traces.jsonl"
+  ],
+  "ai_actions_added": [],
+  "new_operations": [
+    {
+      "trace_id": "bff87904f6d407966d784832196f7e19",
+      "request_id": "s04-a09-stage-note-1",
+      "capability": "stage.note.write",
+      "started_at": 1790296597.3415506,
+      "duration_ms": 32919.7,
+      "attempts": 2,
+      "replayed": true,
+      "first_failure_stage": "core.approval",
+      "canonical_outcome": "AMBIGUOUS",
+      "recovery_requirement": "reconcile-exact-request",
+      "needs_attention": true
+    }
+  ],
+  "head": {
+    "before": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "after": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e"
+  },
+  "git_status_after": [
+    " M curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+    "?? operations/transactions/idempotency.yaml",
+    "?? operations/transactions/revisions.yaml",
+    "?? operations/transactions/transaction-20260925-003709-001.yaml"
+  ],
+  "flags": []
+}
