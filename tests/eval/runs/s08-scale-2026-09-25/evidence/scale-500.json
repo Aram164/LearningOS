@@ -1,0 +1,153 @@
+{
+  "bench_version": 1,
+  "world": "/Users/aramaljanadi/los-eval/s08-scale-2026-09-25-scale500/LearningOS/repository",
+  "world_head": "bd7179af032b81b2840413747000d58b6b534088",
+  "notes": 616,
+  "reps": 3,
+  "derived_bytes": 21932640,
+  "operations": {
+    "generate_cold": {
+      "median_s": 0.59,
+      "min_s": 0.586,
+      "max_s": 0.684,
+      "samples_s": [
+        0.684,
+        0.59,
+        0.586
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "validate": {
+      "median_s": 0.428,
+      "min_s": 0.419,
+      "max_s": 0.43,
+      "samples_s": [
+        0.428,
+        0.43,
+        0.419
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "generate_warm": {
+      "median_s": 0.568,
+      "min_s": 0.566,
+      "max_s": 0.575,
+      "samples_s": [
+        0.566,
+        0.568,
+        0.575
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "search_metadata": {
+      "median_s": 0.591,
+      "min_s": 0.589,
+      "max_s": 0.591,
+      "samples_s": [
+        0.591,
+        0.591,
+        0.589
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "search_content": {
+      "median_s": 1.766,
+      "min_s": 1.745,
+      "max_s": 1.776,
+      "samples_s": [
+        1.776,
+        1.766,
+        1.745
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "inspect_note": {
+      "median_s": 0.586,
+      "min_s": 0.585,
+      "max_s": 0.59,
+      "samples_s": [
+        0.59,
+        0.585,
+        0.586
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "related_note": {
+      "median_s": 0.585,
+      "min_s": 0.579,
+      "max_s": 0.585,
+      "samples_s": [
+        0.585,
+        0.579,
+        0.585
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "bootstrap_brief": {
+      "median_s": 0.647,
+      "min_s": 0.645,
+      "max_s": 0.657,
+      "samples_s": [
+        0.657,
+        0.645,
+        0.647
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "resume": {
+      "median_s": 0.363,
+      "min_s": 0.363,
+      "max_s": 0.366,
+      "samples_s": [
+        0.366,
+        0.363,
+        0.363
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "incremental_generate": {
+      "median_s": 0.573,
+      "min_s": 0.569,
+      "max_s": 0.577,
+      "samples_s": [
+        0.569,
+        0.573,
+        0.577
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "incremental_search": {
+      "median_s": 1.262,
+      "min_s": 1.254,
+      "max_s": 1.274,
+      "samples_s": [
+        1.254,
+        1.262,
+        1.274
+      ],
+      "exit_codes": [
+        0
+      ]
+    }
+  }
+}

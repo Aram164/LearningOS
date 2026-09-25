@@ -1,0 +1,153 @@
+{
+  "bench_version": 1,
+  "world": "/Users/aramaljanadi/los-eval/s08-scale-2026-09-25-scale10000/LearningOS/repository",
+  "world_head": "cef2e239cf1d75044713a9042157b8d4108893e9",
+  "notes": 10116,
+  "reps": 3,
+  "derived_bytes": 412662292,
+  "operations": {
+    "generate_cold": {
+      "median_s": 5.014,
+      "min_s": 5.003,
+      "max_s": 5.041,
+      "samples_s": [
+        5.003,
+        5.041,
+        5.014
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "validate": {
+      "median_s": 3.289,
+      "min_s": 3.215,
+      "max_s": 3.337,
+      "samples_s": [
+        3.215,
+        3.337,
+        3.289
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "generate_warm": {
+      "median_s": 4.851,
+      "min_s": 4.756,
+      "max_s": 4.921,
+      "samples_s": [
+        4.756,
+        4.921,
+        4.851
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "search_metadata": {
+      "median_s": 4.678,
+      "min_s": 4.663,
+      "max_s": 4.837,
+      "samples_s": [
+        4.663,
+        4.837,
+        4.678
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "search_content": {
+      "median_s": 227.833,
+      "min_s": 226.23,
+      "max_s": 228.079,
+      "samples_s": [
+        228.079,
+        227.833,
+        226.23
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "inspect_note": {
+      "median_s": 4.665,
+      "min_s": 4.633,
+      "max_s": 4.777,
+      "samples_s": [
+        4.777,
+        4.633,
+        4.665
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "related_note": {
+      "median_s": 4.675,
+      "min_s": 4.671,
+      "max_s": 4.741,
+      "samples_s": [
+        4.741,
+        4.675,
+        4.671
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "bootstrap_brief": {
+      "median_s": 5.466,
+      "min_s": 5.463,
+      "max_s": 5.532,
+      "samples_s": [
+        5.532,
+        5.463,
+        5.466
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "resume": {
+      "median_s": 2.845,
+      "min_s": 2.842,
+      "max_s": 2.897,
+      "samples_s": [
+        2.897,
+        2.845,
+        2.842
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "incremental_generate": {
+      "median_s": 4.914,
+      "min_s": 4.884,
+      "max_s": 4.921,
+      "samples_s": [
+        4.921,
+        4.884,
+        4.914
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "incremental_search": {
+      "median_s": 169.318,
+      "min_s": 168.129,
+      "max_s": 170.513,
+      "samples_s": [
+        170.513,
+        168.129,
+        169.318
+      ],
+      "exit_codes": [
+        0
+      ]
+    }
+  }
+}
