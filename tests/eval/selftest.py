@@ -16,12 +16,14 @@ Checks:
             in the world, and no distinctive oracle sentence appears in any
             public file, in any commit touching tests/eval, or in a built world
             (runs/ is consumer output: checked for the oracle's own sentences,
-            not for the expected mentions a correct answer should contain)
+            not for the expected mentions a correct answer should contain, and
+            minus the matches adjudicated in leak-adjudications.json)
 """
 
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
 import shutil
@@ -293,16 +295,35 @@ def oracle_patterns(oracle_dir: Path, mentions: bool = True) -> list[str]:
     return sorted(pats)
 
 
-def leak_hits(eval_dir: Path, pat_file: Path, run_pat_file: Path) -> list[str]:
+ADJUDICATIONS = EVAL / "leak-adjudications.json"
+
+
+def adjudicated_pairs() -> set[tuple[str, str]]:
+    """(run file, SHA-256 of an oracle sentence) pairs the conductor ruled to be the
+    consumer's own wording (H5). Hashes only, so the list reveals no oracle text."""
+    if not ADJUDICATIONS.exists():
+        return set()
+    data = json.loads(ADJUDICATIONS.read_text(encoding="utf-8"))
+    return {(a["path"], a["pattern_sha256"]) for a in data["adjudicated"]}
+
+
+def run_leaks(path: str, text: str, run_pats: list[str], allowed: set) -> list[str]:
+    """SHA-256 digests of the oracle sentences in one run file, minus adjudicated ones."""
+    digests = (hashlib.sha256(p.encode("utf-8")).hexdigest() for p in run_pats if p in text)
+    return [d for d in digests if (path, d) not in allowed]
+
+
+def leak_hits(eval_dir: Path, pat_file: Path, run_pats: list[str],
+              allowed: set = frozenset()) -> list[str]:
     """Files under eval_dir holding oracle text. runs/ is consumer output and is
-    checked against run_pat_file (the oracle's own sentences) only."""
+    checked against run_pats (the oracle's own sentences) only."""
     hits = subprocess.run(["grep", "-rlF", "-f", str(pat_file), "--exclude-dir=private",
                            "--exclude-dir=runs", str(eval_dir)],
                           capture_output=True, text=True).stdout.split()
-    if (eval_dir / "runs").is_dir():
-        hits += subprocess.run(["grep", "-rlF", "-f", str(run_pat_file),
-                                str(eval_dir / "runs")],
-                               capture_output=True, text=True).stdout.split()
+    for f in sorted(p for p in (eval_dir / "runs").rglob("*") if p.is_file()):
+        rel = "tests/eval/" + f.relative_to(eval_dir).as_posix()
+        if run_leaks(rel, f.read_text(encoding="utf-8", errors="replace"), run_pats, allowed):
+            hits.append(str(f))
     return hits
 
 
@@ -311,23 +332,28 @@ def t_leak_scan_toy(ctx):
     root = ctx["tmp"] / "leak-toy"
     mention = "a phrase a correct explanation is expected to say"
     own = "the oracle's own reason for judging this pair relevant"
-    pat_file, run_pat_file = root / "patterns.txt", root / "run-patterns.txt"
+    pat_file = root / "patterns.txt"
     run_file = root / "eval" / "runs" / "r1" / "connections.jsonl"
     public_file = root / "eval" / "public" / "brief.md"
     run_file.parent.mkdir(parents=True)
     public_file.parent.mkdir(parents=True)
     pat_file.write_text(f"{mention}\n{own}\n", encoding="utf-8")
-    run_pat_file.write_text(f"{own}\n", encoding="utf-8")
     run_file.write_text(json.dumps({"reason": mention}) + "\n", encoding="utf-8")
-    assert leak_hits(root / "eval", pat_file, run_pat_file) == [], \
+    assert leak_hits(root / "eval", pat_file, [own]) == [], \
         "an expected mention in a run was reported as a leak"
     public_file.write_text(mention + "\n", encoding="utf-8")
-    assert leak_hits(root / "eval", pat_file, run_pat_file) == [str(public_file)], \
+    assert leak_hits(root / "eval", pat_file, [own]) == [str(public_file)], \
         "an expected mention in a public file was not reported"
     public_file.unlink()
     run_file.write_text(json.dumps({"reason": own}) + "\n", encoding="utf-8")
-    assert leak_hits(root / "eval", pat_file, run_pat_file) == [str(run_file)], \
+    assert leak_hits(root / "eval", pat_file, [own]) == [str(run_file)], \
         "the oracle's own sentence in a run was not reported"
+    digest = hashlib.sha256(own.encode("utf-8")).hexdigest()
+    ruled = {("tests/eval/runs/r1/connections.jsonl", digest)}
+    assert leak_hits(root / "eval", pat_file, [own], ruled) == [], \
+        "an adjudicated match was still reported"
+    assert leak_hits(root / "eval", pat_file, [own], {("tests/eval/runs/r2/x", digest)}) \
+        == [str(run_file)], "an adjudication for another file suppressed this one"
 
 
 @check("blind: oracle decrypts, ids resolve, nothing leaks")
@@ -345,17 +371,26 @@ def t_leaks(ctx):
     pat_file.write_text("\n".join(pats) + "\n", encoding="utf-8")
     run_pat_file = ctx["tmp"] / "run-patterns.txt"
     run_pat_file.write_text("\n".join(run_pats) + "\n", encoding="utf-8")
-    hits = leak_hits(EVAL, pat_file, run_pat_file)
+    allowed = adjudicated_pairs()
+    hits = leak_hits(EVAL, pat_file, run_pats, allowed)
     assert not hits, f"oracle text found in public files: {hits}"
     commits = subprocess.run(["git", "log", "--all", "--format=%H", "--", "tests/eval"],
                              cwd=REPO, capture_output=True, text=True).stdout.split()
-    scopes = ((pat_file, ["tests/eval", ":!tests/eval/private", ":!tests/eval/runs"]),
-              (run_pat_file, ["tests/eval/runs"]))
     for commit in commits:
-        for patterns, pathspec in scopes:
-            proc = subprocess.run(["git", "grep", "-lF", "-f", str(patterns), commit, "--",
-                                   *pathspec], cwd=REPO, capture_output=True, text=True)
-            assert not proc.stdout.strip(), f"oracle text in commit {commit[:12]}: {proc.stdout}"
+        proc = subprocess.run(["git", "grep", "-lF", "-f", str(pat_file), commit, "--",
+                               "tests/eval", ":!tests/eval/private", ":!tests/eval/runs"],
+                              cwd=REPO, capture_output=True, text=True)
+        assert not proc.stdout.strip(), f"oracle text in commit {commit[:12]}: {proc.stdout}"
+        listed = subprocess.run(["git", "grep", "-lF", "-f", str(run_pat_file), commit, "--",
+                                 "tests/eval/runs"], cwd=REPO, capture_output=True,
+                                text=True).stdout.split()
+        for spec in listed:
+            path = spec.split(":", 1)[1]
+            text = subprocess.run(["git", "show", spec], cwd=REPO, capture_output=True,
+                                  text=True).stdout
+            bad = run_leaks(path, text, run_pats, allowed)
+            assert not bad, (f"oracle text in commit {commit[:12]}: {path} "
+                             f"(sha256 {', '.join(d[:16] for d in bad)})")
     if "world" in ctx:
         world_root = ctx["world"].parent.parent
         hits = subprocess.run(["grep", "-rlF", "-f", str(pat_file), "--exclude-dir=.git",

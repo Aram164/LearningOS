@@ -113,6 +113,9 @@ own. The judge merges every run branch before scoring.
 | 2 | N | `s02-novice-2026-09-25` | `claude/relaxed-maxwell-63p0mh` | `13ad2fca…` | after H1, before H2 (eval `3a53589`); owner authorized approval values mid-run |
 | 3 | L | `s03-learner-2026-09-25` | `claude/zealous-einstein-7h57rx` | `13ad2fca…` | after H1, before H2 (eval `3a53589`); owner authorized approval values mid-run |
 | 4 | R | `s04-resume-2026-09-25` | `claude/adoring-thompson-fa2n41` | `13ad2fca…` | before H2: agent environment refused the approval hash; no write completed (S10, S16 apply, S26 goal 2) |
+| 4b | O (S10, S16, S26) | `s04b-writes-2026-09-25` | `claude/eval-s04b-writes-2026-09-25` | `13ad2fca…` | after H3 (eval `658db28`); local run (H4), opened an earlier memory note before starting |
+| 5 | C | `s05-connections-a-2026-09-25` | `claude/eval-s05-connections-a-2026-09-25` | `13ad2fca…` | after H3 (eval `658db28`); local run (H4), opened an earlier memory note before starting; one leak-scan match adjudicated (H5) |
+| 6 | C | `s06-connections-b-2026-09-25` | `claude/eval-s06-connections-b-2026-09-25` | `13ad2fca…` | after H3 (eval `658db28`); local run (H4), memory index in context only |
 
 ## Harness changes
 
@@ -149,4 +152,27 @@ here, so the judge can tell a product finding from an artefact of the harness.
   in public files, the corpus, built worlds and every other committed path. A
   toy self-test covers the split. No run's content or score changes; the
   judge's worksheets show the two matches as ordinary mention coverage.
+- **H4 (2026-09-25).** From session 4b on, consumer chats run locally, on the
+  owner's machine, not in separate cloud containers. They share its
+  filesystem, its other agent sessions and the assistant's persistent memory.
+  That memory includes notes from the owner's earlier development work on
+  LearningOS internals. Runs 4b, 5, 6 and 7 started with that memory index in
+  context, and 4b and 5 opened one such note. One chat's shell slip deleted an
+  untracked owner file outside its world; it was restored from earlier
+  transcripts. `public/SESSION-BRIEF.md` now has a "shared machine" section:
+  work only in your own world, no memory or transcript reads, explicit git
+  paths, quoted heredocs, and a load record for timing runs. Runs 8 and 9
+  received it. The judge should treat the implementation-knowledge friction of
+  runs 4b, 5, 6 and 7 as possibly understated, and should not compare their
+  timings with container runs.
+- **H5 (2026-09-25).** One of the oracle's own one-line judgment reasons
+  (44 characters, summarising a single inbox item) appeared verbatim in run
+  5's `connections.jsonl`, as its reason for a different probe. Run 5's local
+  transcript shows the phrase only in the session's own writes; no tool
+  result ever showed it oracle text. The same transcript check on runs 4b, 6
+  and 7 found no oracle text read either. Rather than loosening the scan
+  again, `selftest.py` now honours `leak-adjudications.json`: each entry names
+  one run file and the SHA-256 of one oracle sentence, so the list reveals no
+  oracle text, and every other match still fails. A toy self-test covers it.
+  No run's content or score changes.
 
