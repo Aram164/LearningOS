@@ -22,12 +22,18 @@ class ProjectionFailure(TransactionFailure):
     Carries whether rollback completed, so the gateway classifies by
     subsystem outcome instead of matching exception prose. A complete
     rollback proves NOT_COMMITTED (PROJECTION_FAILED); an incomplete one
-    leaves the outcome unknown (INTERNAL_FAILURE).
+    leaves the outcome unknown (INTERNAL_FAILURE). When the restored
+    pre-state itself refuses re-publication for a content (non-OSError)
+    reason, the defect pre-exists the write: ``pre_existing_defect`` names
+    that case so the gateway reports it like the shadow-validation
+    refusal it is (VALIDATION_FAILED), not as an unknown outcome (JF-11).
     """
 
-    def __init__(self, message: str, *, rollback_complete: bool):
+    def __init__(self, message: str, *, rollback_complete: bool,
+                 pre_existing_defect: bool = False):
         super().__init__(message)
         self.rollback_complete = rollback_complete
+        self.pre_existing_defect = pre_existing_defect
 
 
 class PostCommitFailure(TransactionFailure):
