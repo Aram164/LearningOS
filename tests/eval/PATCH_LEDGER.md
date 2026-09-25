@@ -743,3 +743,78 @@ Three legs, three different answers — verified separately:
 - Real repo: `validate.py --compact` 0 errors;
   `warning_baseline.py --check` OK; `ruff check tools/ tests/`
   clean.
+
+## Close-out — deferred, residuals, follow-ups (S11–S12)
+
+Repairs intentionally NOT made, with reasons:
+
+- JF-13 ledger rebuild from receipts: assessed against the
+  small-safe-supported bar and deferred (quarantine tokens are
+  not receipt-derived; reverted ledgers need merge semantics;
+  reconcile-time hooks widen the lock-acquisition failure
+  surface). Detection implemented instead (duplicate-key +
+  unreadable-ledger validator errors).
+- Manifest v15 → v16 for `garden-note` / `inbox-item` record
+  types: the repo's own rule requires the UI mirror in the SAME
+  change, and the UI sibling is absent from this worktree — a
+  bump landing alone is the exact bug the rule exists to
+  prevent. Served discovery + content through `los` queries
+  with zero contract bytes changed instead.
+- JF-15 symmetrization: documented the one-directional rule
+  instead; symmetrizing changes `related` behavior for all
+  consumers.
+- JF-17 workspace Next Action: no capability advances the
+  workspace aim — a missing write needing Aram's design call.
+- S23 linear remainder (≈1 ms/note per-search floor: full
+  reads + hashing + full postings load) and `generate`
+  granularity (warm ≈ cold, one-line edit = full rebuild):
+  both need index/redesign work beyond the repair bar. The
+  superlinear term is fixed; generate at 1.3 s per 2k notes is
+  bulk-acceptable.
+- Out of scope per the repair brief, untouched: JF-25
+  (capture-to-note/successor path — needs Aram's read-only
+  boundary call), JF-22, S13, S14.
+- No action (adjudicated): JF-06 NOT CONFIRMED; JF-12 / JF-24
+  confirmed behavior, documented; JF-16 artefact, docs residue
+  done.
+
+Cross-repo follow-up (recorded, enforced by parity test, UI
+sibling absent here): UI `DEFINITIVE_NO_COMMIT_CODES` must add
+`IDEMPOTENCY_CONFLICT` (JF-19).
+
+Commit hygiene: stage commits used `--no-verify`, though no
+`pre-commit` hook is installed in this checkout — no bypass
+occurred. Push likewise plain unless a hook defect appears.
+
+## Final gates (S11–S12 repair tip)
+
+- Full suite (`pytest -q`, incl. `full_repo`): 2361 passed,
+  31 skipped, 2 failed — both failures verified IDENTICAL on
+  the base commit via a detached worktree at `84bda98`
+  (base product code via `PYTHONPATH`), so neither is a
+  repair regression:
+  - `test_manifest_replay :: test_real_repo_manifest_replay`:
+    needs untracked maintainer pilot bundles
+    (`operations/ai-actions/requests/ai-request-sad-l04-pilot/`;
+    only `.gitkeep` is tracked) absent from this checkout.
+    Not skipped: adding a skip to green the suite is
+    prohibited; the test is meaningful where the data exists.
+  - `test_perimeter ::
+    test_every_pending_disposition_entry_is_still_on_disk`:
+    `original_research.txt` was disposed of (gone from the
+    wrapper root) but is still listed in
+    `pending_disposition`. The contract prescribes removing
+    the entry — but that asserts the commissioning brief was
+    filed per the entry's terms, which this repair cannot
+    verify. Aram decision: confirm the brief's fate, then
+    remove the entry and log the disposition.
+- `make test-fast` (the documented no-real-data gate): green
+  here (2289 passed, 0 failed) and on a fresh-install world
+  (2265 passed, 0 failed).
+- `validate.py --compact`: 0 errors;
+  `warning_baseline.py --check`: OK (no new signature);
+  `ruff check tools/ tests/`: clean.
+- Oracle plaintext (`/tmp/oracle-s11-rD4ZIF`) removed;
+  `LOS_EVAL_ORACLE_KEY` verified non-empty without exposure.
+  No oracle material was ever committed (worlds + throwaway
+  dirs live outside the repo).
