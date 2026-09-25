@@ -15,6 +15,8 @@ Checks:
             tracked; with the key: the oracle decrypts, every oracle id exists
             in the world, and no distinctive oracle sentence appears in any
             public file, in any commit touching tests/eval, or in a built world
+            (runs/ is consumer output: checked for the oracle's own sentences,
+            not for the expected mentions a correct answer should contain)
 """
 
 from __future__ import annotations
@@ -265,17 +267,20 @@ def t_private_tracked():
     assert head == b"Salted__", "sealed oracle is not an openssl salted ciphertext"
 
 
-def oracle_patterns(oracle_dir: Path) -> list[str]:
+def oracle_patterns(oracle_dir: Path, mentions: bool = True) -> list[str]:
     pats = set()
     rel = yaml.safe_load((oracle_dir / "relations.yaml").read_text())["probes"]
     for p in rel.values():
         for j in p["judgments"]:
-            for s in [j.get("why", ""), *j.get("m", [])]:
+            for s in [j.get("why", ""), *(j.get("m", []) if mentions else [])]:
                 if len(s) >= 28:
                     pats.add(s)
     # Answer facts are left out on purpose: many quote the learner's own notes,
     # which are public by design. Judge notes, judgment reasons, expected
-    # mentions and scenario expectations are the oracle's own words.
+    # mentions and scenario expectations are the oracle's own words. Expected
+    # mentions are also what a correct explanation should say (score_connections
+    # rewards a reason that covers them), so mentions=False gives the patterns
+    # for consumer output (H3).
     ans = yaml.safe_load((oracle_dir / "answers.yaml").read_text())["questions"]
     for q in ans.values():
         if len(q.get("judge", "")) >= 28:
@@ -288,6 +293,43 @@ def oracle_patterns(oracle_dir: Path) -> list[str]:
     return sorted(pats)
 
 
+def leak_hits(eval_dir: Path, pat_file: Path, run_pat_file: Path) -> list[str]:
+    """Files under eval_dir holding oracle text. runs/ is consumer output and is
+    checked against run_pat_file (the oracle's own sentences) only."""
+    hits = subprocess.run(["grep", "-rlF", "-f", str(pat_file), "--exclude-dir=private",
+                           "--exclude-dir=runs", str(eval_dir)],
+                          capture_output=True, text=True).stdout.split()
+    if (eval_dir / "runs").is_dir():
+        hits += subprocess.run(["grep", "-rlF", "-f", str(run_pat_file),
+                                str(eval_dir / "runs")],
+                               capture_output=True, text=True).stdout.split()
+    return hits
+
+
+@check("blind: leak scan lets runs/ contain expected mentions (toy data)")
+def t_leak_scan_toy(ctx):
+    root = ctx["tmp"] / "leak-toy"
+    mention = "a phrase a correct explanation is expected to say"
+    own = "the oracle's own reason for judging this pair relevant"
+    pat_file, run_pat_file = root / "patterns.txt", root / "run-patterns.txt"
+    run_file = root / "eval" / "runs" / "r1" / "connections.jsonl"
+    public_file = root / "eval" / "public" / "brief.md"
+    run_file.parent.mkdir(parents=True)
+    public_file.parent.mkdir(parents=True)
+    pat_file.write_text(f"{mention}\n{own}\n", encoding="utf-8")
+    run_pat_file.write_text(f"{own}\n", encoding="utf-8")
+    run_file.write_text(json.dumps({"reason": mention}) + "\n", encoding="utf-8")
+    assert leak_hits(root / "eval", pat_file, run_pat_file) == [], \
+        "an expected mention in a run was reported as a leak"
+    public_file.write_text(mention + "\n", encoding="utf-8")
+    assert leak_hits(root / "eval", pat_file, run_pat_file) == [str(public_file)], \
+        "an expected mention in a public file was not reported"
+    public_file.unlink()
+    run_file.write_text(json.dumps({"reason": own}) + "\n", encoding="utf-8")
+    assert leak_hits(root / "eval", pat_file, run_pat_file) == [str(run_file)], \
+        "the oracle's own sentence in a run was not reported"
+
+
 @check("blind: oracle decrypts, ids resolve, nothing leaks")
 def t_leaks(ctx):
     if not os.environ.get("LOS_EVAL_ORACLE_KEY"):
@@ -298,18 +340,22 @@ def t_leaks(ctx):
     open_to(out)
     oracle_dir = out / "oracle"
     pats = oracle_patterns(oracle_dir)
+    run_pats = oracle_patterns(oracle_dir, mentions=False)
     pat_file = ctx["tmp"] / "patterns.txt"
     pat_file.write_text("\n".join(pats) + "\n", encoding="utf-8")
-    hits = subprocess.run(["grep", "-rlF", "-f", str(pat_file), "--exclude-dir=private",
-                           str(EVAL)], capture_output=True, text=True).stdout.split()
+    run_pat_file = ctx["tmp"] / "run-patterns.txt"
+    run_pat_file.write_text("\n".join(run_pats) + "\n", encoding="utf-8")
+    hits = leak_hits(EVAL, pat_file, run_pat_file)
     assert not hits, f"oracle text found in public files: {hits}"
     commits = subprocess.run(["git", "log", "--all", "--format=%H", "--", "tests/eval"],
                              cwd=REPO, capture_output=True, text=True).stdout.split()
+    scopes = ((pat_file, ["tests/eval", ":!tests/eval/private", ":!tests/eval/runs"]),
+              (run_pat_file, ["tests/eval/runs"]))
     for commit in commits:
-        proc = subprocess.run(["git", "grep", "-lF", "-f", str(pat_file), commit, "--",
-                               "tests/eval", ":!tests/eval/private"], cwd=REPO,
-                              capture_output=True, text=True)
-        assert not proc.stdout.strip(), f"oracle text in commit {commit[:12]}: {proc.stdout}"
+        for patterns, pathspec in scopes:
+            proc = subprocess.run(["git", "grep", "-lF", "-f", str(patterns), commit, "--",
+                                   *pathspec], cwd=REPO, capture_output=True, text=True)
+            assert not proc.stdout.strip(), f"oracle text in commit {commit[:12]}: {proc.stdout}"
     if "world" in ctx:
         world_root = ctx["world"].parent.parent
         hits = subprocess.run(["grep", "-rlF", "-f", str(pat_file), "--exclude-dir=.git",
@@ -319,7 +365,7 @@ def t_leaks(ctx):
         rel = yaml.safe_load((oracle_dir / "relations.yaml").read_text())["probes"]
         bad = sorted({j["t"] for p in rel.values() for j in p["judgments"]} - ids)
         assert not bad, f"oracle targets missing from the world: {bad}"
-    return f"{len(pats)} patterns, {len(commits)} commits scanned"
+    return f"{len(pats)} patterns ({len(run_pats)} for runs/), {len(commits)} commits scanned"
 
 
 # -------------------------------------------------------------------- lint
@@ -351,6 +397,7 @@ def main(argv=None) -> int:
     t_observe(ctx)
     t_determinism(ctx)
     t_private_tracked()
+    t_leak_scan_toy(ctx)
     t_leaks(ctx)
     t_ruff()
     width = max(len(n) for _, n, _ in RESULTS)

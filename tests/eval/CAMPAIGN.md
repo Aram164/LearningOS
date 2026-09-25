@@ -110,6 +110,8 @@ own. The judge merges every run branch before scoring.
 | Session | Plan | Run id | Branch | World HEAD | Notes |
 |---|---|---|---|---|---|
 | 0 | B | `s00-baseline-2026-09-24` | `claude/optimistic-mayer-065kyv` | `9a85f012…` | built before harness change H1 |
+| 2 | N | `s02-novice-2026-09-25` | `claude/relaxed-maxwell-63p0mh` | `13ad2fca…` | after H1, before H2 (eval `3a53589`); owner authorized approval values mid-run |
+| 3 | L | `s03-learner-2026-09-25` | `claude/zealous-einstein-7h57rx` | `13ad2fca…` | after H1, before H2 (eval `3a53589`); owner authorized approval values mid-run |
 | 4 | R | `s04-resume-2026-09-25` | `claude/adoring-thompson-fa2n41` | `13ad2fca…` | before H2: agent environment refused the approval hash; no write completed (S10, S16 apply, S26 goal 2) |
 
 ## Harness changes
@@ -134,6 +136,17 @@ here, so the judge can tell a product finding from an artefact of the harness.
   `public/CONSUMER-PROTOCOL.md` now states that a scripted learner approval is
   a real approval and that recording it in the product's required form is the
   operator's job. Runs after H2 received this sentence; their friction on
-  discovering the approval mechanism is therefore not comparable with runs 0
-  and 4, which measured it without the hint.
+  discovering the approval mechanism is therefore not comparable with runs 0,
+  2, 3 and 4, which measured it without the hint.
+- **H3 (2026-09-25).** The self-test's leak scan used the oracle's expected
+  mentions (the short phrases a correct connection explanation should contain,
+  which `score_connections.py` rewards) as leak markers everywhere, including
+  consumer output. Run 3's `connections.jsonl` tripped it twice. Both times the
+  consumer had condensed a sentence from the learner's own notes into the same
+  words the oracle author used. No judgment reason, judge note or scenario
+  expectation appeared in any run. Fixed in `selftest.py`: `runs/` is scanned
+  for the oracle's own sentences only; expected mentions remain leak markers
+  in public files, the corpus, built worlds and every other committed path. A
+  toy self-test covers the split. No run's content or score changes; the
+  judge's worksheets show the two matches as ordinary mention coverage.
 
