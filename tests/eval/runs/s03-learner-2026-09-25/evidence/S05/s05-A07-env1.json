@@ -1,0 +1,20 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s05-A07-1",
+ "idempotency_key": "s03-s05-A07-k1",
+ "capability": "stage.note.write",
+ "channel": "operator",
+ "expected_snapshot": "sha256:3cc5d7c9f3e5312a4fcc9f7e017b7909039b00d4b420e99aabf988c8ddcc8077",
+ "expected_revisions": {
+  "unit-os-l02": 0
+ },
+ "approval": {
+  "kind": "operator-approval",
+  "subject_sha256": "sha256:a093de47552d6ae7f5657d2a25ce3a12e72b7ce174f012ead5c2f462ffcc1b30"
+ },
+ "payload": {
+  "unit_id": "unit-os-l02",
+  "stage_id": "stage-os-l02-02-proportional-share",
+  "text": "\n## 2026-09-22 — reading: stride paper excerpt (filed by the operator)\n\nFrom Waldspurger & Weihl, \"Stride Scheduling\" (1995), §2:\n\n\"Each client has a ticket allocation, a stride inversely proportional to its\ntickets, and a pass value. The client with the minimum pass is selected, and\nits pass is advanced by its stride. … Stride scheduling achieves\nproportional-share allocation deterministically: the relative error in any\nclient's allocation is bounded by a constant, independent of the allocation\nperiod, whereas lottery scheduling's expected error grows with the square root\nof the number of allocations.\"\n"
+ }
+}

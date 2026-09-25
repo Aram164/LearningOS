@@ -1,0 +1,20 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s05-A05-1",
+ "idempotency_key": "s03-s05-A05-k1",
+ "capability": "stage.note.write",
+ "channel": "operator",
+ "expected_snapshot": "sha256:80314a7e7b2196ce9a97a74b363dd9dc670b9725ca124a0007a7d3752619c607",
+ "expected_revisions": {
+  "unit-dataframes-lineage": 0
+ },
+ "approval": {
+  "kind": "operator-approval",
+  "subject_sha256": "sha256:c180a903ca6fcd79467b05ce75a1bf7126300842aaf4b8df0ba1549c58ffe95c"
+ },
+ "payload": {
+  "unit_id": "unit-dataframes-lineage",
+  "stage_id": "stage-df-lineage-01-trace",
+  "text": "\n## 2026-09-21 — second fan-out bug, practice dashboard (transcribed notebook page, filed by the operator)\n\nRevenue per region doubled for \"North\" last week — impossible.\n\nWalked back step by step with row counts:\n- orders (week): 48,210 rows ✓\n- ⋈ customers: 48,210 ✓\n- ⋈ regions on region_code: 96,420 ✗ ← here\n\nregions table had two rows for code \"N\" (old name + new name after the\nrename). Every North order matched twice. Dedup the dimension table and add a\nuniqueness check on the dim key before joining.\n\nSecond time a join fan-out has bitten me.\n"
+ }
+}

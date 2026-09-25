@@ -1,0 +1,24 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s05-A10-1",
+ "idempotency_key": "s03-s05-A10-k1",
+ "capability": "note.revise",
+ "ok": true,
+ "replayed": false,
+ "transaction_id": "transaction-20260925-004532-001",
+ "receipt_path": "operations/transactions/transaction-20260925-004532-001.yaml",
+ "snapshot_after": "sha256:cd551988ae4542cd2940cfceca3c64234a9374c6d4f4521c81ea750a338ccf30",
+ "result": {
+  "ok": true,
+  "note_id": "note-query-optimizer-cost-model",
+  "path": "knowledge/notes/data-systems/note-query-optimizer-cost-model.md",
+  "transaction_id": "transaction-20260925-004532-001",
+  "receipt_path": "operations/transactions/transaction-20260925-004532-001.yaml",
+  "artifact_revisions": {
+   "note-query-optimizer-cost-model": 1
+  },
+  "snapshot_after": "sha256:cd551988ae4542cd2940cfceca3c64234a9374c6d4f4521c81ea750a338ccf30",
+  "replayed": false
+ },
+ "error": null
+}

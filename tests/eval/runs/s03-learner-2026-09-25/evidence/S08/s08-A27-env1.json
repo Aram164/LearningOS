@@ -1,0 +1,20 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s08-A27-1",
+ "idempotency_key": "s03-s08-A27-k1",
+ "capability": "stage.note.write",
+ "channel": "operator",
+ "expected_snapshot": "sha256:5a7f5dee1ec48a7a799a754b19b3a86d3efb7e65ab93af5389c7318c829af5d4",
+ "expected_revisions": {
+  "unit-dataframes-joins-at-scale": 0
+ },
+ "approval": {
+  "kind": "operator-approval",
+  "subject_sha256": "sha256:211799c3b7d02f4bbd6487bbe61dbf14ed96e5774946c35458f5664cb06757e2"
+ },
+ "payload": {
+  "unit_id": "unit-dataframes-joins-at-scale",
+  "stage_id": "stage-df-joins-01-strategies",
+  "text": "\n## 2026-09-29 — first measurement: skewed join (stage note draft)\n\nJoined events (50M rows) with users on user_id. One key, user_id = 0\n(\"anonymous\"), holds 40% of all events.\n\nHash join: the partition containing key 0 is ~20M rows, does not fit the\nmemory budget, spills to disk and is re-partitioned — but repartitioning by\nhash cannot split a single key. Runtime 11 min vs 90 s after filtering key 0\nout and joining it separately.\n\nSo a hash join is O(n + m) only if the build partitions fit in memory and keys\nare spread out. With one giant key it degrades badly.\n"
+ }
+}

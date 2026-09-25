@@ -1,0 +1,160 @@
+{
+ "scenario": "S08",
+ "run_id": "s03-learner-2026-09-25",
+ "classification": "PASS_WITH_FRICTION",
+ "classification_reason": "The wrong note was found in one search and corrected through an approved, append-only, receipted revision, with the original sentence intact; the documented supersession path was unavailable because no capability creates a note.",
+ "before": {
+  "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+  "git_status": [
+   " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lazy-plans/stages/stage-df-lazy-02-read-explain/notes.md",
+   " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lineage/stages/stage-df-lineage-01-trace/notes.md",
+   " M curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+   " M curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l07/stages/stage-l07-01-ridge-lasso-geometry/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l09/stages/stage-l09-02-svd-connection/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l11/stages/stage-l11-01-backprop/notes.md",
+   " M knowledge/notes/data-systems/note-query-optimizer-cost-model.md",
+   " M knowledge/notes/machine-learning/note-ridge-regression-penalty.md",
+   " M knowledge/notes/mathematics/note-independence-vs-conditional-independence.md",
+   " M knowledge/notes/systems/note-amdahls-law.md",
+   "?? knowledge/garden/everything-is-a-dag-again.md",
+   "?? operations/transactions/idempotency.yaml",
+   "?? operations/transactions/revisions.yaml",
+   "?? operations/transactions/transaction-20260925-003900-001.yaml",
+   "?? operations/transactions/transaction-20260925-004511-001.yaml",
+   "?? operations/transactions/transaction-20260925-004514-001.yaml",
+   "?? operations/transactions/transaction-20260925-004517-001.yaml",
+   "?? operations/transactions/transaction-20260925-004520-001.yaml",
+   "?? operations/transactions/transaction-20260925-004523-001.yaml",
+   "?? operations/transactions/transaction-20260925-004526-001.yaml",
+   "?? operations/transactions/transaction-20260925-004529-001.yaml",
+   "?? operations/transactions/transaction-20260925-004532-001.yaml",
+   "?? operations/transactions/transaction-20260925-004535-001.yaml",
+   "?? operations/transactions/transaction-20260925-004945-001.yaml",
+   "?? operations/transactions/transaction-20260925-005137-001.yaml",
+   "?? operations/transactions/transaction-20260925-005140-001.yaml"
+  ],
+  "canonical_digest": "73ed9ef7cf6ac064c5b5c659f535b45e28c3a2b82159def60fec4025f42c3fac",
+  "derived_digest": "bf8e1ec74314b9c0123f7fb362951bc074b71eb2c078acde86862cc3b912699a",
+  "snapshot_file": "observations/S08-before.json"
+ },
+ "consumer": {
+  "goal": "Record that the A27 skewed-join measurement shows an earlier note wrong, so future reads see the correction, without destroying the original wording.",
+  "first_action": "Read A27, then `los search \"hash join\"` → note-hash-join-vs-sort-merge, whose exam summary says 'hash join is always O(n + m)'.",
+  "commands": [
+   "los search hash join",
+   "los search hash join --type note --content --limit 30",
+   "los search sort-merge",
+   "los search sort-merge --type note --content --limit 30",
+   "los capabilities note.evidence.add --json",
+   "los note-evidence --help",
+   "los plan-edit-context unit-dataframes-joins-at-scale --stage-id stage-df-joins-01-strategies",
+   "los bootstrap --brief",
+   "los capability stage.note.write --payload-file /tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/S08/s08-A27-env1.json",
+   "los bootstrap --brief",
+   "los capability note.revise --payload-file /tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/S08/s08-hashjoin-env1.json",
+   "validate; baseline; generate; grep original sentence",
+   "los capability stage.note.write (s08-A27)",
+   "los capability note.revise (s08-hashjoin)"
+  ],
+  "tool_calls": 5,
+  "docs_consulted": [
+   "WORKFLOWS §15 (deprecate or supersede)",
+   "los capabilities note.evidence.add --json; los note-evidence --help"
+  ],
+  "impl_files_read": [],
+  "retries": 0,
+  "confusions": [
+   "WORKFLOWS §15 prefers a superseding note (state: deprecated + supersedes) over editing, but no capability creates a new note, so supersession cannot be done through the gateway. The note is also only partly wrong (one summary line), so deprecating the whole note would itself mislead.",
+   "note.evidence.add wants a typed URI ref (material://, note://, https://); there is no documented URI for a stage working note, so I did not attach the measurement as evidence."
+  ],
+  "corrective_steps": [],
+  "questions_asked_to_learner": [
+   "Proposed: (1) file A27 verbatim in the working note of stage-df-joins-01-strategies; (2) append a dated 'Correction' section to note-hash-join-vs-sort-merge, directly below your unchanged summary line, quoting your measurement's conclusion. Approve? → 'Yes, apply exactly that.'"
+  ],
+  "implementation_knowledge_needed": false,
+  "wall_minutes": 2,
+  "outcome": "The wrong note is note-hash-join-vs-sort-merge. Its original summary line ('hash join is always O(n + m), so it wins whenever there is no sort order to exploit') is unchanged at line 26, and a dated Correction section directly below it quotes the measurement: O(n + m) holds only if build partitions fit in memory and keys are spread out. The measurement itself sits in the joins stage note. Validation 0 errors."
+ },
+ "internal": {
+  "request_ids": [
+   "s03-s08-A27-1",
+   "s03-s08-hashjoin-1"
+  ],
+  "receipts": [
+   "transaction-20260925-005250-001",
+   "transaction-20260925-005253-001"
+  ],
+  "transaction_behavior": "Two committed transactions: stage note appended (unit-dataframes-joins-at-scale 0→1); note replaced by an append-only revision (note 0→1; 0 lines removed per git diff).",
+  "approval_behavior": "operator-approval over the intent hash; the replacement file bound by SHA-256; both after the scripted approval.",
+  "projection_activity": "Snapshot advanced twice; manifest republished.",
+  "persistence_activity": "2 receipts.",
+  "derived_changes": "manifest/views regenerated.",
+  "manifest_changes": "Republished.",
+  "unexpected_writes": [],
+  "warnings_errors": [],
+  "git_diff_stat": "note-hash-join-vs-sort-merge.md +16/−0; stage-df-joins-01-strategies/notes.md +14",
+  "observe_diff_file": "observations/S08-diff.json"
+ },
+ "after": {
+  "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+  "git_status": [
+   " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-joins-at-scale/stages/stage-df-joins-01-strategies/notes.md",
+   " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lazy-plans/stages/stage-df-lazy-02-read-explain/notes.md",
+   " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lineage/stages/stage-df-lineage-01-trace/notes.md",
+   " M curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+   " M curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l07/stages/stage-l07-01-ridge-lasso-geometry/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l09/stages/stage-l09-02-svd-connection/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l11/stages/stage-l11-01-backprop/notes.md",
+   " M knowledge/notes/data-systems/note-hash-join-vs-sort-merge.md",
+   " M knowledge/notes/data-systems/note-query-optimizer-cost-model.md",
+   " M knowledge/notes/machine-learning/note-ridge-regression-penalty.md",
+   " M knowledge/notes/mathematics/note-independence-vs-conditional-independence.md",
+   " M knowledge/notes/systems/note-amdahls-law.md",
+   "?? knowledge/garden/everything-is-a-dag-again.md",
+   "?? operations/transactions/idempotency.yaml",
+   "?? operations/transactions/revisions.yaml",
+   "?? operations/transactions/transaction-20260925-003900-001.yaml",
+   "?? operations/transactions/transaction-20260925-004511-001.yaml",
+   "?? operations/transactions/transaction-20260925-004514-001.yaml",
+   "?? operations/transactions/transaction-20260925-004517-001.yaml",
+   "?? operations/transactions/transaction-20260925-004520-001.yaml",
+   "?? operations/transactions/transaction-20260925-004523-001.yaml",
+   "?? operations/transactions/transaction-20260925-004526-001.yaml",
+   "?? operations/transactions/transaction-20260925-004529-001.yaml",
+   "?? operations/transactions/transaction-20260925-004532-001.yaml",
+   "?? operations/transactions/transaction-20260925-004535-001.yaml",
+   "?? operations/transactions/transaction-20260925-004945-001.yaml",
+   "?? operations/transactions/transaction-20260925-005137-001.yaml",
+   "?? operations/transactions/transaction-20260925-005140-001.yaml",
+   "?? operations/transactions/transaction-20260925-005250-001.yaml",
+   "?? operations/transactions/transaction-20260925-005253-001.yaml"
+  ],
+  "canonical_digest": "4099e284bf5c32ee0bfea1e3e2ca92077d47c7033bada653e9be0864294b1d08",
+  "derived_digest": "1245b4c4d2f83f3db673547975c4df053ed5335b90c0f305e61abe66c525f3cd",
+  "snapshot_file": "observations/S08-after.json"
+ },
+ "friction": [
+  {
+   "tag": "missing-capability",
+   "description": "Supersession (the documented correction path, WORKFLOWS §15) needs a new note, which no capability can create; the correction had to be appended to the old note via note.revise.",
+   "cost": "—"
+  },
+  {
+   "tag": "hidden-prerequisite",
+   "description": "No URI scheme is documented for stage working notes, so the measurement cannot be attached as note evidence.",
+   "cost": "1 tool call"
+  }
+ ],
+ "failures": [],
+ "scenario_record": {
+  "note_identified_as_wrong": "note-hash-join-vs-sort-merge ('My summary for the exam: hash join is always O(n + m), so it wins whenever there is no sort order to exploit.')",
+  "how_recorded": "revise (append-only correction section via note.revise, transaction-20260925-005253-001) + the measurement filed in stage-df-joins-01-strategies (stage.note.write, transaction-20260925-005250-001); no new note or supersession (no capability); no evidence entry (no URI for stage notes)",
+  "every_command_outcome": "both gateway writes committed on first attempt; validate 0 errors; warning baseline OK",
+  "original_wording_survives": "yes — git diff shows 0 removed lines; the sentence is still at line 26"
+ },
+ "uncertainties": [
+  "The note's state stays 'evolving'; nothing marks it at the metadata level as containing a corrected claim, so only readers of the body see the correction."
+ ]
+}

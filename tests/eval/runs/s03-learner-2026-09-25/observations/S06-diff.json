@@ -1,0 +1,100 @@
+{
+  "from": "S06-before",
+  "to": "S06-after",
+  "canonical": {
+    "added": [
+      "knowledge/garden/everything-is-a-dag-again.md",
+      "operations/transactions/transaction-20260925-004945-001.yaml"
+    ],
+    "removed": [],
+    "modified": [
+      "operations/transactions/idempotency.yaml",
+      "operations/transactions/revisions.yaml"
+    ]
+  },
+  "canonical_digest_changed": true,
+  "receipts_added": [
+    "operations/transactions/transaction-20260925-004945-001.yaml"
+  ],
+  "inflight_after": [],
+  "derived": {
+    "added": [
+      "generated/derived-state/blobs/0f89699455766614ade191dc43d2897ebfe4e8773ffeb7e74a6cc91a5afb955f",
+      "generated/derived-state/blobs/45963f995fb78b7a787c60d42c245781fb740adc0c1d61e98bd4ece4c6e3ad02",
+      "generated/derived-state/blobs/d80c32e3f3c9803d9f5c7793d03130b651cf43b05f51bb28c7299f7a166f613d",
+      "generated/derived-state/blobs/f2b90346a68712c9fb6d86bbf301ca674691e8a10d39ed4dfc2abb197e13e070"
+    ],
+    "removed": [],
+    "modified": [
+      "generated/backlinks.json",
+      "generated/derived-state/state-v1.json",
+      "generated/manifest.json",
+      "generated/nebula.md",
+      "generated/reading-room.md",
+      "generated/reports/validation-report.md"
+    ],
+    "bytes_before": 996080,
+    "bytes_after": 1363821
+  },
+  "diagnostics_added": [],
+  "ai_actions_added": [],
+  "new_operations": [
+    {
+      "trace_id": "4ce594147a55d07f80a55fa5a33945d3",
+      "request_id": "s03-s06-A18-2",
+      "capability": "garden.seed.create",
+      "started_at": 1790297385.1069853,
+      "duration_ms": 1321.3,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    },
+    {
+      "trace_id": "7e048b45e20dd489f877b69df47221f8",
+      "request_id": "s03-s06-A18-1",
+      "capability": "garden.seed.create",
+      "started_at": 1790297374.9459064,
+      "duration_ms": 110.4,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": "core.admission",
+      "canonical_outcome": "NOT_COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    }
+  ],
+  "head": {
+    "before": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "after": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e"
+  },
+  "git_status_after": [
+    " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lazy-plans/stages/stage-df-lazy-02-read-explain/notes.md",
+    " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lineage/stages/stage-df-lineage-01-trace/notes.md",
+    " M curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+    " M curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+    " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l07/stages/stage-l07-01-ridge-lasso-geometry/notes.md",
+    " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l09/stages/stage-l09-02-svd-connection/notes.md",
+    " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l11/stages/stage-l11-01-backprop/notes.md",
+    " M knowledge/notes/data-systems/note-query-optimizer-cost-model.md",
+    " M knowledge/notes/mathematics/note-independence-vs-conditional-independence.md",
+    " M knowledge/notes/systems/note-amdahls-law.md",
+    "?? knowledge/garden/everything-is-a-dag-again.md",
+    "?? operations/transactions/idempotency.yaml",
+    "?? operations/transactions/revisions.yaml",
+    "?? operations/transactions/transaction-20260925-003900-001.yaml",
+    "?? operations/transactions/transaction-20260925-004511-001.yaml",
+    "?? operations/transactions/transaction-20260925-004514-001.yaml",
+    "?? operations/transactions/transaction-20260925-004517-001.yaml",
+    "?? operations/transactions/transaction-20260925-004520-001.yaml",
+    "?? operations/transactions/transaction-20260925-004523-001.yaml",
+    "?? operations/transactions/transaction-20260925-004526-001.yaml",
+    "?? operations/transactions/transaction-20260925-004529-001.yaml",
+    "?? operations/transactions/transaction-20260925-004532-001.yaml",
+    "?? operations/transactions/transaction-20260925-004535-001.yaml",
+    "?? operations/transactions/transaction-20260925-004945-001.yaml"
+  ],
+  "flags": []
+}

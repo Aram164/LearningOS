@@ -1,0 +1,20 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s05-A02-1",
+ "idempotency_key": "s03-s05-A02-k1",
+ "capability": "stage.note.write",
+ "channel": "operator",
+ "expected_snapshot": "sha256:411721b333431c5cf1aa17f657ce09345c5dded3df810654dfdb2f0749ae3480",
+ "expected_revisions": {
+  "unit-statlearn-l07": 0
+ },
+ "approval": {
+  "kind": "operator-approval",
+  "subject_sha256": "sha256:00cb2bf6665f2f819376b4e0b7ccb97673d89cbc9c1017dc4ec50f1709f45568"
+ },
+ "payload": {
+  "unit_id": "unit-statlearn-l07",
+  "stage_id": "stage-l07-01-ridge-lasso-geometry",
+  "text": "\n## 2026-09-19 — continued: 1-D lasso solved by hand (stage note draft)\n\nSolved the 1-D lasso by hand. Minimize ½(y − w)² + λ|w|.\n\n- If w > 0: derivative w − y + λ = 0 → w = y − λ, valid only if y > λ.\n- If w < 0: w = y + λ, valid only if y < −λ.\n- Otherwise the minimum is at the kink: w = 0.\n\nSo w = sign(y) · max(|y| − λ, 0) — \"soft thresholding\". Everything with\n|y| ≤ λ is set to exactly zero. Ridge in 1-D: w = y / (1 + λ) — shrinks but\nnever hits zero.\n\nThat's why there is no neat matrix formula for the lasso: the solution is\npiecewise, and which pieces are active depends on the data. Coordinate descent\napplies this 1-D rule to one weight at a time.\n"
+ }
+}

@@ -1,0 +1,87 @@
+{
+  "from": "S05-before",
+  "to": "S05-after",
+  "canonical": {
+    "added": [
+      "operations/transactions/transaction-20260925-004511-001.yaml",
+      "operations/transactions/transaction-20260925-004514-001.yaml",
+      "operations/transactions/transaction-20260925-004517-001.yaml",
+      "operations/transactions/transaction-20260925-004520-001.yaml",
+      "operations/transactions/transaction-20260925-004523-001.yaml",
+      "operations/transactions/transaction-20260925-004526-001.yaml",
+      "operations/transactions/transaction-20260925-004529-001.yaml",
+      "operations/transactions/transaction-20260925-004532-001.yaml",
+      "operations/transactions/transaction-20260925-004535-001.yaml"
+    ],
+    "removed": [],
+    "modified": [
+      "curriculum/modules/module-skill-dataframes/units/unit-dataframes-lazy-plans/stages/stage-df-lazy-02-read-explain/notes.md",
+      "curriculum/modules/module-skill-dataframes/units/unit-dataframes-lineage/stages/stage-df-lineage-01-trace/notes.md",
+      "curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+      "curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l07/stages/stage-l07-01-ridge-lasso-geometry/notes.md",
+      "curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l09/stages/stage-l09-02-svd-connection/notes.md",
+      "curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l11/stages/stage-l11-01-backprop/notes.md",
+      "knowledge/notes/data-systems/note-query-optimizer-cost-model.md",
+      "knowledge/notes/mathematics/note-independence-vs-conditional-independence.md",
+      "knowledge/notes/systems/note-amdahls-law.md",
+      "operations/transactions/idempotency.yaml",
+      "operations/transactions/revisions.yaml"
+    ]
+  },
+  "canonical_digest_changed": true,
+  "receipts_added": [
+    "operations/transactions/transaction-20260925-004511-001.yaml",
+    "operations/transactions/transaction-20260925-004514-001.yaml",
+    "operations/transactions/transaction-20260925-004517-001.yaml",
+    "operations/transactions/transaction-20260925-004520-001.yaml",
+    "operations/transactions/transaction-20260925-004523-001.yaml",
+    "operations/transactions/transaction-20260925-004526-001.yaml",
+    "operations/transactions/transaction-20260925-004529-001.yaml",
+    "operations/transactions/transaction-20260925-004532-001.yaml",
+    "operations/transactions/transaction-20260925-004535-001.yaml"
+  ],
+  "inflight_after": [],
+  "derived": {
+    "added": [],
+    "removed": [],
+    "modified": [
+      "generated/backlinks.json",
+      "generated/manifest.json",
+      "generated/reports/validation-report.md"
+    ],
+    "bytes_before": 985995,
+    "bytes_after": 996080
+  },
+  "diagnostics_added": [],
+  "ai_actions_added": [],
+  "new_operations": [],
+  "head": {
+    "before": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "after": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e"
+  },
+  "git_status_after": [
+    " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lazy-plans/stages/stage-df-lazy-02-read-explain/notes.md",
+    " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lineage/stages/stage-df-lineage-01-trace/notes.md",
+    " M curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+    " M curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+    " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l07/stages/stage-l07-01-ridge-lasso-geometry/notes.md",
+    " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l09/stages/stage-l09-02-svd-connection/notes.md",
+    " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l11/stages/stage-l11-01-backprop/notes.md",
+    " M knowledge/notes/data-systems/note-query-optimizer-cost-model.md",
+    " M knowledge/notes/mathematics/note-independence-vs-conditional-independence.md",
+    " M knowledge/notes/systems/note-amdahls-law.md",
+    "?? operations/transactions/idempotency.yaml",
+    "?? operations/transactions/revisions.yaml",
+    "?? operations/transactions/transaction-20260925-003900-001.yaml",
+    "?? operations/transactions/transaction-20260925-004511-001.yaml",
+    "?? operations/transactions/transaction-20260925-004514-001.yaml",
+    "?? operations/transactions/transaction-20260925-004517-001.yaml",
+    "?? operations/transactions/transaction-20260925-004520-001.yaml",
+    "?? operations/transactions/transaction-20260925-004523-001.yaml",
+    "?? operations/transactions/transaction-20260925-004526-001.yaml",
+    "?? operations/transactions/transaction-20260925-004529-001.yaml",
+    "?? operations/transactions/transaction-20260925-004532-001.yaml",
+    "?? operations/transactions/transaction-20260925-004535-001.yaml"
+  ],
+  "flags": []
+}

@@ -1,0 +1,175 @@
+{
+ "scenario": "S13",
+ "run_id": "s03-learner-2026-09-25",
+ "classification": "PASS",
+ "classification_reason": "The triage was answered from the unit scopes, the L05 slide text (scope authority) and existing notes, with required/helpful/defer/reference buckets and a prerequisite inventory; no records needed changing.",
+ "before": {
+  "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+  "git_status": [
+   " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-joins-at-scale/stages/stage-df-joins-01-strategies/notes.md",
+   " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lazy-plans/stages/stage-df-lazy-02-read-explain/notes.md",
+   " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lineage/stages/stage-df-lineage-01-trace/notes.md",
+   " M curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+   " M curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l07/stages/stage-l07-01-ridge-lasso-geometry/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l09/stages/stage-l09-02-svd-connection/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l11/stages/stage-l11-01-backprop/notes.md",
+   " M knowledge/notes/data-systems/note-hash-join-vs-sort-merge.md",
+   " M knowledge/notes/data-systems/note-query-optimizer-cost-model.md",
+   " M knowledge/notes/machine-learning/note-ridge-regression-penalty.md",
+   " M knowledge/notes/mathematics/note-independence-vs-conditional-independence.md",
+   " M knowledge/notes/systems/note-amdahls-law.md",
+   "?? knowledge/garden/everything-is-a-dag-again.md",
+   "?? operations/transactions/idempotency.yaml",
+   "?? operations/transactions/revisions.yaml",
+   "?? operations/transactions/transaction-20260925-003900-001.yaml",
+   "?? operations/transactions/transaction-20260925-004511-001.yaml",
+   "?? operations/transactions/transaction-20260925-004514-001.yaml",
+   "?? operations/transactions/transaction-20260925-004517-001.yaml",
+   "?? operations/transactions/transaction-20260925-004520-001.yaml",
+   "?? operations/transactions/transaction-20260925-004523-001.yaml",
+   "?? operations/transactions/transaction-20260925-004526-001.yaml",
+   "?? operations/transactions/transaction-20260925-004529-001.yaml",
+   "?? operations/transactions/transaction-20260925-004532-001.yaml",
+   "?? operations/transactions/transaction-20260925-004535-001.yaml",
+   "?? operations/transactions/transaction-20260925-004945-001.yaml",
+   "?? operations/transactions/transaction-20260925-005137-001.yaml",
+   "?? operations/transactions/transaction-20260925-005140-001.yaml",
+   "?? operations/transactions/transaction-20260925-005250-001.yaml",
+   "?? operations/transactions/transaction-20260925-005253-001.yaml"
+  ],
+  "canonical_digest": "4099e284bf5c32ee0bfea1e3e2ca92077d47c7033bada653e9be0864294b1d08",
+  "derived_digest": "1245b4c4d2f83f3db673547975c4df053ed5335b90c0f305e61abe66c525f3cd",
+  "snapshot_file": "observations/S13-before.json"
+ },
+ "consumer": {
+  "goal": "Tell the learner whether she needs Bayesian networks for the Statistical Learning retake, what would come first, and what she already has.",
+  "first_action": "Listed the retake module's units and scopes (`los unit-list --module module-tuh-statlearn`).",
+  "commands": [
+   "los unit-list --module module-tuh-statlearn",
+   "los search graphical",
+   "los search graphical --type note --content --limit 30",
+   "los search Bishop",
+   "los search Bishop --type note --content --limit 30",
+   "los inspect source-bishop-prml",
+   "los plan-edit-context unit-statlearn-l05 --brief",
+   "grep -ril 'bayesian network|graphical model|d-separation' materials/",
+   "cat L05 slides material"
+  ],
+  "tool_calls": 4,
+  "docs_consulted": [
+   "unit scopes (unit-list)",
+   "materials/source-tuh-statlearn-slides/L05-generative-classifiers.md (scope authority per WORKFLOWS §23)",
+   "CLAUDE.md §7 scope-explosion triage",
+   "coordination (from S02)"
+  ],
+  "impl_files_read": [],
+  "retries": 0,
+  "confusions": [
+   "No product search matched 'graphical' or 'Bayesian network'; the scope check needed the slide text, which I grepped in the materials folder (plan-edit-context --brief lists only legacy string routes for the slides).",
+   "CLAUDE.md says accepted deferrals go in the workspace's Deferred section, but no capability writes a workspace CONTEXT.md, and the learner did not accept a deferral (no scripted reply covers it)."
+  ],
+  "corrective_steps": [],
+  "questions_asked_to_learner": [],
+  "implementation_knowledge_needed": false,
+  "wall_minutes": 2,
+  "outcome": "No — Bayesian networks are not in the retake scope. What matters is stating the naive (conditional-independence) factorization precisely, which you already have in three places. Your BN page helps as a picture of that assumption. Defer d-separation and BN inference until after the exams; Bishop ch. 8 is reference only. Prerequisites you already have: conditional probability, conditional independence, the NB factorization, DAGs, Markov chains/HMMs. Missing: nothing on d-separation or BN inference. No records changed."
+ },
+ "internal": {
+  "request_ids": [],
+  "receipts": [],
+  "transaction_behavior": "Read-only.",
+  "approval_behavior": "Not exercised.",
+  "projection_activity": "Reads only.",
+  "persistence_activity": "None.",
+  "derived_changes": "None.",
+  "manifest_changes": "None.",
+  "unexpected_writes": [],
+  "warnings_errors": [],
+  "git_diff_stat": "(no change in this scenario)",
+  "observe_diff_file": "observations/S13-diff.json"
+ },
+ "after": {
+  "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+  "git_status": [
+   " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-joins-at-scale/stages/stage-df-joins-01-strategies/notes.md",
+   " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lazy-plans/stages/stage-df-lazy-02-read-explain/notes.md",
+   " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lineage/stages/stage-df-lineage-01-trace/notes.md",
+   " M curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+   " M curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l07/stages/stage-l07-01-ridge-lasso-geometry/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l09/stages/stage-l09-02-svd-connection/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l11/stages/stage-l11-01-backprop/notes.md",
+   " M knowledge/notes/data-systems/note-hash-join-vs-sort-merge.md",
+   " M knowledge/notes/data-systems/note-query-optimizer-cost-model.md",
+   " M knowledge/notes/machine-learning/note-ridge-regression-penalty.md",
+   " M knowledge/notes/mathematics/note-independence-vs-conditional-independence.md",
+   " M knowledge/notes/systems/note-amdahls-law.md",
+   "?? knowledge/garden/everything-is-a-dag-again.md",
+   "?? operations/transactions/idempotency.yaml",
+   "?? operations/transactions/revisions.yaml",
+   "?? operations/transactions/transaction-20260925-003900-001.yaml",
+   "?? operations/transactions/transaction-20260925-004511-001.yaml",
+   "?? operations/transactions/transaction-20260925-004514-001.yaml",
+   "?? operations/transactions/transaction-20260925-004517-001.yaml",
+   "?? operations/transactions/transaction-20260925-004520-001.yaml",
+   "?? operations/transactions/transaction-20260925-004523-001.yaml",
+   "?? operations/transactions/transaction-20260925-004526-001.yaml",
+   "?? operations/transactions/transaction-20260925-004529-001.yaml",
+   "?? operations/transactions/transaction-20260925-004532-001.yaml",
+   "?? operations/transactions/transaction-20260925-004535-001.yaml",
+   "?? operations/transactions/transaction-20260925-004945-001.yaml",
+   "?? operations/transactions/transaction-20260925-005137-001.yaml",
+   "?? operations/transactions/transaction-20260925-005140-001.yaml",
+   "?? operations/transactions/transaction-20260925-005250-001.yaml",
+   "?? operations/transactions/transaction-20260925-005253-001.yaml"
+  ],
+  "canonical_digest": "4099e284bf5c32ee0bfea1e3e2ca92077d47c7033bada653e9be0864294b1d08",
+  "derived_digest": "44b0ff34da12281c3c084cd5a701a096027c970fe67efed28fd488685d3e80c6",
+  "snapshot_file": "observations/S13-after.json"
+ },
+ "friction": [
+  {
+   "tag": "missing-capability",
+   "description": "The recommended place for an accepted deferral (workspace Deferred section) has no write capability.",
+   "cost": "—"
+  },
+  {
+   "tag": "unnecessary-exploration",
+   "description": "Checking exam scope needed the slide text from the materials folder; search/related have no notion of exam scope for a topic.",
+   "cost": "2 tool calls"
+  }
+ ],
+ "failures": [],
+ "scenario_record": {
+  "triage": {
+   "required_now": [
+    "Nothing about Bayesian networks as such: the retake scope (unit scopes; L05 slide text, the scope authority) never mentions BNs, graphical models or d-separation.",
+    "What IS required and BN-adjacent: stating the naive factorization p(x|y) = Π_j p(x_j|y) precisely and where it enters (L05 slides 12–13, 'Slide 35. Exam hint'). You have this: note-naive-bayes-spam-filter, the completed derivation in stage-l05-01-derive-naive-bayes, note-independence-vs-conditional-independence."
+   ],
+   "helpful_now": [
+    "The BN picture of Naive Bayes (class node → every feature) from your library page — now filed in note-independence-vs-conditional-independence — as a way to state the assumption as conditional independence given the class.",
+    "Your page's parameter count (31 vs 10 numbers) is the same argument as L05 slides 12–13 (2^d − 1 vs d per class)."
+   ],
+   "defer": [
+    "General Bayesian networks: d-separation, explaining away via colliders, inference — until after the 2026-10-06 retake (and the 2026-10-12 oral). Your coordination decision makes the retake primary and the L05 comparison is still open."
+   ],
+   "reference_only": [
+    "Bishop PRML ch. 8 (source-bishop-prml; registered, no local material, evaluated for HMM/logistic regression/PCA, not BNs)",
+    "Murphy PML1 (source-murphy-pml1)"
+   ],
+   "prerequisites_for_BNs_and_what_you_have": {
+    "conditional probability and Bayes' rule": "note-conditional-probability-basics",
+    "conditional independence (incl. explaining away)": "note-independence-vs-conditional-independence",
+    "factorizing a joint into small factors": "note-naive-bayes-spam-filter; stage-l05-01-derive-naive-bayes",
+    "DAGs / topological order": "note-build-systems-dag-incremental; note-data-pipeline-orchestration-dag; garden:everything-is-a-dag.md",
+    "chain-structured models": "note-markov-chains-stationary; note-hmm-viterbi (an HMM is a BN)",
+    "missing": "nothing written yet on d-separation or BN inference beyond the library page"
+   }
+  },
+  "records_changed": "none (deferral offered, not recorded — no accepted decision and no workspace-write capability)"
+ },
+ "uncertainties": [
+  "Only L05, L07 and L09 slide exports exist locally; L03 and L11 slide text was not available to check for BN mentions, though their unit scopes do not mention them."
+ ]
+}

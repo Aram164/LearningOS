@@ -1,0 +1,25 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s05-A02-1",
+ "idempotency_key": "s03-s05-A02-k1",
+ "capability": "stage.note.write",
+ "ok": true,
+ "replayed": false,
+ "transaction_id": "transaction-20260925-004511-001",
+ "receipt_path": "operations/transactions/transaction-20260925-004511-001.yaml",
+ "snapshot_after": "sha256:80314a7e7b2196ce9a97a74b363dd9dc670b9725ca124a0007a7d3752619c607",
+ "result": {
+  "ok": true,
+  "unit_id": "unit-statlearn-l07",
+  "stage_id": "stage-l07-01-ridge-lasso-geometry",
+  "working_note": "curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l07/stages/stage-l07-01-ridge-lasso-geometry/notes.md",
+  "transaction_id": "transaction-20260925-004511-001",
+  "receipt_path": "operations/transactions/transaction-20260925-004511-001.yaml",
+  "artifact_revisions": {
+   "unit-statlearn-l07": 1
+  },
+  "snapshot_after": "sha256:80314a7e7b2196ce9a97a74b363dd9dc670b9725ca124a0007a7d3752619c607",
+  "replayed": false
+ },
+ "error": null
+}

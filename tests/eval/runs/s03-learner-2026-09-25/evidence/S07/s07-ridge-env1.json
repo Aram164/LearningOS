@@ -1,0 +1,20 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s07-ridge-1",
+ "idempotency_key": "s03-s07-ridge-k1",
+ "capability": "note.revise",
+ "channel": "operator",
+ "expected_snapshot": "sha256:c6ac9a3799bd1d3a98369ee23257cc1d7279bf32f928e578473f1f615c08281c",
+ "expected_revisions": {
+  "note-ridge-regression-penalty": 0
+ },
+ "approval": {
+  "kind": "operator-approval",
+  "subject_sha256": "sha256:956196cb77c8a3d6dc30260d81420499e29e041c41503e9a91ab6e3fe5fd53a2"
+ },
+ "payload": {
+  "note_id": "note-ridge-regression-penalty",
+  "file": "/tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/S07/ridge.md",
+  "file_sha256": "sha256:5abd65b122af09e36ecf498d39d585c5f64c3c48907e3eb8579f903646e00196"
+ }
+}
