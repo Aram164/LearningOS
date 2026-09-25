@@ -736,3 +736,39 @@ def test_ai_bundle_locks_current_manifest_contract(ai_repo: Path):
         lock["manifest_contract_version"]
         == declared_version(ai_repo)
     )
+
+
+def test_prepare_refuses_a_request_id_the_manifest_cannot_publish(ai_repo: Path):
+    """A caller id outside the ai-request pattern is refused pre-persist (JF-08)."""
+    from learning_os.ai_actions.support import REQUEST_ID_PATTERN
+
+    app = service(ai_repo)
+    requests_dir = ai_repo / "operations/ai-actions/requests"
+    before = sorted(p.name for p in requests_dir.iterdir())
+    with pytest.raises(DeliveryValidationError, match="does not match"):
+        app.prepare(action_id="garden.shelve", target_kind="garden-note",
+                    target_id=target_id(ai_repo), provider="manual-bundle",
+                    request_id="my-request-1")
+    assert sorted(p.name for p in requests_dir.iterdir()) == before
+    # The enforced pattern is the manifest schema's, read from the declaration
+    # so a contract bump cannot silently desync the two copies.
+    contract = yaml.safe_load(
+        (ai_repo / "system/contracts/manifest-contract.yaml").read_text(encoding="utf-8"))
+    schema = json.loads((ai_repo / contract["schema_path"]).read_text(encoding="utf-8"))
+    assert schema["$defs"]["aiRequest"]["properties"]["id"]["pattern"] == REQUEST_ID_PATTERN
+
+
+def test_validator_names_a_persisted_bundle_with_a_bad_request_id(ai_repo: Path):
+    """A hand-made bundle id outside the pattern is an error naming it (JF-08)."""
+    from learning_os.loader import load_repo
+    from learning_os.rules import validate
+
+    bundle = ai_repo / "operations/ai-actions/requests/my-request-1/request.yaml"
+    write_yaml(bundle, {"id": "my-request-1", "type": "ai-action-request"})
+    errors = [i for i in validate(load_repo(ai_repo)) if i.code == "AI-REQUEST-ID"]
+    assert len(errors) == 1
+    assert "my-request-1" in errors[0].message
+    assert "request.yaml" in errors[0].path
+    write_yaml(bundle, {"id": "ai-request-ok-1", "type": "ai-action-request"})
+    codes = [i.code for i in validate(load_repo(ai_repo))]
+    assert "AI-REQUEST-ID" not in codes
