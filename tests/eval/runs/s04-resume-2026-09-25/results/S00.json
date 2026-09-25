@@ -1,0 +1,61 @@
+{
+  "scenario": "S00",
+  "run_id": "s04-resume-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "Oriented and answered in ~1 minute with 6 consumer tool calls using the documented task-shaped entry (OPERATOR.md -> bootstrap --brief -> resume -> inspect coordination). Only friction: the first CLI call failed because the default python is 3.11; the error message itself named the fix.",
+  "before": {"revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e", "git_status": [], "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec", "snapshot_file": "observations/S00-before.json"},
+  "consumer": {
+    "goal": "Get bearings in an unfamiliar installation and give the learner a five-line state + due-soon summary.",
+    "first_action": "ls of the world repository root + head of CLAUDE.md, which points to system/OPERATOR.md as the vendor-neutral entry point",
+    "commands": [
+      "ls; git log --oneline | head -5; head -20 CLAUDE.md",
+      "cat system/OPERATOR.md",
+      "python tools/los.py bootstrap --brief   (python 3.11 -> ImportError: needs >= 3.12, message names the fix)",
+      "<py3.13 venv> tools/los.py bootstrap --brief",
+      "<py3.13 venv> tools/los.py resume",
+      "<py3.13 venv> tools/los.py inspect coordination"
+    ],
+    "tool_calls": 6,
+    "docs_consulted": ["CLAUDE.md (first 20 lines; the same product CLAUDE.md was also pre-loaded into the agent context by the session harness)", "system/OPERATOR.md"],
+    "impl_files_read": [],
+    "retries": 1,
+    "confusions": [
+      "Which date is 'today': the product computes relative dates from the system clock (2026-09-25; resume says pointer is '9 days ago', exam '17 days'). I used that date.",
+      "OPERATOR.md offers several entry reads; for an open 'what state am I in' question it says bootstrap --brief, then workspace/coordination — followed that."
+    ],
+    "corrective_steps": ["Re-ran the CLI with a Python 3.13 venv outside the repository, as the ImportError message suggested."],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 1.0,
+    "outcome": "Five lines: (1) You stopped in Operating Systems L02 (CPU scheduling), stage stage-os-l02-02-proportional-share, last touched 2026-09-16; recorded next step: work one stride-scheduling example by hand, then explain vruntime aloud. (2) Priorities (decision 2026-08-24): Statistical Learning retake first; OS oral prep second at ~1/3 of study time; dataframe skill + Tessera at most two evenings/week; Ledgerline paused. (3) Due soon: Statistical Learning retake (2. Termin) 2026-10-06 10:00-12:00, registered (11 days); OS oral exam 2026-10-12 14:30, registered (17 days). (4) Active study maps: SL L05 stage 2 (generative vs discriminative), SL L07 stage 1 (ridge/lasso geometry), OS L02 stage 2, dataframe lazy-plans stage 2; the SL workspace also wants a timed mock exam booked for the first week of October. (5) Housekeeping: 7 unprocessed inbox items, 9 Garden seeds; linear-algebra refresh paused since 2026-06-12 (resume only its SVD stage, as far as SL L09 needs)."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "No writes attempted.",
+    "approval_behavior": "Not applicable (read-only).",
+    "projection_activity": "bootstrap --brief (0.8 s) and resume computed a fresh projection in memory; generated/ stayed empty (only .gitkeep).",
+    "persistence_activity": "Only ignored paths touched: operations/diagnostics/ and __pycache__.",
+    "derived_changes": "none (generated/ bytes 0 before and after)",
+    "manifest_changes": "none",
+    "unexpected_writes": [],
+    "warnings_errors": ["ImportError from default python 3.11: 'LearningOS needs Python >= 3.12 ... build one outside the repository ...'"],
+    "git_diff_stat": "",
+    "observe_diff_file": "observations/S00-diff.json"
+  },
+  "after": {"revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e", "git_status": [], "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec", "snapshot_file": "observations/S00-after.json"},
+  "friction": [
+    {"tag": "setup-failure", "description": "Default `python` on PATH is 3.11; first CLI call refused with an ImportError that names the fix (venv outside the repo). No .venv in the world.", "cost": "1 extra tool call"}
+  ],
+  "failures": [],
+  "scenario_record": {
+    "read_order_before_first_answer": ["ls + CLAUDE.md head", "system/OPERATOR.md", "los bootstrap --brief (failed: py3.11)", "los bootstrap --brief", "los resume", "los inspect coordination"],
+    "wall_minutes_to_first_answer": 1.0,
+    "tool_calls_to_first_answer": 6,
+    "unsure_about": [
+      "Reference date for 'soon' - resolved by using the product's own system-clock relative dates (2026-09-25).",
+      "Whether workspace next actions are priorities - bootstrap labels them 'recorded options, not current priorities', so priorities were taken from inspect coordination (dated decision 2026-08-24)."
+    ]
+  },
+  "uncertainties": ["The world's recorded history ends before the system date; 'due soon' is computed against 2026-09-25."]
+}

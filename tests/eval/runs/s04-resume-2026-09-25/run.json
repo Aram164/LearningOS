@@ -1,0 +1,72 @@
+{
+  "run_id": "s04-resume-2026-09-25",
+  "plan": "R",
+  "session_role": "resuming-agent",
+  "persona": "Operator agent picking up Noor Haddad's LearningOS installation mid-flight with no prior conversation memory; learns the product from its own docs and CLI.",
+  "blind": true,
+  "started": "2026-09-25T00:14:24Z",
+  "finished": "2026-09-25T00:39:03Z",
+  "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+  "eval_revision": "3a53589545d74df25d691f4beac4d0097ed313d7",
+  "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+  "world_build": {
+    "builder_version": 1,
+    "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+    "product_revision_requested": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+    "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+    "scale": 0,
+    "seed": 20260924,
+    "timeline": {
+      "start": "2026-04-06",
+      "as_of": "2026-09-18"
+    },
+    "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "commits": 133,
+    "notes": 116,
+    "arrivals": 30,
+    "paths": {
+      "repository": "/root/los-eval/s04-resume-2026-09-25/LearningOS/repository",
+      "materials": "/root/los-eval/s04-resume-2026-09-25/LearningOS/materials",
+      "drop": "/root/los-eval/s04-resume-2026-09-25/eval-drop"
+    },
+    "validation": "0 error(s), 3 warning(s) — OK (0.3s)",
+    "validate_exit": 0,
+    "generate_exit": 0
+  },
+  "environment": {
+    "os": "linux (cloud container)",
+    "interpreter": "Python 3.13.12 venv in the session scratchpad with PyYAML 6.0.3, jsonschema 4.26.0, pypdf 6.19.0; default python on PATH is 3.11.15 (refused by LearningOS)",
+    "worlds": {
+      "S00": "~/los-eval/s04-resume-2026-09-25",
+      "S02": "~/los-eval/s04-resume-2026-09-25-S02",
+      "S09": "~/los-eval/s04-resume-2026-09-25-S09",
+      "S10": "~/los-eval/s04-resume-2026-09-25-S10",
+      "S11": "~/los-eval/s04-resume-2026-09-25-S11",
+      "S12": "~/los-eval/s04-resume-2026-09-25-S12",
+      "S16+S25": "~/los-eval/s04-resume-2026-09-25-S16 (S25 continued on it)",
+      "S26": "~/los-eval/s04-resume-2026-09-25-S26"
+    },
+    "all_world_heads": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e (every build identical)",
+    "system_date": "2026-09-25 (the product computes relative dates from it; the world timeline as_of is 2026-09-18)",
+    "obsidian_ui": "not available"
+  },
+  "scenarios": [
+    "S00",
+    "S02",
+    "S09",
+    "S10",
+    "S11",
+    "S12",
+    "S16",
+    "S25",
+    "S26"
+  ],
+  "deviations": [
+    "For every world:fresh scenario I built a new world into its own directory (~/los-eval/s04-resume-2026-09-25-<Sxx>) rather than resetting one world. Builds are deterministic and every one produced world HEAD 13ad2fc. S25 continued on the S16 world as specified.",
+    "The Python venv lives in the session scratchpad, not /tmp/evalenv; the protocol allows any Python >= 3.12 with the three packages.",
+    "Before the run, the session harness had already loaded the product's CLAUDE.md (the host repository's copy, same product) into the agent's context. It is the product's own agent adapter, so this is product documentation, not oracle material.",
+    "A single agent session ran all nine scenarios in order, so later scenarios weren't memory-free the way a true resuming agent would be. Knowledge from S02 (e.g. the 12 vs 14 October conflict, concept ids such as concept-page-replacement) may have shortened S09-S26. I re-derived each answer with product commands in the scenario's own world, and flagged where prior knowledge was used.",
+    "Environment constraint, not product behaviour: this evaluation session's permission classifier blocked the agent from computing a GatewayEnvelopeV2 approval subject (approval.subject_sha256 = intent_sha256(envelope)) itself, treating it as an approval bypass. So no gateway write was completed in this run: S10 (stage.note.write), S16 apply (ai-action.delivery.apply) and S26 goal 2 (capture.create). I didn't pursue those writes by any other route (no direct file writes, no retries). Whether correctly signed envelopes would have committed, and what receipts they would have produced, is NOT VERIFIED.",
+    "Blindness kept: tests/eval/private/ and tests/eval/metrics/ were never opened or searched, and no other run (including tests/eval/runs/README.md) was read. Harness files read: tests/eval/public/* and tests/eval/tools/{build_world,observe,check_run}.py --help output only."
+  ]
+}

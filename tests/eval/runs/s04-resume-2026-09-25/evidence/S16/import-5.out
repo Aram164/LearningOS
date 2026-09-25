@@ -1,0 +1,61 @@
+{
+  "ok": true,
+  "delivery": {
+    "schema_version": 1,
+    "id": "ai-delivery-20260925-temperature-01",
+    "type": "ai-action-delivery",
+    "request_id": "ai-request-20260925-003317-1a836c",
+    "action_id": "garden.shelve",
+    "producer": {
+      "adapter": "manual-bundle"
+    },
+    "preconditions": {
+      "snapshot_id": "sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e",
+      "artifact_revisions": {
+        "garden-note-temperature-everywhere": "sha256:6fa835afc62a92a0248e25049637263331671814029e18898ce7792b922f590d"
+      }
+    },
+    "approval": {
+      "user_approved": true
+    },
+    "operations": [
+      {
+        "capability": "garden.add-transcription",
+        "target_id": "garden-note-temperature-everywhere",
+        "artifact_ref": "artifacts/transcription.md"
+      },
+      {
+        "capability": "relationship.create",
+        "target_id": "garden-note-temperature-everywhere",
+        "payload": {
+          "id": "relationship-garden-temperature-everywhere-note-softmax-temperature",
+          "from": {
+            "id": "garden-note-temperature-everywhere",
+            "type": "garden-note"
+          },
+          "relation": "relates-to",
+          "to": {
+            "id": "note-softmax-temperature",
+            "type": "note"
+          }
+        }
+      },
+      {
+        "capability": "relationship.create",
+        "target_id": "garden-note-temperature-everywhere",
+        "payload": {
+          "id": "relationship-garden-temperature-everywhere-note-simulated-annealing",
+          "from": {
+            "id": "garden-note-temperature-everywhere",
+            "type": "garden-note"
+          },
+          "relation": "relates-to",
+          "to": {
+            "id": "note-simulated-annealing",
+            "type": "note"
+          }
+        }
+      }
+    ]
+  }
+}

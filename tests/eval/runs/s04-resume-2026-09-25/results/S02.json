@@ -1,0 +1,87 @@
+{
+  "scenario": "S02",
+  "run_id": "s04-resume-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "All 36 questions answered with record ids/paths and quotes, no writes. The documented read surface (search, note-read, inspect, related, module-list, project-list, plan-edit-context) carried the note- and record-level questions well; cross-note questions (corrections, duplicates, cross-course links, Garden, inbox) needed direct reading of canonical files because the product exposes no note-to-note links, no inbox/Garden read query, and no state/supersession listing.",
+  "before": {"revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e", "git_status": [], "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec", "snapshot_file": "observations/S02-before.json"},
+  "consumer": {
+    "goal": "Answer Q01-Q36 (public/questions.yaml) from a fresh world with evidence, never declaring mastery.",
+    "first_action": "los --help, then `search \"housing gradient descent learning rate\" --type note` (returned [])",
+    "commands": [
+      "los --help; los search --help; related --help; note-read --help",
+      "search \"housing gradient descent learning rate\" --type note  -> []",
+      "search \"gradient descent\" --type note; search \"learning rate\" --type note --content",
+      "search \"\" --type note --limit 200  (full title list, 116 notes)",
+      "note-read <id> (about 45 notes, batched through a loop)",
+      "module-list; project-list; inspect module-tuh-statlearn",
+      "inspect workspace-os-oral-prep workspace-tessera-engine (no body sections)",
+      "cat work/active/*/CONTEXT.md (workspace bodies: open questions, deferred)",
+      "plan-edit-context unit-os-l02 --stage-id stage-os-l02-02-proportional-share",
+      "cat curriculum/.../stage-os-l02-02-proportional-share/notes.md",
+      "search \"\" --type source --limit 100; search logging; search undo; search stride",
+      "inspect source-garcia-molina-db source-mohan-aries-1992 source-waldspurger-stride-1995 source-ostep",
+      "material-context \"undo redo logging\" -> 0 items; search \"undo/redo\" --content -> 0",
+      "unit-list --module-id module-skill-linalg-refresh / module-tuh-statlearn",
+      "inspect study-map-linalg-svd; inspect study-map-os-l02 study-map-statlearn-l05 study-map-statlearn-l07; inspect study-map-statlearn-l09 note-statlearn-mock-exam-september; inspect study-map-dataframes-lazy-plans",
+      "status",
+      "search \"\" --type inbox|inbox-item|capture|garden|garden-entry -> [] each",
+      "capabilities --compact --json",
+      "intelligence-scan --brief --json -> no groups",
+      "ls/cat work/inbox/*; cat knowledge/garden/*.md; git log -- knowledge/garden",
+      "related note-query-optimizer-cost-model / note-write-ahead-logging-aries / note-low-rank-approximation / note-virtual-memory-is-swap",
+      "related concept-write-ahead-logging / concept-cardinality-estimation / concept-conditional-independence / concept-low-rank-approximation / concept-proportional-share",
+      "semantic --list",
+      "search <wrong|deprecated|supersedes|Corrects|Update 2026|topological|SVM|Boltzmann|garden|tickets|fair> --type note --content",
+      "inspect milestone-tessera-optimizer -> record not found"
+    ],
+    "tool_calls": 42,
+    "docs_consulted": ["system/OPERATOR.md (from S00)", "los --help and per-command --help"],
+    "impl_files_read": [],
+    "retries": 1,
+    "confusions": [
+      "search seems to require every query word to match a title/summary: a natural multi-word query returned []; single words worked. Content search appears to OR words (\"Update 2026\" matched 'created: 2026') and returns each snippet twice.",
+      "`related` returns only direct metadata links (concepts, sources, workspaces); following a concept gives notes on that concept only - no cross-concept, cross-course or correction links.",
+      "`inspect workspace-…` omits the CONTEXT.md body (Open Questions, Deferred), so those had to be read from the file.",
+      "No read query for inbox items or Garden seeds (status only counts them; search types inbox/garden return []). The Nebula view requires generating views.",
+      "Deprecated notes carry no supersedes link to their successors; the only way to list corrected notes was content-searching the frontmatter word 'deprecated'.",
+      "project-tessera lists milestone_ids that inspect cannot resolve ('record not found')."
+    ],
+    "corrective_steps": [
+      "Used an empty query `search \"\" --type note --limit 200` to get the full title list, then note-read per note.",
+      "Read workspace CONTEXT.md, inbox and Garden files directly (canonical data, not implementation)."
+    ],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 5.5,
+    "outcome": "36 answers with evidence (answers.jsonl). Highlights: OS oral 2026-10-12 14:30 per module record, with the conflicting '14 October' in note-oral-exam-prep-strategy flagged; DB grade 2.0; SL 2. Termin registered 2026-10-06 10:00-12:00; stopped at step 4 of the stride example on 2026-09-16; three deprecated->corrected note pairs plus batch-norm qualification; no mastery claims."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "No writes attempted.",
+    "approval_behavior": "Not applicable (read-only).",
+    "projection_activity": "Each read computed a fresh projection; every response carried the same snapshot_id sha256:82bcffb7… (unchanged world).",
+    "persistence_activity": "Reads created a derived-state cache: generated/derived-state/state-v1.json + 117 blobs (490,130 bytes). Gitignored; not a canonical change.",
+    "derived_changes": "118 derived files added under generated/derived-state/ (0 bytes before). S00's reads (bootstrap/resume/inspect) had not created it; note-read / content search in S02 did.",
+    "manifest_changes": "none (generated/manifest.json not built)",
+    "unexpected_writes": ["generated/derived-state/ cache written by read-only commands (gitignored derived state; expected-looking but undocumented in OPERATOR.md)"],
+    "warnings_errors": ["los: record not found: milestone-tessera-optimizer"],
+    "git_diff_stat": "",
+    "observe_diff_file": "observations/S02-diff.json"
+  },
+  "after": {"revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e", "git_status": [], "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec", "snapshot_file": "observations/S02-after.json"},
+  "friction": [
+    {"tag": "unhelpful-error", "description": "Natural multi-word `search` returns [] with no hint that it needs fewer/other words.", "cost": "1-2 extra calls"},
+    {"tag": "missing-capability", "description": "No read surface for inbox items or Garden seeds; Q27/Q34 needed direct file reads.", "cost": "5 extra calls"},
+    {"tag": "missing-capability", "description": "`related` has no note-to-note, cross-course or correction/supersession edges; Q10, Q22, Q32, Q35, Q36 relied on agent reading.", "cost": "~10 calls of reading"},
+    {"tag": "manual-generated-file-inspection", "description": "Workspace Open Questions/Deferred sections are not in `inspect` output; read CONTEXT.md files directly.", "cost": "2 calls"},
+    {"tag": "repeated-context-reconstruction", "description": "`resume` says 'Evidence none / Open here —' and does not show the stage working-note text that holds the exact stopping point; found via plan-edit-context working_note path / inspect study-map notes_text.", "cost": "2 calls"},
+    {"tag": "other", "description": "Dangling-looking milestone ids on project-tessera (inspect: record not found).", "cost": "1 call"}
+  ],
+  "failures": [],
+  "scenario_record": {"answers_file": "answers.jsonl", "questions_answered": 36, "plan_scope": "R answers all Q01-Q36"},
+  "uncertainties": [
+    "Q17, Q22, Q32, Q34, Q36 rankings/groupings are my own reading; the product offered no ranking.",
+    "Q36: idempotency and CAP/ACID pairs judged from titles only."
+  ]
+}

@@ -1,0 +1,44 @@
+{
+  "from": "S10-before",
+  "to": "S10-after",
+  "canonical": {
+    "added": [],
+    "removed": [],
+    "modified": []
+  },
+  "canonical_digest_changed": false,
+  "receipts_added": [],
+  "inflight_after": [],
+  "derived": {
+    "added": [],
+    "removed": [],
+    "modified": [],
+    "bytes_before": 0,
+    "bytes_after": 0
+  },
+  "diagnostics_added": [
+    "operations/diagnostics/traces.jsonl"
+  ],
+  "ai_actions_added": [],
+  "new_operations": [
+    {
+      "trace_id": "cd0d791990187a240e8e968b8b85c860",
+      "request_id": "s10-stage-note-20260925-1",
+      "capability": "stage.note.write",
+      "started_at": 1790296050.191036,
+      "duration_ms": 31.3,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": "core.approval",
+      "canonical_outcome": "NOT_COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    }
+  ],
+  "head": {
+    "before": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "after": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e"
+  },
+  "git_status_after": [],
+  "flags": []
+}

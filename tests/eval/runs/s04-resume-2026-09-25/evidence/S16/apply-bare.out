@@ -1,0 +1,6 @@
+usage: los ai-action-apply-delivery [-h] --delivery-sha256 DELIVERY_SHA256
+                                    --artifact-sha256 ARTIFACT_SHA256
+                                    [--expected-snapshot EXPECTED_SNAPSHOT]
+                                    [--expected-revision EXPECTED_REVISION]
+                                    delivery_id
+los ai-action-apply-delivery: error: the following arguments are required: --delivery-sha256, --artifact-sha256

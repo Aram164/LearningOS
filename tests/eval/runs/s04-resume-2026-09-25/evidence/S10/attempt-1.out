@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "request_id": "s10-stage-note-20260925-1",
+  "idempotency_key": "s10-stage-note-stride-done-20260925",
+  "capability": "stage.note.write",
+  "ok": false,
+  "replayed": false,
+  "transaction_id": null,
+  "receipt_path": null,
+  "snapshot_after": null,
+  "result": {},
+  "error": {
+    "code": "UNCONFIRMED",
+    "message": "approval subject does not match the current capability intent",
+    "retryable": false,
+    "details": {}
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "scenario": "S26",
+  "run_id": "s04-resume-2026-09-25",
+  "classification": "USABILITY_FAILURE",
+  "classification_reason": "Goals 1 and 3 were quick: 1 call and 3 calls, no documentation beyond the entry contract. Goal 2, a one-line inbox capture, failed: the bare `capture` command refuses by design, and the only write path is a hand-built GatewayEnvelopeV2 whose approval hash is undocumented (F-s10-intent-hash-01). Self-computing it was blocked by this evaluation environment's guard, so no capture was made. For an operator agent, the most ordinary write in the product can't be done from the documentation alone.",
+  "before": {"revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e", "git_status": [], "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec", "snapshot_file": "observations/S26-before.json"},
+  "consumer": {
+    "goal": "(1) deadlines in the next three weeks; (2) add 'ask tutor about lasso subgradients' to the inbox; (3) show caching notes.",
+    "first_action": "los bootstrap --brief (academic_deadlines)",
+    "commands": [
+      "G1: bootstrap --brief (+ status exam lines in the same call)",
+      "G2: capabilities capture.create --json; capture --help",
+      "G2: los capture --text \"ask tutor about lasso subgradients\" -> refused, exit 2, no write",
+      "G3: search caching; search cache; search cache --type note --content",
+      "G3: related concept-cpu-caches / concept-buffer-management / concept-kv-cache / concept-page-replacement"
+    ],
+    "tool_calls": 6,
+    "docs_consulted": ["system/OPERATOR.md (entry rules, from S00)", "capture --help", "capabilities capture.create --json"],
+    "impl_files_read": [],
+    "retries": 0,
+    "confusions": [
+      "G1: academic_deadlines in bootstrap --brief includes past items (July windows, the passed DB exam, the withdrawn SL sitting), so the 3-week window had to be filtered by hand.",
+      "G2: capture.create admission is 'direct-user-gesture', but WORKFLOWS §8 says an agent-origin envelope claiming a gesture fails closed. Nothing says what channel/approval an operator agent should use to capture on the learner's behalf. The capture's expected_revisions use a request-scoped artifact id ('capture-request:<idempotency_key>'), which I only saw in tools/learning_os/contracts/gateway.py during S10 and which isn't in the docs.",
+      "G3: 'caching' matched only one note and 'cache' matched more (no stemming), so the first query undercounted."
+    ],
+    "corrective_steps": ["G3: retried with the stem 'cache' and content search."],
+    "questions_asked_to_learner": ["G2: Add an inbox capture with the text 'ask tutor about lasso subgradients'? -> (scripted) 'Yes.'"],
+    "implementation_knowledge_needed": true,
+    "wall_minutes": 1.0,
+    "outcome": "(1) Due in the next three weeks (to 2026-10-16): Statistical Learning retake (2. Termin), Tue 2026-10-06 10:00–12:00, registered; Operating Systems oral, Mon 2026-10-12 14:30, registered. Your SL workspace also plans a timed mock exam in the first week of October; that's a plan, not a deadline. (2) Not done. The inbox capture was refused: the system only accepts it as a signed gateway request, and I couldn't produce the approval signature. Nothing was written. (3) Caching notes: note-caching-everywhere ('The same cache idea in three courses': CPU caches, buffer pool, memoization), note-cpu-cache-locality, note-buffer-pool-replacement, note-page-replacement-lru-clock, note-dynamic-programming-memoization, note-kv-cache-transformer-serving. Passing mentions: note-context-switch-cost (cache/TLB warm-up), note-virtual-memory-address-translation (the TLB caches translations), note-b-plus-tree-indexes (top levels stay cached), note-event-sourcing-append-only (views as a cache over the log)."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "No transaction: the bare capture refused before any write (exit 2).",
+    "approval_behavior": "Bare named write command refuses and names the capability path. The envelope path was not attempted because its approval subject must be self-computed (blocked in this environment).",
+    "projection_activity": "Fresh projections per read.",
+    "persistence_activity": "Read-side derived-state cache (118 files under generated/derived-state/) from content search; gitignored.",
+    "derived_changes": "generated/derived-state/ cache",
+    "manifest_changes": "none",
+    "unexpected_writes": [],
+    "warnings_errors": ["canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability capture.create --payload-file ENVELOPE.json` (exit 2)"],
+    "git_diff_stat": "",
+    "observe_diff_file": "observations/S26-diff.json"
+  },
+  "after": {"revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e", "git_status": [], "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec", "snapshot_file": "observations/S26-after.json"},
+  "friction": [
+    {"tag": "needs-implementation-knowledge", "description": "A one-line inbox capture needs a hand-built GatewayEnvelopeV2: undocumented approval hash, request-scoped expected_revisions key, and an unclear channel/approval kind for an agent.", "cost": "goal not achievable from docs; 3 calls spent"},
+    {"tag": "unstable-output-format", "description": "bootstrap --brief academic_deadlines mixes past and future items with no 'upcoming' filter.", "cost": "manual filtering"},
+    {"tag": "redundant-calls", "description": "Search has no stemming ('caching' vs 'cache').", "cost": "1 extra query"}
+  ],
+  "failures": ["F-s10-intent-hash-01"],
+  "scenario_record": {
+    "per_goal": {
+      "G1_due_next_three_weeks": {"tool_calls": 1, "commands": ["bootstrap --brief; status"], "retries": 0, "docs_read": [], "impl_files_read": [], "seconds": 1, "result": "SL 2. Termin 2026-10-06 10:00-12:00 (registered); OS oral 2026-10-12 14:30 (registered)"},
+      "G2_inbox_capture": {"tool_calls": 2, "commands": ["capabilities capture.create --json; capture --help", "capture --text 'ask tutor about lasso subgradients' -> refused exit 2"], "retries": 0, "docs_read": ["capture --help", "capability definition"], "impl_files_read": [], "seconds": 6, "result": "NOT DONE — envelope with self-computed approval hash required; blocked in this evaluation environment"},
+      "G3_caching_notes": {"tool_calls": 3, "commands": ["search caching; search cache; search cache --type note --content", "related concept-cpu-caches|concept-buffer-management|concept-kv-cache|concept-page-replacement"], "retries": 1, "docs_read": [], "impl_files_read": [], "seconds": 13, "result": "6 primary notes + 4 passing mentions"}
+    }
+  },
+  "uncertainties": ["G3: the concept id concept-page-replacement came from an earlier scenario's reading (source-ostep evaluation), not from a fresh product hint."]
+}

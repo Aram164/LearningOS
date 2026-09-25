@@ -1,0 +1,57 @@
+{
+  "scenario": "S11",
+  "run_id": "s04-resume-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "One `search tessera` pointed to the project, workspace, relationship, unit and coordination. A batched inspect plus the dataframe study map gave state, decision, dependency and priority limits, so a sourced next-hour plan took about 7 tool calls. Friction: the concrete todo list is in an inbox capture that no product read surfaces, and the workspace's open questions are missing from inspect output, so both came from reading files directly.",
+  "before": {"revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e", "git_status": [], "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec", "snapshot_file": "observations/S11-before.json"},
+  "consumer": {
+    "goal": "Reconstruct where Tessera stands and propose the most sensible next hour, respecting recorded priorities and dependencies.",
+    "first_action": "los search tessera",
+    "commands": [
+      "search tessera",
+      "inspect project-tessera workspace-tessera-engine relationship-tessera-dataframes unit-dataframes-lazy-plans coordination",
+      "inspect study-map-dataframes-lazy-plans; sed work/active/workspace-tessera-engine/CONTEXT.md (body); git log for the workspace/project",
+      "related concept-query-optimization; note-read note-tagless-visitor-pattern-ast note-rust-ownership-borrowing",
+      "search Tessera --type note --content; grep -il tessera work/inbox/* knowledge/garden/*; cat work/inbox/20260910-tessera-todo.md",
+      "note-read note-regression-testing-snapshots note-algebraic-equivalences-pushdown note-property-based-testing"
+    ],
+    "tool_calls": 7,
+    "docs_consulted": ["system/OPERATOR.md (entry rules from S00: named record -> inspect; coordination for priorities)"],
+    "impl_files_read": [],
+    "retries": 0,
+    "confusions": [
+      "Whether 'Tessera's optimizer work follows the dataframe skill unit on query plans; it should not run ahead of it' blocks the filter-below-join rule. The dataframe stage has plan 1 annotated, and plan 1 is exactly predicate pushdown into the scan plus projection pushdown. So I judged filter-below-join not to be running ahead. That's my interpretation, not recorded."
+    ],
+    "corrective_steps": [],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 1.5,
+    "outcome": "Where you are: Tessera's parser/logical plan and pull-based executor are done; the active milestone is the rule-based optimizer (the cost-based join ordering comes after, per your 2026-08-04 decision). Your optimizer runs rules bottom-up with transform_up and repeats until nothing changes (capped at 50 passes); rules done: merge adjacent Filters, drop a no-op Project, fold `1 = 1` and drop Filter(true); you snapshot the optimized plan for 20 example queries. Your recorded next action (workspace, 2026-09-09) and your 2026-09-10 todo: filter-below-join (only when the predicate's columns come from one side), projection pruning, the property test execute(optimize(q)) == execute(q), and the open worry that merge-filters vs split-filters could stop the optimizer from terminating. Your weekly log for 2026-09-14 says you didn't touch Tessera that week. Limits: per your 2026-08-24 decision, Tessera plus the dataframe module get at most two evenings a week, and Statistical Learning (exam 2026-10-06) is primary. Coordination also says Tessera must not run ahead of the dataframe query-plan unit, which is at stage 2 with plan 1 of 3 annotated. Plan 1 is exactly filter pushdown and column pruning, so tonight's rule isn't ahead of it. Suggested hour: (1) ~10 min: a result-comparison test for a join+filter query, executing the query before and after optimizing and comparing the rows (a first, fixed-query version of your property test). (2) ~35 min: implement filter-below-join as one transform_up rule, Filter(p, Join(L, R)) → Join(Filter(p, L), R) when every column of p is in L's schema (and the mirror case for R). Push only whole predicates for now and don't add a split-conjunction rule tonight: that is exactly the merge/split fight you worried about. (3) ~15 min: re-run the 20 plan snapshots and read each changed diff before accepting it (your own warning in the snapshot note). Leave projection pruning, its ordering question and termination for the next evening."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "No writes.",
+    "approval_behavior": "Not applicable.",
+    "projection_activity": "Fresh projection per read; same snapshot id.",
+    "persistence_activity": "Read-side derived-state cache written under generated/derived-state/ (gitignored).",
+    "derived_changes": "generated/derived-state/ cache added by note-read/content search",
+    "manifest_changes": "none",
+    "unexpected_writes": [],
+    "warnings_errors": [],
+    "git_diff_stat": "",
+    "observe_diff_file": "observations/S11-diff.json"
+  },
+  "after": {"revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e", "git_status": [], "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec", "snapshot_file": "observations/S11-after.json"},
+  "friction": [
+    {"tag": "missing-capability", "description": "The concrete Tessera todo (work/inbox/20260910-tessera-todo.md) is only reachable by listing/grepping the inbox; search, content search, related and inspect never surface inbox items.", "cost": "1 call, and easily missed"},
+    {"tag": "manual-generated-file-inspection", "description": "Workspace Open Questions (termination, pruning order) are not in `inspect workspace-tessera-engine`; read CONTEXT.md directly.", "cost": "1 call"},
+    {"tag": "other", "description": "project-tessera.milestone_ids name milestone-tessera-parser/-optimizer, which inspect cannot resolve (seen in S02); the usable milestone state is in structure.nodes (step-tessera-*).", "cost": "0 here (known from S02)"}
+  ],
+  "failures": [],
+  "scenario_record": {
+    "sources_assembled": ["project-tessera (structure.nodes, decisions)", "workspace-tessera-engine (next_action via inspect; Open Questions via CONTEXT.md)", "relationship-tessera-dataframes", "coordination (Priorities, Dependencies)", "study-map-dataframes-lazy-plans (stage 2 notes: plan 1 annotated, plans 2-3 to do)", "note-tagless-visitor-pattern-ast", "note-rust-ownership-borrowing", "note-algebraic-equivalences-pushdown (via related concept-query-optimization)", "note-property-based-testing, note-regression-testing-snapshots (via content search 'Tessera')", "note-weekly-review-log (2026-09-14: did not touch Tessera)", "work/inbox/20260910-tessera-todo.md"],
+    "found_only_by_reading_unpointed_files": ["work/inbox/20260910-tessera-todo.md (no product surface lists inbox items)", "Open Questions section of work/active/workspace-tessera-engine/CONTEXT.md (not in inspect output)", "git log dates for the workspace (2026-09-09)"]
+  },
+  "uncertainties": ["Whether filter-below-join counts as 'running ahead' of the dataframe unit is my interpretation; the learner may prefer to annotate plans 2-3 first."]
+}

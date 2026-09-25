@@ -1,0 +1,50 @@
+{
+  "scenario": "S09",
+  "run_id": "s04-resume-2026-09-25",
+  "classification": "PASS",
+  "classification_reason": "The authoritative module record (12 Oct 2026, 14:30, registered) was reached in one documented call; the conflicting '14 October' was traced to a single note citing an email draft via content search. The conflict was put to the learner, and no change was made because nothing needed updating — the plans (workspace deadline, resume exam line, coordination) already use 12 October.",
+  "before": {"revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e", "git_status": [], "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec", "snapshot_file": "observations/S09-before.json"},
+  "consumer": {
+    "goal": "Confirm the OS oral date against the system and update plans if needed.",
+    "first_action": "los inspect module-tuh-os (CLAUDE.md hard rule 2 / OPERATOR boundary 5: exam facts live only in the module record)",
+    "commands": [
+      "inspect module-tuh-os",
+      "search \"14 October\" --content; search \"October\" --content; git grep for 14 Oct variants (non-code)",
+      "inspect workspace-os-oral-prep coordination; resume"
+    ],
+    "tool_calls": 4,
+    "docs_consulted": ["CLAUDE.md hard rules 2 and 6 (already in context)", "system/OPERATOR.md hard boundary 5"],
+    "impl_files_read": [],
+    "retries": 0,
+    "confusions": ["None about where the fact lives. The only judgement was whether to touch the note that holds the wrong date; the hard rules forbid rewriting note bodies, so I left it and told the learner."],
+    "corrective_steps": [],
+    "questions_asked_to_learner": ["Your system has the OS oral on Monday 12 October 2026 at 14:30 (module record, registered), not the 14th. The 14th only appears in your oral-prep note, which says it came from the registration email draft. Which date is right? -> learner (scripted): 'Oh. I only remember the date from an email draft. What does my system say?'"],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 1.0,
+    "outcome": "Answer: 'No. Your system records the OS oral as Monday 12 October 2026 at 14:30 (30-minute oral, slot assigned by the chair, registered). That's in curriculum/modules/module-tuh-os/module.yaml, which is the authoritative record. \"14 October\" only appears in note-oral-exam-prep-strategy, where you wrote that it came from the registration email draft. Your plans already use 12 October (workspace deadline, the exam shown by resume, the priority decision), so there's nothing to update and I changed nothing. If the chair office's confirmation says something else, give me that date and I'll record it in the module record. I left your note's wording as you wrote it.'"
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "No writes.",
+    "approval_behavior": "No change proposed, so no approval requested (scripted rule: 'Only if you're sure it's right').",
+    "projection_activity": "Fresh projection per read; same snapshot id as other fresh worlds.",
+    "persistence_activity": "Read-side derived-state cache created again (118 files under generated/derived-state/, gitignored).",
+    "derived_changes": "generated/derived-state/ cache added by reads",
+    "manifest_changes": "none",
+    "unexpected_writes": [],
+    "warnings_errors": [],
+    "git_diff_stat": "",
+    "observe_diff_file": "observations/S09-diff.json"
+  },
+  "after": {"revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e", "git_status": [], "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec", "snapshot_file": "observations/S09-after.json"},
+  "friction": [
+    {"tag": "missing-capability", "description": "The system can't flag a date written in prose that contradicts the module record. The note's wrong date only turned up because I searched for it.", "cost": "1 call"}
+  ],
+  "failures": [],
+  "scenario_record": {
+    "answer_and_record_relied_on": "12 October 2026, 14:30, from curriculum/modules/module-tuh-os/module.yaml (sittings + attempts: registered); conflicting source note-oral-exam-prep-strategy line 23 ('14 October (from the registration email draft)').",
+    "changes_made": "none"
+  },
+  "uncertainties": ["Whether the real-world slot is 12 or 14 October can't be settled from the repository. The module record is authoritative by contract, but the note says the date should still be checked with the chair."]
+}
