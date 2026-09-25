@@ -1,0 +1,8 @@
+schema_version: 1
+request_id: ai-request-20260925-003317-1a836c
+action_id: garden.shelve
+provider: manual-bundle
+operations:
+  - capability: garden.add-transcription
+    target_id: garden-note-temperature-everywhere
+    artifact_ref: artifacts/transcription.md

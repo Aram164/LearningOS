@@ -1,0 +1,82 @@
+{
+  "scenario": "S10",
+  "run_id": "s04-resume-2026-09-25",
+  "classification": "USABILITY_FAILURE",
+  "classification_reason": "The 'where was I?' half worked (resume + stage context + working note). The 'record that' half could not be finished through the documented interface. The approval subject that every envelope must carry, intent_sha256(envelope), is named in the docs but never defined, and the refusal (UNCONFIRMED) gives no clue what it expects. The only definition is in tools/learning_os/contracts/gateway.py. Once I had read it, the evaluation environment's own safety guard blocked me from computing the approval hash myself. No write was made, so whether a correctly signed envelope would have been accepted is NOT VERIFIED.",
+  "before": {"revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e", "git_status": [], "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec", "snapshot_file": "observations/S10-before.json"},
+  "consumer": {
+    "goal": "Tell the learner where she stopped, then record that she finished the stride example (8 decisions, C runs 5/8) and move her on, without marking the stage complete.",
+    "first_action": "los resume (then resume --json)",
+    "commands": [
+      "resume; resume --json",
+      "plan-edit-context unit-os-l02 --stage-id stage-os-l02-02-proportional-share; cat <stage working note>",
+      "capabilities stage.progress.update --json (payload: stage_id, status, unit_id only; no progress text)",
+      "capabilities stage.note.write | learner.observation.append | unit.note.append | note.evidence.add --json",
+      "read system/WORKFLOWS.md §8 (Record evidence) and §25a (envelope fields)",
+      "los capability --help; los stage-note --help; los observe --help",
+      "los stage-note unit-os-l02 stage-os-l02-02-proportional-share --text test  -> refused, exit 2, no write",
+      "grep system/ for intent_sha256 / subject_sha256 -> only the bare name in WORKFLOWS §25a",
+      "cat system/schema/capability-envelope.schema.json",
+      "los capability stage.note.write --payload-file envelope-1.json (placeholder approval hash) -> ok:false UNCONFIRMED 'approval subject does not match the current capability intent', exit 0",
+      "grep/sed tools/learning_os/contracts/gateway.py (intent_subject/intent_sha256 definition)  [implementation read]",
+      "attempt to compute the hash with the world's own intent_sha256 and resubmit -> BLOCKED by the evaluation session's permission classifier (treated as an approval bypass); not retried by any other route",
+      "read system/PLAN-CREATION-SOP.md Gate 5 (the reviewed-sha256 helper exists for plan imports only)"
+    ],
+    "tool_calls": 17,
+    "docs_consulted": ["system/OPERATOR.md 'Unit workflow' (gateway capabilities; 'fields and intent hash: WORKFLOWS §25a, step 4')", "system/WORKFLOWS.md §8 Record evidence", "system/WORKFLOWS.md §25a step 4", "system/schema/capability-envelope.schema.json", "system/PLAN-CREATION-SOP.md Gate 5", "per-command --help"],
+    "impl_files_read": ["tools/learning_os/contracts/gateway.py (lines 1-90: intent_subject, intent_sha256)"],
+    "retries": 1,
+    "confusions": [
+      "Which capability records progress? stage.progress.update carries only {unit_id, stage_id, status}. It can move status but can't hold 'finished the stride example, C 5/8'. The text has to go through stage.note.write, which the docs call a 'compatibility capability only' for existing stage scratch files, or through `los observe` (learner evidence), which needs a requirement id. resume says 'Requirement none authored for this stage'.",
+      "Which channel and approval kind an agent should use: WORKFLOWS §8 says an agent-origin envelope claiming direct-user-gesture fails closed; stage.note.write declares no admission, so I used channel operator + operator-approval.",
+      "expected_revisions must cover 'exactly every artifact the transaction touches'. Nothing documents which artifacts stage.note.write touches (study map? unit? both?).",
+      "How to compute approval.subject_sha256: the docs only say intent_sha256(envelope). Which fields are hashed and how they are serialised is not documented, and the error message doesn't say."
+    ],
+    "corrective_steps": ["Read the implementation to learn the intent-subject definition (friction). Stopped when the environment's guard refused the self-computed approval."],
+    "questions_asked_to_learner": [
+      "Should I mark the proportional-share stage complete? -> (scripted) 'No — I still have to explain vruntime aloud. Just record the progress.'",
+      "Proposed change: append to the stage's working note (unit-os-l02 / stage-os-l02-02-proportional-share, via stage.note.write, no replace): '2026-09-25: finished the stride example — all eight decisions, and C does run 5 out of 8 times. NEXT: explain vruntime aloud in under two minutes (stage not complete yet).' Apply? -> (scripted) 'Yes, apply exactly that.'"
+    ],
+    "implementation_knowledge_needed": true,
+    "wall_minutes": 3.0,
+    "outcome": "Where you were: Operating Systems L02, stage 'Proportional share and CFS' (stage-os-l02-02-proportional-share). You stopped on 2026-09-16 at step 4 of the stride example (A/B/C = 100/50/250 tickets, strides 100/200/40, decisions 1–3 done). Next was: finish the eight decisions, check C gets 5/8, then explain vruntime aloud in under two minutes. (Statistical Learning is your primary priority until 6 Oct.) Recording your progress: I couldn't save it. The system refused the entry because its approval check needs a hash the documentation doesn't define, and I wasn't allowed to compute it myself here. Nothing was changed; the stage is still active and still on this step. Your next step is to explain vruntime aloud."
+  },
+  "internal": {
+    "request_ids": ["s10-stage-note-20260925-1 (trace cd0d791990187a240e8e968b8b85c860; first_failure_stage core.approval; canonical_outcome NOT_COMMITTED)"],
+    "receipts": [],
+    "transaction_behavior": "Gateway refused before any transaction: error UNCONFIRMED, retryable false, details {}. No journal or receipt was left behind, and no inflight directory was created.",
+    "approval_behavior": "Fails closed on a mismatched approval subject. The bare named command refuses with exit 2 and points to the capability path. The refusal gives no expected subject and doesn't list the fields that make up the intent.",
+    "projection_activity": "Reads only; same snapshot sha256:82bcffb7… throughout.",
+    "persistence_activity": "operations/diagnostics/traces.jsonl gained the failed request's trace (ignored path). No derived-state cache this time (no note-read/content search).",
+    "derived_changes": "none",
+    "manifest_changes": "none",
+    "unexpected_writes": [],
+    "warnings_errors": [
+      "canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability stage.note.write --payload-file ENVELOPE.json` (exit 2)",
+      "UNCONFIRMED: approval subject does not match the current capability intent (process exit code 0 although ok:false)"
+    ],
+    "git_diff_stat": "",
+    "observe_diff_file": "observations/S10-diff.json"
+  },
+  "after": {"revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e", "git_status": [], "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec", "snapshot_file": "observations/S10-after.json"},
+  "friction": [
+    {"tag": "needs-implementation-knowledge", "description": "approval.subject_sha256 = intent_sha256(envelope) is undocumented beyond its name (OPERATOR points to WORKFLOWS §25a step 4, which only names it). The definition (hash of schema_version, capability, channel, expected_snapshot, expected_revisions, payload; sorted keys, compact separators) lives only in tools/learning_os/contracts/gateway.py.", "cost": "5 tool calls; blocked completion"},
+    {"tag": "unhelpful-error", "description": "UNCONFIRMED 'approval subject does not match the current capability intent' with empty details: no expected value and no list of the fields that make up the intent.", "cost": "1 failed submit"},
+    {"tag": "unclear-terminology", "description": "Three overlapping ways to record progress (stage-progress = status only; stage-note = 'compatibility only'; observe = needs a requirement the stage doesn't have). Nothing says which one records 'I finished part of a stage'.", "cost": "4 calls of reading capability definitions and WORKFLOWS"},
+    {"tag": "hidden-prerequisite", "description": "expected_revisions must list exactly the touched artifacts. Nothing documents which artifacts stage.note.write touches.", "cost": "guess"},
+    {"tag": "repeated-context-reconstruction", "description": "resume shows 'Evidence none / Open here —' and not the stage working note that holds the actual stopping point.", "cost": "1 extra call"}
+  ],
+  "failures": ["F-s10-intent-hash-01", "F-s10-exit-code-02"],
+  "scenario_record": {
+    "where_was_i_answer": "OS L02 stage-os-l02-02-proportional-share; stopped at step 4 of the stride example on 2026-09-16; next: finish 8 decisions, check C 5/8, explain vruntime aloud. Sources: resume pointer (bootstrap/resume), plan-edit-context stage (done_when, working_note path), stage working note text, workspace next action, COORDINATION priorities.",
+    "writes_performed": "none",
+    "capability": "stage.note.write (intended); stage.progress.update rejected as unsuitable (status-only payload)",
+    "envelope_fields_constructed": ["schema_version=2", "request_id", "idempotency_key", "capability", "channel=operator", "expected_snapshot (from plan-edit-context)", "expected_revisions={study-map-os-l02: 0} (guess)", "approval.kind=operator-approval", "approval.subject_sha256 (could not be produced without implementation knowledge; self-computation blocked by the evaluation environment)", "payload {unit_id, stage_id, text}"],
+    "receipt_id": null,
+    "retries": "1 refused submission (placeholder hash); the second (computed hash) was blocked before it ran"
+  },
+  "uncertainties": [
+    "Whether channel operator + operator-approval is the right admission for stage.note.write from an agent, and whether expected_revisions={study-map-os-l02:0} is exact. Neither was tested because the approval step could not be completed.",
+    "The permission block is a property of this evaluation environment, not of LearningOS. Another agent environment might let the operator compute the hash, and then the scenario might pass with friction."
+  ]
+}

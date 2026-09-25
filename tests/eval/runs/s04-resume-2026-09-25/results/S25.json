@@ -1,0 +1,60 @@
+{
+  "scenario": "S25",
+  "run_id": "s04-resume-2026-09-25",
+  "classification": "PASS",
+  "classification_reason": "The documented closure path (WORKFLOWS §22: `los session-end` without a message first) validated, regenerated and reported zero session-owned and zero unrelated changes. Canonical state was unchanged after S16 (apply never ran), so correctly nothing was staged or committed and nothing was pushed. The validator and warning baseline were clean.",
+  "before": {"revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e", "git_status": [], "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec", "snapshot_file": "observations/S25-before.json"},
+  "consumer": {
+    "goal": "Close the learning session and commit what the session changed (world continued from S16).",
+    "first_action": "Read system/WORKFLOWS.md §22 'End a session' and `los session-end --help`",
+    "commands": [
+      "sed WORKFLOWS.md §22; los session-end --help",
+      "los session-end   (review run, no commit message) -> ok, touched [], owned_changes [], unrelated_changes [], committed false, session_closed true",
+      "python tools/validate.py --compact -> 0 errors, 2 warnings (WS-NEGLECT, clock-derived)",
+      "python tools/warning_baseline.py --check -> OK, no new warning signature",
+      "git status --short (clean); git check-ignore -v on the AI-action request/delivery and generated/manifest.json"
+    ],
+    "tool_calls": 4,
+    "docs_consulted": ["system/WORKFLOWS.md §22", "CLAUDE.md hard rules 9 and 12", "system/OPERATOR.md 'Shelving and session closure'"],
+    "impl_files_read": [],
+    "retries": 0,
+    "confusions": [
+      "The review run (no --commit-message) already reported session_closed: true. WORKFLOWS §22 describes reviewing first and then optionally rerunning with --commit-message. With nothing owned it made no difference here. Whether the ledger survives for the second run when changes exist was not testable in this world state.",
+      "S16's AI-action request/delivery files were not listed as touched or unrelated, because they are git-ignored exchange state (.gitignore lines 19 and 21). That matches AI-ACTIONS.md, but the learner might expect 'what we did' to include them."
+    ],
+    "corrective_steps": [],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 0.5,
+    "outcome": "'Session closed. There was nothing to commit. Today's only work was preparing the AI shelving request for your temperature seed and validating the delivery, and it wasn't applied. Those files live in operations/ai-actions/, which is exchange state kept outside Git on purpose. None of your notes, plans or records changed. Validation: 0 errors; 2 warnings that say the Ledgerline and linear-algebra workspaces haven't been touched in a while (both paused by your decisions); no new warnings. Nothing was pushed.'"
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "No transaction; no commit (committed: false). World HEAD unchanged 13ad2fc.",
+    "approval_behavior": "Commit approval was not requested because the reviewed list was empty. The scripted confirmation only applies when a commit is shown.",
+    "projection_activity": "session-end validated and regenerated (1.2 s).",
+    "persistence_activity": "One more derived file under generated/ (validation report); no canonical write.",
+    "derived_changes": "1 derived file added",
+    "manifest_changes": "none observed",
+    "unexpected_writes": [],
+    "warnings_errors": ["W WS-NEGLECT: workspace 'workspace-ledgerline' untouched for 31 days (per Git)", "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)"],
+    "git_diff_stat": "",
+    "observe_diff_file": "observations/S25-diff.json"
+  },
+  "after": {"revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e", "git_status": [], "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec", "snapshot_file": "observations/S25-after.json"},
+  "friction": [
+    {"tag": "unclear-safety", "description": "The review run returns session_closed: true, which reads as if the session ledger is already gone before the documented optional commit rerun.", "cost": "0 here; untestable"}
+  ],
+  "failures": [],
+  "scenario_record": {
+    "staged_and_committed": "nothing (session-end: touched [], owned_changes [], committed false)",
+    "left_out_and_why": [
+      "operations/ai-actions/requests/ai-request-20260925-003317-1a836c/ and operations/ai-actions/deliveries/ai-delivery-20260925-temperature-01/ — git-ignored AI-action exchange state (not canonical; unapplied delivery)",
+      "generated/* — disposable derived views (git-ignored, CLAUDE.md hard rule 1)",
+      "operations/diagnostics/ — ignored trace store"
+    ],
+    "push": "not pushed (learner said don't push; nothing to push)"
+  },
+  "uncertainties": ["The world's validation count differs between build (3 warnings) and now (2): the WS-NEGLECT warnings are clock-derived, so the counts move with the system date. They are baseline-exempt per OPERATOR.md."]
+}

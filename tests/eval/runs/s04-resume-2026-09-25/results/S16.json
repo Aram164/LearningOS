@@ -1,0 +1,74 @@
+{
+  "scenario": "S16",
+  "run_id": "s04-resume-2026-09-25",
+  "classification": "USABILITY_FAILURE",
+  "classification_reason": "Prepare, import and validate worked and stayed inside operations/ai-actions/. The delivery.yaml format is documented nowhere: the bundle's instructions only say 'Return an approved delivery directory containing delivery.yaml'. Import rejected four plausible deliveries with one terse error each ('unsafe exchange identifier: ' with an empty value; 'delivery adapter does not match prepared request' when the field is actually 'producer'), and the working format came only from reading tools/learning_os/ai_actions/service.py. Apply needs a GatewayEnvelopeV2 whose approval subject is the same undocumented intent hash as in S10. Self-computing it was blocked by the evaluation environment's permission guard, so apply, receipt and canonical writes are NOT VERIFIED.",
+  "before": {"revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e", "git_status": [], "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec", "snapshot_file": "observations/S16-before.json"},
+  "consumer": {
+    "goal": "Run garden.shelve on the 'temperature' Garden seed as the manual-bundle provider, validate the delivery, apply it if valid.",
+    "first_action": "los ai-action-list",
+    "commands": [
+      "ai-action-list",
+      "grep system/ README for garden.shelve / ai-action-prepare / manual-bundle; cat system/AI-ACTIONS.md",
+      "ai-action-prepare --help; ai-action-import-delivery --help; ai-action-validate-delivery --help; cat system/contracts/ai-actions/garden.shelve.yaml",
+      "bootstrap --brief (snapshot id) ; ai-action-prepare --action-id garden.shelve --target-kind garden-note --target-id garden-note-temperature-everywhere --provider manual-bundle --expected-snapshot sha256:82bcffb7… -> ok, request ai-request-20260925-003317-1a836c",
+      "read the request bundle (instructions.md, context.md, request.yaml, allowed-capabilities.json, artifact-index.json, contract-lock.json, attachments/)",
+      "ls system/schema (no delivery schema); grep system/ for delivery.yaml; cat system/schema/capabilities/ai-action.delivery.apply.schema.json; capabilities.yaml write scopes",
+      "ai-action-import-delivery delivery-1 -> 'los: unsafe exchange identifier: ' (exit 1)",
+      "ai-action-import-delivery delivery-2 (+id) -> 'delivery type must be ai-action-delivery'",
+      "ai-action-import-delivery delivery-3 (+type) -> 'delivery adapter does not match prepared request'",
+      "ai-action-import-delivery delivery-4 (provider.adapter) -> same error",
+      "grep + sed tools/learning_os/ai_actions/service.py lines 520-800 (delivery schema: id, type, action_id, producer.adapter, preconditions == request.preconditions, approval.user_approved, operations; relationship.create payload shape)  [implementation read]",
+      "ai-action-import-delivery delivery-5 -> ok",
+      "ai-action-validate-delivery ai-delivery-20260925-temperature-01 -> ok; ai-action-status -> delivery-ready",
+      "ai-action-apply-delivery --help (bare apply needs content hashes; AI-ACTIONS.md: 'Calling ai-action-apply-delivery directly is deliberately refused'); capability ai-action.delivery.apply envelope NOT submitted: approval subject needs the self-computed intent hash, blocked in S10 by the environment guard"
+    ],
+    "tool_calls": 19,
+    "docs_consulted": ["system/AI-ACTIONS.md", "system/contracts/ai-actions/garden.shelve.yaml", "system/schema/capabilities/ai-action.delivery.apply.schema.json", "system/contracts/capabilities.yaml (domain_capabilities write scopes)", "request bundle instructions.md/context.md"],
+    "impl_files_read": ["tools/learning_os/ai_actions/service.py (lines 520-800: _validate, apply_delivery)"],
+    "retries": 4,
+    "confusions": [
+      "Target id for the seed was not listed anywhere I looked; AI-ACTIONS.md's example 'garden-note-example-…' suggested 'garden-note-<filename>', which worked.",
+      "No delivery.yaml schema or example in system/; the request bundle instructions don't describe it either.",
+      "'unsafe exchange identifier: ' with an empty value didn't say which field; 'delivery adapter does not match prepared request' was about a field named 'producer', while the request calls it 'provider'.",
+      "The relationship 'relation' vocabulary for operations/ai-actions/relationships.yaml is undocumented; I used 'relates-to'. Import did not check the relation name or that the 'to' ids exist.",
+      "The apply step, as with S10: 'The approval subject is the standard Gateway V2 hash over that whole intent', with no definition in the docs."
+    ],
+    "corrective_steps": ["Read the delivery validator in service.py to learn the accepted delivery shape.", "Stopped before apply."],
+    "questions_asked_to_learner": ["Here is the delivery I'd submit as the provider: an AI-derived transcription knowledge/garden/transcriptions/garden-note-temperature-everywhere.md, which explains that both are the Boltzmann distribution p ∝ exp(−E/T) (softmax with E_i = −z_i; Metropolis acceptance in annealing samples the same distribution), plus two relationships from the seed to note-softmax-temperature and note-simulated-annealing. Your seed file stays unchanged. Approve this delivery? -> (scripted) 'Approved.'"],
+    "implementation_knowledge_needed": true,
+    "wall_minutes": 2.5,
+    "outcome": "What the learner would see: 'I prepared the shelving request for your temperature seed, wrote the AI reading (both are the Boltzmann distribution; T sets how strongly low-energy states are preferred) with links to your softmax and simulated-annealing notes, and the system validated the delivery. I did NOT apply it. Applying needs an approval hash the documentation doesn't define, and I'm not permitted to compute it myself here. Nothing in your notes or Garden changed. The validated delivery is waiting as ai-delivery-20260925-temperature-01 (request ai-request-20260925-003317-1a836c, status delivery-ready).'"
+  },
+  "internal": {
+    "request_ids": ["ai-request-20260925-003317-1a836c", "delivery ai-delivery-20260925-temperature-01"],
+    "receipts": [],
+    "transaction_behavior": "Prepare persisted a request bundle; import staged each attempt and removed rejected ones: no operations/ai-actions/incoming/ residue after four rejections, consistent with 'a rejected bundle never occupies a canonical-looking path'. Validate: ok. No transaction opened; no ReceiptV2.",
+    "approval_behavior": "Delivery approval is a self-declared field (approval.user_approved: true) inside the provider's delivery.yaml, checked only for truthiness at import. The binding approval is meant to be the apply envelope (approved-delivery) — not reached.",
+    "projection_activity": "The AI-action commands built the full generated view set (19 files incl. generated/manifest.json, nebula.md, reading-room.md, reports/health.md) — the first scenario in this run where generated/*.md views appeared.",
+    "persistence_activity": "operations/ai-actions/requests/ai-request-20260925-003317-1a836c/ (7 files) and operations/ai-actions/deliveries/ai-delivery-20260925-temperature-01/ (delivery.yaml, artifacts/transcription.md). Git-ignored exchange state; git status stayed clean.",
+    "derived_changes": "19 generated files added (full view build).",
+    "manifest_changes": "generated/manifest.json created (did not exist before).",
+    "unexpected_writes": [],
+    "warnings_errors": ["los: unsafe exchange identifier: ", "los: delivery type must be ai-action-delivery", "los: delivery adapter does not match prepared request (x2)"],
+    "git_diff_stat": "",
+    "observe_diff_file": "observations/S16-diff.json"
+  },
+  "after": {"revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e", "git_status": [], "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec", "snapshot_file": "observations/S16-after.json"},
+  "friction": [
+    {"tag": "needs-implementation-knowledge", "description": "delivery.yaml format (id, type, producer.adapter, preconditions copied from request, approval.user_approved, operations[] and each capability's operation shape) is documented nowhere; learned from service.py.", "cost": "4 failed imports + 3 implementation reads"},
+    {"tag": "unhelpful-error", "description": "Import errors are one-at-a-time and sometimes misleading: an empty identifier name, and an 'adapter' mismatch when the field is 'producer' (the request itself calls it 'provider').", "cost": "4 retries"},
+    {"tag": "needs-implementation-knowledge", "description": "Apply envelope approval subject = undocumented intent hash (same as F-s10-intent-hash-01).", "cost": "blocked completion"},
+    {"tag": "hidden-prerequisite", "description": "Garden target ids (garden-note-<filename-stem>) are not listed by any read command; guessed from the AI-ACTIONS.md example.", "cost": "0-1 calls"}
+  ],
+  "failures": ["F-s16-delivery-format-03", "F-s10-intent-hash-01"],
+  "scenario_record": {
+    "request_id": "ai-request-20260925-003317-1a836c",
+    "delivery_id": "ai-delivery-20260925-temperature-01",
+    "validation_result": "ok (ai-action-validate-delivery); status delivery-ready",
+    "receipt_id": null,
+    "files_created_or_changed": ["operations/ai-actions/requests/ai-request-20260925-003317-1a836c/{allowed-capabilities.json, artifact-index.json, attachments/temperature-everywhere.md, context.md, contract-lock.json, instructions.md, request.yaml}", "operations/ai-actions/deliveries/ai-delivery-20260925-temperature-01/{delivery.yaml, artifacts/transcription.md}", "generated/* (19 derived files)"],
+    "outside_declared_scope": "None observed. Canonical tree unchanged (canonical digest identical before/after); original seed knowledge/garden/temperature-everywhere.md unchanged. The planned writes (knowledge/garden/transcriptions/, operations/ai-actions/garden-state/, operations/ai-actions/relationships.yaml) were never reached."
+  },
+  "uncertainties": ["Whether a correctly signed apply would have written only the three declared destinations and a ReceiptV2 is NOT VERIFIED."]
+}
