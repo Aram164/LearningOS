@@ -1,0 +1,31 @@
+{
+  "ok": true,
+  "delivery": {
+    "schema_version": 1,
+    "id": "ai-delivery-20260925-temperature-everywhere",
+    "type": "ai-action-delivery",
+    "request_id": "ai-request-20260925-022947-4ff0ef",
+    "action_id": "garden.shelve",
+    "producer": {
+      "adapter": "manual-bundle"
+    },
+    "preconditions": {
+      "snapshot_id": "sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e",
+      "artifact_revisions": {
+        "garden-note-temperature-everywhere": "sha256:6fa835afc62a92a0248e25049637263331671814029e18898ce7792b922f590d"
+      }
+    },
+    "approval": {
+      "user_approved": true,
+      "approved_at": "2026-09-25",
+      "note": "Learner replied 'Approved.' after seeing the single transcription operation and its full text."
+    },
+    "operations": [
+      {
+        "capability": "garden.add-transcription",
+        "target_id": "garden-note-temperature-everywhere",
+        "artifact_ref": "artifacts/transcription.md"
+      }
+    ]
+  }
+}

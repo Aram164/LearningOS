@@ -1,0 +1,30 @@
+{
+  "operations": [
+    {
+      "trace_id": "d7648ef6e37b20ec89dfcaf5f3264876",
+      "request_id": "s04b-s10-stage-note-2",
+      "capability": "stage.note.write",
+      "started_at": 1790302888.036839,
+      "duration_ms": 839.0,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    },
+    {
+      "trace_id": "41d52b2d9d3f64282d4c5b06424b1e24",
+      "request_id": "s04b-s10-stage-note-1",
+      "capability": "stage.note.write",
+      "started_at": 1790302828.732509,
+      "duration_ms": 110.7,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": "core.admission",
+      "canonical_outcome": "NOT_COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    }
+  ]
+}
