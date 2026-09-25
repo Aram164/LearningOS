@@ -1,6 +1,9 @@
 """Actual V2 transactions against synthetic records, never the learner's graph."""
 import json
+from pathlib import Path
 
+import jsonschema
+import pytest
 import yaml
 from gateway_helpers import approved_v2_call
 from repo_builders import run_los
@@ -68,3 +71,25 @@ def test_no_direct_cli_bypass(mini_repo):
                      json.dumps({"operations": [{"action": "remove", "old": OLD}]}))
     assert result.returncode != 0
     assert yaml.safe_load((mini_repo / "knowledge/concept-relations.yaml").read_text())["relations"] == [OLD]
+
+
+def test_atlas_question_payload_schema_types_its_fields(repo_root: Path):
+    schema = json.loads((repo_root / "system/schema/capabilities/atlas.question.save.schema.json").read_text())
+    question = schema["properties"]["question"]
+    assert set(question["properties"]) == {"id", "title", "text", "target", "state", "answer_notes"}
+    assert question["required"] == ["id"]
+    assert question["additionalProperties"] is False
+    validator = jsonschema.Draft202012Validator(schema)
+    validator.validate({"question": {"id": "note-atlas-x"}})
+    with pytest.raises(jsonschema.ValidationError):
+        validator.validate({"question": {"id": "note-atlas-x", "bogus": 1}})
+    with pytest.raises(jsonschema.ValidationError):
+        validator.validate({"question": {"title": "no id"}})
+
+
+def test_atlas_question_save_refuses_a_non_object_target(mini_repo):
+    result = run_los(mini_repo, "atlas-question-save", "--question",
+                     json.dumps({"id": "note-atlas-new", "title": "T",
+                                 "text": "Why?", "target": "concept-expected-value"}))
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert "question target must be an object" in result.stderr

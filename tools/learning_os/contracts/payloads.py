@@ -18,6 +18,7 @@ import argparse
 import json
 import re
 
+from .atlas_question import question_schema as atlas_question_schema
 from .batch_notes import bundle_schema as batch_notes_schema
 
 # Owned by the envelope, never by the payload.
@@ -64,6 +65,7 @@ _GATEWAY_INLINE_REQUIRED = {
 #: use never sees the schema.
 _NESTED_SCHEMAS: dict[tuple[str, str], dict] = {
     ("note.analysis.save_batch", "bundle"): batch_notes_schema(),
+    ("atlas.question.save", "question"): atlas_question_schema(),
 }
 
 

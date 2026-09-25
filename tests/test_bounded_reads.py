@@ -460,3 +460,81 @@ def test_brief_pointer_invalid_matches_missing(mini_repo):
     data = json.loads(brief.stdout)
     assert data["pointer_state"] == "invalid"
     assert [opt["workspace_id"] for opt in data["recorded_options"]] == ["workspace-demo"]
+
+
+def test_search_surfaces_garden_seeds_and_inbox_filenames(mini_repo):
+    from learning_os.garden import garden_id
+
+    garden = mini_repo / "knowledge/garden"
+    garden.mkdir(parents=True, exist_ok=True)
+    (garden / "zephyrquux-garden.md").write_text(
+        "# Zephyrquux garden seed\n\nA seedling thought.\n", encoding="utf-8")
+    (mini_repo / "work/inbox/20260910-tessera-todo.md").write_text(
+        "tessera todo\n", encoding="utf-8")
+    seed_id = garden_id(garden, garden / "zephyrquux-garden.md")
+    rows = json.loads(run_los(mini_repo, "search", "Zephyrquux").stdout)
+    seed = next((row for row in rows if row.get("id") == seed_id), None)
+    assert seed is not None, rows
+    assert seed["type"] == "garden-note"
+    assert seed["state"] == "seed"
+    assert set(seed) == {"id", "type", "title", "path", "status", "state", "deprecated"}
+    rows = json.loads(run_los(mini_repo, "search", "tessera-todo").stdout)
+    drop = next((row for row in rows if row.get("type") == "inbox-item"), None)
+    assert drop is not None, rows
+    assert drop["id"] == "20260910-tessera-todo.md"
+    assert drop["path"] == "work/inbox/20260910-tessera-todo.md"
+    assert json.loads(run_los(mini_repo, "search", "tessera-todo",
+                              "--type", "note").stdout) == []
+
+
+def test_note_read_resolves_a_garden_seed(mini_repo):
+    from learning_os.garden import garden_id
+
+    garden = mini_repo / "knowledge/garden"
+    garden.mkdir(parents=True, exist_ok=True)
+    (garden / "kernel-thought.md").write_text(
+        "# Kernel thought\n\nThe third meaning of kernel.\n", encoding="utf-8")
+    seed_id = garden_id(garden, garden / "kernel-thought.md")
+    response = run_los(mini_repo, "note-read", seed_id)
+    assert response.returncode == 0, response.stderr
+    row = json.loads(response.stdout)
+    assert row["contract"] == "note-content"
+    assert row["note_id"] == seed_id
+    assert "The third meaning of kernel." in row["content"]
+    assert row["snapshot_id"].startswith("sha256:")
+
+
+def test_inbox_read_serves_text_and_refuses_binary_escape_and_missing(mini_repo):
+    inbox = mini_repo / "work/inbox"
+    (inbox / "todo.md").write_text("hello inbox\n", encoding="utf-8")
+    response = run_los(mini_repo, "inbox-read", "todo.md")
+    assert response.returncode == 0, response.stderr
+    row = json.loads(response.stdout)
+    assert row["contract"] == "inbox-content"
+    assert row["item"] == "todo.md"
+    assert row["content"] == "hello inbox\n"
+    assert row["snapshot_id"].startswith("sha256:")
+    (inbox / "blob.bin").write_bytes(b"\x00\x01\x02\xff")
+    refused = run_los(mini_repo, "inbox-read", "blob.bin")
+    assert refused.returncode != 0
+    assert "not UTF-8" in refused.stderr
+    link = inbox / "link.md"
+    link.symlink_to(inbox / "todo.md")
+    linked = run_los(mini_repo, "inbox-read", "link.md")
+    assert linked.returncode != 0
+    assert "symlink" in linked.stderr
+    assert run_los(mini_repo, "inbox-read", "../active/x").returncode != 0
+    missing = run_los(mini_repo, "inbox-read", "nope.md")
+    assert missing.returncode != 0
+    assert "not found" in missing.stderr
+
+
+def test_search_rows_carry_state_and_deprecated(mini_repo):
+    concepts = json.loads(run_los(mini_repo, "search", "Expected",
+                                  "--type", "concept").stdout)
+    assert concepts, "mini concept must match"
+    assert all("deprecated" in row for row in concepts)
+    notes = json.loads(run_los(mini_repo, "search", "note-demo",
+                               "--type", "note").stdout)
+    assert notes, "mini note must match"
+    assert all("state" in row for row in notes)

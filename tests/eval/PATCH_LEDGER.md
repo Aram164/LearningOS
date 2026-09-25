@@ -454,3 +454,155 @@ Three sub-fixes, one per minimized repro:
   `operations/diagnostics/` absent after the suites (JF-03 holds).
 - Known cross-repo follow-up: UI `DEFINITIVE_NO_COMMIT_CODES` must add
   IDEMPOTENCY_CONFLICT (parity test enforces).
+
+## S12.5 — Read gaps + doc residues (JF-14 / JF-17 / JF-23)
+
+World repro script (outside repo): `/tmp/s11-repro/repro_s12_5_reads.py`,
+run against `/tmp/s11-repro/world-s12_5` (built with
+`--source-rev WORKTREE` from the S12.4 tip; probes invoke the repo's
+`tools/los.py` with `--root`, before/after by worktree state).
+
+### JF-14 — Garden, inbox, and stage-note reads
+
+Three legs, three different answers — verified separately:
+
+1. Stage notes: already reachable, no code change. `inspect
+   STUDY_MAP_ID` carries every stage's `notes_text` (verified: a
+   gateway-written note appears in `inspect` and matches metadata
+   search in the world repro). The defect was discoverability; the
+   repair is docs (OPERATOR read routing, below).
+2. Garden: entries were already projected (top-level `garden_entries`,
+   contract v15) with stable ids, but invisible to every read. Fix,
+   with zero manifest bytes changed (no contract bump — the
+   versioned shape is untouched, so no UI mirror is owed):
+   metadata `search` also matches `garden_entries`, and `note-read`
+   resolves `garden-note-*` ids lazily on a durable-note miss (same
+   `note-content` envelope, snapshot guard, symlink refusal; the
+   durable path is untouched, including its parse-only-notes
+   budget).
+3. Inbox: new `inbox-read` query + CLI command — bounded UTF-8
+   segments of one `work/inbox/` file by inbox-relative name.
+   Refuses missing names, absolute/`..` names, symlinks, and
+   non-UTF-8 drops (binary captures have no text read); guarded by
+   the canonical snapshot (`work/` is a canonical root). Metadata
+   `search` matches inbox filenames only, never bytes
+   (binary-safe); discovery lists non-dot files (the same rule as
+   the inbox count) while an exact name reads dot-files too.
+   Catalog: `note.content` invariants widened, new `inbox.content`
+   query; brief-bootstrap expands gain `inbox_read`.
+- Deliberately NOT done: no `garden-note`/`inbox-item` record types
+  in manifest `records[]`. That reshapes the published v15
+  contract, and the repo's own rule requires the UI mirror in the
+  SAME change ("a bump that lands alone is the bug this file was
+  written to prevent"); the UI sibling is absent from this
+  worktree, so a v16 bump cannot land correctly. The `los`-query
+  surfacing above serves discovery + content with the contract
+  bytes identical.
+- BEFORE (world): 4/14 — garden/inbox invisible everywhere,
+  `note-read` refuses garden ids, no `inbox-read` command.
+- AFTER: 14/14.
+- Tests: `test_search_surfaces_garden_seeds_and_inbox_filenames`,
+  `test_note_read_resolves_a_garden_seed`,
+  `test_inbox_read_serves_text_and_refuses_binary_escape_and_missing`
+  (tests/test_bounded_reads.py) — all fail pre-fix, pass post-fix.
+
+### JF-17 — `resume` shows recorded stage progress
+
+- Mechanism (verified): `resume` renders requirement-linked
+  observations only, and forces `observations` empty when the stage
+  has no authored requirement — so after a `stage.note.write` the
+  screen reads "none recorded" even though the write succeeded.
+- Fix: `cmd_resume` computes bounded stage-note facts
+  (`working_note`, line count, last-commit `updated`, trailing
+  800-char excerpt) via `_stage_note_facts` (boundary-checked,
+  best-effort: missing/unreadable file is 0 lines, an escaping
+  path is None — resume names no defects, the validator does); a
+  new optional `stage-note` dossier section carries them (the
+  digest moves with the note, like every section); the render
+  gains `Stage note N lines recorded (path, updated …)` plus the
+  last 3 non-empty lines, `nothing recorded yet` when empty, and a
+  `Next` line naming `stage-note` when no requirement exists.
+- BEFORE (world): no `Stage note` line, no `stage-note` JSON
+  section. AFTER: both, with the written marker in the excerpt.
+- Tests: `test_stage_note_section_moves_the_digest_and_refuses_non_mappings`,
+  `test_resume_shows_recorded_stage_note_without_a_requirement`
+  (tests/test_resume_dossier.py) — fail pre-fix, pass post-fix.
+- Honest residual (not repaired): no capability advances the
+  workspace Next Action — a missing write needing Aram's design
+  call, recorded here, not implemented.
+
+### JF-23 — small read-surface items
+
+- (a) `notes_updated`: docs only. OPERATOR now states it is the
+  note file's last-commit date, unmoved by uncommitted writes. No
+  code change: commit-date sourcing is the determinism
+  architecture (byte-identical rebuilds); wall-clock mtime would
+  fight it, and the schema file cannot carry the note (any byte
+  change breaks `schema_sha256` → contract bump).
+- (b) `atlas.question.save` payload: new single-source module
+  `contracts/atlas_question.py` (`QUESTION_FIELDS` +
+  `question_schema()`), the handler imports the field set
+  (replacing its inline copy), a non-dict `target` is refused
+  instead of crashing with `AttributeError` on the new-note
+  path, the registry gains
+  `("atlas.question.save", "question")`, and capability schemas
+  were regenerated (only this file of 39 changed). The nested
+  shape mirrors the handler, never stricter: required `id` only
+  (title/text/target are conditionally required by repository
+  state, which the schema cannot see); target/state/answer-note
+  internals stay structural with `note.schema.json` cited, so no
+  second enforcement copy exists.
+- (c) Search rows gain `state` + `deprecated` keys (additive;
+  null when the record lacks them) — note lifecycle state and
+  concept deprecation are now visible in discovery output.
+- (d) Revision 0: already documented in WORKFLOWS §25c ("the
+  legitimate no-recorded-revision baseline, backstopped by the
+  snapshot guard") — verified present, cited, no new prose.
+- Tests: `test_atlas_question_payload_schema_types_its_fields`,
+  `test_atlas_question_save_refuses_a_non_object_target`
+  (tests/test_atlas_authoring.py),
+  `test_search_rows_carry_state_and_deprecated`
+  (tests/test_bounded_reads.py) — all fail pre-fix, pass post-fix.
+
+### Documentation residues (JF-12 / JF-15 / JF-16 / JF-24 + JF-19)
+
+- JF-19 operations reference (promised in S12.4): new WORKFLOWS
+  §28 — list/explain forms, the three outcomes + recovery
+  requirements, the at-or-past settlement rule with `make views`
+  as the settling step, request-id reuse, failure stages. Every
+  claim verified against `conventions.py` / `resolver.py` /
+  `commands/operations.py` (incl. `projection_outcome` values and
+  newest-first ordering).
+- JF-12: OPERATOR "What 'clean' means" states the fail-closed
+  design (one error anywhere blocks every write; reads refuse
+  rather than omit).
+- JF-15: OPERATOR states `related` is one-directional
+  (documented, not symmetrized — verified against the backlink
+  builder: a workspace lists a note when either side declares the
+  link, the note lists it only from its own declarations).
+- JF-16: README (2 spots) + OPERATOR atlas line say "build views
+  first" on a fresh install.
+- JF-24: OPERATOR states search semantics (AND-substrings,
+  unranked, no snippets — the design, not a defect).
+- JF-14: OPERATOR read routing (stage-note path via parent-map
+  inspect, garden `note-read`, `inbox-read`, search coverage);
+  WORKFLOWS §21 gains the inbox read line.
+- Verification: 9-statement presence probe, all PRESENT; the §25a
+  literal-example test passes unchanged (new §28 sits past the
+  `## 26.` split).
+
+### S12.5 gate results
+
+- World repro: 4/14 → 14/14.
+- New tests: 8, all fail pre-fix and pass post-fix (verified via
+  stash of `tools/` + `system/`).
+- Full files: test_bounded_reads.py + test_resume_dossier.py +
+  test_resume_pointer.py + test_atlas_authoring.py +
+  test_capability_catalog.py + test_capability_dispatch.py +
+  test_agent_efficiency.py + test_cli.py + test_search_index.py
+  (200 passed); test_curriculum_v2.py + test_plan_resume.py +
+  test_material_context.py + test_evidence_staleness.py (85 passed,
+  1 skipped).
+- Real repo: `validate.py --compact` 0 errors;
+  `warning_baseline.py --check` OK; `ruff check tools/ tests/`
+  clean.

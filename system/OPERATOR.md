@@ -45,6 +45,11 @@ gate by exact code, never by heuristic. A baseline-managed signature that
 shrinks is a repair and passes; it is never restored merely to match the old
 total.
 
+Fail-closed is the design, not an accident: one validation error anywhere
+in the tree blocks *every* canonical write, even an unrelated capture, and
+reads refuse rather than silently omit what they cannot verify. The error
+always names its file. Fix the defect; do not route around the guard.
+
 ## Start here
 
 Do not recursively discover the repository. Entry is task-shaped: start
@@ -118,11 +123,13 @@ Decide which read answers the question before reading:
 
 Task-shaped entry preserves complete material access through `inspect ID`.
 Its `domain_atlas` glance summarizes all projected notes and shelves across
-domains, independently of pagination; open the domain atlas for the full map.
+domains, independently of pagination; open the domain atlas for the full map
+(run `make views` first on a fresh install — `generated/` starts empty).
 Read several known records with `inspect ID1 ID2 ...` (at most 20) to share one
 fresh projection; the batch preserves requested order, includes a snapshot,
 and refuses missing IDs or changes during the read. Use `note-read` for note
-bodies. Ask governance questions through `semantic PREDICATE --input k=v`
+bodies — durable notes and garden seeds alike, by stable id. Ask governance
+questions through `semantic PREDICATE --input k=v`
 (`semantic --list` names the 23 registered predicates;
 `semantic --recipe CLASS` shows the worked example procedures for one
 question class, examples only) instead of
@@ -151,6 +158,14 @@ ordering, scope, or resource membership changes.
 Continue a summary page with its returned offset and snapshot. Read saved
 reasoning with `note-read NOTE_ID` (bounded Unicode-character segments) and
 search beyond note summaries with `search QUERY --type note --content`.
+Read a stage's working-note content from its parent map: `inspect
+STUDY_MAP_ID` carries every stage's `notes_text` (`inspect STAGE_ID` does
+not resolve stages). The `notes_updated` on those stages is the note file's
+last-commit date, not the write date — uncommitted gateway writes do not
+move it. Read inbox drops with `inbox-read NAME` (bounded segments of one
+`work/inbox/` file by name; binary drops refuse). `search` without
+`--content` matches records, garden seeds, and inbox filenames, so all
+three are discoverable without reading files.
 Continuation reads require the previous response's `--expected-snapshot`;
 changed content is a restart, never a silently mixed result.
 
@@ -165,7 +180,15 @@ components, units, study maps, stages, source maps, topics, joins, progress,
 resume pointer, structured academic deadlines (registered attempts, available
 sittings, and registration windows), and the Future Master's Planning boundary. Interfaces must not reconstruct
 application state by parsing canonical Markdown or YAML. Use `list-*`,
-`inspect`, `search`, and `related` for targeted reads.
+`inspect`, `search`, and `related` for targeted reads. `search` without
+`--content` conjoins whitespace-separated substrings per row — every term
+must occur somewhere in the row — unranked and without snippets, so short
+stems collide and natural phrasing often returns nothing; that coarseness
+is the design, not a defect. `related ID` walks one hop over the record's
+own declared edges plus the manifest's backlink tables, and it is not
+symmetric: a workspace lists a note when either side declares the link,
+but the note lists the workspace only when the note itself declares it,
+so membership in one direction never implies the reverse edge.
 
 ## Product hierarchy
 

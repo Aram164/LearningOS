@@ -21,7 +21,8 @@ never edit it.
    capabilities --compact --json` and `python tools/los.py bootstrap --brief`
    (guards, resume, owed work, deadlines, and runnable expands on one page),
    then reads your active workspace and the coordination facts behind it, plus
-   the at-a-glance block of `generated/domain-atlas.md` (the cross-domain map).
+   the at-a-glance block of `generated/domain-atlas.md` (the cross-domain map;
+   run `make views` first on a fresh install — `generated/` starts empty).
    That's the whole interface.
 2. **By hand:** the one-page home is `generated/reading-room.md` (run
    `make views` to refresh) — exams, workspaces, recent notes, queues, all
@@ -53,7 +54,8 @@ The rest of this file is the full manual; the four commands are under
 **Start a session:** open this folder in a chat. The operator boots from
 `system/OPERATOR.md` with `bootstrap --brief` (guards, resume, owed work,
 deadlines, expands), then reads your active workspace and the coordination
-facts behind it — plus the at-a-glance block of `generated/domain-atlas.md`,
+facts behind it — plus the at-a-glance block of `generated/domain-atlas.md`
+(run `make views` first on a fresh install),
 so every session starts with the full cross-domain map in view. You just say
 what you're working on.
 
