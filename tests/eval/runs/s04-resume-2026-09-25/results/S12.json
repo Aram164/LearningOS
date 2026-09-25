@@ -1,0 +1,63 @@
+{
+  "scenario": "S12",
+  "run_id": "s04-resume-2026-09-25",
+  "classification": "PASS",
+  "classification_reason": "Three calls gave a sourced recommendation. `search \"linear algebra\"` found the module, workspace and coordination; one batched inspect gave the recorded deferral ('resume only the SVD stage, and only as far as the L09 exam scope needs'), the dependency, both study maps with their stopping points, and the L09 unit scope. No change was needed, and none was made.",
+  "before": {"revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e", "git_status": [], "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec", "snapshot_file": "observations/S12-before.json"},
+  "consumer": {
+    "goal": "Decide from recorded facts/decisions whether and how far to resume the paused linear-algebra refresh.",
+    "first_action": "los search \"linear algebra\"",
+    "commands": [
+      "search \"linear algebra\"",
+      "inspect module-skill-linalg-refresh workspace-linalg-refresh coordination study-map-linalg-svd study-map-statlearn-l09 unit-statlearn-l09",
+      "(stage detail from the same JSON); sed CONTEXT.md bodies of workspace-statlearn-retake and workspace-linalg-refresh"
+    ],
+    "tool_calls": 3,
+    "docs_consulted": [],
+    "impl_files_read": [],
+    "retries": 0,
+    "confusions": ["The linalg workspace's next action (finish the image-compression experiment) conflicts with the newer coordination deferral that limits any resumption to what L09 needs. I followed the coordination record because it is the dated decision owner (CLAUDE.md hard rule 2)."],
+    "corrective_steps": [],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 1.5,
+    "outcome": "Recommendation: yes, but only the one piece your retake needs, and as part of Statistical Learning rather than by restarting the refresh. Why: your recorded decision says 'Linear algebra refresh paused since 2026-06-12; resume only the SVD stage, and only as far as the L09 exam scope needs'. Coordination also records that the L09 (PCA/SVD) gap depends on it. L09 is exam scope (scope: '…the SVD of the centred data matrix, explained variance'), its stage 2 'Connect PCA to the SVD' is marked exam-critical and has been paused since 2026-06-10, and your retake is on 2026-10-06, which is primary until then. What exactly (about 1–2 sessions): (1) you already have the SVD geometry: refresh stage 1 is complete and note-svd-geometric has AᵀA = VΣᵀΣVᵀ; (2) finish L09 stage 2 from where you stopped: centred X = UΣVᵀ ⇒ covariance XᵀX/n = V(Σ²/n)Vᵀ, so V's columns are the principal directions and the eigenvalues are σ_i²/n. That answers your open 'σ_i²/n?', and the explained-variance fraction of component i is σ_i²/Σσ_j². Check it numerically on the 2-D toy data from note-pca-by-hand (SVD vs eigh). Resource on the stage: Bishop §12.1. Done when: a short proof in your own words. (3) Don't restart the rest: the image-compression experiment (refresh stage 2, not exam-critical) and the recommender question stay paused until after the exams (after 2026-10-12). Your SL workspace still asks whether the SVD proof or only the PCA computation gets examined; the step above covers both. Keep it small, because L07 (regularization) is recorded as your biggest gap. No records changed."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "No writes.",
+    "approval_behavior": "Not applicable.",
+    "projection_activity": "Fresh projection; batched inspect of 6 ids shares one snapshot.",
+    "persistence_activity": "Read-side derived-state cache under generated/derived-state/ (gitignored).",
+    "derived_changes": "generated/derived-state/ cache",
+    "manifest_changes": "none",
+    "unexpected_writes": [],
+    "warnings_errors": [],
+    "git_diff_stat": "",
+    "observe_diff_file": "observations/S12-diff.json"
+  },
+  "after": {"revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e", "git_status": [], "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec", "snapshot_file": "observations/S12-after.json"},
+  "friction": [
+    {"tag": "manual-generated-file-inspection", "description": "Workspace bodies (SL open question 'Is the SVD proof likely to be asked…', Current Scope) are only in CONTEXT.md, not in inspect.", "cost": "1 call"}
+  ],
+  "failures": [],
+  "scenario_record": {
+    "recommendation": "Resume only the PCA↔SVD connection (L09 stage 2), inside the SL retake and before 2026-10-06; keep the image-compression/low-rank stage and the refresh module paused until after the October exams.",
+    "facts_and_decisions_relied_on": [
+      "work/COORDINATION.md Deferrals: 'Linear algebra refresh paused since 2026-06-12; resume only the SVD stage, and only as far as the L09 exam scope needs.'",
+      "work/COORDINATION.md Dependencies: 'The Statistical Learning L09 (PCA/SVD) gap depends on the paused linear algebra refresh — resuming the SVD stage is the prerequisite.'",
+      "work/COORDINATION.md Priorities (decision 2026-08-24): SL retake primary until its sitting.",
+      "module-tuh-statlearn: 2. Termin 2026-10-06 registered (from S00/S02 knowledge of the module record; same in this world)",
+      "study-map-statlearn-l09: stage-l09-02-svd-connection exam_critical, paused, notes stop at 'σ_i² / n?' (2026-06-10)",
+      "study-map-linalg-svd: stage 1 complete (2026-06-08), stage 2 low-rank paused, not exam-critical",
+      "unit-statlearn-l09 scope includes 'the SVD of the centred data matrix, explained variance'",
+      "workspace-statlearn-retake: 'the SVD part is exam scope and I still owe it'; L07 biggest gap"
+    ],
+    "records_changed": "none"
+  },
+  "uncertainties": [
+    "Observation, not investigated: stage-l09-01's resource 'Slides L09 / L09 slides 1-20' resolves to material_path materials/source-tuh-statlearn-slides/L05-generative-classifiers.md (an L05 file) — possibly a mis-bound material route in the world data or projection.",
+    "The time estimate (1-2 sessions) is my judgement."
+  ]
+}
