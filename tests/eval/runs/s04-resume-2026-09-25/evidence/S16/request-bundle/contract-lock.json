@@ -1,0 +1,6 @@
+{
+  "exchange_bundle_version": 1,
+  "capability_contract_version": 2,
+  "manifest_contract_version": 15,
+  "action_registry_schema_version": 1
+}
