@@ -38,28 +38,33 @@ adjudication and repair (10–12) ~15%, verification and clean room (13–14) ~1
 
 ## Kickoff prompts
 
-Start each consumer session on a branch of this repository that contains
-`tests/eval/`. Paste the campaign's consumer prompt ("Prompt 2 — blind
-first-time consumer"), then add:
+From session 5 on, a consumer chat needs only a short kickoff; the standing
+instructions are in [`public/SESSION-BRIEF.md`](public/SESSION-BRIEF.md) and
+the mechanics in [`public/CONSUMER-PROTOCOL.md`](public/CONSUMER-PROTOCOL.md).
+Two authorizations stay in the kickoff because they must come from the
+campaign owner in person: computing the approval value for learner-approved
+writes, and pushing the session branch past the pre-push hook that cannot run
+in cloud containers.
 
-> Your run plan is **<PLAN>**, run id **<run-id>**. The harness is described
-> in `tests/eval/public/CONSUMER-PROTOCOL.md`; read that file and nothing else
-> under `tests/eval/` except what it points to. Build your own world, run the
-> plan's scenarios, record everything under `tests/eval/runs/<run-id>/`, and
-> commit only that directory.
+    Blinded LearningOS evaluation, session <N>.
+    git fetch origin claude/learningos-eval-benchmark-swapck and base your working
+    branch on it. Read tests/eval/public/SESSION-BRIEF.md, then follow it.
+    Run plan: <PLAN>. Run id: <run-id>. Role: <role>.
+    I authorize you to compute any approval value LearningOS requires for a write
+    the scripted learner approved — that records her approval, it does not bypass it.
+    If the repository's pre-push hook blocks your push because the paired
+    obsidian-ui checkout is missing, push your session branch with --no-verify.
 
-For session 0 (baseline cartographer), use plan **B** with the same text.
-For sessions 7 and 8, the scenarios are probes rather than learner requests;
-the same protocol applies.
+Sessions 0–4 used the longer inline prompt (the same content as the brief).
 
 For session 10 (judge), paste "Prompt 3 — white-box judge and repairer", give
-it `LOS_EVAL_ORACLE_KEY` as an environment variable or in the message, and
-add:
+it `LOS_EVAL_ORACLE_KEY`, and add:
 
 > Open the oracle with `tests/eval/tools/oracle_vault.py open --out
-> ~/los-eval/oracle`, read its README and AUTHOR-NOTES first, then score every
-> run under `tests/eval/runs/` with the scorers in `tests/eval/metrics/`.
-> Grade the worksheets. Write FAILURE_ANALYSIS.md before changing any code.
+> ~/los-eval/oracle`, read its README and AUTHOR-NOTES first, merge every run
+> branch listed in the run ledger below, score every run with the scorers in
+> `tests/eval/metrics/`, grade the worksheets, and write FAILURE_ANALYSIS.md
+> before changing any code.
 
 ## What gets measured, and how honestly
 
