@@ -1,0 +1,65 @@
+{
+  "from": "S13-before",
+  "to": "S13-after",
+  "canonical": {
+    "added": [],
+    "removed": [],
+    "modified": []
+  },
+  "canonical_digest_changed": false,
+  "receipts_added": [],
+  "inflight_after": [],
+  "derived": {
+    "added": [
+      "generated/derived-state/blobs/0c948bb6302e384220460712f4781ac3264ec428a1bb7e9875434e4f15327aba",
+      "generated/derived-state/blobs/a8a94072c3f27095c48202a90d05d602eb77d044697d38ad357a3e6a99ca22a6"
+    ],
+    "removed": [],
+    "modified": [
+      "generated/derived-state/state-v1.json"
+    ],
+    "bytes_before": 1732539,
+    "bytes_after": 2071430
+  },
+  "diagnostics_added": [],
+  "ai_actions_added": [],
+  "new_operations": [],
+  "head": {
+    "before": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "after": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e"
+  },
+  "git_status_after": [
+    " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-joins-at-scale/stages/stage-df-joins-01-strategies/notes.md",
+    " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lazy-plans/stages/stage-df-lazy-02-read-explain/notes.md",
+    " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lineage/stages/stage-df-lineage-01-trace/notes.md",
+    " M curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+    " M curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+    " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l07/stages/stage-l07-01-ridge-lasso-geometry/notes.md",
+    " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l09/stages/stage-l09-02-svd-connection/notes.md",
+    " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l11/stages/stage-l11-01-backprop/notes.md",
+    " M knowledge/notes/data-systems/note-hash-join-vs-sort-merge.md",
+    " M knowledge/notes/data-systems/note-query-optimizer-cost-model.md",
+    " M knowledge/notes/machine-learning/note-ridge-regression-penalty.md",
+    " M knowledge/notes/mathematics/note-independence-vs-conditional-independence.md",
+    " M knowledge/notes/systems/note-amdahls-law.md",
+    "?? knowledge/garden/everything-is-a-dag-again.md",
+    "?? operations/transactions/idempotency.yaml",
+    "?? operations/transactions/revisions.yaml",
+    "?? operations/transactions/transaction-20260925-003900-001.yaml",
+    "?? operations/transactions/transaction-20260925-004511-001.yaml",
+    "?? operations/transactions/transaction-20260925-004514-001.yaml",
+    "?? operations/transactions/transaction-20260925-004517-001.yaml",
+    "?? operations/transactions/transaction-20260925-004520-001.yaml",
+    "?? operations/transactions/transaction-20260925-004523-001.yaml",
+    "?? operations/transactions/transaction-20260925-004526-001.yaml",
+    "?? operations/transactions/transaction-20260925-004529-001.yaml",
+    "?? operations/transactions/transaction-20260925-004532-001.yaml",
+    "?? operations/transactions/transaction-20260925-004535-001.yaml",
+    "?? operations/transactions/transaction-20260925-004945-001.yaml",
+    "?? operations/transactions/transaction-20260925-005137-001.yaml",
+    "?? operations/transactions/transaction-20260925-005140-001.yaml",
+    "?? operations/transactions/transaction-20260925-005250-001.yaml",
+    "?? operations/transactions/transaction-20260925-005253-001.yaml"
+  ],
+  "flags": []
+}

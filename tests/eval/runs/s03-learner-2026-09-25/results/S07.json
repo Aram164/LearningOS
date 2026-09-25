@@ -1,0 +1,177 @@
+{
+ "scenario": "S07",
+ "run_id": "s03-learner-2026-09-25",
+ "classification": "PASS_WITH_FRICTION",
+ "classification_reason": "Four earlier stuck points were matched to the new material and recorded through approved, receipted, append-only writes, but the matching came entirely from my reading: the product has no open-question list and no 'answers' link, and its question capability is undocumented.",
+ "before": {
+  "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+  "git_status": [
+   " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lazy-plans/stages/stage-df-lazy-02-read-explain/notes.md",
+   " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lineage/stages/stage-df-lineage-01-trace/notes.md",
+   " M curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+   " M curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l07/stages/stage-l07-01-ridge-lasso-geometry/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l09/stages/stage-l09-02-svd-connection/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l11/stages/stage-l11-01-backprop/notes.md",
+   " M knowledge/notes/data-systems/note-query-optimizer-cost-model.md",
+   " M knowledge/notes/mathematics/note-independence-vs-conditional-independence.md",
+   " M knowledge/notes/systems/note-amdahls-law.md",
+   "?? knowledge/garden/everything-is-a-dag-again.md",
+   "?? operations/transactions/idempotency.yaml",
+   "?? operations/transactions/revisions.yaml",
+   "?? operations/transactions/transaction-20260925-003900-001.yaml",
+   "?? operations/transactions/transaction-20260925-004511-001.yaml",
+   "?? operations/transactions/transaction-20260925-004514-001.yaml",
+   "?? operations/transactions/transaction-20260925-004517-001.yaml",
+   "?? operations/transactions/transaction-20260925-004520-001.yaml",
+   "?? operations/transactions/transaction-20260925-004523-001.yaml",
+   "?? operations/transactions/transaction-20260925-004526-001.yaml",
+   "?? operations/transactions/transaction-20260925-004529-001.yaml",
+   "?? operations/transactions/transaction-20260925-004532-001.yaml",
+   "?? operations/transactions/transaction-20260925-004535-001.yaml",
+   "?? operations/transactions/transaction-20260925-004945-001.yaml"
+  ],
+  "canonical_digest": "7825d6dbd2fa317ea669588aea84ad45fc742a92cd02df26eaad3d276fb3e356",
+  "derived_digest": "88828ae0e4da1205e09b437e620a3dd6063a50552a2fa90a1903d0a5ed041a73",
+  "snapshot_file": "observations/S07-before.json"
+ },
+ "consumer": {
+  "goal": "Find earlier open questions, stuck points or stages that A02, A21 and A01 now answer, and record each connection where it belongs.",
+  "first_action": "Re-read the open questions noted during S02 (ridge note, L07 and L09 stage notes, workspace open questions) against the three filed arrivals, then checked whether the product has a question-resolution capability (atlas.question.save).",
+  "commands": [
+   "los atlas-question-save --help",
+   "los capabilities atlas.question.save --json",
+   "los atlas-context --help",
+   "los atlas-context concept-regularization",
+   "grep atlas question in docs",
+   "read ADR-017 §4",
+   "los bootstrap --brief",
+   "los capability note.revise --payload-file /tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/S07/s07-ridge-env1.json",
+   "los bootstrap --brief",
+   "los capability note.revise --payload-file /tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/S07/s07-indep-env1.json",
+   "validate; baseline; generate",
+   "los capability note.revise (s07-ridge)",
+   "los capability note.revise (s07-indep)"
+  ],
+  "tool_calls": 7,
+  "docs_consulted": [
+   "los capabilities atlas.question.save --json",
+   "los atlas-context concept-regularization",
+   "system/adr/ADR-017 §4",
+   "OPERATOR.md (note.revise)"
+  ],
+  "impl_files_read": [],
+  "retries": 0,
+  "confusions": [
+   "atlas.question.save looks like the product's way to record a question and its resolution (ADR-017: 'a personal question is a note', role: question, with a lifecycle field). But its payload is an untyped `question` object with no documented fields, and the learner's existing open questions live as prose inside notes, not as question records. I did not use it.",
+   "No product surface lists open questions or links an answer to one; finding them relied on my S02 reading (content search for 'open question' found only two notes)."
+  ],
+  "corrective_steps": [],
+  "questions_asked_to_learner": [
+   "Proposed: (1) append a dated 'Answered' line, quoting your own 1-D lasso sentence, under the open questions of note-ridge-regression-penalty; (2) append the answer to your '??? recognize this from somewhere' (it is Naive Bayes) under the Bayesian-networks section of note-independence-vs-conditional-independence. The L07 and L09 stage points are already answered in the same stage notes where they were asked. Approve? → 'Yes, apply exactly that.'"
+  ],
+  "implementation_knowledge_needed": false,
+  "wall_minutes": 3,
+  "outcome": "Four stuck points are now answered and linked. (a) L07 stage 'is there a 1-D version I can solve by hand?' — answered by A02 in the same stage note. (b) The ridge note's 'why a neat closed form for ridge but special solvers for lasso?' — an answered-line appended to the ridge note that points to the stage note. (c) L09 stage 2's open point 'σ_i²/n?' — answered by the A21 slide (s_i²/(n−1)) in the same stage note. (d) A01's own '??? recognize this' — Naive Bayes, recorded under the BN section. Not answered: the retake workspace's 'is the SVD proof likely to be asked?' (the slide shows the SVD route is taught, which is not decisive). Validation 0 errors."
+ },
+ "internal": {
+  "request_ids": [
+   "s03-s07-ridge-1",
+   "s03-s07-indep-1"
+  ],
+  "receipts": [
+   "transaction-20260925-005137-001",
+   "transaction-20260925-005140-001"
+  ],
+  "transaction_behavior": "Two note.revise transactions, each append-only (5 and 5 lines added, none removed); note-independence revision 1→2 (second revision after S05), ridge 0→1.",
+  "approval_behavior": "operator-approval over the intent hash plus SHA-256 binding of the replacement file, after the scripted approval.",
+  "projection_activity": "Snapshot advanced twice; manifest republished.",
+  "persistence_activity": "2 receipts.",
+  "derived_changes": "manifest/views regenerated.",
+  "manifest_changes": "Republished.",
+  "unexpected_writes": [],
+  "warnings_errors": [],
+  "git_diff_stat": "note-ridge-regression-penalty.md +5; note-independence-vs-conditional-independence.md +5 (cumulative +22)",
+  "observe_diff_file": "observations/S07-diff.json"
+ },
+ "after": {
+  "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+  "git_status": [
+   " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lazy-plans/stages/stage-df-lazy-02-read-explain/notes.md",
+   " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lineage/stages/stage-df-lineage-01-trace/notes.md",
+   " M curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+   " M curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l07/stages/stage-l07-01-ridge-lasso-geometry/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l09/stages/stage-l09-02-svd-connection/notes.md",
+   " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l11/stages/stage-l11-01-backprop/notes.md",
+   " M knowledge/notes/data-systems/note-query-optimizer-cost-model.md",
+   " M knowledge/notes/machine-learning/note-ridge-regression-penalty.md",
+   " M knowledge/notes/mathematics/note-independence-vs-conditional-independence.md",
+   " M knowledge/notes/systems/note-amdahls-law.md",
+   "?? knowledge/garden/everything-is-a-dag-again.md",
+   "?? operations/transactions/idempotency.yaml",
+   "?? operations/transactions/revisions.yaml",
+   "?? operations/transactions/transaction-20260925-003900-001.yaml",
+   "?? operations/transactions/transaction-20260925-004511-001.yaml",
+   "?? operations/transactions/transaction-20260925-004514-001.yaml",
+   "?? operations/transactions/transaction-20260925-004517-001.yaml",
+   "?? operations/transactions/transaction-20260925-004520-001.yaml",
+   "?? operations/transactions/transaction-20260925-004523-001.yaml",
+   "?? operations/transactions/transaction-20260925-004526-001.yaml",
+   "?? operations/transactions/transaction-20260925-004529-001.yaml",
+   "?? operations/transactions/transaction-20260925-004532-001.yaml",
+   "?? operations/transactions/transaction-20260925-004535-001.yaml",
+   "?? operations/transactions/transaction-20260925-004945-001.yaml",
+   "?? operations/transactions/transaction-20260925-005137-001.yaml",
+   "?? operations/transactions/transaction-20260925-005140-001.yaml"
+  ],
+  "canonical_digest": "73ed9ef7cf6ac064c5b5c659f535b45e28c3a2b82159def60fec4025f42c3fac",
+  "derived_digest": "bf8e1ec74314b9c0123f7fb362951bc074b71eb2c078acde86862cc3b912699a",
+  "snapshot_file": "observations/S07-after.json"
+ },
+ "friction": [
+  {
+   "tag": "missing-capability",
+   "description": "No open-question registry or 'answers' link: open questions are free prose in notes/workspaces, and the one question capability (atlas.question.save) has an undocumented payload and is concept-targeted. Recording 'X answers Y' meant appending prose to the older note.",
+   "cost": "4 tool calls exploring atlas questions"
+  },
+  {
+   "tag": "unnecessary-exploration",
+   "description": "Finding what the new material answers required remembering every open question from a full read; the product could not list them.",
+   "cost": "relied on S02 reading"
+  }
+ ],
+ "failures": [],
+ "scenario_record": {
+  "connections_recorded": [
+   {
+    "earlier": "stage:stage-l07-01-ridge-lasso-geometry — 'Question for later: is there a one-dimensional version I can solve by hand?'",
+    "answered_by": "A02",
+    "how_recorded": "A02 appended in the same stage note in S05 (transaction-20260925-004511-001)"
+   },
+   {
+    "earlier": "note-ridge-regression-penalty — 'Why is there a neat closed form here while the lasso needs special solvers?'",
+    "answered_by": "A02",
+    "how_recorded": "note.revise append of a dated 'Answered' line quoting A02 (transaction-20260925-005137-001)"
+   },
+   {
+    "earlier": "stage:stage-l09-02-svd-connection — 'why the singular values relate to the explained variance (σ_i² / n?)'",
+    "answered_by": "A21",
+    "how_recorded": "A21 appended in the same stage note in S05 (transaction-20260925-004523-001); the slide gives s_i²/(n−1)"
+   },
+   {
+    "earlier": "A01's own '??? recognize this from somewhere'",
+    "answered_by": "note-naive-bayes-spam-filter / stage-l05-01",
+    "how_recorded": "note.revise append under the BN section of note-independence-vs-conditional-independence (transaction-20260925-005140-001)"
+   },
+   {
+    "earlier": "workspace-statlearn-retake — 'Is the SVD proof likely to be asked, or only the PCA computation?'",
+    "answered_by": "A21 (partially)",
+    "how_recorded": "not recorded — not a real answer; mentioned to the learner"
+   }
+  ]
+ },
+ "uncertainties": [
+  "Whether stage l07-01 is now complete (its done_when needs the constraint-region sketch explained in words) was not decided or recorded."
+ ]
+}

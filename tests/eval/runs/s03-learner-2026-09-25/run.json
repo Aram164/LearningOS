@@ -1,0 +1,63 @@
+{
+ "run_id": "s03-learner-2026-09-25",
+ "plan": "L",
+ "session_role": "blind-consumer-learner",
+ "persona": "serious learner's operator meeting the installation for the first time; wants new material connected to everything learned before",
+ "blind": true,
+ "started": "2026-09-25T00:14:09Z",
+ "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+ "eval_revision": "3a53589545d74df25d691f4beac4d0097ed313d7",
+ "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+ "world_build": {
+  "builder_version": 1,
+  "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+  "product_revision_requested": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+  "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+  "scale": 0,
+  "seed": 20260924,
+  "timeline": {
+   "start": "2026-04-06",
+   "as_of": "2026-09-18"
+  },
+  "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+  "commits": 133,
+  "notes": 116,
+  "arrivals": 30,
+  "paths": {
+   "repository": "/root/los-eval/s03-learner-2026-09-25/LearningOS/repository",
+   "materials": "/root/los-eval/s03-learner-2026-09-25/LearningOS/materials",
+   "drop": "/root/los-eval/s03-learner-2026-09-25/eval-drop"
+  },
+  "validation": "0 error(s), 3 warning(s) — OK (0.4s)",
+  "validate_exit": 0,
+  "generate_exit": 0
+ },
+ "environment": {
+  "os": "Linux 6.18 (cloud container)",
+  "python_for_world": "/tmp/evalenv (Python 3.13 venv with pyyaml, jsonschema, pypdf)",
+  "world_path": "~/los-eval/s03-learner-2026-09-25",
+  "clock": "container clock UTC; world timeline as_of 2026-09-18, real date 2026-09-25",
+  "status": "COMPLETE — all plan L scenarios run",
+  "TRACEPARENT": "The container exports a W3C TRACEPARENT; LearningOS adopted it for every call until mid-S05, after which los ran with it unset (see F-s03-diag-ambiguous-01)."
+ },
+ "scenarios": [
+  "S02",
+  "S03",
+  "S04",
+  "S05",
+  "S06",
+  "S07",
+  "S08",
+  "S13"
+ ],
+ "deviations": [
+  "Interim checkpoints were committed and pushed at the user's request mid-run (after S04, S06, S08); the final commit supersedes them.",
+  "Agent model identifier deliberately not recorded in this pushed artifact (session policy forbids model ids in repository artifacts).",
+  "S03 'fresh' world obtained by `git reset --hard && git clean -fd` inside the world (per protocol §2); gitignored generated views from S02 remained, canonical state was the initial commit.",
+  "Generated views (`make views`) were built in S02 with PYTHON=/tmp/evalenv/bin/python because the world has no .venv; this is a derived-state write only.",
+  "Wall-clock minutes come from the container clock and may undercount thinking time between tool calls.",
+  "From mid-S05 onwards, los was run with TRACEPARENT unset (env -u TRACEPARENT) so that diagnostics stay per-request; earlier traces are merged under the inherited trace id.",
+  "The user explicitly authorized computing the GatewayEnvelopeV2 approval value (intent_sha256) for writes the scripted learner approved; I did this for every write, only after the scripted approval."
+ ],
+ "finished": "2026-09-25T00:56:00Z"
+}

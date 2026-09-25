@@ -1,0 +1,24 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s07-ridge-1",
+ "idempotency_key": "s03-s07-ridge-k1",
+ "capability": "note.revise",
+ "ok": true,
+ "replayed": false,
+ "transaction_id": "transaction-20260925-005137-001",
+ "receipt_path": "operations/transactions/transaction-20260925-005137-001.yaml",
+ "snapshot_after": "sha256:b3ad103c38055f8f43ec856ddd172ce33f13f99c5bee8800f8cd85a2716ed631",
+ "result": {
+  "ok": true,
+  "note_id": "note-ridge-regression-penalty",
+  "path": "knowledge/notes/machine-learning/note-ridge-regression-penalty.md",
+  "transaction_id": "transaction-20260925-005137-001",
+  "receipt_path": "operations/transactions/transaction-20260925-005137-001.yaml",
+  "artifact_revisions": {
+   "note-ridge-regression-penalty": 1
+  },
+  "snapshot_after": "sha256:b3ad103c38055f8f43ec856ddd172ce33f13f99c5bee8800f8cd85a2716ed631",
+  "replayed": false
+ },
+ "error": null
+}

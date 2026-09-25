@@ -1,0 +1,17 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s06-A18-1",
+ "idempotency_key": "s03-s06-A18-k1",
+ "capability": "garden.seed.create",
+ "channel": "operator",
+ "expected_snapshot": "sha256:84d44bb5a8fd87da4fb723ee89a0cd1ac4e0a51fcecf09dcf56041485a145950",
+ "expected_revisions": {},
+ "approval": {
+  "kind": "operator-approval",
+  "subject_sha256": "sha256:20266a6f6f625c29363dde5a3f1a36a7ff1f337a53267d1196192a97b1a7abc4"
+ },
+ "payload": {
+  "text": "Everything I touch is a DAG: git, make, Airflow, query plans, autograd graphs.\nMaybe one note about topological order and cycle detection across all of them?\n#pattern #cs\n\n(Captured again from the phone on 2026-09-25 — same thread as everything-is-a-dag.md from 2026-08-07.)\n",
+  "title": "Everything is a DAG (again)"
+ }
+}

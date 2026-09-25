@@ -1,0 +1,64 @@
+{
+  "from": "S04-before",
+  "to": "S04-after",
+  "canonical": {
+    "added": [
+      "operations/transactions/idempotency.yaml",
+      "operations/transactions/revisions.yaml",
+      "operations/transactions/transaction-20260925-003900-001.yaml"
+    ],
+    "removed": [],
+    "modified": [
+      "curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md"
+    ]
+  },
+  "canonical_digest_changed": true,
+  "receipts_added": [
+    "operations/transactions/idempotency.yaml",
+    "operations/transactions/revisions.yaml",
+    "operations/transactions/transaction-20260925-003900-001.yaml"
+  ],
+  "inflight_after": [],
+  "derived": {
+    "added": [
+      "generated/reports/validation-report.md"
+    ],
+    "removed": [],
+    "modified": [
+      "generated/backlinks.json",
+      "generated/manifest.json"
+    ],
+    "bytes_before": 983267,
+    "bytes_after": 985995
+  },
+  "diagnostics_added": [
+    "operations/diagnostics/traces.jsonl"
+  ],
+  "ai_actions_added": [],
+  "new_operations": [
+    {
+      "trace_id": "44fafdf2364addbc4ef55dd120a03f0a",
+      "request_id": "s03-s04-a09-stage-note-1",
+      "capability": "stage.note.write",
+      "started_at": 1790296700.2862165,
+      "duration_ms": 41116.2,
+      "attempts": 3,
+      "replayed": true,
+      "first_failure_stage": "core.approval",
+      "canonical_outcome": "AMBIGUOUS",
+      "recovery_requirement": "reconcile-exact-request",
+      "needs_attention": true
+    }
+  ],
+  "head": {
+    "before": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "after": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e"
+  },
+  "git_status_after": [
+    " M curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+    "?? operations/transactions/idempotency.yaml",
+    "?? operations/transactions/revisions.yaml",
+    "?? operations/transactions/transaction-20260925-003900-001.yaml"
+  ],
+  "flags": []
+}

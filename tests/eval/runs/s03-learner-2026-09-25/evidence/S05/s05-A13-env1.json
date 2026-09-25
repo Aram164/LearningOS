@@ -1,0 +1,20 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s05-A13-1",
+ "idempotency_key": "s03-s05-A13-k1",
+ "capability": "note.revise",
+ "channel": "operator",
+ "expected_snapshot": "sha256:cd551988ae4542cd2940cfceca3c64234a9374c6d4f4521c81ea750a338ccf30",
+ "expected_revisions": {
+  "note-amdahls-law": 0
+ },
+ "approval": {
+  "kind": "operator-approval",
+  "subject_sha256": "sha256:d5e5d7f154afa87d371f9a2ec10b3c3fc0498f685821ef1c0214fa72ed6d2ec1"
+ },
+ "payload": {
+  "note_id": "note-amdahls-law",
+  "file": "/tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/S05/A13-note.md",
+  "file_sha256": "sha256:c4c14e046856d2f34c4a08f707bb059c02264cec2b457e57a590b9f74075b299"
+ }
+}

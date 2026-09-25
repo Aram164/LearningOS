@@ -1,0 +1,18 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s06-A18-1",
+ "idempotency_key": "s03-s06-A18-k1",
+ "capability": "garden.seed.create",
+ "ok": false,
+ "replayed": false,
+ "transaction_id": null,
+ "receipt_path": null,
+ "snapshot_after": null,
+ "result": {},
+ "error": {
+  "code": "INVALID_REQUEST",
+  "message": "GatewayEnvelopeV2 expected_revisions must cover exactly every transaction artifact (missing=['garden-request:s03-s06-A18-k1'], unexpected=[])",
+  "retryable": false,
+  "details": {}
+ }
+}

@@ -1,0 +1,20 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s04-a09-stage-note-1",
+ "idempotency_key": "s03-s04-a09-stage-note",
+ "capability": "stage.note.write",
+ "channel": "operator",
+ "expected_snapshot": "sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e",
+ "expected_revisions": {
+  "study-map-os-l07": 0
+ },
+ "approval": {
+  "kind": "operator-approval",
+  "subject_sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+ },
+ "payload": {
+  "unit_id": "unit-os-l07",
+  "stage_id": "stage-os-l07-01-deadlock",
+  "text": "\n## Real-world example — friend's internship message (received 2026-09-22, filed by the operator)\n\n> \"our migration script deadlocked in Postgres: transaction 1 updates accounts\n> then ledger, transaction 2 updates ledger then accounts. postgres killed one\n> of them with 'deadlock detected'. fix was to always touch tables in the same\n> order\" — that's literally the exam question\n\nConnects to: note-deadlock-four-conditions (a global lock order breaks circular\nwait), note-two-phase-locking-deadlocks (waits-for graph; the database aborts a\nvictim — Postgres's \"deadlock detected\"), and the collected oral question in\nwork/inbox/20260915-os-oral-questions.md (\"How can deadlock be prevented? Which\ncondition would you break in practice?\").\n"
+ }
+}

@@ -1,0 +1,20 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s08-hashjoin-1",
+ "idempotency_key": "s03-s08-hashjoin-k1",
+ "capability": "note.revise",
+ "channel": "operator",
+ "expected_snapshot": "sha256:17caee03bedf0cffc7dacbf278d2e1438cc612ccf3b8643429a6d8a9e5e86c60",
+ "expected_revisions": {
+  "note-hash-join-vs-sort-merge": 0
+ },
+ "approval": {
+  "kind": "operator-approval",
+  "subject_sha256": "sha256:6e4a16ef18614097ef47295b94e0ca878d74c25a0d73cfa7589be66d42294ce3"
+ },
+ "payload": {
+  "note_id": "note-hash-join-vs-sort-merge",
+  "file": "/tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/S08/hashjoin.md",
+  "file_sha256": "sha256:8854b03d23ba7b219df623691c9ddf04f519d68192a6fd0a3cbb3c760fe03b17"
+ }
+}
