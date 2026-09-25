@@ -1,0 +1,331 @@
+02:16:05 python tools/los.py related --help
+02:16:05 python tools/los.py search --help
+02:16:05 python tools/los.py inspect --help
+02:16:05 python tools/los.py note-read --help
+02:16:05 python tools/los.py semantic --help
+02:16:10 python tools/los.py related note-naive-bayes-spam-filter
+02:16:17 python tools/los.py inspect note-naive-bayes-spam-filter
+02:16:22 python tools/los.py note-read note-naive-bayes-spam-filter
+02:16:27 python tools/los.py related concept-naive-bayes
+02:16:28 python tools/los.py inspect concept-naive-bayes
+02:16:35 python tools/los.py semantic --list
+02:17:01 python tools/los.py search naive bayes --limit 20
+02:17:01 python tools/los.py search spam --content --limit 20
+02:17:08 python tools/los.py search dag --limit 30
+02:17:08 python tools/los.py search tessera --limit 30
+02:17:09 python tools/los.py search proportional share --limit 30
+02:17:22 python tools/los.py atlas-context --help
+02:17:22 python tools/los.py inspect garden:everything-is-a-dag.md
+02:17:22 python tools/los.py inspect everything-is-a-dag
+02:17:23 python tools/los.py related garden:everything-is-a-dag.md
+02:17:31 python tools/los.py bootstrap --brief
+02:17:38 python tools/los.py bootstrap --compact
+02:17:44 python tools/los.py search  --type note --limit 5
+02:17:45 python tools/los.py search * --type note --limit 5
+02:17:56 python tools/los.py bootstrap
+02:18:03 python tools/los.py intelligence-scan --brief --json
+02:18:16 python tools/los.py search  --type note --limit 200
+02:18:17 python tools/los.py inspect note-acid-consistency note-adam-always-better note-adam-vs-sgd-revisited note-algebraic-equivalences-pushdown note-amdahls-law note-b-plus-tree-indexes note-backprop-as-bookkeeping note-batchnorm-internal-covariate-shift note-batchnorm-why-it-works-contested note-bias-variance-decomposition-lecture note-bias-variance-from-book note-bloom-filter-false-positive-math note-buffer-pool-replacement note-build-systems-dag-incremental note-caching-everywhere note-cap-consistency-linearizability note-central-limit-theorem-simulation note-cfs-fair-share note-chain-rule-multivariable note-cnn-convolution-kernels
+02:18:17 python tools/los.py inspect note-columnar-storage-compression note-compiler-pipeline-overview note-conditional-probability-basics note-consistent-estimators note-constant-folding-cse note-context-switch-cost note-convexity-basics note-covariance-matrix note-cpu-cache-locality note-cpu-instruction-pipeline note-cpu-scheduling-round-robin note-cross-validation-kfold note-data-leakage-scaler note-data-lineage-debugging note-data-parallel-training-scaling note-data-pipeline-orchestration-dag note-db-exam-cheatsheet note-db-normalization-3nf note-deadlock-four-conditions note-decision-trees-entropy
+02:18:18 python tools/los.py inspect note-dominant-resource-fairness-paper note-dynamic-batching-inference note-dynamic-programming-memoization note-eigenvectors-intuition note-error-handling-result-types note-event-sourcing-append-only note-external-merge-sort note-forward-mode-autodiff-dual-numbers note-garbage-collection-generational note-gaussian-noise-least-squares note-generative-vs-discriminative note-git-internals-content-addressing note-gradient-descent-from-scratch note-hash-join-vs-sort-merge note-hmm-viterbi note-how-i-take-notes note-idempotency-keys-api note-idempotent-pipelines-backfills note-independence-vs-conditional-independence note-journaling-filesystems
+02:18:18 python tools/los.py inspect note-kafka-consumer-lag-backpressure note-kernel-density-estimation note-kv-cache-transformer-serving note-lasso-sparsity-geometry note-lazy-evaluation-query-plans note-linear-regression-normal-equation note-logistic-regression-cross-entropy note-low-rank-approximation note-lsm-trees note-map-estimation-priors note-markov-chains-stationary note-matrix-factorization-recommenders note-mixed-precision-training note-mle-coin-flips note-multi-tenant-gpu-sharing note-naive-bayes-spam-filter note-normal-distribution-standardizing note-oral-exam-prep-strategy note-os-kernel-user-mode note-os-scheduling-exercise-bank
+02:18:19 python tools/los.py inspect note-overfitting-polynomial-degree note-p-values-corrected note-p-values-first-take note-page-replacement-lru-clock note-parallel-workers-no-speedup note-pca-by-hand note-pomodoro-and-context-switching note-priority-inversion note-property-based-testing note-query-optimizer-cost-model note-queueing-littles-law note-regression-metrics note-regression-testing-snapshots note-relational-algebra-operators note-ridge-regression-penalty note-rust-ownership-borrowing note-selinger-join-ordering note-semaphores-producer-consumer note-semester-review-july note-sgd-momentum-nn-training
+02:18:19 python tools/los.py inspect note-simulated-annealing note-softmax-temperature note-spaced-repetition-scheduler note-ssa-form note-statlearn-mock-exam-september note-study-plan-retake-strategy note-svd-geometric note-svm-kernel-trick note-tagless-visitor-pattern-ast note-two-phase-locking-deadlocks note-type-inference-unification note-virtual-memory-address-translation note-virtual-memory-is-swap note-weekly-review-log note-why-provenance-paper note-write-ahead-logging-aries
+02:18:36 python tools/los.py note-read note-acid-consistency --limit 16000
+02:18:37 python tools/los.py note-read note-adam-always-better --limit 16000
+02:18:37 python tools/los.py note-read note-adam-vs-sgd-revisited --limit 16000
+02:18:37 python tools/los.py note-read note-algebraic-equivalences-pushdown --limit 16000
+02:18:37 python tools/los.py note-read note-amdahls-law --limit 16000
+02:18:37 python tools/los.py note-read note-b-plus-tree-indexes --limit 16000
+02:18:38 python tools/los.py note-read note-backprop-as-bookkeeping --limit 16000
+02:18:38 python tools/los.py note-read note-batchnorm-internal-covariate-shift --limit 16000
+02:18:38 python tools/los.py note-read note-batchnorm-why-it-works-contested --limit 16000
+02:18:38 python tools/los.py note-read note-bias-variance-decomposition-lecture --limit 16000
+02:18:39 python tools/los.py note-read note-bias-variance-from-book --limit 16000
+02:18:39 python tools/los.py note-read note-bloom-filter-false-positive-math --limit 16000
+02:18:39 python tools/los.py note-read note-buffer-pool-replacement --limit 16000
+02:18:39 python tools/los.py note-read note-build-systems-dag-incremental --limit 16000
+02:18:40 python tools/los.py note-read note-caching-everywhere --limit 16000
+02:18:40 python tools/los.py note-read note-cap-consistency-linearizability --limit 16000
+02:18:40 python tools/los.py note-read note-central-limit-theorem-simulation --limit 16000
+02:18:40 python tools/los.py note-read note-cfs-fair-share --limit 16000
+02:18:41 python tools/los.py note-read note-chain-rule-multivariable --limit 16000
+02:18:41 python tools/los.py note-read note-cnn-convolution-kernels --limit 16000
+02:18:41 python tools/los.py note-read note-columnar-storage-compression --limit 16000
+02:18:41 python tools/los.py note-read note-compiler-pipeline-overview --limit 16000
+02:18:42 python tools/los.py note-read note-conditional-probability-basics --limit 16000
+02:18:42 python tools/los.py note-read note-consistent-estimators --limit 16000
+02:18:42 python tools/los.py note-read note-constant-folding-cse --limit 16000
+02:18:42 python tools/los.py note-read note-context-switch-cost --limit 16000
+02:18:42 python tools/los.py note-read note-convexity-basics --limit 16000
+02:18:43 python tools/los.py note-read note-covariance-matrix --limit 16000
+02:18:43 python tools/los.py note-read note-cpu-cache-locality --limit 16000
+02:18:43 python tools/los.py note-read note-cpu-instruction-pipeline --limit 16000
+02:18:43 python tools/los.py note-read note-cpu-scheduling-round-robin --limit 16000
+02:18:44 python tools/los.py note-read note-cross-validation-kfold --limit 16000
+02:18:44 python tools/los.py note-read note-data-leakage-scaler --limit 16000
+02:18:44 python tools/los.py note-read note-data-lineage-debugging --limit 16000
+02:18:44 python tools/los.py note-read note-data-parallel-training-scaling --limit 16000
+02:18:45 python tools/los.py note-read note-data-pipeline-orchestration-dag --limit 16000
+02:18:45 python tools/los.py note-read note-db-exam-cheatsheet --limit 16000
+02:18:45 python tools/los.py note-read note-db-normalization-3nf --limit 16000
+02:18:45 python tools/los.py note-read note-deadlock-four-conditions --limit 16000
+02:18:46 python tools/los.py note-read note-decision-trees-entropy --limit 16000
+02:18:46 python tools/los.py note-read note-dominant-resource-fairness-paper --limit 16000
+02:18:46 python tools/los.py note-read note-dynamic-batching-inference --limit 16000
+02:18:46 python tools/los.py note-read note-dynamic-programming-memoization --limit 16000
+02:18:46 python tools/los.py note-read note-eigenvectors-intuition --limit 16000
+02:18:47 python tools/los.py note-read note-error-handling-result-types --limit 16000
+02:18:47 python tools/los.py note-read note-event-sourcing-append-only --limit 16000
+02:18:47 python tools/los.py note-read note-external-merge-sort --limit 16000
+02:18:47 python tools/los.py note-read note-forward-mode-autodiff-dual-numbers --limit 16000
+02:18:48 python tools/los.py note-read note-garbage-collection-generational --limit 16000
+02:18:48 python tools/los.py note-read note-gaussian-noise-least-squares --limit 16000
+02:18:48 python tools/los.py note-read note-generative-vs-discriminative --limit 16000
+02:18:48 python tools/los.py note-read note-git-internals-content-addressing --limit 16000
+02:18:49 python tools/los.py note-read note-gradient-descent-from-scratch --limit 16000
+02:18:49 python tools/los.py note-read note-hash-join-vs-sort-merge --limit 16000
+02:18:49 python tools/los.py note-read note-hmm-viterbi --limit 16000
+02:18:49 python tools/los.py note-read note-how-i-take-notes --limit 16000
+02:18:50 python tools/los.py note-read note-idempotency-keys-api --limit 16000
+02:18:50 python tools/los.py note-read note-idempotent-pipelines-backfills --limit 16000
+02:18:50 python tools/los.py note-read note-independence-vs-conditional-independence --limit 16000
+02:18:50 python tools/los.py note-read note-journaling-filesystems --limit 16000
+02:18:50 python tools/los.py note-read note-kafka-consumer-lag-backpressure --limit 16000
+02:18:51 python tools/los.py note-read note-kernel-density-estimation --limit 16000
+02:18:51 python tools/los.py note-read note-kv-cache-transformer-serving --limit 16000
+02:18:51 python tools/los.py note-read note-lasso-sparsity-geometry --limit 16000
+02:18:51 python tools/los.py note-read note-lazy-evaluation-query-plans --limit 16000
+02:18:52 python tools/los.py note-read note-linear-regression-normal-equation --limit 16000
+02:18:52 python tools/los.py note-read note-logistic-regression-cross-entropy --limit 16000
+02:18:52 python tools/los.py note-read note-low-rank-approximation --limit 16000
+02:18:52 python tools/los.py note-read note-lsm-trees --limit 16000
+02:18:53 python tools/los.py note-read note-map-estimation-priors --limit 16000
+02:18:53 python tools/los.py note-read note-markov-chains-stationary --limit 16000
+02:18:53 python tools/los.py note-read note-matrix-factorization-recommenders --limit 16000
+02:18:53 python tools/los.py note-read note-mixed-precision-training --limit 16000
+02:18:54 python tools/los.py note-read note-mle-coin-flips --limit 16000
+02:18:54 python tools/los.py note-read note-multi-tenant-gpu-sharing --limit 16000
+02:18:54 python tools/los.py note-read note-naive-bayes-spam-filter --limit 16000
+02:18:54 python tools/los.py note-read note-normal-distribution-standardizing --limit 16000
+02:18:55 python tools/los.py note-read note-oral-exam-prep-strategy --limit 16000
+02:18:55 python tools/los.py note-read note-os-kernel-user-mode --limit 16000
+02:18:55 python tools/los.py note-read note-os-scheduling-exercise-bank --limit 16000
+02:18:55 python tools/los.py note-read note-overfitting-polynomial-degree --limit 16000
+02:18:56 python tools/los.py note-read note-p-values-corrected --limit 16000
+02:18:56 python tools/los.py note-read note-p-values-first-take --limit 16000
+02:18:56 python tools/los.py note-read note-page-replacement-lru-clock --limit 16000
+02:18:56 python tools/los.py note-read note-parallel-workers-no-speedup --limit 16000
+02:18:57 python tools/los.py note-read note-pca-by-hand --limit 16000
+02:18:57 python tools/los.py note-read note-pomodoro-and-context-switching --limit 16000
+02:18:57 python tools/los.py note-read note-priority-inversion --limit 16000
+02:18:57 python tools/los.py note-read note-property-based-testing --limit 16000
+02:18:57 python tools/los.py note-read note-query-optimizer-cost-model --limit 16000
+02:18:58 python tools/los.py note-read note-queueing-littles-law --limit 16000
+02:18:58 python tools/los.py note-read note-regression-metrics --limit 16000
+02:18:58 python tools/los.py note-read note-regression-testing-snapshots --limit 16000
+02:18:58 python tools/los.py note-read note-relational-algebra-operators --limit 16000
+02:18:59 python tools/los.py note-read note-ridge-regression-penalty --limit 16000
+02:18:59 python tools/los.py note-read note-rust-ownership-borrowing --limit 16000
+02:18:59 python tools/los.py note-read note-selinger-join-ordering --limit 16000
+02:18:59 python tools/los.py note-read note-semaphores-producer-consumer --limit 16000
+02:19:00 python tools/los.py note-read note-semester-review-july --limit 16000
+02:19:00 python tools/los.py note-read note-sgd-momentum-nn-training --limit 16000
+02:19:00 python tools/los.py note-read note-simulated-annealing --limit 16000
+02:19:00 python tools/los.py note-read note-softmax-temperature --limit 16000
+02:19:01 python tools/los.py note-read note-spaced-repetition-scheduler --limit 16000
+02:19:01 python tools/los.py note-read note-ssa-form --limit 16000
+02:19:01 python tools/los.py note-read note-statlearn-mock-exam-september --limit 16000
+02:19:01 python tools/los.py note-read note-study-plan-retake-strategy --limit 16000
+02:19:01 python tools/los.py note-read note-svd-geometric --limit 16000
+02:19:02 python tools/los.py note-read note-svm-kernel-trick --limit 16000
+02:19:02 python tools/los.py note-read note-tagless-visitor-pattern-ast --limit 16000
+02:19:02 python tools/los.py note-read note-two-phase-locking-deadlocks --limit 16000
+02:19:02 python tools/los.py note-read note-type-inference-unification --limit 16000
+02:19:03 python tools/los.py note-read note-virtual-memory-address-translation --limit 16000
+02:19:03 python tools/los.py note-read note-virtual-memory-is-swap --limit 16000
+02:19:03 python tools/los.py note-read note-weekly-review-log --limit 16000
+02:19:03 python tools/los.py note-read note-why-provenance-paper --limit 16000
+02:19:04 python tools/los.py note-read note-write-ahead-logging-aries --limit 16000
+02:19:26 python tools/los.py search  --type workspace --limit 100
+02:19:27 python tools/los.py search  --type project --limit 100
+02:19:27 python tools/los.py search  --type stage --limit 100
+02:19:28 python tools/los.py search  --type study-map --limit 100
+02:19:28 python tools/los.py search  --type unit --limit 100
+02:19:35 python tools/los.py inspect study-map-dataframes-joins study-map-dataframes-lazy-plans study-map-dataframes-lineage study-map-linalg-svd study-map-os-l02 study-map-os-l05 study-map-os-l07 study-map-statlearn-l05 study-map-statlearn-l07 study-map-statlearn-l09 study-map-statlearn-l11
+02:19:55 python tools/los.py inspect workspace-dataframe-skill workspace-dbsys-exam workspace-ledgerline workspace-linalg-refresh workspace-os-oral-prep workspace-statlearn-retake workspace-tessera-engine project-ledgerline project-tessera
+02:20:13 python tools/los.py search Conditional independence --content --limit 20
+02:20:13 python tools/los.py search fair share --limit 20
+02:20:14 python tools/los.py related concept-proportional-share
+02:20:24 python tools/los.py related source-kleppmann-ddia
+02:20:25 python tools/los.py related workspace-os-oral-prep
+02:20:25 python tools/los.py related unit-os-l02
+02:20:51 python tools/los.py related note-naive-bayes-spam-filter
+02:20:52 python tools/los.py related concept-naive-bayes
+02:20:52 python tools/los.py related concept-bayes-theorem
+02:20:53 python tools/los.py related source-murphy-pml1
+02:20:53 python tools/los.py related source-tuh-statlearn-slides
+02:20:54 python tools/los.py search naive bayes --limit 30
+02:20:54 python tools/los.py search independence assumption --limit 30
+02:20:55 python tools/los.py search independen --type note --content --limit 30
+02:20:55 python tools/los.py search smoothing --type note --content --limit 30
+02:20:56 python tools/los.py related note-map-estimation-priors
+02:20:56 python tools/los.py related concept-bayes-theorem
+02:20:56 python tools/los.py related concept-map-estimation
+02:20:57 python tools/los.py related concept-conditional-probability
+02:20:57 python tools/los.py related concept-naive-bayes
+02:20:58 python tools/los.py related concept-maximum-likelihood
+02:20:58 python tools/los.py related source-murphy-pml1
+02:20:59 python tools/los.py search MAP estimation --limit 30
+02:20:59 python tools/los.py search prior --limit 30
+02:21:00 python tools/los.py search prior --type note --content --limit 30
+02:21:00 python tools/los.py search penalty --type note --content --limit 30
+02:21:01 python tools/los.py related note-parallel-workers-no-speedup
+02:21:01 python tools/los.py search parallel speedup --limit 30
+02:21:01 python tools/los.py search workers --limit 30
+02:21:02 python tools/los.py search speedup --type note --content --limit 30
+02:21:02 python tools/los.py search serial --type note --content --limit 30
+02:21:03 python tools/los.py related note-cfs-fair-share
+02:21:03 python tools/los.py related concept-cpu-scheduling
+02:21:04 python tools/los.py related concept-proportional-share
+02:21:04 python tools/los.py related concept-context-switch
+02:21:05 python tools/los.py related source-ostep
+02:21:05 python tools/los.py related source-tuh-os-slides
+02:21:06 python tools/los.py search fair share --limit 30
+02:21:06 python tools/los.py search proportional share --limit 30
+02:21:06 python tools/los.py search fair --type note --content --limit 30
+02:21:07 python tools/los.py search weighted share --type note --content --limit 30
+02:21:07 python tools/los.py related note-write-ahead-logging-aries
+02:21:08 python tools/los.py related concept-transactions-acid
+02:21:08 python tools/los.py related concept-write-ahead-logging
+02:21:09 python tools/los.py related concept-two-phase-locking
+02:21:09 python tools/los.py related source-garcia-molina-db
+02:21:10 python tools/los.py related source-mohan-aries-1992
+02:21:10 python tools/los.py related source-tuh-dbsys-slides
+02:21:11 python tools/los.py search write-ahead logging --limit 30
+02:21:11 python tools/los.py search crash recovery --limit 30
+02:21:12 python tools/los.py search crash --type note --content --limit 30
+02:21:12 python tools/los.py search log --type note --content --limit 30
+02:21:12 python tools/los.py related note-selinger-join-ordering
+02:21:13 python tools/los.py related concept-join-algorithms
+02:21:13 python tools/los.py related concept-query-optimization
+02:21:14 python tools/los.py related concept-cardinality-estimation
+02:21:14 python tools/los.py related concept-relational-algebra
+02:21:15 python tools/los.py related source-selinger-1979
+02:21:15 python tools/los.py related source-tuh-dbsys-slides
+02:21:16 python tools/los.py search join ordering --limit 30
+02:21:16 python tools/los.py search dynamic programming --limit 30
+02:21:17 python tools/los.py search join order --type note --content --limit 30
+02:21:17 python tools/los.py search subproblem --type note --content --limit 30
+02:21:17 python tools/los.py related note-query-optimizer-cost-model
+02:21:18 python tools/los.py related concept-cardinality-estimation
+02:21:18 python tools/los.py related concept-query-optimization
+02:21:19 python tools/los.py related concept-join-algorithms
+02:21:19 python tools/los.py related concept-relational-algebra
+02:21:20 python tools/los.py related source-selinger-1979
+02:21:20 python tools/los.py related source-tuh-dbsys-slides
+02:21:21 python tools/los.py search selectivity --limit 30
+02:21:21 python tools/los.py search cardinality estimation --limit 30
+02:21:22 python tools/los.py search independen --type note --content --limit 30
+02:21:22 python tools/los.py search estimat --type note --content --limit 30
+02:21:22 python tools/los.py related note-low-rank-approximation
+02:21:23 python tools/los.py related concept-low-rank-approximation
+02:21:23 python tools/los.py related concept-svd
+02:21:24 python tools/los.py related concept-eigendecomposition
+02:21:24 python tools/los.py related source-strang-linalg
+02:21:25 python tools/los.py search low-rank --limit 30
+02:21:25 python tools/los.py search singular value --limit 30
+02:21:26 python tools/los.py search rank --type note --content --limit 30
+02:21:26 python tools/los.py search missing --type note --content --limit 30
+02:21:27 python tools/los.py related note-data-lineage-debugging
+02:21:27 python tools/los.py search lineage --limit 30
+02:21:28 python tools/los.py search provenance --limit 30
+02:21:28 python tools/los.py search lineage --type note --content --limit 30
+02:21:28 python tools/los.py search which input --type note --content --limit 30
+02:21:29 python tools/los.py related note-kv-cache-transformer-serving
+02:21:29 python tools/los.py related concept-kv-cache
+02:21:30 python tools/los.py related concept-model-serving
+02:21:30 python tools/los.py search KV cache --limit 30
+02:21:31 python tools/los.py search attention --limit 30
+02:21:31 python tools/los.py search attention --type note --content --limit 30
+02:21:32 python tools/los.py search memory --type note --content --limit 30
+02:21:32 python tools/los.py related note-os-kernel-user-mode
+02:21:33 python tools/los.py related concept-os-kernel
+02:21:33 python tools/los.py related source-tuh-os-slides
+02:21:33 python tools/los.py search kernel --limit 30
+02:21:34 python tools/los.py search system call --limit 30
+02:21:34 python tools/los.py search kernel --type note --content --limit 30
+02:21:35 python tools/los.py search privilege --type note --content --limit 30
+02:21:35 python tools/los.py related note-db-normalization-3nf
+02:21:36 python tools/los.py related concept-db-normalization
+02:21:36 python tools/los.py related source-tuh-dbsys-slides
+02:21:37 python tools/los.py search normalization --limit 30
+02:21:37 python tools/los.py search functional dependency --limit 30
+02:21:38 python tools/los.py search redundan --type note --content --limit 30
+02:21:38 python tools/los.py search normal form --type note --content --limit 30
+02:21:38 python tools/los.py related note-acid-consistency
+02:21:39 python tools/los.py related concept-transactions-acid
+02:21:39 python tools/los.py related concept-two-phase-locking
+02:21:40 python tools/los.py related concept-write-ahead-logging
+02:21:40 python tools/los.py related source-garcia-molina-db
+02:21:41 python tools/los.py related source-tuh-dbsys-slides
+02:21:41 python tools/los.py search consistency --limit 30
+02:21:42 python tools/los.py search ACID --limit 30
+02:21:42 python tools/los.py search consisten --type note --content --limit 30
+02:21:43 python tools/los.py search invariant --type note --content --limit 30
+02:21:43 python tools/los.py related note-spaced-repetition-scheduler
+02:21:44 python tools/los.py related concept-spaced-repetition
+02:21:44 python tools/los.py related source-anki-manual
+02:21:44 python tools/los.py search spaced repetition --limit 30
+02:21:45 python tools/los.py search review scheduler --limit 30
+02:21:45 python tools/los.py search interval --type note --content --limit 30
+02:21:46 python tools/los.py search schedul --type note --content --limit 30
+02:21:46 python tools/los.py related note-buffer-pool-replacement
+02:21:47 python tools/los.py related concept-buffer-management
+02:21:47 python tools/los.py related source-garcia-molina-db
+02:21:48 python tools/los.py search buffer pool --limit 30
+02:21:48 python tools/los.py search page replacement --limit 30
+02:21:49 python tools/los.py search LRU --type note --content --limit 30
+02:21:49 python tools/los.py search evict --type note --content --limit 30
+02:21:50 python tools/los.py related note-p-values-corrected
+02:21:50 python tools/los.py related concept-hypothesis-testing
+02:21:51 python tools/los.py related source-tuh-statlearn-slides
+02:21:51 python tools/los.py related source-wasserstein-asa-2016
+02:21:52 python tools/los.py search p-value --limit 30
+02:21:52 python tools/los.py search hypothesis testing --limit 30
+02:21:52 python tools/los.py search p-value --type note --content --limit 30
+02:21:53 python tools/los.py search H0 --type note --content --limit 30
+02:21:53 python tools/los.py related note-gradient-descent-from-scratch
+02:21:54 python tools/los.py related concept-gradient-descent
+02:21:54 python tools/los.py related concept-linear-regression
+02:21:55 python tools/los.py related concept-normal-equation
+02:21:55 python tools/los.py related concept-stochastic-gradient-descent
+02:21:56 python tools/los.py related source-tuh-statlearn-slides
+02:21:56 python tools/los.py search gradient descent --limit 30
+02:21:57 python tools/los.py search learning rate --limit 30
+02:21:57 python tools/los.py search standardiz --type note --content --limit 30
+02:21:58 python tools/los.py search learning rate --type note --content --limit 30
+02:21:58 python tools/los.py related note-dynamic-batching-inference
+02:21:59 python tools/los.py related concept-model-serving
+02:21:59 python tools/los.py related concept-kv-cache
+02:22:00 python tools/los.py related source-huyen-dmls
+02:22:00 python tools/los.py search dynamic batching --limit 30
+02:22:01 python tools/los.py search model serving --limit 30
+02:22:01 python tools/los.py search batch --type note --content --limit 30
+02:22:02 python tools/los.py search latency --type note --content --limit 30
+02:22:02 python tools/los.py related note-softmax-temperature
+02:22:02 python tools/los.py related concept-softmax
+02:22:03 python tools/los.py related source-goodfellow-dl
+02:22:03 python tools/los.py search temperature --limit 30
+02:22:04 python tools/los.py search softmax --limit 30
+02:22:04 python tools/los.py search temperature --type note --content --limit 30
+02:22:05 python tools/los.py search exp( --type note --content --limit 30
+02:22:05 python tools/los.py related note-constant-folding-cse
+02:22:06 python tools/los.py related concept-compiler-optimization
+02:22:06 python tools/los.py related concept-compiler-structure
+02:22:07 python tools/los.py related concept-ssa
+02:22:07 python tools/los.py related source-dragon-book
+02:22:08 python tools/los.py search constant folding --limit 30
+02:22:08 python tools/los.py search rewrite rules --limit 30
+02:22:09 python tools/los.py search fold --type note --content --limit 30
+02:22:09 python tools/los.py search rewrite --type note --content --limit 30

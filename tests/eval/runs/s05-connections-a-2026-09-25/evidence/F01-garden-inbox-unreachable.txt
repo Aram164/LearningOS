@@ -1,0 +1,21 @@
+$ python tools/los.py inspect garden:everything-is-a-dag.md
+los: record not found: garden:everything-is-a-dag.md
+exit=2
+$ python tools/los.py inspect everything-is-a-dag
+los: record not found: everything-is-a-dag
+exit=2
+$ python tools/los.py related garden:everything-is-a-dag.md
+los: record not found: garden:everything-is-a-dag.md
+exit=2
+$ python tools/los.py inspect inbox:20260910-tessera-todo.md
+los: record not found: inbox:20260910-tessera-todo.md
+exit=2
+$ python tools/los.py inspect 20260910-tessera-todo
+los: record not found: 20260910-tessera-todo
+exit=2
+$ python tools/los.py search dag --limit 30   (types returned)
+['concept', 'note']
+$ python tools/los.py search tessera --limit 30   (types returned)
+['coordination', 'note', 'project', 'project-relationship', 'unit', 'workspace']
+$ python tools/los.py bootstrap --brief   (counts.inbox_items, counts.garden_entries)
+7 9

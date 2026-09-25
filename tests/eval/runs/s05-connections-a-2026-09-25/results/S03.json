@@ -1,0 +1,156 @@
+{
+  "scenario": "S03",
+  "run_id": "s05-connections-a-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "All 20 canon probes answered with ranked, evidenced lists (161 results) using only documented reads, and the world is unchanged. The product's contribution is an unranked, concept-mediated neighbourhood: `related NOTE` returns the note's concepts and sources, never other notes, so candidate notes need a second hop (`related CONCEPT`) and ranking is left entirely to the operator. Garden seeds, inbox captures and stage notes are not searchable, and garden/inbox items cannot be addressed at all, so 75 of 161 results (and all 26 garden/inbox/stage results) came from the operator's own reading, including reading knowledge/garden/ and work/inbox/ files directly. The documented cross-domain entry, generated/domain-atlas.md, does not exist in the world. No implementation files were needed.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec",
+    "derived_digest": "df97c8737d287c93f8e3a048d46ad71f9da0e95cf3cccd0c0bbc8e63032db409",
+    "snapshot_file": "observations/S03-before.json"
+  },
+  "consumer": {
+    "goal": "For each of the 20 canon notes, show the learner what else she has that she should read next to it, best first, and why.",
+    "first_action": "Read AGENTS.md (world root), which points to system/OPERATOR.md and `python tools/los.py capabilities --compact --json`.",
+    "commands": [
+      "python3 tools/los.py capabilities --compact --json   (failed: no .venv in the world; re-run with an external Python 3.12 venv holding pyyaml/jsonschema/pypdf)",
+      "python tools/los.py capabilities --compact --json",
+      "python tools/los.py --help; related/search/inspect/note-read/semantic --help",
+      "python tools/los.py related note-naive-bayes-spam-filter",
+      "python tools/los.py inspect note-naive-bayes-spam-filter",
+      "python tools/los.py note-read note-naive-bayes-spam-filter",
+      "python tools/los.py related concept-naive-bayes; inspect concept-naive-bayes",
+      "python tools/los.py semantic --list",
+      "python tools/los.py search \"naive bayes\" --limit 20; search spam --content --limit 20",
+      "python tools/los.py search dag|tessera|\"proportional share\" (coverage check)",
+      "python tools/los.py atlas-context --help; inspect garden:everything-is-a-dag.md (not found); inspect everything-is-a-dag (not found); related garden:everything-is-a-dag.md (not found)",
+      "python tools/los.py bootstrap --brief; bootstrap --compact; bootstrap (full, 59 KB)",
+      "python tools/los.py intelligence-scan --brief --json (empty)",
+      "python tools/los.py search \"\" --type note --limit 200 (all 116 notes)",
+      "python tools/los.py inspect <20 note ids> x6 (batch metadata for all notes)",
+      "python tools/los.py note-read <id> --limit 16000 x116 (every note body)",
+      "cat knowledge/garden/*.md work/inbox/*.md (direct file read: no product read exists)",
+      "python tools/los.py search \"\" --type workspace|project|stage|study-map|unit --limit 100",
+      "python tools/los.py inspect <11 study-map ids> (stage notes via notes_text)",
+      "python tools/los.py inspect <7 workspace ids> project-ledgerline project-tessera",
+      "python tools/los.py related source-kleppmann-ddia; related workspace-os-oral-prep; related unit-os-l02",
+      "per probe (169 calls total): related NOTE; related CONCEPT for each of its concepts; related NEIGHBOUR-CONCEPT; related SOURCE; search \"<2 terms>\"; search \"<2 terms>\" --type note --content  — full list per probe in connections.jsonl `commands`, every call in evidence/S03-cli-calls.log"
+    ],
+    "tool_calls": 46,
+    "docs_consulted": [
+      "AGENTS.md",
+      "system/OPERATOR.md",
+      "CLAUDE.md §2 (bootstrap order) and §7 (retrieval behavior)",
+      "system/WORKFLOWS.md (lines found by grep for related/connection)",
+      "system/ARCHITECTURE.md (lines found by grep: no related-to relation type)",
+      "los --help and per-command --help"
+    ],
+    "impl_files_read": [],
+    "retries": 1,
+    "confusions": [
+      "`related` is the documented lookup for a named record, but on a note it returns only concepts and sources; which hop gives 'other notes' is not documented (found by trying: related CONCEPT).",
+      "The capability index (capabilities --compact) lists note.search/note.content but not `related`, `inspect` or `search`; those are CLI commands named only in OPERATOR.md prose.",
+      "CLAUDE.md says to consult generated/domain-atlas.md for cross-domain discovery; generated/ only holds derived-state/.",
+      "bootstrap --brief reports inbox_items 7 and garden_entries 9, but no read command resolves either kind of item.",
+      "Stages are not a search type; their working notes surface only inside `inspect study-map-…` (notes_text)."
+    ],
+    "corrective_steps": [
+      "Used an external Python 3.12 venv (pyyaml, jsonschema, pypdf) instead of running `make setup` inside the world.",
+      "Two-hop product traversal (note → concept → notes; concept → neighbour concept → notes) instead of expecting `related NOTE` to return notes.",
+      "Listed all notes with `search \"\" --type note` and read every body with note-read, then ranked by judgment.",
+      "Read the 9 Garden seeds and 7 inbox captures directly from knowledge/garden/ and work/inbox/ (no product read exists).",
+      "Read stage working notes through `inspect study-map-…`."
+    ],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 11.5,
+    "outcome": "Twenty ranked reading lists (5–10 items each), each item with a one-line reason and a quoted line from the target; contrasts (e.g. the optimizer's independence assumption vs Naive Bayes), superseded versions (p-values first take) and tentative links are flagged. Nothing in her repository changed."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "None: only read commands were used; observe.py shows no receipts, no in-flight journals, no new `los operations` entries.",
+    "approval_behavior": "None required; no write was proposed or approved.",
+    "projection_activity": "The first read commands materialised a derived-state projection cache under generated/derived-state/ (state-v1.json plus 117 content-addressed blobs).",
+    "persistence_activity": "Derived only: generated/derived-state grew from 0 to 490,130 bytes (118 files added). generated/* is git-ignored, so git status stays clean.",
+    "derived_changes": "118 derived files added under generated/derived-state/; derived digest df97c873… → 28a681fe….",
+    "manifest_changes": "No generated/manifest.json exists before or after, although OPERATOR.md names it as the stable read contract; the projection appears to live in generated/derived-state/ (not opened by hand).",
+    "unexpected_writes": [],
+    "warnings_errors": [
+      "python3 tools/los.py … → 'learning_os: cannot run — pyyaml is not installed; jsonschema is not installed. Fix with: make setup' (clear, actionable)",
+      "inspect/related garden:everything-is-a-dag.md, everything-is-a-dag, inbox:20260910-tessera-todo.md, 20260910-tessera-todo → 'los: record not found' (exit 2)"
+    ],
+    "git_diff_stat": "",
+    "observe_diff_file": "observations/S03-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec",
+    "derived_digest": "28a681fe6a6e6949e8f7d5f57f92cea8e7b220af26a67e82b821d281f76fdd3c",
+    "snapshot_file": "observations/S03-after.json"
+  },
+  "friction": [
+    {
+      "tag": "hidden-prerequisite",
+      "description": "The world has no .venv; the first documented command fails under the system Python. The error names the fix (make setup), which would install into the learner's repository; I used an external venv instead.",
+      "cost": "1 failed call, 1 extra setup step"
+    },
+    {
+      "tag": "missing-capability",
+      "description": "No 'notes like this one' read: `related NOTE` returns concepts and sources only, unranked. Getting candidate notes takes note → concept → notes and concept → neighbour concept → notes hops, and `related SOURCE` returns every note citing the same course (up to 21), so ranking is manual.",
+      "cost": "97 related calls for 20 probes"
+    },
+    {
+      "tag": "missing-capability",
+      "description": "Garden seeds (9) and inbox captures (7) have no read path: inspect/related say 'record not found' for every id form tried, search never returns them, and no bootstrap collection lists them. I read the files directly, which OPERATOR.md discourages.",
+      "cost": "5 failed calls; 16 files read outside the product"
+    },
+    {
+      "tag": "doc-contradiction",
+      "description": "CLAUDE.md §2 and its 'Cross-domain reach' paragraph send cross-domain discovery to generated/domain-atlas.md, which does not exist on the fresh world. The bootstrap domain_atlas glance reports 0 shelves and 0 crosswalks in every domain.",
+      "cost": "2 calls"
+    },
+    {
+      "tag": "unnecessary-exploration",
+      "description": "I looked for a connection or garden read in bootstrap --brief/--compact/full, intelligence-scan, semantic --list and atlas-context before falling back to reading. None applied.",
+      "cost": "7 calls"
+    },
+    {
+      "tag": "other",
+      "description": "Search is substring-based and noisy: 'prior' matches priority-inversion, 'normalization' matches batch-norm notes, 'kernel' matches the SVM/CNN/KDE kernels. Content-search snippets include frontmatter lines (e.g. the id line). Neither mode ranks by relevance.",
+      "cost": "manual filtering of every search result"
+    },
+    {
+      "tag": "unclear-terminology",
+      "description": "The capability index is described as discovery, yet the lookup verbs agents are told to use (inspect, search, related, note-read) are CLI commands missing from it (only note.search and note.content appear as queries).",
+      "cost": "1 extra --help read"
+    },
+    {
+      "tag": "redundant-calls",
+      "description": "Each CLI call cold-starts at about 0.4 s. A full pass over the 116 notes (inspect ×6, note-read ×116) plus 169 harvest calls took about 2.5 minutes of CLI time.",
+      "cost": "~330 CLI calls"
+    }
+  ],
+  "failures": [
+    "F-s05-garden-inbox-unreachable-01",
+    "F-s05-related-asymmetry-02",
+    "F-s05-domain-atlas-missing-03"
+  ],
+  "scenario_record": {
+    "connection_records": "connections.jsonl, 20 lines with phase \"canon\" (C01–C20)",
+    "which_product_commands_produced_candidates": {
+      "summary": "161 results: 51 product:related (via `related CONCEPT` over the note's own concepts or a neighbouring concept), 7 product:search (projection search on 2 operator-chosen phrases), 28 product:search-content (literal content search), 75 agent-reading. Among ranks 1–3: 25 product:related/search, 14 content search, 21 reading. At rank 1: 17 product, 3 reading.",
+      "per_probe_product_share": "C01 6/10, C02 7/10, C03 3/7, C04 7/10, C05 6/9, C06 7/9, C07 7/10, C08 6/8, C09 2/7, C10 6/8, C11 1/7, C12 1/5, C13 5/6, C14 3/9, C15 2/8, C16 1/6, C17 5/8, C18 4/8, C19 1/6, C20 6/10",
+      "raw_candidate_sets": "evidence/S03-product-candidates.json (every target each command returned, per probe)",
+      "rule_for_source_label": "A result is labelled with the most specific product command that returned it for this probe (related > search > content search). A candidate that appeared only in an unranked `related SOURCE` list (all notes citing the same course or book) is labelled agent-reading, because that list did not single it out."
+    },
+    "which_candidates_added_by_reading": "All 9 stage, 12 Garden and 5 inbox results, plus 47 notes and 2 workspaces the product did not return for that probe. Typical cases: cross-domain analogies with no shared concept or literal term (query-optimizer independence ↔ Naive Bayes, Viterbi ↔ Selinger's DP, softmax temperature ↔ KDE bandwidth); and notes whose concept links do not connect (MAP ↔ lasso: concept-map-estimation has no relation to concept-regularization). Some cross-domain links were reachable by content search on a well-chosen word (journaling FS ↔ WAL via 'crash', KV cache ↔ paging via 'memory')."
+  },
+  "uncertainties": [
+    "Ranking is my judgment; the product ranks nothing, so rank order carries no product signal.",
+    "I may have missed an id form that resolves Garden or inbox items; I did not read implementation code to find out.",
+    "Tentative-flagged links (30) are analogies I would present as 'maybe'; a learner could reasonably disagree."
+  ]
+}

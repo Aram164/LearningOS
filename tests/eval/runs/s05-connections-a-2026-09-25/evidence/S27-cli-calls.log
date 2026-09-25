@@ -1,0 +1,200 @@
+02:27:57 python tools/los.py material-context --help
+02:27:57 python tools/los.py ai-action-list --help
+02:27:57 python tools/los.py capture --help
+02:27:57 python tools/los.py note-analysis-prepare --help
+02:28:02 python tools/los.py ai-action-list
+02:28:02 python tools/los.py material-context Bayesian network
+02:28:03 python tools/los.py material-context naive bayes
+02:28:40 python tools/los.py search bayesian network --limit 30
+02:28:40 python tools/los.py search conditional independence --limit 30
+02:28:41 python tools/los.py search naive bayes --limit 30
+02:28:41 python tools/los.py related concept-conditional-independence
+02:28:42 python tools/los.py related concept-naive-bayes
+02:28:42 python tools/los.py search explaining away --type note --content --limit 30
+02:28:43 python tools/los.py search independen --type note --content --limit 30
+02:28:43 python tools/los.py search lasso --limit 30
+02:28:43 python tools/los.py search ridge regression --limit 30
+02:28:44 python tools/los.py related concept-regularization
+02:28:44 python tools/los.py search lasso --type note --content --limit 30
+02:28:45 python tools/los.py search coordinate descent --type note --content --limit 30
+02:28:45 python tools/los.py search tessera --limit 30
+02:28:46 python tools/los.py search predicate pushdown --limit 30
+02:28:46 python tools/los.py search property-based testing --limit 30
+02:28:47 python tools/los.py related concept-query-optimization
+02:28:47 python tools/los.py related concept-property-based-testing
+02:28:47 python tools/los.py search pushdown --type note --content --limit 30
+02:28:48 python tools/los.py search execute(optimize --type note --content --limit 30
+02:28:48 python tools/los.py search KV cache --limit 30
+02:28:49 python tools/los.py search page table --limit 30
+02:28:49 python tools/los.py search virtual memory --limit 30
+02:28:50 python tools/los.py related concept-kv-cache
+02:28:50 python tools/los.py related concept-virtual-memory
+02:28:51 python tools/los.py search page table --type note --content --limit 30
+02:28:51 python tools/los.py search copy-on-write --type note --content --limit 30
+02:28:51 python tools/los.py search lineage --limit 30
+02:28:52 python tools/los.py search join --limit 30
+02:28:52 python tools/los.py related concept-data-provenance
+02:28:53 python tools/los.py related concept-join-algorithms
+02:28:53 python tools/los.py related concept-relational-algebra
+02:28:54 python tools/los.py search dashboard --type note --content --limit 30
+02:28:54 python tools/los.py search duplicat --type note --content --limit 30
+02:28:55 python tools/los.py search ledgerline --limit 30
+02:28:55 python tools/los.py search event sourcing --limit 30
+02:28:55 python tools/los.py search content addressing --limit 30
+02:28:56 python tools/los.py related concept-event-sourcing
+02:28:56 python tools/los.py related concept-content-addressing
+02:28:57 python tools/los.py search append --type note --content --limit 30
+02:28:57 python tools/los.py search hash --type note --content --limit 30
+02:28:58 python tools/los.py search stride scheduling --limit 30
+02:28:58 python tools/los.py search proportional share --limit 30
+02:28:59 python tools/los.py search lottery --limit 30
+02:28:59 python tools/los.py related concept-proportional-share
+02:29:00 python tools/los.py search stride --type note --content --limit 30
+02:29:00 python tools/los.py search lottery --type note --content --limit 30
+02:29:00 python tools/los.py search dynamic batching --limit 30
+02:29:01 python tools/los.py search fair share --limit 30
+02:29:01 python tools/los.py search model serving --limit 30
+02:29:02 python tools/los.py related concept-model-serving
+02:29:02 python tools/los.py related concept-proportional-share
+02:29:03 python tools/los.py search p99 --type note --content --limit 30
+02:29:03 python tools/los.py search batch --type note --content --limit 30
+02:29:04 python tools/los.py search deadlock --limit 30
+02:29:04 python tools/los.py search two-phase locking --limit 30
+02:29:05 python tools/los.py search lock order --limit 30
+02:29:05 python tools/los.py related concept-deadlock
+02:29:06 python tools/los.py related concept-two-phase-locking
+02:29:06 python tools/los.py search deadlock --type note --content --limit 30
+02:29:06 python tools/los.py search lock order --type note --content --limit 30
+02:29:07 python tools/los.py search cardinality estimation --limit 30
+02:29:07 python tools/los.py search selectivity --limit 30
+02:29:08 python tools/los.py related concept-cardinality-estimation
+02:29:08 python tools/los.py search selectivity --type note --content --limit 30
+02:29:09 python tools/los.py search independen --type note --content --limit 30
+02:29:09 python tools/los.py search p-value --limit 30
+02:29:09 python tools/los.py search hypothesis testing --limit 30
+02:29:10 python tools/los.py search flashcard --limit 30
+02:29:10 python tools/los.py related concept-hypothesis-testing
+02:29:11 python tools/los.py search p-value --type note --content --limit 30
+02:29:11 python tools/los.py search H0 --type note --content --limit 30
+02:29:12 python tools/los.py search HMM --limit 30
+02:29:12 python tools/los.py search viterbi --limit 30
+02:29:12 python tools/los.py search markov chain --limit 30
+02:29:13 python tools/los.py related concept-hidden-markov-models
+02:29:13 python tools/los.py related concept-markov-chains
+02:29:14 python tools/los.py search viterbi --type note --content --limit 30
+02:29:14 python tools/los.py search weather --type note --content --limit 30
+02:29:15 python tools/los.py search amdahl --limit 30
+02:29:15 python tools/los.py search speedup --limit 30
+02:29:16 python tools/los.py related concept-amdahls-law
+02:29:16 python tools/los.py search gustafson --type note --content --limit 30
+02:29:16 python tools/los.py search speedup --type note --content --limit 30
+02:29:17 python tools/los.py search lazy evaluation --limit 30
+02:29:17 python tools/los.py search query plan --limit 30
+02:29:18 python tools/los.py search explain --limit 30
+02:29:18 python tools/los.py related concept-lazy-evaluation
+02:29:19 python tools/los.py related concept-query-optimization
+02:29:19 python tools/los.py search explain --type note --content --limit 30
+02:29:20 python tools/los.py search pushdown --type note --content --limit 30
+02:29:20 python tools/los.py search softmax --limit 30
+02:29:21 python tools/los.py search temperature --limit 30
+02:29:21 python tools/los.py search simulated annealing --limit 30
+02:29:21 python tools/los.py related concept-softmax
+02:29:22 python tools/los.py related concept-simulated-annealing
+02:29:22 python tools/los.py search temperature --type note --content --limit 30
+02:29:23 python tools/los.py search exp( --type note --content --limit 30
+02:29:23 python tools/los.py search batch normalization --limit 30
+02:29:23 python tools/los.py search standardizing --limit 30
+02:29:24 python tools/los.py related concept-batch-normalization
+02:29:24 python tools/los.py search running --type note --content --limit 30
+02:29:25 python tools/los.py search z-score --type note --content --limit 30
+02:29:25 python tools/los.py search consistency --limit 30
+02:29:26 python tools/los.py search CAP --limit 30
+02:29:26 python tools/los.py search ACID --limit 30
+02:29:27 python tools/los.py related concept-journaling-file-systems
+02:29:27 python tools/los.py related concept-cap-theorem
+02:29:27 python tools/los.py related concept-transactions-acid
+02:29:28 python tools/los.py search consisten --type note --content --limit 30
+02:29:28 python tools/los.py search DAG --limit 30
+02:29:29 python tools/los.py search topological sort --limit 30
+02:29:29 python tools/los.py search build systems --limit 30
+02:29:30 python tools/los.py related concept-adaptive-optimizers
+02:29:30 python tools/los.py related concept-content-addressing
+02:29:30 python tools/los.py related concept-workflow-orchestration
+02:29:31 python tools/los.py related concept-build-systems
+02:29:31 python tools/los.py search DAG --type note --content --limit 30
+02:29:32 python tools/los.py search cycle --type note --content --limit 30
+02:29:32 python tools/los.py search bloom filter --limit 30
+02:29:32 python tools/los.py search LSM tree --limit 30
+02:29:33 python tools/los.py search false positive --limit 30
+02:29:33 python tools/los.py related concept-bloom-filters
+02:29:34 python tools/los.py related concept-lsm-trees
+02:29:34 python tools/los.py search bloom --type note --content --limit 30
+02:29:35 python tools/los.py search false positive --type note --content --limit 30
+02:29:35 python tools/los.py search virtual memory --limit 30
+02:29:36 python tools/los.py search TLB --limit 30
+02:29:36 python tools/los.py search context switch --limit 30
+02:29:36 python tools/los.py related concept-virtual-memory
+02:29:37 python tools/los.py related concept-context-switch
+02:29:37 python tools/los.py search TLB --type note --content --limit 30
+02:29:38 python tools/los.py search page table --type note --content --limit 30
+02:29:38 python tools/los.py search PCA --limit 30
+02:29:39 python tools/los.py search SVD --limit 30
+02:29:39 python tools/los.py search covariance matrix --limit 30
+02:29:39 python tools/los.py related concept-pca
+02:29:40 python tools/los.py related concept-low-rank-approximation
+02:29:40 python tools/los.py related concept-svd
+02:29:41 python tools/los.py related concept-covariance-matrix
+02:29:41 python tools/los.py search singular --type note --content --limit 30
+02:29:42 python tools/los.py search principal --type note --content --limit 30
+02:29:42 python tools/los.py search automatic differentiation --limit 30
+02:29:43 python tools/los.py search backpropagation --limit 30
+02:29:43 python tools/los.py search chain rule --limit 30
+02:29:43 python tools/los.py related concept-automatic-differentiation
+02:29:44 python tools/los.py related concept-backpropagation
+02:29:44 python tools/los.py related concept-chain-rule
+02:29:45 python tools/los.py search reverse --type note --content --limit 30
+02:29:45 python tools/los.py search forward pass --type note --content --limit 30
+02:29:46 python tools/los.py search idempotency --limit 30
+02:29:46 python tools/los.py search ledgerline --limit 30
+02:29:47 python tools/los.py search retry --limit 30
+02:29:47 python tools/los.py related concept-idempotency
+02:29:47 python tools/los.py search retry --type note --content --limit 30
+02:29:48 python tools/los.py search idempoten --type note --content --limit 30
+02:29:48 python tools/los.py search sourdough --limit 30
+02:29:49 python tools/los.py search feeding schedule --limit 30
+02:29:49 python tools/los.py search sourdough --type note --content --limit 30
+02:29:49 python tools/los.py search feeding --type note --content --limit 30
+02:29:50 python tools/los.py search logistic regression --limit 30
+02:29:50 python tools/los.py search cross-entropy --limit 30
+02:29:51 python tools/los.py related concept-logistic-regression
+02:29:51 python tools/los.py related concept-cross-entropy
+02:29:52 python tools/los.py search cross-entropy --type note --content --limit 30
+02:29:52 python tools/los.py search squared error --type note --content --limit 30
+02:29:52 python tools/los.py search learning rate --limit 30
+02:29:53 python tools/los.py search gradient descent --limit 30
+02:29:53 python tools/los.py related concept-gradient-descent
+02:29:54 python tools/los.py related concept-stochastic-gradient-descent
+02:29:54 python tools/los.py search learning rate --type note --content --limit 30
+02:29:55 python tools/los.py search explode --type note --content --limit 30
+02:29:55 python tools/los.py search hash join --limit 30
+02:29:55 python tools/los.py search join strategies --limit 30
+02:29:56 python tools/los.py search skew --limit 30
+02:29:56 python tools/los.py related concept-join-algorithms
+02:29:57 python tools/los.py search hash join --type note --content --limit 30
+02:29:57 python tools/los.py search partition --type note --content --limit 30
+02:29:58 python tools/los.py search bounded buffer --limit 30
+02:29:58 python tools/los.py search consumer lag --limit 30
+02:29:59 python tools/los.py search backpressure --limit 30
+02:29:59 python tools/los.py related concept-stream-processing
+02:30:00 python tools/los.py search bounded buffer --type note --content --limit 30
+02:30:00 python tools/los.py search lag --type note --content --limit 30
+02:30:00 python tools/los.py search dominant resource fairness --limit 30
+02:30:01 python tools/los.py search GPU sharing --limit 30
+02:30:01 python tools/los.py related concept-dominant-resource-fairness
+02:30:02 python tools/los.py search Dominant Resource Fairness --type note --content --limit 30
+02:30:02 python tools/los.py search Ghodsi --type note --content --limit 30
+02:30:03 python tools/los.py search attention --limit 30
+02:30:03 python tools/los.py search KV cache --limit 30
+02:30:04 python tools/los.py related concept-kv-cache
+02:30:04 python tools/los.py search attention --type note --content --limit 30
+02:30:05 python tools/los.py search keys and values --type note --content --limit 30
