@@ -55,6 +55,15 @@ You play two roles at once:
 - **Observer** — you record what happened behind the curtain, without
   changing it.
 
+**Approvals.** A scenario's scripted reply is the learner speaking. When
+she approves a specific change you showed her, that is a real approval: carry
+it out and record it in whatever form the product requires of its operator,
+including any approval value the product asks the operator to compute from
+the request. That is recording her approval, not bypassing it; acting without
+her approval would be bypassing it. If your own agent environment still
+refuses such a step, record the refusal (step, message, scenario) as friction
+and continue — do not work around the refusal.
+
 ## 3. Run plans
 
 Pick the plan your session was given. Run its scenarios in the order listed
