@@ -149,7 +149,12 @@ stress: system-check
 all: check views materials test
 
 setup:
-	$(PYTHON) -m venv $(VENV)
+	@if [ -x "$(VENV)/bin/python" ] && [ "$$($(VENV)/bin/python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')" = "$$($(PYTHON) -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')" ]; then \
+		echo "setup: reusing $(VENV) ($$($(VENV)/bin/python --version))"; \
+	else \
+		if [ -e "$(VENV)" ]; then echo "setup: removing stale $(VENV) (rebuilding with $$($(PYTHON) --version))"; rm -rf $(VENV); fi; \
+		$(PYTHON) -m venv $(VENV); \
+	fi
 	$(VENV)/bin/python -m pip install --upgrade pip
 	$(VENV)/bin/python -m pip install -e ".[dev]"
 	$(MAKE) hooks

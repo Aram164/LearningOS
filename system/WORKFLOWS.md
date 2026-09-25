@@ -39,7 +39,7 @@ If the active count reaches 8+, the validator warns: finish or archive something
 
 Put fragments, quotations awaiting processing, rough diagrams, temporary source lists, partial calculations, and lecture-specific checklists in workspace `scratch/` or `inputs/`. Temporary capture does not require canonical metadata.
 
-When no workspace is obvious, drop anything into `work/inbox/` — no naming, no metadata. The operator routes inbox items to their deterministic destination (ARCHITECTURE §3.3); the inbox trends toward empty.
+When no workspace is obvious, drop anything into `work/inbox/` — no naming, no metadata. The operator routes inbox items to their deterministic destination (ARCHITECTURE §3.3); the inbox trends toward empty. The write itself goes through a `capture.create` envelope (§25c): the bare `capture --text` command is refused by design.
 
 ## 3. Create or evolve a durable note
 
@@ -715,7 +715,9 @@ without refreshing its snapshot, revisions or retry identity.
    artifact the transaction touches — the module plus each unit in the
    package, no more and no fewer — an `approval` whose `subject_sha256` is
    `intent_sha256(envelope)`, and the payload. `approve` never appears in the
-   payload; a `file` payload always carries its `file_sha256`.
+   payload; a `file` payload always carries its `file_sha256`. The complete
+   envelope construction (intent hash, revision guards, approval kinds,
+   refusal shape) is §25c; this step states only what plan revision adds.
 
    `module.plan.import` additionally requires a coverage audit under
    `work/active/` carrying the literal headings `## Local`, `## Linked` and
@@ -766,6 +768,88 @@ gateway envelope; review both, then submit the envelope unchanged.
    `STALE_SNAPSHOT` — re-run prep. Tampered or moved staging files are
    refused by the content hashes and intent binding, never silently
    accepted.
+
+## 25c. Build a write envelope (GatewayEnvelopeV2)
+
+Every canonical write is submitted as an explicit envelope; the bare
+mutating commands (`capture --text`, `note-revise`, …) refuse with exit 2
+(*"canonical writes must use GatewayEnvelopeV2; direct CLI application is
+disabled"*) by design, never by accident. This section is the complete
+construction recipe — nothing else is needed.
+
+1. **Payload schema.** `python tools/los.py capabilities <name> --json`
+   is the payload contract for capability `<name>`.
+2. **Snapshot.** `python tools/los.py bootstrap --compact` prints
+   `snapshot_id` (`sha256:…`); that exact string is `expected_snapshot`.
+   Any canonical change between reading it and submitting refuses the
+   write as `STALE_SNAPSHOT` (exit 3) — re-read and re-seal.
+3. **Revision guards.** `expected_revisions` maps every artifact the
+   transaction touches to its current revision (read
+   `operations/transactions/revisions.yaml`; an artifact absent from the
+   ledger has revision 0 — the legitimate no-recorded-revision baseline,
+   backstopped by the snapshot guard). Two capabilities name their write
+   target only inside the handler, so the caller cannot guard a path and
+   guards the request instead: `capture.create` takes
+   `capture-request:<idempotency-key>`, `garden.seed.create` takes
+   `garden-request:<idempotency-key>`, both at revision 0 for a fresh
+   key.
+4. **Identities.** `request_id` and `idempotency_key` are caller-chosen
+   (1–128 chars, `^[A-Za-z0-9][A-Za-z0-9._:-]*$`). Reuse the same key for
+   retries of the *same* approved intent (an exact retry replays the
+   receipt instead of writing twice); a *different* intent under a used
+   key is refused as `IDEMPOTENCY_CONFLICT`. Mint a fresh `request_id`
+   per attempt: reused ids merge their explanations in `los operations`.
+5. **Approval.** `channel` is `operator` and `approval.kind` is
+   `operator-approval` on the operator path (`direct-user-gesture` is
+   admitted only for a closed UI-originated allowlist).
+   `approval.subject_sha256` must equal `intent_sha256(envelope)`,
+   computed as below **after** every other field is final — any later
+   edit invalidates it and the write is refused as `UNCONFIRMED`.
+   The approval subject is the operator's assertion that the learner
+   approved this exact intent, guarded by the snapshot/revision checks —
+   not cryptographic proof that a human was present.
+6. **Submit.** `python tools/los.py capability <name> --payload-file
+   envelope.json`. Exit 0 commits (or replays); exit 2 refuses; exit 3
+   is `STALE_SNAPSHOT`.
+
+**Intent hash.** The approval subject covers exactly six fields —
+`schema_version`, `capability`, `channel`, `expected_snapshot`,
+`expected_revisions`, `payload` — and deliberately excludes
+`request_id`, `idempotency_key`, and `approval` (request identities are
+not intent). Canonical form: `json.dumps(subject, sort_keys=True,
+separators=(",", ":"), ensure_ascii=False)` encoded UTF-8, SHA-256 hex,
+prefixed `sha256:`. In Python:
+
+```python
+import hashlib, json
+subject = {k: envelope[k] for k in (
+    "schema_version", "capability", "channel",
+    "expected_snapshot", "expected_revisions", "payload")}
+approval = "sha256:" + hashlib.sha256(json.dumps(
+    subject, sort_keys=True, separators=(",", ":"),
+    ensure_ascii=False).encode("utf-8")).hexdigest()
+```
+
+**Refusal shape.** A refusal answers `ok: false` with
+`error: {code, message, retryable, details}`. `details` is `{}` on
+`UNCONFIRMED` and on every prose-classified refusal — only the typed
+projection/commit outcomes (`PROJECTION_FAILED`, post-commit
+`INTERNAL_FAILURE`) carry stage details. An empty `details` is normal,
+not a missing diagnosis: the `message` names the defect.
+
+**Worked capture.** Inbox capture (`§2`) via the envelope route:
+
+```bash
+SNAP=$(python tools/los.py bootstrap --compact \
+  | python -c 'import json,sys; print(json.load(sys.stdin)["snapshot_id"])')
+# envelope.json: schema_version 2, request_id "request-<key>",
+# idempotency_key "<key>", capability "capture.create", channel "operator",
+# expected_snapshot "$SNAP",
+# expected_revisions {"capture-request:<key>": 0},
+# approval {"kind": "operator-approval", "subject_sha256": <intent hash>},
+# payload {"text": "…"}
+python tools/los.py capability capture.create --payload-file envelope.json
+```
 
 ## 26. Source routing and feedback
 

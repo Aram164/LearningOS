@@ -27,8 +27,10 @@ never edit it.
    `make views` to refresh) — exams, workspaces, recent notes, queues, all
    linked. Exam facts live in each owning academic module; the full "what should I
    do next?" dashboard is `generated/coordination-view.md`; your knowledge is
-   under `knowledge/notes/`; capture anything into `work/inbox/` (or
-   `python tools/los.py capture --text "…"`).
+   under `knowledge/notes/`; capture anything into `work/inbox/` (the
+   operator writes it through a `capture.create` envelope per WORKFLOWS
+   §25c — the bare `python tools/los.py capture --text "…"` is refused
+   without one).
 3. **After editing:** run `make check`. The pre-commit hook blocks commits while
    the validator reports **errors**; warnings print and never block. To see
    whether you introduced one, run `make warnings` — it compares the warning

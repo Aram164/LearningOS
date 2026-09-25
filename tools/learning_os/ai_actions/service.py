@@ -544,37 +544,64 @@ class AIActionService:
 
     def _validate(self, delivery: DeliveryRecord, directory: Path) -> ValidatedDelivery:
         delivery_id = str(delivery.get("id", ""))
+        if not str(delivery.get("request_id", "")):
+            raise DeliveryValidationError("delivery must name its request_id")
         request = self.repository.get_request(str(delivery.get("request_id", "")))
+        # Shape problems aggregate: a hand-authored delivery should learn
+        # everything wrong with it in one round, not one field per import
+        # (JF-07). Live freshness guards below still fail fast.
+        problems: list[str] = []
         if delivery.get("type") != "ai-action-delivery":
-            raise DeliveryValidationError("delivery type must be ai-action-delivery")
+            problems.append("delivery type must be ai-action-delivery")
         if delivery.get("action_id") != request.get("action_id"):
-            raise DeliveryValidationError("delivery action does not match request")
+            problems.append(
+                f"delivery action_id {delivery.get('action_id')!r} does not match "
+                f"prepared request {request.get('action_id')!r}")
         producer = delivery.get("producer") or {}
-        if producer.get("adapter") != (request.get("provider") or {}).get("adapter"):
-            raise DeliveryValidationError("delivery adapter does not match prepared request")
+        expected_adapter = (request.get("provider") or {}).get("adapter")
+        if producer.get("adapter") != expected_adapter:
+            problems.append(
+                f"delivery producer.adapter {producer.get('adapter')!r} does not match "
+                f"prepared request provider.adapter {expected_adapter!r}")
         if delivery.get("preconditions") != request.get("preconditions"):
-            raise DeliveryValidationError("delivery preconditions do not match prepared request")
+            problems.append(
+                "delivery preconditions must equal the prepared request preconditions")
         if not (delivery.get("approval") or {}).get("user_approved"):
-            raise DeliveryValidationError("delivery lacks recorded user approval")
+            problems.append("delivery approval.user_approved must be true")
         operations = delivery.get("operations")
         if not isinstance(operations, list) or not operations:
-            raise DeliveryValidationError("delivery must contain at least one operation")
-        allowed = set(request.get("allowed_capabilities", []))
-        forbidden = set(request.get("forbidden_capabilities", []))
-        target_id = str((request.get("target") or {}).get("id", ""))
-        for operation in operations:
-            if not isinstance(operation, dict):
-                raise DeliveryValidationError("each delivery operation must be a mapping")
-            capability = operation.get("capability")
-            if capability in forbidden or capability not in allowed:
-                raise DeliveryValidationError(f"capability is not allowed: {capability}")
-            if operation.get("target_id") and operation.get("target_id") != target_id:
-                raise DeliveryValidationError("operation targets an unrelated artifact")
-            artifact_ref = operation.get("artifact_ref")
-            if artifact_ref:
-                artifact = _inside(directory, str(artifact_ref))
-                if not artifact.is_file():
-                    raise DeliveryValidationError(f"delivery artifact is missing: {artifact_ref}")
+            problems.append("delivery must contain at least one operation")
+        else:
+            allowed = set(request.get("allowed_capabilities", []))
+            forbidden = set(request.get("forbidden_capabilities", []))
+            target_id = str((request.get("target") or {}).get("id", ""))
+            for index, operation in enumerate(operations):
+                where = f"operations[{index}]"
+                if not isinstance(operation, dict):
+                    problems.append(f"{where} must be a mapping")
+                    continue
+                capability = operation.get("capability")
+                if capability in forbidden or capability not in allowed:
+                    problems.append(
+                        f"{where} capability is not allowed: {capability!r}")
+                if operation.get("target_id") and operation.get("target_id") != target_id:
+                    problems.append(f"{where} targets an unrelated artifact")
+                artifact_ref = operation.get("artifact_ref")
+                if artifact_ref:
+                    try:
+                        artifact = _inside(directory, str(artifact_ref))
+                    except DeliveryValidationError as exc:
+                        problems.append(f"{where} artifact_ref is unsafe: {exc}")
+                    else:
+                        if not artifact.is_file():
+                            problems.append(
+                                f"{where} artifact is missing: {artifact_ref}")
+        if problems:
+            shown = problems[:12]
+            if len(problems) > 12:
+                shown.append(f"{len(problems) - 12} further problem(s) omitted")
+            raise DeliveryValidationError(
+                f"delivery {delivery_id!r} is invalid: " + "; ".join(shown))
         # Staleness is scoped to what the delivery actually reasoned about.  The
         # repository-wide fingerprint is provenance, not a gate: rejecting a
         # delivery because an unrelated note moved (feature specification §20.4
