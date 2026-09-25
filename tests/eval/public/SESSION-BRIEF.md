@@ -21,6 +21,29 @@ decrypt or search for it, and do not look for a key. Do not read
 branches. If you see oracle material by accident, record it and mark the run
 `"blind": false`.
 
+## On a shared machine
+
+Several evaluation chats may run at once on one computer, beside the owner's
+own files and other agent sessions.
+
+- Work only in your world (`~/los-eval/<run-id>*`), your session worktree and
+  your scratchpad. Under `~/los-eval/`, open nothing but your own run's
+  directories.
+- Do not read or write your assistant's persistent memory (for Claude Code,
+  `~/.claude/projects/*/memory/`). Do not read other sessions' transcripts
+  (`~/.claude/projects/`, `~/.codex/`) or other chats' scratchpads. A memory
+  index may already be in your context: do not open what it points to, and
+  record in `run.json` → `deviations` anything it made you do differently.
+- Your shell may start each command outside your world. Give every git
+  command that changes state an explicit path (`git -C <path>`). Write files
+  with a file-writing tool or a quoted heredoc (`<<'EOF'`), so that backticks
+  or `$(…)` in your text are never executed.
+- If anything outside your world changes by your hand, stop and tell the
+  owner at once.
+- Timing runs (plan P): record `uptime` before and after every measurement
+  series, so the load of other work on the machine is visible next to your
+  numbers.
+
 ## Two roles at once
 
 - **Consumer** — do each scenario the way a real user or user-facing agent

@@ -15,7 +15,7 @@ The campaign plan (which session does what, with kickoff prompts) is in
 | | Who may read it | Where |
 |---|---|---|
 | **PUBLIC** | everyone, including blind consumer sessions | `corpus/`, `public/`, `tools/`, `runs/` (own run only until finished) |
-| **HARNESS** | everyone; reading it teaches nothing about the answers, but blind consumers should not study `metrics/` | `metrics/`, `selftest.py` |
+| **HARNESS** | everyone; reading it teaches nothing about the answers, but blind consumers should not study `metrics/` | `metrics/`, `selftest.py`, `leak-adjudications.json` |
 | **PRIVATE** | the judge and repair sessions only | `private/oracle.tar.gz.enc` — encrypted; key held by the campaign owner, never committed |
 
 The oracle holds the relation judgments (MUST_CONNECT / USEFUL_CONNECT /
@@ -46,6 +46,7 @@ tests/eval/
 ├── README.md                this file
 ├── CAMPAIGN.md              the session plan and kickoff prompts
 ├── selftest.py              package self-tests (not part of make test)
+├── leak-adjudications.json  leak-scan matches ruled independent wording (hashes only)
 ├── corpus/                  PUBLIC — the synthetic learner's material
 │   ├── world.yaml           persona, timeline, pinned product revision
 │   ├── registries.yaml      concepts, relations, sources, programs

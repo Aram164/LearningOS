@@ -1,0 +1,13 @@
+{
+ "schema_version": 1,
+ "about": "Matches of the oracle's own sentences in consumer output (tests/eval/runs/) that the conductor ruled to be the consumer's own wording, not a blindness breach. Patterns are recorded as SHA-256 only, so this file reveals no oracle text. selftest.py ignores exactly these (file, pattern) pairs; every other match still fails. Each entry is logged in CAMPAIGN.md under its harness change.",
+ "adjudicated": [
+  {
+   "path": "tests/eval/runs/s05-connections-a-2026-09-25/connections.jsonl",
+   "pattern_sha256": "2ae59821c56ff7b3b7a197fa7f896ff0eddd833c5ec60eb754e782bba6c5d685",
+   "harness_change": "H5",
+   "ruled": "2026-09-25",
+   "evidence": "A 44-character one-line summary of a single inbox item, written in the consumer's reason for a different probe than the oracle's. The session's local transcript shows the phrase only in the session's own writes; no tool result ever showed it any oracle text."
+  }
+ ]
+}
