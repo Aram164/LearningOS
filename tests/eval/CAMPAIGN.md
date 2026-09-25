@@ -105,6 +105,7 @@ own. The judge merges every run branch before scoring.
 | Session | Plan | Run id | Branch | World HEAD | Notes |
 |---|---|---|---|---|---|
 | 0 | B | `s00-baseline-2026-09-24` | `claude/optimistic-mayer-065kyv` | `9a85f012…` | built before harness change H1 |
+| 4 | R | `s04-resume-2026-09-25` | `claude/adoring-thompson-fa2n41` | `13ad2fca…` | before H2: agent environment refused the approval hash; no write completed (S10, S16 apply, S26 goal 2) |
 
 ## Harness changes
 
@@ -122,4 +123,12 @@ here, so the judge can tell a product finding from an artefact of the harness.
   "resume pointer vs study map" observation from those runs is a harness
   artefact, though whether the product should flag such a disagreement
   remains a fair question.
+- **H2 (2026-09-25).** Session 4's agent environment refused to compute the
+  value LearningOS requires an operator to attach to an approved write,
+  reading it as self-approval, so none of that run's writes happened.
+  `public/CONSUMER-PROTOCOL.md` now states that a scripted learner approval is
+  a real approval and that recording it in the product's required form is the
+  operator's job. Runs after H2 received this sentence; their friction on
+  discovering the approval mechanism is therefore not comparable with runs 0
+  and 4, which measured it without the hint.
 
