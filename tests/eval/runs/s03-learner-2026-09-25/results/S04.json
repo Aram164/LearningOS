@@ -1,0 +1,174 @@
+{
+ "scenario": "S04",
+ "run_id": "s03-learner-2026-09-25",
+ "classification": "PASS_WITH_FRICTION",
+ "classification_reason": "The capture was filed verbatim into the matching stage's working note through a receipted gateway write after explicit approval, and its connections were reported; but building the envelope required reading implementation code for the intent hash, the documented routing destinations have no capability, and the diagnostics then mislabelled the write as ambiguous.",
+ "before": {
+  "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+  "git_status": [],
+  "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec",
+  "derived_digest": "c72ef3b1346358a19af48d18f1e1439378cf970e79012b9332d000bd7ac3b10c",
+  "snapshot_file": "observations/S04-before.json"
+ },
+ "consumer": {
+  "goal": "File the friend's Postgres-deadlock message (eval-drop/A09.md) where it belongs and tell the learner what it connects to.",
+  "first_action": "Read eval-drop/A09.md and its drop metadata (inbox-capture, arrives 2026-09-22), then read WORKFLOWS §2/§3/§8/§15/§21 for inbox routing.",
+  "commands": [
+   "grep inbox routing in system/*.md",
+   "read WORKFLOWS §2,§3,§8,§15,§21",
+   "los capabilities --json",
+   "los capabilities path.note.write --json",
+   "los capabilities stage.note.write --json",
+   "los capabilities capture.create --json",
+   "read ARCHITECTURE §3.3",
+   "read WORKFLOWS §25a (envelope)",
+   "grep intent_sha256 in system/ docs+schema",
+   "read system/schema/capability-envelope.schema.json",
+   "los stage-note --help",
+   "los capability --help",
+   "los plan-edit-context unit-os-l07 --stage-id stage-os-l07-01-deadlock",
+   "los search deadlock",
+   "los search deadlock --type note --content --limit 30",
+   "los search lock order",
+   "los search lock order --type note --content --limit 30",
+   "los search postgres",
+   "los search postgres --type note --content --limit 30",
+   "los related concept-deadlock",
+   "los related concept-two-phase-locking",
+   "los stage-note unit-os-l07 stage-os-l07-01-deadlock --text test",
+   "los capability stage.note.write --payload-file /tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/A09-try1.json",
+   "read PLAN-CREATION-SOP ~490-520; grep envelope in docs",
+   "read SEMANTIC-CONTRACT 180-250, WORKFLOWS 270-300",
+   "IMPL READ: grep 'def intent_sha256' tools/",
+   "IMPL READ: tools/learning_os/contracts/gateway.py lines 1-110",
+   "los capability stage.note.write --payload-file /tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/A09-try2.json",
+   "los capability stage.note.write --payload-file /tmp/claude-0/-home-user-LearningOS/bb73d8c4-3eff-5cd9-9ab3-7157d01f7050/scratchpad/env/A09-try3.json",
+   "python tools/validate.py --compact; python tools/warning_baseline.py --check",
+   "los generate",
+   "los operations",
+   "los inspect study-map-os-l07",
+   "los operations --request-id s03-s04-a09-stage-note-3",
+   "los operations --request-id s03-s04-a09-stage-note-1",
+   "los status",
+   "los bootstrap --brief",
+   "los capability stage.note.write --payload-file A09-try1.json (UNCONFIRMED)",
+   "los capability stage.note.write --payload-file A09-try2.json (INVALID_REQUEST)",
+   "los capability stage.note.write --payload-file A09-try3.json (ok)",
+   "los generate",
+   "los operations",
+   "los operations --request-id s03-s04-a09-stage-note-3"
+  ],
+  "tool_calls": 27,
+  "docs_consulted": [
+   "system/WORKFLOWS.md §2, §3, §8, §15, §21, §25a",
+   "system/ARCHITECTURE.md §3.3",
+   "system/PLAN-CREATION-SOP.md Gate 5",
+   "system/SEMANTIC-CONTRACT.md (admission)",
+   "system/schema/capability-envelope.schema.json",
+   "los capabilities --json; capabilities path.note.write/stage.note.write/capture.create --json"
+  ],
+  "impl_files_read": [
+   "tools/learning_os/contracts/gateway.py (intent_sha256 / intent_subject — the approval subject hash is not specified in any document)"
+  ],
+  "retries": 2,
+  "confusions": [
+   "WORKFLOWS §21 routes 'temporary material tied to an active effort' to the workspace's scratch/, but no capability writes workspace scratch: path.note.write requires a learning-path id and stage (the world has 0 learning paths). There is also no capability that creates an ordinary durable synthesis note — only note.analysis.save (source analyses) and atlas.question.save (questions).",
+   "stage.note.write is described as 'compatibility capability only', yet OPERATOR.md says stage-specific learning belongs in the stage note; it was the only governed write that fits.",
+   "The approval subject is 'intent_sha256(envelope)', but no document defines the function; the UNCONFIRMED error ('approval subject does not match the current capability intent') gives no expected value.",
+   "Which artifacts expected_revisions must list is undocumented per capability; the INVALID_REQUEST error named them precisely (missing unit-os-l07, unexpected study-map-os-l07), which made the retry easy.",
+   "After success, `los operations` listed the write as AMBIGUOUS / needs_attention (see F-s03-diag-ambiguous-01)."
+  ],
+  "corrective_steps": [
+   "Read the intent-hash implementation and reproduced it in a 10-line helper (my scratchpad mkenv.py).",
+   "Corrected expected_revisions from the error message.",
+   "From S05 on, used a fresh idempotency key for every corrected attempt."
+  ],
+  "questions_asked_to_learner": [
+   "Proposed: append the message verbatim, under a short provenance header plus a 'Connects to' line, to the working note of stage-os-l07-01-deadlock (unit-os-l07) via stage.note.write — approve? → scripted reply: 'Yes, apply exactly what you showed me.'"
+  ],
+  "implementation_knowledge_needed": true,
+  "wall_minutes": 4,
+  "outcome": "The message now sits, verbatim with a provenance header, in the working note of the OS L07 deadlock stage (the stage the oral question belongs to). The learner is told it connects to note-deadlock-four-conditions (lock order breaks circular wait), note-two-phase-locking-deadlocks (Postgres aborting a victim), and the collected oral question 'which condition would you break in practice'. Validation 0 errors, no new warning signature; nothing committed in the world repository (not requested)."
+ },
+ "internal": {
+  "request_ids": [
+   "s03-s04-a09-stage-note-1",
+   "s03-s04-a09-stage-note-2",
+   "s03-s04-a09-stage-note-3"
+  ],
+  "receipts": [
+   "operations/transactions/transaction-20260925-003900-001.yaml"
+  ],
+  "transaction_behavior": "Attempt 1 refused UNCONFIRMED (approval hash), attempt 2 refused INVALID_REQUEST (expected_revisions), both before any write. Attempt 3 committed atomically: one working-note write (sha256 e3b0…→34f3…, created: false), unit-os-l07 revision 0→1, snapshot 82bcffb7…→411721b3…, receipt with authority grant and intent hash.",
+  "approval_behavior": "Envelope approval kind operator-approval bound to intent_sha256 of {schema_version, capability, channel, expected_snapshot, expected_revisions, payload}; request_id and idempotency_key are excluded from the subject. The learner's approval was given in conversation before the envelope was built.",
+  "projection_activity": "snapshot_after reported by the result; `los generate` republished manifest.json; `inspect study-map-os-l07` showed the new notes_text but notes_updated '2026-09-02' (the date of the last commit touching the empty file, not the write).",
+  "persistence_activity": "Receipt plus two new ledgers (operations/transactions/idempotency.yaml, revisions.yaml) created untracked; operations/diagnostics/traces.jsonl appended.",
+  "derived_changes": "1 derived file added, 2 modified (manifest and views).",
+  "manifest_changes": "generated/manifest.json republished for snapshot 411721b3….",
+  "unexpected_writes": [],
+  "warnings_errors": [
+   "UNCONFIRMED: approval subject does not match the current capability intent",
+   "INVALID_REQUEST: expected_revisions must cover exactly every transaction artifact (missing=['unit-os-l07'], unexpected=['study-map-os-l07'])",
+   "`los operations`: canonical_outcome AMBIGUOUS, needs_attention true for the committed request"
+  ],
+  "git_diff_stat": " .../unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md | 13 +++++ (1 file changed, 13 insertions); untracked: 3 files under operations/transactions/",
+  "observe_diff_file": "observations/S04-diff.json"
+ },
+ "after": {
+  "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+  "git_status": [
+   " M curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+   "?? operations/transactions/idempotency.yaml",
+   "?? operations/transactions/revisions.yaml",
+   "?? operations/transactions/transaction-20260925-003900-001.yaml"
+  ],
+  "canonical_digest": "b5d7ddb6e88696b4227519bea69c3aaf2870b0813725575e3cc303212958d52d",
+  "derived_digest": "64006addde23e55fa350e0a2aae09e3dca50ebf1dc08d09a987c56910e77f330",
+  "snapshot_file": "observations/S04-after.json"
+ },
+ "friction": [
+  {
+   "tag": "needs-implementation-knowledge",
+   "description": "The approval subject hash (intent_sha256) is required for every agent write but specified nowhere in the docs; I had to read tools/learning_os/contracts/gateway.py.",
+   "cost": "4 tool calls, 1 failed submission"
+  },
+  {
+   "tag": "missing-capability",
+   "description": "The documented inbox-routing destinations (workspace scratch/, a new durable synthesis note) have no gateway capability; only stage-owned notes, the inbox itself and the Garden are writable for a free-form capture.",
+   "cost": "~6 tool calls reading capabilities and docs"
+  },
+  {
+   "tag": "doc-contradiction",
+   "description": "stage.note.write is 'compatibility capability only' (capabilities.yaml, OPERATOR) while OPERATOR also says stage-specific learning belongs in its stage note and no newer stage-note capability exists.",
+   "cost": "—"
+  },
+  {
+   "tag": "unhelpful-error",
+   "description": "UNCONFIRMED gives no hint of how the intent hash is formed; by contrast INVALID_REQUEST on revisions named the exact artifacts.",
+   "cost": "1 retry"
+  },
+  {
+   "tag": "unclear-safety",
+   "description": "After a clean commit, `los operations` flags the request AMBIGUOUS / needs_attention / BLOCKED; a user reading it would think the write may not have happened.",
+   "cost": "2 tool calls to investigate"
+  }
+ ],
+ "failures": [
+  "F-s03-diag-ambiguous-01"
+ ],
+ "scenario_record": {
+  "change_applied": {
+   "path": "curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+   "capability": "stage.note.write",
+   "receipt": "operations/transactions/transaction-20260925-003900-001.yaml",
+   "transaction_id": "transaction-20260925-003900-001",
+   "approval": "Learner approved the exact proposed text and destination (scripted reply 'Yes, apply exactly what you showed me.'); envelope approval kind operator-approval."
+  },
+  "connection_record": "connections.jsonl probe A09 (phase after-shelving)",
+  "original_capture_file": "eval-drop/A09.md left untouched (outside the installation); not first captured into work/inbox/."
+ },
+ "uncertainties": [
+  "Whether a friend's anecdote should instead become (part of) a durable note is a judgement call; with no note-creation capability and the stage not yet started, the stage note was the least destructive governed home.",
+  "The world repository was left with uncommitted changes (no commit was requested)."
+ ]
+}
