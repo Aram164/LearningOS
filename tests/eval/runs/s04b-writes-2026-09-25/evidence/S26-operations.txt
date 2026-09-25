@@ -1,0 +1,17 @@
+{
+  "operations": [
+    {
+      "trace_id": "c0b9f02c97ebd8d6491f80c2c7c7fbb2",
+      "request_id": "s04b-s26-capture-1",
+      "capability": "capture.create",
+      "started_at": 1790303766.633357,
+      "duration_ms": 714.9,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    }
+  ]
+}

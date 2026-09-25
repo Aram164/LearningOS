@@ -1,0 +1,15 @@
+--- /private/tmp/claude-501/-Users-aramaljanadi-Desktop-semestercontext/d6a760e8-a320-41b0-998d-4ff7cf6e5b87/scratchpad/work/s16-delivery/artifacts/transcription.md	2026-09-25 04:31:48
++++ /Users/aramaljanadi/los-eval/s04b-writes-2026-09-25/S16-retry/LearningOS/repository/knowledge/garden/transcriptions/garden-note-temperature-everywhere.md	2026-09-25 04:32:39
+@@ -1,3 +1,12 @@
++---
++id: transcription-garden-note-temperature-everywhere
++type: garden-transcription
++garden_entry_id: garden-note-temperature-everywhere
++provenance: ai-derived
++request_id: ai-request-20260925-022947-4ff0ef
++delivery_id: ai-delivery-20260925-temperature-everywhere
++---
++
+ # Temperature everywhere — AI-derived transcription
+ 
+ > AI-derived by the `garden.shelve` action (provider: manual-bundle, request

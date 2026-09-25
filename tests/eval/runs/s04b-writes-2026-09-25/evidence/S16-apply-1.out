@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "request_id": "s04b-s16-apply-1",
+  "idempotency_key": "s04b-s16-apply-1",
+  "capability": "ai-action.delivery.apply",
+  "ok": false,
+  "replayed": false,
+  "transaction_id": null,
+  "receipt_path": null,
+  "snapshot_after": null,
+  "result": {},
+  "error": {
+    "code": "INVALID_REQUEST",
+    "message": "delivery transaction failed: GatewayEnvelopeV2 expected_revisions must cover exactly every transaction artifact (missing=['transcription-garden-note-temperature-everywhere'], unexpected=[])",
+    "retryable": false,
+    "details": {}
+  }
+}

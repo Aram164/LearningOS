@@ -1,0 +1,163 @@
+{
+  "scenario": "S16",
+  "run_id": "s04b-writes-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "On the second fresh world the manual-bundle action ran end to end: prepare → provider delivery → import (validated) → learner approval recorded → approved-delivery envelope → committed receipt; the seed stayed unchanged, every write fell inside the capability grants, validation 0 errors and no new warning signature. Friction was heavy: the Garden seed is not findable through search, the delivery.yaml format is documented nowhere a provider can see (three blind import attempts, then an implementation read), and the result cannot be read back through inspect or search. The first world was poisoned by a prepare with a custom --request-id (F-s04b-writes-02), which is recorded separately as a robustness failure; the scenario's own outcome is judged on the retry.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec",
+    "derived_digest": "df97c8737d287c93f8e3a048d46ad71f9da0e95cf3cccd0c0bbc8e63032db409",
+    "snapshot_file": "observations/S16-retry-before.json"
+  },
+  "consumer": {
+    "goal": "Run the AI shelving action on the learner's Garden seed about 'temperature', act as the provider through the manual bundle, and apply the delivery if it validates.",
+    "first_action": "python tools/los.py search temperature",
+    "commands": [
+      "python tools/los.py search temperature",
+      "python tools/los.py search --help",
+      "python tools/los.py search temperature --content",
+      "python tools/los.py search temperature --type garden",
+      "python tools/los.py ai-action-list --help",
+      "python tools/los.py ai-action-list",
+      "grep -rln 'garden.shelve|ai-action-prepare|manual-bundle' system/ AGENTS.md CLAUDE.md",
+      "python tools/los.py search temperature --type garden-note",
+      "python tools/los.py search garden --limit 20",
+      "ls -R knowledge/garden; grep -il temperature -r knowledge/garden",
+      "cat knowledge/garden/temperature-everywhere.md",
+      "python tools/los.py ai-action-prepare --help",
+      "[world 1] python tools/los.py bootstrap --compact   (snapshot)",
+      "[world 1] python tools/los.py ai-action-prepare --action-id garden.shelve --target-kind garden-note --target-id garden-note-temperature-everywhere --provider manual-bundle --expected-snapshot SNAP --request-id s04b-s16-prepare-1   (exit 2; bundle persisted; world poisoned — F-s04b-writes-02)",
+      "[world 1] python tools/los.py resume / bootstrap --brief / search temperature / ai-action-status s04b-s16-prepare-1; python tools/validate.py --compact   (damage assessment)",
+      "[world 2] python tools/los.py bootstrap --compact   (snapshot)",
+      "[world 2] python tools/los.py ai-action-prepare --action-id garden.shelve --target-kind garden-note --target-id garden-note-temperature-everywhere --provider manual-bundle --expected-snapshot SNAP   (ok: ai-request-20260925-022947-4ff0ef)",
+      "cat operations/ai-actions/requests/ai-request-20260925-022947-4ff0ef/{instructions.md,context.md,allowed-capabilities.json,artifact-index.json,contract-lock.json,request.yaml}",
+      "ls system/schema | grep deliver…; grep -rln 'delivery.yaml' system/",
+      "python tools/los.py ai-action-import-delivery --help / ai-action-validate-delivery --help / ai-action-apply-delivery --help / ai-action-append-slices --help",
+      "python tools/los.py capabilities ai-action.delivery.apply --json",
+      "python tools/los.py ai-action-import-delivery DELIVERY_DIR   (1: 'unsafe exchange identifier: ' — no id)",
+      "python tools/los.py ai-action-import-delivery DELIVERY_DIR   (2: 'delivery adapter does not match prepared request')",
+      "python tools/los.py ai-action-import-delivery DELIVERY_DIR   (3: same — provider.adapter is not the field)",
+      "grep -rn 'delivery adapter does not match|unsafe exchange identifier' tools/",
+      "sed -n 500,640p tools/learning_os/ai_actions/service.py",
+      "python tools/los.py ai-action-import-delivery DELIVERY_DIR   (4: ok, after recorded learner approval)",
+      "python tools/los.py ai-action-validate-delivery ai-delivery-20260925-temperature-everywhere   (ok)",
+      "python tools/los.py bootstrap --compact   (snapshot)",
+      "python tools/los.py capability ai-action.delivery.apply --payload-file s16-env1.json   (refused: missing revision guard for the new transcription artifact)",
+      "python tools/los.py bootstrap --compact   (snapshot)",
+      "python tools/los.py capability ai-action.delivery.apply --payload-file s16-env2.json   (committed)",
+      "python tools/validate.py --compact; python tools/warning_baseline.py --check",
+      "python tools/los.py ai-action-status ai-request-20260925-022947-4ff0ef",
+      "python tools/los.py inspect transcription-garden-note-temperature-everywhere   (record not found)",
+      "python tools/los.py inspect garden-note-temperature-everywhere   (record not found)",
+      "python tools/los.py search Boltzmann --content   (0 results)",
+      "python tools/los.py operations --limit 5"
+    ],
+    "tool_calls": 38,
+    "docs_consulted": [
+      "system/OPERATOR.md (read in S10; capture routing: half-formed ideas → knowledge/garden/)",
+      "system/AI-ACTIONS.md (whole; not linked from OPERATOR.md — found by grep)",
+      "system/contracts/ai-actions/garden.shelve.yaml",
+      "system/contracts/normative-corpus.yaml (AI-ACTIONS.md entry: reference, current, binding)",
+      "the prepared bundle: instructions.md, context.md, allowed-capabilities.json, artifact-index.json, contract-lock.json, request.yaml"
+    ],
+    "impl_files_read": [
+      "tools/learning_os/ai_actions/service.py (lines 500-640: import_delivery, _validate, _assert_target_unchanged, start of apply_delivery)"
+    ],
+    "retries": 5,
+    "confusions": [
+      "How to find a Garden seed: `search` returns durable notes and concepts but never Garden seeds, with or without --type garden / garden-note; the seed was found by listing knowledge/garden/.",
+      "The target id is not in the seed (no frontmatter) and no command lists Garden ids; `garden-note-temperature-everywhere` was inferred from the one example id in AI-ACTIONS.md and happened to be right.",
+      "The delivery format: the bundle says 'return an approved delivery directory containing delivery.yaml' and AI-ACTIONS.md shows only an `operations:` fragment. Required top-level fields (id, type, request_id, action_id, producer.adapter, preconditions copied exactly, approval.user_approved, operations) were learned from service.py.",
+      "Where the learner's approval goes: validation at import already requires approval.user_approved, so approval has to be obtained before import, not before 'apply' as the scenario and docs phrase it.",
+      "Which revisions the apply envelope must guard: the new transcription artifact (not yet existing) must be guarded at revision 0 alongside the seed; this is not documented.",
+      "AI-ACTIONS.md says operations/ai-actions/ bookkeeping is 'kept out of the canonical tree', yet garden-state/ is not gitignored and the observer counts it as canonical (only requests/ and deliveries/ are ignored)."
+    ],
+    "corrective_steps": [
+      "Abandoned the poisoned first world untouched (no hand deletion of the bad bundle) and repeated the scenario once on a fresh deterministic world without --request-id.",
+      "Added a delivery id after 'unsafe exchange identifier: ' (empty).",
+      "Read service.py to learn the delivery fields after two adapter-mismatch refusals.",
+      "Added transcription-garden-note-temperature-everywhere: 0 to expected_revisions after the apply refusal named it."
+    ],
+    "questions_asked_to_learner": [
+      "Approval of the delivery before applying: one operation, garden.add-transcription, creating an AI-labelled transcription under knowledge/garden/transcriptions/ with the seed verbatim and a separate AI synthesis (same Boltzmann factor exp(−E/T); physics shared in the max-entropy sense only; pointers to note-softmax-temperature and note-simulated-annealing; one open question); original seed unchanged. → \"Approved.\""
+    ],
+    "implementation_knowledge_needed": true,
+    "wall_minutes": 10,
+    "outcome": "The learner is told the shelving ran and was applied: her seed 'temperature-everywhere' is unchanged; a new AI-derived transcription at knowledge/garden/transcriptions/garden-note-temperature-everywhere.md holds her words verbatim plus a clearly separated synthesis answering 'coincidence or the same physics?' (the same Boltzmann factor; same physics in the statistical-mechanics sense only) with pointers to her two related notes and one open question. She cannot pull it up through the product's search or inspect; the file path comes from the receipt / ai-action-status."
+  },
+  "internal": {
+    "request_ids": [
+      "ai-request-20260925-022947-4ff0ef (AI-action request, world 2; status completed)",
+      "ai-delivery-20260925-temperature-everywhere (delivery id)",
+      "s04b-s16-apply-1 (trace d6cdf6b6338280d9de0b7964e7a4732c, NOT_COMMITTED at core.admission)",
+      "s04b-s16-apply-2 (trace 059c412339141f468c3bcba27b4501f0, COMMITTED)",
+      "s04b-s16-prepare-1 (world 1; not traced by `los operations`)"
+    ],
+    "receipts": [
+      "operations/transactions/transaction-20260925-043239-001.yaml"
+    ],
+    "transaction_behavior": "One committed transaction for ai-action.delivery.apply: snapshot 82bcffb7… → 9d9f11cd…; artifacts garden-note-temperature-everywhere 0→1 and transcription-garden-note-temperature-everywhere 0→1. Writes: knowledge/garden/transcriptions/garden-note-temperature-everywhere.md (created), operations/ai-actions/garden-state/garden-note-temperature-everywhere.yaml (created), and the request.yaml status update (exchange state). The receipt names three grants — ai-action.delivery.apply (operations/ai-actions/requests/**), garden.add-transcription (knowledge/garden/transcriptions/), garden.update (operations/ai-actions/garden-state/) — and every write falls inside one of them. garden.update was exercised although the delivery listed only garden.add-transcription; it is within the action's allowed_capabilities and the documented effects. The refused first apply stopped at core.admission with no write. Import and validate do not create transactions or receipts; a rejected import left only an empty operations/ai-actions/incoming/ directory.",
+    "approval_behavior": "Two approval records: (1) inside delivery.yaml, approval.user_approved true — required at import, so the learner's 'Approved.' had to be obtained before import; (2) the apply envelope's approval kind approved-delivery with subject_sha256 = intent_sha256 over the intent (computed with the product's helper), whose payload binds the stored delivery.yaml bytes (sha256:affcd6a9…) and the artifact (artifacts/transcription.md). The canonical transcription is not byte-identical to the approved artifact: the apply prepends a provenance frontmatter block (id, type garden-transcription, garden_entry_id, provenance ai-derived, request_id, delivery_id); the approved body follows unchanged (evidence/S16-approved-vs-written.diff). The approval value is self-computable by the envelope builder; nothing proves a human approved.",
+    "projection_activity": "Application refreshed the projection: 138 generated/ files added (984,289 bytes) where the fresh world had none. The transcription and the seed are nevertheless not resolvable by `inspect`, and `search --content` does not index Garden transcriptions.",
+    "persistence_activity": "Exchange state under operations/ai-actions/: requests/<id>/ (7 files, gitignored), deliveries/<id>/ (delivery.yaml + artifact, gitignored), incoming/ (empty dir left by the rejected imports). operations/diagnostics/traces.jsonl gained the two apply traces.",
+    "derived_changes": "138 derived files added under generated/; none modified or removed.",
+    "manifest_changes": "generated/manifest.json produced by the apply's projection refresh; snapshot 82bcffb7… → 9d9f11cd….",
+    "unexpected_writes": [],
+    "warnings_errors": [
+      "World 1: ai-action-prepare exit 2 — manifest contract mismatch on /ai_actions/requests/0/id (see F-s04b-writes-02)",
+      "Import 1: 'unsafe exchange identifier: ' (empty value, field not named)",
+      "Imports 2-3: 'delivery adapter does not match prepared request' (the expected field, producer.adapter, is not named)",
+      "Apply 1: INVALID_REQUEST — delivery transaction failed: expected_revisions must cover exactly every transaction artifact (missing=['transcription-garden-note-temperature-everywhere'], unexpected=[])",
+      "validate after apply: 0 errors, 2 warnings (clock-derived WS-NEGLECT); warning_baseline --check OK"
+    ],
+    "git_diff_stat": "no tracked file modified; 5 untracked canonical files: knowledge/garden/transcriptions/garden-note-temperature-everywhere.md, operations/ai-actions/garden-state/garden-note-temperature-everywhere.yaml, operations/transactions/{idempotency.yaml, revisions.yaml, transaction-20260925-043239-001.yaml}",
+    "observe_diff_file": "observations/S16-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [
+      "?? knowledge/garden/transcriptions/",
+      "?? operations/ai-actions/garden-state/",
+      "?? operations/transactions/idempotency.yaml",
+      "?? operations/transactions/revisions.yaml",
+      "?? operations/transactions/transaction-20260925-043239-001.yaml"
+    ],
+    "canonical_digest": "2f67f923b0f0a692aa7d3d5e38b56f4696abe257ddd4a83c2648dd02bd33ccc0",
+    "derived_digest": "f9196047feddc736ddf5ed1e266c3ffba4fa2874cbc0c5d959754f34a259052d",
+    "snapshot_file": "observations/S16-after.json"
+  },
+  "friction": [
+    {"tag": "needs-implementation-knowledge", "description": "The delivery.yaml schema is published nowhere a provider or operator can see — not in the bundle, not in system/schema, and AI-ACTIONS.md shows only an operations fragment. Required fields (id, type, request_id, action_id, producer.adapter, exact preconditions copy, approval.user_approved, operations) came from tools/learning_os/ai_actions/service.py. A real external provider receiving only the bundle could not produce a valid delivery.", "cost": "3 refused imports, 2 implementation-read calls"},
+    {"tag": "unhelpful-error", "description": "Import errors do not name the field: 'unsafe exchange identifier: ' prints an empty value without saying which identifier; 'delivery adapter does not match prepared request' does not say the field is producer.adapter (the request calls the same concept provider.adapter).", "cost": "2 wasted attempts"},
+    {"tag": "missing-capability", "description": "Garden seeds are not reachable through the product's read surface: search (any --type) and inspect never return them, and no command lists Garden ids. The seed was found by listing knowledge/garden/, and its id was inferred from a doc example. After application, neither the seed nor its transcription resolves by inspect, and search --content does not cover them.", "cost": "6 calls to find the target; result not readable back"},
+    {"tag": "unclear-safety", "description": "The --request-id option of ai-action-prepare has no documented format and a bad value poisons the projection (F-s04b-writes-02); the error then recommends a manifest contract bump, a maintainer action that would be wrong for a consumer.", "cost": "a second world build and ~8 calls of damage assessment"},
+    {"tag": "hidden-prerequisite", "description": "The apply envelope must guard a not-yet-existing artifact (transcription-garden-note-temperature-everywhere at revision 0); AI-ACTIONS.md says only 'one expected revision for every transaction artifact'. The refusal named it precisely.", "cost": "1 refused apply"},
+    {"tag": "doc-contradiction", "description": "The scenario and AI-ACTIONS.md frame approval as preceding application, but import already refuses a delivery without approval.user_approved, so approval must precede import. AI-ACTIONS.md also calls operations/ai-actions/ bookkeeping 'kept out of the canonical tree' while listing garden-state/ as an approved canonical effect (it is not gitignored).", "cost": "one reordering of the workflow"},
+    {"tag": "unnecessary-exploration", "description": "OPERATOR.md never mentions AI actions or AI-ACTIONS.md; the binding doc was found by grepping system/.", "cost": "1 grep"}
+  ],
+  "failures": ["F-s04b-writes-02"],
+  "scenario_record": {
+    "request_id": "ai-request-20260925-022947-4ff0ef",
+    "delivery_id": "ai-delivery-20260925-temperature-everywhere",
+    "validation_result": "ai-action-validate-delivery → {\"ok\": true, \"delivery_id\": \"ai-delivery-20260925-temperature-everywhere\", \"request_id\": \"ai-request-20260925-022947-4ff0ef\"}",
+    "receipt_id": "transaction-20260925-043239-001",
+    "files_created_or_changed": [
+      {"path": "knowledge/garden/transcriptions/garden-note-temperature-everywhere.md", "change": "created", "scope": "inside garden.add-transcription (knowledge/garden/transcriptions/)"},
+      {"path": "operations/ai-actions/garden-state/garden-note-temperature-everywhere.yaml", "change": "created", "scope": "inside garden.update (operations/ai-actions/garden-state/) — not requested by the delivery, performed by the apply"},
+      {"path": "operations/ai-actions/requests/ai-request-20260925-022947-4ff0ef/request.yaml", "change": "modified (status → completed, delivery and receipt ids)", "scope": "inside ai-action.delivery.apply (operations/ai-actions/requests/**)"},
+      {"path": "operations/transactions/transaction-20260925-043239-001.yaml, idempotency.yaml, revisions.yaml", "change": "created", "scope": "transaction service ledgers"},
+      {"path": "operations/ai-actions/deliveries/ai-delivery-20260925-temperature-everywhere/ (delivery.yaml, artifacts/transcription.md)", "change": "created at import", "scope": "exchange state, gitignored"},
+      {"path": "knowledge/garden/temperature-everywhere.md", "change": "unchanged", "scope": "original seed, protected"}
+    ],
+    "fell_outside_declared_scope": "none",
+    "first_world": "~/los-eval/s04b-writes-2026-09-25/S16 — poisoned by the custom --request-id prepare; preserved untouched (observations/S16-before.json, S16-poisoned.json, S16-poisoned-diff.json)",
+    "delivery_content": "one garden.add-transcription operation; the transcription artifact holds the seed verbatim and a separate, labelled AI synthesis"
+  },
+  "uncertainties": [
+    "Whether the Obsidian UI surfaces Garden seeds and transcriptions (NOT TESTED); the CLI does not.",
+    "Whether a relationship.create operation to note-softmax-temperature / note-simulated-annealing was expected; I did not add one because its operation shape is documented nowhere and guessing a third undocumented format seemed worse than naming the notes in prose.",
+    "Whether the automatic garden.update write is intended when the delivery does not request it (it is inside the documented effects).",
+    "Prior non-evaluation memory of this product's envelope helper may have shortened the approval-hash step (see run.json deviations)."
+  ]
+}
