@@ -1,0 +1,5 @@
+los: the published manifest no longer matches system/contracts/manifest-contract.yaml (declared v15).
+  schema at /backlinks/note_incoming/note-b-plus-tree-indexes/0: {'from': 'note-lsm-trees', 'kind': 'superseded-by'} is not of type 'string'
+A change to the published shape is an interface change, even when it only adds a key: consumers declare an exact version and fail closed.
+  1. python tools/manifest_contract.py --bump --note "<what changed>"
+  2. mirror the new version into the UI in the same change — contracts/manifest-v<N>.lock.json, MANIFEST_CONTRACT_VERSION, ManifestV<N>, fixture-vault/generated/manifest.json

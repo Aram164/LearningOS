@@ -1,0 +1,19 @@
+{
+ "schema_version": 2,
+ "request_id": "req-s20a-cap",
+ "idempotency_key": "idem-s20a-cap",
+ "capability": "capture.create",
+ "channel": "operator",
+ "expected_snapshot": "sha256:b5c38ebb846d2301b669f6d0c52620982e2b824fdf66e2a864cc5e2344556d65",
+ "expected_revisions": {
+  "capture-request:idem-s20a-cap": 0
+ },
+ "approval": {
+  "kind": "direct-user-gesture",
+  "subject_sha256": "sha256:64614a138e9aff4912253a4fa712e0818678d6670b21458bdf1e8d50da15c893"
+ },
+ "payload": {
+  "text": "S20a probe: capture while one note has broken frontmatter.",
+  "title": "s20a probe"
+ }
+}

@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "req-s22-r01-b",
+  "idempotency_key": "idem-s22-r01-b",
+  "capability": "capture.create",
+  "ok": true,
+  "replayed": false,
+  "transaction_id": "transaction-20260925-125947-001",
+  "receipt_path": "operations/transactions/transaction-20260925-125947-001.yaml",
+  "snapshot_after": "sha256:f989bada6909dd8c4a5b36cd99c56a0cb2d274ea3cc03f273051a662dde59e48",
+  "result": {
+    "ok": true,
+    "captured": "work/inbox/20260925-125947-s22-r01-b.md",
+    "transaction_id": "transaction-20260925-125947-001",
+    "receipt_path": "operations/transactions/transaction-20260925-125947-001.yaml",
+    "artifact_revisions": {
+      "capture-request:idem-s22-r01-b": 1
+    },
+    "snapshot_after": "sha256:f989bada6909dd8c4a5b36cd99c56a0cb2d274ea3cc03f273051a662dde59e48",
+    "replayed": false
+  },
+  "error": null
+}

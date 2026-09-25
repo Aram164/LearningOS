@@ -1,0 +1,21 @@
+{
+  "schema_version": 2,
+  "request_id": "req-s22-r02-a",
+  "idempotency_key": "idem-s22-r02-a",
+  "capability": "capture.create",
+  "ok": false,
+  "replayed": false,
+  "transaction_id": null,
+  "receipt_path": null,
+  "snapshot_after": null,
+  "result": {},
+  "error": {
+    "code": "STALE_SNAPSHOT",
+    "message": "canonical state changed since this request was approved",
+    "retryable": true,
+    "details": {
+      "expected": "sha256:f989bada6909dd8c4a5b36cd99c56a0cb2d274ea3cc03f273051a662dde59e48",
+      "actual": "sha256:b5ae9f7d86f97f783bf10fd079780e9a68f79ddef413b5c1292772ab4607f773"
+    }
+  }
+}

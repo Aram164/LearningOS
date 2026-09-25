@@ -1,0 +1,139 @@
+{
+  "scenario": "S01",
+  "run_id": "s07-abuse-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "Setup, validation, the warning gate, status and view generation all worked first time with no change to any canonical file. But the documented fast test suite reports 18 failures that a user cannot act on (tests coupled to the maintainer's data), and it silently writes 135 trace spans into the learner's live operation log, making `los operations` report dozens of fabricated AMBIGUOUS writes.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S01-before.json"
+  },
+  "consumer": {
+    "goal": "Confirm the tooling runs on this machine and the repository is healthy without changing notes",
+    "first_action": "cat AGENTS.md → system/OPERATOR.md → README.md (Quick start, Commands)",
+    "commands": [
+      "git status --porcelain",
+      "make  (target list)",
+      "make setup",
+      "make check",
+      "make warnings",
+      "make status",
+      "make views",
+      "make check",
+      "make test-fast",
+      "python tools/los.py operations --limit 3",
+      "python tools/los.py operations --request-id req-capture.create",
+      "python tools/los.py status"
+    ],
+    "tool_calls": 14,
+    "docs_consulted": [
+      "AGENTS.md",
+      "system/OPERATOR.md",
+      "README.md"
+    ],
+    "impl_files_read": [
+      "Makefile (test-fast target, grep)",
+      "tests/conftest.py (real_repo fixture, grep)"
+    ],
+    "retries": 0,
+    "confusions": [
+      "make check first reported HYGIENE-VIEWS 'generated/ views absent' although EVAL-WORLD.json says generate ran; generated/ held only reports/validation-report.md",
+      "validate prints 3 warnings but warning_baseline says '0 warning(s) across 0 signature(s)'; OPERATOR.md explains exempt clock-derived advisories, so resolved by reading",
+      "test-fast is described as not loading repository state yet its failures are FileNotFoundError on the owner's workspace files"
+    ],
+    "corrective_steps": [
+      "ran make views to clear HYGIENE-VIEWS (derived only)"
+    ],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 14,
+    "outcome": "Tooling works: .venv on Python 3.14.4, hooks installed, validation 0 errors / 2 warnings (both WS-NEGLECT clock advisories), warning gate OK, views built. Fast tests: 18 failures tied to the maintainer's own data, not the learner's. No notes changed. Side effect the learner would not expect: the operation log now shows 45 bogus 'needs attention' operations from the test run."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "no writes performed",
+    "approval_behavior": "none required",
+    "projection_activity": "make views wrote 20 derived files under generated/",
+    "persistence_activity": "none canonical",
+    "derived_changes": "generated/: 1 → 21 files",
+    "manifest_changes": "generated/manifest.json created",
+    "unexpected_writes": [
+      "operations/diagnostics/traces.jsonl (gitignored) — 135 spans from make test-fast",
+      "operations/ .pytest_cache (gitignored)"
+    ],
+    "warnings_errors": [
+      "W WS-NEGLECT workspace-ledgerline 31 days",
+      "W WS-NEGLECT workspace-linalg-refresh 104 days",
+      "W HYGIENE-VIEWS (before make views)",
+      "make test-fast: 18 failed"
+    ],
+    "git_diff_stat": "(empty) — git status --porcelain clean before and after",
+    "observe_diff_file": "observations/S01-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S01-after.json"
+  },
+  "friction": [
+    {
+      "tag": "unhelpful-error",
+      "description": "18 test-fast failures with FileNotFoundError on paths that do not belong to this learner; nothing says they are owner-data tests",
+      "cost": "2 tool calls + 5.5 min test run"
+    },
+    {
+      "tag": "doc-contradiction",
+      "description": "README says test-fast does no checked-in repository load; it both reads owner files and writes the live trace store",
+      "cost": "2 impl files read"
+    },
+    {
+      "tag": "unclear-safety",
+      "description": "after a harmless test run, `los operations` claims dozens of AMBIGUOUS writes needing reconciliation",
+      "cost": "2 tool calls"
+    }
+  ],
+  "failures": [
+    "F-s07-01",
+    "F-s07-02"
+  ],
+  "scenario_record": {
+    "setup_commands": [
+      {
+        "cmd": "make setup",
+        "exit": 0,
+        "seconds": 4
+      },
+      {
+        "cmd": "make check",
+        "exit": 0
+      },
+      {
+        "cmd": "make warnings",
+        "exit": 0
+      },
+      {
+        "cmd": "make status",
+        "exit": 0
+      },
+      {
+        "cmd": "make views",
+        "exit": 0,
+        "seconds": 1
+      },
+      {
+        "cmd": "make test-fast",
+        "exit": 2,
+        "seconds": 331,
+        "result": "18 failed, 2242 passed, 18 skipped, 83 deselected"
+      }
+    ],
+    "workaround_used": "none",
+    "validator": "0 error(s), 3 warning(s) — OK before views; 0 error(s), 2 warning(s) after make views",
+    "warning_baseline": "warning-baseline: 0 warning(s) across 0 signature(s); baseline 0 across 0 (recorded 2026-09-18) — OK",
+    "files_changed_by_setup": "git status --porcelain empty before and after; ignored additions: .venv/, .pytest_cache/, generated/*, operations/diagnostics/traces.jsonl, .git/hooks/{pre-commit,post-commit,pre-push}"
+  },
+  "uncertainties": [
+    "Whether the owner's real installation also accumulates test traces in its live store (likely: same code path)"
+  ]
+}

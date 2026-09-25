@@ -1,0 +1,11 @@
+---
+id: note-lsm-trees
+type: note
+title: LSM trees
+created: 2026-07-18
+role: synthesis
+state: evolving
+supersedes: [note-b-plus-tree-indexes]
+authorship: user
+concepts:
+mutation exit=0

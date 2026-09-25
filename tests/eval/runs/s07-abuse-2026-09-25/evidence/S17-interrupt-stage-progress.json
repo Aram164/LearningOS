@@ -1,0 +1,957 @@
+{
+  "probe_version": 1,
+  "world": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository",
+  "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py capability stage.progress.update --payload-file /private/tmp/claude-501/-Users-aramaljanadi-Desktop-semestercontext/368267e1-e5a2-4126-89e6-f8129249956f/scratchpad/s17/sp1.json",
+  "recover": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+  "uninterrupted_s": 0.751,
+  "complete_write": {
+    "changed_dirs": [
+      "curriculum",
+      "curriculum/modules/module-tuh-os/units/unit-os-l02"
+    ],
+    "changed_count": 3,
+    "new_receipts": 3,
+    "inflight": []
+  },
+  "summary": {
+    "pre-state": 16,
+    "committed": 1,
+    "finished": 1,
+    "exposed_before_recovery": 12
+  },
+  "trials": [
+    {
+      "delay_s": 0.01,
+      "killed": true,
+      "elapsed_s": 0.012,
+      "outcome": "pre-state",
+      "delta": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": []
+      },
+      "exposed_before_recovery": false,
+      "before_recovery": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": [],
+        "reads": [
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/validate.py --compact --no-report",
+            "exit": 0,
+            "tail": [
+              "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+              "W HYGIENE-VIEWS: generated/manifest.json is not the current authored snapshot \u2014 run `make views` [generated/manifest.json]",
+              "0 error(s), 3 warning(s) \u2014 OK (0.2s)"
+            ]
+          },
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py status --json",
+            "exit": 0,
+            "tail": [
+              "{\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":13},\"counts\":{\"active_workspaces\":6,\"archived_workspaces\":1,\"concept_relations\":28,\"concepts\":99,\"garden_notes\":9,\"inbox_items\":7,\"modules\":5,\"modules_enrolled\":2,\"notes\":116,\"programs\":2,\"projects\":2,\"sources\":29,\"standing_workspaces\":0,\"study_maps\":11,\"units\":16},\"exam_spine\":[{\"date\":\"2026-10-06\",\"module_id\":\"module-tuh-statlearn\",\"termin\":2,\"title\":\"Statistical Learning\"},{\"date\":\"2026-10-12\",\"module_id\":\"module-tuh-os\",\"termin\":1,\"title\":\"Operating Systems\"}],\"learning_os\":\"3.2.0\",\"root\":\"/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository\",\"validation\":{\"errors\":0,\"ok\":true,\"warnings\":3}}"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+          "exit": 0,
+          "tail": [
+            "published generated/manifest.json (atomic contract snapshot)"
+          ]
+        }
+      ]
+    },
+    {
+      "delay_s": 0.05,
+      "killed": true,
+      "elapsed_s": 0.055,
+      "outcome": "pre-state",
+      "delta": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": []
+      },
+      "exposed_before_recovery": false,
+      "before_recovery": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": [],
+        "reads": [
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/validate.py --compact --no-report",
+            "exit": 0,
+            "tail": [
+              "W WS-NEGLECT: workspace 'workspace-ledgerline' untouched for 31 days (per Git)",
+              "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+              "0 error(s), 2 warning(s) \u2014 OK (0.2s)"
+            ]
+          },
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py status --json",
+            "exit": 0,
+            "tail": [
+              "{\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":13},\"counts\":{\"active_workspaces\":6,\"archived_workspaces\":1,\"concept_relations\":28,\"concepts\":99,\"garden_notes\":9,\"inbox_items\":7,\"modules\":5,\"modules_enrolled\":2,\"notes\":116,\"programs\":2,\"projects\":2,\"sources\":29,\"standing_workspaces\":0,\"study_maps\":11,\"units\":16},\"exam_spine\":[{\"date\":\"2026-10-06\",\"module_id\":\"module-tuh-statlearn\",\"termin\":2,\"title\":\"Statistical Learning\"},{\"date\":\"2026-10-12\",\"module_id\":\"module-tuh-os\",\"termin\":1,\"title\":\"Operating Systems\"}],\"learning_os\":\"3.2.0\",\"root\":\"/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository\",\"validation\":{\"errors\":0,\"ok\":true,\"warnings\":2}}"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+          "exit": 0,
+          "tail": [
+            "published generated/manifest.json (atomic contract snapshot)"
+          ]
+        }
+      ]
+    },
+    {
+      "delay_s": 0.1,
+      "killed": true,
+      "elapsed_s": 0.107,
+      "outcome": "pre-state",
+      "delta": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": []
+      },
+      "exposed_before_recovery": false,
+      "before_recovery": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": [],
+        "reads": [
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/validate.py --compact --no-report",
+            "exit": 0,
+            "tail": [
+              "W WS-NEGLECT: workspace 'workspace-ledgerline' untouched for 31 days (per Git)",
+              "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+              "0 error(s), 2 warning(s) \u2014 OK (0.2s)"
+            ]
+          },
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py status --json",
+            "exit": 0,
+            "tail": [
+              "{\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":13},\"counts\":{\"active_workspaces\":6,\"archived_workspaces\":1,\"concept_relations\":28,\"concepts\":99,\"garden_notes\":9,\"inbox_items\":7,\"modules\":5,\"modules_enrolled\":2,\"notes\":116,\"programs\":2,\"projects\":2,\"sources\":29,\"standing_workspaces\":0,\"study_maps\":11,\"units\":16},\"exam_spine\":[{\"date\":\"2026-10-06\",\"module_id\":\"module-tuh-statlearn\",\"termin\":2,\"title\":\"Statistical Learning\"},{\"date\":\"2026-10-12\",\"module_id\":\"module-tuh-os\",\"termin\":1,\"title\":\"Operating Systems\"}],\"learning_os\":\"3.2.0\",\"root\":\"/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository\",\"validation\":{\"errors\":0,\"ok\":true,\"warnings\":2}}"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+          "exit": 0,
+          "tail": [
+            "published generated/manifest.json (atomic contract snapshot)"
+          ]
+        }
+      ]
+    },
+    {
+      "delay_s": 0.15,
+      "killed": true,
+      "elapsed_s": 0.157,
+      "outcome": "pre-state",
+      "delta": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": []
+      },
+      "exposed_before_recovery": false,
+      "before_recovery": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": [],
+        "reads": [
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/validate.py --compact --no-report",
+            "exit": 0,
+            "tail": [
+              "W WS-NEGLECT: workspace 'workspace-ledgerline' untouched for 31 days (per Git)",
+              "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+              "0 error(s), 2 warning(s) \u2014 OK (0.2s)"
+            ]
+          },
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py status --json",
+            "exit": 0,
+            "tail": [
+              "{\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":13},\"counts\":{\"active_workspaces\":6,\"archived_workspaces\":1,\"concept_relations\":28,\"concepts\":99,\"garden_notes\":9,\"inbox_items\":7,\"modules\":5,\"modules_enrolled\":2,\"notes\":116,\"programs\":2,\"projects\":2,\"sources\":29,\"standing_workspaces\":0,\"study_maps\":11,\"units\":16},\"exam_spine\":[{\"date\":\"2026-10-06\",\"module_id\":\"module-tuh-statlearn\",\"termin\":2,\"title\":\"Statistical Learning\"},{\"date\":\"2026-10-12\",\"module_id\":\"module-tuh-os\",\"termin\":1,\"title\":\"Operating Systems\"}],\"learning_os\":\"3.2.0\",\"root\":\"/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository\",\"validation\":{\"errors\":0,\"ok\":true,\"warnings\":2}}"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+          "exit": 0,
+          "tail": [
+            "published generated/manifest.json (atomic contract snapshot)"
+          ]
+        }
+      ]
+    },
+    {
+      "delay_s": 0.2,
+      "killed": true,
+      "elapsed_s": 0.202,
+      "outcome": "pre-state",
+      "delta": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": []
+      },
+      "exposed_before_recovery": false,
+      "before_recovery": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": [],
+        "reads": [
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/validate.py --compact --no-report",
+            "exit": 0,
+            "tail": [
+              "W WS-NEGLECT: workspace 'workspace-ledgerline' untouched for 31 days (per Git)",
+              "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+              "0 error(s), 2 warning(s) \u2014 OK (0.2s)"
+            ]
+          },
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py status --json",
+            "exit": 0,
+            "tail": [
+              "{\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":13},\"counts\":{\"active_workspaces\":6,\"archived_workspaces\":1,\"concept_relations\":28,\"concepts\":99,\"garden_notes\":9,\"inbox_items\":7,\"modules\":5,\"modules_enrolled\":2,\"notes\":116,\"programs\":2,\"projects\":2,\"sources\":29,\"standing_workspaces\":0,\"study_maps\":11,\"units\":16},\"exam_spine\":[{\"date\":\"2026-10-06\",\"module_id\":\"module-tuh-statlearn\",\"termin\":2,\"title\":\"Statistical Learning\"},{\"date\":\"2026-10-12\",\"module_id\":\"module-tuh-os\",\"termin\":1,\"title\":\"Operating Systems\"}],\"learning_os\":\"3.2.0\",\"root\":\"/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository\",\"validation\":{\"errors\":0,\"ok\":true,\"warnings\":2}}"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+          "exit": 0,
+          "tail": [
+            "published generated/manifest.json (atomic contract snapshot)"
+          ]
+        }
+      ]
+    },
+    {
+      "delay_s": 0.25,
+      "killed": true,
+      "elapsed_s": 0.255,
+      "outcome": "pre-state",
+      "delta": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": []
+      },
+      "exposed_before_recovery": true,
+      "before_recovery": {
+        "changed_dirs": [
+          "curriculum",
+          "curriculum/modules/module-tuh-os/units/unit-os-l02"
+        ],
+        "changed_count": 3,
+        "new_receipts": 1,
+        "inflight": [
+          "operations/transactions/.inflight/transaction-20260925-042834-001/backup-0",
+          "operations/transactions/.inflight/transaction-20260925-042834-001/backup-1",
+          "operations/transactions/.inflight/transaction-20260925-042834-001/backup-2",
+          "operations/transactions/.inflight/transaction-20260925-042834-001/intent.json"
+        ],
+        "reads": [
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/validate.py --compact --no-report",
+            "exit": 0,
+            "tail": [
+              "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+              "W HYGIENE-VIEWS: generated/manifest.json is not the current authored snapshot \u2014 run `make views` [generated/manifest.json]",
+              "0 error(s), 3 warning(s) \u2014 OK (0.2s)"
+            ]
+          },
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py status --json",
+            "exit": 0,
+            "tail": [
+              "{\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":13},\"counts\":{\"active_workspaces\":6,\"archived_workspaces\":1,\"concept_relations\":28,\"concepts\":99,\"garden_notes\":9,\"inbox_items\":7,\"modules\":5,\"modules_enrolled\":2,\"notes\":116,\"programs\":2,\"projects\":2,\"sources\":29,\"standing_workspaces\":0,\"study_maps\":11,\"units\":16},\"exam_spine\":[{\"date\":\"2026-10-06\",\"module_id\":\"module-tuh-statlearn\",\"termin\":2,\"title\":\"Statistical Learning\"},{\"date\":\"2026-10-12\",\"module_id\":\"module-tuh-os\",\"termin\":1,\"title\":\"Operating Systems\"}],\"learning_os\":\"3.2.0\",\"root\":\"/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository\",\"validation\":{\"errors\":0,\"ok\":true,\"warnings\":3}}"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+          "exit": 0,
+          "tail": [
+            "published generated/manifest.json (atomic contract snapshot)"
+          ]
+        }
+      ]
+    },
+    {
+      "delay_s": 0.3,
+      "killed": true,
+      "elapsed_s": 0.304,
+      "outcome": "pre-state",
+      "delta": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": []
+      },
+      "exposed_before_recovery": true,
+      "before_recovery": {
+        "changed_dirs": [
+          "curriculum",
+          "curriculum/modules/module-tuh-os/units/unit-os-l02"
+        ],
+        "changed_count": 3,
+        "new_receipts": 1,
+        "inflight": [
+          "operations/transactions/.inflight/transaction-20260925-042836-001/backup-0",
+          "operations/transactions/.inflight/transaction-20260925-042836-001/backup-1",
+          "operations/transactions/.inflight/transaction-20260925-042836-001/backup-2",
+          "operations/transactions/.inflight/transaction-20260925-042836-001/intent.json"
+        ],
+        "reads": [
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/validate.py --compact --no-report",
+            "exit": 0,
+            "tail": [
+              "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+              "W HYGIENE-VIEWS: generated/manifest.json is not the current authored snapshot \u2014 run `make views` [generated/manifest.json]",
+              "0 error(s), 3 warning(s) \u2014 OK (0.2s)"
+            ]
+          },
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py status --json",
+            "exit": 0,
+            "tail": [
+              "{\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":13},\"counts\":{\"active_workspaces\":6,\"archived_workspaces\":1,\"concept_relations\":28,\"concepts\":99,\"garden_notes\":9,\"inbox_items\":7,\"modules\":5,\"modules_enrolled\":2,\"notes\":116,\"programs\":2,\"projects\":2,\"sources\":29,\"standing_workspaces\":0,\"study_maps\":11,\"units\":16},\"exam_spine\":[{\"date\":\"2026-10-06\",\"module_id\":\"module-tuh-statlearn\",\"termin\":2,\"title\":\"Statistical Learning\"},{\"date\":\"2026-10-12\",\"module_id\":\"module-tuh-os\",\"termin\":1,\"title\":\"Operating Systems\"}],\"learning_os\":\"3.2.0\",\"root\":\"/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository\",\"validation\":{\"errors\":0,\"ok\":true,\"warnings\":3}}"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+          "exit": 0,
+          "tail": [
+            "published generated/manifest.json (atomic contract snapshot)"
+          ]
+        }
+      ]
+    },
+    {
+      "delay_s": 0.35,
+      "killed": true,
+      "elapsed_s": 0.355,
+      "outcome": "pre-state",
+      "delta": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": []
+      },
+      "exposed_before_recovery": true,
+      "before_recovery": {
+        "changed_dirs": [
+          "curriculum",
+          "curriculum/modules/module-tuh-os/units/unit-os-l02"
+        ],
+        "changed_count": 3,
+        "new_receipts": 1,
+        "inflight": [
+          "operations/transactions/.inflight/transaction-20260925-042838-001/backup-0",
+          "operations/transactions/.inflight/transaction-20260925-042838-001/backup-1",
+          "operations/transactions/.inflight/transaction-20260925-042838-001/backup-2",
+          "operations/transactions/.inflight/transaction-20260925-042838-001/intent.json"
+        ],
+        "reads": [
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/validate.py --compact --no-report",
+            "exit": 0,
+            "tail": [
+              "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+              "W HYGIENE-VIEWS: generated/manifest.json is not the current authored snapshot \u2014 run `make views` [generated/manifest.json]",
+              "0 error(s), 3 warning(s) \u2014 OK (0.3s)"
+            ]
+          },
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py status --json",
+            "exit": 0,
+            "tail": [
+              "{\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":13},\"counts\":{\"active_workspaces\":6,\"archived_workspaces\":1,\"concept_relations\":28,\"concepts\":99,\"garden_notes\":9,\"inbox_items\":7,\"modules\":5,\"modules_enrolled\":2,\"notes\":116,\"programs\":2,\"projects\":2,\"sources\":29,\"standing_workspaces\":0,\"study_maps\":11,\"units\":16},\"exam_spine\":[{\"date\":\"2026-10-06\",\"module_id\":\"module-tuh-statlearn\",\"termin\":2,\"title\":\"Statistical Learning\"},{\"date\":\"2026-10-12\",\"module_id\":\"module-tuh-os\",\"termin\":1,\"title\":\"Operating Systems\"}],\"learning_os\":\"3.2.0\",\"root\":\"/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository\",\"validation\":{\"errors\":0,\"ok\":true,\"warnings\":3}}"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+          "exit": 0,
+          "tail": [
+            "published generated/manifest.json (atomic contract snapshot)"
+          ]
+        }
+      ]
+    },
+    {
+      "delay_s": 0.4,
+      "killed": true,
+      "elapsed_s": 0.403,
+      "outcome": "pre-state",
+      "delta": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": []
+      },
+      "exposed_before_recovery": true,
+      "before_recovery": {
+        "changed_dirs": [
+          "curriculum",
+          "curriculum/modules/module-tuh-os/units/unit-os-l02"
+        ],
+        "changed_count": 3,
+        "new_receipts": 1,
+        "inflight": [
+          "operations/transactions/.inflight/transaction-20260925-042840-001/backup-0",
+          "operations/transactions/.inflight/transaction-20260925-042840-001/backup-1",
+          "operations/transactions/.inflight/transaction-20260925-042840-001/backup-2",
+          "operations/transactions/.inflight/transaction-20260925-042840-001/intent.json"
+        ],
+        "reads": [
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/validate.py --compact --no-report",
+            "exit": 0,
+            "tail": [
+              "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+              "W HYGIENE-VIEWS: generated/manifest.json is not the current authored snapshot \u2014 run `make views` [generated/manifest.json]",
+              "0 error(s), 3 warning(s) \u2014 OK (0.2s)"
+            ]
+          },
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py status --json",
+            "exit": 0,
+            "tail": [
+              "{\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":13},\"counts\":{\"active_workspaces\":6,\"archived_workspaces\":1,\"concept_relations\":28,\"concepts\":99,\"garden_notes\":9,\"inbox_items\":7,\"modules\":5,\"modules_enrolled\":2,\"notes\":116,\"programs\":2,\"projects\":2,\"sources\":29,\"standing_workspaces\":0,\"study_maps\":11,\"units\":16},\"exam_spine\":[{\"date\":\"2026-10-06\",\"module_id\":\"module-tuh-statlearn\",\"termin\":2,\"title\":\"Statistical Learning\"},{\"date\":\"2026-10-12\",\"module_id\":\"module-tuh-os\",\"termin\":1,\"title\":\"Operating Systems\"}],\"learning_os\":\"3.2.0\",\"root\":\"/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository\",\"validation\":{\"errors\":0,\"ok\":true,\"warnings\":3}}"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+          "exit": 0,
+          "tail": [
+            "published generated/manifest.json (atomic contract snapshot)"
+          ]
+        }
+      ]
+    },
+    {
+      "delay_s": 0.45,
+      "killed": true,
+      "elapsed_s": 0.453,
+      "outcome": "pre-state",
+      "delta": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": []
+      },
+      "exposed_before_recovery": true,
+      "before_recovery": {
+        "changed_dirs": [
+          "curriculum",
+          "curriculum/modules/module-tuh-os/units/unit-os-l02"
+        ],
+        "changed_count": 3,
+        "new_receipts": 1,
+        "inflight": [
+          "operations/transactions/.inflight/transaction-20260925-042842-001/backup-0",
+          "operations/transactions/.inflight/transaction-20260925-042842-001/backup-1",
+          "operations/transactions/.inflight/transaction-20260925-042842-001/backup-2",
+          "operations/transactions/.inflight/transaction-20260925-042842-001/intent.json"
+        ],
+        "reads": [
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/validate.py --compact --no-report",
+            "exit": 0,
+            "tail": [
+              "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+              "W HYGIENE-VIEWS: generated/manifest.json is not the current authored snapshot \u2014 run `make views` [generated/manifest.json]",
+              "0 error(s), 3 warning(s) \u2014 OK (0.2s)"
+            ]
+          },
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py status --json",
+            "exit": 0,
+            "tail": [
+              "{\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":13},\"counts\":{\"active_workspaces\":6,\"archived_workspaces\":1,\"concept_relations\":28,\"concepts\":99,\"garden_notes\":9,\"inbox_items\":7,\"modules\":5,\"modules_enrolled\":2,\"notes\":116,\"programs\":2,\"projects\":2,\"sources\":29,\"standing_workspaces\":0,\"study_maps\":11,\"units\":16},\"exam_spine\":[{\"date\":\"2026-10-06\",\"module_id\":\"module-tuh-statlearn\",\"termin\":2,\"title\":\"Statistical Learning\"},{\"date\":\"2026-10-12\",\"module_id\":\"module-tuh-os\",\"termin\":1,\"title\":\"Operating Systems\"}],\"learning_os\":\"3.2.0\",\"root\":\"/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository\",\"validation\":{\"errors\":0,\"ok\":true,\"warnings\":3}}"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+          "exit": 0,
+          "tail": [
+            "published generated/manifest.json (atomic contract snapshot)"
+          ]
+        }
+      ]
+    },
+    {
+      "delay_s": 0.5,
+      "killed": true,
+      "elapsed_s": 0.502,
+      "outcome": "pre-state",
+      "delta": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": []
+      },
+      "exposed_before_recovery": true,
+      "before_recovery": {
+        "changed_dirs": [
+          "curriculum",
+          "curriculum/modules/module-tuh-os/units/unit-os-l02"
+        ],
+        "changed_count": 3,
+        "new_receipts": 1,
+        "inflight": [
+          "operations/transactions/.inflight/transaction-20260925-042844-001/backup-0",
+          "operations/transactions/.inflight/transaction-20260925-042844-001/backup-1",
+          "operations/transactions/.inflight/transaction-20260925-042844-001/backup-2",
+          "operations/transactions/.inflight/transaction-20260925-042844-001/intent.json"
+        ],
+        "reads": [
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/validate.py --compact --no-report",
+            "exit": 0,
+            "tail": [
+              "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+              "W HYGIENE-VIEWS: generated/manifest.json is not the current authored snapshot \u2014 run `make views` [generated/manifest.json]",
+              "0 error(s), 3 warning(s) \u2014 OK (0.2s)"
+            ]
+          },
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py status --json",
+            "exit": 0,
+            "tail": [
+              "{\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":13},\"counts\":{\"active_workspaces\":6,\"archived_workspaces\":1,\"concept_relations\":28,\"concepts\":99,\"garden_notes\":9,\"inbox_items\":7,\"modules\":5,\"modules_enrolled\":2,\"notes\":116,\"programs\":2,\"projects\":2,\"sources\":29,\"standing_workspaces\":0,\"study_maps\":11,\"units\":16},\"exam_spine\":[{\"date\":\"2026-10-06\",\"module_id\":\"module-tuh-statlearn\",\"termin\":2,\"title\":\"Statistical Learning\"},{\"date\":\"2026-10-12\",\"module_id\":\"module-tuh-os\",\"termin\":1,\"title\":\"Operating Systems\"}],\"learning_os\":\"3.2.0\",\"root\":\"/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository\",\"validation\":{\"errors\":0,\"ok\":true,\"warnings\":3}}"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+          "exit": 0,
+          "tail": [
+            "published generated/manifest.json (atomic contract snapshot)"
+          ]
+        }
+      ]
+    },
+    {
+      "delay_s": 0.55,
+      "killed": true,
+      "elapsed_s": 0.558,
+      "outcome": "pre-state",
+      "delta": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": []
+      },
+      "exposed_before_recovery": true,
+      "before_recovery": {
+        "changed_dirs": [
+          "curriculum",
+          "curriculum/modules/module-tuh-os/units/unit-os-l02"
+        ],
+        "changed_count": 3,
+        "new_receipts": 1,
+        "inflight": [
+          "operations/transactions/.inflight/transaction-20260925-042847-001/backup-0",
+          "operations/transactions/.inflight/transaction-20260925-042847-001/backup-1",
+          "operations/transactions/.inflight/transaction-20260925-042847-001/backup-2",
+          "operations/transactions/.inflight/transaction-20260925-042847-001/intent.json"
+        ],
+        "reads": [
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/validate.py --compact --no-report",
+            "exit": 0,
+            "tail": [
+              "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+              "W HYGIENE-VIEWS: generated/manifest.json is not the current authored snapshot \u2014 run `make views` [generated/manifest.json]",
+              "0 error(s), 3 warning(s) \u2014 OK (0.2s)"
+            ]
+          },
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py status --json",
+            "exit": 0,
+            "tail": [
+              "{\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":13},\"counts\":{\"active_workspaces\":6,\"archived_workspaces\":1,\"concept_relations\":28,\"concepts\":99,\"garden_notes\":9,\"inbox_items\":7,\"modules\":5,\"modules_enrolled\":2,\"notes\":116,\"programs\":2,\"projects\":2,\"sources\":29,\"standing_workspaces\":0,\"study_maps\":11,\"units\":16},\"exam_spine\":[{\"date\":\"2026-10-06\",\"module_id\":\"module-tuh-statlearn\",\"termin\":2,\"title\":\"Statistical Learning\"},{\"date\":\"2026-10-12\",\"module_id\":\"module-tuh-os\",\"termin\":1,\"title\":\"Operating Systems\"}],\"learning_os\":\"3.2.0\",\"root\":\"/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository\",\"validation\":{\"errors\":0,\"ok\":true,\"warnings\":3}}"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+          "exit": 0,
+          "tail": [
+            "published generated/manifest.json (atomic contract snapshot)"
+          ]
+        }
+      ]
+    },
+    {
+      "delay_s": 0.6,
+      "killed": true,
+      "elapsed_s": 0.607,
+      "outcome": "pre-state",
+      "delta": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": []
+      },
+      "exposed_before_recovery": true,
+      "before_recovery": {
+        "changed_dirs": [
+          "curriculum",
+          "curriculum/modules/module-tuh-os/units/unit-os-l02"
+        ],
+        "changed_count": 3,
+        "new_receipts": 1,
+        "inflight": [
+          "operations/transactions/.inflight/transaction-20260925-042849-001/backup-0",
+          "operations/transactions/.inflight/transaction-20260925-042849-001/backup-1",
+          "operations/transactions/.inflight/transaction-20260925-042849-001/backup-2",
+          "operations/transactions/.inflight/transaction-20260925-042849-001/intent.json"
+        ],
+        "reads": [
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/validate.py --compact --no-report",
+            "exit": 0,
+            "tail": [
+              "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+              "W HYGIENE-VIEWS: generated/manifest.json is not the current authored snapshot \u2014 run `make views` [generated/manifest.json]",
+              "0 error(s), 3 warning(s) \u2014 OK (0.2s)"
+            ]
+          },
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py status --json",
+            "exit": 0,
+            "tail": [
+              "{\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":13},\"counts\":{\"active_workspaces\":6,\"archived_workspaces\":1,\"concept_relations\":28,\"concepts\":99,\"garden_notes\":9,\"inbox_items\":7,\"modules\":5,\"modules_enrolled\":2,\"notes\":116,\"programs\":2,\"projects\":2,\"sources\":29,\"standing_workspaces\":0,\"study_maps\":11,\"units\":16},\"exam_spine\":[{\"date\":\"2026-10-06\",\"module_id\":\"module-tuh-statlearn\",\"termin\":2,\"title\":\"Statistical Learning\"},{\"date\":\"2026-10-12\",\"module_id\":\"module-tuh-os\",\"termin\":1,\"title\":\"Operating Systems\"}],\"learning_os\":\"3.2.0\",\"root\":\"/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository\",\"validation\":{\"errors\":0,\"ok\":true,\"warnings\":3}}"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+          "exit": 0,
+          "tail": [
+            "published generated/manifest.json (atomic contract snapshot)"
+          ]
+        }
+      ]
+    },
+    {
+      "delay_s": 0.65,
+      "killed": true,
+      "elapsed_s": 0.657,
+      "outcome": "pre-state",
+      "delta": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": []
+      },
+      "exposed_before_recovery": true,
+      "before_recovery": {
+        "changed_dirs": [
+          "curriculum",
+          "curriculum/modules/module-tuh-os/units/unit-os-l02"
+        ],
+        "changed_count": 3,
+        "new_receipts": 1,
+        "inflight": [
+          "operations/transactions/.inflight/transaction-20260925-042852-001/backup-0",
+          "operations/transactions/.inflight/transaction-20260925-042852-001/backup-1",
+          "operations/transactions/.inflight/transaction-20260925-042852-001/backup-2",
+          "operations/transactions/.inflight/transaction-20260925-042852-001/intent.json"
+        ],
+        "reads": [
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/validate.py --compact --no-report",
+            "exit": 0,
+            "tail": [
+              "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+              "W HYGIENE-VIEWS: generated/manifest.json is not the current authored snapshot \u2014 run `make views` [generated/manifest.json]",
+              "0 error(s), 3 warning(s) \u2014 OK (0.2s)"
+            ]
+          },
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py status --json",
+            "exit": 0,
+            "tail": [
+              "{\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":13},\"counts\":{\"active_workspaces\":6,\"archived_workspaces\":1,\"concept_relations\":28,\"concepts\":99,\"garden_notes\":9,\"inbox_items\":7,\"modules\":5,\"modules_enrolled\":2,\"notes\":116,\"programs\":2,\"projects\":2,\"sources\":29,\"standing_workspaces\":0,\"study_maps\":11,\"units\":16},\"exam_spine\":[{\"date\":\"2026-10-06\",\"module_id\":\"module-tuh-statlearn\",\"termin\":2,\"title\":\"Statistical Learning\"},{\"date\":\"2026-10-12\",\"module_id\":\"module-tuh-os\",\"termin\":1,\"title\":\"Operating Systems\"}],\"learning_os\":\"3.2.0\",\"root\":\"/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository\",\"validation\":{\"errors\":0,\"ok\":true,\"warnings\":3}}"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+          "exit": 0,
+          "tail": [
+            "published generated/manifest.json (atomic contract snapshot)"
+          ]
+        }
+      ]
+    },
+    {
+      "delay_s": 0.7,
+      "killed": true,
+      "elapsed_s": 0.707,
+      "outcome": "pre-state",
+      "delta": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": []
+      },
+      "exposed_before_recovery": true,
+      "before_recovery": {
+        "changed_dirs": [
+          "curriculum",
+          "curriculum/modules/module-tuh-os/units/unit-os-l02"
+        ],
+        "changed_count": 3,
+        "new_receipts": 1,
+        "inflight": [
+          "operations/transactions/.inflight/transaction-20260925-042854-001/backup-0",
+          "operations/transactions/.inflight/transaction-20260925-042854-001/backup-1",
+          "operations/transactions/.inflight/transaction-20260925-042854-001/backup-2",
+          "operations/transactions/.inflight/transaction-20260925-042854-001/intent.json"
+        ],
+        "reads": [
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/validate.py --compact --no-report",
+            "exit": 0,
+            "tail": [
+              "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+              "W HYGIENE-VIEWS: generated/manifest.json is not the current authored snapshot \u2014 run `make views` [generated/manifest.json]",
+              "0 error(s), 3 warning(s) \u2014 OK (0.2s)"
+            ]
+          },
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py status --json",
+            "exit": 0,
+            "tail": [
+              "{\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":13},\"counts\":{\"active_workspaces\":6,\"archived_workspaces\":1,\"concept_relations\":28,\"concepts\":99,\"garden_notes\":9,\"inbox_items\":7,\"modules\":5,\"modules_enrolled\":2,\"notes\":116,\"programs\":2,\"projects\":2,\"sources\":29,\"standing_workspaces\":0,\"study_maps\":11,\"units\":16},\"exam_spine\":[{\"date\":\"2026-10-06\",\"module_id\":\"module-tuh-statlearn\",\"termin\":2,\"title\":\"Statistical Learning\"},{\"date\":\"2026-10-12\",\"module_id\":\"module-tuh-os\",\"termin\":1,\"title\":\"Operating Systems\"}],\"learning_os\":\"3.2.0\",\"root\":\"/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository\",\"validation\":{\"errors\":0,\"ok\":true,\"warnings\":3}}"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+          "exit": 0,
+          "tail": [
+            "published generated/manifest.json (atomic contract snapshot)"
+          ]
+        }
+      ]
+    },
+    {
+      "delay_s": 0.75,
+      "killed": true,
+      "elapsed_s": 0.754,
+      "outcome": "pre-state",
+      "delta": {
+        "changed_dirs": [],
+        "changed_count": 0,
+        "new_receipts": 0,
+        "inflight": []
+      },
+      "exposed_before_recovery": true,
+      "before_recovery": {
+        "changed_dirs": [
+          "curriculum",
+          "curriculum/modules/module-tuh-os/units/unit-os-l02"
+        ],
+        "changed_count": 3,
+        "new_receipts": 1,
+        "inflight": [
+          "operations/transactions/.inflight/transaction-20260925-042857-001/backup-0",
+          "operations/transactions/.inflight/transaction-20260925-042857-001/backup-1",
+          "operations/transactions/.inflight/transaction-20260925-042857-001/backup-2",
+          "operations/transactions/.inflight/transaction-20260925-042857-001/intent.json"
+        ],
+        "reads": [
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/validate.py --compact --no-report",
+            "exit": 0,
+            "tail": [
+              "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+              "W HYGIENE-VIEWS: generated/manifest.json is not the current authored snapshot \u2014 run `make views` [generated/manifest.json]",
+              "0 error(s), 3 warning(s) \u2014 OK (0.3s)"
+            ]
+          },
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py status --json",
+            "exit": 0,
+            "tail": [
+              "{\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":13},\"counts\":{\"active_workspaces\":6,\"archived_workspaces\":1,\"concept_relations\":28,\"concepts\":99,\"garden_notes\":9,\"inbox_items\":7,\"modules\":5,\"modules_enrolled\":2,\"notes\":116,\"programs\":2,\"projects\":2,\"sources\":29,\"standing_workspaces\":0,\"study_maps\":11,\"units\":16},\"exam_spine\":[{\"date\":\"2026-10-06\",\"module_id\":\"module-tuh-statlearn\",\"termin\":2,\"title\":\"Statistical Learning\"},{\"date\":\"2026-10-12\",\"module_id\":\"module-tuh-os\",\"termin\":1,\"title\":\"Operating Systems\"}],\"learning_os\":\"3.2.0\",\"root\":\"/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository\",\"validation\":{\"errors\":0,\"ok\":true,\"warnings\":3}}"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+          "exit": 0,
+          "tail": [
+            "published generated/manifest.json (atomic contract snapshot)"
+          ]
+        }
+      ]
+    },
+    {
+      "delay_s": 0.8,
+      "killed": true,
+      "elapsed_s": 0.807,
+      "outcome": "committed",
+      "delta": {
+        "changed_dirs": [
+          "curriculum",
+          "curriculum/modules/module-tuh-os/units/unit-os-l02"
+        ],
+        "changed_count": 3,
+        "new_receipts": 3,
+        "inflight": []
+      },
+      "exposed_before_recovery": true,
+      "before_recovery": {
+        "changed_dirs": [
+          "curriculum",
+          "curriculum/modules/module-tuh-os/units/unit-os-l02"
+        ],
+        "changed_count": 3,
+        "new_receipts": 3,
+        "inflight": [
+          "operations/transactions/.inflight/transaction-20260925-042900-001/backup-0",
+          "operations/transactions/.inflight/transaction-20260925-042900-001/backup-1",
+          "operations/transactions/.inflight/transaction-20260925-042900-001/backup-2",
+          "operations/transactions/.inflight/transaction-20260925-042900-001/intent.json"
+        ],
+        "reads": [
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/validate.py --compact --no-report",
+            "exit": 0,
+            "tail": [
+              "W WS-NEGLECT: workspace 'workspace-ledgerline' untouched for 31 days (per Git)",
+              "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+              "0 error(s), 2 warning(s) \u2014 OK (0.2s)"
+            ]
+          },
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py status --json",
+            "exit": 0,
+            "tail": [
+              "{\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":13},\"counts\":{\"active_workspaces\":6,\"archived_workspaces\":1,\"concept_relations\":28,\"concepts\":99,\"garden_notes\":9,\"inbox_items\":7,\"modules\":5,\"modules_enrolled\":2,\"notes\":116,\"programs\":2,\"projects\":2,\"sources\":29,\"standing_workspaces\":0,\"study_maps\":11,\"units\":16},\"exam_spine\":[{\"date\":\"2026-10-06\",\"module_id\":\"module-tuh-statlearn\",\"termin\":2,\"title\":\"Statistical Learning\"},{\"date\":\"2026-10-12\",\"module_id\":\"module-tuh-os\",\"termin\":1,\"title\":\"Operating Systems\"}],\"learning_os\":\"3.2.0\",\"root\":\"/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository\",\"validation\":{\"errors\":0,\"ok\":true,\"warnings\":2}}"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+          "exit": 0,
+          "tail": [
+            "published generated/manifest.json (atomic contract snapshot)"
+          ]
+        }
+      ]
+    },
+    {
+      "delay_s": 0.9,
+      "killed": false,
+      "elapsed_s": 0.833,
+      "outcome": "finished",
+      "delta": {
+        "changed_dirs": [
+          "curriculum",
+          "curriculum/modules/module-tuh-os/units/unit-os-l02"
+        ],
+        "changed_count": 3,
+        "new_receipts": 3,
+        "inflight": []
+      },
+      "exposed_before_recovery": false,
+      "before_recovery": {
+        "changed_dirs": [
+          "curriculum",
+          "curriculum/modules/module-tuh-os/units/unit-os-l02"
+        ],
+        "changed_count": 3,
+        "new_receipts": 3,
+        "inflight": [],
+        "reads": [
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/validate.py --compact --no-report",
+            "exit": 0,
+            "tail": [
+              "W WS-NEGLECT: workspace 'workspace-ledgerline' untouched for 31 days (per Git)",
+              "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+              "0 error(s), 2 warning(s) \u2014 OK (0.3s)"
+            ]
+          },
+          {
+            "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py status --json",
+            "exit": 0,
+            "tail": [
+              "{\"adoption\":{\"notes_reviewed\":0,\"notes_with_evidence\":13},\"counts\":{\"active_workspaces\":6,\"archived_workspaces\":1,\"concept_relations\":28,\"concepts\":99,\"garden_notes\":9,\"inbox_items\":7,\"modules\":5,\"modules_enrolled\":2,\"notes\":116,\"programs\":2,\"projects\":2,\"sources\":29,\"standing_workspaces\":0,\"study_maps\":11,\"units\":16},\"exam_spine\":[{\"date\":\"2026-10-06\",\"module_id\":\"module-tuh-statlearn\",\"termin\":2,\"title\":\"Statistical Learning\"},{\"date\":\"2026-10-12\",\"module_id\":\"module-tuh-os\",\"termin\":1,\"title\":\"Operating Systems\"}],\"learning_os\":\"3.2.0\",\"root\":\"/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository\",\"validation\":{\"errors\":0,\"ok\":true,\"warnings\":2}}"
+            ]
+          }
+        ]
+      },
+      "recovery": [
+        {
+          "cmd": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S17/LearningOS/repository/.venv/bin/python tools/los.py generate",
+          "exit": 0,
+          "tail": [
+            "published generated/manifest.json (atomic contract snapshot)"
+          ]
+        }
+      ]
+    }
+  ]
+}

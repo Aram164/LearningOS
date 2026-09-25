@@ -1,0 +1,56 @@
+{
+  "request_id": "req-s17-sp1",
+  "capability": "stage.progress.update",
+  "diagnosis": {
+    "first_failure_stage": null,
+    "execution_outcome": "unknown",
+    "canonical_outcome": "AMBIGUOUS",
+    "projection_outcome": "unknown",
+    "recovery_requirement": "reconcile-exact-request",
+    "authoritative_evidence": [
+      "observed:sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e"
+    ],
+    "attempts": [
+      {
+        "span": "99b669b2f2877c47",
+        "status": "unknown",
+        "replay_of": null
+      }
+    ],
+    "reasons": [
+      "no response and no receipt: nothing is knowable",
+      "no execution records name an outcome",
+      "ambiguous outcome: the exact request stays recoverable"
+    ]
+  },
+  "timeline": [
+    {
+      "stage": "Core admitted request",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Approval",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Replay lookup",
+      "state": "passed",
+      "detail": "miss"
+    },
+    {
+      "stage": "Snapshot guard",
+      "state": "passed",
+      "detail": null
+    }
+  ],
+  "observed_snapshot": "sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e",
+  "ui_outcome": "BLOCKED",
+  "facts": {
+    "transaction_id": null,
+    "receipt_path": null,
+    "snapshot_before": null,
+    "snapshot_after": null
+  }
+}

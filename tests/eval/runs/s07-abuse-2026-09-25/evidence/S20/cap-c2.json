@@ -1,0 +1,19 @@
+{
+ "schema_version": 2,
+ "request_id": "req-s20c-bin2",
+ "idempotency_key": "idem-s20c-bin2",
+ "capability": "capture.create",
+ "channel": "operator",
+ "expected_snapshot": "sha256:ffc877734e84755e1f3e2b9ecf6749bd8ec1e3ed4031a45b5d6f7705d758b41b",
+ "expected_revisions": {
+  "capture-request:idem-s20c-bin2": 0
+ },
+ "approval": {
+  "kind": "direct-user-gesture",
+  "subject_sha256": "sha256:f302c1d1db4bf72b7c3628a3f7a8b6205c18778839cf6d496be8324f1b28a6e0"
+ },
+ "payload": {
+  "file": "/private/tmp/claude-501/-Users-aramaljanadi-Desktop-semestercontext/368267e1-e5a2-4126-89e6-f8129249956f/scratchpad/s20/blob2/scan-page.bin",
+  "file_sha256": "sha256:9f45a962d854dc45d1923b341ead8502d99c940689c19bc114aeccb89e6ff698"
+ }
+}

@@ -1,0 +1,6 @@
+---
+id: note-lsm-trees
+type: note
+title: [LSM trees: unclosed
+created: 2026-07-18
+mutation exit=0

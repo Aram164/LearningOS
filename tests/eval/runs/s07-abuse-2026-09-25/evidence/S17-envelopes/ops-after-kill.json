@@ -1,0 +1,155 @@
+{
+  "request_id": "req-s17-try4",
+  "capability": "capture.create",
+  "diagnosis": {
+    "first_failure_stage": null,
+    "execution_outcome": "committed",
+    "canonical_outcome": "AMBIGUOUS",
+    "projection_outcome": "published",
+    "recovery_requirement": "reconcile-exact-request",
+    "authoritative_evidence": [
+      "observed:sha256:77af0d60df472876f9d7d028e2d7561692e0bdd3b6e4028e5c199ebf8af1cf03"
+    ],
+    "attempts": [
+      {
+        "span": "bfb7476506ee4bdd",
+        "status": "ok",
+        "replay_of": null
+      },
+      {
+        "span": "31bd26b21a433c18",
+        "status": "ok",
+        "replay_of": "bfb7476506ee4bdd"
+      },
+      {
+        "span": "0978267810066145",
+        "status": "unknown",
+        "replay_of": "bfb7476506ee4bdd"
+      },
+      {
+        "span": "65b74916c0b62987",
+        "status": "unknown",
+        "replay_of": "bfb7476506ee4bdd"
+      },
+      {
+        "span": "5584aef701aafff6",
+        "status": "unknown",
+        "replay_of": "bfb7476506ee4bdd"
+      },
+      {
+        "span": "f2cd7d8cd85fa850",
+        "status": "unknown",
+        "replay_of": "bfb7476506ee4bdd"
+      },
+      {
+        "span": "bfc990043e72ceec",
+        "status": "unknown",
+        "replay_of": "bfb7476506ee4bdd"
+      },
+      {
+        "span": "5a030fc6979c5b6d",
+        "status": "unknown",
+        "replay_of": "bfb7476506ee4bdd"
+      },
+      {
+        "span": "264f6bbf878182da",
+        "status": "unknown",
+        "replay_of": "bfb7476506ee4bdd"
+      },
+      {
+        "span": "5c64b0a0cf3f1aa3",
+        "status": "unknown",
+        "replay_of": "bfb7476506ee4bdd"
+      },
+      {
+        "span": "0fb4325f0c9026eb",
+        "status": "unknown",
+        "replay_of": "bfb7476506ee4bdd"
+      },
+      {
+        "span": "45b85bc2c6378778",
+        "status": "unknown",
+        "replay_of": "bfb7476506ee4bdd"
+      },
+      {
+        "span": "322dd73de3a0a8fe",
+        "status": "unknown",
+        "replay_of": "bfb7476506ee4bdd"
+      },
+      {
+        "span": "25256f3d050ab7ad",
+        "status": "ok",
+        "replay_of": "bfb7476506ee4bdd"
+      },
+      {
+        "span": "01952ff44af8db3f",
+        "status": "ok",
+        "replay_of": "bfb7476506ee4bdd"
+      },
+      {
+        "span": "7c0181af7533970b",
+        "status": "unknown",
+        "replay_of": "bfb7476506ee4bdd"
+      }
+    ],
+    "reasons": [
+      "no response and no receipt: nothing is knowable",
+      "ambiguous outcome: the exact request stays recoverable"
+    ]
+  },
+  "timeline": [
+    {
+      "stage": "Core admitted request",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Approval",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Replay lookup",
+      "state": "passed",
+      "detail": "miss"
+    },
+    {
+      "stage": "Snapshot guard",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Handler",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Validation",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Projection",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Transaction committed",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Receipt persisted",
+      "state": "passed",
+      "detail": null
+    }
+  ],
+  "observed_snapshot": "sha256:77af0d60df472876f9d7d028e2d7561692e0bdd3b6e4028e5c199ebf8af1cf03",
+  "ui_outcome": "BLOCKED",
+  "facts": {
+    "transaction_id": null,
+    "receipt_path": null,
+    "snapshot_before": null,
+    "snapshot_after": null
+  }
+}

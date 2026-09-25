@@ -1,0 +1,49 @@
+{
+  "mode": "two-builds",
+  "worlds": [
+    "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S24A/LearningOS/repository",
+    "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S24B/LearningOS/repository"
+  ],
+  "heads": [
+    "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "13ad2fcaa0e478afddba6451e29376ca00f0bc8e"
+  ],
+  "heads_equal": true,
+  "trees_equal": true,
+  "builds": [
+    {
+      "exit": 0,
+      "tail": [
+        "wrote generated/reports/health.md",
+        "wrote generated/source-index.md",
+        "wrote generated/study-plans.md"
+      ]
+    },
+    {
+      "exit": 0,
+      "tail": [
+        "wrote generated/reports/health.md",
+        "wrote generated/source-index.md",
+        "wrote generated/study-plans.md"
+      ]
+    }
+  ],
+  "raw": {
+    "only_first": [],
+    "only_second": [],
+    "differ": [],
+    "identical": true
+  },
+  "timestamp_normalized": {
+    "only_first": [],
+    "only_second": [],
+    "differ": [],
+    "identical": true
+  },
+  "timestamp_and_root_normalized": {
+    "only_first": [],
+    "only_second": [],
+    "differ": [],
+    "identical": true
+  }
+}

@@ -1,0 +1,13 @@
+diff --git a/knowledge/notes/data-systems/note-lsm-trees.md b/knowledge/notes/data-systems/note-lsm-trees.md
+index cd08898..93aac77 100644
+--- a/knowledge/notes/data-systems/note-lsm-trees.md
++++ b/knowledge/notes/data-systems/note-lsm-trees.md
+@@ -1,7 +1,7 @@
+ ---
+ id: note-lsm-trees
+ type: note
+-title: LSM trees
++title: [LSM trees: unclosed
+ created: 2026-07-18
+ role: synthesis
+ state: evolving

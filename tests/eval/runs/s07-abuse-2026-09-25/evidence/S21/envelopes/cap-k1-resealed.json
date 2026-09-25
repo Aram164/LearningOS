@@ -1,0 +1,19 @@
+{
+ "schema_version": 2,
+ "request_id": "req-s21-cap-1",
+ "idempotency_key": "idem-s21-k1",
+ "capability": "capture.create",
+ "channel": "operator",
+ "expected_snapshot": "sha256:bd995f3c694bad37b1d3733d708db578ef2600ddbaa84e837ae65c8e205f5c9c",
+ "expected_revisions": {
+  "capture-request:idem-s21-k1": 0
+ },
+ "approval": {
+  "kind": "direct-user-gesture",
+  "subject_sha256": "sha256:f63abc675ced52c22bfb3d4403cc7b6737afadb3489cacc9c594c03e8c0a87d2"
+ },
+ "payload": {
+  "text": "S21 idempotency probe: one capture.",
+  "title": "s21 idem"
+ }
+}

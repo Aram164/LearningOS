@@ -1,0 +1,17 @@
+---
+id: note-lsm-trees-revisited
+type: note
+title: LSM trees, revisited
+created: 2026-09-25
+role: synthesis
+state: evolving
+authorship: user
+concepts:
+- concept-lsm-trees
+sources:
+- source-kleppmann-ddia
+supersedes:
+- note-lsm-trees
+---
+
+mutation exit=0

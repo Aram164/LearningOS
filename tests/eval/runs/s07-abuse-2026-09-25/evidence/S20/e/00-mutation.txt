@@ -1,0 +1,11 @@
+id: unit-os-l02
+type: unit
+module_id: module-tuh-os
+kind: lecture
+title: Processes and CPU scheduling
+order: 1
+scope: FCFS, SJF, round robin, priority scheduling, proportional share and CFS.
+status: active
+artifacts: {}
+workspace_ids: []
+mutation exit=0
