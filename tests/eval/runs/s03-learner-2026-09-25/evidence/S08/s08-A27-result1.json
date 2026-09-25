@@ -1,0 +1,25 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s08-A27-1",
+ "idempotency_key": "s03-s08-A27-k1",
+ "capability": "stage.note.write",
+ "ok": true,
+ "replayed": false,
+ "transaction_id": "transaction-20260925-005250-001",
+ "receipt_path": "operations/transactions/transaction-20260925-005250-001.yaml",
+ "snapshot_after": "sha256:17caee03bedf0cffc7dacbf278d2e1438cc612ccf3b8643429a6d8a9e5e86c60",
+ "result": {
+  "ok": true,
+  "unit_id": "unit-dataframes-joins-at-scale",
+  "stage_id": "stage-df-joins-01-strategies",
+  "working_note": "curriculum/modules/module-skill-dataframes/units/unit-dataframes-joins-at-scale/stages/stage-df-joins-01-strategies/notes.md",
+  "transaction_id": "transaction-20260925-005250-001",
+  "receipt_path": "operations/transactions/transaction-20260925-005250-001.yaml",
+  "artifact_revisions": {
+   "unit-dataframes-joins-at-scale": 1
+  },
+  "snapshot_after": "sha256:17caee03bedf0cffc7dacbf278d2e1438cc612ccf3b8643429a6d8a9e5e86c60",
+  "replayed": false
+ },
+ "error": null
+}

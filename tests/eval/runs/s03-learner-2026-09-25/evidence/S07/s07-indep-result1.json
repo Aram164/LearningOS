@@ -1,0 +1,24 @@
+{
+ "schema_version": 2,
+ "request_id": "s03-s07-indep-1",
+ "idempotency_key": "s03-s07-indep-k1",
+ "capability": "note.revise",
+ "ok": true,
+ "replayed": false,
+ "transaction_id": "transaction-20260925-005140-001",
+ "receipt_path": "operations/transactions/transaction-20260925-005140-001.yaml",
+ "snapshot_after": "sha256:5a7f5dee1ec48a7a799a754b19b3a86d3efb7e65ab93af5389c7318c829af5d4",
+ "result": {
+  "ok": true,
+  "note_id": "note-independence-vs-conditional-independence",
+  "path": "knowledge/notes/mathematics/note-independence-vs-conditional-independence.md",
+  "transaction_id": "transaction-20260925-005140-001",
+  "receipt_path": "operations/transactions/transaction-20260925-005140-001.yaml",
+  "artifact_revisions": {
+   "note-independence-vs-conditional-independence": 2
+  },
+  "snapshot_after": "sha256:5a7f5dee1ec48a7a799a754b19b3a86d3efb7e65ab93af5389c7318c829af5d4",
+  "replayed": false
+ },
+ "error": null
+}

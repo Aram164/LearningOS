@@ -1,0 +1,107 @@
+{
+  "from": "S08-before",
+  "to": "S08-after",
+  "canonical": {
+    "added": [
+      "operations/transactions/transaction-20260925-005250-001.yaml",
+      "operations/transactions/transaction-20260925-005253-001.yaml"
+    ],
+    "removed": [],
+    "modified": [
+      "curriculum/modules/module-skill-dataframes/units/unit-dataframes-joins-at-scale/stages/stage-df-joins-01-strategies/notes.md",
+      "knowledge/notes/data-systems/note-hash-join-vs-sort-merge.md",
+      "operations/transactions/idempotency.yaml",
+      "operations/transactions/revisions.yaml"
+    ]
+  },
+  "canonical_digest_changed": true,
+  "receipts_added": [
+    "operations/transactions/transaction-20260925-005250-001.yaml",
+    "operations/transactions/transaction-20260925-005253-001.yaml"
+  ],
+  "inflight_after": [],
+  "derived": {
+    "added": [
+      "generated/derived-state/blobs/2fa74507f222296050920355e257b32232945f32110302b7ebc87071a8597ac0",
+      "generated/derived-state/blobs/9c543a0131fb054cdcb5c22f00debd5eaaa102dcb363fd8cbb9400a615f039b6",
+      "generated/derived-state/blobs/e656e6b7abff2918cba06a7786235506569021aa05078f9d63cbf8fc089ea4d1"
+    ],
+    "removed": [],
+    "modified": [
+      "generated/backlinks.json",
+      "generated/derived-state/state-v1.json",
+      "generated/manifest.json",
+      "generated/reports/validation-report.md"
+    ],
+    "bytes_before": 1363855,
+    "bytes_after": 1732539
+  },
+  "diagnostics_added": [],
+  "ai_actions_added": [],
+  "new_operations": [
+    {
+      "trace_id": "d9e44544863dc71c005551dbf78834b0",
+      "request_id": "s03-s08-hashjoin-1",
+      "capability": "note.revise",
+      "started_at": 1790297573.0829704,
+      "duration_ms": 1419.3,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    },
+    {
+      "trace_id": "42292b1a58893ef1ea52840375d834bf",
+      "request_id": "s03-s08-A27-1",
+      "capability": "stage.note.write",
+      "started_at": 1790297570.2286735,
+      "duration_ms": 1496.3,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "verify-observation",
+      "needs_attention": true
+    }
+  ],
+  "head": {
+    "before": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "after": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e"
+  },
+  "git_status_after": [
+    " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-joins-at-scale/stages/stage-df-joins-01-strategies/notes.md",
+    " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lazy-plans/stages/stage-df-lazy-02-read-explain/notes.md",
+    " M curriculum/modules/module-skill-dataframes/units/unit-dataframes-lineage/stages/stage-df-lineage-01-trace/notes.md",
+    " M curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+    " M curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+    " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l07/stages/stage-l07-01-ridge-lasso-geometry/notes.md",
+    " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l09/stages/stage-l09-02-svd-connection/notes.md",
+    " M curriculum/modules/module-tuh-statlearn/units/unit-statlearn-l11/stages/stage-l11-01-backprop/notes.md",
+    " M knowledge/notes/data-systems/note-hash-join-vs-sort-merge.md",
+    " M knowledge/notes/data-systems/note-query-optimizer-cost-model.md",
+    " M knowledge/notes/machine-learning/note-ridge-regression-penalty.md",
+    " M knowledge/notes/mathematics/note-independence-vs-conditional-independence.md",
+    " M knowledge/notes/systems/note-amdahls-law.md",
+    "?? knowledge/garden/everything-is-a-dag-again.md",
+    "?? operations/transactions/idempotency.yaml",
+    "?? operations/transactions/revisions.yaml",
+    "?? operations/transactions/transaction-20260925-003900-001.yaml",
+    "?? operations/transactions/transaction-20260925-004511-001.yaml",
+    "?? operations/transactions/transaction-20260925-004514-001.yaml",
+    "?? operations/transactions/transaction-20260925-004517-001.yaml",
+    "?? operations/transactions/transaction-20260925-004520-001.yaml",
+    "?? operations/transactions/transaction-20260925-004523-001.yaml",
+    "?? operations/transactions/transaction-20260925-004526-001.yaml",
+    "?? operations/transactions/transaction-20260925-004529-001.yaml",
+    "?? operations/transactions/transaction-20260925-004532-001.yaml",
+    "?? operations/transactions/transaction-20260925-004535-001.yaml",
+    "?? operations/transactions/transaction-20260925-004945-001.yaml",
+    "?? operations/transactions/transaction-20260925-005137-001.yaml",
+    "?? operations/transactions/transaction-20260925-005140-001.yaml",
+    "?? operations/transactions/transaction-20260925-005250-001.yaml",
+    "?? operations/transactions/transaction-20260925-005253-001.yaml"
+  ],
+  "flags": []
+}
