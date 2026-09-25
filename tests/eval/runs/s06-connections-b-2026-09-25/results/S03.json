@@ -1,0 +1,154 @@
+{
+  "scenario": "S03",
+  "run_id": "s06-connections-b-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "All 20 canon probes answered with ranked, reasoned candidates and no canonical writes. But the product surfaced only 85 of the 158 candidates (54%). `related NOTE` never returns notes, so notes came only via concept/source hops. The two concept-less probe notes (C03, C09) got no note neighbours from the graph. Every garden, inbox and stage target (23 of 158) needed direct file reads because no read command exposes them (F-s06-connections-b-01). Cross-domain links were found only by guessing content-search terms.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec",
+    "derived_digest": "df97c8737d287c93f8e3a048d46ad71f9da0e95cf3cccd0c0bbc8e63032db409",
+    "snapshot_file": "observations/S03-before.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec",
+    "derived_digest": "50797f3c64773c06904676c30352a27b1e5fd970a59dd5a0d4b525225b150670",
+    "snapshot_file": "observations/S03-after.json"
+  },
+  "consumer": {
+    "goal": "For each canon probe note C01–C20, show the learner what else she has that she should read next to it, best first, with reasons.",
+    "first_action": "Read the world's AGENTS.md, which points to system/OPERATOR.md and `los capabilities --compact --json`.",
+    "commands": [
+      "cat AGENTS.md; cat system/OPERATOR.md",
+      "python3 tools/los.py capabilities --compact --json  (exit 2: pyyaml/jsonschema missing; message says `make setup`)",
+      "make setup  (exit 0: creates .venv, installs deps, installs pre-commit/post-commit/pre-push hooks)",
+      ".venv/bin/python tools/los.py capabilities --compact --json",
+      "los --help; los related --help; los search --help; los inspect --help",
+      "los related note-naive-bayes-spam-filter; los inspect note-naive-bayes-spam-filter; los inspect concept-naive-bayes; los related concept-naive-bayes",
+      "los semantic --list; los atlas-context --help; los material-context --help; los atlas-context concept-naive-bayes",
+      "los note-read note-naive-bayes-spam-filter",
+      "los search smoothing|\"conditional independence\"|underflow|Laplace --content --limit 10",
+      "los bootstrap --brief; los search \"\" --type note; los search \"\" --limit 2000; los bootstrap --compact; los status",
+      "los inspect inbox|garden|work/inbox (record not found); los search \"\" --type garden (empty)",
+      "ls work/inbox knowledge/garden work work/active",
+      "los inspect <116 notes, 6 batches of 20>",
+      "harvest: for each probe: los related NOTE; los related CONCEPT and los atlas-context CONCEPT per concept; los related SOURCE per source (97 calls)",
+      "los note-read <each of the 20 probes>",
+      "los inspect garden:everything-is-a-dag.md (not found); los note-read everything-is-a-dag (not found); los search dag; los search DAG --content",
+      "cat knowledge/garden/*.md; cat work/inbox/*.md",
+      "los inspect <11 study maps>; los plan-edit-context unit-os-l02 --stage-id stage-os-l02-02-proportional-share (gives working-note path, not content)",
+      "cat curriculum/**/stages/*/notes.md (20 stage working notes)",
+      "los inspect workspace-* project-* relationship-tessera-dataframes",
+      "content-search sweep: 6–7 `los search TERM --content --limit 50` per probe (130 calls, terms in connections.jsonl commands)",
+      "los note-read <all 116 notes> (read bodies to rank)",
+      "los intelligence-scan --brief --json; los capture --help (checking for any inbox/garden read)"
+    ],
+    "tool_calls": 45,
+    "docs_consulted": [
+      "AGENTS.md",
+      "system/OPERATOR.md",
+      "los --help and per-command --help",
+      "README.md (grep for inbox/garden only)",
+      "Makefile (setup target)",
+      ".gitignore",
+      "system/WORKFLOWS.md (grep for inbox)"
+    ],
+    "impl_files_read": [],
+    "retries": 0,
+    "confusions": [
+      "`related` on a note returns only concepts, sources and (sometimes) workspaces, never notes. It took a probe to see that notes are reached via `related CONCEPT` / `related SOURCE`.",
+      "OPERATOR.md says the domain atlas can be opened for the full map, but gives no command; `bootstrap --brief` shows only per-domain counts.",
+      "bootstrap/status count 7 inbox items and 9 garden entries, but no read command lists or reads them; the connection-probes target vocabulary (garden:, inbox:, stage:) has no product-side counterpart.",
+      "`related note-naive-bayes-spam-filter` omits workspace-statlearn-retake although that workspace lists the note, while `related note-cfs-fair-share` does return workspace-os-oral-prep (the note carries `contexts`). Workspace membership is visible from one side only.",
+      "Content search splits the query into whitespace tokens and returns every note whose full file (frontmatter included) contains all tokens as case-insensitive substrings, not the phrase. 'System R' returned 11 notes containing 'system' plus any 'r'; none of them mentions System R. 'the log' returned 23 notes (e.g. 'the' + 'topological'). 'MAP' matched 'map'/'maps'. Snippets are listed once per matching token, so 'conditional independence' showed line 2 twice."
+    ],
+    "corrective_steps": [
+      "Ran `make setup` after the missing-dependency error (the error named the fix).",
+      "Built a two-hop neighbourhood (note → concept/source → notes; concept → atlas relations) because `related` has no note→note edge.",
+      "Listed and read garden, inbox and stage working-note files directly after every product read refused them."
+    ],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 10.4,
+    "outcome": "The learner gets a ranked list of 5–10 items for each of her 20 notes, each with a one-line reason (connections.jsonl, phase canon). Graph-adjacent same-course notes came from the product. The most useful cross-course links came from reading: the independence assumption shared by Naive Bayes and selectivity estimation; Amdahl's law for the 16-worker job; matrix factorisation answering the low-rank note's open question; garden seeds that ask the probe's own question. Where a candidate is weak it is flagged tentative, and contrasts and superseded versions are flagged."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "No transactions: read-only scenario.",
+    "approval_behavior": "No approvals requested or needed.",
+    "projection_activity": "Read commands built and cached the derived projection on first use (generated/derived-state/state-v1.json plus 117 blobs, 490,130 bytes, gitignored).",
+    "persistence_activity": "None to canonical files. `make setup` created .venv/ and egg-info (gitignored) and installed hooks into .git/hooks (pre-commit, post-commit, pre-push).",
+    "derived_changes": "118 derived files added under generated/derived-state/ (digest df97c873… → 50797f3c…); canonical digest unchanged.",
+    "manifest_changes": "none",
+    "unexpected_writes": [],
+    "warnings_errors": [
+      "capabilities before setup: 'learning_os: cannot run — pyyaml is not installed; jsonschema is not installed.' (exit 2)"
+    ],
+    "git_diff_stat": "empty (git status clean before and after; HEAD unchanged 13ad2fca)",
+    "observe_diff_file": "observations/S03-diff.json"
+  },
+  "friction": [
+    {
+      "tag": "hidden-prerequisite",
+      "description": "AGENTS.md and OPERATOR.md start with `python tools/los.py capabilities`, which fails on a fresh checkout until `make setup` is run. The error names the fix, so recovery was quick.",
+      "cost": "2 tool calls"
+    },
+    {
+      "tag": "missing-capability",
+      "description": "`related NOTE` has no note→note edges; related notes are reachable only via concept or source hops. Source hops are very broad (source-tuh-statlearn-slides → 21 notes). Probe notes without concepts (C03 parallel workers, C09 data lineage) get no note neighbours from the product at all.",
+      "cost": "~100 extra CLI calls in a harvest script"
+    },
+    {
+      "tag": "missing-capability",
+      "description": "Garden seeds, inbox captures and stage working notes are counted by bootstrap/status but are invisible to search, search --content, inspect, related and note-read; plan-edit-context --stage-id returns only the working-note path. 23 of 158 recommended targets had to come from reading canonical Markdown directly, which OPERATOR.md tells interfaces not to do.",
+      "cost": "5 tool calls; raw file reads"
+    },
+    {
+      "tag": "missing-capability",
+      "description": "There is no similarity or semantic neighbour search. Cross-course connections (a shared independence assumption, Amdahl's law, fairness across scheduling, GPUs and study time) surface only if the operator guesses the exact substring. Concept relations are sparse (28 in total), and atlas-context added nothing beyond direct concept links.",
+      "cost": "130 content searches plus reading all 116 note bodies"
+    },
+    {
+      "tag": "other",
+      "description": "Search precision: content search ANDs whitespace tokens as substrings over the whole file including frontmatter, so a phrase query is not a phrase ('System R' → 11 notes, none about System R; 'the log' → 23 notes via 'topological'). Title/id search is also plain substring ('dag' → concept-adaptive-optimizers). Snippets repeat per token.",
+      "cost": "manual filtering of false hits"
+    },
+    {
+      "tag": "unclear-terminology",
+      "description": "OPERATOR.md: 'open the domain atlas for the full map', but no command or id is given; `inspect` of plausible ids fails.",
+      "cost": "1 tool call"
+    },
+    {
+      "tag": "other",
+      "description": "Workspace membership is one-directional in `related`: a note listed by a workspace (note-naive-bayes-spam-filter in workspace-statlearn-retake) does not show that workspace unless the note itself carries `contexts`.",
+      "cost": "found by inspecting workspaces separately"
+    }
+  ],
+  "failures": [
+    "F-s06-connections-b-01"
+  ],
+  "scenario_record": {
+    "connection_records": "connections.jsonl: 20 lines, phase canon, C01–C20",
+    "candidates_total": 158,
+    "candidates_by_source": {
+      "product:related": 46,
+      "product:search-content": 39,
+      "agent-reading": 73
+    },
+    "product_commands_that_produced_candidates": [
+      "los related CONCEPT_ID (via note → concept)",
+      "los related SOURCE_ID (via note → source)",
+      "los atlas-context CONCEPT_ID (concept relations, then related)",
+      "los related NOTE_ID (workspaces only)",
+      "los search TERM --content"
+    ],
+    "added_by_own_reading": "All garden:, inbox: and stage: targets (listing directories, reading files); project-tessera and workspace-dbsys-exam (found via inspect of workspaces and projects); and cross-domain notes found by reading all note bodies via note-read (e.g. independence assumption C01↔C07, steal/no-force C05↔C15, MLE zero-count C01)."
+  },
+  "uncertainties": [
+    "Rankings are my judgement of usefulness for her current goals (Oct exams, Tessera). Items flagged tentative are weak links.",
+    "The agent session had a memory index describing LearningOS internals (see run.json deviations). It was not opened during the scenario."
+  ]
+}

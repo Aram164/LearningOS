@@ -1,0 +1,125 @@
+{
+  "scenario": "S27",
+  "run_id": "s06-connections-b-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "All 30 arrivals got a before-shelving connection record (29 ranked lists, plus an empty list for the non-study A24), and the observer diff confirms the world is unchanged. Arrivals have no id, so no connection command applies: the product contributes only via my chosen search terms (title search, content search, related on matched concepts). Title search surfaced most same-topic notes (94 of 185 results), but all 40 garden/inbox/stage/arrival targets and the cross-domain links came from reading (70 of 185).",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec",
+    "derived_digest": "50797f3c64773c06904676c30352a27b1e5fd970a59dd5a0d4b525225b150670",
+    "snapshot_file": "observations/S27-before.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec",
+    "derived_digest": "50797f3c64773c06904676c30352a27b1e5fd970a59dd5a0d4b525225b150670",
+    "snapshot_file": "observations/S27-after.json"
+  },
+  "consumer": {
+    "goal": "Before anything is filed, tell the learner for each capture A01–A30 in eval-drop/ what she already has that it connects to, best first, and why, without changing anything.",
+    "first_action": "Reset the world (git reset --hard; git clean -fd) as the scenario is `world: fresh`, snapshot, then read eval-drop/index.json and all 30 arrival files.",
+    "commands": [
+      "git -C <world> reset --hard; git -C <world> clean -fd",
+      "cat eval-drop/index.json; cat eval-drop/A01.md … A30.md",
+      "los material-context \"bayesian network\"; los material-context \"naive bayes\"  (both empty: pool has 0 analysis notes)",
+      "los search bayes --type concept",
+      "per arrival, 3–5 terms: los search TERM --limit 30 and los search TERM --content --limit 50; then los related CONCEPT for each concept the title search returned (365 CLI calls in total, listed per arrival in connections.jsonl)",
+      "no write, capture, shelving or ai-action command was run"
+    ],
+    "tool_calls": 10,
+    "docs_consulted": [
+      "eval-drop/index.json (arrival metadata)",
+      "knowledge already gathered in S03: OPERATOR.md, all note bodies via note-read, garden/inbox/stage files"
+    ],
+    "impl_files_read": [],
+    "retries": 0,
+    "confusions": [
+      "No product command takes free text or a file and returns related records. `material-context` sounds right ('find saved explanations by need') but searches only analysis notes and assessments, which this world has none of.",
+      "Title search matches substrings of ids as well as titles and hits unrelated records: 'NaN' matched 'Dominant Resource Fairness' (domiNANt), 'CAP' matched 'escape', 'capped' and 'landscape', 'schedule' pulled in concept-simulated-annealing, 'eval' matched 'prevalence'."
+    ],
+    "corrective_steps": [
+      "Treated each arrival as a query: picked distinctive terms, ran title + content search, and expanded matched concepts with `related`. Then ranked by reading, reusing the full-corpus reading from S03.",
+      "Filtered substring false positives by hand."
+    ],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 6.2,
+    "outcome": "For each capture the learner sees a ranked list of 3–10 existing items with a one-line reason. It points out duplicates she already has (A11 p-value card ≈ note-p-values-corrected and an inbox reminder; A18 = garden:everything-is-a-dag.md; A29 = inbox:20260816-drf-paper-link.md, and the DRF paper is already written up). It names answered questions (A17, A25, A28, A30) and stage continuations (A02, A07, A14, A20, A21, A27). It says A24 (sourdough) connects to nothing. Nothing was changed."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "None: read-only.",
+    "approval_behavior": "None requested; the learner said not to change anything yet, and nothing was proposed for application.",
+    "projection_activity": "The projection cache from S03 (gitignored generated/derived-state, left by git clean -fd) was reused; derived digest unchanged.",
+    "persistence_activity": "None.",
+    "derived_changes": "none (digest 50797f3c… before and after)",
+    "manifest_changes": "none",
+    "unexpected_writes": [],
+    "warnings_errors": [],
+    "git_diff_stat": "empty; HEAD 13ad2fca unchanged; git status clean before and after. eval-drop/ files all still carry build-time mtimes (04:15:58 local).",
+    "observe_diff_file": "observations/S27-diff.json"
+  },
+  "friction": [
+    {
+      "tag": "missing-capability",
+      "description": "There is no way to ask 'what do I have that relates to this text/file?'. Every arrival needs hand-picked search terms, and results depend on guessing the words her notes happen to use.",
+      "cost": "365 CLI calls for 30 arrivals, plus manual ranking"
+    },
+    {
+      "tag": "missing-capability",
+      "description": "Same gap as S03 (F-s06-connections-b-01): inbox, garden and stage notes are not searchable. Duplicate detection against the inbox (A11, A29) and the garden (A18) was only possible by reading those files directly.",
+      "cost": "all 40 garden/inbox/stage/arrival targets came from reading"
+    },
+    {
+      "tag": "unclear-terminology",
+      "description": "`material-context` ('find saved explanations by need') returns empty for every query in this world because it only covers analysis notes and assessments; the empty message says so but the command name suggests a general relevance search.",
+      "cost": "2 tool calls"
+    },
+    {
+      "tag": "other",
+      "description": "Title and id search is raw substring matching with no word boundaries, so short terms give noisy hits ('NaN' → Dominant Resource Fairness records).",
+      "cost": "manual filtering"
+    }
+  ],
+  "failures": [
+    "F-s06-connections-b-01"
+  ],
+  "scenario_record": {
+    "connection_records": "connections.jsonl: 30 lines, phase before-shelving, A01–A30",
+    "results_total": 185,
+    "results_by_source": {
+      "product:search": 94,
+      "product:search-content": 20,
+      "product:related": 1,
+      "agent-reading": 70
+    },
+    "target_kinds": {
+      "note/workspace/project": 145,
+      "stage": 14,
+      "garden": 12,
+      "inbox": 7,
+      "arrival": 7
+    },
+    "flags": {
+      "tentative": 48,
+      "duplicate": 8,
+      "contrast": 4,
+      "superseded": 1,
+      "outdated": 1
+    },
+    "product_commands_that_produced_candidates": [
+      "los search TERM (title/id search, all record types)",
+      "los search TERM --content",
+      "los related CONCEPT (concepts found by title search)"
+    ],
+    "added_by_own_reading": "All stage:, garden:, inbox: and arrival: targets; cross-domain notes not matched by my terms (e.g. A01 → note-hmm-viterbi, A10 → note-naive-bayes-spam-filter, A25 → note-mle-coin-flips / note-gaussian-noise-least-squares, A27 → note-parallel-workers-no-speedup).",
+    "world_unchanged": "Confirmed by observations/S27-diff.json: canonical 0 added/removed/modified, derived 0 changes, no receipts, no new operations, no diagnostics, HEAD unchanged, git status empty."
+  },
+  "uncertainties": [
+    "The `source` field shows which product command first returned a target for the terms I chose; a different operator's terms would shift the split between product and reading.",
+    "Ranking relied on reading done in S03 in the same session (the world is deterministic, so the content was identical after the reset)."
+  ]
+}
