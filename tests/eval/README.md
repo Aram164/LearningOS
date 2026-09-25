@@ -59,6 +59,7 @@ tests/eval/
 │   ├── arrivals.md          30 items handed to consumers during scenarios
 │   └── materials/           external slide transcripts
 ├── public/                  PUBLIC — what consumers are asked to do
+│   ├── SESSION-BRIEF.md     standing instructions for blind consumer chats
 │   ├── CONSUMER-PROTOCOL.md
 │   ├── scenarios.yaml       28 scenarios (S00–S27)
 │   ├── questions.yaml       36 retrieval questions (Q01–Q36)
