@@ -195,6 +195,8 @@ hidden:
     - path: .git
       purpose: the git directory itself
       must_be_ignored: false
+    - path: .jules
+      purpose: jules local agent configuration and tracking
     - path: .venv
       purpose: local Python environment, created by `make setup`
     - path: .pytest_cache
