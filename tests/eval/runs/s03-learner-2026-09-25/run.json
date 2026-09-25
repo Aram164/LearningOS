@@ -37,7 +37,7 @@
   "python_for_world": "/tmp/evalenv (Python 3.13 venv with pyyaml, jsonschema, pypdf)",
   "world_path": "~/los-eval/s03-learner-2026-09-25",
   "clock": "container clock UTC; world timeline as_of 2026-09-18, real date 2026-09-25",
-  "status": "INTERIM CHECKPOINT 2 — S02–S06 complete; S07 in progress; S08, S13 not yet run",
+  "status": "INTERIM CHECKPOINT 3 — S02–S08 complete; S13 not yet run",
   "TRACEPARENT": "The container exports a W3C TRACEPARENT; LearningOS adopted it for every call until mid-S05, after which los ran with it unset (see F-s03-diag-ambiguous-01)."
  },
  "scenarios": [
