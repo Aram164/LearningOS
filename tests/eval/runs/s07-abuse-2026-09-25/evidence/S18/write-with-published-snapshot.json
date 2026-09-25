@@ -1,0 +1,21 @@
+{
+  "schema_version": 2,
+  "request_id": "req-s18-stale",
+  "idempotency_key": "idem-s18-stale",
+  "capability": "capture.create",
+  "ok": false,
+  "replayed": false,
+  "transaction_id": null,
+  "receipt_path": null,
+  "snapshot_after": null,
+  "result": {},
+  "error": {
+    "code": "STALE_SNAPSHOT",
+    "message": "canonical state changed since this request was approved",
+    "retryable": true,
+    "details": {
+      "expected": "sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e",
+      "actual": "sha256:9543eedbc3efef89a9d71d7f6c224580d71f3b3919b6104964a0757ba35846f6"
+    }
+  }
+}

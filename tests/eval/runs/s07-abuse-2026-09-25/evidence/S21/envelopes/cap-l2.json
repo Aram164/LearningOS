@@ -1,0 +1,19 @@
+{
+ "schema_version": 2,
+ "request_id": "req-s21-l2",
+ "idempotency_key": "idem-s21-l2",
+ "capability": "capture.create",
+ "channel": "operator",
+ "expected_snapshot": "sha256:bd995f3c694bad37b1d3733d708db578ef2600ddbaa84e837ae65c8e205f5c9c",
+ "expected_revisions": {
+  "capture-request:idem-s21-l2": 0
+ },
+ "approval": {
+  "kind": "direct-user-gesture",
+  "subject_sha256": "sha256:d59201b6bcca38c8e6f98d4dab0422e0e4313c0305fd876931478bd4efc6f779"
+ },
+ "payload": {
+  "text": "S21 ledger probe L2",
+  "title": "s21 l2"
+ }
+}

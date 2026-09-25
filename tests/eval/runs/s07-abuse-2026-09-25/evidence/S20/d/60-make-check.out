@@ -1,0 +1,7 @@
+.venv/bin/python tools/validate.py
+E WS-SECTION: workspace 'workspace-os-oral-prep' is missing required body section '## Next Action' [work/active/workspace-os-oral-prep/CONTEXT.md]
+W WS-NEGLECT: workspace 'workspace-ledgerline' untouched for 32 days (per Git)
+W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 105 days (per Git)
+
+1 error(s), 2 warning(s) — FAIL
+make: *** [check] Error 1

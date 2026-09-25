@@ -1,0 +1,99 @@
+{
+  "scenario": "S18",
+  "run_id": "s07-abuse-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "Every CLI read surface (search, search --content, inspect, note-read, bootstrap --brief) reflected the hand edit immediately under a new snapshot id. A write guarded by the stale published snapshot failed closed with STALE_SNAPSHOT and named the actual snapshot. The published manifest and Markdown views stayed stale; only `validate` warned (HYGIENE-VIEWS). The views' own 'Generated:' stamp cannot reveal the staleness, contrary to the README's human-fallback advice.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S18-before.json"
+  },
+  "consumer": {
+    "goal": "Build views, hand-edit one canonical note body, and check each read surface for staleness without regenerating",
+    "first_action": "make views",
+    "commands": [
+      "make setup",
+      "make views",
+      "cat knowledge/notes/data-systems/note-lsm-trees.md",
+      "grep generated/*.md for the note",
+      "los search --help",
+      "baseline: los search memtable; los search zqxmemtab; los search 'definitely not here' --type note --content; los search zqxabsent --type note --content; los inspect note-lsm-trees; los note-read note-lsm-trees; los related note-lsm-trees; los bootstrap --brief; validate --compact --no-report; los status",
+      "sed: memtable→zqxmemtab, 'definitely not here'→'zqxabsent' in the note body",
+      "same surface set after the edit",
+      "los capability capture.create with expected_snapshot from generated/manifest.json",
+      "make views",
+      "validate --compact --no-report"
+    ],
+    "tool_calls": 14,
+    "docs_consulted": [
+      "README.md (human fallback, Generated timestamp)",
+      "system/OPERATOR.md"
+    ],
+    "impl_files_read": [],
+    "retries": 0,
+    "confusions": [
+      "bootstrap --brief exposes the new snapshot id but says nothing about the published manifest lagging behind it"
+    ],
+    "corrective_steps": [],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 10,
+    "outcome": "The CLI always answered from the current files. A human reading generated/*.md, or an interface reading generated/manifest.json, saw the old text with no in-file sign of staleness. `make views` fixed it."
+  },
+  "internal": {
+    "request_ids": [
+      "req-s18-stale"
+    ],
+    "receipts": [],
+    "transaction_behavior": "capture.create with the published (stale) snapshot → STALE_SNAPSHOT, retryable true, details {expected 82bc…, actual 9543…}; nothing written",
+    "approval_behavior": "approval subject computed with intent_sha256; refusal came from the snapshot guard",
+    "projection_activity": "CLI reads project in memory from canonical files and do not republish generated/; `make views` republished",
+    "derived_changes": "after make views: generated/backlinks.json and generated/manifest.json changed; manifest snapshot 82bc…→9543…, summary updated; Markdown views byte-identical (the body is not shown in them)",
+    "unexpected_writes": [],
+    "warnings_errors": [
+      "W HYGIENE-VIEWS: generated/manifest.json is not the current authored snapshot — run `make views` (validate only)"
+    ],
+    "git_diff_stat": "knowledge/notes/data-systems/note-lsm-trees.md | 8 ++++---- (the probe edit, left in place)",
+    "observe_diff_file": "observations/S18-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [
+      " M knowledge/notes/data-systems/note-lsm-trees.md"
+    ],
+    "snapshot_file": "observations/S18-after.json"
+  },
+  "friction": [
+    {
+      "tag": "manual-generated-file-inspection",
+      "description": "only way to see whether the published manifest lags was to open generated/manifest.json and compare _generated.snapshot_id with bootstrap's snapshot_id",
+      "cost": "2 tool calls"
+    },
+    {
+      "tag": "doc-contradiction",
+      "description": "README advises judging staleness by the Generated: timestamp, which is the last-commit time",
+      "cost": "1 tool call"
+    }
+  ],
+  "failures": [
+    "F-s07-04"
+  ],
+  "scenario_record": {
+    "surfaces": {
+      "los search (summary)": "fresh — old term 'memtable' no longer found, new term found",
+      "los search --type note --content": "fresh — new snapshot 9543…, exact line snippet of the new text; old phrase 0 hits",
+      "los inspect note-lsm-trees": "fresh — summary shows the edited first paragraph (single inspect carries no snapshot id)",
+      "los note-read note-lsm-trees": "fresh — new content_sha256 and snapshot",
+      "los related note-lsm-trees": "fresh (unaffected: lists concept + source only; body edit changes nothing there)",
+      "los bootstrap --brief": "fresh — new snapshot_id 9543…; no mention that generated/ lags",
+      "los status": "stale-silent for views — 'validation: OK · 3 warning(s)', views not named",
+      "tools/validate.py": "stale-warned — HYGIENE-VIEWS names generated/manifest.json",
+      "generated/manifest.json": "stale-silent — old summary, old snapshot_id, same Generated stamp",
+      "generated/*.md views": "stale-silent — body text not shown in views; stamp unchanged and cannot change"
+    },
+    "write_against_stale_published_snapshot": "STALE_SNAPSHOT (fail closed, actual snapshot in details)"
+  },
+  "uncertainties": [
+    "Whether the Obsidian UI reads generated/manifest.json directly (and so shows stale text) is NOT TESTED"
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "schema_version": 2,
+  "request_id": "req-s20a-cap",
+  "idempotency_key": "idem-s20a-cap",
+  "capability": "capture.create",
+  "ok": false,
+  "replayed": false,
+  "transaction_id": null,
+  "receipt_path": null,
+  "snapshot_after": null,
+  "result": {},
+  "error": {
+    "code": "STALE_SNAPSHOT",
+    "message": "canonical state changed since this request was approved",
+    "retryable": true,
+    "details": {
+      "expected": "sha256:b5c38ebb846d2301b669f6d0c52620982e2b824fdf66e2a864cc5e2344556d65",
+      "actual": "sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e"
+    }
+  }
+}

@@ -1,0 +1,2 @@
+capture exit 0
+True work/inbox/20260925-125211-scan-page.bin None

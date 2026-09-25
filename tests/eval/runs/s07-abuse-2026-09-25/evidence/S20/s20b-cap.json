@@ -1,0 +1,19 @@
+{
+ "schema_version": 2,
+ "request_id": "req-s20b-cap",
+ "idempotency_key": "idem-s20b-cap",
+ "capability": "capture.create",
+ "channel": "operator",
+ "expected_snapshot": "sha256:5cd15bcfc402d103f1121c85a3ab7c78c25ccf6f4758bf44942c848208afdf88",
+ "expected_revisions": {
+  "capture-request:idem-s20b-cap": 0
+ },
+ "approval": {
+  "kind": "direct-user-gesture",
+  "subject_sha256": "sha256:ad17b1f96eb1704dc9293b4e9438c1ac99ef1ef2e7c2b075b6d06796fd065375"
+ },
+ "payload": {
+  "text": "S20b probe: capture while a note references an unknown concept.",
+  "title": "s20b-cap"
+ }
+}

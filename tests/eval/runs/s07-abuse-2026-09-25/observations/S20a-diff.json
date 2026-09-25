@@ -1,0 +1,91 @@
+{
+  "from": "S20a-before",
+  "to": "S20a-after",
+  "canonical": {
+    "added": [],
+    "removed": [],
+    "modified": []
+  },
+  "canonical_digest_changed": false,
+  "receipts_added": [],
+  "inflight_after": [],
+  "derived": {
+    "added": [
+      "generated/backlinks.json",
+      "generated/concept-canvas.canvas",
+      "generated/concept-index.md",
+      "generated/concept-map.md",
+      "generated/coordination-view.md",
+      "generated/dependency-report.md",
+      "generated/domain-atlas.md",
+      "generated/learner-interpretations.json",
+      "generated/learner-interpretations.md",
+      "generated/learning-requirements.json",
+      "generated/learning-requirements.md",
+      "generated/library.md",
+      "generated/manifest.json",
+      "generated/module-view.md",
+      "generated/nebula.md",
+      "generated/reading-room.md",
+      "generated/reports/health.md",
+      "generated/reports/validation-report.md",
+      "generated/source-index.md",
+      "generated/study-plans.md"
+    ],
+    "removed": [],
+    "modified": [],
+    "bytes_before": 0,
+    "bytes_after": 494050
+  },
+  "diagnostics_added": [
+    "operations/diagnostics/traces.jsonl"
+  ],
+  "ai_actions_added": [],
+  "new_operations": [
+    {
+      "trace_id": "cedd4c361f66268386a23b65210b5ddd",
+      "request_id": "req-s20a-cap",
+      "capability": "capture.create",
+      "started_at": 1790333441.055443,
+      "duration_ms": 39.3,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": "core.snapshot_guard",
+      "canonical_outcome": "NOT_COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    },
+    {
+      "trace_id": "df5d84e575bbd271991a423d9b7b0b3b",
+      "request_id": "req-s20a-cap",
+      "capability": "capture.create",
+      "started_at": 1790333440.005001,
+      "duration_ms": 450.7,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": "core.validation",
+      "canonical_outcome": "AMBIGUOUS",
+      "recovery_requirement": "reconcile-exact-request",
+      "needs_attention": true
+    },
+    {
+      "trace_id": "4dc8c9f0c91762a8e24f5d95613b2a8c",
+      "request_id": "req-s20a-cap",
+      "capability": "capture.create",
+      "started_at": 1790303931.8839612,
+      "duration_ms": 375.5,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": "core.validation",
+      "canonical_outcome": "AMBIGUOUS",
+      "recovery_requirement": "reconcile-exact-request",
+      "needs_attention": true
+    }
+  ],
+  "head": {
+    "before": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "after": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e"
+  },
+  "git_status_after": [],
+  "flags": []
+}

@@ -1,0 +1,26 @@
+Traceback (most recent call last):
+  File "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S19/LearningOS/repository/tools/los.py", line 1097, in <module>
+    raise SystemExit(main())
+                     ~~~~^^
+  File "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S19/LearningOS/repository/tools/los.py", line 1066, in main
+    return args.func(args)
+           ~~~~~~~~~^^^^^^
+  File "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S19/LearningOS/repository/tools/learning_os/commands/query.py", line 298, in cmd_generate
+    _publish(root)
+    ~~~~~~~~^^^^^^
+  File "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S19/LearningOS/repository/tools/learning_os/commands/support.py", line 187, in _publish
+    _publish_repo(load_repo(root))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^
+  File "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S19/LearningOS/repository/tools/learning_os/commands/support.py", line 191, in _publish_repo
+    write_outputs(repo, generate_all(repo))
+    ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S19/LearningOS/repository/tools/learning_os/genout/outputs.py", line 116, in write_outputs
+    if target.read_bytes() == content:
+       ~~~~~~~~~~~~~~~~~^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 777, in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py", line 771, in open
+    return io.open(self, mode, buffering, encoding, errors, newline)
+           ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+IsADirectoryError: [Errno 21] Is a directory: '/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S19/LearningOS/repository/generated/manifest.json'

@@ -1,0 +1,102 @@
+{
+  "request_id": "req-s21-cap-1",
+  "capability": "capture.create",
+  "diagnosis": {
+    "first_failure_stage": null,
+    "execution_outcome": "committed",
+    "canonical_outcome": "COMMITTED",
+    "projection_outcome": "published",
+    "recovery_requirement": "verify-observation",
+    "authoritative_evidence": [
+      "receipt:operations/transactions/transaction-20260925-125656-001.yaml",
+      "ledger:idem-s21-k1",
+      "response:replayed=true"
+    ],
+    "attempts": [
+      {
+        "span": "3b024c2e2a0f8377",
+        "status": "ok",
+        "replay_of": null
+      },
+      {
+        "span": "0a9866e354347dec",
+        "status": "ok",
+        "replay_of": "3b024c2e2a0f8377"
+      },
+      {
+        "span": "11e1b28e78e1d307",
+        "status": "ok",
+        "replay_of": "3b024c2e2a0f8377"
+      },
+      {
+        "span": "ddcdc44b68fa72f2",
+        "status": "ok",
+        "replay_of": "3b024c2e2a0f8377"
+      },
+      {
+        "span": "0d469ab21be3ebb2",
+        "status": "ok",
+        "replay_of": "3b024c2e2a0f8377"
+      }
+    ],
+    "reasons": [
+      "a committed receipt verified against its ledger entry, the live revision floor, and the capability catalog",
+      "receipt exists but no observation is on record"
+    ]
+  },
+  "timeline": [
+    {
+      "stage": "Core admitted request",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Approval",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Replay lookup",
+      "state": "passed",
+      "detail": "hit"
+    },
+    {
+      "stage": "Snapshot guard",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Handler",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Validation",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Projection",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Transaction committed",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Receipt persisted",
+      "state": "passed",
+      "detail": null
+    }
+  ],
+  "observed_snapshot": "sha256:bd995f3c694bad37b1d3733d708db578ef2600ddbaa84e837ae65c8e205f5c9c",
+  "ui_outcome": "BLOCKED",
+  "facts": {
+    "transaction_id": "transaction-20260925-125656-001",
+    "receipt_path": "operations/transactions/transaction-20260925-125656-001.yaml",
+    "snapshot_before": "sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e",
+    "snapshot_after": "sha256:4dd8ed5c6b3e754acc6af76ab68b7a771a5b2d12ef2c0bce15af230a29db0588"
+  }
+}

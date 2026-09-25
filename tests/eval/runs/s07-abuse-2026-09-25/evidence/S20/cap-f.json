@@ -1,0 +1,19 @@
+{
+ "schema_version": 2,
+ "request_id": "req-s20f-cap",
+ "idempotency_key": "idem-s20f-cap",
+ "capability": "capture.create",
+ "channel": "operator",
+ "expected_snapshot": "sha256:ceee06236a9588de523058c96929653be8a67dc18faed2edc7f42238a2e037b2",
+ "expected_revisions": {
+  "capture-request:idem-s20f-cap": 0
+ },
+ "approval": {
+  "kind": "direct-user-gesture",
+  "subject_sha256": "sha256:ef5614d82158bf73d94e76c385cd3fb8307022716d39467444befed6f9f3b88e"
+ },
+ "payload": {
+  "text": "S20f probe: capture while a note supersedes another.",
+  "title": "s20f probe"
+ }
+}

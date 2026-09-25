@@ -1,0 +1,40 @@
+{
+  "request_id": "req-capture.create",
+  "capability": "capture.create",
+  "diagnosis": {
+    "first_failure_stage": null,
+    "execution_outcome": "refused",
+    "canonical_outcome": "AMBIGUOUS",
+    "projection_outcome": "skipped",
+    "recovery_requirement": "reconcile-exact-request",
+    "authoritative_evidence": [
+      "observed:sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e"
+    ],
+    "attempts": [
+      {
+        "span": "33d0d77f47edc690",
+        "status": "error",
+        "replay_of": null
+      }
+    ],
+    "reasons": [
+      "no response and no receipt: nothing is knowable",
+      "ambiguous outcome: the exact request stays recoverable"
+    ]
+  },
+  "timeline": [
+    {
+      "stage": "Core admitted request",
+      "state": "passed",
+      "detail": null
+    }
+  ],
+  "observed_snapshot": "sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e",
+  "ui_outcome": "BLOCKED",
+  "facts": {
+    "transaction_id": null,
+    "receipt_path": null,
+    "snapshot_before": null,
+    "snapshot_after": null
+  }
+}

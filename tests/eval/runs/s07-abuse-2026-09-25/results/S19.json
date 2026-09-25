@@ -1,0 +1,103 @@
+{
+  "scenario": "S19",
+  "run_id": "s07-abuse-2026-09-25",
+  "classification": "PASS",
+  "classification_reason": "The determinism report is byte-identical: 20 derived files, raw and timestamp-normalized comparison both identical after deleting generated/ and the diagnostic store and rebuilding. Extra abuse beyond the procedure found one contrived crash (F-s07-05) and a dirty tracked file after 'delete generated freely'. Neither affects the scenario's determinism question.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S19-before.json"
+  },
+  "consumer": {
+    "goal": "Run the determinism check on a fresh world, then probe how the product reacts to deleted or corrupted derived state",
+    "first_action": "python tests/eval/metrics/determinism.py --help",
+    "commands": [
+      "build_world.py --out ~/los-eval/s07-abuse-2026-09-25-S19",
+      "make setup",
+      "determinism.py WORLD --out evidence/S19-determinism.json",
+      "make views",
+      "truncate generated/manifest.json to 5000 bytes → search/inspect/bootstrap --brief/status/validate/related/intelligence-scan",
+      "make views",
+      "rm -rf generated → same 7 reads",
+      "make views",
+      "replace generated/manifest.json with a directory → same 7 reads; los generate; make views",
+      "rmdir generated/manifest.json; make views; validate",
+      "git checkout generated/.gitkeep"
+    ],
+    "tool_calls": 8,
+    "docs_consulted": [
+      "README.md (generated/ is disposable)"
+    ],
+    "impl_files_read": [
+      "tests/eval/metrics/determinism.py --help output only (harness)"
+    ],
+    "retries": 0,
+    "confusions": [],
+    "corrective_steps": [
+      "rmdir generated/manifest.json",
+      "git checkout generated/.gitkeep"
+    ],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 6,
+    "outcome": "Derived state rebuilds identically. CLI reads never depend on generated/. Truncated manifest → validate ERROR GEN-JSON (blocks commit until make views); deleted generated/ → HYGIENE-VIEWS warning; a directory in place of the manifest → generate/status/validate crash."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "no writes",
+    "approval_behavior": "n/a",
+    "projection_activity": "two full builds inside the determinism copy; make views ×4 in the world",
+    "derived_changes": "world generated/ populated (19 files added relative to the fresh build)",
+    "unexpected_writes": [
+      "rm -rf generated/ + make views leaves tracked generated/.gitkeep deleted (' D generated/.gitkeep'); the pre-push gate requires a clean worktree"
+    ],
+    "warnings_errors": [
+      "truncated manifest: E GEN-JSON generated JSON does not parse [generated/manifest.json] (validate exit 1; status 'validation: 1 error(s)')",
+      "deleted generated/: W HYGIENE-VIEWS views absent",
+      "manifest as directory: IsADirectoryError tracebacks in generate/status/validate"
+    ],
+    "git_diff_stat": "(empty after restoring generated/.gitkeep)",
+    "observe_diff_file": "observations/S19-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S19-after.json"
+  },
+  "friction": [
+    {
+      "tag": "unhelpful-error",
+      "description": "raw Python traceback from generate/validate/status when the manifest path is a directory",
+      "cost": "2 tool calls"
+    },
+    {
+      "tag": "other",
+      "description": "deleting generated/ as the README allows removes the tracked generated/.gitkeep, which make views does not restore",
+      "cost": "1 tool call"
+    }
+  ],
+  "failures": [
+    "F-s07-05"
+  ],
+  "scenario_record": {
+    "determinism_report": {
+      "mode": "rebuild-after-delete",
+      "files": 20,
+      "builds_exit": [
+        0,
+        0
+      ],
+      "raw_identical": true,
+      "timestamp_normalized_identical": true,
+      "differences": []
+    },
+    "differences_outside_timestamp_fields": "none",
+    "extra_probes": {
+      "truncated_manifest": "CLI reads unaffected (they project from canonical files); validate ERROR GEN-JSON + HYGIENE-VIEWS; status reports 1 error; make views repairs",
+      "deleted_generated": "CLI reads unaffected; validate W HYGIENE-VIEWS; make views repairs but leaves generated/.gitkeep deleted",
+      "manifest_is_directory": "search/inspect/bootstrap/related/intelligence-scan OK; status, validate, generate, make views crash (IsADirectoryError)"
+    }
+  },
+  "uncertainties": []
+}

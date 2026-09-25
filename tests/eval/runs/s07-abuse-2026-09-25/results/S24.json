@@ -1,0 +1,76 @@
+{
+  "scenario": "S24",
+  "run_id": "s07-abuse-2026-09-25",
+  "classification": "PASS",
+  "classification_reason": "Two independent builds into different directories produced the same world HEAD (13ad2fc…) and identical canonical trees. Their 20 derived files were byte-identical raw, timestamp-normalized and root-normalized. An extra generate under TZ=America/New_York with LC_ALL=C also produced a byte-identical generated/ tree.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S24-before.json"
+  },
+  "consumer": {
+    "goal": "Build two worlds from the same inputs and compare HEADs and derived state",
+    "first_action": "build_world.py --out ~/los-eval/s07-abuse-2026-09-25-S24A (and …-S24B)",
+    "commands": [
+      "build_world.py --out …-S24A",
+      "build_world.py --out …-S24B",
+      "make setup (A)",
+      "determinism.py --compare A B --out evidence/S24-determinism-compare.json",
+      "generate in A; generate in B under TZ=America/New_York LC_ALL=C LANG=C; diff -rq A/generated B/generated",
+      "validate in B under TZ=Europe/Berlin and TZ=Asia/Tokyo"
+    ],
+    "tool_calls": 4,
+    "docs_consulted": [],
+    "impl_files_read": [
+      "tests/eval/metrics/determinism.py --help output only (harness)"
+    ],
+    "retries": 0,
+    "confusions": [],
+    "corrective_steps": [],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 4,
+    "outcome": "Builds are reproducible to the byte; derived views embed no absolute paths and no build-time clock ('Generated:' is the last-commit time)."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "no writes",
+    "approval_behavior": "n/a",
+    "projection_activity": "determinism.py built views in temporary copies of A and B; A and B each generated once in place",
+    "derived_changes": "A generated/ populated (19 files added)",
+    "unexpected_writes": [],
+    "warnings_errors": [],
+    "git_diff_stat": "(empty)",
+    "observe_diff_file": "observations/S24-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S24-after.json"
+  },
+  "friction": [],
+  "failures": [],
+  "scenario_record": {
+    "world_heads": {
+      "A": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+      "B": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e"
+    },
+    "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+    "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+    "determinism_report": {
+      "heads_equal": true,
+      "trees_equal": true,
+      "builds_exit": [
+        0,
+        0
+      ],
+      "raw_identical": true,
+      "timestamp_normalized_identical": true,
+      "timestamp_and_root_normalized_identical": true
+    },
+    "differences_in_derived_state": "none",
+    "extra": "generate under TZ=America/New_York LC_ALL=C: generated/ byte-identical to A. WS-NEGLECT day counts depend on wall-clock time (31/104 at 02:30Z, 32/105 at 11:05Z), not on TZ; they are baseline-exempt advisories and do not enter derived files."
+  },
+  "uncertainties": []
+}

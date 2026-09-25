@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "request_id": "req-s21-cap-1",
+  "idempotency_key": "idem-s21-k1",
+  "capability": "capture.create",
+  "ok": false,
+  "replayed": false,
+  "transaction_id": null,
+  "receipt_path": null,
+  "snapshot_after": null,
+  "result": {},
+  "error": {
+    "code": "REVISION_CONFLICT",
+    "message": "los: artifact revision conflict — reload the affected record before writing\n{\"conflicts\": {\"capture-request:idem-s21-k1\": {\"expected\": 0, \"actual\": 1}}}",
+    "retryable": true,
+    "details": {}
+  }
+}
