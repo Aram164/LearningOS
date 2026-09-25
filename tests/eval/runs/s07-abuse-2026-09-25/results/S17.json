@@ -1,0 +1,165 @@
+{
+  "scenario": "S17",
+  "run_id": "s07-abuse-2026-09-25",
+  "classification": "ROBUSTNESS_FAILURE",
+  "classification_reason": "Durability/atomicity after recovery hold: 32 probe kills across two writes (plus 42 manual write kills and 20 attempts to kill the recovery itself, 17 of which landed before it finished), and every trial ended in pre-state or the complete committed shape. No PARTIAL outcome, and no state the next command could not recover from, including kills of the recovery itself. But isolation fails: between a kill and the next lock-taking command, inspect/search show uncommitted content that recovery later undoes, and validate/status say nothing about the pending journal.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S17-before.json"
+  },
+  "consumer": {
+    "goal": "Prepare one valid capture.create and one stage.progress.update envelope, interrupt each at ≥10 points, classify what is left",
+    "first_action": "python tools/los.py capabilities --compact --json",
+    "commands": [
+      "los capabilities --compact --json",
+      "los capabilities capture.create --json",
+      "grep WORKFLOWS.md §25a",
+      "los capture --help",
+      "los capture --text probe (refused: needs GatewayEnvelopeV2)",
+      "los capability --help",
+      "los bootstrap --brief",
+      "los capability capture.create (try1: INVALID_REQUEST 'not valid under any of the given schemas')",
+      "cat system/schema/capability-envelope.schema.json",
+      "los capability capture.create (try2: UNCONFIRMED approval subject mismatch)",
+      "read tools/learning_os/contracts/gateway.py intent_sha256",
+      "los capability capture.create (try3: INVALID_REQUEST missing capture-request:idem-s17-try3)",
+      "los capability capture.create (try4: ok)",
+      "los capabilities stage.progress.update --json",
+      "los stage-progress --help",
+      "los plan-edit-context unit-os-l02 --stage-id stage-os-l02-02-proportional-share",
+      "los capability stage.progress.update (sp1: ok)",
+      "interrupt_probe.py capture.create 16 delays 0.01–0.75",
+      "interrupt_probe.py stage.progress.update 18 delays 0.01–0.9",
+      "manual kill + reads (status, validate, inspect, search, resume, plan-edit-context, bootstrap --brief, operations, intelligence-scan)",
+      "kill los generate during rollback at 20 delays 0.1–1.0 (17 landed)",
+      "los operations --request-id req-s17-sp1",
+      "retry same envelope after kill (both capabilities)"
+    ],
+    "tool_calls": 30,
+    "docs_consulted": [
+      "AGENTS.md",
+      "system/OPERATOR.md",
+      "system/WORKFLOWS.md §25a",
+      "system/schema/capability-envelope.schema.json"
+    ],
+    "impl_files_read": [
+      "tools/learning_os/contracts/gateway.py (intent_sha256, request_artifact_id)",
+      "tests/eval/tools/interrupt_probe.py (harness)"
+    ],
+    "retries": 3,
+    "confusions": [
+      "WORKFLOWS §25a lists the envelope fields but not the channel enum, the approval object shape, or how intent_sha256 is computed",
+      "first envelope error 'is not valid under any of the given schemas' prints the whole envelope but names no field",
+      "capture.create must guard 'capture-request:<idempotency_key>' at revision 0; learned only from the error message",
+      "los operations aggregates traces across git resets (store is gitignored), so after the probe it reported execution_outcome 'committed' for a request that the current repository had never committed"
+    ],
+    "corrective_steps": [
+      "read the envelope schema file",
+      "read the product's intent_sha256 implementation and computed the approval subject with it"
+    ],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": true,
+    "wall_minutes": 22,
+    "outcome": "No write was ever left half-applied after recovery. The same envelope resubmitted after a kill rolls back the orphan and commits exactly once. But until some lock-taking command runs, a user asking `inspect` sees a 'paused' stage that is not actually recorded, and `validate` says the repository is OK."
+  },
+  "internal": {
+    "request_ids": [
+      "req-s17-try1",
+      "req-s17-try2",
+      "req-s17-try3",
+      "req-s17-try4",
+      "req-s17-sp1"
+    ],
+    "receipts": [
+      "transaction-20260925-042556-001 (capture, uninterrupted)",
+      "transaction-20260925-042632-001 (stage progress, uninterrupted)",
+      "transaction-20260925-042811-001 (capture retry after kill)",
+      "transaction-20260925-043156-001 (stage retry after kill)"
+    ],
+    "transaction_behavior": "Journal-first: .inflight/<txn>/intent.json (+ backup-N per overwritten file) written before canonical files; receipt + idempotency.yaml + revisions.yaml at commit. Recovery (on lock: generate, plan-edit-context, bootstrap --brief, any capability submit) restores backups or completes a receipted commit, and is itself idempotent: rollback killed after the file restore leaves only the journal, which the next command removes.",
+    "approval_behavior": "approval.subject_sha256 must equal intent_sha256 over {schema_version, capability, channel, expected_snapshot, expected_revisions, payload}; a mismatch → UNCONFIRMED; the expected value is not leaked.",
+    "projection_activity": "los generate republishes manifest after each recovery",
+    "persistence_activity": "capture: work/inbox/<ts>-s17-probe.md; stage progress: study-map.yaml, unit.yaml, resume.yaml",
+    "unexpected_writes": [
+      "stage.progress.update 'paused' on one stage also set the whole unit.yaml and study-map status to paused",
+      "curriculum/resume.yaml is rewritten (updated date) but is not an expected_revisions artifact"
+    ],
+    "warnings_errors": [
+      "HYGIENE-VIEWS after each kill (manifest not current authored snapshot)",
+      "no warning/error for the pending .inflight journal"
+    ],
+    "git_diff_stat": "world reset to HEAD after the probe; S17-before→after canonical diff empty",
+    "observe_diff_file": "observations/S17-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S17-after.json"
+  },
+  "friction": [
+    {
+      "tag": "needs-implementation-knowledge",
+      "description": "intent_sha256 algorithm and approval object are not in any prose doc; read gateway.py",
+      "cost": "4 envelope attempts, 6 tool calls"
+    },
+    {
+      "tag": "unhelpful-error",
+      "description": "INVALID_REQUEST 'is not valid under any of the given schemas' with the full envelope echoed and no field named",
+      "cost": "2 tool calls"
+    },
+    {
+      "tag": "unclear-safety",
+      "description": "after a kill, whether a read shows committed state depends on which read command is used",
+      "cost": "n/a"
+    }
+  ],
+  "failures": [
+    "F-s07-03"
+  ],
+  "scenario_record": {
+    "capture.create": {
+      "uninterrupted_s": 0.718,
+      "complete_write": "work/inbox +1 file; receipt + idempotency.yaml + revisions.yaml",
+      "per_delay": "0.01,0.05,0.1,0.15 → pre-state, nothing on disk; 0.2–0.65 (10 delays) → before recovery: inbox file + revisions.yaml + .inflight/<txn>/intent.json, no receipt, status inbox 8 (exposed); after `los generate` → pre-state; 0.7 → committed (receipt, no journal); 0.75 → finished",
+      "summary": {
+        "pre-state": 14,
+        "committed": 1,
+        "finished": 1,
+        "exposed_before_recovery": 10,
+        "PARTIAL": 0
+      }
+    },
+    "stage.progress.update": {
+      "uninterrupted_s": 0.751,
+      "complete_write": "study-map.yaml, unit.yaml, resume.yaml; 3 receipt files",
+      "per_delay": "0.01–0.2 → pre-state, nothing on disk; 0.25–0.75 (11 delays) → before recovery: 3 files rewritten, journal intent.json + backup-0..2, no receipt (exposed); after generate → pre-state; 0.8 → killed after receipt, journal still present (exposed) → after generate committed; 0.9 → finished",
+      "summary": {
+        "pre-state": 16,
+        "committed": 1,
+        "finished": 1,
+        "exposed_before_recovery": 12,
+        "PARTIAL": 0
+      }
+    },
+    "leftover_journal_files": "only before recovery; none after any recovery command",
+    "read_behaviour_after_kill": {
+      "status": "no recovery; stale counts (capture: inbox 8)",
+      "validate": "no recovery; 0 errors, only HYGIENE-VIEWS",
+      "inspect": "no recovery; shows uncommitted 'paused'",
+      "search": "no recovery; shows uncommitted 'paused'",
+      "resume": "no recovery; stage-level text only",
+      "operations": "no recovery; diagnosis AMBIGUOUS, 'reconcile-exact-request', ui_outcome BLOCKED",
+      "intelligence-scan --brief": "no recovery",
+      "plan-edit-context": "recovers (rollback), shows active",
+      "bootstrap --brief": "recovers (rollback), shows active"
+    },
+    "recovery_interrupted": "los generate started after a killed write and itself SIGKILLed at 20 delays 0.1–1.0 s (17 killed; 0.5, 0.7, 1.0 finished first): at 0.12–0.13 files still uncommitted + journal; at 0.14–0.15 files restored but journal left; ≥0.155 fully recovered; in every case the next generate finished recovery, exit 0",
+    "retry_same_envelope_after_kill": "capture: ok, new file 20260925-042811-s17-probe.md, orphan 042753 removed, exactly one file + one receipt; stage progress: ok, committed once, operations then reports COMMITTED / SETTLED",
+    "unrecoverable_states": "none found"
+  },
+  "uncertainties": [
+    "Only SIGKILL of the whole process group was tested, not power loss (fsync ordering)",
+    "Whether the UI (Obsidian) triggers recovery on its reads is NOT TESTED"
+  ]
+}

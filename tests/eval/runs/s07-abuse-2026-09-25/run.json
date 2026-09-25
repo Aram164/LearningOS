@@ -1,0 +1,76 @@
+{
+  "run_id": "s07-abuse-2026-09-25",
+  "plan": "X",
+  "session_role": "abuse-investigator",
+  "persona": "technically capable agent operator meeting this installation for the first time; learner Noor Haddad (docs say 'Aram')",
+  "blind": true,
+  "started": "2026-09-25T02:12:00Z",
+  "finished": "2026-09-25T11:06:02Z",
+  "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+  "eval_revision": "658db28d0c389f7ac2e5cbf878d099d4d359ec67",
+  "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+  "world_build": {
+    "builder_version": 1,
+    "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+    "product_revision_requested": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+    "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+    "scale": 0,
+    "seed": 20260924,
+    "timeline": {
+      "start": "2026-04-06",
+      "as_of": "2026-09-18"
+    },
+    "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "commits": 133,
+    "notes": 116,
+    "arrivals": 30,
+    "paths": {
+      "repository": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository",
+      "materials": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/materials",
+      "drop": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/eval-drop"
+    },
+    "validation": "0 error(s), 3 warning(s) — OK (0.2s)",
+    "validate_exit": 0,
+    "generate_exit": 0
+  },
+  "model": "claude-opus-5-5 (Claude Code, desktop app)",
+  "environment": {
+    "os": "macOS, Darwin 25.6.0 (arm64)",
+    "shell": "zsh",
+    "harness_python": "3.12.13 venv with pyyaml, jsonschema, pypdf (build_world.py, observe.py, check_run.py)",
+    "world_python": "3.14.4 — each world's .venv from `make setup` (product commands, interrupt_probe.py, determinism.py)",
+    "worlds": {
+      "S01": "~/los-eval/s07-abuse-2026-09-25",
+      "S17": "~/los-eval/s07-abuse-2026-09-25-S17",
+      "S18": "~/los-eval/s07-abuse-2026-09-25-S18",
+      "S19": "~/los-eval/s07-abuse-2026-09-25-S19",
+      "S20": "~/los-eval/s07-abuse-2026-09-25-S20",
+      "S21": "~/los-eval/s07-abuse-2026-09-25-S21",
+      "S22": "~/los-eval/s07-abuse-2026-09-25-S22",
+      "S24": "~/los-eval/s07-abuse-2026-09-25-S24A and -S24B"
+    },
+    "all_world_heads": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e (every build)"
+  },
+  "scenarios": [
+    "S01",
+    "S17",
+    "S18",
+    "S19",
+    "S20",
+    "S21",
+    "S22",
+    "S24"
+  ],
+  "deviations": [
+    "Every `world: fresh` scenario got its own freshly built world in a sibling directory (~/los-eval/s07-abuse-2026-09-25-Sxx) instead of resetting the first world; the protocol allows 'build again into a new directory'. Builds are deterministic (all HEADs 13ad2fc…).",
+    "S20: the six cases (plus two minimizations, e2-min and f2-min) shared one S20 world, reset between cases with `git reset --hard` and `git clean -fdxq -e .venv`, which also removes ignored derived state and the diagnostic store. They did not get one fresh build each.",
+    "The session sat idle about 8 hours (2026-09-25T02:39Z–10:50Z) in the middle of S20, waiting for the user's 'continue'. Per-scenario wall_minutes exclude the gap; started/finished include it.",
+    "Approval values: approval.subject_sha256 was computed by importing the world's own `learning_os.contracts.gateway.intent_sha256` (read from tools/learning_os/contracts/gateway.py, recorded as friction). Plan X scenarios have no learner request: approvals were recorded only for the writes each probe procedure calls for, as the kickoff authorized. No refusal from the agent environment occurred.",
+    "Extra probes beyond the written procedures, each recorded inside its scenario: S17 kills of the recovery command and per-command read/recovery behaviour; S19 truncated, deleted and directory-replaced manifest; S20 capture attempts under each defect; S21 key/request-id reuse, --replay-only and ledger deletion/corruption; S22 loser retry and a read/write race; S24 a TZ/locale rebuild.",
+    "S22 launched the three writers with back-to-back subprocess.Popen from one Python process (start skew of milliseconds) rather than `&` in one shell line.",
+    "S01 ran `make test-fast` inside the learner's world as part of the health check; it wrote into the world's diagnostic trace store (recorded as F-s07-01).",
+    "Blindness: never opened or searched tests/eval/private/, tests/eval/metrics/ sources, tests/eval/runs/ of other runs, or other branches. Incidental exposure, names only: `ls ~/los-eval/` showed sibling directories named `oracle`, `repository`, `runs` and a `selftest.log` from other sessions (not opened); `git worktree list` / `git branch -a` showed other session branch names (e.g. claude/eval-s05-connections-a-2026-09-25; not read). determinism.py was used only through --help and execution.",
+    "Harness tools read (allowed, counted as harness work): tests/eval/tools/interrupt_probe.py, observe.py, check_run.py, build_world.py --help. The interrupt probe's docstring describes recovery internals (operator lock, crash journals) that the product docs do not.",
+    "S22 read/write-race envelopes were written to a /tmp path the sandbox did not preserve; their results are in evidence/S22/read-write-race.json."
+  ]
+}

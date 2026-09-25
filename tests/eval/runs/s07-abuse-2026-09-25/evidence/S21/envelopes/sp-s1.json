@@ -1,0 +1,21 @@
+{
+ "schema_version": 2,
+ "request_id": "req-s21-sp-1",
+ "idempotency_key": "idem-s21-s1",
+ "capability": "stage.progress.update",
+ "channel": "operator",
+ "expected_snapshot": "sha256:ee612e5002f1a3f170c2e523a4075169a8435bd70b414e7686b06acb9a87841d",
+ "expected_revisions": {
+  "study-map-os-l02": 0,
+  "unit-os-l02": 0
+ },
+ "approval": {
+  "kind": "direct-user-gesture",
+  "subject_sha256": "sha256:63233da308c8b225a32b38ec54ec404e77a1d8985ba9707751bd09c608db9172"
+ },
+ "payload": {
+  "unit_id": "unit-os-l02",
+  "stage_id": "stage-os-l02-02-proportional-share",
+  "status": "paused"
+ }
+}

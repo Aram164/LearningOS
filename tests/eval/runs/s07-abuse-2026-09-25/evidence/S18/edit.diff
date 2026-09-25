@@ -1,0 +1,23 @@
+diff --git a/knowledge/notes/data-systems/note-lsm-trees.md b/knowledge/notes/data-systems/note-lsm-trees.md
+index cd08898..bae257e 100644
+--- a/knowledge/notes/data-systems/note-lsm-trees.md
++++ b/knowledge/notes/data-systems/note-lsm-trees.md
+@@ -12,14 +12,14 @@ sources:
+ - source-kleppmann-ddia
+ ---
+ 
+-Writes go to an in-memory sorted structure (memtable) and a log for
+-durability. When the memtable is full it is written out as an immutable
++Writes go to an in-memory sorted structure (zqxmemtab) and a log for
++durability. When the zqxmemtab is full it is written out as an immutable
+ sorted file (SSTable). Background compaction merges SSTables and drops
+ overwritten or deleted keys.
+ 
+-Reads check the memtable, then SSTables from newest to oldest. To avoid
++Reads check the zqxmemtab, then SSTables from newest to oldest. To avoid
+ reading every file for a key that is not there, each SSTable has a small
+-in-memory filter that answers "definitely not here" or "maybe here".
++in-memory filter that answers "zqxabsent" or "maybe here".
+ 
+ Trade-off vs B-trees: much higher write throughput (sequential writes only),
+ but reads may touch several files and compaction competes for disk bandwidth.

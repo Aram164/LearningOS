@@ -1,0 +1,19 @@
+{
+ "schema_version": 2,
+ "request_id": "req-s22-r04-b",
+ "idempotency_key": "idem-s22-r04-b",
+ "capability": "capture.create",
+ "channel": "operator",
+ "expected_snapshot": "sha256:2db7998288274707e894cc92fc3aefcf7ecbb94c05e2e1cc33b843a15e92ba94",
+ "expected_revisions": {
+  "capture-request:idem-s22-r04-b": 0
+ },
+ "approval": {
+  "kind": "direct-user-gesture",
+  "subject_sha256": "sha256:1a01c34464afd9bb445f21a75b39de03af90a01905dae47f43b9b4645f478c4e"
+ },
+ "payload": {
+  "text": "S22 round 4 capture b",
+  "title": "s22 r04 b"
+ }
+}

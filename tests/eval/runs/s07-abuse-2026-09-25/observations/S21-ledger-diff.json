@@ -1,0 +1,71 @@
+{
+  "from": "S21-after",
+  "to": "S21-ledger-after",
+  "canonical": {
+    "added": [
+      "operations/transactions/transaction-20260925-130410-001.yaml",
+      "work/inbox/20260925-130410-s21-idem.md"
+    ],
+    "removed": [],
+    "modified": [
+      "operations/transactions/idempotency.yaml",
+      "operations/transactions/revisions.yaml"
+    ]
+  },
+  "canonical_digest_changed": true,
+  "receipts_added": [
+    "operations/transactions/transaction-20260925-130410-001.yaml"
+  ],
+  "inflight_after": [],
+  "derived": {
+    "added": [],
+    "removed": [],
+    "modified": [
+      "generated/backlinks.json",
+      "generated/manifest.json",
+      "generated/reading-room.md",
+      "generated/reports/health.md"
+    ],
+    "bytes_before": 494387,
+    "bytes_after": 494657
+  },
+  "diagnostics_added": [],
+  "ai_actions_added": [],
+  "new_operations": [
+    {
+      "trace_id": "badc8418f352b9ec888972ffbbf7d236",
+      "request_id": "req-s21-l2",
+      "capability": "capture.create",
+      "started_at": 1790334218.2370172,
+      "duration_ms": 13.2,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": "core.replay",
+      "canonical_outcome": "AMBIGUOUS",
+      "recovery_requirement": "reconcile-exact-request",
+      "needs_attention": true
+    }
+  ],
+  "head": {
+    "before": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "after": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e"
+  },
+  "git_status_after": [
+    " M curriculum/modules/module-tuh-os/units/unit-os-l02/study-map.yaml",
+    " M curriculum/modules/module-tuh-os/units/unit-os-l02/unit.yaml",
+    " M curriculum/resume.yaml",
+    "?? operations/transactions/idempotency.yaml",
+    "?? operations/transactions/revisions.yaml",
+    "?? operations/transactions/transaction-20260925-125656-001.yaml",
+    "?? operations/transactions/transaction-20260925-125658-001.yaml",
+    "?? operations/transactions/transaction-20260925-125711-001.yaml",
+    "?? operations/transactions/transaction-20260925-125732-001.yaml",
+    "?? operations/transactions/transaction-20260925-125733-001.yaml",
+    "?? operations/transactions/transaction-20260925-130410-001.yaml",
+    "?? work/inbox/20260925-125656-s21-idem.md",
+    "?? work/inbox/20260925-125658-s21-idem.md",
+    "?? work/inbox/20260925-125733-s21-reuse.md",
+    "?? work/inbox/20260925-130410-s21-idem.md"
+  ],
+  "flags": []
+}

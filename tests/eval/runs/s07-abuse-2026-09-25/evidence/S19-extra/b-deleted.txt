@@ -1,0 +1,8 @@
+deleted | tools/los.py search lsm | exit=0 | 
+deleted | tools/los.py inspect note-lsm-trees | exit=0 | 
+deleted | tools/los.py bootstrap --brief | exit=0 | 
+deleted | tools/los.py status | exit=0 | 
+deleted | tools/validate.py --compact --no-report | exit=0 | W HYGIENE-VIEWS: generated/ views absent — run `make views` (they are disposable, but the human-fallback path depends on them) 0 error(s), 3 warning(s) — OK (0.2s) 
+deleted | tools/los.py related note-lsm-trees | exit=0 | 
+deleted | tools/los.py intelligence-scan --brief --json | exit=0 | 
+deleted | generated/manifest.json now: absent

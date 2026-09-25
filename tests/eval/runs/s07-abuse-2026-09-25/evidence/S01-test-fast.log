@@ -1,0 +1,784 @@
+.venv/bin/python -m pytest -q -m "not full_repo"
+....F................................................................... [  3%]
+........................................................................ [  6%]
+........................................................................ [  9%]
+.....................s.................................................. [ 12%]
+........................................................................ [ 15%]
+........................................................................ [ 18%]
+........................................................................ [ 22%]
+........................................................................ [ 25%]
+........................................................................ [ 28%]
+........................................................................ [ 31%]
+........................................................................ [ 34%]
+........................................................................ [ 37%]
+........................................................................ [ 41%]
+........................................................................ [ 44%]
+........................................................................ [ 47%]
+........................................................................ [ 50%]
+........................................................................ [ 53%]
+........................................................................ [ 56%]
+.............................................ssssssssss................. [ 60%]
+........................FFFFFFFFFFFFF.FF....FF.......................... [ 63%]
+........................................................................ [ 66%]
+........................................................................ [ 69%]
+........................................................................ [ 72%]
+........................................................................ [ 75%]
+........................................................................ [ 79%]
+........................................................................ [ 82%]
+........................................................................ [ 85%]
+.............................................s.......................... [ 88%]
+...........................ssssss....................................... [ 91%]
+........................................................................ [ 94%]
+........................................................................ [ 97%]
+..............................................                           [100%]
+=================================== FAILURES ===================================
+____________ test_live_extension_bridge_uses_stable_reviewed_source ____________
+
+real_repo = Repo(root=PosixPath('/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository'), abilities={}, ability_...2; resume only the SVD stage,\n  and only as far as the L09 exam scope needs.\n"), duplicate_ids=[], parse_failures=[])
+
+    def test_live_extension_bridge_uses_stable_reviewed_source(real_repo):
+>       bridge = next(row for row in real_repo.ability_bridges
+                      if row["from"] == "ability-sad-backprop-local"
+                      and row["to"] == "ability-aml-backprop-layerwise")
+E       StopIteration
+
+tests/test_abilities.py:132: StopIteration
+___ test_pilot_draft_replays_under_current_rules[pilot-l06-ch-a-pp05-08.md] ____
+
+tmp_path = PosixPath('/private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/pytest-of-aramaljanadi/pytest-1366/test_pilot_draft_replays_under0')
+capsys = <_pytest.capture.CaptureFixture object at 0x10b1e3f50>
+spec = {'digest': '90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca', 'material': 'mathematics/probability-st...ables.pdf', 'deck_pages': 60, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries', ...}
+chapter = {'pages': [5, 8], 'draft': 'ch-a-pp05-08.md', 'grade': 'accept with note', 'source_chars': 3127, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:787: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-a-pp05-08.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-a-pp05-08.md'
+
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:771: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l06-ch-b-pp09-13.md] ____
+
+tmp_path = PosixPath('/private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/pytest-of-aramaljanadi/pytest-1366/test_pilot_draft_replays_under1')
+capsys = <_pytest.capture.CaptureFixture object at 0x10b7a1ad0>
+spec = {'digest': '90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca', 'material': 'mathematics/probability-st...ables.pdf', 'deck_pages': 60, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries', ...}
+chapter = {'pages': [9, 13], 'draft': 'ch-b-pp09-13.md', 'grade': 'accept', 'source_chars': 2038, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:787: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-b-pp09-13.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-b-pp09-13.md'
+
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:771: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l06-ch-c-pp15-23.md] ____
+
+tmp_path = PosixPath('/private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/pytest-of-aramaljanadi/pytest-1366/test_pilot_draft_replays_under2')
+capsys = <_pytest.capture.CaptureFixture object at 0x10c12dad0>
+spec = {'digest': '90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca', 'material': 'mathematics/probability-st...ables.pdf', 'deck_pages': 60, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries', ...}
+chapter = {'pages': [15, 23], 'draft': 'ch-c-pp15-23.md', 'grade': 'accept with finding F3', 'source_chars': 4294, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:787: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-c-pp15-23.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-c-pp15-23.md'
+
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:771: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l06-ch-d-pp24-32.md] ____
+
+tmp_path = PosixPath('/private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/pytest-of-aramaljanadi/pytest-1366/test_pilot_draft_replays_under3')
+capsys = <_pytest.capture.CaptureFixture object at 0x10b6440d0>
+spec = {'digest': '90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca', 'material': 'mathematics/probability-st...ables.pdf', 'deck_pages': 60, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries', ...}
+chapter = {'pages': [24, 32], 'draft': 'ch-d-pp24-32.md', 'grade': 'accept with findings F4, F5', 'source_chars': 4499, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:787: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-d-pp24-32.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-d-pp24-32.md'
+
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:771: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l06-ch-e-pp34-42.md] ____
+
+tmp_path = PosixPath('/private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/pytest-of-aramaljanadi/pytest-1366/test_pilot_draft_replays_under4')
+capsys = <_pytest.capture.CaptureFixture object at 0x10b5a9c50>
+spec = {'digest': '90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca', 'material': 'mathematics/probability-st...ables.pdf', 'deck_pages': 60, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries', ...}
+chapter = {'pages': [34, 42], 'draft': 'ch-e-pp34-42.md', 'grade': 'accept', 'source_chars': 3039, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:787: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-e-pp34-42.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-e-pp34-42.md'
+
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:771: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l06-ch-f-pp44-50.md] ____
+
+tmp_path = PosixPath('/private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/pytest-of-aramaljanadi/pytest-1366/test_pilot_draft_replays_under5')
+capsys = <_pytest.capture.CaptureFixture object at 0x10b76f750>
+spec = {'digest': '90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca', 'material': 'mathematics/probability-st...ables.pdf', 'deck_pages': 60, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries', ...}
+chapter = {'pages': [44, 50], 'draft': 'ch-f-pp44-50.md', 'grade': 'accept', 'source_chars': 3981, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:787: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-f-pp44-50.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-f-pp44-50.md'
+
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:771: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l06-ch-g-pp52-60.md] ____
+
+tmp_path = PosixPath('/private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/pytest-of-aramaljanadi/pytest-1366/test_pilot_draft_replays_under6')
+capsys = <_pytest.capture.CaptureFixture object at 0x10aeb8e50>
+spec = {'digest': '90935b8261356000cc8a545832a54f0869760169a13715a4c74af89c1ce2d1ca', 'material': 'mathematics/probability-st...ables.pdf', 'deck_pages': 60, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries', ...}
+chapter = {'pages': [52, 60], 'draft': 'ch-g-pp52-60.md', 'grade': 'accept', 'source_chars': 5698, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:787: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-g-pp52-60.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-g-pp52-60.md'
+
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:771: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l11-ch-b-pp03-11.md] ____
+
+tmp_path = PosixPath('/private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/pytest-of-aramaljanadi/pytest-1366/test_pilot_draft_replays_under7')
+capsys = <_pytest.capture.CaptureFixture object at 0x10bf004d0>
+spec = {'digest': 'b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302', 'material': 'mathematics/probability-st...intro.pdf', 'deck_pages': 49, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries', ...}
+chapter = {'pages': [3, 11], 'draft': 'ch-b-pp03-11.md', 'grade': 'accept', 'source_chars': 3495, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:787: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-b-pp03-11.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-b-pp03-11.md'
+
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:771: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l11-ch-c-pp12-20.md] ____
+
+tmp_path = PosixPath('/private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/pytest-of-aramaljanadi/pytest-1366/test_pilot_draft_replays_under8')
+capsys = <_pytest.capture.CaptureFixture object at 0x10b5aad50>
+spec = {'digest': 'b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302', 'material': 'mathematics/probability-st...intro.pdf', 'deck_pages': 49, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries', ...}
+chapter = {'pages': [12, 20], 'draft': 'ch-c-pp12-20.md', 'grade': 'accept', 'source_chars': 4897, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:787: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-c-pp12-20.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-c-pp12-20.md'
+
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:771: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l11-ch-d-pp21-32.md] ____
+
+tmp_path = PosixPath('/private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/pytest-of-aramaljanadi/pytest-1366/test_pilot_draft_replays_under9')
+capsys = <_pytest.capture.CaptureFixture object at 0x10be371d0>
+spec = {'digest': 'b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302', 'material': 'mathematics/probability-st...intro.pdf', 'deck_pages': 49, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries', ...}
+chapter = {'pages': [21, 32], 'draft': 'ch-d-pp21-32.md', 'grade': 'accept', 'source_chars': 6946, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:787: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-d-pp21-32.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-d-pp21-32.md'
+
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:771: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l11-ch-e-pp33-38.md] ____
+
+tmp_path = PosixPath('/private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/pytest-of-aramaljanadi/pytest-1366/test_pilot_draft_replays_under10')
+capsys = <_pytest.capture.CaptureFixture object at 0x10b22d3d0>
+spec = {'digest': 'b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302', 'material': 'mathematics/probability-st...intro.pdf', 'deck_pages': 49, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries', ...}
+chapter = {'pages': [33, 38], 'draft': 'ch-e-pp33-38.md', 'grade': 'accept', 'source_chars': 3347, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:787: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-e-pp33-38.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-e-pp33-38.md'
+
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:771: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l11-ch-f-pp39-46.md] ____
+
+tmp_path = PosixPath('/private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/pytest-of-aramaljanadi/pytest-1366/test_pilot_draft_replays_under11')
+capsys = <_pytest.capture.CaptureFixture object at 0x10be37ed0>
+spec = {'digest': 'b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302', 'material': 'mathematics/probability-st...intro.pdf', 'deck_pages': 49, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries', ...}
+chapter = {'pages': [39, 46], 'draft': 'ch-f-pp39-46.md', 'grade': 'accept', 'source_chars': 4208, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:787: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-f-pp39-46.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-f-pp39-46.md'
+
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:771: FileNotFoundError
+___ test_pilot_draft_replays_under_current_rules[pilot-l11-ch-g-pp47-49.md] ____
+
+tmp_path = PosixPath('/private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/pytest-of-aramaljanadi/pytest-1366/test_pilot_draft_replays_under12')
+capsys = <_pytest.capture.CaptureFixture object at 0x10c15bcd0>
+spec = {'digest': 'b7decfedf4ce4eb66c0a564027f94ac668dbcf396e04461989773eb45d987302', 'material': 'mathematics/probability-st...intro.pdf', 'deck_pages': 49, 'draft_dir': 'work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries', ...}
+chapter = {'pages': [47, 49], 'draft': 'ch-g-pp47-49.md', 'grade': 'reject, verified safe by full spot-read', 'source_chars': 2203, ...}
+
+    @pytest.mark.parametrize(("spec", "chapter"), _chapter_params())
+    def test_pilot_draft_replays_under_current_rules(tmp_path, capsys, spec, chapter):
+        """Each committed pilot draft still promotes under today's rules."""
+        ms = _material_summarize()
+        start, end = chapter["pages"]
+        per_page, remainder = divmod(chapter["source_chars"], end - start + 1)
+        sizes = {page: per_page + (1 if page - start < remainder else 0)
+                 for page in range(start, end + 1)}
+        text = _fixture_text_cache(tmp_path, spec["digest"], spec["material"],
+                                   spec["deck_pages"], sizes)
+        draft = REPO / spec["draft_dir"] / chapter["draft"]
+>       body = draft.read_text(encoding="utf-8")
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:97: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:787: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-g-pp47-49.md')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-g-pp47-49.md'
+
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:771: FileNotFoundError
+___________ test_pilot_triage_ratio_recomputes_from_files[pilot-l06] ___________
+
+name = 'pilot-l06'
+
+    @pytest.mark.parametrize("name", ["pilot-l06", "pilot-l11"])
+    def test_pilot_triage_ratio_recomputes_from_files(name):
+        """Recorded byte ratios match drafts + direct reads on disk."""
+        spec = _manifest(name)
+        draft_bytes = 0
+        for chapter in spec["chapters"]:
+>           raw = (REPO / spec["draft_dir"] / chapter["draft"]).read_bytes()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:145: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:777: in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-a-pp05-08.md')
+mode = 'rb', buffering = 0, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l06-chapter-summaries/ch-a-pp05-08.md'
+
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:771: FileNotFoundError
+___________ test_pilot_triage_ratio_recomputes_from_files[pilot-l11] ___________
+
+name = 'pilot-l11'
+
+    @pytest.mark.parametrize("name", ["pilot-l06", "pilot-l11"])
+    def test_pilot_triage_ratio_recomputes_from_files(name):
+        """Recorded byte ratios match drafts + direct reads on disk."""
+        spec = _manifest(name)
+        draft_bytes = 0
+        for chapter in spec["chapters"]:
+>           raw = (REPO / spec["draft_dir"] / chapter["draft"]).read_bytes()
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:145: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:777: in read_bytes
+    with self.open(mode='rb', buffering=0) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-b-pp03-11.md')
+mode = 'rb', buffering = 0, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/work/active/workspace-m2-exam-prep/outputs/sad-l11-chapter-summaries/ch-b-pp03-11.md'
+
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:771: FileNotFoundError
+_______ test_pilot_applied_findings_carry_committed_receipts[pilot-l06] ________
+
+name = 'pilot-l06'
+
+    @pytest.mark.parametrize("name", ["pilot-l06", "pilot-l11"])
+    def test_pilot_applied_findings_carry_committed_receipts(name):
+        """Each applied finding links a committed receipt with its write."""
+        spec = _manifest(name)
+        assert spec["receipts"]
+        for expected in spec["receipts"]:
+            receipt = yaml.safe_load(
+>               (REPO / expected["path"]).read_text(encoding="utf-8"))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:192: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:787: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/operations/transactions/transaction-20260920-023923-001.yaml')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/operations/transactions/transaction-20260920-023923-001.yaml'
+
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:771: FileNotFoundError
+_______ test_pilot_applied_findings_carry_committed_receipts[pilot-l11] ________
+
+name = 'pilot-l11'
+
+    @pytest.mark.parametrize("name", ["pilot-l06", "pilot-l11"])
+    def test_pilot_applied_findings_carry_committed_receipts(name):
+        """Each applied finding links a committed receipt with its write."""
+        spec = _manifest(name)
+        assert spec["receipts"]
+        for expected in spec["receipts"]:
+            receipt = yaml.safe_load(
+>               (REPO / expected["path"]).read_text(encoding="utf-8"))
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_pilot_replay.py:192: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:787: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/operations/transactions/transaction-20260920-025624-001.yaml')
+mode = 'r', buffering = -1, encoding = 'utf-8', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository/operations/transactions/transaction-20260920-025624-001.yaml'
+
+/opt/homebrew/Cellar/python@3.14/3.14.4_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/pathlib/__init__.py:771: FileNotFoundError
+=========================== short test summary info ============================
+FAILED tests/test_abilities.py::test_live_extension_bridge_uses_stable_reviewed_source
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-a-pp05-08.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-b-pp09-13.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-c-pp15-23.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-d-pp24-32.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-e-pp34-42.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-f-pp44-50.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-g-pp52-60.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l11-ch-b-pp03-11.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l11-ch-c-pp12-20.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l11-ch-d-pp21-32.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l11-ch-e-pp33-38.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l11-ch-f-pp39-46.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l11-ch-g-pp47-49.md]
+FAILED tests/test_pilot_replay.py::test_pilot_triage_ratio_recomputes_from_files[pilot-l06]
+FAILED tests/test_pilot_replay.py::test_pilot_triage_ratio_recomputes_from_files[pilot-l11]
+FAILED tests/test_pilot_replay.py::test_pilot_applied_findings_carry_committed_receipts[pilot-l06]
+FAILED tests/test_pilot_replay.py::test_pilot_applied_findings_carry_committed_receipts[pilot-l11]
+18 failed, 2242 passed, 18 skipped, 83 deselected in 330.62s (0:05:30)
+make: *** [test-fast] Error 1

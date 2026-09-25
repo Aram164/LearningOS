@@ -1,0 +1,52 @@
+{
+  "request_id": "req-s21-cap-1b",
+  "capability": "capture.create",
+  "diagnosis": {
+    "first_failure_stage": "core.replay",
+    "execution_outcome": "refused",
+    "canonical_outcome": "AMBIGUOUS",
+    "projection_outcome": "skipped",
+    "recovery_requirement": "reconcile-exact-request",
+    "authoritative_evidence": [
+      "ledger:idem-s21-k1",
+      "response:IDEMPOTENCY_CONFLICT",
+      "observed:sha256:bd995f3c694bad37b1d3733d708db578ef2600ddbaa84e837ae65c8e205f5c9c"
+    ],
+    "attempts": [
+      {
+        "span": "2092a9fd71c30760",
+        "status": "error",
+        "replay_of": null
+      }
+    ],
+    "reasons": [
+      "committed evidence failed strict verification: idempotency ledger records a different request id for this key",
+      "ambiguous outcome: the exact request stays recoverable"
+    ]
+  },
+  "timeline": [
+    {
+      "stage": "Core admitted request",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Approval",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Replay lookup",
+      "state": "failed",
+      "detail": "conflict"
+    }
+  ],
+  "observed_snapshot": "sha256:bd995f3c694bad37b1d3733d708db578ef2600ddbaa84e837ae65c8e205f5c9c",
+  "ui_outcome": "BLOCKED",
+  "facts": {
+    "transaction_id": null,
+    "receipt_path": null,
+    "snapshot_before": null,
+    "snapshot_after": null
+  }
+}

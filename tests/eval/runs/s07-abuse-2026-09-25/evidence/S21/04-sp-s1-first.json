@@ -1,0 +1,28 @@
+{
+  "schema_version": 2,
+  "request_id": "req-s21-sp-1",
+  "idempotency_key": "idem-s21-s1",
+  "capability": "stage.progress.update",
+  "ok": true,
+  "replayed": false,
+  "transaction_id": "transaction-20260925-125711-001",
+  "receipt_path": "operations/transactions/transaction-20260925-125711-001.yaml",
+  "snapshot_after": "sha256:8b21c7e24b381c81403d150c993511f0ea47860a15df1cefdb4f566e12e82cd5",
+  "result": {
+    "ok": true,
+    "unit_id": "unit-os-l02",
+    "stage_id": "stage-os-l02-02-proportional-share",
+    "status": "paused",
+    "map_status": "paused",
+    "current_stage": "stage-os-l02-02-proportional-share",
+    "transaction_id": "transaction-20260925-125711-001",
+    "receipt_path": "operations/transactions/transaction-20260925-125711-001.yaml",
+    "artifact_revisions": {
+      "study-map-os-l02": 1,
+      "unit-os-l02": 1
+    },
+    "snapshot_after": "sha256:8b21c7e24b381c81403d150c993511f0ea47860a15df1cefdb4f566e12e82cd5",
+    "replayed": false
+  },
+  "error": null
+}

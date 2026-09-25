@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "request_id": "req-s21-cap-1",
+  "idempotency_key": "idem-s21-k1",
+  "capability": "capture.create",
+  "ok": false,
+  "replayed": false,
+  "transaction_id": null,
+  "receipt_path": null,
+  "snapshot_after": null,
+  "result": {},
+  "error": {
+    "code": "UNCONFIRMED",
+    "message": "no committed receipt exists for this exact request",
+    "retryable": false,
+    "details": {}
+  }
+}

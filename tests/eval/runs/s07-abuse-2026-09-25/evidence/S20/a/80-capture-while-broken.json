@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "request_id": "req-s20a-cap",
+  "idempotency_key": "idem-s20a-cap",
+  "capability": "capture.create",
+  "ok": false,
+  "replayed": false,
+  "transaction_id": null,
+  "receipt_path": null,
+  "snapshot_after": null,
+  "result": {},
+  "error": {
+    "code": "INTERNAL_FAILURE",
+    "message": "transaction failed canonical validation: E PARSE: /Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S20/LearningOS/repository/knowledge/notes/data-systems/note-lsm-trees.md: invalid YAML frontmatter: while parsing a flow sequence\n  in \"<unicode string>\", line 3, column 8\ndid not find expected ',' or ']'\n  in \"<unicode string>\", line 4, column 8 [knowledge/notes/data-systems/note-lsm-trees.md]; rollback incomplete for: <projection publication>",
+    "retryable": true,
+    "details": {}
+  }
+}

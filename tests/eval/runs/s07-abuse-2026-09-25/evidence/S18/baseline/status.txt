@@ -1,0 +1,8 @@
+Learning OS v3 · learning_os v3.2.0 · /Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S18/LearningOS/repository
+  notes 116 · concepts 99 · relations 28 · sources 29
+  programs 2 · modules 5 (2 enrolled) · projects 2 · units 16 · study maps 11 · workspaces 6 active (0 standing), 1 archived
+  inbox 7 · garden 9 · reviewed 0/116 · evidence 13/116
+  exam: 2026-10-06 — Statistical Learning (Termin 2)
+  exam: 2026-10-12 — Operating Systems (Termin 1)
+  validation: OK · 2 warning(s), visible and nonblocking (`make warnings` for the delta)
+  human home page: generated/reading-room.md (make views)

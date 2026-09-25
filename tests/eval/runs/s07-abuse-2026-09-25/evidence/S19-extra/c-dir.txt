@@ -1,0 +1,8 @@
+dir | tools/los.py search lsm | exit=0 | 
+dir | tools/los.py inspect note-lsm-trees | exit=0 | 
+dir | tools/los.py bootstrap --brief | exit=0 | 
+dir | tools/los.py status | exit=1 | Traceback (most recent call last):     with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f: 
+dir | tools/validate.py --compact --no-report | exit=1 | Traceback (most recent call last):     with self.open(mode='r', encoding=encoding, errors=errors, newline=newline) as f: 
+dir | tools/los.py related note-lsm-trees | exit=0 | 
+dir | tools/los.py intelligence-scan --brief --json | exit=0 | 
+dir | generated/manifest.json now: dir

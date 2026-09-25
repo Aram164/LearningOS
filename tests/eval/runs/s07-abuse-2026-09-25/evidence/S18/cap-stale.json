@@ -1,0 +1,19 @@
+{
+ "schema_version": 2,
+ "request_id": "req-s18-stale",
+ "idempotency_key": "idem-s18-stale",
+ "capability": "capture.create",
+ "channel": "operator",
+ "expected_snapshot": "sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e",
+ "expected_revisions": {
+  "capture-request:idem-s18-stale": 0
+ },
+ "approval": {
+  "kind": "direct-user-gesture",
+  "subject_sha256": "sha256:5e715248279a43790779643ae66225e8bea6dcb8084bffc6bf76f65866acc55e"
+ },
+ "payload": {
+  "text": "S18 probe: write against the published manifest snapshot.",
+  "title": "s18 stale probe"
+ }
+}

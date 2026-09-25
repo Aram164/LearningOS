@@ -1,0 +1,231 @@
+{
+  "from": "S21-before",
+  "to": "S21-after",
+  "canonical": {
+    "added": [
+      "operations/transactions/idempotency.yaml",
+      "operations/transactions/revisions.yaml",
+      "operations/transactions/transaction-20260925-125656-001.yaml",
+      "operations/transactions/transaction-20260925-125658-001.yaml",
+      "operations/transactions/transaction-20260925-125711-001.yaml",
+      "operations/transactions/transaction-20260925-125732-001.yaml",
+      "operations/transactions/transaction-20260925-125733-001.yaml",
+      "work/inbox/20260925-125656-s21-idem.md",
+      "work/inbox/20260925-125658-s21-idem.md",
+      "work/inbox/20260925-125733-s21-reuse.md"
+    ],
+    "removed": [],
+    "modified": [
+      "curriculum/modules/module-tuh-os/units/unit-os-l02/study-map.yaml",
+      "curriculum/modules/module-tuh-os/units/unit-os-l02/unit.yaml",
+      "curriculum/resume.yaml"
+    ]
+  },
+  "canonical_digest_changed": true,
+  "receipts_added": [
+    "operations/transactions/idempotency.yaml",
+    "operations/transactions/revisions.yaml",
+    "operations/transactions/transaction-20260925-125656-001.yaml",
+    "operations/transactions/transaction-20260925-125658-001.yaml",
+    "operations/transactions/transaction-20260925-125711-001.yaml",
+    "operations/transactions/transaction-20260925-125732-001.yaml",
+    "operations/transactions/transaction-20260925-125733-001.yaml"
+  ],
+  "inflight_after": [],
+  "derived": {
+    "added": [
+      "generated/backlinks.json",
+      "generated/concept-canvas.canvas",
+      "generated/concept-index.md",
+      "generated/concept-map.md",
+      "generated/coordination-view.md",
+      "generated/dependency-report.md",
+      "generated/domain-atlas.md",
+      "generated/learner-interpretations.json",
+      "generated/learner-interpretations.md",
+      "generated/learning-requirements.json",
+      "generated/learning-requirements.md",
+      "generated/library.md",
+      "generated/manifest.json",
+      "generated/module-view.md",
+      "generated/nebula.md",
+      "generated/reading-room.md",
+      "generated/reports/health.md",
+      "generated/source-index.md",
+      "generated/study-plans.md"
+    ],
+    "removed": [],
+    "modified": [],
+    "bytes_before": 0,
+    "bytes_after": 494387
+  },
+  "diagnostics_added": [
+    "operations/diagnostics/traces.jsonl"
+  ],
+  "ai_actions_added": [],
+  "new_operations": [
+    {
+      "trace_id": "edd22d8e670aba260c3366f5cb41a554",
+      "request_id": "req-s21-cap-4",
+      "capability": "capture.create",
+      "started_at": 1790333855.125437,
+      "duration_ms": 12.9,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": "core.replay",
+      "canonical_outcome": "NOT_COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    },
+    {
+      "trace_id": "19b19137f10a0ad867f91a5073dcb9b5",
+      "request_id": "req-s21-cap-1",
+      "capability": "capture.create",
+      "started_at": 1790333854.488203,
+      "duration_ms": 36.1,
+      "attempts": 1,
+      "replayed": true,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "verify-observation",
+      "needs_attention": true
+    },
+    {
+      "trace_id": "b1ce503ce34bdef59b3cf0501bff8f39",
+      "request_id": "req-s21-cap-1",
+      "capability": "capture.create",
+      "started_at": 1790333853.758302,
+      "duration_ms": 567.2,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    },
+    {
+      "trace_id": "872dafba095fae2b702ac544ed39f0a3",
+      "request_id": "req-s21-sp-2",
+      "capability": "stage.progress.update",
+      "started_at": 1790333852.511484,
+      "duration_ms": 590.6,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "verify-observation",
+      "needs_attention": true
+    },
+    {
+      "trace_id": "cf3a7019be72da55d5fd30ae7a6d00c6",
+      "request_id": "req-s21-cap-1",
+      "capability": "capture.create",
+      "started_at": 1790333851.842156,
+      "duration_ms": 36.3,
+      "attempts": 1,
+      "replayed": true,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "verify-observation",
+      "needs_attention": true
+    },
+    {
+      "trace_id": "efefce7b31d6c5f8b2cd61a84b2a198a",
+      "request_id": "req-s21-cap-1b",
+      "capability": "capture.create",
+      "started_at": 1790333851.669674,
+      "duration_ms": 13.2,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": "core.replay",
+      "canonical_outcome": "AMBIGUOUS",
+      "recovery_requirement": "reconcile-exact-request",
+      "needs_attention": true
+    },
+    {
+      "trace_id": "b360480021484d5f5740f799726cbe8e",
+      "request_id": "req-s21-sp-1",
+      "capability": "stage.progress.update",
+      "started_at": 1790333832.610968,
+      "duration_ms": 37.4,
+      "attempts": 1,
+      "replayed": true,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "verify-observation",
+      "needs_attention": true
+    },
+    {
+      "trace_id": "02023b66753af7cc34bf218855b2e07d",
+      "request_id": "req-s21-sp-1",
+      "capability": "stage.progress.update",
+      "started_at": 1790333831.853981,
+      "duration_ms": 592.5,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "verify-observation",
+      "needs_attention": true
+    },
+    {
+      "trace_id": "c5377441a2db27229a4d196e9b460336",
+      "request_id": "req-s21-cap-2",
+      "capability": "capture.create",
+      "started_at": 1790333818.125348,
+      "duration_ms": 577.2,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "verify-observation",
+      "needs_attention": true
+    },
+    {
+      "trace_id": "1c1658ddae518d5d758861fafff69501",
+      "request_id": "req-s21-cap-1",
+      "capability": "capture.create",
+      "started_at": 1790333817.429821,
+      "duration_ms": 36.4,
+      "attempts": 1,
+      "replayed": true,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "verify-observation",
+      "needs_attention": true
+    },
+    {
+      "trace_id": "66c042ab766e80781a8d32d6613cdc1d",
+      "request_id": "req-s21-cap-1",
+      "capability": "capture.create",
+      "started_at": 1790333816.668122,
+      "duration_ms": 591.9,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "verify-observation",
+      "needs_attention": true
+    }
+  ],
+  "head": {
+    "before": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "after": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e"
+  },
+  "git_status_after": [
+    " M curriculum/modules/module-tuh-os/units/unit-os-l02/study-map.yaml",
+    " M curriculum/modules/module-tuh-os/units/unit-os-l02/unit.yaml",
+    " M curriculum/resume.yaml",
+    "?? operations/transactions/idempotency.yaml",
+    "?? operations/transactions/revisions.yaml",
+    "?? operations/transactions/transaction-20260925-125656-001.yaml",
+    "?? operations/transactions/transaction-20260925-125658-001.yaml",
+    "?? operations/transactions/transaction-20260925-125711-001.yaml",
+    "?? operations/transactions/transaction-20260925-125732-001.yaml",
+    "?? operations/transactions/transaction-20260925-125733-001.yaml",
+    "?? work/inbox/20260925-125656-s21-idem.md",
+    "?? work/inbox/20260925-125658-s21-idem.md",
+    "?? work/inbox/20260925-125733-s21-reuse.md"
+  ],
+  "flags": []
+}

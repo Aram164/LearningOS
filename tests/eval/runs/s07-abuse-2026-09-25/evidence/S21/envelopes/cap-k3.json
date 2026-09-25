@@ -1,0 +1,19 @@
+{
+ "schema_version": 2,
+ "request_id": "req-s21-cap-1",
+ "idempotency_key": "idem-s21-k3",
+ "capability": "capture.create",
+ "channel": "operator",
+ "expected_snapshot": "sha256:8b21c7e24b381c81403d150c993511f0ea47860a15df1cefdb4f566e12e82cd5",
+ "expected_revisions": {
+  "capture-request:idem-s21-k3": 0
+ },
+ "approval": {
+  "kind": "direct-user-gesture",
+  "subject_sha256": "sha256:0645f29ce1faa9a77bc54723c20e67ea26ad869a4c5179f9ef632fbd91ca15ba"
+ },
+ "payload": {
+  "text": "S21: reused request id, new key.",
+  "title": "s21 reuse"
+ }
+}

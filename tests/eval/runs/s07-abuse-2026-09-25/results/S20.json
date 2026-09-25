@@ -1,0 +1,196 @@
+{
+  "scenario": "S20",
+  "run_id": "s07-abuse-2026-09-25",
+  "classification": "FUNCTIONAL_FAILURE",
+  "classification_reason": "The validator catches and names cases a, b and d precisely, and the binary capture (c) is handled safely. But two schema-valid inputs certified clean by `make check` take the whole product down: the documented supersession (f) and a unit without the optional scope_sources (e). Both fail the published-manifest contract, and the error prescribes a developer contract bump. Parse or projection failures during a write are misreported as retryable INTERNAL_FAILURE and leave orphan crash journals.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S20a-before.json"
+  },
+  "consumer": {
+    "goal": "Introduce six kinds of malformed or edge input one at a time on a fresh world and record which command catches each and whether the rest keeps working",
+    "first_action": "read system/schema/unit.schema.json, note.schema.json, workspace.schema.json required fields and VALIDATION.md rules",
+    "commands": [
+      "per case (after git reset --hard + git clean -fdx -e .venv): mutation; tools/validate.py --compact --no-report; los generate; los search TERM; los search TERM --type note --content; los bootstrap --brief; los status; make check",
+      "extra: inspect, note-read, related, resume, intelligence-scan, operations under case a",
+      "capture.create attempts under cases a, b, e2, f2; exact retries under case a before and after the fix",
+      "second same-basename binary capture under case c",
+      "minimizations e2 (drop scope_sources) and f2 (one supersedes line)"
+    ],
+    "tool_calls": 26,
+    "docs_consulted": [
+      "system/schema/unit.schema.json",
+      "system/schema/note.schema.json",
+      "system/schema/workspace.schema.json",
+      "system/VALIDATION.md (grep)",
+      "system/WORKFLOWS.md §15"
+    ],
+    "impl_files_read": [],
+    "retries": 2,
+    "confusions": [
+      "read failures in case a say 'cannot publish the manifest' although the command was a search",
+      "cases e and f print instructions for maintainers (bump manifest contract, edit the UI repository) to a consumer",
+      "status prints 'validation: 1 error(s) · N warning(s), visible and nonblocking', which reads as if the error were nonblocking too",
+      "intelligence-scan --brief returns an empty result on the clean world too, so it gives no signal either way"
+    ],
+    "corrective_steps": [
+      "fixed case a by `git checkout` of the note, then `los generate` to clear the journal"
+    ],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 24,
+    "outcome": "Typos in fields the validator knows are caught with the file named. Two edits the validator calls clean (a documented supersession; a unit without an optional field) make search, inspect, bootstrap and every write fail with an instruction to change the product's interface contract."
+  },
+  "internal": {
+    "request_ids": [
+      "req-s20a-cap",
+      "req-s20b-cap",
+      "req-s20c-bin",
+      "req-s20c-bin2",
+      "req-s20e-cap",
+      "req-s20f-cap"
+    ],
+    "receipts": [
+      "transaction-20260925-125153-001 (binary capture)",
+      "transaction-20260925-125211-001 (second binary, same basename)"
+    ],
+    "transaction_behavior": "case b: whole-repository shadow validation refuses cleanly (VALIDATION_FAILED, no journal); cases a/e2/f2: INTERNAL_FAILURE after canonical rollback with 'rollback incomplete for: <projection publication>' and an orphan .inflight/<txn>/intent.json whose paths are already back to 'before'",
+    "approval_behavior": "all envelopes sealed with intent_sha256; approval never the refusal cause",
+    "projection_activity": "generate refused in a, e, e2, f, f2 (contract enforcement on the producer)",
+    "unexpected_writes": [
+      "orphan .inflight journals after non-crash refusals (a, e2, f2)"
+    ],
+    "warnings_errors": [
+      "E PARSE",
+      "E REF-CONCEPT",
+      "E WS-SECTION",
+      "E UNIT-MAP-UNDECLARED",
+      "manifest contract v15 violations (e, e2, f, f2)",
+      "INTERNAL_FAILURE rollback incomplete (a, e2, f2)"
+    ],
+    "git_diff_stat": "per-case; final world state = case f2 (note-lsm-trees +1 line) with one orphan journal",
+    "observe_diff_file": "observations/S20f2-min-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [
+      " M knowledge/notes/data-systems/note-lsm-trees.md"
+    ],
+    "snapshot_file": "observations/S20f2-min-after.json"
+  },
+  "friction": [
+    {
+      "tag": "unhelpful-error",
+      "description": "manifest-contract errors tell a consumer to bump the contract and edit the UI repository instead of naming the offending record file",
+      "cost": "3 cases"
+    },
+    {
+      "tag": "unclear-safety",
+      "description": "INTERNAL_FAILURE retryable:true with 'rollback incomplete' after a clean refusal suggests possible corruption",
+      "cost": "4 tool calls to establish canonical state was restored"
+    }
+  ],
+  "failures": [
+    "F-s07-06",
+    "F-s07-07",
+    "F-s07-08",
+    "F-s07-09"
+  ],
+  "scenario_record": {
+    "cases": {
+      "a_invalid_yaml_frontmatter": {
+        "mutation": "note-lsm-trees title → `[LSM trees: unclosed`",
+        "caught_by": [
+          "tools/validate.py (E PARSE, exit 1)",
+          "make check (exit 2)",
+          "generate/search/search --content/bootstrap --brief/inspect/related (refuse, exit 2)"
+        ],
+        "message": "E PARSE: …/note-lsm-trees.md: invalid YAML frontmatter: while parsing a flow sequence … line 3, column 8; reads: 'cannot publish the manifest: 1 file(s) could not be read, so the answer would silently omit them — <file>'",
+        "named_file": true,
+        "other_commands": "status (reports 1 error), note-read, resume, operations, intelligence-scan kept working; generate/search/inspect/related/bootstrap refused; every write → INTERNAL_FAILURE + orphan journal (F-s07-08)",
+        "snapshots": [
+          "observations/S20a-before.json",
+          "observations/S20a-after.json (after restoring the note)"
+        ]
+      },
+      "b_unknown_concept": {
+        "mutation": "note-lsm-trees concepts → concept-zqx-unknown-concept",
+        "caught_by": [
+          "tools/validate.py (E REF-CONCEPT, exit 1)",
+          "make check (exit 2)",
+          "status ('validation: 1 error(s)')"
+        ],
+        "message": "E REF-CONCEPT: note 'note-lsm-trees' references unknown concept 'concept-zqx-unknown-concept' [knowledge/notes/data-systems/note-lsm-trees.md]",
+        "named_file": true,
+        "other_commands": "generate, search, search --content, bootstrap --brief all worked; unrelated capture refused VALIDATION_FAILED retryable false, no journal",
+        "snapshots": [
+          "observations/S20b-before.json",
+          "observations/S20b-after.json"
+        ]
+      },
+      "c_binary_capture": {
+        "mutation": "capture.create file=4100 random bytes (scan-page.bin) with file_sha256",
+        "caught_by": [],
+        "message": "accepted: ok true, work/inbox/scan-page.bin, receipt transaction-20260925-125153-001",
+        "named_file": true,
+        "other_commands": "validate 0 errors; generate/search/bootstrap/status/make check all fine; inbox_items 7→8; binary not findable by `search scan-page` (inbox files are not search records); a second different file with the same basename was stored as 20260925-125211-scan-page.bin (no overwrite)",
+        "snapshots": [
+          "observations/S20c-before.json",
+          "observations/S20c-after.json"
+        ]
+      },
+      "d_workspace_without_next_action": {
+        "mutation": "removed '## Next Action' section from work/active/workspace-os-oral-prep/CONTEXT.md",
+        "caught_by": [
+          "tools/validate.py (E WS-SECTION, exit 1)",
+          "make check (exit 2)"
+        ],
+        "message": "E WS-SECTION: workspace 'workspace-os-oral-prep' is missing required body section '## Next Action' [work/active/workspace-os-oral-prep/CONTEXT.md]",
+        "named_file": true,
+        "other_commands": "all reads worked; bootstrap --brief silently lists the workspace with next_action '' and resume drops its aim without comment",
+        "snapshots": [
+          "observations/S20d-before.json",
+          "observations/S20d-after.json"
+        ]
+      },
+      "e_unit_required_fields_only": {
+        "mutation": "unit-os-l02/unit.yaml reduced to id,type,module_id,kind,title,order,scope,status,artifacts {},workspace_ids []",
+        "caught_by": [
+          "tools/validate.py (E UNIT-MAP-UNDECLARED only)",
+          "generate/search/bootstrap --brief/inspect/related (exit 2, manifest contract)"
+        ],
+        "message": "validate: 'unit has a study-map.yaml but does not declare it'; reads: 'the published manifest no longer matches … (declared v15) … /units/8: scope_sources is a required property … bump … mirror into the UI'",
+        "named_file": "validate yes; read failures name the manifest path /units/8 and dump the record, not the file",
+        "other_commands": "search --content, status, resume worked; everything projection-backed failed",
+        "minimized_e2": "dropping only scope_sources: validate 0 errors, make check OK, same outage, capture → INTERNAL_FAILURE + journal (F-s07-07)",
+        "snapshots": [
+          "observations/S20e-before.json",
+          "observations/S20e-after.json",
+          "observations/S20e2-min-before.json",
+          "observations/S20e2-min-after.json"
+        ]
+      },
+      "f_superseding_note": {
+        "mutation": "new valid note note-lsm-trees-revisited with supersedes: [note-lsm-trees]",
+        "caught_by": [
+          "generate/search/bootstrap --brief/inspect (exit 2, manifest contract)"
+        ],
+        "message": "'schema at /backlinks/note_incoming/note-lsm-trees/0: {from: note-lsm-trees-revisited, kind: superseded-by} is not of type string … bump … mirror into the UI'",
+        "named_file": false,
+        "other_commands": "validate 0 errors, make check OK, status fine, search --content fine; all projection reads and all writes fail",
+        "minimized_f2": "one line `supersedes: [note-b-plus-tree-indexes]` on an existing note reproduces it; capture → INTERNAL_FAILURE + journal (F-s07-06)",
+        "snapshots": [
+          "observations/S20f-before.json",
+          "observations/S20f-after.json",
+          "observations/S20f2-min-before.json",
+          "observations/S20f2-min-after.json"
+        ]
+      }
+    }
+  },
+  "uncertainties": [
+    "Whether the owner's real repository contains any supersedes edge (if it does, its generate would already fail; if not, the path is simply unexercised)",
+    "Behaviour of the Obsidian UI under these inputs is NOT TESTED"
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "builder_version": 1,
+  "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+  "product_revision_requested": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+  "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+  "scale": 0,
+  "seed": 20260924,
+  "timeline": {
+    "start": "2026-04-06",
+    "as_of": "2026-09-18"
+  },
+  "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+  "commits": 133,
+  "notes": 116,
+  "arrivals": 30,
+  "paths": {
+    "repository": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S24A/LearningOS/repository",
+    "materials": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S24A/LearningOS/materials",
+    "drop": "/Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S24A/eval-drop"
+  },
+  "validation": "0 error(s), 3 warning(s) \u2014 OK (0.2s)",
+  "validate_exit": 0,
+  "generate_exit": 0
+}

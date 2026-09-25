@@ -1,0 +1,21 @@
+{
+  "schema_version": 2,
+  "request_id": "req-s20f-cap",
+  "idempotency_key": "idem-s20f-cap",
+  "capability": "capture.create",
+  "ok": false,
+  "replayed": false,
+  "transaction_id": null,
+  "receipt_path": null,
+  "snapshot_after": null,
+  "result": {},
+  "error": {
+    "code": "INTERNAL_FAILURE",
+    "message": "the published manifest no longer matches system/contracts/manifest-contract.yaml (declared v15).\n  schema at /backlinks/note_incoming/note-b-plus-tree-indexes/0: {'from': 'note-lsm-trees', 'kind': 'superseded-by'} is not of type 'string'\nA change to the published shape is an interface change, even when it only adds a key: consumers declare an exact version and fail closed.\n  1. python tools/manifest_contract.py --bump --note \"<what changed>\"\n  2. mirror the new version into the UI in the same change — contracts/manifest-v<N>.lock.json, MANIFEST_CONTRACT_VERSION, ManifestV<N>, fixture-vault/generated/manifest.json; rollback incomplete for: <projection publication>",
+    "retryable": true,
+    "details": {
+      "stage": "core.projection",
+      "rollback_complete": false
+    }
+  }
+}

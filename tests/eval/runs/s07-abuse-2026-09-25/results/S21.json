@@ -1,0 +1,174 @@
+{
+  "scenario": "S21",
+  "run_id": "s07-abuse-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "With intact ledgers, idempotency semantics are correct: an identical resubmission replays (same transaction, no new file or receipt), even after the world moved on; a new key writes again; a key reused for a different payload is refused with IDEMPOTENCY_CONFLICT; --replay-only verifies without writing. The diagnostics around it mislead (F-s07-10), a reused request_id is accepted, and a no-op status update commits a receipt and bumps revisions. Extra ledger-damage probes: losing both untracked ledgers lets a reused key commit a duplicate that nothing detects (F-s07-11).",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S21-before.json"
+  },
+  "consumer": {
+    "goal": "Submit the same capture twice with one idempotency key, once with a new key, and the same stage.progress.update twice; then probe key/request-id reuse",
+    "first_action": "build + seal capture.create envelope (key idem-s21-k1) against bootstrap --brief snapshot",
+    "commands": [
+      "los capability capture.create (k1) ×2",
+      "los capability capture.create (k2, same text)",
+      "los capability stage.progress.update (s1 paused) ×2",
+      "los capability capture.create (k1 key, different text, request req-s21-cap-1b)",
+      "los capability capture.create (original k1 envelope after 2 later writes)",
+      "los capability stage.progress.update (new key s2, already paused)",
+      "los capability capture.create (request id req-s21-cap-1 reused, key k3)",
+      "los capability capture.create --replay-only (k1; never-submitted k4)",
+      "los operations --request-id …; los operations --limit 20",
+      "los observe --help; grep docs for operations/observation"
+    ],
+    "tool_calls": 9,
+    "docs_consulted": [
+      "system/OPERATOR.md",
+      "system/WORKFLOWS.md (grep observe)",
+      "los capability --help (--replay-only)"
+    ],
+    "impl_files_read": [],
+    "retries": 0,
+    "confusions": [
+      "replayed result omits the inner 'ok' key and, for stage progress, the unit/stage/status fields the first response carried",
+      "every committed write is BLOCKED / needs_attention in `los operations`"
+    ],
+    "corrective_steps": [],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 9,
+    "outcome": "Retrying a write is safe: duplicates never create a second note or receipt. Changing what a used key means is refused. The operation log tells the user that almost everything needs attention."
+  },
+  "internal": {
+    "request_ids": [
+      "req-s21-cap-1",
+      "req-s21-cap-2",
+      "req-s21-sp-1",
+      "req-s21-cap-1b",
+      "req-s21-sp-2",
+      "req-s21-cap-4"
+    ],
+    "receipts": [
+      "transaction-20260925-125656-001 (k1)",
+      "transaction-20260925-125658-001 (k2)",
+      "transaction-20260925-125711-001 (s1)",
+      "transaction-20260925-125732-001 (s2 no-op)",
+      "transaction-20260925-125733-001 (reused request id, k3)"
+    ],
+    "transaction_behavior": "idempotency ledger operations/transactions/idempotency.yaml keyed by idempotency_key; replay returns the stored transaction without handler execution",
+    "approval_behavior": "each envelope carries its own intent hash; reusing a key with a different intent → IDEMPOTENCY_CONFLICT 'idempotency key was already used for a different approved intent'",
+    "unexpected_writes": [
+      "no-op stage.progress.update (paused→paused, new key) committed receipt transaction-20260925-125732-001: all three files byte-identical (sha before = after), snapshot unchanged, but study-map-os-l02 and unit-os-l02 revisions bumped 1→2"
+    ],
+    "warnings_errors": [
+      "IDEMPOTENCY_CONFLICT (expected)",
+      "UNCONFIRMED 'no committed receipt exists for this exact request' (--replay-only k4, expected)"
+    ],
+    "git_diff_stat": "3 files modified (study-map.yaml, unit.yaml, resume.yaml), 3 inbox files + 5 receipts + ledgers added",
+    "observe_diff_file": "observations/S21-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [
+      " M curriculum/modules/module-tuh-os/units/unit-os-l02/study-map.yaml",
+      " M curriculum/modules/module-tuh-os/units/unit-os-l02/unit.yaml",
+      " M curriculum/resume.yaml",
+      "?? operations/transactions/idempotency.yaml",
+      "?? operations/transactions/revisions.yaml",
+      "?? operations/transactions/transaction-20260925-125656-001.yaml",
+      "?? operations/transactions/transaction-20260925-125658-001.yaml",
+      "?? operations/transactions/transaction-20260925-125711-001.yaml",
+      "?? operations/transactions/transaction-20260925-125732-001.yaml",
+      "?? operations/transactions/transaction-20260925-125733-001.yaml",
+      "?? work/inbox/20260925-125656-s21-idem.md",
+      "?? work/inbox/20260925-125658-s21-idem.md",
+      "?? work/inbox/20260925-125733-s21-reuse.md"
+    ],
+    "snapshot_file": "observations/S21-after.json"
+  },
+  "friction": [
+    {
+      "tag": "unclear-safety",
+      "description": "`los operations` marks successful writes BLOCKED / needs_attention and a definite conflict AMBIGUOUS",
+      "cost": "4 tool calls"
+    },
+    {
+      "tag": "unstable-output-format",
+      "description": "replayed results carry a different key set from the original response (no inner ok; stage fields missing)",
+      "cost": "1 tool call"
+    }
+  ],
+  "failures": [
+    "F-s07-10",
+    "F-s07-11"
+  ],
+  "scenario_record": {
+    "submissions": [
+      {
+        "step": "capture k1 #1",
+        "response": "ok, replayed false, transaction-20260925-125656-001, captured work/inbox/20260925-125656-s21-idem.md",
+        "files_after": "inbox 8",
+        "receipts_after": 1
+      },
+      {
+        "step": "capture k1 #2 identical",
+        "response": "ok, replayed true, same transaction, no write",
+        "files_after": "inbox 8",
+        "receipts_after": 1
+      },
+      {
+        "step": "capture k2 new key, same text",
+        "response": "ok, replayed false, transaction-20260925-125658-001, second file 20260925-125658-s21-idem.md (no content dedup)",
+        "files_after": "inbox 9",
+        "receipts_after": 2
+      },
+      {
+        "step": "stage.progress.update s1 #1 (paused)",
+        "response": "ok, replayed false, transaction-20260925-125711-001; unit, study map and stage paused; resume.yaml touched",
+        "receipts_after": 3
+      },
+      {
+        "step": "stage.progress.update s1 #2 identical",
+        "response": "ok, replayed true, same transaction, no write",
+        "receipts_after": 3
+      },
+      {
+        "step": "extra: k1 key + different text",
+        "response": "IDEMPOTENCY_CONFLICT, retryable false, nothing written"
+      },
+      {
+        "step": "extra: original k1 envelope after 2 later writes (stale snapshot)",
+        "response": "ok, replayed true (replay precedes the snapshot guard)"
+      },
+      {
+        "step": "extra: stage no-op with new key",
+        "response": "ok, new receipt 125732, files byte-identical, revisions 1→2"
+      },
+      {
+        "step": "extra: request_id reused with new key k3",
+        "response": "ok, new write 125733 (request ids are not unique)"
+      },
+      {
+        "step": "extra: --replay-only",
+        "response": "k1 → replayed true; never-submitted k4 → UNCONFIRMED 'no committed receipt exists for this exact request'"
+      }
+    ],
+    "ledger_damage": {
+      "L1_idempotency_deleted": "exact replay STALE_SNAPSHOT; --replay-only denies committed receipt; validate 0 errors",
+      "L2_idempotency_corrupt": "INTERNAL_FAILURE retryable, names ledger file; validate 0 errors",
+      "L3_idempotency_deleted_resealed": "REVISION_CONFLICT capture-request:idem-s21-k1 expected 0 actual 1 (revisions ledger backstops)",
+      "L3a_control_intact_resealed": "IDEMPOTENCY_CONFLICT",
+      "L4_both_deleted_resealed": "committed duplicate transaction-20260925-130410-001 + work/inbox/20260925-130410-s21-idem.md (F-s07-11)",
+      "snapshots": [
+        "observations/S21-after.json",
+        "observations/S21-ledger-after.json",
+        "observations/S21-ledger-diff.json"
+      ]
+    }
+  },
+  "uncertainties": [
+    "Whether the UI's 'observation' step is what clears BLOCKED/needs_attention is NOT TESTED (Obsidian UI outside this environment)"
+  ]
+}

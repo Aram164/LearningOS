@@ -1,0 +1,21 @@
+{
+  "schema_version": 2,
+  "request_id": "req-s22-r10-c",
+  "idempotency_key": "idem-s22-r10-c",
+  "capability": "stage.progress.update",
+  "ok": false,
+  "replayed": false,
+  "transaction_id": null,
+  "receipt_path": null,
+  "snapshot_after": null,
+  "result": {},
+  "error": {
+    "code": "STALE_SNAPSHOT",
+    "message": "canonical state changed since this request was approved",
+    "retryable": true,
+    "details": {
+      "expected": "sha256:c68386d6c7bf5666351dcb47457d37a754e65cf8297ad8efb291e33a5ec7ae86",
+      "actual": "sha256:6d17047b68748c44979f6ebff098a32180c23ce0b4b3573ebcc8a291a26f595a"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+truncated | tools/los.py search lsm | exit=0 | 
+truncated | tools/los.py inspect note-lsm-trees | exit=0 | 
+truncated | tools/los.py bootstrap --brief | exit=0 | 
+truncated | tools/los.py status | exit=0 |   validation: 1 error(s) · 3 warning(s), visible and nonblocking (`make warnings` for the delta) 
+truncated | tools/validate.py --compact --no-report | exit=1 | E GEN-JSON: generated JSON does not parse [generated/manifest.json] W HYGIENE-VIEWS: generated/manifest.json is not the current authored snapshot — run `make views` [generated/manifest.json] 
+truncated | tools/los.py related note-lsm-trees | exit=0 | 
+truncated | tools/los.py intelligence-scan --brief --json | exit=0 | 
+truncated | generated/manifest.json now:     5000

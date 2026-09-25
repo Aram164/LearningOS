@@ -1,0 +1,19 @@
+{
+ "schema_version": 2,
+ "request_id": "req-s21-cap-1b",
+ "idempotency_key": "idem-s21-k1",
+ "capability": "capture.create",
+ "channel": "operator",
+ "expected_snapshot": "sha256:8b21c7e24b381c81403d150c993511f0ea47860a15df1cefdb4f566e12e82cd5",
+ "expected_revisions": {
+  "capture-request:idem-s21-k1": 0
+ },
+ "approval": {
+  "kind": "direct-user-gesture",
+  "subject_sha256": "sha256:775ef014d431d1678857982497c29f02b6d048b47beffc157f0d585a885c8617"
+ },
+ "payload": {
+  "text": "S21: DIFFERENT text under a reused key.",
+  "title": "s21 idem"
+ }
+}

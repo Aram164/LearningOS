@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "request_id": "req-s21-l2",
+  "idempotency_key": "idem-s21-l2",
+  "capability": "capture.create",
+  "ok": false,
+  "replayed": false,
+  "transaction_id": null,
+  "receipt_path": null,
+  "snapshot_after": null,
+  "result": {},
+  "error": {
+    "code": "INTERNAL_FAILURE",
+    "message": "idempotency ledger is unreadable: /Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S21/LearningOS/repository/operations/transactions/idempotency.yaml: while parsing a flow sequence\n  in \"<unicode string>\", line 1, column 10\ndid not find expected ',' or ']'\n  in \"<unicode string>\", line 2, column 1",
+    "retryable": true,
+    "details": {}
+  }
+}
