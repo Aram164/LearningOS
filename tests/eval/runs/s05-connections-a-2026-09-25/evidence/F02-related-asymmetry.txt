@@ -1,0 +1,8 @@
+$ python tools/los.py related workspace-statlearn-retake   (note ids)
+['note-bias-variance-decomposition-lecture', 'note-naive-bayes-spam-filter', 'note-pca-by-hand', 'note-ridge-regression-penalty', 'note-statlearn-mock-exam-september', 'note-study-plan-retake-strategy']
+$ python tools/los.py related note-naive-bayes-spam-filter
+[{"id":"concept-naive-bayes","path":"knowledge/concepts.yaml","title":"Naive Bayes","type":"concept"},{"id":"source-murphy-pml1","path":"sources/registry/machine-learning.yaml","title":"Kevin Murphy — Probabilistic Machine Learning: An Introduction","type":"source"},{"id":"source-tuh-statlearn-slides","path":"sources/registry/course-material.yaml","title":"TU Havelberg — Statistical Learning lecture slides (SoSe 2026)","type":"source"}]
+
+$ python tools/los.py related note-oral-exam-prep-strategy   (a note that declares contexts)
+[{"id":"concept-study-planning","path":"knowledge/concepts.yaml","title":"Study planning","type":"concept"},{"id":"workspace-os-oral-prep","path":"work/active/workspace-os-oral-prep/CONTEXT.md","title":"Operating Systems oral exam prep","type":"workspace"}]
+

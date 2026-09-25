@@ -1,0 +1,2886 @@
+{
+ "C01": {
+  "probe": "C01",
+  "query": "note-naive-bayes-spam-filter",
+  "concepts": [
+   "concept-naive-bayes"
+  ],
+  "neighbour_concepts": [
+   "concept-bayes-theorem"
+  ],
+  "sources": [
+   "source-murphy-pml1",
+   "source-tuh-statlearn-slides"
+  ],
+  "commands": [
+   "related note-naive-bayes-spam-filter",
+   "related concept-naive-bayes",
+   "related concept-bayes-theorem",
+   "related source-murphy-pml1",
+   "related source-tuh-statlearn-slides",
+   "search \"naive bayes\"",
+   "search \"independence assumption\"",
+   "search \"independen\" --type note --content",
+   "search \"smoothing\" --type note --content"
+  ],
+  "candidates": {
+   "note-generative-vs-discriminative": [
+    [
+     "related concept-naive-bayes",
+     "shares concept concept-naive-bayes"
+    ],
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ],
+    [
+     "search \"naive bayes\"",
+     ""
+    ]
+   ],
+   "note-statlearn-mock-exam-september": [
+    [
+     "related concept-naive-bayes",
+     "shares concept concept-naive-bayes"
+    ],
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ],
+    [
+     "search \"naive bayes\"",
+     ""
+    ]
+   ],
+   "note-conditional-probability-basics": [
+    [
+     "related concept-bayes-theorem",
+     "concept neighbour concept-bayes-theorem"
+    ],
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-map-estimation-priors": [
+    [
+     "related concept-bayes-theorem",
+     "concept neighbour concept-bayes-theorem"
+    ],
+    [
+     "related source-murphy-pml1",
+     "shares source source-murphy-pml1"
+    ]
+   ],
+   "note-bias-variance-from-book": [
+    [
+     "related source-murphy-pml1",
+     "shares source source-murphy-pml1"
+    ]
+   ],
+   "note-convexity-basics": [
+    [
+     "related source-murphy-pml1",
+     "shares source source-murphy-pml1"
+    ]
+   ],
+   "note-gaussian-noise-least-squares": [
+    [
+     "related source-murphy-pml1",
+     "shares source source-murphy-pml1"
+    ],
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-independence-vs-conditional-independence": [
+    [
+     "related source-murphy-pml1",
+     "shares source source-murphy-pml1"
+    ],
+    [
+     "search \"independen\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-bias-variance-decomposition-lecture": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ],
+    [
+     "search \"independen\" --type note --content",
+     "The cross terms vanish because ε is independent of D and has mean zero, and"
+    ]
+   ],
+   "note-central-limit-theorem-simulation": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-consistent-estimators": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-decision-trees-entropy": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-gradient-descent-from-scratch": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-linear-regression-normal-equation": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-logistic-regression-cross-entropy": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-mle-coin-flips": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ],
+    [
+     "search \"independen\" --type note --content",
+     "Data: n flips, k heads. Model: each flip ~ Bernoulli(θ), flips independent."
+    ]
+   ],
+   "note-normal-distribution-standardizing": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-overfitting-polynomial-degree": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-p-values-corrected": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-p-values-first-take": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-pca-by-hand": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-regression-metrics": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-ridge-regression-penalty": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-svm-kernel-trick": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "workspace-statlearn-retake": [
+    [
+     "search \"naive bayes\"",
+     ""
+    ]
+   ],
+   "note-bloom-filter-false-positive-math": [
+    [
+     "search \"independen\" --type note --content",
+     "Bit array of m bits, k independent hash functions, n inserted elements."
+    ]
+   ],
+   "note-data-pipeline-orchestration-dag": [
+    [
+     "search \"independen\" --type note --content",
+     "independent branches in parallel."
+    ]
+   ],
+   "note-eigenvectors-intuition": [
+    [
+     "search \"independen\" --type note --content",
+     "Diagonalization: if A has n independent eigenvectors, stack them into V and"
+    ]
+   ],
+   "note-how-i-take-notes": [
+    [
+     "search \"smoothing\" --type note --content",
+     "- If I'm unsure, write \"unsure\" instead of smoothing it over."
+    ]
+   ]
+  }
+ },
+ "C02": {
+  "probe": "C02",
+  "query": "note-map-estimation-priors",
+  "concepts": [
+   "concept-bayes-theorem",
+   "concept-map-estimation"
+  ],
+  "neighbour_concepts": [
+   "concept-conditional-probability",
+   "concept-naive-bayes",
+   "concept-maximum-likelihood"
+  ],
+  "sources": [
+   "source-murphy-pml1"
+  ],
+  "commands": [
+   "related note-map-estimation-priors",
+   "related concept-bayes-theorem",
+   "related concept-map-estimation",
+   "related concept-conditional-probability",
+   "related concept-naive-bayes",
+   "related concept-maximum-likelihood",
+   "related source-murphy-pml1",
+   "search \"MAP estimation\"",
+   "search \"prior\"",
+   "search \"prior\" --type note --content",
+   "search \"penalty\" --type note --content"
+  ],
+  "candidates": {
+   "note-conditional-probability-basics": [
+    [
+     "related concept-bayes-theorem",
+     "shares concept concept-bayes-theorem"
+    ],
+    [
+     "related concept-conditional-probability",
+     "concept neighbour concept-conditional-probability"
+    ],
+    [
+     "search \"prior\" --type note --content",
+     "Names from the lecture: P(A) prior, P(B | A) likelihood, P(A | B) posterior,"
+    ]
+   ],
+   "note-independence-vs-conditional-independence": [
+    [
+     "related concept-conditional-probability",
+     "concept neighbour concept-conditional-probability"
+    ],
+    [
+     "related source-murphy-pml1",
+     "shares source source-murphy-pml1"
+    ]
+   ],
+   "note-generative-vs-discriminative": [
+    [
+     "related concept-naive-bayes",
+     "concept neighbour concept-naive-bayes"
+    ],
+    [
+     "search \"prior\" --type note --content",
+     "data. My guess is that the extra assumptions act like a prior."
+    ]
+   ],
+   "note-naive-bayes-spam-filter": [
+    [
+     "related concept-naive-bayes",
+     "concept neighbour concept-naive-bayes"
+    ],
+    [
+     "related source-murphy-pml1",
+     "shares source source-murphy-pml1"
+    ]
+   ],
+   "note-statlearn-mock-exam-september": [
+    [
+     "related concept-naive-bayes",
+     "concept neighbour concept-naive-bayes"
+    ],
+    [
+     "related concept-maximum-likelihood",
+     "concept neighbour concept-maximum-likelihood"
+    ]
+   ],
+   "note-gaussian-noise-least-squares": [
+    [
+     "related concept-maximum-likelihood",
+     "concept neighbour concept-maximum-likelihood"
+    ],
+    [
+     "related source-murphy-pml1",
+     "shares source source-murphy-pml1"
+    ]
+   ],
+   "note-mle-coin-flips": [
+    [
+     "related concept-maximum-likelihood",
+     "concept neighbour concept-maximum-likelihood"
+    ],
+    [
+     "search \"prior\" --type note --content",
+     "That is the overconfidence problem the lecture fixes later with priors."
+    ]
+   ],
+   "note-bias-variance-from-book": [
+    [
+     "related source-murphy-pml1",
+     "shares source source-murphy-pml1"
+    ]
+   ],
+   "note-convexity-basics": [
+    [
+     "related source-murphy-pml1",
+     "shares source source-murphy-pml1"
+    ]
+   ],
+   "note-priority-inversion": [
+    [
+     "search \"prior\"",
+     ""
+    ],
+    [
+     "search \"prior\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-weekly-review-log": [
+    [
+     "search \"prior\"",
+     ""
+    ],
+    [
+     "search \"prior\" --type note --content",
+     "- **2026-08-24** — New priority decision (recorded in coordination)."
+    ]
+   ],
+   "note-cpu-scheduling-round-robin": [
+    [
+     "search \"prior\" --type note --content",
+     "- **MLFQ**: several queues with priorities; a job that uses its whole quantum"
+    ]
+   ],
+   "note-multi-tenant-gpu-sharing": [
+    [
+     "search \"prior\" --type note --content",
+     "The speaker said \"strict priorities starved the batch jobs completely; weights"
+    ]
+   ],
+   "note-os-scheduling-exercise-bank": [
+    [
+     "search \"prior\" --type note --content",
+     "2. Why does MLFQ need a periodic priority boost? Give a job mix that starves"
+    ]
+   ],
+   "note-p-values-corrected": [
+    [
+     "search \"prior\" --type note --content",
+     "Bayes' rule and a prior on H0, which a frequentist test never uses."
+    ]
+   ],
+   "note-matrix-factorization-recommenders": [
+    [
+     "search \"penalty\" --type note --content",
+     "penalty λ(‖p_u‖² + ‖q_i‖²). Alternating least squares: fix Q, each p_u is a"
+    ]
+   ],
+   "note-ridge-regression-penalty": [
+    [
+     "search \"penalty\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-svm-kernel-trick": [
+    [
+     "search \"penalty\" --type note --content",
+     "margin) determine it. Soft margin with slack variables and a penalty C."
+    ]
+   ]
+  }
+ },
+ "C03": {
+  "probe": "C03",
+  "query": "note-parallel-workers-no-speedup",
+  "concepts": [],
+  "neighbour_concepts": [],
+  "sources": [],
+  "commands": [
+   "related note-parallel-workers-no-speedup",
+   "search \"parallel speedup\"",
+   "search \"workers\"",
+   "search \"speedup\" --type note --content",
+   "search \"serial\" --type note --content"
+  ],
+  "candidates": {
+   "workspace-dataframe-skill": [
+    [
+     "related note-parallel-workers-no-speedup",
+     ""
+    ]
+   ],
+   "note-amdahls-law": [
+    [
+     "search \"speedup\" --type note --content",
+     "and as n → ∞, S → 1 / (1 − p). With p = 0.9 the speedup can never exceed 10,"
+    ],
+    [
+     "search \"serial\" --type note --content",
+     "then the parallel part grows while the serial part stays the same."
+    ]
+   ],
+   "note-data-parallel-training-scaling": [
+    [
+     "search \"speedup\" --type note --content",
+     "| GPUs | epoch time | speedup |"
+    ]
+   ],
+   "note-mixed-precision-training": [
+    [
+     "search \"speedup\" --type note --content",
+     "Speedup on my rented GPU: 1.8× for the ResNet run, half the activation memory."
+    ]
+   ],
+   "note-acid-consistency": [
+    [
+     "search \"serial\" --type note --content",
+     "(serializability, at the strictest level)."
+    ]
+   ],
+   "note-two-phase-locking-deadlocks": [
+    [
+     "search \"serial\" --type note --content",
+     "Guarantees conflict-serializable schedules. Strict 2PL holds write locks until"
+    ]
+   ]
+  }
+ },
+ "C04": {
+  "probe": "C04",
+  "query": "note-cfs-fair-share",
+  "concepts": [
+   "concept-cpu-scheduling",
+   "concept-proportional-share"
+  ],
+  "neighbour_concepts": [
+   "concept-context-switch"
+  ],
+  "sources": [
+   "source-ostep",
+   "source-tuh-os-slides"
+  ],
+  "commands": [
+   "related note-cfs-fair-share",
+   "related concept-cpu-scheduling",
+   "related concept-proportional-share",
+   "related concept-context-switch",
+   "related source-ostep",
+   "related source-tuh-os-slides",
+   "search \"fair share\"",
+   "search \"proportional share\"",
+   "search \"fair\" --type note --content",
+   "search \"weighted share\" --type note --content"
+  ],
+  "candidates": {
+   "workspace-os-oral-prep": [
+    [
+     "related note-cfs-fair-share",
+     ""
+    ],
+    [
+     "search \"fair share\"",
+     ""
+    ],
+    [
+     "search \"proportional share\"",
+     ""
+    ]
+   ],
+   "note-cpu-scheduling-round-robin": [
+    [
+     "related concept-cpu-scheduling",
+     "shares concept concept-cpu-scheduling"
+    ],
+    [
+     "related source-ostep",
+     "shares source source-ostep"
+    ],
+    [
+     "related source-tuh-os-slides",
+     "shares source source-tuh-os-slides"
+    ]
+   ],
+   "note-os-scheduling-exercise-bank": [
+    [
+     "related concept-cpu-scheduling",
+     "shares concept concept-cpu-scheduling"
+    ],
+    [
+     "related concept-proportional-share",
+     "shares concept concept-proportional-share"
+    ],
+    [
+     "related concept-context-switch",
+     "concept neighbour concept-context-switch"
+    ],
+    [
+     "related source-tuh-os-slides",
+     "shares source source-tuh-os-slides"
+    ],
+    [
+     "search \"proportional share\"",
+     ""
+    ]
+   ],
+   "note-context-switch-cost": [
+    [
+     "related concept-context-switch",
+     "concept neighbour concept-context-switch"
+    ],
+    [
+     "related source-ostep",
+     "shares source source-ostep"
+    ]
+   ],
+   "note-deadlock-four-conditions": [
+    [
+     "related source-ostep",
+     "shares source source-ostep"
+    ],
+    [
+     "related source-tuh-os-slides",
+     "shares source source-tuh-os-slides"
+    ]
+   ],
+   "note-journaling-filesystems": [
+    [
+     "related source-ostep",
+     "shares source source-ostep"
+    ]
+   ],
+   "note-page-replacement-lru-clock": [
+    [
+     "related source-ostep",
+     "shares source source-ostep"
+    ]
+   ],
+   "note-semaphores-producer-consumer": [
+    [
+     "related source-ostep",
+     "shares source source-ostep"
+    ]
+   ],
+   "note-virtual-memory-address-translation": [
+    [
+     "related source-ostep",
+     "shares source source-ostep"
+    ],
+    [
+     "related source-tuh-os-slides",
+     "shares source source-tuh-os-slides"
+    ]
+   ],
+   "note-amdahls-law": [
+    [
+     "related source-tuh-os-slides",
+     "shares source source-tuh-os-slides"
+    ]
+   ],
+   "note-os-kernel-user-mode": [
+    [
+     "related source-tuh-os-slides",
+     "shares source source-tuh-os-slides"
+    ]
+   ],
+   "note-priority-inversion": [
+    [
+     "related source-tuh-os-slides",
+     "shares source source-tuh-os-slides"
+    ]
+   ],
+   "note-dominant-resource-fairness-paper": [
+    [
+     "search \"fair share\"",
+     ""
+    ],
+    [
+     "search \"fair\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-independence-vs-conditional-independence": [
+    [
+     "search \"fair\" --type note --content",
+     "**Independent, but dependent given C.** Two fair coins X, Y are independent."
+    ]
+   ],
+   "note-multi-tenant-gpu-sharing": [
+    [
+     "search \"fair\" --type note --content",
+     "(frontmatter match)"
+    ],
+    [
+     "search \"weighted share\" --type note --content",
+     "What they did: every team gets a weighted share of GPU time. A team that is; What they did: every team gets a weighted share of GPU time. A team that is"
+    ]
+   ],
+   "note-semester-review-july": [
+    [
+     "search \"fair\" --type note --content",
+     "What went well: Database Systems — steady weekly work, the exam felt fair."
+    ]
+   ],
+   "note-study-plan-retake-strategy": [
+    [
+     "search \"fair\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ]
+  }
+ },
+ "C05": {
+  "probe": "C05",
+  "query": "note-write-ahead-logging-aries",
+  "concepts": [
+   "concept-transactions-acid",
+   "concept-write-ahead-logging"
+  ],
+  "neighbour_concepts": [
+   "concept-two-phase-locking"
+  ],
+  "sources": [
+   "source-garcia-molina-db",
+   "source-mohan-aries-1992",
+   "source-tuh-dbsys-slides"
+  ],
+  "commands": [
+   "related note-write-ahead-logging-aries",
+   "related concept-transactions-acid",
+   "related concept-write-ahead-logging",
+   "related concept-two-phase-locking",
+   "related source-garcia-molina-db",
+   "related source-mohan-aries-1992",
+   "related source-tuh-dbsys-slides",
+   "search \"write-ahead logging\"",
+   "search \"crash recovery\"",
+   "search \"crash\" --type note --content",
+   "search \"log\" --type note --content"
+  ],
+  "candidates": {
+   "note-acid-consistency": [
+    [
+     "related concept-transactions-acid",
+     "shares concept concept-transactions-acid"
+    ],
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ],
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ],
+    [
+     "search \"crash\" --type note --content",
+     "- Durability: once committed, survives crashes."
+    ]
+   ],
+   "note-cap-consistency-linearizability": [
+    [
+     "related concept-transactions-acid",
+     "shares concept concept-transactions-acid"
+    ]
+   ],
+   "note-two-phase-locking-deadlocks": [
+    [
+     "related concept-transactions-acid",
+     "shares concept concept-transactions-acid"
+    ],
+    [
+     "related concept-two-phase-locking",
+     "concept neighbour concept-two-phase-locking"
+    ],
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ],
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-db-exam-cheatsheet": [
+    [
+     "related concept-write-ahead-logging",
+     "shares concept concept-write-ahead-logging"
+    ],
+    [
+     "related concept-two-phase-locking",
+     "concept neighbour concept-two-phase-locking"
+    ],
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ],
+    [
+     "search \"write-ahead logging\"",
+     ""
+    ],
+    [
+     "search \"log\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-algebraic-equivalences-pushdown": [
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ],
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-b-plus-tree-indexes": [
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ]
+   ],
+   "note-buffer-pool-replacement": [
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ]
+   ],
+   "note-external-merge-sort": [
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ],
+    [
+     "search \"log\" --type note --content",
+     "Number of passes = 1 + ⌈log_{B−1} ⌈N/B⌉⌉; every pass reads and writes all N"
+    ]
+   ],
+   "note-hash-join-vs-sort-merge": [
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ],
+    [
+     "search \"log\" --type note --content",
+     "**Sort-merge join**: sort both inputs on the key, then merge. O(n log n + m log"
+    ]
+   ],
+   "note-db-normalization-3nf": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-query-optimizer-cost-model": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-relational-algebra-operators": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-selinger-join-ordering": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "workspace-dbsys-exam": [
+    [
+     "search \"write-ahead logging\"",
+     ""
+    ]
+   ],
+   "note-journaling-filesystems": [
+    [
+     "search \"crash\" --type note --content",
+     "data block, the inode, the free-block bitmap). A crash between the writes"
+    ]
+   ],
+   "note-build-systems-dag-incremental": [
+    [
+     "search \"log\" --type note --content",
+     "targets: topological, restarting, suspending) from the rebuilder (how to"
+    ]
+   ],
+   "note-data-pipeline-orchestration-dag": [
+    [
+     "search \"log\" --type note --content",
+     "every task whose upstream tasks have succeeded — a topological order, with"
+    ]
+   ],
+   "note-decision-trees-entropy": [
+    [
+     "search \"log\" --type note --content",
+     "Entropy of a node with class proportions p_k: H = −Σ_k p_k log₂ p_k."
+    ]
+   ],
+   "note-event-sourcing-append-only": [
+    [
+     "search \"log\" --type note --content",
+     "same log; bugs in a view are fixed by replaying."
+    ]
+   ],
+   "note-gaussian-noise-least-squares": [
+    [
+     "search \"log\" --type note --content",
+     "The likelihood of the whole dataset is the product over i. Take logs:"
+    ]
+   ],
+   "note-generative-vs-discriminative": [
+    [
+     "search \"log\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-hmm-viterbi": [
+    [
+     "search \"log\" --type note --content",
+     "Use logs so the products become sums."
+    ]
+   ],
+   "note-idempotency-keys-api": [
+    [
+     "search \"log\" --type note --content",
+     "Payment-API pattern: the client generates a unique key per logical operation"
+    ]
+   ],
+   "note-idempotent-pipelines-backfills": [
+    [
+     "search \"log\" --type note --content",
+     "- write to a partition keyed by the logical date and *overwrite* it, never"
+    ]
+   ],
+   "note-kafka-consumer-lag-backpressure": [
+    [
+     "search \"log\" --type note --content",
+     "the producers. Kafka itself does not push back — the log just grows (bounded by"
+    ]
+   ],
+   "note-lazy-evaluation-query-plans": [
+    [
+     "search \"log\" --type note --content",
+     "whole pipeline exists as a logical plan the library can rewrite."
+    ]
+   ],
+   "note-logistic-regression-cross-entropy": [
+    [
+     "search \"log\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-lsm-trees": [
+    [
+     "search \"log\" --type note --content",
+     "Writes go to an in-memory sorted structure (memtable) and a log for"
+    ]
+   ],
+   "note-map-estimation-priors": [
+    [
+     "search \"log\" --type note --content",
+     "= argmax_θ [ log p(D | θ) + log p(θ) ]"
+    ]
+   ],
+   "note-mle-coin-flips": [
+    [
+     "search \"log\" --type note --content",
+     "ℓ(θ) = k log θ + (n − k) log(1 − θ)"
+    ]
+   ],
+   "note-naive-bayes-spam-filter": [
+    [
+     "search \"log\" --type note --content",
+     "up. Same for ham, then compare the two scores (in log space, otherwise the"
+    ]
+   ],
+   "note-softmax-temperature": [
+    [
+     "search \"log\" --type note --content",
+     "uniform; small T sharpens it; T → 0 puts all the mass on the largest logit."
+    ]
+   ],
+   "note-spaced-repetition-scheduler": [
+    [
+     "search \"log\" --type note --content",
+     "reviews (the backlog grows faster than you think); write cards myself instead"
+    ]
+   ],
+   "note-tagless-visitor-pattern-ast": [
+    [
+     "search \"log\" --type note --content",
+     "Tessera's logical plan is an enum: Scan, Filter, Project, Join, Aggregate."
+    ]
+   ],
+   "note-weekly-review-log": [
+    [
+     "search \"log\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ]
+  }
+ },
+ "C06": {
+  "probe": "C06",
+  "query": "note-selinger-join-ordering",
+  "concepts": [
+   "concept-join-algorithms",
+   "concept-query-optimization"
+  ],
+  "neighbour_concepts": [
+   "concept-cardinality-estimation",
+   "concept-relational-algebra"
+  ],
+  "sources": [
+   "source-selinger-1979",
+   "source-tuh-dbsys-slides"
+  ],
+  "commands": [
+   "related note-selinger-join-ordering",
+   "related concept-join-algorithms",
+   "related concept-query-optimization",
+   "related concept-cardinality-estimation",
+   "related concept-relational-algebra",
+   "related source-selinger-1979",
+   "related source-tuh-dbsys-slides",
+   "search \"join ordering\"",
+   "search \"dynamic programming\"",
+   "search \"join order\" --type note --content",
+   "search \"subproblem\" --type note --content"
+  ],
+  "candidates": {
+   "note-hash-join-vs-sort-merge": [
+    [
+     "related concept-join-algorithms",
+     "shares concept concept-join-algorithms"
+    ],
+    [
+     "search \"join order\" --type note --content",
+     "there is no sort order to exploit."
+    ]
+   ],
+   "note-algebraic-equivalences-pushdown": [
+    [
+     "related concept-query-optimization",
+     "shares concept concept-query-optimization"
+    ],
+    [
+     "related concept-relational-algebra",
+     "concept neighbour concept-relational-algebra"
+    ],
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ],
+    [
+     "search \"join order\" --type note --content",
+     "3. π_A(R ⋈ S) = π_A(π_{A∪J}(R) ⋈ π_{A∪J}(S)) where J are the join attributes; then projections, then worry about join order. Filtering before a join shrinks"
+    ]
+   ],
+   "note-db-exam-cheatsheet": [
+    [
+     "related concept-query-optimization",
+     "shares concept concept-query-optimization"
+    ],
+    [
+     "related concept-relational-algebra",
+     "concept neighbour concept-relational-algebra"
+    ],
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-lazy-evaluation-query-plans": [
+    [
+     "related concept-query-optimization",
+     "shares concept concept-query-optimization"
+    ]
+   ],
+   "note-query-optimizer-cost-model": [
+    [
+     "related concept-query-optimization",
+     "shares concept concept-query-optimization"
+    ],
+    [
+     "related concept-cardinality-estimation",
+     "concept neighbour concept-cardinality-estimation"
+    ],
+    [
+     "related source-selinger-1979",
+     "shares source source-selinger-1979"
+    ],
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-relational-algebra-operators": [
+    [
+     "related concept-relational-algebra",
+     "concept neighbour concept-relational-algebra"
+    ],
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-acid-consistency": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-db-normalization-3nf": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-two-phase-locking-deadlocks": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-write-ahead-logging-aries": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "project-tessera": [
+    [
+     "search \"join ordering\"",
+     ""
+    ]
+   ],
+   "note-caching-everywhere": [
+    [
+     "search \"dynamic programming\"",
+     ""
+    ],
+    [
+     "search \"subproblem\" --type note --content",
+     "- Memoization in dynamic programming: keep the answer to a subproblem instead"
+    ]
+   ],
+   "note-dynamic-programming-memoization": [
+    [
+     "search \"dynamic programming\"",
+     ""
+    ],
+    [
+     "search \"subproblem\" --type note --content",
+     "solutions to subproblems."
+    ]
+   ]
+  }
+ },
+ "C07": {
+  "probe": "C07",
+  "query": "note-query-optimizer-cost-model",
+  "concepts": [
+   "concept-cardinality-estimation",
+   "concept-query-optimization"
+  ],
+  "neighbour_concepts": [
+   "concept-join-algorithms",
+   "concept-relational-algebra"
+  ],
+  "sources": [
+   "source-selinger-1979",
+   "source-tuh-dbsys-slides"
+  ],
+  "commands": [
+   "related note-query-optimizer-cost-model",
+   "related concept-cardinality-estimation",
+   "related concept-query-optimization",
+   "related concept-join-algorithms",
+   "related concept-relational-algebra",
+   "related source-selinger-1979",
+   "related source-tuh-dbsys-slides",
+   "search \"selectivity\"",
+   "search \"cardinality estimation\"",
+   "search \"independen\" --type note --content",
+   "search \"estimat\" --type note --content"
+  ],
+  "candidates": {
+   "note-algebraic-equivalences-pushdown": [
+    [
+     "related concept-query-optimization",
+     "shares concept concept-query-optimization"
+    ],
+    [
+     "related concept-relational-algebra",
+     "concept neighbour concept-relational-algebra"
+    ],
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-db-exam-cheatsheet": [
+    [
+     "related concept-query-optimization",
+     "shares concept concept-query-optimization"
+    ],
+    [
+     "related concept-relational-algebra",
+     "concept neighbour concept-relational-algebra"
+    ],
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-lazy-evaluation-query-plans": [
+    [
+     "related concept-query-optimization",
+     "shares concept concept-query-optimization"
+    ]
+   ],
+   "note-selinger-join-ordering": [
+    [
+     "related concept-query-optimization",
+     "shares concept concept-query-optimization"
+    ],
+    [
+     "related concept-join-algorithms",
+     "concept neighbour concept-join-algorithms"
+    ],
+    [
+     "related source-selinger-1979",
+     "shares source source-selinger-1979"
+    ],
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-hash-join-vs-sort-merge": [
+    [
+     "related concept-join-algorithms",
+     "concept neighbour concept-join-algorithms"
+    ]
+   ],
+   "note-relational-algebra-operators": [
+    [
+     "related concept-relational-algebra",
+     "concept neighbour concept-relational-algebra"
+    ],
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-acid-consistency": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-db-normalization-3nf": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-two-phase-locking-deadlocks": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-write-ahead-logging-aries": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-bias-variance-decomposition-lecture": [
+    [
+     "search \"independen\" --type note --content",
+     "The cross terms vanish because ε is independent of D and has mean zero, and"
+    ]
+   ],
+   "note-bloom-filter-false-positive-math": [
+    [
+     "search \"independen\" --type note --content",
+     "Bit array of m bits, k independent hash functions, n inserted elements."
+    ]
+   ],
+   "note-data-pipeline-orchestration-dag": [
+    [
+     "search \"independen\" --type note --content",
+     "independent branches in parallel."
+    ]
+   ],
+   "note-eigenvectors-intuition": [
+    [
+     "search \"independen\" --type note --content",
+     "Diagonalization: if A has n independent eigenvectors, stack them into V and"
+    ]
+   ],
+   "note-independence-vs-conditional-independence": [
+    [
+     "search \"independen\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-mle-coin-flips": [
+    [
+     "search \"independen\" --type note --content",
+     "Data: n flips, k heads. Model: each flip ~ Bernoulli(θ), flips independent."
+    ]
+   ],
+   "note-bias-variance-from-book": [
+    [
+     "search \"estimat\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-consistent-estimators": [
+    [
+     "search \"estimat\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-cross-validation-kfold": [
+    [
+     "search \"estimat\" --type note --content",
+     "Nested CV if you also want an honest estimate of the tuned model."
+    ]
+   ],
+   "note-gaussian-noise-least-squares": [
+    [
+     "search \"estimat\" --type note --content",
+     "back if you also want to estimate it (σ̂² = mean squared residual)."
+    ]
+   ],
+   "note-kernel-density-estimation": [
+    [
+     "search \"estimat\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-map-estimation-priors": [
+    [
+     "search \"estimat\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-naive-bayes-spam-filter": [
+    [
+     "search \"estimat\" --type note --content",
+     "The second factor is hopeless to estimate directly — there are more word"
+    ]
+   ],
+   "note-sgd-momentum-nn-training": [
+    [
+     "search \"estimat\" --type note --content",
+     "gradient estimated from 64 examples and a velocity term."
+    ]
+   ],
+   "note-statlearn-mock-exam-september": [
+    [
+     "search \"estimat\" --type note --content",
+     "poor estimate?"
+    ]
+   ]
+  }
+ },
+ "C08": {
+  "probe": "C08",
+  "query": "note-low-rank-approximation",
+  "concepts": [
+   "concept-low-rank-approximation",
+   "concept-svd"
+  ],
+  "neighbour_concepts": [
+   "concept-eigendecomposition"
+  ],
+  "sources": [
+   "source-strang-linalg"
+  ],
+  "commands": [
+   "related note-low-rank-approximation",
+   "related concept-low-rank-approximation",
+   "related concept-svd",
+   "related concept-eigendecomposition",
+   "related source-strang-linalg",
+   "search \"low-rank\"",
+   "search \"singular value\"",
+   "search \"rank\" --type note --content",
+   "search \"missing\" --type note --content"
+  ],
+  "candidates": {
+   "workspace-linalg-refresh": [
+    [
+     "related note-low-rank-approximation",
+     ""
+    ],
+    [
+     "search \"low-rank\"",
+     ""
+    ]
+   ],
+   "note-svd-geometric": [
+    [
+     "related concept-svd",
+     "shares concept concept-svd"
+    ],
+    [
+     "related concept-eigendecomposition",
+     "concept neighbour concept-eigendecomposition"
+    ],
+    [
+     "related source-strang-linalg",
+     "shares source source-strang-linalg"
+    ],
+    [
+     "search \"rank\" --type note --content",
+     "Rank = number of non-zero singular values."
+    ]
+   ],
+   "note-covariance-matrix": [
+    [
+     "related concept-eigendecomposition",
+     "concept neighbour concept-eigendecomposition"
+    ],
+    [
+     "related source-strang-linalg",
+     "shares source source-strang-linalg"
+    ]
+   ],
+   "note-eigenvectors-intuition": [
+    [
+     "related concept-eigendecomposition",
+     "concept neighbour concept-eigendecomposition"
+    ],
+    [
+     "related source-strang-linalg",
+     "shares source source-strang-linalg"
+    ]
+   ],
+   "note-markov-chains-stationary": [
+    [
+     "related concept-eigendecomposition",
+     "concept neighbour concept-eigendecomposition"
+    ],
+    [
+     "search \"rank\" --type note --content",
+     "PageRank is this: a random surfer's stationary distribution over web pages"
+    ]
+   ],
+   "note-pca-by-hand": [
+    [
+     "related concept-eigendecomposition",
+     "concept neighbour concept-eigendecomposition"
+    ]
+   ],
+   "note-linear-regression-normal-equation": [
+    [
+     "search \"rank\" --type note --content",
+     "when XᵀX is invertible (full column rank). Geometrically: Xw is the"
+    ]
+   ],
+   "note-naive-bayes-spam-filter": [
+    [
+     "search \"rank\" --type note --content",
+     "classifier still works well, because we only need the *ranking* of spam vs ham"
+    ]
+   ],
+   "note-softmax-temperature": [
+    [
+     "search \"rank\" --type note --content",
+     "knowledge distillation (a high T exposes how the teacher ranks the wrong"
+    ]
+   ],
+   "note-matrix-factorization-recommenders": [
+    [
+     "search \"missing\" --type note --content",
+     "Ratings matrix R (users × items), 99% missing. Model every user by a vector"
+    ]
+   ]
+  }
+ },
+ "C09": {
+  "probe": "C09",
+  "query": "note-data-lineage-debugging",
+  "concepts": [],
+  "neighbour_concepts": [],
+  "sources": [],
+  "commands": [
+   "related note-data-lineage-debugging",
+   "search \"lineage\"",
+   "search \"provenance\"",
+   "search \"lineage\" --type note --content",
+   "search \"which input\" --type note --content"
+  ],
+  "candidates": {
+   "workspace-dataframe-skill": [
+    [
+     "related note-data-lineage-debugging",
+     ""
+    ],
+    [
+     "search \"lineage\"",
+     ""
+    ],
+    [
+     "search \"provenance\"",
+     ""
+    ]
+   ],
+   "note-why-provenance-paper": [
+    [
+     "search \"provenance\"",
+     ""
+    ],
+    [
+     "search \"lineage\" --type note --content",
+     "annotations, so the same machinery gives counting, trust scores or lineage."
+    ],
+    [
+     "search \"which input\" --type note --content",
+     "- **Why-provenance**: which input tuples justify that this output tuple; - **Why-provenance**: which input tuples justify that this output tuple"
+    ]
+   ],
+   "note-backprop-as-bookkeeping": [
+    [
+     "search \"which input\" --type note --content",
+     "needs its input (for y = Wx, ∂L/∂W = (∂L/∂y) xᵀ). Memory use therefore grows; Still unclear to me: how frameworks decide which intermediates to keep."
+    ]
+   ],
+   "note-build-systems-dag-incremental": [
+    [
+     "search \"which input\" --type note --content",
+     "timestamps; Bazel and similar tools hash the inputs and the command, so a; \"Build Systems à la Carte\" separates the scheduler (in which order to visit"
+    ]
+   ],
+   "note-selinger-join-ordering": [
+    [
+     "search \"which input\" --type note --content",
+     "It only considers left-deep trees (the right input is always a base table),; which keeps the search manageable and suits pipelining."
+    ]
+   ]
+  }
+ },
+ "C10": {
+  "probe": "C10",
+  "query": "note-kv-cache-transformer-serving",
+  "concepts": [
+   "concept-kv-cache",
+   "concept-model-serving"
+  ],
+  "neighbour_concepts": [],
+  "sources": [],
+  "commands": [
+   "related note-kv-cache-transformer-serving",
+   "related concept-kv-cache",
+   "related concept-model-serving",
+   "search \"KV cache\"",
+   "search \"attention\"",
+   "search \"attention\" --type note --content",
+   "search \"memory\" --type note --content"
+  ],
+  "candidates": {
+   "note-dynamic-batching-inference": [
+    [
+     "related concept-model-serving",
+     "shares concept concept-model-serving"
+    ]
+   ],
+   "note-multi-tenant-gpu-sharing": [
+    [
+     "related concept-model-serving",
+     "shares concept concept-model-serving"
+    ],
+    [
+     "search \"memory\" --type note --content",
+     "fixed it\". Also: memory matters as much as compute — one team with huge models"
+    ]
+   ],
+   "note-backprop-as-bookkeeping": [
+    [
+     "search \"memory\" --type note --content",
+     "needs its input (for y = Wx, ∂L/∂W = (∂L/∂y) xᵀ). Memory use therefore grows"
+    ]
+   ],
+   "note-buffer-pool-replacement": [
+    [
+     "search \"memory\" --type note --content",
+     "The buffer pool keeps disk pages in memory frames; a page table maps page ids"
+    ]
+   ],
+   "note-caching-everywhere": [
+    [
+     "search \"memory\" --type note --content",
+     "- CPU caches: hardware keeps recently used memory lines close to the core."
+    ]
+   ],
+   "note-cpu-cache-locality": [
+    [
+     "search \"memory\" --type note --content",
+     "Memory is fetched in cache lines (64 bytes). Temporal locality: recently used"
+    ]
+   ],
+   "note-cpu-instruction-pipeline": [
+    [
+     "search \"memory\" --type note --content",
+     "execute, memory, write-back. With pipelining a new instruction enters every"
+    ]
+   ],
+   "note-dominant-resource-fairness-paper": [
+    [
+     "search \"memory\" --type note --content",
+     "memory). Max-min fairness is clear for one resource; with two it is not — one"
+    ]
+   ],
+   "note-external-merge-sort": [
+    [
+     "search \"memory\" --type note --content",
+     "1. Pass 0: read B pages at a time, sort in memory, write out ⌈N/B⌉ sorted runs."
+    ]
+   ],
+   "note-hash-join-vs-sort-merge": [
+    [
+     "search \"memory\" --type note --content",
+     "needs the build side in memory, otherwise partition both inputs by hash into"
+    ]
+   ],
+   "note-lazy-evaluation-query-plans": [
+    [
+     "search \"memory\" --type note --content",
+     "memory. Lazy: 6 s, 1.3 GB peak."
+    ]
+   ],
+   "note-lsm-trees": [
+    [
+     "search \"memory\" --type note --content",
+     "Writes go to an in-memory sorted structure (memtable) and a log for"
+    ]
+   ],
+   "note-mixed-precision-training": [
+    [
+     "search \"memory\" --type note --content",
+     "Speedup on my rented GPU: 1.8× for the ResNet run, half the activation memory."
+    ]
+   ],
+   "note-page-replacement-lru-clock": [
+    [
+     "search \"memory\" --type note --content",
+     "exact LRU is too expensive to maintain on every memory access."
+    ]
+   ],
+   "note-virtual-memory-address-translation": [
+    [
+     "search \"memory\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-virtual-memory-is-swap": [
+    [
+     "search \"memory\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ]
+  }
+ },
+ "C11": {
+  "probe": "C11",
+  "query": "note-os-kernel-user-mode",
+  "concepts": [
+   "concept-os-kernel"
+  ],
+  "neighbour_concepts": [],
+  "sources": [
+   "source-tuh-os-slides"
+  ],
+  "commands": [
+   "related note-os-kernel-user-mode",
+   "related concept-os-kernel",
+   "related source-tuh-os-slides",
+   "search \"kernel\"",
+   "search \"system call\"",
+   "search \"kernel\" --type note --content",
+   "search \"privilege\" --type note --content"
+  ],
+  "candidates": {
+   "note-amdahls-law": [
+    [
+     "related source-tuh-os-slides",
+     "shares source source-tuh-os-slides"
+    ]
+   ],
+   "note-cfs-fair-share": [
+    [
+     "related source-tuh-os-slides",
+     "shares source source-tuh-os-slides"
+    ]
+   ],
+   "note-cpu-scheduling-round-robin": [
+    [
+     "related source-tuh-os-slides",
+     "shares source source-tuh-os-slides"
+    ]
+   ],
+   "note-deadlock-four-conditions": [
+    [
+     "related source-tuh-os-slides",
+     "shares source source-tuh-os-slides"
+    ]
+   ],
+   "note-os-scheduling-exercise-bank": [
+    [
+     "related source-tuh-os-slides",
+     "shares source source-tuh-os-slides"
+    ]
+   ],
+   "note-priority-inversion": [
+    [
+     "related source-tuh-os-slides",
+     "shares source source-tuh-os-slides"
+    ]
+   ],
+   "note-virtual-memory-address-translation": [
+    [
+     "related source-tuh-os-slides",
+     "shares source source-tuh-os-slides"
+    ],
+    [
+     "search \"kernel\" --type note --content",
+     "Page fault: the entry is not present → trap → the kernel decides (allocate,"
+    ]
+   ],
+   "note-cnn-convolution-kernels": [
+    [
+     "search \"kernel\"",
+     ""
+    ],
+    [
+     "search \"kernel\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-kernel-density-estimation": [
+    [
+     "search \"kernel\"",
+     ""
+    ],
+    [
+     "search \"kernel\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-svm-kernel-trick": [
+    [
+     "search \"kernel\"",
+     ""
+    ],
+    [
+     "search \"kernel\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-lazy-evaluation-query-plans": [
+    [
+     "search \"system call\"",
+     ""
+    ]
+   ]
+  }
+ },
+ "C12": {
+  "probe": "C12",
+  "query": "note-db-normalization-3nf",
+  "concepts": [
+   "concept-db-normalization"
+  ],
+  "neighbour_concepts": [],
+  "sources": [
+   "source-tuh-dbsys-slides"
+  ],
+  "commands": [
+   "related note-db-normalization-3nf",
+   "related concept-db-normalization",
+   "related source-tuh-dbsys-slides",
+   "search \"normalization\"",
+   "search \"functional dependency\"",
+   "search \"redundan\" --type note --content",
+   "search \"normal form\" --type note --content"
+  ],
+  "candidates": {
+   "note-db-exam-cheatsheet": [
+    [
+     "related concept-db-normalization",
+     "shares concept concept-db-normalization"
+    ],
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ],
+    [
+     "search \"normalization\"",
+     ""
+    ]
+   ],
+   "note-acid-consistency": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-algebraic-equivalences-pushdown": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-query-optimizer-cost-model": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-relational-algebra-operators": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-selinger-join-ordering": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-two-phase-locking-deadlocks": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-write-ahead-logging-aries": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-batchnorm-internal-covariate-shift": [
+    [
+     "search \"normalization\"",
+     ""
+    ]
+   ],
+   "note-batchnorm-why-it-works-contested": [
+    [
+     "search \"normalization\"",
+     ""
+    ]
+   ],
+   "note-linear-regression-normal-equation": [
+    [
+     "search \"normal form\" --type note --content",
+     "Cost: forming XᵀX is O(n d²), inverting it O(d³). Fine for d in the hundreds,"
+    ]
+   ],
+   "note-ridge-regression-penalty": [
+    [
+     "search \"normal form\" --type note --content",
+     "λ), which also fixes the collinearity problem from the normal-equation note.; - Why is there a neat closed form here while the lasso needs special solvers?"
+    ]
+   ],
+   "note-softmax-temperature": [
+    [
+     "search \"normal form\" --type note --content",
+     "T = 1 is the normal softmax. Large T flattens the distribution towards; uniform; small T sharpens it; T → 0 puts all the mass on the largest logit."
+    ]
+   ]
+  }
+ },
+ "C13": {
+  "probe": "C13",
+  "query": "note-acid-consistency",
+  "concepts": [
+   "concept-transactions-acid"
+  ],
+  "neighbour_concepts": [
+   "concept-two-phase-locking",
+   "concept-write-ahead-logging"
+  ],
+  "sources": [
+   "source-garcia-molina-db",
+   "source-tuh-dbsys-slides"
+  ],
+  "commands": [
+   "related note-acid-consistency",
+   "related concept-transactions-acid",
+   "related concept-two-phase-locking",
+   "related concept-write-ahead-logging",
+   "related source-garcia-molina-db",
+   "related source-tuh-dbsys-slides",
+   "search \"consistency\"",
+   "search \"ACID\"",
+   "search \"consisten\" --type note --content",
+   "search \"invariant\" --type note --content"
+  ],
+  "candidates": {
+   "note-cap-consistency-linearizability": [
+    [
+     "related concept-transactions-acid",
+     "shares concept concept-transactions-acid"
+    ],
+    [
+     "search \"consistency\"",
+     ""
+    ],
+    [
+     "search \"ACID\"",
+     ""
+    ],
+    [
+     "search \"consisten\" --type note --content",
+     "(frontmatter match)"
+    ],
+    [
+     "search \"invariant\" --type note --content",
+     "ACID consistency = invariants hold (see the June note). Nothing to do with"
+    ]
+   ],
+   "note-two-phase-locking-deadlocks": [
+    [
+     "related concept-transactions-acid",
+     "shares concept concept-transactions-acid"
+    ],
+    [
+     "related concept-two-phase-locking",
+     "concept neighbour concept-two-phase-locking"
+    ],
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ],
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ],
+    [
+     "search \"ACID\"",
+     ""
+    ]
+   ],
+   "note-write-ahead-logging-aries": [
+    [
+     "related concept-transactions-acid",
+     "shares concept concept-transactions-acid"
+    ],
+    [
+     "related concept-write-ahead-logging",
+     "concept neighbour concept-write-ahead-logging"
+    ],
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ],
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ],
+    [
+     "search \"ACID\"",
+     ""
+    ]
+   ],
+   "note-db-exam-cheatsheet": [
+    [
+     "related concept-two-phase-locking",
+     "concept neighbour concept-two-phase-locking"
+    ],
+    [
+     "related concept-write-ahead-logging",
+     "concept neighbour concept-write-ahead-logging"
+    ],
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-algebraic-equivalences-pushdown": [
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ],
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-b-plus-tree-indexes": [
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ]
+   ],
+   "note-buffer-pool-replacement": [
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ]
+   ],
+   "note-external-merge-sort": [
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ]
+   ],
+   "note-hash-join-vs-sort-merge": [
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ]
+   ],
+   "note-db-normalization-3nf": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-query-optimizer-cost-model": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-relational-algebra-operators": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "note-selinger-join-ordering": [
+    [
+     "related source-tuh-dbsys-slides",
+     "shares source source-tuh-dbsys-slides"
+    ]
+   ],
+   "workspace-dbsys-exam": [
+    [
+     "search \"ACID\"",
+     ""
+    ]
+   ],
+   "note-consistent-estimators": [
+    [
+     "search \"consisten\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-journaling-filesystems": [
+    [
+     "search \"consisten\" --type note --content",
+     "leaves them inconsistent. fsck repairs this by scanning the whole disk —"
+    ]
+   ],
+   "note-error-handling-result-types": [
+    [
+     "search \"invariant\" --type note --content",
+     "panic! only for bugs (broken invariants), not for bad input."
+    ]
+   ]
+  }
+ },
+ "C14": {
+  "probe": "C14",
+  "query": "note-spaced-repetition-scheduler",
+  "concepts": [
+   "concept-spaced-repetition"
+  ],
+  "neighbour_concepts": [],
+  "sources": [
+   "source-anki-manual"
+  ],
+  "commands": [
+   "related note-spaced-repetition-scheduler",
+   "related concept-spaced-repetition",
+   "related source-anki-manual",
+   "search \"spaced repetition\"",
+   "search \"review scheduler\"",
+   "search \"interval\" --type note --content",
+   "search \"schedul\" --type note --content"
+  ],
+  "candidates": {
+   "note-data-pipeline-orchestration-dag": [
+    [
+     "search \"review scheduler\"",
+     ""
+    ],
+    [
+     "search \"schedul\" --type note --content",
+     "directed acyclic graph of tasks; an edge means \"run after\". The scheduler runs"
+    ]
+   ],
+   "note-cfs-fair-share": [
+    [
+     "search \"interval\" --type note --content",
+     "\"Fair\" here means: over any interval, CPU time divided in proportion to the"
+    ],
+    [
+     "search \"schedul\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-p-values-corrected": [
+    [
+     "search \"interval\" --type note --content",
+     "effect. Report the effect size and a confidence interval next to it."
+    ]
+   ],
+   "note-build-systems-dag-incremental": [
+    [
+     "search \"schedul\" --type note --content",
+     "\"Build Systems à la Carte\" separates the scheduler (in which order to visit"
+    ]
+   ],
+   "note-cpu-scheduling-round-robin": [
+    [
+     "search \"schedul\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-oral-exam-prep-strategy": [
+    [
+     "search \"schedul\" --type note --content",
+     "- Draw while talking: Gantt charts for scheduling, page-table walks, the"
+    ]
+   ],
+   "note-os-scheduling-exercise-bank": [
+    [
+     "search \"schedul\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-study-plan-retake-strategy": [
+    [
+     "search \"schedul\" --type note --content",
+     "Two exams in October, six weeks. How to schedule study time so neither"
+    ]
+   ],
+   "note-two-phase-locking-deadlocks": [
+    [
+     "search \"schedul\" --type note --content",
+     "Guarantees conflict-serializable schedules. Strict 2PL holds write locks until"
+    ]
+   ],
+   "note-weekly-review-log": [
+    [
+     "search \"schedul\" --type note --content",
+     "comparison still open. OS scheduling going well."
+    ]
+   ]
+  }
+ },
+ "C15": {
+  "probe": "C15",
+  "query": "note-buffer-pool-replacement",
+  "concepts": [
+   "concept-buffer-management"
+  ],
+  "neighbour_concepts": [],
+  "sources": [
+   "source-garcia-molina-db"
+  ],
+  "commands": [
+   "related note-buffer-pool-replacement",
+   "related concept-buffer-management",
+   "related source-garcia-molina-db",
+   "search \"buffer pool\"",
+   "search \"page replacement\"",
+   "search \"LRU\" --type note --content",
+   "search \"evict\" --type note --content"
+  ],
+  "candidates": {
+   "note-caching-everywhere": [
+    [
+     "related concept-buffer-management",
+     "shares concept concept-buffer-management"
+    ],
+    [
+     "search \"evict\" --type note --content",
+     "The eviction question is different in each: hardware must decide in"
+    ]
+   ],
+   "note-acid-consistency": [
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ]
+   ],
+   "note-algebraic-equivalences-pushdown": [
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ]
+   ],
+   "note-b-plus-tree-indexes": [
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ]
+   ],
+   "note-external-merge-sort": [
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ]
+   ],
+   "note-hash-join-vs-sort-merge": [
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ]
+   ],
+   "note-two-phase-locking-deadlocks": [
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ]
+   ],
+   "note-write-ahead-logging-aries": [
+    [
+     "related source-garcia-molina-db",
+     "shares source source-garcia-molina-db"
+    ]
+   ],
+   "note-page-replacement-lru-clock": [
+    [
+     "search \"page replacement\"",
+     ""
+    ],
+    [
+     "search \"LRU\" --type note --content",
+     "(frontmatter match)"
+    ],
+    [
+     "search \"evict\" --type note --content",
+     "When a page must be brought in and no frame is free, which page to evict?"
+    ]
+   ]
+  }
+ },
+ "C16": {
+  "probe": "C16",
+  "query": "note-p-values-corrected",
+  "concepts": [
+   "concept-hypothesis-testing"
+  ],
+  "neighbour_concepts": [],
+  "sources": [
+   "source-tuh-statlearn-slides",
+   "source-wasserstein-asa-2016"
+  ],
+  "commands": [
+   "related note-p-values-corrected",
+   "related concept-hypothesis-testing",
+   "related source-tuh-statlearn-slides",
+   "related source-wasserstein-asa-2016",
+   "search \"p-value\"",
+   "search \"hypothesis testing\"",
+   "search \"p-value\" --type note --content",
+   "search \"H0\" --type note --content"
+  ],
+  "candidates": {
+   "note-p-values-first-take": [
+    [
+     "related concept-hypothesis-testing",
+     "shares concept concept-hypothesis-testing"
+    ],
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ],
+    [
+     "search \"p-value\"",
+     ""
+    ],
+    [
+     "search \"hypothesis testing\"",
+     ""
+    ],
+    [
+     "search \"p-value\" --type note --content",
+     "(frontmatter match)"
+    ],
+    [
+     "search \"H0\" --type note --content",
+     "means there is a 3% chance H0 is right, which is why we reject it below 5%."
+    ]
+   ],
+   "note-bias-variance-decomposition-lecture": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-central-limit-theorem-simulation": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-conditional-probability-basics": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-consistent-estimators": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-decision-trees-entropy": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-gaussian-noise-least-squares": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-generative-vs-discriminative": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-gradient-descent-from-scratch": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-linear-regression-normal-equation": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-logistic-regression-cross-entropy": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-mle-coin-flips": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-naive-bayes-spam-filter": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-normal-distribution-standardizing": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-overfitting-polynomial-degree": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-pca-by-hand": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-regression-metrics": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-ridge-regression-penalty": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-statlearn-mock-exam-september": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-svm-kernel-trick": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ]
+  }
+ },
+ "C17": {
+  "probe": "C17",
+  "query": "note-gradient-descent-from-scratch",
+  "concepts": [
+   "concept-gradient-descent",
+   "concept-linear-regression"
+  ],
+  "neighbour_concepts": [
+   "concept-normal-equation",
+   "concept-stochastic-gradient-descent"
+  ],
+  "sources": [
+   "source-tuh-statlearn-slides"
+  ],
+  "commands": [
+   "related note-gradient-descent-from-scratch",
+   "related concept-gradient-descent",
+   "related concept-linear-regression",
+   "related concept-normal-equation",
+   "related concept-stochastic-gradient-descent",
+   "related source-tuh-statlearn-slides",
+   "search \"gradient descent\"",
+   "search \"learning rate\"",
+   "search \"standardiz\" --type note --content",
+   "search \"learning rate\" --type note --content"
+  ],
+  "candidates": {
+   "note-gaussian-noise-least-squares": [
+    [
+     "related concept-linear-regression",
+     "shares concept concept-linear-regression"
+    ],
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-linear-regression-normal-equation": [
+    [
+     "related concept-linear-regression",
+     "shares concept concept-linear-regression"
+    ],
+    [
+     "related concept-normal-equation",
+     "concept neighbour concept-normal-equation"
+    ],
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-ridge-regression-penalty": [
+    [
+     "related concept-linear-regression",
+     "shares concept concept-linear-regression"
+    ],
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-adam-vs-sgd-revisited": [
+    [
+     "related concept-stochastic-gradient-descent",
+     "concept neighbour concept-stochastic-gradient-descent"
+    ],
+    [
+     "search \"gradient descent\"",
+     ""
+    ],
+    [
+     "search \"learning rate\" --type note --content",
+     "sensitive to the initial learning rate.; sensitive to the initial learning rate."
+    ]
+   ],
+   "note-batchnorm-why-it-works-contested": [
+    [
+     "related concept-stochastic-gradient-descent",
+     "concept neighbour concept-stochastic-gradient-descent"
+    ],
+    [
+     "search \"gradient descent\"",
+     ""
+    ]
+   ],
+   "note-sgd-momentum-nn-training": [
+    [
+     "related concept-stochastic-gradient-descent",
+     "concept neighbour concept-stochastic-gradient-descent"
+    ],
+    [
+     "search \"gradient descent\"",
+     ""
+    ]
+   ],
+   "note-bias-variance-decomposition-lecture": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-central-limit-theorem-simulation": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-conditional-probability-basics": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-consistent-estimators": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-decision-trees-entropy": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-generative-vs-discriminative": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-logistic-regression-cross-entropy": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-mle-coin-flips": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-naive-bayes-spam-filter": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-normal-distribution-standardizing": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ],
+    [
+     "search \"standardiz\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-overfitting-polynomial-degree": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-p-values-corrected": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-p-values-first-take": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-pca-by-hand": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ],
+    [
+     "search \"standardiz\" --type note --content",
+     "Standardize first if the features have different units."
+    ]
+   ],
+   "note-regression-metrics": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-statlearn-mock-exam-september": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-svm-kernel-trick": [
+    [
+     "related source-tuh-statlearn-slides",
+     "shares source source-tuh-statlearn-slides"
+    ]
+   ],
+   "note-batchnorm-internal-covariate-shift": [
+    [
+     "search \"learning rate\" --type note --content",
+     "stable input distribution and training can use much larger learning rates.; stable input distribution and training can use much larger learning rates."
+    ]
+   ],
+   "note-study-plan-retake-strategy": [
+    [
+     "search \"learning rate\" --type note --content",
+     "- Fixed weekly share: Statistical Learning gets two thirds of study blocks,"
+    ]
+   ]
+  }
+ },
+ "C18": {
+  "probe": "C18",
+  "query": "note-dynamic-batching-inference",
+  "concepts": [
+   "concept-model-serving"
+  ],
+  "neighbour_concepts": [
+   "concept-kv-cache"
+  ],
+  "sources": [
+   "source-huyen-dmls"
+  ],
+  "commands": [
+   "related note-dynamic-batching-inference",
+   "related concept-model-serving",
+   "related concept-kv-cache",
+   "related source-huyen-dmls",
+   "search \"dynamic batching\"",
+   "search \"model serving\"",
+   "search \"batch\" --type note --content",
+   "search \"latency\" --type note --content"
+  ],
+  "candidates": {
+   "note-kv-cache-transformer-serving": [
+    [
+     "related concept-model-serving",
+     "shares concept concept-model-serving"
+    ],
+    [
+     "related concept-kv-cache",
+     "concept neighbour concept-kv-cache"
+    ],
+    [
+     "search \"model serving\"",
+     ""
+    ],
+    [
+     "search \"batch\" --type note --content",
+     "way in naive servers, which directly limits how many requests fit in a batch."
+    ]
+   ],
+   "note-multi-tenant-gpu-sharing": [
+    [
+     "related concept-model-serving",
+     "shares concept concept-model-serving"
+    ],
+    [
+     "related source-huyen-dmls",
+     "shares source source-huyen-dmls"
+    ],
+    [
+     "search \"model serving\"",
+     ""
+    ],
+    [
+     "search \"batch\" --type note --content",
+     "From the internship-fair talk: one team's nightly batch-scoring jobs took all"
+    ]
+   ],
+   "note-data-leakage-scaler": [
+    [
+     "related source-huyen-dmls",
+     "shares source source-huyen-dmls"
+    ]
+   ],
+   "note-backprop-as-bookkeeping": [
+    [
+     "search \"batch\" --type note --content",
+     "with depth × batch size — that is the memory wall people talk about."
+    ]
+   ],
+   "note-batchnorm-internal-covariate-shift": [
+    [
+     "search \"batch\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-batchnorm-why-it-works-contested": [
+    [
+     "search \"batch\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-cpu-scheduling-round-robin": [
+    [
+     "search \"batch\" --type note --content",
+     "interactive/batch split without being told."
+    ]
+   ],
+   "note-data-parallel-training-scaling": [
+    [
+     "search \"batch\" --type note --content",
+     "Cloud credits experiment: ResNet-18 on 1, 2, 4, 8 GPUs, same global batch."
+    ]
+   ],
+   "note-sgd-momentum-nn-training": [
+    [
+     "search \"batch\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-cfs-fair-share": [
+    [
+     "search \"latency\" --type note --content",
+     "grows more slowly, so it gets picked more often. sched_latency (e.g. 48 ms) is"
+    ]
+   ]
+  }
+ },
+ "C19": {
+  "probe": "C19",
+  "query": "note-softmax-temperature",
+  "concepts": [
+   "concept-softmax"
+  ],
+  "neighbour_concepts": [],
+  "sources": [
+   "source-goodfellow-dl"
+  ],
+  "commands": [
+   "related note-softmax-temperature",
+   "related concept-softmax",
+   "related source-goodfellow-dl",
+   "search \"temperature\"",
+   "search \"softmax\"",
+   "search \"temperature\" --type note --content",
+   "search \"exp(\" --type note --content"
+  ],
+  "candidates": {
+   "note-adam-vs-sgd-revisited": [
+    [
+     "related source-goodfellow-dl",
+     "shares source source-goodfellow-dl"
+    ]
+   ],
+   "note-backprop-as-bookkeeping": [
+    [
+     "related source-goodfellow-dl",
+     "shares source source-goodfellow-dl"
+    ]
+   ],
+   "note-chain-rule-multivariable": [
+    [
+     "related source-goodfellow-dl",
+     "shares source source-goodfellow-dl"
+    ]
+   ],
+   "note-cnn-convolution-kernels": [
+    [
+     "related source-goodfellow-dl",
+     "shares source source-goodfellow-dl"
+    ]
+   ],
+   "note-sgd-momentum-nn-training": [
+    [
+     "related source-goodfellow-dl",
+     "shares source source-goodfellow-dl"
+    ]
+   ],
+   "note-independence-vs-conditional-independence": [
+    [
+     "search \"temperature\" --type note --content",
+     "incidents are correlated across the year. Given the temperature, they are"
+    ]
+   ],
+   "note-simulated-annealing": [
+    [
+     "search \"temperature\" --type note --content",
+     "Otherwise move with probability exp(−(E' − E) / T). The temperature T starts"
+    ],
+    [
+     "search \"exp(\" --type note --content",
+     "Otherwise move with probability exp(−(E' − E) / T). The temperature T starts"
+    ]
+   ],
+   "note-gaussian-noise-least-squares": [
+    [
+     "search \"exp(\" --type note --content",
+     "p(y_i | x_i, w) = (2πσ²)^(−1/2) · exp(−(y_i − wᵀx_i)² / (2σ²))"
+    ]
+   ],
+   "note-map-estimation-priors": [
+    [
+     "search \"exp(\" --type note --content",
+     "Laplace prior p(θ_j) ∝ exp(−|θ_j| / b) gives Σ|θ_j| instead of ‖θ‖²."
+    ]
+   ],
+   "note-svm-kernel-trick": [
+    [
+     "search \"exp(\" --type note --content",
+     "RBF kernel: k(x, x') = exp(−γ‖x − x'‖²) — an infinite-dimensional φ."
+    ]
+   ]
+  }
+ },
+ "C20": {
+  "probe": "C20",
+  "query": "note-constant-folding-cse",
+  "concepts": [
+   "concept-compiler-optimization"
+  ],
+  "neighbour_concepts": [
+   "concept-compiler-structure",
+   "concept-ssa"
+  ],
+  "sources": [
+   "source-dragon-book"
+  ],
+  "commands": [
+   "related note-constant-folding-cse",
+   "related concept-compiler-optimization",
+   "related concept-compiler-structure",
+   "related concept-ssa",
+   "related source-dragon-book",
+   "search \"constant folding\"",
+   "search \"rewrite rules\"",
+   "search \"fold\" --type note --content",
+   "search \"rewrite\" --type note --content"
+  ],
+  "candidates": {
+   "note-ssa-form": [
+    [
+     "related concept-compiler-optimization",
+     "shares concept concept-compiler-optimization"
+    ],
+    [
+     "related concept-ssa",
+     "concept neighbour concept-ssa"
+    ],
+    [
+     "related source-dragon-book",
+     "shares source source-dragon-book"
+    ]
+   ],
+   "note-compiler-pipeline-overview": [
+    [
+     "related concept-compiler-structure",
+     "concept neighbour concept-compiler-structure"
+    ]
+   ],
+   "note-type-inference-unification": [
+    [
+     "related source-dragon-book",
+     "shares source source-dragon-book"
+    ]
+   ],
+   "note-algebraic-equivalences-pushdown": [
+    [
+     "search \"rewrite rules\"",
+     ""
+    ],
+    [
+     "search \"rewrite\" --type note --content",
+     "Rewrite rules that keep the result identical but change the cost:"
+    ]
+   ],
+   "project-tessera": [
+    [
+     "search \"rewrite rules\"",
+     ""
+    ]
+   ],
+   "note-cross-validation-kfold": [
+    [
+     "search \"fold\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-data-leakage-scaler": [
+    [
+     "search \"fold\" --type note --content",
+     "Pipeline to cross_val_score — then fit() on each training fold refits the"
+    ]
+   ],
+   "note-event-sourcing-append-only": [
+    [
+     "search \"fold\" --type note --content",
+     "checked out\"), not the current state. The current state is a fold over the"
+    ]
+   ],
+   "note-tagless-visitor-pattern-ast": [
+    [
+     "search \"fold\" --type note --content",
+     "keeps all columns; fold constant expressions like `1 = 1` to `true`, then drop"
+    ]
+   ],
+   "note-lazy-evaluation-query-plans": [
+    [
+     "search \"rewrite\" --type note --content",
+     "whole pipeline exists as a logical plan the library can rewrite."
+    ]
+   ],
+   "note-rust-ownership-borrowing": [
+    [
+     "search \"rewrite\" --type note --content",
+     "Where it hurt in Tessera: a rewrite rule wanted to mutate a plan node while"
+    ]
+   ]
+  }
+ }
+}

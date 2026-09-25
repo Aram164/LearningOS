@@ -1,0 +1,6 @@
+$ python3 tools/los.py capabilities --compact --json   (system python, no .venv in the world)
+learning_os: cannot run — pyyaml is not installed; jsonschema is not installed.
+Fix with:  make setup   (creates .venv and installs pyproject.toml)
+Or directly:  python3 -m pip install -e ".[dev]"
+(add --break-system-packages if pip refuses on a system Python)
+0

@@ -1,0 +1,2521 @@
+{
+ "A01": {
+  "probe": "A01",
+  "concepts": [
+   "concept-conditional-independence",
+   "concept-naive-bayes"
+  ],
+  "commands": [
+   "search \"bayesian network\"",
+   "search \"conditional independence\"",
+   "search \"naive bayes\"",
+   "related concept-conditional-independence",
+   "related concept-naive-bayes",
+   "search \"explaining away\" --type note --content",
+   "search \"independen\" --type note --content"
+  ],
+  "candidates": {
+   "note-independence-vs-conditional-independence": [
+    [
+     "search \"conditional independence\"",
+     ""
+    ],
+    [
+     "related concept-conditional-independence",
+     "shares concept concept-conditional-independence"
+    ],
+    [
+     "search \"explaining away\" --type note --content",
+     "Let C = X XOR Y. Given C = 1, knowing X determines Y completely. \"Explaining; away\" in Murphy is the same effect: two independent causes of one observed"
+    ],
+    [
+     "search \"independen\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-generative-vs-discriminative": [
+    [
+     "search \"naive bayes\"",
+     ""
+    ],
+    [
+     "related concept-naive-bayes",
+     "shares concept concept-naive-bayes"
+    ]
+   ],
+   "note-naive-bayes-spam-filter": [
+    [
+     "search \"naive bayes\"",
+     ""
+    ],
+    [
+     "related concept-naive-bayes",
+     "shares concept concept-naive-bayes"
+    ]
+   ],
+   "note-statlearn-mock-exam-september": [
+    [
+     "search \"naive bayes\"",
+     ""
+    ],
+    [
+     "related concept-naive-bayes",
+     "shares concept concept-naive-bayes"
+    ]
+   ],
+   "workspace-statlearn-retake": [
+    [
+     "search \"naive bayes\"",
+     ""
+    ]
+   ],
+   "note-bias-variance-decomposition-lecture": [
+    [
+     "search \"independen\" --type note --content",
+     "The cross terms vanish because ε is independent of D and has mean zero, and"
+    ]
+   ],
+   "note-bloom-filter-false-positive-math": [
+    [
+     "search \"independen\" --type note --content",
+     "Bit array of m bits, k independent hash functions, n inserted elements."
+    ]
+   ],
+   "note-data-pipeline-orchestration-dag": [
+    [
+     "search \"independen\" --type note --content",
+     "independent branches in parallel."
+    ]
+   ],
+   "note-eigenvectors-intuition": [
+    [
+     "search \"independen\" --type note --content",
+     "Diagonalization: if A has n independent eigenvectors, stack them into V and"
+    ]
+   ],
+   "note-mle-coin-flips": [
+    [
+     "search \"independen\" --type note --content",
+     "Data: n flips, k heads. Model: each flip ~ Bernoulli(θ), flips independent."
+    ]
+   ]
+  }
+ },
+ "A02": {
+  "probe": "A02",
+  "concepts": [
+   "concept-regularization"
+  ],
+  "commands": [
+   "search \"lasso\"",
+   "search \"ridge regression\"",
+   "related concept-regularization",
+   "search \"lasso\" --type note --content",
+   "search \"coordinate descent\" --type note --content"
+  ],
+  "candidates": {
+   "note-lasso-sparsity-geometry": [
+    [
+     "search \"lasso\"",
+     ""
+    ],
+    [
+     "related concept-regularization",
+     "shares concept concept-regularization"
+    ],
+    [
+     "search \"lasso\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "workspace-statlearn-retake": [
+    [
+     "search \"lasso\"",
+     ""
+    ],
+    [
+     "search \"ridge regression\"",
+     ""
+    ]
+   ],
+   "note-ridge-regression-penalty": [
+    [
+     "search \"ridge regression\"",
+     ""
+    ],
+    [
+     "related concept-regularization",
+     "shares concept concept-regularization"
+    ],
+    [
+     "search \"lasso\" --type note --content",
+     "- Why is there a neat closed form here while the lasso needs special solvers?"
+    ]
+   ],
+   "note-statlearn-mock-exam-september": [
+    [
+     "related concept-regularization",
+     "shares concept concept-regularization"
+    ]
+   ]
+  }
+ },
+ "A03": {
+  "probe": "A03",
+  "concepts": [
+   "concept-query-optimization",
+   "concept-property-based-testing"
+  ],
+  "commands": [
+   "search \"tessera\"",
+   "search \"predicate pushdown\"",
+   "search \"property-based testing\"",
+   "related concept-query-optimization",
+   "related concept-property-based-testing",
+   "search \"pushdown\" --type note --content",
+   "search \"execute(optimize\" --type note --content"
+  ],
+  "candidates": {
+   "note-rust-ownership-borrowing": [
+    [
+     "search \"tessera\"",
+     ""
+    ]
+   ],
+   "note-tagless-visitor-pattern-ast": [
+    [
+     "search \"tessera\"",
+     ""
+    ]
+   ],
+   "note-weekly-review-log": [
+    [
+     "search \"tessera\"",
+     ""
+    ]
+   ],
+   "project-tessera": [
+    [
+     "search \"tessera\"",
+     ""
+    ]
+   ],
+   "workspace-tessera-engine": [
+    [
+     "search \"tessera\"",
+     ""
+    ]
+   ],
+   "note-property-based-testing": [
+    [
+     "search \"property-based testing\"",
+     ""
+    ],
+    [
+     "related concept-property-based-testing",
+     "shares concept concept-property-based-testing"
+    ],
+    [
+     "search \"execute(optimize\" --type note --content",
+     "for all queries q: execute(optimize(q)) == execute(q)   ← the Tessera one"
+    ]
+   ],
+   "note-algebraic-equivalences-pushdown": [
+    [
+     "related concept-query-optimization",
+     "shares concept concept-query-optimization"
+    ],
+    [
+     "search \"pushdown\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-db-exam-cheatsheet": [
+    [
+     "related concept-query-optimization",
+     "shares concept concept-query-optimization"
+    ],
+    [
+     "search \"pushdown\" --type note --content",
+     "- Pushdown rules: see the algebraic equivalences note."
+    ]
+   ],
+   "note-lazy-evaluation-query-plans": [
+    [
+     "related concept-query-optimization",
+     "shares concept concept-query-optimization"
+    ],
+    [
+     "search \"pushdown\" --type note --content",
+     "- predicate pushdown — filters move as close to the data source as possible,"
+    ]
+   ],
+   "note-query-optimizer-cost-model": [
+    [
+     "related concept-query-optimization",
+     "shares concept concept-query-optimization"
+    ]
+   ],
+   "note-selinger-join-ordering": [
+    [
+     "related concept-query-optimization",
+     "shares concept concept-query-optimization"
+    ]
+   ]
+  }
+ },
+ "A04": {
+  "probe": "A04",
+  "concepts": [
+   "concept-kv-cache",
+   "concept-virtual-memory"
+  ],
+  "commands": [
+   "search \"KV cache\"",
+   "search \"page table\"",
+   "search \"virtual memory\"",
+   "related concept-kv-cache",
+   "related concept-virtual-memory",
+   "search \"page table\" --type note --content",
+   "search \"copy-on-write\" --type note --content"
+  ],
+  "candidates": {
+   "note-kv-cache-transformer-serving": [
+    [
+     "search \"KV cache\"",
+     ""
+    ],
+    [
+     "related concept-kv-cache",
+     "shares concept concept-kv-cache"
+    ]
+   ],
+   "note-buffer-pool-replacement": [
+    [
+     "search \"page table\"",
+     ""
+    ],
+    [
+     "search \"page table\" --type note --content",
+     "The buffer pool keeps disk pages in memory frames; a page table maps page ids; The buffer pool keeps disk pages in memory frames; a page table maps page ids"
+    ]
+   ],
+   "note-os-kernel-user-mode": [
+    [
+     "search \"page table\"",
+     ""
+    ],
+    [
+     "search \"page table\" --type note --content",
+     "and may execute privileged instructions (change page tables, talk to devices,; and may execute privileged instructions (change page tables, talk to devices,"
+    ]
+   ],
+   "note-write-ahead-logging-aries": [
+    [
+     "search \"page table\"",
+     ""
+    ],
+    [
+     "search \"page table\" --type note --content",
+     "Rule: the log record describing a change must reach stable storage *before*; the changed data page is written (write-ahead), and all of a transaction's log"
+    ]
+   ],
+   "note-virtual-memory-address-translation": [
+    [
+     "search \"virtual memory\"",
+     ""
+    ],
+    [
+     "related concept-virtual-memory",
+     "shares concept concept-virtual-memory"
+    ],
+    [
+     "search \"page table\" --type note --content",
+     "Mechanics: the address splits into a virtual page number and an offset. The; page table maps page numbers to physical frame numbers; multi-level page"
+    ],
+    [
+     "search \"copy-on-write\" --type note --content",
+     "frame into two address spaces), lazy allocation, copy-on-write fork, and yes,"
+    ]
+   ],
+   "note-virtual-memory-is-swap": [
+    [
+     "search \"virtual memory\"",
+     ""
+    ],
+    [
+     "related concept-virtual-memory",
+     "shares concept concept-virtual-memory"
+    ]
+   ],
+   "workspace-os-oral-prep": [
+    [
+     "search \"virtual memory\"",
+     ""
+    ]
+   ],
+   "note-b-plus-tree-indexes": [
+    [
+     "search \"page table\" --type note --content",
+     "Fanout ~ page size / (key + pointer) ≈ 4096 / 16 = 256; three levels already; Clustered index: the table itself is stored in index order; only one per"
+    ]
+   ],
+   "note-oral-exam-prep-strategy": [
+    [
+     "search \"page table\" --type note --content",
+     "- Draw while talking: Gantt charts for scheduling, page-table walks, the; - Draw while talking: Gantt charts for scheduling, page-table walks, the"
+    ]
+   ]
+  }
+ },
+ "A05": {
+  "probe": "A05",
+  "concepts": [
+   "concept-data-provenance",
+   "concept-join-algorithms",
+   "concept-relational-algebra"
+  ],
+  "commands": [
+   "search \"lineage\"",
+   "search \"join\"",
+   "related concept-data-provenance",
+   "related concept-join-algorithms",
+   "related concept-relational-algebra",
+   "search \"dashboard\" --type note --content",
+   "search \"duplicat\" --type note --content"
+  ],
+  "candidates": {
+   "note-data-lineage-debugging": [
+    [
+     "search \"lineage\"",
+     ""
+    ],
+    [
+     "search \"dashboard\" --type note --content",
+     "(frontmatter match)"
+    ],
+    [
+     "search \"duplicat\" --type note --content",
+     "users had two devices registered, so the join duplicated their rows, and the"
+    ]
+   ],
+   "workspace-dataframe-skill": [
+    [
+     "search \"lineage\"",
+     ""
+    ],
+    [
+     "search \"join\"",
+     ""
+    ]
+   ],
+   "note-hash-join-vs-sort-merge": [
+    [
+     "search \"join\"",
+     ""
+    ],
+    [
+     "related concept-join-algorithms",
+     "shares concept concept-join-algorithms"
+    ]
+   ],
+   "note-relational-algebra-operators": [
+    [
+     "search \"join\"",
+     ""
+    ],
+    [
+     "related concept-relational-algebra",
+     "shares concept concept-relational-algebra"
+    ],
+    [
+     "search \"duplicat\" --type note --content",
+     "- π_A(R) projection: keep columns A (set semantics removes duplicates; SQL"
+    ]
+   ],
+   "note-selinger-join-ordering": [
+    [
+     "search \"join\"",
+     ""
+    ],
+    [
+     "related concept-join-algorithms",
+     "shares concept concept-join-algorithms"
+    ]
+   ],
+   "note-tagless-visitor-pattern-ast": [
+    [
+     "search \"join\"",
+     ""
+    ]
+   ],
+   "project-tessera": [
+    [
+     "search \"join\"",
+     ""
+    ]
+   ],
+   "workspace-tessera-engine": [
+    [
+     "search \"join\"",
+     ""
+    ]
+   ],
+   "note-why-provenance-paper": [
+    [
+     "related concept-data-provenance",
+     "shares concept concept-data-provenance"
+    ]
+   ],
+   "note-algebraic-equivalences-pushdown": [
+    [
+     "related concept-relational-algebra",
+     "shares concept concept-relational-algebra"
+    ]
+   ],
+   "note-db-exam-cheatsheet": [
+    [
+     "related concept-relational-algebra",
+     "shares concept concept-relational-algebra"
+    ]
+   ]
+  }
+ },
+ "A06": {
+  "probe": "A06",
+  "concepts": [
+   "concept-event-sourcing",
+   "concept-content-addressing"
+  ],
+  "commands": [
+   "search \"ledgerline\"",
+   "search \"event sourcing\"",
+   "search \"content addressing\"",
+   "related concept-event-sourcing",
+   "related concept-content-addressing",
+   "search \"append\" --type note --content",
+   "search \"hash\" --type note --content"
+  ],
+  "candidates": {
+   "note-event-sourcing-append-only": [
+    [
+     "search \"ledgerline\"",
+     ""
+    ],
+    [
+     "search \"event sourcing\"",
+     ""
+    ],
+    [
+     "related concept-event-sourcing",
+     "shares concept concept-event-sourcing"
+    ],
+    [
+     "search \"append\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-idempotency-keys-api": [
+    [
+     "search \"ledgerline\"",
+     ""
+    ]
+   ],
+   "note-weekly-review-log": [
+    [
+     "search \"ledgerline\"",
+     ""
+    ]
+   ],
+   "project-ledgerline": [
+    [
+     "search \"ledgerline\"",
+     ""
+    ]
+   ],
+   "workspace-ledgerline": [
+    [
+     "search \"ledgerline\"",
+     ""
+    ],
+    [
+     "search \"event sourcing\"",
+     ""
+    ]
+   ],
+   "note-git-internals-content-addressing": [
+    [
+     "search \"content addressing\"",
+     ""
+    ],
+    [
+     "related concept-content-addressing",
+     "shares concept concept-content-addressing"
+    ],
+    [
+     "search \"hash\" --type note --content",
+     "Git stores four kinds of objects, each named by the hash of its content:"
+    ]
+   ],
+   "note-idempotent-pipelines-backfills": [
+    [
+     "search \"append\" --type note --content",
+     "append;"
+    ]
+   ],
+   "note-journaling-filesystems": [
+    [
+     "search \"append\" --type note --content",
+     "Problem: appending a block to a file touches several on-disk structures (the"
+    ]
+   ],
+   "note-bloom-filter-false-positive-math": [
+    [
+     "search \"hash\" --type note --content",
+     "Bit array of m bits, k independent hash functions, n inserted elements."
+    ]
+   ],
+   "note-build-systems-dag-incremental": [
+    [
+     "search \"hash\" --type note --content",
+     "timestamps; Bazel and similar tools hash the inputs and the command, so a"
+    ]
+   ],
+   "note-cap-consistency-linearizability": [
+    [
+     "search \"hash\" --type note --content",
+     "Also \"eventual consistency\", \"consistent hashing\", \"read-your-writes"
+    ]
+   ],
+   "note-hash-join-vs-sort-merge": [
+    [
+     "search \"hash\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ]
+  }
+ },
+ "A07": {
+  "probe": "A07",
+  "concepts": [
+   "concept-proportional-share"
+  ],
+  "commands": [
+   "search \"stride scheduling\"",
+   "search \"proportional share\"",
+   "search \"lottery\"",
+   "related concept-proportional-share",
+   "search \"stride\" --type note --content",
+   "search \"lottery\" --type note --content"
+  ],
+  "candidates": {
+   "workspace-os-oral-prep": [
+    [
+     "search \"stride scheduling\"",
+     ""
+    ],
+    [
+     "search \"proportional share\"",
+     ""
+    ]
+   ],
+   "note-cfs-fair-share": [
+    [
+     "search \"proportional share\"",
+     ""
+    ],
+    [
+     "related concept-proportional-share",
+     "shares concept concept-proportional-share"
+    ],
+    [
+     "search \"stride\" --type note --content",
+     "Update 2026-09-16 (oral prep): stride scheduling is the deterministic version"
+    ],
+    [
+     "search \"lottery\" --type note --content",
+     "**Lottery scheduling**: every process holds tickets; every time slice draw a"
+    ]
+   ],
+   "note-os-scheduling-exercise-bank": [
+    [
+     "search \"proportional share\"",
+     ""
+    ],
+    [
+     "related concept-proportional-share",
+     "shares concept concept-proportional-share"
+    ],
+    [
+     "search \"stride\" --type note --content",
+     "4. Stride scheduling: A, B, C hold 100, 50, 250 tickets, L = 10,000. List the"
+    ],
+    [
+     "search \"lottery\" --type note --content",
+     "3. Lottery: A holds 75 tickets, B 25. After 4 slices, what is the probability"
+    ]
+   ]
+  }
+ },
+ "A08": {
+  "probe": "A08",
+  "concepts": [
+   "concept-model-serving",
+   "concept-proportional-share"
+  ],
+  "commands": [
+   "search \"dynamic batching\"",
+   "search \"fair share\"",
+   "search \"model serving\"",
+   "related concept-model-serving",
+   "related concept-proportional-share",
+   "search \"p99\" --type note --content",
+   "search \"batch\" --type note --content"
+  ],
+  "candidates": {
+   "note-dynamic-batching-inference": [
+    [
+     "search \"dynamic batching\"",
+     ""
+    ],
+    [
+     "search \"model serving\"",
+     ""
+    ],
+    [
+     "related concept-model-serving",
+     "shares concept concept-model-serving"
+    ],
+    [
+     "search \"p99\" --type note --content",
+     "request pays up to max_wait extra latency, and the p99 latency gets worse"
+    ],
+    [
+     "search \"batch\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-cfs-fair-share": [
+    [
+     "search \"fair share\"",
+     ""
+    ],
+    [
+     "related concept-proportional-share",
+     "shares concept concept-proportional-share"
+    ]
+   ],
+   "note-dominant-resource-fairness-paper": [
+    [
+     "search \"fair share\"",
+     ""
+    ]
+   ],
+   "workspace-os-oral-prep": [
+    [
+     "search \"fair share\"",
+     ""
+    ]
+   ],
+   "note-kv-cache-transformer-serving": [
+    [
+     "search \"model serving\"",
+     ""
+    ],
+    [
+     "related concept-model-serving",
+     "shares concept concept-model-serving"
+    ],
+    [
+     "search \"batch\" --type note --content",
+     "way in naive servers, which directly limits how many requests fit in a batch."
+    ]
+   ],
+   "note-multi-tenant-gpu-sharing": [
+    [
+     "search \"model serving\"",
+     ""
+    ],
+    [
+     "related concept-model-serving",
+     "shares concept concept-model-serving"
+    ],
+    [
+     "search \"batch\" --type note --content",
+     "From the internship-fair talk: one team's nightly batch-scoring jobs took all"
+    ]
+   ],
+   "note-os-scheduling-exercise-bank": [
+    [
+     "related concept-proportional-share",
+     "shares concept concept-proportional-share"
+    ]
+   ],
+   "note-backprop-as-bookkeeping": [
+    [
+     "search \"batch\" --type note --content",
+     "with depth × batch size — that is the memory wall people talk about."
+    ]
+   ],
+   "note-batchnorm-internal-covariate-shift": [
+    [
+     "search \"batch\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-batchnorm-why-it-works-contested": [
+    [
+     "search \"batch\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-cpu-scheduling-round-robin": [
+    [
+     "search \"batch\" --type note --content",
+     "interactive/batch split without being told."
+    ]
+   ],
+   "note-data-parallel-training-scaling": [
+    [
+     "search \"batch\" --type note --content",
+     "Cloud credits experiment: ResNet-18 on 1, 2, 4, 8 GPUs, same global batch."
+    ]
+   ],
+   "note-sgd-momentum-nn-training": [
+    [
+     "search \"batch\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ]
+  }
+ },
+ "A09": {
+  "probe": "A09",
+  "concepts": [
+   "concept-deadlock",
+   "concept-two-phase-locking"
+  ],
+  "commands": [
+   "search \"deadlock\"",
+   "search \"two-phase locking\"",
+   "search \"lock order\"",
+   "related concept-deadlock",
+   "related concept-two-phase-locking",
+   "search \"deadlock\" --type note --content",
+   "search \"lock order\" --type note --content"
+  ],
+  "candidates": {
+   "note-deadlock-four-conditions": [
+    [
+     "search \"deadlock\"",
+     ""
+    ],
+    [
+     "related concept-deadlock",
+     "shares concept concept-deadlock"
+    ],
+    [
+     "search \"deadlock\" --type note --content",
+     "(frontmatter match)"
+    ],
+    [
+     "search \"lock order\" --type note --content",
+     "order so a cycle cannot form (circular wait)."
+    ]
+   ],
+   "note-two-phase-locking-deadlocks": [
+    [
+     "search \"deadlock\"",
+     ""
+    ],
+    [
+     "search \"two-phase locking\"",
+     ""
+    ],
+    [
+     "related concept-two-phase-locking",
+     "shares concept concept-two-phase-locking"
+    ],
+    [
+     "search \"deadlock\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "workspace-os-oral-prep": [
+    [
+     "search \"deadlock\"",
+     ""
+    ]
+   ],
+   "note-db-exam-cheatsheet": [
+    [
+     "search \"two-phase locking\"",
+     ""
+    ],
+    [
+     "related concept-two-phase-locking",
+     "shares concept concept-two-phase-locking"
+    ]
+   ],
+   "note-semaphores-producer-consumer": [
+    [
+     "search \"deadlock\" --type note --content",
+     "while sleeping on a full buffer, and no consumer can get in. Deadlock."
+    ]
+   ],
+   "note-journaling-filesystems": [
+    [
+     "search \"lock order\" --type note --content",
+     "Problem: appending a block to a file touches several on-disk structures (the; Metadata-only journaling (ordered mode) writes the data block first, then"
+    ]
+   ]
+  }
+ },
+ "A10": {
+  "probe": "A10",
+  "concepts": [
+   "concept-cardinality-estimation"
+  ],
+  "commands": [
+   "search \"cardinality estimation\"",
+   "search \"selectivity\"",
+   "related concept-cardinality-estimation",
+   "search \"selectivity\" --type note --content",
+   "search \"independen\" --type note --content"
+  ],
+  "candidates": {
+   "note-query-optimizer-cost-model": [
+    [
+     "search \"cardinality estimation\"",
+     ""
+    ],
+    [
+     "search \"selectivity\"",
+     ""
+    ],
+    [
+     "related concept-cardinality-estimation",
+     "shares concept concept-cardinality-estimation"
+    ],
+    [
+     "search \"selectivity\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-bias-variance-decomposition-lecture": [
+    [
+     "search \"independen\" --type note --content",
+     "The cross terms vanish because ε is independent of D and has mean zero, and"
+    ]
+   ],
+   "note-bloom-filter-false-positive-math": [
+    [
+     "search \"independen\" --type note --content",
+     "Bit array of m bits, k independent hash functions, n inserted elements."
+    ]
+   ],
+   "note-data-pipeline-orchestration-dag": [
+    [
+     "search \"independen\" --type note --content",
+     "independent branches in parallel."
+    ]
+   ],
+   "note-eigenvectors-intuition": [
+    [
+     "search \"independen\" --type note --content",
+     "Diagonalization: if A has n independent eigenvectors, stack them into V and"
+    ]
+   ],
+   "note-independence-vs-conditional-independence": [
+    [
+     "search \"independen\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-mle-coin-flips": [
+    [
+     "search \"independen\" --type note --content",
+     "Data: n flips, k heads. Model: each flip ~ Bernoulli(θ), flips independent."
+    ]
+   ]
+  }
+ },
+ "A11": {
+  "probe": "A11",
+  "concepts": [
+   "concept-hypothesis-testing"
+  ],
+  "commands": [
+   "search \"p-value\"",
+   "search \"hypothesis testing\"",
+   "search \"flashcard\"",
+   "related concept-hypothesis-testing",
+   "search \"p-value\" --type note --content",
+   "search \"H0\" --type note --content"
+  ],
+  "candidates": {
+   "note-p-values-corrected": [
+    [
+     "search \"p-value\"",
+     ""
+    ],
+    [
+     "search \"hypothesis testing\"",
+     ""
+    ],
+    [
+     "related concept-hypothesis-testing",
+     "shares concept concept-hypothesis-testing"
+    ],
+    [
+     "search \"p-value\" --type note --content",
+     "(frontmatter match)"
+    ],
+    [
+     "search \"H0\" --type note --content",
+     "> p = P(test statistic at least as extreme as the one observed | H0 is true)"
+    ]
+   ],
+   "note-p-values-first-take": [
+    [
+     "search \"p-value\"",
+     ""
+    ],
+    [
+     "search \"hypothesis testing\"",
+     ""
+    ],
+    [
+     "related concept-hypothesis-testing",
+     "shares concept concept-hypothesis-testing"
+    ],
+    [
+     "search \"p-value\" --type note --content",
+     "(frontmatter match)"
+    ],
+    [
+     "search \"H0\" --type note --content",
+     "means there is a 3% chance H0 is right, which is why we reject it below 5%."
+    ]
+   ],
+   "note-spaced-repetition-scheduler": [
+    [
+     "search \"flashcard\"",
+     ""
+    ]
+   ]
+  }
+ },
+ "A12": {
+  "probe": "A12",
+  "concepts": [
+   "concept-hidden-markov-models",
+   "concept-markov-chains"
+  ],
+  "commands": [
+   "search \"HMM\"",
+   "search \"viterbi\"",
+   "search \"markov chain\"",
+   "related concept-hidden-markov-models",
+   "related concept-markov-chains",
+   "search \"viterbi\" --type note --content",
+   "search \"weather\" --type note --content"
+  ],
+  "candidates": {
+   "note-hmm-viterbi": [
+    [
+     "search \"HMM\"",
+     ""
+    ],
+    [
+     "search \"viterbi\"",
+     ""
+    ],
+    [
+     "search \"markov chain\"",
+     ""
+    ],
+    [
+     "related concept-hidden-markov-models",
+     "shares concept concept-hidden-markov-models"
+    ],
+    [
+     "search \"viterbi\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-markov-chains-stationary": [
+    [
+     "search \"markov chain\"",
+     ""
+    ],
+    [
+     "related concept-markov-chains",
+     "shares concept concept-markov-chains"
+    ],
+    [
+     "search \"weather\" --type note --content",
+     "Weather toy: sunny→sunny 0.9, rainy→rainy 0.5. Solving π = πP gives"
+    ]
+   ]
+  }
+ },
+ "A13": {
+  "probe": "A13",
+  "concepts": [
+   "concept-amdahls-law"
+  ],
+  "commands": [
+   "search \"amdahl\"",
+   "search \"speedup\"",
+   "related concept-amdahls-law",
+   "search \"gustafson\" --type note --content",
+   "search \"speedup\" --type note --content"
+  ],
+  "candidates": {
+   "note-amdahls-law": [
+    [
+     "search \"amdahl\"",
+     ""
+    ],
+    [
+     "related concept-amdahls-law",
+     "shares concept concept-amdahls-law"
+    ],
+    [
+     "search \"gustafson\" --type note --content",
+     "Gustafson's counterpoint: people use more cores to solve bigger problems, and"
+    ],
+    [
+     "search \"speedup\" --type note --content",
+     "and as n → ∞, S → 1 / (1 − p). With p = 0.9 the speedup can never exceed 10,"
+    ]
+   ],
+   "note-parallel-workers-no-speedup": [
+    [
+     "search \"speedup\"",
+     ""
+    ],
+    [
+     "search \"speedup\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-data-parallel-training-scaling": [
+    [
+     "search \"speedup\" --type note --content",
+     "| GPUs | epoch time | speedup |"
+    ]
+   ],
+   "note-mixed-precision-training": [
+    [
+     "search \"speedup\" --type note --content",
+     "Speedup on my rented GPU: 1.8× for the ResNet run, half the activation memory."
+    ]
+   ]
+  }
+ },
+ "A14": {
+  "probe": "A14",
+  "concepts": [
+   "concept-lazy-evaluation",
+   "concept-query-optimization"
+  ],
+  "commands": [
+   "search \"lazy evaluation\"",
+   "search \"query plan\"",
+   "search \"explain\"",
+   "related concept-lazy-evaluation",
+   "related concept-query-optimization",
+   "search \"explain\" --type note --content",
+   "search \"pushdown\" --type note --content"
+  ],
+  "candidates": {
+   "note-lazy-evaluation-query-plans": [
+    [
+     "search \"lazy evaluation\"",
+     ""
+    ],
+    [
+     "search \"query plan\"",
+     ""
+    ],
+    [
+     "related concept-lazy-evaluation",
+     "shares concept concept-lazy-evaluation"
+    ],
+    [
+     "related concept-query-optimization",
+     "shares concept concept-query-optimization"
+    ],
+    [
+     "search \"explain\" --type note --content",
+     "Optimizations the guide lists (explain() shows the result):"
+    ],
+    [
+     "search \"pushdown\" --type note --content",
+     "- predicate pushdown — filters move as close to the data source as possible,"
+    ]
+   ],
+   "workspace-dataframe-skill": [
+    [
+     "search \"lazy evaluation\"",
+     ""
+    ],
+    [
+     "search \"query plan\"",
+     ""
+    ],
+    [
+     "search \"explain\"",
+     ""
+    ]
+   ],
+   "note-query-optimizer-cost-model": [
+    [
+     "search \"query plan\"",
+     ""
+    ],
+    [
+     "related concept-query-optimization",
+     "shares concept concept-query-optimization"
+    ]
+   ],
+   "project-tessera": [
+    [
+     "search \"query plan\"",
+     ""
+    ]
+   ],
+   "workspace-tessera-engine": [
+    [
+     "search \"query plan\"",
+     ""
+    ]
+   ],
+   "project-ledgerline": [
+    [
+     "search \"explain\"",
+     ""
+    ]
+   ],
+   "workspace-os-oral-prep": [
+    [
+     "search \"explain\"",
+     ""
+    ]
+   ],
+   "note-algebraic-equivalences-pushdown": [
+    [
+     "related concept-query-optimization",
+     "shares concept concept-query-optimization"
+    ],
+    [
+     "search \"pushdown\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-db-exam-cheatsheet": [
+    [
+     "related concept-query-optimization",
+     "shares concept concept-query-optimization"
+    ],
+    [
+     "search \"pushdown\" --type note --content",
+     "- Pushdown rules: see the algebraic equivalences note."
+    ]
+   ],
+   "note-selinger-join-ordering": [
+    [
+     "related concept-query-optimization",
+     "shares concept concept-query-optimization"
+    ]
+   ],
+   "note-independence-vs-conditional-independence": [
+    [
+     "search \"explain\" --type note --content",
+     "(roughly) not — the temperature explains both. Same with two students' exam"
+    ]
+   ],
+   "note-oral-exam-prep-strategy": [
+    [
+     "search \"explain\" --type note --content",
+     "— so only mention things you can explain one level deeper."
+    ]
+   ],
+   "note-pca-by-hand": [
+    [
+     "search \"explain\" --type note --content",
+     "First eigenvector ≈ (0.84, 0.55). Explained variance of PC1 = 2.79 / 3.0 = 93%."
+    ]
+   ],
+   "note-regression-metrics": [
+    [
+     "search \"explain\" --type note --content",
+     "- R² = 1 − SS_res / SS_tot — fraction of variance explained; can be negative"
+    ]
+   ],
+   "note-statlearn-mock-exam-september": [
+    [
+     "search \"explain\" --type note --content",
+     "3. (15 P) Derive the ridge estimator. Explain why it exists even when XᵀX is"
+    ]
+   ]
+  }
+ },
+ "A15": {
+  "probe": "A15",
+  "concepts": [
+   "concept-softmax",
+   "concept-simulated-annealing"
+  ],
+  "commands": [
+   "search \"softmax\"",
+   "search \"temperature\"",
+   "search \"simulated annealing\"",
+   "related concept-softmax",
+   "related concept-simulated-annealing",
+   "search \"temperature\" --type note --content",
+   "search \"exp(\" --type note --content"
+  ],
+  "candidates": {
+   "note-softmax-temperature": [
+    [
+     "search \"softmax\"",
+     ""
+    ],
+    [
+     "search \"temperature\"",
+     ""
+    ],
+    [
+     "related concept-softmax",
+     "shares concept concept-softmax"
+    ],
+    [
+     "search \"temperature\" --type note --content",
+     "(frontmatter match)"
+    ],
+    [
+     "search \"exp(\" --type note --content",
+     "softmax(z)_i = exp(z_i / T) / Σ_j exp(z_j / T)"
+    ]
+   ],
+   "note-simulated-annealing": [
+    [
+     "search \"simulated annealing\"",
+     ""
+    ],
+    [
+     "related concept-simulated-annealing",
+     "shares concept concept-simulated-annealing"
+    ],
+    [
+     "search \"temperature\" --type note --content",
+     "Otherwise move with probability exp(−(E' − E) / T). The temperature T starts"
+    ],
+    [
+     "search \"exp(\" --type note --content",
+     "Otherwise move with probability exp(−(E' − E) / T). The temperature T starts"
+    ]
+   ],
+   "note-independence-vs-conditional-independence": [
+    [
+     "search \"temperature\" --type note --content",
+     "incidents are correlated across the year. Given the temperature, they are"
+    ]
+   ],
+   "note-gaussian-noise-least-squares": [
+    [
+     "search \"exp(\" --type note --content",
+     "p(y_i | x_i, w) = (2πσ²)^(−1/2) · exp(−(y_i − wᵀx_i)² / (2σ²))"
+    ]
+   ],
+   "note-map-estimation-priors": [
+    [
+     "search \"exp(\" --type note --content",
+     "Laplace prior p(θ_j) ∝ exp(−|θ_j| / b) gives Σ|θ_j| instead of ‖θ‖²."
+    ]
+   ],
+   "note-svm-kernel-trick": [
+    [
+     "search \"exp(\" --type note --content",
+     "RBF kernel: k(x, x') = exp(−γ‖x − x'‖²) — an infinite-dimensional φ."
+    ]
+   ]
+  }
+ },
+ "A16": {
+  "probe": "A16",
+  "concepts": [
+   "concept-batch-normalization"
+  ],
+  "commands": [
+   "search \"batch normalization\"",
+   "search \"standardizing\"",
+   "related concept-batch-normalization",
+   "search \"running\" --type note --content",
+   "search \"z-score\" --type note --content"
+  ],
+  "candidates": {
+   "note-batchnorm-internal-covariate-shift": [
+    [
+     "search \"batch normalization\"",
+     ""
+    ],
+    [
+     "related concept-batch-normalization",
+     "shares concept concept-batch-normalization"
+    ],
+    [
+     "search \"running\" --type note --content",
+     "At test time use running averages of μ and σ² collected during training, not"
+    ]
+   ],
+   "note-batchnorm-why-it-works-contested": [
+    [
+     "search \"batch normalization\"",
+     ""
+    ],
+    [
+     "related concept-batch-normalization",
+     "shares concept concept-batch-normalization"
+    ]
+   ],
+   "note-normal-distribution-standardizing": [
+    [
+     "search \"standardizing\"",
+     ""
+    ],
+    [
+     "search \"z-score\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-adam-always-better": [
+    [
+     "search \"running\" --type note --content",
+     "Adam adapts the step size per parameter (running averages of the gradient and"
+    ]
+   ],
+   "note-deadlock-four-conditions": [
+    [
+     "search \"running\" --type note --content",
+     "keep running but make no progress."
+    ]
+   ],
+   "note-idempotency-keys-api": [
+    [
+     "search \"running\" --type note --content",
+     "returns the stored result instead of running the operation again."
+    ]
+   ],
+   "note-idempotent-pipelines-backfills": [
+    [
+     "search \"running\" --type note --content",
+     "A step is idempotent if running it twice leaves the same result as running it"
+    ]
+   ]
+  }
+ },
+ "A17": {
+  "probe": "A17",
+  "concepts": [
+   "concept-journaling-file-systems",
+   "concept-cap-theorem",
+   "concept-transactions-acid"
+  ],
+  "commands": [
+   "search \"consistency\"",
+   "search \"CAP\"",
+   "search \"ACID\"",
+   "related concept-journaling-file-systems",
+   "related concept-cap-theorem",
+   "related concept-transactions-acid",
+   "search \"consisten\" --type note --content"
+  ],
+  "candidates": {
+   "note-acid-consistency": [
+    [
+     "search \"consistency\"",
+     ""
+    ],
+    [
+     "search \"ACID\"",
+     ""
+    ],
+    [
+     "related concept-transactions-acid",
+     "shares concept concept-transactions-acid"
+    ],
+    [
+     "search \"consisten\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-cap-consistency-linearizability": [
+    [
+     "search \"consistency\"",
+     ""
+    ],
+    [
+     "search \"CAP\"",
+     ""
+    ],
+    [
+     "search \"ACID\"",
+     ""
+    ],
+    [
+     "related concept-cap-theorem",
+     "shares concept concept-cap-theorem"
+    ],
+    [
+     "related concept-transactions-acid",
+     "shares concept concept-transactions-acid"
+    ],
+    [
+     "search \"consisten\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-simulated-annealing": [
+    [
+     "search \"CAP\"",
+     ""
+    ]
+   ],
+   "note-two-phase-locking-deadlocks": [
+    [
+     "search \"ACID\"",
+     ""
+    ],
+    [
+     "related concept-transactions-acid",
+     "shares concept concept-transactions-acid"
+    ]
+   ],
+   "note-write-ahead-logging-aries": [
+    [
+     "search \"ACID\"",
+     ""
+    ],
+    [
+     "related concept-transactions-acid",
+     "shares concept concept-transactions-acid"
+    ]
+   ],
+   "workspace-dbsys-exam": [
+    [
+     "search \"ACID\"",
+     ""
+    ]
+   ],
+   "note-journaling-filesystems": [
+    [
+     "related concept-journaling-file-systems",
+     "shares concept concept-journaling-file-systems"
+    ],
+    [
+     "search \"consisten\" --type note --content",
+     "leaves them inconsistent. fsck repairs this by scanning the whole disk —"
+    ]
+   ],
+   "note-consistent-estimators": [
+    [
+     "search \"consisten\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ]
+  }
+ },
+ "A18": {
+  "probe": "A18",
+  "concepts": [
+   "concept-adaptive-optimizers",
+   "concept-content-addressing",
+   "concept-workflow-orchestration",
+   "concept-build-systems"
+  ],
+  "commands": [
+   "search \"DAG\"",
+   "search \"topological sort\"",
+   "search \"build systems\"",
+   "related concept-adaptive-optimizers",
+   "related concept-content-addressing",
+   "related concept-workflow-orchestration",
+   "related concept-build-systems",
+   "search \"DAG\" --type note --content",
+   "search \"cycle\" --type note --content"
+  ],
+  "candidates": {
+   "note-build-systems-dag-incremental": [
+    [
+     "search \"DAG\"",
+     ""
+    ],
+    [
+     "search \"build systems\"",
+     ""
+    ],
+    [
+     "related concept-build-systems",
+     "shares concept concept-build-systems"
+    ],
+    [
+     "search \"DAG\" --type note --content",
+     "(frontmatter match)"
+    ],
+    [
+     "search \"cycle\" --type note --content",
+     "A dependency cycle is an error — make prints \"Circular dependency dropped\"."
+    ]
+   ],
+   "note-data-pipeline-orchestration-dag": [
+    [
+     "search \"DAG\"",
+     ""
+    ],
+    [
+     "related concept-workflow-orchestration",
+     "shares concept concept-workflow-orchestration"
+    ],
+    [
+     "search \"DAG\" --type note --content",
+     "(frontmatter match)"
+    ],
+    [
+     "search \"cycle\" --type note --content",
+     "Why acyclic: a cycle would mean a task waits for itself. The orchestrator"
+    ]
+   ],
+   "note-hash-join-vs-sort-merge": [
+    [
+     "search \"build systems\"",
+     ""
+    ]
+   ],
+   "note-lazy-evaluation-query-plans": [
+    [
+     "search \"build systems\"",
+     ""
+    ]
+   ],
+   "project-tessera": [
+    [
+     "search \"build systems\"",
+     ""
+    ]
+   ],
+   "note-adam-always-better": [
+    [
+     "related concept-adaptive-optimizers",
+     "shares concept concept-adaptive-optimizers"
+    ]
+   ],
+   "note-adam-vs-sgd-revisited": [
+    [
+     "related concept-adaptive-optimizers",
+     "shares concept concept-adaptive-optimizers"
+    ]
+   ],
+   "note-git-internals-content-addressing": [
+    [
+     "related concept-content-addressing",
+     "shares concept concept-content-addressing"
+    ],
+    [
+     "search \"DAG\" --type note --content",
+     "and every later id changes (a Merkle DAG);"
+    ]
+   ],
+   "note-idempotent-pipelines-backfills": [
+    [
+     "related concept-workflow-orchestration",
+     "shares concept concept-workflow-orchestration"
+    ]
+   ],
+   "note-cpu-instruction-pipeline": [
+    [
+     "search \"cycle\" --type note --content",
+     "cycle, so throughput approaches one instruction per cycle even though each one"
+    ]
+   ],
+   "note-deadlock-four-conditions": [
+    [
+     "search \"cycle\" --type note --content",
+     "4. circular wait — a cycle of threads each waiting for the next."
+    ]
+   ],
+   "note-garbage-collection-generational": [
+    [
+     "search \"cycle\" --type note --content",
+     "Tracing (mark from roots) vs reference counting (free at zero; cycles leak"
+    ]
+   ],
+   "note-two-phase-locking-deadlocks": [
+    [
+     "search \"cycle\" --type note --content",
+     "lock Tj holds) and checks it for cycles, periodically or on every wait. A cycle"
+    ]
+   ]
+  }
+ },
+ "A19": {
+  "probe": "A19",
+  "concepts": [
+   "concept-bloom-filters",
+   "concept-lsm-trees"
+  ],
+  "commands": [
+   "search \"bloom filter\"",
+   "search \"LSM tree\"",
+   "search \"false positive\"",
+   "related concept-bloom-filters",
+   "related concept-lsm-trees",
+   "search \"bloom\" --type note --content",
+   "search \"false positive\" --type note --content"
+  ],
+  "candidates": {
+   "note-bloom-filter-false-positive-math": [
+    [
+     "search \"bloom filter\"",
+     ""
+    ],
+    [
+     "search \"false positive\"",
+     ""
+    ],
+    [
+     "related concept-bloom-filters",
+     "shares concept concept-bloom-filters"
+    ],
+    [
+     "search \"bloom\" --type note --content",
+     "(frontmatter match)"
+    ],
+    [
+     "search \"false positive\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-lsm-trees": [
+    [
+     "search \"LSM tree\"",
+     ""
+    ],
+    [
+     "related concept-lsm-trees",
+     "shares concept concept-lsm-trees"
+    ]
+   ]
+  }
+ },
+ "A20": {
+  "probe": "A20",
+  "concepts": [
+   "concept-virtual-memory",
+   "concept-context-switch"
+  ],
+  "commands": [
+   "search \"virtual memory\"",
+   "search \"TLB\"",
+   "search \"context switch\"",
+   "related concept-virtual-memory",
+   "related concept-context-switch",
+   "search \"TLB\" --type note --content",
+   "search \"page table\" --type note --content"
+  ],
+  "candidates": {
+   "note-virtual-memory-address-translation": [
+    [
+     "search \"virtual memory\"",
+     ""
+    ],
+    [
+     "related concept-virtual-memory",
+     "shares concept concept-virtual-memory"
+    ],
+    [
+     "search \"TLB\" --type note --content",
+     "tables avoid allocating entries for unused regions. The TLB caches recent"
+    ],
+    [
+     "search \"page table\" --type note --content",
+     "Mechanics: the address splits into a virtual page number and an offset. The; page table maps page numbers to physical frame numbers; multi-level page"
+    ]
+   ],
+   "note-virtual-memory-is-swap": [
+    [
+     "search \"virtual memory\"",
+     ""
+    ],
+    [
+     "related concept-virtual-memory",
+     "shares concept concept-virtual-memory"
+    ]
+   ],
+   "workspace-os-oral-prep": [
+    [
+     "search \"virtual memory\"",
+     ""
+    ]
+   ],
+   "note-context-switch-cost": [
+    [
+     "search \"context switch\"",
+     ""
+    ],
+    [
+     "related concept-context-switch",
+     "shares concept concept-context-switch"
+    ],
+    [
+     "search \"TLB\" --type note --content",
+     "Indirect cost, usually bigger: the new process finds the caches and the TLB"
+    ]
+   ],
+   "note-os-scheduling-exercise-bank": [
+    [
+     "search \"context switch\"",
+     ""
+    ],
+    [
+     "related concept-context-switch",
+     "shares concept concept-context-switch"
+    ]
+   ],
+   "note-pomodoro-and-context-switching": [
+    [
+     "search \"context switch\"",
+     ""
+    ]
+   ],
+   "note-os-kernel-user-mode": [
+    [
+     "search \"TLB\" --type note --content",
+     "argument checking, cache and TLB pollution."
+    ],
+    [
+     "search \"page table\" --type note --content",
+     "and may execute privileged instructions (change page tables, talk to devices,; and may execute privileged instructions (change page tables, talk to devices,"
+    ]
+   ],
+   "note-b-plus-tree-indexes": [
+    [
+     "search \"page table\" --type note --content",
+     "Fanout ~ page size / (key + pointer) ≈ 4096 / 16 = 256; three levels already; Clustered index: the table itself is stored in index order; only one per"
+    ]
+   ],
+   "note-buffer-pool-replacement": [
+    [
+     "search \"page table\" --type note --content",
+     "The buffer pool keeps disk pages in memory frames; a page table maps page ids; The buffer pool keeps disk pages in memory frames; a page table maps page ids"
+    ]
+   ],
+   "note-oral-exam-prep-strategy": [
+    [
+     "search \"page table\" --type note --content",
+     "- Draw while talking: Gantt charts for scheduling, page-table walks, the; - Draw while talking: Gantt charts for scheduling, page-table walks, the"
+    ]
+   ],
+   "note-write-ahead-logging-aries": [
+    [
+     "search \"page table\" --type note --content",
+     "Rule: the log record describing a change must reach stable storage *before*; the changed data page is written (write-ahead), and all of a transaction's log"
+    ]
+   ]
+  }
+ },
+ "A21": {
+  "probe": "A21",
+  "concepts": [
+   "concept-pca",
+   "concept-low-rank-approximation",
+   "concept-svd",
+   "concept-covariance-matrix"
+  ],
+  "commands": [
+   "search \"PCA\"",
+   "search \"SVD\"",
+   "search \"covariance matrix\"",
+   "related concept-pca",
+   "related concept-low-rank-approximation",
+   "related concept-svd",
+   "related concept-covariance-matrix",
+   "search \"singular\" --type note --content",
+   "search \"principal\" --type note --content"
+  ],
+  "candidates": {
+   "note-pca-by-hand": [
+    [
+     "search \"PCA\"",
+     ""
+    ],
+    [
+     "search \"covariance matrix\"",
+     ""
+    ],
+    [
+     "related concept-pca",
+     "shares concept concept-pca"
+    ],
+    [
+     "related concept-covariance-matrix",
+     "shares concept concept-covariance-matrix"
+    ]
+   ],
+   "note-statlearn-mock-exam-september": [
+    [
+     "search \"PCA\"",
+     ""
+    ],
+    [
+     "related concept-pca",
+     "shares concept concept-pca"
+    ],
+    [
+     "search \"singular\" --type note --content",
+     "singular."
+    ],
+    [
+     "search \"principal\" --type note --content",
+     "5. (18 P) Compute the first principal component of the given 2-D covariance"
+    ]
+   ],
+   "note-weekly-review-log": [
+    [
+     "search \"PCA\"",
+     ""
+    ],
+    [
+     "search \"SVD\"",
+     ""
+    ]
+   ],
+   "workspace-statlearn-retake": [
+    [
+     "search \"PCA\"",
+     ""
+    ]
+   ],
+   "note-low-rank-approximation": [
+    [
+     "search \"SVD\"",
+     ""
+    ],
+    [
+     "related concept-low-rank-approximation",
+     "shares concept concept-low-rank-approximation"
+    ],
+    [
+     "related concept-svd",
+     "shares concept concept-svd"
+    ],
+    [
+     "search \"singular\" --type note --content",
+     "Keep only the k largest singular values:"
+    ]
+   ],
+   "note-svd-geometric": [
+    [
+     "search \"SVD\"",
+     ""
+    ],
+    [
+     "related concept-svd",
+     "shares concept concept-svd"
+    ],
+    [
+     "search \"singular\" --type note --content",
+     "singular values."
+    ]
+   ],
+   "workspace-linalg-refresh": [
+    [
+     "search \"SVD\"",
+     ""
+    ]
+   ],
+   "note-covariance-matrix": [
+    [
+     "search \"covariance matrix\"",
+     ""
+    ],
+    [
+     "related concept-covariance-matrix",
+     "shares concept concept-covariance-matrix"
+    ]
+   ],
+   "note-linear-regression-normal-equation": [
+    [
+     "search \"singular\" --type note --content",
+     "If two features are collinear, XᵀX is singular and the formula breaks. The"
+    ]
+   ]
+  }
+ },
+ "A22": {
+  "probe": "A22",
+  "concepts": [
+   "concept-automatic-differentiation",
+   "concept-backpropagation",
+   "concept-chain-rule"
+  ],
+  "commands": [
+   "search \"automatic differentiation\"",
+   "search \"backpropagation\"",
+   "search \"chain rule\"",
+   "related concept-automatic-differentiation",
+   "related concept-backpropagation",
+   "related concept-chain-rule",
+   "search \"reverse\" --type note --content",
+   "search \"forward pass\" --type note --content"
+  ],
+  "candidates": {
+   "note-forward-mode-autodiff-dual-numbers": [
+    [
+     "search \"automatic differentiation\"",
+     ""
+    ],
+    [
+     "related concept-automatic-differentiation",
+     "shares concept concept-automatic-differentiation"
+    ],
+    [
+     "search \"reverse\" --type note --content",
+     "outputs; the other direction (reverse mode) is what you want for one output"
+    ]
+   ],
+   "note-backprop-as-bookkeeping": [
+    [
+     "search \"backpropagation\"",
+     ""
+    ],
+    [
+     "search \"chain rule\"",
+     ""
+    ],
+    [
+     "related concept-backpropagation",
+     "shares concept concept-backpropagation"
+    ],
+    [
+     "related concept-chain-rule",
+     "shares concept concept-chain-rule"
+    ],
+    [
+     "search \"reverse\" --type note --content",
+     "reverse, multiplying by each node's local derivative; a node used by several"
+    ],
+    [
+     "search \"forward pass\" --type note --content",
+     "Forward pass: compute every intermediate value layer by layer and *keep; Forward pass: compute every intermediate value layer by layer and *keep"
+    ]
+   ],
+   "workspace-statlearn-retake": [
+    [
+     "search \"backpropagation\"",
+     ""
+    ]
+   ],
+   "note-chain-rule-multivariable": [
+    [
+     "search \"chain rule\"",
+     ""
+    ],
+    [
+     "related concept-chain-rule",
+     "shares concept concept-chain-rule"
+    ]
+   ],
+   "note-write-ahead-logging-aries": [
+    [
+     "search \"reverse\" --type note --content",
+     "3. Undo — roll back the losers in reverse order, writing compensation log"
+    ]
+   ]
+  }
+ },
+ "A23": {
+  "probe": "A23",
+  "concepts": [
+   "concept-idempotency"
+  ],
+  "commands": [
+   "search \"idempotency\"",
+   "search \"ledgerline\"",
+   "search \"retry\"",
+   "related concept-idempotency",
+   "search \"retry\" --type note --content",
+   "search \"idempoten\" --type note --content"
+  ],
+  "candidates": {
+   "note-idempotency-keys-api": [
+    [
+     "search \"idempotency\"",
+     ""
+    ],
+    [
+     "search \"ledgerline\"",
+     ""
+    ],
+    [
+     "search \"retry\"",
+     ""
+    ],
+    [
+     "related concept-idempotency",
+     "shares concept concept-idempotency"
+    ],
+    [
+     "search \"retry\" --type note --content",
+     "happened. Retrying blindly may charge twice."
+    ],
+    [
+     "search \"idempoten\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-idempotent-pipelines-backfills": [
+    [
+     "search \"idempotency\"",
+     ""
+    ],
+    [
+     "related concept-idempotency",
+     "shares concept concept-idempotency"
+    ],
+    [
+     "search \"retry\" --type note --content",
+     "A retry after a timeout doubled that day's totals."
+    ],
+    [
+     "search \"idempoten\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "workspace-ledgerline": [
+    [
+     "search \"idempotency\"",
+     ""
+    ],
+    [
+     "search \"ledgerline\"",
+     ""
+    ]
+   ],
+   "note-event-sourcing-append-only": [
+    [
+     "search \"ledgerline\"",
+     ""
+    ]
+   ],
+   "note-weekly-review-log": [
+    [
+     "search \"ledgerline\"",
+     ""
+    ]
+   ],
+   "project-ledgerline": [
+    [
+     "search \"ledgerline\"",
+     ""
+    ]
+   ]
+  }
+ },
+ "A24": {
+  "probe": "A24",
+  "concepts": [],
+  "commands": [
+   "search \"sourdough\"",
+   "search \"feeding schedule\"",
+   "search \"sourdough\" --type note --content",
+   "search \"feeding\" --type note --content"
+  ],
+  "candidates": {}
+ },
+ "A25": {
+  "probe": "A25",
+  "concepts": [
+   "concept-logistic-regression",
+   "concept-cross-entropy"
+  ],
+  "commands": [
+   "search \"logistic regression\"",
+   "search \"cross-entropy\"",
+   "related concept-logistic-regression",
+   "related concept-cross-entropy",
+   "search \"cross-entropy\" --type note --content",
+   "search \"squared error\" --type note --content"
+  ],
+  "candidates": {
+   "note-generative-vs-discriminative": [
+    [
+     "search \"logistic regression\"",
+     ""
+    ],
+    [
+     "related concept-logistic-regression",
+     "shares concept concept-logistic-regression"
+    ]
+   ],
+   "note-logistic-regression-cross-entropy": [
+    [
+     "search \"logistic regression\"",
+     ""
+    ],
+    [
+     "search \"cross-entropy\"",
+     ""
+    ],
+    [
+     "related concept-logistic-regression",
+     "shares concept concept-logistic-regression"
+    ],
+    [
+     "related concept-cross-entropy",
+     "shares concept concept-cross-entropy"
+    ],
+    [
+     "search \"cross-entropy\" --type note --content",
+     "(frontmatter match)"
+    ],
+    [
+     "search \"squared error\" --type note --content",
+     "Why not squared error? With a sigmoid inside, squared error is non-convex in w; Why not squared error? With a sigmoid inside, squared error is non-convex in w"
+    ]
+   ],
+   "note-bias-variance-decomposition-lecture": [
+    [
+     "search \"squared error\" --type note --content",
+     "set D and look at the expected squared error at a fixed point x, averaging; set D and look at the expected squared error at a fixed point x, averaging"
+    ]
+   ],
+   "note-bias-variance-from-book": [
+    [
+     "search \"squared error\" --type note --content",
+     "so for an estimator: mean squared error = bias² + variance. Same shape as the; so for an estimator: mean squared error = bias² + variance. Same shape as the"
+    ]
+   ],
+   "note-convexity-basics": [
+    [
+     "search \"squared error\" --type note --content",
+     "answer. Squared error of a linear model is convex in the weights; the loss of; answer. Squared error of a linear model is convex in the weights; the loss of"
+    ]
+   ],
+   "note-gradient-descent-from-scratch": [
+    [
+     "search \"squared error\" --type note --content",
+     "Update rule: w ← w − η ∇L(w), with L the mean squared error.; Update rule: w ← w − η ∇L(w), with L the mean squared error."
+    ]
+   ],
+   "note-lasso-sparsity-geometry": [
+    [
+     "search \"squared error\" --type note --content",
+     "Constrained form: minimize the squared error subject to Σ|w_j| ≤ t. In 2-D the; Constrained form: minimize the squared error subject to Σ|w_j| ≤ t. In 2-D the"
+    ]
+   ],
+   "note-map-estimation-priors": [
+    [
+     "search \"squared error\" --type note --content",
+     "sum of squared residuals over 2σ², so the whole thing is squared error plus a; sum of squared residuals over 2σ², so the whole thing is squared error plus a"
+    ]
+   ],
+   "note-matrix-factorization-recommenders": [
+    [
+     "search \"squared error\" --type note --content",
+     "Fit by minimizing the squared error *only over the observed ratings*, plus a; Fit by minimizing the squared error *only over the observed ratings*, plus a"
+    ]
+   ]
+  }
+ },
+ "A26": {
+  "probe": "A26",
+  "concepts": [
+   "concept-gradient-descent",
+   "concept-stochastic-gradient-descent"
+  ],
+  "commands": [
+   "search \"learning rate\"",
+   "search \"gradient descent\"",
+   "related concept-gradient-descent",
+   "related concept-stochastic-gradient-descent",
+   "search \"learning rate\" --type note --content",
+   "search \"explode\" --type note --content"
+  ],
+  "candidates": {
+   "note-adam-vs-sgd-revisited": [
+    [
+     "search \"gradient descent\"",
+     ""
+    ],
+    [
+     "related concept-stochastic-gradient-descent",
+     "shares concept concept-stochastic-gradient-descent"
+    ],
+    [
+     "search \"learning rate\" --type note --content",
+     "sensitive to the initial learning rate.; sensitive to the initial learning rate."
+    ]
+   ],
+   "note-batchnorm-why-it-works-contested": [
+    [
+     "search \"gradient descent\"",
+     ""
+    ],
+    [
+     "related concept-stochastic-gradient-descent",
+     "shares concept concept-stochastic-gradient-descent"
+    ]
+   ],
+   "note-gradient-descent-from-scratch": [
+    [
+     "search \"gradient descent\"",
+     ""
+    ],
+    [
+     "related concept-gradient-descent",
+     "shares concept concept-gradient-descent"
+    ],
+    [
+     "search \"learning rate\" --type note --content",
+     "the learning rate, look at the feature scales.; the learning rate, look at the feature scales."
+    ],
+    [
+     "search \"explode\" --type note --content",
+     "- On the raw features, η = 0.1 made the loss explode to inf within 12 steps."
+    ]
+   ],
+   "note-sgd-momentum-nn-training": [
+    [
+     "search \"gradient descent\"",
+     ""
+    ],
+    [
+     "related concept-stochastic-gradient-descent",
+     "shares concept concept-stochastic-gradient-descent"
+    ]
+   ],
+   "note-batchnorm-internal-covariate-shift": [
+    [
+     "search \"learning rate\" --type note --content",
+     "stable input distribution and training can use much larger learning rates.; stable input distribution and training can use much larger learning rates."
+    ]
+   ],
+   "note-study-plan-retake-strategy": [
+    [
+     "search \"learning rate\" --type note --content",
+     "- Fixed weekly share: Statistical Learning gets two thirds of study blocks,"
+    ]
+   ]
+  }
+ },
+ "A27": {
+  "probe": "A27",
+  "concepts": [
+   "concept-join-algorithms"
+  ],
+  "commands": [
+   "search \"hash join\"",
+   "search \"join strategies\"",
+   "search \"skew\"",
+   "related concept-join-algorithms",
+   "search \"hash join\" --type note --content",
+   "search \"partition\" --type note --content"
+  ],
+  "candidates": {
+   "note-hash-join-vs-sort-merge": [
+    [
+     "search \"hash join\"",
+     ""
+    ],
+    [
+     "related concept-join-algorithms",
+     "shares concept concept-join-algorithms"
+    ],
+    [
+     "search \"hash join\" --type note --content",
+     "(frontmatter match)"
+    ],
+    [
+     "search \"partition\" --type note --content",
+     "needs the build side in memory, otherwise partition both inputs by hash into"
+    ]
+   ],
+   "note-central-limit-theorem-simulation": [
+    [
+     "search \"skew\"",
+     ""
+    ]
+   ],
+   "note-selinger-join-ordering": [
+    [
+     "related concept-join-algorithms",
+     "shares concept concept-join-algorithms"
+    ]
+   ],
+   "note-cap-consistency-linearizability": [
+    [
+     "search \"partition\" --type note --content",
+     "CAP itself, stated carefully: when a network partition happens, a replicated"
+    ]
+   ],
+   "note-idempotent-pipelines-backfills": [
+    [
+     "search \"partition\" --type note --content",
+     "- write to a partition keyed by the logical date and *overwrite* it, never"
+    ]
+   ],
+   "note-kafka-consumer-lag-backpressure": [
+    [
+     "search \"partition\" --type note --content",
+     "Options when consumers fall behind: add partitions and consumers (parallelism"
+    ]
+   ],
+   "note-virtual-memory-is-swap": [
+    [
+     "search \"partition\" --type note --content",
+     "is full, pages are written to the swap partition and read back later. So a"
+    ]
+   ]
+  }
+ },
+ "A28": {
+  "probe": "A28",
+  "concepts": [
+   "concept-stream-processing"
+  ],
+  "commands": [
+   "search \"bounded buffer\"",
+   "search \"consumer lag\"",
+   "search \"backpressure\"",
+   "related concept-stream-processing",
+   "search \"bounded buffer\" --type note --content",
+   "search \"lag\" --type note --content"
+  ],
+  "candidates": {
+   "note-semaphores-producer-consumer": [
+    [
+     "search \"bounded buffer\"",
+     ""
+    ],
+    [
+     "search \"bounded buffer\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-kafka-consumer-lag-backpressure": [
+    [
+     "search \"consumer lag\"",
+     ""
+    ],
+    [
+     "search \"backpressure\"",
+     ""
+    ],
+    [
+     "related concept-stream-processing",
+     "shares concept concept-stream-processing"
+    ],
+    [
+     "search \"bounded buffer\" --type note --content",
+     "the producers. Kafka itself does not push back — the log just grows (bounded by; retention). Push-based systems with bounded buffers do push back: the producer"
+    ],
+    [
+     "search \"lag\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ]
+  }
+ },
+ "A29": {
+  "probe": "A29",
+  "concepts": [
+   "concept-dominant-resource-fairness"
+  ],
+  "commands": [
+   "search \"dominant resource fairness\"",
+   "search \"GPU sharing\"",
+   "related concept-dominant-resource-fairness",
+   "search \"Dominant Resource Fairness\" --type note --content",
+   "search \"Ghodsi\" --type note --content"
+  ],
+  "candidates": {
+   "note-dominant-resource-fairness-paper": [
+    [
+     "search \"dominant resource fairness\"",
+     ""
+    ],
+    [
+     "related concept-dominant-resource-fairness",
+     "shares concept concept-dominant-resource-fairness"
+    ],
+    [
+     "search \"Dominant Resource Fairness\" --type note --content",
+     "(frontmatter match)"
+    ],
+    [
+     "search \"Ghodsi\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ],
+   "note-multi-tenant-gpu-sharing": [
+    [
+     "search \"dominant resource fairness\"",
+     ""
+    ],
+    [
+     "search \"GPU sharing\"",
+     ""
+    ],
+    [
+     "related concept-dominant-resource-fairness",
+     "shares concept concept-dominant-resource-fairness"
+    ],
+    [
+     "search \"Dominant Resource Fairness\" --type note --content",
+     "(frontmatter match)"
+    ]
+   ]
+  }
+ },
+ "A30": {
+  "probe": "A30",
+  "concepts": [
+   "concept-kv-cache"
+  ],
+  "commands": [
+   "search \"attention\"",
+   "search \"KV cache\"",
+   "related concept-kv-cache",
+   "search \"attention\" --type note --content",
+   "search \"keys and values\" --type note --content"
+  ],
+  "candidates": {
+   "note-kv-cache-transformer-serving": [
+    [
+     "search \"attention\"",
+     ""
+    ],
+    [
+     "search \"KV cache\"",
+     ""
+    ],
+    [
+     "related concept-kv-cache",
+     "shares concept concept-kv-cache"
+    ],
+    [
+     "search \"attention\" --type note --content",
+     "Generating token t needs attention over all previous tokens. Recomputing their"
+    ],
+    [
+     "search \"keys and values\" --type note --content",
+     "keys and values every step would be quadratic, so the server stores them: the; keys and values every step would be quadratic, so the server stores them: the"
+    ]
+   ]
+  }
+ }
+}

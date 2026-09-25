@@ -1,0 +1,37 @@
+$ python tools/los.py material-context 'naive bayes'
+{"schema_version":1,"snapshot_id":"sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e","contract":"material-context","ranked_by":"recorded stage use-evidence per source: positive feedback first, mismatch feedback last; ties keep stable order (notes by id, then assessments by unit and route)","items":[],"total":0,"next_offset":null,"observations_sha256":"sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a","searched":{"query_terms":["naive","bayes"],"concept":null,"purpose":null,"unit":null,"analysis_notes":0,"assessments":0},"pool":{"analysis_notes":0,"assessments":0,"analysis_by_resolution":{},"analysis_unreviewed":0},"empty":"no match in the searched records; this never proves no source explains the topic"}
+
+$ python tools/los.py ai-action-list
+{
+  "ok": true,
+  "actions": [
+    {
+      "id": "garden.shelve",
+      "title": "Shelve with AI",
+      "description": "Prepare a bounded Garden seed for discussion, then apply only an approved structured delivery.",
+      "target_kinds": [
+        "garden-note"
+      ],
+      "interaction_mode": "discussion",
+      "status": "implemented",
+      "supported_providers": [
+        "manual-bundle",
+        "claude",
+        "chatgpt"
+      ]
+    },
+    {
+      "id": "unit.compare-materials",
+      "title": "Compare unit materials",
+      "description": "Prepare the complete local material menu for qualitative comparison and publish only a whole approved unit dossier.",
+      "target_kinds": [
+        "unit"
+      ],
+      "interaction_mode": "discussion",
+      "status": "implemented",
+      "supported_providers": [
+        "manual-bundle"
+      ]
+    }
+  ]
+}
