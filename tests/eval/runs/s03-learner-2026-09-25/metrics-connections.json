@@ -1,0 +1,2720 @@
+{
+  "scorer_version": 1,
+  "results_file": "tests/eval/runs/s03-learner-2026-09-25/connections.jsonl",
+  "missing_probes": [
+    "A03",
+    "A04",
+    "A06",
+    "A08",
+    "A12",
+    "A15",
+    "A16",
+    "A17",
+    "A19",
+    "A20",
+    "A23",
+    "A25",
+    "A26",
+    "A28",
+    "A30"
+  ],
+  "unknown_probes_in_results": [],
+  "overall": {
+    "probes": 50,
+    "answered": 35,
+    "macro_answered": {
+      "recall@5": 0.9823,
+      "recall@10": 1.0,
+      "relevant_recall@5": 0.7024,
+      "relevant_recall@10": 0.9528,
+      "precision@5": 0.7314,
+      "judged_precision@5": 0.9941,
+      "must_not_rate@10": 0.1923,
+      "mrr": 0.9697,
+      "explanation_coverage_HEURISTIC": 0.6421,
+      "evidence_resolvable_rate": 1.0
+    },
+    "macro_all_missing_as_zero": {
+      "recall@5": 0.6753,
+      "recall@10": 0.6875,
+      "relevant_recall@10": 0.6611,
+      "precision@5": 0.512,
+      "mrr": 0.6667
+    },
+    "decoy_hit@5_rate": 0.0769,
+    "outdated_uncaveated_total": 0
+  },
+  "by_group": {
+    "canon": {
+      "probes": 20,
+      "answered": 20,
+      "macro_answered": {
+        "recall@5": 0.9825,
+        "recall@10": 1.0,
+        "relevant_recall@5": 0.6847,
+        "relevant_recall@10": 0.962,
+        "precision@5": 0.76,
+        "judged_precision@5": 0.99,
+        "must_not_rate@10": 0.3571,
+        "mrr": 0.9474,
+        "explanation_coverage_HEURISTIC": 0.6784,
+        "evidence_resolvable_rate": 1.0
+      },
+      "macro_all_missing_as_zero": {
+        "recall@5": 0.9825,
+        "recall@10": 1.0,
+        "relevant_recall@10": 0.962,
+        "precision@5": 0.76,
+        "mrr": 0.9474
+      },
+      "decoy_hit@5_rate": 0.1429,
+      "outdated_uncaveated_total": 0
+    },
+    "arrival": {
+      "probes": 30,
+      "answered": 15,
+      "macro_answered": {
+        "recall@5": 0.9821,
+        "recall@10": 1.0,
+        "relevant_recall@5": 0.7276,
+        "relevant_recall@10": 0.9395,
+        "precision@5": 0.6933,
+        "judged_precision@5": 1.0,
+        "must_not_rate@10": 0.0,
+        "mrr": 1.0,
+        "explanation_coverage_HEURISTIC": 0.5929,
+        "evidence_resolvable_rate": 1.0
+      },
+      "macro_all_missing_as_zero": {
+        "recall@5": 0.4741,
+        "recall@10": 0.4828,
+        "relevant_recall@10": 0.4536,
+        "precision@5": 0.3467,
+        "mrr": 0.4828
+      },
+      "decoy_hit@5_rate": 0.0,
+      "outdated_uncaveated_total": 0
+    }
+  },
+  "by_category": {
+    "chronology": {
+      "relevant": 16,
+      "found@10": 16,
+      "must_not": 0,
+      "hit@10": 0,
+      "recall@10": 1.0,
+      "must_not_rate@10": null
+    },
+    "context": {
+      "relevant": 40,
+      "found@10": 36,
+      "must_not": 0,
+      "hit@10": 0,
+      "recall@10": 0.9,
+      "must_not_rate@10": null
+    },
+    "cross-domain": {
+      "relevant": 36,
+      "found@10": 35,
+      "must_not": 0,
+      "hit@10": 0,
+      "recall@10": 0.9722,
+      "must_not_rate@10": null
+    },
+    "duplicate": {
+      "relevant": 8,
+      "found@10": 8,
+      "must_not": 0,
+      "hit@10": 0,
+      "recall@10": 1.0,
+      "must_not_rate@10": null
+    },
+    "explicit-metadata": {
+      "relevant": 32,
+      "found@10": 32,
+      "must_not": 0,
+      "hit@10": 0,
+      "recall@10": 1.0,
+      "must_not_rate@10": null
+    },
+    "keyword-decoy": {
+      "relevant": 0,
+      "found@10": 0,
+      "must_not": 25,
+      "hit@10": 5,
+      "recall@10": null,
+      "must_not_rate@10": 0.2
+    },
+    "lexical": {
+      "relevant": 23,
+      "found@10": 23,
+      "must_not": 0,
+      "hit@10": 0,
+      "recall@10": 1.0,
+      "must_not_rate@10": null
+    },
+    "math-equivalence": {
+      "relevant": 6,
+      "found@10": 6,
+      "must_not": 0,
+      "hit@10": 0,
+      "recall@10": 1.0,
+      "must_not_rate@10": null
+    },
+    "prerequisite": {
+      "relevant": 7,
+      "found@10": 5,
+      "must_not": 0,
+      "hit@10": 0,
+      "recall@10": 0.7143,
+      "must_not_rate@10": null
+    },
+    "semantic-paraphrase": {
+      "relevant": 51,
+      "found@10": 50,
+      "must_not": 0,
+      "hit@10": 0,
+      "recall@10": 0.9804,
+      "must_not_rate@10": null
+    },
+    "transitive": {
+      "relevant": 18,
+      "found@10": 15,
+      "must_not": 0,
+      "hit@10": 0,
+      "recall@10": 0.8333,
+      "must_not_rate@10": null
+    }
+  },
+  "by_lexical_overlap_of_MUST": {
+    "none": {
+      "must": 8,
+      "found@10": 8,
+      "recall@10": 1.0
+    },
+    "partial": {
+      "must": 23,
+      "found@10": 23,
+      "recall@10": 1.0
+    },
+    "strong": {
+      "must": 34,
+      "found@10": 34,
+      "recall@10": 1.0
+    }
+  },
+  "by_class": {
+    "AMBIGUOUS": {
+      "judged": 36,
+      "returned@10": 15,
+      "returned_rate@10": 0.4167
+    },
+    "MUST_CONNECT": {
+      "judged": 65,
+      "returned@10": 65,
+      "returned_rate@10": 1.0
+    },
+    "MUST_NOT_CONNECT": {
+      "judged": 25,
+      "returned@10": 5,
+      "returned_rate@10": 0.2
+    },
+    "USEFUL_CONNECT": {
+      "judged": 126,
+      "returned@10": 116,
+      "returned_rate@10": 0.9206
+    }
+  },
+  "per_probe": [
+    {
+      "probe": "C01",
+      "answered": true,
+      "returned": 10,
+      "non_material_dropped": 0,
+      "n_must": 3,
+      "n_relevant": 8,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.375,
+      "recall@10": 1.0,
+      "relevant_recall@10": 0.875,
+      "precision@5": 0.6,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-map-estimation-priors",
+        "note-mle-coin-flips",
+        "stage:stage-l05-02-generative-vs-discriminative"
+      ],
+      "explanation_coverage_HEURISTIC": 0.5833333333333334,
+      "outdated_uncaveated": [],
+      "evidence_cited": 10,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "stage:stage-l05-01-derive-naive-bayes",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-independence-vs-conditional-independence",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-generative-vs-discriminative",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "stage:stage-l05-02-generative-vs-discriminative",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 5,
+          "target": "note-mle-coin-flips",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 6,
+          "target": "note-conditional-probability-basics",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 7,
+          "target": "garden:independence-assumptions-that-still-work.md",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 8,
+          "target": "note-query-optimizer-cost-model",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 9,
+          "target": "note-map-estimation-priors",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 10,
+          "target": "note-statlearn-mock-exam-september",
+          "class": "USEFUL_CONNECT"
+        }
+      ]
+    },
+    {
+      "probe": "C02",
+      "answered": true,
+      "returned": 10,
+      "non_material_dropped": 0,
+      "n_must": 1,
+      "n_relevant": 7,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.7142857142857143,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 1.0,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-generative-vs-discriminative",
+        "note-naive-bayes-spam-filter"
+      ],
+      "explanation_coverage_HEURISTIC": 0.7333333333333333,
+      "outdated_uncaveated": [],
+      "evidence_cited": 11,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-ridge-regression-penalty",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-gaussian-noise-least-squares",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-mle-coin-flips",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-lasso-sparsity-geometry",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 5,
+          "target": "stage:stage-l07-01-ridge-lasso-geometry",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 6,
+          "target": "note-conditional-probability-basics",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 7,
+          "target": "note-bias-variance-from-book",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 8,
+          "target": "note-naive-bayes-spam-filter",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 9,
+          "target": "note-generative-vs-discriminative",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 10,
+          "target": "note-convexity-basics",
+          "class": "AMBIGUOUS"
+        }
+      ]
+    },
+    {
+      "probe": "C03",
+      "answered": true,
+      "returned": 9,
+      "non_material_dropped": 0,
+      "n_must": 1,
+      "n_relevant": 5,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.6,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 0.6,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-data-lineage-debugging",
+        "note-kafka-consumer-lag-backpressure",
+        "note-lazy-evaluation-query-plans",
+        "stage:stage-df-lazy-01-lazy-vs-eager"
+      ],
+      "explanation_coverage_HEURISTIC": 0.25,
+      "outdated_uncaveated": [],
+      "evidence_cited": 7,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-amdahls-law",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-data-parallel-training-scaling",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-columnar-storage-compression",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-kafka-consumer-lag-backpressure",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 5,
+          "target": "stage:stage-df-lazy-01-lazy-vs-eager",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 6,
+          "target": "note-lazy-evaluation-query-plans",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 7,
+          "target": "workspace-dataframe-skill",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 8,
+          "target": "note-data-pipeline-orchestration-dag",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 9,
+          "target": "note-data-lineage-debugging",
+          "class": "UNJUDGED"
+        }
+      ]
+    },
+    {
+      "probe": "C04",
+      "answered": true,
+      "returned": 10,
+      "non_material_dropped": 0,
+      "n_must": 3,
+      "n_relevant": 8,
+      "n_must_not": 2,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.625,
+      "recall@10": 1.0,
+      "relevant_recall@10": 0.875,
+      "precision@5": 1.0,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": 0.5,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "workspace-os-oral-prep"
+      ],
+      "explanation_coverage_HEURISTIC": 0.8888888888888888,
+      "outdated_uncaveated": [],
+      "evidence_cited": 10,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "stage:stage-os-l02-02-proportional-share",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-os-scheduling-exercise-bank",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-cpu-scheduling-round-robin",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-context-switch-cost",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 5,
+          "target": "note-dominant-resource-fairness-paper",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 6,
+          "target": "note-multi-tenant-gpu-sharing",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 7,
+          "target": "workspace-os-oral-prep",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 8,
+          "target": "inbox:20260915-os-oral-questions.md",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 9,
+          "target": "garden:fairness-for-my-study-time.md",
+          "class": "AMBIGUOUS"
+        },
+        {
+          "rank": 10,
+          "target": "note-study-plan-retake-strategy",
+          "class": "MUST_NOT_CONNECT"
+        }
+      ]
+    },
+    {
+      "probe": "C05",
+      "answered": true,
+      "returned": 9,
+      "non_material_dropped": 0,
+      "n_must": 2,
+      "n_relevant": 8,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.5,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 0.8,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-buffer-pool-replacement"
+      ],
+      "explanation_coverage_HEURISTIC": 0.5,
+      "outdated_uncaveated": [],
+      "evidence_cited": 8,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-journaling-filesystems",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-acid-consistency",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-event-sourcing-append-only",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "garden:logs-are-the-real-database.md",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 5,
+          "target": "note-buffer-pool-replacement",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 6,
+          "target": "note-lsm-trees",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 7,
+          "target": "note-db-exam-cheatsheet",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 8,
+          "target": "note-two-phase-locking-deadlocks",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 9,
+          "target": "garden:ledgerline-receipt-idea.md",
+          "class": "USEFUL_CONNECT"
+        }
+      ]
+    },
+    {
+      "probe": "C06",
+      "answered": true,
+      "returned": 10,
+      "non_material_dropped": 0,
+      "n_must": 3,
+      "n_relevant": 8,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.625,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 1.0,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-relational-algebra-operators",
+        "workspace-dataframe-skill"
+      ],
+      "explanation_coverage_HEURISTIC": 0.6,
+      "outdated_uncaveated": [],
+      "evidence_cited": 8,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-query-optimizer-cost-model",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "garden:why-did-swapping-from-order-matter.md",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-dynamic-programming-memoization",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-hash-join-vs-sort-merge",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 5,
+          "target": "note-algebraic-equivalences-pushdown",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 6,
+          "target": "note-hmm-viterbi",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 7,
+          "target": "project-tessera",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 8,
+          "target": "workspace-dataframe-skill",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 9,
+          "target": "note-lazy-evaluation-query-plans",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 10,
+          "target": "note-relational-algebra-operators",
+          "class": "UNJUDGED"
+        }
+      ]
+    },
+    {
+      "probe": "C07",
+      "answered": true,
+      "returned": 10,
+      "non_material_dropped": 0,
+      "n_must": 1,
+      "n_relevant": 5,
+      "n_must_not": 1,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.8,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 0.8,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": 0.0,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "garden:why-did-swapping-from-order-matter.md",
+        "note-data-lineage-debugging",
+        "note-db-normalization-3nf",
+        "project-tessera",
+        "workspace-dataframe-skill"
+      ],
+      "explanation_coverage_HEURISTIC": 0.5,
+      "outdated_uncaveated": [],
+      "evidence_cited": 4,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-selinger-join-ordering",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-naive-bayes-spam-filter",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-independence-vs-conditional-independence",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-db-normalization-3nf",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 5,
+          "target": "garden:independence-assumptions-that-still-work.md",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 6,
+          "target": "garden:why-did-swapping-from-order-matter.md",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 7,
+          "target": "note-algebraic-equivalences-pushdown",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 8,
+          "target": "note-data-lineage-debugging",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 9,
+          "target": "workspace-dataframe-skill",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 10,
+          "target": "project-tessera",
+          "class": "UNJUDGED"
+        }
+      ]
+    },
+    {
+      "probe": "C08",
+      "answered": true,
+      "returned": 8,
+      "non_material_dropped": 0,
+      "n_must": 3,
+      "n_relevant": 8,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.625,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 1.0,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [],
+      "explanation_coverage_HEURISTIC": 1.0,
+      "outdated_uncaveated": [],
+      "evidence_cited": 3,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-matrix-factorization-recommenders",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-svd-geometric",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "stage:stage-linalg-svd-02-low-rank",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "stage:stage-l09-02-svd-connection",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 5,
+          "target": "note-pca-by-hand",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 6,
+          "target": "workspace-linalg-refresh",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 7,
+          "target": "note-covariance-matrix",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 8,
+          "target": "note-eigenvectors-intuition",
+          "class": "USEFUL_CONNECT"
+        }
+      ]
+    },
+    {
+      "probe": "C09",
+      "answered": true,
+      "returned": 9,
+      "non_material_dropped": 0,
+      "n_must": 1,
+      "n_relevant": 3,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.3333333333333333,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 0.2,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-parallel-workers-no-speedup",
+        "note-query-optimizer-cost-model",
+        "note-relational-algebra-operators",
+        "stage:stage-df-lineage-01-trace"
+      ],
+      "explanation_coverage_HEURISTIC": 0.5,
+      "outdated_uncaveated": [],
+      "evidence_cited": 4,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-why-provenance-paper",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "stage:stage-df-lineage-01-trace",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 3,
+          "target": "note-idempotent-pipelines-backfills",
+          "class": "AMBIGUOUS"
+        },
+        {
+          "rank": 4,
+          "target": "note-relational-algebra-operators",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 5,
+          "target": "note-query-optimizer-cost-model",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 6,
+          "target": "workspace-dataframe-skill",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 7,
+          "target": "note-parallel-workers-no-speedup",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 8,
+          "target": "note-event-sourcing-append-only",
+          "class": "AMBIGUOUS"
+        },
+        {
+          "rank": 9,
+          "target": "note-data-pipeline-orchestration-dag",
+          "class": "USEFUL_CONNECT"
+        }
+      ]
+    },
+    {
+      "probe": "C10",
+      "answered": true,
+      "returned": 9,
+      "non_material_dropped": 0,
+      "n_must": 2,
+      "n_relevant": 6,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.6666666666666666,
+      "recall@10": 1.0,
+      "relevant_recall@10": 0.8333333333333334,
+      "precision@5": 0.8,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-backprop-as-bookkeeping",
+        "note-softmax-temperature"
+      ],
+      "explanation_coverage_HEURISTIC": 1.0,
+      "outdated_uncaveated": [],
+      "evidence_cited": 3,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "garden:attention-as-soft-lookup.md",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-dynamic-batching-inference",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-multi-tenant-gpu-sharing",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-virtual-memory-address-translation",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 5,
+          "target": "note-caching-everywhere",
+          "class": "AMBIGUOUS"
+        },
+        {
+          "rank": 6,
+          "target": "note-dynamic-programming-memoization",
+          "class": "AMBIGUOUS"
+        },
+        {
+          "rank": 7,
+          "target": "note-mixed-precision-training",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 8,
+          "target": "note-backprop-as-bookkeeping",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 9,
+          "target": "note-softmax-temperature",
+          "class": "UNJUDGED"
+        }
+      ]
+    },
+    {
+      "probe": "C11",
+      "answered": true,
+      "returned": 10,
+      "non_material_dropped": 0,
+      "n_must": 1,
+      "n_relevant": 6,
+      "n_must_not": 3,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.6666666666666666,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 0.8,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": 0.6666666666666666,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-cfs-fair-share",
+        "workspace-os-oral-prep"
+      ],
+      "explanation_coverage_HEURISTIC": 0.6666666666666666,
+      "outdated_uncaveated": [],
+      "evidence_cited": 2,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-context-switch-cost",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-virtual-memory-address-translation",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "inbox:20260915-os-oral-questions.md",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-cpu-scheduling-round-robin",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 5,
+          "target": "workspace-os-oral-prep",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 6,
+          "target": "garden:kernel-is-an-overloaded-word.md",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 7,
+          "target": "note-cfs-fair-share",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 8,
+          "target": "note-priority-inversion",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 9,
+          "target": "note-svm-kernel-trick",
+          "class": "MUST_NOT_CONNECT"
+        },
+        {
+          "rank": 10,
+          "target": "note-cnn-convolution-kernels",
+          "class": "MUST_NOT_CONNECT"
+        }
+      ]
+    },
+    {
+      "probe": "C12",
+      "answered": true,
+      "returned": 6,
+      "non_material_dropped": 0,
+      "n_must": 1,
+      "n_relevant": 3,
+      "n_must_not": 3,
+      "recall@5": 1.0,
+      "relevant_recall@5": 1.0,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 0.6,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": 0.0,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-data-lineage-debugging",
+        "note-query-optimizer-cost-model",
+        "workspace-dbsys-exam"
+      ],
+      "explanation_coverage_HEURISTIC": 1.0,
+      "outdated_uncaveated": [],
+      "evidence_cited": 0,
+      "evidence_resolvable_rate": null,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-db-exam-cheatsheet",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-relational-algebra-operators",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-query-optimizer-cost-model",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 4,
+          "target": "note-acid-consistency",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 5,
+          "target": "note-data-lineage-debugging",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 6,
+          "target": "workspace-dbsys-exam",
+          "class": "UNJUDGED"
+        }
+      ]
+    },
+    {
+      "probe": "C13",
+      "answered": true,
+      "returned": 8,
+      "non_material_dropped": 0,
+      "n_must": 1,
+      "n_relevant": 4,
+      "n_must_not": 1,
+      "recall@5": 1.0,
+      "relevant_recall@5": 1.0,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 0.8,
+      "judged_precision@5": 0.8,
+      "must_not_rate@10": 1.0,
+      "decoy_hit@5": true,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-db-exam-cheatsheet"
+      ],
+      "explanation_coverage_HEURISTIC": 0.0,
+      "outdated_uncaveated": [],
+      "evidence_cited": 1,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-cap-consistency-linearizability",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-write-ahead-logging-aries",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-two-phase-locking-deadlocks",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-db-normalization-3nf",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 5,
+          "target": "note-consistent-estimators",
+          "class": "MUST_NOT_CONNECT"
+        },
+        {
+          "rank": 6,
+          "target": "note-journaling-filesystems",
+          "class": "AMBIGUOUS"
+        },
+        {
+          "rank": 7,
+          "target": "note-idempotency-keys-api",
+          "class": "AMBIGUOUS"
+        },
+        {
+          "rank": 8,
+          "target": "note-db-exam-cheatsheet",
+          "class": "UNJUDGED"
+        }
+      ]
+    },
+    {
+      "probe": "C14",
+      "answered": true,
+      "returned": 10,
+      "non_material_dropped": 0,
+      "n_must": 0,
+      "n_relevant": 4,
+      "n_must_not": 3,
+      "recall@5": null,
+      "relevant_recall@5": 0.75,
+      "recall@10": null,
+      "relevant_recall@10": 1.0,
+      "precision@5": 0.6,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": 0.3333333333333333,
+      "decoy_hit@5": false,
+      "mrr": null,
+      "unjudged_returned": [
+        "garden:fairness-for-my-study-time.md",
+        "note-oral-exam-prep-strategy",
+        "note-queueing-littles-law",
+        "note-semester-review-july",
+        "note-weekly-review-log"
+      ],
+      "explanation_coverage_HEURISTIC": null,
+      "outdated_uncaveated": [],
+      "evidence_cited": 1,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-study-plan-retake-strategy",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-pomodoro-and-context-switching",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "inbox:20260916-sleep-podcast.md",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-queueing-littles-law",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 5,
+          "target": "garden:fairness-for-my-study-time.md",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 6,
+          "target": "note-cfs-fair-share",
+          "class": "MUST_NOT_CONNECT"
+        },
+        {
+          "rank": 7,
+          "target": "note-oral-exam-prep-strategy",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 8,
+          "target": "note-weekly-review-log",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 9,
+          "target": "note-semester-review-july",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 10,
+          "target": "note-how-i-take-notes",
+          "class": "USEFUL_CONNECT"
+        }
+      ]
+    },
+    {
+      "probe": "C15",
+      "answered": true,
+      "returned": 9,
+      "non_material_dropped": 0,
+      "n_must": 2,
+      "n_relevant": 6,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.6666666666666666,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 0.8,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-dynamic-programming-memoization",
+        "note-write-ahead-logging-aries"
+      ],
+      "explanation_coverage_HEURISTIC": 1.0,
+      "outdated_uncaveated": [],
+      "evidence_cited": 2,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-page-replacement-lru-clock",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-caching-everywhere",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-cpu-cache-locality",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-write-ahead-logging-aries",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 5,
+          "target": "note-virtual-memory-address-translation",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 6,
+          "target": "note-b-plus-tree-indexes",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 7,
+          "target": "note-external-merge-sort",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 8,
+          "target": "note-dynamic-programming-memoization",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 9,
+          "target": "note-kv-cache-transformer-serving",
+          "class": "AMBIGUOUS"
+        }
+      ]
+    },
+    {
+      "probe": "C16",
+      "answered": true,
+      "returned": 8,
+      "non_material_dropped": 0,
+      "n_must": 2,
+      "n_relevant": 4,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.75,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 0.6,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-map-estimation-priors",
+        "note-normal-distribution-standardizing",
+        "note-statlearn-mock-exam-september",
+        "workspace-statlearn-retake"
+      ],
+      "explanation_coverage_HEURISTIC": 0.6666666666666666,
+      "outdated_uncaveated": [],
+      "evidence_cited": 3,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-p-values-first-take",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "inbox:20260903-pvalue-reminder.md",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-conditional-probability-basics",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-map-estimation-priors",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 5,
+          "target": "note-statlearn-mock-exam-september",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 6,
+          "target": "note-normal-distribution-standardizing",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 7,
+          "target": "note-central-limit-theorem-simulation",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 8,
+          "target": "workspace-statlearn-retake",
+          "class": "UNJUDGED"
+        }
+      ]
+    },
+    {
+      "probe": "C17",
+      "answered": true,
+      "returned": 10,
+      "non_material_dropped": 0,
+      "n_must": 2,
+      "n_relevant": 7,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.5714285714285714,
+      "recall@10": 1.0,
+      "relevant_recall@10": 0.8571428571428571,
+      "precision@5": 0.8,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 0.5,
+      "unjudged_returned": [
+        "note-covariance-matrix",
+        "note-data-leakage-scaler",
+        "note-gaussian-noise-least-squares",
+        "note-ridge-regression-penalty"
+      ],
+      "explanation_coverage_HEURISTIC": 1.0,
+      "outdated_uncaveated": [],
+      "evidence_cited": 2,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-normal-distribution-standardizing",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-sgd-momentum-nn-training",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-linear-regression-normal-equation",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-convexity-basics",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 5,
+          "target": "note-data-leakage-scaler",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 6,
+          "target": "note-adam-vs-sgd-revisited",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 7,
+          "target": "note-regression-metrics",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 8,
+          "target": "note-gaussian-noise-least-squares",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 9,
+          "target": "note-ridge-regression-penalty",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 10,
+          "target": "note-covariance-matrix",
+          "class": "UNJUDGED"
+        }
+      ]
+    },
+    {
+      "probe": "C18",
+      "answered": true,
+      "returned": 8,
+      "non_material_dropped": 0,
+      "n_must": 1,
+      "n_relevant": 5,
+      "n_must_not": 1,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.8,
+      "recall@10": 1.0,
+      "relevant_recall@10": 0.8,
+      "precision@5": 0.8,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": 0.0,
+      "decoy_hit@5": false,
+      "mrr": 0.5,
+      "unjudged_returned": [
+        "note-context-switch-cost",
+        "note-cpu-scheduling-round-robin",
+        "note-data-parallel-training-scaling",
+        "note-semaphores-producer-consumer"
+      ],
+      "explanation_coverage_HEURISTIC": 1.0,
+      "outdated_uncaveated": [],
+      "evidence_cited": 0,
+      "evidence_resolvable_rate": null,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-kv-cache-transformer-serving",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-multi-tenant-gpu-sharing",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-queueing-littles-law",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-kafka-consumer-lag-backpressure",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 5,
+          "target": "note-cpu-scheduling-round-robin",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 6,
+          "target": "note-context-switch-cost",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 7,
+          "target": "note-data-parallel-training-scaling",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 8,
+          "target": "note-semaphores-producer-consumer",
+          "class": "UNJUDGED"
+        }
+      ]
+    },
+    {
+      "probe": "C19",
+      "answered": true,
+      "returned": 5,
+      "non_material_dropped": 0,
+      "n_must": 1,
+      "n_relevant": 3,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 1.0,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 0.6,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "garden:attention-as-soft-lookup.md",
+        "note-kv-cache-transformer-serving"
+      ],
+      "explanation_coverage_HEURISTIC": 0.0,
+      "outdated_uncaveated": [],
+      "evidence_cited": 2,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "garden:temperature-everywhere.md",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-simulated-annealing",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-logistic-regression-cross-entropy",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "garden:attention-as-soft-lookup.md",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 5,
+          "target": "note-kv-cache-transformer-serving",
+          "class": "UNJUDGED"
+        }
+      ]
+    },
+    {
+      "probe": "C20",
+      "answered": true,
+      "returned": 9,
+      "non_material_dropped": 0,
+      "n_must": 3,
+      "n_relevant": 8,
+      "n_must_not": 0,
+      "recall@5": 0.6666666666666666,
+      "relevant_recall@5": 0.625,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 1.0,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-regression-testing-snapshots"
+      ],
+      "explanation_coverage_HEURISTIC": 1.0,
+      "outdated_uncaveated": [],
+      "evidence_cited": 3,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-tagless-visitor-pattern-ast",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-algebraic-equivalences-pushdown",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-ssa-form",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "inbox:20260910-tessera-todo.md",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 5,
+          "target": "workspace-tessera-engine",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 6,
+          "target": "note-property-based-testing",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 7,
+          "target": "note-lazy-evaluation-query-plans",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 8,
+          "target": "note-compiler-pipeline-overview",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 9,
+          "target": "note-regression-testing-snapshots",
+          "class": "UNJUDGED"
+        }
+      ]
+    },
+    {
+      "probe": "A01",
+      "answered": true,
+      "returned": 10,
+      "non_material_dropped": 0,
+      "n_must": 2,
+      "n_relevant": 7,
+      "n_must_not": 2,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.5714285714285714,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 0.8,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": 0.0,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "stage:stage-l05-01-derive-naive-bayes"
+      ],
+      "explanation_coverage_HEURISTIC": 0.6666666666666666,
+      "outdated_uncaveated": [],
+      "evidence_cited": 2,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-naive-bayes-spam-filter",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-independence-vs-conditional-independence",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-generative-vs-discriminative",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "stage:stage-l05-01-derive-naive-bayes",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 5,
+          "target": "note-hmm-viterbi",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 6,
+          "target": "note-query-optimizer-cost-model",
+          "class": "AMBIGUOUS"
+        },
+        {
+          "rank": 7,
+          "target": "garden:independence-assumptions-that-still-work.md",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 8,
+          "target": "garden:everything-is-a-dag.md",
+          "class": "AMBIGUOUS"
+        },
+        {
+          "rank": 9,
+          "target": "note-markov-chains-stationary",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 10,
+          "target": "note-conditional-probability-basics",
+          "class": "USEFUL_CONNECT"
+        }
+      ]
+    },
+    {
+      "probe": "A02",
+      "answered": true,
+      "returned": 8,
+      "non_material_dropped": 0,
+      "n_must": 3,
+      "n_relevant": 6,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.8333333333333334,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 1.0,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-statlearn-mock-exam-september",
+        "stage:stage-l07-02-choose-lambda"
+      ],
+      "explanation_coverage_HEURISTIC": 0.75,
+      "outdated_uncaveated": [],
+      "evidence_cited": 2,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "stage:stage-l07-01-ridge-lasso-geometry",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-ridge-regression-penalty",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-lasso-sparsity-geometry",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-map-estimation-priors",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 5,
+          "target": "note-convexity-basics",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 6,
+          "target": "stage:stage-l07-02-choose-lambda",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 7,
+          "target": "note-statlearn-mock-exam-september",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 8,
+          "target": "workspace-statlearn-retake",
+          "class": "USEFUL_CONNECT"
+        }
+      ]
+    },
+    {
+      "probe": "A03",
+      "answered": false,
+      "n_must": 7,
+      "n_relevant": 11,
+      "n_must_not": 1
+    },
+    {
+      "probe": "A04",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 5,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A05",
+      "answered": true,
+      "returned": 8,
+      "non_material_dropped": 0,
+      "n_must": 1,
+      "n_relevant": 3,
+      "n_must_not": 1,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.6666666666666666,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 0.4,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": 0.0,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-query-optimizer-cost-model",
+        "note-relational-algebra-operators",
+        "stage:stage-df-lineage-01-trace"
+      ],
+      "explanation_coverage_HEURISTIC": 0.0,
+      "outdated_uncaveated": [],
+      "evidence_cited": 2,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-data-lineage-debugging",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "stage:stage-df-lineage-01-trace",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 3,
+          "target": "note-db-normalization-3nf",
+          "class": "AMBIGUOUS"
+        },
+        {
+          "rank": 4,
+          "target": "note-why-provenance-paper",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 5,
+          "target": "note-relational-algebra-operators",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 6,
+          "target": "note-idempotent-pipelines-backfills",
+          "class": "AMBIGUOUS"
+        },
+        {
+          "rank": 7,
+          "target": "note-query-optimizer-cost-model",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 8,
+          "target": "workspace-dataframe-skill",
+          "class": "USEFUL_CONNECT"
+        }
+      ]
+    },
+    {
+      "probe": "A06",
+      "answered": false,
+      "n_must": 4,
+      "n_relevant": 9,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A07",
+      "answered": true,
+      "returned": 8,
+      "non_material_dropped": 0,
+      "n_must": 3,
+      "n_relevant": 6,
+      "n_must_not": 2,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.6666666666666666,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 0.8,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": 0.0,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "workspace-os-oral-prep"
+      ],
+      "explanation_coverage_HEURISTIC": 1.0,
+      "outdated_uncaveated": [],
+      "evidence_cited": 1,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "stage:stage-os-l02-02-proportional-share",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-cfs-fair-share",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-os-scheduling-exercise-bank",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "workspace-os-oral-prep",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 5,
+          "target": "note-cpu-scheduling-round-robin",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 6,
+          "target": "note-dominant-resource-fairness-paper",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 7,
+          "target": "note-multi-tenant-gpu-sharing",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 8,
+          "target": "garden:fairness-for-my-study-time.md",
+          "class": "AMBIGUOUS"
+        }
+      ]
+    },
+    {
+      "probe": "A08",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 6,
+      "n_must_not": 1
+    },
+    {
+      "probe": "A09",
+      "answered": true,
+      "returned": 8,
+      "non_material_dropped": 0,
+      "n_must": 2,
+      "n_relevant": 5,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.6,
+      "recall@10": 1.0,
+      "relevant_recall@10": 0.8,
+      "precision@5": 0.6,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-db-exam-cheatsheet",
+        "stage:stage-os-l07-01-deadlock",
+        "workspace-os-oral-prep"
+      ],
+      "explanation_coverage_HEURISTIC": 1.0,
+      "outdated_uncaveated": [],
+      "evidence_cited": 5,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-deadlock-four-conditions",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-two-phase-locking-deadlocks",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "inbox:20260915-os-oral-questions.md",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "stage:stage-os-l07-01-deadlock",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 5,
+          "target": "workspace-os-oral-prep",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 6,
+          "target": "note-semaphores-producer-consumer",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 7,
+          "target": "note-db-exam-cheatsheet",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 8,
+          "target": "note-priority-inversion",
+          "class": "AMBIGUOUS"
+        }
+      ]
+    },
+    {
+      "probe": "A10",
+      "answered": true,
+      "returned": 9,
+      "non_material_dropped": 0,
+      "n_must": 1,
+      "n_relevant": 5,
+      "n_must_not": 1,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.8,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 0.8,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": 0.0,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "arrival:A01",
+        "note-db-normalization-3nf",
+        "project-tessera",
+        "workspace-dataframe-skill"
+      ],
+      "explanation_coverage_HEURISTIC": 1.0,
+      "outdated_uncaveated": [],
+      "evidence_cited": 1,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-query-optimizer-cost-model",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-naive-bayes-spam-filter",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-independence-vs-conditional-independence",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-db-normalization-3nf",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 5,
+          "target": "note-selinger-join-ordering",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 6,
+          "target": "garden:independence-assumptions-that-still-work.md",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 7,
+          "target": "workspace-dataframe-skill",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 8,
+          "target": "project-tessera",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 9,
+          "target": "arrival:A01",
+          "class": "UNJUDGED"
+        }
+      ]
+    },
+    {
+      "probe": "A11",
+      "answered": true,
+      "returned": 5,
+      "non_material_dropped": 0,
+      "n_must": 2,
+      "n_relevant": 5,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 1.0,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 1.0,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [],
+      "explanation_coverage_HEURISTIC": 0.0,
+      "outdated_uncaveated": [],
+      "evidence_cited": 2,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-p-values-corrected",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "inbox:20260903-pvalue-reminder.md",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-p-values-first-take",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-spaced-repetition-scheduler",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 5,
+          "target": "note-conditional-probability-basics",
+          "class": "USEFUL_CONNECT"
+        }
+      ]
+    },
+    {
+      "probe": "A12",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 5,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A13",
+      "answered": true,
+      "returned": 4,
+      "non_material_dropped": 0,
+      "n_must": 3,
+      "n_relevant": 3,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 1.0,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 0.6,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-data-pipeline-orchestration-dag"
+      ],
+      "explanation_coverage_HEURISTIC": 0.3333333333333333,
+      "outdated_uncaveated": [],
+      "evidence_cited": 1,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-amdahls-law",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-parallel-workers-no-speedup",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-data-parallel-training-scaling",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-data-pipeline-orchestration-dag",
+          "class": "UNJUDGED"
+        }
+      ]
+    },
+    {
+      "probe": "A14",
+      "answered": true,
+      "returned": 9,
+      "non_material_dropped": 0,
+      "n_must": 4,
+      "n_relevant": 7,
+      "n_must_not": 1,
+      "recall@5": 0.75,
+      "relevant_recall@5": 0.5714285714285714,
+      "recall@10": 1.0,
+      "relevant_recall@10": 0.8571428571428571,
+      "precision@5": 0.8,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": 0.0,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "inbox:20260910-tessera-todo.md",
+        "note-tagless-visitor-pattern-ast",
+        "workspace-dataframe-skill"
+      ],
+      "explanation_coverage_HEURISTIC": 0.8,
+      "outdated_uncaveated": [],
+      "evidence_cited": 2,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "stage:stage-df-lazy-02-read-explain",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-algebraic-equivalences-pushdown",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "inbox:20260910-tessera-todo.md",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 4,
+          "target": "workspace-tessera-engine",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 5,
+          "target": "note-lazy-evaluation-query-plans",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 6,
+          "target": "note-constant-folding-cse",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 7,
+          "target": "inbox:20260812-lazy-plan-explain-paste.md",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 8,
+          "target": "workspace-dataframe-skill",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 9,
+          "target": "note-tagless-visitor-pattern-ast",
+          "class": "UNJUDGED"
+        }
+      ]
+    },
+    {
+      "probe": "A15",
+      "answered": false,
+      "n_must": 3,
+      "n_relevant": 4,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A16",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 6,
+      "n_must_not": 2
+    },
+    {
+      "probe": "A17",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 3,
+      "n_must_not": 1
+    },
+    {
+      "probe": "A18",
+      "answered": true,
+      "returned": 9,
+      "non_material_dropped": 0,
+      "n_must": 1,
+      "n_relevant": 9,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.5555555555555556,
+      "recall@10": 1.0,
+      "relevant_recall@10": 0.8888888888888888,
+      "precision@5": 1.0,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "arrival:A01"
+      ],
+      "explanation_coverage_HEURISTIC": 0.5,
+      "outdated_uncaveated": [],
+      "evidence_cited": 1,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "garden:everything-is-a-dag.md",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-build-systems-dag-incremental",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-data-pipeline-orchestration-dag",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-git-internals-content-addressing",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 5,
+          "target": "note-backprop-as-bookkeeping",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 6,
+          "target": "note-ssa-form",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 7,
+          "target": "note-deadlock-four-conditions",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 8,
+          "target": "note-two-phase-locking-deadlocks",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 9,
+          "target": "arrival:A01",
+          "class": "UNJUDGED"
+        }
+      ]
+    },
+    {
+      "probe": "A19",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 4,
+      "n_must_not": 1
+    },
+    {
+      "probe": "A20",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 5,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A21",
+      "answered": true,
+      "returned": 9,
+      "non_material_dropped": 0,
+      "n_must": 3,
+      "n_relevant": 7,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.5714285714285714,
+      "recall@10": 1.0,
+      "relevant_recall@10": 0.8571428571428571,
+      "precision@5": 0.8,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-consistent-estimators",
+        "note-statlearn-mock-exam-september",
+        "stage:stage-linalg-svd-02-low-rank"
+      ],
+      "explanation_coverage_HEURISTIC": 1.0,
+      "outdated_uncaveated": [],
+      "evidence_cited": 2,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "stage:stage-l09-02-svd-connection",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-pca-by-hand",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-svd-geometric",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-consistent-estimators",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 5,
+          "target": "note-covariance-matrix",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 6,
+          "target": "note-low-rank-approximation",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 7,
+          "target": "workspace-statlearn-retake",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 8,
+          "target": "note-statlearn-mock-exam-september",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 9,
+          "target": "stage:stage-linalg-svd-02-low-rank",
+          "class": "UNJUDGED"
+        }
+      ]
+    },
+    {
+      "probe": "A22",
+      "answered": true,
+      "returned": 4,
+      "non_material_dropped": 0,
+      "n_must": 3,
+      "n_relevant": 4,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.75,
+      "recall@10": 1.0,
+      "relevant_recall@10": 0.75,
+      "precision@5": 0.6,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "stage:stage-l11-01-backprop"
+      ],
+      "explanation_coverage_HEURISTIC": 0.5,
+      "outdated_uncaveated": [],
+      "evidence_cited": 1,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-forward-mode-autodiff-dual-numbers",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-backprop-as-bookkeeping",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-chain-rule-multivariable",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "stage:stage-l11-01-backprop",
+          "class": "UNJUDGED"
+        }
+      ]
+    },
+    {
+      "probe": "A23",
+      "answered": false,
+      "n_must": 3,
+      "n_relevant": 6,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A24",
+      "answered": true,
+      "returned": 0,
+      "non_material_dropped": 0,
+      "n_must": 0,
+      "n_relevant": 0,
+      "n_must_not": 4,
+      "recall@5": null,
+      "relevant_recall@5": null,
+      "recall@10": null,
+      "relevant_recall@10": null,
+      "precision@5": 0.0,
+      "judged_precision@5": null,
+      "must_not_rate@10": 0.0,
+      "decoy_hit@5": false,
+      "mrr": null,
+      "unjudged_returned": [],
+      "explanation_coverage_HEURISTIC": null,
+      "outdated_uncaveated": [],
+      "evidence_cited": 0,
+      "evidence_resolvable_rate": null,
+      "targets": []
+    },
+    {
+      "probe": "A25",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 3,
+      "n_must_not": 1
+    },
+    {
+      "probe": "A26",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 3,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A27",
+      "answered": true,
+      "returned": 8,
+      "non_material_dropped": 0,
+      "n_must": 1,
+      "n_relevant": 5,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.6,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 0.6,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-amdahls-law",
+        "note-buffer-pool-replacement",
+        "stage:stage-df-joins-01-strategies"
+      ],
+      "explanation_coverage_HEURISTIC": 0.25,
+      "outdated_uncaveated": [],
+      "evidence_cited": 1,
+      "evidence_resolvable_rate": 1.0,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "note-hash-join-vs-sort-merge",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "stage:stage-df-joins-01-strategies",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 3,
+          "target": "note-parallel-workers-no-speedup",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-amdahls-law",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 5,
+          "target": "note-external-merge-sort",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 6,
+          "target": "note-buffer-pool-replacement",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 7,
+          "target": "note-query-optimizer-cost-model",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 8,
+          "target": "workspace-dataframe-skill",
+          "class": "USEFUL_CONNECT"
+        }
+      ]
+    },
+    {
+      "probe": "A28",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 4,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A29",
+      "answered": true,
+      "returned": 4,
+      "non_material_dropped": 0,
+      "n_must": 2,
+      "n_relevant": 3,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 1.0,
+      "recall@10": 1.0,
+      "relevant_recall@10": 1.0,
+      "precision@5": 0.6,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 1.0,
+      "unjudged_returned": [
+        "note-cfs-fair-share"
+      ],
+      "explanation_coverage_HEURISTIC": 0.5,
+      "outdated_uncaveated": [],
+      "evidence_cited": 0,
+      "evidence_resolvable_rate": null,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "inbox:20260816-drf-paper-link.md",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-dominant-resource-fairness-paper",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-multi-tenant-gpu-sharing",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "note-cfs-fair-share",
+          "class": "UNJUDGED"
+        }
+      ]
+    },
+    {
+      "probe": "A30",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 5,
+      "n_must_not": 0
+    }
+  ]
+}

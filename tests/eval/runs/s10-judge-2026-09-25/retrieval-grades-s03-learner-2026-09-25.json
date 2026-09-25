@@ -1,0 +1,157 @@
+{
+  "run": "s03-learner-2026-09-25",
+  "grader": "S10 white-box judge",
+  "scale": "2 correct with evidence; 1 partly right or weak evidence; 0 wrong or unsupported; null not answered",
+  "summary": {
+    "grade_2": 35,
+    "grade_1": 1,
+    "grade_0": 0,
+    "unanswered": 0
+  },
+  "grades": {
+    "Q01": {
+      "grade": 2,
+      "note": "all points; scaling emphasized; flag is a false positive"
+    },
+    "Q02": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q03": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q04": {
+      "grade": 2,
+      "note": "4/4 including the relapse bonus; flag is a false positive"
+    },
+    "Q05": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q06": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q07": {
+      "grade": 2,
+      "note": "correct record fact plus the conflict bonus; flag is a false positive (wrong date quoted as wrong)"
+    },
+    "Q08": {
+      "grade": 2,
+      "note": "2.0 answered; guess named as guess; flag is a false positive"
+    },
+    "Q09": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q10": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q11": {
+      "grade": 2,
+      "note": "evidence reported, mastery refused; flag is a false positive"
+    },
+    "Q12": {
+      "grade": 1,
+      "note": "main answer right; misses the exercise-bank authorship/solution-status point"
+    },
+    "Q13": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q14": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q15": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q16": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q17": {
+      "grade": 2,
+      "note": "core set plus separated analogues; flag is a false positive (study-time items listed as analogues, not CPU notes)"
+    },
+    "Q18": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q19": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q20": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q21": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q22": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q23": {
+      "grade": 2,
+      "note": "mastery refused, for/against evidence; flag is a false positive"
+    },
+    "Q24": {
+      "grade": 2,
+      "note": "correct source; ARIES distinguished as beyond-depth; flag is a false positive"
+    },
+    "Q25": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q26": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q27": {
+      "grade": 2,
+      "note": "all seven captures named with routings; some citation strings are single-letter fragments"
+    },
+    "Q28": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q29": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q30": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q31": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q32": {
+      "grade": 2,
+      "note": "correct no-explicit-link plus discovered parallel (full credit per worksheet rule)"
+    },
+    "Q33": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q34": {
+      "grade": 2,
+      "note": "four correct seed/note pairings"
+    },
+    "Q35": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    },
+    "Q36": {
+      "grade": 2,
+      "note": "all expected points present with evidence"
+    }
+  }
+}

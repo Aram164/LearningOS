@@ -1,0 +1,1156 @@
+{
+  "scorer_version": 1,
+  "results_file": "tests/eval/runs/s04-resume-2026-09-25/answers.jsonl",
+  "missing": [],
+  "overall": {
+    "questions": 36,
+    "answered": 36,
+    "evidence_ok_rate": 0.8333,
+    "points_HEURISTIC_mean": 0.9722,
+    "provenance_mean": 0.9954,
+    "forbidden_flags": 5
+  },
+  "by_category": {
+    "abandoned": {
+      "questions": 1,
+      "answered": 1,
+      "evidence_ok_rate": 1.0,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    },
+    "audit": {
+      "questions": 1,
+      "answered": 1,
+      "evidence_ok_rate": 1.0,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    },
+    "chronology": {
+      "questions": 8,
+      "answered": 8,
+      "evidence_ok_rate": 0.875,
+      "points_HEURISTIC_mean": 0.9688,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 2
+    },
+    "coordination": {
+      "questions": 3,
+      "answered": 3,
+      "evidence_ok_rate": 0.6667,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    },
+    "cross-domain": {
+      "questions": 3,
+      "answered": 3,
+      "evidence_ok_rate": 1.0,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    },
+    "disambiguation": {
+      "questions": 2,
+      "answered": 2,
+      "evidence_ok_rate": 1.0,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    },
+    "duplicates": {
+      "questions": 1,
+      "answered": 1,
+      "evidence_ok_rate": 1.0,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    },
+    "evidence": {
+      "questions": 3,
+      "answered": 3,
+      "evidence_ok_rate": 0.6667,
+      "points_HEURISTIC_mean": 0.8333,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    },
+    "exact": {
+      "questions": 4,
+      "answered": 4,
+      "evidence_ok_rate": 1.0,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 1
+    },
+    "exam-fact": {
+      "questions": 3,
+      "answered": 3,
+      "evidence_ok_rate": 0.0,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 1
+    },
+    "garden": {
+      "questions": 1,
+      "answered": 1,
+      "evidence_ok_rate": 1.0,
+      "points_HEURISTIC_mean": 0.75,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    },
+    "inbox": {
+      "questions": 1,
+      "answered": 1,
+      "evidence_ok_rate": 1.0,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    },
+    "later-answer": {
+      "questions": 2,
+      "answered": 2,
+      "evidence_ok_rate": 1.0,
+      "points_HEURISTIC_mean": 0.875,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    },
+    "mastery": {
+      "questions": 1,
+      "answered": 1,
+      "evidence_ok_rate": 0.0,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    },
+    "outdated": {
+      "questions": 3,
+      "answered": 3,
+      "evidence_ok_rate": 0.6667,
+      "points_HEURISTIC_mean": 0.9167,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 2
+    },
+    "project": {
+      "questions": 4,
+      "answered": 4,
+      "evidence_ok_rate": 1.0,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    },
+    "resume": {
+      "questions": 1,
+      "answered": 1,
+      "evidence_ok_rate": 0.0,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 0.8333,
+      "forbidden_flags": 0
+    },
+    "semantic": {
+      "questions": 3,
+      "answered": 3,
+      "evidence_ok_rate": 1.0,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    },
+    "semantic-set": {
+      "questions": 3,
+      "answered": 3,
+      "evidence_ok_rate": 1.0,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 1
+    },
+    "source": {
+      "questions": 2,
+      "answered": 2,
+      "evidence_ok_rate": 1.0,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 1
+    },
+    "synthesis": {
+      "questions": 1,
+      "answered": 1,
+      "evidence_ok_rate": 1.0,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    }
+  },
+  "per_question": [
+    {
+      "question": "Q01",
+      "answered": true,
+      "cat": [
+        "exact",
+        "chronology"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "\u03b7 = 0.1 made the loss diverge (inf within 12 steps) on raw features",
+          "hit": true
+        },
+        {
+          "fact": "the fix was standardizing/scaling the features",
+          "hit": true
+        },
+        {
+          "fact": "after standardizing, \u03b7 = 0.1 converges (<200 iterations)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [
+        "the fix was only lowering the learning rate to 0.01"
+      ],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q02",
+      "answered": true,
+      "cat": [
+        "semantic"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "the Naive Bayes spam-filter note",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q03",
+      "answered": true,
+      "cat": [
+        "synthesis",
+        "cross-domain"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "MAP = maximize log-likelihood + log-prior",
+          "hit": true
+        },
+        {
+          "fact": "a Gaussian prior's log is \u2212\u2016\u03b8\u2016\u00b2/(2\u03c4\u00b2), a squared (L2) penalty",
+          "hit": true
+        },
+        {
+          "fact": "\u03bb corresponds to \u03c3\u00b2/\u03c4\u00b2 (noise over prior variance); narrow prior = strong penalty",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q04",
+      "answered": true,
+      "cat": [
+        "chronology",
+        "outdated"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 0.75,
+      "points": [
+        {
+          "fact": "current: probability of data at least as extreme as observed, assuming H0 is true",
+          "hit": true
+        },
+        {
+          "fact": "it is not P(H0 | data)",
+          "hit": true
+        },
+        {
+          "fact": "in April she believed it was the probability that H0 is true (corrected in June)",
+          "hit": false
+        },
+        {
+          "fact": "the misconception recurred in a September mock (inbox reminder)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [
+        "presents 'probability that the null hypothesis is true' as the current definition"
+      ],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q05",
+      "answered": true,
+      "cat": [
+        "outdated",
+        "chronology"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "no \u2014 virtual memory is per-process address translation; swapping is one optional use",
+          "hit": true
+        },
+        {
+          "fact": "page tables / TLB translate addresses",
+          "hit": true
+        },
+        {
+          "fact": "the April note that equated them is her old, corrected view",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q06",
+      "answered": true,
+      "cat": [
+        "resume"
+      ],
+      "evidence_all": true,
+      "evidence_any": false,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "stopped in Operating Systems L02, stage 'Proportional share and CFS'",
+          "hit": true
+        },
+        {
+          "fact": "the stride example stopped at step 4 (A=100, B=50, C=250 tickets)",
+          "hit": true
+        },
+        {
+          "fact": "next: finish the first eight decisions, check C runs 5/8, explain vruntime aloud",
+          "hit": true
+        },
+        {
+          "fact": "the recorded priority (2026-08-24) makes Statistical Learning primary \u2014 where she stopped is not necessarily what comes next",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 0.8333333333333334,
+      "confidence": "high"
+    },
+    {
+      "question": "Q07",
+      "answered": true,
+      "cat": [
+        "exam-fact",
+        "outdated"
+      ],
+      "evidence_all": false,
+      "evidence_any": true,
+      "missing_evidence": [
+        "module-tuh-os"
+      ],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "2026-10-12 at 14:30",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [
+        "14 October"
+      ],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q08",
+      "answered": true,
+      "cat": [
+        "exam-fact"
+      ],
+      "evidence_all": false,
+      "evidence_any": true,
+      "missing_evidence": [
+        "module-tuh-dbsys"
+      ],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "2.0 (passed, 2026-07-15)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q09",
+      "answered": true,
+      "cat": [
+        "exam-fact"
+      ],
+      "evidence_all": false,
+      "evidence_any": true,
+      "missing_evidence": [
+        "module-tuh-statlearn"
+      ],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "yes, registered for the 2. Termin",
+          "hit": true
+        },
+        {
+          "fact": "2026-10-06, 10:00\u201312:00",
+          "hit": true
+        },
+        {
+          "fact": "withdrew from the 1. Termin (2026-07-21)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q10",
+      "answered": true,
+      "cat": [
+        "later-answer",
+        "chronology"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "question: could low-rank approximation fill in missing ratings, given the SVD needs every entry?",
+          "hit": true
+        },
+        {
+          "fact": "answered on 2026-08-25 by the matrix-factorization note: fit P Q\u1d40 only on observed entries",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q11",
+      "answered": true,
+      "cat": [
+        "evidence"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "yes: a written derivation exists (Gaussian likelihood \u2192 log \u2192 argmin squared residuals)",
+          "hit": true
+        },
+        {
+          "fact": "evidence reference: own solution to L03 exercise 2 (github://\u2026/sheet03/ex2_gaussian_mle.pdf)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q12",
+      "answered": true,
+      "cat": [
+        "evidence"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 0.5,
+      "points": [
+        {
+          "fact": "not completed: started, stopped at step 4 of 8",
+          "hit": true
+        },
+        {
+          "fact": "the exercise-bank version (Q4) is operator-drafted and has no recorded solution",
+          "hit": false
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q13",
+      "answered": true,
+      "cat": [
+        "project"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "filter-below-join rule (only when predicate columns come from one side)",
+          "hit": true
+        },
+        {
+          "fact": "projection pruning",
+          "hit": true
+        },
+        {
+          "fact": "property test execute(optimize(q)) == execute(q)",
+          "hit": true
+        },
+        {
+          "fact": "rule termination when rules undo each other",
+          "hit": true
+        },
+        {
+          "fact": "cost-based join ordering is a later, planned milestone (rules before cost, decided 2026-08-04)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q14",
+      "answered": true,
+      "cat": [
+        "coordination",
+        "project"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "paused until after the October exams",
+          "hit": true
+        },
+        {
+          "fact": "decided 2026-08-24",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q15",
+      "answered": true,
+      "cat": [
+        "coordination",
+        "chronology"
+      ],
+      "evidence_all": true,
+      "evidence_any": false,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "Statistical Learning retake is primary until its sitting",
+          "hit": true
+        },
+        {
+          "fact": "OS oral prep second, in parallel, about a third of study time",
+          "hit": true
+        },
+        {
+          "fact": "dataframe skill and Tessera at most two evenings a week",
+          "hit": true
+        },
+        {
+          "fact": "Ledgerline paused",
+          "hit": true
+        },
+        {
+          "fact": "this 2026-08-24 decision replaced the 2026-07-14 ordering (DB first)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q16",
+      "answered": true,
+      "cat": [
+        "disambiguation"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "a kernel k(x,x') = \u03c6(x)\u1d40\u03c6(x') replaces inner products in the dual (kernel trick), e.g. RBF",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q17",
+      "answered": true,
+      "cat": [
+        "semantic-set"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "the proportional-share/CFS note",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [
+        "lists study-time notes (spaced repetition, retake plan) as CPU-fairness notes"
+      ],
+      "provenance": 1.0,
+      "confidence": "medium"
+    },
+    {
+      "question": "Q18",
+      "answered": true,
+      "cat": [
+        "chronology"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "current view (2026-08-28): the internal-covariate-shift explanation is the original motivation but disputed",
+          "hit": true
+        },
+        {
+          "fact": "alternative: smoother loss landscape allows larger steps",
+          "hit": true
+        },
+        {
+          "fact": "the June note holds the older ICS explanation",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q19",
+      "answered": true,
+      "cat": [
+        "chronology"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "no: Adam trains fast, but tuned SGD+momentum can generalize better (Wilson et al.)",
+          "hit": true
+        },
+        {
+          "fact": "her own run: Adam 86% vs SGD+momentum 88%",
+          "hit": true
+        },
+        {
+          "fact": "the June 'Adam is just better' note is her superseded view",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q20",
+      "answered": true,
+      "cat": [
+        "semantic"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "reading/parsing the single CSV ran in one process \u2014 about half the runtime \u2014 so extra workers only sped up the other half",
+          "hit": true
+        },
+        {
+          "fact": "Amdahl's law bounds the speedup",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q21",
+      "answered": true,
+      "cat": [
+        "semantic"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "weekly-active-users jumped 38%; join with the device table duplicated users with two devices; fix COUNT(DISTINCT)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q22",
+      "answered": true,
+      "cat": [
+        "cross-domain",
+        "semantic-set"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "write-ahead logging (databases)",
+          "hit": true
+        },
+        {
+          "fact": "journaling file systems (OS)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "medium"
+    },
+    {
+      "question": "Q23",
+      "answered": true,
+      "cat": [
+        "mastery",
+        "evidence"
+      ],
+      "evidence_all": true,
+      "evidence_any": false,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "refuses to declare mastery; reports evidence instead",
+          "hit": true
+        },
+        {
+          "fact": "done: hand computation from the covariance matrix, checked against numpy",
+          "hit": true
+        },
+        {
+          "fact": "not done: the PCA\u2013SVD connection stage is paused/unfinished",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q24",
+      "answered": true,
+      "cat": [
+        "source"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "Garcia-Molina/Ullman/Widom \u2014 recovery chapter clearest on undo/redo logging",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [
+        "names ARIES paper as the clearest"
+      ],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q25",
+      "answered": true,
+      "cat": [
+        "source"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "OSTEP (lottery and stride chapter; first-learning)",
+          "hit": true
+        },
+        {
+          "fact": "Waldspurger & Weihl stride paper for depth",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q26",
+      "answered": true,
+      "cat": [
+        "abandoned",
+        "coordination"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "paused 2026-06-12 at the low-rank stage: rank 5 done, ranks 20/50 not",
+          "hit": true
+        },
+        {
+          "fact": "coordination says the L09 PCA/SVD gap depends on resuming the SVD stage \u2014 yes, but only as far as L09 needs",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "medium"
+    },
+    {
+      "question": "Q27",
+      "answered": true,
+      "cat": [
+        "inbox"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "lists all seven captures",
+          "hit": true
+        },
+        {
+          "fact": "DRF link is already covered by the DRF note",
+          "hit": true
+        },
+        {
+          "fact": "p-value reminder duplicates the corrected p-value note",
+          "hit": true
+        },
+        {
+          "fact": "batch-norm forum question is already answered by the August note",
+          "hit": true
+        },
+        {
+          "fact": "Tessera todo belongs to the Tessera workspace/project",
+          "hit": true
+        },
+        {
+          "fact": "OS oral questions belong to the OS oral workspace",
+          "hit": true
+        },
+        {
+          "fact": "lazy-plan paste belongs with the explain() stage",
+          "hit": true
+        },
+        {
+          "fact": "sleep podcast: Garden or discard, not a durable note tied to a module",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "medium"
+    },
+    {
+      "question": "Q28",
+      "answered": true,
+      "cat": [
+        "project"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "workspace open question: how deep the chair goes on CFS internals",
+          "hit": true
+        },
+        {
+          "fact": "the collected past oral questions (unrouted inbox capture)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "medium"
+    },
+    {
+      "question": "Q29",
+      "answered": true,
+      "cat": [
+        "semantic-set",
+        "disambiguation"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "retake strategy note (fair split of study blocks)",
+          "hit": true
+        },
+        {
+          "fact": "garden seed on scheduling study like CFS",
+          "hit": true
+        },
+        {
+          "fact": "pomodoro / switching-subjects note",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q30",
+      "answered": true,
+      "cat": [
+        "exact"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "about 2.1 \u00b5s per switch (pipe ping-pong, pinned to one core)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q31",
+      "answered": true,
+      "cat": [
+        "exact"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "96.8% with smoothing, 91% without",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q32",
+      "answered": true,
+      "cat": [
+        "cross-domain"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "multiplying selectivities assumes independent columns, like Naive Bayes multiplying per-word probabilities",
+          "hit": true
+        },
+        {
+          "fact": "both fail on correlated features/columns (city/zip)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "medium"
+    },
+    {
+      "question": "Q33",
+      "answered": true,
+      "cat": [
+        "project",
+        "exact"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "2026-08-04 (decision-tessera-rules-before-cost)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q34",
+      "answered": true,
+      "cat": [
+        "garden",
+        "later-answer"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 0.75,
+      "points": [
+        {
+          "fact": "join-order question \u2192 answered by the System R/Selinger note",
+          "hit": true
+        },
+        {
+          "fact": "independence-assumption question \u2192 the cost-model note is a second example",
+          "hit": false
+        },
+        {
+          "fact": "logs-are-the-database \u2192 WAL/journaling/event-sourcing notes",
+          "hit": true
+        },
+        {
+          "fact": "temperature seed \u2192 softmax + annealing notes exist (the link itself is not written anywhere)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "medium"
+    },
+    {
+      "question": "Q35",
+      "answered": true,
+      "cat": [
+        "audit",
+        "chronology"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "p-values first take (April) \u2192 corrected June",
+          "hit": true
+        },
+        {
+          "fact": "virtual memory = swap (April) \u2192 corrected May",
+          "hit": true
+        },
+        {
+          "fact": "Adam is just better (June) \u2192 revisited August",
+          "hit": true
+        },
+        {
+          "fact": "batch norm ICS explanation \u2192 contested in August (not formally superseded)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q36",
+      "answered": true,
+      "cat": [
+        "duplicates"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "bias\u2013variance lecture note and book note overlap (different framing: prediction vs estimator)",
+          "hit": true
+        },
+        {
+          "fact": "p-value inbox reminder repeats the corrected p-value note",
+          "hit": true
+        },
+        {
+          "fact": "DRF inbox link vs the DRF note",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "medium"
+    }
+  ]
+}

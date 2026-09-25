@@ -1,0 +1,600 @@
+{
+  "scorer_version": 1,
+  "results_file": "tests/eval/runs/s02-novice-2026-09-25/connections.jsonl",
+  "missing_probes": [
+    "C01",
+    "C02",
+    "C03",
+    "C04",
+    "C05",
+    "C06",
+    "C07",
+    "C08",
+    "C09",
+    "C10",
+    "C11",
+    "C12",
+    "C13",
+    "C14",
+    "C15",
+    "C16",
+    "C17",
+    "C18",
+    "C19",
+    "C20",
+    "A01",
+    "A02",
+    "A03",
+    "A04",
+    "A05",
+    "A06",
+    "A07",
+    "A08",
+    "A10",
+    "A11",
+    "A12",
+    "A13",
+    "A14",
+    "A15",
+    "A16",
+    "A17",
+    "A18",
+    "A19",
+    "A20",
+    "A21",
+    "A22",
+    "A23",
+    "A24",
+    "A25",
+    "A26",
+    "A27",
+    "A28",
+    "A29",
+    "A30"
+  ],
+  "unknown_probes_in_results": [],
+  "overall": {
+    "probes": 50,
+    "answered": 1,
+    "macro_answered": {
+      "recall@5": 1.0,
+      "recall@10": 1.0,
+      "relevant_recall@5": 0.6,
+      "relevant_recall@10": 0.8,
+      "precision@5": 0.6,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "mrr": 0.5,
+      "explanation_coverage_HEURISTIC": 1.0,
+      "evidence_resolvable_rate": 0.875
+    },
+    "macro_all_missing_as_zero": {
+      "recall@5": 0.0208,
+      "recall@10": 0.0208,
+      "relevant_recall@10": 0.0163,
+      "precision@5": 0.012,
+      "mrr": 0.0104
+    },
+    "decoy_hit@5_rate": null,
+    "outdated_uncaveated_total": 0
+  },
+  "by_group": {
+    "canon": {
+      "probes": 20,
+      "answered": 0,
+      "macro_answered": {
+        "recall@5": null,
+        "recall@10": null,
+        "relevant_recall@5": null,
+        "relevant_recall@10": null,
+        "precision@5": null,
+        "judged_precision@5": null,
+        "must_not_rate@10": null,
+        "mrr": null,
+        "explanation_coverage_HEURISTIC": null,
+        "evidence_resolvable_rate": null
+      },
+      "macro_all_missing_as_zero": {
+        "recall@5": 0.0,
+        "recall@10": 0.0,
+        "relevant_recall@10": 0.0,
+        "precision@5": 0.0,
+        "mrr": 0.0
+      },
+      "decoy_hit@5_rate": null,
+      "outdated_uncaveated_total": 0
+    },
+    "arrival": {
+      "probes": 30,
+      "answered": 1,
+      "macro_answered": {
+        "recall@5": 1.0,
+        "recall@10": 1.0,
+        "relevant_recall@5": 0.6,
+        "relevant_recall@10": 0.8,
+        "precision@5": 0.6,
+        "judged_precision@5": 1.0,
+        "must_not_rate@10": null,
+        "mrr": 0.5,
+        "explanation_coverage_HEURISTIC": 1.0,
+        "evidence_resolvable_rate": 0.875
+      },
+      "macro_all_missing_as_zero": {
+        "recall@5": 0.0345,
+        "recall@10": 0.0345,
+        "relevant_recall@10": 0.0276,
+        "precision@5": 0.02,
+        "mrr": 0.0172
+      },
+      "decoy_hit@5_rate": null,
+      "outdated_uncaveated_total": 0
+    }
+  },
+  "by_category": {
+    "context": {
+      "relevant": 2,
+      "found@10": 1,
+      "must_not": 0,
+      "hit@10": 0,
+      "recall@10": 0.5,
+      "must_not_rate@10": null
+    },
+    "cross-domain": {
+      "relevant": 1,
+      "found@10": 1,
+      "must_not": 0,
+      "hit@10": 0,
+      "recall@10": 1.0,
+      "must_not_rate@10": null
+    },
+    "lexical": {
+      "relevant": 2,
+      "found@10": 2,
+      "must_not": 0,
+      "hit@10": 0,
+      "recall@10": 1.0,
+      "must_not_rate@10": null
+    },
+    "semantic-paraphrase": {
+      "relevant": 1,
+      "found@10": 1,
+      "must_not": 0,
+      "hit@10": 0,
+      "recall@10": 1.0,
+      "must_not_rate@10": null
+    }
+  },
+  "by_lexical_overlap_of_MUST": {
+    "strong": {
+      "must": 2,
+      "found@10": 2,
+      "recall@10": 1.0
+    }
+  },
+  "by_class": {
+    "AMBIGUOUS": {
+      "judged": 1,
+      "returned@10": 0,
+      "returned_rate@10": 0.0
+    },
+    "MUST_CONNECT": {
+      "judged": 2,
+      "returned@10": 2,
+      "returned_rate@10": 1.0
+    },
+    "USEFUL_CONNECT": {
+      "judged": 3,
+      "returned@10": 2,
+      "returned_rate@10": 0.6667
+    }
+  },
+  "per_probe": [
+    {
+      "probe": "C01",
+      "answered": false,
+      "n_must": 3,
+      "n_relevant": 8,
+      "n_must_not": 0
+    },
+    {
+      "probe": "C02",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 7,
+      "n_must_not": 0
+    },
+    {
+      "probe": "C03",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 5,
+      "n_must_not": 0
+    },
+    {
+      "probe": "C04",
+      "answered": false,
+      "n_must": 3,
+      "n_relevant": 8,
+      "n_must_not": 2
+    },
+    {
+      "probe": "C05",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 8,
+      "n_must_not": 0
+    },
+    {
+      "probe": "C06",
+      "answered": false,
+      "n_must": 3,
+      "n_relevant": 8,
+      "n_must_not": 0
+    },
+    {
+      "probe": "C07",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 5,
+      "n_must_not": 1
+    },
+    {
+      "probe": "C08",
+      "answered": false,
+      "n_must": 3,
+      "n_relevant": 8,
+      "n_must_not": 0
+    },
+    {
+      "probe": "C09",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 3,
+      "n_must_not": 0
+    },
+    {
+      "probe": "C10",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 6,
+      "n_must_not": 0
+    },
+    {
+      "probe": "C11",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 6,
+      "n_must_not": 3
+    },
+    {
+      "probe": "C12",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 3,
+      "n_must_not": 3
+    },
+    {
+      "probe": "C13",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 4,
+      "n_must_not": 1
+    },
+    {
+      "probe": "C14",
+      "answered": false,
+      "n_must": 0,
+      "n_relevant": 4,
+      "n_must_not": 3
+    },
+    {
+      "probe": "C15",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 6,
+      "n_must_not": 0
+    },
+    {
+      "probe": "C16",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 4,
+      "n_must_not": 0
+    },
+    {
+      "probe": "C17",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 7,
+      "n_must_not": 0
+    },
+    {
+      "probe": "C18",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 5,
+      "n_must_not": 1
+    },
+    {
+      "probe": "C19",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 3,
+      "n_must_not": 0
+    },
+    {
+      "probe": "C20",
+      "answered": false,
+      "n_must": 3,
+      "n_relevant": 8,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A01",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 7,
+      "n_must_not": 2
+    },
+    {
+      "probe": "A02",
+      "answered": false,
+      "n_must": 3,
+      "n_relevant": 6,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A03",
+      "answered": false,
+      "n_must": 7,
+      "n_relevant": 11,
+      "n_must_not": 1
+    },
+    {
+      "probe": "A04",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 5,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A05",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 3,
+      "n_must_not": 1
+    },
+    {
+      "probe": "A06",
+      "answered": false,
+      "n_must": 4,
+      "n_relevant": 9,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A07",
+      "answered": false,
+      "n_must": 3,
+      "n_relevant": 6,
+      "n_must_not": 2
+    },
+    {
+      "probe": "A08",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 6,
+      "n_must_not": 1
+    },
+    {
+      "probe": "A09",
+      "answered": true,
+      "returned": 7,
+      "non_material_dropped": 0,
+      "n_must": 2,
+      "n_relevant": 5,
+      "n_must_not": 0,
+      "recall@5": 1.0,
+      "relevant_recall@5": 0.6,
+      "recall@10": 1.0,
+      "relevant_recall@10": 0.8,
+      "precision@5": 0.6,
+      "judged_precision@5": 1.0,
+      "must_not_rate@10": null,
+      "decoy_hit@5": false,
+      "mrr": 0.5,
+      "unjudged_returned": [
+        "note-db-exam-cheatsheet",
+        "stage:stage-os-l07-01-deadlock",
+        "workspace-os-oral-prep"
+      ],
+      "explanation_coverage_HEURISTIC": 1.0,
+      "outdated_uncaveated": [],
+      "evidence_cited": 8,
+      "evidence_resolvable_rate": 0.875,
+      "targets": [
+        {
+          "rank": 1,
+          "target": "inbox:20260915-os-oral-questions.md",
+          "class": "USEFUL_CONNECT"
+        },
+        {
+          "rank": 2,
+          "target": "note-deadlock-four-conditions",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 3,
+          "target": "note-two-phase-locking-deadlocks",
+          "class": "MUST_CONNECT"
+        },
+        {
+          "rank": 4,
+          "target": "stage:stage-os-l07-01-deadlock",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 5,
+          "target": "workspace-os-oral-prep",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 6,
+          "target": "note-db-exam-cheatsheet",
+          "class": "UNJUDGED"
+        },
+        {
+          "rank": 7,
+          "target": "note-semaphores-producer-consumer",
+          "class": "USEFUL_CONNECT"
+        }
+      ]
+    },
+    {
+      "probe": "A10",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 5,
+      "n_must_not": 1
+    },
+    {
+      "probe": "A11",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 5,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A12",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 5,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A13",
+      "answered": false,
+      "n_must": 3,
+      "n_relevant": 3,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A14",
+      "answered": false,
+      "n_must": 4,
+      "n_relevant": 7,
+      "n_must_not": 1
+    },
+    {
+      "probe": "A15",
+      "answered": false,
+      "n_must": 3,
+      "n_relevant": 4,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A16",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 6,
+      "n_must_not": 2
+    },
+    {
+      "probe": "A17",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 3,
+      "n_must_not": 1
+    },
+    {
+      "probe": "A18",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 9,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A19",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 4,
+      "n_must_not": 1
+    },
+    {
+      "probe": "A20",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 5,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A21",
+      "answered": false,
+      "n_must": 3,
+      "n_relevant": 7,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A22",
+      "answered": false,
+      "n_must": 3,
+      "n_relevant": 4,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A23",
+      "answered": false,
+      "n_must": 3,
+      "n_relevant": 6,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A24",
+      "answered": false,
+      "n_must": 0,
+      "n_relevant": 0,
+      "n_must_not": 4
+    },
+    {
+      "probe": "A25",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 3,
+      "n_must_not": 1
+    },
+    {
+      "probe": "A26",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 3,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A27",
+      "answered": false,
+      "n_must": 1,
+      "n_relevant": 5,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A28",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 4,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A29",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 3,
+      "n_must_not": 0
+    },
+    {
+      "probe": "A30",
+      "answered": false,
+      "n_must": 2,
+      "n_relevant": 5,
+      "n_must_not": 0
+    }
+  ]
+}

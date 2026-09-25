@@ -1,0 +1,157 @@
+{
+  "run": "s02-novice-2026-09-25",
+  "grader": "S10 white-box judge",
+  "scale": "2 correct with evidence; 1 partly right or weak evidence; 0 wrong or unsupported; null not answered",
+  "summary": {
+    "grade_2": 11,
+    "grade_1": 1,
+    "grade_0": 0,
+    "unanswered": 24
+  },
+  "grades": {
+    "Q01": {
+      "grade": 2,
+      "note": "all points; scaling emphasized; forbidden flag is a false positive (0.01 named only as the old compromise)"
+    },
+    "Q02": {
+      "grade": 2,
+      "note": "all expected points present with resolving evidence"
+    },
+    "Q03": {
+      "grade": 2,
+      "note": "all expected points present with resolving evidence"
+    },
+    "Q04": {
+      "grade": 2,
+      "note": "3/4 incl. current definition; relapse point is bonus; flag is a false positive (old view quoted as wrong)"
+    },
+    "Q05": {
+      "grade": 2,
+      "note": "correct answer with both notes; flag is a false positive (old equation quoted as corrected)"
+    },
+    "Q06": {
+      "grade": 2,
+      "note": "all expected points present with resolving evidence"
+    },
+    "Q07": {
+      "grade": 2,
+      "note": "all expected points present with resolving evidence"
+    },
+    "Q08": {
+      "grade": 2,
+      "note": "all expected points present with resolving evidence"
+    },
+    "Q09": {
+      "grade": 2,
+      "note": "all expected points present with resolving evidence"
+    },
+    "Q10": {
+      "grade": 2,
+      "note": "all expected points present with resolving evidence"
+    },
+    "Q11": {
+      "grade": 2,
+      "note": "evidence reported, mastery explicitly refused; flag is a false positive"
+    },
+    "Q12": {
+      "grade": 1,
+      "note": "main answer right (partial work shown); misses the exercise-bank authorship/solution-status point"
+    },
+    "Q13": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q14": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q15": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q16": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q17": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q18": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q19": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q20": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q21": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q22": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q23": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q24": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q25": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q26": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q27": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q28": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q29": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q30": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q31": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q32": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q33": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q34": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q35": {
+      "grade": null,
+      "note": "not answered"
+    },
+    "Q36": {
+      "grade": null,
+      "note": "not answered"
+    }
+  }
+}

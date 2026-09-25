@@ -1,0 +1,1565 @@
+{
+  "friction_version": 1,
+  "runs": [
+    "tests/eval/runs/s00-baseline-2026-09-24",
+    "tests/eval/runs/s02-novice-2026-09-25",
+    "tests/eval/runs/s03-learner-2026-09-25",
+    "tests/eval/runs/s04-resume-2026-09-25",
+    "tests/eval/runs/s04b-writes-2026-09-25",
+    "tests/eval/runs/s05-connections-a-2026-09-25",
+    "tests/eval/runs/s06-connections-b-2026-09-25",
+    "tests/eval/runs/s07-abuse-2026-09-25",
+    "tests/eval/runs/s08-scale-2026-09-25"
+  ],
+  "scenario_results": 45,
+  "scenarios": {
+    "S00": {
+      "runs": [
+        "s00-baseline-2026-09-24",
+        "s02-novice-2026-09-25",
+        "s04-resume-2026-09-25"
+      ],
+      "classification": {
+        "PASS_WITH_FRICTION": 3
+      },
+      "tool_calls": {
+        "median": 8,
+        "max": 9,
+        "n": 3
+      },
+      "commands": {
+        "median": 8,
+        "max": 9,
+        "n": 3
+      },
+      "retries": {
+        "median": 1,
+        "max": 1,
+        "n": 3
+      },
+      "docs_consulted": {
+        "median": 2,
+        "max": 3,
+        "n": 3
+      },
+      "impl_files_read": {
+        "median": 0,
+        "max": 0,
+        "n": 3
+      },
+      "questions_asked_to_learner": {
+        "median": 0,
+        "max": 0,
+        "n": 3
+      },
+      "wall_minutes": {
+        "median": 1.5,
+        "max": 1.6,
+        "n": 3
+      },
+      "implementation_knowledge_needed": "0/3"
+    },
+    "S01": {
+      "runs": [
+        "s00-baseline-2026-09-24",
+        "s02-novice-2026-09-25",
+        "s07-abuse-2026-09-25"
+      ],
+      "classification": {
+        "ROBUSTNESS_FAILURE": 2,
+        "PASS_WITH_FRICTION": 1
+      },
+      "tool_calls": {
+        "median": 14,
+        "max": 22,
+        "n": 3
+      },
+      "commands": {
+        "median": 12,
+        "max": 18,
+        "n": 3
+      },
+      "retries": {
+        "median": 2,
+        "max": 2,
+        "n": 3
+      },
+      "docs_consulted": {
+        "median": 3,
+        "max": 4,
+        "n": 3
+      },
+      "impl_files_read": {
+        "median": 2,
+        "max": 2,
+        "n": 3
+      },
+      "questions_asked_to_learner": {
+        "median": 0,
+        "max": 0,
+        "n": 3
+      },
+      "wall_minutes": {
+        "median": 14,
+        "max": 26,
+        "n": 3
+      },
+      "implementation_knowledge_needed": "1/3"
+    },
+    "S02": {
+      "runs": [
+        "s02-novice-2026-09-25",
+        "s03-learner-2026-09-25",
+        "s04-resume-2026-09-25"
+      ],
+      "classification": {
+        "PASS_WITH_FRICTION": 3
+      },
+      "tool_calls": {
+        "median": 42,
+        "max": 62,
+        "n": 3
+      },
+      "commands": {
+        "median": 25,
+        "max": 179,
+        "n": 3
+      },
+      "retries": {
+        "median": 2,
+        "max": 3,
+        "n": 3
+      },
+      "docs_consulted": {
+        "median": 3,
+        "max": 9,
+        "n": 3
+      },
+      "impl_files_read": {
+        "median": 0,
+        "max": 1,
+        "n": 3
+      },
+      "questions_asked_to_learner": {
+        "median": 0,
+        "max": 0,
+        "n": 3
+      },
+      "wall_minutes": {
+        "median": 13,
+        "max": 13,
+        "n": 3
+      },
+      "implementation_knowledge_needed": "0/3"
+    },
+    "S03": {
+      "runs": [
+        "s03-learner-2026-09-25",
+        "s05-connections-a-2026-09-25",
+        "s06-connections-b-2026-09-25"
+      ],
+      "classification": {
+        "PASS_WITH_FRICTION": 3
+      },
+      "tool_calls": {
+        "median": 45,
+        "max": 46,
+        "n": 3
+      },
+      "commands": {
+        "median": 23,
+        "max": 115,
+        "n": 3
+      },
+      "retries": {
+        "median": 0,
+        "max": 1,
+        "n": 3
+      },
+      "docs_consulted": {
+        "median": 6,
+        "max": 7,
+        "n": 3
+      },
+      "impl_files_read": {
+        "median": 0,
+        "max": 0,
+        "n": 3
+      },
+      "questions_asked_to_learner": {
+        "median": 0,
+        "max": 0,
+        "n": 3
+      },
+      "wall_minutes": {
+        "median": 10.4,
+        "max": 11.5,
+        "n": 3
+      },
+      "implementation_knowledge_needed": "0/3"
+    },
+    "S04": {
+      "runs": [
+        "s02-novice-2026-09-25",
+        "s03-learner-2026-09-25"
+      ],
+      "classification": {
+        "PASS_WITH_FRICTION": 2
+      },
+      "tool_calls": {
+        "median": 27.0,
+        "max": 27,
+        "n": 2
+      },
+      "commands": {
+        "median": 32.5,
+        "max": 43,
+        "n": 2
+      },
+      "retries": {
+        "median": 1.5,
+        "max": 2,
+        "n": 2
+      },
+      "docs_consulted": {
+        "median": 5.5,
+        "max": 6,
+        "n": 2
+      },
+      "impl_files_read": {
+        "median": 1.0,
+        "max": 1,
+        "n": 2
+      },
+      "questions_asked_to_learner": {
+        "median": 1.0,
+        "max": 1,
+        "n": 2
+      },
+      "wall_minutes": {
+        "median": 4.0,
+        "max": 4,
+        "n": 2
+      },
+      "implementation_knowledge_needed": "2/2"
+    },
+    "S05": {
+      "runs": [
+        "s03-learner-2026-09-25"
+      ],
+      "classification": {
+        "PASS_WITH_FRICTION": 1
+      },
+      "tool_calls": {
+        "median": 24,
+        "max": 24,
+        "n": 1
+      },
+      "commands": {
+        "median": 70,
+        "max": 70,
+        "n": 1
+      },
+      "retries": {
+        "median": 1,
+        "max": 1,
+        "n": 1
+      },
+      "docs_consulted": {
+        "median": 4,
+        "max": 4,
+        "n": 1
+      },
+      "impl_files_read": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "questions_asked_to_learner": {
+        "median": 2,
+        "max": 2,
+        "n": 1
+      },
+      "wall_minutes": {
+        "median": 7,
+        "max": 7,
+        "n": 1
+      },
+      "implementation_knowledge_needed": "0/1"
+    },
+    "S06": {
+      "runs": [
+        "s02-novice-2026-09-25",
+        "s03-learner-2026-09-25"
+      ],
+      "classification": {
+        "PASS_WITH_FRICTION": 2
+      },
+      "tool_calls": {
+        "median": 10.0,
+        "max": 12,
+        "n": 2
+      },
+      "commands": {
+        "median": 17.0,
+        "max": 21,
+        "n": 2
+      },
+      "retries": {
+        "median": 1.0,
+        "max": 1,
+        "n": 2
+      },
+      "docs_consulted": {
+        "median": 3.5,
+        "max": 4,
+        "n": 2
+      },
+      "impl_files_read": {
+        "median": 0.0,
+        "max": 0,
+        "n": 2
+      },
+      "questions_asked_to_learner": {
+        "median": 2.0,
+        "max": 2,
+        "n": 2
+      },
+      "wall_minutes": {
+        "median": 2.0,
+        "max": 2,
+        "n": 2
+      },
+      "implementation_knowledge_needed": "0/2"
+    },
+    "S07": {
+      "runs": [
+        "s03-learner-2026-09-25"
+      ],
+      "classification": {
+        "PASS_WITH_FRICTION": 1
+      },
+      "tool_calls": {
+        "median": 7,
+        "max": 7,
+        "n": 1
+      },
+      "commands": {
+        "median": 13,
+        "max": 13,
+        "n": 1
+      },
+      "retries": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "docs_consulted": {
+        "median": 4,
+        "max": 4,
+        "n": 1
+      },
+      "impl_files_read": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "questions_asked_to_learner": {
+        "median": 1,
+        "max": 1,
+        "n": 1
+      },
+      "wall_minutes": {
+        "median": 3,
+        "max": 3,
+        "n": 1
+      },
+      "implementation_knowledge_needed": "0/1"
+    },
+    "S08": {
+      "runs": [
+        "s03-learner-2026-09-25"
+      ],
+      "classification": {
+        "PASS_WITH_FRICTION": 1
+      },
+      "tool_calls": {
+        "median": 5,
+        "max": 5,
+        "n": 1
+      },
+      "commands": {
+        "median": 14,
+        "max": 14,
+        "n": 1
+      },
+      "retries": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "docs_consulted": {
+        "median": 2,
+        "max": 2,
+        "n": 1
+      },
+      "impl_files_read": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "questions_asked_to_learner": {
+        "median": 1,
+        "max": 1,
+        "n": 1
+      },
+      "wall_minutes": {
+        "median": 2,
+        "max": 2,
+        "n": 1
+      },
+      "implementation_knowledge_needed": "0/1"
+    },
+    "S09": {
+      "runs": [
+        "s04-resume-2026-09-25"
+      ],
+      "classification": {
+        "PASS": 1
+      },
+      "tool_calls": {
+        "median": 4,
+        "max": 4,
+        "n": 1
+      },
+      "commands": {
+        "median": 3,
+        "max": 3,
+        "n": 1
+      },
+      "retries": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "docs_consulted": {
+        "median": 2,
+        "max": 2,
+        "n": 1
+      },
+      "impl_files_read": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "questions_asked_to_learner": {
+        "median": 1,
+        "max": 1,
+        "n": 1
+      },
+      "wall_minutes": {
+        "median": 1.0,
+        "max": 1.0,
+        "n": 1
+      },
+      "implementation_knowledge_needed": "0/1"
+    },
+    "S10": {
+      "runs": [
+        "s02-novice-2026-09-25",
+        "s04-resume-2026-09-25",
+        "s04b-writes-2026-09-25"
+      ],
+      "classification": {
+        "PASS_WITH_FRICTION": 2,
+        "USABILITY_FAILURE": 1
+      },
+      "tool_calls": {
+        "median": 17,
+        "max": 29,
+        "n": 3
+      },
+      "commands": {
+        "median": 13,
+        "max": 25,
+        "n": 3
+      },
+      "retries": {
+        "median": 1,
+        "max": 1,
+        "n": 3
+      },
+      "docs_consulted": {
+        "median": 6,
+        "max": 6,
+        "n": 3
+      },
+      "impl_files_read": {
+        "median": 1,
+        "max": 1,
+        "n": 3
+      },
+      "questions_asked_to_learner": {
+        "median": 2,
+        "max": 2,
+        "n": 3
+      },
+      "wall_minutes": {
+        "median": 3.0,
+        "max": 8,
+        "n": 3
+      },
+      "implementation_knowledge_needed": "2/3"
+    },
+    "S11": {
+      "runs": [
+        "s04-resume-2026-09-25"
+      ],
+      "classification": {
+        "PASS_WITH_FRICTION": 1
+      },
+      "tool_calls": {
+        "median": 7,
+        "max": 7,
+        "n": 1
+      },
+      "commands": {
+        "median": 6,
+        "max": 6,
+        "n": 1
+      },
+      "retries": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "docs_consulted": {
+        "median": 1,
+        "max": 1,
+        "n": 1
+      },
+      "impl_files_read": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "questions_asked_to_learner": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "wall_minutes": {
+        "median": 1.5,
+        "max": 1.5,
+        "n": 1
+      },
+      "implementation_knowledge_needed": "0/1"
+    },
+    "S12": {
+      "runs": [
+        "s04-resume-2026-09-25"
+      ],
+      "classification": {
+        "PASS": 1
+      },
+      "tool_calls": {
+        "median": 3,
+        "max": 3,
+        "n": 1
+      },
+      "commands": {
+        "median": 3,
+        "max": 3,
+        "n": 1
+      },
+      "retries": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "docs_consulted": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "impl_files_read": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "questions_asked_to_learner": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "wall_minutes": {
+        "median": 1.5,
+        "max": 1.5,
+        "n": 1
+      },
+      "implementation_knowledge_needed": "0/1"
+    },
+    "S13": {
+      "runs": [
+        "s03-learner-2026-09-25"
+      ],
+      "classification": {
+        "PASS": 1
+      },
+      "tool_calls": {
+        "median": 4,
+        "max": 4,
+        "n": 1
+      },
+      "commands": {
+        "median": 9,
+        "max": 9,
+        "n": 1
+      },
+      "retries": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "docs_consulted": {
+        "median": 4,
+        "max": 4,
+        "n": 1
+      },
+      "impl_files_read": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "questions_asked_to_learner": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "wall_minutes": {
+        "median": 2,
+        "max": 2,
+        "n": 1
+      },
+      "implementation_knowledge_needed": "0/1"
+    },
+    "S14": {
+      "runs": [
+        "s02-novice-2026-09-25"
+      ],
+      "classification": {
+        "PASS_WITH_FRICTION": 1
+      },
+      "tool_calls": {
+        "median": 7,
+        "max": 7,
+        "n": 1
+      },
+      "commands": {
+        "median": 11,
+        "max": 11,
+        "n": 1
+      },
+      "retries": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "docs_consulted": {
+        "median": 4,
+        "max": 4,
+        "n": 1
+      },
+      "impl_files_read": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "questions_asked_to_learner": {
+        "median": 3,
+        "max": 3,
+        "n": 1
+      },
+      "wall_minutes": {
+        "median": 2,
+        "max": 2,
+        "n": 1
+      },
+      "implementation_knowledge_needed": "0/1"
+    },
+    "S15": {
+      "runs": [
+        "s02-novice-2026-09-25"
+      ],
+      "classification": {
+        "PASS_WITH_FRICTION": 1
+      },
+      "tool_calls": {
+        "median": 6,
+        "max": 6,
+        "n": 1
+      },
+      "commands": {
+        "median": 8,
+        "max": 8,
+        "n": 1
+      },
+      "retries": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "docs_consulted": {
+        "median": 4,
+        "max": 4,
+        "n": 1
+      },
+      "impl_files_read": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "questions_asked_to_learner": {
+        "median": 2,
+        "max": 2,
+        "n": 1
+      },
+      "wall_minutes": {
+        "median": 1.5,
+        "max": 1.5,
+        "n": 1
+      },
+      "implementation_knowledge_needed": "0/1"
+    },
+    "S16": {
+      "runs": [
+        "s04-resume-2026-09-25",
+        "s04b-writes-2026-09-25"
+      ],
+      "classification": {
+        "USABILITY_FAILURE": 1,
+        "PASS_WITH_FRICTION": 1
+      },
+      "tool_calls": {
+        "median": 28.5,
+        "max": 38,
+        "n": 2
+      },
+      "commands": {
+        "median": 26.0,
+        "max": 38,
+        "n": 2
+      },
+      "retries": {
+        "median": 4.5,
+        "max": 5,
+        "n": 2
+      },
+      "docs_consulted": {
+        "median": 5.0,
+        "max": 5,
+        "n": 2
+      },
+      "impl_files_read": {
+        "median": 1.0,
+        "max": 1,
+        "n": 2
+      },
+      "questions_asked_to_learner": {
+        "median": 1.0,
+        "max": 1,
+        "n": 2
+      },
+      "wall_minutes": {
+        "median": 6.25,
+        "max": 10,
+        "n": 2
+      },
+      "implementation_knowledge_needed": "2/2"
+    },
+    "S17": {
+      "runs": [
+        "s07-abuse-2026-09-25"
+      ],
+      "classification": {
+        "ROBUSTNESS_FAILURE": 1
+      },
+      "tool_calls": {
+        "median": 30,
+        "max": 30,
+        "n": 1
+      },
+      "commands": {
+        "median": 23,
+        "max": 23,
+        "n": 1
+      },
+      "retries": {
+        "median": 3,
+        "max": 3,
+        "n": 1
+      },
+      "docs_consulted": {
+        "median": 4,
+        "max": 4,
+        "n": 1
+      },
+      "impl_files_read": {
+        "median": 2,
+        "max": 2,
+        "n": 1
+      },
+      "questions_asked_to_learner": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "wall_minutes": {
+        "median": 22,
+        "max": 22,
+        "n": 1
+      },
+      "implementation_knowledge_needed": "1/1"
+    },
+    "S18": {
+      "runs": [
+        "s07-abuse-2026-09-25"
+      ],
+      "classification": {
+        "PASS_WITH_FRICTION": 1
+      },
+      "tool_calls": {
+        "median": 14,
+        "max": 14,
+        "n": 1
+      },
+      "commands": {
+        "median": 11,
+        "max": 11,
+        "n": 1
+      },
+      "retries": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "docs_consulted": {
+        "median": 2,
+        "max": 2,
+        "n": 1
+      },
+      "impl_files_read": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "questions_asked_to_learner": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "wall_minutes": {
+        "median": 10,
+        "max": 10,
+        "n": 1
+      },
+      "implementation_knowledge_needed": "0/1"
+    },
+    "S19": {
+      "runs": [
+        "s07-abuse-2026-09-25"
+      ],
+      "classification": {
+        "PASS": 1
+      },
+      "tool_calls": {
+        "median": 8,
+        "max": 8,
+        "n": 1
+      },
+      "commands": {
+        "median": 11,
+        "max": 11,
+        "n": 1
+      },
+      "retries": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "docs_consulted": {
+        "median": 1,
+        "max": 1,
+        "n": 1
+      },
+      "impl_files_read": {
+        "median": 1,
+        "max": 1,
+        "n": 1
+      },
+      "questions_asked_to_learner": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "wall_minutes": {
+        "median": 6,
+        "max": 6,
+        "n": 1
+      },
+      "implementation_knowledge_needed": "0/1"
+    },
+    "S20": {
+      "runs": [
+        "s07-abuse-2026-09-25"
+      ],
+      "classification": {
+        "FUNCTIONAL_FAILURE": 1
+      },
+      "tool_calls": {
+        "median": 26,
+        "max": 26,
+        "n": 1
+      },
+      "commands": {
+        "median": 5,
+        "max": 5,
+        "n": 1
+      },
+      "retries": {
+        "median": 2,
+        "max": 2,
+        "n": 1
+      },
+      "docs_consulted": {
+        "median": 5,
+        "max": 5,
+        "n": 1
+      },
+      "impl_files_read": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "questions_asked_to_learner": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "wall_minutes": {
+        "median": 24,
+        "max": 24,
+        "n": 1
+      },
+      "implementation_knowledge_needed": "0/1"
+    },
+    "S21": {
+      "runs": [
+        "s07-abuse-2026-09-25"
+      ],
+      "classification": {
+        "PASS_WITH_FRICTION": 1
+      },
+      "tool_calls": {
+        "median": 9,
+        "max": 9,
+        "n": 1
+      },
+      "commands": {
+        "median": 10,
+        "max": 10,
+        "n": 1
+      },
+      "retries": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "docs_consulted": {
+        "median": 3,
+        "max": 3,
+        "n": 1
+      },
+      "impl_files_read": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "questions_asked_to_learner": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "wall_minutes": {
+        "median": 9,
+        "max": 9,
+        "n": 1
+      },
+      "implementation_knowledge_needed": "0/1"
+    },
+    "S22": {
+      "runs": [
+        "s07-abuse-2026-09-25"
+      ],
+      "classification": {
+        "PASS_WITH_FRICTION": 1
+      },
+      "tool_calls": {
+        "median": 7,
+        "max": 7,
+        "n": 1
+      },
+      "commands": {
+        "median": 4,
+        "max": 4,
+        "n": 1
+      },
+      "retries": {
+        "median": 2,
+        "max": 2,
+        "n": 1
+      },
+      "docs_consulted": {
+        "median": 1,
+        "max": 1,
+        "n": 1
+      },
+      "impl_files_read": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "questions_asked_to_learner": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "wall_minutes": {
+        "median": 8,
+        "max": 8,
+        "n": 1
+      },
+      "implementation_knowledge_needed": "0/1"
+    },
+    "S23": {
+      "runs": [
+        "s08-scale-2026-09-25"
+      ],
+      "classification": {
+        "PERFORMANCE_FAILURE": 1
+      },
+      "tool_calls": {
+        "median": 20,
+        "max": 20,
+        "n": 1
+      },
+      "commands": {
+        "median": 13,
+        "max": 13,
+        "n": 1
+      },
+      "retries": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "docs_consulted": {
+        "median": 5,
+        "max": 5,
+        "n": 1
+      },
+      "impl_files_read": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "questions_asked_to_learner": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "wall_minutes": {
+        "median": 43,
+        "max": 43,
+        "n": 1
+      },
+      "implementation_knowledge_needed": "0/1"
+    },
+    "S24": {
+      "runs": [
+        "s07-abuse-2026-09-25"
+      ],
+      "classification": {
+        "PASS": 1
+      },
+      "tool_calls": {
+        "median": 4,
+        "max": 4,
+        "n": 1
+      },
+      "commands": {
+        "median": 6,
+        "max": 6,
+        "n": 1
+      },
+      "retries": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "docs_consulted": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "impl_files_read": {
+        "median": 1,
+        "max": 1,
+        "n": 1
+      },
+      "questions_asked_to_learner": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "wall_minutes": {
+        "median": 4,
+        "max": 4,
+        "n": 1
+      },
+      "implementation_knowledge_needed": "0/1"
+    },
+    "S25": {
+      "runs": [
+        "s04-resume-2026-09-25"
+      ],
+      "classification": {
+        "PASS": 1
+      },
+      "tool_calls": {
+        "median": 4,
+        "max": 4,
+        "n": 1
+      },
+      "commands": {
+        "median": 5,
+        "max": 5,
+        "n": 1
+      },
+      "retries": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "docs_consulted": {
+        "median": 3,
+        "max": 3,
+        "n": 1
+      },
+      "impl_files_read": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "questions_asked_to_learner": {
+        "median": 0,
+        "max": 0,
+        "n": 1
+      },
+      "wall_minutes": {
+        "median": 0.5,
+        "max": 0.5,
+        "n": 1
+      },
+      "implementation_knowledge_needed": "0/1"
+    },
+    "S26": {
+      "runs": [
+        "s00-baseline-2026-09-24",
+        "s02-novice-2026-09-25",
+        "s04-resume-2026-09-25",
+        "s04b-writes-2026-09-25"
+      ],
+      "classification": {
+        "USABILITY_FAILURE": 2,
+        "PASS_WITH_FRICTION": 2
+      },
+      "tool_calls": {
+        "median": 8.0,
+        "max": 18,
+        "n": 4
+      },
+      "commands": {
+        "median": 10.0,
+        "max": 16,
+        "n": 4
+      },
+      "retries": {
+        "median": 0.5,
+        "max": 1,
+        "n": 4
+      },
+      "docs_consulted": {
+        "median": 2.0,
+        "max": 8,
+        "n": 4
+      },
+      "impl_files_read": {
+        "median": 0.0,
+        "max": 1,
+        "n": 4
+      },
+      "questions_asked_to_learner": {
+        "median": 1.0,
+        "max": 1,
+        "n": 4
+      },
+      "wall_minutes": {
+        "median": 1.5,
+        "max": 2.8,
+        "n": 4
+      },
+      "implementation_knowledge_needed": "3/4"
+    },
+    "S27": {
+      "runs": [
+        "s05-connections-a-2026-09-25",
+        "s06-connections-b-2026-09-25"
+      ],
+      "classification": {
+        "PASS_WITH_FRICTION": 2
+      },
+      "tool_calls": {
+        "median": 10.0,
+        "max": 10,
+        "n": 2
+      },
+      "commands": {
+        "median": 5.0,
+        "max": 6,
+        "n": 2
+      },
+      "retries": {
+        "median": 0.0,
+        "max": 0,
+        "n": 2
+      },
+      "docs_consulted": {
+        "median": 2.0,
+        "max": 2,
+        "n": 2
+      },
+      "impl_files_read": {
+        "median": 0.0,
+        "max": 0,
+        "n": 2
+      },
+      "questions_asked_to_learner": {
+        "median": 0.0,
+        "max": 0,
+        "n": 2
+      },
+      "wall_minutes": {
+        "median": 6.2,
+        "max": 6.2,
+        "n": 2
+      },
+      "implementation_knowledge_needed": "0/2"
+    }
+  },
+  "friction_tags": {
+    "doc-contradiction": {
+      "runs": 6,
+      "scenarios": [
+        "S00",
+        "S01",
+        "S03",
+        "S04",
+        "S10",
+        "S15",
+        "S16",
+        "S18",
+        "S26"
+      ],
+      "examples": [
+        "s00-baseline-2026-09-24/S00: CLAUDE.md hard rule 6 / \u00a77 route 'what next' through a freshly rebuilt coordination view and generated/domain-atlas.md; OPERATOR.md routes it through bootstrap --brief + inspect coordination and says ",
+        "s00-baseline-2026-09-24/S26: README documents `los.py capture --text` as the inbox path, but the CLI refuses all direct canonical writes.",
+        "s02-novice-2026-09-25/S00: Entry docs alternate between 'python tools/los.py' and '.venv/bin/python tools/los.py' without saying a venv must be created first.",
+        "s02-novice-2026-09-25/S01: README calls make test-fast 'quick feedback ... no checked-in repository load'; it took 10m51s and ~16 failures are FileNotFoundError on another learner's files (work/active/workspace-m2-exam-prep/out",
+        "s02-novice-2026-09-25/S15: CLAUDE.md \u00a75/WORKFLOWS \u00a715 describe successor notes with 'supersedes'; OPERATOR.md describes note.revise for in-place semantic replacement; WORKFLOWS never mentions note.revise and no capability creat"
+      ]
+    },
+    "hidden-prerequisite": {
+      "runs": 6,
+      "scenarios": [
+        "S02",
+        "S03",
+        "S06",
+        "S08",
+        "S10",
+        "S16",
+        "S26"
+      ],
+      "examples": [
+        "s02-novice-2026-09-25/S06: garden.seed.create needs expected_revisions {'garden-request:<idempotency_key>': 0}; undocumented, but the refusal named it.",
+        "s02-novice-2026-09-25/S26: capture.create needs expected_revisions {'capture-request:<idempotency_key>': 0}; the key differs per capability and is undocumented; learned only from the refusal.",
+        "s03-learner-2026-09-25/S02: The human views referenced by `status` (reading room, nebula) are not built in a fresh installation; `make views` is required first and uses PYTHON/venv detection from the Makefile.",
+        "s03-learner-2026-09-25/S06: Request-scoped revision key ('garden-request:<idempotency_key>') for garden.seed.create is undocumented; discovered from the error.",
+        "s03-learner-2026-09-25/S08: No URI scheme is documented for stage working notes, so the measurement cannot be attached as note evidence."
+      ]
+    },
+    "manual-generated-file-inspection": {
+      "runs": 4,
+      "scenarios": [
+        "S02",
+        "S04",
+        "S06",
+        "S10",
+        "S11",
+        "S12",
+        "S18"
+      ],
+      "examples": [
+        "s02-novice-2026-09-25/S04: Inbox items are not searchable through the product; relevant inbox content found by ls/cat of work/inbox/.",
+        "s02-novice-2026-09-25/S06: Garden and inbox are not searchable; duplicates found by ls/cat of knowledge/garden/ and work/inbox/.",
+        "s02-novice-2026-09-25/S10: As in S02, the exact stopping point exists only in the stage working note, read by path with cat.",
+        "s03-learner-2026-09-25/S02: Domain atlas, concept map and health report were read as Markdown to enumerate notes and relations \u2014 there is no list-notes command.",
+        "s04-resume-2026-09-25/S02: Workspace Open Questions/Deferred sections are not in `inspect` output; read CONTEXT.md files directly."
+      ]
+    },
+    "missing-capability": {
+      "runs": 7,
+      "scenarios": [
+        "S02",
+        "S03",
+        "S04",
+        "S05",
+        "S06",
+        "S07",
+        "S08",
+        "S09",
+        "S10",
+        "S11",
+        "S13",
+        "S14",
+        "S15",
+        "S16",
+        "S26",
+        "S27"
+      ],
+      "examples": [
+        "s00-baseline-2026-09-24/S26: No CLI command prepares or checks an envelope for a simple user-gesture write (no `capture --check`, no envelope/intent helper), unlike route-patch/module-plan-import, which return guards from --check",
+        "s02-novice-2026-09-25/S02: No read command returns a stage working note; resume reports 'Evidence none / Open here \u2014' while the working note holds the exact stopping point.",
+        "s02-novice-2026-09-25/S04: No gateway capability for WORKFLOWS \u00a721's inbox->workspace scratch/inputs route or for removing a routed inbox item; capture.create only adds to the inbox.",
+        "s02-novice-2026-09-25/S06: No capability to append to an existing Garden seed or to retire a processed inbox item; the lossless option was a second, near-duplicate seed and the stale DRF inbox copy remains.",
+        "s02-novice-2026-09-25/S10: No capability records partial stage progress in a form resume reads; stage.progress.update is status-only and the evidence ledger requires an authored requirement."
+      ]
+    },
+    "needs-implementation-knowledge": {
+      "runs": 6,
+      "scenarios": [
+        "S01",
+        "S04",
+        "S10",
+        "S16",
+        "S17",
+        "S26"
+      ],
+      "examples": [
+        "s00-baseline-2026-09-24/S01: Explaining the failed retry required reading the Makefile setup target and knowing that `python -m venv` over an existing venv keeps the old interpreter.",
+        "s00-baseline-2026-09-24/S26: The intent-hash algorithm and the request-scoped `capture-request:<key>` revision guard are documented nowhere outside tools/learning_os/contracts/gateway.py. A one-line capture needed a code read and",
+        "s02-novice-2026-09-25/S04: The approval subject hash (intent_sha256) is undefined in the docs the refusal points to (WORKFLOWS \u00a725a step 4, OPERATOR.md); computing it required reading tools/learning_os/contracts/gateway.py.",
+        "s02-novice-2026-09-25/S26: The inbox write was only this short because the intent-hash recipe had been learned from tools/learning_os/contracts/gateway.py in S04; a fresh agent has no documented way to build the envelope for a ",
+        "s03-learner-2026-09-25/S04: The approval subject hash (intent_sha256) is required for every agent write but specified nowhere in the docs; I had to read tools/learning_os/contracts/gateway.py."
+      ]
+    },
+    "other": {
+      "runs": 7,
+      "scenarios": [
+        "S00",
+        "S01",
+        "S02",
+        "S03",
+        "S11",
+        "S19",
+        "S22",
+        "S26",
+        "S27"
+      ],
+      "examples": [
+        "s00-baseline-2026-09-24/S00: Resume pointer is labelled 'confirmed' while the study map's current_stage names an earlier stage (and marks the pointer's stage 'pending'); the discrepancy is only visible by comparing two fields of ",
+        "s00-baseline-2026-09-24/S00: bootstrap --brief is a single-line JSON blob with no as-of date or days-until and mixes past (July) and future deadlines; resume gives day counts but only for the pointer's module. Computing 'due soon",
+        "s00-baseline-2026-09-24/S01: PERFORMANCE: `make test-fast`, described as 'quick feedback', took 11 min 54 s. It outlived the 10-minute foreground limit and had to be backgrounded and polled.",
+        "s00-baseline-2026-09-24/S26: Search is literal, with no stemming or concept expansion: 'caching' -> 1 note, 'cache' -> 10. Completeness needed variant queries plus `related` on concepts.",
+        "s00-baseline-2026-09-24/S26: bootstrap --brief deadlines carry no days-until and no window filter, so 'next three weeks' needs manual date filtering."
+      ]
+    },
+    "redundant-calls": {
+      "runs": 3,
+      "scenarios": [
+        "S02",
+        "S03",
+        "S26"
+      ],
+      "examples": [
+        "s02-novice-2026-09-25/S02: Unranked substring search ('prior' -> priority inversion, 'MAP' -> 30+ modules/units/study maps) forced several narrowing queries per question and opening every candidate with note-read.",
+        "s02-novice-2026-09-25/S26: No 'upcoming within N days' read; the deadline window was computed by the operator over the full list.",
+        "s04-resume-2026-09-25/S26: Search has no stemming ('caching' vs 'cache').",
+        "s05-connections-a-2026-09-25/S03: Each CLI call cold-starts at about 0.4 s. A full pass over the 116 notes (inspect \u00d76, note-read \u00d7116) plus 169 harvest calls took about 2.5 minutes of CLI time."
+      ]
+    },
+    "repeated-context-reconstruction": {
+      "runs": 1,
+      "scenarios": [
+        "S02",
+        "S10"
+      ],
+      "examples": [
+        "s04-resume-2026-09-25/S02: `resume` says 'Evidence none / Open here \u2014' and does not show the stage working-note text that holds the exact stopping point; found via plan-edit-context working_note path / inspect study-map notes_t",
+        "s04-resume-2026-09-25/S10: resume shows 'Evidence none / Open here \u2014' and not the stage working note that holds the actual stopping point."
+      ]
+    },
+    "setup-failure": {
+      "runs": 3,
+      "scenarios": [
+        "S00",
+        "S01"
+      ],
+      "examples": [
+        "s00-baseline-2026-09-24/S00: Default `python` is 3.11.15 and tools/los.py refuses it; the fresh world has no .venv. The ImportError names two fixes (make setup, or an outside-repo uv venv) so recovery was mechanical, but no read ",
+        "s00-baseline-2026-09-24/S01: `make setup` uses the system python3 (3.11) by default and fails at the pip step. The documented PYTHON= override then fails too, because the stale venv is reused. Recovery (rm -rf .venv) is undocumen",
+        "s02-novice-2026-09-25/S00: Documented invocation 'python tools/los.py' fails on this machine's default Python 3.11 (ImportError). The message is actionable and names two recovery routes (make setup, or an out-of-repo uv venv).",
+        "s02-novice-2026-09-25/S01: 'make setup' uses PYTHON ?= python3; on this machine that is 3.11 and pip rejects the package. The failure leaves a half-built .venv.",
+        "s04-resume-2026-09-25/S00: Default `python` on PATH is 3.11; first CLI call refused with an ImportError that names the fix (venv outside the repo). No .venv in the world."
+      ]
+    },
+    "unclear-safety": {
+      "runs": 6,
+      "scenarios": [
+        "S01",
+        "S04",
+        "S05",
+        "S10",
+        "S15",
+        "S16",
+        "S17",
+        "S20",
+        "S21",
+        "S25",
+        "S26"
+      ],
+      "examples": [
+        "s00-baseline-2026-09-24/S01: Nothing warns that the test suite may write into the repository's operations/diagnostics store; the learner-visible `los operations` view was polluted.",
+        "s02-novice-2026-09-25/S01: Running the documented test suite inside the installation writes into the learner's operational diagnostics store; nothing warns that tests share the installation root.",
+        "s02-novice-2026-09-25/S04: Which approval.kind to use (direct-user-gesture / operator-approval) and which artifact ids belong in expected_revisions for a stage note are not documented; both were guesses that happened to be acce",
+        "s02-novice-2026-09-25/S15: Approval for a semantic rewrite is an operator-asserted 'operator-approval'; nothing distinguishes a learner-approved diff from an operator deciding alone.",
+        "s03-learner-2026-09-25/S04: After a clean commit, `los operations` flags the request AMBIGUOUS / needs_attention / BLOCKED; a user reading it would think the write may not have happened. Root cause found in S05: the container's "
+      ]
+    },
+    "unclear-terminology": {
+      "runs": 7,
+      "scenarios": [
+        "S00",
+        "S01",
+        "S02",
+        "S03",
+        "S10",
+        "S14",
+        "S27"
+      ],
+      "examples": [
+        "s00-baseline-2026-09-24/S01: warning_baseline prints '0 warning(s) across 0 signature(s)' next to a validator that prints 3 warnings; it does not say that the other warnings are baseline-exempt advisories.",
+        "s02-novice-2026-09-25/S00: OPERATOR.md front-loads plan-editing vocabulary (route, stage, snapshot guard, GatewayEnvelopeV2, route.patch) before a new user knows the product hierarchy.",
+        "s02-novice-2026-09-25/S01: Validator prints '3 warning(s)' while the baseline gate prints '0 warning(s) across 0 signature(s)'; the exemption is not explained in the output.",
+        "s02-novice-2026-09-25/S02: 'semantic' sounded like a semantic search; it evaluates governance rule predicates.",
+        "s02-novice-2026-09-25/S14: The product offers no definition or check of 'tidy' beyond the validator, so a vague cleanup request has to be translated by the operator's own judgment."
+      ]
+    },
+    "unhelpful-error": {
+      "runs": 5,
+      "scenarios": [
+        "S01",
+        "S02",
+        "S04",
+        "S10",
+        "S16",
+        "S17",
+        "S19",
+        "S20"
+      ],
+      "examples": [
+        "s02-novice-2026-09-25/S01: Retrying with the README's documented override (make setup PYTHON=python3.12) fails identically because the stale .venv keeps a 3.11 python symlink; neither the Makefile nor the error says to remove .",
+        "s02-novice-2026-09-25/S02: Multi-word natural-language queries silently return [] (whole-query substring match); no hint to shorten the query.",
+        "s02-novice-2026-09-25/S04: UNCONFIRMED 'approval subject does not match the current capability intent' gives no expected hash and no pointer to how it is computed; exit code 0 on a refused write.",
+        "s03-learner-2026-09-25/S04: UNCONFIRMED gives no hint of how the intent hash is formed; by contrast INVALID_REQUEST on revisions named the exact artifacts.",
+        "s04-resume-2026-09-25/S02: Natural multi-word `search` returns [] with no hint that it needs fewer/other words."
+      ]
+    },
+    "unnecessary-exploration": {
+      "runs": 4,
+      "scenarios": [
+        "S02",
+        "S03",
+        "S07",
+        "S13",
+        "S16"
+      ],
+      "examples": [
+        "s02-novice-2026-09-25/S02: 'related' does not surface notes that answer or correct each other; the ridge<->MAP and low-rank<->matrix-factorization links had to be found by content search and reading.",
+        "s03-learner-2026-09-25/S02: `related` does not surface sibling notes, deprecated predecessors or Garden seeds; corpus-level questions (Q29, Q34, Q35, Q36) forced a full read of all 116 notes via a note-read loop (~110 KB).",
+        "s03-learner-2026-09-25/S03: Cross-domain connections (the ones a learner most needs) are invisible to every product surface because notes on different courses rarely share a concept id and the 28 concept relations are all intra-",
+        "s03-learner-2026-09-25/S07: Finding what the new material answers required remembering every open question from a full read; the product could not list them.",
+        "s03-learner-2026-09-25/S13: Checking exam scope needed the slide text from the materials folder; search/related have no notion of exam scope for a topic."
+      ]
+    },
+    "unstable-output-format": {
+      "runs": 4,
+      "scenarios": [
+        "S00",
+        "S06",
+        "S10",
+        "S21",
+        "S26"
+      ],
+      "examples": [
+        "s02-novice-2026-09-25/S00: bootstrap --brief emits one minified JSON line (~4 KB) intended for agents; past and future deadlines are interleaved with no days-remaining field, so the 'due soon' filter must be done by the reader.",
+        "s02-novice-2026-09-25/S06: Refused writes exit 2 (INVALID_REQUEST) or 0 (UNCONFIRMED in S04); callers cannot rely on the exit code.",
+        "s02-novice-2026-09-25/S26: search is literal substring: 'caching' and 'cache' return different sets.",
+        "s04-resume-2026-09-25/S26: bootstrap --brief academic_deadlines mixes past and future items with no 'upcoming' filter.",
+        "s04b-writes-2026-09-25/S10: `resume --json` omits the 'Recorded aims' block (coordination decision and workspace next action) that the text output shows, so a machine consumer loses the sourced aims."
+      ]
+    }
+  },
+  "repeated": [
+    "doc-contradiction",
+    "hidden-prerequisite",
+    "manual-generated-file-inspection",
+    "missing-capability",
+    "needs-implementation-knowledge",
+    "other",
+    "redundant-calls",
+    "setup-failure",
+    "unclear-safety",
+    "unclear-terminology",
+    "unhelpful-error",
+    "unnecessary-exploration",
+    "unstable-output-format"
+  ],
+  "implementation_files_read": {
+    "tests/eval/metrics/determinism.py --help output only (harness)": 2,
+    "Makefile (setup and hooks targets, lines 140-165), read to understand why the retry failed": 1,
+    "pytest failure tracebacks, which quoted snippets of tests/test_diagnostic_store.py and tests/test_recovery_conflicts.py (incidental; no test file was opened)": 1,
+    "tools/learning_os/contracts/gateway.py (lines 1-95: intent_subject, intent_sha256, REQUEST_SCOPED_ARTIFACT_PREFIXES, request_artifact_id), then imported to build the envelope": 1,
+    "tools/learning_os/contracts/gateway.py (intent_subject / intent_sha256, lines 30-90)": 1,
+    "Makefile (grep for the PYTHON variable, to run `make views` with the eval venv)": 1,
+    "tools/learning_os/contracts/gateway.py (intent_sha256 / intent_subject \u2014 the approval subject hash is not specified in any document)": 1,
+    "tools/learning_os/contracts/gateway.py (lines 1-90: intent_subject, intent_sha256)": 1,
+    "tools/learning_os/ai_actions/service.py (lines 520-800: _validate, apply_delivery)": 1,
+    "tools/learning_os/contracts/gateway.py (lines 1-95: intent_subject / intent_sha256, channel and approval-kind sets)": 1,
+    "tools/learning_os/ai_actions/service.py (lines 500-640: import_delivery, _validate, _assert_target_unchanged, start of apply_delivery)": 1,
+    "Makefile (test-fast target, grep)": 1,
+    "tests/conftest.py (real_repo fixture, grep)": 1,
+    "tools/learning_os/contracts/gateway.py (intent_sha256, request_artifact_id)": 1,
+    "tests/eval/tools/interrupt_probe.py (harness)": 1
+  }
+}

@@ -1,0 +1,711 @@
+{
+  "scorer_version": 1,
+  "results_file": "tests/eval/runs/s02-novice-2026-09-25/answers.jsonl",
+  "missing": [
+    "Q13",
+    "Q14",
+    "Q15",
+    "Q16",
+    "Q17",
+    "Q18",
+    "Q19",
+    "Q20",
+    "Q21",
+    "Q22",
+    "Q23",
+    "Q24",
+    "Q25",
+    "Q26",
+    "Q27",
+    "Q28",
+    "Q29",
+    "Q30",
+    "Q31",
+    "Q32",
+    "Q33",
+    "Q34",
+    "Q35",
+    "Q36"
+  ],
+  "overall": {
+    "questions": 36,
+    "answered": 12,
+    "evidence_ok_rate": 0.2778,
+    "points_HEURISTIC_mean": 0.9375,
+    "provenance_mean": 0.9792,
+    "forbidden_flags": 4
+  },
+  "by_category": {
+    "abandoned": {
+      "questions": 1,
+      "answered": 0,
+      "evidence_ok_rate": 0.0,
+      "points_HEURISTIC_mean": null,
+      "provenance_mean": null,
+      "forbidden_flags": 0
+    },
+    "audit": {
+      "questions": 1,
+      "answered": 0,
+      "evidence_ok_rate": 0.0,
+      "points_HEURISTIC_mean": null,
+      "provenance_mean": null,
+      "forbidden_flags": 0
+    },
+    "chronology": {
+      "questions": 8,
+      "answered": 4,
+      "evidence_ok_rate": 0.5,
+      "points_HEURISTIC_mean": 0.9375,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 3
+    },
+    "coordination": {
+      "questions": 3,
+      "answered": 0,
+      "evidence_ok_rate": 0.0,
+      "points_HEURISTIC_mean": null,
+      "provenance_mean": null,
+      "forbidden_flags": 0
+    },
+    "cross-domain": {
+      "questions": 3,
+      "answered": 1,
+      "evidence_ok_rate": 0.3333,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    },
+    "disambiguation": {
+      "questions": 2,
+      "answered": 0,
+      "evidence_ok_rate": 0.0,
+      "points_HEURISTIC_mean": null,
+      "provenance_mean": null,
+      "forbidden_flags": 0
+    },
+    "duplicates": {
+      "questions": 1,
+      "answered": 0,
+      "evidence_ok_rate": 0.0,
+      "points_HEURISTIC_mean": null,
+      "provenance_mean": null,
+      "forbidden_flags": 0
+    },
+    "evidence": {
+      "questions": 3,
+      "answered": 2,
+      "evidence_ok_rate": 0.6667,
+      "points_HEURISTIC_mean": 0.75,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 1
+    },
+    "exact": {
+      "questions": 4,
+      "answered": 1,
+      "evidence_ok_rate": 0.25,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 1
+    },
+    "exam-fact": {
+      "questions": 3,
+      "answered": 3,
+      "evidence_ok_rate": 0.6667,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    },
+    "garden": {
+      "questions": 1,
+      "answered": 0,
+      "evidence_ok_rate": 0.0,
+      "points_HEURISTIC_mean": null,
+      "provenance_mean": null,
+      "forbidden_flags": 0
+    },
+    "inbox": {
+      "questions": 1,
+      "answered": 0,
+      "evidence_ok_rate": 0.0,
+      "points_HEURISTIC_mean": null,
+      "provenance_mean": null,
+      "forbidden_flags": 0
+    },
+    "later-answer": {
+      "questions": 2,
+      "answered": 1,
+      "evidence_ok_rate": 0.5,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    },
+    "mastery": {
+      "questions": 1,
+      "answered": 0,
+      "evidence_ok_rate": 0.0,
+      "points_HEURISTIC_mean": null,
+      "provenance_mean": null,
+      "forbidden_flags": 0
+    },
+    "outdated": {
+      "questions": 3,
+      "answered": 3,
+      "evidence_ok_rate": 1.0,
+      "points_HEURISTIC_mean": 0.9167,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 2
+    },
+    "project": {
+      "questions": 4,
+      "answered": 0,
+      "evidence_ok_rate": 0.0,
+      "points_HEURISTIC_mean": null,
+      "provenance_mean": null,
+      "forbidden_flags": 0
+    },
+    "resume": {
+      "questions": 1,
+      "answered": 1,
+      "evidence_ok_rate": 0.0,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 0.75,
+      "forbidden_flags": 0
+    },
+    "semantic": {
+      "questions": 3,
+      "answered": 1,
+      "evidence_ok_rate": 0.3333,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    },
+    "semantic-set": {
+      "questions": 3,
+      "answered": 0,
+      "evidence_ok_rate": 0.0,
+      "points_HEURISTIC_mean": null,
+      "provenance_mean": null,
+      "forbidden_flags": 0
+    },
+    "source": {
+      "questions": 2,
+      "answered": 0,
+      "evidence_ok_rate": 0.0,
+      "points_HEURISTIC_mean": null,
+      "provenance_mean": null,
+      "forbidden_flags": 0
+    },
+    "synthesis": {
+      "questions": 1,
+      "answered": 1,
+      "evidence_ok_rate": 1.0,
+      "points_HEURISTIC_mean": 1.0,
+      "provenance_mean": 1.0,
+      "forbidden_flags": 0
+    }
+  },
+  "per_question": [
+    {
+      "question": "Q01",
+      "answered": true,
+      "cat": [
+        "exact",
+        "chronology"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "\u03b7 = 0.1 made the loss diverge (inf within 12 steps) on raw features",
+          "hit": true
+        },
+        {
+          "fact": "the fix was standardizing/scaling the features",
+          "hit": true
+        },
+        {
+          "fact": "after standardizing, \u03b7 = 0.1 converges (<200 iterations)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [
+        "the fix was only lowering the learning rate to 0.01"
+      ],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q02",
+      "answered": true,
+      "cat": [
+        "semantic"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "the Naive Bayes spam-filter note",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q03",
+      "answered": true,
+      "cat": [
+        "synthesis",
+        "cross-domain"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "MAP = maximize log-likelihood + log-prior",
+          "hit": true
+        },
+        {
+          "fact": "a Gaussian prior's log is \u2212\u2016\u03b8\u2016\u00b2/(2\u03c4\u00b2), a squared (L2) penalty",
+          "hit": true
+        },
+        {
+          "fact": "\u03bb corresponds to \u03c3\u00b2/\u03c4\u00b2 (noise over prior variance); narrow prior = strong penalty",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q04",
+      "answered": true,
+      "cat": [
+        "chronology",
+        "outdated"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 0.75,
+      "points": [
+        {
+          "fact": "current: probability of data at least as extreme as observed, assuming H0 is true",
+          "hit": true
+        },
+        {
+          "fact": "it is not P(H0 | data)",
+          "hit": true
+        },
+        {
+          "fact": "in April she believed it was the probability that H0 is true (corrected in June)",
+          "hit": true
+        },
+        {
+          "fact": "the misconception recurred in a September mock (inbox reminder)",
+          "hit": false
+        }
+      ],
+      "forbidden_HEURISTIC": [
+        "presents 'probability that the null hypothesis is true' as the current definition"
+      ],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q05",
+      "answered": true,
+      "cat": [
+        "outdated",
+        "chronology"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "no \u2014 virtual memory is per-process address translation; swapping is one optional use",
+          "hit": true
+        },
+        {
+          "fact": "page tables / TLB translate addresses",
+          "hit": true
+        },
+        {
+          "fact": "the April note that equated them is her old, corrected view",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [
+        "yes / virtual memory means using disk as RAM"
+      ],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q06",
+      "answered": true,
+      "cat": [
+        "resume"
+      ],
+      "evidence_all": true,
+      "evidence_any": false,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "stopped in Operating Systems L02, stage 'Proportional share and CFS'",
+          "hit": true
+        },
+        {
+          "fact": "the stride example stopped at step 4 (A=100, B=50, C=250 tickets)",
+          "hit": true
+        },
+        {
+          "fact": "next: finish the first eight decisions, check C runs 5/8, explain vruntime aloud",
+          "hit": true
+        },
+        {
+          "fact": "the recorded priority (2026-08-24) makes Statistical Learning primary \u2014 where she stopped is not necessarily what comes next",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 0.75,
+      "confidence": "high"
+    },
+    {
+      "question": "Q07",
+      "answered": true,
+      "cat": [
+        "exam-fact",
+        "outdated"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "2026-10-12 at 14:30",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q08",
+      "answered": true,
+      "cat": [
+        "exam-fact"
+      ],
+      "evidence_all": false,
+      "evidence_any": true,
+      "missing_evidence": [
+        "module-tuh-dbsys"
+      ],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "2.0 (passed, 2026-07-15)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q09",
+      "answered": true,
+      "cat": [
+        "exam-fact"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "yes, registered for the 2. Termin",
+          "hit": true
+        },
+        {
+          "fact": "2026-10-06, 10:00\u201312:00",
+          "hit": true
+        },
+        {
+          "fact": "withdrew from the 1. Termin (2026-07-21)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q10",
+      "answered": true,
+      "cat": [
+        "later-answer",
+        "chronology"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "question: could low-rank approximation fill in missing ratings, given the SVD needs every entry?",
+          "hit": true
+        },
+        {
+          "fact": "answered on 2026-08-25 by the matrix-factorization note: fit P Q\u1d40 only on observed entries",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "medium"
+    },
+    {
+      "question": "Q11",
+      "answered": true,
+      "cat": [
+        "evidence"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 1.0,
+      "points": [
+        {
+          "fact": "yes: a written derivation exists (Gaussian likelihood \u2192 log \u2192 argmin squared residuals)",
+          "hit": true
+        },
+        {
+          "fact": "evidence reference: own solution to L03 exercise 2 (github://\u2026/sheet03/ex2_gaussian_mle.pdf)",
+          "hit": true
+        }
+      ],
+      "forbidden_HEURISTIC": [
+        "declares mastery"
+      ],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q12",
+      "answered": true,
+      "cat": [
+        "evidence"
+      ],
+      "evidence_all": true,
+      "evidence_any": true,
+      "missing_evidence": [],
+      "points_HEURISTIC": 0.5,
+      "points": [
+        {
+          "fact": "not completed: started, stopped at step 4 of 8",
+          "hit": true
+        },
+        {
+          "fact": "the exercise-bank version (Q4) is operator-drafted and has no recorded solution",
+          "hit": false
+        }
+      ],
+      "forbidden_HEURISTIC": [],
+      "provenance": 1.0,
+      "confidence": "high"
+    },
+    {
+      "question": "Q13",
+      "answered": false,
+      "cat": [
+        "project"
+      ]
+    },
+    {
+      "question": "Q14",
+      "answered": false,
+      "cat": [
+        "coordination",
+        "project"
+      ]
+    },
+    {
+      "question": "Q15",
+      "answered": false,
+      "cat": [
+        "coordination",
+        "chronology"
+      ]
+    },
+    {
+      "question": "Q16",
+      "answered": false,
+      "cat": [
+        "disambiguation"
+      ]
+    },
+    {
+      "question": "Q17",
+      "answered": false,
+      "cat": [
+        "semantic-set"
+      ]
+    },
+    {
+      "question": "Q18",
+      "answered": false,
+      "cat": [
+        "chronology"
+      ]
+    },
+    {
+      "question": "Q19",
+      "answered": false,
+      "cat": [
+        "chronology"
+      ]
+    },
+    {
+      "question": "Q20",
+      "answered": false,
+      "cat": [
+        "semantic"
+      ]
+    },
+    {
+      "question": "Q21",
+      "answered": false,
+      "cat": [
+        "semantic"
+      ]
+    },
+    {
+      "question": "Q22",
+      "answered": false,
+      "cat": [
+        "cross-domain",
+        "semantic-set"
+      ]
+    },
+    {
+      "question": "Q23",
+      "answered": false,
+      "cat": [
+        "mastery",
+        "evidence"
+      ]
+    },
+    {
+      "question": "Q24",
+      "answered": false,
+      "cat": [
+        "source"
+      ]
+    },
+    {
+      "question": "Q25",
+      "answered": false,
+      "cat": [
+        "source"
+      ]
+    },
+    {
+      "question": "Q26",
+      "answered": false,
+      "cat": [
+        "abandoned",
+        "coordination"
+      ]
+    },
+    {
+      "question": "Q27",
+      "answered": false,
+      "cat": [
+        "inbox"
+      ]
+    },
+    {
+      "question": "Q28",
+      "answered": false,
+      "cat": [
+        "project"
+      ]
+    },
+    {
+      "question": "Q29",
+      "answered": false,
+      "cat": [
+        "semantic-set",
+        "disambiguation"
+      ]
+    },
+    {
+      "question": "Q30",
+      "answered": false,
+      "cat": [
+        "exact"
+      ]
+    },
+    {
+      "question": "Q31",
+      "answered": false,
+      "cat": [
+        "exact"
+      ]
+    },
+    {
+      "question": "Q32",
+      "answered": false,
+      "cat": [
+        "cross-domain"
+      ]
+    },
+    {
+      "question": "Q33",
+      "answered": false,
+      "cat": [
+        "project",
+        "exact"
+      ]
+    },
+    {
+      "question": "Q34",
+      "answered": false,
+      "cat": [
+        "garden",
+        "later-answer"
+      ]
+    },
+    {
+      "question": "Q35",
+      "answered": false,
+      "cat": [
+        "audit",
+        "chronology"
+      ]
+    },
+    {
+      "question": "Q36",
+      "answered": false,
+      "cat": [
+        "duplicates"
+      ]
+    }
+  ]
+}
