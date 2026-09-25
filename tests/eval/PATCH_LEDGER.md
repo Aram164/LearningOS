@@ -317,3 +317,140 @@ world data (before runs taken with the stage's edits absent).
 - Note: `test_tree_contract.py::test_every_top_level_directory_on_disk_is_declared`
   fails identically on clean HEAD (`bases/` absent from this worktree) —
   pre-existing environment artifact, carried to the S12.6 JF-02 triage.
+
+## S12.4 — Diagnostics honesty (JF-04 / JF-03 / JF-19 / JF-21)
+
+### JF-04 — TRACEPARENT adopted as operation identity
+
+- Mechanism (verified): `tracer.operation()` returned the propagated
+  context wholesale and `span_start("attempt")` reused its span id, so
+  every process under one ambient trace logged one operation; `los
+  operations` groups by trace id and merged them (wrong outcome,
+  wrong attention).
+- Fix: `operation()` always mints a fresh per-process operation
+  (trace + span), carrying the propagated pair as `parent` linkage only
+  (stable per process, re-derived if the env value changes);
+  `TraceContext` gains `parent`; transient records carry
+  `parent_op`/`parent_span`; the store persists `parent_trace_id` /
+  `parent_span_id` (additive; old readers ignore it) and reads pass
+  them through. Correlation preserved, identity per process.
+- BEFORE (world, ambient TRACEPARENT, two writes): 1 operation with
+  2 attempts under the ambient trace; 0/28 records with parent linkage.
+- AFTER: 2 operations (fresh traces), 1 attempt each, 28/28 records
+  parented. World repro 1/4 → 4/4.
+- Tests: new `test_shared_parent_trace_does_not_merge_operations`
+  (fails pre-fix, passes post-fix). Intent-preserving rewrites of three
+  tests that pinned the adjudicated adoption:
+  `test_child_receives_the_intended_context` (capability record still
+  shows the received parent; phases now assert fresh ids + parent
+  linkage), `test_concurrent_operations_cannot_cross_contexts`
+  (per-attempt distinct ops + shared parent linkage — stronger
+  isolation than before), `test_s6_resolves_committed_from_persisted_store`
+  (attempt selection by parent trace instead of adopted identity; S6
+  verdict unchanged). The old asserts encoded the confirmed defect
+  (adoption merges unrelated requests); the tests' intents (context
+  receipt, isolation, S6 resolution) are preserved.
+
+### JF-03 — test spans pollute the checked-in operations view
+
+- Mechanism (verified): `test_capability_dispatch._run_capability` and
+  one `test_capability_catalog` case drive the real CLI without
+  `--root` (they assert on the real capability catalog), binding the
+  trace store to the real root; `make test-fast` wrote exactly the
+  S00-counted 135 spans to `operations/diagnostics/traces.jsonl`.
+- Fix: autouse conftest fixture snapshots the real `traces.jsonl`
+  around every test (byte-restore: unlink-if-created else
+  truncate-to-size, rmdir-if-emptied) and unbinds the process-global
+  store afterwards. The two tests keep running against the real
+  catalog — assertions unchanged, side effects isolated. Mini-root
+  store assertions are untouched (their roots are never the real one).
+- BEFORE: the two files pass 66/66 and leak 135 spans.
+- AFTER: 66/66, zero bytes left behind (dir removed too).
+- Tests: `test_suite_leaves_the_real_diagnostic_store_untouched`
+  replays the leak path in a nested pytest and asserts byte-identity;
+  fails on unfixed conftest (nested run appends spans), passes with it.
+
+### JF-19 — operations mislabels settled outcomes (F-s07-10)
+
+Three sub-fixes, one per minimized repro:
+1. Settlement: a commit settled only while the live manifest showed
+   its exact snapshot, so every CLI write read BLOCKED until views
+   regenerated and all but the latest stayed that way permanently.
+   New rule: COMMITTED + live manifest at-or-past the commit (both
+   snapshots chained to receipts, manifest receipt at-or-after the
+   write's — `manifest_covers_receipt`, pure and unit-tested) settles
+   with reason "live manifest is past this commit"; a behind/unknown
+   manifest keeps verify-observation (the real projection-behind
+   signal, with `make views` as the documented settling step).
+2. Conflicts: a lone IDEMPOTENCY_CONFLICT (every counted attempt)
+   now resolves NOT_COMMITTED/none via `_conflict_proves_no_commit`,
+   ordered before the contradiction branches (the ledger row is the
+   other intent's evidence). The S9–S11 multi-attempt guard is shared
+   and still withholds proof for ambiguous earlier attempts.
+   `IDEMPOTENCY_CONFLICT` also joins `DEFINITIVE_NO_COMMIT_CODES`;
+   the UI mirror (`contracts/gateway-v2.ts`) needs the same addition
+   — recorded here as a required cross-repo sync; the drift-failing
+   parity test skips in this worktree (sibling absent) and will fail
+   until the UI lands it, which is the designed forcing function.
+3. Reused ids: `describe_operation` appends an explicit note when the
+   matched records span 2+ idempotency keys (covered key + every
+   other key with outcome/tx), instead of silently naming only the
+   first transaction. Response shape unchanged (additive reason).
+- BEFORE (world): superseded COMMITTED → verify-observation/attention;
+  conflict → AMBIGUOUS + reconcile-exact-request; shared-id
+  explanation names tx1 only. 1/5.
+- AFTER: all settled/named correctly. 5/5.
+- Tests: `test_manifest_covers_receipt_positions_the_live_manifest`,
+  `test_superseded_commit_settles_without_exact_observation`,
+  `test_idempotency_conflict_proves_no_commit_for_its_attempt` (incl.
+  multi-attempt guard + contradiction-ordering legs),
+  `test_reused_request_id_names_every_distinct_request` (end-to-end,
+  two CLI writes) — all fail pre-fix, pass post-fix. The S1–S14
+  ground-truth gate is unchanged (all 14 verdicts identical).
+- Docs: the operations-surface reference (statuses, recovery
+  requirements, settlement rule) confirmed missing by JF-19 is written
+  in S12.5 with the other documentation residues.
+
+### JF-21 — reads disagree after a kill
+
+- Mechanism (verified, F-s07-03 replicated): query reads (single-ID
+  inspect/search/related) call bare `_fresh_manifest` with no lock,
+  while batch inspect/bootstrap/plan reads take the operator lock
+  (which reconciles on acquisition). After a SIGKILL mid-commit the
+  interfaces report different states.
+- Fix: `_fresh_manifest` takes `_operator_lock` itself — the single
+  choke point for all 11 projection-read call sites (query, reads,
+  unit, module, project). Re-entrant for callers already holding the
+  lock; uncontended flock + empty-journal scan cost is negligible
+  next to a full manifest build. Every projection read now observes
+  post-recovery transaction-consistent state. Reconcile/commit/replay
+  logic untouched: the 94-kill atomicity and idempotency properties
+  keep their exact code paths (strengthened isolation, no weakened
+  property). `validate`/`status` still report on-disk state directly
+  (out of the adjudicated scope, which names single-ID/batch/bootstrap).
+- BEFORE (world, real SIGKILL at 0.5s): single inspect → paused
+  (uncommitted), batch → active, bootstrap snapshot == pre-state.
+- AFTER: single/batch/bootstrap all pre-state. World repro 2/3 → 3/3.
+- Tests: `test_reads_agree_on_pre_state_after_a_crash` (planted torn
+  file + v2 journal, no receipt; asserts single/batch/bootstrap +
+  healed bytes) — fails pre-fix (single shows paused), passes post-fix.
+
+### S12.4 gate results
+
+- World repros: JF-04 1/4 → 4/4; JF-19 1/5 → 5/5; JF-21 2/3 → 3/3;
+  JF-03 135 leaked spans → 0 (66/66 pass both ways).
+- New tests: 7, all fail pre-fix and pass post-fix (the conftest
+  one fails on unfixed conftest as shown), plus 3 intent-preserving
+  rewrites of tests that pinned the JF-04 adoption.
+- Full files: test_trace_context.py (14 passed, 1 skipped);
+  test_diagnostic_store.py + test_causal_resolver.py +
+  test_evidence_parity.py + test_operations.py (64 passed, 1 skipped);
+  test_recovery_conflicts.py + test_bounded_reads.py +
+  test_search_index.py (103 passed); test_transactions.py +
+  test_gateway_v2.py + test_capability_dispatch.py +
+  test_capability_catalog.py (165 passed).
+- Real repo: `validate.py --compact` 0 errors;
+  `warning_baseline.py --check` OK; `ruff check tools/ tests/` clean;
+  `operations/diagnostics/` absent after the suites (JF-03 holds).
+- Known cross-repo follow-up: UI `DEFINITIVE_NO_COMMIT_CODES` must add
+  IDEMPOTENCY_CONFLICT (parity test enforces).

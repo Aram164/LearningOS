@@ -107,6 +107,40 @@ def _mini_with_curriculum(tmp_path: Path, name: str) -> Path:
     return mini
 
 
+def test_reads_agree_on_pre_state_after_a_crash(tmp_path: Path):
+    """Single-ID, batch, and bootstrap reads all reconcile first (JF-21).
+
+    A planted crash (torn unit file + published journal, no receipt) must
+    read as the pre-state on every interface: no reader may show a write
+    recovery will undo.
+    """
+    import json
+
+    from repo_builders import run_los
+
+    from learning_os.fingerprint import canonical_fingerprint
+
+    mini = _mini_with_curriculum(tmp_path, "reads-agree")
+    unit_file = mini / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+    pre = canonical_fingerprint(mini)
+    before = unit_file.read_bytes()
+    dirty = before.replace(b"status: active", b"status: paused")
+    assert dirty != before, "fixture must carry an active status to tear"
+    unit_file.write_bytes(dirty)
+    _write_journal_v2(
+        mini, "transaction-20260101-000000-001",
+        [(unit_file.relative_to(mini).as_posix(), before, dirty)])
+    single = json.loads(run_los(mini, "inspect", "unit-demo-l01").stdout)
+    assert single["status"] == "active", single
+    batch = json.loads(run_los(
+        mini, "inspect", "unit-demo-l01", "study-map-demo-l01").stdout)
+    assert [r["status"] for r in batch["records"]
+            if r["id"] == "unit-demo-l01"] == ["active"], batch
+    boot = json.loads(run_los(mini, "bootstrap", "--compact").stdout)
+    assert boot["snapshot_id"] == f"sha256:{pre}", boot["snapshot_id"]
+    assert unit_file.read_bytes() == before
+
+
 def _crash_stage_write(mini: Path, key: str) -> dict:
     """A real crashed commit: chmod breaks projection, the v2 journal stays."""
     from gateway_helpers import approved_v2_envelope

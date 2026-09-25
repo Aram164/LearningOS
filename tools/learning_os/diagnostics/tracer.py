@@ -5,10 +5,12 @@ is a strict no-op when the sink is unset. Every function swallows its own
 failures: instrumentation observes the write path and can never break, slow
 materially, or alter it.
 
-Operation identity: the propagated UI context when present, else one lazily
-minted process operation. A CLI invocation is one operation by construction,
-so the process-global fallback cannot cross contexts between processes; it
-only gives direct-CLI (operator) calls a stable identity without a UI.
+Operation identity: one lazily minted process operation, always. A
+propagated UI context is parentage for correlation, never identity:
+adopting it merged every process sharing one ambient trace into one
+misreported operation (JF-04). A CLI invocation is one operation by
+construction, so the process-global identity cannot cross contexts
+between processes.
 """
 
 from __future__ import annotations
@@ -24,17 +26,24 @@ from .conventions import TRACE_DEBUG_FILE_ENV, VOCAB_VERSION
 from .store import persist_record
 
 _current: TraceContext | None = None
+_current_source: str | None = None
 
 
 def operation() -> TraceContext:
-    """This process's operation: propagated context, else one minted root."""
-    global _current
+    """This process's operation: minted, with any propagated context as parent."""
+    global _current, _current_source
     propagated = trace_context_from_env()
-    if propagated is not None:
-        return propagated
-    if _current is None:
-        _current = TraceContext(trace_id=secrets.token_hex(16),
-                                span_id=secrets.token_hex(8))
+    source = propagated.format() if propagated is not None else None
+    if _current is None or source != _current_source:
+        if propagated is None:
+            _current = TraceContext(trace_id=secrets.token_hex(16),
+                                    span_id=secrets.token_hex(8))
+        else:
+            _current = TraceContext(trace_id=secrets.token_hex(16),
+                                    span_id=secrets.token_hex(8),
+                                    sampled=propagated.sampled,
+                                    parent=propagated)
+        _current_source = source
     return _current
 
 
@@ -69,6 +78,13 @@ def _append(record: dict) -> None:
     persist_record(record)
 
 
+def _parentage(active: TraceContext) -> dict:
+    parent = active.parent
+    if parent is None:
+        return {}
+    return {"parent_op": parent.trace_id, "parent_span": parent.span_id}
+
+
 def emit_event(name: str, *, stage: str | None = None,
                status: str = "ok", span_id: str | None = None,
                attrs: dict | None = None,
@@ -87,6 +103,7 @@ def emit_event(name: str, *, stage: str | None = None,
             "ts": time.time(),
             "pid": os.getpid(),
             "attrs": _clean_attrs(attrs),
+            **_parentage(active),
         })
     except Exception:
         return
@@ -107,6 +124,7 @@ def span_start(name: str, *, attrs: dict | None = None,
             "ts": time.time(),
             "pid": os.getpid(),
             "attrs": _clean_attrs(attrs),
+            **_parentage(active),
         })
     except Exception:
         pass
@@ -129,6 +147,7 @@ def span_end(span_id: str, name: str, *, status: str = "ok",
             "ts": time.time(),
             "pid": os.getpid(),
             "attrs": _clean_attrs(attrs),
+            **_parentage(active),
         })
     except Exception:
         return

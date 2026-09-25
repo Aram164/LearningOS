@@ -19,6 +19,55 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 SHARED_GENERATED_AT = "shared-test-snapshot"
 
 
+@pytest.fixture(autouse=True)
+def _isolate_diagnostic_store_side_effects():
+    """Keep test spans out of the checked-in tree (JF-03).
+
+    A few tests drive the real capability catalog through the real CLI
+    without ``--root`` (they assert on the real catalog, so a tmp mini
+    would change the assertions); those runs bind the trace store to the
+    real root and persist spans best-effort. Snapshot the real
+    ``traces.jsonl`` around every test and restore it after, and unbind
+    the process-global store so in-process emits cannot bleed into the
+    next test's mini either. Tests asserting on a mini's own store are
+    unaffected: their roots are untouched.
+    """
+    store = REPO_ROOT / "operations" / "diagnostics" / "traces.jsonl"
+    try:
+        before = store.stat().st_size if store.is_file() else None
+    except OSError:
+        before = None
+    yield
+    try:
+        if before is None:
+            try:
+                store.unlink()
+            except FileNotFoundError:
+                pass
+            except OSError:
+                pass
+            try:
+                store.parent.rmdir()
+            except OSError:
+                pass
+        elif store.is_file():
+            try:
+                with store.open("r+b") as handle:
+                    handle.truncate(before)
+            except OSError:
+                pass
+    finally:
+        try:
+            from learning_os.diagnostics.store import bind_store
+        except ImportError:
+            pass
+        else:
+            try:
+                bind_store(None)
+            except Exception:
+                pass
+
+
 @pytest.fixture(scope="session")
 def repo_root() -> Path:
     return REPO_ROOT

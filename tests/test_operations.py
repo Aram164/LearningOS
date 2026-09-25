@@ -232,3 +232,38 @@ def test_wrongly_shaped_and_duplicate_authority_is_reported(tmp_path: Path):
         code, detail = _operations(mini, "--request-id", "request-ops-shapes-ok")
         assert code == 0
         assert detail["diagnosis"]["canonical_outcome"] == "AMBIGUOUS"
+
+
+def test_reused_request_id_names_every_distinct_request(tmp_path: Path):
+    """Request ids are not unique: a shared id must not silently explain
+    only the first transaction (JF-19)."""
+    mini = _mini_with_curriculum(tmp_path, "ops-reused-id")
+    first = _write(mini, "ops-reused-1", request_id="request-ops-shared")
+    assert first is not None and first.get("ok"), first
+    # A second write under the same shared request id, another capability.
+    from gateway_helpers import approved_v2_envelope, request_artifact_id
+
+    from learning_os.contracts.gateway import intent_sha256
+
+    envelope = approved_v2_envelope(
+        mini, capability="garden.seed.create",
+        payload={"title": "Shared id probe", "text": "second write"},
+        artifact_ids=[request_artifact_id(
+            "garden.seed.create", "ops-reused-2")],
+        idempotency_key="ops-reused-2")
+    envelope["request_id"] = "request-ops-shared"
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    proc = subprocess.run(
+        [sys.executable, str(LOS), "--root", str(mini), "capability",
+         "garden.seed.create", "--payload-file", "-"],
+        input=json.dumps(envelope), capture_output=True, text=True,
+        timeout=120)
+    second = json.loads(proc.stdout)
+    assert second.get("ok"), proc.stdout + proc.stderr
+    code, detail = _operations(mini, "--request-id", "request-ops-shared")
+    assert code == 0
+    blob = json.dumps(detail)
+    assert first["transaction_id"] in blob, blob
+    assert second["transaction_id"] in blob, blob
+    assert any("reused across 2 idempotency keys" in reason
+               for reason in detail["diagnosis"]["reasons"]), blob

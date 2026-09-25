@@ -111,6 +111,9 @@ def _evidence_for(root: Path, records: list[dict],
         response_codes=codes,
         observed_snapshot=_observed_for(
             records, (response or {}).get("snapshot_after"), observed),
+        # `observed` is the live manifest snapshot itself: the supersession
+        # check positions it against the receipt inventory (JF-19).
+        manifest_snapshot=observed,
         authority_files=authority_files)
 
 
@@ -222,6 +225,41 @@ def build_timeline(records: list[dict], diagnosis) -> list[dict]:
     return rows
 
 
+def _note_request_id_reuse(records: list[dict], authority, diagnosis) -> None:
+    """Name every distinct request behind one reused request id (JF-19).
+
+    Request ids are caller-chosen and not unique; two writes may share one
+    id string under different idempotency keys. Authority resolves the
+    first key's evidence, so without this note the explanation silently
+    names only the first transaction.
+    """
+    per_op: dict[str, dict] = {}
+    for record in records:
+        op = record.get("op")
+        if not op:
+            continue
+        slot = per_op.setdefault(op, {})
+        attrs = record.get("attrs") or {}
+        if record.get("name") in (conventions.EVENT_ENVELOPE_VALIDATED,
+                                  conventions.EVENT_ENVELOPE_PREPARED):
+            if attrs.get("idempotency_key") and "key" not in slot:
+                slot["key"] = attrs.get("idempotency_key")
+        if record.get("name") == conventions.EVENT_RESPONSE_EMITTED:
+            slot["outcome"] = "ok" if attrs.get("ok") else attrs.get("code")
+            slot["tx"] = attrs.get("transaction_id")
+    keys = sorted({slot.get("key") for slot in per_op.values() if slot.get("key")})
+    if len(keys) < 2:
+        return
+    covered = authority.idempotency_key
+    others = [f"{slot.get('key')} ({slot.get('outcome')}"
+              + (f" {slot.get('tx')}" if slot.get("tx") else "") + ")"
+              for slot in sorted(per_op.values(), key=lambda s: str(s.get("key")))
+              if slot.get("key") and slot.get("key") != covered]
+    diagnosis.reasons.append(
+        f"request_id reused across {len(keys)} idempotency keys; this "
+        f"explanation covers {covered} only — also: {', '.join(others)}")
+
+
 def describe_operation(root: Path, request_id: str) -> dict | None:
     """Full diagnosis plus timeline for one request id, or None."""
     everything = read_records(root)
@@ -235,6 +273,7 @@ def describe_operation(root: Path, request_id: str) -> dict | None:
     observed = _observed_snapshot(root)
     authority = _evidence_for(root, records, observed)
     diagnosis = resolve(records, authority)
+    _note_request_id_reuse(records, authority, diagnosis)
     receipt = authority.verified_receipt or {}
     if diagnosis.canonical_outcome == "COMMITTED" \
             and diagnosis.recovery_requirement == "none":
