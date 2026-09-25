@@ -116,6 +116,7 @@ own. The judge merges every run branch before scoring.
 | 4b | O (S10, S16, S26) | `s04b-writes-2026-09-25` | `claude/eval-s04b-writes-2026-09-25` | `13ad2fca…` | after H3 (eval `658db28`); local run (H4), opened an earlier memory note before starting |
 | 5 | C | `s05-connections-a-2026-09-25` | `claude/eval-s05-connections-a-2026-09-25` | `13ad2fca…` | after H3 (eval `658db28`); local run (H4), opened an earlier memory note before starting; one leak-scan match adjudicated (H5) |
 | 6 | C | `s06-connections-b-2026-09-25` | `claude/eval-s06-connections-b-2026-09-25` | `13ad2fca…` | after H3 (eval `658db28`); local run (H4), memory index in context only |
+| 7 | X | `s07-abuse-2026-09-25` | `claude/eval-s07-abuse-2026-09-25` | `13ad2fca…` | after H3 (eval `658db28`); local run (H4), memory index in context; started before the H4 brief |
 
 ## Harness changes
 
