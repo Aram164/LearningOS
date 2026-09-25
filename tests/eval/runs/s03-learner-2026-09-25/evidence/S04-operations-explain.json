@@ -1,0 +1,81 @@
+{
+  "request_id": "s03-s04-a09-stage-note-3",
+  "capability": "stage.note.write",
+  "diagnosis": {
+    "first_failure_stage": "core.approval",
+    "execution_outcome": "committed",
+    "canonical_outcome": "AMBIGUOUS",
+    "projection_outcome": "published",
+    "recovery_requirement": "reconcile-exact-request",
+    "authoritative_evidence": [
+      "ledger:s03-s04-a09-stage-note",
+      "observed:sha256:411721b333431c5cf1aa17f657ce09345c5dded3df810654dfdb2f0749ae3480"
+    ],
+    "attempts": [
+      {
+        "span": "6009a4c6ed1c4555",
+        "status": "ok",
+        "replay_of": null
+      }
+    ],
+    "reasons": [
+      "committed evidence failed strict verification: idempotency ledger records a different request id for this key",
+      "ambiguous outcome: the exact request stays recoverable"
+    ]
+  },
+  "timeline": [
+    {
+      "stage": "Core admitted request",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Approval",
+      "state": "failed",
+      "detail": null
+    },
+    {
+      "stage": "Replay lookup",
+      "state": "passed",
+      "detail": "miss"
+    },
+    {
+      "stage": "Snapshot guard",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Handler",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Validation",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Projection",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Transaction committed",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Receipt persisted",
+      "state": "passed",
+      "detail": null
+    }
+  ],
+  "observed_snapshot": "sha256:411721b333431c5cf1aa17f657ce09345c5dded3df810654dfdb2f0749ae3480",
+  "ui_outcome": "BLOCKED",
+  "facts": {
+    "transaction_id": null,
+    "receipt_path": null,
+    "snapshot_before": null,
+    "snapshot_after": null
+  }
+}
