@@ -1,0 +1,17 @@
+Operating Systems · Processes and CPU scheduling · stage-os-l02-02-proportional-share
+  (via resume pointer; pointer updated 2026-09-16 (8 days ago))
+
+  Recorded aims (compare with current dates and state):
+    Coordination decision 2026-08-24: Decision 2026-08-24 (Noor), replacing the 2026-07-14 ordering: Statistical Learning retake is primary until its sitting; Operating Systems oral prep is second and runs in parallel at roughly a third of study time.…
+      source: work/COORDINATION.md#Priorities
+    Workspace workspace-os-oral-prep: Continue the proportional-share stage: work one stride-scheduling example by hand, then explain vruntime aloud.
+      source: work/active/workspace-os-oral-prep/CONTEXT.md#Next-Action
+
+  Requirement  none authored for this stage
+
+  Evidence     none recorded yet
+  Last result  none
+
+  Open here    —
+
+  Exam         Oral exam slot — 2026-10-12 (18 days)

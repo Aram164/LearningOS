@@ -1,0 +1,4 @@
+.venv/bin/python tools/warning_baseline.py --check
+warning-baseline: 0 warning(s) across 0 signature(s); baseline 0 across 0 (recorded 2026-09-18)
+
+warning-baseline: OK — zero errors, no new warning signature.

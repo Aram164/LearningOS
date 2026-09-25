@@ -1,0 +1,185 @@
+{
+  "scenario": "S01",
+  "run_id": "s00-baseline-2026-09-24",
+  "classification": "ROBUSTNESS_FAILURE",
+  "classification_reason": "The learner's main asks were met: the tooling ends up working, the validator reports 0 errors, the warning baseline shows no new signature, and no note or tracked file changed. Two robustness problems remain. (1) The documented setup cannot recover from a first failure: the documented PYTHON= override failed identically until the half-built .venv was deleted, which no document mentions. (2) The documented `make test-fast` wrote a phantom AMBIGUOUS, needs-attention request into the learner's operations/diagnostics store, visible via `los operations`. The suite also fails 34 tests here, at least 17 because it reads the product author's own repository files.",
+  "before": {
+    "revision": "9a85f012bea38e7db8bd76edf6251136f9aa15e1",
+    "git_status": [],
+    "canonical_digest": "c888e80b499ff1091f9bf17f936b85a82fb539545b000cb7df8bded00852436e",
+    "derived_digest": "df97c8737d287c93f8e3a048d46ad71f9da0e95cf3cccd0c0bbc8e63032db409",
+    "snapshot_file": "observations/S01-before.json"
+  },
+  "consumer": {
+    "goal": "Make the LearningOS tooling work on this machine and confirm that the repository is healthy without changing any notes.",
+    "first_action": "Searched README.md for setup/venv/install/python and read its 'Without the operator' and 'Commands' sections (lines 76-200).",
+    "commands": [
+      "cd ~/los-eval/s00-baseline-2026-09-24/LearningOS/repository; git status --short --ignored; grep -n -i -E 'setup|venv|install|python' README.md",
+      "sed -n 76,200p README.md",
+      "ls .git/hooks | grep -v sample; git config --get core.hooksPath; make   # target list, exit 0",
+      "make setup   # exit 2 (python3 -> 3.11.15; pip: requires >=3.12)",
+      "make setup PYTHON=python3.12   # exit 2, identical error (existing 3.11 .venv reused)",
+      "cat .venv/pyvenv.cfg; grep docs for venv recovery   # cfg says 3.12.3; no recovery documented",
+      "ls -la .venv/bin | grep python; sed -n 140,165p Makefile   # impl read: setup target",
+      "rm -rf .venv && make setup PYTHON=python3.12   # exit 0, 11.4 s, hooks installed",
+      "make check   # exit 0: 0 error(s), 3 warning(s) (2x WS-NEGLECT, HYGIENE-VIEWS)",
+      "make warnings; .venv/bin/python tools/validate.py --compact   # both exit 0; baseline '0 warning(s) across 0 signature(s)'",
+      "make views   # exit 0, 0.9 s, wrote 20 files under generated/",
+      "make test-fast   # exit 2 after 11 min 54 s: 34 failed, 2214 passed, 30 skipped, 83 deselected",
+      ".venv/bin/python tools/validate.py --compact; tools/warning_baseline.py --check; make status   # 0 errors, 2 warnings, OK",
+      "git status --short --ignored",
+      "grep FAILED/E lines in the test-fast output (no test source opened)",
+      ".venv/bin/python -m pytest tests/test_pilot_replay.py tests/test_operations.py -q -p no:cacheprovider   # 21 failed, 12 passed (deterministic)",
+      ".venv/bin/python tools/los.py operations   # phantom req-bad-payload, AMBIGUOUS, needs_attention",
+      "stat timestamps of generated/, .pytest_cache, traces.jsonl to attribute the write"
+    ],
+    "tool_calls": 22,
+    "docs_consulted": [
+      "README.md (Commands, setup paragraph, 'Without the operator', 'Trust but verify')",
+      "`make` help text",
+      "CLAUDE.md hard rule 9 (validate + warning baseline), already in context",
+      "system/OPERATOR.md 'What clean means', already read in S00"
+    ],
+    "impl_files_read": [
+      "Makefile (setup and hooks targets, lines 140-165), read to understand why the retry failed",
+      "pytest failure tracebacks, which quoted snippets of tests/test_diagnostic_store.py and tests/test_recovery_conflicts.py (incidental; no test file was opened)"
+    ],
+    "retries": 2,
+    "confusions": [
+      "README says Python 3.12+ is required, but a bare `make setup` silently uses the system python3 (3.11) and fails only at the pip step, after creating a venv and upgrading pip in it.",
+      "After a failed setup, it was unclear why the documented `PYTHON=python3.12` override failed with the same error; pyvenv.cfg claimed 3.12.3 while the python binary was still 3.11.",
+      "warning_baseline reports '0 warning(s) across 0 signature(s)' while the validator reports 3 (then 2) warnings. Nothing in its output says those warnings are baseline-exempt; OPERATOR.md 'What clean means' explains the exemption set.",
+      "README calls make test-fast 'quick feedback'; it ran for almost 12 minutes, so I had to background it and poll."
+    ],
+    "corrective_steps": [
+      "Deleted the half-built, gitignored .venv (created by the failed setup a minute earlier, holding no learner data) and re-ran `make setup PYTHON=python3.12`. This is a generic venv workaround, not a product patch.",
+      "Ran `make views` to clear the HYGIENE-VIEWS advisory, since generated/ is disposable and rebuilding it is an automatic permission.",
+      "Re-ran two failing test files once to confirm the failures are deterministic.",
+      "Left the polluted diagnostic trace in place and reported it; nothing was repaired."
+    ],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": true,
+    "wall_minutes": 26,
+    "outcome": "The learner sees evidence/S01-answer.md. Tooling works on Python 3.12 after a workaround. The validator reports 0 errors and 2 nonblocking neglect advisories, the warning baseline passes, views are rebuilt, and notes are verified unchanged. Two caveats: the product's own fast test suite fails 34 tests here and cannot serve as a health check, and running it left a phantom 'needs attention' request in her `los operations`."
+  },
+  "internal": {
+    "request_ids": [
+      "req-bad-payload (phantom, written by the test suite; trace b3374ba2d506605f0e90a7e68fc300f5)"
+    ],
+    "receipts": [],
+    "transaction_behavior": "No learner-initiated transaction. The observer saw no receipts and nothing in flight before or after.",
+    "approval_behavior": "Not exercised.",
+    "projection_activity": "make views published 20 files (493,520 bytes) under generated/, including manifest.json, coordination-view.md, domain-atlas.md and reports/health.md. The earlier `make check` had already written generated/reports/validation-report.md.",
+    "persistence_activity": "operations/diagnostics/traces.jsonl was created by make test-fast: 135 spans, one trace, 45 attempts, first_failure_stage core.admission, canonical_outcome AMBIGUOUS.",
+    "derived_changes": "derived 0 -> 493,520 bytes (20 files added); none modified.",
+    "manifest_changes": "generated/manifest.json created by make views (none existed before).",
+    "unexpected_writes": [
+      "operations/diagnostics/traces.jsonl (54,128 bytes) written by make test-fast into the learner's repository; it surfaces as a needs-attention operation in `los operations`",
+      ".git/hooks/pre-commit, post-commit, pre-push installed by make setup (documented, but outside the working tree)",
+      ".venv/, tools/learningos_core.egg-info/, .pytest_cache/ and __pycache__ dirs (all gitignored; documented or expected by-products of setup and tests)"
+    ],
+    "warnings_errors": [
+      "make setup (attempt 1, 2): ERROR: Package 'learningos-core' requires a different Python: 3.11.15 not in '>=3.12'",
+      "W WS-NEGLECT: workspace 'workspace-ledgerline' untouched for 31 days (per Git)",
+      "W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)",
+      "W HYGIENE-VIEWS: generated/ views absent (cleared by make views)",
+      "make test-fast: 34 failed, 2214 passed, 30 skipped, 83 deselected"
+    ],
+    "git_diff_stat": "(empty: HEAD 9a85f01 unchanged, tracked tree clean; canonical digest unchanged)",
+    "observe_diff_file": "observations/S01-diff.json"
+  },
+  "after": {
+    "revision": "9a85f012bea38e7db8bd76edf6251136f9aa15e1",
+    "git_status": [],
+    "canonical_digest": "c888e80b499ff1091f9bf17f936b85a82fb539545b000cb7df8bded00852436e",
+    "derived_digest": "47e1976bb5597d3f573d9cc8598c8b258554aeda6c86b0b8fb97e508e0e28b80",
+    "snapshot_file": "observations/S01-after.json"
+  },
+  "friction": [
+    {
+      "tag": "setup-failure",
+      "description": "`make setup` uses the system python3 (3.11) by default and fails at the pip step. The documented PYTHON= override then fails too, because the stale venv is reused. Recovery (rm -rf .venv) is undocumented.",
+      "cost": "4 extra tool calls, about 3 minutes, one Makefile read"
+    },
+    {
+      "tag": "needs-implementation-knowledge",
+      "description": "Explaining the failed retry required reading the Makefile setup target and knowing that `python -m venv` over an existing venv keeps the old interpreter.",
+      "cost": "2 tool calls"
+    },
+    {
+      "tag": "unclear-terminology",
+      "description": "warning_baseline prints '0 warning(s) across 0 signature(s)' next to a validator that prints 3 warnings; it does not say that the other warnings are baseline-exempt advisories.",
+      "cost": "0 calls; reconciled from OPERATOR.md"
+    },
+    {
+      "tag": "other",
+      "description": "PERFORMANCE: `make test-fast`, described as 'quick feedback', took 11 min 54 s. It outlived the 10-minute foreground limit and had to be backgrounded and polled.",
+      "cost": "12 minutes wall, 5 extra tool calls (including my own wait loops, which matched their own command line and had to be killed)"
+    },
+    {
+      "tag": "unclear-safety",
+      "description": "Nothing warns that the test suite may write into the repository's operations/diagnostics store; the learner-visible `los operations` view was polluted.",
+      "cost": "4 tool calls to attribute the write"
+    }
+  ],
+  "failures": [
+    "F-s00-baseline-01",
+    "F-s00-baseline-02",
+    "F-s00-baseline-03"
+  ],
+  "scenario_record": {
+    "setup_commands": [
+      {
+        "command": "make setup",
+        "exit": 2,
+        "note": "default python3 3.11.15; pip refuses (requires >=3.12)"
+      },
+      {
+        "command": "make setup PYTHON=python3.12",
+        "exit": 2,
+        "note": "existing 3.11 .venv reused; same pip error"
+      },
+      {
+        "command": "rm -rf .venv && make setup PYTHON=python3.12",
+        "exit": 0,
+        "note": "workaround; 11.4 s; deps + editable install + 3 hooks"
+      },
+      {
+        "command": "(S00) uv venv --python 3.12 ~/losvenv && uv pip install ... PyYAML 'jsonschema>=4' pypdf",
+        "exit": 0,
+        "note": "outside-repo alternative from the ImportError hint; used in S00 and S26"
+      }
+    ],
+    "validator_result": "make check / validate.py --compact: exit 0, '0 error(s), 3 warning(s) — OK' before views, '0 error(s), 2 warning(s) — OK (0.5s)' after make views",
+    "warning_baseline_result": "make warnings / warning_baseline.py --check: exit 0, 'warning-baseline: 0 warning(s) across 0 signature(s); baseline 0 across 0 (recorded 2026-09-18)' / 'OK — zero errors, no new warning signature.'",
+    "tests": "make test-fast: exit 2, 34 failed / 2214 passed / 30 skipped / 83 deselected, 713.67 s",
+    "git_status_before": {
+      "tracked_or_untracked": [],
+      "ignored": [
+        "operations/diagnostics/ (only .gitkeep)",
+        "tools/**/__pycache__/ (from world build and S00 reads)"
+      ]
+    },
+    "git_status_after": {
+      "tracked_or_untracked": [],
+      "ignored_added": [
+        ".venv/",
+        "tools/learningos_core.egg-info/",
+        ".pytest_cache/",
+        "generated/* (20 files)",
+        "operations/diagnostics/traces.jsonl"
+      ],
+      "outside_worktree": [
+        ".git/hooks/pre-commit",
+        ".git/hooks/post-commit",
+        ".git/hooks/pre-push"
+      ]
+    },
+    "notes_changed": false
+  },
+  "uncertainties": [
+    "Which test wrote the phantom trace: not bisected, to avoid reading tests/**.",
+    "How many of the 34 failures also occur in the product's own development clone: not run there.",
+    "Whether running as uid 0 contributes to the diagnostics-store write as well as to the chmod-based failures."
+  ]
+}
