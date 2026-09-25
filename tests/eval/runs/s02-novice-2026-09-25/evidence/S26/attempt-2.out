@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "s26-inbox-lasso-2",
+  "idempotency_key": "s26-inbox-lasso",
+  "capability": "capture.create",
+  "ok": true,
+  "replayed": false,
+  "transaction_id": "transaction-20260925-004911-001",
+  "receipt_path": "operations/transactions/transaction-20260925-004911-001.yaml",
+  "snapshot_after": "sha256:2705d1a3975bdc5e5a78f74a351db291df0b62273804adc1460bf58a899a881e",
+  "result": {
+    "ok": true,
+    "captured": "work/inbox/20260925-004911-ask-tutor-about-lasso-subgradients.md",
+    "transaction_id": "transaction-20260925-004911-001",
+    "receipt_path": "operations/transactions/transaction-20260925-004911-001.yaml",
+    "artifact_revisions": {
+      "capture-request:s26-inbox-lasso": 1
+    },
+    "snapshot_after": "sha256:2705d1a3975bdc5e5a78f74a351db291df0b62273804adc1460bf58a899a881e",
+    "replayed": false
+  },
+  "error": null
+}

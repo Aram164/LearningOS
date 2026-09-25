@@ -1,0 +1,11 @@
+--- knowledge/notes/machine-learning/note-svm-kernel-trick.md	2026-09-25 00:44:05.966580014 +0000
++++ /tmp/claude-0/-home-user-LearningOS/1292ed61-254d-5ac4-ba21-d0e53e16c86e/scratchpad/S14/note-svm-kernel-trick.md	2026-09-25 00:45:43.943201792 +0000
+@@ -10,6 +10,8 @@
+ - concept-svm
+ sources:
+ - source-tuh-statlearn-slides
++contexts:
++- workspace-statlearn-retake
+ ---
+ 
+ Maximum-margin separating hyperplane; only the support vectors (points on the

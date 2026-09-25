@@ -1,0 +1,24 @@
+{
+  "schema_version": 2,
+  "request_id": "s15-batchnorm-revise-1",
+  "idempotency_key": "s15-batchnorm-revise",
+  "capability": "note.revise",
+  "ok": true,
+  "replayed": false,
+  "transaction_id": "transaction-20260925-004739-001",
+  "receipt_path": "operations/transactions/transaction-20260925-004739-001.yaml",
+  "snapshot_after": "sha256:751453e960438b5a97edce81a1d51f686786c07b81a36cc80bae01d8d9b60218",
+  "result": {
+    "ok": true,
+    "note_id": "note-batchnorm-internal-covariate-shift",
+    "path": "knowledge/notes/machine-learning/note-batchnorm-internal-covariate-shift.md",
+    "transaction_id": "transaction-20260925-004739-001",
+    "receipt_path": "operations/transactions/transaction-20260925-004739-001.yaml",
+    "artifact_revisions": {
+      "note-batchnorm-internal-covariate-shift": 1
+    },
+    "snapshot_after": "sha256:751453e960438b5a97edce81a1d51f686786c07b81a36cc80bae01d8d9b60218",
+    "replayed": false
+  },
+  "error": null
+}
