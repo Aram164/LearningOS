@@ -76,7 +76,7 @@
    "stage.note.write is described as 'compatibility capability only', yet OPERATOR.md says stage-specific learning belongs in the stage note; it was the only governed write that fits.",
    "The approval subject is 'intent_sha256(envelope)', but no document defines the function; the UNCONFIRMED error ('approval subject does not match the current capability intent') gives no expected value.",
    "Which artifacts expected_revisions must list is undocumented per capability; the INVALID_REQUEST error named them precisely (missing unit-os-l07, unexpected study-map-os-l07), which made the retry easy.",
-   "After success, `los operations` listed the write as AMBIGUOUS / needs_attention (see F-s03-diag-ambiguous-01)."
+   "After success, `los operations` listed the write as AMBIGUOUS / needs_attention — caused by the container's TRACEPARENT being adopted as every request's trace (diagnosed in S05; F-s03-diag-ambiguous-01)."
   ],
   "corrective_steps": [
    "Read the intent-hash implementation and reproduced it in a 10-line helper (my scratchpad mkenv.py).",
@@ -149,7 +149,7 @@
   },
   {
    "tag": "unclear-safety",
-   "description": "After a clean commit, `los operations` flags the request AMBIGUOUS / needs_attention / BLOCKED; a user reading it would think the write may not have happened.",
+   "description": "After a clean commit, `los operations` flags the request AMBIGUOUS / needs_attention / BLOCKED; a user reading it would think the write may not have happened. Root cause found in S05: the container's inherited TRACEPARENT makes every los call share one trace/span id (see F-s03-diag-ambiguous-01).",
    "cost": "2 tool calls to investigate"
   }
  ],
