@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "request_id": "req-s20b-cap",
+  "idempotency_key": "idem-s20b-cap",
+  "capability": "capture.create",
+  "ok": false,
+  "replayed": false,
+  "transaction_id": null,
+  "receipt_path": null,
+  "snapshot_after": null,
+  "result": {},
+  "error": {
+    "code": "VALIDATION_FAILED",
+    "message": "transaction failed canonical validation: E REF-CONCEPT: note 'note-lsm-trees' references unknown concept 'concept-zqx-unknown-concept' [knowledge/notes/data-systems/note-lsm-trees.md]",
+    "retryable": false,
+    "details": {}
+  }
+}

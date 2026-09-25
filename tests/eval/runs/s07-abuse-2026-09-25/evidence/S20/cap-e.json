@@ -1,0 +1,19 @@
+{
+ "schema_version": 2,
+ "request_id": "req-s20e-cap",
+ "idempotency_key": "idem-s20e-cap",
+ "capability": "capture.create",
+ "channel": "operator",
+ "expected_snapshot": "sha256:6c0583944c5ff415574908a10958c4ce6d065ccf49eaf93c58c526380b7d23d2",
+ "expected_revisions": {
+  "capture-request:idem-s20e-cap": 0
+ },
+ "approval": {
+  "kind": "direct-user-gesture",
+  "subject_sha256": "sha256:f7ebadac5a81187d105ea3179a852eab270060c5fb1c804bce1a1daa21569e04"
+ },
+ "payload": {
+  "text": "S20e probe: capture while a unit lacks scope_sources.",
+  "title": "s20e probe"
+ }
+}

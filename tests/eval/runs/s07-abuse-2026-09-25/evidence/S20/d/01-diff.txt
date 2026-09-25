@@ -1,0 +1,13 @@
+diff --git a/work/active/workspace-os-oral-prep/CONTEXT.md b/work/active/workspace-os-oral-prep/CONTEXT.md
+index 9e1bb0d..1604ba6 100644
+--- a/work/active/workspace-os-oral-prep/CONTEXT.md
++++ b/work/active/workspace-os-oral-prep/CONTEXT.md
+@@ -39,8 +39,3 @@ Scheduling first (L02), then virtual memory (L05), then concurrency (L07).
+ ## Open Questions
+ 
+ - How deep does the chair go on CFS internals (red-black tree, vruntime)?
+-
+-## Next Action
+-
+-Continue the proportional-share stage: work one stride-scheduling example by
+-hand, then explain vruntime aloud.

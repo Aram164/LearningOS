@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "request_id": "req-s21-cap-1b",
+  "idempotency_key": "idem-s21-k1",
+  "capability": "capture.create",
+  "ok": false,
+  "replayed": false,
+  "transaction_id": null,
+  "receipt_path": null,
+  "snapshot_after": null,
+  "result": {},
+  "error": {
+    "code": "IDEMPOTENCY_CONFLICT",
+    "message": "idempotency key was already used for a different approved intent",
+    "retryable": false,
+    "details": {}
+  }
+}

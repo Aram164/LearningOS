@@ -1,0 +1,19 @@
+{
+ "schema_version": 2,
+ "request_id": "req-s17-try4",
+ "idempotency_key": "idem-s17-try4",
+ "capability": "capture.create",
+ "channel": "operator",
+ "expected_snapshot": "sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e",
+ "expected_revisions": {
+  "capture-request:idem-s17-try4": 0
+ },
+ "approval": {
+  "kind": "direct-user-gesture",
+  "subject_sha256": "sha256:141a3fe852caa6fcf2e44299a902ff82d16a3180e092a31d81a3b82159991b73"
+ },
+ "payload": {
+  "text": "S17 probe capture: interrupted write test.",
+  "title": "s17 probe"
+ }
+}

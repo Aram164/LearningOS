@@ -1,0 +1,4 @@
+los: cannot search: 1 file(s) could not be read, so the answer would silently omit them — knowledge/notes/data-systems/note-lsm-trees.md: /Users/aramaljanadi/los-eval/s07-abuse-2026-09-25-S20/LearningOS/repository/knowledge/notes/data-systems/note-lsm-trees.md: invalid YAML frontmatter: while parsing a flow sequence
+  in "<unicode string>", line 3, column 8
+did not find expected ',' or ']'
+  in "<unicode string>", line 4, column 8

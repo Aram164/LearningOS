@@ -1,0 +1,299 @@
+{
+  "scenario": "S22",
+  "run_id": "s07-abuse-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "30 simultaneous writes over 10 rounds: exactly one per round committed, the other two were refused STALE_SNAPSHOT (exit 3, retryable). No lost, duplicated or partial write: 10 ok = 10 receipts = 7 inbox files + 3 stage updates, no journal, validator clean. Losers re-sealed on the fresh snapshot with the same key committed. 24 batch reads raced against 12 writes showed no torn state. Friction: one global snapshot guard serializes even unrelated writes, so two thirds of concurrent writes need a reload plus a recomputed approval.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S22-before.json"
+  },
+  "consumer": {
+    "goal": "Start two capture.create and one stage.progress.update at the same moment, 10 rounds, and check for conflicts, lost or duplicated writes",
+    "first_action": "los plan-edit-context unit-os-l02 --stage-id stage-os-l02-02-proportional-share (snapshot + revisions for the round)",
+    "commands": [
+      "per round: plan-edit-context (guards); seal 3 envelopes on one snapshot; spawn 3 × `los capability …` back-to-back (Python Popen, equivalent to `&` in one shell line); wait",
+      "integrity check: inbox files vs ok responses, receipts vs ok transaction ids, .inflight, validate",
+      "round-10 losers: exact resubmission; re-sealed with fresh snapshot and same idempotency key",
+      "read/write race: 12 sequential stage toggles vs looping `los inspect unit-os-l02 study-map-os-l02`"
+    ],
+    "tool_calls": 7,
+    "docs_consulted": [
+      "system/OPERATOR.md hard boundary 12 ('On conflict, reload rather than overwrite')"
+    ],
+    "impl_files_read": [],
+    "retries": 2,
+    "confusions": [],
+    "corrective_steps": [],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 8,
+    "outcome": "Concurrent writers never corrupt or lose anything; each loser is told the state changed and can reload and resubmit."
+  },
+  "internal": {
+    "request_ids": [
+      "req-s22-r01-a … req-s22-r10-c (30)",
+      "req-s22-r10-a / -c resealed",
+      "req-s22rw-00 … 11"
+    ],
+    "receipts": [
+      "transaction-20260925-125947-001",
+      "transaction-20260925-125948-001",
+      "transaction-20260925-125949-001",
+      "transaction-20260925-125950-001",
+      "transaction-20260925-125951-001",
+      "transaction-20260925-125952-001",
+      "transaction-20260925-125953-001",
+      "transaction-20260925-125954-001",
+      "transaction-20260925-125955-001",
+      "transaction-20260925-125956-001",
+      "transaction-20260925-130036-001 (r10 a retry)",
+      "transaction-20260925-130037-001 (r10 c retry)",
+      "12 read/write-race stage receipts"
+    ],
+    "transaction_behavior": "the first writer to take the operator lock commits; others fail the snapshot guard before any canonical write (no journal, no partial file)",
+    "approval_behavior": "STALE_SNAPSHOT does not consume the idempotency key; the retry changes expected_snapshot, so the approval subject (intent hash) must be recomputed",
+    "unexpected_writes": [],
+    "warnings_errors": [
+      "STALE_SNAPSHOT ×20 (expected)"
+    ],
+    "git_diff_stat": "34 canonical files added (8 inbox captures, 24 receipts, 2 ledgers); curriculum/resume.yaml modified; unit/study-map net status unchanged (last toggle active)",
+    "observe_diff_file": "observations/S22-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [
+      "35 entries: 34 untracked (inbox + receipts + ledgers) + M curriculum/resume.yaml"
+    ],
+    "snapshot_file": "observations/S22-after.json"
+  },
+  "friction": [
+    {
+      "tag": "other",
+      "description": "one repository-wide snapshot guard makes independent writes (two inbox captures and an unrelated stage update) mutually exclusive; each loser needs a fresh snapshot and a recomputed approval hash",
+      "cost": "20 of 30 writes refused; 1 extra round-trip each"
+    }
+  ],
+  "failures": [],
+  "scenario_record": {
+    "rounds": [
+      {
+        "round": 1,
+        "snapshot": "sha256:82bcffb7b860…",
+        "stage_status_requested": "paused",
+        "exits": {
+          "a": 3,
+          "b": 0,
+          "c": 3
+        },
+        "winner": [
+          "b"
+        ],
+        "conflicts": {
+          "a": "STALE_SNAPSHOT",
+          "c": "STALE_SNAPSHOT"
+        },
+        "receipts": [
+          "transaction-20260925-125947-001"
+        ]
+      },
+      {
+        "round": 2,
+        "snapshot": "sha256:f989bada6909…",
+        "stage_status_requested": "active",
+        "exits": {
+          "a": 3,
+          "b": 3,
+          "c": 0
+        },
+        "winner": [
+          "c"
+        ],
+        "conflicts": {
+          "a": "STALE_SNAPSHOT",
+          "b": "STALE_SNAPSHOT"
+        },
+        "receipts": [
+          "transaction-20260925-125948-001"
+        ]
+      },
+      {
+        "round": 3,
+        "snapshot": "sha256:b5ae9f7d86f9…",
+        "stage_status_requested": "paused",
+        "exits": {
+          "a": 0,
+          "b": 3,
+          "c": 3
+        },
+        "winner": [
+          "a"
+        ],
+        "conflicts": {
+          "b": "STALE_SNAPSHOT",
+          "c": "STALE_SNAPSHOT"
+        },
+        "receipts": [
+          "transaction-20260925-125949-001"
+        ]
+      },
+      {
+        "round": 4,
+        "snapshot": "sha256:2db799828827…",
+        "stage_status_requested": "active",
+        "exits": {
+          "a": 3,
+          "b": 0,
+          "c": 3
+        },
+        "winner": [
+          "b"
+        ],
+        "conflicts": {
+          "a": "STALE_SNAPSHOT",
+          "c": "STALE_SNAPSHOT"
+        },
+        "receipts": [
+          "transaction-20260925-125950-001"
+        ]
+      },
+      {
+        "round": 5,
+        "snapshot": "sha256:6f5ea0294773…",
+        "stage_status_requested": "paused",
+        "exits": {
+          "a": 3,
+          "b": 0,
+          "c": 3
+        },
+        "winner": [
+          "b"
+        ],
+        "conflicts": {
+          "a": "STALE_SNAPSHOT",
+          "c": "STALE_SNAPSHOT"
+        },
+        "receipts": [
+          "transaction-20260925-125951-001"
+        ]
+      },
+      {
+        "round": 6,
+        "snapshot": "sha256:e36f2d6f60c8…",
+        "stage_status_requested": "active",
+        "exits": {
+          "a": 3,
+          "b": 0,
+          "c": 3
+        },
+        "winner": [
+          "b"
+        ],
+        "conflicts": {
+          "a": "STALE_SNAPSHOT",
+          "c": "STALE_SNAPSHOT"
+        },
+        "receipts": [
+          "transaction-20260925-125952-001"
+        ]
+      },
+      {
+        "round": 7,
+        "snapshot": "sha256:a7de30bca450…",
+        "stage_status_requested": "paused",
+        "exits": {
+          "a": 3,
+          "b": 3,
+          "c": 0
+        },
+        "winner": [
+          "c"
+        ],
+        "conflicts": {
+          "a": "STALE_SNAPSHOT",
+          "b": "STALE_SNAPSHOT"
+        },
+        "receipts": [
+          "transaction-20260925-125953-001"
+        ]
+      },
+      {
+        "round": 8,
+        "snapshot": "sha256:f3c311424119…",
+        "stage_status_requested": "active",
+        "exits": {
+          "a": 3,
+          "b": 3,
+          "c": 0
+        },
+        "winner": [
+          "c"
+        ],
+        "conflicts": {
+          "a": "STALE_SNAPSHOT",
+          "b": "STALE_SNAPSHOT"
+        },
+        "receipts": [
+          "transaction-20260925-125954-001"
+        ]
+      },
+      {
+        "round": 9,
+        "snapshot": "sha256:a7de30bca450…",
+        "stage_status_requested": "paused",
+        "exits": {
+          "a": 3,
+          "b": 0,
+          "c": 3
+        },
+        "winner": [
+          "b"
+        ],
+        "conflicts": {
+          "a": "STALE_SNAPSHOT",
+          "c": "STALE_SNAPSHOT"
+        },
+        "receipts": [
+          "transaction-20260925-125955-001"
+        ]
+      },
+      {
+        "round": 10,
+        "snapshot": "sha256:c68386d6c7bf…",
+        "stage_status_requested": "active",
+        "exits": {
+          "a": 3,
+          "b": 0,
+          "c": 3
+        },
+        "winner": [
+          "b"
+        ],
+        "conflicts": {
+          "a": "STALE_SNAPSHOT",
+          "c": "STALE_SNAPSHOT"
+        },
+        "receipts": [
+          "transaction-20260925-125956-001"
+        ]
+      }
+    ],
+    "totals": {
+      "writes": 30,
+      "committed": 10,
+      "stale_snapshot": 20,
+      "lost": 0,
+      "duplicated": 0,
+      "partial": 0,
+      "journals_left": 0,
+      "validate": "0 error(s), 2 warning(s)"
+    },
+    "loser_retry": "round 10: exact resubmission → STALE_SNAPSHOT again; re-sealed on fresh snapshot, same idempotency key → committed (130036, 130037)",
+    "read_write_race": "12 stage toggles committed sequentially while 24 batch `inspect unit-os-l02 study-map-os-l02` reads ran: 0 errors, 0 torn (unit and map status always agreed; each read carried its own snapshot_id)"
+  },
+  "uncertainties": [
+    "Only 3-way races on one machine; lock fairness under heavier contention not measured",
+    "The race used back-to-back Popen, not literally `&` in one shell line; start skew was milliseconds",
+    "Read/write-race envelopes were written to /tmp and not preserved (the sandbox did not keep them); their results are in evidence/S22/read-write-race.json"
+  ]
+}

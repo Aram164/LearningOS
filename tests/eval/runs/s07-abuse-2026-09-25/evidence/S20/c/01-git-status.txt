@@ -1,0 +1,4 @@
+?? operations/transactions/idempotency.yaml
+?? operations/transactions/revisions.yaml
+?? operations/transactions/transaction-20260925-125153-001.yaml
+?? work/inbox/scan-page.bin

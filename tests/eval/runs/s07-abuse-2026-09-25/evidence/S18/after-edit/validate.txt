@@ -1,0 +1,4 @@
+W WS-NEGLECT: workspace 'workspace-ledgerline' untouched for 31 days (per Git)
+W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)
+W HYGIENE-VIEWS: generated/manifest.json is not the current authored snapshot — run `make views` [generated/manifest.json]
+0 error(s), 3 warning(s) — OK (0.2s)

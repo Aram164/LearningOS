@@ -1,0 +1,9 @@
+
+## Current Scope
+
+Scheduling first (L02), then virtual memory (L05), then concurrency (L07).
+
+## Open Questions
+
+- How deep does the chair go on CFS internals (red-black tree, vruntime)?
+mutation exit=0

@@ -1,0 +1,6 @@
+tools/los.py inspect note-b-plus-tree-indexes | exit=2 | los: cannot publish the manifest: 1 file(s) could not be read, so the answer would silently omit them — knowledge/notes/data-systems/note-lsm-trees.md: /Users
+tools/los.py note-read note-b-plus-tree-indexes | exit=0 | {"schema_version":1,"snapshot_id":"sha256:b5c38ebb846d2301b669f6d0c52620982e2b824fdf66e2a864cc5e2344556d65","contract":"note-content","note_id":"note-b-plus-tre
+tools/los.py related note-b-plus-tree-indexes | exit=2 | los: cannot publish the manifest: 1 file(s) could not be read, so the answer would silently omit them — knowledge/notes/data-systems/note-lsm-trees.md: /Users
+tools/los.py resume | exit=0 | Operating Systems · Processes and CPU scheduling · stage-os-l02-02-proportional-share   (via resume pointer; pointer updated 2026-09-16 (9 days ago))    Recor
+tools/los.py intelligence-scan --brief --json | exit=0 | {"contract":"intelligence-scan-brief","full_result":"intelligence-scan --json","groups":[],"omitted_goals":0,"omitted_groups":0,"total_goals":0,"total_groups":0
+tools/los.py operations --limit 1 | exit=0 | {   "operations": [] } 

@@ -1,0 +1,7 @@
+.venv/bin/python tools/validate.py
+E REF-CONCEPT: note 'note-lsm-trees' references unknown concept 'concept-zqx-unknown-concept' [knowledge/notes/data-systems/note-lsm-trees.md]
+W WS-NEGLECT: workspace 'workspace-ledgerline' untouched for 32 days (per Git)
+W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 105 days (per Git)
+
+1 error(s), 2 warning(s) — FAIL
+make: *** [check] Error 1

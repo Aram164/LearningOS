@@ -1,0 +1,13 @@
+---
+id: note-lsm-trees
+type: note
+title: LSM trees
+created: 2026-07-18
+role: synthesis
+state: evolving
+authorship: user
+concepts:
+- concept-zqx-unknown-concept
+sources:
+- source-kleppmann-ddia
+mutation exit=0

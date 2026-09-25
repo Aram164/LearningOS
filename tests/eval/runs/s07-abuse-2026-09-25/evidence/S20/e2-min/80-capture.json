@@ -1,0 +1,21 @@
+{
+  "schema_version": 2,
+  "request_id": "req-s20e-cap",
+  "idempotency_key": "idem-s20e-cap",
+  "capability": "capture.create",
+  "ok": false,
+  "replayed": false,
+  "transaction_id": null,
+  "receipt_path": null,
+  "snapshot_after": null,
+  "result": {},
+  "error": {
+    "code": "INTERNAL_FAILURE",
+    "message": "the published manifest no longer matches system/contracts/manifest-contract.yaml (declared v15).\n  schema at /records/269: {'id': 'unit-os-l02', 'type': 'unit', 'module_id': 'module-tuh-os', 'kind': 'lecture', 'title': 'Processes and CPU scheduling', 'order': 1, 'scope': 'FCFS, SJF, round robin, priority scheduling, proportional share and CFS.', 'status': 'active', 'artifacts': {'ultimate_reference': 'note-cpu-scheduling-round-robin', 'exercise_bank': 'note-os-scheduling-exercise-bank'}, 'workspace_ids': ['workspace-os-oral-prep'], 'current_study_map': 'study-map-os-l02', 'source_selections': [], 'revision': 0, 'path': 'curriculum/modules/module-tuh-os/units/unit-os-l02/unit.yaml', 'project_ids': [], 'needs_study_map': False, 'notes_text': '', 'note_sections': [], 'notes_updated': None} is not valid under any of the given schemas\n  schema at /units/8: 'scope_sources' is a required property\nA change to the published shape is an interface change, even when it only adds a key: consumers declare an exact version and fail closed.\n  1. python tools/manifest_contract.py --bump --note \"<what changed>\"\n  2. mirror the new version into the UI in the same change — contracts/manifest-v<N>.lock.json, MANIFEST_CONTRACT_VERSION, ManifestV<N>, fixture-vault/generated/manifest.json; rollback incomplete for: <projection publication>",
+    "retryable": true,
+    "details": {
+      "stage": "core.projection",
+      "rollback_complete": false
+    }
+  }
+}

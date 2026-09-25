@@ -1,0 +1,78 @@
+python3 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+Requirement already satisfied: pip in ./.venv/lib/python3.14/site-packages (26.1)
+WARNING: Cache entry deserialization failed, entry ignored
+Collecting pip
+  Using cached pip-26.2.1-py3-none-any.whl.metadata (4.6 kB)
+Using cached pip-26.2.1-py3-none-any.whl (1.8 MB)
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 26.1
+    Uninstalling pip-26.1:
+      Successfully uninstalled pip-26.1
+Successfully installed pip-26.2.1
+.venv/bin/python -m pip install -e ".[dev]"
+WARNING: Cache entry deserialization failed, entry ignored
+WARNING: Cache entry deserialization failed, entry ignored
+Obtaining file:///Users/aramaljanadi/los-eval/s07-abuse-2026-09-25/LearningOS/repository
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+Collecting PyYAML (from learningos-core==3.2.0)
+  Using cached pyyaml-6.0.3-cp314-cp314-macosx_11_0_arm64.whl.metadata (2.4 kB)
+Collecting jsonschema>=4 (from learningos-core==3.2.0)
+  Using cached jsonschema-4.26.0-py3-none-any.whl.metadata (7.6 kB)
+Collecting pypdf (from learningos-core==3.2.0)
+  Using cached pypdf-6.19.0-py3-none-any.whl.metadata (7.5 kB)
+Collecting pytest (from learningos-core==3.2.0)
+  Using cached pytest-9.1.1-py3-none-any.whl.metadata (7.6 kB)
+Collecting ruff>=0.16 (from learningos-core==3.2.0)
+  Using cached ruff-0.16.9-py3-none-macosx_11_0_arm64.whl.metadata (20 kB)
+Collecting attrs>=22.2.0 (from jsonschema>=4->learningos-core==3.2.0)
+  Using cached attrs-26.1.0-py3-none-any.whl.metadata (8.8 kB)
+Collecting jsonschema-specifications>=2023.03.6 (from jsonschema>=4->learningos-core==3.2.0)
+  Using cached jsonschema_specifications-2025.9.1-py3-none-any.whl.metadata (2.9 kB)
+Collecting referencing>=0.28.4 (from jsonschema>=4->learningos-core==3.2.0)
+  Using cached referencing-0.37.0-py3-none-any.whl.metadata (2.8 kB)
+Collecting rpds-py>=0.25.0 (from jsonschema>=4->learningos-core==3.2.0)
+  Using cached rpds_py-2026.6.3-cp314-cp314-macosx_11_0_arm64.whl.metadata (4.1 kB)
+Collecting iniconfig>=1.0.1 (from pytest->learningos-core==3.2.0)
+  Using cached iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+Collecting packaging>=22 (from pytest->learningos-core==3.2.0)
+  Using cached packaging-26.3-py3-none-any.whl.metadata (3.5 kB)
+Collecting pluggy<2,>=1.5 (from pytest->learningos-core==3.2.0)
+  Using cached pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+Collecting pygments>=2.7.2 (from pytest->learningos-core==3.2.0)
+  Using cached pygments-2.21.0-py3-none-any.whl.metadata (2.5 kB)
+Using cached jsonschema-4.26.0-py3-none-any.whl (90 kB)
+Using cached attrs-26.1.0-py3-none-any.whl (67 kB)
+Using cached jsonschema_specifications-2025.9.1-py3-none-any.whl (18 kB)
+Using cached referencing-0.37.0-py3-none-any.whl (26 kB)
+Using cached rpds_py-2026.6.3-cp314-cp314-macosx_11_0_arm64.whl (339 kB)
+Using cached ruff-0.16.9-py3-none-macosx_11_0_arm64.whl (9.9 MB)
+Using cached pypdf-6.19.0-py3-none-any.whl (395 kB)
+Using cached pytest-9.1.1-py3-none-any.whl (386 kB)
+Using cached pluggy-1.6.0-py3-none-any.whl (20 kB)
+Using cached iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+Using cached packaging-26.3-py3-none-any.whl (129 kB)
+Using cached pygments-2.21.0-py3-none-any.whl (1.3 MB)
+Using cached pyyaml-6.0.3-cp314-cp314-macosx_11_0_arm64.whl (173 kB)
+Building wheels for collected packages: learningos-core
+  Building editable for learningos-core (pyproject.toml): started
+  Building editable for learningos-core (pyproject.toml): finished with status 'done'
+  Created wheel for learningos-core: filename=learningos_core-3.2.0-0.editable-py3-none-any.whl size=1704 sha256=9344099997f682c4a916f87024c693a3fd01e55f8279b16f6640cd33eac38501
+  Stored in directory: /private/var/folders/tx/dcz7b0nn2_n8kv3439vkggc80000gn/T/pip-ephem-wheel-cache-x5yhhfs2/wheels/57/b3/73/13d259073ca016045485102a7bcf61a81aa4c1da6f286bb776
+Successfully built learningos-core
+Installing collected packages: ruff, rpds-py, PyYAML, pypdf, pygments, pluggy, packaging, iniconfig, attrs, referencing, pytest, jsonschema-specifications, jsonschema, learningos-core
+
+Successfully installed PyYAML-6.0.3 attrs-26.1.0 iniconfig-2.3.0 jsonschema-4.26.0 jsonschema-specifications-2025.9.1 learningos-core-3.2.0 packaging-26.3 pluggy-1.6.0 pygments-2.21.0 pypdf-6.19.0 pytest-9.1.1 referencing-0.37.0 rpds-py-2026.6.3 ruff-0.16.9
+/Applications/Xcode.app/Contents/Developer/usr/bin/make hooks
+install -m 0755 tools/hooks/pre-commit .git/hooks/pre-commit
+install -m 0755 tools/hooks/post-commit .git/hooks/post-commit
+install -m 0755 tools/hooks/pre-push .git/hooks/pre-push
+setup complete: .venv created, deps installed, hooks active.

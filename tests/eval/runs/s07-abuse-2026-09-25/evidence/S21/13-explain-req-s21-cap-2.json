@@ -1,0 +1,81 @@
+{
+  "request_id": "req-s21-cap-2",
+  "capability": "capture.create",
+  "diagnosis": {
+    "first_failure_stage": null,
+    "execution_outcome": "committed",
+    "canonical_outcome": "COMMITTED",
+    "projection_outcome": "published",
+    "recovery_requirement": "verify-observation",
+    "authoritative_evidence": [
+      "receipt:operations/transactions/transaction-20260925-125658-001.yaml",
+      "ledger:idem-s21-k2"
+    ],
+    "attempts": [
+      {
+        "span": "248d7f38cd8f6881",
+        "status": "ok",
+        "replay_of": null
+      }
+    ],
+    "reasons": [
+      "a committed receipt verified against its ledger entry, the live revision floor, and the capability catalog",
+      "receipt exists but no observation is on record"
+    ]
+  },
+  "timeline": [
+    {
+      "stage": "Core admitted request",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Approval",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Replay lookup",
+      "state": "passed",
+      "detail": "miss"
+    },
+    {
+      "stage": "Snapshot guard",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Handler",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Validation",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Projection",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Transaction committed",
+      "state": "passed",
+      "detail": null
+    },
+    {
+      "stage": "Receipt persisted",
+      "state": "passed",
+      "detail": null
+    }
+  ],
+  "observed_snapshot": "sha256:bd995f3c694bad37b1d3733d708db578ef2600ddbaa84e837ae65c8e205f5c9c",
+  "ui_outcome": "BLOCKED",
+  "facts": {
+    "transaction_id": "transaction-20260925-125658-001",
+    "receipt_path": "operations/transactions/transaction-20260925-125658-001.yaml",
+    "snapshot_before": "sha256:4dd8ed5c6b3e754acc6af76ab68b7a771a5b2d12ef2c0bce15af230a29db0588",
+    "snapshot_after": "sha256:ee612e5002f1a3f170c2e523a4075169a8435bd70b414e7686b06acb9a87841d"
+  }
+}

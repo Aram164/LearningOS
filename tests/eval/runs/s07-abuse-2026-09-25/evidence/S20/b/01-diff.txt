@@ -1,0 +1,13 @@
+diff --git a/knowledge/notes/data-systems/note-lsm-trees.md b/knowledge/notes/data-systems/note-lsm-trees.md
+index cd08898..abfe5e0 100644
+--- a/knowledge/notes/data-systems/note-lsm-trees.md
++++ b/knowledge/notes/data-systems/note-lsm-trees.md
+@@ -7,7 +7,7 @@ role: synthesis
+ state: evolving
+ authorship: user
+ concepts:
+-- concept-lsm-trees
++- concept-zqx-unknown-concept
+ sources:
+ - source-kleppmann-ddia
+ ---

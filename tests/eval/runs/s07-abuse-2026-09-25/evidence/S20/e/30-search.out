@@ -1,0 +1,6 @@
+los: the published manifest no longer matches system/contracts/manifest-contract.yaml (declared v15).
+  schema at /records/269: {'id': 'unit-os-l02', 'type': 'unit', 'module_id': 'module-tuh-os', 'kind': 'lecture', 'title': 'Processes and CPU scheduling', 'order': 1, 'scope': 'FCFS, SJF, round robin, priority scheduling, proportional share and CFS.', 'status': 'active', 'artifacts': {}, 'workspace_ids': [], 'source_selections': [], 'revision': 0, 'path': 'curriculum/modules/module-tuh-os/units/unit-os-l02/unit.yaml', 'project_ids': [], 'needs_study_map': False, 'notes_text': '', 'note_sections': [], 'notes_updated': None} is not valid under any of the given schemas
+  schema at /units/8: 'scope_sources' is a required property
+A change to the published shape is an interface change, even when it only adds a key: consumers declare an exact version and fail closed.
+  1. python tools/manifest_contract.py --bump --note "<what changed>"
+  2. mirror the new version into the UI in the same change — contracts/manifest-v<N>.lock.json, MANIFEST_CONTRACT_VERSION, ManifestV<N>, fixture-vault/generated/manifest.json
