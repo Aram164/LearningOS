@@ -1,0 +1,24 @@
+{
+  "schema_version": 2,
+  "request_id": "s14-svm-contexts-1",
+  "idempotency_key": "s14-svm-contexts",
+  "capability": "note.revise",
+  "ok": true,
+  "replayed": false,
+  "transaction_id": "transaction-20260925-004555-001",
+  "receipt_path": "operations/transactions/transaction-20260925-004555-001.yaml",
+  "snapshot_after": "sha256:6c480f6a3f6471ece1803915924fe60e7c585a7daf7dd11609eb24ba4a1c8107",
+  "result": {
+    "ok": true,
+    "note_id": "note-svm-kernel-trick",
+    "path": "knowledge/notes/machine-learning/note-svm-kernel-trick.md",
+    "transaction_id": "transaction-20260925-004555-001",
+    "receipt_path": "operations/transactions/transaction-20260925-004555-001.yaml",
+    "artifact_revisions": {
+      "note-svm-kernel-trick": 1
+    },
+    "snapshot_after": "sha256:6c480f6a3f6471ece1803915924fe60e7c585a7daf7dd11609eb24ba4a1c8107",
+    "replayed": false
+  },
+  "error": null
+}

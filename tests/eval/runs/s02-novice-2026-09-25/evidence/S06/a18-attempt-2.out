@@ -1,0 +1,23 @@
+{
+  "schema_version": 2,
+  "request_id": "s06-a18-garden-seed-2",
+  "idempotency_key": "s06-a18-garden-seed",
+  "capability": "garden.seed.create",
+  "ok": true,
+  "replayed": false,
+  "transaction_id": "transaction-20260925-004102-001",
+  "receipt_path": "operations/transactions/transaction-20260925-004102-001.yaml",
+  "snapshot_after": "sha256:366783dc20c0b9afd7aa43b54f792533e2d2ceebb83a0009f7c4a071bfcf8f03",
+  "result": {
+    "ok": true,
+    "seed_path": "knowledge/garden/everything-is-a-dag-second-capture-see-everything-is-a-dag.md",
+    "transaction_id": "transaction-20260925-004102-001",
+    "receipt_path": "operations/transactions/transaction-20260925-004102-001.yaml",
+    "artifact_revisions": {
+      "garden-request:s06-a18-garden-seed": 1
+    },
+    "snapshot_after": "sha256:366783dc20c0b9afd7aa43b54f792533e2d2ceebb83a0009f7c4a071bfcf8f03",
+    "replayed": false
+  },
+  "error": null
+}

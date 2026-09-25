@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "request_id": "s26-inbox-lasso-1",
+  "idempotency_key": "s26-inbox-lasso",
+  "capability": "capture.create",
+  "ok": false,
+  "replayed": false,
+  "transaction_id": null,
+  "receipt_path": null,
+  "snapshot_after": null,
+  "result": {},
+  "error": {
+    "code": "INVALID_REQUEST",
+    "message": "GatewayEnvelopeV2 expected_revisions must cover exactly every transaction artifact (missing=['capture-request:s26-inbox-lasso'], unexpected=[])",
+    "retryable": false,
+    "details": {}
+  }
+}

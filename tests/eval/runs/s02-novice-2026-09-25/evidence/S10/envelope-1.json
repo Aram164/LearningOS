@@ -1,0 +1,21 @@
+{
+ "schema_version": 2,
+ "request_id": "s10-stride-progress-1",
+ "idempotency_key": "s10-stride-progress",
+ "capability": "stage.note.write",
+ "channel": "operator",
+ "expected_snapshot": "sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e",
+ "expected_revisions": {
+  "unit-os-l02": 0
+ },
+ "payload": {
+  "unit_id": "unit-os-l02",
+  "stage_id": "stage-os-l02-02-proportional-share",
+  "text": "\n## Progress 2026-09-25 (recorded by the operator from Noor's report)\n\n\"I just finished the stride example — all eight decisions, and C does run 5 out of 8 times.\"\n\nStage not complete yet: still to explain vruntime aloud in under two minutes.\n",
+  "replace": false
+ },
+ "approval": {
+  "kind": "operator-approval",
+  "subject_sha256": "sha256:550b65063df863fd0ccf699d596de6f3808b5c5c4516caff703fce6439216936"
+ }
+}

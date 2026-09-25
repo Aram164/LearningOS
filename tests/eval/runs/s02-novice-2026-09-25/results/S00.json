@@ -1,0 +1,88 @@
+{
+  "scenario": "S00",
+  "run_id": "s02-novice-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "A correct five-line orientation was produced from documented entry points (AGENTS.md -> system/OPERATOR.md -> bootstrap --brief, resume, inspect coordination) in 8 tool calls, with no writes. Friction: the default interpreter (3.11) is refused and an out-of-repo venv had to be built first; bootstrap --brief is a single minified JSON line that mixes past and future deadlines without a 'today' or 'days until' field.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S00-before.json"
+  },
+  "consumer": {
+    "goal": "Get bearings in an unfamiliar LearningOS installation and tell the learner, in five lines, what state she is in and what is due soon.",
+    "first_action": "ls -la of the world repository root plus git log/status, to see what kind of repository this is",
+    "commands": [
+      "ls -la; git log --oneline | head -5; git status --short",
+      "cat AGENTS.md system/OPERATOR.md",
+      "python tools/los.py bootstrap --brief   # -> ImportError: LearningOS needs Python >= 3.12; this is 3.11.15 (exit 1)",
+      "which uv; grep -n '^setup' -A12 Makefile",
+      "uv venv --python 3.12 ~/losvenv && uv pip install --python ~/losvenv/bin/python PyYAML 'jsonschema>=4' pypdf   # recipe copied from the error message",
+      "~/losvenv/bin/python tools/los.py bootstrap --brief",
+      "~/losvenv/bin/python tools/los.py resume",
+      "~/losvenv/bin/python tools/los.py inspect coordination"
+    ],
+    "tool_calls": 8,
+    "docs_consulted": ["AGENTS.md", "system/OPERATOR.md", "Makefile (setup target only)"],
+    "impl_files_read": [],
+    "retries": 1,
+    "confusions": [
+      "AGENTS.md and OPERATOR.md say 'python tools/los.py ...', other lines say '.venv/bin/python tools/los.py ...'; no .venv exists in a fresh installation and the system 'python' is 3.11, which the product refuses.",
+      "OPERATOR.md is a dense contract (snapshot guards, routes, GatewayEnvelopeV2, semantic predicates) rather than a quick start; the 'what should I work on? -> bootstrap --brief' rule was findable but buried among plan-editing instructions.",
+      "bootstrap --brief lists six academic deadlines including three already in the past (July exams, July registration window, Aug-Sep registration window) with no 'today' and no days-remaining field; I had to compare dates myself.",
+      "World timeline says as_of 2026-09-18 but the machine clock is 2026-09-25; the product computes relative dates from the machine clock ('pointer updated 2026-09-16 (9 days ago)', 'Oral exam slot 2026-10-12 (17 days)'). I used the machine clock."
+    ],
+    "corrective_steps": [
+      "Followed the ImportError's own recovery recipe (out-of-repo venv via uv) instead of 'make setup', to avoid writing into the learner's repository before the health-check scenario."
+    ],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 1.5,
+    "outcome": "Five-line answer given to the learner:\n1. You stopped in Operating Systems L02, stage 'proportional-share' (pointer 2026-09-16); recorded next step: work one stride-scheduling example by hand, then explain vruntime aloud.\n2. Standing priority (decision 2026-08-24): Statistical Learning retake first; OS oral second at ~1/3 of study time; dataframe skill + Tessera at most two evenings a week; Ledgerline paused.\n3. Due soon: Statistical Learning 2. Termin on 2026-10-06, 10:00-12:00 — you are registered (11 days).\n4. Operating Systems oral exam slot on 2026-10-12 at 14:30 — registered (17 days).\n5. Open StatLearn work: finish L05 stage 2 (generative vs discriminative), then L07 ridge/lasso; book a timed mock exam for the first week of October. 7 inbox items are unprocessed."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "Read-only session; no gateway write attempted.",
+    "approval_behavior": "No approvals needed.",
+    "projection_activity": "bootstrap --brief returned a snapshot_id (sha256:82bcffb7...) computed in memory; nothing was written to generated/ (derived tree stayed at the single generated/.gitkeep).",
+    "persistence_activity": "none",
+    "derived_changes": "none",
+    "manifest_changes": "none (generated/manifest.json was never materialised by the brief read)",
+    "unexpected_writes": [],
+    "warnings_errors": ["ImportError on Python 3.11 with an actionable recovery message (exit 1)"],
+    "git_diff_stat": "(empty)",
+    "observe_diff_file": "observations/S00-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S00-after.json"
+  },
+  "friction": [
+    {"tag": "setup-failure", "description": "Documented invocation 'python tools/los.py' fails on this machine's default Python 3.11 (ImportError). The message is actionable and names two recovery routes (make setup, or an out-of-repo uv venv).", "cost": "2 extra tool calls, <1 minute"},
+    {"tag": "doc-contradiction", "description": "Entry docs alternate between 'python tools/los.py' and '.venv/bin/python tools/los.py' without saying a venv must be created first.", "cost": "1 confusion"},
+    {"tag": "unstable-output-format", "description": "bootstrap --brief emits one minified JSON line (~4 KB) intended for agents; past and future deadlines are interleaved with no days-remaining field, so the 'due soon' filter must be done by the reader. 'resume' is the human-readable view and does give '17 days'.", "cost": "2 extra reads (resume, coordination) to assemble the answer"},
+    {"tag": "unclear-terminology", "description": "OPERATOR.md front-loads plan-editing vocabulary (route, stage, snapshot guard, GatewayEnvelopeV2, route.patch) before a new user knows the product hierarchy.", "cost": "reading time"}
+  ],
+  "failures": [],
+  "scenario_record": {
+    "reading_order_before_first_answer": [
+      "world root listing + git log",
+      "AGENTS.md",
+      "system/OPERATOR.md",
+      "los bootstrap --brief (failed: Python 3.11)",
+      "Makefile setup target",
+      "uv venv (out-of-repo, per error message)",
+      "los bootstrap --brief",
+      "los resume",
+      "los inspect coordination"
+    ],
+    "wall_clock_minutes_to_first_answer": 1.5,
+    "tool_calls_to_first_answer": 8,
+    "unsure_about": [
+      "Which 'today' to use (world as_of 2026-09-18 vs machine clock 2026-09-25) — resolved by following the product, which uses the machine clock.",
+      "Whether the resume pointer (OS) or the coordination priority (StatLearn primary) is 'where I am' — resolved by reporting both, as OPERATOR.md says the pointer is 'where study stopped, not a recommendation'."
+    ]
+  },
+  "uncertainties": ["Wall-clock minutes are as measured by the container clock (00:13:51 -> 00:14:35 plus reading); the agent's own reasoning time is not fully reflected."]
+}

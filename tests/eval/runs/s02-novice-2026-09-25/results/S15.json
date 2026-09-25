@@ -1,0 +1,83 @@
+{
+  "scenario": "S15",
+  "run_id": "s02-novice-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "The June note was revised in place through note.revise only after the learner saw the full diff and approved it; the id, path and role were kept; the correction reuses the learner's own August reasoning rather than a textbook text; and the original June paragraph survives verbatim in the note (and in Git). Friction: WORKFLOWS (§13 review, §15 deprecate/supersede) never mentions note.revise, and there is no gateway way to create a successor note with a supersedes trail, so revise-in-place was the only governed option. The approval is self-asserted by the operator (operator-approval), and the receipt keeps only hashes of the old version, so recovering it depends on Git.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S15-before.json"
+  },
+  "consumer": {
+    "goal": "Rewrite the learner's June batch-norm note so it is correct now, with her approval and without losing her original reasoning.",
+    "first_action": "los search 'batch norm'",
+    "commands": [
+      "los search 'batch norm' ; los search batchnorm",
+      "los note-read note-batchnorm-internal-covariate-shift ; los note-read note-batchnorm-why-it-works-contested ; cat work/inbox/20260914-batchnorm-forum-question.md",
+      "sed -n 379,398p system/WORKFLOWS.md (§13 review, §14 move, §15 deprecate/supersede) ; grep note.revise system/WORKFLOWS.md system/ARCHITECTURE.md (no hits)",
+      "(question to learner: keep the old explanation? -> keep it findable)",
+      "draft replacement outside the repository; diff -u shown to learner",
+      "(question to learner: approve this diff? -> yes)",
+      "los capability note.revise --payload-file envelope-1.json   # ok, transaction-20260925-004739-001",
+      "git diff --stat ; python tools/validate.py --compact ; python tools/warning_baseline.py --check ; git show HEAD:<note> | grep ; cat receipt"
+    ],
+    "tool_calls": 6,
+    "docs_consulted": ["system/WORKFLOWS.md §13-§15", "CLAUDE.md §5-§6 (already in context)", "OPERATOR.md note.revise paragraph (read in S00)", "los capabilities note.revise --json (read in S14)"],
+    "impl_files_read": [],
+    "retries": 0,
+    "confusions": [
+      "Two documented paths conflict: CLAUDE.md §5 and WORKFLOWS §15 describe replacing a note with a rewritten successor carrying 'supersedes', but no capability creates an ordinary durable note (only note.analysis.save for source analyses and atlas.question.save); OPERATOR.md describes note.revise, which WORKFLOWS never mentions.",
+      "WORKFLOWS §13 says a semantic review sets 'reviewed'; note.revise does not ask for or set it, and setting it myself would claim a review the learner has not done, so it was left null.",
+      "approval.kind offers direct-user-gesture / approved-delivery / operator-approval; none says 'learner approved this diff', and the gateway cannot tell whether a learner approved at all."
+    ],
+    "corrective_steps": [],
+    "questions_asked_to_learner": [
+      "(before drafting or any write) Should I keep your original June explanation? -> 'Keep my original reasoning findable.'",
+      "(after showing the full diff, before any write) This is the proposed rewrite — the mechanics stay as you wrote them, the 'Why it works' part is replaced by your own August conclusion (from note-batchnorm-why-it-works-contested), the June paragraph is kept word for word under 'Original June explanation', and Santurkar et al. is added as a source. Apply? -> 'Yes, apply that.'"
+    ],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 1.5,
+    "outcome": "note-batchnorm-internal-covariate-shift now says the internal-covariate-shift story is the original paper's motivation, disputed by Santurkar et al. (shift injected after BN still trains fast; BN barely reduces shift by their measure; smoother loss landscape instead), keeps your uncertainty about the Lipschitz argument and your exam advice, and keeps the June paragraph verbatim under 'Original June explanation, kept as I wrote it'. The mechanics and test-time paragraphs are unchanged; source-santurkar-batchnorm-2018 added. Receipt transaction-20260925-004739-001; the previous file is also in Git (world HEAD 13ad2fca). Not committed."
+  },
+  "internal": {
+    "request_ids": ["s15-batchnorm-revise-1"],
+    "receipts": ["operations/transactions/transaction-20260925-004739-001.yaml"],
+    "transaction_behavior": "One committed transaction on the first attempt: note revision 0 -> 1; snapshot 82bcffb7... -> 751453e9...; replacement file bound by file_sha256 in the payload; receipt records sha256_before 43c36351... and sha256_after ad99fa53... but not the old bytes.",
+    "approval_behavior": "Learner saw the diff and approved before the write. Envelope approval.kind = operator-approval, subject = intent hash; there is no learner-specific approval kind, so the gateway records the operator's assertion.",
+    "projection_activity": "Projection republished in the transaction; 20 generated files added.",
+    "persistence_activity": "operations/transactions/{idempotency.yaml, revisions.yaml, transaction-20260925-004739-001.yaml} created.",
+    "derived_changes": "generated/: 20 files added.",
+    "manifest_changes": "manifest rebuilt with the revised note (sources now include source-santurkar-batchnorm-2018).",
+    "unexpected_writes": [],
+    "warnings_errors": [],
+    "git_diff_stat": " .../note-batchnorm-internal-covariate-shift.md | 15 +++++++++++++++ ; untracked: 3 files under operations/transactions/",
+    "observe_diff_file": "observations/S15-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [
+      " M knowledge/notes/machine-learning/note-batchnorm-internal-covariate-shift.md",
+      "?? operations/transactions/idempotency.yaml",
+      "?? operations/transactions/revisions.yaml",
+      "?? operations/transactions/transaction-20260925-004739-001.yaml"
+    ],
+    "snapshot_file": "observations/S15-after.json"
+  },
+  "friction": [
+    {"tag": "doc-contradiction", "description": "CLAUDE.md §5/WORKFLOWS §15 describe successor notes with 'supersedes'; OPERATOR.md describes note.revise for in-place semantic replacement; WORKFLOWS never mentions note.revise and no capability creates a successor note.", "cost": "2 doc reads to choose a path"},
+    {"tag": "unclear-safety", "description": "Approval for a semantic rewrite is an operator-asserted 'operator-approval'; nothing distinguishes a learner-approved diff from an operator deciding alone.", "cost": "none in time; weak audit trail"},
+    {"tag": "missing-capability", "description": "Receipts keep hashes, not prior content; recovering a revised note's previous text relies on Git, which is uncommitted between revisions until session-end.", "cost": "risk only"}
+  ],
+  "failures": [],
+  "scenario_record": {
+    "approval_relative_to_write": "Both questions (keep original? / approve diff?) were asked and answered before the single write; no write happened before approval.",
+    "capability": "note.revise",
+    "approval_kind_in_envelope": "operator-approval",
+    "receipt": "operations/transactions/transaction-20260925-004739-001.yaml",
+    "final_text_file": "evidence/S15/note-batchnorm-internal-covariate-shift.md (the approved replacement; identical bytes now in the world)",
+    "original_wording_recoverable": "Yes, two ways: (1) the June 'Why it works' paragraph is kept verbatim inside the revised note under 'Original June explanation, kept as I wrote it'; (2) the complete previous file is in the world's Git HEAD (git show HEAD:knowledge/notes/machine-learning/note-batchnorm-internal-covariate-shift.md). The receipt holds only its sha256."
+  },
+  "uncertainties": [
+    "Whether a successor note with 'supersedes' (the documented identity-change path) would have been preferred; no gateway capability supports it for an ordinary note."
+  ]
+}
