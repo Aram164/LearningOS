@@ -1,0 +1,90 @@
+{
+  "run_id": "s00-baseline-2026-09-24",
+  "plan": "B",
+  "session_role": "baseline-cartographer (first contact)",
+  "persona": "Technically capable consumer/agent meeting this LearningOS installation for the first time, acting as operator for the learner Noor Haddad",
+  "blind": true,
+  "started": "2026-09-24T23:28:00Z",
+  "finished": "2026-09-25T00:04:54Z",
+  "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+  "eval_revision": "5ccd52aded5b3efb76fc3b62c8eded4f0b087639",
+  "world_head": "9a85f012bea38e7db8bd76edf6251136f9aa15e1",
+  "world_build": {
+    "builder_version": 1,
+    "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+    "product_revision_requested": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+    "corpus_sha256": "c440f189b69a53fe76be3d2d99b0c47798f0ed3748626243a34d81c9c2fa3a3d",
+    "scale": 0,
+    "seed": 20260924,
+    "timeline": {
+      "start": "2026-04-06",
+      "as_of": "2026-09-18"
+    },
+    "world_head": "9a85f012bea38e7db8bd76edf6251136f9aa15e1",
+    "commits": 132,
+    "notes": 116,
+    "arrivals": 30,
+    "paths": {
+      "repository": "/root/los-eval/s00-baseline-2026-09-24/LearningOS/repository",
+      "materials": "/root/los-eval/s00-baseline-2026-09-24/LearningOS/materials",
+      "drop": "/root/los-eval/s00-baseline-2026-09-24/eval-drop"
+    },
+    "validation": "0 error(s), 3 warning(s) — OK (0.4s)",
+    "validate_exit": 0,
+    "generate_exit": 0
+  },
+  "environment": {
+    "os": "Linux 6.18.44 (cloud container), running as uid 0",
+    "default_python": "/usr/local/bin/python 3.11.15 (python/python3); python3.12 3.12.3 and python3.13 3.13.12 also installed",
+    "uv": "0.8.17",
+    "git": "2.43.0",
+    "product_interpreters": {
+      "S00, S26": "~/losvenv (uv venv --python 3.12, PyYAML, jsonschema>=4, pypdf), created outside the repository per the product's ImportError hint",
+      "S01": "in-repo .venv built by `make setup PYTHON=python3.12` after removing a half-built 3.11 venv"
+    },
+    "harness_interpreter": "separate python3.13 venv in the agent scratchpad (pyyaml, jsonschema, pypdf) for build_world.py, observe.py, check_run.py",
+    "ambient_env": "TRACEPARENT=00-b3374ba2d506605f0e90a7e68fc300f5-… is set by the agent host; LearningOS adopted its trace id for every gateway request in both worlds",
+    "worlds": {
+      "S00,S01": "~/los-eval/s00-baseline-2026-09-24",
+      "S26": "~/los-eval/s00-baseline-2026-09-24-s26"
+    },
+    "second_world_build": {
+      "builder_version": 1,
+      "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+      "product_revision_requested": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+      "corpus_sha256": "c440f189b69a53fe76be3d2d99b0c47798f0ed3748626243a34d81c9c2fa3a3d",
+      "scale": 0,
+      "seed": 20260924,
+      "timeline": {
+        "start": "2026-04-06",
+        "as_of": "2026-09-18"
+      },
+      "world_head": "9a85f012bea38e7db8bd76edf6251136f9aa15e1",
+      "commits": 132,
+      "notes": 116,
+      "arrivals": 30,
+      "paths": {
+        "repository": "/root/los-eval/s00-baseline-2026-09-24-s26/LearningOS/repository",
+        "materials": "/root/los-eval/s00-baseline-2026-09-24-s26/LearningOS/materials",
+        "drop": "/root/los-eval/s00-baseline-2026-09-24-s26/eval-drop"
+      },
+      "validation": "0 error(s), 3 warning(s) — OK (0.3s)",
+      "validate_exit": 0,
+      "generate_exit": 0
+    }
+  },
+  "scenarios": [
+    "S00",
+    "S01",
+    "S26"
+  ],
+  "deviations": [
+    "S26 (world: fresh) used a second deterministic build in a new directory (~/los-eval/s00-baseline-2026-09-24-s26) instead of resetting the S00/S01 world. Its EVAL-WORLD.json has the same product_revision, corpus_sha256 and world_head (9a85f01), and the S26-before canonical digest equals S00-before.",
+    "S26 reused the machine-level interpreter ~/losvenv created in S00 rather than repeating setup, so its tool counts exclude interpreter setup (measured in S00/S01).",
+    "The agent's context already held the product's CLAUDE.md before the session, auto-loaded from the host repository checkout, whose copy is byte-identical to the world's. A Claude agent opened inside the world would get the same file.",
+    "The optional `model` field is omitted: the session's policy forbids writing model identifiers into repository artifacts.",
+    "Two of my own background wait loops (`until ! pgrep -f pytest`) matched their own command line, never exited, and were killed. This was a harness mistake, cost about 10 minutes of wall time during S01, and had no effect on the world.",
+    "The run crossed UTC midnight during S26, so artefacts carry both 2026-09-24 and 2026-09-25 dates.",
+    "Outside CONSUMER-PROTOCOL.md, I read only what it points to: public/scenarios.yaml, public/schemas/*.json and public/templates/*. tests/eval/tools/* were executed, not read. I saw only the names of the directories under tests/eval/ (private, metrics, corpus) and that runs/ held only README.md; nothing in them was opened."
+  ]
+}

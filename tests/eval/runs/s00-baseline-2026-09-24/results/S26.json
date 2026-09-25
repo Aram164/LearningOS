@@ -1,0 +1,198 @@
+{
+  "scenario": "S26",
+  "run_id": "s00-baseline-2026-09-24",
+  "classification": "USABILITY_FAILURE",
+  "classification_reason": "All three goals were completed and verified: deadlines, a committed inbox capture with a receipt, and a caching note list. Goals 1 and 3 took 1 and 3 calls. Goal 2, a one-line inbox capture, could not be done through documented interfaces. The README command is refused, and the required envelope depends on an intent-hash algorithm and a request-scoped revision guard that appear only in tools/learning_os/contracts/gateway.py. It took 13 calls and implementation knowledge.",
+  "before": {
+    "revision": "9a85f012bea38e7db8bd76edf6251136f9aa15e1",
+    "git_status": [],
+    "canonical_digest": "c888e80b499ff1091f9bf17f936b85a82fb539545b000cb7df8bded00852436e",
+    "derived_digest": "df97c8737d287c93f8e3a048d46ad71f9da0e95cf3cccd0c0bbc8e63032db409",
+    "snapshot_file": "observations/S26-before.json"
+  },
+  "consumer": {
+    "goal": "Three ordinary requests: (1) what is due in the next three weeks, (2) add 'ask tutor about lasso subgradients' to the inbox, (3) show my notes on caching.",
+    "first_action": "~/losvenv/bin/python tools/los.py bootstrap --brief, filtering academic_deadlines to 2026-09-24..2026-10-15 (entry path already known from S00).",
+    "commands": [
+      "cd ~/los-eval/s00-baseline-2026-09-24-s26/LearningOS/repository  (fresh world; interpreter: machine venv ~/losvenv from S00, no in-repo .venv)",
+      "G1: los.py bootstrap --brief | filter academic_deadlines to [today, today+21d]",
+      "G2: sed -n 14,40p README.md; los.py capabilities --compact --json",
+      "G2: los.py capabilities capture.create --json",
+      "G2: los.py capture --text \"ask tutor about lasso subgradients\"   # exit 2: canonical writes must use GatewayEnvelopeV2",
+      "G2: grep WORKFLOWS.md headings for 25a; sed -n 639,740p system/WORKFLOWS.md",
+      "G2: los.py --help; los.py capture --help; los.py capability --help   # no envelope helper",
+      "G2: grep -rln intent_sha256 system/ README.md; cat system/schema/capability-envelope.schema.json",
+      "G2: sed PLAN-CREATION-SOP.md Gate 5; grep AI-ACTIONS.md for intent   # no algorithm documented",
+      "G2: grep -rn 'def intent_sha256' tools/; sed -n 1,95p tools/learning_os/contracts/gateway.py   # IMPLEMENTATION READ",
+      "G2: build envelope with learning_os.contracts.gateway.intent_sha256/request_artifact_id (in scratchpad); los.py capability capture.create --payload-file envelope.json   # exit 0, committed",
+      "G2: cat the captured inbox file and receipt   # verify",
+      "G3: los.py search caching --type note   # 1 hit",
+      "G3: los.py search caching --type note --content; search cache --type note --content; search cache --type concept   # 1 / 10 / 2 hits",
+      "G3: los.py related note-caching-everywhere; related concept-cpu-caches; related concept-kv-cache",
+      "after edits: tools/validate.py --compact; tools/warning_baseline.py --check; los.py operations"
+    ],
+    "tool_calls": 18,
+    "docs_consulted": [
+      "README.md (lines 14-40, 'Start here')",
+      "capabilities --compact --json and capabilities capture.create --json",
+      "system/WORKFLOWS.md §25a",
+      "los.py --help, capture --help, capability --help",
+      "system/schema/capability-envelope.schema.json",
+      "system/PLAN-CREATION-SOP.md Gate 5",
+      "system/AI-ACTIONS.md (intent passages)",
+      "system/OPERATOR.md (from S00; search/related guidance)"
+    ],
+    "impl_files_read": [
+      "tools/learning_os/contracts/gateway.py (lines 1-95: intent_subject, intent_sha256, REQUEST_SCOPED_ARTIFACT_PREFIXES, request_artifact_id), then imported to build the envelope"
+    ],
+    "retries": 1,
+    "confusions": [
+      "README says `los.py capture --text \"…\"` captures to the inbox; the CLI refuses it and points to an envelope.",
+      "OPERATOR.md defers the intent hash to WORKFLOWS §25a step 4, which names `intent_sha256(envelope)` but not what it hashes.",
+      "The capture.create capability definition declares writes 'work/inbox/**' but not the `capture-request:<idempotency_key>` artifact that expected_revisions must cover. The only hint is in a code comment.",
+      "What revision a not-yet-existing request artifact has: guessed 0, accepted.",
+      "Search has no stemming: 'caching' finds 1 note (summary and content), 'cache' finds 10. The first answer would have missed 4 of the 5 central caching notes.",
+      "bootstrap --brief has no date-window filter, so the three-week filter was manual date arithmetic."
+    ],
+    "corrective_steps": [
+      "After the bare capture was refused, read the documentation chain (WORKFLOWS §25a, envelope schema, SOP, AI-ACTIONS), then the gateway implementation, and built one envelope. The approval subject is the product's own hash of the exact request the learner asked for; no approval was bypassed.",
+      "After a single-hit search, broadened to content search, the 'cache' stem, and the concept layer (related) as CLAUDE.md §7 describes."
+    ],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": true,
+    "wall_minutes": 2.8,
+    "outcome": "The learner sees evidence/S26-answer.md. Two registered exams fall in the window (StatLearn Tue 2026-10-06 10:00–12:00; OS oral Mon 2026-10-12 14:30), plus the recorded mock-exam aim. The inbox capture is confirmed with its path and receipt, and left uncommitted. Five core caching notes are listed with five passing mentions, with an offer to open any of them."
+  },
+  "internal": {
+    "request_ids": [
+      "s26-inbox-lasso-subgradients-req1 (trace b3374ba2d506605f0e90a7e68fc300f5, inherited from the session's TRACEPARENT)"
+    ],
+    "receipts": [
+      "operations/transactions/transaction-20260925-000028-001.yaml (status committed; snapshot_before sha256:24555340… -> snapshot_after sha256:15aed1b5…; artifact capture-request:s26-inbox-lasso-subgradients-1 0 -> 1; one created write, sha256 5f8d7f0e…)"
+    ],
+    "transaction_behavior": "Bare CLI write refused before any state change (exit 2). The envelope request committed in one attempt (duration 1318 ms, attempts 1, replayed false). It wrote the inbox file, a receipt, operations/transactions/idempotency.yaml and revisions.yaml (artifact-revision ledger), and trace spans. `los operations` shows canonical_outcome COMMITTED, needs_attention false.",
+    "approval_behavior": "approval.kind direct-user-gesture with subject_sha256 equal to the intent hash, recorded in the receipt under request.approval. The learner's explicit request was treated as the gesture, so no separate approval question was asked. The gateway accepted it without further prompting.",
+    "projection_activity": "The capture transaction published the whole generated/ view set at 00:00:29: manifest.json, coordination-view, domain-atlas, reading-room and others, plus generated/derived-state/state-v1.json and 117 blobs (984,148 bytes total). Later search/related reads used snapshot sha256:15aed1b5… (post-write).",
+    "persistence_activity": "operations/diagnostics/traces.jsonl created (14 spans, one trace).",
+    "derived_changes": "derived 0 -> 984,148 bytes, 138 files added (137 from the capture transaction; generated/reports/validation-report.md from my validate run).",
+    "manifest_changes": "generated/manifest.json created by the capture transaction's publication step.",
+    "unexpected_writes": [],
+    "warnings_errors": [
+      "capture bare CLI: 'canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability capture.create --payload-file ENVELOPE.json` (payload schema: `los capabilities capture.create --json`; envelope: WORKFLOWS §25a step 4)'",
+      "validate after the write: 0 error(s), 2 warning(s) (WS-NEGLECT x2); warning baseline OK"
+    ],
+    "git_diff_stat": "HEAD unchanged (9a85f01). 4 untracked files: work/inbox/20260925-000028-ask-tutor-about-lasso-subgradients.md, operations/transactions/{transaction-20260925-000028-001.yaml, idempotency.yaml, revisions.yaml}. Nothing committed; session-end not run because the learner didn't ask for a commit.",
+    "observe_diff_file": "observations/S26-diff.json"
+  },
+  "after": {
+    "revision": "9a85f012bea38e7db8bd76edf6251136f9aa15e1",
+    "git_status": [
+      "?? operations/transactions/idempotency.yaml",
+      "?? operations/transactions/revisions.yaml",
+      "?? operations/transactions/transaction-20260925-000028-001.yaml",
+      "?? work/inbox/20260925-000028-ask-tutor-about-lasso-subgradients.md"
+    ],
+    "canonical_digest": "390d847d8f6da64088ea5a6e7ecc4cb7c7a9dbe6573268330c76c862ba6493a9",
+    "derived_digest": "c614d3860cbb9e591574274f8aec4532916d291a06ccc9a5225d9a62de635e6a",
+    "snapshot_file": "observations/S26-after.json"
+  },
+  "friction": [
+    {
+      "tag": "doc-contradiction",
+      "description": "README documents `los.py capture --text` as the inbox path, but the CLI refuses all direct canonical writes.",
+      "cost": "1 failed call"
+    },
+    {
+      "tag": "needs-implementation-knowledge",
+      "description": "The intent-hash algorithm and the request-scoped `capture-request:<key>` revision guard are documented nowhere outside tools/learning_os/contracts/gateway.py. A one-line capture needed a code read and an import of product internals.",
+      "cost": "about 10 extra tool calls for goal 2 (13 vs 1-3 for the other goals), 7 documents opened"
+    },
+    {
+      "tag": "missing-capability",
+      "description": "No CLI command prepares or checks an envelope for a simple user-gesture write (no `capture --check`, no envelope/intent helper), unlike route-patch/module-plan-import, which return guards from --check.",
+      "cost": "see above"
+    },
+    {
+      "tag": "other",
+      "description": "Search is literal, with no stemming or concept expansion: 'caching' -> 1 note, 'cache' -> 10. Completeness needed variant queries plus `related` on concepts.",
+      "cost": "2 extra tool calls"
+    },
+    {
+      "tag": "other",
+      "description": "bootstrap --brief deadlines carry no days-until and no window filter, so 'next three weeks' needs manual date filtering.",
+      "cost": "0 extra calls (inline filter)"
+    }
+  ],
+  "failures": [
+    "F-s00-baseline-04"
+  ],
+  "scenario_record": {
+    "per_goal": {
+      "G1_due_next_three_weeks": {
+        "tool_calls": 1,
+        "commands": [
+          "bootstrap --brief (+ inline date filter)"
+        ],
+        "retries": 0,
+        "docs_read": [],
+        "impl_files_read": [],
+        "minutes": 0.4,
+        "note": "No new documentation needed because the entry path was learned in S00 (same session)."
+      },
+      "G2_inbox_capture": {
+        "tool_calls": 13,
+        "commands": [
+          "README read",
+          "capabilities --compact --json",
+          "capabilities capture.create --json",
+          "capture --text (refused)",
+          "WORKFLOWS §25a (2 calls)",
+          "--help x3",
+          "doc grep + envelope schema",
+          "SOP/AI-ACTIONS grep",
+          "grep tools for intent_sha256",
+          "read gateway.py",
+          "build + apply envelope",
+          "verify file + receipt"
+        ],
+        "retries": 1,
+        "docs_read": [
+          "README.md",
+          "WORKFLOWS.md §25a",
+          "capability-envelope.schema.json",
+          "PLAN-CREATION-SOP.md Gate 5",
+          "AI-ACTIONS.md"
+        ],
+        "impl_files_read": [
+          "tools/learning_os/contracts/gateway.py"
+        ],
+        "minutes": 1.4
+      },
+      "G3_caching_notes": {
+        "tool_calls": 3,
+        "commands": [
+          "search caching --type note",
+          "search caching|cache --type note --content; search cache --type concept",
+          "related x3"
+        ],
+        "retries": 0,
+        "docs_read": [],
+        "impl_files_read": [],
+        "minutes": 0.5
+      },
+      "post_edit_validation": {
+        "tool_calls": 1,
+        "commands": [
+          "validate.py --compact; warning_baseline.py --check; los operations"
+        ],
+        "minutes": 0.2
+      }
+    }
+  },
+  "uncertainties": [
+    "Wall-clock minutes are short because the agent works quickly. Tool-call counts are the more meaningful friction measure.",
+    "Goal 1 and goal 3 benefited from S00 knowledge in this same session (entry commands). A cold agent would add roughly the S00 orientation cost (about 9 calls including interpreter setup).",
+    "Whether the learner expected the capture to be committed: left uncommitted, per the session-end contract in OPERATOR.md.",
+    "The capture filename carries the UTC date 20260925 because the write happened just after UTC midnight; the learner's local timezone is unknown."
+  ]
+}

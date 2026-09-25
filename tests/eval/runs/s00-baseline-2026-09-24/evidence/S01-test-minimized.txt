@@ -1,0 +1,22 @@
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-a-pp05-08.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-b-pp09-13.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-c-pp15-23.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-d-pp24-32.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-e-pp34-42.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-f-pp44-50.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l06-ch-g-pp52-60.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l11-ch-b-pp03-11.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l11-ch-c-pp12-20.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l11-ch-d-pp21-32.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l11-ch-e-pp33-38.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l11-ch-f-pp39-46.md]
+FAILED tests/test_pilot_replay.py::test_pilot_draft_replays_under_current_rules[pilot-l11-ch-g-pp47-49.md]
+FAILED tests/test_pilot_replay.py::test_pilot_triage_ratio_recomputes_from_files[pilot-l06]
+FAILED tests/test_pilot_replay.py::test_pilot_triage_ratio_recomputes_from_files[pilot-l11]
+FAILED tests/test_pilot_replay.py::test_pilot_applied_findings_carry_committed_receipts[pilot-l06]
+FAILED tests/test_pilot_replay.py::test_pilot_applied_findings_carry_committed_receipts[pilot-l11]
+FAILED tests/test_operations.py::test_list_reports_verdicts_newest_first - As...
+FAILED tests/test_operations.py::test_detail_explains_one_request - Assertion...
+FAILED tests/test_operations.py::test_list_limit_selects_newest_first - Asser...
+FAILED tests/test_operations.py::test_wrongly_shaped_and_duplicate_authority_is_reported
+21 failed, 12 passed in 12.32s
