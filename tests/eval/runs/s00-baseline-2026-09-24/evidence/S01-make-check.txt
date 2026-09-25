@@ -1,0 +1,6 @@
+.venv/bin/python tools/validate.py
+W WS-NEGLECT: workspace 'workspace-ledgerline' untouched for 31 days (per Git)
+W WS-NEGLECT: workspace 'workspace-linalg-refresh' untouched for 104 days (per Git)
+W HYGIENE-VIEWS: generated/ views absent — run `make views` (they are disposable, but the human-fallback path depends on them)
+
+0 error(s), 3 warning(s) — OK
