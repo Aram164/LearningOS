@@ -119,6 +119,7 @@ own. The judge merges every run branch before scoring.
 | 7 | X | `s07-abuse-2026-09-25` | `claude/eval-s07-abuse-2026-09-25` | `13ad2fca…` | after H3 (eval `658db28`); local run (H4), memory index in context; started before the H4 brief |
 | 8 | P | `s08-scale-2026-09-25` | `muse/eval-s08-scale-2026-09-25` | `13ad2fca…` | after H4 brief; local run, blind, check_run clean; 4 scale worlds (scale-0 head shown, all heads in run environment.worlds); --no-verify commit (hook env) + push (authorized); S23 PERFORMANCE_FAILURE, judge to confirm; timings non-comparable (H4) |
 | 9 | F | — | — | — | OMITTED by owner decision 2026-09-25; partial run discarded uncommitted and excluded from adjudication |
+| 10 | — | `s10-judge-2026-09-25` | `muse/eval-s10-judge-2026-09-25` | `13ad2fca…` | white-box judge (keyed by design), base eval `d0c49b5`; 9 run branches merged, check_run clean; 28 scenarios graded, 29 records → 25 findings (22 confirmed/2 artefacts/1 not confirmed); keyed selftest 13/13; --no-verify push (authorized worktree-hook exception) |
 
 ## Harness changes
 
