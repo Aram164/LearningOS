@@ -117,9 +117,28 @@ def write_outputs(repo: Repo, outputs: dict[str, str]) -> None:
                 continue
         except FileNotFoundError:
             pass
+        except IsADirectoryError:
+            _recover_output_dir(gen, relative)
         tmp.write_bytes(content)
         os.replace(tmp, target)
     _remove_stale(gen, outputs)
+
+
+def _recover_output_dir(gen: Path, relative: PurePosixPath) -> None:
+    """Clear an empty directory blocking one output path, else refuse.
+
+    generated/ is disposable: an empty directory where a view belongs is
+    residue a rebuild may clear. Anything inside it is not ours to
+    delete — refuse with the manual recovery instead of a traceback.
+    """
+    try:
+        (gen / relative).rmdir()
+    except OSError as exc:
+        raise TransactionFailure(
+            f"generated/{relative.as_posix()} is a non-empty directory, not the "
+            "published view — move its contents away, delete it, and rebuild "
+            "(`make views`)"
+        ) from exc
 
 
 def _refuse_link(path: Path, gen: Path) -> None:

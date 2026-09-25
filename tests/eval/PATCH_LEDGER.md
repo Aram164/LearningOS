@@ -606,3 +606,140 @@ Three legs, three different answers — verified separately:
 - Real repo: `validate.py --compact` 0 errors;
   `warning_baseline.py --check` OK; `ruff check tools/ tests/`
   clean.
+
+## S12.6 — Scale, stamps, crashes, suite (S23 / JF-18 / JF-20 / JF-02)
+
+### JF-20 — manifest-as-directory crashes four commands
+
+- Mechanism (verified): `write_outputs` caught `FileNotFoundError`
+  only around the compare-read, so a directory at
+  `generated/manifest.json` raised raw `IsADirectoryError`
+  (`los generate` / `make views`); the validator's `*.json` /
+  `*.md` loops and archived-index reads crashed the same way
+  (`los status`, `tools/validate.py`) — a directory matches the
+  `rglob` but has no bytes to read.
+- Fix: the publisher recovers an EMPTY blocking directory
+  (`rmdir` + rebuild — the documented delete-and-rebuild
+  recovery, now performed) and refuses a non-empty one with
+  `TransactionFailure` naming the manual recovery (`los: …`,
+  exit 2, no traceback; user content is never deleted). The
+  validator reports `GEN-JSON` / `GEN-HEADER` errors naming the
+  shape with its recovery; the archived-index reads are guarded
+  by `is_file` (same crash class for `*.md`-shaped directories;
+  broken symlinks now read as absent, like missing files).
+- BEFORE (world `/tmp/s11-repro/world-s12_6`, script
+  `/tmp/s11-repro/repro_s12_6_crash_stamp.py`): 5/11 — raw
+  tracebacks from all four commands. AFTER: 11/11. One check was
+  corrected mid-course: `los status` is a summary surface, so it
+  asserts the error count, not the filename.
+- Tests: `test_generate_rebuilds_through_an_empty_output_dir_and_refuses_a_full_one`
+  (tests/test_generation.py),
+  `test_a_view_shaped_like_a_directory_is_a_named_error_not_a_crash`
+  (tests/test_validation.py) — fail pre-fix, pass post-fix.
+
+### JF-18 — the Generated stamp shows staleness
+
+- Mechanism (verified): `stable_generated_at` stamped the bare
+  last-commit time, byte-identical across different content; only
+  the manifest's `snapshot_id` moved, and no Markdown view shows
+  one — so the README's human-fallback freshness check could not
+  work after uncommitted edits.
+- Fix: the stamp appends `, uncommitted changes` when
+  `_git_state` reports dirty canonical roots. A pure function of
+  tree state, so S19/S24 byte-identity holds (identical trees
+  still rebuild identically); clean trees stamp byte-identically
+  to before (the existing exact pin passes unchanged; view
+  goldens normalize the line regardless). README's fallback line
+  now names the marker.
+- BEFORE/AFTER: same world repro (dirty-stamp checks fail, then
+  pass); clean-stamp check passes both ways (no clean-tree
+  change).
+- Test: `test_stamp_names_uncommitted_canonical_changes`
+  (tests/test_githistory.py) — fails pre-fix, passes post-fix.
+
+### JF-02 — suite health (portability + base-commit triage)
+
+- State found: `make test-fast` is GREEN on this checkout (2289
+  passed, 18 skipped, 83 deselected) — the campaign's 4
+  inherited-TRACEPARENT failures are gone (JF-04; re-verified:
+  71 passed with an ambient TRACEPARENT set), and the
+  base-commit remainder no longer reproduces here (fixed across
+  S11–S12 or specific to the campaign containers).
+- Remaining real defect: 18 tests load maintainer-only data
+  without the `full_repo` marker (17 `test_pilot_replay`
+  params over workspace-m2 pilot drafts + 1 transaction
+  receipt, 1 `test_abilities` live-extension test on
+  `real_repo`), failing on any fresh installation. Fix: mark,
+  not decouple — the pilot module's subject IS the maintainer
+  pilot, so synthetic data would defeat it; `full_repo` is the
+  honest contract (`test-fast` = "no checked-in repository
+  load"). Full audit: every other `real_repo` / `real_issues` /
+  `real_manifest` / `real_generated` use in the suite already
+  carries the mark (verified per test).
+- Evidence: local `test-fast` green; fresh-install proof by
+  syncing the two marked files into `world-s12_6` and running
+  its suite: 2265 passed, 0 failed, 107 deselected. The marked
+  tests still pass here under full selection (23 pilot tests).
+- Base-commit triage residue from S11.3: `test_tree_contract ::
+  test_every_top_level_directory_on_disk_is_declared` failed
+  (`bases/` declared but absent). Triaged: `bases/` is
+  UI-installed, gitignored content — legitimately absent — and
+  the checker itself excuses ignored-absent paths while this
+  test demanded exact set equality. Fixed the test to apply the
+  checker's rule (intent preserved: undeclared dirs and missing
+  unignored structure still fail). File now 22/22.
+
+### S23 — scale (content-search latency)
+
+- Mechanism, confirmed against the implementation with bench
+  parity (not the consumer's unindexed-scan theory): at 2116
+  notes the bench query reproduces 11.6 s cold / 8.4 s warm
+  (bench: 11.7 / 8.8). cProfile of warm search: 81% in derived
+  `lookup` — every node evaluation re-read and re-parsed the
+  ENTIRE state index, making each N-node evaluation O(N²) in
+  state bytes (2117 parses per search here; the term explodes to
+  228 s at 10k notes).
+- Fix: a session-scoped state-index cache in the derived engine
+  (read once per evaluation; own in-session stores update it).
+  Exactly equivalent to re-reading: same base, same updates in
+  the same order; the memo already shields direct stores; tamper
+  paths abort the session. Store durability is untouched
+  (per-node publish preserved for kill-safety); cold builds keep
+  O(N²) state writes — the rare path, accepted deliberately.
+- Numbers (2116 notes, bench query `stride --content`): cold
+  11.6 → 8.7 s, warm 8.4 → 2.2 s (3.9×). Identical answers
+  (`total: 2`, same snippets). 10k-scale improvement is
+  extrapolated (linear remainder ≈ 12–15 s warm), not measured.
+- Residuals, out of the small-safe-supported bar (need index
+  redesign, recorded not implemented): the linear per-search
+  floor (full-corpus reads + hashing + full postings load,
+  ≈1 ms/note) wants mtime invalidation / lazy segments; full
+  `generate` granularity (warm ≈ cold, one-line edit = full
+  rebuild) is unchanged — at 1.3 s for 2k notes it is
+  bulk-acceptable, and interactivity never hinged on it.
+- Correctness: 225-test derived/search/manifest battery green,
+  including the indexed==exhaustive differential oracle and the
+  byte-identity suites.
+- Test: `test_one_session_reads_the_state_index_once`
+  (tests/test_derived_engine.py) — fails pre-fix, passes
+  post-fix.
+
+### S12.6 gate results
+
+- World repros: crash/stamp 5/11 → 11/11; scale table above;
+  suite: local 2289 pass / 0 fail, fresh-install world 2265
+  pass / 0 fail.
+- New tests: 4, all fail pre-fix and pass post-fix (verified via
+  stash of `tools/`), plus the JF-02 mark/test alignment (no
+  behavior change).
+- Full files: test_derived_engine.py + test_derived_state.py +
+  test_search_index.py + test_manifest_derived.py +
+  test_manifest_shadow.py + test_incremental_generation.py +
+  test_bounded_reads.py (225 passed); test_githistory.py +
+  test_generation.py + test_validation.py +
+  test_pilot_replay.py + test_abilities.py + test_hygiene.py
+  (177 passed); test_tree_contract.py (22 passed);
+  diagnostics under ambient TRACEPARENT (71 passed, 2 skipped).
+- Real repo: `validate.py --compact` 0 errors;
+  `warning_baseline.py --check` OK; `ruff check tools/ tests/`
+  clean.

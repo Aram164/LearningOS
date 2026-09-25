@@ -145,6 +145,15 @@ def test_real_repository_success(tmp_path):
     assert stable_generated_at(tmp_path) == "2020-01-02T03:04:05+00:00 (last commit)"
 
 
+def test_stamp_names_uncommitted_canonical_changes(tmp_path):
+    init_repo(tmp_path)
+    assert stable_generated_at(tmp_path) == "2020-01-02T03:04:05+00:00 (last commit)"
+    (tmp_path / "knowledge").mkdir()
+    (tmp_path / "knowledge" / "draft.md").write_text("uncommitted", encoding="utf-8")
+    assert stable_generated_at(tmp_path) == \
+        "2020-01-02T03:04:05+00:00 (last commit, uncommitted changes)"
+
+
 def test_gitfile_repository(tmp_path):
     init_repo(tmp_path)
     metadata = tmp_path / "metadata"

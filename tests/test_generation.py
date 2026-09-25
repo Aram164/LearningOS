@@ -12,6 +12,7 @@ from pathlib import Path
 import pytest
 from stress_check import _generation_stress
 
+from learning_os.errors import TransactionFailure
 from learning_os.genout import generate_all, write_outputs
 from learning_os.genout.outputs import _KEEP_TOP_DIRS
 from learning_os.loader import load_repo
@@ -524,3 +525,21 @@ def test_tools_generate_malformed_frontmatter_prevents_publication(mini_repo):
     
     # the existing manifest must not be overwritten
     assert manifest_path.read_bytes() == manifest_bytes
+
+
+def test_generate_rebuilds_through_an_empty_output_dir_and_refuses_a_full_one(mini_repo):
+    repo = load_repo(mini_repo)
+    write_outputs(repo, generate_all(repo, generated_at="T1"))
+    manifest = mini_repo / "generated/manifest.json"
+    manifest.unlink()
+    manifest.mkdir()
+    write_outputs(load_repo(mini_repo),
+                  generate_all(load_repo(mini_repo), generated_at="T1"))
+    assert manifest.is_file()
+    manifest.unlink()
+    manifest.mkdir()
+    (manifest / "keep.txt").write_text("not ours", encoding="utf-8")
+    with pytest.raises(TransactionFailure, match="non-empty directory"):
+        write_outputs(load_repo(mini_repo),
+                      generate_all(load_repo(mini_repo), generated_at="T1"))
+    assert (manifest / "keep.txt").is_file()
