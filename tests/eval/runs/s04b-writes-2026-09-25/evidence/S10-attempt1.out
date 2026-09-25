@@ -1,0 +1,18 @@
+{
+  "schema_version": 2,
+  "request_id": "s04b-s10-stage-note-1",
+  "idempotency_key": "s04b-s10-stage-note-1",
+  "capability": "stage.note.write",
+  "ok": false,
+  "replayed": false,
+  "transaction_id": null,
+  "receipt_path": null,
+  "snapshot_after": null,
+  "result": {},
+  "error": {
+    "code": "INVALID_REQUEST",
+    "message": "GatewayEnvelopeV2 expected_revisions must cover exactly every transaction artifact (missing=[], unexpected=['study-map-os-l02'])",
+    "retryable": false,
+    "details": {}
+  }
+}

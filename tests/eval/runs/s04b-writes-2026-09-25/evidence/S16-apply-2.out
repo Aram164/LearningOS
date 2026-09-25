@@ -1,0 +1,133 @@
+{
+  "schema_version": 2,
+  "request_id": "s04b-s16-apply-2",
+  "idempotency_key": "s04b-s16-apply-2",
+  "capability": "ai-action.delivery.apply",
+  "ok": true,
+  "replayed": false,
+  "transaction_id": "transaction-20260925-043239-001",
+  "receipt_path": "operations/transactions/transaction-20260925-043239-001.yaml",
+  "snapshot_after": "sha256:9d9f11cd0447d247b3e2a64a36b37a684250a028aaa61a609603a1e68ef65bd1",
+  "result": {
+    "ok": true,
+    "transaction_id": "transaction-20260925-043239-001",
+    "receipt_path": "operations/transactions/transaction-20260925-043239-001.yaml",
+    "snapshot_after": "sha256:9d9f11cd0447d247b3e2a64a36b37a684250a028aaa61a609603a1e68ef65bd1",
+    "artifact_revisions": {
+      "garden-note-temperature-everywhere": 1,
+      "transcription-garden-note-temperature-everywhere": 1
+    },
+    "replayed": false,
+    "receipt": {
+      "schema_version": 2,
+      "id": "transaction-20260925-043239-001",
+      "type": "transaction-receipt",
+      "status": "committed",
+      "capability": "ai-action.delivery.apply",
+      "committed_at": "2026-09-25T04:32:39+02:00",
+      "snapshot_before": "sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e",
+      "snapshot_after": "sha256:9d9f11cd0447d247b3e2a64a36b37a684250a028aaa61a609603a1e68ef65bd1",
+      "expected_revisions": {
+        "garden-note-temperature-everywhere": 0,
+        "transcription-garden-note-temperature-everywhere": 0
+      },
+      "artifact_revisions": {
+        "garden-note-temperature-everywhere": {
+          "before": 0,
+          "after": 1
+        },
+        "transcription-garden-note-temperature-everywhere": {
+          "before": 0,
+          "after": 1
+        }
+      },
+      "writes": [
+        {
+          "path": "knowledge/garden/transcriptions/garden-note-temperature-everywhere.md",
+          "sha256_before": null,
+          "sha256_after": "0b70bd067003f370d0612aa368ad40b0ae8b8b39e4e2c0758ee653ba38362630",
+          "created": true
+        },
+        {
+          "path": "operations/ai-actions/garden-state/garden-note-temperature-everywhere.yaml",
+          "sha256_before": null,
+          "sha256_after": "5489df6c421c861ea43bf1f380b2403bc4d2d699556b622eadf14677328c122b",
+          "created": true
+        },
+        {
+          "path": "operations/ai-actions/requests/ai-request-20260925-022947-4ff0ef/request.yaml",
+          "sha256_before": "c63b057a47f3ec6ddd446e681b76b4bb97c83033a9883e416a62f9e40b1343f7",
+          "sha256_after": "170378506e023b4dca93ad6ea80f17a88c589b9f99844021d257660a02d95e3f",
+          "created": false
+        }
+      ],
+      "metadata": {
+        "request_id": "ai-request-20260925-022947-4ff0ef",
+        "delivery_id": "ai-delivery-20260925-temperature-everywhere",
+        "action_id": "garden.shelve",
+        "approved_delivery": {
+          "delivery_sha256": "sha256:affcd6a95d09890064e0204634b249f307c63e7044b32df19e1c726debc07a47",
+          "artifact_sha256": {
+            "artifacts/transcription.md": "sha256:9e990c609993bc12d2d27d118f21fbb73fd04f28ea1fdfe5abc0565be9f77e7a"
+          }
+        },
+        "created_ids": [
+          "transcription-garden-note-temperature-everywhere"
+        ],
+        "updated_ids": [
+          "garden-note-temperature-everywhere"
+        ],
+        "deleted_ids": [],
+        "superseded_ids": [],
+        "validation": {
+          "schemas": "passed",
+          "references": "passed",
+          "boundaries": "passed",
+          "projection": "passed"
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "ai-action.delivery.apply",
+            "declared_writes": [
+              "operations/ai-actions/requests/**"
+            ]
+          },
+          {
+            "capability": "garden.add-transcription",
+            "declared_writes": [
+              "knowledge/garden/transcriptions/"
+            ]
+          },
+          {
+            "capability": "garden.update",
+            "declared_writes": [
+              "operations/ai-actions/garden-state/"
+            ]
+          }
+        ]
+      },
+      "request": {
+        "channel": "operator",
+        "request_id": "s04b-s16-apply-2",
+        "idempotency_key": "s04b-s16-apply-2",
+        "intent_sha256": "sha256:1f2babb1a3b6acfcdf42a69ecc2ea3747efe8690977e7f208c9af42545d6734f",
+        "approval": {
+          "kind": "approved-delivery",
+          "subject_sha256": "sha256:1f2babb1a3b6acfcdf42a69ecc2ea3747efe8690977e7f208c9af42545d6734f"
+        }
+      },
+      "transaction_id": "transaction-20260925-043239-001",
+      "revision_updates": {
+        "garden-note-temperature-everywhere": 1,
+        "transcription-garden-note-temperature-everywhere": 1
+      },
+      "receipt_path": "operations/transactions/transaction-20260925-043239-001.yaml",
+      "replayed": false
+    }
+  },
+  "error": null
+}

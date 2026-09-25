@@ -1,0 +1,25 @@
+{
+  "schema_version": 2,
+  "request_id": "s04b-s10-stage-note-2",
+  "idempotency_key": "s04b-s10-stage-note-2",
+  "capability": "stage.note.write",
+  "ok": true,
+  "replayed": false,
+  "transaction_id": "transaction-20260925-042128-001",
+  "receipt_path": "operations/transactions/transaction-20260925-042128-001.yaml",
+  "snapshot_after": "sha256:59dee724b28c803ae46a04462546328237ecc0bd5d55cf62b17e5b03f7b0be17",
+  "result": {
+    "ok": true,
+    "unit_id": "unit-os-l02",
+    "stage_id": "stage-os-l02-02-proportional-share",
+    "working_note": "curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+    "transaction_id": "transaction-20260925-042128-001",
+    "receipt_path": "operations/transactions/transaction-20260925-042128-001.yaml",
+    "artifact_revisions": {
+      "unit-os-l02": 1
+    },
+    "snapshot_after": "sha256:59dee724b28c803ae46a04462546328237ecc0bd5d55cf62b17e5b03f7b0be17",
+    "replayed": false
+  },
+  "error": null
+}

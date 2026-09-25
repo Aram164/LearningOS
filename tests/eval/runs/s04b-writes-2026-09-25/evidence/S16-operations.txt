@@ -1,0 +1,30 @@
+{
+  "operations": [
+    {
+      "trace_id": "059c412339141f468c3bcba27b4501f0",
+      "request_id": "s04b-s16-apply-2",
+      "capability": "ai-action.delivery.apply",
+      "started_at": 1790303559.252543,
+      "duration_ms": 765.9,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    },
+    {
+      "trace_id": "d6cdf6b6338280d9de0b7964e7a4732c",
+      "request_id": "s04b-s16-apply-1",
+      "capability": "ai-action.delivery.apply",
+      "started_at": 1790303547.72223,
+      "duration_ms": 136.9,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": "core.admission",
+      "canonical_outcome": "NOT_COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    }
+  ]
+}

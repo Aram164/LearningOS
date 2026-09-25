@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "request": {
+    "id": "s04b-s16-prepare-1",
+    "action_id": "garden.shelve",
+    "target": {
+      "kind": "garden-note",
+      "id": "garden-note-temperature-everywhere"
+    },
+    "provider": "manual-bundle",
+    "status": "prepared",
+    "created_at": "2026-09-25T02:28:06+00:00",
+    "delivery_id": null,
+    "receipt_id": null,
+    "bundle_path": "operations/ai-actions/requests/s04b-s16-prepare-1"
+  }
+}

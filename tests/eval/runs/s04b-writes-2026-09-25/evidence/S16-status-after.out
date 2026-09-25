@@ -1,0 +1,17 @@
+{
+  "ok": true,
+  "request": {
+    "id": "ai-request-20260925-022947-4ff0ef",
+    "action_id": "garden.shelve",
+    "target": {
+      "kind": "garden-note",
+      "id": "garden-note-temperature-everywhere"
+    },
+    "provider": "manual-bundle",
+    "status": "completed",
+    "created_at": "2026-09-25T02:29:47+00:00",
+    "delivery_id": "ai-delivery-20260925-temperature-everywhere",
+    "receipt_id": "transaction-20260925-043239-001",
+    "bundle_path": "operations/ai-actions/requests/ai-request-20260925-022947-4ff0ef"
+  }
+}
