@@ -211,3 +211,109 @@ world data (before runs taken with the stage's edits absent).
 - Real repo: `validate.py --compact` 0 errors (no false positives from
   the new checks); `warning_baseline.py --check` OK;
   `ruff check tools/ tests/` clean.
+
+## S11.3 — First-run traps (JF-01 / JF-05 / JF-07)
+
+### JF-01 — setup cannot recover from its own first failure
+
+- Mechanism (verified): `make setup PYTHON=<old>` builds a 3.11 venv,
+  then fails at `pip install` (requires-python >=3.12). The retry
+  `make setup PYTHON=<new>` runs `python -m venv` over the existing
+  tree, which exits 0 while silently keeping 3.11 — so the retry fails
+  identically. Only hand-deleting `.venv` recovered.
+- Fix (Makefile `setup` target): reuse the existing venv only when its
+  interpreter major.minor equals `PYTHON`'s; otherwise remove the stale
+  tree and rebuild (covers half-built trees with no `bin/python` too).
+  Same-interpreter re-runs stay fast (reuse); switching `PYTHON`
+  rebuilds, which is what the override promises. Runtime echos state
+  reuse vs rebuild.
+- BEFORE (scratch clone `/tmp/s11-repro/jf01-before`): first setup exit
+  2 (`requires a different Python: 3.11.15 not in '>=3.12'`); retry with
+  3.12 exit 2, identical error, venv still 3.11.15.
+- AFTER (patched Makefile in the same half-built clone): retry exit 0,
+  `removing stale .venv (rebuilding with Python 3.12.13)`, `setup
+  complete`; recovered venv validates the repo clean
+  (`0 error(s) — OK`); second re-run reuses (`reusing .venv`), exit 0.
+- Tests: `setup` added to `test_make_entrypoints_parse` (pins the
+  shell-heavy target parses — a quoting slip breaks every fresh clone).
+  No functional pytest: a real `make setup` needs network (~minutes) and
+  the repo has no shell harness; the scratch-clone before/after above is
+  the evidence of record.
+
+### JF-05 — no agent can build a write envelope from the docs
+
+- Gaps (verified): approval hash named but algorithm only in
+  `contracts/gateway.py`; `capture-request:`/`garden-request:` guards in
+  zero documents; README's `capture --text` refused (exit 2) with no
+  bridge; refusal `details: {}` undocumented.
+- Fix: new WORKFLOWS `§25c. Build a write envelope (GatewayEnvelopeV2)`
+  — complete recipe: payload schema source, snapshot source
+  (`bootstrap --compact` `snapshot_id`, verified equal to the canonical
+  fingerprint), revision guards incl. the request-scoped prefix map and
+  the revision-0 baseline, identity rules (key reuse vs
+  IDEMPOTENCY_CONFLICT, fresh request_id per attempt), approval kinds
+  (`operator-approval` + `operator` channel; gesture is a closed UI
+  allowlist) with the one-line approval meaning (operator assertion
+  guarded by snapshot/revision checks, not proof of human presence),
+  submit + exit codes, the exact intent-hash algorithm (six subject
+  fields, canonical JSON form, `sha256:` hex) with a copy-paste Python
+  snippet, refusal shape (`details: {}` normal on UNCONFIRMED/prose
+  refusals; only typed projection/commit outcomes carry stage details),
+  and a worked capture. Bridges: §25a step 4 and §2 point at §25c;
+  README's capture line now routes through the envelope; OPERATOR.md
+  capture routing points at §25c.
+- BEFORE: doc-gap probe 0/5 (all facts absent; README command exit 2).
+- AFTER: 5/5; a from-docs-only envelope (stdlib + CLI, zero
+  implementation imports — `/tmp/s11-repro/prove_jf05_docs.py`)
+  committed on the scratch world (exit 0, fresh receipt).
+- Tests: docs are verified by the gap probe + sufficiency proof, not by
+  pytest (no doc-content harness exists; the §25a literal-example test
+  still passes unchanged).
+
+### JF-07 — manual-bundle delivery format undocumented
+
+- Gaps (verified): no delivery schema anywhere; import refused one field
+  per round; adapter error named neither `producer` (delivery side) nor
+  `provider` (request side).
+- Fix, three parts:
+  1. New AI-ACTIONS.md `Delivery bundle format` section: every
+     `delivery.yaml` field with provenance (what must equal/copy the
+     request), the `producer`/`provider` asymmetry stated explicitly,
+     per-capability operation shapes, aggregation behavior, and a
+     complete minimal example. Verified accurate: `approved_at`
+     documented as conventional (never read by code), `producer.provider`
+     as uncompared (only `adapter` is).
+  2. `service._validate` aggregates all shape problems into one
+     `DeliveryValidationError` (per-operation `operations[i]` locations;
+     capped at twelve + omission count per the house pattern); live
+     freshness guards still fail fast. Staging names a missing delivery
+     `id` (`delivery.yaml must carry a non-empty id`, was the cryptic
+     `unsafe exchange identifier: ''`) and `_validate` names a missing
+     `request_id`.
+  3. Adapter message now names both sides: `delivery producer.adapter
+     … does not match prepared request provider.adapter …`.
+- BEFORE (world probes): multi-defect delivery → single `delivery type
+  must be ai-action-delivery`; provider-shaped delivery → fieldless
+  `delivery adapter does not match prepared request`; schema terms
+  absent from AI-ACTIONS.md. 0/3.
+- AFTER: one import round reports all six shape problems with locations;
+  adapter error names both fields; docs present. 3/3. A from-docs-only
+  delivery (`/tmp/s11-repro/prove_jf07_docs.py`) imports and validates
+  (exit 0/0).
+- Tests: `test_import_reports_every_shape_problem_in_one_round`,
+  `test_adapter_mismatch_names_both_sides_of_the_asymmetry`,
+  `test_missing_delivery_identities_name_their_fields`
+  (tests/test_ai_actions.py) — all fail pre-fix, pass post-fix. No
+  existing test pinned the old messages.
+
+### S11.3 gate results
+
+- JF-01 scratch clone: retry exit 2 → 0; recovered venv validates clean.
+- JF-05 gap probe 0/5 → 5/5; from-docs envelope committed.
+- JF-07 world probes 0/3 → 3/3; from-docs delivery imports + validates.
+- Full test_ai_actions.py (28 passed); §25a literal-example test +
+  entrypoints parse pass; `validate.py --compact` 0 errors;
+  `warning_baseline.py --check` OK; `ruff check tools/ tests/` clean.
+- Note: `test_tree_contract.py::test_every_top_level_directory_on_disk_is_declared`
+  fails identically on clean HEAD (`bases/` absent from this worktree) —
+  pre-existing environment artifact, carried to the S12.6 JF-02 triage.

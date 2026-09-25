@@ -56,6 +56,60 @@ rejected bundle never occupies a canonical-looking path. Successful application
 is atomic, refreshes the deterministic manifest projection, and creates a
 ReceiptV2 under `operations/transactions/` before success is reported.
 
+## Delivery bundle format
+
+An approved delivery is a directory containing `delivery.yaml` plus every
+file its operations reference (no symlinks). `delivery.yaml` carries:
+
+| Field | Meaning |
+|---|---|
+| `schema_version` | `1` |
+| `id` | delivery id (non-empty exchange identifier, e.g. `ai-delivery-…`) |
+| `type` | must be `ai-action-delivery` |
+| `request_id` | the prepared request's id (`operations/ai-actions/requests/<id>/`) |
+| `action_id` | must equal the request's `action_id` |
+| `producer` | `{provider, adapter}`; only `adapter` is compared — `producer.adapter` must equal the **request's** `provider.adapter` (note the asymmetry: the delivery says `producer`, the request says `provider`) |
+| `preconditions` | must equal the request's `preconditions` verbatim (copy from the request's `request.yaml`) |
+| `approval` | `user_approved: true` (required) plus `approved_at` (when, by convention) — the recorded user approval of this exact delivery |
+| `operations` | non-empty list; each names a `capability` from the request's `allowed-capabilities.json` (never a forbidden one) and, when set, a `target_id` equal to the request target |
+
+Operation shapes per capability:
+
+- `garden.add-transcription`: `artifact_ref` (required, path inside the
+  bundle); `supersedes: transcription-<target-id>` required when the seed
+  already has a transcription.
+- `garden.update`: `patch` mapping with allowlisted fields only (e.g.
+  `title`, `state`).
+- `relationship.create`: `payload` with `id`, `from: {kind, id}`,
+  `relation`, `to: {kind, id}`.
+- `unit.material-synthesis.publish`: `artifact_ref` (required) pointing
+  at one whole synthesis record.
+
+Shape problems are reported together (up to twelve, then a count of the
+rest), so one import round names everything wrong with the bundle;
+freshness guards (target moved, original changed) still refuse
+immediately. A complete minimal delivery:
+
+```yaml
+schema_version: 1
+id: ai-delivery-example-001
+type: ai-action-delivery
+request_id: ai-request-example-001
+action_id: garden.shelve
+producer: {provider: manual, adapter: manual-bundle}
+preconditions: # copied verbatim from the request's request.yaml
+  snapshot_id: sha256:<prepared snapshot>
+  artifact_revisions: {garden-note-example: 0}
+approval: {user_approved: true, approved_at: '2026-09-25T12:00:00+00:00'}
+operations:
+  - capability: garden.add-transcription
+    target_id: garden-note-example
+    artifact_ref: artifacts/transcription.md
+  - capability: garden.update
+    target_id: garden-note-example
+    patch: {title: Example, state: developing}
+```
+
 ## Contracts
 
 | Contract | Owns |

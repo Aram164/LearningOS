@@ -326,7 +326,8 @@ excluded. Commit and optional push occur only after explicit confirmation.
 
 Stage-specific learning belongs in its stage note. Unrelated quick capture goes
 to `work/inbox/`. A deliberately half-formed idea that should gestate goes to
-`knowledge/garden/`. The operator, not the learner, handles filing.
+`knowledge/garden/`. The operator, not the learner, handles filing. Every one
+of these writes goes through a GatewayEnvelopeV2 built per WORKFLOWS §25c.
 
 Read the applicable platform adapter, then the task-relevant sections of
 `system/ARCHITECTURE.md`, `system/WORKFLOWS.md`, and the schemas/contracts they
