@@ -1,0 +1,16 @@
+python3.12 -m venv .venv
+.venv/bin/python -m pip install --upgrade pip
+Requirement already satisfied: pip in ./.venv/lib/python3.11/site-packages (26.2.1)
+.venv/bin/python -m pip install -e ".[dev]"
+Obtaining file:///root/los-eval/s02-novice-2026-09-25/LearningOS/repository
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Checking if build backend supports build_editable: started
+  Checking if build backend supports build_editable: finished with status 'done'
+  Getting requirements to build editable: started
+  Getting requirements to build editable: finished with status 'done'
+  Preparing editable metadata (pyproject.toml): started
+  Preparing editable metadata (pyproject.toml): finished with status 'done'
+INFO: pip is looking at multiple versions of learningos-core to determine which version is compatible with other requirements. This could take a while.
+ERROR: Package 'learningos-core' requires a different Python: 3.11.15 not in '>=3.12'
+make: *** [Makefile:154: setup] Error 1

@@ -1,0 +1,65 @@
+{
+  "from": "S01-before",
+  "to": "S01-after",
+  "canonical": {
+    "added": [],
+    "removed": [],
+    "modified": []
+  },
+  "canonical_digest_changed": false,
+  "receipts_added": [],
+  "inflight_after": [],
+  "derived": {
+    "added": [
+      "generated/backlinks.json",
+      "generated/concept-canvas.canvas",
+      "generated/concept-index.md",
+      "generated/concept-map.md",
+      "generated/coordination-view.md",
+      "generated/dependency-report.md",
+      "generated/domain-atlas.md",
+      "generated/learner-interpretations.json",
+      "generated/learner-interpretations.md",
+      "generated/learning-requirements.json",
+      "generated/learning-requirements.md",
+      "generated/library.md",
+      "generated/manifest.json",
+      "generated/module-view.md",
+      "generated/nebula.md",
+      "generated/reading-room.md",
+      "generated/reports/health.md",
+      "generated/reports/validation-report.md",
+      "generated/source-index.md",
+      "generated/study-plans.md"
+    ],
+    "removed": [],
+    "modified": [],
+    "bytes_before": 0,
+    "bytes_after": 493550
+  },
+  "diagnostics_added": [
+    "operations/diagnostics/traces.jsonl"
+  ],
+  "ai_actions_added": [],
+  "new_operations": [
+    {
+      "trace_id": "bff87904f6d407966d784832196f7e19",
+      "request_id": "req-bad-payload",
+      "capability": "unknown.write",
+      "started_at": 1790295449.2180932,
+      "duration_ms": 16110.4,
+      "attempts": 45,
+      "replayed": true,
+      "first_failure_stage": "core.admission",
+      "canonical_outcome": "AMBIGUOUS",
+      "recovery_requirement": "reconcile-exact-request",
+      "needs_attention": true
+    }
+  ],
+  "head": {
+    "before": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "after": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e"
+  },
+  "git_status_after": [],
+  "flags": []
+}

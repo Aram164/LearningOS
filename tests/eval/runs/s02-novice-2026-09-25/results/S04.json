@@ -1,0 +1,113 @@
+{
+  "scenario": "S04",
+  "run_id": "s02-novice-2026-09-25",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "The capture was filed through a gateway capability with a receipt, after showing the learner the exact text and target and getting approval; validation stayed at 0 errors with no new warning signature, and the connection list was produced. But the envelope's approval hash (intent_sha256) is not specified in any document the refusal points to — the first submission was refused with UNCONFIRMED and the operator had to read tools/learning_os/contracts/gateway.py to compute it. There is also no documented capability for the WORKFLOWS §21 inbox->workspace scratch route, and 'los operations' afterwards reported the committed write as AMBIGUOUS/needs_attention (see F-s04-operations-merge-04).",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "snapshot_file": "observations/S04-before.json"
+  },
+  "consumer": {
+    "goal": "File the friend's forwarded message (eval-drop/A09.md) where it belongs and tell the learner what it connects to.",
+    "first_action": "cat eval-drop/A09.md and the public arrival metadata (kind inbox-capture, channel 'message from a friend doing an internship')",
+    "commands": [
+      "cat eval-drop/A09.md",
+      "grep '^#' system/WORKFLOWS.md; sed -n 38,57p; sed -n 506,536p system/WORKFLOWS.md   (§2 capture, §3 durable note, §21 process the inbox, §22 end a session)",
+      "ARCHITECTURE.md §3.3 file-saving conventions",
+      "los capabilities --compact --json",
+      "los capabilities capture.create|review.prepare|review.apply|garden.seed.create|stage.note.write|unit.note.append --json",
+      "los search deadlock|'lock order'|locking|Postgres|transaction|'circular wait' (+ --type note --content)",
+      "los note-read note-deadlock-four-conditions ; los note-read note-two-phase-locking-deadlocks",
+      "los plan-edit-context unit-os-l07 --brief ; los plan-edit-context unit-os-l07 --stage-id stage-os-l07-01-deadlock",
+      "ls work/active/workspace-os-oral-prep/ work/inbox/ ; cat work/inbox/20260915-os-oral-questions.md ; cat .../stage-os-l07-01-deadlock/notes.md (empty)",
+      "los search questions --type inbox   # -> [] (inbox items are not searchable)",
+      "sed -n '/^## 25a/,/^## 25b/p' system/WORKFLOWS.md (envelope fields)",
+      "cat system/schema/capability-envelope.schema.json ; grep intent system/*.md",
+      "los stage-note --help ; los capabilities stage.note.write --json",
+      "PROPOSAL shown to learner -> approved",
+      "los capability stage.note.write --payload-file envelope-1.json   # ok:false UNCONFIRMED 'approval subject does not match the current capability intent' (exit 0)",
+      "los stage-note unit-os-l07 stage-os-l07-01-deadlock --text ...   # refused: points to WORKFLOWS §25a step 4 (exit 2)",
+      "grep -rn 'def intent_sha256' tools/ ; sed -n 30,90p tools/learning_os/contracts/gateway.py   # implementation read",
+      "los capability stage.note.write --payload-file envelope-2.json   # ok:true, transaction-20260925-003709-001",
+      "git diff ; cat operations/transactions/transaction-20260925-003709-001.yaml",
+      "python tools/validate.py --compact   # 0 error(s), 2 warning(s)",
+      "python tools/warning_baseline.py --check   # OK",
+      "los operations   # reports trace bff87904... request s04-a09-stage-note-1 AMBIGUOUS needs_attention"
+    ],
+    "tool_calls": 27,
+    "docs_consulted": ["system/WORKFLOWS.md §2, §3, §21, §22, §25a", "system/ARCHITECTURE.md §3.3", "system/schema/capability-envelope.schema.json", "system/PLAN-CREATION-SOP.md Gate 5", "los capabilities (compact index and 6 details)"],
+    "impl_files_read": ["tools/learning_os/contracts/gateway.py (intent_subject / intent_sha256, lines 30-90)"],
+    "retries": 1,
+    "confusions": [
+      "WORKFLOWS §21 routes 'temporary material tied to an active effort' to the workspace's scratch/, but no capability writes work/active/**/scratch; HARD RULE 12 says canonical writes need an action-specific capability, while CLAUDE.md §3 lists inbox routing as an automatic permission. I chose the stage working note (OPERATOR.md: 'Stage-specific learning belongs in its stage note') via stage.note.write, which is labelled 'compatibility capability only'.",
+      "capture.create only writes work/inbox/** and has 'no automatic routing'; there is no capability to move an inbox item to its destination, so capturing first would leave a copy in the inbox that nothing can remove through the gateway.",
+      "Inbox items are not searchable (search --type inbox -> []), so the 'exam question' the capture refers to was only found by listing work/inbox/ and reading the files.",
+      "OPERATOR.md and the refusal message point to 'WORKFLOWS §25a step 4' for the intent hash; that section says only that subject_sha256 is 'intent_sha256(envelope)' without defining which fields are hashed or how they are serialised.",
+      "A refused write (ok:false, UNCONFIRMED) returns process exit code 0, while --help documents 'Exit codes: 0 ok · 1 validation errors · 2 usage/environment error · 3 conflict'.",
+      "expected_revisions for a stage note: plan-edit-context listed three artifacts (module, study map, unit); I guessed {unit-os-l07: 0} and it was accepted, but no document says which artifact a stage note belongs to."
+    ],
+    "corrective_steps": [
+      "Read the implementation of intent_sha256 (request_id and idempotency_key are excluded from the hashed subject) and resubmitted with a new request_id and the same idempotency key."
+    ],
+    "questions_asked_to_learner": [
+      "I'd append exactly this section (shown: heading, the message verbatim in a text block, and a 'Connects to' line) to the working note of your OS L07 stage 'Deadlock conditions and detection' (currently empty) through the stage.note.write capability. OK? -> scripted reply: 'Yes, apply exactly what you showed me.'"
+    ],
+    "implementation_knowledge_needed": true,
+    "wall_minutes": 4,
+    "outcome": "Filed: the friend's message now sits verbatim in the working note of your Operating Systems L07 stage 'Deadlock conditions and detection' (stage-os-l07-01-deadlock), receipt transaction-20260925-003709-001. It connects to: your inbox list of last year's oral questions ('How can deadlock be prevented? Which condition would you break in practice?') — this is a real-world answer: always locking tables in the same order breaks circular wait; note-deadlock-four-conditions (global lock order); note-two-phase-locking-deadlocks (T1 A->B vs T2 B->A, the database detects the waits-for cycle and aborts a victim, which is Postgres' 'deadlock detected'); and your OS oral prep workspace. Nothing is committed yet."
+  },
+  "internal": {
+    "request_ids": ["s04-a09-stage-note-1 (refused UNCONFIRMED)", "s04-a09-stage-note-2 (committed)"],
+    "receipts": ["operations/transactions/transaction-20260925-003709-001.yaml"],
+    "transaction_behavior": "First envelope refused before any write (UNCONFIRMED at core.approval; no receipt, no file change). Second envelope: approval passed, replay miss, snapshot guard passed, transaction started, validation passed, projection published, committed, receipt persisted (trace events). Receipt records snapshot_before 82bcffb7..., snapshot_after c89b45e3..., unit-os-l07 revision 0->1, one write with sha256 before/after.",
+    "approval_behavior": "approval.kind operator-approval with subject_sha256 = intent_sha256 over {schema_version, capability, channel, expected_snapshot, expected_revisions, payload}; the gateway verified it and refused a mismatching one. The learner approved the exact text and target before the write.",
+    "projection_activity": "Projection republished inside the transaction (snapshot moved to sha256:c89b45e3...); 20 derived files added under generated/.",
+    "persistence_activity": "operations/transactions/{idempotency.yaml, revisions.yaml, transaction-20260925-003709-001.yaml} created (untracked); operations/diagnostics/traces.jsonl created (19 lines).",
+    "derived_changes": "generated/: 20 files added.",
+    "manifest_changes": "generated/manifest.json rebuilt with snapshot c89b45e3...",
+    "unexpected_writes": [],
+    "warnings_errors": [
+      "UNCONFIRMED: approval subject does not match the current capability intent (exit 0)",
+      "stage-note bare: 'canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled' (exit 2)",
+      "los operations: trace bff87904... shows request s04-a09-stage-note-1, attempts 2, canonical_outcome AMBIGUOUS, needs_attention true — although s04-a09-stage-note-2 committed"
+    ],
+    "git_diff_stat": " .../units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md | 10 ++++++++++ ; untracked: operations/transactions/idempotency.yaml, revisions.yaml, transaction-20260925-003709-001.yaml",
+    "observe_diff_file": "observations/S04-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [
+      " M curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+      "?? operations/transactions/idempotency.yaml",
+      "?? operations/transactions/revisions.yaml",
+      "?? operations/transactions/transaction-20260925-003709-001.yaml"
+    ],
+    "snapshot_file": "observations/S04-after.json"
+  },
+  "friction": [
+    {"tag": "needs-implementation-knowledge", "description": "The approval subject hash (intent_sha256) is undefined in the docs the refusal points to (WORKFLOWS §25a step 4, OPERATOR.md); computing it required reading tools/learning_os/contracts/gateway.py.", "cost": "1 refused submission + 4 tool calls"},
+    {"tag": "unhelpful-error", "description": "UNCONFIRMED 'approval subject does not match the current capability intent' gives no expected hash and no pointer to how it is computed; exit code 0 on a refused write.", "cost": "1 retry"},
+    {"tag": "missing-capability", "description": "No gateway capability for WORKFLOWS §21's inbox->workspace scratch/inputs route or for removing a routed inbox item; capture.create only adds to the inbox.", "cost": "design deliberation, ~5 capability detail reads"},
+    {"tag": "unclear-safety", "description": "Which approval.kind to use (direct-user-gesture / operator-approval) and which artifact ids belong in expected_revisions for a stage note are not documented; both were guesses that happened to be accepted.", "cost": "guesswork"},
+    {"tag": "manual-generated-file-inspection", "description": "Inbox items are not searchable through the product; relevant inbox content found by ls/cat of work/inbox/.", "cost": "2 tool calls"}
+  ],
+  "failures": ["F-s04-operations-merge-04"],
+  "scenario_record": {
+    "change_applied": {
+      "path": "curriculum/modules/module-tuh-os/units/unit-os-l07/stages/stage-os-l07-01-deadlock/notes.md",
+      "capability": "stage.note.write (append, replace=false)",
+      "receipt": "operations/transactions/transaction-20260925-003709-001.yaml",
+      "request_id": "s04-a09-stage-note-2",
+      "idempotency_key": "s04-a09-stage-note",
+      "approval": "operator-approval; learner approved the exact text and target shown ('Yes, apply exactly what you showed me.')",
+      "envelope_fields_constructed_by_hand": ["schema_version", "request_id", "idempotency_key", "capability", "channel", "expected_snapshot (from plan-edit-context)", "expected_revisions {unit-os-l07: 0} (guessed)", "approval.kind", "approval.subject_sha256 (from implementation)", "payload"]
+    },
+    "connection_record": "connections.jsonl probe A09, phase after-shelving",
+    "original_capture_preserved": "verbatim inside a ```text fence; eval-drop/A09.md untouched"
+  },
+  "uncertainties": [
+    "Whether the stage working note (vs. workspace-os-oral-prep/scratch/ or the inbox) is the intended home; the docs give two plausible routes and only one has a capability.",
+    "Nothing was committed; the scenario did not ask for a commit and session-end is a separate step."
+  ]
+}

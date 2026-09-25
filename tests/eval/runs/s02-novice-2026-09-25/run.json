@@ -1,0 +1,58 @@
+{
+ "run_id": "s02-novice-2026-09-25",
+ "plan": "N",
+ "session_role": "blind-consumer-novice",
+ "persona": "technically capable consumer meeting this LearningOS installation for the first time; operator for the synthetic learner Noor Haddad",
+ "blind": true,
+ "started": "2026-09-25T00:13:20Z",
+ "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+ "eval_revision": "3a53589545d74df25d691f4beac4d0097ed313d7",
+ "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+ "world_build": {
+  "builder_version": 1,
+  "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+  "product_revision_requested": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+  "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+  "scale": 0,
+  "seed": 20260924,
+  "timeline": {
+   "start": "2026-04-06",
+   "as_of": "2026-09-18"
+  },
+  "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+  "commits": 133,
+  "notes": 116,
+  "arrivals": 30,
+  "paths": {
+   "repository": "/root/los-eval/s02-novice-2026-09-25/LearningOS/repository",
+   "materials": "/root/los-eval/s02-novice-2026-09-25/LearningOS/materials",
+   "drop": "/root/los-eval/s02-novice-2026-09-25/eval-drop"
+  },
+  "validation": "0 error(s), 3 warning(s) — OK (0.3s)",
+  "validate_exit": 0,
+  "generate_exit": 0
+ },
+ "model": "claude-opus-5-5 (configured session model)",
+ "environment": {
+  "os": "Linux 6.18 container, 4 cores",
+  "system_python": "3.11.15 (refused by the product)",
+  "product_python": "3.12.3 (uv venv ~/losvenv outside the world; make setup PYTHON=python3.12 in the S01 world)",
+  "harness_python": "3.13 venv in the session scratchpad (PyYAML, jsonschema, pypdf)",
+  "TRACEPARENT": "set by the agent harness for every process (00-bff87904f6d407966d784832196f7e19-...); the product adopts it as trace/operation id — see F-s04-operations-merge-04"
+ },
+ "scenarios": [
+  "S00",
+  "S01",
+  "S02",
+  "S04",
+  "S06",
+  "S10"
+ ],
+ "deviations": [
+  "INTERIM RECORD: written mid-run at the learner's request; scenarios S14, S15 and S26 are still to run and 'finished' is not yet set.",
+  "Fresh worlds were built into separate directories (~/los-eval/s02-novice-2026-09-25-S02, -S10, -S14, ...) rather than reset in place; all builds reported the same world_head 13ad2fca.",
+  "S04 and S06 used world: continue from the S02 world (the previous scenario of this run), not the S01 world where setup/tests ran.",
+  "The learner is scripted: questions to her and her replies were posed and answered inline in the operator's own reasoning immediately before each write, not in separate conversational turns.",
+  "S01's make test-fast was re-run once, after S01 was recorded, with TRACEPARENT unset, to separate environment effects from product behaviour; that re-run is harness investigation, not part of any scenario."
+ ]
+}
