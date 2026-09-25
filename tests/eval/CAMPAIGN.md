@@ -28,7 +28,7 @@ invariant.
 | 14 | Clean-room consumer on the final revision | N + C | no | `runs/s14-cleanroom-<date>/` |
 
 Sessions 2–9 are independent and can run in parallel. Session 10 needs all of
-them. Repair sessions build worlds with `--source-rev WORKTREE` so the same
+them. Session 9 was omitted by owner decision (see run ledger); adjudication and repair proceed on Sessions 0–8. Repair sessions build worlds with `--source-rev WORKTREE` so the same
 data exercises the patched product; session 13 starts again from the
 unmodified scenarios.
 
@@ -117,6 +117,7 @@ own. The judge merges every run branch before scoring.
 | 5 | C | `s05-connections-a-2026-09-25` | `claude/eval-s05-connections-a-2026-09-25` | `13ad2fca…` | after H3 (eval `658db28`); local run (H4), opened an earlier memory note before starting; one leak-scan match adjudicated (H5) |
 | 6 | C | `s06-connections-b-2026-09-25` | `claude/eval-s06-connections-b-2026-09-25` | `13ad2fca…` | after H3 (eval `658db28`); local run (H4), memory index in context only |
 | 7 | X | `s07-abuse-2026-09-25` | `claude/eval-s07-abuse-2026-09-25` | `13ad2fca…` | after H3 (eval `658db28`); local run (H4), memory index in context; started before the H4 brief |
+| 9 | F | — | — | — | OMITTED by owner decision 2026-09-25; partial run discarded uncommitted and excluded from adjudication |
 
 ## Harness changes
 
