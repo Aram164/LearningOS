@@ -38,6 +38,11 @@
 #      this file was written to prevent.
 #
 # Rebuild with: python tools/manifest_contract.py --bump --note "…"
+#
+# DEFERRED (v16 garden/inbox, 2026-09-26): v15 already publishes
+# `garden_entries`, and inbox stays served by `search`/`inbox-read`. The
+# trigger that reopens this is a consumer needing inbox or garden
+# *content* — not just presence — inside the atomic manifest read.
 # Keys that were once published and must never come back under this name.
 # `exam_spine` was a strict subset of `academic_deadlines` — a second shape for
 # the same facts (ADR-006, 2026-08-03).

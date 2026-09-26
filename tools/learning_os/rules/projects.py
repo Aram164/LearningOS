@@ -128,6 +128,15 @@ class ChecksProjects:
                           f"workspace '{ws.id}' untouched for {int(days)} days (per Git)")
 
     def check_transaction_receipts(self):
+        # DEFERRED (JF-13 rebuild, 2026-09-26): detection is here, but
+        # rebuilding the ledgers from receipts stays unbuilt. Audited then:
+        # 301 receipts, 63 without idempotency keys (idempotency is not
+        # rebuildable from receipts alone), and one real chain hole
+        # (unit/study-map-aml-l10 1→2 on 2026-08-22) that naive max-after
+        # replay would launder. The unblocker is recording idempotency
+        # keys on every receipt going forward, plus quarantine-token
+        # enforcement on the commit path — a write-path change, not a
+        # reader. Until then a rebuild tool would be a false recovery.
         directory = self.repo.root / "operations" / "transactions"
         if not directory.is_dir():
             return

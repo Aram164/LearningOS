@@ -585,6 +585,9 @@ def _match_verified(items, terms):
     return matches
 
 
+# MEASURED (S23 cold-search scaling, 2026-09-26): 145 notes 1.02s cold /
+# 0.76s warm; 290 notes 1.07s / 0.84s; 725 notes 2.00s / 1.14s. Loader
+# dominates (warm tracks cold); no index or rebuild work triggered.
 def _exhaustive_content_search(root, ordered, terms):
     """The current implementation, kept as the differential oracle."""
     matches = []
