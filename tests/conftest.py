@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import textwrap
 from pathlib import Path
@@ -11,7 +12,24 @@ import group_map
 import pytest
 import yaml
 
+from learning_os.diagnostics.conventions import TRACE_STORE_DENY_ENV
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
+
+# The test session must never persist spans to the repository under test. A
+# few tests drive the real capability catalog through the real CLI without
+# ``--root`` (they assert on the real catalog, so a tmp mini would change
+# the assertions); those runs bind the trace store to the real root, and
+# their best-effort spans used to land in the live
+# ``operations/diagnostics/traces.jsonl`` (JF-03). Deny persistence for this
+# repository for the whole session — child processes inherit this
+# environment, so rootless CLI runs are covered too — instead of truncating
+# the live store after the fact. Mini repositories under tmp dirs are
+# unaffected. Never truncate, unlink, or otherwise modify the live store
+# from the test session: a legitimate span written outside the test scope
+# must survive the suite (see test_diagnostic_store.py).
+os.environ[TRACE_STORE_DENY_ENV] = os.pathsep.join(
+    [str(REPO_ROOT), os.environ.get(TRACE_STORE_DENY_ENV, "")]).rstrip(os.pathsep)
 
 # Stamp embedded in the shared session snapshots below. No consumer asserts on
 # its value (verified at introduction); it only needs to be stable so the
@@ -20,52 +38,24 @@ SHARED_GENERATED_AT = "shared-test-snapshot"
 
 
 @pytest.fixture(autouse=True)
-def _isolate_diagnostic_store_side_effects():
-    """Keep test spans out of the checked-in tree (JF-03).
+def _unbind_diagnostic_store_between_tests():
+    """Unbind the process-global trace store after every test (JF-03).
 
-    A few tests drive the real capability catalog through the real CLI
-    without ``--root`` (they assert on the real catalog, so a tmp mini
-    would change the assertions); those runs bind the trace store to the
-    real root and persist spans best-effort. Snapshot the real
-    ``traces.jsonl`` around every test and restore it after, and unbind
-    the process-global store so in-process emits cannot bleed into the
-    next test's mini either. Tests asserting on a mini's own store are
-    unaffected: their roots are untouched.
+    Binding is process-global, so without this an in-process emit in one
+    test could persist into the previous test's mini. Persistence to the
+    repository under test is denied session-wide (above); this fixture
+    only resets the pointer.
     """
-    store = REPO_ROOT / "operations" / "diagnostics" / "traces.jsonl"
-    try:
-        before = store.stat().st_size if store.is_file() else None
-    except OSError:
-        before = None
     yield
     try:
-        if before is None:
-            try:
-                store.unlink()
-            except FileNotFoundError:
-                pass
-            except OSError:
-                pass
-            try:
-                store.parent.rmdir()
-            except OSError:
-                pass
-        elif store.is_file():
-            try:
-                with store.open("r+b") as handle:
-                    handle.truncate(before)
-            except OSError:
-                pass
-    finally:
+        from learning_os.diagnostics.store import bind_store
+    except ImportError:
+        pass
+    else:
         try:
-            from learning_os.diagnostics.store import bind_store
-        except ImportError:
+            bind_store(None)
+        except Exception:
             pass
-        else:
-            try:
-                bind_store(None)
-            except Exception:
-                pass
 
 
 @pytest.fixture(scope="session")

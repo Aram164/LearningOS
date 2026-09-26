@@ -46,10 +46,42 @@ def traces_path(root: Path) -> Path:
     return store_dir(root) / TRACES_FILENAME
 
 
+def _denied_roots() -> list[Path]:
+    """Resolved roots from TRACE_STORE_DENY_ENV; bad entries ignored."""
+    raw = os.environ.get(conventions.TRACE_STORE_DENY_ENV, "")
+    roots = []
+    for entry in raw.split(os.pathsep):
+        entry = entry.strip()
+        if not entry:
+            continue
+        try:
+            roots.append(Path(entry).resolve())
+        except OSError:
+            continue
+    return roots
+
+
+def _is_denied(root: Path) -> bool:
+    """Whether persistence is disabled for this repository root (JF-03)."""
+    try:
+        resolved = Path(root).resolve()
+    except OSError:
+        return False
+    return any(resolved == denied or denied in resolved.parents
+               for denied in _denied_roots())
+
+
 def bind_store(root: Path | None) -> None:
-    """Bind this process's persistent sink; None unbinds (tests)."""
+    """Bind this process's persistent sink; None unbinds (tests).
+
+    Binding a denied root leaves the store unbound: span persistence is
+    disabled for that repository instead of being cleaned up afterwards.
+    """
     global _bound_root
-    _bound_root = Path(root).resolve() if root is not None else None
+    if root is None or _is_denied(Path(root)):
+        _bound_root = None
+    else:
+        _bound_root = Path(root).resolve()
 
 
 def persist_record(record: dict) -> None:
