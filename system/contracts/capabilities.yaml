@@ -60,6 +60,12 @@ queries:
     - reads one work/inbox file by inbox-relative name, without following symlinks
     - non-UTF-8 drops refuse with no text read; dot-files read by exact name only
     - exact content segments carry snapshot and byte hash; continuation refuses changed snapshots
+  inbox.list:
+    handler: inbox_list
+    result: inbox-list
+    invariants:
+    - lists work/inbox files by inbox-relative name, without reading bytes
+    - dot-files excluded; a missing inbox is empty
   note.search:
     handler: search
     result: note-content-search
