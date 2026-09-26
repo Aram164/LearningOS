@@ -12,7 +12,7 @@ VENV   := .venv
 # Homebrew "externally-managed-environment" errors on macOS.
 PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYTHON))
 
-.PHONY: help check warnings views materials inventory verify-materials contract test test-fast test-group test-affected bench lint code-check all setup hooks garden status plan-check projection-check system-check stress
+.PHONY: help check warnings views materials inventory verify-materials contract test test-fast test-group test-affected bench lint code-check all setup setup-lean hooks garden status plan-check projection-check system-check stress
 
 help:
 	@echo "make check  - validate the repository (schemas + semantic rules)"
@@ -43,6 +43,7 @@ help:
 	@echo "make all    - check + views + materials + test"
 	@echo "make hooks  - install the canonical Core hooks and the paired pre-push gate"
 	@echo "make setup  - create .venv, install deps, install Git hooks (run once per clone/move)"
+	@echo "make setup-lean - runtime-only .venv for fresh clones (no pytest/ruff; see README)"
 
 check:
 	$(PY) tools/validate.py
@@ -155,6 +156,13 @@ all: check views materials test
 check-python:
 	@$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info[:2] >= (3, 12) else 1)' || { echo "setup: refusing to touch $(VENV): '$(PYTHON)' is not a usable Python >= 3.12"; exit 1; }
 
+# What `setup` installs into the venv (appended to pip's -e flag, so the
+# value must stay space-free for the recursive `setup-lean` call below).
+# `setup-lean` overrides this with the runtime-only spec; a lean venv runs
+# every product command but not the test suite, and the pre-commit hook
+# skips its static checks loudly until ruff is installed (S09b-F3: full
+# .[dev] setup measured ~8x slower warm).
+PIP_EDITABLE ?= .[dev]
 setup: check-python
 	@if [ -x "$(VENV)/bin/python" ] && [ "$$($(VENV)/bin/python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')" = "$$($(PYTHON) -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')" ]; then \
 		echo "setup: reusing $(VENV) ($$($(VENV)/bin/python --version))"; \
@@ -163,9 +171,16 @@ setup: check-python
 		$(PYTHON) -m venv $(VENV); \
 	fi
 	$(VENV)/bin/python -m pip install --upgrade pip
-	$(VENV)/bin/python -m pip install -e ".[dev]"
+	$(VENV)/bin/python -m pip install "-e$(PIP_EDITABLE)"
 	$(MAKE) hooks
 	@echo "setup complete: .venv created, deps installed, hooks active."
+
+# Fresh-clone fast path: product commands work in seconds; run plain `make
+# setup` afterwards for pytest/ruff. On an existing full venv this target
+# does not uninstall anything — it only matters for fresh clones.
+setup-lean:
+	$(MAKE) setup PIP_EDITABLE=.
+	@echo "setup-lean complete: runtime-only .venv (no pytest/ruff)."
 
 hooks:
 	install -m 0755 tools/hooks/pre-commit .git/hooks/pre-commit

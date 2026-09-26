@@ -914,7 +914,8 @@ def test_make_entrypoints_parse(repo_root):
 
     # "setup" carries shell conditionals (stale-venv recovery, JF-01):
     # a quoting slip breaks every fresh clone, so it parses here.
-    for target in ("help", "plan-check", "system-check", "setup", "check-python"):
+    for target in ("help", "plan-check", "system-check", "setup", "setup-lean",
+                   "check-python"):
         result = subprocess.run(["make", "-n", target], cwd=repo_root, capture_output=True, text=True)
         assert result.returncode == 0, result.stderr
 
