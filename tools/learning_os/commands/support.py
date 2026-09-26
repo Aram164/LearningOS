@@ -201,12 +201,18 @@ def _path_or_error(root: Path, path_id: str):
 
 
 def _fresh_manifest(root: Path, *, snapshot_id: str | None = None) -> dict:
-    repo = load_repo(root)
-    if snapshot_id is not None:
-        seed_source_fingerprint(repo, snapshot_id)
-    generated_at = stable_generated_at(root)
-    backlinks = build_backlinks(repo, generated_at)
-    return build_manifest(repo, generated_at, backlinks)
+    # Every projection read takes the operator lock: acquisition runs crash
+    # recovery first, so single-ID reads, batch reads, and bootstrap all
+    # observe transaction-consistent post-recovery state instead of
+    # disagreeing after a kill (JF-21). Re-entrant: callers already holding
+    # the lock (batch inspect, bootstrap) pass straight through.
+    with _operator_lock(root):
+        repo = load_repo(root)
+        if snapshot_id is not None:
+            seed_source_fingerprint(repo, snapshot_id)
+        generated_at = stable_generated_at(root)
+        backlinks = build_backlinks(repo, generated_at)
+        return build_manifest(repo, generated_at, backlinks)
 
 
 def _json_layout(stream=None) -> dict:

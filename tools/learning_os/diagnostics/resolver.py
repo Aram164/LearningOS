@@ -74,11 +74,41 @@ class AuthorityEvidence:
     response_transaction_id: str | None = None
     transport_error: str | None = None
     observed_snapshot: str | None = None
+    #: True when the live manifest snapshot chains to a receipt at or after
+    #: this write's own receipt: the projection is caught up past the
+    #: commit, so the write is settled even though its exact snapshot is
+    #: no longer live (JF-19). A manifest behind the commit — or showing
+    #: a snapshot no receipt accounts for — leaves this False.
+    superseded_snapshot: bool = False
     #: Authority files (relative paths) that yielded no evidence because
     #: they were unreadable, unparseable, or wrongly shaped. Skipped, never
     #: fatal — but recorded, so a corrupt receipt is explicit uncertainty
     #: rather than a silent absence.
     unreadable_authority: list[str] = field(default_factory=list)
+
+
+def manifest_covers_receipt(receipts: list[dict], manifest_snapshot: str | None,
+                            snapshot_after: str | None) -> bool:
+    """Whether the live manifest is at or past one committed write (JF-19).
+
+    Pure position check over the receipt inventory: both snapshots must
+    chain to receipts, and the manifest's receipt must sort at or after
+    the write's (transaction ids are time-ordered). Anything unchained —
+    a manifest behind the commit, or a snapshot no receipt accounts for
+    (hand-modified tree) — answers False, keeping verify-observation.
+    """
+    if not manifest_snapshot or not snapshot_after:
+        return False
+    if manifest_snapshot == snapshot_after:
+        return True
+    manifest_ids = sorted(
+        str(receipt.get("id", "")) for receipt in receipts
+        if receipt.get("snapshot_after") == manifest_snapshot)
+    write_ids = sorted(
+        str(receipt.get("id", "")) for receipt in receipts
+        if receipt.get("snapshot_after") == snapshot_after)
+    return bool(manifest_ids) and bool(write_ids) \
+        and manifest_ids[0] >= write_ids[-1]
 
 
 def load_authority_files(root: Path) -> tuple[list[dict], dict, list[str]]:
@@ -131,6 +161,7 @@ def collect_authority(root: Path, *, request_id: str, idempotency_key: str,
                       capability: str, response: dict | None = None,
                       transport_error: str | None = None,
                       observed_snapshot: str | None = None,
+                      manifest_snapshot: str | None = None,
                       response_codes: list | None = None,
                       authority_files: tuple[list[dict], dict, list[str]]
                       | None = None) -> AuthorityEvidence:
@@ -174,6 +205,7 @@ def collect_authority(root: Path, *, request_id: str, idempotency_key: str,
                 verified_receipt["_path"] = verified[1]["receipt_path"]
     error = (response or {}).get("error") or {}
     codes = list(response_codes) if response_codes is not None else [error.get("code")]
+    snapshot_after = (response or {}).get("snapshot_after")
     return AuthorityEvidence(
         request_id=request_id,
         idempotency_key=idempotency_key,
@@ -185,10 +217,12 @@ def collect_authority(root: Path, *, request_id: str, idempotency_key: str,
         response_code=error.get("code"),
         response_codes=codes,
         response_replayed=bool((response or {}).get("replayed", False)),
-        response_snapshot_after=(response or {}).get("snapshot_after"),
+        response_snapshot_after=snapshot_after,
         response_transaction_id=(response or {}).get("transaction_id"),
         transport_error=transport_error,
         observed_snapshot=observed_snapshot,
+        superseded_snapshot=manifest_covers_receipt(
+            receipts, manifest_snapshot, snapshot_after),
         unreadable_authority=list(unreadable),
     )
 
@@ -270,6 +304,21 @@ def _attempt_spans(records: list[dict]) -> list[dict]:
     return attempts
 
 
+def _codes_cover_attempts(records: list[dict], codes: list) -> bool:
+    """Whether one response code exists per counted attempt.
+
+    Attempts are counted from UI dispatches and Core attempt spans,
+    whichever reports more, so a transport-lost dispatch or a crashed
+    attempt without a response summary still withholds proof.
+    """
+    dispatches = sum(1 for record in records
+                     if record.get("name") == conventions.EVENT_ENVELOPE_DISPATCHED)
+    spans = sum(1 for record in records
+                if record.get("kind") == "span-start"
+                and record.get("name") == "attempt")
+    return len(codes) >= max(dispatches, spans, 1)
+
+
 def _refusals_prove_no_commit(records: list[dict],
                               authority: AuthorityEvidence) -> bool:
     """Whether the recorded refusals cover every counted attempt.
@@ -277,20 +326,27 @@ def _refusals_prove_no_commit(records: list[dict],
     A definitive refusal proves no-commit only for its own attempt. A
     recovery refusal (STALE/REVISION/INVALID on attempt 2) says nothing
     about an ambiguous attempt 1 — the UI-side rule, applied here to the
-    merged trace. Attempts are counted from UI dispatches and Core
-    attempt spans, whichever reports more, so a transport-lost dispatch
-    or a crashed attempt without a response summary still withholds
-    proof; success responses never count as refusals.
+    merged trace. Success responses never count as refusals.
     """
     codes = authority.response_codes or [authority.response_code]
     if not all(code in conventions.DEFINITIVE_NO_COMMIT_CODES for code in codes):
         return False
-    dispatches = sum(1 for record in records
-                     if record.get("name") == conventions.EVENT_ENVELOPE_DISPATCHED)
-    spans = sum(1 for record in records
-                if record.get("kind") == "span-start"
-                and record.get("name") == "attempt")
-    return len(codes) >= max(dispatches, spans, 1)
+    return _codes_cover_attempts(records, codes)
+
+
+def _conflict_proves_no_commit(records: list[dict],
+                               authority: AuthorityEvidence) -> bool:
+    """Whether a lone key conflict retires this request (JF-19).
+
+    Every counted attempt ended in IDEMPOTENCY_CONFLICT: the key is bound
+    to a different intent, so this request cannot have committed. The
+    ledger row and any matching receipt are the other intent's evidence,
+    which is why this check runs before the contradiction branches.
+    """
+    codes = authority.response_codes or [authority.response_code]
+    if not codes or not all(code == "IDEMPOTENCY_CONFLICT" for code in codes):
+        return False
+    return _codes_cover_attempts(records, codes)
 
 
 def resolve(records: list[dict], authority: AuthorityEvidence) -> CausalDiagnosis:
@@ -329,6 +385,11 @@ def resolve(records: list[dict], authority: AuthorityEvidence) -> CausalDiagnosi
         canonical = "COMMITTED"
         reasons.append("a committed receipt verified against its ledger entry, "
                        "the live revision floor, and the capability catalog")
+    elif _conflict_proves_no_commit(records, authority):
+        canonical = "NOT_COMMITTED"
+        reasons.append("every counted attempt ended in IDEMPOTENCY_CONFLICT: "
+                       "the key is bound to a different intent, so this "
+                       "request cannot have committed")
     elif authority.verification_error is not None:
         canonical = "AMBIGUOUS"
         reasons.append("committed evidence failed strict verification: "
@@ -430,6 +491,10 @@ def resolve(records: list[dict], authority: AuthorityEvidence) -> CausalDiagnosi
                 and authority.observed_snapshot == authority.response_snapshot_after:
             recovery = "none"
             reasons.append("receipt observed in the projection: settled")
+        elif authority.superseded_snapshot:
+            recovery = "none"
+            reasons.append("live manifest is past this commit: settled "
+                           "(the exact snapshot is historical, not missing)")
         else:
             recovery = "verify-observation"
             reasons.append("receipt exists but no observation is on record")

@@ -28,11 +28,15 @@ class TraceContext:
 
     ``trace_id`` is the operation (stable across retries); ``span_id`` is
     this physical attempt; ``sampled`` is the W3C sampling flag bit.
+    ``parent`` is the propagated caller context when one was provided:
+    parentage, never identity — adopting it would merge unrelated
+    requests sharing one ambient trace into one operation (JF-04).
     """
 
     trace_id: str
     span_id: str
     sampled: bool = True
+    parent: TraceContext | None = None
 
     def format(self) -> str:
         flags = "01" if self.sampled else "00"
