@@ -1,0 +1,2048 @@
+diff --git a/Makefile b/Makefile
+index 1a98274..58afa46 100644
+--- a/Makefile
++++ b/Makefile
+@@ -149,7 +149,12 @@ stress: system-check
+ all: check views materials test
+ 
+ setup:
+-	$(PYTHON) -m venv $(VENV)
++	@if [ -x "$(VENV)/bin/python" ] && [ "$$($(VENV)/bin/python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')" = "$$($(PYTHON) -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')" ]; then \
++		echo "setup: reusing $(VENV) ($$($(VENV)/bin/python --version))"; \
++	else \
++		if [ -e "$(VENV)" ]; then echo "setup: removing stale $(VENV) (rebuilding with $$($(PYTHON) --version))"; rm -rf $(VENV); fi; \
++		$(PYTHON) -m venv $(VENV); \
++	fi
+ 	$(VENV)/bin/python -m pip install --upgrade pip
+ 	$(VENV)/bin/python -m pip install -e ".[dev]"
+ 	$(MAKE) hooks
+diff --git a/system/AI-ACTIONS.md b/system/AI-ACTIONS.md
+index 59b5dce..6782f18 100644
+--- a/system/AI-ACTIONS.md
++++ b/system/AI-ACTIONS.md
+@@ -56,6 +56,60 @@ rejected bundle never occupies a canonical-looking path. Successful application
+ is atomic, refreshes the deterministic manifest projection, and creates a
+ ReceiptV2 under `operations/transactions/` before success is reported.
+ 
++## Delivery bundle format
++
++An approved delivery is a directory containing `delivery.yaml` plus every
++file its operations reference (no symlinks). `delivery.yaml` carries:
++
++| Field | Meaning |
++|---|---|
++| `schema_version` | `1` |
++| `id` | delivery id (non-empty exchange identifier, e.g. `ai-delivery-…`) |
++| `type` | must be `ai-action-delivery` |
++| `request_id` | the prepared request's id (`operations/ai-actions/requests/<id>/`) |
++| `action_id` | must equal the request's `action_id` |
++| `producer` | `{provider, adapter}`; only `adapter` is compared — `producer.adapter` must equal the **request's** `provider.adapter` (note the asymmetry: the delivery says `producer`, the request says `provider`) |
++| `preconditions` | must equal the request's `preconditions` verbatim (copy from the request's `request.yaml`) |
++| `approval` | `user_approved: true` (required) plus `approved_at` (when, by convention) — the recorded user approval of this exact delivery |
++| `operations` | non-empty list; each names a `capability` from the request's `allowed-capabilities.json` (never a forbidden one) and, when set, a `target_id` equal to the request target |
++
++Operation shapes per capability:
++
++- `garden.add-transcription`: `artifact_ref` (required, path inside the
++  bundle); `supersedes: transcription-<target-id>` required when the seed
++  already has a transcription.
++- `garden.update`: `patch` mapping with allowlisted fields only (e.g.
++  `title`, `state`).
++- `relationship.create`: `payload` with `id`, `from: {kind, id}`,
++  `relation`, `to: {kind, id}`.
++- `unit.material-synthesis.publish`: `artifact_ref` (required) pointing
++  at one whole synthesis record.
++
++Shape problems are reported together (up to twelve, then a count of the
++rest), so one import round names everything wrong with the bundle;
++freshness guards (target moved, original changed) still refuse
++immediately. A complete minimal delivery:
++
++```yaml
++schema_version: 1
++id: ai-delivery-example-001
++type: ai-action-delivery
++request_id: ai-request-example-001
++action_id: garden.shelve
++producer: {provider: manual, adapter: manual-bundle}
++preconditions: # copied verbatim from the request's request.yaml
++  snapshot_id: sha256:<prepared snapshot>
++  artifact_revisions: {garden-note-example: 0}
++approval: {user_approved: true, approved_at: '2026-09-25T12:00:00+00:00'}
++operations:
++  - capability: garden.add-transcription
++    target_id: garden-note-example
++    artifact_ref: artifacts/transcription.md
++  - capability: garden.update
++    target_id: garden-note-example
++    patch: {title: Example, state: developing}
++```
++
+ ## Contracts
+ 
+ | Contract | Owns |
+diff --git a/system/OPERATOR.md b/system/OPERATOR.md
+index 44cb26b..9acaba2 100644
+--- a/system/OPERATOR.md
++++ b/system/OPERATOR.md
+@@ -45,6 +45,11 @@ gate by exact code, never by heuristic. A baseline-managed signature that
+ shrinks is a repair and passes; it is never restored merely to match the old
+ total.
+ 
++Fail-closed is the design, not an accident: one validation error anywhere
++in the tree blocks *every* canonical write, even an unrelated capture, and
++reads refuse rather than silently omit what they cannot verify. The error
++always names its file. Fix the defect; do not route around the guard.
++
+ ## Start here
+ 
+ Do not recursively discover the repository. Entry is task-shaped: start
+@@ -118,11 +123,13 @@ Decide which read answers the question before reading:
+ 
+ Task-shaped entry preserves complete material access through `inspect ID`.
+ Its `domain_atlas` glance summarizes all projected notes and shelves across
+-domains, independently of pagination; open the domain atlas for the full map.
++domains, independently of pagination; open the domain atlas for the full map
++(run `make views` first on a fresh install — `generated/` starts empty).
+ Read several known records with `inspect ID1 ID2 ...` (at most 20) to share one
+ fresh projection; the batch preserves requested order, includes a snapshot,
+ and refuses missing IDs or changes during the read. Use `note-read` for note
+-bodies. Ask governance questions through `semantic PREDICATE --input k=v`
++bodies — durable notes and garden seeds alike, by stable id. Ask governance
++questions through `semantic PREDICATE --input k=v`
+ (`semantic --list` names the 23 registered predicates;
+ `semantic --recipe CLASS` shows the worked example procedures for one
+ question class, examples only) instead of
+@@ -151,6 +158,14 @@ ordering, scope, or resource membership changes.
+ Continue a summary page with its returned offset and snapshot. Read saved
+ reasoning with `note-read NOTE_ID` (bounded Unicode-character segments) and
+ search beyond note summaries with `search QUERY --type note --content`.
++Read a stage's working-note content from its parent map: `inspect
++STUDY_MAP_ID` carries every stage's `notes_text` (`inspect STAGE_ID` does
++not resolve stages). The `notes_updated` on those stages is the note file's
++last-commit date, not the write date — uncommitted gateway writes do not
++move it. Read inbox drops with `inbox-read NAME` (bounded segments of one
++`work/inbox/` file by name; binary drops refuse). `search` without
++`--content` matches records, garden seeds, and inbox filenames, so all
++three are discoverable without reading files.
+ Continuation reads require the previous response's `--expected-snapshot`;
+ changed content is a restart, never a silently mixed result.
+ 
+@@ -165,7 +180,15 @@ components, units, study maps, stages, source maps, topics, joins, progress,
+ resume pointer, structured academic deadlines (registered attempts, available
+ sittings, and registration windows), and the Future Master's Planning boundary. Interfaces must not reconstruct
+ application state by parsing canonical Markdown or YAML. Use `list-*`,
+-`inspect`, `search`, and `related` for targeted reads.
++`inspect`, `search`, and `related` for targeted reads. `search` without
++`--content` conjoins whitespace-separated substrings per row — every term
++must occur somewhere in the row — unranked and without snippets, so short
++stems collide and natural phrasing often returns nothing; that coarseness
++is the design, not a defect. `related ID` walks one hop over the record's
++own declared edges plus the manifest's backlink tables, and it is not
++symmetric: a workspace lists a note when either side declares the link,
++but the note lists the workspace only when the note itself declares it,
++so membership in one direction never implies the reverse edge.
+ 
+ ## Product hierarchy
+ 
+@@ -326,7 +349,8 @@ excluded. Commit and optional push occur only after explicit confirmation.
+ 
+ Stage-specific learning belongs in its stage note. Unrelated quick capture goes
+ to `work/inbox/`. A deliberately half-formed idea that should gestate goes to
+-`knowledge/garden/`. The operator, not the learner, handles filing.
++`knowledge/garden/`. The operator, not the learner, handles filing. Every one
++of these writes goes through a GatewayEnvelopeV2 built per WORKFLOWS §25c.
+ 
+ Read the applicable platform adapter, then the task-relevant sections of
+ `system/ARCHITECTURE.md`, `system/WORKFLOWS.md`, and the schemas/contracts they
+diff --git a/system/WORKFLOWS.md b/system/WORKFLOWS.md
+index 7ad8960..1e889bd 100644
+--- a/system/WORKFLOWS.md
++++ b/system/WORKFLOWS.md
+@@ -39,7 +39,7 @@ If the active count reaches 8+, the validator warns: finish or archive something
+ 
+ Put fragments, quotations awaiting processing, rough diagrams, temporary source lists, partial calculations, and lecture-specific checklists in workspace `scratch/` or `inputs/`. Temporary capture does not require canonical metadata.
+ 
+-When no workspace is obvious, drop anything into `work/inbox/` — no naming, no metadata. The operator routes inbox items to their deterministic destination (ARCHITECTURE §3.3); the inbox trends toward empty.
++When no workspace is obvious, drop anything into `work/inbox/` — no naming, no metadata. The operator routes inbox items to their deterministic destination (ARCHITECTURE §3.3); the inbox trends toward empty. The write itself goes through a `capture.create` envelope (§25c): the bare `capture --text` command is refused by design.
+ 
+ ## 3. Create or evolve a durable note
+ 
+@@ -517,6 +517,10 @@ Routing destinations are already deterministic (ARCHITECTURE §3.3); this is the
+ 
+ When an item is genuinely ambiguous, prefer capturing it into the most likely workspace's `scratch/` over guessing a canonical home (least destructive, then ask); Aram never makes the filing decision — the operator does. Rebuild generated outputs once any registry changed.
+ 
++Read the inbox through the product, never by catting files: `search`
++matches inbox filenames, and `inbox-read NAME` returns bounded segments
++of one drop (binary drops refuse — they have no text read).
++
+ ## 22. End a session
+ 
+ Any learning session that used guarded mutation commands ends deliberately:
+@@ -715,7 +719,9 @@ without refreshing its snapshot, revisions or retry identity.
+    artifact the transaction touches — the module plus each unit in the
+    package, no more and no fewer — an `approval` whose `subject_sha256` is
+    `intent_sha256(envelope)`, and the payload. `approve` never appears in the
+-   payload; a `file` payload always carries its `file_sha256`.
++   payload; a `file` payload always carries its `file_sha256`. The complete
++   envelope construction (intent hash, revision guards, approval kinds,
++   refusal shape) is §25c; this step states only what plan revision adds.
+ 
+    `module.plan.import` additionally requires a coverage audit under
+    `work/active/` carrying the literal headings `## Local`, `## Linked` and
+@@ -767,6 +773,88 @@ gateway envelope; review both, then submit the envelope unchanged.
+    refused by the content hashes and intent binding, never silently
+    accepted.
+ 
++## 25c. Build a write envelope (GatewayEnvelopeV2)
++
++Every canonical write is submitted as an explicit envelope; the bare
++mutating commands (`capture --text`, `note-revise`, …) refuse with exit 2
++(*"canonical writes must use GatewayEnvelopeV2; direct CLI application is
++disabled"*) by design, never by accident. This section is the complete
++construction recipe — nothing else is needed.
++
++1. **Payload schema.** `python tools/los.py capabilities <name> --json`
++   is the payload contract for capability `<name>`.
++2. **Snapshot.** `python tools/los.py bootstrap --compact` prints
++   `snapshot_id` (`sha256:…`); that exact string is `expected_snapshot`.
++   Any canonical change between reading it and submitting refuses the
++   write as `STALE_SNAPSHOT` (exit 3) — re-read and re-seal.
++3. **Revision guards.** `expected_revisions` maps every artifact the
++   transaction touches to its current revision (read
++   `operations/transactions/revisions.yaml`; an artifact absent from the
++   ledger has revision 0 — the legitimate no-recorded-revision baseline,
++   backstopped by the snapshot guard). Two capabilities name their write
++   target only inside the handler, so the caller cannot guard a path and
++   guards the request instead: `capture.create` takes
++   `capture-request:<idempotency-key>`, `garden.seed.create` takes
++   `garden-request:<idempotency-key>`, both at revision 0 for a fresh
++   key.
++4. **Identities.** `request_id` and `idempotency_key` are caller-chosen
++   (1–128 chars, `^[A-Za-z0-9][A-Za-z0-9._:-]*$`). Reuse the same key for
++   retries of the *same* approved intent (an exact retry replays the
++   receipt instead of writing twice); a *different* intent under a used
++   key is refused as `IDEMPOTENCY_CONFLICT`. Mint a fresh `request_id`
++   per attempt: reused ids merge their explanations in `los operations`.
++5. **Approval.** `channel` is `operator` and `approval.kind` is
++   `operator-approval` on the operator path (`direct-user-gesture` is
++   admitted only for a closed UI-originated allowlist).
++   `approval.subject_sha256` must equal `intent_sha256(envelope)`,
++   computed as below **after** every other field is final — any later
++   edit invalidates it and the write is refused as `UNCONFIRMED`.
++   The approval subject is the operator's assertion that the learner
++   approved this exact intent, guarded by the snapshot/revision checks —
++   not cryptographic proof that a human was present.
++6. **Submit.** `python tools/los.py capability <name> --payload-file
++   envelope.json`. Exit 0 commits (or replays); exit 2 refuses; exit 3
++   is `STALE_SNAPSHOT`.
++
++**Intent hash.** The approval subject covers exactly six fields —
++`schema_version`, `capability`, `channel`, `expected_snapshot`,
++`expected_revisions`, `payload` — and deliberately excludes
++`request_id`, `idempotency_key`, and `approval` (request identities are
++not intent). Canonical form: `json.dumps(subject, sort_keys=True,
++separators=(",", ":"), ensure_ascii=False)` encoded UTF-8, SHA-256 hex,
++prefixed `sha256:`. In Python:
++
++```python
++import hashlib, json
++subject = {k: envelope[k] for k in (
++    "schema_version", "capability", "channel",
++    "expected_snapshot", "expected_revisions", "payload")}
++approval = "sha256:" + hashlib.sha256(json.dumps(
++    subject, sort_keys=True, separators=(",", ":"),
++    ensure_ascii=False).encode("utf-8")).hexdigest()
++```
++
++**Refusal shape.** A refusal answers `ok: false` with
++`error: {code, message, retryable, details}`. `details` is `{}` on
++`UNCONFIRMED` and on every prose-classified refusal — only the typed
++projection/commit outcomes (`PROJECTION_FAILED`, post-commit
++`INTERNAL_FAILURE`) carry stage details. An empty `details` is normal,
++not a missing diagnosis: the `message` names the defect.
++
++**Worked capture.** Inbox capture (`§2`) via the envelope route:
++
++```bash
++SNAP=$(python tools/los.py bootstrap --compact \
++  | python -c 'import json,sys; print(json.load(sys.stdin)["snapshot_id"])')
++# envelope.json: schema_version 2, request_id "request-<key>",
++# idempotency_key "<key>", capability "capture.create", channel "operator",
++# expected_snapshot "$SNAP",
++# expected_revisions {"capture-request:<key>": 0},
++# approval {"kind": "operator-approval", "subject_sha256": <intent hash>},
++# payload {"text": "…"}
++python tools/los.py capability capture.create --payload-file envelope.json
++```
++
+ ## 26. Source routing and feedback
+ 
+ Register one global source identity first. Add a module source-map entry only
+@@ -814,3 +902,52 @@ register only adopted resources, create units from confirmed scope, add
+ explicit workspace joins, validate, regenerate, and review. The quarantined
+ originals and migration mapping remain Git-tracked. No bulk promotion is
+ allowed.
++
++## 28. Read an operation (`los operations`)
++
++This is the only surface that explains a write request after the fact.
++`los operations` lists recent causal operations (newest first, `--limit`
++up to 50); `los operations --request-id ID` explains one request with a
++full diagnosis, timeline, and receipt facts. An unknown id answers
++`{"error": "unknown request_id"}` (exit 2).
++
++The diagnosis carries three outcomes plus what must still happen:
++
++- `execution_outcome` — what the instrumentation observed
++  (`committed`, `rolled-back`, `refused`, `transport-lost`, `unknown`).
++  Deliberately the weakest: `rolled-back` means rollback *appeared* to
++  complete, which never proves the write is absent.
++- `canonical_outcome` — what the canonical store definitely did:
++  `COMMITTED` (a receipt verified through the strict resolver),
++  `NOT_COMMITTED` (a definitive no-commit refusal:
++  `INVALID_REQUEST`, `UNKNOWN_CAPABILITY`, `STALE_SNAPSHOT`,
++  `REVISION_CONFLICT`, `OUT_OF_SCOPE`, `AMBIGUOUS_MIGRATION`,
++  `VALIDATION_FAILED`, `PROJECTION_FAILED`, `UNCONFIRMED`,
++  `IDEMPOTENCY_CONFLICT` — the full list is
++  `DEFINITIVE_NO_COMMIT_CODES` in
++  `tools/learning_os/diagnostics/conventions.py`), or `AMBIGUOUS`
++  (the evidence cannot decide — an honest answer that keeps the
++  recovery record open).
++- `projection_outcome` — what re-publication did (`published`,
++  `failed`, `skipped`, `unknown`).
++- `recovery_requirement` — what must still happen: `none` (settled or
++  definitively absent), `verify-observation` (receipt exists, no
++  projection observation yet — run `make views` to settle it), or
++  `reconcile-exact-request` (ambiguous outcome — reconcile that exact
++  request). `needs_attention` is true exactly when this is not `none`.
++
++Settlement rule: a commit settles while the live manifest is at or past
++it — the manifest's receipt is at or after the write's — with reason
++"live manifest is past this commit". A behind or unknown manifest keeps
++`verify-observation`; regenerating views (`make views`) is the
++documented settling step. The learner-facing `ui_outcome` is `SETTLED`
++(committed, nothing owed), `REFUSED` (definitively absent, nothing
++owed), or `BLOCKED` (anything else).
++
++Request ids are caller-chosen and not unique: when one id was reused
++across distinct idempotency keys, the explanation names every distinct
++request instead of silently covering only the first. `failure_stage`
++names the first stage known to have failed (`core.admission`,
++`core.snapshot_guard`, `core.revision_guard`, `core.approval`,
++`core.replay`, `core.validation`, `core.commit`, `core.receipt`,
++`core.projection`, `ui.*`), or null when the operation settled.
+diff --git a/system/contracts/capabilities.yaml b/system/contracts/capabilities.yaml
+index fb0792e..a31f438 100644
+--- a/system/contracts/capabilities.yaml
++++ b/system/contracts/capabilities.yaml
+@@ -51,7 +51,14 @@ queries:
+     handler: note_read
+     result: note-content
+     invariants:
+-    - reads only registered durable notes without following symlinks
++    - reads registered durable notes and garden seeds by stable id, without following symlinks
++    - exact content segments carry snapshot and byte hash; continuation refuses changed snapshots
++  inbox.content:
++    handler: inbox_read
++    result: inbox-content
++    invariants:
++    - reads one work/inbox file by inbox-relative name, without following symlinks
++    - non-UTF-8 drops refuse with no text read; dot-files read by exact name only
+     - exact content segments carry snapshot and byte hash; continuation refuses changed snapshots
+   note.search:
+     handler: search
+diff --git a/system/schema/capabilities/atlas.question.save.schema.json b/system/schema/capabilities/atlas.question.save.schema.json
+index 202824c..61c5c28 100644
+--- a/system/schema/capabilities/atlas.question.save.schema.json
++++ b/system/schema/capabilities/atlas.question.save.schema.json
+@@ -10,7 +10,43 @@
+   ],
+   "properties": {
+     "question": {
+-      "type": "object"
++      "type": "object",
++      "required": [
++        "id"
++      ],
++      "additionalProperties": false,
++      "properties": {
++        "id": {
++          "type": "string",
++          "minLength": 1,
++          "description": "Durable note id the question lives on; an unknown id starts a new question note."
++        },
++        "title": {
++          "type": "string",
++          "minLength": 1,
++          "description": "Question title; required for a new question."
++        },
++        "text": {
++          "type": "string",
++          "minLength": 1,
++          "description": "Question body; required for a new question."
++        },
++        "target": {
++          "type": "object",
++          "description": "What the question is about, shaped as note atlas_question.target in system/schema/note.schema.json: {concepts: [...]} or {from, type, to}. Required for a new question; preserved, never changed, on an existing one."
++        },
++        "state": {
++          "type": "string",
++          "description": "open or resolved, per note atlas_question.state; new questions start open."
++        },
++        "answer_notes": {
++          "type": "array",
++          "items": {
++            "type": "string"
++          },
++          "description": "Durable note ids answering the question; each must resolve to another durable note."
++        }
++      }
+     }
+   }
+ }
+diff --git a/tools/learning_os/ai_actions/service.py b/tools/learning_os/ai_actions/service.py
+index 30388fd..660e42a 100644
+--- a/tools/learning_os/ai_actions/service.py
++++ b/tools/learning_os/ai_actions/service.py
+@@ -73,6 +73,7 @@ from .support import (
+     _read_yaml,
+     _sha256_file,
+     _snapshot,
++    check_request_id,
+     parse_frontmatter_request_id,
+ )
+ from .types import (
+@@ -231,7 +232,14 @@ class AIActionService:
+                 f"expected snapshot {expected_snapshot}, current snapshot is {snapshot}"
+             )
+         now = self.clock()
+-        request_id = request_id or f"ai-request-{now:%Y%m%d-%H%M%S}-{uuid4().hex[:6]}"
++        if request_id is not None:
++            # A caller-supplied id that the manifest cannot publish would be
++            # persisted and then break every projection read (JF-08): refuse
++            # before anything is written. The minted default matches by
++            # construction.
++            check_request_id(request_id)
++        else:
++            request_id = f"ai-request-{now:%Y%m%d-%H%M%S}-{uuid4().hex[:6]}"
+         original: OriginalArtifact = {
+             "id": f"original-{target_id}",
+             "canonical_path": target["path"],
+@@ -536,37 +544,64 @@ class AIActionService:
+ 
+     def _validate(self, delivery: DeliveryRecord, directory: Path) -> ValidatedDelivery:
+         delivery_id = str(delivery.get("id", ""))
++        if not str(delivery.get("request_id", "")):
++            raise DeliveryValidationError("delivery must name its request_id")
+         request = self.repository.get_request(str(delivery.get("request_id", "")))
++        # Shape problems aggregate: a hand-authored delivery should learn
++        # everything wrong with it in one round, not one field per import
++        # (JF-07). Live freshness guards below still fail fast.
++        problems: list[str] = []
+         if delivery.get("type") != "ai-action-delivery":
+-            raise DeliveryValidationError("delivery type must be ai-action-delivery")
++            problems.append("delivery type must be ai-action-delivery")
+         if delivery.get("action_id") != request.get("action_id"):
+-            raise DeliveryValidationError("delivery action does not match request")
++            problems.append(
++                f"delivery action_id {delivery.get('action_id')!r} does not match "
++                f"prepared request {request.get('action_id')!r}")
+         producer = delivery.get("producer") or {}
+-        if producer.get("adapter") != (request.get("provider") or {}).get("adapter"):
+-            raise DeliveryValidationError("delivery adapter does not match prepared request")
++        expected_adapter = (request.get("provider") or {}).get("adapter")
++        if producer.get("adapter") != expected_adapter:
++            problems.append(
++                f"delivery producer.adapter {producer.get('adapter')!r} does not match "
++                f"prepared request provider.adapter {expected_adapter!r}")
+         if delivery.get("preconditions") != request.get("preconditions"):
+-            raise DeliveryValidationError("delivery preconditions do not match prepared request")
++            problems.append(
++                "delivery preconditions must equal the prepared request preconditions")
+         if not (delivery.get("approval") or {}).get("user_approved"):
+-            raise DeliveryValidationError("delivery lacks recorded user approval")
++            problems.append("delivery approval.user_approved must be true")
+         operations = delivery.get("operations")
+         if not isinstance(operations, list) or not operations:
+-            raise DeliveryValidationError("delivery must contain at least one operation")
+-        allowed = set(request.get("allowed_capabilities", []))
+-        forbidden = set(request.get("forbidden_capabilities", []))
+-        target_id = str((request.get("target") or {}).get("id", ""))
+-        for operation in operations:
+-            if not isinstance(operation, dict):
+-                raise DeliveryValidationError("each delivery operation must be a mapping")
+-            capability = operation.get("capability")
+-            if capability in forbidden or capability not in allowed:
+-                raise DeliveryValidationError(f"capability is not allowed: {capability}")
+-            if operation.get("target_id") and operation.get("target_id") != target_id:
+-                raise DeliveryValidationError("operation targets an unrelated artifact")
+-            artifact_ref = operation.get("artifact_ref")
+-            if artifact_ref:
+-                artifact = _inside(directory, str(artifact_ref))
+-                if not artifact.is_file():
+-                    raise DeliveryValidationError(f"delivery artifact is missing: {artifact_ref}")
++            problems.append("delivery must contain at least one operation")
++        else:
++            allowed = set(request.get("allowed_capabilities", []))
++            forbidden = set(request.get("forbidden_capabilities", []))
++            target_id = str((request.get("target") or {}).get("id", ""))
++            for index, operation in enumerate(operations):
++                where = f"operations[{index}]"
++                if not isinstance(operation, dict):
++                    problems.append(f"{where} must be a mapping")
++                    continue
++                capability = operation.get("capability")
++                if capability in forbidden or capability not in allowed:
++                    problems.append(
++                        f"{where} capability is not allowed: {capability!r}")
++                if operation.get("target_id") and operation.get("target_id") != target_id:
++                    problems.append(f"{where} targets an unrelated artifact")
++                artifact_ref = operation.get("artifact_ref")
++                if artifact_ref:
++                    try:
++                        artifact = _inside(directory, str(artifact_ref))
++                    except DeliveryValidationError as exc:
++                        problems.append(f"{where} artifact_ref is unsafe: {exc}")
++                    else:
++                        if not artifact.is_file():
++                            problems.append(
++                                f"{where} artifact is missing: {artifact_ref}")
++        if problems:
++            shown = problems[:12]
++            if len(problems) > 12:
++                shown.append(f"{len(problems) - 12} further problem(s) omitted")
++            raise DeliveryValidationError(
++                f"delivery {delivery_id!r} is invalid: " + "; ".join(shown))
+         # Staleness is scoped to what the delivery actually reasoned about.  The
+         # repository-wide fingerprint is provenance, not a gate: rejecting a
+         # delivery because an unrelated note moved (feature specification §20.4
+diff --git a/tools/learning_os/ai_actions/storage.py b/tools/learning_os/ai_actions/storage.py
+index bbbba35..fce683c 100644
+--- a/tools/learning_os/ai_actions/storage.py
++++ b/tools/learning_os/ai_actions/storage.py
+@@ -99,6 +99,8 @@ class FilesystemAIActionRepository:
+         delivery = _read_yaml(source / "delivery.yaml")
+         if not isinstance(delivery, dict):
+             raise DeliveryValidationError("delivery.yaml must contain a mapping")
++        if not str(delivery.get("id", "")).strip():
++            raise DeliveryValidationError("delivery.yaml must carry a non-empty id")
+         destination = self.delivery_dir(str(delivery.get("id", "")))
+         if destination.exists():
+             raise DeliveryValidationError(f"delivery already exists: {delivery.get('id')}")
+@@ -128,6 +130,8 @@ class FilesystemAIActionRepository:
+             delivery = _read_yaml(staged / "delivery.yaml")
+             if not isinstance(delivery, dict):
+                 raise DeliveryValidationError("delivery.yaml must contain a mapping")
++            if not str(delivery.get("id", "")).strip():
++                raise DeliveryValidationError("delivery.yaml must carry a non-empty id")
+             destination = self.delivery_dir(str(delivery.get("id", "")))
+             if destination.exists():
+                 raise DeliveryValidationError(
+diff --git a/tools/learning_os/ai_actions/support.py b/tools/learning_os/ai_actions/support.py
+index 21d54a3..5e02dd3 100644
+--- a/tools/learning_os/ai_actions/support.py
++++ b/tools/learning_os/ai_actions/support.py
+@@ -7,6 +7,7 @@ import contextlib
+ import datetime as dt
+ import hashlib
+ import os
++import re
+ from collections.abc import Callable
+ from pathlib import Path, PurePosixPath
+ from typing import Any
+@@ -15,6 +16,22 @@ import yaml
+ 
+ from .errors import DeliveryValidationError
+ 
++#: Request ids must match the manifest contract's `ai_actions/requests[]/id`
++#: pattern (system/contracts/manifest-v*.schema.json). A persisted bundle with
++#: any other id breaks every projection read, so both the prepare path and the
++#: validator enforce this before anything depends on it (JF-08).
++REQUEST_ID_PATTERN = r"^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$"
++REQUEST_ID_RE = re.compile(REQUEST_ID_PATTERN)
++
++
++def check_request_id(request_id: str) -> str:
++    """Return ``request_id`` if it is projectable, else raise."""
++    if not REQUEST_ID_RE.fullmatch(str(request_id)):
++        raise DeliveryValidationError(
++            f"request id {request_id!r} does not match {REQUEST_ID_PATTERN!r}; "
++            "no request was prepared")
++    return str(request_id)
++
+ 
+ def _read_yaml(path: Path, default: Any = None) -> Any:
+     if not path.is_file():
+diff --git a/tools/learning_os/commands/atlas.py b/tools/learning_os/commands/atlas.py
+index 42f0420..729ca21 100644
+--- a/tools/learning_os/commands/atlas.py
++++ b/tools/learning_os/commands/atlas.py
+@@ -10,6 +10,7 @@ from pathlib import Path
+ import jsonschema
+ import yaml
+ 
++from ..contracts.atlas_question import QUESTION_FIELDS
+ from ..fingerprint import canonical_fingerprint
+ from ..loader import load_repo
+ from ..loading.yamlio import UniqueKeySafeLoader
+@@ -157,9 +158,10 @@ def cmd_atlas_question_save(args) -> int:
+     question = args.question
+     if not isinstance(question, dict):
+         raise WriteRefused("question must be an object")
+-    allowed = {"id", "title", "text", "target", "state", "answer_notes"}
+-    if set(question) - allowed or not isinstance(question.get("id"), str):
++    if set(question) - QUESTION_FIELDS or not isinstance(question.get("id"), str):
+         raise WriteRefused("question has unknown fields or no note id")
++    if "target" in question and not isinstance(question["target"], dict):
++        raise WriteRefused("question target must be an object")
+     with _operator_lock(root):
+         if not _expected_ok(root, args.expected_snapshot):
+             return 3
+diff --git a/tools/learning_os/commands/capability.py b/tools/learning_os/commands/capability.py
+index 71e5ae9..fab6c97 100644
+--- a/tools/learning_os/commands/capability.py
++++ b/tools/learning_os/commands/capability.py
+@@ -497,9 +497,16 @@ def _projection_error(exc: ProjectionFailure) -> dict:
+     """Typed projection outcome: subsystem proven, prose not consulted.
+ 
+     A complete rollback proves the write never committed; an incomplete
+-    one leaves the outcome unknown however the message reads.
++    one leaves the outcome unknown however the message reads. A complete
++    rollback over a pre-state that itself does not publish is a
++    shadow-validation refusal (JF-11), reported like one.
+     """
+     if exc.rollback_complete:
++        if exc.pre_existing_defect:
++            return _gateway_error(
++                "VALIDATION_FAILED", str(exc), retryable=False,
++                details={"stage": "core.projection", "rollback_complete": True,
++                         "pre_existing_defect": True})
+         return _gateway_error(
+             "PROJECTION_FAILED", str(exc), retryable=True,
+             details={"stage": "core.projection", "rollback_complete": True})
+diff --git a/tools/learning_os/commands/operations.py b/tools/learning_os/commands/operations.py
+index 4834b7e..ce7ce35 100644
+--- a/tools/learning_os/commands/operations.py
++++ b/tools/learning_os/commands/operations.py
+@@ -111,6 +111,9 @@ def _evidence_for(root: Path, records: list[dict],
+         response_codes=codes,
+         observed_snapshot=_observed_for(
+             records, (response or {}).get("snapshot_after"), observed),
++        # `observed` is the live manifest snapshot itself: the supersession
++        # check positions it against the receipt inventory (JF-19).
++        manifest_snapshot=observed,
+         authority_files=authority_files)
+ 
+ 
+@@ -222,6 +225,41 @@ def build_timeline(records: list[dict], diagnosis) -> list[dict]:
+     return rows
+ 
+ 
++def _note_request_id_reuse(records: list[dict], authority, diagnosis) -> None:
++    """Name every distinct request behind one reused request id (JF-19).
++
++    Request ids are caller-chosen and not unique; two writes may share one
++    id string under different idempotency keys. Authority resolves the
++    first key's evidence, so without this note the explanation silently
++    names only the first transaction.
++    """
++    per_op: dict[str, dict] = {}
++    for record in records:
++        op = record.get("op")
++        if not op:
++            continue
++        slot = per_op.setdefault(op, {})
++        attrs = record.get("attrs") or {}
++        if record.get("name") in (conventions.EVENT_ENVELOPE_VALIDATED,
++                                  conventions.EVENT_ENVELOPE_PREPARED):
++            if attrs.get("idempotency_key") and "key" not in slot:
++                slot["key"] = attrs.get("idempotency_key")
++        if record.get("name") == conventions.EVENT_RESPONSE_EMITTED:
++            slot["outcome"] = "ok" if attrs.get("ok") else attrs.get("code")
++            slot["tx"] = attrs.get("transaction_id")
++    keys = sorted({slot.get("key") for slot in per_op.values() if slot.get("key")})
++    if len(keys) < 2:
++        return
++    covered = authority.idempotency_key
++    others = [f"{slot.get('key')} ({slot.get('outcome')}"
++              + (f" {slot.get('tx')}" if slot.get("tx") else "") + ")"
++              for slot in sorted(per_op.values(), key=lambda s: str(s.get("key")))
++              if slot.get("key") and slot.get("key") != covered]
++    diagnosis.reasons.append(
++        f"request_id reused across {len(keys)} idempotency keys; this "
++        f"explanation covers {covered} only — also: {', '.join(others)}")
++
++
+ def describe_operation(root: Path, request_id: str) -> dict | None:
+     """Full diagnosis plus timeline for one request id, or None."""
+     everything = read_records(root)
+@@ -235,6 +273,7 @@ def describe_operation(root: Path, request_id: str) -> dict | None:
+     observed = _observed_snapshot(root)
+     authority = _evidence_for(root, records, observed)
+     diagnosis = resolve(records, authority)
++    _note_request_id_reuse(records, authority, diagnosis)
+     receipt = authority.verified_receipt or {}
+     if diagnosis.canonical_outcome == "COMMITTED" \
+             and diagnosis.recovery_requirement == "none":
+diff --git a/tools/learning_os/commands/query.py b/tools/learning_os/commands/query.py
+index 83fc3ec..14d3b01 100644
+--- a/tools/learning_os/commands/query.py
++++ b/tools/learning_os/commands/query.py
+@@ -217,18 +217,53 @@ def cmd_bootstrap(args) -> int:
+     return 0
+ 
+ 
++def _inbox_search_rows(root: Path) -> list[dict]:
++    """One discovery row per inbox file, matched on names only, never bytes.
++
++    Inbox drops are arbitrary files (binary captures included), so the
++    metadata search reads no content here: the haystack is the file name
++    and path. Content stays behind ``inbox-read``, which refuses non-text.
++    Raises OSError when the listing itself fails; a missing inbox is empty.
++    """
++    inbox = root / "work" / "inbox"
++    if not inbox.is_dir():
++        return []
++    rows = []
++    for path in sorted(inbox.rglob("*")):
++        if not path.is_file():
++            continue
++        rel = path.relative_to(inbox).as_posix()
++        if any(part.startswith(".") for part in rel.split("/")):
++            continue
++        rows.append({"id": rel, "type": "inbox-item", "title": path.name,
++                     "path": f"work/inbox/{rel}"})
++    return rows
++
++
+ def cmd_search(args) -> int:
+     if getattr(args, "content", False):
+         return content_search(args)
+-    manifest = _fresh_manifest(_root(args))
++    root = _root(args)
++    manifest = _fresh_manifest(root)
+     words = [w for w in args.query.lower().split() if w]
++    rows = list(manifest["records"])
++    if not args.type or args.type == "garden-note":
++        rows.extend(manifest.get("garden_entries", []) or [])
++    if not args.type or args.type == "inbox-item":
++        try:
++            rows.extend(_inbox_search_rows(root))
++        except OSError as exc:
++            print(f"los: cannot list work/inbox: {exc}", file=sys.stderr)
++            return 2
+     matches = []
+-    for rec in manifest["records"]:
++    for rec in rows:
+         if args.type and rec.get("type") != args.type:
+             continue
+         hay = json.dumps(rec, ensure_ascii=False).lower()
+         if all(word in hay for word in words):
+-            matches.append({k: rec.get(k) for k in ("id", "type", "title", "path", "status")})
++            matches.append({k: rec.get(k) for k in
++                            ("id", "type", "title", "path", "status",
++                             "state", "deprecated")})
+     print(json.dumps(matches[:args.limit], **_json_layout(), sort_keys=True, ensure_ascii=False))
+     return 0
+ 
+diff --git a/tools/learning_os/commands/reads.py b/tools/learning_os/commands/reads.py
+index cc54c67..8f5a8a3 100644
+--- a/tools/learning_os/commands/reads.py
++++ b/tools/learning_os/commands/reads.py
+@@ -6,14 +6,15 @@ import hashlib
+ import json
+ import re
+ import sys
+-from pathlib import PurePosixPath
++from pathlib import Path, PurePosixPath
+ 
+ from learning_os.derived import DerivedError, evaluate
+ from learning_os.errors import unreadable_refusal
+ from learning_os.fingerprint import canonical_fingerprint
++from learning_os.garden import garden_id
+ from learning_os.genout.atlas import ATLAS_DOMAINS
+ from learning_os.loader import load_repo
+-from learning_os.loading import Repo, load_notes
++from learning_os.loading import Repo, load_garden, load_notes
+ from learning_os.material_analysis import observe_local_material
+ from learning_os.material_synthesis import material_synthesis_freshness
+ from learning_os.search.index import NoteBlob, build_registry
+@@ -270,6 +271,7 @@ def brief_bootstrap(args) -> int:
+                     "coordination": "inspect coordination",
+                     "intelligence_scan": "intelligence-scan --brief --json",
+                     "note_read": "note-read NOTE_ID",
++                    "inbox_read": "inbox-read NAME",
+                     "content_search": "search QUERY --type note --content",
+                     "material_context": "material-context QUERY",
+                     "ability_context": "ability-context",
+@@ -283,18 +285,30 @@ def brief_bootstrap(args) -> int:
+         return _refusal(exc)
+ 
+ 
+-def _note_bytes(root, note):
+-    path = note.path
+-    owner = root / "knowledge" / "notes"
++def _bytes_inside_owner(root, path, owner, *, escape, symlink):
++    """Read bytes admitted by one owner directory; symlinks always refuse.
++
++    The one admission rule for note, garden, and inbox reads: the resolved
++    target must sit below the owner, and no path component may be a link —
++    even one that would resolve in-tree. Only the refusal wording differs
++    per surface.
++    """
+     try:
+         path.resolve(strict=True).relative_to(owner.resolve(strict=True))
+     except (ValueError, OSError) as exc:
+-        raise WriteRefused("note path escapes its knowledge owner") from exc
++        raise WriteRefused(escape) from exc
+     if any(part.is_symlink() for part in (path, *path.parents) if part != root.parent):
+-        raise WriteRefused("note read refuses symlinks")
++        raise WriteRefused(symlink)
+     return path.read_bytes()
+ 
+ 
++def _note_bytes(root, note):
++    return _bytes_inside_owner(
++        root, note.path, root / "knowledge" / "notes",
++        escape="note path escapes its knowledge owner",
++        symlink="note read refuses symlinks")
++
++
+ def _note_collection(root):
+     """Load only the note registry for note reads/search, not a complete Repo.
+ 
+@@ -306,6 +320,35 @@ def _note_collection(root):
+     return repo
+ 
+ 
++def _garden_note(root, note_id):
++    """The garden seed with one stable id, or None.
++
++    Loaded lazily on a durable-note miss, so the registered-note path —
++    including its parse-only-notes budget — never pays for the garden.
++    Identity is the same ``garden_id`` the manifest projects, so search
++    rows and this read cannot disagree about what an id names.
++    """
++    repo = Repo(root=root)
++    load_garden(repo, root)
++    garden_root = root / "knowledge" / "garden"
++    for note in repo.garden_notes:
++        if garden_id(garden_root, note.path) == note_id:
++            return note
++    return None
++
++
++def _content_envelope(contract, ref_key, ref, relpath, raw, content, offset, limit):
++    return {
++        "contract": contract, ref_key: ref, "path": relpath,
++        "content_sha256": "sha256:" + hashlib.sha256(raw).hexdigest(),
++        "offset": offset, "offset_unit": "unicode_characters",
++        "total_characters": len(content),
++        "start_line": content.count("\n", 0, offset) + 1,
++        "content": content[offset:offset + limit],
++        "next_offset": offset + limit if offset + limit < len(content) else None,
++    }
++
++
+ def cmd_note_read(args) -> int:
+     root = _root(args)
+     try:
+@@ -315,18 +358,61 @@ def cmd_note_read(args) -> int:
+             repo = _note_collection(root)
+             note = repo.notes.get(args.note_id)
+             if note is None:
+-                raise WriteRefused(f"note not found: {args.note_id}")
++                garden = _garden_note(root, args.note_id)
++                if garden is None:
++                    raise WriteRefused(f"note not found: {args.note_id}")
++                raw = _bytes_inside_owner(
++                    root, garden.path, root / "knowledge" / "garden",
++                    escape="garden path escapes its garden owner",
++                    symlink="garden read refuses symlinks")
++                content = raw.decode("utf-8")
++                return _print_stable(root, snapshot, _content_envelope(
++                    "note-content", "note_id", args.note_id,
++                    garden.path.relative_to(root).as_posix(),
++                    raw, content, offset, limit))
+             raw = _note_bytes(root, note)
+             content = raw.decode("utf-8")
+-            return _print_stable(root, snapshot, {
+-                "contract": "note-content", "note_id": note.id,
+-                "path": note.path.relative_to(root).as_posix(),
+-                "content_sha256": "sha256:" + hashlib.sha256(raw).hexdigest(),
+-                "offset": offset, "offset_unit": "unicode_characters",
+-                "total_characters": len(content), "start_line": content.count("\n", 0, offset) + 1,
+-                "content": content[offset:offset + limit],
+-                "next_offset": offset + limit if offset + limit < len(content) else None,
+-            })
++            return _print_stable(root, snapshot, _content_envelope(
++                "note-content", "note_id", note.id,
++                note.path.relative_to(root).as_posix(),
++                raw, content, offset, limit))
++    except (WriteRefused, OSError, UnicodeError) as exc:
++        return _refusal(exc)
++
++
++def cmd_inbox_read(args) -> int:
++    """Read a bounded segment of one work/inbox file by inbox-relative name.
++
++    Inbox drops are addressed by name — they have no registry and no stable
++    ids — and may be binary, so non-UTF-8 bytes refuse rather than decode.
++    Discovery lists non-dot files (the same rule as the inbox count); an
++    exact name reads whatever it addresses, dot-files included.
++    """
++    root = _root(args)
++    try:
++        offset, limit = _window(args, 16000)
++        name = args.name
++        if Path(name).is_absolute() or ".." in Path(name).parts:
++            raise WriteRefused(f"inbox name must be relative to work/inbox: {name}")
++        with _operator_lock(root):
++            snapshot = _snapshot(root, args.expected_snapshot)
++            target = root / "work" / "inbox" / name
++            if not target.is_symlink() and not target.is_file():
++                raise WriteRefused(f"inbox item not found: {name}")
++            raw = _bytes_inside_owner(
++                root, target, root / "work" / "inbox",
++                escape=f"inbox item escapes work/inbox: {name}",
++                symlink="inbox read refuses symlinks")
++            try:
++                content = raw.decode("utf-8")
++            except UnicodeError as exc:
++                raise WriteRefused(
++                    f"inbox item is not UTF-8 text and has no text read: {name}"
++                ) from exc
++            return _print_stable(root, snapshot, _content_envelope(
++                "inbox-content", "item", name,
++                target.relative_to(root).as_posix(),
++                raw, content, offset, limit))
+     except (WriteRefused, OSError, UnicodeError) as exc:
+         return _refusal(exc)
+ 
+diff --git a/tools/learning_os/commands/resume.py b/tools/learning_os/commands/resume.py
+index b5812d8..a1933bd 100644
+--- a/tools/learning_os/commands/resume.py
++++ b/tools/learning_os/commands/resume.py
+@@ -21,13 +21,14 @@ from learning_os.genout.resume_dossier import (
+     ResumeDossierError,
+     build_resume_dossier,
+ )
+-from learning_os.githistory import GitHistoryError
++from learning_os.githistory import GitHistoryError, last_commit_date
+ from learning_os.learning_runtime import (
+     RuntimeInputError,
+     collect_requirements,
+     read_observations,
+ )
+ from learning_os.loader import load_repo
++from learning_os.pathing import PathBoundaryError, resolved_inside
+ from learning_os.semantics.goals import stale_observations
+ 
+ from .support import _json_layout, _root
+@@ -173,6 +174,45 @@ def _resolve_stage(repo):
+                   "touched — start any stage to set one")
+ 
+ 
++#: Trailing excerpt kept in the dossier: progress notes append, so the
++#: tail is the latest recorded work. Bounded so the screen stays one page.
++STAGE_NOTE_EXCERPT_CHARS = 800
++
++
++def _stage_note_facts(root: Path, stage: dict) -> dict | None:
++    """Bounded facts about one stage's working note, or None.
++
++    None means the stage names no note. A missing or unreadable file is
++    zero lines — "nothing recorded yet", never an error: resume is a
++    best-effort screen, and the validator (not this read) names defects.
++    A note path escaping the tree is also None; serving it would be the
++    defect this read must not add.
++    """
++    if not isinstance(stage, dict):
++        return None
++    rel = stage.get("working_note")
++    if not isinstance(rel, str) or not rel:
++        return None
++    try:
++        candidate = resolved_inside(root, root / rel, strict=False)
++    except PathBoundaryError:
++        return None
++    try:
++        text = candidate.read_text(encoding="utf-8", errors="replace") \
++            if candidate.is_file() else ""
++    except OSError:
++        text = ""
++    excerpt = text[-STAGE_NOTE_EXCERPT_CHARS:]
++    if len(text) > STAGE_NOTE_EXCERPT_CHARS:
++        excerpt = excerpt.split("\n", 1)[-1]
++    try:
++        updated = last_commit_date(root, rel) or None
++    except GitHistoryError:
++        updated = None
++    return {"working_note": rel, "lines": len(text.splitlines()),
++            "updated": updated, "excerpt": excerpt}
++
++
+ def _top_cluster(root: Path) -> dict | None:
+     """The single highest-ranked goal cluster, or None.
+ 
+@@ -330,12 +370,13 @@ def cmd_resume(args) -> int:
+         for obs in observations
+     ]
+     top_cluster = _top_cluster(root)
++    stage_note = _stage_note_facts(root, stage)
+     try:
+         dossier = build_resume_dossier(
+             unit_id=unit_id, module_id=module_id, stage_id=stage_id,
+             study_map_id=study_map_id, via=via, requirement=requirement,
+             observations=obs_rows, open_items=open_items, sittings=sittings,
+-            titles=titles, top_cluster=top_cluster)
++            titles=titles, top_cluster=top_cluster, stage_note=stage_note)
+     except ResumeDossierError as exc:
+         print(f"los: {exc}", file=sys.stderr)
+         return 2
+@@ -347,7 +388,8 @@ def cmd_resume(args) -> int:
+         return 0
+     aims = _recorded_aims(repo, module_id, unit_id)
+     print(_render(dossier, requirement, observations, open_items, sittings,
+-                  titles, via_detail, len(stale_here), top_cluster, aims))
++                  titles, via_detail, len(stale_here), top_cluster, aims,
++                  stage_note))
+     return 0
+ 
+ 
+@@ -369,7 +411,8 @@ def _ago(day: str) -> str:
+ def _render(dossier, requirement, observations, open_items, sittings,
+             titles, via_detail: str, stale_count: int = 0,
+             top_cluster: dict | None = None,
+-            recorded_aims: list[tuple[str, str, str]] | None = None) -> str:
++            recorded_aims: list[tuple[str, str, str]] | None = None,
++            stage_note: dict | None = None) -> str:
+     today = _dt.date.today()
+     lines = [f"{titles['module']} · {titles['unit']} · {dossier.stage_id}",
+              f"  ({via_detail})", ""]
+@@ -400,6 +443,17 @@ def _render(dossier, requirement, observations, open_items, sittings,
+         noun = "result" if stale_count == 1 else "results"
+         lines.append(f"  Changed since  {stale_count} earlier {noun} "
+                      "were against a requirement that has since changed.")
++    if isinstance(stage_note, dict) and stage_note.get("working_note"):
++        count = stage_note.get("lines") or 0
++        noun = "line" if count == 1 else "lines"
++        when = f", updated {stage_note['updated']}" if stage_note.get("updated") else ""
++        if count > 0:
++            lines.append(f"  Stage note   {count} {noun} recorded ({stage_note['working_note']}{when})")
++            tail = [line for line in (stage_note.get("excerpt") or "").splitlines()
++                    if line.strip()][-3:]
++            lines.extend(f"               {line[:200]}" for line in tail)
++        else:
++            lines.append(f"  Stage note   nothing recorded yet ({stage_note['working_note']})")
+     lines.append("")
+     if open_items:
+         lines.append(f"  Open here    {open_items[0]}")
+@@ -427,6 +481,9 @@ def _render(dossier, requirement, observations, open_items, sittings,
+     if isinstance(requirement, dict):
+         lines.append(f"  Next         los observe {requirement['id']} --activity <what-you-did> "
+                      "--result <correct|incorrect|partial|abandoned>")
++    else:
++        lines.append(f"  Next         los stage-note {dossier.unit_id} {dossier.stage_id} "
++                     "--text <what-you-did>")
+     upcoming = [(row.get("start_date", ""), row) for row in sittings
+                 if isinstance(row.get("start_date"), str)
+                 and row["start_date"] >= today.isoformat()]
+diff --git a/tools/learning_os/commands/support.py b/tools/learning_os/commands/support.py
+index 71c18c1..efbb64a 100644
+--- a/tools/learning_os/commands/support.py
++++ b/tools/learning_os/commands/support.py
+@@ -201,12 +201,18 @@ def _path_or_error(root: Path, path_id: str):
+ 
+ 
+ def _fresh_manifest(root: Path, *, snapshot_id: str | None = None) -> dict:
+-    repo = load_repo(root)
+-    if snapshot_id is not None:
+-        seed_source_fingerprint(repo, snapshot_id)
+-    generated_at = stable_generated_at(root)
+-    backlinks = build_backlinks(repo, generated_at)
+-    return build_manifest(repo, generated_at, backlinks)
++    # Every projection read takes the operator lock: acquisition runs crash
++    # recovery first, so single-ID reads, batch reads, and bootstrap all
++    # observe transaction-consistent post-recovery state instead of
++    # disagreeing after a kill (JF-21). Re-entrant: callers already holding
++    # the lock (batch inspect, bootstrap) pass straight through.
++    with _operator_lock(root):
++        repo = load_repo(root)
++        if snapshot_id is not None:
++            seed_source_fingerprint(repo, snapshot_id)
++        generated_at = stable_generated_at(root)
++        backlinks = build_backlinks(repo, generated_at)
++        return build_manifest(repo, generated_at, backlinks)
+ 
+ 
+ def _json_layout(stream=None) -> dict:
+diff --git a/tools/learning_os/contracts/atlas_question.py b/tools/learning_os/contracts/atlas_question.py
+new file mode 100644
+index 0000000..6d882a1
+--- /dev/null
++++ b/tools/learning_os/contracts/atlas_question.py
+@@ -0,0 +1,85 @@
++"""Single source of truth for the Atlas question shape.
++
++``atlas.question.save`` validates the same question in two places: the
++gateway payload schema (derived, so agents can discover the contract) and
++the handler (for direct CLI use and defense in depth). Both import these
++definitions, so a future edit touches this module and regenerates — never
++two hand-kept copies. The generated
++``system/schema/capabilities/atlas.question.save.schema.json`` remains
++an output of ``tools/generate_capability_schemas.py``, not a third place
++to edit.
++
++The nested shape mirrors the handler's checks, never stricter ones:
++direct CLI use never sees the schema. Conditions the handler decides
++from repository state (new questions require title, text and target;
++a stored target is preserved; answer notes must resolve) stay out of
++the schema — only the field names, the required id, and the per-field
++types live here. Target, state, and answer-note internals stay
++structural: their authority is ``atlas_question`` in
++``system/schema/note.schema.json``, which the handler enforces after
++merging, and this module must not become a second copy.
++"""
++
++from __future__ import annotations
++
++#: Fields the handler accepts on a question; anything else refuses.
++QUESTION_FIELDS = frozenset({"id", "title", "text", "target", "state", "answer_notes"})
++
++#: Keys the gateway schema requires. Only the id: title, text, and
++#: target are required for new questions but optional for updates, and
++#: the schema cannot see which one this payload is.
++QUESTION_REQUIRED = ("id",)
++
++
++def question_schema() -> dict:
++    """The nested ``question`` subschema, built from the constants above."""
++    return {
++        "type": "object",
++        "required": list(QUESTION_REQUIRED),
++        "additionalProperties": False,
++        "properties": {
++            "id": {
++                "type": "string",
++                "minLength": 1,
++                "description": (
++                    "Durable note id the question lives on; "
++                    "an unknown id starts a new question note."
++                ),
++            },
++            "title": {
++                "type": "string",
++                "minLength": 1,
++                "description": "Question title; required for a new question.",
++            },
++            "text": {
++                "type": "string",
++                "minLength": 1,
++                "description": "Question body; required for a new question.",
++            },
++            "target": {
++                "type": "object",
++                "description": (
++                    "What the question is about, shaped as note "
++                    "atlas_question.target in "
++                    "system/schema/note.schema.json: {concepts: [...]} or "
++                    "{from, type, to}. Required for a new question; "
++                    "preserved, never changed, on an existing one."
++                ),
++            },
++            "state": {
++                "type": "string",
++                "description": (
++                    "open or resolved, per note atlas_question.state; "
++                    "new questions start open."
++                ),
++            },
++            "answer_notes": {
++                "type": "array",
++                "items": {"type": "string"},
++                "description": (
++                    "Durable note ids answering the question; "
++                    "each must resolve to another durable note."
++                ),
++            },
++        },
++    }
+diff --git a/tools/learning_os/contracts/payloads.py b/tools/learning_os/contracts/payloads.py
+index 4149b99..4df22e7 100644
+--- a/tools/learning_os/contracts/payloads.py
++++ b/tools/learning_os/contracts/payloads.py
+@@ -18,6 +18,7 @@ import argparse
+ import json
+ import re
+ 
++from .atlas_question import question_schema as atlas_question_schema
+ from .batch_notes import bundle_schema as batch_notes_schema
+ 
+ # Owned by the envelope, never by the payload.
+@@ -64,6 +65,7 @@ _GATEWAY_INLINE_REQUIRED = {
+ #: use never sees the schema.
+ _NESTED_SCHEMAS: dict[tuple[str, str], dict] = {
+     ("note.analysis.save_batch", "bundle"): batch_notes_schema(),
++    ("atlas.question.save", "question"): atlas_question_schema(),
+ }
+ 
+ 
+diff --git a/tools/learning_os/derived/engine.py b/tools/learning_os/derived/engine.py
+index 43c8253..4354af4 100644
+--- a/tools/learning_os/derived/engine.py
++++ b/tools/learning_os/derived/engine.py
+@@ -28,7 +28,7 @@ from typing import Any
+ 
+ from .identity import digest_bytes, digest_code_identity, digest_producer_files, runtime_digest
+ from .model import DerivedError, InputRef, NodeSpec, NodeState, node_key
+-from .store import canonical_bytes, lookup, store_node
++from .store import canonical_bytes, lookup, read_state, store_node
+ 
+ 
+ @dataclass(frozen=True)
+@@ -114,6 +114,18 @@ class _Session:
+     runtime_digest: str
+     staging: Staging | None = None
+     memo: dict[str, Evaluation] = field(default_factory=dict)
++    #: The persisted state index, read once per session. Re-parsing it
++    #: per node made every N-node evaluation O(N^2) in state bytes
++    #: (S23: 81% of a warm 2k-note content search). Own in-session
++    #: stores update it, so it always equals what a fresh re-read
++    #: would return; external writers are excluded by the operator
++    #: lock, the same assumption the memo already makes.
++    states: dict[str, NodeState] | None = None
++
++    def _lookup(self, node_id: str) -> tuple[NodeState, Any] | None:
++        if self.states is None:
++            self.states = read_state(self.root)
++        return lookup(self.root, node_id, states=self.states)
+ 
+     def evaluate(self, node_id: str, stack: tuple[str, ...] = ()) -> Evaluation:
+         if node_id in self.memo:
+@@ -145,7 +157,7 @@ class _Session:
+             dependency_outputs={dep: item.output_sha256 for dep, item in dependencies.items()},
+         )
+         previous: NodeState | None = None
+-        cached = lookup(self.root, node_id)
++        cached = self._lookup(node_id)
+         if cached is not None:
+             previous, value = cached
+             if previous.node_key == key:
+@@ -158,7 +170,9 @@ class _Session:
+         if self.staging is not None:
+             self.staging.pending[node_id] = (key, value)
+         else:
+-            store_node(self.root, node_id, node_key=key, value=value)
++            persisted = store_node(self.root, node_id, node_key=key, value=value)
++            assert self.states is not None  # _lookup above always loads it
++            self.states[node_id] = persisted
+         if previous is None:
+             reason = "cache-miss"
+         elif previous.output_sha256 == output:
+diff --git a/tools/learning_os/derived/store.py b/tools/learning_os/derived/store.py
+index ac520e6..5a9a6cd 100644
+--- a/tools/learning_os/derived/store.py
++++ b/tools/learning_os/derived/store.py
+@@ -151,14 +151,19 @@ def invalidate(root: Path, node_id: str) -> None:
+         canonical_bytes(_state_payload(states)))
+ 
+ 
+-def lookup(root: Path, node_id: str) -> tuple[NodeState, Any] | None:
++def lookup(root: Path, node_id: str, *,
++           states: dict[str, NodeState] | None = None) -> tuple[NodeState, Any] | None:
+     """Verified reuse: entry plus an existing blob with a matching hash.
+ 
+     Anything else — missing entry, missing or symlinked blob, hash
+     mismatch, unparseable blob — is a cache miss (None). The blob path is
+     derived from the verified output hash, never trusted from the entry.
++    ``states`` is a pre-read state index; callers evaluating many nodes
++    pass one shared read instead of re-parsing the index per node.
+     """
+-    state = read_state(root).get(node_id)
++    if states is None:
++        states = read_state(root)
++    state = states.get(node_id)
+     if state is None:
+         return None
+     blob_path = derived_dir(root) / BLOBS_DIRNAME / state.output_sha256
+diff --git a/tools/learning_os/diagnostics/context.py b/tools/learning_os/diagnostics/context.py
+index ed5603e..3498239 100644
+--- a/tools/learning_os/diagnostics/context.py
++++ b/tools/learning_os/diagnostics/context.py
+@@ -28,11 +28,15 @@ class TraceContext:
+ 
+     ``trace_id`` is the operation (stable across retries); ``span_id`` is
+     this physical attempt; ``sampled`` is the W3C sampling flag bit.
++    ``parent`` is the propagated caller context when one was provided:
++    parentage, never identity — adopting it would merge unrelated
++    requests sharing one ambient trace into one operation (JF-04).
+     """
+ 
+     trace_id: str
+     span_id: str
+     sampled: bool = True
++    parent: TraceContext | None = None
+ 
+     def format(self) -> str:
+         flags = "01" if self.sampled else "00"
+diff --git a/tools/learning_os/diagnostics/conventions.py b/tools/learning_os/diagnostics/conventions.py
+index 23d89c5..880437f 100644
+--- a/tools/learning_os/diagnostics/conventions.py
++++ b/tools/learning_os/diagnostics/conventions.py
+@@ -182,6 +182,12 @@ RECOVERY_REQUIREMENTS = frozenset({
+ #: semantic contract Track #3 exists to unify; until then the mirror plus
+ #: the drift-failing parity test is the deliberate mechanism. Do not pull
+ #: contract generation into Track #2 to fix this sooner.
++#:
++#: IDEMPOTENCY_CONFLICT joined in S12 (JF-19): a refused attempt proves its
++#: own request wrote nothing, and the per-attempt coverage rule already
++#: withholds proof when an earlier attempt is ambiguous. The UI mirror in
++#: contracts/gateway-v2.ts needs the same addition; the parity test fails
++#: until it lands.
+ DEFINITIVE_NO_COMMIT_CODES = frozenset({
+     "INVALID_REQUEST",
+     "UNKNOWN_CAPABILITY",
+@@ -192,6 +198,7 @@ DEFINITIVE_NO_COMMIT_CODES = frozenset({
+     "VALIDATION_FAILED",
+     "PROJECTION_FAILED",
+     "UNCONFIRMED",
++    "IDEMPOTENCY_CONFLICT",
+ })
+ 
+ # ---------------------------------------------------------------------------
+diff --git a/tools/learning_os/diagnostics/resolver.py b/tools/learning_os/diagnostics/resolver.py
+index dbd46ed..9b3824d 100644
+--- a/tools/learning_os/diagnostics/resolver.py
++++ b/tools/learning_os/diagnostics/resolver.py
+@@ -74,6 +74,12 @@ class AuthorityEvidence:
+     response_transaction_id: str | None = None
+     transport_error: str | None = None
+     observed_snapshot: str | None = None
++    #: True when the live manifest snapshot chains to a receipt at or after
++    #: this write's own receipt: the projection is caught up past the
++    #: commit, so the write is settled even though its exact snapshot is
++    #: no longer live (JF-19). A manifest behind the commit — or showing
++    #: a snapshot no receipt accounts for — leaves this False.
++    superseded_snapshot: bool = False
+     #: Authority files (relative paths) that yielded no evidence because
+     #: they were unreadable, unparseable, or wrongly shaped. Skipped, never
+     #: fatal — but recorded, so a corrupt receipt is explicit uncertainty
+@@ -81,6 +87,30 @@ class AuthorityEvidence:
+     unreadable_authority: list[str] = field(default_factory=list)
+ 
+ 
++def manifest_covers_receipt(receipts: list[dict], manifest_snapshot: str | None,
++                            snapshot_after: str | None) -> bool:
++    """Whether the live manifest is at or past one committed write (JF-19).
++
++    Pure position check over the receipt inventory: both snapshots must
++    chain to receipts, and the manifest's receipt must sort at or after
++    the write's (transaction ids are time-ordered). Anything unchained —
++    a manifest behind the commit, or a snapshot no receipt accounts for
++    (hand-modified tree) — answers False, keeping verify-observation.
++    """
++    if not manifest_snapshot or not snapshot_after:
++        return False
++    if manifest_snapshot == snapshot_after:
++        return True
++    manifest_ids = sorted(
++        str(receipt.get("id", "")) for receipt in receipts
++        if receipt.get("snapshot_after") == manifest_snapshot)
++    write_ids = sorted(
++        str(receipt.get("id", "")) for receipt in receipts
++        if receipt.get("snapshot_after") == snapshot_after)
++    return bool(manifest_ids) and bool(write_ids) \
++        and manifest_ids[0] >= write_ids[-1]
++
++
+ def load_authority_files(root: Path) -> tuple[list[dict], dict, list[str]]:
+     """Read every receipt plus the idempotency ledger, once.
+ 
+@@ -131,6 +161,7 @@ def collect_authority(root: Path, *, request_id: str, idempotency_key: str,
+                       capability: str, response: dict | None = None,
+                       transport_error: str | None = None,
+                       observed_snapshot: str | None = None,
++                      manifest_snapshot: str | None = None,
+                       response_codes: list | None = None,
+                       authority_files: tuple[list[dict], dict, list[str]]
+                       | None = None) -> AuthorityEvidence:
+@@ -174,6 +205,7 @@ def collect_authority(root: Path, *, request_id: str, idempotency_key: str,
+                 verified_receipt["_path"] = verified[1]["receipt_path"]
+     error = (response or {}).get("error") or {}
+     codes = list(response_codes) if response_codes is not None else [error.get("code")]
++    snapshot_after = (response or {}).get("snapshot_after")
+     return AuthorityEvidence(
+         request_id=request_id,
+         idempotency_key=idempotency_key,
+@@ -185,10 +217,12 @@ def collect_authority(root: Path, *, request_id: str, idempotency_key: str,
+         response_code=error.get("code"),
+         response_codes=codes,
+         response_replayed=bool((response or {}).get("replayed", False)),
+-        response_snapshot_after=(response or {}).get("snapshot_after"),
++        response_snapshot_after=snapshot_after,
+         response_transaction_id=(response or {}).get("transaction_id"),
+         transport_error=transport_error,
+         observed_snapshot=observed_snapshot,
++        superseded_snapshot=manifest_covers_receipt(
++            receipts, manifest_snapshot, snapshot_after),
+         unreadable_authority=list(unreadable),
+     )
+ 
+@@ -270,6 +304,21 @@ def _attempt_spans(records: list[dict]) -> list[dict]:
+     return attempts
+ 
+ 
++def _codes_cover_attempts(records: list[dict], codes: list) -> bool:
++    """Whether one response code exists per counted attempt.
++
++    Attempts are counted from UI dispatches and Core attempt spans,
++    whichever reports more, so a transport-lost dispatch or a crashed
++    attempt without a response summary still withholds proof.
++    """
++    dispatches = sum(1 for record in records
++                     if record.get("name") == conventions.EVENT_ENVELOPE_DISPATCHED)
++    spans = sum(1 for record in records
++                if record.get("kind") == "span-start"
++                and record.get("name") == "attempt")
++    return len(codes) >= max(dispatches, spans, 1)
++
++
+ def _refusals_prove_no_commit(records: list[dict],
+                               authority: AuthorityEvidence) -> bool:
+     """Whether the recorded refusals cover every counted attempt.
+@@ -277,20 +326,27 @@ def _refusals_prove_no_commit(records: list[dict],
+     A definitive refusal proves no-commit only for its own attempt. A
+     recovery refusal (STALE/REVISION/INVALID on attempt 2) says nothing
+     about an ambiguous attempt 1 — the UI-side rule, applied here to the
+-    merged trace. Attempts are counted from UI dispatches and Core
+-    attempt spans, whichever reports more, so a transport-lost dispatch
+-    or a crashed attempt without a response summary still withholds
+-    proof; success responses never count as refusals.
++    merged trace. Success responses never count as refusals.
+     """
+     codes = authority.response_codes or [authority.response_code]
+     if not all(code in conventions.DEFINITIVE_NO_COMMIT_CODES for code in codes):
+         return False
+-    dispatches = sum(1 for record in records
+-                     if record.get("name") == conventions.EVENT_ENVELOPE_DISPATCHED)
+-    spans = sum(1 for record in records
+-                if record.get("kind") == "span-start"
+-                and record.get("name") == "attempt")
+-    return len(codes) >= max(dispatches, spans, 1)
++    return _codes_cover_attempts(records, codes)
++
++
++def _conflict_proves_no_commit(records: list[dict],
++                               authority: AuthorityEvidence) -> bool:
++    """Whether a lone key conflict retires this request (JF-19).
++
++    Every counted attempt ended in IDEMPOTENCY_CONFLICT: the key is bound
++    to a different intent, so this request cannot have committed. The
++    ledger row and any matching receipt are the other intent's evidence,
++    which is why this check runs before the contradiction branches.
++    """
++    codes = authority.response_codes or [authority.response_code]
++    if not codes or not all(code == "IDEMPOTENCY_CONFLICT" for code in codes):
++        return False
++    return _codes_cover_attempts(records, codes)
+ 
+ 
+ def resolve(records: list[dict], authority: AuthorityEvidence) -> CausalDiagnosis:
+@@ -329,6 +385,11 @@ def resolve(records: list[dict], authority: AuthorityEvidence) -> CausalDiagnosi
+         canonical = "COMMITTED"
+         reasons.append("a committed receipt verified against its ledger entry, "
+                        "the live revision floor, and the capability catalog")
++    elif _conflict_proves_no_commit(records, authority):
++        canonical = "NOT_COMMITTED"
++        reasons.append("every counted attempt ended in IDEMPOTENCY_CONFLICT: "
++                       "the key is bound to a different intent, so this "
++                       "request cannot have committed")
+     elif authority.verification_error is not None:
+         canonical = "AMBIGUOUS"
+         reasons.append("committed evidence failed strict verification: "
+@@ -430,6 +491,10 @@ def resolve(records: list[dict], authority: AuthorityEvidence) -> CausalDiagnosi
+                 and authority.observed_snapshot == authority.response_snapshot_after:
+             recovery = "none"
+             reasons.append("receipt observed in the projection: settled")
++        elif authority.superseded_snapshot:
++            recovery = "none"
++            reasons.append("live manifest is past this commit: settled "
++                           "(the exact snapshot is historical, not missing)")
+         else:
+             recovery = "verify-observation"
+             reasons.append("receipt exists but no observation is on record")
+diff --git a/tools/learning_os/diagnostics/store.py b/tools/learning_os/diagnostics/store.py
+index 1cefd75..2119962 100644
+--- a/tools/learning_os/diagnostics/store.py
++++ b/tools/learning_os/diagnostics/store.py
+@@ -75,7 +75,11 @@ def persist_record(record: dict) -> None:
+             "operation_id": record.get("op"),
+             "attempt_id": record.get("span"),
+             "span_id": record.get("span"),
+-            "parent_span_id": None,
++            # Parentage, not identity: the propagated caller context this
++            # operation was minted under (JF-04). Absent for direct-CLI
++            # roots. Additive: older readers ignore the new key.
++            "parent_trace_id": record.get("parent_op"),
++            "parent_span_id": record.get("parent_span"),
+             "kind": record.get("kind"),
+             "name": record.get("name"),
+             "stage": record.get("stage"),
+@@ -154,6 +158,8 @@ def read_records(root: Path, *, trace_id: str | None = None,
+             "status": stored.get("status"),
+             "op": stored.get("trace_id"),
+             "span": stored.get("span_id"),
++            "parent_op": stored.get("parent_trace_id"),
++            "parent_span": stored.get("parent_span_id"),
+             "ts": stored.get("timestamp"),
+             "attrs": stored.get("attributes") or {},
+         }
+diff --git a/tools/learning_os/diagnostics/tracer.py b/tools/learning_os/diagnostics/tracer.py
+index f30f538..dfdab21 100644
+--- a/tools/learning_os/diagnostics/tracer.py
++++ b/tools/learning_os/diagnostics/tracer.py
+@@ -5,10 +5,12 @@ is a strict no-op when the sink is unset. Every function swallows its own
+ failures: instrumentation observes the write path and can never break, slow
+ materially, or alter it.
+ 
+-Operation identity: the propagated UI context when present, else one lazily
+-minted process operation. A CLI invocation is one operation by construction,
+-so the process-global fallback cannot cross contexts between processes; it
+-only gives direct-CLI (operator) calls a stable identity without a UI.
++Operation identity: one lazily minted process operation, always. A
++propagated UI context is parentage for correlation, never identity:
++adopting it merged every process sharing one ambient trace into one
++misreported operation (JF-04). A CLI invocation is one operation by
++construction, so the process-global identity cannot cross contexts
++between processes.
+ """
+ 
+ from __future__ import annotations
+@@ -24,17 +26,24 @@ from .conventions import TRACE_DEBUG_FILE_ENV, VOCAB_VERSION
+ from .store import persist_record
+ 
+ _current: TraceContext | None = None
++_current_source: str | None = None
+ 
+ 
+ def operation() -> TraceContext:
+-    """This process's operation: propagated context, else one minted root."""
+-    global _current
++    """This process's operation: minted, with any propagated context as parent."""
++    global _current, _current_source
+     propagated = trace_context_from_env()
+-    if propagated is not None:
+-        return propagated
+-    if _current is None:
+-        _current = TraceContext(trace_id=secrets.token_hex(16),
+-                                span_id=secrets.token_hex(8))
++    source = propagated.format() if propagated is not None else None
++    if _current is None or source != _current_source:
++        if propagated is None:
++            _current = TraceContext(trace_id=secrets.token_hex(16),
++                                    span_id=secrets.token_hex(8))
++        else:
++            _current = TraceContext(trace_id=secrets.token_hex(16),
++                                    span_id=secrets.token_hex(8),
++                                    sampled=propagated.sampled,
++                                    parent=propagated)
++        _current_source = source
+     return _current
+ 
+ 
+@@ -69,6 +78,13 @@ def _append(record: dict) -> None:
+     persist_record(record)
+ 
+ 
++def _parentage(active: TraceContext) -> dict:
++    parent = active.parent
++    if parent is None:
++        return {}
++    return {"parent_op": parent.trace_id, "parent_span": parent.span_id}
++
++
+ def emit_event(name: str, *, stage: str | None = None,
+                status: str = "ok", span_id: str | None = None,
+                attrs: dict | None = None,
+@@ -87,6 +103,7 @@ def emit_event(name: str, *, stage: str | None = None,
+             "ts": time.time(),
+             "pid": os.getpid(),
+             "attrs": _clean_attrs(attrs),
++            **_parentage(active),
+         })
+     except Exception:
+         return
+@@ -107,6 +124,7 @@ def span_start(name: str, *, attrs: dict | None = None,
+             "ts": time.time(),
+             "pid": os.getpid(),
+             "attrs": _clean_attrs(attrs),
++            **_parentage(active),
+         })
+     except Exception:
+         pass
+@@ -129,6 +147,7 @@ def span_end(span_id: str, name: str, *, status: str = "ok",
+             "ts": time.time(),
+             "pid": os.getpid(),
+             "attrs": _clean_attrs(attrs),
++            **_parentage(active),
+         })
+     except Exception:
+         return
+diff --git a/tools/learning_os/errors.py b/tools/learning_os/errors.py
+index b20db16..5f3bf23 100644
+--- a/tools/learning_os/errors.py
++++ b/tools/learning_os/errors.py
+@@ -22,12 +22,18 @@ class ProjectionFailure(TransactionFailure):
+     Carries whether rollback completed, so the gateway classifies by
+     subsystem outcome instead of matching exception prose. A complete
+     rollback proves NOT_COMMITTED (PROJECTION_FAILED); an incomplete one
+-    leaves the outcome unknown (INTERNAL_FAILURE).
++    leaves the outcome unknown (INTERNAL_FAILURE). When the restored
++    pre-state itself refuses re-publication for a content (non-OSError)
++    reason, the defect pre-exists the write: ``pre_existing_defect`` names
++    that case so the gateway reports it like the shadow-validation
++    refusal it is (VALIDATION_FAILED), not as an unknown outcome (JF-11).
+     """
+ 
+-    def __init__(self, message: str, *, rollback_complete: bool):
++    def __init__(self, message: str, *, rollback_complete: bool,
++                 pre_existing_defect: bool = False):
+         super().__init__(message)
+         self.rollback_complete = rollback_complete
++        self.pre_existing_defect = pre_existing_defect
+ 
+ 
+ class PostCommitFailure(TransactionFailure):
+diff --git a/tools/learning_os/genout/common.py b/tools/learning_os/genout/common.py
+index 8aab8a9..8f3fe8a 100644
+--- a/tools/learning_os/genout/common.py
++++ b/tools/learning_os/genout/common.py
+@@ -115,10 +115,20 @@ def stable_generated_at(root: Path) -> str:
+     Regenerating without new commits yields byte-for-byte identical output
+     (improvement: no wall-clock noise in generated files). Falls back to a
+     fixed marker for a tree without history (e.g. synthetic test repos).
++
++    A tree with uncommitted canonical changes stamps
++    "(last commit, uncommitted changes)" instead of the bare commit time,
++    so the README's human-fallback freshness check can see what the
++    validator's hygiene warning already reports. The marker is a pure
++    function of tree state — identical trees still rebuild
++    byte-identically — and clean trees stamp exactly as before.
+     """
+     try:
+         ts = read_history(root, "-1", "--format=%cI").strip()
+         if ts:
++            _, dirty = _git_state(root)
++            if dirty:
++                return f"{ts} (last commit, uncommitted changes)"
+             return f"{ts} (last commit)"
+     except GitHistoryError as exc:
+         raise TransactionFailure(f"failed to read git history: {exc}") from exc
+diff --git a/tools/learning_os/genout/concepts.py b/tools/learning_os/genout/concepts.py
+index de22c4e..3e38eba 100644
+--- a/tools/learning_os/genout/concepts.py
++++ b/tools/learning_os/genout/concepts.py
+@@ -32,13 +32,14 @@ def build_backlinks_semantic(repo: Repo) -> dict:
+             source_to_notes.setdefault(sid, []).append(note.id)
+         for wid in note.meta.get("contexts", []) or []:
+             workspace_to_notes.setdefault(wid, []).append(note.id)
++        # Plain incoming-note ids: the published manifest contract declares
++        # note_incoming a string array map, and anything richer breaks every
++        # projection read for a schema-valid note (JF-09).
+         for target in note.meta.get("supersedes", []) or []:
+-            note_incoming.setdefault(target, []).append(
+-                {"from": note.id, "kind": "superseded-by"})
++            note_incoming.setdefault(target, []).append(note.id)
+         for m in re.finditer(r"note://(note-[a-z0-9-]+)", note.body):
+             if m.group(1) != note.id:
+-                note_incoming.setdefault(m.group(1), []).append(
+-                    {"from": note.id, "kind": "mentions"})
++                note_incoming.setdefault(m.group(1), []).append(note.id)
+     for ws in sorted(repo.workspaces.values(), key=lambda w: w.id):
+         for nid in ws.meta.get("notes", []) or []:
+             lst = workspace_to_notes.setdefault(ws.id, [])
+@@ -80,7 +81,7 @@ def build_backlinks_semantic(repo: Repo) -> dict:
+     for d in concept_relations.values():
+         d["outgoing"].sort(key=lambda e: (e["type"], e["to"]))
+         d["incoming"].sort(key=lambda e: (e["type"], e["from"]))
+-    for m in (concept_to_notes, source_to_notes, workspace_to_notes,
++    for m in (concept_to_notes, source_to_notes, note_incoming, workspace_to_notes,
+               module_to_workspaces, unit_to_workspaces, module_to_units, source_to_units):
+         for k in m:
+             m[k] = sorted(set(m[k])) if all(isinstance(x, str) for x in m[k]) else m[k]
+diff --git a/tools/learning_os/genout/derived_generation.py b/tools/learning_os/genout/derived_generation.py
+index 1077bb1..7e5e03f 100644
+--- a/tools/learning_os/genout/derived_generation.py
++++ b/tools/learning_os/genout/derived_generation.py
+@@ -63,7 +63,8 @@ DEPENDENCY_REPORT_BODY_ID = "gen.dependency-report.body"
+ 
+ #: Bumped when a shadow node changes shape (inputs, dependencies, or value
+ #: structure) independently of its producer files.
+-GENERATION_NODE_VERSION = 1
++#: v2: note_incoming entries are plain note-id strings (JF-09).
++GENERATION_NODE_VERSION = 2
+ 
+ BACKLINKS_PRODUCERS = (
+     "tools/learning_os/genout/concepts.py",
+diff --git a/tools/learning_os/genout/outputs.py b/tools/learning_os/genout/outputs.py
+index d2bc968..e299866 100644
+--- a/tools/learning_os/genout/outputs.py
++++ b/tools/learning_os/genout/outputs.py
+@@ -117,11 +117,30 @@ def write_outputs(repo: Repo, outputs: dict[str, str]) -> None:
+                 continue
+         except FileNotFoundError:
+             pass
++        except IsADirectoryError:
++            _recover_output_dir(gen, relative)
+         tmp.write_bytes(content)
+         os.replace(tmp, target)
+     _remove_stale(gen, outputs)
+ 
+ 
++def _recover_output_dir(gen: Path, relative: PurePosixPath) -> None:
++    """Clear an empty directory blocking one output path, else refuse.
++
++    generated/ is disposable: an empty directory where a view belongs is
++    residue a rebuild may clear. Anything inside it is not ours to
++    delete — refuse with the manual recovery instead of a traceback.
++    """
++    try:
++        (gen / relative).rmdir()
++    except OSError as exc:
++        raise TransactionFailure(
++            f"generated/{relative.as_posix()} is a non-empty directory, not the "
++            "published view — move its contents away, delete it, and rebuild "
++            "(`make views`)"
++        ) from exc
++
++
+ def _refuse_link(path: Path, gen: Path) -> None:
+     if path.is_symlink():
+         raise TransactionFailure(
+diff --git a/tools/learning_os/genout/projection/records_curriculum.py b/tools/learning_os/genout/projection/records_curriculum.py
+index 2c4692c..7eec117 100644
+--- a/tools/learning_os/genout/projection/records_curriculum.py
++++ b/tools/learning_os/genout/projection/records_curriculum.py
+@@ -160,6 +160,10 @@ def project_units(repo: Repo, revision: Revision,
+         records.append({
+             **dict(data),
+             "source_selections": projected_selections,
++            # Optional in the unit schema but required by the published
++            # manifest: a missing block projects to the empty list so a
++            # schema-valid unit stays projectable (JF-10).
++            "scope_sources": data.get("scope_sources") or [],
+             "revision": revision(unit.id, data),
+             "path": str(unit.path.relative_to(repo.root)),
+             # Projects own units explicitly in the Project record. The legacy
+diff --git a/tools/learning_os/genout/resume_dossier.py b/tools/learning_os/genout/resume_dossier.py
+index 3244831..3e6dc49 100644
+--- a/tools/learning_os/genout/resume_dossier.py
++++ b/tools/learning_os/genout/resume_dossier.py
+@@ -69,6 +69,7 @@ def build_resume_dossier(
+     sittings: Sequence[Mapping[str, object]],
+     titles: Mapping[str, str],
+     top_cluster: Mapping[str, object] | None = None,
++    stage_note: Mapping[str, object] | None = None,
+ ) -> ResumeDossier:
+     """Compile one resume screen. Pure: same inputs, same key.
+ 
+@@ -77,6 +78,12 @@ def build_resume_dossier(
+     fields only (no days-until: render-time countdowns never enter the
+     hashed content), so the digest moves when the top cluster moves and
+     never with the clock.
++
++    ``stage_note`` is bounded facts about the stage's working note (path,
++    line count, last-commit date, trailing excerpt), or None when the
++    stage names no note. Requirement-linked observations stay the
++    evidence; the note is what "move me on" can show when no requirement
++    is authored — and the digest moves with it, like every section.
+     """
+     for label, value in (("unit", unit_id), ("module", module_id),
+                          ("stage", stage_id), ("study map", study_map_id)):
+@@ -86,6 +93,8 @@ def build_resume_dossier(
+         raise ResumeDossierError("a resume dossier names how its stage was resolved")
+     if top_cluster is not None and not isinstance(top_cluster, Mapping):
+         raise ResumeDossierError("a resume dossier's top cluster is a mapping or nothing")
++    if stage_note is not None and not isinstance(stage_note, Mapping):
++        raise ResumeDossierError("a resume dossier's stage note is a mapping or nothing")
+     try:
+         sections = {
+             "requirement": dict(requirement) if requirement is not None else None,
+@@ -95,6 +104,7 @@ def build_resume_dossier(
+             "titles": {str(key): str(value) for key, value in titles.items()},
+             "via": via,
+             "top-cluster": dict(top_cluster) if top_cluster is not None else None,
++            "stage-note": dict(stage_note) if stage_note is not None else None,
+         }
+     except (TypeError, ValueError) as exc:
+         raise ResumeDossierError(f"malformed resume inputs: {exc}") from exc
+@@ -110,6 +120,7 @@ def build_resume_dossier(
+         ("sittings", sections["sittings"]),
+         ("titles", sections["titles"]),
+         ("top-cluster", sections["top-cluster"]),
++        ("stage-note", sections["stage-note"]),
+     )
+     return ResumeDossier(
+         key=f"context://{unit_id}/resume-dossier@{digest[:16]}",
+diff --git a/tools/learning_os/rules/core.py b/tools/learning_os/rules/core.py
+index 4db2c83..3ea58d3 100644
+--- a/tools/learning_os/rules/core.py
++++ b/tools/learning_os/rules/core.py
+@@ -203,6 +203,7 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
+         self.check_lifecycle_coherence()
+         self.check_projects()
+         self.check_transaction_receipts()
++        self.check_ai_action_requests()
+         self.check_files()
+         self.check_workspaces()
+         self.check_learning_paths()
+diff --git a/tools/learning_os/rules/generated.py b/tools/learning_os/rules/generated.py
+index ac4528f..9a2d299 100644
+--- a/tools/learning_os/rules/generated.py
++++ b/tools/learning_os/rules/generated.py
+@@ -129,13 +129,23 @@ class ChecksGenerated:
+             for f in sorted(reports.iterdir()):
+                 if f.is_file() and not f.name.startswith(GENERATED_REPORT_PREFIXES):
+                     self.err("GEN-UNKNOWN", f"unexpected file in generated/reports/: {f.name}")
+-        # Generated warning headers
++        # Generated warning headers. A directory carrying a view's name
++        # matches the glob but has no bytes to check: name the shape with
++        # its recovery instead of crashing on the read (JF-20).
+         for f in sorted(gen.rglob("*.md")):
++            if not f.is_file():
++                self.err("GEN-HEADER", "generated Markdown is a directory, not the published "
++                         "view — delete it and rebuild", self._rel(f))
++                continue
+             head = f.read_text(encoding="utf-8", errors="replace")[:400]
+             if "GENERATED" not in head:
+                 self.err("GEN-HEADER", "generated file lacks a generated-file warning header",
+                          self._rel(f))
+         for f in sorted(gen.rglob("*.json")):
++            if not f.is_file():
++                self.err("GEN-JSON", "generated JSON is a directory, not the published "
++                         "view — delete it and rebuild", self._rel(f))
++                continue
+             try:
+                 data = json.loads(f.read_text(encoding="utf-8"))
+             except json.JSONDecodeError:
+@@ -148,7 +158,7 @@ class ChecksGenerated:
+         archived_ids = [w.id for w in self.repo.archived_workspaces()]
+         for name in ("concept-index.md", "source-index.md"):
+             f = gen / name
+-            if f.exists():
++            if f.is_file():
+                 text = f.read_text(encoding="utf-8", errors="replace")
+                 for wid in archived_ids:
+                     if wid in text:
+diff --git a/tools/learning_os/rules/projects.py b/tools/learning_os/rules/projects.py
+index 68f93e9..c59a02d 100644
+--- a/tools/learning_os/rules/projects.py
++++ b/tools/learning_os/rules/projects.py
+@@ -139,7 +139,20 @@ class ChecksProjects:
+                 str(exc),
+                 "operations/transactions/revisions.yaml",
+             )
++        # The idempotency ledger is replay's only memory: an unreadable one
++        # fails closed at commit time, but validate stayed silent over it
++        # (JF-13/L2). A missing file is fine (no gateway writes yet).
++        from ..evidence import _load_idempotency_entries
++        try:
++            _load_idempotency_entries(self.repo.root)
++        except TransactionFailure as exc:
++            self.err(
++                "TRANSACTION-IDEMPOTENCY",
++                str(exc),
++                "operations/transactions/idempotency.yaml",
++            )
+         seen: set[str] = set()
++        seen_keys: dict[str, str] = {}
+         for path in sorted(directory.glob("transaction-*.yaml")):
+             try:
+                 # `yaml.safe_load` is the pure-Python loader: 214 receipts cost
+@@ -161,3 +174,42 @@ class ChecksProjects:
+                 self.err("TRANSACTION-RECEIPT",
+                          f"duplicate transaction receipt id '{transaction_id}'", self._rel(path))
+             seen.add(transaction_id)
++            # Two committed receipts sharing one idempotency key is genuinely
++            # ambiguous: replay can prove at most one of them. Ledger loss
++            # followed by key reuse produces exactly this (JF-13/L4).
++            request = data.get("request") if isinstance(data, dict) else None
++            key = request.get("idempotency_key") if isinstance(request, dict) else None
++            if isinstance(key, str) and key:
++                first = seen_keys.setdefault(key, self._rel(path))
++                if first != self._rel(path):
++                    self.err("TRANSACTION-RECEIPT",
++                             f"duplicate idempotency key '{key}' also committed "
++                             f"in {first}", self._rel(path))
++
++    def check_ai_action_requests(self):
++        from ..ai_actions.support import REQUEST_ID_PATTERN, REQUEST_ID_RE
++        directory = self.repo.root / "operations" / "ai-actions" / "requests"
++        if not directory.is_dir():
++            return
++        for path in sorted(directory.glob("*/request.yaml")):
++            try:
++                data = yaml.load(
++                    path.read_text(encoding="utf-8"), Loader=UniqueKeySafeLoader,
++                ) or {}
++            except Exception as exc:  # noqa: BLE001 - report as validation issue
++                self.err("AI-REQUEST-BUNDLE", f"cannot parse request bundle: {exc}",
++                         self._rel(path))
++                continue
++            if not isinstance(data, dict):
++                self.err("AI-REQUEST-BUNDLE", "request bundle must contain a mapping",
++                         self._rel(path))
++                continue
++            request_id = data.get("id")
++            # The projection publishes this id verbatim into the manifest,
++            # whose schema only accepts the ai-request pattern: anything else
++            # breaks every projection read while validating clean (JF-08).
++            if not isinstance(request_id, str) or not REQUEST_ID_RE.fullmatch(request_id):
++                self.err("AI-REQUEST-ID",
++                         f"request id {request_id!r} does not match {REQUEST_ID_PATTERN!r}; "
++                         "remove or rename the bundle so reads can publish the manifest",
++                         self._rel(path))
+diff --git a/tools/learning_os/transactions.py b/tools/learning_os/transactions.py
+index ae9b72a..94a1d55 100644
+--- a/tools/learning_os/transactions.py
++++ b/tools/learning_os/transactions.py
+@@ -1322,6 +1322,11 @@ class TransactionService:
+         staging_dir = inflight_parent / f".preparing-{transaction_id}"
+         inflight_dir = inflight_parent / transaction_id
+         journal_published = False
++        # Content (non-OSError) failures re-publishing over proven pre-state.
++        # The defect pre-exists the write: canonical rollback completed, so
++        # the journal is removed and the refusal reports the pre-existing
++        # defect instead of an unknown outcome (JF-11).
++        republication_defects: list[Exception] = []
+ 
+         def rollback() -> list[str]:
+             """Unwind through the published journal, never from memory alone.
+@@ -1382,14 +1387,32 @@ class TransactionService:
+                 if restore_projection is not None:
+                     try:
+                         restore_projection()
+-                    except Exception:
++                    except OSError:
+                         failures.append("<projection publication>")
+-            if failures:
++                    except Exception as exc:
++                        # Unwind only proves the write set was restored; a
++                        # concurrent foreign change elsewhere in the tree
++                        # (which the snapshot guard, not unwind, detects)
++                        # may be what breaks re-publication. Only a tree
++                        # that still equals the transaction's pre-state
++                        # proves the defect pre-exists this write — and
++                        # only then is this not a rollback failure (JF-11).
++                        try:
++                            prestate_intact = (
++                                take_fingerprint() == snapshot_before)
++                        except Exception:
++                            prestate_intact = False
++                        if prestate_intact:
++                            republication_defects.append(exc)
++                        else:
++                            failures.append("<projection publication>")
++            if failures or republication_defects:
+                 # Canonical state is ambiguous — unwind proved nothing, or
+-                # re-publication just failed over a proven tree. Either
+-                # way a manifest now would present uncertainty as
+-                # current, so drop the marker instead: "projection
+-                # unavailable" is the truthful state.
++                # re-publication just failed over a proven tree — or the
++                # pre-state itself does not publish. Either way a manifest
++                # now would present uncertainty as current, so drop the
++                # marker instead: "projection unavailable" is the
++                # truthful state.
+                 problem = _invalidate_projection(self.root)
+                 if problem is not None:
+                     failures.append("generated/manifest.json")
+@@ -1689,11 +1712,32 @@ class TransactionService:
+                         f"{exc}; rollback incomplete for: {', '.join(rollback_failures)}",
+                         rollback_complete=False,
+                     ) from exc
++                if republication_defects:
++                    # Fixed wording: the gateway classifies TransactionFailure
++                    # prose, so the defect's own text (which may name
++                    # snapshots, revisions, …) must not leak into this
++                    # message. The original exception already names the
++                    # defect; the type here only aids debugging.
++                    defect = type(republication_defects[0]).__name__
++                    raise ProjectionFailure(
++                        f"{exc}; rolled back completely but the restored pre-state "
++                        f"cannot be re-published ({defect}); the defect pre-exists "
++                        "this write",
++                        rollback_complete=True,
++                        pre_existing_defect=True,
++                    ) from exc
+                 raise ProjectionFailure(str(exc), rollback_complete=True) from exc
+             if rollback_failures:
+                 raise TransactionFailure(
+                     f"{exc}; rollback incomplete for: {', '.join(rollback_failures)}"
+                 ) from exc
++            if republication_defects:
++                defect = type(republication_defects[0]).__name__
++                raise TransactionFailure(
++                    f"{exc}; rolled back completely but the restored pre-state "
++                    f"cannot be re-published ({defect}); the defect pre-exists "
++                    "this write"
++                ) from exc
+             if isinstance(exc, TransactionFailure):
+                 raise
+             raise TransactionFailure(str(exc)) from exc
+diff --git a/tools/los.py b/tools/los.py
+index 71ca8f3..e09c882 100644
+--- a/tools/los.py
++++ b/tools/los.py
+@@ -101,6 +101,7 @@ from learning_os.commands.query import (  # noqa: E402
+     cmd_validate,
+ )
+ from learning_os.commands.reads import (  # noqa: E402
++    cmd_inbox_read,
+     cmd_material_context,
+     cmd_note_read,
+ )
+@@ -209,7 +210,7 @@ def build_parser() -> argparse.ArgumentParser:
+     p.add_argument("--expected-snapshot", default=None)
+     p.set_defaults(func=cmd_material_span)
+ 
+-    p = sub.add_parser("search", help="search the complete fresh projection")
++    p = sub.add_parser("search", help="search records, garden seeds, and inbox filenames")
+     p.add_argument("query")
+     p.add_argument("--type", default=None, help="optional record type")
+     p.add_argument("--limit", type=int, default=50)
+@@ -252,13 +253,20 @@ def build_parser() -> argparse.ArgumentParser:
+                    help="worked example procedures for one question class (examples only)")
+     p.set_defaults(func=cmd_semantic)
+ 
+-    p = sub.add_parser("note-read", help="read a bounded segment of a durable note by stable ID")
++    p = sub.add_parser("note-read", help="read a bounded segment of a durable note or garden seed by stable ID")
+     p.add_argument("note_id")
+     p.add_argument("--offset", type=int, default=0, help="zero-based Unicode character offset")
+     p.add_argument("--limit", type=int, default=8000, help="maximum characters, bounded to 16000")
+     p.add_argument("--expected-snapshot", default=None)
+     p.set_defaults(func=cmd_note_read)
+ 
++    p = sub.add_parser("inbox-read", help="read a bounded segment of one work/inbox file by name")
++    p.add_argument("name", help="file name relative to work/inbox/")
++    p.add_argument("--offset", type=int, default=0, help="zero-based Unicode character offset")
++    p.add_argument("--limit", type=int, default=8000, help="maximum characters, bounded to 16000")
++    p.add_argument("--expected-snapshot", default=None)
++    p.set_defaults(func=cmd_inbox_read)
++
+     p = sub.add_parser("inspect", help="inspect one record by stable id")
+     p.add_argument("id")
+     p.add_argument("more_ids", nargs="*", help="inspect up to 20 records from one fresh snapshot")
+@@ -358,7 +366,9 @@ def build_parser() -> argparse.ArgumentParser:
+     p.add_argument("--target-id", required=True)
+     p.add_argument("--provider", default="manual-bundle")
+     p.add_argument("--expected-snapshot", default=None)
+-    p.add_argument("--request-id", default=None)
++    p.add_argument("--request-id", default=None,
++                   help="optional caller id; must match ^ai-request-[a-z0-9]+(-[a-z0-9]+)*$ "
++                        "(refused before anything is persisted)")
+     p.set_defaults(func=cmd_ai_action_prepare)
+ 
+     p = sub.add_parser("ai-action-append-slices",

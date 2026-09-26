@@ -1,0 +1,31 @@
+{
+  "scenario": "S19",
+  "run_id": "s13-verify-2026-09-26",
+  "classification": "PASS",
+  "classification_reason": "determinism.py rebuild-after-delete: 20/20 files raw byte-identical. F-s13-verify-03 files the cosmetic GEN-JSON symlink mislabel (base crashes there).",
+  "before": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "after": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "consumer": {
+    "goal": "Rerun S19 derived-state rebuild + JF-20 directory-shape recovery.",
+    "first_action": "Ran metrics/determinism.py on tip; then empty/full/md-dir/symlink/missing shapes.",
+    "commands": [
+      "tests/eval/metrics/determinism.py TIP-B --out s19-tip.json",
+      "mkdir/rm/ln -s shapes at manifest + reading-room; los generate / validate / status each"
+    ],
+    "implementation_knowledge_needed": true,
+    "outcome": "Rebuilds are byte-identical; all four commands survive all five shapes with named errors."
+  },
+  "internal": {
+    "transaction_behavior": "white-box verification; worlds reset between probes",
+    "warnings_errors": []
+  },
+  "failures": [
+    "F-s13-verify-03"
+  ]
+}

@@ -1,0 +1,18 @@
+CHECK jf14-stage PASS :: rc=0 marker_in_map=True
+CHECK jf14-garden-search PASS :: rc=0 found=True
+CHECK jf14-garden-read PASS :: rc=0 envelope_ok=True
+CHECK jf14-garden-missing PASS :: rc=2 msg='los: note not found: garden-note-no-such-seed-zzz\n'
+CHECK jf14-inbox-text PASS :: rc=0 has_content=True
+CHECK jf14-inbox-missing PASS :: rc=2 msg='los: inbox item not found: no-such-file-zzz.md'
+CHECK jf14-inbox-escape PASS :: rc=2 msg='los: inbox name must be relative to work/inbox: ../coordination.md'
+CHECK jf14-inbox-escape2 PASS :: rc=2 msg='los: inbox name must be relative to work/inbox: sub/../../unit.yaml'
+CHECK jf14-inbox-abs PASS :: rc=2 msg='los: inbox name must be relative to work/inbox: /etc/hostname'
+CHECK jf14-inbox-binary PASS :: rc=2 msg='los: inbox item is not UTF-8 text and has no text read: s13-binary-blob.bin'
+CHECK jf14-inbox-symlink PASS :: rc=2 msg='los: inbox item escapes work/inbox: s13-link-evil.md'
+CHECK jf14-inbox-dotread PASS :: rc=0 ok=True
+CHECK jf14-inbox-search-name PASS :: rc=0 found=True
+CHECK jf14-inbox-search-bytes PASS :: rc=0 absent=True
+CHECK jf14-inbox-dot-hidden PASS :: rc=0 excluded=True
+CHECK jf14-inbox-stale PASS :: rc=3
+CHECK jf14-durable-unaffected PASS :: rc=0 ok=True
+SUMMARY {"stage": "PASS", "garden-search": "PASS", "garden-read": "PASS", "garden-missing": "PASS", "inbox-text": "PASS", "inbox-missing": "PASS", "inbox-escape": "PASS", "inbox-escape2": "PASS", "inbox-abs": "PASS", "inbox-binary": "PASS", "inbox-symlink": "PASS", "inbox-dotread": "PASS", "inbox-search-name": "PASS", "inbox-search-bytes": "PASS", "inbox-dot-hidden": "PASS", "inbox-stale": "PASS", "durable-unaffected": "PASS"}

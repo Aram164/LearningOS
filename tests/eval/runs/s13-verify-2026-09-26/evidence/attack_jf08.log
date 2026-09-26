@@ -1,0 +1,20 @@
+CHECK jf08-orig PASS :: rc=1 persisted=[] reads_ok=True msg="los: request id 'my-request-1' does not match '^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$'; no request was prepared"
+CHECK jf08-upper PASS :: rc=1 persisted=[] reads_ok=True msg="los: request id 'AI-REQUEST-ABC' does not match '^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$'; no request "
+CHECK jf08-underscore PASS :: rc=1 persisted=[] reads_ok=True msg="los: request id 'ai_request_x' does not match '^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$'; no request wa"
+CHECK jf08-trailing-dash PASS :: rc=1 persisted=[] reads_ok=True msg="los: request id 'ai-request-' does not match '^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$'; no request was"
+CHECK jf08-upper-suffix PASS :: rc=1 persisted=[] reads_ok=True msg="los: request id 'ai-request-AbC' does not match '^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$'; no request "
+CHECK jf08-spaces PASS :: rc=1 persisted=[] reads_ok=True msg="los: request id 'ai request 1' does not match '^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$'; no request wa"
+CHECK jf08-empty PASS :: rc=1 persisted=[] reads_ok=True msg="los: request id '' does not match '^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$'; no request was prepared"
+CHECK jf08-toolong PASS :: rc=1 persisted=[] reads_ok=True msg='los: unsafe exchange identifier: ai-request-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'
+CHECK jf08-unicode PASS :: rc=1 persisted=[] reads_ok=True msg="los: request id 'ai-request-café' does not match '^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$'; no request"
+CHECK jf08-traversal PASS :: rc=1 persisted=[] reads_ok=True msg="los: request id '../ai-request-x' does not match '^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$'; no request"
+CHECK jf08-dots PASS :: rc=1 persisted=[] reads_ok=True msg="los: request id 'ai-request-..' does not match '^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$'; no request w"
+CHECK jf08-colon PASS :: rc=1 persisted=[] reads_ok=True msg="los: request id 'ai-request:a' does not match '^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$'; no request wa"
+CHECK jf08-valid-min PASS :: rc=0 persisted=['ai-request-a'] reads_ok=True msg='}'
+CHECK jf08-valid-multi PASS :: rc=0 persisted=['ai-request-abc-123-xyz'] reads_ok=True msg='}'
+CHECK jf08-valid-s13 PASS :: rc=0 persisted=['ai-request-s13-hostile-probe-7'] reads_ok=True msg='}'
+CHECK jf08-minted PASS :: rc=0 persisted=['ai-request-20260925-223114-9efbd2'] reads_ok=True
+CHECK jf08-planted-bad PASS :: rc=1 names=True line="E AI-REQUEST-ID: request id 'my-request-1' does not match '^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$'; remove or rename the bundle so reads can "
+CHECK jf08-planted-shape PASS :: rc=1 names=True
+CHECK jf08-planted-fixed PASS :: rc=0 errors=[]
+SUMMARY {"orig": "PASS", "upper": "PASS", "underscore": "PASS", "trailing-dash": "PASS", "upper-suffix": "PASS", "spaces": "PASS", "empty": "PASS", "toolong": "PASS", "unicode": "PASS", "traversal": "PASS", "dots": "PASS", "colon": "PASS", "valid-min": "PASS", "valid-multi": "PASS", "valid-s13": "PASS", "minted": "PASS", "planted-bad": "PASS", "planted-shape": "PASS", "planted-fixed": "PASS"}

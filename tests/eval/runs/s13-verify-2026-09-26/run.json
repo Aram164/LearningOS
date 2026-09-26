@@ -1,0 +1,92 @@
+{
+  "blind": false,
+  "deviations": [
+    "White-box hostile verification (plan O), not a blind consumer run: the oracle was opened into a throwaway dir outside the repo per the kickoff (README + AUTHOR-NOTES read, plaintext removed at the end). blind:false records that access.",
+    "Verification worlds built with --source-rev WORKTREE (patched tip 7ffad84) and base-comparison worlds from 84bda98, all seed 20260924, under /tmp/s13/ (outside the repo). run.json world_head/world_build refer to the scale-0 tip world; all six heads are in environment.worlds.",
+    "World probes ran each world's own product code (world tools via cwd); write envelopes were sealed by a docs-only script (WORKFLOWS section 25c + capability-schema CLI, stdlib only), which is itself the JF-05 sufficiency proof.",
+    "S22 racers were fired simultaneously from one Python process via threads (s07 used ms-skewed launches); S21/S17 kill timings likewise use process-group SIGKILL from a driver script.",
+    "eval_revision is the frozen repair tip 7ffad84 (the tests/eval content run against); this run's own records are the only addition on top."
+  ],
+  "environment": {
+    "load": "shared machine; every bench series uptime-bracketed, see evidence/uptime-*.log",
+    "machine": "macOS",
+    "python": "3.14.4 (repo .venv)",
+    "worlds": {
+      "base-10k": {
+        "notes": 10116,
+        "scale": 10000,
+        "seed": 20260924,
+        "source_rev": "84bda98852e0505ba40d93e7e15dd3f716563edb",
+        "world_head": "31322632ad19f63c4c8595846b0696b254f09106"
+      },
+      "base-2k": {
+        "notes": 2116,
+        "scale": 2000,
+        "seed": 20260924,
+        "source_rev": "84bda98852e0505ba40d93e7e15dd3f716563edb",
+        "world_head": "822c114cf9b7cc402bdb75531535644885ecf02e"
+      },
+      "base": {
+        "notes": 116,
+        "scale": 0,
+        "seed": 20260924,
+        "source_rev": "84bda98852e0505ba40d93e7e15dd3f716563edb",
+        "world_head": "d4a270255fd2976d14c4594fd365bfb4ce73456d"
+      },
+      "tip-10k": {
+        "notes": 10116,
+        "scale": 10000,
+        "seed": 20260924,
+        "source_rev": "WORKTREE",
+        "world_head": "62cac7541e80d4fcf270b743058fe1e0b9d1c5b3"
+      },
+      "tip-2k": {
+        "notes": 2116,
+        "scale": 2000,
+        "seed": 20260924,
+        "source_rev": "WORKTREE",
+        "world_head": "a31a3804e62dce6bc1e04330026f7eff690f84ad"
+      },
+      "tip": {
+        "notes": 116,
+        "scale": 0,
+        "seed": 20260924,
+        "source_rev": "WORKTREE",
+        "world_head": "78154b2ba900b007dfd6a4e0feb8910be5665e65"
+      }
+    }
+  },
+  "eval_revision": "7ffad843c48a61bc68c61aee7f29c0c274b8c1de",
+  "finished": "2026-09-26T00:14:42Z",
+  "model": "Muse Spark (muse-spark) via Muse Code",
+  "plan": "O",
+  "product_revision": "7ffad843c48a61bc68c61aee7f29c0c274b8c1de",
+  "run_id": "s13-verify-2026-09-26",
+  "scenarios": [
+    "S01",
+    "S09",
+    "S10",
+    "S16",
+    "S17",
+    "S18",
+    "S19",
+    "S20",
+    "S21",
+    "S22",
+    "S23",
+    "S24",
+    "S26"
+  ],
+  "session_role": "hostile-verifier",
+  "started": "2026-09-25T22:05:00Z",
+  "world_build": {
+    "commits": 133,
+    "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+    "notes": 116,
+    "product_revision": "WORKTREE",
+    "scale": 0,
+    "seed": 20260924,
+    "world_head": "78154b2ba900b007dfd6a4e0feb8910be5665e65"
+  },
+  "world_head": "78154b2ba900b007dfd6a4e0feb8910be5665e65"
+}

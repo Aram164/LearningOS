@@ -1,0 +1,7 @@
+CHECK jf19-settle PASS :: first={'canonical_outcome': 'COMMITTED', 'recovery_requirement': 'none', 'ui_outcome': None} second={'canonical_outcome': 'COMMITTED', 'recovery_requirement': 'none', 'ui_outcome': None}
+CHECK jf19-past-reason PASS :: present=True
+CHECK jf19-behind PASS :: nomanifest_req=verify-observation after_views=none
+CHECK jf19-conflict PASS :: {'canonical_outcome': 'NOT_COMMITTED', 'recovery_requirement': 'none', 'ui_outcome': None}
+CHECK jf19-shared PASS :: names_both_keys=True
+CHECK jf19-unknown PASS :: rc=2 body="{'error': 'unknown request_id', 'request_id': 'request-no-such-id-zzz'}"
+SUMMARY {"settle": "PASS", "behind": "PASS", "conflict": "PASS", "shared": "PASS", "unknown": "PASS"}

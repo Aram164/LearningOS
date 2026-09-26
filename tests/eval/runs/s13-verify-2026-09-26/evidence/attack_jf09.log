@@ -1,0 +1,10 @@
+CHECK jf09-orig PASS :: validate=0 reads={'search': 0, 'bootstrap': 0, 'inspect': 0, 'related': 0, 'generate': 0, 'write': 0} valuetxt='0 error(s), 3 warning(s) — OK (0.2s)'
+CHECK jf09-multi FAIL :: validate=1 reads={'search': 2, 'bootstrap': 2, 'inspect': 2, 'related': 2, 'generate': 2, 'write': 1} valuetxt='2 error(s), 3 warning(s) — FAIL (0.2s)'
+CHECK jf09-string INFO :: validate=1 search=2 bootstrap=2 valuetxt='25 error(s), 3 warning(s) — FAIL (0.2s)'
+CHECK jf09-bodymention PASS :: validate=0 reads={'search': 0, 'bootstrap': 0, 'inspect': 0, 'related': 0, 'generate': 0, 'write': 0} valuetxt='0 error(s), 3 warning(s) — OK (0.2s)'
+CHECK jf09-incoming-shape FAIL :: note_incoming[note-lsm-trees]='MISSING-KEY'
+CHECK jf09-bodymention-bad PASS :: validate=0 reads={'search': 0, 'bootstrap': 0, 'inspect': 0, 'related': 0, 'generate': 0, 'write': 0} valuetxt='0 error(s), 3 warning(s) — OK (0.2s)'
+CHECK jf09-empty PASS :: validate=0 reads={'search': 0, 'bootstrap': 0, 'inspect': 0, 'related': 0, 'generate': 0, 'write': 0} valuetxt='0 error(s), 3 warning(s) — OK (0.2s)'
+CHECK jf09-self PASS :: validate=0 reads={'search': 0, 'bootstrap': 0, 'inspect': 0, 'related': 0, 'generate': 0, 'write': 0} valuetxt='0 error(s), 3 warning(s) — OK (0.2s)'
+CHECK jf09-caps FAIL :: validate=1 reads={'search': 2, 'bootstrap': 2, 'inspect': 2, 'related': 2, 'generate': 2, 'write': 1} valuetxt='2 error(s), 3 warning(s) — FAIL (0.2s)'
+SUMMARY {"orig": "PASS", "multi": "FAIL", "string": "PASS", "bodymention": "PASS", "bodymention-bad": "PASS", "empty": "PASS", "self": "PASS", "caps": "FAIL"}

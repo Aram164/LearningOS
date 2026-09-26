@@ -1,0 +1,153 @@
+{
+  "bench_version": 1,
+  "world": "/private/tmp/s13/w-base-10k/LearningOS/repository",
+  "world_head": "31322632ad19f63c4c8595846b0696b254f09106",
+  "notes": 10116,
+  "reps": 3,
+  "derived_bytes": 412662292,
+  "operations": {
+    "generate_cold": {
+      "median_s": 5.212,
+      "min_s": 5.126,
+      "max_s": 5.409,
+      "samples_s": [
+        5.409,
+        5.212,
+        5.126
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "validate": {
+      "median_s": 3.476,
+      "min_s": 3.43,
+      "max_s": 3.484,
+      "samples_s": [
+        3.43,
+        3.476,
+        3.484
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "generate_warm": {
+      "median_s": 5.127,
+      "min_s": 5.041,
+      "max_s": 5.157,
+      "samples_s": [
+        5.041,
+        5.127,
+        5.157
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "search_metadata": {
+      "median_s": 4.929,
+      "min_s": 4.861,
+      "max_s": 4.981,
+      "samples_s": [
+        4.861,
+        4.929,
+        4.981
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "search_content": {
+      "median_s": 234.802,
+      "min_s": 232.097,
+      "max_s": 239.626,
+      "samples_s": [
+        232.097,
+        234.802,
+        239.626
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "inspect_note": {
+      "median_s": 4.869,
+      "min_s": 4.795,
+      "max_s": 4.879,
+      "samples_s": [
+        4.795,
+        4.869,
+        4.879
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "related_note": {
+      "median_s": 4.851,
+      "min_s": 4.727,
+      "max_s": 5.039,
+      "samples_s": [
+        4.727,
+        4.851,
+        5.039
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "bootstrap_brief": {
+      "median_s": 5.779,
+      "min_s": 5.614,
+      "max_s": 5.817,
+      "samples_s": [
+        5.614,
+        5.779,
+        5.817
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "resume": {
+      "median_s": 2.975,
+      "min_s": 2.941,
+      "max_s": 3.092,
+      "samples_s": [
+        2.941,
+        2.975,
+        3.092
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "incremental_generate": {
+      "median_s": 5.081,
+      "min_s": 5.037,
+      "max_s": 5.122,
+      "samples_s": [
+        5.037,
+        5.122,
+        5.081
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "incremental_search": {
+      "median_s": 175.579,
+      "min_s": 173.498,
+      "max_s": 176.03,
+      "samples_s": [
+        176.03,
+        173.498,
+        175.579
+      ],
+      "exit_codes": [
+        0
+      ]
+    }
+  }
+}

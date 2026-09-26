@@ -1,0 +1,29 @@
+{
+  "scenario": "S22",
+  "run_id": "s13-verify-2026-09-26",
+  "classification": "PASS",
+  "classification_reason": "30 racing writes (10 rounds x 2 capture + 1 SPU, thread-launched): 10 committed, 20 clean conflicts (16 STALE_SNAPSHOT + 4 REVISION_CONFLICT), receipts match commits, no dup keys, no journals, validate clean. Zero lost/duplicated/partial.",
+  "before": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "after": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "consumer": {
+    "goal": "Rerun S22 modest concurrency (thread-launched racers; s07 used one process with ms skew).",
+    "first_action": "Sealed 3 fresh envelopes per round; fired simultaneously via threads.",
+    "commands": [
+      "attack_s22.py (10 rounds)",
+      "receipt/key/journal/validate integrity audit"
+    ],
+    "implementation_knowledge_needed": true,
+    "outcome": "Racers serialize through clean conflicts; nothing lost or doubled."
+  },
+  "internal": {
+    "transaction_behavior": "white-box verification; worlds reset between probes",
+    "warnings_errors": []
+  },
+  "failures": []
+}

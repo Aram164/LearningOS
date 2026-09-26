@@ -1,0 +1,49 @@
+{
+  "mode": "two-builds",
+  "worlds": [
+    "/private/tmp/s13/w-tip/LearningOS/repository",
+    "/private/tmp/s13/w-tip-twin/LearningOS/repository"
+  ],
+  "heads": [
+    "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "78154b2ba900b007dfd6a4e0feb8910be5665e65"
+  ],
+  "heads_equal": true,
+  "trees_equal": true,
+  "builds": [
+    {
+      "exit": 0,
+      "tail": [
+        "wrote generated/reports/health.md",
+        "wrote generated/source-index.md",
+        "wrote generated/study-plans.md"
+      ]
+    },
+    {
+      "exit": 0,
+      "tail": [
+        "wrote generated/reports/health.md",
+        "wrote generated/source-index.md",
+        "wrote generated/study-plans.md"
+      ]
+    }
+  ],
+  "raw": {
+    "only_first": [],
+    "only_second": [],
+    "differ": [],
+    "identical": true
+  },
+  "timestamp_normalized": {
+    "only_first": [],
+    "only_second": [],
+    "differ": [],
+    "identical": true
+  },
+  "timestamp_and_root_normalized": {
+    "only_first": [],
+    "only_second": [],
+    "differ": [],
+    "identical": true
+  }
+}

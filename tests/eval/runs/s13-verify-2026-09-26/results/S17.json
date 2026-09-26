@@ -1,0 +1,30 @@
+{
+  "scenario": "S17",
+  "run_id": "s13-verify-2026-09-26",
+  "classification": "PASS",
+  "classification_reason": "interrupt_probe: 20 kill trials (capture + stage.progress.update, 10 delays each) end pre-state/finished, zero PARTIAL, recovery kill-safe. JF-21: 7/7 caught kills agree across single/batch/search/bootstrap (pre-state, healed pre-state); base control 4/4 reproduces the paused-vs-active split.",
+  "before": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "after": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "consumer": {
+    "goal": "Rerun S17 interrupted writes + JF-21 read agreement with base control.",
+    "first_action": "Sealed capture/SPU envelopes on tip; ran interrupt_probe.py per S17 procedure.",
+    "commands": [
+      "tests/eval/tools/interrupt_probe.py --world TIP-B --cmd ... (x2)",
+      "attack_jf21b.py: Popen + SIGKILL at 10 delays, single-first read matrix",
+      "attack_jf21base.py: same battery on w-base"
+    ],
+    "implementation_knowledge_needed": true,
+    "outcome": "Killed writes never strand partial state and never disagree across readers."
+  },
+  "internal": {
+    "transaction_behavior": "white-box verification; worlds reset between probes",
+    "warnings_errors": []
+  },
+  "failures": []
+}

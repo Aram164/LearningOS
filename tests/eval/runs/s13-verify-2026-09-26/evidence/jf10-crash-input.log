@@ -1,0 +1,1 @@
+ jf10 validator TypeError crash input (mixed-type list) reproduced identically on tip and base; see VERIFICATION_REPORT + F-s13-verify-02

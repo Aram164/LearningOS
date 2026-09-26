@@ -1,0 +1,30 @@
+{
+  "scenario": "S18",
+  "run_id": "s13-verify-2026-09-26",
+  "classification": "PASS",
+  "classification_reason": "Dirty canonical trees stamp '(last commit, uncommitted changes)' in every view; clean trees stamp byte-identically to base. Dirty detection covers modified + staged + untracked-inside-canonical, ignores untracked root scratch.",
+  "before": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "after": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "consumer": {
+    "goal": "Rerun S18 freshness + JF-18 stamp repair.",
+    "first_action": "Compared clean/dirty Generated lines across views on tip.",
+    "commands": [
+      "los generate; grep Generated reading-room.md",
+      "dirty note / untracked-root / untracked-knowledge / staged variants",
+      "diff -rq base/clean vs tip/clean generated/"
+    ],
+    "implementation_knowledge_needed": true,
+    "outcome": "The human-fallback freshness check works; clean bytes unchanged."
+  },
+  "internal": {
+    "transaction_behavior": "white-box verification; worlds reset between probes",
+    "warnings_errors": []
+  },
+  "failures": []
+}

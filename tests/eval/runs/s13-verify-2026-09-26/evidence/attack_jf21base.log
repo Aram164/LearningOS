@@ -1,0 +1,5 @@
+CHECK jf21-t1 FAIL :: delay=0.25 single='paused' batch='active' search='active' bootstrap_rc=0 healed='active'
+CHECK jf21-t2 FAIL :: delay=0.3 single='paused' batch='active' search='active' bootstrap_rc=0 healed='active'
+CHECK jf21-t3 FAIL :: delay=0.35 single='paused' batch='active' search='active' bootstrap_rc=0 healed='active'
+CHECK jf21-t4 FAIL :: delay=0.4 single='paused' batch='active' search='active' bootstrap_rc=0 healed='active'
+SUMMARY caught=4/4 agreed=0/4

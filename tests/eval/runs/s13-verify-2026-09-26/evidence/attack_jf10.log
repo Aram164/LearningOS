@@ -1,0 +1,9 @@
+CHECK jf10-orig PASS :: validate=0 reads={'search': 0, 'bootstrap': 0, 'generate': 0, 'write': 0} '0 error(s), 3 warning(s) — OK (0.2s)'
+CHECK jf10-projected-default PASS :: units[unit-os-l02].scope_sources=[]
+CHECK jf10-null FAIL :: validate=1 reads={'search': 0, 'bootstrap': 0, 'generate': 0, 'write': 1} '1 error(s), 3 warning(s) — FAIL (0.2s)'
+CHECK jf10-wrongtype-err INFO :: "E SCHEMA: unit: {'source_id': 'x'} is not of type 'array' (at scope_sources) [curriculum/modules/module-tuh-os/units/unit-os-l02/unit.yaml]"
+CHECK jf10-wrongtype CONSISTENT-REFUSAL :: validate=1 reads={'search': 1, 'bootstrap': 1, 'generate': 1, 'write': 1} '1 error(s), 3 warning(s) — FAIL (0.2s)'
+CHECK jf10-othermodule PASS :: validate=0 reads={'search': 0, 'bootstrap': 0, 'generate': 0, 'write': 0} '0 error(s), 3 warning(s) — OK (0.2s)'
+CHECK jf10-multiunit INFO :: stripped 16 units
+CHECK jf10-multiunit PASS :: validate=0 reads={'search': 0, 'bootstrap': 0, 'generate': 0, 'write': 0} '0 error(s), 3 warning(s) — OK (0.2s)'
+SUMMARY {"orig": "PASS", "null": "FAIL", "wrongtype": "CONSISTENT-REFUSAL", "othermodule": "PASS", "multiunit": "PASS"}

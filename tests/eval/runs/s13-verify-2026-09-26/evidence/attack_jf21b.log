@@ -1,0 +1,11 @@
+CHECK jf21-t1 SKIP :: delay=0.1 file=active receipts=0
+CHECK jf21-t2 SKIP :: delay=0.15 file=active receipts=0
+CHECK jf21-t3 SKIP :: delay=0.2 file=active receipts=0
+CHECK jf21-t4 PASS :: delay=0.25 single='active' batch='active' search='active' bootstrap_rc=0 healed='active'
+CHECK jf21-t5 PASS :: delay=0.3 single='active' batch='active' search='active' bootstrap_rc=0 healed='active'
+CHECK jf21-t6 PASS :: delay=0.35 single='active' batch='active' search='active' bootstrap_rc=0 healed='active'
+CHECK jf21-t7 PASS :: delay=0.4 single='active' batch='active' search='active' bootstrap_rc=0 healed='active'
+CHECK jf21-t8 PASS :: delay=0.45 single='active' batch='active' search='active' bootstrap_rc=0 healed='active'
+CHECK jf21-t9 PASS :: delay=0.5 single='active' batch='active' search='active' bootstrap_rc=0 healed='active'
+CHECK jf21-t10 PASS :: delay=0.55 single='active' batch='active' search='active' bootstrap_rc=0 healed='active'
+SUMMARY caught=7/10 agreed=7/7
