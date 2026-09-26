@@ -111,6 +111,11 @@ def _request_to_flip(copy: Path) -> Path:
 
 @pytest.mark.full_repo
 def test_real_repo_manifest_replay(tmp_path: Path):
+    # The replay commits inside its copy: a `.git` pointer file (linked
+    # worktree, submodule) would resolve those commits into the real
+    # repository instead of the disposable copy. Real clones run it.
+    if not (REPO_ROOT / ".git").is_dir():
+        pytest.skip("needs a real .git directory, not a linked-worktree pointer")
     copy = _copy_live_tree(tmp_path)
 
     cold = _rerun(copy)
