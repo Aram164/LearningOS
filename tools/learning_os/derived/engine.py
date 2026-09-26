@@ -28,7 +28,7 @@ from typing import Any
 
 from .identity import digest_bytes, digest_code_identity, digest_producer_files, runtime_digest
 from .model import DerivedError, InputRef, NodeSpec, NodeState, node_key
-from .store import canonical_bytes, lookup, store_node
+from .store import canonical_bytes, lookup, read_state, store_node
 
 
 @dataclass(frozen=True)
@@ -114,6 +114,18 @@ class _Session:
     runtime_digest: str
     staging: Staging | None = None
     memo: dict[str, Evaluation] = field(default_factory=dict)
+    #: The persisted state index, read once per session. Re-parsing it
+    #: per node made every N-node evaluation O(N^2) in state bytes
+    #: (S23: 81% of a warm 2k-note content search). Own in-session
+    #: stores update it, so it always equals what a fresh re-read
+    #: would return; external writers are excluded by the operator
+    #: lock, the same assumption the memo already makes.
+    states: dict[str, NodeState] | None = None
+
+    def _lookup(self, node_id: str) -> tuple[NodeState, Any] | None:
+        if self.states is None:
+            self.states = read_state(self.root)
+        return lookup(self.root, node_id, states=self.states)
 
     def evaluate(self, node_id: str, stack: tuple[str, ...] = ()) -> Evaluation:
         if node_id in self.memo:
@@ -145,7 +157,7 @@ class _Session:
             dependency_outputs={dep: item.output_sha256 for dep, item in dependencies.items()},
         )
         previous: NodeState | None = None
-        cached = lookup(self.root, node_id)
+        cached = self._lookup(node_id)
         if cached is not None:
             previous, value = cached
             if previous.node_key == key:
@@ -158,7 +170,9 @@ class _Session:
         if self.staging is not None:
             self.staging.pending[node_id] = (key, value)
         else:
-            store_node(self.root, node_id, node_key=key, value=value)
+            persisted = store_node(self.root, node_id, node_key=key, value=value)
+            assert self.states is not None  # _lookup above always loads it
+            self.states[node_id] = persisted
         if previous is None:
             reason = "cache-miss"
         elif previous.output_sha256 == output:

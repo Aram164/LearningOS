@@ -256,9 +256,14 @@ def test_every_top_level_directory_on_disk_is_declared():
         p.name for p in ROOT.iterdir()
         if p.is_dir() and not tc._is_residue(p.name, contract)
     } - hidden
-    assert on_disk == declared, (
+    # Absent-but-ignored declared paths (bases/, and generated/ on a fresh
+    # checkout) are legitimate states, not violations: the checker excuses
+    # them, and this comparison must apply the same rule (JF-02).
+    absent_ignored = {path for path in declared - on_disk
+                      if tc._git_ignored(ROOT, path)}
+    assert on_disk == declared - absent_ignored, (
         f"undeclared: {sorted(on_disk - declared)}; "
-        f"declared but absent: {sorted(declared - on_disk)}"
+        f"declared but absent: {sorted(declared - on_disk - absent_ignored)}"
     )
 
 
