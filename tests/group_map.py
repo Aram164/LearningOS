@@ -86,6 +86,7 @@ GROUPS: dict[str, list[str]] = {
         "test_module_concept_atlas.py",
         "test_projection_fidelity.py",
         "test_projection_verification.py",
+        "test_related.py",
         "test_render.py",
         "test_search_index.py",
         "test_thematic_navigation_projection.py",

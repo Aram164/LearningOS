@@ -276,7 +276,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("more_ids", nargs="*", help="inspect up to 20 records from one fresh snapshot")
     p.set_defaults(func=cmd_inspect)
 
-    p = sub.add_parser("related", help="list records related to one stable id")
+    p = sub.add_parser("related", help="list records related to one stable id, ranked with reasons")
     p.add_argument("id")
     p.set_defaults(func=cmd_related)
 

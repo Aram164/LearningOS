@@ -14,10 +14,18 @@ from learning_os.loader import load_repo
 from learning_os.pathing import PathBoundaryError, read_text_inside
 from learning_os.rules import validate
 
-from .reads import brief_bootstrap, compact_bootstrap, content_search, inspect_batch, record_payload
+from .reads import (
+    brief_bootstrap,
+    compact_bootstrap,
+    content_search,
+    inspect_batch,
+    record_payload,
+    related_records,
+)
 from .support import (
     _delegate,
     _fresh_manifest,
+    _fresh_manifest_and_repo,
     _json_layout,
     _operator_lock,
     _print_rows,
@@ -281,39 +289,14 @@ def cmd_inspect(args) -> int:
 
 
 def cmd_related(args) -> int:
-    manifest = _fresh_manifest(_root(args))
+    root = _root(args)
+    manifest, repo = _fresh_manifest_and_repo(root)
     by_id = {r.get("id"): r for r in manifest["records"]}
     resolved_id = (manifest.get("project_aliases") or {}).get(args.id, args.id)
-    rec = by_id.get(resolved_id)
-    if rec is None:
+    if resolved_id not in by_id:
         print(f"los: record not found: {args.id}", file=sys.stderr)
         return 2
-    ids = set()
-    for key in ("concepts", "sources", "contexts", "notes", "program_ids",
-                "module_ids", "unit_ids", "unit_order", "related_module_ids"):
-        ids.update(rec.get(key, []) or [])
-    if rec.get("workspace_id"):
-        ids.add(rec["workspace_id"])
-    for key in ("area_id", "module_id", "unit_id", "current_study_map"):
-        if rec.get(key):
-            ids.add(rec[key])
-    backlinks = manifest.get("backlinks", {})
-    for table in ("concept_to_notes", "source_to_notes", "workspace_to_notes",
-                  "module_to_workspaces", "unit_to_workspaces", "module_to_units",
-                  "source_to_units"):
-        ids.update((backlinks.get(table) or {}).get(args.id, []) or [])
-    for relation in manifest.get("relations", []):
-        if relation.get("from") == args.id:
-            ids.add(relation.get("to"))
-        if relation.get("to") == resolved_id:
-            ids.add(relation.get("from"))
-    for relation in manifest.get("project_relationships", []):
-        if relation.get("from_project_id") == resolved_id:
-            ids.add(relation.get("to_id"))
-        if relation.get("to_id") == resolved_id:
-            ids.add(relation.get("from_project_id"))
-    out = [{k: by_id[rid].get(k) for k in ("id", "type", "title", "path")}
-           for rid in sorted(ids) if rid in by_id]
+    out = related_records(manifest, resolved_id, repo)
     print(json.dumps(out, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
