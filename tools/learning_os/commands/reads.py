@@ -68,6 +68,48 @@ def record_payload(manifest, record_id):
     return payload
 
 
+def _structure_node_ids(container):
+    """Every structure node id in a project structure, children included."""
+    ids = []
+    if not isinstance(container, dict):
+        return ids
+    for key in ("nodes", "children"):
+        for node in container.get(key) or []:
+            if not isinstance(node, dict):
+                continue
+            if node.get("id"):
+                ids.append(node["id"])
+            ids.extend(_structure_node_ids(node))
+    return ids
+
+
+def describe_unresolved_reference(manifest, record_id):
+    """Name the record that references an unresolvable id, if there is one.
+
+    Projected records advertise ids that are not records themselves
+    (project milestone_ids and structure node ids). On an inspect miss,
+    point the caller at the referring record instead of a bare not-found.
+    Returns None when nothing references the id.
+    """
+    for record in manifest.get("records", []) or []:
+        referrer = record.get("id")
+        if not referrer:
+            continue
+        if record_id in (record.get("milestone_ids") or []):
+            return (f"referenced by {referrer} (project) in milestone_ids; "
+                    f"milestones are not inspectable records — "
+                    f"inspect {referrer} to see milestone status in its structure")
+        if record_id in _structure_node_ids(record.get("structure") or {}):
+            return (f"referenced by {referrer} (project) as a structure node; "
+                    f"inspect {referrer} to see it in context")
+        for key, value in record.items():
+            if (key.endswith("_ids") and key != "milestone_ids"
+                    and isinstance(value, list) and record_id in value):
+                return (f"referenced by {referrer} "
+                        f"({record.get('type', 'record')}) in {key}")
+    return None
+
+
 def inspect_batch(args) -> int:
     """Resolve a requested batch once; never return a partial or mixed read."""
     ids = [args.id, *args.more_ids]
@@ -82,7 +124,11 @@ def inspect_batch(args) -> int:
             for record_id in ids:
                 record = record_payload(manifest, record_id)
                 if record is None:
-                    raise WriteRefused(f"record not found: {record_id}")
+                    message = f"record not found: {record_id}"
+                    hint = describe_unresolved_reference(manifest, record_id)
+                    if hint:
+                        message += f"\nlos: hint: {hint}"
+                    raise WriteRefused(message)
                 records.append(record)
             return _print_stable(root, snapshot, {
                 "contract": "record-batch", "requested_ids": ids, "records": records,

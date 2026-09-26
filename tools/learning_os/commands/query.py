@@ -14,7 +14,14 @@ from learning_os.loader import load_repo
 from learning_os.pathing import PathBoundaryError, read_text_inside
 from learning_os.rules import validate
 
-from .reads import brief_bootstrap, compact_bootstrap, content_search, inspect_batch, record_payload
+from .reads import (
+    brief_bootstrap,
+    compact_bootstrap,
+    content_search,
+    describe_unresolved_reference,
+    inspect_batch,
+    record_payload,
+)
 from .support import (
     _delegate,
     _fresh_manifest,
@@ -292,6 +299,9 @@ def cmd_inspect(args) -> int:
     payload = record_payload(manifest, args.id)
     if payload is None:
         print(f"los: record not found: {args.id}", file=sys.stderr)
+        hint = describe_unresolved_reference(manifest, args.id)
+        if hint:
+            print(f"los: hint: {hint}", file=sys.stderr)
         return 2
     print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
