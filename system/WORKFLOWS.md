@@ -798,7 +798,10 @@ construction recipe — nothing else is needed.
    guards the request instead: `capture.create` takes
    `capture-request:<idempotency-key>`, `garden.seed.create` takes
    `garden-request:<idempotency-key>`, both at revision 0 for a fresh
-   key.
+   key. Common shapes: `stage.note.write` guards its unit;
+   `stage.progress.update` and `stage.attachment.add` guard the unit and
+   that unit's study map. A refusal names the exact expected set
+   (`artifacts=[...]`) — copy it, re-read revisions, and re-seal.
 4. **Identities.** `request_id` and `idempotency_key` are caller-chosen
    (1–128 chars, `^[A-Za-z0-9][A-Za-z0-9._:-]*$`). Reuse the same key for
    retries of the *same* approved intent (an exact retry replays the
