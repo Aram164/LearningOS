@@ -339,6 +339,62 @@ def detect_reviewer_correction_pattern(
     return tuple(goals)
 
 
+def detect_claims_needing_review(
+    *,
+    claims: Mapping[str, Mapping[str, str]],
+    known_ids: Sequence[str] = (),
+) -> tuple[CandidateGoal, ...]:
+    """Judged claims still need a reviewer: review the unreviewed, resolve
+    the contested.
+
+    A judged-but-never-reviewed claim is review debt; a contested claim is
+    disagreement, which needs a reviewer rather than a recompute. Stale
+    and withdrawn claims stay out: the lineage-stale goals already cover
+    the stale ones, and a withdrawn claim needs a fresh judgment through
+    its own lifecycle, not a review. One goal per claim.
+    """
+    try:
+        items = sorted(claims.items())
+    except (TypeError, ValueError) as exc:
+        raise GoalError(f"malformed claims: {exc}") from exc
+    goals = []
+    for claim_id, record in items:
+        if not isinstance(record, Mapping):
+            raise GoalError(f"malformed claim {claim_id!r}: expected a mapping")
+        reviewed_by = record.get("reviewed_by", "")
+        status = record.get("status", "")
+        if not isinstance(reviewed_by, str) or not isinstance(status, str):
+            raise GoalError(f"malformed claim {claim_id!r}: expected strings")
+        if status in ("stale", "withdrawn"):
+            continue
+        if status == "contested":
+            goal = _emit(
+                "claims-needing-review", str(claim_id),
+                f"Resolve {claim_id}: contested claim needs a reviewer",
+                "A reviewer disputes the verdict itself; disagreement needs "
+                "a reviewer, not a recompute.",
+                [f"claim:{claim_id}"],
+                known_ids,
+            )
+        elif status == "supported":
+            if reviewed_by.strip():
+                continue
+            goal = _emit(
+                "claims-needing-review", str(claim_id),
+                f"Review {claim_id}: judged but never reviewed",
+                "Judged with no recorded review; the evidence trail must "
+                "identify the actual review and its limits.",
+                [f"claim:{claim_id}"],
+                known_ids,
+            )
+        else:
+            raise GoalError(
+                f"malformed claim {claim_id!r}: unknown status {status!r}")
+        if goal is not None:
+            goals.append(goal)
+    return tuple(goals)
+
+
 # ---- clustering: one shared cause, one row ----------------------------------
 
 #: Evidence prefixes that name the shared cause behind a fanned-out goal.

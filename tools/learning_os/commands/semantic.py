@@ -1,4 +1,4 @@
-"""`los semantic`: the query surface over the 23 semantic predicates.
+"""`los semantic`: the query surface over the 26 semantic predicates.
 
 A semantic layer exists to be queried — applications stop re-deriving
 meaning from scattered YAML because they can ask. Each predicate already

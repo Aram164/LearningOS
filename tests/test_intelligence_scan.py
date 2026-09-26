@@ -92,15 +92,29 @@ def test_stale_claims_and_obligations_emit_with_evidence():
     assert goals[1].evidence == ("unit:unit-needs-map",)
 
 
+def test_claim_reviews_reach_the_review_detector():
+    goals = scan_observations(_input(
+        claim_reviews=(("covers:route-1", "", "supported"),
+                       ("covers:route-2", "aram", "supported"),
+                       ("covers:route-3", "aram", "contested")),
+    ))
+    assert [(goal.goal_id, goal.detector) for goal in goals] == [
+        ("claims-needing-review:covers:route-1", "claims-needing-review"),
+        ("claims-needing-review:covers:route-3", "claims-needing-review"),
+    ]
+
+
 def test_known_ids_dedup_every_detector():
     known = ("covering-routes-stale:route-1",
              "lineage-stale:covers:route-9",
-             "study-map-obligation:unit-needs-map")
+             "study-map-obligation:unit-needs-map",
+             "claims-needing-review:covers:route-1")
     goals = scan_observations(_input(
         changed_nodes=("knowledge-a",),
         route_covers=(("route-1", ("knowledge-a",)),),
         stale_claims=(("covers:route-9", ("unit-x",)),),
         obligations=("unit-needs-map",),
+        claim_reviews=(("covers:route-1", "", "supported"),),
         known_ids=known,
     ))
     assert goals == ()
@@ -317,7 +331,14 @@ def test_scan_recency_and_source_join_use_real_git_history(mini_repo, monkeypatc
         goal_ids = {goal.goal_id for goal in goals}
         assert f"covering-routes-stale:{route_id}" in goal_ids
         assert f"source-changed-under-claim:covers:{route_id}" in goal_ids
-        assert not any("route-unrelated" in goal_id for goal_id in goal_ids)
+        assert not any(
+            goal_id.startswith(("covering-routes-stale:", "lineage-stale:",
+                                "source-changed-under-claim:"))
+            and "route-unrelated" in goal_id
+            for goal_id in goal_ids
+        )
+        assert ("claims-needing-review:covers:route-unrelated"
+                in goal_ids)
 
         proc = subprocess.run(
             [sys.executable, str(LOS), "--root", str(mini_repo),

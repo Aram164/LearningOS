@@ -17,7 +17,7 @@ This layer is **interpretation, not stored truth**:
   (`genout.projection`) keeps answering derivations per row; the contract
   owns their meaning so agents read one declared layer.
 
-## Predicates (Phase 1: 23)
+## Predicates (Phase 1: 26)
 
 Each predicate names its authoritative inputs — the only facts it may read —
 and its fallback rule for incomplete or unknown input. The fallback direction
@@ -50,6 +50,9 @@ goal-detector motivating it.
 | `RelationMayApply` | type, endpoints, inferred flag | ADR-015; OPERATOR.md rule 2 | inferred or malformed never applies |
 | `DossierFresh` | cached/current hashes | Phase 5 dossier contract | empty maps never fresh |
 | `AttemptConsistent` | attempt/sitting termins | OPERATOR.md rule 5 | malformed lists inconsistent |
+| `NeedsSourceReview` | reviewed flag, bytes-current flag | OPERATOR.md rule 2 | non-boolean inputs never fire |
+| `RequiresHumanJudgment` | decision kind, rule-decidable flag | OPERATOR.md rule 10, boundary 17 | malformed inputs never fire |
+| `CurrentScopeAuthority` | fact kind + owning ids, superseded paths, replacement | ARCHITECTURE.md §5.5; OPERATOR.md boundaries 4–5 | unknown or superseded-without-replacement → `"unknown"` |
 
 Staleness is not completeness: artifacts a claim never read cannot stale
 it, and an unreadable read set is stale rather than trusted. Deleting this
@@ -110,10 +113,14 @@ identify the actual review and its limits.
 ## Candidate goals (Phase 3)
 
 The engine surfaces what is worth investigating and never mutates meaning
-itself. Five read-only detectors — covering routes gone stale, sources
+itself. Six read-only detectors — covering routes gone stale, sources
 changed under claims, repeated question classes with no VOQ, inspections
-with no dossier, systematic reviewer corrections — emit goals with
-rationale and evidence, thresholded and deduplicated. Each goal then walks
+with no dossier, systematic reviewer corrections, judged claims still
+needing a reviewer — emit goals with rationale and evidence, thresholded
+and deduplicated. The sixth motivates the review predicates:
+`NeedsSourceReview` fires on its signals, `RequiresHumanJudgment` on its
+contested goals, and reviewers re-resolve moved authorities through
+`CurrentScopeAuthority`. Each goal then walks
 `detected → formulated → eligible → proposed → authorized → planned →
 executing → verified → closed` (plus `deferred/rejected/stale/superseded`),
 one step at a time; only Aram authorizes. The queue lives under
@@ -298,7 +305,7 @@ with updated predicates, fixtures, and lineage.
 
 ## Status
 
-Phase 1 (contract + VOQs): 23 predicates end-to-end with registry plus
+Phase 1 (contract + VOQs): 26 predicates end-to-end with registry plus
 `evaluate()` entry point, proven by `tests/test_semantic_contract.py` and
 the VOQ suite. Phase 1.5 adds the policy-query envelope; Phase 2 adds
 lineage above. Full vision and work plan:
