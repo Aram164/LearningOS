@@ -123,10 +123,10 @@ def stable_generated_at(root: Path) -> str:
     function of tree state — identical trees still rebuild
     byte-identically — and clean trees stamp exactly as before.
 
-    A UTC commit time is always spelled ``+00:00``. Git's ``%cI`` spells it
-    ``+00:00`` up to 2.42 and ``Z`` in newer releases (observed: 2.54, 2.55),
-    so without this one normalisation the same history stamps different view
-    bytes on different machines.
+    A UTC commit time is always spelled ``+00:00``. Git's ``%cI`` spelling
+    of UTC differs by version (observed: 2.42 prints ``+00:00``; 2.54 and
+    2.55 print ``Z``), so without this one normalisation the same history
+    stamps different view bytes on different machines.
     """
     try:
         ts = read_history(root, "-1", "--format=%cI").strip()
