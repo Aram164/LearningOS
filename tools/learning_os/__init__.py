@@ -68,8 +68,9 @@ def _check_deps() -> None:
     if problems:
         _sys.stderr.write(
             "learning_os: cannot run — " + "; ".join(problems) + ".\n"
-            "Fix with:  make setup   (creates .venv and installs pyproject.toml)\n"
-            "Or directly:  python3 -m pip install -e \".[dev]\"\n"
+            "Fix with:  make setup-lean   (fast: creates .venv with runtime deps only)\n"
+            "Or full:  make setup   (adds pytest, ruff)\n"
+            "Or directly:  python3 -m pip install -e \".\"\n"
             "(add --break-system-packages if pip refuses on a system Python)\n")
         raise SystemExit(2)
 
