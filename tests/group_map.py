@@ -245,6 +245,7 @@ PATH_RULES: list[tuple[str, frozenset[str] | None]] = [
     ("tools/learning_os/commands/workspace.py", frozenset({"gateway"})),
     ("tools/learning_os/diagnostics/", frozenset({"gateway"})),
     ("tools/diagnostics_prune.py", frozenset({"gateway"})),
+    ("tools/seal_envelope.py", frozenset({"gateway"})),
     ("tools/learning_os/contracts/", frozenset({"contracts", "gateway"})),
     ("tools/contract_bundle.py", frozenset({"contracts"})),
     ("tools/schema_contract.py", frozenset({"contracts"})),

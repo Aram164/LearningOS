@@ -50,6 +50,7 @@ ENTRYPOINTS = (
     "refresh_amls_fixture.py",
     "release_pair_receipt.py",
     "schema_contract.py",
+    "seal_envelope.py",
     "stress_check.py",
     "tree_contract.py",
     "validate.py",
