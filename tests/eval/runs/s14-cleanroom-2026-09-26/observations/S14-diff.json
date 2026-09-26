@@ -1,0 +1,79 @@
+{
+  "from": "S14-before",
+  "to": "S14-after",
+  "canonical": {
+    "added": [
+      "operations/transactions/idempotency.yaml",
+      "operations/transactions/revisions.yaml",
+      "operations/transactions/transaction-20260926-034419-001.yaml",
+      "operations/transactions/transaction-20260926-034420-001.yaml"
+    ],
+    "removed": [],
+    "modified": [
+      "knowledge/notes/machine-learning/note-svm-kernel-trick.md",
+      "knowledge/notes/mathematics/note-kernel-density-estimation.md"
+    ]
+  },
+  "canonical_digest_changed": true,
+  "receipts_added": [
+    "operations/transactions/idempotency.yaml",
+    "operations/transactions/revisions.yaml",
+    "operations/transactions/transaction-20260926-034419-001.yaml",
+    "operations/transactions/transaction-20260926-034420-001.yaml"
+  ],
+  "inflight_after": [],
+  "derived": {
+    "added": [],
+    "removed": [],
+    "modified": [
+      "generated/backlinks.json",
+      "generated/manifest.json",
+      "generated/reports/validation-report.md"
+    ],
+    "bytes_before": 985095,
+    "bytes_after": 984096
+  },
+  "diagnostics_added": [],
+  "ai_actions_added": [],
+  "new_operations": [
+    {
+      "trace_id": "5754dabfa2fd14cbea76f8c93492ee00",
+      "request_id": "request-s14-s14-note-kernel-density-estimation-1",
+      "capability": "note.revise",
+      "started_at": 1790387060.7604768,
+      "duration_ms": 574.9,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    },
+    {
+      "trace_id": "513a6307e25a6cd556670bb95e9f8bbf",
+      "request_id": "request-s14-s14-note-svm-kernel-trick-1",
+      "capability": "note.revise",
+      "started_at": 1790387059.648041,
+      "duration_ms": 570.2,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    }
+  ],
+  "head": {
+    "before": "00becd4796c09e42199c9dd0d0f75ed5b99c4185",
+    "after": "00becd4796c09e42199c9dd0d0f75ed5b99c4185"
+  },
+  "git_status_after": [
+    " M knowledge/notes/machine-learning/note-svm-kernel-trick.md",
+    " M knowledge/notes/mathematics/note-kernel-density-estimation.md",
+    "?? operations/transactions/idempotency.yaml",
+    "?? operations/transactions/revisions.yaml",
+    "?? operations/transactions/transaction-20260926-034419-001.yaml",
+    "?? operations/transactions/transaction-20260926-034420-001.yaml"
+  ],
+  "flags": []
+}

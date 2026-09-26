@@ -1,0 +1,28 @@
+{
+  "from": "S27-before",
+  "to": "S27-after",
+  "canonical": {
+    "added": [],
+    "removed": [],
+    "modified": []
+  },
+  "canonical_digest_changed": false,
+  "receipts_added": [],
+  "inflight_after": [],
+  "derived": {
+    "added": [],
+    "removed": [],
+    "modified": [],
+    "bytes_before": 984523,
+    "bytes_after": 984523
+  },
+  "diagnostics_added": [],
+  "ai_actions_added": [],
+  "new_operations": [],
+  "head": {
+    "before": "00becd4796c09e42199c9dd0d0f75ed5b99c4185",
+    "after": "00becd4796c09e42199c9dd0d0f75ed5b99c4185"
+  },
+  "git_status_after": [],
+  "flags": []
+}
