@@ -14,7 +14,11 @@ import os
 import re
 from dataclasses import dataclass
 
-from .conventions import TRACE_DEBUG_FILE_ENV, TRACEPARENT_ENV
+from .conventions import (
+    TRACE_DEBUG_FILE_ENV,
+    TRACE_OWNERSHIP_ENV,
+    TRACEPARENT_ENV,
+)
 
 #: Strict W3C traceparent, version 00 only: ``00-<trace-id>-<span-id>-<flags>``.
 _TRACEPARENT_RE = re.compile(
@@ -70,6 +74,26 @@ def trace_context_from_env(env: os._Environ | dict | None = None) -> TraceContex
     except Exception:
         return None
     return parse_traceparent(value)
+
+
+def is_learningos_owned(propagated: TraceContext | None,
+                        env: os._Environ | dict | None = None) -> bool:
+    """Whether the propagated context is explicitly LearningOS-owned.
+
+    Owner-selected Option A (JF-04): the UI marks every dispatch it mints
+    by setting ``LOS_TRACE_OWNED`` to the operation id alongside
+    TRACEPARENT. Only a marker naming this exact context adopts it as
+    operation identity; an absent, mismatched, or malformed marker leaves
+    the context as ambient parentage, never identity.
+    """
+    if propagated is None:
+        return False
+    source = os.environ if env is None else env
+    try:
+        marker = source.get(TRACE_OWNERSHIP_ENV)
+    except Exception:
+        return False
+    return isinstance(marker, str) and marker.strip() == propagated.trace_id
 
 
 def record_debug(

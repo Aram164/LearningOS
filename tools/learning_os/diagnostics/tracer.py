@@ -5,12 +5,14 @@ is a strict no-op when the sink is unset. Every function swallows its own
 failures: instrumentation observes the write path and can never break, slow
 materially, or alter it.
 
-Operation identity: one lazily minted process operation, always. A
-propagated UI context is parentage for correlation, never identity:
-adopting it merged every process sharing one ambient trace into one
-misreported operation (JF-04). A CLI invocation is one operation by
-construction, so the process-global identity cannot cross contexts
-between processes.
+Operation identity: a propagated context the UI explicitly marked as
+LearningOS-owned is adopted as this process's operation, so one UI
+logical operation stays one LearningOS operation (JF-04, owner-selected
+Option A). Anything else — absent, unmarked, or mismatched — is
+parentage for correlation under a freshly minted operation: adopting an
+ambient trace merged every process sharing it into one misreported
+operation. A CLI invocation is one operation by construction, so the
+process-global identity cannot cross contexts between processes.
 """
 
 from __future__ import annotations
@@ -21,28 +23,30 @@ import secrets
 import time
 from dataclasses import dataclass
 
-from .context import TraceContext, trace_context_from_env
+from .context import TraceContext, is_learningos_owned, trace_context_from_env
 from .conventions import TRACE_DEBUG_FILE_ENV, VOCAB_VERSION
 from .store import persist_record
 
 _current: TraceContext | None = None
-_current_source: str | None = None
+_current_source: tuple | None = None
 
 
 def operation() -> TraceContext:
-    """This process's operation: minted, with any propagated context as parent."""
+    """This process's operation: an explicitly LearningOS-owned propagated
+    context is adopted as identity; anything else is parentage for a
+    freshly minted operation."""
     global _current, _current_source
     propagated = trace_context_from_env()
-    source = propagated.format() if propagated is not None else None
+    owned = is_learningos_owned(propagated)
+    source = (propagated.format() if propagated is not None else None, owned)
     if _current is None or source != _current_source:
-        if propagated is None:
-            _current = TraceContext(trace_id=secrets.token_hex(16),
-                                    span_id=secrets.token_hex(8))
-        else:
-            _current = TraceContext(trace_id=secrets.token_hex(16),
-                                    span_id=secrets.token_hex(8),
-                                    sampled=propagated.sampled,
-                                    parent=propagated)
+        adopted = propagated is not None and owned
+        _current = TraceContext(
+            trace_id=propagated.trace_id if adopted else secrets.token_hex(16),
+            span_id=secrets.token_hex(8),
+            sampled=propagated.sampled if propagated is not None else True,
+            parent=propagated,
+        )
         _current_source = source
     return _current
 
