@@ -100,6 +100,7 @@ def _generate(pair: dict, **overrides) -> dict:
         "core_root": pair["core"], "ui_root": pair["ui"],
         "core_sha": pair["core_sha"], "ui_sha": pair["ui_sha"],
         "workflow_run_id": "123", "workflow_run_attempt": "1",
+        "live_install_scope": "not-run-live-install-deselected",
     }
     kwargs.update(overrides)
     return rpr.generate(**kwargs)
@@ -121,6 +122,28 @@ def test_a_valid_exact_pair_generates_a_schema_valid_receipt(clean_pair):
         )
     assert receipt["system_check_passed"] is True
     assert receipt["stress_scope"] == "not-run-materials-unprovisioned"
+    assert receipt["live_install_scope"] == "not-run-live-install-deselected"
+
+
+@pytest.mark.parametrize("scope", rpr.LIVE_INSTALL_SCOPES)
+def test_receipt_records_the_declared_live_install_scope(clean_pair, tmp_path, scope):
+    receipt = _generate(clean_pair, live_install_scope=scope)
+    assert receipt["live_install_scope"] == scope
+    rpr.validate_receipt(receipt)
+    artifact = _artifact_dir(clean_pair, receipt, tmp_path)
+    rpr.verify(receipt, artifact)  # must not raise
+
+
+def test_undeclared_live_install_scope_is_refused(clean_pair):
+    with pytest.raises(rpr.ReleasePairReceiptError, match="live_install_scope"):
+        _generate(clean_pair, live_install_scope="maybe")
+
+
+def test_receipt_without_live_install_scope_fails_schema(clean_pair):
+    receipt = _generate(clean_pair)
+    del receipt["live_install_scope"]
+    with pytest.raises(rpr.ReleasePairReceiptError, match="schema validation"):
+        rpr.validate_receipt(receipt)
 
 
 def test_malformed_sha_is_refused(clean_pair):
@@ -289,3 +312,9 @@ def test_release_pair_workflow_runs_system_check():
     text = (rpr.ROOT / ".github" / "workflows" / "release-pair.yml").read_text(encoding="utf-8")
     assert "make system-check" in text
     assert "make -C repository system-check" in text or "working-directory: repository" in text
+
+
+def test_release_pair_workflow_declares_the_deselected_scope():
+    text = (rpr.ROOT / ".github" / "workflows" / "release-pair.yml").read_text(encoding="utf-8")
+    assert "not live_install" in text
+    assert "--live-install-scope not-run-live-install-deselected" in text

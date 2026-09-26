@@ -11,7 +11,8 @@
     "manifest_contract_schema_sha256", "runtime_source_fingerprint",
     "bundle_sha256", "stylesheet_sha256", "shipped_asset_sha256",
     "system_check_passed",
-    "stress_scope", "workflow_run_id", "workflow_run_attempt"
+    "stress_scope", "live_install_scope",
+    "workflow_run_id", "workflow_run_attempt"
   ],
   "properties": {
     "schema_version": {"const": 1},
@@ -42,6 +43,10 @@
     "stress_scope": {
       "enum": ["not-run-materials-unprovisioned", "full"],
       "description": "The workflow checkout provisions neither repository's external materials tree, so `make stress` cannot run in CI; the mandatory stress gate stays local. A receipt states this explicitly rather than implying stress ran."
+    },
+    "live_install_scope": {
+      "enum": ["not-run-live-install-deselected", "full"],
+      "description": "Whether the paired gate ran the `live_install` tests (needing the maintainer's gitignored data or the wrapper root) or deselected them by name. CI states the deselection explicitly rather than implying the full suite ran; the live installation's own system-check records full."
     },
     "workflow_run_id": {"type": "string", "minLength": 1},
     "workflow_run_attempt": {"type": "string", "minLength": 1}
