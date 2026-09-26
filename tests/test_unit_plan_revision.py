@@ -920,6 +920,21 @@ def test_make_entrypoints_parse(repo_root):
         assert result.returncode == 0, result.stderr
 
 
+def test_setup_lean_overrides_no_pip_environment_option(repo_root):
+    import re
+    import subprocess
+
+    # make exports a command-line override into every recipe's environment,
+    # and pip reads PIP_<OPTION> variables as option defaults. The first
+    # setup-lean passed PIP_EDITABLE=., so `pip install --upgrade pip` and
+    # pip's own build-dependency install also installed `-e .`, and every
+    # fresh clone failed. `make -n` parses fine either way, hence this check.
+    result = subprocess.run(["make", "-n", "setup-lean"], cwd=repo_root,
+                            capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr
+    assert not re.search(r"\bPIP_[A-Z_]+=", result.stdout), result.stdout
+
+
 def test_check_python_refuses_an_unusable_interpreter(repo_root):
     import subprocess
 
