@@ -283,6 +283,9 @@ def test_the_live_perimeter_has_no_errors():
 
 
 @pytest.mark.full_repo
+# Reads the wrapper root above repository/, which exists only in the live
+# installation; a CI checkout has no semestercontext/ around it.
+@pytest.mark.live_install
 def test_every_pending_disposition_entry_is_still_on_disk():
     """The list is shrink-only.
 

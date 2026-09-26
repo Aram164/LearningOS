@@ -90,7 +90,15 @@ jobs:
       # check` (build, typecheck, contract gate, fixture suites, and the
       # real cross-process Gateway recovery harness against this Core), so
       # ordinary CI exercises the identical command a release does locally.
+      #
+      # `live_install` tests need state no checkout can carry: the
+      # maintainer's gitignored data, or the wrapper root above repository/.
+      # They are deselected here by name, never skipped, so the summary line
+      # counts them as deselected; the live installation's own
+      # `make system-check` still runs them.
       - name: paired release gate (make system-check)
+        env:
+          PYTEST_ADDOPTS: '-m "not live_install"'
         run: make system-check
       - name: URL-rot audit (weekly only)
         if: github.event_name == 'schedule'

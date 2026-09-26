@@ -34,6 +34,7 @@ pythonpath = ["tools"]
 testpaths = ["tests"]
 markers = [
   "full_repo: exercises the checked-in repository state rather than a synthetic fixture",
+  "live_install: needs state only the live installation has (gitignored maintainer data, or the wrapper root above repository/); CI deselects it by name",
   # Area groups (tests/group_map.py; applied at collection by conftest.py).
   "studyplan: curriculum, study maps, routes, units, plan revisions",
   "materials: materials farm, attachments, slices, summaries, ingestion",

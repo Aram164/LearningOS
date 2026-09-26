@@ -102,8 +102,16 @@ jobs:
       # checkout provisions neither repository's external materials tree, so
       # it stays the mandatory *local* gate — the receipt below records this
       # scope explicitly rather than implying stress ran.
+      #
+      # `live_install` tests need state no checkout can carry: the
+      # maintainer's gitignored data, or the wrapper root above repository/.
+      # They are deselected here by name, never skipped, so the summary line
+      # counts them as deselected; the live installation's own
+      # `make system-check` still runs them.
       - name: paired release gate (make system-check)
         working-directory: repository
+        env:
+          PYTEST_ADDOPTS: '-m "not live_install"'
         run: make system-check
 
       # The UI build always uses its own checked-out Git revision (never a

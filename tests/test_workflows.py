@@ -105,6 +105,22 @@ def test_ordinary_ci_does_not_run_full_stress():
     assert "stress_check.py" not in runs
 
 
+def test_ci_deselects_only_live_installation_tests():
+    """Both workflows drop exactly the `live_install` marker from the gate.
+
+    Those tests need state no checkout carries. Anything broader — `not
+    full_repo`, a `-k` filter, a second marker — would quietly shrink what a
+    green run proves, so the selection is pinned exactly.
+    """
+    for workflow in (VALIDATE, RELEASE_PAIR):
+        gates = [step for job in _load(workflow)["jobs"].values()
+                 for step in job["steps"]
+                 if "make system-check" in step.get("run", "")]
+        assert len(gates) == 1, workflow.name
+        assert gates[0].get("env") == {"PYTEST_ADDOPTS": '-m "not live_install"'}, (
+            workflow.name)
+
+
 def test_workflow_run_scripts_never_interpolate_github_expressions():
     """Expressions are data, not shell source; steps receive them through env."""
     for workflow in (VALIDATE, RELEASE_PAIR):
