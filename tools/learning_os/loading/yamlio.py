@@ -78,13 +78,22 @@ def _read_text(path: Path, root: Path, *, errors: str = "strict") -> str:
 def _normalize(value):
     """YAML 1.1 auto-parses ISO dates; the schemas expect strings. Normalize
     recursively so the logical model is representation-independent."""
+    t = type(value)
+    if t is str or t is int or t is float or t is bool or value is None:
+        return value
+    if t is dict:
+        return {k: _normalize(v) for k, v in value.items()}
+    if t is list:
+        return [_normalize(v) for v in value]
+
     import datetime as _dt
-    if isinstance(value, (_dt.date, _dt.datetime)):
-        return value.isoformat()
+
     if isinstance(value, dict):
         return {k: _normalize(v) for k, v in value.items()}
     if isinstance(value, list):
         return [_normalize(v) for v in value]
+    if isinstance(value, (_dt.date, _dt.datetime)):
+        return value.isoformat()
     return value
 
 
@@ -99,7 +108,7 @@ def parse_frontmatter(text: str, path: Path) -> tuple[dict, str]:
         raise LoaderError(f"{path}: invalid YAML frontmatter: {exc}") from exc
     if not isinstance(meta, dict):
         raise LoaderError(f"{path}: frontmatter is not a mapping")
-    return _normalize(meta), text[m.end():]
+    return _normalize(meta), text[m.end() :]
 
 
 def _load_yaml(path: Path, root: Path) -> dict:
