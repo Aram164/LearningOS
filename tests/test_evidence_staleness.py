@@ -4,7 +4,7 @@ predicate query surface.
 Finding 3 compares the fingerprint recorded on each observation against
 the live requirement — a belief held under assumptions that later moved
 — and feeds mismatches to the scan as `evidence-superseded` goals plus
-one line on `los resume`. Finding 4 exposes the 23 predicates through
+one line on `los resume`. Finding 4 exposes the 26 predicates through
 `los semantic`, so agents can ask instead of re-deriving.
 """
 
@@ -112,15 +112,19 @@ def test_resume_reports_results_against_a_moved_requirement(mini_repo: Path):
     assert "against a requirement that has since changed" in text.stdout
 
 
-def test_semantic_list_registers_23_predicates(mini_repo: Path):
+def test_semantic_list_registers_26_predicates(mini_repo: Path):
     proc = run_los(mini_repo, "semantic", "--list")
     assert proc.returncode == 0, proc.stderr
     registry = json.loads(proc.stdout)
-    assert len(registry) == 23
+    assert len(registry) == 26
     by_name = {row["name"]: row for row in registry}
     assert by_name["NeedsStudyMap"]["inputs"] == [
         "unit_status", "module_status", "has_study_map"]
     assert by_name["NeedsStudyMap"]["authority"] == "OPERATOR.md rule 6"
+    assert by_name["NeedsSourceReview"]["inputs"] == [
+        "reviewed", "bytes_current"]
+    assert by_name["CurrentScopeAuthority"]["authority"] == (
+        "ARCHITECTURE.md §5.5; OPERATOR.md boundaries 4-5")
     assert all({"name", "inputs", "authority", "description"} <= set(row)
                for row in registry)
 

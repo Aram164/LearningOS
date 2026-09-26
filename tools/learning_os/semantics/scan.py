@@ -48,6 +48,7 @@ from ..loader import load_repo
 from ..pathing import PathBoundaryError, resolve_symlinks_inside
 from .goals import (
     CandidateGoal,
+    detect_claims_needing_review,
     detect_covering_routes_stale,
     detect_source_changed_under_claim,
     stale_observations,
@@ -115,6 +116,7 @@ class ScanInput:
     obligations: tuple[str, ...] = ()
     evidence_stale: tuple[tuple[str, str], ...] = ()
     node_units: tuple[tuple[str, str], ...] = ()
+    claim_reviews: tuple[tuple[str, str, str], ...] = ()
     known_ids: tuple[str, ...] = ()
 
 
@@ -143,6 +145,11 @@ def scan_observations(observations: ScanInput) -> tuple[CandidateGoal, ...]:
         changed_sources=list(observations.changed_sources),
         claim_sources={cid: list(sources)
                        for cid, sources in observations.claim_sources},
+        known_ids=list(observations.known_ids),
+    ))
+    goals.extend(detect_claims_needing_review(
+        claims={cid: {"reviewed_by": reviewed, "status": status}
+                for cid, reviewed, status in observations.claim_reviews},
         known_ids=list(observations.known_ids),
     ))
     for claim_id, moved in observations.stale_claims:
@@ -413,6 +420,7 @@ def collect_observations(root: Path | str, *,
     manifest_files = _scan_manifest_files(root)
     claim_sources: dict[str, list[str]] = {}
     stale: list[tuple[str, tuple[str, ...]]] = []
+    reviews: list[tuple[str, str, str]] = []
     # Each stored evidence key is resolved against live bytes once per
     # collection: shared evidence is read once no matter how many
     # dependent claims pin it. Unresolvable keys stay absent and fail
@@ -461,6 +469,12 @@ def collect_observations(root: Path | str, *,
                 claim_id,
                 tuple(sorted(set(moved) | set(verdict.blocked_by))),
             ))
+        reviewed = lineage.reviewed_by
+        reviews.append((
+            claim_id,
+            reviewed if isinstance(reviewed, str) else "",
+            verdict.status if isinstance(verdict.status, str) else "",
+        ))
     study_map_units = set()
     for smap in (getattr(repo, "study_maps", {}) or {}).values():
         unit_id = getattr(smap, "unit_id", None)
@@ -509,6 +523,7 @@ def collect_observations(root: Path | str, *,
         stale_claims=tuple(sorted(stale)),
         obligations=tuple(sorted(obligations)),
         evidence_stale=evidence_stale,
+        claim_reviews=tuple(sorted(reviews)),
         known_ids=decided,
     )
 

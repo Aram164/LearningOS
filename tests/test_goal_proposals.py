@@ -12,6 +12,7 @@ import pytest
 
 from learning_os.semantics import (
     GoalError,
+    detect_claims_needing_review,
     detect_covering_routes_stale,
     detect_inspection_without_dossier,
     detect_repeated_question_gap,
@@ -92,6 +93,48 @@ def test_reviewer_corrections_blame_the_contract():
     )
     assert goal.goal_id == "reviewer-correction-pattern:locators"
     assert "contract" in goal.rationale
+
+
+def test_unreviewed_claims_fire_and_reviewed_ones_stay_silent():
+    goals = detect_claims_needing_review(
+        claims={
+            "covers:route-1": {"reviewed_by": "", "status": "supported"},
+            "covers:route-2": {"reviewed_by": "aram", "status": "supported"},
+        },
+    )
+    assert [goal.goal_id for goal in goals] == [
+        "claims-needing-review:covers:route-1"]
+    assert goals[0].state == "detected"
+    assert "claim:covers:route-1" in goals[0].evidence
+
+
+def test_contested_claims_need_a_reviewer_not_a_recompute():
+    (goal,) = detect_claims_needing_review(
+        claims={"covers:route-1": {"reviewed_by": "aram",
+                                   "status": "contested"}},
+    )
+    assert goal.goal_id == "claims-needing-review:covers:route-1"
+    assert goal.title.startswith("Resolve ")
+    assert "reviewer" in goal.rationale
+
+
+def test_stale_and_withdrawn_claims_stay_out_of_review():
+    assert detect_claims_needing_review(
+        claims={
+            "covers:route-1": {"reviewed_by": "", "status": "stale"},
+            "covers:route-2": {"reviewed_by": "", "status": "withdrawn"},
+        },
+    ) == ()
+
+
+def test_review_signals_fail_closed():
+    with pytest.raises(GoalError):
+        detect_claims_needing_review(
+            claims={"covers:route-1": {"reviewed_by": "",
+                                       "status": "judged"}})
+    with pytest.raises(GoalError):
+        detect_claims_needing_review(
+            claims={"covers:route-1": "supported"})
 
 
 def test_known_goals_do_not_refire():

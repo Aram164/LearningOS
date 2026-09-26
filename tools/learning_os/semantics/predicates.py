@@ -585,6 +585,86 @@ def attempt_consistent(
         return False
 
 
+def needs_source_review(*, reviewed: bool, bytes_current: bool) -> bool:
+    """Whether a source-derived claim needs (re-)review.
+
+    A claim needs review when it was never reviewed or the bytes it was
+    reviewed against moved since. The claims-needing-review detector
+    surfaces instances; reviewers re-resolve authority through
+    CurrentScopeAuthority. Fallback: non-boolean inputs never fire.
+    """
+    if not isinstance(reviewed, bool) or not isinstance(bytes_current, bool):
+        return False
+    return (not reviewed) or (not bytes_current)
+
+
+#: Decision kinds only a human makes, whatever the evidence says.
+JUDGMENT_ONLY = frozenset({
+    "authorization",
+    "scope-choice",
+    "conflict-resolution",
+    "pedagogical-stance",
+    "mastery-assessment",
+})
+
+
+def requires_human_judgment(*, decision_kind: str, rule_decidable: bool) -> bool:
+    """Whether a decision needs a human rather than a rule.
+
+    Judgment-only kinds (authorization, scope choice, conflict
+    resolution, pedagogical stance, mastery assessment) always need one;
+    every other kind needs one exactly when no rule decides it.
+    Fallback: malformed inputs never fire.
+    """
+    if not isinstance(decision_kind, str) or not decision_kind:
+        return False
+    if not isinstance(rule_decidable, bool):
+        return False
+    return (decision_kind in JUDGMENT_ONLY) or (not rule_decidable)
+
+
+def current_scope_authority(
+    *,
+    fact_kind: str,
+    module_id: str = "",
+    unit_id: str = "",
+    workspace_id: str = "",
+    note_id: str = "",
+    program_id: str = "",
+    source_id: str = "",
+    superseded: Sequence[str] = (),
+    replacement: str = "",
+) -> str:
+    """Which record presently authorizes a fact, given supersession.
+
+    ScopeAuthority names the static owner; this names the effective one:
+    the static owner while it stands, its live replacement once the
+    owner is superseded, ``"unknown"`` when neither answers. Reviewers
+    apply it to claims citing moved authorities. Fallback: never guess —
+    unknown kinds, missing ids, malformed supersession, and a superseded
+    replacement all answer ``"unknown"``.
+    """
+    owner = scope_authority(
+        fact_kind=fact_kind, module_id=module_id, unit_id=unit_id,
+        workspace_id=workspace_id, note_id=note_id, program_id=program_id,
+        source_id=source_id,
+    )
+    if owner == "unknown":
+        return "unknown"
+    if isinstance(superseded, str):
+        return "unknown"
+    try:
+        retired = {str(path) for path in superseded}
+    except TypeError:
+        return "unknown"
+    if owner not in retired:
+        return owner
+    if (isinstance(replacement, str) and replacement
+            and replacement not in retired):
+        return replacement
+    return "unknown"
+
+
 @dataclass(frozen=True)
 class Predicate:
     """One named semantic judgment plus the metadata a consumer needs."""
@@ -760,6 +840,28 @@ PREDICATES: Mapping[str, Predicate] = {
         ("attempt_termins", "sitting_termins"),
         "OPERATOR.md rule 5",
         "Every recorded attempt names a real sitting of its module.",
+    ),
+    "NeedsSourceReview": _predicate(
+        "NeedsSourceReview", needs_source_review,
+        ("reviewed", "bytes_current"),
+        "OPERATOR.md rule 2",
+        "A source-derived claim needs review when never reviewed or its "
+        "bytes moved since.",
+    ),
+    "RequiresHumanJudgment": _predicate(
+        "RequiresHumanJudgment", requires_human_judgment,
+        ("decision_kind", "rule_decidable"),
+        "OPERATOR.md rule 10, boundary 17",
+        "Judgment-only kinds always need a human; other kinds need one "
+        "exactly when no rule decides them.",
+    ),
+    "CurrentScopeAuthority": _predicate(
+        "CurrentScopeAuthority", current_scope_authority,
+        ("fact_kind", "module_id", "unit_id", "workspace_id", "note_id",
+         "program_id", "source_id", "superseded", "replacement"),
+        "ARCHITECTURE.md §5.5; OPERATOR.md boundaries 4-5",
+        "The presently-effective authority for a fact: the static owner "
+        "while it stands, its live replacement once superseded.",
     ),
 }
 
