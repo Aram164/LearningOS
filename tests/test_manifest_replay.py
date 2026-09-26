@@ -79,10 +79,37 @@ def _rewrite(path: Path, mutate) -> None:
     path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
 
 
+def _request_to_flip(copy: Path) -> Path:
+    """The ai-action request whose status flip exercises the ai-actions node.
+
+    The live installation flips its own gitignored pilot request; a bare
+    checkout (CI included) synthesizes a schema-valid request in the
+    disposable copy instead, so the replay never depends on maintainer
+    data. The bundle carries every field the manifest's aiRequest rows
+    require, with inert replay values throughout.
+    """
+    pilot = (copy / "operations" / "ai-actions" / "requests"
+             / "ai-request-sad-l04-pilot" / "request.yaml")
+    if pilot.is_file():
+        return pilot
+    synthetic = (copy / "operations" / "ai-actions" / "requests"
+                 / "ai-request-replay-synthetic" / "request.yaml")
+    synthetic.parent.mkdir(parents=True, exist_ok=True)
+    synthetic.write_text(
+        yaml.safe_dump(
+            {"id": "ai-request-replay-synthetic",
+             "action_id": "garden.shelve",
+             "target": {"kind": "garden-note", "id": "replay-seed"},
+             "provider": {"preferred": "manual-bundle"},
+             "status": "completed",
+             "created_at": STAMP},
+            sort_keys=False),
+        encoding="utf-8",
+    )
+    return synthetic
+
+
 @pytest.mark.full_repo
-# Flips the maintainer's gitignored pilot request (operations/ai-actions/
-# requests/ai-request-sad-l04-pilot), which no checkout carries.
-@pytest.mark.live_install
 def test_real_repo_manifest_replay(tmp_path: Path):
     copy = _copy_live_tree(tmp_path)
 
@@ -168,8 +195,7 @@ def test_real_repo_manifest_replay(tmp_path: Path):
         doc["status"] = (
             "delivery-ready" if doc["status"] == "completed" else "completed")
 
-    _rewrite(copy / "operations/ai-actions/requests/ai-request-sad-l04-pilot"
-             / "request.yaml", flip_request)
+    _rewrite(_request_to_flip(copy), flip_request)
     requested = _rerun(copy)
     assert requested[AI_ACTIONS_ID][0] == "rebuilt"
     assert requested[SEMANTIC_PAYLOAD_ID][0] == "rebuilt"
