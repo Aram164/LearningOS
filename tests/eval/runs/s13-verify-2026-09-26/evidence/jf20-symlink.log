@@ -1,0 +1,1 @@
+ GEN-JSON symlink mislabel vs base FileNotFoundError crash; see VERIFICATION_REPORT + F-s13-verify-03

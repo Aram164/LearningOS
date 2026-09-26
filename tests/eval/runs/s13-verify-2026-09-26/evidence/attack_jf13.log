@@ -1,0 +1,10 @@
+CHECK jf13-A PASS :: first={'exit': 0, 'code': None, 'replayed': False, 'tx': 'transaction-20260926-003751-001'} second={'exit': 0, 'code': None, 'replayed': False, 'tx': 'transaction-20260926-003752-001'} validate_rc=1 dup_flag=True names_both=True
+CHECK jf13-A-errline INFO :: ["E TRANSACTION-RECEIPT: duplicate idempotency key 's13-jf13-A' also committed in operations/transactions/transaction-20260926-003751-001.yaml [operations/transac"]
+CHECK jf13-B1 PASS :: rc=1 line=['E TRANSACTION-IDEMPOTENCY: idempotency ledger is unreadable: /private/tmp/s13/w-tip/LearningOS/repository/operations/transactions/idempotency.yaml: wh']
+CHECK jf13-B2 PASS :: rc=0 '0 error(s), 2 warning(s) — OK (0.2s); warning list: generate'
+CHECK jf13-B3 PASS :: rc=1 flagged=True
+CHECK jf13-B4 PASS :: rc=1 line=['E TRANSACTION-REVISIONS: artifact revision ledger is unreadable: /private/tmp/s13/w-tip/LearningOS/repository/operations/transactions/revisions.yaml: ']
+CHECK jf13-C PASS :: first={'exit': 0, 'code': None, 'replayed': False, 'tx': 'transaction-20260926-003802-001'} replay={'exit': 0, 'code': None, 'replayed': True, 'tx': 'transaction-20260926-003802-001'} receipts=['transaction-20260926-003802-001.yaml']
+CHECK jf13-C-clean PASS :: validate_rc=0
+CHECK jf13-D PASS :: rc=1 dup_lines=1
+SUMMARY {"A": "PASS", "B1": "PASS", "B2": "PASS", "B3": "PASS", "B4": "PASS", "C": "PASS", "D": "PASS"}

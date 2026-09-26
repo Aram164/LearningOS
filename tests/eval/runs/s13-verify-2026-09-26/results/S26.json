@@ -1,0 +1,29 @@
+{
+  "scenario": "S26",
+  "run_id": "s13-verify-2026-09-26",
+  "classification": "PASS",
+  "classification_reason": "Docs-only inbox capture committed on the first attempt (stdlib + CLI, zero implementation imports) via the \u00a725c recipe; tamper/conflict/stale paths behave as documented.",
+  "before": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "after": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "consumer": {
+    "goal": "Rerun S26 errands capture + JF-05 sufficiency proof.",
+    "first_action": "Built the \u00a725c sealer from the docs text; submitted a capture.",
+    "commands": [
+      "seal.py TIP capture.create (first attempt exit 0)",
+      "tamper/conflict/guard-discovery probes"
+    ],
+    "implementation_knowledge_needed": true,
+    "outcome": "First-exposure capture works from docs alone."
+  },
+  "internal": {
+    "transaction_behavior": "white-box verification; worlds reset between probes",
+    "warnings_errors": []
+  },
+  "failures": []
+}

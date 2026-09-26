@@ -1,0 +1,33 @@
+{
+  "scenario": "S20",
+  "run_id": "s13-verify-2026-09-26",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "Original cases (e)/(f) fixed: validator-clean supersedes/scope_sources inputs stay projectable with reads and writes green. All schema-invalid variants (dup/pattern/type/scalar/dangling) are validator-flagged with files named and fail closed consistently. F-s13-verify-02 files the adjacent validator crash on mixed-type lists (pre-existing).",
+  "before": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "after": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "consumer": {
+    "goal": "Rerun S20 malformed input + JF-08/09/10/11 repairs with adversarial variants.",
+    "first_action": "Replayed F-s07-06/07/08 repros verbatim, then attacked each with non-synthetic shapes.",
+    "commands": [
+      "attack_jf09.py (8 cases + incoming-shape)",
+      "attack_jf10.py (5 cases + projected default + crash-input)",
+      "attack_jf08.py (19 cases)",
+      "attack_jf11.py (5 cases incl. recovery sequences)"
+    ],
+    "implementation_knowledge_needed": true,
+    "outcome": "Every malformed input is either clean-and-working or loudly refused with its file named."
+  },
+  "internal": {
+    "transaction_behavior": "white-box verification; worlds reset between probes",
+    "warnings_errors": []
+  },
+  "failures": [
+    "F-s13-verify-02"
+  ]
+}

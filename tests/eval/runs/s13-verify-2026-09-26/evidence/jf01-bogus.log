@@ -1,0 +1,5 @@
+/bin/sh: python9.9-nonexistent: command not found
+/bin/sh: python9.9-nonexistent: command not found
+setup: removing stale .venv (rebuilding with )
+/bin/sh: python9.9-nonexistent: command not found
+make: *** [setup] Error 127

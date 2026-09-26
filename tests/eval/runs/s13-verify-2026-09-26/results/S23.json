@@ -1,0 +1,29 @@
+{
+  "scenario": "S23",
+  "run_id": "s13-verify-2026-09-26",
+  "classification": "PERFORMANCE_FAILURE",
+  "classification_reason": "10k warm content search 11.236s (11.165-11.331): 15.7x better, inside the extrapolated 12-15s remainder - confirmed. 10k cold still 153.984s (1.5x); 2k cold 8.706s still misses the ~2s bar and warm 2.467s marginally misses; generate warm~=cold unchanged. Scaling defect improved, NOT closed.",
+  "before": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "after": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "consumer": {
+    "goal": "Mandatory S23: measure the original 10,116-note workload on the repaired product, warm+cold with reps+spreads, vs S8 with base calibration.",
+    "first_action": "Benched tip/base at 2k (harness validation), then tip/base at 10k, all uptime-bracketed.",
+    "commands": [
+      "scale_bench.py --world w-tip-2k/w-base-2k/w-tip-10k/w-base-10k --reps 3",
+      "back-to-back warm-store searches (11.8s, 9.5s, identical answers)"
+    ],
+    "implementation_knowledge_needed": true,
+    "outcome": "Warm search is 15x faster; cold sessions and the 2s bar still fail."
+  },
+  "internal": {
+    "transaction_behavior": "white-box verification; worlds reset between probes",
+    "warnings_errors": []
+  },
+  "failures": []
+}

@@ -1,0 +1,29 @@
+{
+  "scenario": "S24",
+  "run_id": "s13-verify-2026-09-26",
+  "classification": "PASS",
+  "classification_reason": "Independent twin build from the same inputs yields the same HEAD (78154b2b); determinism.py --compare reports raw byte-identical derived state across directories.",
+  "before": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "after": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "consumer": {
+    "goal": "Rerun S24 determinism across builds.",
+    "first_action": "Built w-tip-twin independently; compared with determinism.py.",
+    "commands": [
+      "build_world.py --out w-tip-twin --source-rev WORKTREE --seed 20260924",
+      "tests/eval/metrics/determinism.py --compare w-tip w-tip-twin"
+    ],
+    "implementation_knowledge_needed": true,
+    "outcome": "Same inputs, same HEAD, identical bytes."
+  },
+  "internal": {
+    "transaction_behavior": "white-box verification; worlds reset between probes",
+    "warnings_errors": []
+  },
+  "failures": []
+}

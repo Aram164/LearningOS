@@ -1,0 +1,36 @@
+{
+  "scenario": "S01",
+  "run_id": "s13-verify-2026-09-26",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "Setup recovery works (3.11-fail to 3.12 retry exit 0 with rebuild; reuse/no-python/switch legs pass; recovered venv validates clean). Fresh-install test-fast green: 2269 passed, 18 skipped, 107 deselected, zero diagnostic spans left. F-s13-verify-01 files the minor bogus-PYTHON footgun.",
+  "before": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "after": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "consumer": {
+    "goal": "Rerun S01 setup/health + JF-01/JF-02/JF-03 repairs on fresh installs.",
+    "first_action": "Cloned scratch repo; failed setup with 3.11, recovered with 3.12.",
+    "commands": [
+      "make setup PYTHON=python3.11 (fail)",
+      "make setup PYTHON=python3.12 (exit 0, rebuild)",
+      "re-run (reuse)",
+      "rm bin/python (rebuild)",
+      "3.12->3.14 (rebuild)",
+      "bogus PYTHON (footgun)",
+      "pytest -m not full_repo in w-tip (2269 green, zero spans)"
+    ],
+    "implementation_knowledge_needed": true,
+    "outcome": "Tooling installs, recovers, and checks green on a fresh tree."
+  },
+  "internal": {
+    "transaction_behavior": "no writes; setup + suite only",
+    "warnings_errors": []
+  },
+  "failures": [
+    "F-s13-verify-01"
+  ]
+}

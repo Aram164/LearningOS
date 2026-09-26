@@ -1,0 +1,153 @@
+{
+  "bench_version": 1,
+  "world": "/private/tmp/s13/w-tip-2k/LearningOS/repository",
+  "world_head": "a31a3804e62dce6bc1e04330026f7eff690f84ad",
+  "notes": 2116,
+  "reps": 3,
+  "derived_bytes": 83770356,
+  "operations": {
+    "generate_cold": {
+      "median_s": 1.342,
+      "min_s": 1.318,
+      "max_s": 1.447,
+      "samples_s": [
+        1.447,
+        1.318,
+        1.342
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "validate": {
+      "median_s": 0.894,
+      "min_s": 0.891,
+      "max_s": 0.925,
+      "samples_s": [
+        0.891,
+        0.894,
+        0.925
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "generate_warm": {
+      "median_s": 1.292,
+      "min_s": 1.279,
+      "max_s": 1.32,
+      "samples_s": [
+        1.279,
+        1.292,
+        1.32
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "search_metadata": {
+      "median_s": 1.271,
+      "min_s": 1.263,
+      "max_s": 1.29,
+      "samples_s": [
+        1.263,
+        1.271,
+        1.29
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "search_content": {
+      "median_s": 8.706,
+      "min_s": 8.606,
+      "max_s": 8.855,
+      "samples_s": [
+        8.606,
+        8.706,
+        8.855
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "inspect_note": {
+      "median_s": 1.286,
+      "min_s": 1.258,
+      "max_s": 1.299,
+      "samples_s": [
+        1.258,
+        1.286,
+        1.299
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "related_note": {
+      "median_s": 1.276,
+      "min_s": 1.261,
+      "max_s": 1.284,
+      "samples_s": [
+        1.261,
+        1.276,
+        1.284
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "bootstrap_brief": {
+      "median_s": 1.474,
+      "min_s": 1.452,
+      "max_s": 1.48,
+      "samples_s": [
+        1.452,
+        1.474,
+        1.48
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "resume": {
+      "median_s": 0.827,
+      "min_s": 0.809,
+      "max_s": 0.838,
+      "samples_s": [
+        0.809,
+        0.838,
+        0.827
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "incremental_generate": {
+      "median_s": 1.308,
+      "min_s": 1.303,
+      "max_s": 1.345,
+      "samples_s": [
+        1.303,
+        1.345,
+        1.308
+      ],
+      "exit_codes": [
+        0
+      ]
+    },
+    "incremental_search": {
+      "median_s": 2.467,
+      "min_s": 2.438,
+      "max_s": 2.501,
+      "samples_s": [
+        2.438,
+        2.501,
+        2.467
+      ],
+      "exit_codes": [
+        0
+      ]
+    }
+  }
+}

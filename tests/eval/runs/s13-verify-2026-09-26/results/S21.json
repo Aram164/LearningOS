@@ -1,0 +1,30 @@
+{
+  "scenario": "S21",
+  "run_id": "s13-verify-2026-09-26",
+  "classification": "PASS",
+  "classification_reason": "Replay/new-key/conflict semantics byte-identical to base behavior (replay returns same receipt, no double write). Ledger loss still re-arms keys (deferred, by design) but the state is now loud (duplicate-key validator error naming both receipts); unreadable ledgers flagged, missing fine; --replay-only denies post-loss as designed. Operations labels: settlement, conflict proof, reused-id explanations all correct.",
+  "before": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "after": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "consumer": {
+    "goal": "Rerun S21 idempotency + JF-13/JF-19 repairs; confirm rebuild absent.",
+    "first_action": "Replayed F-s07-10/11 repros; attacked each JF-19 sub-fix and JF-13 leg.",
+    "commands": [
+      "attack_jf13.py (7 cases)",
+      "attack_jf19.py (5 cases)",
+      "--replay-only intact vs post-loss"
+    ],
+    "implementation_knowledge_needed": true,
+    "outcome": "Idempotency semantics unchanged; the only surface that explains a request now tells the truth."
+  },
+  "internal": {
+    "transaction_behavior": "white-box verification; worlds reset between probes",
+    "warnings_errors": []
+  },
+  "failures": []
+}

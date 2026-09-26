@@ -1,0 +1,35 @@
+{
+  "mode": "rebuild-after-delete",
+  "world": "/private/tmp/s13/w-tip-b/LearningOS/repository",
+  "builds": [
+    {
+      "exit": 0,
+      "tail": [
+        "wrote generated/reports/health.md",
+        "wrote generated/source-index.md",
+        "wrote generated/study-plans.md"
+      ]
+    },
+    {
+      "exit": 0,
+      "tail": [
+        "wrote generated/reports/health.md",
+        "wrote generated/source-index.md",
+        "wrote generated/study-plans.md"
+      ]
+    }
+  ],
+  "files": 20,
+  "raw": {
+    "only_first": [],
+    "only_second": [],
+    "differ": [],
+    "identical": true
+  },
+  "timestamp_normalized": {
+    "only_first": [],
+    "only_second": [],
+    "differ": [],
+    "identical": true
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "scenario": "S10",
+  "run_id": "s13-verify-2026-09-26",
+  "classification": "PASS",
+  "classification_reason": "Stage-note progress recorded via gateway is visible to resume (20 lines + marker excerpt + Next line); dossier key moves; empty/missing/escaping notes handled best-effort. Workspace Next Action still not advanced (recorded deferral).",
+  "before": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "after": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "consumer": {
+    "goal": "Rerun S10 progress + JF-17 repair: record stage progress, check resume.",
+    "first_action": "Read PATCH_LEDGER S12.5 JF-17; wrote stage.note.write envelope via docs-only sealer.",
+    "commands": [
+      "seal.py TIP-B stage.note.write ... --rev unit-os-l02=0",
+      "los resume [--json]",
+      "truncate/delete/escape working_note, re-run resume"
+    ],
+    "implementation_knowledge_needed": true,
+    "outcome": "Resume shows the recorded progress with excerpt; nothing-recorded-yet and null cases clean."
+  },
+  "internal": {
+    "transaction_behavior": "white-box verification; worlds reset between probes",
+    "warnings_errors": []
+  },
+  "failures": []
+}

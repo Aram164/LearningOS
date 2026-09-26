@@ -1,0 +1,13 @@
+CHECK jf21-t1 SKIP :: delay=0.05 no journal (pre/post-commit kill)
+CHECK jf21-t2 SKIP :: delay=0.1 no journal (pre/post-commit kill)
+CHECK jf21-t3 SKIP :: delay=0.15 no journal (pre/post-commit kill)
+CHECK jf21-t4 SKIP :: delay=0.2 no journal (pre/post-commit kill)
+CHECK jf21-t5 SKIP :: delay=0.25 no journal (pre/post-commit kill)
+CHECK jf21-t6 SKIP :: delay=0.3 no journal (pre/post-commit kill)
+CHECK jf21-t7 SKIP :: delay=0.35 no journal (pre/post-commit kill)
+CHECK jf21-t8 SKIP :: delay=0.4 no journal (pre/post-commit kill)
+CHECK jf21-t9 SKIP :: delay=0.45 no journal (pre/post-commit kill)
+CHECK jf21-t10 SKIP :: delay=0.5 no journal (pre/post-commit kill)
+CHECK jf21-t11 SKIP :: delay=0.55 no journal (pre/post-commit kill)
+CHECK jf21-t12 SKIP :: delay=0.6 no journal (pre/post-commit kill)
+SUMMARY caught=0/12 agreed=0/0

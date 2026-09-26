@@ -1,0 +1,35 @@
+{
+  "scenario": "S16",
+  "run_id": "s13-verify-2026-09-26",
+  "classification": "PASS",
+  "classification_reason": "From-docs-only manual-bundle delivery (new seed, hand-built per AI-ACTIONS.md): prepare ok, import exit 0, validate exit 0, full envelope apply exit 0 with receipt and landed transcription. Six defects aggregate in one round; adapter/identity/cap errors all named. F-s13-verify-04 files the pre-existing non-YAML traceback.",
+  "before": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "after": {
+    "revision": "78154b2ba900b007dfd6a4e0feb8910be5665e65",
+    "git_status": []
+  },
+  "consumer": {
+    "goal": "Rerun S16 shelving + JF-07/JF-08 repairs from docs only.",
+    "first_action": "Read AI-ACTIONS.md Delivery bundle format section only; prepared garden.shelve request.",
+    "commands": [
+      "los ai-action-prepare ... --request-id ai-request-s13-jf07-proof",
+      "hand-write delivery.yaml + artifacts/",
+      "los ai-action-import-delivery DIR",
+      "los ai-action-validate-delivery ID",
+      "seal apply envelope (approved-delivery) + submit",
+      "6-defect / adapter / unknown-request / missing-id / non-YAML / 28-defect imports"
+    ],
+    "implementation_knowledge_needed": true,
+    "outcome": "Shelving completes end to end from docs; error rounds name everything."
+  },
+  "internal": {
+    "transaction_behavior": "white-box verification; worlds reset between probes",
+    "warnings_errors": []
+  },
+  "failures": [
+    "F-s13-verify-04"
+  ]
+}

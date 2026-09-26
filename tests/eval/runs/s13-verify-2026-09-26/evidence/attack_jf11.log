@@ -1,0 +1,10 @@
+CHECK jf11-A-validate INFO :: rc=1 first_E=['E PARSE: /private/tmp/s13/w-tip/LearningOS/repository/knowledge/notes/data-systems/note-lsm-trees.md']
+CHECK jf11-A PASS :: {'exit': 2, 'code': 'VALIDATION_FAILED', 'retryable': False, 'sealed': True, 'message': 'transaction failed canonical validation: E PARSE: /private/tmp/s13/w-tip/LearningOS/repository/knowledge/notes/data-systems/note-lsm-trees.md: invalid YAML frontmatter: while parsing a flow sequence\n  in "<unicode string', 'replayed': False} journals=[]
+CHECK jf11-A-canonical-intact PASS :: defect preserved, nothing else written; receipts=[]
+CHECK jf11-B-validate INFO :: rc=1 names_AI_REQUEST_ID=True
+CHECK jf11-B PASS :: {'exit': 2, 'code': 'VALIDATION_FAILED', 'retryable': False, 'sealed': True, 'message': "transaction failed canonical validation: E AI-REQUEST-ID: request id 'my-request-1' does not match '^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$'; remove or rename the bundle so reads can publish the manifest [operations/ai-act", 'replayed': False} journals=[]
+CHECK jf11-B-wording INFO :: message="transaction failed canonical validation: E AI-REQUEST-ID: request id 'my-request-1' does not match '^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$'; remove or rename the bundle so reads can publish the manifest [operations/ai-act"
+CHECK jf11-C PASS :: {'exit': 2, 'code': 'VALIDATION_FAILED', 'retryable': False, 'sealed': True, 'message': 'transaction failed canonical validation: E PARSE: /private/tmp/s13/w-tip/LearningOS/repository/curriculum/modules/module-tuh-os/module.yaml: invalid YAML: while parsing a flow sequence\n  in "<unicode string>", line 5, co', 'replayed': False} journals=[]
+CHECK jf11-D PASS :: first=VALIDATION_FAILED retry_exit=0 replayed=False journals=[]
+CHECK jf11-E PASS :: first=VALIDATION_FAILED retry_exit=3 reseal_exit=0
+SUMMARY {"A": "PASS", "B": "PASS", "C": "PASS", "D": "PASS", "E": "PASS"}
