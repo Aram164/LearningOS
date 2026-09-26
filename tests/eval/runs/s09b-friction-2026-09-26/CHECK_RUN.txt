@@ -1,0 +1,10 @@
+=== check_run s09b-pass1 ===
+check_run: 3 scenario results, 0 problem(s)
+=== check_run s09b-pass2 ===
+check_run: 3 scenario results, 0 problem(s)
+=== check_run s09b-pass3 ===
+check_run: 3 scenario results, 0 problem(s)
+=== revisions ===
+8d1cc470d73a252bb7d87dc36c81e71e5db7c0d2
+## muse/s09b-friction-2026-09-26
+?? tests/eval/

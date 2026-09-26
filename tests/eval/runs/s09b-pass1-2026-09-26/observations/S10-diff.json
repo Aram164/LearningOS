@@ -1,0 +1,110 @@
+{
+  "from": "S10-before",
+  "to": "S10-after",
+  "canonical": {
+    "added": [
+      "operations/transactions/idempotency.yaml",
+      "operations/transactions/revisions.yaml",
+      "operations/transactions/transaction-20260926-095152-001.yaml",
+      "operations/transactions/transaction-20260926-095301-001.yaml"
+    ],
+    "removed": [],
+    "modified": [
+      "curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+      "curriculum/resume.yaml"
+    ]
+  },
+  "canonical_digest_changed": true,
+  "receipts_added": [
+    "operations/transactions/idempotency.yaml",
+    "operations/transactions/revisions.yaml",
+    "operations/transactions/transaction-20260926-095152-001.yaml",
+    "operations/transactions/transaction-20260926-095301-001.yaml"
+  ],
+  "inflight_after": [],
+  "derived": {
+    "added": [
+      "generated/backlinks.json",
+      "generated/concept-canvas.canvas",
+      "generated/concept-index.md",
+      "generated/concept-map.md",
+      "generated/coordination-view.md",
+      "generated/dependency-report.md",
+      "generated/domain-atlas.md",
+      "generated/learner-interpretations.json",
+      "generated/learner-interpretations.md",
+      "generated/learning-requirements.json",
+      "generated/learning-requirements.md",
+      "generated/library.md",
+      "generated/manifest.json",
+      "generated/module-view.md",
+      "generated/nebula.md",
+      "generated/reading-room.md",
+      "generated/reports/health.md",
+      "generated/source-index.md",
+      "generated/study-plans.md"
+    ],
+    "removed": [],
+    "modified": [],
+    "bytes_before": 0,
+    "bytes_after": 494063
+  },
+  "diagnostics_added": [
+    "operations/diagnostics/traces.jsonl"
+  ],
+  "ai_actions_added": [],
+  "new_operations": [
+    {
+      "trace_id": "03676d1b526b17d45645d8c003e56247",
+      "request_id": "request-s09b-p1-s10-prog-02",
+      "capability": "stage.progress.update",
+      "started_at": 1790409181.527616,
+      "duration_ms": 617.6,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    },
+    {
+      "trace_id": "67291ed46b6a33ce89ea18bb01622834",
+      "request_id": "request-s09b-p1-s10-prog-01",
+      "capability": "stage.progress.update",
+      "started_at": 1790409154.554826,
+      "duration_ms": 72.0,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": "core.admission",
+      "canonical_outcome": "NOT_COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    },
+    {
+      "trace_id": "b86c622774b0a76576aa419245974b42",
+      "request_id": "request-s09b-p1-s10-note-01",
+      "capability": "stage.note.write",
+      "started_at": 1790409112.658478,
+      "duration_ms": 678.0,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    }
+  ],
+  "head": {
+    "before": "a62b39169269ba26e13b7fbda9e3ad56367b1ef9",
+    "after": "a62b39169269ba26e13b7fbda9e3ad56367b1ef9"
+  },
+  "git_status_after": [
+    " M curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+    " M curriculum/resume.yaml",
+    "?? operations/transactions/idempotency.yaml",
+    "?? operations/transactions/revisions.yaml",
+    "?? operations/transactions/transaction-20260926-095152-001.yaml",
+    "?? operations/transactions/transaction-20260926-095301-001.yaml"
+  ],
+  "flags": []
+}

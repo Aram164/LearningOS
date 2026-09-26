@@ -1,0 +1,28 @@
+{
+  "from": "S02-before",
+  "to": "S02-after",
+  "canonical": {
+    "added": [],
+    "removed": [],
+    "modified": []
+  },
+  "canonical_digest_changed": false,
+  "receipts_added": [],
+  "inflight_after": [],
+  "derived": {
+    "added": [],
+    "removed": [],
+    "modified": [],
+    "bytes_before": 0,
+    "bytes_after": 0
+  },
+  "diagnostics_added": [],
+  "ai_actions_added": [],
+  "new_operations": [],
+  "head": {
+    "before": "a62b39169269ba26e13b7fbda9e3ad56367b1ef9",
+    "after": "a62b39169269ba26e13b7fbda9e3ad56367b1ef9"
+  },
+  "git_status_after": [],
+  "flags": []
+}
