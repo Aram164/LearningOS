@@ -791,7 +791,9 @@ construction recipe — nothing else is needed.
    transaction touches to its current revision (read
    `operations/transactions/revisions.yaml`; an artifact absent from the
    ledger has revision 0 — the legitimate no-recorded-revision baseline,
-   backstopped by the snapshot guard). Two capabilities name their write
+   backstopped by the snapshot guard. The ledger file itself does not
+   exist until the first write commits; before that, guard every touched
+   artifact at 0). Two capabilities name their write
    target only inside the handler, so the caller cannot guard a path and
    guards the request instead: `capture.create` takes
    `capture-request:<idempotency-key>`, `garden.seed.create` takes
