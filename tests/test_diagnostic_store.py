@@ -148,6 +148,42 @@ def test_replay_attempts_stay_linked_across_restart(tmp_path: Path):
     assert diagnosis.attempts[1]["replay_of"] == diagnosis.attempts[0]["span"]
 
 
+def test_shared_parent_trace_does_not_merge_operations(tmp_path: Path):
+    """Two writes under one ambient trace stay two operations (JF-04).
+
+    The propagated context is parentage, never identity: each attempt
+    mints its own operation and links the shared parent for correlation.
+    """
+    import secrets
+
+    mini = _mini_with_curriculum(tmp_path, "store-unmerged")
+    from gateway_helpers import approved_v2_envelope as envelope_for
+    from gateway_helpers import request_artifact_id
+
+    trace_id = secrets.token_hex(16)
+    parent = f"00-{trace_id}-{secrets.token_hex(8)}-01"
+    writes = [
+        ("stage.progress.update", dict(STAGE_PAYLOAD), list(STAGE_ARTIFACTS),
+         "store-unmerged-1"),
+        ("garden.seed.create", {"title": "Store probe", "text": "second write"},
+         [request_artifact_id("garden.seed.create", "store-unmerged-2")],
+         "store-unmerged-2"),
+    ]
+    for capability, payload, artifact_ids, key in writes:
+        envelope = envelope_for(
+            mini, capability=capability, payload=payload,
+            artifact_ids=artifact_ids, idempotency_key=key)
+        proc = subprocess.run(
+            [sys.executable, str(LOS), "--root", str(mini), "capability",
+             capability, "--payload-file", "-"],
+            input=json.dumps(envelope), capture_output=True, text=True,
+            timeout=120, env={**os.environ, "TRACEPARENT": parent})
+        assert proc.returncode == 0, proc.stderr
+    records = _read_in_fresh_process(mini)
+    assert len({record["op"] for record in records}) == 2
+    assert {record.get("parent_op") for record in records} == {trace_id}
+
+
 def test_s6_resolves_committed_from_persisted_store(tmp_path: Path):
     import secrets
 
@@ -177,8 +213,10 @@ def test_s6_resolves_committed_from_persisted_store(tmp_path: Path):
              "TRACEPARENT": f"00-{trace_id}-{secrets.token_hex(8)}-01"})
     replay_body = json.loads(replay.stdout)
     assert replay_body["replayed"] is True
+    # Attempts link through the shared parent trace now (JF-04): each Core
+    # attempt mints its own operation instead of adopting the UI's trace.
     records = [record for record in _read_in_fresh_process(mini)
-               if record["op"] == trace_id]
+               if record.get("parent_op") == trace_id]
     authority = collect_authority(
         mini, request_id="request-store-s6", idempotency_key="store-s6",
         capability="stage.progress.update", response=replay_body,
@@ -488,3 +526,24 @@ def test_no_exception_body_reaches_the_store(tmp_path: Path):
     assert failures, "the projection failure must stay on record"
     assert re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*",
                         failures[0]["attrs"]["error"]), failures[0]["attrs"]
+
+
+def test_suite_leaves_the_real_diagnostic_store_untouched():
+    """test-fast must not write the checked-in operations view (JF-03).
+
+    Replays the known leak path (a rootless capability run, which binds
+    the real root) inside a nested pytest process and asserts the real
+    store is byte-identical afterwards. The conftest isolation fixture
+    is what makes this pass; without it the nested run appends spans.
+    """
+    repo = Path(__file__).resolve().parent.parent
+    store = repo / "operations" / "diagnostics" / "traces.jsonl"
+    before = store.read_bytes() if store.is_file() else None
+    proc = subprocess.run(
+        [sys.executable, "-m", "pytest", "-q", "-p", "no:cacheprovider",
+         "tests/test_capability_dispatch.py::"
+         "test_a_malformed_payload_is_refused_before_any_write"],
+        cwd=repo, capture_output=True, text=True, timeout=300)
+    assert proc.returncode == 0, proc.stdout[-2000:] + proc.stderr[-2000:]
+    after = store.read_bytes() if store.is_file() else None
+    assert after == before, "the nested suite run polluted the real store"

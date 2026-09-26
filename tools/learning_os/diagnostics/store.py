@@ -75,7 +75,11 @@ def persist_record(record: dict) -> None:
             "operation_id": record.get("op"),
             "attempt_id": record.get("span"),
             "span_id": record.get("span"),
-            "parent_span_id": None,
+            # Parentage, not identity: the propagated caller context this
+            # operation was minted under (JF-04). Absent for direct-CLI
+            # roots. Additive: older readers ignore the new key.
+            "parent_trace_id": record.get("parent_op"),
+            "parent_span_id": record.get("parent_span"),
             "kind": record.get("kind"),
             "name": record.get("name"),
             "stage": record.get("stage"),
@@ -154,6 +158,8 @@ def read_records(root: Path, *, trace_id: str | None = None,
             "status": stored.get("status"),
             "op": stored.get("trace_id"),
             "span": stored.get("span_id"),
+            "parent_op": stored.get("parent_trace_id"),
+            "parent_span": stored.get("parent_span_id"),
             "ts": stored.get("timestamp"),
             "attrs": stored.get("attributes") or {},
         }
