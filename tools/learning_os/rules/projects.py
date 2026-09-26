@@ -161,3 +161,31 @@ class ChecksProjects:
                 self.err("TRANSACTION-RECEIPT",
                          f"duplicate transaction receipt id '{transaction_id}'", self._rel(path))
             seen.add(transaction_id)
+
+    def check_ai_action_requests(self):
+        from ..ai_actions.support import REQUEST_ID_PATTERN, REQUEST_ID_RE
+        directory = self.repo.root / "operations" / "ai-actions" / "requests"
+        if not directory.is_dir():
+            return
+        for path in sorted(directory.glob("*/request.yaml")):
+            try:
+                data = yaml.load(
+                    path.read_text(encoding="utf-8"), Loader=UniqueKeySafeLoader,
+                ) or {}
+            except Exception as exc:  # noqa: BLE001 - report as validation issue
+                self.err("AI-REQUEST-BUNDLE", f"cannot parse request bundle: {exc}",
+                         self._rel(path))
+                continue
+            if not isinstance(data, dict):
+                self.err("AI-REQUEST-BUNDLE", "request bundle must contain a mapping",
+                         self._rel(path))
+                continue
+            request_id = data.get("id")
+            # The projection publishes this id verbatim into the manifest,
+            # whose schema only accepts the ai-request pattern: anything else
+            # breaks every projection read while validating clean (JF-08).
+            if not isinstance(request_id, str) or not REQUEST_ID_RE.fullmatch(request_id):
+                self.err("AI-REQUEST-ID",
+                         f"request id {request_id!r} does not match {REQUEST_ID_PATTERN!r}; "
+                         "remove or rename the bundle so reads can publish the manifest",
+                         self._rel(path))

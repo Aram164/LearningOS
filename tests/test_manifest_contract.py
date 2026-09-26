@@ -261,3 +261,49 @@ def test_a_contract_mismatch_reaches_the_cli_as_one_line(mini_repo):
         assert proc.returncode == 2, f"{command}: {proc.stdout}{proc.stderr}"
         assert "Traceback" not in proc.stderr, f"{command} raised instead of reporting"
         assert proc.stderr.startswith("los: the published manifest no longer matches")
+
+
+def test_supersedes_and_mention_edges_stay_projectable(mini_repo):
+    """A schema-valid supersedes edge publishes as plain id strings (JF-09)."""
+    demo = mini_repo / "knowledge/notes/mathematics/note-demo.md"
+    old = mini_repo / "knowledge/notes/mathematics/note-old.md"
+    old.write_text(
+        demo.read_text(encoding="utf-8")
+        .replace("id: note-demo", "id: note-old")
+        .replace("title: Demo note", "title: Old note"),
+        encoding="utf-8",
+    )
+    text = demo.read_text(encoding="utf-8")
+    marker = "sources: [source-demo-book]\n---"
+    assert marker in text
+    text = text.replace(marker, "sources: [source-demo-book]\nsupersedes: [note-old]\n---")
+    demo.write_text(text + "\nSee note://note-old for the earlier version.\n",
+                    encoding="utf-8")
+    from learning_os.genout.concepts import build_backlinks
+    from learning_os.loader import load_repo
+
+    repo = load_repo(mini_repo)
+    manifest = build_manifest(repo, "T1", build_backlinks(repo, "T1"))
+    ok, message = check(manifest, mini_repo)
+    assert ok, message
+    assert manifest["backlinks"]["note_incoming"]["note-old"] == ["note-demo"]
+
+
+def test_unit_without_scope_sources_stays_projectable(mini_repo):
+    """A unit carrying only schema-required fields still publishes (JF-10)."""
+    from repo_builders import add_curriculum, write_yaml
+
+    add_curriculum(mini_repo)
+    path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+    write_yaml(path, {
+        "id": "unit-demo-l01", "type": "unit", "module_id": "module-demo",
+        "kind": "lecture", "title": "Expected value", "order": 1,
+        "scope": "The lecture as taught.", "status": "active",
+        "artifacts": {"ultimate_reference": "note-demo"},
+        "workspace_ids": ["workspace-demo"],
+    })
+    manifest = _manifest(mini_repo)
+    ok, message = check(manifest, mini_repo)
+    assert ok, message
+    [unit] = [r for r in manifest["units"] if r["id"] == "unit-demo-l01"]
+    assert unit["scope_sources"] == []

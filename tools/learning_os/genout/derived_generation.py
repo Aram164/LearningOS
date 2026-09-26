@@ -63,7 +63,8 @@ DEPENDENCY_REPORT_BODY_ID = "gen.dependency-report.body"
 
 #: Bumped when a shadow node changes shape (inputs, dependencies, or value
 #: structure) independently of its producer files.
-GENERATION_NODE_VERSION = 1
+#: v2: note_incoming entries are plain note-id strings (JF-09).
+GENERATION_NODE_VERSION = 2
 
 BACKLINKS_PRODUCERS = (
     "tools/learning_os/genout/concepts.py",

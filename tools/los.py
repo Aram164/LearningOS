@@ -358,7 +358,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--target-id", required=True)
     p.add_argument("--provider", default="manual-bundle")
     p.add_argument("--expected-snapshot", default=None)
-    p.add_argument("--request-id", default=None)
+    p.add_argument("--request-id", default=None,
+                   help="optional caller id; must match ^ai-request-[a-z0-9]+(-[a-z0-9]+)*$ "
+                        "(refused before anything is persisted)")
     p.set_defaults(func=cmd_ai_action_prepare)
 
     p = sub.add_parser("ai-action-append-slices",

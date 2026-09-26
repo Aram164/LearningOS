@@ -160,6 +160,10 @@ def project_units(repo: Repo, revision: Revision,
         records.append({
             **dict(data),
             "source_selections": projected_selections,
+            # Optional in the unit schema but required by the published
+            # manifest: a missing block projects to the empty list so a
+            # schema-valid unit stays projectable (JF-10).
+            "scope_sources": data.get("scope_sources") or [],
             "revision": revision(unit.id, data),
             "path": str(unit.path.relative_to(repo.root)),
             # Projects own units explicitly in the Project record. The legacy
