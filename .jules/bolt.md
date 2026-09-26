@@ -1,0 +1,3 @@
+## 2025-02-28 - Optimize YAML normalizer for primitive types
+**Learning:** The highly recursive `_normalize` function in `tools/learning_os/loading/yamlio.py` traverses every node of parsed YAML files. Doing an `isinstance()` check against datetimes before checking for common primitive types (str, int, float, bool) causes significant overhead. By using exact type matching (`type(value) is X`) for primitive leaf nodes first and bypassing `isinstance` for them, we cut the time roughly in half. `isinstance` is retained for collections to handle YAML parser subclasses properly.
+**Action:** Always process common primitive leaf paths before expensive operations or complex `isinstance` checks in highly recursive Python functions.
