@@ -1736,7 +1736,8 @@ class TransactionService:
                 raise TransactionFailure(
                     f"{exc}; rolled back completely but the restored pre-state "
                     f"cannot be re-published ({defect}); the defect pre-exists "
-                    "this write"
+                    "this write",
+                    pre_existing_defect=True,
                 ) from exc
             if isinstance(exc, TransactionFailure):
                 raise

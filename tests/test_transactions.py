@@ -700,6 +700,7 @@ def test_validation_failure_with_unpublishable_prestate_leaves_no_orphan(tmp_pat
             validate_state=lambda: ["E PARSE: some note has invalid YAML frontmatter"],
             rollback_publish=fail_rollback_publish,
         )
+    assert caught.value.pre_existing_defect is True
     assert "rollback incomplete" not in str(caught.value)
     assert "pre-exists this write" in str(caught.value)
     assert "E PARSE" in str(caught.value)

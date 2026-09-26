@@ -13,7 +13,17 @@ from pathlib import Path
 
 
 class TransactionFailure(Exception):
-    """A governed write failed and its canonical changes were rolled back."""
+    """A governed write failed and its canonical changes were rolled back.
+
+    ``pre_existing_defect`` names the JF-11 case: canonical rollback
+    completed but the restored pre-state itself refuses re-publication
+    for a content reason, so the defect pre-exists the write. The
+    gateway classifies on this flag, never on message prose.
+    """
+
+    def __init__(self, *args, pre_existing_defect: bool = False):
+        super().__init__(*args)
+        self.pre_existing_defect = pre_existing_defect
 
 
 class ProjectionFailure(TransactionFailure):
@@ -31,9 +41,8 @@ class ProjectionFailure(TransactionFailure):
 
     def __init__(self, message: str, *, rollback_complete: bool,
                  pre_existing_defect: bool = False):
-        super().__init__(message)
+        super().__init__(message, pre_existing_defect=pre_existing_defect)
         self.rollback_complete = rollback_complete
-        self.pre_existing_defect = pre_existing_defect
 
 
 class PostCommitFailure(TransactionFailure):
