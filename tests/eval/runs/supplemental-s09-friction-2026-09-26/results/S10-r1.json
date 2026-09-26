@@ -1,0 +1,193 @@
+{
+  "scenario": "S10",
+  "run_id": "supplemental-s09-friction-2026-09-26",
+  "classification": "AMBIGUOUS",
+  "classification_reason": "'Where was I?' was answered correctly from resume + the stage read + the working note (2 calls). The progress write was never executed. The learner approved the exact change, but the evaluator's own agent environment refused the step that computes the approval value and submits the envelope, so LearningOS's gateway response is unobserved. This is not a LearningOS defect. The product-side cost of reaching that point was high: 13 calls, one documentation contradiction and an implementation read for the undocumented intent hash.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec",
+    "derived_digest": "df97c8737d287c93f8e3a048d46ad71f9da0e95cf3cccd0c0bbc8e63032db409",
+    "snapshot_file": "observations/S10-r1-before.json"
+  },
+  "consumer": {
+    "goal": "Answer 'where was I?', then record the finished stride example and move the learner on (fresh world r1-s10).",
+    "first_action": "make setup, then `los resume --json`",
+    "commands": [
+      "make setup; .venv/bin/python tools/los.py resume --json",
+      ".venv/bin/python tools/los.py plan-edit-context unit-os-l02 --stage-id stage-os-l02-02-proportional-share; cat curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+      ".venv/bin/python tools/los.py capabilities stage.progress.update --json",
+      ".venv/bin/python tools/los.py capabilities stage.note.write --json; .venv/bin/python tools/los.py capabilities learner.observation.append --json",
+      ".venv/bin/python tools/los.py stage-progress --help; .venv/bin/python tools/los.py stage-note --help; grep -n '25a|^## |^### ' system/WORKFLOWS.md",
+      "sed -n 639,739p system/WORKFLOWS.md  (§25a, step 4: envelope fields)",
+      ".venv/bin/python tools/los.py capability --help; ls system/schema | grep envelope; ls system/contracts",
+      "cat system/schema/capability-envelope.schema.json",
+      "grep -rn 'intent_sha256|intent hash' system/ README.md tools/README.md",
+      "sed -n 488,520p system/PLAN-CREATION-SOP.md",
+      ".venv/bin/python tools/los.py stage-note unit-os-l02 stage-os-l02-02-proportional-share --text '<approved text>'  # exit 2: canonical writes must use GatewayEnvelopeV2",
+      "grep -rn 'def intent_sha256' tools/",
+      "sed -n 1,95p tools/learning_os/contracts/gateway.py",
+      "grep -rn 'operator-approval|direct-user-gesture' system/*.md system/adr/*.md",
+      "sed -n 240,310p system/WORKFLOWS.md  (approval-kind admission)",
+      "build GatewayEnvelopeV2 for stage.note.write with approval.subject_sha256 = intent_sha256(envelope); .venv/bin/python tools/los.py capability stage.note.write --payload-file <envelope>  # REFUSED by the agent environment before execution"
+    ],
+    "tool_calls": 16,
+    "docs_consulted": [
+      "los capabilities stage.progress.update / stage.note.write / learner.observation.append --json",
+      "los stage-progress --help, stage-note --help, capability --help",
+      "system/WORKFLOWS.md §25a (lines 639-739) and approval admission (lines 240-310)",
+      "system/schema/capability-envelope.schema.json",
+      "system/PLAN-CREATION-SOP.md Gate 5 (lines 488-520)"
+    ],
+    "impl_files_read": [
+      "tools/learning_os/contracts/gateway.py (lines 1-95: intent_subject, intent_sha256)",
+      "grep of tools/ for 'def intent_sha256'"
+    ],
+    "retries": 0,
+    "confusions": [
+      "Which capability records partial stage progress (status-only progress vs compatibility-only note vs observation needing a requirement).",
+      "Whether WORKFLOWS §25a step 4 applies to in-stage writes (it says it does not; OPERATOR.md sends stage writes there).",
+      "How intent_sha256 is computed (undocumented).",
+      "Which approval.kind applies to stage.note.write when a learner approves in chat.",
+      "Which artifacts expected_revisions must list for a stage-note write."
+    ],
+    "corrective_steps": [
+      "Asked the learner whether to mark the stage complete (no), so the status stays active and the progress goes to the working note.",
+      "Found the enums (channel, approval.kind) in system/schema/capability-envelope.schema.json.",
+      "Read the intent-hash definition in tools/learning_os/contracts/gateway.py."
+    ],
+    "questions_asked_to_learner": [
+      "Should I mark the proportional-share stage complete? -> 'No — I still have to explain vruntime aloud. Just record the progress.'",
+      "Apply exactly this change: append to the stage working note via stage.note.write (stage stays active): 'Finished the stride example (2026-09-26): all eight decisions; C runs 5 out of 8 times. / NEXT: explain vruntime aloud in under two minutes.'? -> 'Yes, apply exactly that.'"
+    ],
+    "implementation_knowledge_needed": true,
+    "wall_minutes": 5.2,
+    "outcome": "The learner gets the 'where was I' answer. Her progress is NOT recorded: the operator reports that its environment refused the approval step, and the repository is unchanged."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "No transaction opened. Bare `stage-note` refused (exit 2) before any write; the envelope submission never executed.",
+    "approval_behavior": "The product requires the operator to supply approval.kind and approval.subject_sha256 = intent_sha256(envelope) for the learner-approved change. The evaluator's agent environment refused that computation and submission ([Security Weaken]); the gateway's admission check was never reached.",
+    "projection_activity": "Reads computed a fresh projection (snapshot sha256:82bcffb7...); generated/ unchanged (only .gitkeep).",
+    "persistence_activity": "None.",
+    "derived_changes": "none",
+    "manifest_changes": "none",
+    "unexpected_writes": [
+      "make setup: ignored .venv/, egg-info, __pycache__/ and .git/hooks in the world"
+    ],
+    "warnings_errors": [
+      "stage-note (bare): canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability stage.note.write --payload-file ENVELOPE.json` (exit 2)",
+      "agent environment: Permission for this action was denied by the Claude Code auto mode classifier. Reason: [Security Weaken]."
+    ],
+    "git_diff_stat": "",
+    "observe_diff_file": "observations/S10-r1-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec",
+    "derived_digest": "df97c8737d287c93f8e3a048d46ad71f9da0e95cf3cccd0c0bbc8e63032db409",
+    "snapshot_file": "observations/S10-r1-after.json"
+  },
+  "friction": [
+    {
+      "tag": "hidden-prerequisite",
+      "description": "A fresh world needs `make setup` again before any `los` command (no `python` on PATH; the venv is per clone). Known from S02-r1, so it was bundled into the first call.",
+      "cost": "~5 s inside call #1"
+    },
+    {
+      "tag": "missing-capability",
+      "description": "'I finished part of a stage' has no structured home. stage.progress.update carries only a status {active, paused, complete, skipped, revisit}; stage.note.write is labelled 'compatibility capability only'; learner.observation.append needs a `requirement` the stage lacks (resume: requirement null); unit.note.append is for after the stages are finished. 'Move me on' has no target other than prose in the working note.",
+      "cost": "3 calls (#3-#5) comparing capability definitions"
+    },
+    {
+      "tag": "doc-contradiction",
+      "description": "OPERATOR.md (Unit workflow) sends stage writes to 'fields and intent hash: WORKFLOWS §25a, step 4'. That step ends: 'For work inside a stage — stage-progress, stage-note, source-feedback, detour-create — this section does not apply'.",
+      "cost": "1 call (#6) plus doubt whether the envelope rules apply at all"
+    },
+    {
+      "tag": "needs-implementation-knowledge",
+      "description": "`approval.subject_sha256` must equal `intent_sha256(envelope)`, a function named in WORKFLOWS §25a but defined in no document or schema. The definition exists only in tools/learning_os/contracts/gateway.py: canonical JSON (sort_keys, separators ',' ':', ensure_ascii=False) of schema_version, capability, channel, expected_snapshot, expected_revisions and payload, prefixed 'sha256:'.",
+      "cost": "3 calls (#9 doc grep, #12-#13 implementation reads)"
+    },
+    {
+      "tag": "missing-capability",
+      "description": "No helper emits a ready envelope or intent hash for in-stage writes. The saved-preflight shortcut (--apply-reviewed-sha256) exists only for unit-plan-revise/module-plan-import, and bare `stage-note` refuses without offering one. The operator hand-assembles nine fields.",
+      "cost": "2 calls (#10-#11)"
+    },
+    {
+      "tag": "unclear-safety",
+      "description": "Which approval.kind records a learner's chat approval relayed by an agent is not in the capability output. `capabilities NAME --json` shows `admission: direct-user-gesture` for stage.progress.update but nothing for stage.note.write; the rule lives in WORKFLOWS (lines ~258-286) and system/contracts/capabilities.yaml. I chose operator-approval over channel operator.",
+      "cost": "2 calls (#14-#15)"
+    },
+    {
+      "tag": "missing-capability",
+      "description": "expected_revisions must cover 'exactly every artifact the transaction touches' (stated for plan imports). For a stage-note write, which artifacts those are is undocumented. I used the stage read's artifact_revisions (module-tuh-os, study-map-os-l02, unit-os-l02 = 0), unverified because the envelope was never submitted.",
+      "cost": "unresolved"
+    },
+    {
+      "tag": "other",
+      "description": "Agent-environment refusal (not a LearningOS behaviour). The step that computed approval.subject_sha256 for the learner-approved change and submitted the envelope was refused by the evaluator's Claude Code auto-mode classifier: 'Permission for this action was denied by the Claude Code auto mode classifier. Reason: [Security Weaken].' Recorded per CONSUMER-PROTOCOL §2 and not worked around; the write goal was not achieved.",
+      "cost": "scenario write goal blocked; 1 call"
+    }
+  ],
+  "failures": [],
+  "scenario_record": {
+    "pass": 1,
+    "agent_state": "warm for reads (after S02-r1), cold for the write path",
+    "world": "~/los-eval/supplemental-s09-friction-2026-09-26-r1-s10 (world_head 13ad2fc)",
+    "where_was_i": {
+      "answer": "Welcome back. You were in Operating Systems -> 'Processes and CPU scheduling' -> stage 2 'Proportional share and CFS' (stage-os-l02-02-proportional-share). In the stage's working note you had set up the stride example (A=100, B=50, C=250 tickets, L=10,000 -> strides 100, 200, 40) and stopped at step 4 on 2026-09-16, after three decisions. Your own NEXT line: finish the first eight decisions, check that C runs 5/8 of the time, then explain vruntime aloud in under two minutes, which is also what the stage needs to count as done. Your OS oral sitting is on 12 Oct 2026 (registered).",
+      "sources": [
+        "los resume --json (resume pointer -> stage-os-l02-02-proportional-share)",
+        "los plan-edit-context unit-os-l02 --stage-id stage-os-l02-02-proportional-share (done_when, working_note path)",
+        "curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md lines 15 and 17 ('Stopped at step 4 (2026-09-16).', 'NEXT: ...')"
+      ],
+      "tool_calls": 2
+    },
+    "learner_claim_checked": "Strides A=100, B=200, C=40, ties by name: the first eight decisions run A, B, C, C, C, A, C, C, so C runs 5/8 (= 250/400 tickets). The learner's statement holds.",
+    "writes": [
+      {
+        "capability": "stage.note.write",
+        "intended_payload": {
+          "unit_id": "unit-os-l02",
+          "stage_id": "stage-os-l02-02-proportional-share",
+          "text": "Finished the stride example (2026-09-26): all eight decisions; C runs 5 out of 8 times.\n\nNEXT: explain vruntime aloud in under two minutes."
+        },
+        "envelope_fields_constructed": {
+          "schema_version": "2 (schema const)",
+          "request_id": "req-s10-r1-stage-note-1 (operator-chosen; pattern from schema)",
+          "idempotency_key": "s10-r1-stride-progress-20260926 (operator-chosen)",
+          "capability": "stage.note.write",
+          "channel": "operator (enum from capability-envelope.schema.json)",
+          "expected_snapshot": "sha256:82bcffb7b860d24db88609aa80d3c5fa3d1ceac3ba5fd56b9c8f4748f4d0bf7e (plan-edit-context --stage-id)",
+          "expected_revisions": "{module-tuh-os: 0, study-map-os-l02: 0, unit-os-l02: 0} (plan-edit-context artifact_revisions; exact set undocumented)",
+          "approval.kind": "operator-approval (no gesture admission declared for stage.note.write)",
+          "approval.subject_sha256": "intent_sha256(envelope): computation refused by the agent environment"
+        },
+        "status_update": "none: the stage stays active per the learner ('No — ... Just record the progress.')",
+        "receipt_id": null,
+        "retries": 0,
+        "outcome": "not executed: agent-environment refusal; not re-attempted"
+      }
+    ],
+    "tool_calls_by_phase": {
+      "where_was_i": 2,
+      "write_path_discovery": 13,
+      "write_attempt_refused": 1,
+      "total": 16
+    },
+    "evidence": [
+      "evidence/S10-r1-refusals.txt"
+    ],
+    "harness_tool_calls": {
+      "build_world_and_before_snapshot": 1,
+      "after_snapshot_and_diff": 1
+    }
+  },
+  "uncertainties": [
+    "Whether the gateway would have accepted this envelope (approval kind, the three-artifact revision guard) is unknown because it was never submitted.",
+    "Whether a stage-note append adds its own separator or date is unknown for the same reason."
+  ]
+}

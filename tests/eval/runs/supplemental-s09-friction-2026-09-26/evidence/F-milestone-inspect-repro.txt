@@ -1,0 +1,12 @@
+Minimized reproduction (read-only), world supplemental-s09-friction-2026-09-26-r3-s26 (world_head 13ad2fc), after its scenario closed.
+project-tessera (los inspect project-tessera): milestone_ids ['milestone-tessera-parser', 'milestone-tessera-optimizer']; structure.nodes ['step-tessera-parser', 'step-tessera-executor', 'step-tessera-optimizer', 'step-tessera-cost']
+$ los inspect milestone-tessera-optimizer
+  exit=2 stream=stderr :: los: record not found: milestone-tessera-optimizer
+$ los inspect milestone-tessera-parser
+  exit=2 stream=stderr :: los: record not found: milestone-tessera-parser
+$ los inspect step-tessera-optimizer
+  exit=2 stream=stderr :: los: record not found: step-tessera-optimizer
+$ los inspect project-tessera
+  exit=0 stream=stdout :: {"boundaries":{"confidentiality":"public","external_code_access":"read-only","notes":"The code lives in its own repository; LearningOS keeps the learning around
+$ los search tessera-optimizer
+  exit=0 :: [{"id":"project-tessera","path":"projects/registry/project-tessera.yaml","status":"active","title":"Tessera — a toy dataflow query engine","type":"project"}]

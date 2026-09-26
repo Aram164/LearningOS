@@ -1,0 +1,9 @@
+Observer probe (not a consumer step), world supplemental-s09-friction-2026-09-26-r3-s26 after its S26 after-snapshot.
+Each read runs once; count = files under generated/derived-state/ afterwards.
+start: 0
+after bootstrap --compact: 0
+after related note-caching-everywhere: 0
+after note-read note-caching-everywhere: 0
+after search caching --type note --content: 118
+after a second content search: 118
+git status --porcelain: []

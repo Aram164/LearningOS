@@ -1,0 +1,402 @@
+{
+  "scenario": "S02",
+  "run_id": "supplemental-s09-friction-2026-09-26",
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "All five questions answered with evidence through documented reads (bootstrap --brief, inspect batch, plan-edit-context, search) plus direct reads of learner files the product points to but does not serve (stage working note, workspace files, inbox items). Friction: a hidden setup prerequisite (no `python`, `make setup` needed per world), no inbox or Garden listing, resume omits the working note, and an uninspectable milestone id. Pass 1 = cold first contact.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec",
+    "derived_digest": "df97c8737d287c93f8e3a048d46ad71f9da0e95cf3cccd0c0bbc8e63032db409",
+    "snapshot_file": "observations/S02-r1-before.json"
+  },
+  "consumer": {
+    "goal": "Answer Q06, Q07, Q13, Q15 and Q27 from the learner's repository (fresh world r1-s02).",
+    "first_action": "ls -la of the world repository root, then read AGENTS.md and CLAUDE.md",
+    "commands": [
+      "ls -la; ls README* AGENTS.md CLAUDE.md; wc -l AGENTS.md README.md",
+      "cat AGENTS.md; cat system/CLAUDE.md (via root CLAUDE.md symlink)",
+      "cat system/OPERATOR.md",
+      "python tools/los.py capabilities --compact --json  # zsh: command not found: python",
+      "grep -n -i 'venv|setup|install|requirements|python3|make ' README.md; grep -n '^setup|...' Makefile",
+      "sed -n 150,185p README.md; sed -n 1,16p Makefile; sed -n 151,200p Makefile",
+      "make setup  # exit 0, 4.69 s: .venv, pip install -e .[dev], hooks",
+      ".venv/bin/python tools/los.py capabilities --compact --json",
+      ".venv/bin/python tools/los.py bootstrap --brief",
+      ".venv/bin/python tools/los.py --help",
+      ".venv/bin/python tools/los.py status; .venv/bin/python tools/los.py resume --json",
+      ".venv/bin/python tools/los.py inspect workspace-os-oral-prep workspace-tessera-engine coordination module-tuh-os",
+      ".venv/bin/python tools/los.py plan-edit-context unit-os-l02 --stage-id stage-os-l02-02-proportional-share",
+      "cat curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md; .venv/bin/python tools/los.py inspect project-tessera",
+      "cat work/active/workspace-tessera-engine/CONTEXT.md; .venv/bin/python tools/los.py inspect milestone-tessera-optimizer (-> 'los: record not found'); ls -la work/inbox/",
+      "for f in work/inbox/*.md: cat",
+      "grep -n '^#' system/ARCHITECTURE.md",
+      "sed -n 207,258p system/ARCHITECTURE.md  (§3.3 File-saving conventions)",
+      ".venv/bin/python tools/los.py search <q> for q in 'p-value', 'batch normalization', 'dominant resource fairness', 'sleep', 'explain plan'",
+      ".venv/bin/python tools/los.py inspect note-batchnorm-why-it-works-contested note-batchnorm-internal-covariate-shift note-dominant-resource-fairness-paper note-p-values-corrected note-os-scheduling-exercise-bank; ls knowledge/garden/; .venv/bin/python tools/los.py plan-edit-context unit-dataframes-lazy-plans --stage-id stage-df-lazy-02-read-explain",
+      "cat knowledge/garden/fairness-for-my-study-time.md; body of work/active/workspace-os-oral-prep/CONTEXT.md"
+    ],
+    "tool_calls": 21,
+    "docs_consulted": [
+      "AGENTS.md",
+      "system/CLAUDE.md (root CLAUDE.md symlink)",
+      "system/OPERATOR.md",
+      "README.md (setup/commands section, lines 150-185 + grep)",
+      "system/ARCHITECTURE.md §3.3 (and heading list)",
+      "los --help"
+    ],
+    "impl_files_read": [
+      "Makefile (setup and hooks targets; read to confirm what `make setup` writes)"
+    ],
+    "retries": 1,
+    "confusions": [
+      "Which interpreter runs `python tools/los.py` (no `python` on PATH).",
+      "Whether `resume` (CLAUDE.md) or `bootstrap --brief` (OPERATOR.md) is the entry for 'where did I stop'.",
+      "Capability names in the compact index differ from CLI verbs.",
+      "ARCHITECTURE §3.3 says filing is deterministic but gives locations, not a routing procedure for a capture that matches an existing note."
+    ],
+    "corrective_steps": [
+      "Ran `make setup` (per README) and used .venv/bin/python for every later command.",
+      "Used `los --help` to map capability names to CLI verbs.",
+      "Read the stage working note and the workspace CONTEXT.md files directly for detail the reads omit.",
+      "Listed and read work/inbox/ and knowledge/garden/ directly."
+    ],
+    "questions_asked_to_learner": [],
+    "implementation_knowledge_needed": false,
+    "wall_minutes": 4.5,
+    "outcome": "Five answers with cited records (see scenario_record.answers); no change to the repository."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "None: read-only scenario; no gateway write was attempted.",
+    "approval_behavior": "None required; nothing was proposed or applied.",
+    "projection_activity": "Every read computed a fresh in-memory projection (same snapshot_id sha256:82bcffb7... across bootstrap, inspect and plan-edit-context); generated/ held only .gitkeep before and after, and no manifest file was written.",
+    "persistence_activity": "No canonical or derived file changed; los operations listed 0 operations before and after.",
+    "derived_changes": "none",
+    "manifest_changes": "none",
+    "unexpected_writes": [
+      "make setup created ignored .venv/, tools/learningos_core.egg-info/ and __pycache__/ directories (git status stays clean; observer sees no canonical change)",
+      "make setup installed .git/hooks/pre-commit, post-commit and pre-push in the world repository"
+    ],
+    "warnings_errors": [
+      "zsh: command not found: python",
+      "los inspect milestone-tessera-optimizer -> stderr 'los: record not found: milestone-tessera-optimizer', exit 2 (exit code established in the minimized reproduction)"
+    ],
+    "git_diff_stat": "",
+    "observe_diff_file": "observations/S02-r1-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec",
+    "derived_digest": "df97c8737d287c93f8e3a048d46ad71f9da0e95cf3cccd0c0bbc8e63032db409",
+    "snapshot_file": "observations/S02-r1-after.json"
+  },
+  "friction": [
+    {
+      "tag": "hidden-prerequisite",
+      "description": "AGENTS.md, OPERATOR.md and `los --help` all say `python tools/los.py ...`, but no `python` is on PATH here and the tools need the project venv. The venv comes from `make setup`, which only README's command section mentions; the agent entry documents never do.",
+      "cost": "1 failed call + 2 README/Makefile reads + 1 setup call (4 of 21 calls)"
+    },
+    {
+      "tag": "unclear-safety",
+      "description": "README says `make setup` also installs a pre-push hook 'into the sibling UI checkout when it is present' without naming the path. I had to read the Makefile hooks target to confirm it only writes ../obsidian-ui/.git/hooks when that directory exists (it did not here).",
+      "cost": "1 call (Makefile read)"
+    },
+    {
+      "tag": "other",
+      "description": "Entry documentation volume: AGENTS.md sends to OPERATOR.md (336 lines) and the Claude adapter CLAUDE.md (307 lines) repeats much of it. About 650 lines of contract came before the first product command, and neither says which of `resume` and `bootstrap --brief` answers 'where did I stop' (CLAUDE.md names `resume`, OPERATOR.md names `bootstrap --brief`).",
+      "cost": "2 calls, ~650 lines of context"
+    },
+    {
+      "tag": "unclear-terminology",
+      "description": "`capabilities --compact --json` lists query names (operator.bootstrap, note.search, project.inspect) that are not the CLI verbs the docs use (bootstrap, search, inspect). Mapping them needed `los --help`.",
+      "cost": "1 call"
+    },
+    {
+      "tag": "missing-capability",
+      "description": "`resume --json` returns the stage ids, titles and exam sittings, with requirement null and no observations. It omits the stage working note, whose 'Stopped at step 4 (2026-09-16)' and 'NEXT:' lines are the exact answer to 'where did I stop'. I needed plan-edit-context for the note path and a direct file read.",
+      "cost": "2 calls"
+    },
+    {
+      "tag": "missing-capability",
+      "description": "No command lists inbox items: `status` and `bootstrap --brief` only count them (inbox 7), so the inbox was listed and read with ls/cat. The Garden is not searchable (`search sleep` -> []) and its generated lens (generated/nebula.md) does not exist in a fresh world, so it was listed by hand too.",
+      "cost": "3 calls"
+    },
+    {
+      "tag": "unhelpful-error",
+      "description": "project-tessera lists milestone_ids [milestone-tessera-parser, milestone-tessera-optimizer] but `inspect milestone-tessera-optimizer` says only 'los: record not found'. The project's own structure nodes use different ids (step-tessera-*), and the error gives no hint.",
+      "cost": "1 call (not retried)"
+    },
+    {
+      "tag": "missing-capability",
+      "description": "`inspect` on notes returns no created/updated date, so I could not tell from the product whether the contested batch-norm note predates the 2026-09-14 forum capture. Left unresolved rather than reading Git history.",
+      "cost": "0 calls; one uncertainty"
+    }
+  ],
+  "failures": [
+    "F-supplemental-s09-friction-001"
+  ],
+  "scenario_record": {
+    "pass": 1,
+    "agent_state": "cold: first contact with LearningOS in this session",
+    "world": "~/los-eval/supplemental-s09-friction-2026-09-26-r1-s02 (world_head 13ad2fc)",
+    "questions": [
+      "Q06",
+      "Q07",
+      "Q13",
+      "Q15",
+      "Q27"
+    ],
+    "answers": [
+      {
+        "question": "Q06",
+        "answer": "You stopped on 2026-09-16 in Operating Systems -> unit 'Processes and CPU scheduling' (unit-os-l02) -> study map study-map-os-l02 -> stage 2 'Proportional share and CFS' (stage-os-l02-02-proportional-share). The resume pointer is marked 'confirmed' (where study stopped, not a recommendation). Exactly: in that stage's working note you were hand-computing the stride-scheduling example (A=100, B=50, C=250 tickets, L=10,000 -> strides 100, 200, 40) and stopped at step 4, after the first three decisions (A, then B, then C had run; passes A=100, B=200, C=40). What you were about to do next, in your own NEXT line: finish the first eight decisions, check that C runs 5/8 of the time in the long run, then explain vruntime aloud in under two minutes. That is also the stage's done-when ('Explain vruntime aloud in under two minutes; one stride example computed'), and the OS oral-prep workspace records the same next action.",
+        "evidence": [
+          {
+            "ref": "bootstrap --brief: resume_pointer",
+            "quote": "stage_id stage-os-l02-02-proportional-share, updated 2026-09-16, pointer_state confirmed"
+          },
+          {
+            "ref": "curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+            "quote": "Stopped at step 4 (2026-09-16)."
+          },
+          {
+            "ref": "curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+            "quote": "NEXT: finish the first eight decisions, check that C runs 5/8 of the time in the long run, then explain vruntime aloud in under two minutes."
+          },
+          {
+            "ref": "stage-os-l02-02-proportional-share (plan-edit-context --stage-id): done_when",
+            "quote": "Explain vruntime aloud in under two minutes; one stride example computed."
+          },
+          {
+            "ref": "workspace-os-oral-prep: next_action",
+            "quote": "Continue the proportional-share stage: work one stride-scheduling example by hand, then explain vruntime aloud."
+          }
+        ],
+        "confidence": "high",
+        "commands": [
+          ".venv/bin/python tools/los.py bootstrap --brief",
+          ".venv/bin/python tools/los.py resume --json",
+          ".venv/bin/python tools/los.py inspect workspace-os-oral-prep workspace-tessera-engine coordination module-tuh-os",
+          ".venv/bin/python tools/los.py plan-edit-context unit-os-l02 --stage-id stage-os-l02-02-proportional-share",
+          "cat curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md"
+        ],
+        "tool_calls": 4,
+        "impl_files_read": [],
+        "notes": "resume --json named the stage but not how far into it; the exact stop point ('step 4') and NEXT line exist only in the stage working note, read directly. 10 orientation/setup calls (#1-#10: repo listing, AGENTS.md+CLAUDE.md, OPERATOR.md, failed `python`, README/Makefile setup reads, make setup, capabilities, bootstrap --brief, --help) served all five questions and are counted once in results/S02-r1.json; tool_calls here counts the question-specific calls after them (a call serving several questions is counted for each)."
+      },
+      {
+        "question": "Q07",
+        "answer": "Monday 12 October 2026 at 14:30: the Operating Systems (INF-BS-4, TU Havelberg) oral exam, 1. Termin ('Oral exam slot'), 30 minutes, slot assigned by the chair. You are registered for it (attempt for Termin 1 recorded as 'registered'). The module record names no room. This comes from the owning module record; COORDINATION.md deliberately only says the slot lives there.",
+        "evidence": [
+          {
+            "ref": "curriculum/modules/module-tuh-os/module.yaml (inspect module-tuh-os): examination.sittings",
+            "quote": "termin 1, date 2026-10-12, time 14:30, label 'Oral exam slot'"
+          },
+          {
+            "ref": "curriculum/modules/module-tuh-os/module.yaml: examination.notes",
+            "quote": "Oral exam, 30 minutes, slot assigned by the chair."
+          },
+          {
+            "ref": "curriculum/modules/module-tuh-os/module.yaml: attempts",
+            "quote": "termin 1, date 2026-10-12, result registered"
+          },
+          {
+            "ref": "work/COORDINATION.md: Commitments",
+            "quote": "Operating Systems oral — registered (slot lives in the module record)."
+          }
+        ],
+        "confidence": "high",
+        "commands": [
+          ".venv/bin/python tools/los.py bootstrap --brief",
+          ".venv/bin/python tools/los.py inspect workspace-os-oral-prep workspace-tessera-engine coordination module-tuh-os"
+        ],
+        "tool_calls": 1,
+        "impl_files_read": [],
+        "notes": "bootstrap --brief already listed the sitting; inspect module-tuh-os confirmed it from the owning module record (duration, registration). 10 orientation/setup calls (#1-#10: repo listing, AGENTS.md+CLAUDE.md, OPERATOR.md, failed `python`, README/Makefile setup reads, make setup, capabilities, bootstrap --brief, --help) served all five questions and are counted once in results/S02-r1.json; tool_calls here counts the question-specific calls after them (a call serving several questions is counted for each)."
+      },
+      {
+        "question": "Q13",
+        "answer": "Tessera (project-tessera) has four milestones: parser and logical plan (complete), pull-based executor (complete), rule-based optimizer (active), cost-based join ordering (planned; by your 2026-08-04 decision it comes only after the rewrite rules, once the executor is stable). What is recorded as still to do for the optimizer: (1) the filter-below-join rule, only when the predicate's columns come from one side, with tests comparing results before and after rewriting (the workspace's recorded next action); (2) projection pruning; (3) a property test execute(optimize(q)) == execute(q) for random queries; (4) making rule application terminate when two rules undo each other (merge-filters vs split-filters). (4) is also an open question in the workspace, together with whether projection pruning should run before or after filter pushdown. Constant folding of '1 = 1' is already ticked off. Items (2) and (3), and the ticks, come from an unfiled inbox capture (work/inbox/20260910-tessera-todo.md), not yet from the workspace. Sequencing constraint (COORDINATION.md): Tessera's optimizer work follows the dataframe skill unit on query plans (currently at stage 'Read explain() output', three plans to annotate) and should not run ahead of it; Tessera gets at most two evenings a week. The repository records no formal done-criterion for the optimizer milestone, and the milestone id the project lists (milestone-tessera-optimizer) cannot be inspected.",
+        "evidence": [
+          {
+            "ref": "projects/registry/project-tessera.yaml (inspect project-tessera): structure.nodes",
+            "quote": "Parser and logical plan: complete; Pull-based executor: complete; Rule-based optimizer: active; Cost-based join ordering: planned"
+          },
+          {
+            "ref": "decision-tessera-rules-before-cost (project-tessera, decided 2026-08-04)",
+            "quote": "Implement algebraic rewrite rules first; cost-based join ordering only after the executor is stable."
+          },
+          {
+            "ref": "work/active/workspace-tessera-engine/CONTEXT.md: Next Action",
+            "quote": "Implement the filter-below-join rule and write tests that compare results before and after rewriting."
+          },
+          {
+            "ref": "work/active/workspace-tessera-engine/CONTEXT.md: Open Questions",
+            "quote": "How do I make rule application terminate when two rules undo each other? / Should projection pruning run before or after filter pushdown?"
+          },
+          {
+            "ref": "work/inbox/20260910-tessera-todo.md",
+            "quote": "[ ] filter-below-join rule (only when predicate columns come from one side) / [ ] projection pruning / [ ] property test: execute(optimize(q)) == execute(q) for random q / [ ] rules fighting each other / [x] constant folding of 1 = 1"
+          },
+          {
+            "ref": "work/COORDINATION.md: Dependencies",
+            "quote": "Tessera's optimizer work follows the dataframe skill unit on query plans; it should not run ahead of it."
+          }
+        ],
+        "confidence": "medium",
+        "commands": [
+          ".venv/bin/python tools/los.py bootstrap --brief",
+          ".venv/bin/python tools/los.py inspect workspace-os-oral-prep workspace-tessera-engine coordination module-tuh-os",
+          ".venv/bin/python tools/los.py inspect project-tessera",
+          "cat work/active/workspace-tessera-engine/CONTEXT.md",
+          ".venv/bin/python tools/los.py inspect milestone-tessera-optimizer  # -> los: record not found",
+          "ls -la work/inbox/",
+          "cat work/inbox/*.md"
+        ],
+        "tool_calls": 4,
+        "impl_files_read": [],
+        "notes": "The concrete remaining items are split between the workspace file and an unfiled inbox to-do; no product read joins them. 10 orientation/setup calls (#1-#10: repo listing, AGENTS.md+CLAUDE.md, OPERATOR.md, failed `python`, README/Makefile setup reads, make setup, capabilities, bootstrap --brief, --help) served all five questions and are counted once in results/S02-r1.json; tool_calls here counts the question-specific calls after them (a call serving several questions is counted for each)."
+      },
+      {
+        "question": "Q15",
+        "answer": "Your recorded priority is the decision of 2026-08-24 in COORDINATION.md (it replaced the 2026-07-14 ordering): (1) the Statistical Learning retake is primary until its sitting (2. Termin, Tuesday 6 Oct 2026, 10:00-12:00, registered); (2) Operating Systems oral prep is second and runs in parallel at roughly a third of study time (oral Monday 12 Oct 2026, 14:30); (3) the dataframe skill module and Tessera get at most two evenings a week, and Tessera's optimizer must not run ahead of the dataframe query-plan unit; (4) Ledgerline is paused until after the October exams, and the linear algebra refresh has been paused since 2026-06-12: resume only its SVD stage, and only as far as the Statistical Learning L09 scope needs. The resume pointer sits on the OS stage only because that is where you last studied; it is not a priority statement. This is your recorded decision, not my recommendation; COORDINATION.md records no later priority decision.",
+        "evidence": [
+          {
+            "ref": "work/COORDINATION.md: Priorities",
+            "quote": "Decision 2026-08-24 (Noor), replacing the 2026-07-14 ordering: Statistical Learning retake is primary until its sitting; Operating Systems oral prep is second and runs in parallel at roughly a third of study time."
+          },
+          {
+            "ref": "work/COORDINATION.md: Priorities",
+            "quote": "The dataframe skill module and Tessera get at most two evenings a week. Ledgerline is paused."
+          },
+          {
+            "ref": "work/COORDINATION.md: Deferrals",
+            "quote": "Linear algebra refresh paused since 2026-06-12; resume only the SVD stage, and only as far as the L09 exam scope needs."
+          },
+          {
+            "ref": "bootstrap --brief: academic_deadlines",
+            "quote": "Statistical Learning 2. Termin 2026-10-06 10:00-12:00 registered; Operating Systems oral 2026-10-12 14:30 registered"
+          }
+        ],
+        "confidence": "high",
+        "commands": [
+          ".venv/bin/python tools/los.py bootstrap --brief",
+          ".venv/bin/python tools/los.py inspect workspace-os-oral-prep workspace-tessera-engine coordination module-tuh-os"
+        ],
+        "tool_calls": 1,
+        "impl_files_read": [],
+        "notes": "inspect coordination returns COORDINATION.md sections as structured text; one call. 10 orientation/setup calls (#1-#10: repo listing, AGENTS.md+CLAUDE.md, OPERATOR.md, failed `python`, README/Makefile setup reads, make setup, capabilities, bootstrap --brief, --help) served all five questions and are counted once in results/S02-r1.json; tool_calls here counts the question-specific calls after them (a call serving several questions is counted for each)."
+      },
+      {
+        "question": "Q27",
+        "answer": "Seven unprocessed captures sit in work/inbox/ (bootstrap and status both count 7). 1) 20260812-lazy-plan-explain-paste.md: a pasted naive vs optimized lazy plan ('why did the filter disappear from the top?? and where did the other columns go'). It belongs in the dataframe skill unit's current stage 'Read explain() output' (stage-df-lazy-02-read-explain, unit-dataframes-lazy-plans), as a natural candidate for the three plans that stage wants annotated. It is the same idea as Tessera's filter-below-join and projection-pruning to-dos. 2) 20260816-drf-paper-link.md: 'read later: Dominant Resource Fairness'. Already filed: the source is registered (source-ghodsi-drf-2011) and you have a reference note on it (note-dominant-resource-fairness-paper), plus note-multi-tenant-gpu-sharing for the GPU-sharing angle. The capture is redundant and can be cleared. 3) 20260903-pvalue-reminder.md: you repeated the 'p = chance H0 is true' mistake in a mock. The correct statement already exists in note-p-values-corrected (which says you had it wrong in April; note-p-values-first-take is the April note, and no formal supersedes link is recorded). This is evidence of a recurring misconception for the Statistical Learning retake. It belongs as a learner observation or evidence against note-p-values-corrected, not as a new note. 4) 20260910-tessera-todo.md: Tessera to-do list. It belongs in the Tessera workspace (work/active/workspace-tessera-engine/CONTEXT.md). Its filter-below-join item is already the workspace's Next Action and its rule-termination item already an Open Question; projection pruning and the property test are new scope items. 5) 20260914-batchnorm-forum-question.md: 'batch norm does NOT actually fix internal covariate shift?'. Already answered in your repository by note-batchnorm-why-it-works-contested (Santurkar et al. 2018, source-santurkar-batchnorm-2018), which challenges your June note note-batchnorm-internal-covariate-shift. The question belongs linked to those notes, and the capture itself can be cleared. Search also surfaces unit-statlearn-l11 'Training neural networks' for batch normalization. 6) 20260915-os-oral-questions.md: questions from last year's OS orals (scheduler, process vs thread, page fault, TLB and context switch, deadlock prevention, priority inversion). It belongs to the OS oral prep workspace (workspace-os-oral-prep) as practice input spanning its three units (L02 scheduling, L05 virtual memory, L07 concurrency). The scheduling question overlaps the existing note-os-scheduling-exercise-bank. 7) 20260916-sleep-podcast.md: sleep after learning helps recall, 'maybe stop studying at midnight before the exams?'. This is not course material but a half-formed study-habit idea, so it belongs in the Garden (knowledge/garden/), next to your existing seed fairness-for-my-study-time.md (#planning). Nothing has been moved; filing any of it would be a separate, approved change.",
+        "evidence": [
+          {
+            "ref": "bootstrap --brief: counts.inbox_items",
+            "quote": "7"
+          },
+          {
+            "ref": "work/inbox/20260812-lazy-plan-explain-paste.md",
+            "quote": "why did the filter disappear from the top?? and where did the other columns go"
+          },
+          {
+            "ref": "stage-df-lazy-02-read-explain (plan-edit-context --stage-id)",
+            "quote": "Read explain() output; objective: Read an optimized plan and name each optimization that fired; done_when: Three plans annotated."
+          },
+          {
+            "ref": "work/inbox/20260816-drf-paper-link.md",
+            "quote": "read later: Dominant Resource Fairness (Ghodsi et al., NSDI 2011)"
+          },
+          {
+            "ref": "note-dominant-resource-fairness-paper (knowledge/notes/systems/note-dominant-resource-fairness-paper.md)"
+          },
+          {
+            "ref": "source-ghodsi-drf-2011 (sources/registry/ml-systems.yaml)"
+          },
+          {
+            "ref": "work/inbox/20260903-pvalue-reminder.md",
+            "quote": "did it AGAIN in the mock: wrote \"p = 0.02 so 2% chance H0 is true\". NO."
+          },
+          {
+            "ref": "note-p-values-corrected (knowledge/notes/mathematics/note-p-values-corrected.md)",
+            "quote": "I had this wrong in April. Correct statement:"
+          },
+          {
+            "ref": "work/inbox/20260910-tessera-todo.md",
+            "quote": "tessera todo"
+          },
+          {
+            "ref": "work/active/workspace-tessera-engine/CONTEXT.md: Next Action / Open Questions"
+          },
+          {
+            "ref": "work/inbox/20260914-batchnorm-forum-question.md",
+            "quote": "someone says batch norm does NOT actually fix internal covariate shift"
+          },
+          {
+            "ref": "note-batchnorm-why-it-works-contested (knowledge/notes/machine-learning/note-batchnorm-why-it-works-contested.md)",
+            "quote": "The June note repeats the original paper's explanation (internal covariate shift). Santurkar et al. test it directly"
+          },
+          {
+            "ref": "work/inbox/20260915-os-oral-questions.md",
+            "quote": "Questions from last year's OS orals (from Jana and Tim)"
+          },
+          {
+            "ref": "workspace-os-oral-prep: unit_ids unit-os-l02, unit-os-l05, unit-os-l07"
+          },
+          {
+            "ref": "note-os-scheduling-exercise-bank (role exercise-bank)"
+          },
+          {
+            "ref": "work/inbox/20260916-sleep-podcast.md",
+            "quote": "maybe stop studying at midnight before the exams?"
+          },
+          {
+            "ref": "knowledge/garden/fairness-for-my-study-time.md",
+            "quote": "#planning #os"
+          }
+        ],
+        "confidence": "medium",
+        "commands": [
+          "ls -la work/inbox/",
+          "cat work/inbox/*.md",
+          "grep -n '^#' system/ARCHITECTURE.md",
+          "sed -n 207,258p system/ARCHITECTURE.md",
+          ".venv/bin/python tools/los.py search 'p-value'",
+          ".venv/bin/python tools/los.py search 'batch normalization'",
+          ".venv/bin/python tools/los.py search 'dominant resource fairness'",
+          ".venv/bin/python tools/los.py search 'sleep'",
+          ".venv/bin/python tools/los.py search 'explain plan'",
+          ".venv/bin/python tools/los.py inspect note-batchnorm-why-it-works-contested note-batchnorm-internal-covariate-shift note-dominant-resource-fairness-paper note-p-values-corrected note-os-scheduling-exercise-bank",
+          "ls knowledge/garden/",
+          ".venv/bin/python tools/los.py plan-edit-context unit-dataframes-lazy-plans --stage-id stage-df-lazy-02-read-explain",
+          "cat knowledge/garden/fairness-for-my-study-time.md",
+          "work/active/workspace-os-oral-prep/CONTEXT.md body"
+        ],
+        "tool_calls": 7,
+        "impl_files_read": [],
+        "notes": "No command lists inbox items (status/bootstrap only count them), so the inbox was listed and read directly; routing needed one search per item and a Garden listing because the Garden is not searchable. 10 orientation/setup calls (#1-#10: repo listing, AGENTS.md+CLAUDE.md, OPERATOR.md, failed `python`, README/Makefile setup reads, make setup, capabilities, bootstrap --brief, --help) served all five questions and are counted once in results/S02-r1.json; tool_calls here counts the question-specific calls after them (a call serving several questions is counted for each)."
+      }
+    ],
+    "tool_calls_by_phase": {
+      "orientation_and_setup": 10,
+      "question_specific": 11,
+      "total": 21
+    },
+    "doc_lines_read_before_first_product_command": 656,
+    "setup_seconds": 4.69,
+    "harness_tool_calls": {
+      "build_world": 1,
+      "observe_snapshots_and_diff": 2,
+      "snapshot_inspection": 1,
+      "note": "record-writing calls not counted"
+    }
+  },
+  "uncertainties": [
+    "Per-question tool counts are an attribution: several calls served more than one question.",
+    "Q27 routing is operator judgement; the product documents where artifacts live but not how to route a capture that duplicates existing material.",
+    "Whether note-batchnorm-why-it-works-contested was written before or after the 2026-09-14 capture."
+  ]
+}

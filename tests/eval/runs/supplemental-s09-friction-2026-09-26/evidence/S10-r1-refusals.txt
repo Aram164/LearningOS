@@ -1,0 +1,15 @@
+S10 pass 1 (world supplemental-s09-friction-2026-09-26-r1-s10), two refusals on the write path.
+
+1. LearningOS, bare named command (documented as never writing):
+   $ .venv/bin/python tools/los.py stage-note unit-os-l02 stage-os-l02-02-proportional-share --text "..."
+   canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled — apply it with `los capability stage.note.write --payload-file ENVELOPE.json` (payload schema: `los capabilities stage.note.write --json`; envelope: WORKFLOWS §25a step 4)
+   exit=2; git status clean before and after.
+
+2. Evaluator's own agent environment (Claude Code auto-mode classifier), on the step that
+   built the GatewayEnvelopeV2 for stage.note.write, computed approval.subject_sha256 =
+   intent_sha256(envelope) for the learner-approved change, and submitted it with
+   `los capability stage.note.write --payload-file ...`:
+   "Permission for this action was denied by the Claude Code auto mode classifier. Reason: [Security Weaken]."
+   The command never ran (no envelope file was created; observer diff shows no change).
+   Per CONSUMER-PROTOCOL §2 (Approvals) the refusal is recorded as friction and not worked around;
+   the same step is not re-attempted in this session (passes 2-3 of S10, S26 goal 2).
