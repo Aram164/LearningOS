@@ -123,6 +123,7 @@ GROUPS: dict[str, list[str]] = {
         "test_diagnostic_store.py",
         "test_evidence_parity.py",
         "test_intelligence_scan.py",
+        "test_note_create.py",
         "test_note_evidence.py",
         "test_observation_gesture.py",
         "test_operations.py",

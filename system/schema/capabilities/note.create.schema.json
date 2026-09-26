@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/note.create.schema.json",
+  "title": "payload for capability note.create",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "body_file",
+    "note"
+  ],
+  "properties": {
+    "body_file": {
+      "type": "string"
+    },
+    "body_file_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "note": {
+      "type": "object"
+    }
+  },
+  "dependentRequired": {
+    "body_file": [
+      "body_file_sha256"
+    ],
+    "body_file_sha256": [
+      "body_file"
+    ]
+  }
+}

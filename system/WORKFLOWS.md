@@ -43,17 +43,34 @@ When no workspace is obvious, drop anything into `work/inbox/` — no naming, no
 
 ## 3. Create or evolve a durable note
 
+Durable notes are created only through a gateway capability (§25c) — never by
+saving the file directly. Pick the capability by what the note is:
+
+- a source-chapter analysis → `note.analysis.save` (one) or
+  `note.analysis.save_batch` (up to 20 under one receipt);
+- a learner's recorded question → `atlas.question.save`;
+- session scratch promoted in bulk at closure → shelving: `review.prepare`,
+  then `review.apply` on explicitly approved items only;
+- anything else durable → `note.create` below.
+
 1. search for an existing note with the same purpose;
-2. update it when appropriate;
+2. update it when appropriate, through `note.revise` after explicit approval —
+   identity, path, and role stay stable;
 3. otherwise assign a stable note ID (no gratuitous numeric suffix);
-4. assign a role if not `synthesis` (`exercise-bank`, `mock-exam`, `crosswalk`, …);
-5. save as `knowledge/notes/<bucket>/<note-id>.md` — filename is always the ID, bucket is the nearest reasonable domain;
-6. attach relevant concept and source IDs;
+4. assign a role if not `synthesis` (`exercise-bank`, `mock-exam`,
+   `crosswalk`, …); `reference` and `question` keep their dedicated
+   capabilities and are refused by `note.create`;
+5. stage the exact body bytes and apply them with a `note.create` envelope
+   (§25c): the handler writes `knowledge/notes/<bucket>/<note-id>.md` —
+   filename is always the ID, bucket is the nearest reasonable domain;
+6. attach relevant concept and source IDs (each must already be registered);
 7. preserve uncertainty and unfinished reasoning;
 8. add the workspace ID as context when useful;
-9. rebuild generated outputs.
+9. validate, then rebuild generated outputs.
 
-Do not require polish or completeness.
+Do not require polish or completeness. A successor that replaces an earlier
+note declares `supersedes` in the same `note.create` call, which deprecates
+the predecessor atomically (workflow 15).
 
 ## 4. Add a concept
 
@@ -386,13 +403,10 @@ Preserve the ID; repair explicit path links; keep ID-based references unchanged;
 
 ## 15. Deprecate or supersede
 
-Prefer preservation over deletion:
-
-```yaml
-state: deprecated
-supersedes:
-  - note-old-id
-```
+Prefer preservation over deletion. A successor is an ordinary `note.create`
+call whose record declares `supersedes: [note-old-id, …]`; every listed
+predecessor must exist and is marked `state: deprecated` in the same
+transaction. The reverse link is generated, never stored (ARCHITECTURE §5.5).
 
 Concepts: `deprecated: true` + `replaced_by`. Generated indexes mark deprecated records but do not erase them.
 
@@ -507,7 +521,7 @@ Worked case: AML's 1. Termin was withdrawn and the 2. Termin (2026-09-30) is sti
 
 Routing destinations are already deterministic (ARCHITECTURE §3.3); this is the loop that applies them, not a new routing policy. It invents no destinations — each item is pointed at the workflow that already owns it. `work/inbox/` is the zero-friction capture point and should trend toward empty. Process it by taking each item in turn and routing it to its single deterministic destination:
 
-1. **Durable understanding** (a worked derivation, a synthesis worth finding again) → a note under `knowledge/` (workflow 3); handwritten photos or scans → workflow 17.
+1. **Durable understanding** (a worked derivation, a synthesis worth finding again) → a note under `knowledge/` through the workflow-3 capability (`note.create` envelope — never a direct save); handwritten photos or scans → workflow 17.
 2. **Temporary material** tied to an active effort (fragments, a rough source list, lecture-specific checklists) → that workspace's `scratch/` or `inputs/` (workflow 2).
 3. **A new learning resource** (course, video, book, blog, paper, tool) → register it (workflow 6a); add to a curated list if it belongs on one (workflow 6b).
 4. **An operational fact** (commitment, priority, dependency, deferral) → `COORDINATION.md` (workflow 9).
