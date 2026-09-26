@@ -93,6 +93,7 @@ from learning_os.commands.query import (  # noqa: E402
     cmd_bootstrap,
     cmd_capabilities,
     cmd_generate,
+    cmd_inbox_list,
     cmd_inspect,
     cmd_program_list,
     cmd_related,
@@ -261,11 +262,14 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_note_read)
 
     p = sub.add_parser("inbox-read", help="read a bounded segment of one work/inbox file by name")
-    p.add_argument("name", help="file name relative to work/inbox/")
+    p.add_argument("name", help="file name relative to work/inbox/ (list names with inbox-list)")
     p.add_argument("--offset", type=int, default=0, help="zero-based Unicode character offset")
     p.add_argument("--limit", type=int, default=8000, help="maximum characters, bounded to 16000")
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_inbox_read)
+
+    p = sub.add_parser("inbox-list", help="list work/inbox files by name, without reading bytes")
+    p.set_defaults(func=cmd_inbox_list)
 
     p = sub.add_parser("inspect", help="inspect one record by stable id")
     p.add_argument("id")

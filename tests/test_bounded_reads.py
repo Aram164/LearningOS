@@ -538,3 +538,21 @@ def test_search_rows_carry_state_and_deprecated(mini_repo):
                                "--type", "note").stdout)
     assert notes, "mini note must match"
     assert all("state" in row for row in notes)
+
+
+def test_inbox_list_lists_names_without_reading_bytes(mini_repo):
+    listed = run_los(mini_repo, "inbox-list")
+    assert listed.returncode == 0, listed.stderr
+    assert json.loads(listed.stdout) == []
+    inbox = mini_repo / "work/inbox"
+    (inbox / "todo.md").write_text("hello inbox\n", encoding="utf-8")
+    (inbox / "blob.bin").write_bytes(b"\x00\x01\x02\xff")
+    (inbox / ".hidden.md").write_text("dot-file\n", encoding="utf-8")
+    listed = run_los(mini_repo, "inbox-list")
+    assert listed.returncode == 0, listed.stderr
+    rows = json.loads(listed.stdout)
+    assert [row["id"] for row in rows] == ["blob.bin", "todo.md"]
+    assert all(row["type"] == "inbox-item" for row in rows)
+    assert all(set(row) == {"id", "type", "title", "path", "status",
+                            "state", "deprecated"} for row in rows)
+    assert rows[0]["path"] == "work/inbox/blob.bin"
