@@ -18,6 +18,7 @@ from .reads import (
     brief_bootstrap,
     compact_bootstrap,
     content_search,
+    empty_search_hint,
     inspect_batch,
     inspect_not_found,
     record_payload,
@@ -266,14 +267,21 @@ def cmd_search(args) -> int:
             print(f"los: cannot list work/inbox: {exc}", file=sys.stderr)
             return 2
     matches = []
+    hits = [0] * len(words)
     for rec in rows:
         if args.type and rec.get("type") != args.type:
             continue
         hay = json.dumps(rec, ensure_ascii=False).lower()
-        if all(word in hay for word in words):
+        found = [word in hay for word in words]
+        for index, hit in enumerate(found):
+            if hit:
+                hits[index] += 1
+        if all(found):
             matches.append({k: rec.get(k) for k in
                             ("id", "type", "title", "path", "status",
                              "state", "deprecated")})
+    if not matches and words:
+        print(f"los: {empty_search_hint('record', words, hits)}", file=sys.stderr)
     print(json.dumps(matches[:args.limit], **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 

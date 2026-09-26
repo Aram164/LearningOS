@@ -409,6 +409,39 @@ def _bytes_inside_owner(root, path, owner, *, escape, symlink):
     return path.read_bytes()
 
 
+def empty_search_hint(row_word: str, terms: list[str], hits: list[int]) -> str:
+    """One-line stderr disclosure for an empty literal-AND result.
+
+    Names how many rows each term matched on its own, so the caller can
+    see which term eliminated the answer. stdout shapes stay untouched.
+    """
+    shown = [f"{term}={count}"
+             for term, count in zip(terms[:20], hits[:20], strict=True)]
+    if len(terms) > 20:
+        shown.append(f"+{len(terms) - 20} more")
+    plural = "s" if len(terms) != 1 else ""
+    return (f"no {row_word} matches all {len(terms)} term{plural}; "
+            f"per-term {row_word} hits: {' '.join(shown)}")
+
+
+def _content_term_hits(root, ordered, terms):
+    """Per-term note counts for an empty content result, or None.
+
+    Best-effort by design: the search itself already answered [], so a
+    read racing the hint must never fail the command.
+    """
+    try:
+        hits = [0] * len(terms)
+        for note in ordered:
+            text = _note_bytes(root, note).decode("utf-8")
+            for index, term in enumerate(terms):
+                if term.search(text):
+                    hits[index] += 1
+        return hits
+    except (WriteRefused, OSError, UnicodeError):
+        return None
+
+
 def _note_bytes(root, note):
     return _bytes_inside_owner(
         root, note.path, root / "knowledge" / "notes",
@@ -629,6 +662,11 @@ def content_search(args) -> int:
                 # partial answer. Bytes/symlink refusals are not
                 # DerivedError and still propagate unchanged.
                 matches = _exhaustive_content_search(root, ordered, terms)
+            if not matches:
+                hint_hits = _content_term_hits(root, ordered, terms)
+                if hint_hits is not None:
+                    print(f"los: {empty_search_hint('note', raw_terms, hint_hits)}",
+                          file=sys.stderr)
             return _print_stable(root, snapshot, {
                 "contract": "note-content-search", "items": matches[offset:offset + limit],
                 "total": len(matches),

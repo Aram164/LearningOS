@@ -187,7 +187,9 @@ application state by parsing canonical Markdown or YAML. Use `list-*`,
 `inspect`, `search`, and `related` for targeted reads. `search` without
 `--content` conjoins whitespace-separated substrings per row — every term
 must occur somewhere in the row — unranked and without snippets, so short
-stems collide and natural phrasing often returns nothing. `related ID`
+stems collide and natural phrasing often returns nothing. An empty answer
+names per-term hit counts on stderr, so the eliminating term is visible.
+`related ID`
 walks one hop over the record's own declared edges plus the manifest's
 backlink tables in both directions, so membership in one direction always
 implies the reverse edge. Results rank by connection strength (more
