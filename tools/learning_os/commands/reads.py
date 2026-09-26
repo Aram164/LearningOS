@@ -24,6 +24,7 @@ from learning_os.search.query import candidates
 from .support import (
     WriteRefused,
     _fresh_manifest,
+    _fresh_manifest_and_repo,
     _operator_lock,
     _root,
 )
@@ -68,6 +69,110 @@ def record_payload(manifest, record_id):
     return payload
 
 
+def _structure_nodes(structure):
+    """(node, node_path) pairs for a project structure tree, in order."""
+    found = []
+
+    def visit(nodes, path):
+        for node in nodes or []:
+            if not isinstance(node, dict) or not isinstance(node.get("id"), str):
+                continue
+            here = [*path, node["id"]]
+            found.append((node, here))
+            visit(node.get("children"), here)
+
+    if isinstance(structure, dict):
+        visit(structure.get("nodes"), [])
+    return found
+
+
+def structural_payload(manifest: dict, record_id: str, repo=None) -> dict | None:
+    """Resolve a structural sub-id to its owner context, or None.
+
+    Pure over the manifest except for learning-path stages, which are not
+    projected and need the loaded repo. Curriculum stages answer with
+    their projected row plus the plan-edit-context invocation that owns
+    edits (inspect carries no revision guards); path stages, detours,
+    and project nodes answer with their row plus owners; bare milestone
+    ids answer with their owning projects, since milestones carry no
+    record of their own. Several owners for one id answer one ambiguous
+    payload with every candidate in stable order.
+    """
+    matches: list[dict] = []
+    for stage in manifest.get("stages", []) or []:
+        if isinstance(stage, dict) and stage.get("id") == record_id:
+            unit_id = stage.get("unit_id")
+            matches.append({
+                "id": record_id, "structural_kind": "curriculum-stage",
+                "stage": dict(stage), "unit_id": unit_id,
+                "study_map_id": stage.get("study_map_id"),
+                "module_id": stage.get("module_id"),
+                "edit_via": (f"plan-edit-context {unit_id} "
+                             f"--stage-id {record_id}"),
+            })
+    if repo is not None:
+        for path in sorted(getattr(repo, "learning_paths", {}).values(),
+                           key=lambda candidate: candidate.id):
+            for stage in path.data.get("stages", []) or []:
+                if isinstance(stage, dict) and stage.get("id") == record_id:
+                    matches.append({
+                        "id": record_id, "structural_kind": "path-stage",
+                        "stage": dict(stage), "path_id": path.id,
+                        "workspace_id": path.workspace_id,
+                        "archived": bool(path.archived),
+                    })
+    for study_map in manifest.get("study_maps", []) or []:
+        if not isinstance(study_map, dict):
+            continue
+        for detour in study_map.get("detours", []) or []:
+            if isinstance(detour, dict) and detour.get("id") == record_id:
+                matches.append({
+                    "id": record_id, "structural_kind": "detour",
+                    "detour": dict(detour), "unit_id": study_map.get("unit_id"),
+                    "study_map_id": study_map.get("id"),
+                    "module_id": study_map.get("module_id"),
+                })
+    for record in manifest.get("records", []) or []:
+        if not isinstance(record, dict) or record.get("type") != "project":
+            continue
+        for node, node_path in _structure_nodes(record.get("structure")):
+            if node["id"] == record_id:
+                matches.append({
+                    "id": record_id, "structural_kind": "project-node",
+                    "node": dict(node), "project_id": record.get("id"),
+                    "node_path": node_path, "record_path": record.get("path"),
+                })
+        if record_id in (record.get("milestone_ids", []) or []):
+            matches.append({
+                "id": record_id, "structural_kind": "project-milestone",
+                "project_id": record.get("id"), "record_path": record.get("path"),
+                "note": ("milestones carry no record of their own; "
+                         "the owning project is the record"),
+            })
+    if not matches:
+        return None
+    node_projects = {match["project_id"] for match in matches
+                     if match["structural_kind"] == "project-node"}
+    matches = [match for match in matches
+               if match["structural_kind"] != "project-milestone"
+               or match["project_id"] not in node_projects]
+    if len(matches) == 1:
+        return matches[0]
+    return {"id": record_id, "structural_kind": "ambiguous",
+            "candidates": matches}
+
+
+#: Id prefixes that name structural sub-records rather than records.
+STRUCTURAL_PREFIXES = ("stage-", "detour-", "step-", "workstream-", "milestone-")
+
+
+def inspect_not_found(record_id: str) -> str:
+    if isinstance(record_id, str) and record_id.startswith(STRUCTURAL_PREFIXES):
+        return (f"record not found: {record_id} (no curriculum stage, path stage, "
+                "detour, project node, or milestone carries this id)")
+    return f"record not found: {record_id}"
+
+
 def inspect_batch(args) -> int:
     """Resolve a requested batch once; never return a partial or mixed read."""
     ids = [args.id, *args.more_ids]
@@ -77,12 +182,14 @@ def inspect_batch(args) -> int:
     try:
         with _operator_lock(root):
             snapshot = _snapshot(root)
-            manifest = _fresh_manifest(root, snapshot_id=snapshot)
+            manifest, repo = _fresh_manifest_and_repo(root, snapshot_id=snapshot)
             records = []
             for record_id in ids:
                 record = record_payload(manifest, record_id)
                 if record is None:
-                    raise WriteRefused(f"record not found: {record_id}")
+                    record = structural_payload(manifest, record_id, repo)
+                if record is None:
+                    raise WriteRefused(inspect_not_found(record_id))
                 records.append(record)
             return _print_stable(root, snapshot, {
                 "contract": "record-batch", "requested_ids": ids, "records": records,
