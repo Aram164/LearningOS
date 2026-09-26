@@ -17,6 +17,7 @@ from learning_os.contracts.gateway import GatewayRequestContext, intent_sha256
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.transactions import (
     ProjectionFailure,
+    TransactionFailure,
     TransactionIdempotencyConflict,
     TransactionService,
 )
@@ -726,16 +727,26 @@ def test_projection_error_maps_pre_existing_defect_to_validation_failed():
 
 
 def test_gateway_v2_classifies_unpublishable_prestate_as_validation_failed():
-    """The fixed JF-11 wording must not trip an earlier classifier token."""
-    error = _classify_failure(
-        2,
+    """The pre-existing-defect case is recognized by typed flag (JF-11).
+
+    Even a hostile message naming earlier classifier tokens (snapshot,
+    projection, approval) must not divert the refusal: the flag decides,
+    never the prose.
+    """
+    failure = TransactionFailure(
         "transaction failed canonical validation: E PARSE: some note has invalid "
         "YAML frontmatter; rolled back completely but the restored pre-state "
         "cannot be re-published (TransactionFailure); the defect pre-exists "
-        "this write",
+        "this write; snapshot projection approval",
+        pre_existing_defect=True,
     )
+    error = _classify_failure(2, str(failure), failure=failure)
     assert error["code"] == "VALIDATION_FAILED"
     assert error["retryable"] is False
+    assert error["message"] == str(failure)
+    # ... and without the flag the same prose is just prose: tokens rule.
+    untyped = _classify_failure(2, str(failure))
+    assert untyped["code"] != "VALIDATION_FAILED", untyped
 
 
 def test_gateway_v2_returns_typed_unknown_capability(

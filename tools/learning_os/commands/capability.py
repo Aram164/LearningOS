@@ -454,7 +454,15 @@ def _gateway_error(code: str, message: str, *, retryable: bool = False,
     }
 
 
-def _classify_failure(code: int, message: str) -> dict:
+def _classify_failure(code: int, message: str, *,
+                      failure: BaseException | None = None) -> dict:
+    if getattr(failure, "pre_existing_defect", False):
+        # Typed pre-existing-defect case (JF-11): canonical rollback
+        # completed but the restored pre-state itself does not publish —
+        # the shadow-validation refusal. Recognized by flag, never by
+        # message tokens, so defect prose can never trip an earlier
+        # classifier token. Same refusal the tokens used to select.
+        return _gateway_error("VALIDATION_FAILED", message)
     lowered = message.lower()
     # TransactionService normally rolls every authored byte back before a
     # refusal reaches this boundary.  When it explicitly reports an incomplete
@@ -1106,6 +1114,7 @@ def cmd_capability(args) -> int:
             _validate_capability_envelope(root, response, kind="result")
             print(json.dumps(response, indent=2, ensure_ascii=False))
             return _close_attempt(attempt, 2, "error", {"stage": "core.replay"})
+        failure: BaseException | None = None
         try:
             # One lock spans the approved-state comparison and the handler.
             # Named handlers reuse this lock, so their historical in-lock
@@ -1209,8 +1218,10 @@ def cmd_capability(args) -> int:
             return _close_attempt(attempt, 2, "error", {"code": "INTERNAL_FAILURE"})
         except TransactionFailure as exc:
             code, result = 2, {"error": str(exc)}
+            failure = exc
         except ValueError as exc:
             code, result = 2, {"error": str(exc)}
+            failure = exc
         except Exception as exc:  # fail closed behind a typed V2 boundary
             response = _v2_response(
                 envelope,
@@ -1234,7 +1245,8 @@ def cmd_capability(args) -> int:
             receipt_path=confirmation.get("receipt_path"),
             snapshot_after=confirmation.get("snapshot_after"),
             result=result if code == 0 else {},
-            error=None if code == 0 else _classify_failure(code, complaint),
+            error=None if code == 0 else _classify_failure(
+                code, complaint, failure=failure),
         )
         _validate_capability_envelope(root, response, kind="result")
         print(json.dumps(response, indent=2, ensure_ascii=False))
