@@ -189,6 +189,9 @@ application state by parsing canonical Markdown or YAML. Use `list-*`,
 must occur somewhere in the row — unranked and without snippets, so short
 stems collide and natural phrasing often returns nothing. An empty answer
 names per-term hit counts on stderr, so the eliminating term is visible.
+An empty query lists every row instead of matching: `search "" --type
+workspace` is the workspace list, and the same holds for every other
+record family, garden seeds, and inbox filenames (up to `--limit`).
 `related ID`
 walks one hop over the record's own declared edges plus the manifest's
 backlink tables in both directions, so membership in one direction always
