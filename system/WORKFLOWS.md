@@ -860,6 +860,12 @@ SNAP=$(python tools/los.py bootstrap --compact \
 python tools/los.py capability capture.create --payload-file envelope.json
 ```
 
+**Sealing helper.** `python tools/seal_envelope.py --capability NAME
+--payload JSON-or-@FILE --key KEY --revision ART=REV` reads the snapshot
+live and emits the sealed envelope above (to stdout, or `--out` a scratch
+path — never inside the repo). It performs exactly this section's steps 2–5;
+submit its output via step 6.
+
 ## 26. Source routing and feedback
 
 Register one global source identity first. Add a module source-map entry only
