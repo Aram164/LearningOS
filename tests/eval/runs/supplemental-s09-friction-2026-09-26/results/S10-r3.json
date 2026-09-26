@@ -1,0 +1,116 @@
+{
+  "scenario": "S10",
+  "run_id": "supplemental-s09-friction-2026-09-26",
+  "classification": "AMBIGUOUS",
+  "classification_reason": "Warm pass 3: 'where was I?' re-derived identically in 2 calls. The learner again declined completion and approved the exact stage-note append, but the write was not attempted: the evaluator's agent environment refused this step in S10-r1 and that denial covers the outcome. The gateway's behaviour stays unobserved; not a LearningOS defect.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec",
+    "derived_digest": "df97c8737d287c93f8e3a048d46ad71f9da0e95cf3cccd0c0bbc8e63032db409",
+    "snapshot_file": "observations/S10-r3-before.json"
+  },
+  "consumer": {
+    "goal": "Answer 'where was I?', then record the finished stride example (fresh world r3-s10).",
+    "first_action": "make setup; los resume --json",
+    "commands": [
+      "make setup; .venv/bin/python tools/los.py resume --json",
+      ".venv/bin/python tools/los.py plan-edit-context unit-os-l02 --stage-id stage-os-l02-02-proportional-share; cat <working_note from that read>"
+    ],
+    "tool_calls": 2,
+    "docs_consulted": [],
+    "impl_files_read": [],
+    "retries": 0,
+    "confusions": [],
+    "corrective_steps": [],
+    "questions_asked_to_learner": [
+      "Should I mark the proportional-share stage complete? -> 'No — I still have to explain vruntime aloud. Just record the progress.'",
+      "Apply exactly this change: append to the stage working note via stage.note.write (stage stays active): 'Finished the stride example (2026-09-26): all eight decisions; C runs 5 out of 8 times. / NEXT: explain vruntime aloud in under two minutes.'? -> 'Yes, apply exactly that.'"
+    ],
+    "implementation_knowledge_needed": true,
+    "wall_minutes": 0.2,
+    "outcome": "The learner gets the 'where was I' answer; her progress is not recorded (the operator reports the refused approval step); the repository is unchanged."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "No transaction opened; no envelope submitted.",
+    "approval_behavior": "The learner approved; approval.subject_sha256 would have to be computed by the operator (intent_sha256, undocumented). Not attempted: agent-environment refusal from S10-r1.",
+    "projection_activity": "Fresh projection per read (snapshot sha256:82bcffb7..., identical to pass 1).",
+    "persistence_activity": "None.",
+    "derived_changes": "none",
+    "manifest_changes": "none",
+    "unexpected_writes": [
+      "make setup: ignored .venv/, egg-info, __pycache__/ and .git/hooks"
+    ],
+    "warnings_errors": [],
+    "git_diff_stat": "",
+    "observe_diff_file": "observations/S10-r3-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec",
+    "derived_digest": "df97c8737d287c93f8e3a048d46ad71f9da0e95cf3cccd0c0bbc8e63032db409",
+    "snapshot_file": "observations/S10-r3-after.json"
+  },
+  "friction": [
+    {
+      "tag": "hidden-prerequisite",
+      "description": "`make setup` again in the fresh world.",
+      "cost": "bundled into call #1"
+    },
+    {
+      "tag": "missing-capability",
+      "description": "`resume` still omits the working note's 'Stopped at' and 'NEXT' lines, so every return costs a second call for the stage read plus a file read.",
+      "cost": "1 extra call per return"
+    },
+    {
+      "tag": "needs-implementation-knowledge",
+      "description": "Recording the progress still needs the undocumented intent_sha256 and an undocumented expected_revisions set (see S10-r1); a warm agent carries that knowledge only because it read gateway.py earlier in the session.",
+      "cost": "not measurable this pass (write not attempted)"
+    },
+    {
+      "tag": "other",
+      "description": "Agent-environment refusal carried over from S10-r1 ('Permission for this action was denied by the Claude Code auto mode classifier. Reason: [Security Weaken].'); the write goal was not attempted.",
+      "cost": "write goal blocked"
+    }
+  ],
+  "failures": [],
+  "scenario_record": {
+    "pass": 3,
+    "agent_state": "warm: same session; write-path knowledge from S10-r1",
+    "world": "~/los-eval/supplemental-s09-friction-2026-09-26-r3-s10 (world_head 13ad2fc)",
+    "where_was_i": {
+      "answer": "Welcome back. You were in Operating Systems -> 'Processes and CPU scheduling' -> stage 2 'Proportional share and CFS' (stage-os-l02-02-proportional-share). In the stage's working note you had set up the stride example (A=100, B=50, C=250 tickets, L=10,000 -> strides 100, 200, 40) and stopped at step 4 on 2026-09-16, after three decisions. Your own NEXT line: finish the first eight decisions, check that C runs 5/8 of the time, then explain vruntime aloud in under two minutes, which is also what the stage needs to count as done. Your OS oral sitting is on 12 Oct 2026 (registered).",
+      "sources": [
+        "los resume --json",
+        "los plan-edit-context unit-os-l02 --stage-id stage-os-l02-02-proportional-share",
+        "curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md lines 15 and 17"
+      ],
+      "tool_calls": 2
+    },
+    "writes": [
+      {
+        "capability": "stage.note.write",
+        "intended_payload": {
+          "unit_id": "unit-os-l02",
+          "stage_id": "stage-os-l02-02-proportional-share",
+          "text": "Finished the stride example (2026-09-26): all eight decisions; C runs 5 out of 8 times.\n\nNEXT: explain vruntime aloud in under two minutes."
+        },
+        "envelope_fields_needed": "as S10-r1 (snapshot and artifact_revisions re-read in this world: sha256:82bcffb7..., module/study-map/unit = 0)",
+        "receipt_id": null,
+        "retries": 0,
+        "outcome": "not attempted: agent-environment refusal (S10-r1) covers this step"
+      }
+    ],
+    "consumer_seconds": 14,
+    "harness_tool_calls": {
+      "build_world_and_before_snapshot": 1,
+      "after_snapshot_and_diff": 1
+    }
+  },
+  "uncertainties": [
+    "The warm cost of the write path itself could not be measured."
+  ]
+}

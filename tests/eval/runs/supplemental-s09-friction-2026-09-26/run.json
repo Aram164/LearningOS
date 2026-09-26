@@ -1,0 +1,201 @@
+{
+  "run_id": "supplemental-s09-friction-2026-09-26",
+  "plan": "F",
+  "session_role": "friction-investigator",
+  "persona": "agent-friction investigator: repeat ordinary goals and count every read, tool call, retry and implementation file they cost",
+  "blind": true,
+  "started": "2026-09-26T02:14:17Z",
+  "finished": "2026-09-26T05:35:53Z",
+  "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+  "eval_revision": "d5a6e3c365f9901a9db2a5acb24256322e056d2a",
+  "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+  "world_build": {
+    "builder_version": 1,
+    "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+    "product_revision_requested": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+    "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+    "scale": 0,
+    "seed": 20260924,
+    "timeline": {
+      "start": "2026-04-06",
+      "as_of": "2026-09-18"
+    },
+    "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "commits": 133,
+    "notes": 116,
+    "arrivals": 30,
+    "paths": {
+      "repository": "/Users/aramaljanadi/los-eval/supplemental-s09-friction-2026-09-26-r1-s02/LearningOS/repository",
+      "materials": "/Users/aramaljanadi/los-eval/supplemental-s09-friction-2026-09-26-r1-s02/LearningOS/materials",
+      "drop": "/Users/aramaljanadi/los-eval/supplemental-s09-friction-2026-09-26-r1-s02/eval-drop"
+    },
+    "validation": "0 error(s), 3 warning(s) — OK (0.2s)",
+    "validate_exit": 0,
+    "generate_exit": 0
+  },
+  "model": "claude-opus-5-5 (Claude Code desktop app, auto permission mode)",
+  "environment": {
+    "os": "macOS (Darwin 25.6.0)",
+    "shell": "zsh",
+    "harness_python": "3.12.13 venv in the session scratchpad (PyYAML 6.0.3, jsonschema 4.26.0, pypdf 6.19.0)",
+    "world_python": "each world's own .venv from `make setup` (system python3 3.14.4)",
+    "session_worktree_branch": "claude/supplemental-s09-friction-2026-09-26",
+    "supplemental": "post-hoc session-9 supplement; not part of the original blinded sequence",
+    "worlds": [
+      {
+        "scenario_run": "S02-r1",
+        "world": "~/los-eval/supplemental-s09-friction-2026-09-26-r1-s02",
+        "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+        "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+        "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+        "validation": "0 error(s), 3 warning(s) — OK (0.2s)"
+      },
+      {
+        "scenario_run": "S10-r1",
+        "world": "~/los-eval/supplemental-s09-friction-2026-09-26-r1-s10",
+        "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+        "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+        "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+        "validation": "0 error(s), 3 warning(s) — OK (0.2s)"
+      },
+      {
+        "scenario_run": "S26-r1",
+        "world": "~/los-eval/supplemental-s09-friction-2026-09-26-r1-s26",
+        "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+        "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+        "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+        "validation": "0 error(s), 3 warning(s) — OK (0.2s)"
+      },
+      {
+        "scenario_run": "S02-r2",
+        "world": "~/los-eval/supplemental-s09-friction-2026-09-26-r2-s02",
+        "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+        "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+        "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+        "validation": "0 error(s), 3 warning(s) — OK (0.2s)"
+      },
+      {
+        "scenario_run": "S10-r2",
+        "world": "~/los-eval/supplemental-s09-friction-2026-09-26-r2-s10",
+        "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+        "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+        "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+        "validation": "0 error(s), 3 warning(s) — OK (0.2s)"
+      },
+      {
+        "scenario_run": "S26-r2",
+        "world": "~/los-eval/supplemental-s09-friction-2026-09-26-r2-s26",
+        "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+        "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+        "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+        "validation": "0 error(s), 3 warning(s) — OK (0.2s)"
+      },
+      {
+        "scenario_run": "S02-r3",
+        "world": "~/los-eval/supplemental-s09-friction-2026-09-26-r3-s02",
+        "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+        "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+        "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+        "validation": "0 error(s), 3 warning(s) — OK (0.2s)"
+      },
+      {
+        "scenario_run": "S10-r3",
+        "world": "~/los-eval/supplemental-s09-friction-2026-09-26-r3-s10",
+        "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+        "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+        "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+        "validation": "0 error(s), 3 warning(s) — OK (0.2s)"
+      },
+      {
+        "scenario_run": "S26-r3",
+        "world": "~/los-eval/supplemental-s09-friction-2026-09-26-r3-s26",
+        "product_revision": "200a36185fd5c693b4464ce0bdff4be5b89ce584",
+        "world_head": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+        "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+        "validation": "0 error(s), 3 warning(s) — OK (0.2s)"
+      }
+    ],
+    "consumer_cost_by_run": {
+      "S02-r1": {
+        "tool_calls": 21,
+        "seconds": 271,
+        "retries": 1,
+        "impl_files_read": 1
+      },
+      "S02-r2": {
+        "tool_calls": 4,
+        "seconds": 35,
+        "retries": 0,
+        "impl_files_read": 0
+      },
+      "S02-r3": {
+        "tool_calls": 4,
+        "seconds": 30,
+        "retries": 0,
+        "impl_files_read": 0
+      },
+      "S10-r1": {
+        "tool_calls": 16,
+        "seconds": 310,
+        "retries": 0,
+        "impl_files_read": 1,
+        "write": "refused by agent environment"
+      },
+      "S10-r2": {
+        "tool_calls": 2,
+        "seconds": 13,
+        "retries": 0,
+        "impl_files_read": 0,
+        "write": "not attempted"
+      },
+      "S10-r3": {
+        "tool_calls": 2,
+        "seconds": 14,
+        "retries": 0,
+        "impl_files_read": 0,
+        "write": "not attempted"
+      },
+      "S26-r1": {
+        "tool_calls": 11,
+        "seconds": 107,
+        "retries": 0,
+        "impl_files_read": 0,
+        "write": "not attempted"
+      },
+      "S26-r2": {
+        "tool_calls": 3,
+        "seconds": 29,
+        "retries": 1,
+        "impl_files_read": 0,
+        "write": "not attempted"
+      },
+      "S26-r3": {
+        "tool_calls": 2,
+        "seconds": 22,
+        "retries": 0,
+        "impl_files_read": 0,
+        "write": "not attempted"
+      }
+    }
+  },
+  "scenarios": [
+    "S02",
+    "S10",
+    "S26"
+  ],
+  "deviations": [
+    "Post-hoc supplemental evidence: collected on 2026-09-26 after the campaign's other sessions had finished. It is NOT part of the original blinded sequence and does not change the campaign's run ledger, where session 9 stays recorded as omitted. The eval base was pinned to d5a6e3c365f9901a9db2a5acb24256322e056d2a: the session worktree was created from that commit (not the branch head), and no other branch or later commit of the LearningOS repository was looked at.",
+    "Harness clarifications from the kickoff message, which the protocol leaves open: plan F ran as three passes, each S02 -> S10 -> S26, every scenario run on a newly built world (9 builds). Results are named results/Sxx-rN.json. answers.jsonl holds pass 1's answers only (one record per question); each pass's answers are in results/S02-rN.json -> scenario_record.answers.",
+    "Worlds were built with build_world.py's pinned default (no --source-rev). All nine EVAL-WORLD.json files show product_revision 200a361... and world_head 13ad2fc... (listed in environment.worlds). World directories are ~/los-eval/<run-id>-r{1,2,3}-s{02,10,26}.",
+    "Harness interpreter: a venv in the session scratchpad built with python3.12 (python3.13 is not installed), instead of the protocol's example /tmp/evalenv, which another evaluation chat on this machine could share.",
+    "Agent-environment refusal (CONSUMER-PROTOCOL §2, 'record the refusal as friction and continue'). In S10-r1 the Claude Code auto-mode classifier refused the step that built the GatewayEnvelopeV2 for the learner-approved stage.note.write, computed approval.subject_sha256 = intent_sha256(envelope) and submitted it: 'Permission for this action was denied by the Claude Code auto mode classifier. Reason: [Security Weaken].' This happened although the kickoff message authorized computing approval values for writes the scripted learner approved. The denial covers the outcome, so the same step was not re-attempted in S10-r2/r3 or for the S26 inbox capture (goal 2) in any pass. No gateway write was executed in this run; S10 and S26 are classified AMBIGUOUS, and the product's write path (acceptance, receipts, transactions) is untested here.",
+    "Memory index in context: Claude Code auto-loaded the user's memory index (MEMORY.md) into this session. No memory file was opened. Its one-line entries named, among others, a LearningOS 'gateway write path' with a 'channel enum', 'plan route identity', 'worktree git hooks — pre-commit needs a worktree .venv; pre-push always fails in a worktree (.git is a file)', and a 'repo topology' sibling-name requirement. Effect: I knew in advance that write envelopes and a channel enum exist, which may have primed my search for the envelope schema in S10-r1; the enum values themselves came from system/schema/capability-envelope.schema.json. It did not change which scenario commands I ran. Its effect on the commit/push steps is recorded in SESSION_REPORT.md.",
+    "Project instructions in context: the semestercontext root AGENTS.md (auto-loaded) names LearningOS/repository/system/OPERATOR.md as the real repository's binding contract. The world's own AGENTS.md and CLAUDE.md point to the same file, so the reading order was unaffected.",
+    "Agent state across passes: all nine runs happened in one session. Pass 1 is the only cold measurement, and S10-r1 and S26-r1 were already warm for reads because S02-r1 preceded them. Passes 2-3 are warm: product documents were not re-read, and every answer was re-derived from that pass's fresh world, not recalled.",
+    "Timing: wall seconds run from `date +%s` inside a scenario's (or goal's) first consumer call to the end of its last. They include deliberation between calls but not before the first call. Tool-call counts are Bash invocations made as the learner's operator; harness calls (builds, snapshots, record writing) are counted separately in each result.",
+    "'Today' for S26's three-week horizon is the system date 2026-09-26; the world's timeline ends on 2026-09-18.",
+    "Observer-only probes after scenario closure, both read-only for canonical state: which read builds the derived cache (evidence/derived-state-probe.txt) and a minimized reproduction of F-supplemental-s09-friction-001 (evidence/F-milestone-inspect-repro.txt), both run in world r3-s26 after its S26 after-snapshot.",
+    "Own errors (not product friction): zsh treated `echo =====` as an equals expansion during harness reads, and in S26-r2 an unquoted variable made the goal-1 chain fail once (counted as a retry). Timing runs are not part of plan F, so no uptime series was recorded.",
+    "Commit made with --no-verify on the owner's instruction. The eval repository's pre-commit hook blocked the first attempt ('/opt/homebrew/opt/python@3.14/bin/python3.14: No module named ruff' / 'COMMIT BLOCKED: static checks failed'): with no .venv in the session worktree the hook falls back to the system python3, which has no ruff. I created an ignored project venv in the session worktree (python3 -m venv .venv && .venv/bin/python -m pip install -e '.[dev]'; no tracked file changed); a memory-index entry had predicted this. The owner then instructed 'bypass the check with --no-verify', so the run directory was committed with git commit --no-verify; ruff and tools/validate.py did not run on this commit."
+  ]
+}

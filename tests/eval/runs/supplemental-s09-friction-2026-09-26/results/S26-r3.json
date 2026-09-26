@@ -1,0 +1,135 @@
+{
+  "scenario": "S26",
+  "run_id": "supplemental-s09-friction-2026-09-26",
+  "classification": "AMBIGUOUS",
+  "classification_reason": "Warm pass 3: goals 1 and 3 re-derived identically (1 + 1 calls). Goal 2 stopped at the learner's approval because the agent-environment refusal from S10-r1 covers computing the approval value, so LearningOS's capture path stays unobserved. Not a LearningOS defect.",
+  "before": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec",
+    "derived_digest": "df97c8737d287c93f8e3a048d46ad71f9da0e95cf3cccd0c0bbc8e63032db409",
+    "snapshot_file": "observations/S26-r3-before.json"
+  },
+  "consumer": {
+    "goal": "(1) due in the next three weeks, (2) inbox note, (3) caching notes (fresh world r3-s26).",
+    "first_action": "make setup, then the goal-1 chain",
+    "commands": [
+      "make setup; .venv/bin/python tools/los.py bootstrap --brief (academic_deadlines); .venv/bin/python tools/los.py search '' --type workspace --limit 50 -> ids under work/active/; .venv/bin/python tools/los.py inspect <those 6 workspace ids> (status, deadline, next_action)",
+      ".venv/bin/python tools/los.py search caching|cache|'buffer pool'|memoization --type note; .venv/bin/python tools/los.py inspect note-caching-everywhere note-cpu-cache-locality note-buffer-pool-replacement note-dynamic-programming-memoization note-kv-cache-transformer-serving note-event-sourcing-append-only"
+    ],
+    "tool_calls": 2,
+    "docs_consulted": [],
+    "impl_files_read": [],
+    "retries": 0,
+    "confusions": [],
+    "corrective_steps": [],
+    "questions_asked_to_learner": [
+      "Create one inbox capture via capture.create with the text 'ask tutor about lasso subgradients' (no title; the handler names the file under work/inbox/)? -> 'Yes.'"
+    ],
+    "implementation_knowledge_needed": true,
+    "wall_minutes": 0.4,
+    "outcome": "Goals 1 and 3 answered as in pass 1; goal 2 not done (the operator reports the refused approval step); the repository is unchanged."
+  },
+  "internal": {
+    "request_ids": [],
+    "receipts": [],
+    "transaction_behavior": "No transaction opened.",
+    "approval_behavior": "Learner approved; the operator did not compute approval.subject_sha256 (agent-environment refusal from S10-r1).",
+    "projection_activity": "Fresh projection per read (snapshot sha256:82bcffb7...).",
+    "persistence_activity": "None. No derived-state cache this pass: no content search, note-read, related or bootstrap --compact was run.",
+    "derived_changes": "none",
+    "manifest_changes": "none",
+    "unexpected_writes": [
+      "make setup: ignored .venv/, egg-info, __pycache__/ and .git/hooks"
+    ],
+    "warnings_errors": [],
+    "git_diff_stat": "",
+    "observe_diff_file": "observations/S26-r3-diff.json"
+  },
+  "after": {
+    "revision": "13ad2fcaa0e478afddba6451e29376ca00f0bc8e",
+    "git_status": [],
+    "canonical_digest": "14a86016b0d4b1d3d9eca37a376708a01c108da6f039769ff19eb5d08326d2ec",
+    "derived_digest": "df97c8737d287c93f8e3a048d46ad71f9da0e95cf3cccd0c0bbc8e63032db409",
+    "snapshot_file": "observations/S26-r3-after.json"
+  },
+  "friction": [
+    {
+      "tag": "hidden-prerequisite",
+      "description": "`make setup` again in the fresh world.",
+      "cost": "bundled into call #1"
+    },
+    {
+      "tag": "missing-capability",
+      "description": "Goal 1 still needs a three-read chain (deadlines, workspace list via empty-query search, workspace inspect) and date filtering by the agent; there is no 'due within N days' read.",
+      "cost": "1 chained call per pass"
+    },
+    {
+      "tag": "missing-capability",
+      "description": "Goal 3 still needs four literal searches to cover the synonyms that the concept aliases already record; `inspect` summaries are first-line extracts and sometimes only a lead-in ('Two ingredients:').",
+      "cost": "1 chained call per pass"
+    },
+    {
+      "tag": "other",
+      "description": "Goal 2 blocked by the agent-environment refusal carried over from S10-r1 ('Permission for this action was denied by the Claude Code auto mode classifier. Reason: [Security Weaken].').",
+      "cost": "goal 2 not achieved"
+    }
+  ],
+  "failures": [],
+  "scenario_record": {
+    "pass": 3,
+    "agent_state": "warm: same session; command paths known from pass 1",
+    "world": "~/los-eval/supplemental-s09-friction-2026-09-26-r3-s26 (world_head 13ad2fc)",
+    "goals": [
+      {
+        "goal": 1,
+        "text": "what's due in the next three weeks",
+        "tool_calls": 1,
+        "commands": [
+          "make setup; .venv/bin/python tools/los.py bootstrap --brief (academic_deadlines); .venv/bin/python tools/los.py search '' --type workspace --limit 50 -> ids under work/active/; .venv/bin/python tools/los.py inspect <those 6 workspace ids> (status, deadline, next_action)"
+        ],
+        "retries": 0,
+        "docs_read": [],
+        "impl_files_read": [],
+        "seconds": 6,
+        "classification": "PASS_WITH_FRICTION",
+        "outcome": "Today is Sat 26 Sep 2026; the next three weeks run to Sat 17 Oct. Two dated items fall in that window, both registered: (1) Statistical Learning retake, 2. Termin, Tue 6 Oct 2026, 10:00-12:00, and (2) Operating Systems oral exam, Mon 12 Oct 2026, 14:30. The retake and OS-prep workspaces carry the same two deadlines. Your Statistical Learning workspace also has a self-set to-do in its next action: book a mock exam under timed conditions for the first week of October, i.e. before the 6th. All registration windows have closed (OS: July; Statistical Learning 2. Termin: 24 Aug - 11 Sep). No other workspace or project has a date in the window; Ledgerline is blocked until after 12 Oct."
+      },
+      {
+        "goal": 2,
+        "text": "add a quick note to my inbox",
+        "tool_calls": 0,
+        "commands": [],
+        "retries": 0,
+        "docs_read": [],
+        "impl_files_read": [],
+        "seconds": 0,
+        "classification": "AMBIGUOUS",
+        "intended_payload": {
+          "text": "ask tutor about lasso subgradients"
+        },
+        "outcome": "not attempted: agent-environment refusal (S10-r1) covers computing the approval value"
+      },
+      {
+        "goal": 3,
+        "text": "show me my notes on caching",
+        "tool_calls": 1,
+        "commands": [
+          ".venv/bin/python tools/los.py search caching|cache|'buffer pool'|memoization --type note; .venv/bin/python tools/los.py inspect note-caching-everywhere note-cpu-cache-locality note-buffer-pool-replacement note-dynamic-programming-memoization note-kv-cache-transformer-serving note-event-sourcing-append-only"
+        ],
+        "retries": 0,
+        "docs_read": [],
+        "impl_files_read": [],
+        "seconds": 3,
+        "classification": "PASS_WITH_FRICTION",
+        "outcome": "Your notes on caching: (1) note-caching-everywhere 'The same cache idea in three courses' (cross-domain, rough, 2026-07-05): keep a small fast copy of something expensive and decide what to evict, seen in CPU caches, the database buffer pool and memoization, with different eviction in each; (2) note-cpu-cache-locality 'Caches and locality' (systems): cache lines, temporal and spatial locality; (3) note-buffer-pool-replacement 'Buffer pool management' (data-systems); (4) note-dynamic-programming-memoization 'Dynamic programming and memoization' (programming); (5) note-kv-cache-transformer-serving 'The KV cache in transformer inference' (systems, rough). Peripheral: note-event-sourcing-append-only mentions state cached in materialized views."
+      }
+    ],
+    "timing_note": "seconds run from the start of a goal's first call to the end of its last call",
+    "harness_tool_calls": {
+      "build_world_and_before_snapshot": 1,
+      "after_snapshot_and_diff": 1
+    }
+  },
+  "uncertainties": []
+}
