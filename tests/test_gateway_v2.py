@@ -1572,3 +1572,25 @@ def test_seal_envelope_helper_refuses_out_inside_repo(repo_root, mini_repo,
     assert refused.returncode == 2
     assert "refusing to write" in refused.stderr
     assert not (mini_repo / "sealed.json").exists()
+
+
+def test_seal_envelope_helper_mints_a_fresh_bounded_request_id(repo_root, mini_repo,
+                                                              tmp_path):
+    # §25c step 4: an exact retry keeps its key but needs a new request id,
+    # or `los operations` merges the attempts into one explanation. A
+    # longest legal key must still leave a legal request id.
+    key = "k" * 128
+    sealed = [subprocess.run(
+        [sys.executable, str(repo_root / "tools/seal_envelope.py"),
+         "--root", str(mini_repo), "--capability", "capture.create",
+         "--payload", '{"text": "sealed twice"}', "--key", key,
+         "--revision", f"{request_artifact_id('capture.create', key)}=0"],
+        capture_output=True, text=True) for _ in range(2)]
+    assert all(run.returncode == 0 for run in sealed), [r.stderr for r in sealed]
+    envelopes = [json.loads(run.stdout) for run in sealed]
+    first, second = (envelope["request_id"] for envelope in envelopes)
+    assert first != second
+    assert envelopes[0]["approval"] == envelopes[1]["approval"]
+    applied = _run(repo_root, mini_repo, tmp_path / "apply.json", envelopes[1])
+    assert applied.returncode == 0, applied.stdout
+    assert json.loads(applied.stdout)["request_id"] == second

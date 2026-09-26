@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import secrets
 import sys
 from pathlib import Path
 
@@ -22,6 +23,21 @@ from learning_os.contracts.gateway import (
 )
 from learning_os.fingerprint import source_fingerprint
 from learning_os.loader import load_repo
+
+# capability-envelope.schema.json bounds request_id at 128 characters.
+REQUEST_ID_MAX = 128
+
+
+def _fresh_request_id(key: str) -> str:
+    """Mint a new request id for this sealing run (WORKFLOWS §25c step 4).
+
+    An exact retry keeps its idempotency key by design, so a key-derived id
+    would repeat across attempts, and `los operations` would merge them into
+    one explanation (a refused attempt reads as the committed one).
+    """
+    suffix = secrets.token_hex(4)
+    stem = key[:REQUEST_ID_MAX - len("request--") - len(suffix)]
+    return f"request-{stem}-{suffix}"
 
 
 def _parse_revision(spec: str) -> tuple[str, int]:
@@ -57,7 +73,8 @@ def main(argv: list[str] | None = None) -> int:
                         help="payload JSON, or @PATH to a JSON file")
     parser.add_argument("--key", required=True, help="idempotency key")
     parser.add_argument("--request-id", default=None,
-                        help="request id (default: request-<key>)")
+                        help="request id (default: a fresh request-<key>-<random> "
+                             "per run, as §25c step 4 asks)")
     parser.add_argument("--channel", default="operator",
                         help=f"one of: {', '.join(sorted(GATEWAY_CHANNELS))}")
     parser.add_argument("--approval-kind", default="operator-approval",
@@ -99,7 +116,7 @@ def main(argv: list[str] | None = None) -> int:
     snapshot = args.snapshot or f"sha256:{source_fingerprint(load_repo(root))}"
     envelope = {
         "schema_version": GATEWAY_SCHEMA_VERSION,
-        "request_id": args.request_id or f"request-{args.key}",
+        "request_id": args.request_id or _fresh_request_id(args.key),
         "idempotency_key": args.key,
         "capability": args.capability,
         "channel": args.channel,

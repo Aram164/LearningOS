@@ -531,9 +531,10 @@ Routing destinations are already deterministic (ARCHITECTURE §3.3); this is the
 
 When an item is genuinely ambiguous, prefer capturing it into the most likely workspace's `scratch/` over guessing a canonical home (least destructive, then ask); Aram never makes the filing decision — the operator does. Rebuild generated outputs once any registry changed.
 
-Read the inbox through the product, never by catting files: `search`
-matches inbox filenames, and `inbox-read NAME` returns bounded segments
-of one drop (binary drops refuse — they have no text read).
+Read the inbox through the product, never by catting files: `inbox-list`
+names every drop, `search` matches inbox filenames, and `inbox-read NAME`
+returns bounded segments of one drop (binary drops refuse — they have no
+text read).
 
 ## 22. End a session
 
@@ -815,7 +816,11 @@ construction recipe — nothing else is needed.
    key. Common shapes: `stage.note.write` guards its unit;
    `stage.progress.update` and `stage.attachment.add` guard the unit and
    that unit's study map. A refusal names the exact expected set
-   (`artifacts=[...]`) — copy it, re-read revisions, and re-seal.
+   (`artifacts=[...]`) — copy it, re-read revisions, and re-seal. That
+   refusal committed nothing and the corrected envelope is a new intent,
+   so seal it under a fresh idempotency key (a request-scoped guard
+   follows its key); reusing the refused key leaves the refusal flagged
+   for reconciliation in `los operations`.
 4. **Identities.** `request_id` and `idempotency_key` are caller-chosen
    (1–128 chars, `^[A-Za-z0-9][A-Za-z0-9._:-]*$`). Reuse the same key for
    retries of the *same* approved intent (an exact retry replays the
@@ -877,8 +882,9 @@ python tools/los.py capability capture.create --payload-file envelope.json
 **Sealing helper.** `python tools/seal_envelope.py --capability NAME
 --payload JSON-or-@FILE --key KEY --revision ART=REV` reads the snapshot
 live and emits the sealed envelope above (to stdout, or `--out` a scratch
-path — never inside the repo). It performs exactly this section's steps 2–5;
-submit its output via step 6.
+path — never inside the repo). It performs steps 2, 4 and 5, minting a
+fresh `request_id` per run; step 3's guards are yours to supply, one
+`--revision` each (a refusal names the set). Submit its output via step 6.
 
 ## 26. Source routing and feedback
 
