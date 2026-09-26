@@ -121,6 +121,7 @@ own. The judge merges every run branch before scoring.
 | 9 | F | — | — | — | OMITTED by owner decision 2026-09-25; partial run discarded uncommitted and excluded from adjudication |
 | 10 | — | `s10-judge-2026-09-25` | `muse/eval-s10-judge-2026-09-25` | `13ad2fca…` | white-box judge (keyed by design), base eval `d0c49b5`; 9 run branches merged, check_run clean; 28 scenarios graded, 29 records → 25 findings (22 confirmed/2 artefacts/1 not confirmed); keyed selftest 13/13; --no-verify push (authorized worktree-hook exception) |
 | 13 | reruns | `s13-verify-2026-09-26` | `muse/eval-s13-verify-2026-09-26` | `78154b2b…` | hostile verifier (keyed), base repair tip `7ffad84`; 17 repairs HELD, S23 PARTIAL, 0 BROKEN; 1 repair-introduced minor (bogus-PYTHON venv delete, F-s13-verify-01); check_run clean, keyed selftest green |
+| 14 | N + C | `s14-cleanroom-2026-09-26` | `muse/eval-s14-cleanroom-2026-09-26` | `00becd47…` | clean-room consumer (blind, no key), base final `eec74eb`; 11 scenarios (7 PASS/4 PWF), 9 first-try receipts, 0 failures; twin worlds identical HEAD; check_run clean, keyed leak scan clean |
 
 ## Harness changes
 
