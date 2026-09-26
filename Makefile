@@ -161,8 +161,12 @@ check-python:
 # `setup-lean` overrides this with the runtime-only spec; a lean venv runs
 # every product command but not the test suite, and the pre-commit hook
 # skips its static checks loudly until ruff is installed (S09b-F3: full
-# .[dev] setup measured ~8x slower warm).
-PIP_EDITABLE ?= .[dev]
+# .[dev] setup measured ~8x slower warm). Never name it PIP_*: make exports
+# a command-line override into every recipe's environment, and pip reads
+# any PIP_<OPTION> variable as that option's default — so every pip call,
+# including pip's own isolated build-dependency install, also installed
+# `-e .` and `make setup-lean` failed in every fresh clone.
+SETUP_SPEC ?= .[dev]
 setup: check-python
 	@if [ -x "$(VENV)/bin/python" ] && [ "$$($(VENV)/bin/python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')" = "$$($(PYTHON) -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')" ]; then \
 		echo "setup: reusing $(VENV) ($$($(VENV)/bin/python --version))"; \
@@ -171,7 +175,7 @@ setup: check-python
 		$(PYTHON) -m venv $(VENV); \
 	fi
 	$(VENV)/bin/python -m pip install --upgrade pip
-	$(VENV)/bin/python -m pip install "-e$(PIP_EDITABLE)"
+	$(VENV)/bin/python -m pip install "-e$(SETUP_SPEC)"
 	$(MAKE) hooks
 	@echo "setup complete: .venv created, deps installed, hooks active."
 
@@ -179,7 +183,7 @@ setup: check-python
 # setup` afterwards for pytest/ruff. On an existing full venv this target
 # does not uninstall anything — it only matters for fresh clones.
 setup-lean:
-	$(MAKE) setup PIP_EDITABLE=.
+	$(MAKE) setup SETUP_SPEC=.
 	@echo "setup-lean complete: runtime-only .venv (no pytest/ruff)."
 
 hooks:
