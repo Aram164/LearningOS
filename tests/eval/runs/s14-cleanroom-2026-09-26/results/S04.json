@@ -1,0 +1,159 @@
+{
+  "after": {
+    "git_status": [
+      "?? knowledge/notes/systems/note-deadlock-postgres-ordering.md",
+      "?? operations/transactions/idempotency.yaml",
+      "?? operations/transactions/revisions.yaml",
+      "?? operations/transactions/transaction-20260926-033514-001.yaml",
+      "?? work/inbox/20260926-033514-deadlock-in-postgres-migration-friend-s-.md"
+    ],
+    "revision": "00becd4796c09e42199c9dd0d0f75ed5b99c4185",
+    "snapshot_file": "observations/S04-after.json"
+  },
+  "before": {
+    "git_status": [],
+    "revision": "00becd4796c09e42199c9dd0d0f75ed5b99c4185",
+    "snapshot_file": "observations/S04-before.json"
+  },
+  "classification": "PASS_WITH_FRICTION",
+  "classification_reason": "Arrival captured and filed as a durable note with receipt, validation green, but the durable-note creation mechanism (direct operator filing vs capability) is ambiguous across OPERATOR.md, WORKFLOWS, and the capability list.",
+  "consumer": {
+    "commands": [
+      "los capabilities --compact --json",
+      "los capabilities review.prepare --json",
+      "los shelving-prepare --help",
+      "los capabilities capture.create --json",
+      "read WORKFLOWS.md \u00a721 (Process the inbox), \u00a73 (durable note), \u00a725c (envelope)",
+      "los search \"deadlock\"",
+      "los note-read note-deadlock-four-conditions",
+      "read OPERATOR.md (note-creation capabilities, Capture routing)",
+      "read ARCHITECTURE.md \u00a73.3",
+      "git log (world history convention)",
+      "los bootstrap --compact (snapshot)",
+      "seal + los capability capture.create --payload-file (exit 0)",
+      "write knowledge/notes/systems/note-deadlock-postgres-ordering.md",
+      "make check (exit 0, transient HYGIENE-VIEWS before regen)",
+      "make views (exit 0)",
+      "make check (exit 0, 0 errors)",
+      "los search \"deadlock\" (new note found)"
+    ],
+    "confusions": [
+      "review.prepare/shelving-prepare writes curriculum units, not inbox captures \u2014 resolved: wrong tool for this arrival; capture.create + WORKFLOWS \u00a73 is the path.",
+      "OPERATOR.md says only note.analysis.save[_batch]/atlas.question.save create durable notes, yet WORKFLOWS \u00a73 describes the operator saving knowledge notes directly and no capability fits a friend's anecdote \u2014 resolved by direct operator filing per \u00a73, with the capture receipt as the transaction record."
+    ],
+    "corrective_steps": [
+      "Routed via capture.create envelope (receipt) + direct durable-note filing per WORKFLOWS \u00a73; validated and regenerated after."
+    ],
+    "docs_consulted": [
+      "los capabilities --compact --json",
+      "los capabilities review.prepare/capture.create --json",
+      "WORKFLOWS.md \u00a721, \u00a73, \u00a72, \u00a725c",
+      "OPERATOR.md (note creation, Shelving, Capture routing)",
+      "ARCHITECTURE.md \u00a73.3"
+    ],
+    "first_action": "Read eval-drop/A09.md, then listed capabilities to find the shelving path.",
+    "goal": "File the friend's Postgres-deadlock capture where it belongs and report its connections.",
+    "impl_files_read": [],
+    "implementation_knowledge_needed": false,
+    "outcome": "Filed as new durable note knowledge/notes/systems/note-deadlock-postgres-ordering.md (concept-deadlock, context workspace-os-oral-prep), original preserved in work/inbox via capture.create receipt transaction-20260926-033514-001. Connects to the four-conditions theory note, the 2PL deadlocks note, and the OS oral-prep workspace.",
+    "questions_asked_to_learner": [
+      "Proposed the exact change (inbox capture preserving the message verbatim + new note with shown content at the shown path, linked to concept-deadlock and OS oral prep) and asked for approval \u2014 reply: 'Yes, apply exactly what you showed me.'"
+    ],
+    "retries": 0,
+    "tool_calls": 19,
+    "wall_minutes": 40
+  },
+  "friction": [
+    {
+      "cost": "~6 extra reads",
+      "description": "Three overlapping shelving paths (review.prepare/shelving-prepare for units, capture.create for inbox, WORKFLOWS \u00a73 direct note filing) with no single 'file this capture' route; OPERATOR.md's 'capabilities that create durable notes' list excludes the \u00a73 direct-filing path used here.",
+      "tag": "unclear-terminology"
+    },
+    {
+      "cost": "1 extra check run",
+      "description": "make check between writing and regenerating reports HYGIENE-VIEWS (stale manifest); the validate-then-regenerate order in docs produces a transient warning \u2014 regenerate-then-validate is the clean order.",
+      "tag": "other"
+    }
+  ],
+  "internal": {
+    "approval_behavior": "operator-approval kind; approval.subject_sha256 = intent hash over the six envelope fields, computed after the scripted learner approved the exact shown change (owner-authorized approval recording).",
+    "derived_changes": "Generated views rebuilt (manifest + indexes refreshed for the new note).",
+    "git_diff_stat": "5 untracked files added; no tracked modifications.",
+    "observe_diff_file": "observations/S04-diff.json",
+    "projection_activity": "Snapshot moved sha256:2da68742...f8d \u2192 sha256:e8b9c877...de8d7 after capture.",
+    "receipts": [
+      "operations/transactions/transaction-20260926-033514-001.yaml"
+    ],
+    "request_ids": [
+      "request-s14-a09-inbox-1"
+    ],
+    "transaction_behavior": "capture.create committed (not replayed); idempotency key s14-a09-inbox at revision 1.",
+    "unexpected_writes": [],
+    "warnings_errors": [
+      "make check (pre-regen): HYGIENE-VIEWS manifest staleness \u2014 resolved by make views; post-regen check 0 errors"
+    ]
+  },
+  "run_id": "s14-cleanroom-2026-09-26",
+  "scenario": "S04",
+  "scenario_record": {
+    "approval": "Asked for approval of the specific proposed change before any write; scripted reply 'Yes, apply exactly what you showed me.' Approval recorded as operator-approval intent hash sha256:5f433ff82f572a6b5fa2d5571d5d3ce038078a16d5e1d61f22070a7116fd0019 (owner-authorized).",
+    "capability": "capture.create (durable note filed directly per WORKFLOWS \u00a73)",
+    "change_applied": {
+      "note": "knowledge/notes/systems/note-deadlock-postgres-ordering.md (new; concept-deadlock; context workspace-os-oral-prep)",
+      "receipt": "operations/transactions/transaction-20260926-033514-001.yaml",
+      "transaction": "transaction-20260926-033514-001"
+    },
+    "connection_record": "A09 after-shelving record embedded here as connection_record_after_shelving (relocated from connections.jsonl: that file keeps one record per probe per check_run.py, and the combined N+C run requires both A09 phases; connections.jsonl holds the complete A01-A30 before-shelving set).",
+    "destination_decision": "Durable knowledge note (new; purpose differs from the theory note: concrete production case + exam pointer), not an update to note-deadlock-four-conditions and not workspace scratch.",
+    "inbox": "work/inbox/20260926-033514-deadlock-in-postgres-migration-friend-s-.md (original preserved per capture invariant)",
+    "connection_record_after_shelving": {
+      "commands": [
+        "los search \"deadlock\"",
+        "los note-read note-deadlock-four-conditions"
+      ],
+      "notes": "Arrival filed as note-deadlock-postgres-ordering; connections are the older material it belongs next to.",
+      "phase": "after-shelving",
+      "probe": "A09",
+      "results": [
+        {
+          "evidence": [
+            {
+              "quote": "impose a global lock order so a cycle cannot form (circular wait)",
+              "ref": "note-deadlock-four-conditions"
+            },
+            {
+              "quote": "Then recover by killing or rolling back one thread.",
+              "ref": "note-deadlock-four-conditions"
+            }
+          ],
+          "rank": 1,
+          "reason": "The theory behind the anecdote: opposite table orders form the circular wait, one global order breaks it, and Postgres killing a victim is detection plus rollback recovery.",
+          "source": "product:search",
+          "target": "note-deadlock-four-conditions"
+        },
+        {
+          "evidence": [
+            {
+              "ref": "note-two-phase-locking-deadlocks"
+            }
+          ],
+          "rank": 2,
+          "reason": "The database-side deadlocks companion (two-phase locking) \u2014 same phenomenon in the DB course.",
+          "source": "product:search",
+          "target": "note-two-phase-locking-deadlocks"
+        },
+        {
+          "evidence": [
+            {
+              "ref": "workspace-os-oral-prep"
+            }
+          ],
+          "rank": 3,
+          "reason": "The exam-prep workspace where deadlock is one of three oral topics \u2014 'literally the exam question' lands here.",
+          "source": "product:search",
+          "target": "workspace-os-oral-prep"
+        }
+      ]
+    }
+  }
+}

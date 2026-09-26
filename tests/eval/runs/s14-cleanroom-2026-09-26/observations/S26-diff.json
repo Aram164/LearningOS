@@ -1,0 +1,61 @@
+{
+  "from": "S26-before",
+  "to": "S26-after",
+  "canonical": {
+    "added": [
+      "operations/transactions/idempotency.yaml",
+      "operations/transactions/revisions.yaml",
+      "operations/transactions/transaction-20260926-034743-001.yaml",
+      "work/inbox/20260926-034743-ask-tutor-about-lasso-subgradients.md"
+    ],
+    "removed": [],
+    "modified": []
+  },
+  "canonical_digest_changed": true,
+  "receipts_added": [
+    "operations/transactions/idempotency.yaml",
+    "operations/transactions/revisions.yaml",
+    "operations/transactions/transaction-20260926-034743-001.yaml"
+  ],
+  "inflight_after": [],
+  "derived": {
+    "added": [],
+    "removed": [],
+    "modified": [
+      "generated/backlinks.json",
+      "generated/manifest.json",
+      "generated/reading-room.md",
+      "generated/reports/health.md"
+    ],
+    "bytes_before": 984197,
+    "bytes_after": 984523
+  },
+  "diagnostics_added": [],
+  "ai_actions_added": [],
+  "new_operations": [
+    {
+      "trace_id": "ef3175923ed41abb9773ddb524be5679",
+      "request_id": "request-s14-s26-inbox-note-1",
+      "capability": "capture.create",
+      "started_at": 1790387263.667305,
+      "duration_ms": 546.0,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    }
+  ],
+  "head": {
+    "before": "00becd4796c09e42199c9dd0d0f75ed5b99c4185",
+    "after": "00becd4796c09e42199c9dd0d0f75ed5b99c4185"
+  },
+  "git_status_after": [
+    "?? operations/transactions/idempotency.yaml",
+    "?? operations/transactions/revisions.yaml",
+    "?? operations/transactions/transaction-20260926-034743-001.yaml",
+    "?? work/inbox/20260926-034743-ask-tutor-about-lasso-subgradients.md"
+  ],
+  "flags": []
+}

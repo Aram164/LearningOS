@@ -1,0 +1,100 @@
+{
+  "from": "S06-before",
+  "to": "S06-after",
+  "canonical": {
+    "added": [
+      "operations/transactions/transaction-20260926-033835-001.yaml",
+      "operations/transactions/transaction-20260926-033836-001.yaml",
+      "operations/transactions/transaction-20260926-033837-001.yaml",
+      "work/inbox/20260926-033835-p-value-definition-phone-capture.md",
+      "work/inbox/20260926-033836-everything-is-a-dag-idea-capture.md",
+      "work/inbox/20260926-033837-drf-read-later-internship-fair-tip.md"
+    ],
+    "removed": [],
+    "modified": [
+      "operations/transactions/idempotency.yaml",
+      "operations/transactions/revisions.yaml"
+    ]
+  },
+  "canonical_digest_changed": true,
+  "receipts_added": [
+    "operations/transactions/transaction-20260926-033835-001.yaml",
+    "operations/transactions/transaction-20260926-033836-001.yaml",
+    "operations/transactions/transaction-20260926-033837-001.yaml"
+  ],
+  "inflight_after": [],
+  "derived": {
+    "added": [],
+    "removed": [],
+    "modified": [
+      "generated/backlinks.json",
+      "generated/manifest.json",
+      "generated/reading-room.md",
+      "generated/reports/health.md",
+      "generated/reports/validation-report.md"
+    ],
+    "bytes_before": 985797,
+    "bytes_after": 987243
+  },
+  "diagnostics_added": [],
+  "ai_actions_added": [],
+  "new_operations": [
+    {
+      "trace_id": "bd1926b6d42f998c876272a71d1d8b56",
+      "request_id": "request-s14-a29-inbox-1",
+      "capability": "capture.create",
+      "started_at": 1790386717.311681,
+      "duration_ms": 559.1,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    },
+    {
+      "trace_id": "b4aa52623946b45c9db6b654ceb8404e",
+      "request_id": "request-s14-a18-inbox-1",
+      "capability": "capture.create",
+      "started_at": 1790386716.1982982,
+      "duration_ms": 561.1,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    },
+    {
+      "trace_id": "43c1762f44c2c8fbc6c9fd7a8623d734",
+      "request_id": "request-s14-a11-inbox-1",
+      "capability": "capture.create",
+      "started_at": 1790386715.0870771,
+      "duration_ms": 563.1,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    }
+  ],
+  "head": {
+    "before": "00becd4796c09e42199c9dd0d0f75ed5b99c4185",
+    "after": "00becd4796c09e42199c9dd0d0f75ed5b99c4185"
+  },
+  "git_status_after": [
+    "?? knowledge/notes/systems/note-deadlock-postgres-ordering.md",
+    "?? operations/transactions/idempotency.yaml",
+    "?? operations/transactions/revisions.yaml",
+    "?? operations/transactions/transaction-20260926-033514-001.yaml",
+    "?? operations/transactions/transaction-20260926-033835-001.yaml",
+    "?? operations/transactions/transaction-20260926-033836-001.yaml",
+    "?? operations/transactions/transaction-20260926-033837-001.yaml",
+    "?? work/inbox/20260926-033514-deadlock-in-postgres-migration-friend-s-.md",
+    "?? work/inbox/20260926-033835-p-value-definition-phone-capture.md",
+    "?? work/inbox/20260926-033836-everything-is-a-dag-idea-capture.md",
+    "?? work/inbox/20260926-033837-drf-read-later-internship-fair-tip.md"
+  ],
+  "flags": []
+}

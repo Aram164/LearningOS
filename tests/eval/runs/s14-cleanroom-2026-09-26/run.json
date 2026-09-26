@@ -1,0 +1,68 @@
+{
+  "blind": true,
+  "deviations": [
+    "Combined run covers Plan N (S00,S01,S02,Q01-Q12,S04,S06,S10,S14,S15,S26) + Plan C (S03,S27); recorded as plan 'O' (other/ad hoc) since the schema allows one plan value.",
+    "product_revision recorded as the exact base SHA eec74eb1b1b22f13fb5fb94c043484956b175423: the world was built with --source-rev WORKTREE on a clean tree at exactly that commit (EVAL-WORLD.json says 'WORKTREE').",
+    "Listed ~/los-eval/ top-level directory names once at session start (other run IDs visible as names only); never opened any other run's directories or contents.",
+    "World CLI commands that write derived-state caches (e.g. search --content) and all world writes ran with filesystem access outside the managed sandbox (require_escalated): the sandbox denies the product's normal derived-state writes under ~/los-eval, and sandboxed search --content fails with Errno 1. Recorded as an environment deviation, not a product defect.",
+    "Fresh worlds via the protocol-sanctioned git reset --hard + git clean -fd in the world; ignored .venv and generated/ views from S01 survived resets (tracked tree always verified at initial commit 00becd4).",
+    "No oracle contact: LOS_EVAL_ORACLE_KEY never present, never requested; private/metrics/runs(s*)/ledger/failure-analysis materials never opened. Cross-scenario knowledge within this run (e.g. S03 reusing S02 reads) is marked agent-reading where used.",
+    "A09 has two required connection phases in a combined N+C run (S04 after-shelving, S27 before-shelving) but check_run.py enforces one record per probe id in connections.jsonl. Kept the complete A01-A30 before-shelving set in connections.jsonl (50 lines: 20 canon + 30 before-shelving) and embedded the S04 A09 after-shelving record verbatim in results/S04.json scenario_record.connection_record_after_shelving. No evidence dropped; check_run.py reports 0 problems."
+  ],
+  "environment": {
+    "det2_world_head": "00becd4796c09e42199c9dd0d0f75ed5b99c4185",
+    "deterministic_rebuild": "verified: two independent builds from --source-rev WORKTREE --seed 20260924 produced identical world HEADs and an empty observer diff",
+    "os": "darwin",
+    "python": "repo .venv (Python 3.14.4) for harness; world .venv (created by make setup) for world CLI",
+    "sandbox": "managed; world reads/writes outside allowed roots ran unsandboxed (require_escalated)",
+    "seed": 20260924,
+    "source_rev": "WORKTREE"
+  },
+  "eval_revision": "eec74eb1b1b22f13fb5fb94c043484956b175423",
+  "finished": "2026-09-26T01:57:00Z",
+  "model": "Muse Code powered by Meta Muse Spark",
+  "persona": "clean-room consumer, first contact with the final revision",
+  "plan": "O",
+  "product_revision": "eec74eb1b1b22f13fb5fb94c043484956b175423",
+  "run_id": "s14-cleanroom-2026-09-26",
+  "scenarios": [
+    "S00",
+    "S01",
+    "S02",
+    "S03",
+    "S04",
+    "S06",
+    "S10",
+    "S14",
+    "S15",
+    "S26",
+    "S27"
+  ],
+  "session_role": "clean-room-final-consumer (Plan N + Plan C)",
+  "started": "2026-09-26T01:09:23Z",
+  "world_build": {
+    "arrivals": 30,
+    "builder_version": 1,
+    "commits": 133,
+    "corpus_sha256": "ca9429af8fb7f772895c20ccac1ad3a466a0f0db856ea6fc84d361ce7ef1b0e5",
+    "generate_exit": 0,
+    "notes": 116,
+    "paths": {
+      "drop": "/Users/aramaljanadi/los-eval/s14-cleanroom-2026-09-26/eval-drop",
+      "materials": "/Users/aramaljanadi/los-eval/s14-cleanroom-2026-09-26/LearningOS/materials",
+      "repository": "/Users/aramaljanadi/los-eval/s14-cleanroom-2026-09-26/LearningOS/repository"
+    },
+    "product_revision": "WORKTREE",
+    "product_revision_requested": "WORKTREE",
+    "scale": 0,
+    "seed": 20260924,
+    "timeline": {
+      "as_of": "2026-09-18",
+      "start": "2026-04-06"
+    },
+    "validate_exit": 0,
+    "validation": "0 error(s), 3 warning(s) \u2014 OK (0.2s)",
+    "world_head": "00becd4796c09e42199c9dd0d0f75ed5b99c4185"
+  },
+  "world_head": "00becd4796c09e42199c9dd0d0f75ed5b99c4185"
+}

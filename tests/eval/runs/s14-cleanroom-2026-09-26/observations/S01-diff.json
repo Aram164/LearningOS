@@ -1,0 +1,49 @@
+{
+  "from": "S01-before",
+  "to": "S01-after",
+  "canonical": {
+    "added": [],
+    "removed": [],
+    "modified": []
+  },
+  "canonical_digest_changed": false,
+  "receipts_added": [],
+  "inflight_after": [],
+  "derived": {
+    "added": [
+      "generated/backlinks.json",
+      "generated/concept-canvas.canvas",
+      "generated/concept-index.md",
+      "generated/concept-map.md",
+      "generated/coordination-view.md",
+      "generated/dependency-report.md",
+      "generated/domain-atlas.md",
+      "generated/learner-interpretations.json",
+      "generated/learner-interpretations.md",
+      "generated/learning-requirements.json",
+      "generated/learning-requirements.md",
+      "generated/library.md",
+      "generated/manifest.json",
+      "generated/module-view.md",
+      "generated/nebula.md",
+      "generated/reading-room.md",
+      "generated/reports/health.md",
+      "generated/reports/validation-report.md",
+      "generated/source-index.md",
+      "generated/study-plans.md"
+    ],
+    "removed": [],
+    "modified": [],
+    "bytes_before": 0,
+    "bytes_after": 493550
+  },
+  "diagnostics_added": [],
+  "ai_actions_added": [],
+  "new_operations": [],
+  "head": {
+    "before": "00becd4796c09e42199c9dd0d0f75ed5b99c4185",
+    "after": "00becd4796c09e42199c9dd0d0f75ed5b99c4185"
+  },
+  "git_status_after": [],
+  "flags": []
+}

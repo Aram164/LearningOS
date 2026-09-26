@@ -1,0 +1,66 @@
+{
+  "from": "S10-before",
+  "to": "S10-after",
+  "canonical": {
+    "added": [
+      "operations/transactions/idempotency.yaml",
+      "operations/transactions/revisions.yaml",
+      "operations/transactions/transaction-20260926-034134-001.yaml"
+    ],
+    "removed": [],
+    "modified": [
+      "curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md"
+    ]
+  },
+  "canonical_digest_changed": true,
+  "receipts_added": [
+    "operations/transactions/idempotency.yaml",
+    "operations/transactions/revisions.yaml",
+    "operations/transactions/transaction-20260926-034134-001.yaml"
+  ],
+  "inflight_after": [],
+  "derived": {
+    "added": [],
+    "removed": [],
+    "modified": [
+      "generated/backlinks.json",
+      "generated/concept-canvas.canvas",
+      "generated/concept-index.md",
+      "generated/domain-atlas.md",
+      "generated/manifest.json",
+      "generated/reading-room.md",
+      "generated/reports/health.md",
+      "generated/reports/validation-report.md"
+    ],
+    "bytes_before": 987243,
+    "bytes_after": 985095
+  },
+  "diagnostics_added": [],
+  "ai_actions_added": [],
+  "new_operations": [
+    {
+      "trace_id": "5ece12629eb2e347ba04432abc4285d6",
+      "request_id": "request-s14-s10-stage-note-unit-1",
+      "capability": "stage.note.write",
+      "started_at": 1790386894.371299,
+      "duration_ms": 569.9,
+      "attempts": 1,
+      "replayed": false,
+      "first_failure_stage": null,
+      "canonical_outcome": "COMMITTED",
+      "recovery_requirement": "none",
+      "needs_attention": false
+    }
+  ],
+  "head": {
+    "before": "00becd4796c09e42199c9dd0d0f75ed5b99c4185",
+    "after": "00becd4796c09e42199c9dd0d0f75ed5b99c4185"
+  },
+  "git_status_after": [
+    " M curriculum/modules/module-tuh-os/units/unit-os-l02/stages/stage-os-l02-02-proportional-share/notes.md",
+    "?? operations/transactions/idempotency.yaml",
+    "?? operations/transactions/revisions.yaml",
+    "?? operations/transactions/transaction-20260926-034134-001.yaml"
+  ],
+  "flags": []
+}
