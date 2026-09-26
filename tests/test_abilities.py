@@ -128,6 +128,7 @@ def test_changed_bridge_source_withholds_transfer(ability_root: Path):
     assert focus["bridges"][0]["source_freshness"]["status"] == "stale"
 
 
+@pytest.mark.full_repo
 def test_live_extension_bridge_uses_stable_reviewed_source(real_repo):
     bridge = next(row for row in real_repo.ability_bridges
                   if row["from"] == "ability-sad-backprop-local"

@@ -97,8 +97,9 @@ Everything is plain text; nothing requires any tool to read. The four questions:
   commented and readable raw. This file is the only truth for those facts.
 - **What should I do next?** Run `make views` (or `python tools/generate.py`),
   then open `generated/coordination-view.md` — exam spine, every workspace's
-  next action, neglect signals. Check its `Generated:` timestamp; if views feel
-  stale, rebuild (the post-commit hook does this automatically after commits).
+  next action, neglect signals. Check its `Generated:` line — it names
+  uncommitted changes when the tree is dirty; if views feel stale, rebuild
+  (the post-commit hook does this automatically after commits).
 - **Where is my knowledge on X?** Browse `knowledge/notes/<domain>/` —
   filenames say what they are — or ctrl-F `generated/concept-index.md`
   (German terms work; aliases are indexed). The prerequisite graph is drawn in

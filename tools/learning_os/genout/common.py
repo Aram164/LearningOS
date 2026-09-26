@@ -115,10 +115,20 @@ def stable_generated_at(root: Path) -> str:
     Regenerating without new commits yields byte-for-byte identical output
     (improvement: no wall-clock noise in generated files). Falls back to a
     fixed marker for a tree without history (e.g. synthetic test repos).
+
+    A tree with uncommitted canonical changes stamps
+    "(last commit, uncommitted changes)" instead of the bare commit time,
+    so the README's human-fallback freshness check can see what the
+    validator's hygiene warning already reports. The marker is a pure
+    function of tree state — identical trees still rebuild
+    byte-identically — and clean trees stamp exactly as before.
     """
     try:
         ts = read_history(root, "-1", "--format=%cI").strip()
         if ts:
+            _, dirty = _git_state(root)
+            if dirty:
+                return f"{ts} (last commit, uncommitted changes)"
             return f"{ts} (last commit)"
     except GitHistoryError as exc:
         raise TransactionFailure(f"failed to read git history: {exc}") from exc

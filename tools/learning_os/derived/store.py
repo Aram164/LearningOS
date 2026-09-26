@@ -151,14 +151,19 @@ def invalidate(root: Path, node_id: str) -> None:
         canonical_bytes(_state_payload(states)))
 
 
-def lookup(root: Path, node_id: str) -> tuple[NodeState, Any] | None:
+def lookup(root: Path, node_id: str, *,
+           states: dict[str, NodeState] | None = None) -> tuple[NodeState, Any] | None:
     """Verified reuse: entry plus an existing blob with a matching hash.
 
     Anything else — missing entry, missing or symlinked blob, hash
     mismatch, unparseable blob — is a cache miss (None). The blob path is
     derived from the verified output hash, never trusted from the entry.
+    ``states`` is a pre-read state index; callers evaluating many nodes
+    pass one shared read instead of re-parsing the index per node.
     """
-    state = read_state(root).get(node_id)
+    if states is None:
+        states = read_state(root)
+    state = states.get(node_id)
     if state is None:
         return None
     blob_path = derived_dir(root) / BLOBS_DIRNAME / state.output_sha256

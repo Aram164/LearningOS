@@ -129,13 +129,23 @@ class ChecksGenerated:
             for f in sorted(reports.iterdir()):
                 if f.is_file() and not f.name.startswith(GENERATED_REPORT_PREFIXES):
                     self.err("GEN-UNKNOWN", f"unexpected file in generated/reports/: {f.name}")
-        # Generated warning headers
+        # Generated warning headers. A directory carrying a view's name
+        # matches the glob but has no bytes to check: name the shape with
+        # its recovery instead of crashing on the read (JF-20).
         for f in sorted(gen.rglob("*.md")):
+            if not f.is_file():
+                self.err("GEN-HEADER", "generated Markdown is a directory, not the published "
+                         "view — delete it and rebuild", self._rel(f))
+                continue
             head = f.read_text(encoding="utf-8", errors="replace")[:400]
             if "GENERATED" not in head:
                 self.err("GEN-HEADER", "generated file lacks a generated-file warning header",
                          self._rel(f))
         for f in sorted(gen.rglob("*.json")):
+            if not f.is_file():
+                self.err("GEN-JSON", "generated JSON is a directory, not the published "
+                         "view — delete it and rebuild", self._rel(f))
+                continue
             try:
                 data = json.loads(f.read_text(encoding="utf-8"))
             except json.JSONDecodeError:
@@ -148,7 +158,7 @@ class ChecksGenerated:
         archived_ids = [w.id for w in self.repo.archived_workspaces()]
         for name in ("concept-index.md", "source-index.md"):
             f = gen / name
-            if f.exists():
+            if f.is_file():
                 text = f.read_text(encoding="utf-8", errors="replace")
                 for wid in archived_ids:
                     if wid in text:
