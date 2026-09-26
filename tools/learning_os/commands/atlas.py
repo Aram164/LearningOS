@@ -10,6 +10,7 @@ from pathlib import Path
 import jsonschema
 import yaml
 
+from ..contracts.atlas_question import QUESTION_FIELDS
 from ..fingerprint import canonical_fingerprint
 from ..loader import load_repo
 from ..loading.yamlio import UniqueKeySafeLoader
@@ -157,9 +158,10 @@ def cmd_atlas_question_save(args) -> int:
     question = args.question
     if not isinstance(question, dict):
         raise WriteRefused("question must be an object")
-    allowed = {"id", "title", "text", "target", "state", "answer_notes"}
-    if set(question) - allowed or not isinstance(question.get("id"), str):
+    if set(question) - QUESTION_FIELDS or not isinstance(question.get("id"), str):
         raise WriteRefused("question has unknown fields or no note id")
+    if "target" in question and not isinstance(question["target"], dict):
+        raise WriteRefused("question target must be an object")
     with _operator_lock(root):
         if not _expected_ok(root, args.expected_snapshot):
             return 3

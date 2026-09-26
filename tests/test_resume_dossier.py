@@ -281,3 +281,38 @@ def test_recovery_follows_the_newest_touch_even_with_no_requirement(
                         lambda _root: {old_map: "100", new_map: "200"})
     _, _, unit_id, _, stage_id = _resolve_stage(load_repo(root))
     assert (unit_id, stage_id) == ("unit-demo-l02", "stage-demo2")
+
+
+def test_stage_note_section_moves_the_digest_and_refuses_non_mappings():
+    base = build_resume_dossier(**_inputs())
+    assert dict(base.content)["stage-note"] is None
+    note = {"working_note": "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md",
+            "lines": 3, "updated": "2026-09-25", "excerpt": "worked example done\n"}
+    changed = build_resume_dossier(**_inputs(stage_note=note))
+    assert changed.key != base.key
+    assert dict(changed.content)["stage-note"] == note
+    again = build_resume_dossier(**_inputs(stage_note=dict(note)))
+    assert again == changed
+    with pytest.raises(ResumeDossierError):
+        build_resume_dossier(**_inputs(stage_note=["not-a-mapping"]))
+
+
+def test_resume_shows_recorded_stage_note_without_a_requirement(mini_repo: Path):
+    add_curriculum(mini_repo)
+    note_rel = "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md"
+    empty = run_los(mini_repo, "resume")
+    assert empty.returncode == 0, empty.stderr
+    assert "Stage note   nothing recorded yet" in empty.stdout
+    (mini_repo / note_rel).write_text(
+        "Derived E[X] for a Bernoulli.\nWorked example done zephyr-note.\n",
+        encoding="utf-8")
+    text = run_los(mini_repo, "resume")
+    assert text.returncode == 0, text.stderr
+    assert "Stage note   2 lines recorded" in text.stdout
+    assert "zephyr-note" in text.stdout
+    assert "los stage-note unit-demo-l01 stage-demo --text" in text.stdout
+    payload = json.loads(run_los(mini_repo, "resume", "--json").stdout)
+    section = payload["content"]["stage-note"]
+    assert section["lines"] == 2
+    assert section["working_note"] == note_rel
+    assert "zephyr-note" in section["excerpt"]

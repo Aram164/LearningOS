@@ -51,7 +51,14 @@ queries:
     handler: note_read
     result: note-content
     invariants:
-    - reads only registered durable notes without following symlinks
+    - reads registered durable notes and garden seeds by stable id, without following symlinks
+    - exact content segments carry snapshot and byte hash; continuation refuses changed snapshots
+  inbox.content:
+    handler: inbox_read
+    result: inbox-content
+    invariants:
+    - reads one work/inbox file by inbox-relative name, without following symlinks
+    - non-UTF-8 drops refuse with no text read; dot-files read by exact name only
     - exact content segments carry snapshot and byte hash; continuation refuses changed snapshots
   note.search:
     handler: search

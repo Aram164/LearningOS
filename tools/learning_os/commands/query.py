@@ -217,18 +217,53 @@ def cmd_bootstrap(args) -> int:
     return 0
 
 
+def _inbox_search_rows(root: Path) -> list[dict]:
+    """One discovery row per inbox file, matched on names only, never bytes.
+
+    Inbox drops are arbitrary files (binary captures included), so the
+    metadata search reads no content here: the haystack is the file name
+    and path. Content stays behind ``inbox-read``, which refuses non-text.
+    Raises OSError when the listing itself fails; a missing inbox is empty.
+    """
+    inbox = root / "work" / "inbox"
+    if not inbox.is_dir():
+        return []
+    rows = []
+    for path in sorted(inbox.rglob("*")):
+        if not path.is_file():
+            continue
+        rel = path.relative_to(inbox).as_posix()
+        if any(part.startswith(".") for part in rel.split("/")):
+            continue
+        rows.append({"id": rel, "type": "inbox-item", "title": path.name,
+                     "path": f"work/inbox/{rel}"})
+    return rows
+
+
 def cmd_search(args) -> int:
     if getattr(args, "content", False):
         return content_search(args)
-    manifest = _fresh_manifest(_root(args))
+    root = _root(args)
+    manifest = _fresh_manifest(root)
     words = [w for w in args.query.lower().split() if w]
+    rows = list(manifest["records"])
+    if not args.type or args.type == "garden-note":
+        rows.extend(manifest.get("garden_entries", []) or [])
+    if not args.type or args.type == "inbox-item":
+        try:
+            rows.extend(_inbox_search_rows(root))
+        except OSError as exc:
+            print(f"los: cannot list work/inbox: {exc}", file=sys.stderr)
+            return 2
     matches = []
-    for rec in manifest["records"]:
+    for rec in rows:
         if args.type and rec.get("type") != args.type:
             continue
         hay = json.dumps(rec, ensure_ascii=False).lower()
         if all(word in hay for word in words):
-            matches.append({k: rec.get(k) for k in ("id", "type", "title", "path", "status")})
+            matches.append({k: rec.get(k) for k in
+                            ("id", "type", "title", "path", "status",
+                             "state", "deprecated")})
     print(json.dumps(matches[:args.limit], **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
