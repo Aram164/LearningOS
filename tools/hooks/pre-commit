@@ -39,11 +39,16 @@ if [ -z "$PY" ]; then
     exit 1
 fi
 
-if ! "$PY" -m ruff check tools tests; then
-    echo "" >&2
-    echo "COMMIT BLOCKED: static checks failed (see above)." >&2
-    echo "Fix the reported code defect, then commit again." >&2
-    exit 1
+if "$PY" -m ruff --version >/dev/null 2>&1; then
+    if ! "$PY" -m ruff check tools tests; then
+        echo "" >&2
+        echo "COMMIT BLOCKED: static checks failed (see above)." >&2
+        echo "Fix the reported code defect, then commit again." >&2
+        exit 1
+    fi
+else
+    echo "pre-commit: ruff is not installed — static checks SKIPPED." >&2
+    echo "pre-commit: run 'make setup' for the full gate." >&2
 fi
 
 "$PY" tools/validate.py --compact

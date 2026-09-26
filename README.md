@@ -117,6 +117,7 @@ anything — a text editor and Git are enough to operate this repository forever
 
 ```bash
 make setup      # once per clone/move: create .venv, install deps, install Git hooks
+make setup-lean # fresh-clone fast path: runtime-only .venv (no pytest/ruff)
 make check      # validate (schemas + VALIDATION.md rules) — errors block, warnings do not
 make warnings   # the warning delta against the recorded baseline; fails only on a NEW one
 make views      # rebuild everything under the gitignored output tree
