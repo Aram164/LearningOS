@@ -51,6 +51,23 @@ TRACEPARENT_ENV = "TRACEPARENT"
 #: alter the gateway call it observed.
 TRACE_DEBUG_FILE_ENV = "LOS_TRACE_DEBUG_FILE"
 
+#: Roots whose trace stores must never be persisted to, as an
+#: `os.pathsep`-separated list of repository roots. Binding one of them (or
+#: anything beneath one) leaves the store unbound, so `persist_record`
+#: becomes a no-op for that repository (JF-03). The test session installs
+#: the repository under test here, which keeps test spans out of the live
+#: `operations/diagnostics/traces.jsonl` without ever truncating or
+#: deleting it. Production never sets this.
+TRACE_STORE_DENY_ENV = "LOS_TRACE_STORE_DENY"
+
+#: Explicit LearningOS-ownership marker for a propagated trace context
+#: (JF-04, owner-selected Option A). The UI sets this to the operation id
+#: alongside TRACEPARENT for every dispatch it mints; Core adopts a
+#: propagated context as logical operation identity if and only if the
+#: marker names that exact context. An unmarked or mismatched TRACEPARENT
+#: is ambient parentage for correlation, never identity.
+TRACE_OWNERSHIP_ENV = "LOS_TRACE_OWNED"
+
 # ---------------------------------------------------------------------------
 # Span names (emitted from Phase 2; declared here).
 # ---------------------------------------------------------------------------
@@ -183,11 +200,11 @@ RECOVERY_REQUIREMENTS = frozenset({
 #: the drift-failing parity test is the deliberate mechanism. Do not pull
 #: contract generation into Track #2 to fix this sooner.
 #:
-#: IDEMPOTENCY_CONFLICT joined in S12 (JF-19): a refused attempt proves its
-#: own request wrote nothing, and the per-attempt coverage rule already
-#: withholds proof when an earlier attempt is ambiguous. The UI mirror in
-#: contracts/gateway-v2.ts needs the same addition; the parity test fails
-#: until it lands.
+#: IDEMPOTENCY_CONFLICT stays out of this set (JF-19): a lone key conflict
+#: retires its own request through the dedicated `_conflict_proves_no_commit`
+#: resolver rule, not through the shared definitive-refusal rule. The UI
+#: mirror deliberately excludes it for the same reason; the parity test
+#: fails if either side drifts.
 DEFINITIVE_NO_COMMIT_CODES = frozenset({
     "INVALID_REQUEST",
     "UNKNOWN_CAPABILITY",
@@ -198,7 +215,6 @@ DEFINITIVE_NO_COMMIT_CODES = frozenset({
     "VALIDATION_FAILED",
     "PROJECTION_FAILED",
     "UNCONFIRMED",
-    "IDEMPOTENCY_CONFLICT",
 })
 
 # ---------------------------------------------------------------------------
