@@ -590,3 +590,27 @@ def test_inspect_miss_on_advertised_unresolved_id_names_referring_project(mini_r
     unknown = run_los(mini_repo, "inspect", "note-no-such-note")
     assert unknown.returncode == 2, unknown.stderr
     assert "project-demo" not in unknown.stderr
+
+
+def test_inspect_miss_hint_keeps_the_not_found_exit_code(mini_repo):
+    # The hint names the referrer, and a batch refusal's exit code is chosen
+    # from its message text: a referrer id containing "snapshot" once turned
+    # a batch miss into exit 3, the restart-this-read code.
+    write_yaml(mini_repo / "projects/registry/project-snapshot-lab.yaml", {
+        "schema_version": 1, "id": "project-snapshot-lab", "type": "project",
+        "title": "Snapshot lab", "project_type": "software",
+        "status": "active", "root_uri": "project://snapshot-lab",
+        "objective": "Reference a workspace that does not exist.",
+        "milestone_ids": [], "linked_module_ids": [], "unit_ids": [],
+        "workspace_ids": ["workspace-demo-ghost"], "thematic_group_ids": [],
+        "boundaries": {"confidentiality": "private",
+                       "external_code_access": "approved"},
+    })
+    single = run_los(mini_repo, "inspect", "workspace-demo-ghost")
+    batch = run_los(mini_repo, "inspect", "workspace-demo-ghost",
+                    "project-snapshot-lab")
+    for missing in (single, batch):
+        assert missing.returncode == 2, missing.stderr
+        assert "los: record not found: workspace-demo-ghost" in missing.stderr
+        assert ("los: hint: referenced by project-snapshot-lab (project) "
+                "in workspace_ids") in missing.stderr
