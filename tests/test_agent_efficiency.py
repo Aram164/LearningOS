@@ -209,9 +209,9 @@ def test_batch_builds_once_and_preserves_aliases(mini_repo, monkeypatch, capsys)
 
     def manifest(root, *, snapshot_id=None):
         calls.append(root)
-        return {"project_aliases": {"old": "new"}, "records": [{"id": "new"}]}
+        return {"project_aliases": {"old": "new"}, "records": [{"id": "new"}]}, None
 
-    monkeypatch.setattr(reads, "_fresh_manifest", manifest)
+    monkeypatch.setattr(reads, "_fresh_manifest_and_repo", manifest)
     args = SimpleNamespace(root=str(mini_repo), id="old", more_ids=["new", "old"])
     assert query.cmd_inspect(args) == 0
     assert len(calls) == 1
@@ -222,7 +222,8 @@ def test_batch_builds_once_and_preserves_aliases(mini_repo, monkeypatch, capsys)
 
 
 def test_batch_refuses_changed_snapshot_before_emitting_records(mini_repo, monkeypatch, capsys):
-    monkeypatch.setattr(reads, "_fresh_manifest", lambda root, **kwargs: {"records": [{"id": "a"}]})
+    monkeypatch.setattr(reads, "_fresh_manifest_and_repo",
+                        lambda root, **kwargs: ({"records": [{"id": "a"}]}, None))
     fingerprints = iter(["a" * 64, "b" * 64])
     monkeypatch.setattr(reads, "canonical_fingerprint", lambda root: next(fingerprints))
     assert query.cmd_inspect(SimpleNamespace(root=str(mini_repo), id="a", more_ids=["a"])) == 3
@@ -237,9 +238,9 @@ def test_json_layout_follows_stream_and_inspect_json_is_equivalent(mini_repo, mo
     terminal, pipe = Terminal(), StringIO()
     assert support._json_layout(terminal) == {"indent": 2}
     assert support._json_layout(pipe) == {"separators": (",", ":")}
-    monkeypatch.setattr(query, "_fresh_manifest", lambda root: {
+    monkeypatch.setattr(query, "_fresh_manifest_and_repo", lambda root: ({
         "records": [{"id": "record-demo", "title": "Demo"}],
-    })
+    }, None))
     args = SimpleNamespace(root=str(mini_repo), id="record-demo", more_ids=[])
     for stream in (terminal, pipe):
         with redirect_stdout(stream):

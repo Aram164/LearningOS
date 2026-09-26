@@ -272,7 +272,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_inbox_read)
 
-    p = sub.add_parser("inspect", help="inspect one record by stable id")
+    p = sub.add_parser("inspect", help="inspect one record or structural id")
     p.add_argument("id")
     p.add_argument("more_ids", nargs="*", help="inspect up to 20 records from one fresh snapshot")
     p.set_defaults(func=cmd_inspect)

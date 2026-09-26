@@ -71,8 +71,9 @@ Pick one entry read; do not stack them:
   snapshot-bound call), then `route-patch --check`. The route response
   already carries the snapshot and exact revision guards; do not read
   `bootstrap` or the unit brief first.
-- A named stage → `plan-edit-context UNIT_ID --stage-id STAGE_ID`;
-  `inspect STAGE_ID` does not resolve stages.
+- A named stage → `plan-edit-context UNIT_ID --stage-id STAGE_ID` for edits
+  (snapshot and revision guards); `inspect STAGE_ID` answers read-only
+  questions with the projected row plus owners.
 - Unit coverage, source-completeness, or unknown route/stage ids →
   `plan-edit-context UNIT_ID --brief` first (guards, id inventories,
   missing evidence, reusable analysis refs, preflight checks, runnable
@@ -91,12 +92,14 @@ startup.
 
 Decide which read answers the question before reading:
 
-- A named record → `inspect ID`. A named stage →
-  `plan-edit-context UNIT_ID --stage-id STAGE_ID`; `inspect STAGE_ID` does not
-  resolve stages. A named route → `plan-edit-context UNIT_ID --route-id
-  ROUTE_ID` (or the `--route-ids` batch); the route response already
-  carries the snapshot and revision guards. Reach for the unit `--brief`
-  only for unit coverage, source-completeness, or unknown ids.
+- A named record → `inspect ID`, including structural sub-ids (curriculum
+  and path stages, detours, project nodes, milestones — each answers with
+  its owners). A named stage edit →
+  `plan-edit-context UNIT_ID --stage-id STAGE_ID` for the guards. A named
+  route → `plan-edit-context UNIT_ID --route-id ROUTE_ID` (or the
+  `--route-ids` batch); the route response already carries the snapshot
+  and revision guards. Reach for the unit `--brief` only for unit
+  coverage, source-completeness, or unknown ids.
 - A material question → saved context first (`material-context`), else one
   exact span (`material-span UNIT_ID ROUTE_ID`); never trawl.
 - A new video → title/description and course/playlist membership for provisional

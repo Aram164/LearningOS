@@ -19,8 +19,10 @@ from .reads import (
     compact_bootstrap,
     content_search,
     inspect_batch,
+    inspect_not_found,
     record_payload,
     related_records,
+    structural_payload,
 )
 from .support import (
     _delegate,
@@ -279,10 +281,12 @@ def cmd_search(args) -> int:
 def cmd_inspect(args) -> int:
     if getattr(args, "more_ids", None):
         return inspect_batch(args)
-    manifest = _fresh_manifest(_root(args))
+    manifest, repo = _fresh_manifest_and_repo(_root(args))
     payload = record_payload(manifest, args.id)
     if payload is None:
-        print(f"los: record not found: {args.id}", file=sys.stderr)
+        payload = structural_payload(manifest, args.id, repo)
+    if payload is None:
+        print(f"los: {inspect_not_found(args.id)}", file=sys.stderr)
         return 2
     print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
