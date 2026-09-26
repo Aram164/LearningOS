@@ -1532,3 +1532,43 @@ def test_two_concurrent_replays_of_the_same_transaction_do_not_duplicate_rows(
     assert list(ledger["paths"]).count(captured) == 1, (
         "concurrent replays of the same transaction must not duplicate the ownership row"
     )
+
+
+def test_seal_envelope_helper_produces_submittable_capture(repo_root, mini_repo,
+                                                           tmp_path):
+    payload_file = tmp_path / "payload.json"
+    payload_file.write_text(json.dumps({"text": "sealed by helper"}),
+                            encoding="utf-8")
+    out = tmp_path / "sealed.json"
+    before = {path for path in mini_repo.rglob("*")}
+    sealed = subprocess.run(
+        [sys.executable, str(repo_root / "tools/seal_envelope.py"),
+         "--root", str(mini_repo), "--capability", "capture.create",
+         "--payload", "@" + str(payload_file), "--key", "seal-helper-001",
+         "--revision", "capture-request:seal-helper-001=0",
+         "--out", str(out)],
+        capture_output=True, text=True)
+    assert sealed.returncode == 0, sealed.stderr
+    assert {path for path in mini_repo.rglob("*")} == before
+    envelope = json.loads(out.read_text(encoding="utf-8"))
+    assert envelope["capability"] == "capture.create"
+    assert envelope["channel"] == "operator"
+    assert envelope["idempotency_key"] == "seal-helper-001"
+    assert envelope["approval"]["kind"] == "operator-approval"
+    applied = _run(repo_root, mini_repo, tmp_path / "apply.json", envelope)
+    assert applied.returncode == 0, applied.stdout
+    assert json.loads(applied.stdout)["ok"] is True
+
+
+def test_seal_envelope_helper_refuses_out_inside_repo(repo_root, mini_repo,
+                                                      tmp_path):
+    refused = subprocess.run(
+        [sys.executable, str(repo_root / "tools/seal_envelope.py"),
+         "--root", str(mini_repo), "--capability", "capture.create",
+         "--payload", '{"text": "x"}', "--key", "seal-helper-002",
+         "--revision", "capture-request:seal-helper-002=0",
+         "--out", str(mini_repo / "sealed.json")],
+        capture_output=True, text=True)
+    assert refused.returncode == 2
+    assert "refusing to write" in refused.stderr
+    assert not (mini_repo / "sealed.json").exists()
