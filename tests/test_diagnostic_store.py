@@ -528,12 +528,85 @@ def test_no_exception_body_reaches_the_store(tmp_path: Path):
                         failures[0]["attrs"]["error"]), failures[0]["attrs"]
 
 
+def test_denied_root_disables_persistence(tmp_path: Path, monkeypatch):
+    """Binding a denied root leaves the store unbound: persists are no-ops,
+    while an allowed root still persists (JF-03)."""
+    from learning_os.diagnostics import conventions
+    from learning_os.diagnostics.store import bind_store, persist_record
+
+    record = {"v": conventions.VOCAB_VERSION, "kind": "event",
+              "name": "deny-probe", "op": "0" * 32, "span": "1" * 16}
+    denied = tmp_path / "denied"
+    monkeypatch.setenv(conventions.TRACE_STORE_DENY_ENV, str(denied))
+    bind_store(denied)
+    try:
+        persist_record(record)
+    finally:
+        bind_store(None)
+    assert not traces_path(denied).exists()
+    allowed = tmp_path / "allowed"
+    bind_store(allowed)
+    try:
+        persist_record(record)
+    finally:
+        bind_store(None)
+    assert traces_path(allowed).is_file()
+
+
+def test_span_outside_deny_scope_survives(tmp_path: Path, monkeypatch):
+    """A legitimate span written outside the test scope survives denied
+    binds — and so does one already sitting in the denied file (JF-03).
+
+    The old isolation truncated the live store after the suite; the deny
+    mechanism must never modify any store, denied or not.
+    """
+    from learning_os.diagnostics import conventions
+    from learning_os.diagnostics.store import bind_store, persist_record
+
+    sentinel = '{"legitimate": "span"}\n'
+    live = tmp_path / "live"
+    traces_path(live).parent.mkdir(parents=True)
+    traces_path(live).write_text(sentinel, encoding="utf-8")
+    denied = tmp_path / "denied"
+    monkeypatch.setenv(conventions.TRACE_STORE_DENY_ENV, str(denied))
+    record = {"v": conventions.VOCAB_VERSION, "kind": "event",
+              "name": "deny-probe", "op": "0" * 32, "span": "1" * 16}
+    bind_store(denied)
+    try:
+        persist_record(record)
+    finally:
+        bind_store(None)
+    assert traces_path(live).read_text(encoding="utf-8") == sentinel
+    assert not traces_path(denied).exists()
+    traces_path(denied).parent.mkdir(parents=True)
+    traces_path(denied).write_text(sentinel, encoding="utf-8")
+    bind_store(denied)
+    try:
+        persist_record(record)
+    finally:
+        bind_store(None)
+    assert traces_path(denied).read_text(encoding="utf-8") == sentinel
+
+
+def test_session_denies_persistence_for_repo_under_test():
+    """The test session installs its own repository in the deny list, so
+    rootless CLI runs cannot persist to the live store (JF-03)."""
+    from learning_os.diagnostics import conventions
+
+    repo = Path(__file__).resolve().parent.parent.resolve()
+    denied = [Path(entry).resolve()
+              for entry in os.environ.get(
+                  conventions.TRACE_STORE_DENY_ENV, "").split(os.pathsep)
+              if entry.strip()]
+    assert repo in denied
+
+
 def test_suite_leaves_the_real_diagnostic_store_untouched():
     """test-fast must not write the checked-in operations view (JF-03).
 
     Replays the known leak path (a rootless capability run, which binds
     the real root) inside a nested pytest process and asserts the real
-    store is byte-identical afterwards. The conftest isolation fixture
+    store is byte-identical afterwards. The session deny list in conftest
     is what makes this pass; without it the nested run appends spans.
     """
     repo = Path(__file__).resolve().parent.parent
