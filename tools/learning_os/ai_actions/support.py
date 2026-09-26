@@ -7,6 +7,7 @@ import contextlib
 import datetime as dt
 import hashlib
 import os
+import re
 from collections.abc import Callable
 from pathlib import Path, PurePosixPath
 from typing import Any
@@ -14,6 +15,22 @@ from typing import Any
 import yaml
 
 from .errors import DeliveryValidationError
+
+#: Request ids must match the manifest contract's `ai_actions/requests[]/id`
+#: pattern (system/contracts/manifest-v*.schema.json). A persisted bundle with
+#: any other id breaks every projection read, so both the prepare path and the
+#: validator enforce this before anything depends on it (JF-08).
+REQUEST_ID_PATTERN = r"^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$"
+REQUEST_ID_RE = re.compile(REQUEST_ID_PATTERN)
+
+
+def check_request_id(request_id: str) -> str:
+    """Return ``request_id`` if it is projectable, else raise."""
+    if not REQUEST_ID_RE.fullmatch(str(request_id)):
+        raise DeliveryValidationError(
+            f"request id {request_id!r} does not match {REQUEST_ID_PATTERN!r}; "
+            "no request was prepared")
+    return str(request_id)
 
 
 def _read_yaml(path: Path, default: Any = None) -> Any:

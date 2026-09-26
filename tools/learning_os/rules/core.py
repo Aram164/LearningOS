@@ -203,6 +203,7 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         self.check_lifecycle_coherence()
         self.check_projects()
         self.check_transaction_receipts()
+        self.check_ai_action_requests()
         self.check_files()
         self.check_workspaces()
         self.check_learning_paths()
