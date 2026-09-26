@@ -454,6 +454,7 @@ commands:
     - one active stage
     - the resume pointer names the stage this action made current and commits in the same transaction
     - other units keep their own active study maps
+    - an optional progress summary/next is recorded on the stage row with today's date
   stage.attachment.add:
     handler: stage_attach
     cli_command: stage-attach
@@ -548,6 +549,15 @@ commands:
     - source file is copied
     - never moved
     - the external attachment is bound to its exact bytes by SHA-256 before use
+  workspace.next-action.update:
+    handler: workspace_next_action
+    cli_command: workspace-next-action
+    writes:
+    - work/active/**
+    invariants:
+    - one active workspace; archived or non-active workspaces refuse
+    - only the Next Action section content changes; section editing is fence-aware and frontmatter is preserved
+    - GatewayEnvelopeV2 carries the action text inline and never reads it from stdin
   project.create:
     handler: project_create
     cli_command: project-create

@@ -1,29 +1,19 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "capabilities/stage.progress.update.schema.json",
-  "title": "payload for capability stage.progress.update",
+  "$id": "capabilities/workspace.next-action.update.schema.json",
+  "title": "payload for capability workspace.next-action.update",
   "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "stage_id",
-    "status",
-    "unit_id"
+    "next_action",
+    "workspace_id"
   ],
   "properties": {
-    "progress_next": {
+    "next_action": {
       "type": "string"
     },
-    "progress_summary": {
-      "type": "string"
-    },
-    "stage_id": {
-      "type": "string"
-    },
-    "status": {
-      "type": "string"
-    },
-    "unit_id": {
+    "workspace_id": {
       "type": "string"
     }
   }

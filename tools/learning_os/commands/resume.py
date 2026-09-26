@@ -371,12 +371,15 @@ def cmd_resume(args) -> int:
     ]
     top_cluster = _top_cluster(root)
     stage_note = _stage_note_facts(root, stage)
+    progress = stage.get("progress") if isinstance(stage, dict) else None
+    stage_progress = progress if isinstance(progress, dict) else None
     try:
         dossier = build_resume_dossier(
             unit_id=unit_id, module_id=module_id, stage_id=stage_id,
             study_map_id=study_map_id, via=via, requirement=requirement,
             observations=obs_rows, open_items=open_items, sittings=sittings,
-            titles=titles, top_cluster=top_cluster, stage_note=stage_note)
+            titles=titles, top_cluster=top_cluster, stage_note=stage_note,
+            stage_progress=stage_progress)
     except ResumeDossierError as exc:
         print(f"los: {exc}", file=sys.stderr)
         return 2
@@ -389,7 +392,7 @@ def cmd_resume(args) -> int:
     aims = _recorded_aims(repo, module_id, unit_id)
     print(_render(dossier, requirement, observations, open_items, sittings,
                   titles, via_detail, len(stale_here), top_cluster, aims,
-                  stage_note))
+                  stage_note, stage_progress))
     return 0
 
 
@@ -412,7 +415,8 @@ def _render(dossier, requirement, observations, open_items, sittings,
             titles, via_detail: str, stale_count: int = 0,
             top_cluster: dict | None = None,
             recorded_aims: list[tuple[str, str, str]] | None = None,
-            stage_note: dict | None = None) -> str:
+            stage_note: dict | None = None,
+            stage_progress: dict | None = None) -> str:
     today = _dt.date.today()
     lines = [f"{titles['module']} · {titles['unit']} · {dossier.stage_id}",
              f"  ({via_detail})", ""]
@@ -454,6 +458,11 @@ def _render(dossier, requirement, observations, open_items, sittings,
             lines.extend(f"               {line[:200]}" for line in tail)
         else:
             lines.append(f"  Stage note   nothing recorded yet ({stage_note['working_note']})")
+    if isinstance(stage_progress, dict) and stage_progress.get("summary"):
+        when = f" (updated {stage_progress['updated']})" if stage_progress.get("updated") else ""
+        lines.append(f"  Progress     {str(stage_progress['summary'])[:200]}{when}")
+        if stage_progress.get("next"):
+            lines.append(f"               next: {str(stage_progress['next'])[:200]}")
     lines.append("")
     if open_items:
         lines.append(f"  Open here    {open_items[0]}")

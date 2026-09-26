@@ -39,7 +39,9 @@ _CORE_ONLY_RESOURCE_KEYS = ("node_scaffold_note",)
 # yet. Projecting it would change the published shape (an interface change
 # under manifest-contract rules), so it stays Core-side until a UI need names
 # it — the same strip-until-needed treatment as the runtime keys above.
-_CORE_ONLY_STAGE_KEYS = ("knowledge_node_id", "ability_ids")
+# Structured stage progress joins the list: resume reads it from the study
+# map, and no interface needs it projected yet.
+_CORE_ONLY_STAGE_KEYS = ("knowledge_node_id", "ability_ids", "progress")
 
 
 def _has_direct_open_target(resource: dict) -> bool:

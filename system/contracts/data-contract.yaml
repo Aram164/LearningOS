@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 39
-schema_fingerprint: sha256:a1dc8c8a8fbccb65752d74b7506247f6d7f1cfd8d79e2cb82ea166beddf39742
+contract_version: 40
+schema_fingerprint: sha256:c91787b86a41309214cefb800bcef3847fa2b1eb226ccf9492d32e350fcfb808
 record_schemas: 35
 history:
 - version: 1
@@ -307,3 +307,11 @@ history:
     use and type (additive; existing records stay valid)
   migration: null
   fixture: tests/fixtures/formats/v25/
+- version: 40
+  adopted: '2026-09-26'
+  note: 'study-map stages gain an optional progress record (updated, summary, next):
+    the stage''s current structured progress, written only through stage.progress.update
+    and surfaced by resume. Additive and backward-compatible — absent means nothing
+    recorded, which is what every v39 record carries.'
+  migration: null
+  fixture: tests/fixtures/formats/v40/
