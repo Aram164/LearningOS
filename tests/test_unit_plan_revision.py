@@ -914,9 +914,30 @@ def test_make_entrypoints_parse(repo_root):
 
     # "setup" carries shell conditionals (stale-venv recovery, JF-01):
     # a quoting slip breaks every fresh clone, so it parses here.
-    for target in ("help", "plan-check", "system-check", "setup"):
+    for target in ("help", "plan-check", "system-check", "setup", "check-python"):
         result = subprocess.run(["make", "-n", target], cwd=repo_root, capture_output=True, text=True)
         assert result.returncode == 0, result.stderr
+
+
+def test_check_python_refuses_an_unusable_interpreter(repo_root):
+    import subprocess
+
+    # F-s13-verify-01: a bogus PYTHON must fail in the viability gate,
+    # before `setup` may touch the existing .venv. The gate itself never
+    # writes, so this runs against the repo under test with no fixture.
+    result = subprocess.run(["make", "check-python", "PYTHON=python9.9-nonexistent"],
+                            cwd=repo_root, capture_output=True, text=True)
+    assert result.returncode != 0
+    assert "refusing to touch" in result.stdout + result.stderr
+
+
+def test_check_python_accepts_the_running_interpreter(repo_root):
+    import subprocess
+    import sys
+
+    result = subprocess.run(["make", "check-python", f"PYTHON={sys.executable}"],
+                            cwd=repo_root, capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr + result.stdout
 
 
 def test_reviewed_apply_rolls_back_all_writes_on_publish_failure(mini_repo, tmp_path, monkeypatch):
