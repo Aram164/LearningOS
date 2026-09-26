@@ -215,8 +215,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_material_span)
 
-    p = sub.add_parser("search", help="search records, garden seeds, and inbox filenames")
-    p.add_argument("query")
+    p = sub.add_parser("search", help="search records, garden seeds, and inbox filenames; empty query lists rows")
+    p.add_argument("query", help='literal-AND substrings; "" lists every row (combine with --type, e.g. workspace)')
     p.add_argument("--type", default=None, help="optional record type")
     p.add_argument("--limit", type=int, default=50)
     p.add_argument("--content", action="store_true", help="search complete durable note text with exact line snippets")

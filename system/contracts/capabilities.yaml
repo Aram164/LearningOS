@@ -65,6 +65,7 @@ queries:
     result: note-content-search
     invariants:
     - content mode searches complete registered durable notes and returns bounded line snippets
+    - content mode requires a nonempty query; empty-query listing is the CLI metadata search, not this capability
   material.context:
     handler: material_context
     cli_command: material-context
