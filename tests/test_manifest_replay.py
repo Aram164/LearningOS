@@ -80,6 +80,9 @@ def _rewrite(path: Path, mutate) -> None:
 
 
 @pytest.mark.full_repo
+# Flips the maintainer's gitignored pilot request (operations/ai-actions/
+# requests/ai-request-sad-l04-pilot), which no checkout carries.
+@pytest.mark.live_install
 def test_real_repo_manifest_replay(tmp_path: Path):
     copy = _copy_live_tree(tmp_path)
 
