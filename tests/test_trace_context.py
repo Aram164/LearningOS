@@ -200,6 +200,76 @@ def test_child_receives_the_intended_context(mini_repo: Path, tmp_path: Path):
     assert {row["parent_span"] for row in phases} == {SPAN_ID}
 
 
+def test_marked_context_is_adopted_as_operation_identity(
+        mini_repo: Path, tmp_path: Path):
+    """A LearningOS-owned marked context is adopted: one UI logical
+    operation stays one LearningOS operation (JF-04, Option A).
+
+    The Core attempt is a fresh child span of the UI dispatch span — same
+    trace, W3C parentage intact — and request_id correlation is unchanged.
+    """
+    debug = tmp_path / "trace-owned.jsonl"
+    key = "trace-owned-probe-001"
+    envelope = _seed_envelope(mini_repo, key)
+    proc = _run_traced(
+        mini_repo, envelope,
+        {"TRACEPARENT": f"00-{TRACE_ID}-{SPAN_ID}-01",
+         conventions.TRACE_OWNERSHIP_ENV: TRACE_ID,
+         "LOS_TRACE_DEBUG_FILE": str(debug)},
+    )
+    assert proc.returncode == 0, proc.stderr
+    body = json.loads(proc.stdout)
+    assert body["request_id"] == envelope["request_id"]
+    records = _debug_records(debug)
+    phases = [row for row in records if row.get("v") == 2]
+    assert phases, "the attempt span stream must also be recorded"
+    assert {row["op"] for row in phases} == {TRACE_ID}
+    assert SPAN_ID not in {row["span"] for row in phases}
+    assert {row["parent_op"] for row in phases} == {TRACE_ID}
+    assert {row["parent_span"] for row in phases} == {SPAN_ID}
+
+
+def test_mismatched_marker_is_parent_only(mini_repo: Path, tmp_path: Path):
+    """A marker naming a different context does not adopt it (JF-04).
+
+    Ownership binds the marker to the exact propagated trace: a stale or
+    foreign marker leaves the context as ambient parentage.
+    """
+    debug = tmp_path / "trace-mismatch.jsonl"
+    key = "trace-mismatch-probe-001"
+    proc = _run_traced(
+        mini_repo, _seed_envelope(mini_repo, key),
+        {"TRACEPARENT": f"00-{TRACE_ID}-{SPAN_ID}-01",
+         conventions.TRACE_OWNERSHIP_ENV: "f" * 32,
+         "LOS_TRACE_DEBUG_FILE": str(debug)},
+    )
+    assert proc.returncode == 0, proc.stderr
+    records = _debug_records(debug)
+    phases = [row for row in records if row.get("v") == 2]
+    assert phases, "the attempt span stream must also be recorded"
+    assert {row["op"] for row in phases} != {TRACE_ID}
+    assert len({row["op"] for row in phases}) == 1
+    assert {row["parent_op"] for row in phases} == {TRACE_ID}
+    assert {row["parent_span"] for row in phases} == {SPAN_ID}
+
+
+def test_ownership_marker_rules():
+    """Ownership requires an exact marker-to-trace match (JF-04)."""
+    from learning_os.diagnostics.context import is_learningos_owned
+
+    owned = TraceContext(trace_id=TRACE_ID, span_id=SPAN_ID)
+    assert is_learningos_owned(
+        owned, {conventions.TRACE_OWNERSHIP_ENV: TRACE_ID})
+    assert is_learningos_owned(
+        owned, {conventions.TRACE_OWNERSHIP_ENV: f"  {TRACE_ID}  "})
+    assert not is_learningos_owned(owned, {})
+    assert not is_learningos_owned(
+        owned, {conventions.TRACE_OWNERSHIP_ENV: "f" * 32})
+    assert not is_learningos_owned(
+        owned, {conventions.TRACE_OWNERSHIP_ENV: ""})
+    assert not is_learningos_owned(None, {conventions.TRACE_OWNERSHIP_ENV: TRACE_ID})
+
+
 def test_malformed_context_is_ignored(mini_repo: Path, tmp_path: Path):
     debug = tmp_path / "trace.jsonl"
     key = "trace-context-malformed-001"
