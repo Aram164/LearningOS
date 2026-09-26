@@ -338,6 +338,18 @@ commands:
     - note body is never modified
     - evidence is append-only
     - existing entries are never rewritten or removed
+  note.create:
+    handler: note_create
+    cli_command: note-create
+    writes:
+    - knowledge/notes/**
+    invariants:
+    - handler owns authorship and review defaults; input can never self-promote to user-reviewed
+    - body bytes are preserved verbatim and must match the approved SHA-256
+    - filename is always the note id; id collision refuses and updates go through note.revise
+    - reference and question roles keep their dedicated capabilities and refuse here
+    - superseded notes must exist and are marked deprecated in the same transaction
+    - saving preserves bytes; it never approves coverage, adopts plans, or records mastery
   unit.plan.revise:
     handler: unit_plan_revise
     cli_command: unit-plan-revise

@@ -75,7 +75,11 @@ from learning_os.commands.module import (  # noqa: E402
     cmd_module_plan_import,
     cmd_unit_plan_revise,
 )
-from learning_os.commands.note import cmd_note_evidence, cmd_note_revise  # noqa: E402
+from learning_os.commands.note import (  # noqa: E402
+    cmd_note_create,
+    cmd_note_evidence,
+    cmd_note_revise,
+)
 from learning_os.commands.observation import cmd_observation_append, cmd_observe  # noqa: E402
 from learning_os.commands.operations import cmd_operations  # noqa: E402
 from learning_os.commands.path import (  # noqa: E402
@@ -793,6 +797,17 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.set_defaults(func=cmd_unit_plan_revise, _parser_factory=build_parser)
     p.add_argument("--review-report", help="saved --check JSON; required for reviewed apply and exact retries")
+
+    p = sub.add_parser("note-create", help="create one durable note from approved bytes")
+    p.add_argument("--note", required=True, type=json_object)
+    p.add_argument("--body-file", required=True)
+    p.add_argument(
+        "--body-file-sha256", type=sha256_value, default=None,
+        help="SHA-256 of the exact note bytes approved for creation",
+    )
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_note_create)
 
     p = sub.add_parser("note-revise",
                        help="replace one existing note after explicit full-file review")

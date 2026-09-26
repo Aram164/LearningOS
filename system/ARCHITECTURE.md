@@ -359,6 +359,17 @@ basis does not renew an interpretation of older bytes. The derived projection
 binds both the referenced note and its observed source. Saving preserves a draft; it never
 approves its claims or represents the learner's understanding.
 
+### 5.7 General note creation
+
+Every other durable note is created only through the `note.create` gateway
+capability, which owns authorship and review defaults, preserves the approved
+body bytes verbatim, and refuses id collisions (updates go through
+`note.revise`). The `reference` and `question` roles keep their dedicated
+capabilities above and are refused here, so provenance bindings and
+question wording can never be bypassed by the general path. A successor
+declares `supersedes` in the same call and deprecates its predecessors
+atomically (§5.5).
+
 ---
 
 ## 6. Concepts
