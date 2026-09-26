@@ -1161,7 +1161,8 @@ class TransactionService:
             unexpected = sorted(set(expected) - set(artifacts))
             raise TransactionFailure(
                 "GatewayEnvelopeV2 expected_revisions must cover exactly every "
-                f"transaction artifact (missing={missing}, unexpected={unexpected})"
+                f"transaction artifact (missing={missing}, unexpected={unexpected}, "
+                f"artifacts={artifacts})"
             )
         conflicts = {
             artifact: (wanted, revisions_before.get(artifact, 0))
