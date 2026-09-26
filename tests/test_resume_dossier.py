@@ -316,3 +316,35 @@ def test_resume_shows_recorded_stage_note_without_a_requirement(mini_repo: Path)
     assert section["lines"] == 2
     assert section["working_note"] == note_rel
     assert "zephyr-note" in section["excerpt"]
+
+
+def test_stage_progress_section_moves_the_digest_and_refuses_non_mappings():
+    base = build_resume_dossier(**_inputs())
+    assert dict(base.content)["stage-progress"] is None
+    progress = {"updated": "2026-09-26", "summary": "Worked §1 zephyr-progress.",
+                "next": "Re-derive closed-book."}
+    changed = build_resume_dossier(**_inputs(stage_progress=progress))
+    assert changed.key != base.key
+    assert dict(changed.content)["stage-progress"] == progress
+    again = build_resume_dossier(**_inputs(stage_progress=dict(progress)))
+    assert again == changed
+    with pytest.raises(ResumeDossierError):
+        build_resume_dossier(**_inputs(stage_progress=["not-a-mapping"]))
+
+
+def test_resume_shows_recorded_stage_progress(mini_repo: Path):
+    add_curriculum(mini_repo)
+    empty = run_los(mini_repo, "resume")
+    assert empty.returncode == 0, empty.stderr
+    assert "Progress" not in empty.stdout
+    data = yaml.safe_load((mini_repo / MAP).read_text(encoding="utf-8"))
+    data["stages"][0]["progress"] = {
+        "updated": "2026-09-26", "summary": "Worked §1 zephyr-progress.",
+        "next": "Re-derive closed-book."}
+    write_yaml(mini_repo / MAP, data)
+    text = run_los(mini_repo, "resume")
+    assert text.returncode == 0, text.stderr
+    assert "zephyr-progress" in text.stdout
+    assert "next: Re-derive closed-book." in text.stdout
+    payload = json.loads(run_los(mini_repo, "resume", "--json").stdout)
+    assert payload["content"]["stage-progress"]["summary"].endswith("zephyr-progress.")

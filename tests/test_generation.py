@@ -15,6 +15,7 @@ from stress_check import _generation_stress
 from learning_os.errors import TransactionFailure
 from learning_os.genout import generate_all, write_outputs
 from learning_os.genout.outputs import _KEEP_TOP_DIRS
+from learning_os.genout.projection.stages import project_stages
 from learning_os.loader import load_repo
 
 TIMESTAMP_LINE = re.compile(r"^> Generated: .*$", re.MULTILINE)
@@ -526,6 +527,21 @@ def test_tools_generate_malformed_frontmatter_prevents_publication(mini_repo):
     
     # the existing manifest must not be overwritten
     assert manifest_path.read_bytes() == manifest_bytes
+
+
+def test_structured_progress_stays_core_side_in_projection(mini_repo):
+    """Stage progress is canonical-only: projecting it would change the
+    published manifest shape, so it strips like knowledge_node_id."""
+    repo = load_repo(mini_repo)
+    data = {"stages": [{
+        "id": "stage-demo", "title": "Demo", "status": "active",
+        "resources": [],
+        "progress": {"updated": "2026-09-26", "summary": "Worked §1.",
+                      "next": "Again."},
+    }]}
+    [projected] = project_stages(repo, data, "working_note")
+    assert "progress" not in projected
+    assert projected["status"] == "active"
 
 
 def test_generate_rebuilds_through_an_empty_output_dir_and_refuses_a_full_one(mini_repo):

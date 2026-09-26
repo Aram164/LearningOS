@@ -322,6 +322,27 @@
         },
         "source_feedback": {
           "type": "array"
+        },
+        "progress": {
+          "description": "The stage's current structured progress: where work stopped and what comes next. Written only through stage.progress.update alongside a status action; resume surfaces it. Absent means nothing recorded — the working note remains the scratch record.",
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "updated",
+            "summary"
+          ],
+          "properties": {
+            "updated": {
+              "type": "string",
+              "format": "date"
+            },
+            "summary": {
+              "$ref": "#/$defs/nonEmptyText"
+            },
+            "next": {
+              "$ref": "#/$defs/nonEmptyText"
+            }
+          }
         }
       }
     },

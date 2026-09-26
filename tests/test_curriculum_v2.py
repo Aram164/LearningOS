@@ -336,6 +336,73 @@ def test_stage_progress_offers_the_observation_verb(mini_repo):
     assert observations == []
 
 
+def _v1_demo_map(mini_repo):
+    """Backfill the demo study map to plan_template_version 1 in place."""
+    path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    data["plan_template_version"] = 1
+    for number, stage in enumerate(data["stages"], 1):
+        stage["number"] = number
+        stage.setdefault("exam_critical", False)
+        stage.setdefault("concepts", ["concept-expected-value"])
+    write_yaml(path, data)
+
+
+def test_stage_progress_records_structured_progress(mini_repo):
+    """--progress-summary/--progress-next land on the stage row with a date."""
+    add_curriculum(mini_repo)
+    _v1_demo_map(mini_repo)
+    updated = approved_v2_cli(
+        mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "active",
+        "--progress-summary", "Worked §1; the example needs a second pass.",
+        "--progress-next", "Re-derive closed-book.",
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="curriculum-stage-progress-records",
+    )
+    assert updated.returncode == 0, updated.stderr
+    result = gateway_result(updated)
+    assert re.fullmatch(r"\d{4}-\d{2}-\d{2}", result["progress"]["updated"])
+    assert result["progress"]["summary"] == "Worked §1; the example needs a second pass."
+    assert result["progress"]["next"] == "Re-derive closed-book."
+    stage = load_repo(mini_repo).study_maps["study-map-demo-l01"].data["stages"][0]
+    assert stage["progress"]["summary"].startswith("Worked §1")
+    assert stage["status"] == "active"
+
+
+def test_stage_progress_next_needs_a_summary(mini_repo):
+    add_curriculum(mini_repo)
+    _v1_demo_map(mini_repo)
+    orphan = approved_v2_cli(
+        mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "active",
+        "--progress-next", "Without a summary.",
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="curriculum-stage-progress-orphan-next",
+    )
+    assert orphan.returncode != 0
+    blank = approved_v2_cli(
+        mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "active",
+        "--progress-summary", "   ",
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="curriculum-stage-progress-blank",
+    )
+    assert blank.returncode != 0
+    stage = load_repo(mini_repo).study_maps["study-map-demo-l01"].data["stages"][0]
+    assert "progress" not in stage
+
+
+def test_stage_progress_refuses_on_legacy_maps(mini_repo):
+    """Structured progress is a template-v1 stage field; legacy maps refuse."""
+    add_curriculum(mini_repo)
+    legacy = approved_v2_cli(
+        mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "active",
+        "--progress-summary", "Not for legacy shapes.",
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="curriculum-stage-progress-legacy",
+    )
+    assert legacy.returncode != 0
+    assert "progress" in legacy.stdout + legacy.stderr
+
+
 def test_stage_note_snapshot_guard_and_german_search(mini_repo):
     add_curriculum(mini_repo)
     write_outputs(load_repo(mini_repo), generate_all(load_repo(mini_repo), "T1"))

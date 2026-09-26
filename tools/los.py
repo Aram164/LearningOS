@@ -145,6 +145,7 @@ from learning_os.commands.vnext import (  # noqa: E402
     cmd_route_identity_migrate,
     cmd_unit_material_synthesis_publish,
 )
+from learning_os.commands.workspace import cmd_workspace_next_action  # noqa: E402
 from learning_os.contracts.manifest_contract import ManifestContractError  # noqa: E402
 from learning_os.contracts.payloads import json_object, sha256_value  # noqa: E402
 from learning_os.health import HealthReportError  # noqa: E402
@@ -947,6 +948,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("unit_id")
     p.add_argument("stage_id")
     p.add_argument("status", choices=("active", "paused", "complete", "skipped", "revisit"))
+    p.add_argument("--progress-summary", default=None,
+                   help="record where work stopped (stored on the stage row, surfaced by resume)")
+    p.add_argument("--progress-next", default=None,
+                   help="record what comes next (requires --progress-summary)")
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_stage_progress)
@@ -1060,6 +1065,14 @@ def build_parser() -> argparse.ArgumentParser:
                    help="optimistic concurrency token from manifest _generated.snapshot_id")
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_path_progress)
+
+    p = sub.add_parser("workspace-next-action", help="replace one active workspace's Next Action section")
+    p.add_argument("workspace_id")
+    p.add_argument("--next-action", required=True,
+                   help="the new Next Action body (envelope-inline, never from stdin)")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_workspace_next_action)
 
     p = sub.add_parser("path-attach", help="copy handwriting/media into a stage-owned attachment folder")
     p.add_argument("path_id")

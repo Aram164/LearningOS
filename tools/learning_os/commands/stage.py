@@ -157,6 +157,20 @@ def cmd_stage_progress(args) -> int:
                 data["status"] = "ready-to-shelve"
                 data.setdefault("shelving", {})["state"] = "draft"
                 unit_data["status"] = "ready-to-shelve"
+        summary = getattr(args, "progress_summary", None)
+        upcoming = getattr(args, "progress_next", None)
+        if summary is not None or upcoming is not None:
+            if summary is None or not summary.strip():
+                print("los: --progress-next needs --progress-summary", file=sys.stderr)
+                return 2
+            if upcoming is not None and not upcoming.strip():
+                print("los: --progress-next must not be blank", file=sys.stderr)
+                return 2
+            entry = {"updated": _dt.date.today().isoformat(),
+                     "summary": summary.strip()}
+            if upcoming is not None:
+                entry["next"] = upcoming.strip()
+            stage["progress"] = entry
         # One rule for every branch: the destination is the stage this action
         # just made current. Activate or revisit and you return to it; pause it
         # and you return to the thing you paused, which is what pausing means;
@@ -183,6 +197,7 @@ def cmd_stage_progress(args) -> int:
     print(json.dumps({"ok": True, "unit_id": args.unit_id, "stage_id": args.stage_id,
                       "status": action, "map_status": data["status"],
                       "current_stage": data["current_stage"],
+                      **({"progress": stage["progress"]} if "progress" in stage else {}),
                       **_observe_offer(args.unit_id, stage),
                       **confirmation}, ensure_ascii=False))
     return 0
