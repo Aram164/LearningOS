@@ -155,10 +155,10 @@ def test_stamp_names_uncommitted_canonical_changes(tmp_path):
 
 
 def test_stamp_spells_utc_one_way_whatever_git_prints(tmp_path, monkeypatch):
-    """The two tests above only reach the ``Z`` spelling on a newer Git.
+    """The two tests above only reach the ``Z`` spelling on some Git versions.
 
-    Git up to 2.42 prints a UTC ``%cI`` as ``+00:00`` and newer releases as
-    ``Z``. This pins the normalisation on every machine, whichever Git it has.
+    Git 2.42 prints a UTC ``%cI`` as ``+00:00``; 2.54 and 2.55 print ``Z``.
+    This pins the normalisation on every machine, whichever Git it has.
     """
     from learning_os.genout import common
 
