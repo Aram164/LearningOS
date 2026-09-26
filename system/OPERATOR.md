@@ -166,8 +166,9 @@ Read a stage's working-note content from its parent map: `inspect
 STUDY_MAP_ID` carries every stage's `notes_text` (`inspect STAGE_ID` does
 not resolve stages). The `notes_updated` on those stages is the note file's
 last-commit date, not the write date — uncommitted gateway writes do not
-move it. Read inbox drops with `inbox-read NAME` (bounded segments of one
-`work/inbox/` file by name; binary drops refuse). `search` without
+move it. List inbox drops with `inbox-list`, then read one with
+`inbox-read NAME` (bounded segments of one `work/inbox/` file by name;
+binary drops refuse). `search` without
 `--content` matches records, garden seeds, and inbox filenames, so all
 three are discoverable without reading files.
 Continuation reads require the previous response's `--expected-snapshot`;

@@ -378,6 +378,7 @@ def brief_bootstrap(args) -> int:
                     "coordination": "inspect coordination",
                     "intelligence_scan": "intelligence-scan --brief --json",
                     "note_read": "note-read NOTE_ID",
+                    "inbox_list": "inbox-list",
                     "inbox_read": "inbox-read NAME",
                     "content_search": "search QUERY --type note --content",
                     "material_context": "material-context QUERY",
