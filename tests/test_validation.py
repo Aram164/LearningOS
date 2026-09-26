@@ -239,6 +239,16 @@ def test_a_view_shaped_like_a_directory_is_a_named_error_not_a_crash(mini_repo):
     assert "directory" in str(issues[0]) and "rebuild" in str(issues[0])
 
 
+def test_a_view_shaped_like_a_broken_symlink_names_the_symlink(mini_repo):
+    manifest = mini_repo / "generated/manifest.json"
+    manifest.parent.mkdir(parents=True, exist_ok=True)
+    manifest.symlink_to(mini_repo / "generated/nowhere.json")
+    issues = [i for i in run(mini_repo)
+              if i.code == "GEN-JSON" and i.severity == "E"]
+    assert len(issues) == 1, [str(i) for i in run(mini_repo)]
+    assert "symlink" in str(issues[0]) and "rebuild" in str(issues[0])
+
+
 def test_crosswalk_judgment_table_warns(mini_repo):
     note = mini_repo / "knowledge" / "notes" / "mathematics" / "note-demo.md"
     text = note.read_text().replace("role: synthesis", "role: crosswalk")

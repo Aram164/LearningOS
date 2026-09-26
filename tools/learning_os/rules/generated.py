@@ -142,6 +142,10 @@ class ChecksGenerated:
                 self.err("GEN-HEADER", "generated file lacks a generated-file warning header",
                          self._rel(f))
         for f in sorted(gen.rglob("*.json")):
+            if f.is_symlink() and not f.exists():
+                self.err("GEN-JSON", "generated JSON is a broken symlink, not the published "
+                         "view — delete it and rebuild", self._rel(f))
+                continue
             if not f.is_file():
                 self.err("GEN-JSON", "generated JSON is a directory, not the published "
                          "view — delete it and rebuild", self._rel(f))
