@@ -497,9 +497,16 @@ def _projection_error(exc: ProjectionFailure) -> dict:
     """Typed projection outcome: subsystem proven, prose not consulted.
 
     A complete rollback proves the write never committed; an incomplete
-    one leaves the outcome unknown however the message reads.
+    one leaves the outcome unknown however the message reads. A complete
+    rollback over a pre-state that itself does not publish is a
+    shadow-validation refusal (JF-11), reported like one.
     """
     if exc.rollback_complete:
+        if exc.pre_existing_defect:
+            return _gateway_error(
+                "VALIDATION_FAILED", str(exc), retryable=False,
+                details={"stage": "core.projection", "rollback_complete": True,
+                         "pre_existing_defect": True})
         return _gateway_error(
             "PROJECTION_FAILED", str(exc), retryable=True,
             details={"stage": "core.projection", "rollback_complete": True})

@@ -139,7 +139,20 @@ class ChecksProjects:
                 str(exc),
                 "operations/transactions/revisions.yaml",
             )
+        # The idempotency ledger is replay's only memory: an unreadable one
+        # fails closed at commit time, but validate stayed silent over it
+        # (JF-13/L2). A missing file is fine (no gateway writes yet).
+        from ..evidence import _load_idempotency_entries
+        try:
+            _load_idempotency_entries(self.repo.root)
+        except TransactionFailure as exc:
+            self.err(
+                "TRANSACTION-IDEMPOTENCY",
+                str(exc),
+                "operations/transactions/idempotency.yaml",
+            )
         seen: set[str] = set()
+        seen_keys: dict[str, str] = {}
         for path in sorted(directory.glob("transaction-*.yaml")):
             try:
                 # `yaml.safe_load` is the pure-Python loader: 214 receipts cost
@@ -161,6 +174,17 @@ class ChecksProjects:
                 self.err("TRANSACTION-RECEIPT",
                          f"duplicate transaction receipt id '{transaction_id}'", self._rel(path))
             seen.add(transaction_id)
+            # Two committed receipts sharing one idempotency key is genuinely
+            # ambiguous: replay can prove at most one of them. Ledger loss
+            # followed by key reuse produces exactly this (JF-13/L4).
+            request = data.get("request") if isinstance(data, dict) else None
+            key = request.get("idempotency_key") if isinstance(request, dict) else None
+            if isinstance(key, str) and key:
+                first = seen_keys.setdefault(key, self._rel(path))
+                if first != self._rel(path):
+                    self.err("TRANSACTION-RECEIPT",
+                             f"duplicate idempotency key '{key}' also committed "
+                             f"in {first}", self._rel(path))
 
     def check_ai_action_requests(self):
         from ..ai_actions.support import REQUEST_ID_PATTERN, REQUEST_ID_RE

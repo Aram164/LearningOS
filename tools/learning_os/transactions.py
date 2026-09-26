@@ -1322,6 +1322,11 @@ class TransactionService:
         staging_dir = inflight_parent / f".preparing-{transaction_id}"
         inflight_dir = inflight_parent / transaction_id
         journal_published = False
+        # Content (non-OSError) failures re-publishing over proven pre-state.
+        # The defect pre-exists the write: canonical rollback completed, so
+        # the journal is removed and the refusal reports the pre-existing
+        # defect instead of an unknown outcome (JF-11).
+        republication_defects: list[Exception] = []
 
         def rollback() -> list[str]:
             """Unwind through the published journal, never from memory alone.
@@ -1382,14 +1387,32 @@ class TransactionService:
                 if restore_projection is not None:
                     try:
                         restore_projection()
-                    except Exception:
+                    except OSError:
                         failures.append("<projection publication>")
-            if failures:
+                    except Exception as exc:
+                        # Unwind only proves the write set was restored; a
+                        # concurrent foreign change elsewhere in the tree
+                        # (which the snapshot guard, not unwind, detects)
+                        # may be what breaks re-publication. Only a tree
+                        # that still equals the transaction's pre-state
+                        # proves the defect pre-exists this write — and
+                        # only then is this not a rollback failure (JF-11).
+                        try:
+                            prestate_intact = (
+                                take_fingerprint() == snapshot_before)
+                        except Exception:
+                            prestate_intact = False
+                        if prestate_intact:
+                            republication_defects.append(exc)
+                        else:
+                            failures.append("<projection publication>")
+            if failures or republication_defects:
                 # Canonical state is ambiguous — unwind proved nothing, or
-                # re-publication just failed over a proven tree. Either
-                # way a manifest now would present uncertainty as
-                # current, so drop the marker instead: "projection
-                # unavailable" is the truthful state.
+                # re-publication just failed over a proven tree — or the
+                # pre-state itself does not publish. Either way a manifest
+                # now would present uncertainty as current, so drop the
+                # marker instead: "projection unavailable" is the
+                # truthful state.
                 problem = _invalidate_projection(self.root)
                 if problem is not None:
                     failures.append("generated/manifest.json")
@@ -1689,10 +1712,31 @@ class TransactionService:
                         f"{exc}; rollback incomplete for: {', '.join(rollback_failures)}",
                         rollback_complete=False,
                     ) from exc
+                if republication_defects:
+                    # Fixed wording: the gateway classifies TransactionFailure
+                    # prose, so the defect's own text (which may name
+                    # snapshots, revisions, …) must not leak into this
+                    # message. The original exception already names the
+                    # defect; the type here only aids debugging.
+                    defect = type(republication_defects[0]).__name__
+                    raise ProjectionFailure(
+                        f"{exc}; rolled back completely but the restored pre-state "
+                        f"cannot be re-published ({defect}); the defect pre-exists "
+                        "this write",
+                        rollback_complete=True,
+                        pre_existing_defect=True,
+                    ) from exc
                 raise ProjectionFailure(str(exc), rollback_complete=True) from exc
             if rollback_failures:
                 raise TransactionFailure(
                     f"{exc}; rollback incomplete for: {', '.join(rollback_failures)}"
+                ) from exc
+            if republication_defects:
+                defect = type(republication_defects[0]).__name__
+                raise TransactionFailure(
+                    f"{exc}; rolled back completely but the restored pre-state "
+                    f"cannot be re-published ({defect}); the defect pre-exists "
+                    "this write"
                 ) from exc
             if isinstance(exc, TransactionFailure):
                 raise
