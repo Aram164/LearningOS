@@ -556,3 +556,37 @@ def test_inbox_list_lists_names_without_reading_bytes(mini_repo):
     assert all(set(row) == {"id", "type", "title", "path", "status",
                             "state", "deprecated"} for row in rows)
     assert rows[0]["path"] == "work/inbox/blob.bin"
+
+
+def test_inspect_miss_on_advertised_unresolved_id_names_referring_project(mini_repo):
+    # Milestones and structure nodes resolve structurally since Item 4, so
+    # the hint cases use advertised-but-dangling cross-refs instead (the
+    # only advertised ids inspect still misses). The validator would refuse
+    # these dangling refs; inspect reads without validating.
+    write_yaml(mini_repo / "projects/registry/project-demo.yaml", {
+        "schema_version": 1, "id": "project-demo", "type": "project",
+        "title": "Demo project", "project_type": "software",
+        "status": "active", "root_uri": "project://demo",
+        "objective": "Demonstrate the shadow graph.",
+        "milestone_ids": ["milestone-demo-alpha"],
+        "linked_module_ids": [], "unit_ids": ["unit-demo-ghost"],
+        "workspace_ids": ["workspace-demo-ghost"],
+        "thematic_group_ids": [],
+        "boundaries": {"confidentiality": "private",
+                       "external_code_access": "approved"},
+        "structure": {"kind": "linear", "nodes": [
+            {"id": "step-demo-alpha", "title": "Alpha", "kind": "milestone",
+             "status": "active"}]},
+    })
+    missing = run_los(mini_repo, "inspect", "workspace-demo-ghost")
+    assert missing.returncode == 2, missing.stderr
+    assert "los: record not found: workspace-demo-ghost" in missing.stderr
+    assert "project-demo" in missing.stderr
+    assert "workspace_ids" in missing.stderr
+    node = run_los(mini_repo, "inspect", "unit-demo-ghost")
+    assert node.returncode == 2, node.stderr
+    assert "project-demo" in node.stderr
+    assert "unit_ids" in node.stderr
+    unknown = run_los(mini_repo, "inspect", "note-no-such-note")
+    assert unknown.returncode == 2, unknown.stderr
+    assert "project-demo" not in unknown.stderr
