@@ -101,6 +101,7 @@ from learning_os.commands.query import (  # noqa: E402
     cmd_validate,
 )
 from learning_os.commands.reads import (  # noqa: E402
+    cmd_inbox_read,
     cmd_material_context,
     cmd_note_read,
 )
@@ -209,7 +210,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_material_span)
 
-    p = sub.add_parser("search", help="search the complete fresh projection")
+    p = sub.add_parser("search", help="search records, garden seeds, and inbox filenames")
     p.add_argument("query")
     p.add_argument("--type", default=None, help="optional record type")
     p.add_argument("--limit", type=int, default=50)
@@ -252,12 +253,19 @@ def build_parser() -> argparse.ArgumentParser:
                    help="worked example procedures for one question class (examples only)")
     p.set_defaults(func=cmd_semantic)
 
-    p = sub.add_parser("note-read", help="read a bounded segment of a durable note by stable ID")
+    p = sub.add_parser("note-read", help="read a bounded segment of a durable note or garden seed by stable ID")
     p.add_argument("note_id")
     p.add_argument("--offset", type=int, default=0, help="zero-based Unicode character offset")
     p.add_argument("--limit", type=int, default=8000, help="maximum characters, bounded to 16000")
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_note_read)
+
+    p = sub.add_parser("inbox-read", help="read a bounded segment of one work/inbox file by name")
+    p.add_argument("name", help="file name relative to work/inbox/")
+    p.add_argument("--offset", type=int, default=0, help="zero-based Unicode character offset")
+    p.add_argument("--limit", type=int, default=8000, help="maximum characters, bounded to 16000")
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_inbox_read)
 
     p = sub.add_parser("inspect", help="inspect one record by stable id")
     p.add_argument("id")
