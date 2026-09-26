@@ -10,8 +10,10 @@ with the checked-in data.
 
 from __future__ import annotations
 
+import os
 import shutil
 import subprocess
+from datetime import date, timedelta
 from pathlib import Path
 
 import pytest
@@ -243,10 +245,20 @@ def test_real_repo_manifest_replay(tmp_path: Path):
     assert angled[UNITS_ID] == ("rebuilt", "node-key-changed-output-same")
     assert angled[SEMANTIC_PAYLOAD_ID][0] == "rebuilt"
 
+    # Last-commit dates are day-resolution (%cs), and a shallow clone (CI's
+    # default checkout) dates every note at HEAD's day: a replay committed
+    # that same day moved no date, so COUNTS rightly hit. Dating the commit
+    # the day after HEAD moves the edited notes' dates in any clone.
+    head_day = subprocess.run(["git", "log", "-1", "--format=%cs"], cwd=copy,
+                              check=True, capture_output=True, text=True).stdout
+    replay_at = (f"{date.fromisoformat(head_day.strip()) + timedelta(days=1)}"
+                 "T12:00:00+00:00")
     subprocess.run(["git", "add", "-A"], cwd=copy, check=True, capture_output=True)
     subprocess.run(["git", "-c", "user.email=replay@local", "-c", "user.name=replay",
                     "commit", "-m", "replay", "--no-verify"],
-                   cwd=copy, check=True, capture_output=True)
+                   cwd=copy, check=True, capture_output=True,
+                   env={**os.environ, "GIT_AUTHOR_DATE": replay_at,
+                        "GIT_COMMITTER_DATE": replay_at})
     committed = _rerun(copy)
     assert committed[COUNTS_ID][0] == "rebuilt"
     assert committed[VALIDATION_PROOF_ID][0] == "rebuilt"
