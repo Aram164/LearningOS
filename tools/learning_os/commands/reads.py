@@ -583,6 +583,90 @@ def _evidence_label(tally):
             "positive": positive, "mismatch": mismatch}
 
 
+#: Declared-edge fields walked from the record itself, in stable order.
+RELATED_LIST_FIELDS = ("concepts", "sources", "contexts", "notes",
+                       "program_ids", "module_ids", "unit_ids", "unit_order",
+                       "related_module_ids")
+RELATED_SCALAR_FIELDS = ("workspace_id", "area_id", "module_id", "unit_id",
+                         "current_study_map")
+
+#: Backlink tables walked in both directions. Every table maps an owner to
+#: its members; the walk answers the direct lookup and the inverse scan, so
+#: membership in one direction always implies the reverse edge (JF-15). The
+#: differently-shaped concept_relations table stays out: concept relations
+#: are already walked both ways from the manifest relations list.
+RELATED_BACKLINK_TABLES = ("concept_to_notes", "source_to_notes",
+                           "workspace_to_notes", "module_to_workspaces",
+                           "unit_to_workspaces", "module_to_units",
+                           "source_to_units", "note_incoming")
+
+
+def related_records(manifest: dict, raw_id: str, repo=None) -> list[dict]:
+    """Ranked one-hop connections for one record id.
+
+    Pure over the manifest (plus recorded use-evidence tallied from the
+    repo when given): the record's own declared edges, every backlink
+    table in both directions, concept relations both ways, and project
+    relationships both ways. Unknown ids answer [] — the caller owns the
+    not-found error. Aliases resolve through project_aliases.
+
+    Ranking is deterministic: more distinct edges first, then recorded
+    stage use-evidence per source exactly as material-context ranks it
+    (positive counts first, mismatch counts last), then stable id order.
+    Each result names the edges that produced it in `via`.
+    """
+    by_id = {r.get("id"): r for r in manifest.get("records", [])}
+    resolved = (manifest.get("project_aliases") or {}).get(raw_id, raw_id)
+    rec = by_id.get(resolved)
+    if rec is None:
+        return []
+    reasons: dict[str, set[str]] = {}
+
+    def link(rid, why):
+        if isinstance(rid, str) and rid in by_id:
+            reasons.setdefault(rid, set()).add(why)
+
+    for key in RELATED_LIST_FIELDS:
+        for rid in rec.get(key, []) or []:
+            link(rid, key)
+    for key in RELATED_SCALAR_FIELDS:
+        if rec.get(key):
+            link(rec[key], key)
+    backlinks = manifest.get("backlinks", {}) or {}
+    for table in RELATED_BACKLINK_TABLES:
+        members = (backlinks.get(table) or {}).get(resolved, []) or []
+        for rid in members:
+            link(rid, f"backlink:{table}")
+        for owner, owned in ((backlinks.get(table) or {}).items()):
+            if isinstance(owned, list) and resolved in owned:
+                link(owner, f"inverse:{table}")
+    for relation in manifest.get("relations", []) or []:
+        if not isinstance(relation, dict):
+            continue
+        if relation.get("from") == resolved:
+            link(relation.get("to"), "relation")
+        if relation.get("to") == resolved:
+            link(relation.get("from"), "relation")
+    for relation in manifest.get("project_relationships", []) or []:
+        if not isinstance(relation, dict):
+            continue
+        if relation.get("from_project_id") == resolved:
+            link(relation.get("to_id"), "project_relationship")
+        if relation.get("to_id") == resolved:
+            link(relation.get("from_project_id"), "project_relationship")
+    tallies = _use_evidence(repo) if repo is not None else {}
+    ranked = []
+    for rid, whys in reasons.items():
+        tally = tallies.get(rid, {}) if by_id[rid].get("type") == "source" else {}
+        label = _evidence_label(tally)
+        ranked.append((-len(whys), -label["positive"], label["mismatch"], rid))
+    ranked.sort()
+    return [{"id": rid, "type": by_id[rid].get("type"),
+             "title": by_id[rid].get("title"), "path": by_id[rid].get("path"),
+             "via": sorted(reasons[rid])}
+            for _, _, _, rid in ranked]
+
+
 def _resolve_concept(repo, raw):
     """A concept id or declared alias, matched case-insensitively."""
     if raw in repo.concepts:

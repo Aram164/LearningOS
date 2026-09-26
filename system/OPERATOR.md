@@ -185,11 +185,12 @@ application state by parsing canonical Markdown or YAML. Use `list-*`,
 `--content` conjoins whitespace-separated substrings per row — every term
 must occur somewhere in the row — unranked and without snippets, so short
 stems collide and natural phrasing often returns nothing. `related ID`
-walks one hop over the record's
-own declared edges plus the manifest's backlink tables, and it is not
-symmetric: a workspace lists a note when either side declares the link,
-but the note lists the workspace only when the note itself declares it,
-so membership in one direction never implies the reverse edge.
+walks one hop over the record's own declared edges plus the manifest's
+backlink tables in both directions, so membership in one direction always
+implies the reverse edge. Results rank by connection strength (more
+distinct edges first), then recorded stage use-evidence per source
+(positive first, mismatch last, as in material-context), then stable id;
+each result names the edges that produced it in `via`.
 
 ## Product hierarchy
 

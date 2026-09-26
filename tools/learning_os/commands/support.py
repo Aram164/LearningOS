@@ -200,7 +200,9 @@ def _path_or_error(root: Path, path_id: str):
     return repo, learning_path
 
 
-def _fresh_manifest(root: Path, *, snapshot_id: str | None = None) -> dict:
+def _fresh_manifest_and_repo(
+    root: Path, *, snapshot_id: str | None = None,
+) -> tuple[dict, object]:
     # Every projection read takes the operator lock: acquisition runs crash
     # recovery first, so single-ID reads, batch reads, and bootstrap all
     # observe transaction-consistent post-recovery state instead of
@@ -212,7 +214,12 @@ def _fresh_manifest(root: Path, *, snapshot_id: str | None = None) -> dict:
             seed_source_fingerprint(repo, snapshot_id)
         generated_at = stable_generated_at(root)
         backlinks = build_backlinks(repo, generated_at)
-        return build_manifest(repo, generated_at, backlinks)
+        return build_manifest(repo, generated_at, backlinks), repo
+
+
+def _fresh_manifest(root: Path, *, snapshot_id: str | None = None) -> dict:
+    manifest, _ = _fresh_manifest_and_repo(root, snapshot_id=snapshot_id)
+    return manifest
 
 
 def _json_layout(stream=None) -> dict:
