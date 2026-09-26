@@ -122,8 +122,7 @@ semestercontext/
 │   ├── README.md
 │   ├── CLAUDE.md     the Claude adapter, reachable from the umbrella
 │   └── Plans
-├── Stratum/          independent external Git repository; never traversed
-└── tpcx-ai-v2.0.0/   the operator's own TPC-DS/AI vendor download; never traversed
+└── Stratum/          independent external Git repository; never traversed
 ```
 
 <!-- root-tree:end -->

@@ -121,21 +121,6 @@ entries:
       in ARCHITECTURE §3.1. Keeps its own remotes and worktree. LearningOS
       never indexes, validates or manages it; never traversed.
 
-  - path: tpcx-ai-v2.0.0
-    kind: directory
-    owner: external
-    annotation: the operator's own TPC-DS/AI vendor download; never traversed
-    purpose: >-
-      The TPCx-AI v2.0.0 benchmark kit (~1.0 GB), downloaded by the operator
-      from tpc.org under their own one-time key. It is not LearningOS material
-      and must never be filed into it: an earlier pass read it as loose
-      material and buried it under LearningOS/archive/, which silently broke
-      the venv inside it whose 1893 shebangs carry this absolute path. Because
-      the wrapper .gitignore excludes it, git recorded nothing and there was no
-      commit to revert. Declared here so the perimeter stops reporting it as
-      undeclared, and so the next reader learns it is hands-off rather than
-      cleanup fodder. Never traversed, never validated, never relocated.
-
   # ---- umbrella ------------------------------------------------------------
 
   - path: LearningOS/repository
