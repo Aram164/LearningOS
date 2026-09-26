@@ -818,3 +818,51 @@ occurred. Push likewise plain unless a hook defect appears.
   `LOS_EVAL_ORACLE_KEY` verified non-empty without exposure.
   No oracle material was ever committed (worlds + throwaway
   dirs live outside the repo).
+
+## Follow-up — bogus-PYTHON venv preservation (F-s13-verify-01)
+
+Branch: `muse/eval-s11r-venv-2026-09-26`, forked from frozen repair tip
+`7ffad843c48a61bc68c61aee7f29c0c274b8c1de` (repair product line, not the
+S13 evidence branch, which is unmodified). S13 found the JF-01 repair
+introduced a remove-before-validate order: `make setup
+PYTHON=<nonexistent>` deleted the healthy `.venv`, then failed (Error
+127), leaving no environment; base failed first and left `.venv`
+untouched. Confirmed independently on scratch clones at both revisions
+before fixing.
+
+Invariant: an invalid requested Python interpreter must fail without
+destroying a healthy existing environment before replacement viability
+is established.
+
+- Fix (Makefile seam only): new `check-python` viability-gate target —
+  `$(PYTHON)` must run and report >= 3.12 (floor cited to
+  requires-python in pyproject.toml) — and `setup` now depends on it,
+  so the guard runs before any `rm -rf`. Refusal names the interpreter
+  (`setup: refusing to touch .venv: ...`). The reuse/stale decision
+  below is byte-unchanged.
+- BEFORE (scratch clone at 7ffad84, healthy 3.12 venv):
+  `make setup PYTHON=python9.9-nonexistent` prints `removing stale
+  .venv`, deletes it, Error 127.
+- AFTER (same clone + this Makefile): refusal message, rc 2, `.venv`
+  present and still reporting 3.12.13.
+- JF-01 behavior preserved (same clone): 3.11 venv + PYTHON=3.12 →
+  `removing stale`, rebuild, `setup complete`, rc 0, new venv 3.12.13,
+  validates 0 errors; second run reuses (`reusing .venv`), rc 0.
+- Fresh setup (scratch clone at this branch tip, no .venv):
+  `make setup PYTHON=<3.12>` → `setup complete`, rc 0; first-run
+  `test-fast` in the fresh venv: green (see evidence log).
+- Tests: `test_check_python_refuses_an_unusable_interpreter` and
+  `test_check_python_accepts_the_running_interpreter`
+  (tests/test_unit_plan_revision.py) — both fail on the unpatched
+  Makefile (no such target / no refusal), both pass patched;
+  `check-python` added to `test_make_entrypoints_parse` (quoting-slip
+  pin). Evidence: `/tmp/s11r-evidence/{bogus-after,stale-recovery-after,
+  reuse-after,fresh-setup,fresh-testfast}.log`.
+- Gates on this branch: setup-target tests pass; `make test-fast`
+  2269 passed, 2 failed — only the environment-specific unreadable-path
+  pair, which fails identically on base `84bda98` and the unpatched main
+  checkout (audit-harness artifact, not a regression); fresh-clone
+  first-run test-fast below is the clean-environment confirmation.
+  `validate.py --compact` 0 errors;
+  `warning_baseline.py --check` OK; `ruff check tools/ tests/` clean;
+  keyed eval selftest green (leak scan over the new commit).

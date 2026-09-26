@@ -148,7 +148,14 @@ stress: system-check
 
 all: check views materials test
 
-setup:
+# Viability gate for `setup`: the requested interpreter must run and meet the
+# floor before anything under $(VENV) is touched. Without this, a bogus or
+# too-old PYTHON deleted a healthy .venv before failing (F-s13-verify-01).
+# Keep the floor in sync with requires-python in pyproject.toml.
+check-python:
+	@$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info[:2] >= (3, 12) else 1)' || { echo "setup: refusing to touch $(VENV): '$(PYTHON)' is not a usable Python >= 3.12"; exit 1; }
+
+setup: check-python
 	@if [ -x "$(VENV)/bin/python" ] && [ "$$($(VENV)/bin/python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')" = "$$($(PYTHON) -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')" ]; then \
 		echo "setup: reusing $(VENV) ($$($(VENV)/bin/python --version))"; \
 	else \
