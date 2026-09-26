@@ -261,10 +261,27 @@ def cmd_search(args) -> int:
             continue
         hay = json.dumps(rec, ensure_ascii=False).lower()
         if all(word in hay for word in words):
-            matches.append({k: rec.get(k) for k in
-                            ("id", "type", "title", "path", "status",
-                             "state", "deprecated")})
+            matches.append(_discovery_row(rec))
     print(json.dumps(matches[:args.limit], **_json_layout(), sort_keys=True, ensure_ascii=False))
+    return 0
+
+
+def _discovery_row(rec):
+    """One stable discovery row, shared by search and inbox-list."""
+    return {k: rec.get(k) for k in
+            ("id", "type", "title", "path", "status",
+             "state", "deprecated")}
+
+
+def cmd_inbox_list(args) -> int:
+    root = _root(args)
+    try:
+        rows = _inbox_search_rows(root)
+    except OSError as exc:
+        print(f"los: cannot list work/inbox: {exc}", file=sys.stderr)
+        return 2
+    print(json.dumps([_discovery_row(rec) for rec in rows],
+                     **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
 
