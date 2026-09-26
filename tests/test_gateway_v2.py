@@ -986,6 +986,8 @@ def test_gateway_v2_refuses_a_guard_naming_someone_elses_request(
     response = json.loads(refused.stdout)
     assert response["ok"] is False
     assert "cover exactly every transaction artifact" in response["error"]["message"]
+    expected = request_artifact_id("capture.create", "capture-foreign-guard-001")
+    assert f"artifacts=['{expected}']" in response["error"]["message"]
     assert not list((mini_repo / "work/inbox").glob("*.md"))
 
 
