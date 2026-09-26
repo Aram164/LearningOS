@@ -99,6 +99,8 @@ class FilesystemAIActionRepository:
         delivery = _read_yaml(source / "delivery.yaml")
         if not isinstance(delivery, dict):
             raise DeliveryValidationError("delivery.yaml must contain a mapping")
+        if not str(delivery.get("id", "")).strip():
+            raise DeliveryValidationError("delivery.yaml must carry a non-empty id")
         destination = self.delivery_dir(str(delivery.get("id", "")))
         if destination.exists():
             raise DeliveryValidationError(f"delivery already exists: {delivery.get('id')}")
@@ -128,6 +130,8 @@ class FilesystemAIActionRepository:
             delivery = _read_yaml(staged / "delivery.yaml")
             if not isinstance(delivery, dict):
                 raise DeliveryValidationError("delivery.yaml must contain a mapping")
+            if not str(delivery.get("id", "")).strip():
+                raise DeliveryValidationError("delivery.yaml must carry a non-empty id")
             destination = self.delivery_dir(str(delivery.get("id", "")))
             if destination.exists():
                 raise DeliveryValidationError(
