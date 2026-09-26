@@ -136,6 +136,7 @@ jobs:
             --ui-sha "$UI_SHA" \
             --workflow-run-id "$WORKFLOW_RUN_ID" \
             --workflow-run-attempt "$WORKFLOW_RUN_ATTEMPT" \
+            --live-install-scope not-run-live-install-deselected \
             --out ../release-pair-artifact/pair-receipt.json
 
       - name: Assemble the fixed upload layout
