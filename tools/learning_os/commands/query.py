@@ -18,6 +18,7 @@ from .reads import (
     brief_bootstrap,
     compact_bootstrap,
     content_search,
+    describe_unresolved_reference,
     empty_search_hint,
     inspect_batch,
     inspect_not_found,
@@ -312,6 +313,9 @@ def cmd_inspect(args) -> int:
         payload = structural_payload(manifest, args.id, repo)
     if payload is None:
         print(f"los: {inspect_not_found(args.id)}", file=sys.stderr)
+        hint = describe_unresolved_reference(manifest, args.id)
+        if hint:
+            print(f"los: hint: {hint}", file=sys.stderr)
         return 2
     print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
