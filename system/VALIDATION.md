@@ -262,3 +262,16 @@ transaction receipt must conform to readable Receipt v1 or authoritative
 Receipt v2 and have a unique ID.
 The revision ledger is operational metadata and is not interpreted as a
 receipt.
+
+- **E** `AI-REQUEST-ID`: every `operations/ai-actions/requests/*/request.yaml`
+  bundle carries an `id` matching `^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$`; any
+  other id breaks every projection read, so the bundle must be removed or
+  renamed until reads can publish the manifest.
+- **E** `AI-REQUEST-BUNDLE`: every request bundle parses as YAML and contains
+  a mapping; an unparseable bundle is an error naming its file.
+- **E** `TRANSACTION-RECEIPT`: no two committed receipts share one
+  idempotency key — ledger loss followed by key reuse commits twice, and
+  replay can prove at most one of the pair.
+- **E** `TRANSACTION-IDEMPOTENCY`: `operations/transactions/idempotency.yaml`
+  parses when present (a missing file is fine: no gateway writes yet); an
+  unreadable ledger fails closed at commit time and is an error here.

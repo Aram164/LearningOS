@@ -45,7 +45,7 @@ gate by exact code, never by heuristic. A baseline-managed signature that
 shrinks is a repair and passes; it is never restored merely to match the old
 total.
 
-Fail-closed is the design, not an accident: one validation error anywhere
+Fail-closed: one validation error anywhere
 in the tree blocks *every* canonical write, even an unrelated capture, and
 reads refuse rather than silently omit what they cannot verify. The error
 always names its file. Fix the defect; do not route around the guard.
@@ -124,7 +124,8 @@ Decide which read answers the question before reading:
 Task-shaped entry preserves complete material access through `inspect ID`.
 Its `domain_atlas` glance summarizes all projected notes and shelves across
 domains, independently of pagination; open the domain atlas for the full map
-(run `make views` first on a fresh install — `generated/` starts empty).
+(on a fresh install run `make setup` first, then `make views` —
+`generated/` starts empty).
 Read several known records with `inspect ID1 ID2 ...` (at most 20) to share one
 fresh projection; the batch preserves requested order, includes a snapshot,
 and refuses missing IDs or changes during the read. Use `note-read` for note
@@ -183,8 +184,8 @@ application state by parsing canonical Markdown or YAML. Use `list-*`,
 `inspect`, `search`, and `related` for targeted reads. `search` without
 `--content` conjoins whitespace-separated substrings per row — every term
 must occur somewhere in the row — unranked and without snippets, so short
-stems collide and natural phrasing often returns nothing; that coarseness
-is the design, not a defect. `related ID` walks one hop over the record's
+stems collide and natural phrasing often returns nothing. `related ID`
+walks one hop over the record's
 own declared edges plus the manifest's backlink tables, and it is not
 symmetric: a workspace lists a note when either side declares the link,
 but the note lists the workspace only when the note itself declares it,
