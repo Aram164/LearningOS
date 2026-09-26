@@ -122,9 +122,16 @@ def stable_generated_at(root: Path) -> str:
     validator's hygiene warning already reports. The marker is a pure
     function of tree state — identical trees still rebuild
     byte-identically — and clean trees stamp exactly as before.
+
+    A UTC commit time is always spelled ``+00:00``. Git's ``%cI`` spells it
+    ``+00:00`` up to 2.42 and ``Z`` in newer releases (observed: 2.54, 2.55),
+    so without this one normalisation the same history stamps different view
+    bytes on different machines.
     """
     try:
         ts = read_history(root, "-1", "--format=%cI").strip()
+        if ts.endswith("Z"):
+            ts = ts[:-1] + "+00:00"
         if ts:
             _, dirty = _git_state(root)
             if dirty:

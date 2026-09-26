@@ -154,6 +154,23 @@ def test_stamp_names_uncommitted_canonical_changes(tmp_path):
         "2020-01-02T03:04:05+00:00 (last commit, uncommitted changes)"
 
 
+def test_stamp_spells_utc_one_way_whatever_git_prints(tmp_path, monkeypatch):
+    """The two tests above only reach the ``Z`` spelling on a newer Git.
+
+    Git up to 2.42 prints a UTC ``%cI`` as ``+00:00`` and newer releases as
+    ``Z``. This pins the normalisation on every machine, whichever Git it has.
+    """
+    from learning_os.genout import common
+
+    init_repo(tmp_path)
+    monkeypatch.setattr(common, "read_history",
+                        lambda root, *args: "2020-01-02T03:04:05Z\n")
+    assert stable_generated_at(tmp_path) == "2020-01-02T03:04:05+00:00 (last commit)"
+    monkeypatch.setattr(common, "read_history",
+                        lambda root, *args: "2020-01-02T05:04:05+02:00\n")
+    assert stable_generated_at(tmp_path) == "2020-01-02T05:04:05+02:00 (last commit)"
+
+
 def test_gitfile_repository(tmp_path):
     init_repo(tmp_path)
     metadata = tmp_path / "metadata"
