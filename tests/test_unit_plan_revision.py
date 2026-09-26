@@ -912,7 +912,9 @@ def test_receipt_verifier_fails_closed(mini_repo, tmp_path, damage):
 def test_make_entrypoints_parse(repo_root):
     import subprocess
 
-    for target in ("help", "plan-check", "system-check"):
+    # "setup" carries shell conditionals (stale-venv recovery, JF-01):
+    # a quoting slip breaks every fresh clone, so it parses here.
+    for target in ("help", "plan-check", "system-check", "setup"):
         result = subprocess.run(["make", "-n", target], cwd=repo_root, capture_output=True, text=True)
         assert result.returncode == 0, result.stderr
 
