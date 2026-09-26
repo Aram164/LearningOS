@@ -709,6 +709,35 @@ def test_projection_error_maps_rollback_outcome_not_prose(
     }
 
 
+def test_projection_error_maps_pre_existing_defect_to_validation_failed():
+    """A pre-state that cannot publish is a validation refusal (JF-11)."""
+    error = _projection_error(ProjectionFailure(
+        "the published manifest no longer matches (drifted shape); rolled back "
+        "completely but the restored pre-state cannot be re-published "
+        "(TransactionFailure); the defect pre-exists this write",
+        rollback_complete=True, pre_existing_defect=True))
+    assert error["code"] == "VALIDATION_FAILED"
+    assert error["retryable"] is False
+    assert error["details"] == {
+        "stage": "core.projection",
+        "rollback_complete": True,
+        "pre_existing_defect": True,
+    }
+
+
+def test_gateway_v2_classifies_unpublishable_prestate_as_validation_failed():
+    """The fixed JF-11 wording must not trip an earlier classifier token."""
+    error = _classify_failure(
+        2,
+        "transaction failed canonical validation: E PARSE: some note has invalid "
+        "YAML frontmatter; rolled back completely but the restored pre-state "
+        "cannot be re-published (TransactionFailure); the defect pre-exists "
+        "this write",
+    )
+    assert error["code"] == "VALIDATION_FAILED"
+    assert error["retryable"] is False
+
+
 def test_gateway_v2_returns_typed_unknown_capability(
     mini_repo: Path, repo_root: Path, tmp_path: Path
 ):

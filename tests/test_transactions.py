@@ -678,6 +678,103 @@ def test_projection_failure_with_broken_rollback_is_typed_incomplete(
     assert "rollback incomplete" in str(caught.value)
 
 
+def test_validation_failure_with_unpublishable_prestate_leaves_no_orphan(tmp_path: Path):
+    """A pre-existing defect is a validation refusal, not an unknown outcome (JF-11).
+
+    Canonical validation fails on the tree, unwind proves pre-state, and
+    re-publication refuses for a content reason: the defect pre-exists the
+    write, so the journal is removed and the message must not claim an
+    incomplete rollback.
+    """
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+
+    def fail_rollback_publish() -> None:
+        raise TransactionFailure("cannot publish the manifest: 1 file(s) could not be read")
+
+    with pytest.raises(TransactionFailure) as caught:
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            validate_state=lambda: ["E PARSE: some note has invalid YAML frontmatter"],
+            rollback_publish=fail_rollback_publish,
+        )
+    assert "rollback incomplete" not in str(caught.value)
+    assert "pre-exists this write" in str(caught.value)
+    assert "E PARSE" in str(caught.value)
+    assert not target.exists()
+    inflight = root / "operations/transactions/.inflight"
+    assert list(inflight.glob("transaction-*")) == []
+    assert list((root / "operations/transactions").glob("transaction-*.yaml")) == []
+
+
+def test_projection_failure_over_unpublishable_prestate_is_typed_pre_existing(
+    tmp_path: Path,
+):
+    """Projection stage, same rule: proven pre-state that cannot publish (JF-11)."""
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+
+    def fail_publish() -> str:
+        raise TransactionFailure("the published manifest no longer matches (drifted shape)")
+
+    def fail_rollback_publish() -> None:
+        raise TransactionFailure("the published manifest no longer matches (drifted shape)")
+
+    with pytest.raises(ProjectionFailure) as caught:
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            publish=fail_publish,
+            rollback_publish=fail_rollback_publish,
+        )
+    assert caught.value.rollback_complete is True
+    assert caught.value.pre_existing_defect is True
+    assert "rollback incomplete" not in str(caught.value)
+    assert not target.exists()
+    inflight = root / "operations/transactions/.inflight"
+    assert list(inflight.glob("transaction-*")) == []
+    assert list((root / "operations/transactions").glob("transaction-*.yaml")) == []
+
+
+def test_republication_failure_with_concurrent_change_stays_unknown(
+    tmp_path: Path,
+):
+    """A foreign change during the window keeps crash semantics (JF-11).
+
+    Unwind proves the write set was restored, but the tree no longer
+    equals the transaction's pre-state, so a content re-publication
+    failure cannot be blamed on a pre-existing defect: the outcome stays
+    unknown and the journal stays for recovery.
+    """
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+    foreign = root / "knowledge/notes/foreign.md"
+
+    def hostile_validate():
+        foreign.parent.mkdir(parents=True, exist_ok=True)
+        foreign.write_bytes(b"foreign\n")
+        return ["forced validation failure"]
+
+    def fail_rollback_publish() -> None:
+        raise TransactionFailure(
+            "the published manifest no longer matches (drifted shape)")
+
+    with pytest.raises(TransactionFailure, match="rollback incomplete"):
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            validate_state=hostile_validate,
+            rollback_publish=fail_rollback_publish,
+        )
+    assert foreign.is_file(), "rollback must not erase the foreign edit"
+    inflight = root / "operations/transactions/.inflight"
+    assert len(list(inflight.glob("transaction-*"))) == 1
+
+
 def test_transaction_owned_writes_share_the_receipt_identity(tmp_path: Path):
     root = tmp_path
     target = root / "projects/registry/project-demo.yaml"
