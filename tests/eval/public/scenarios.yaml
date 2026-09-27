@@ -59,9 +59,10 @@ scenarios:
     plans: [A]
     world: continue
     learner_says: >-
-      Record a reviewed synthesis of the first lab unit, then correct its
-      material locator after comparing the lab notes. Carry the synthesis
-      forward only if it still describes the revised evidence.
+      Record a reviewed synthesis of the first lab unit. After comparing the
+      lab notes, make its material locator more precise by identifying the
+      worked 1000-to-240-to-12 row-count example in Section 1. Carry the
+      synthesis forward only if it still describes the revised evidence.
     scripted_replies:
       - {if: "you show the source evidence, synthesis and exact revision diff", reply: "Yes, apply that reviewed revision."}
     record: [initial synthesis receipt, replacement decision, revision preflight, final receipt, freshness read]
@@ -85,26 +86,27 @@ scenarios:
     plans: [A]
     world: continue
     learner_says: >-
-      Move the optional reference from the first lab unit to the new
-      materialization unit and narrow what it claims to cover. Preserve the
-      existing learning order. Show any warnings or acknowledgments this needs.
+      Move the Polars API guide reference off the first lab unit and onto the
+      new materialization unit. Leave the lineage unit's route intact. Review
+      any coverage claim this changes, preserve the existing learning order,
+      and show any warnings or evidence this needs.
     scripted_replies:
       - {if: "you show the complete source-menu and stage diff", reply: "I approve the displayed change and the specific acknowledged trade-off."}
-    record: [bounded-path refusal if attempted, full-package audit, semantic acknowledgments, preflight, receipt]
+    record: [any refusal and its reason, full-package audit, required evidence or acknowledgments, preflight, receipt]
 
   - id: S07
-    title: Prepare a map and respect UI admission
+    title: Prepare a map and use an admitted approval path
     area: authoring
     plans: [A]
     world: continue
     learner_says: >-
       Give the original lineage unit a small ordered study map using its
-      selected material. Review it first. If this CLI session cannot admit the
-      map import, tell me exactly what must happen in the UI. Leave the
-      completed plan-unit stage and my current resume position alone.
+      selected material. Review it first, then tell me which admission paths
+      are available here and in the app. Leave the completed plan-unit stage
+      and my current resume position alone.
     scripted_replies:
-      - {if: "you show the map and no-write review", reply: "Import that map using the admitted gesture."}
-    record: [draft digest, preflight, admission channel and refusal if CLI-only, receipt only if actual UI admitted, unaffected stage and resume state]
+      - {if: "you show the map and no-write review", reply: "Import exactly that map through the approved operator path."}
+    record: [draft digest, preflight, admission path, approval kind and channel, receipt, unaffected stage and resume state]
 
   - id: S08
     title: Lost plan response and restart
@@ -115,6 +117,12 @@ scenarios:
       The response to the last reviewed plan change disappeared. Find out
       whether it committed. Do not invent a new request to make the screen
       look successful.
+    procedure: >-
+      Resume this case in a fresh operator context on the same world after S07.
+      The saved preflight report, submitted envelope and idempotency key remain
+      available; the apply response is withheld from this context. Preserve
+      the original transcript in the run evidence for the judge. Resolve the
+      outcome through operations, receipts and a fresh projected read.
     record: [saved review report, verification command, operation and receipt identity, replay result, canonical diff]
 
   - id: S09
@@ -174,9 +182,10 @@ scenarios:
     plans: [E]
     world: fresh
     learner_says: >-
-      How does the extra customer group in my query lab relate to the wrong
-      number I traced in Tessera and the database query-optimization lecture?
-      Give me the smallest useful set of evidence and say what is uncertain.
+      How does the extra customer group in my query lab relate to what I think
+      was a wrong-number trace in Tessera and to the database query-optimization
+      lecture? Check whether that Tessera trace exists in my records. Give me
+      the smallest useful set of evidence and say what is uncertain.
     record: [queries and context bytes, product-surfaced targets, file-read targets, citations, answer]
 
   - id: S14
@@ -184,6 +193,7 @@ scenarios:
     area: learning
     plans: [E]
     world: fresh
+    inputs: [corpus/materials/source-noor-lazy-lab/plan-sketch.md]
     learner_says: >-
       Attach my new plan sketch to the active query-lab stage and record that
       I can explain the predicate move, but do not mark the stage complete.
@@ -330,7 +340,9 @@ scenarios:
     plans: [R]
     world: fresh
     procedure: >-
-      On the frozen candidate, run the complete Core/UI gate, inspect both CI
-      workflows for the exact pair, install in the disposable vault and use
-      Diagnostics-backed live verification after reload.
+      On the frozen candidate, run the world-compatible Core/UI gate on a
+      synthetic world and the complete Core suite on a separate clean clone of
+      the real product revision. Inspect both CI workflows for the exact pair,
+      install in the disposable vault and use Diagnostics-backed live
+      verification after reload.
     record: [exact Core and UI SHAs, local gate, CI URLs and conclusions, install status, live report]

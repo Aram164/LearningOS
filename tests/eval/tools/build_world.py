@@ -120,6 +120,23 @@ def git(cwd: Path, *args: str, env: dict | None = None, capture: bool = False) -
 
 
 # ---------------------------------------------------------------- product
+def enclosing_git_tree(path: Path) -> Path | None:
+    """The nearest existing directory at or above ``path`` that holds ``.git``."""
+    for candidate in (path, *path.parents):
+        if (candidate / ".git").exists():
+            return candidate
+    return None
+
+
+def product_identity(files: dict[str, tuple[bytes, int, str | None]]) -> str:
+    """One digest over the product files actually installed (path, mode, bytes, link)."""
+    h = hashlib.sha256()
+    for rel, (data, mode, link) in sorted(files.items()):
+        h.update(rel.encode() + b"\0" + oct(mode).encode() + b"\0"
+                 + (link or "").encode() + b"\0" + data + b"\0")
+    return h.hexdigest()
+
+
 def resolve_revision(rev: str) -> str:
     if rev == "WORKTREE":
         return "WORKTREE"
@@ -142,7 +159,10 @@ def product_files(rev: str) -> dict[str, tuple[bytes, int, str | None]]:
                 mode = 0o755 if os.access(path, os.X_OK) else 0o644
                 files[rel] = (path.read_bytes(), mode, None)
         return files
-    raw = subprocess.run(["git", "archive", "--format=tar", rev, "--", *PRODUCT_PATHS],
+    # Exclude evaluation files at the Git pathspec level. Filtering tar members
+    # afterwards still asks a partial clone for the sealed oracle blob.
+    raw = subprocess.run(["git", "archive", "--format=tar", rev, "--", *PRODUCT_PATHS,
+                          ":(exclude)tests/eval"],
                          cwd=REPO, capture_output=True)
     if raw.returncode != 0:
         raise BuildError(f"git archive {rev} failed: {raw.stderr.decode().strip()}")
@@ -512,6 +532,13 @@ def build(out: Path, rev: str, scale: int, seed: int, validate: bool) -> dict:
         raise BuildError(f"--out must be outside the real semestercontext tree ({REPO.parents[1]})")
     except ValueError:
         pass
+    # The check above protects the tree this builder runs from. A copy of the
+    # harness elsewhere would otherwise accept a path inside the real tree, so
+    # also refuse any location inside an existing Git working tree: a world
+    # is always its own new repository in a plain directory.
+    enclosing = enclosing_git_tree(out)
+    if enclosing is not None:
+        raise BuildError(f"--out must not be inside an existing Git working tree ({enclosing})")
     if out.exists() and (not out.is_dir() or any(out.iterdir())):
         raise BuildError(f"--out must be a new or empty directory: {out}")
     world_meta = yaml.safe_load((CORPUS / "world.yaml").read_text(encoding="utf-8"))
@@ -519,6 +546,17 @@ def build(out: Path, rev: str, scale: int, seed: int, validate: bool) -> dict:
         rev = world_meta["product"]["pinned_revision"]
     resolved = resolve_revision(rev)
     product = product_files(resolved)
+    identity_record = {"product_tree_sha256": product_identity(product)}
+    if resolved == "WORKTREE":
+        # A WORKTREE build has no commit id of its own: record the source HEAD
+        # and a digest of its uncommitted product state, so the exact product
+        # can still be named later.
+        identity_record["product_source_head"] = git(REPO, "rev-parse", "HEAD",
+                                                     capture=True).strip()
+        porcelain = git(REPO, "status", "--porcelain", "--", *PRODUCT_PATHS, capture=True)
+        identity_record["product_source_status_sha256"] = hashlib.sha256(
+            porcelain.encode()).hexdigest()
+        identity_record["product_source_dirty"] = bool(porcelain.strip())
     if "tools/los.py" not in product:
         raise BuildError(f"revision {rev} has no tools/los.py; not a LearningOS product revision")
 
@@ -627,6 +665,7 @@ def build(out: Path, rev: str, scale: int, seed: int, validate: bool) -> dict:
         "builder_version": BUILDER_VERSION,
         "product_revision": resolved,
         "product_revision_requested": rev,
+        **identity_record,
         "corpus_sha256": corpus_digest(CORPUS),
         "scale": scale,
         "seed": seed,

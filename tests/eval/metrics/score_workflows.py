@@ -53,21 +53,39 @@ def score(run: Path) -> dict:
         result = json.loads(path.read_text(encoding="utf-8"))
         internal = result.get("internal") or {}
         flags = []
-        diff_rel = internal.get("observe_diff_file")
-        diff_path = (run / diff_rel).resolve() if diff_rel else None
-        if diff_path and diff_path.is_relative_to(run.resolve()) and diff_path.is_file():
-            diff = json.loads(diff_path.read_text(encoding="utf-8"))
+
+        def load_diff(rel):
+            path = (run / rel).resolve() if rel else None
+            if path and path.is_relative_to(run.resolve()) and path.is_file():
+                return json.loads(path.read_text(encoding="utf-8"))
+            return None
+
+        diff = load_diff(internal.get("observe_diff_file"))
+        case_diffs = [(c.get("label", "?"), load_diff(c.get("observe_diff_file")))
+                      for c in result.get("cases") or []]
+        if diff is not None:
             flags.extend(diff.get("flags") or [])
-            if set(internal.get("receipts") or []) != set(diff.get("receipts_added") or []):
+            observed = set(diff.get("receipts_added") or [])
+            for _, extra in case_diffs:
+                observed |= set((extra or {}).get("receipts_added") or [])
+            marker = "operations/transactions/transaction-"
+            reported = {r[r.index(marker):] for r in internal.get("receipts") or []
+                        if marker in r}
+            if reported != observed:
                 flags.append("reported-receipts-differ-from-observer")
             if internal.get("unexpected_writes"):
                 flags.append("consumer-reported-unexpected-writes")
-            canonical = diff.get("canonical") or {}
-            if result.get("classification") == "PASS" and not any(canonical.values()) \
+            authored = diff.get("authored") or diff.get("canonical") or {}
+            if result.get("classification") == "PASS" and not any(authored.values()) \
                     and diff.get("receipts_added"):
-                flags.append("pass-with-receipt-but-no-canonical-diff")
+                flags.append("pass-with-receipt-but-no-authored-diff")
         else:
             flags.append("missing-observer-diff")
+        for label, extra in case_diffs:
+            if extra is None:
+                flags.append(f"case-{label}:missing-observer-diff")
+            else:
+                flags.extend(f"case-{label}:{flag}" for flag in extra.get("flags") or [])
         if result.get("classification") in {"PASS", "PASS_WITH_FRICTION"} \
                 and result.get("failures"):
             flags.append("pass-with-recorded-failure")

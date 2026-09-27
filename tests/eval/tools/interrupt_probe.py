@@ -5,14 +5,18 @@
         --cmd "python tools/los.py capability capture.create --payload-file /abs/envelope.json" \
         --delays 0.02,0.05,0.1,0.2,0.3,0.5,0.8,1.2,2,3 --out interrupt.json
 
-For the world repository (it must be an evaluation world: EVAL-WORLD.json two
-levels up — the probe refuses anything else, because it resets the world
-between trials):
+For the world repository (it must be an evaluation world's
+``LearningOS/repository`` with EVAL-WORLD.json two levels up — the probe
+refuses anything else, because it restores the world between trials):
 
-1. reset the world to HEAD (git reset --hard, git clean, remove crash
-   journals) and run the command once uninterrupted to learn its duration and
-   the shape of a complete write (which directories change, receipt count);
-2. for every delay: reset, start the command in its own process group, send
+1. copy the world repository as it stands now — tracked, untracked and
+   ignored files, so prerequisites the operator prepared (a coverage audit
+   under work/active/, a staged batch) survive — into a hidden pristine copy
+   beside it, then run the command once uninterrupted to learn its duration
+   and the shape of a complete write (which directories change, receipt
+   count). If that uninterrupted run changes nothing canonical, the probe
+   stops with exit 2: every kill would be vacuous;
+2. for every delay: restore the pristine copy, start the command in its own process group, send
    SIGKILL to the group after the delay, then
    a. run the --after read commands (default: `tools/validate.py --compact
       --no-report` and `tools/los.py status --json`) and record what the
@@ -36,10 +40,12 @@ between trials):
    judge; the probe only reports it.
 
 Canonical paths under operations/ are compared by shape only, because receipt
-and request ids differ between runs. The world is reset at the end.
+and request ids differ between runs. The world is restored to its pristine
+copy at the end and the copy is removed.
 
-The envelope's expected_snapshot must match the world's HEAD state; since every
-trial starts from the same reset state, one envelope serves all trials.
+The envelope's expected_snapshot must match the world's state when the probe
+starts; since every trial starts from the same restored state, one envelope
+serves all trials.
 """
 
 from __future__ import annotations
@@ -52,6 +58,7 @@ import shutil
 import signal
 import subprocess
 import sys
+import tempfile
 import time
 from pathlib import Path
 
@@ -64,20 +71,38 @@ VOLATILE = ("operations/transactions/", "operations/gateway-requests/", "operati
 
 def require_world(repo: Path) -> Path:
     repo = repo.resolve()
-    if not (repo.parent.parent / "EVAL-WORLD.json").is_file():
-        raise SystemExit(f"interrupt_probe: {repo} is not an evaluation world "
-                         "(no EVAL-WORLD.json two levels up); refusing to reset it")
+    record = repo.parent.parent / "EVAL-WORLD.json"
+    if (not record.is_file() or repo.name != "repository" or repo.parent.name != "LearningOS"
+            or not (repo / "tools" / "los.py").is_file()):
+        raise SystemExit(f"interrupt_probe: {repo} is not an evaluation world's "
+                         "LearningOS/repository (EVAL-WORLD.json two levels up); refusing "
+                         "to restore it")
+    try:
+        named = Path(json.loads(record.read_text(encoding="utf-8"))["paths"]["repository"])
+    except (ValueError, KeyError, TypeError):
+        named = None
+    if named is None or named.resolve() != repo:
+        print(f"interrupt_probe: note: EVAL-WORLD.json names {named}; probing the copy at "
+              f"{repo}", file=sys.stderr)
     return repo
 
 
-def reset(repo: Path) -> None:
-    env = {**os.environ, "LC_ALL": "C"}
-    subprocess.run(["git", "reset", "--hard", "-q", "HEAD"], cwd=repo, check=True, env=env)
-    subprocess.run(["git", "clean", "-fdq", "-e", "generated/"], cwd=repo, check=True, env=env)
-    for rel in ("operations/transactions/.inflight", "operations/ai-actions/incoming"):
-        path = repo / rel
-        if path.exists():
-            shutil.rmtree(path)
+class Pristine:
+    """A full copy of the world repository, restored before every trial."""
+
+    def __init__(self, repo: Path):
+        self.repo = repo
+        self.holder = Path(tempfile.mkdtemp(prefix=".interrupt-probe-pristine-",
+                                            dir=repo.parent.parent))
+        self.copy = self.holder / "repository"
+        shutil.copytree(repo, self.copy, symlinks=True)
+
+    def restore(self) -> None:
+        shutil.rmtree(self.repo)
+        shutil.copytree(self.copy, self.repo, symlinks=True)
+
+    def discard(self) -> None:
+        shutil.rmtree(self.holder, ignore_errors=True)
 
 
 def shape(snap: dict) -> dict:
@@ -144,18 +169,29 @@ def main(argv=None) -> int:
     recover_cmd = (f"{sys.executable} tools/los.py generate" if args.recover is None
                    else args.recover)
 
-    reset(repo)
+    saved = Pristine(repo)
+    try:
+        return probe(repo, saved, cmd, delays, after_cmds, recover_cmd, args)
+    finally:
+        saved.restore()
+        saved.discard()
+
+
+def probe(repo: Path, saved: Pristine, cmd: list[str], delays: list[float],
+          after_cmds: list[str], recover_cmd: str, args) -> int:
     pristine = snapshot(repo, "pristine")
     duration, _ = trial(repo, cmd, None)
     full = snapshot(repo, "complete")
     complete = delta(pristine, full)
     if complete["changed_count"] == 0:
         print("interrupt_probe: the uninterrupted command changed nothing canonical; "
-              "check the envelope before interpreting kills", file=sys.stderr)
+              "every kill would be vacuous. Check the envelope and its prerequisites "
+              "(the world was restored).", file=sys.stderr)
+        return 2
 
     results = []
     for delay in delays:
-        reset(repo)
+        saved.restore()
         before = snapshot(repo, f"before-{delay}")
         elapsed, killed = trial(repo, cmd, delay)
         after_runs = run_after(repo, after_cmds)
@@ -180,12 +216,11 @@ def main(argv=None) -> int:
                                                         and exposed["inflight"]),
                         "before_recovery": {**exposed, "reads": after_runs},
                         "recovery": recover_runs})
-    reset(repo)
     summary: dict[str, int] = {}
     for row in results:
         summary[row["outcome"]] = summary.get(row["outcome"], 0) + 1
     summary["exposed_before_recovery"] = sum(r["exposed_before_recovery"] for r in results)
-    payload = {"probe_version": 1, "world": str(repo), "cmd": args.cmd,
+    payload = {"probe_version": 2, "world": str(repo), "cmd": args.cmd,
                "recover": recover_cmd,
                "uninterrupted_s": round(duration, 3), "complete_write": complete,
                "summary": summary, "trials": results}

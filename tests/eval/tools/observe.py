@@ -11,16 +11,25 @@ A snapshot records, for the repository at WORLD_REPO:
 * a digest per canonical file (everything not ignored by Git, outside .git and
   generated/), and one digest over all of them;
 * a digest per derived file under generated/ and its total bytes;
-* the transaction receipts under operations/transactions/, any crash-recovery
-  journal under operations/transactions/.inflight/, AI-action request and
-  delivery bundles, and the diagnostic trace store's file list;
+* the transaction receipts (operations/transactions/transaction-*.yaml) and,
+  separately, the transaction ledgers beside them (idempotency, revisions,
+  lineage); any crash-recovery journal under operations/transactions/.inflight/;
+  AI-action request and delivery bundles; and the diagnostic trace store's
+  file list;
+* the external materials tree named by EVAL-WORLD.json (``paths.materials``),
+  which lives outside the repository; a sibling ``obsidian-ui`` checkout's
+  HEAD and status when one exists; and the installed UI plugin's
+  ``data.json`` (its gateway-recovery state) when present;
 * the product's own `los operations` listing (its trace/request ids), when the
   world's CLI can run.
 
 `diff` reports what changed between two snapshots: canonical files added,
-removed or modified; receipts added; journals left behind; derived files that
-changed; and a flag for any canonical change without a new receipt (a write
-that bypassed the transaction service, or one that is still in flight).
+removed or modified; receipts and ledgers added or changed; journals left
+behind; derived files and materials that changed; and flags. "Authored
+change" means a canonical change outside operations/transactions/, because a
+receipt is itself a canonical file: a new receipt without an authored change,
+and an authored change without a new receipt (a write that bypassed the
+transaction service, or one still in flight), are both flagged.
 
 Nothing here writes inside the world. Output goes to --out or stdout.
 """
@@ -80,6 +89,56 @@ def derived_files(repo: Path) -> list[str]:
     return [p.relative_to(repo).as_posix() for p in base.rglob("*") if p.is_file()]
 
 
+RECEIPT_PREFIX = "operations/transactions/transaction-"
+TRANSACTIONS = "operations/transactions/"
+
+
+def _is_receipt(rel: str) -> bool:
+    return rel.startswith(RECEIPT_PREFIX) and rel.endswith(".yaml") and "/.inflight" not in rel
+
+
+def _world_record(repo: Path) -> dict | None:
+    record = repo.parent.parent / "EVAL-WORLD.json"
+    if not record.is_file():
+        return None
+    try:
+        return json.loads(record.read_text(encoding="utf-8"))
+    except ValueError:
+        return None
+
+
+def _materials(repo: Path) -> dict | None:
+    record = _world_record(repo)
+    base = Path(((record or {}).get("paths") or {}).get("materials") or repo.parent / "materials")
+    if not base.is_dir():
+        return None
+    rels = [p.relative_to(base).as_posix() for p in base.rglob("*") if p.is_file() or p.is_symlink()]
+    files, digest, total = _tree(base, rels)
+    return {"root": str(base), "digest": digest, "bytes": total, "count": len(files),
+            "files": files}
+
+
+def _ui(repo: Path) -> dict | None:
+    ui = repo.parent / "obsidian-ui"
+    state: dict = {}
+    if (ui / ".git").exists():
+        state["checkout"] = str(ui)
+        state["head"] = _git(ui, "rev-parse", "HEAD").strip()
+        state["git_status"] = _git(ui, "status", "--porcelain").splitlines()
+    data = repo / ".obsidian/plugins/learningos-ui/data.json"
+    if data.is_file():
+        state["plugin_data_sha256"] = _sha(data)
+        try:
+            parsed = json.loads(data.read_text(encoding="utf-8"))
+            state["gateway_recovery"] = parsed.get("gatewayRecovery") if isinstance(parsed, dict) else None
+        except ValueError:
+            state["gateway_recovery"] = "unparseable"
+    build_info = repo / ".obsidian/plugins/learningos-ui/build-info.json"
+    if build_info.is_file():
+        state["installed_build_info_sha256"] = _sha(build_info)
+    return state or None
+
+
 def _listing(repo: Path, rel: str) -> list[str]:
     base = repo / rel
     if not base.exists():
@@ -94,8 +153,10 @@ def snapshot(repo: Path, label: str) -> dict:
         raise SystemExit(f"observe: {repo} is not a LearningOS repository")
     canonical, canonical_digest, canonical_bytes = _tree(repo, canonical_files(repo))
     derived, derived_digest, derived_bytes = _tree(repo, derived_files(repo))
-    receipts = [p for p in _listing(repo, "operations/transactions")
-                if "/.inflight" not in p and not p.endswith(".gitkeep")]
+    transaction_files = [p for p in _listing(repo, "operations/transactions")
+                         if "/.inflight" not in p and not p.endswith(".gitkeep")]
+    receipts = [p for p in transaction_files if _is_receipt(p)]
+    ledgers = {p: canonical.get(p) for p in transaction_files if not _is_receipt(p)}
     inflight = _listing(repo, "operations/transactions/.inflight")
     ops = None
     proc = subprocess.run([sys.executable, "tools/los.py", "operations", "--limit", "50"],
@@ -106,7 +167,7 @@ def snapshot(repo: Path, label: str) -> dict:
         except json.JSONDecodeError:
             ops = None
     return {
-        "observer_version": 1,
+        "observer_version": 2,
         "label": label,
         "taken_at": dt.datetime.now(dt.UTC).isoformat(timespec="seconds"),
         "repository": str(repo),
@@ -117,7 +178,10 @@ def snapshot(repo: Path, label: str) -> dict:
         "derived": {"digest": derived_digest, "bytes": derived_bytes,
                     "count": len(derived), "files": derived},
         "receipts": receipts,
+        "ledgers": ledgers,
         "inflight": inflight,
+        "materials": _materials(repo),
+        "ui": _ui(repo),
         "ai_actions": _listing(repo, "operations/ai-actions"),
         "gateway_requests": _listing(repo, "operations/gateway-requests"),
         "diagnostics": _listing(repo, "operations/diagnostics"),
@@ -135,8 +199,14 @@ def _changes(a: dict, b: dict) -> dict:
 def diff(before: dict, after: dict) -> dict:
     canonical = _changes(before["canonical"]["files"], after["canonical"]["files"])
     receipts_added = sorted(set(after["receipts"]) - set(before["receipts"]))
+    receipts_removed = sorted(set(before["receipts"]) - set(after["receipts"]))
     derived = _changes(before["derived"]["files"], after["derived"]["files"])
-    canonical_changed = any(canonical.values())
+    authored = {k: [p for p in v if not p.startswith(TRANSACTIONS)] for k, v in canonical.items()}
+    canonical_changed = any(authored.values())
+    ledgers = _changes(before.get("ledgers") or {}, after.get("ledgers") or {})
+    mat_before, mat_after = before.get("materials"), after.get("materials")
+    materials = (_changes(mat_before["files"], mat_after["files"])
+                 if mat_before and mat_after else None)
     ops_before = {o.get("request_id") for o in before.get("operations") or [] if isinstance(o, dict)}
     ops_after = [o for o in after.get("operations") or [] if isinstance(o, dict)
                  and o.get("request_id") not in ops_before]
@@ -145,6 +215,10 @@ def diff(before: dict, after: dict) -> dict:
         flags.append("canonical-change-without-new-receipt")
     if receipts_added and not canonical_changed:
         flags.append("receipt-without-canonical-change")
+    if receipts_removed:
+        flags.append("receipt-removed")
+    if materials and any(materials.values()):
+        flags.append("materials-changed")
     if after["inflight"]:
         flags.append("inflight-journal-present")
     if before["head"] != after["head"]:
@@ -152,8 +226,13 @@ def diff(before: dict, after: dict) -> dict:
     return {
         "from": before["label"], "to": after["label"],
         "canonical": canonical,
+        "authored": authored,
         "canonical_digest_changed": before["canonical"]["digest"] != after["canonical"]["digest"],
         "receipts_added": receipts_added,
+        "receipts_removed": receipts_removed,
+        "ledgers": ledgers,
+        "materials": materials,
+        "ui": {"before": before.get("ui"), "after": after.get("ui")},
         "inflight_after": after["inflight"],
         "derived": {**derived, "bytes_before": before["derived"]["bytes"],
                     "bytes_after": after["derived"]["bytes"]},

@@ -1,7 +1,7 @@
 {
   "sealed": "2026-09-27",
-  "plaintext_sha256": "91564258360cb4c87f59c9daed9f76a60942f9e25ec064d982a2e3db04d6c5b0",
-  "plaintext_bytes": 4070,
+  "plaintext_sha256": "5139d3cfa47a5737154dbe72f2ff52e8e24b8b8a19336a582f5180521a4f0e71",
+  "plaintext_bytes": 5132,
   "files": [
     "JUDGE.md",
     "expectations.yaml"

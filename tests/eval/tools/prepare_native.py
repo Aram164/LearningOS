@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import subprocess
 import sys
 from pathlib import Path
@@ -34,6 +35,12 @@ def prepare(world_dir: Path, ui_source: Path, ui_rev: str, node: str | None,
     world_dir = world_dir.resolve(strict=True)
     if world_dir.is_relative_to(REAL_TREE):
         raise ValueError("synthetic world must be outside semestercontext")
+    # REAL_TREE is derived from this script's location, so a harness copy
+    # elsewhere protects only itself. A world directory is never inside an
+    # existing Git working tree; refuse one that is.
+    for candidate in (world_dir, *world_dir.parents):
+        if (candidate / ".git").exists():
+            raise ValueError(f"synthetic world must not be inside a Git working tree ({candidate})")
     record_path = world_dir / "EVAL-WORLD.json"
     record = json.loads(record_path.read_text(encoding="utf-8"))
     core = world_dir / "LearningOS/repository"
@@ -61,13 +68,12 @@ def prepare(world_dir: Path, ui_source: Path, ui_rev: str, node: str | None,
     os.symlink(python_venv, core / ".venv", target_is_directory=True)
     modules = ui_source / "node_modules"
     if modules.is_dir() and not (ui / "node_modules").exists():
-        # The UI repository does not ignore a symlink named node_modules by
-        # default. Exclude it only in this disposable clone's Git metadata so
-        # build-info can prove the authored UI tree is clean.
+        # Use a private dependency tree. A symlink would let npm writes in a
+        # disposable world mutate the source checkout's dependencies.
         exclude = ui / ".git/info/exclude"
         exclude.write_text(exclude.read_text(encoding="utf-8") + "\n/node_modules\n",
                            encoding="utf-8")
-        os.symlink(modules, ui / "node_modules", target_is_directory=True)
+        shutil.copytree(modules, ui / "node_modules", symlinks=True)
     call([sys.executable, "tools/generate.py"], cwd=core)
     command = [sys.executable, "install.py", "--vault", str(core)]
     if node:

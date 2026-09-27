@@ -1,6 +1,8 @@
 # Native Obsidian pass
 
-Build a fresh synthetic world, then from the real Core checkout run:
+Build a fresh synthetic world, then from the operator harness (the Core
+checkout at the frozen harness revision your kickoff names; never the
+learner's real checkout) run:
 
 ```bash
 .venv/bin/python tests/eval/tools/prepare_native.py \
@@ -9,17 +11,22 @@ Build a fresh synthetic world, then from the real Core checkout run:
 ```
 
 The tool locally clones that UI commit beside the synthetic Core, links the
-existing Python virtual environment for the UI gateway, generates views, runs
-the UI installer and `install:status`, and prints the product Core
-revision, synthetic Core HEAD and UI revision separately. It can reuse the
-source checkout's `node_modules` through a local ignored link. If dependencies
+harness-only Python virtual environment for the UI gateway, generates views,
+runs the UI installer and `install:status`, and prints the product Core
+revision, synthetic Core HEAD and UI revision separately. It copies the
+harness UI's `node_modules` into the disposable UI clone. If dependencies
 are missing, it leaves a clean UI clone; run `npm ci` there and then
 `python3 install.py --vault /private/tmp/los-eval-world-U/LearningOS/repository`.
 It refuses a
 nonempty UI destination and any world inside the real workspace.
 
 Open only `/private/tmp/los-eval-world-U/LearningOS/repository` as a vault in
-Obsidian. Check its title/path before the first click. Enable the installed
+Obsidian. Its folder is named `repository`, exactly like the learner's real
+Core vault, so the window title alone does not identify it. Check its path
+before the first click, and before any CLI-driven UI action (`obsidian-cli`
+answers from Obsidian's main window whatever `vault=` says) assert that
+`app.vault.adapter.basePath` equals the synthetic vault path. Run the U plan
+alone, with no other operator session active. Enable the installed
 plugin if Obsidian asks, reload, and open Diagnostics. Record the visible
 identity and source fingerprint, then run S23–S25 through the actual controls.
 Capture screenshots and JavaScript errors. CLI preparation is allowed; CLI

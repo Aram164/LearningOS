@@ -98,6 +98,17 @@ def check_builder() -> None:
             pass
         else:
             raise AssertionError("builder accepted output inside real repository")
+        inside = root / "some-checkout"
+        (inside / "nested").mkdir(parents=True)
+        subprocess.run(["git", "init", "-q", str(inside)], check=True)
+        try:
+            build(inside / "nested/world", "WORKTREE", 0, 20260924, False)
+        except BuildError:
+            pass
+        else:
+            raise AssertionError("builder accepted output inside another Git working tree")
+        require(bool(a.get("product_tree_sha256")) and a["product_tree_sha256"] ==
+                b["product_tree_sha256"], "product identity digest missing or unstable")
         world_repo = root / "a/LearningOS/repository"
         before = subprocess.run(["git", "status", "--porcelain"], cwd=world_repo,
                                 capture_output=True, text=True, check=True).stdout
@@ -108,6 +119,24 @@ def check_builder() -> None:
         after = subprocess.run(["git", "status", "--porcelain"], cwd=world_repo,
                                capture_output=True, text=True, check=True).stdout
         require(before == after, "observer changed the world")
+        snap = json.loads(observer.stdout)
+        require("ledgers" in snap and snap.get("materials") and snap["materials"]["count"] > 0,
+                "observer lacks ledgers or the external materials tree")
+        probe = subprocess.run([sys.executable, str(EVAL / "tools/interrupt_probe.py"),
+                                "--world", str(world_repo), "--cmd", "true", "--delays", "0.1",
+                                "--recover", ""], capture_output=True, text=True)
+        require(probe.returncode == 2, f"interrupt probe accepted a vacuous command: "
+                                       f"{probe.returncode} {probe.stderr[-300:]}")
+        after_probe = subprocess.run(["git", "status", "--porcelain"], cwd=world_repo,
+                                     capture_output=True, text=True, check=True).stdout
+        require(after_probe == before, "interrupt probe left the world changed")
+        require(not list((root / "a").glob(".interrupt-probe-pristine-*")),
+                "interrupt probe left its pristine copy behind")
+        refused = subprocess.run([sys.executable, str(EVAL / "tools/interrupt_probe.py"),
+                                  "--world", str(root / "a/LearningOS"), "--cmd", "true",
+                                  "--delays", "0.1"], capture_output=True, text=True)
+        require(refused.returncode != 0 and "refusing" in refused.stderr,
+                "interrupt probe accepted a path that is not a world repository")
 
 
 def check_records() -> None:
@@ -118,7 +147,7 @@ def check_records() -> None:
         (run / "SESSION_REPORT.md").write_text("# Selftest\n", encoding="utf-8")
         (run / "run.json").write_text(json.dumps({
             "run_id": run.name, "plan": "B", "session_role": "selftest",
-            "started": "2026-09-27T00:00:00Z", "product_revision": "WORKTREE",
+            "started": "2026-09-27T00:00:00Z", "product_revision": "abc",
             "world_head": "abc", "blind": True, "scenarios": ["S00", "S01"],
         }), encoding="utf-8")
         for sid in ("S00", "S01"):
@@ -135,12 +164,38 @@ def check_records() -> None:
                 "internal": {"observe_diff_file": diff},
             }), encoding="utf-8")
         require(not check_run(run), "valid minimal run rejected")
+        result = json.loads((run / "results/S01.json").read_text(encoding="utf-8"))
+        result["internal"]["receipts"] = ["operations/transactions/transaction-x.yaml"]
+        (run / "results/S01.json").write_text(json.dumps(result), encoding="utf-8")
+        require(any("envelope" in p for p in check_run(run)),
+                "receipted result without an envelope accepted")
+        result["internal"]["envelope_note"] = "selftest"
+        (run / "results/S01.json").write_text(json.dumps(result), encoding="utf-8")
+        require(not check_run(run), "envelope note not accepted")
         if os.getenv("LOS_EVAL_ORACLE_KEY"):
             sys.path.insert(0, str(EVAL / "metrics"))
             from score_workflows import score
             require(len(score(run)["worksheets"]) == 2, "judge scorer rejected valid run")
         (run / "results/S01.json").unlink()
         require(check_run(run), "missing scenario result accepted")
+        split = Path(temp) / "split-run"
+        (split / "results").mkdir(parents=True)
+        (split / "SESSION_REPORT.md").write_text("# Selftest\n", encoding="utf-8")
+        record = {"run_id": split.name, "plan": "X1", "session_role": "selftest",
+                  "started": "2026-09-27T00:00:00Z", "product_revision": "abc",
+                  "world_head": "abc", "blind": True, "scenarios": ["S15", "S16", "S17"]}
+        (split / "run.json").write_text(json.dumps(record), encoding="utf-8")
+        for sid in record["scenarios"]:
+            (split / "results" / f"{sid}.json").write_text(json.dumps({
+                "scenario": sid, "run_id": split.name, "classification": "NOT_RUN",
+                "before": {}, "after": {}, "internal": {},
+                "consumer": {"goal": "selftest", "first_action": "none",
+                             "commands": [], "outcome": "not run"},
+            }), encoding="utf-8")
+        require(not check_run(split), f"X1 split record rejected: {check_run(split)}")
+        record["plan"] = "X"
+        (split / "run.json").write_text(json.dumps(record), encoding="utf-8")
+        require(check_run(split), "partial plan X accepted without a split letter")
 
 
 def main() -> int:
@@ -148,7 +203,8 @@ def main() -> int:
     check_oracle(ids)
     check_builder()
     check_records()
-    print(f"eval selftest: {len(ids)} scenarios, sealed oracle, deterministic world, safe observer OK")
+    print(f"eval selftest: {len(ids)} scenarios, sealed oracle, deterministic world, "
+          "fenced builder, safe observer and probe, record contract OK")
     return 0
 
 

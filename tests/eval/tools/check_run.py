@@ -13,6 +13,9 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 EVAL = Path(__file__).resolve().parents[1]
 SCHEMAS = EVAL / "public" / "schemas"
+# CAMPAIGN.md gives plan X to two sessions; each half records its own letter.
+PLAN_SUBSETS = {"X1": ["S15", "S16", "S17"], "X2": ["S18", "S19", "S20", "S21", "S22"]}
+SUBSET_PLANS = {"C", "V", "O"}
 
 
 def _read(path: Path, problems: list[str]) -> dict:
@@ -55,14 +58,15 @@ def check_run(run: Path) -> list[str]:
     if data:
         _schema("run.schema.json", data, "run.json", problems)
         plan = data.get("plan")
-        expected = {s["id"] for s in scenarios if plan in s["plans"]}
+        expected = (set(PLAN_SUBSETS[plan]) if plan in PLAN_SUBSETS
+                    else {s["id"] for s in scenarios if plan in s["plans"]})
         declared = data.get("scenarios") or []
         if not isinstance(declared, list) or any(not isinstance(s, str) for s in declared):
             problems.append("run.json: scenarios must be a list of strings")
             declared = []
-        if plan not in {"C", "V", "O"} and set(declared) != expected:
+        if plan not in SUBSET_PLANS and set(declared) != expected:
             problems.append(f"run.json: plan {plan} requires {sorted(expected)}, got {declared}")
-        if plan in {"C", "V", "O"} and not declared:
+        if plan in SUBSET_PLANS and not declared:
             problems.append("run.json: an ad-hoc/verification plan must declare scenarios")
         if len(declared) != len(set(declared)):
             problems.append("run.json: duplicate scenario ids")
@@ -76,6 +80,9 @@ def check_run(run: Path) -> list[str]:
             for key in ("world_head", "product_revision"):
                 if world.get(key) != data.get(key):
                     problems.append(f"run.json: {key} differs from world_build")
+        if data.get("product_revision") == "WORKTREE" and not world.get("product_tree_sha256"):
+            problems.append("run.json: product_revision WORKTREE names no product; build from a "
+                            "commit, or include world_build with product_tree_sha256")
     else:
         declared = []
 
@@ -128,6 +135,17 @@ def check_run(run: Path) -> list[str]:
         internal = row.get("internal") or {}
         if internal.get("observe_diff_file"):
             _artifact(run, internal["observe_diff_file"], problems)
+        for case in row.get("cases") or []:
+            for state in (case.get("before") or {}, case.get("after") or {}):
+                if state.get("snapshot_file"):
+                    _artifact(run, state["snapshot_file"], problems)
+            if case.get("observe_diff_file"):
+                _artifact(run, case["observe_diff_file"], problems)
+        for rel in (internal.get("envelope_files") or []) + (internal.get("review_reports") or []):
+            _artifact(run, rel, problems)
+        if internal.get("receipts") and not internal.get("envelope_files") \
+                and not (internal.get("envelope_note") or "").strip():
+            problems.append(f"{path}: receipts recorded without envelope_files or envelope_note")
     if set(declared) != found:
         problems.append(f"results: declared {sorted(set(declared))}, found {sorted(found)}")
     if data.get("run_id") and data["run_id"] != run.name:

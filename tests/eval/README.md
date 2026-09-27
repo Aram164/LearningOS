@@ -28,11 +28,11 @@ never given to blind operators.
 | `metrics/score_workflows.py` | Judge-side evidence worksheet and observer flags |
 | `private/` | Sealed oracle and its manifest only |
 
-Large run outputs, screenshots and decrypted oracle files belong outside both
-product repositories, for example under `/private/tmp/los-eval-runs/`. The
-campaign report records their paths and SHA-256 digests. `tests/eval/` does
-not collect as part of ordinary pytest; the small `tests/test_operator_journeys.py`
-suite is the maintained focused regression entry point.
+Large run outputs and screenshots belong outside both product repositories,
+for example under `/private/tmp/los-eval-runs/`. Decrypted oracle files and the
+key belong in the judge-only home directory, away from operator scratch.
+The campaign report records evidence paths and SHA-256 digests. `tests/eval/`
+does not collect as part of ordinary pytest.
 
 ## Build and check
 
@@ -41,14 +41,16 @@ From the Core root, using its `.venv/bin/python`:
 ```bash
 .venv/bin/python tests/eval/selftest.py
 .venv/bin/python tests/eval/tools/build_world.py \
-  --out /private/tmp/los-write-world-01 --source-rev WORKTREE
+  --out /private/tmp/los-write-world-01 --source-rev PRODUCT_SHA
 .venv/bin/python tests/eval/tools/check_run.py /private/tmp/los-eval-runs/RUN_ID
 ```
 
 Use a new output directory for every run. The builder refuses locations in
-the real `semestercontext` tree, refuses a nonempty output directory, and has
-no destructive reset flag. A pinned base revision is in `corpus/world.yaml`;
-`WORKTREE` evaluates the current candidate while recording that choice.
+the tree it runs from and inside any existing Git working tree, refuses a
+nonempty output directory, and has no destructive reset flag. A pinned base
+revision is in `corpus/world.yaml`. Blind and repair runs build from an exact
+commit (`--source-rev SHA`); `WORKTREE` is for harness development and records
+the source HEAD, a status digest and a digest of the product files it copied.
 
 Before blind runs, run the self-test, freeze the public scenario revision and
 the sealed oracle, and give the consumer only `public/SESSION-BRIEF.md` plus a
