@@ -1304,6 +1304,8 @@ def test_replay_request_id_mismatch_fails_closed(
     assert response["error"]["code"] == "INTERNAL_FAILURE"
     assert response["error"]["retryable"] is False
     assert "request id" in response["error"]["message"]
+    assert envelope["request_id"] in response["error"]["message"]
+    assert "saved envelope unchanged" in response["error"]["message"]
 
 
 def test_replay_channel_mismatch_fails_closed(mini_repo: Path, repo_root: Path, tmp_path: Path):

@@ -768,6 +768,25 @@ gateway envelope; review both, then submit the envelope unchanged.
    inline — 1 to 20 notes, no `frozen_input_*` fields (prep derives every
    hash from the body bytes). Body bytes are exactly the UTF-8 encoding of
    each body string: leading whitespace and CRLF survive verbatim.
+   For a resolved local source, `binding.material` is a path relative to the
+   `materials/` tree, without a `material://` scheme or a leading `materials/`.
+   The drafter supplies `live_source_digest` equal to
+   `recorded_source_digest` as bare 64-character hex for the observed bytes;
+   prep derives only `frozen_input_*`. One note uses the same batch format:
+
+   ```json
+   {"notes": [{"id": "note-example-analysis", "title": "Example analysis",
+     "path": "knowledge/notes/data-systems/note-example-analysis.md",
+     "binding": {"resolution": "resolved", "source_id": "source-example-course",
+       "material": "course/deck.pdf",
+       "recorded_source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "live_source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "inspected_range": {"start": 1, "end": 3}},
+     "body": "Analysis of the inspected pages.\n"}]}
+   ```
+
+   Replace the example source, path, range and digest with the source's
+   registered material and the bytes actually observed before preparing.
 2. **Prepare.**
    `note-analysis-prepare --drafts drafts.json --out <dir>` with the
    staging dir outside the repository. Prep validates every draft,
