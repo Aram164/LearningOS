@@ -258,6 +258,7 @@
           "pattern": "^[0-9a-f]{64}$"
         },
         "inspected_range": {
+          "description": "Inclusive physical PDF pages (cover = 1) for PDF sources; inclusive one-based physical file lines for Markdown and plain text. Section labels are not line numbers.",
           "type": "object",
           "required": [
             "start",

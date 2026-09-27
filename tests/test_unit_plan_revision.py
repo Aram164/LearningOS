@@ -132,6 +132,56 @@ def test_preflight_sees_the_same_perimeter_as_live(mini_repo: Path):
     assert any("PERIMETER-UNDECLARED" in line for line in failures), failures
 
 
+def test_stale_dossier_names_each_expected_basis_value(mini_repo: Path):
+    from copy import deepcopy
+
+    from learning_os.material_synthesis import (
+        MaterialSynthesisError,
+        validate_unit_material_synthesis,
+    )
+
+    _sliced_unit(mini_repo, [_sliced_route("route-demo-book", "lecture-01.pdf")])
+    good = _valid_dossier(mini_repo, "route-demo-book", "lecture-01.pdf")
+    stale = deepcopy(good)
+    stale["basis"]["source_map_checksum"] = "sha256:" + "0" * 64
+    stale["basis"]["route_set_checksum"] = "sha256:" + "0" * 64
+
+    with pytest.raises(MaterialSynthesisError) as caught:
+        validate_unit_material_synthesis(mini_repo, "unit-demo-l01", stale)
+    message = str(caught.value)
+    assert '"source_map_checksum": ' in message
+    assert good["basis"]["source_map_checksum"] in message
+    assert '"route_set_checksum": ' in message
+    assert good["basis"]["route_set_checksum"] in message
+
+
+def test_compact_preflight_emits_post_change_basis(mini_repo: Path, tmp_path: Path):
+    from repo_builders import run_los, write_yaml
+
+    from learning_os.material_synthesis import current_unit_material_basis
+
+    good = _compact_setup(mini_repo)
+    live = current_unit_material_basis(mini_repo, "unit-demo-l01")
+    covers = ["knowledge-demo-expectation", "knowledge-demo-outcomes"]
+    revision = _compact_revision(
+        mini_repo,
+        route_changes={"update": [{"route_id": "route-demo-book",
+                                   "fields": {"covers": covers}}]},
+        material_synthesis=good,
+        claim_evidence=[{"claim_id": "covers:route-demo-book",
+                         "evidence": [{"kind": "route-locator", "ref": "lecture-01.pdf"}]}],
+    )
+    path = tmp_path / "staged-basis.yaml"
+    write_yaml(path, revision)
+
+    result = run_los(mini_repo, "unit-plan-revise", "unit-demo-l01", "--file",
+                     str(path), "--check", "--staged-basis", "unit-demo-l01")
+    assert result.returncode == 0, result.stderr
+    output = json.loads(result.stdout)
+    assert output["validated"] is False
+    assert output["basis"]["route_set_checksum"] != live["route_set_checksum"]
+
+
 def test_route_change_with_stale_dossier_fails_closed(mini_repo: Path):
     """Adding a route without a replacement dossier must keep failing."""
     from learning_os.material_synthesis import (

@@ -200,7 +200,7 @@ def verify_committed_evidence(
     if row["request_id"] != request.request_id:
         # Replay binds the exact committed request (WORKFLOWS §25c step 4): name
         # it, so the recovery is to resubmit that saved envelope unchanged.
-        raise ReplayEvidenceError(
+        raise TransactionIdempotencyConflict(
             "idempotency ledger records a different request id for this key "
             f"({row['request_id']}); an exact retry resubmits that request's saved "
             "envelope unchanged"

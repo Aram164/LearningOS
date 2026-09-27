@@ -23,6 +23,18 @@ MD_LINK_RE = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
 SUFFIX_RE = re.compile(r"^(?P<base>.+)-(?P<num>\d{1,2})$")
 WORKSPACE_TOKEN_RE = re.compile(r"\bworkspace-[a-z0-9]+(?:-[a-z0-9]+)*\b")
 
+
+def id_list_items(value):
+    """Iterate valid ID-shaped items; schema errors own malformed list shapes."""
+    return (item for item in value if isinstance(item, str)) \
+        if isinstance(value, list) else ()
+
+
+def list_items(value):
+    """Do not iterate a schema-invalid scalar string as a list of characters."""
+    return value if isinstance(value, list) else ()
+
+
 REQUIRED_WORKSPACE_SECTIONS = ("Objective", "Current Scope", "Open Questions", "Next Action")
 COORDINATION_SECTIONS = ("Commitments", "Priorities", "Dependencies", "Deferrals")
 

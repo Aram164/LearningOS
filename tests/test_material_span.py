@@ -54,6 +54,29 @@ def test_local_span_is_observed_and_extraction_is_on_demand(mini_repo: Path):
     assert span["file_sha256"] == data["spans"][0]["file_sha256"]
 
 
+def test_markdown_span_reports_physical_lines_of_displayed_excerpt(mini_repo: Path):
+    add_curriculum(mini_repo)
+    _add_material_overview(mini_repo)
+    source_path = mini_repo / "sources/sources.yaml"
+    sources = yaml.safe_load(source_path.read_text(encoding="utf-8"))
+    sources["sources"][0]["material"] = "material://demo"
+    write_yaml(source_path, sources)
+    map_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
+    source_map = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    source_map["sources"][0]["unit_routes"][0]["locator"] = "lecture-01.md"
+    write_yaml(map_path, source_map)
+    material = mini_repo.parent / "materials/demo/lecture-01.md"
+    material.parent.mkdir(parents=True, exist_ok=True)
+    material.write_text("# Section 1\n\nFirst point\nSecond point\n", encoding="utf-8")
+
+    result = run_los(mini_repo, "material-span", "unit-demo-l01", _route(mini_repo),
+                     "--extract")
+    assert result.returncode == 0, result.stderr
+    span = json.loads(result.stdout)["spans"][0]
+    assert span["inspected_range_unit"] == "line"
+    assert span["inspected_range"] == {"start": 1, "end": 4}
+
+
 def test_remote_span_is_never_fetched_implicitly(mini_repo: Path):
     add_curriculum(mini_repo)
     _add_material_overview(mini_repo)

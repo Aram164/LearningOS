@@ -8,6 +8,7 @@ returns the one canonical file that a gateway transaction may publish.
 from __future__ import annotations
 
 import hashlib
+import json
 from collections import Counter
 from pathlib import Path
 from typing import Any
@@ -249,9 +250,14 @@ def validate_unit_material_synthesis(
     basis = value["basis"]
     material_cache: dict[Path, str] = {}
     current = current_unit_material_basis(root, unit_id, repo=repo, cache=material_cache)
-    for field in _COMPARED_BASIS_FIELDS:
-        if basis.get(field) != current[field]:
-            raise MaterialSynthesisError(f"dossier basis is stale at {field}")
+    stale = [field for field in _COMPARED_BASIS_FIELDS
+             if basis.get(field) != current[field]]
+    if stale:
+        expected = {field: current[field] for field in stale}
+        raise MaterialSynthesisError(
+            "dossier basis is stale; expected values for changed fields: "
+            + json.dumps(expected, sort_keys=True, ensure_ascii=False)
+        )
 
     concept_ids = set(repo.concepts)
     note_ids = set(repo.notes)

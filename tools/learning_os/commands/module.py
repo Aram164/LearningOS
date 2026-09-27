@@ -1873,6 +1873,7 @@ def _cmd_compact_module_plan_import(args, root: Path, source: Path,
                 file=str(tmp_path),
                 file_sha256=f"sha256:{hashlib.sha256(assembled).hexdigest()}",
                 promotion=None, check=args.check,
+                staged_basis=getattr(args, "staged_basis", None),
                 expected_snapshot=args.expected_snapshot,
                 expected_revision=list(getattr(args, "expected_revision", []) or []),
                 _parser_factory=getattr(args, "_parser_factory", None),
@@ -1895,6 +1896,9 @@ def cmd_module_plan_import(args) -> int:
     explicit workspace joins together. It never deletes units or creates
     durable notes, and every stage remains bounded to the requested module.
     """
+    if getattr(args, "staged_basis", None) and not args.check:
+        print("los: --staged-basis requires --check", file=sys.stderr)
+        return 2
     if getattr(args, "promotion", None) is not None:
         return _cmd_master_promotion_import(args)
 
@@ -2136,6 +2140,27 @@ def cmd_module_plan_import(args) -> int:
                 print("los: revision changes no canonical bytes; nothing to apply",
                       file=sys.stderr)
                 return 2
+        basis_unit = getattr(args, "staged_basis", None)
+        if basis_unit:
+            if basis_unit not in seen_units:
+                print(f"los: staged basis unit is not in this package: {basis_unit}",
+                      file=sys.stderr)
+                return 2
+            from learning_os.material_synthesis import current_unit_material_basis
+
+            try:
+                with _staged_shadow(root, writes) as shadow:
+                    basis = current_unit_material_basis(shadow, basis_unit)
+            except (MaterialSynthesisError, OSError, ValueError) as exc:
+                print(f"los: staged basis unavailable: {exc}", file=sys.stderr)
+                return 2
+            print(json.dumps({
+                "unit_id": basis_unit,
+                "basis": basis,
+                "package_sha256": package_sha,
+                "validated": False,
+            }, indent=2, ensure_ascii=False, sort_keys=True))
+            return 0
         try:
             errors = _module_plan_validation_errors(
                 root, writes,
@@ -2564,6 +2589,7 @@ def _unit_plan_revise_locked(args) -> int:
                 file_sha256=f"sha256:{hashlib.sha256(package_bytes).hexdigest()}",
                 promotion=None,
                 check=check,
+                staged_basis=getattr(args, "staged_basis", None),
                 expected_snapshot=expected_snapshot,
                 expected_revision=list(getattr(args, "expected_revision", []) or []),
                 _parser_factory=getattr(args, "_parser_factory", None),

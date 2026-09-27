@@ -8,7 +8,7 @@ from typing import Literal
 
 from ..loader import EVIDENCE_SCHEMES
 from ..routes import exact_selection_matches, iter_route_references
-from .common import MD_LINK_RE, WORKSPACE_TOKEN_RE
+from .common import MD_LINK_RE, WORKSPACE_TOKEN_RE, id_list_items, list_items
 
 
 @dataclass(frozen=True)
@@ -117,7 +117,7 @@ class ChecksReferences:
                         "does not match the current route",
                         where,
                     )
-                for concept_id in assessment.get("concept_ids", []) or []:
+                for concept_id in id_list_items(assessment.get("concept_ids")):
                     if concept_id not in r.concepts:
                         self.err(
                             "REF-CONCEPT",
@@ -136,7 +136,7 @@ class ChecksReferences:
                         f"unknown concept '{concept_id}'",
                         where,
                     )
-                for related_unit_id in group.get("related_unit_ids", []) or []:
+                for related_unit_id in id_list_items(group.get("related_unit_ids")):
                     if related_unit_id not in r.units:
                         self.err(
                             "REF-UNIT",
@@ -144,7 +144,7 @@ class ChecksReferences:
                             f"unknown related unit '{related_unit_id}'",
                             where,
                         )
-                for note_id in group.get("bridge_note_ids", []) or []:
+                for note_id in id_list_items(group.get("bridge_note_ids")):
                     if note_id not in r.notes:
                         self.err(
                             "REF-NOTE",
@@ -154,16 +154,16 @@ class ChecksReferences:
                         )
         for note in r.notes.values():
             where = self._rel(note.path)
-            for cid in note.meta.get("concepts", []) or []:
+            for cid in id_list_items(note.meta.get("concepts")):
                 if cid not in r.concepts:
                     self.err("REF-CONCEPT", f"note '{note.id}' references unknown concept '{cid}'", where)
-            for sid in note.meta.get("sources", []) or []:
+            for sid in id_list_items(note.meta.get("sources")):
                 if sid not in r.sources:
                     self.err("REF-SOURCE", f"note '{note.id}' references unknown source '{sid}'", where)
-            for wid in note.meta.get("contexts", []) or []:
+            for wid in id_list_items(note.meta.get("contexts")):
                 if wid not in r.workspaces and wid not in r.quarantined_workspace_ids:
                     self.err("REF-WORKSPACE", f"note '{note.id}' references unknown workspace '{wid}'", where)
-            for target in note.meta.get("supersedes", []) or []:
+            for target in id_list_items(note.meta.get("supersedes")):
                 if target not in r.notes:
                     self.err("REF-SUPERSEDES", f"note '{note.id}' supersedes unknown note '{target}'", where)
             for ev in note.meta.get("evidence", []) or []:
@@ -175,31 +175,31 @@ class ChecksReferences:
                     self._check_uri(ref, where)
         for ws in r.workspaces.values():
             where = self._rel(ws.path)
-            for cid in ws.meta.get("concepts", []) or []:
+            for cid in id_list_items(ws.meta.get("concepts")):
                 if cid not in r.concepts:
                     self.err("REF-CONCEPT", f"workspace '{ws.id}' references unknown concept '{cid}'", where)
-            for nid in ws.meta.get("notes", []) or []:
+            for nid in id_list_items(ws.meta.get("notes")):
                 if nid not in r.notes:
                     self.err("REF-NOTE", f"workspace '{ws.id}' references unknown note '{nid}'", where)
-            for sid in ws.meta.get("sources", []) or []:
+            for sid in id_list_items(ws.meta.get("sources")):
                 if sid not in r.sources:
                     self.err("REF-SOURCE", f"workspace '{ws.id}' references unknown source '{sid}'", where)
-            for pid in ws.meta.get("program_ids", []) or []:
+            for pid in id_list_items(ws.meta.get("program_ids")):
                 if pid not in r.programs:
                     self.err("REF-PROGRAM", f"workspace '{ws.id}' references unknown program '{pid}'", where)
-            for mid in ws.meta.get("module_ids", []) or []:
+            for mid in id_list_items(ws.meta.get("module_ids")):
                 if mid not in r.modules:
                     self.err("REF-MODULE", f"workspace '{ws.id}' references unknown module '{mid}'", where)
             project_id = ws.meta.get("project_id")
             if project_id and project_id not in r.projects:
                 self.err("REF-PROJECT",
                          f"workspace '{ws.id}' references unknown project '{project_id}'", where)
-            for uid in ws.meta.get("unit_ids", []) or []:
+            for uid in id_list_items(ws.meta.get("unit_ids")):
                 if uid not in r.units:
                     self.err("REF-UNIT", f"workspace '{ws.id}' references unknown unit '{uid}'", where)
         for mid, module in r.modules.items():
             where = self._origin_for("module", mid)
-            for gid in module.get("thematic_group_ids", []) or []:
+            for gid in id_list_items(module.get("thematic_group_ids")):
                 if gid not in r.thematic_groups:
                     self.err(
                         "REF-THEMATIC-GROUP",
@@ -211,7 +211,7 @@ class ChecksReferences:
                 self.err("REF-PROGRAM", f"module '{mid}' references unknown program '{area_id}'", where)
             component_ids = {c.get("id") for c in module.get("components", []) or []
                              if isinstance(c, dict)}
-            for uid in module.get("unit_order", []) or []:
+            for uid in id_list_items(module.get("unit_order")):
                 unit = r.units.get(uid)
                 if unit is None:
                     self.err("REF-UNIT", f"module '{mid}' orders unknown unit '{uid}'", where)
@@ -220,7 +220,7 @@ class ChecksReferences:
             source_map = r.module_source_maps.get(mid)
             if module.get("source_map") and source_map is None:
                 self.err("REF-SOURCE-MAP", f"module '{mid}' declares a missing source map", where)
-            for related in module.get("related_module_ids", []) or []:
+            for related in id_list_items(module.get("related_module_ids")):
                 if related not in r.modules:
                     self.err("REF-MODULE", f"module '{mid}' references unknown related module '{related}'", where)
             for uid, unit in r.units.items():
@@ -259,7 +259,7 @@ class ChecksReferences:
             for node in (data.get("knowledge_map") or {}).get("nodes", []) or []:
                 if not isinstance(node, dict):
                     continue
-                for concept_id in node.get("concept_ids", []) or []:
+                for concept_id in id_list_items(node.get("concept_ids")):
                     if concept_id not in r.concepts:
                         self.err(
                             "REF-CONCEPT",
@@ -329,7 +329,7 @@ class ChecksReferences:
                             f"'{legacy_matches[0].route_id}' is available",
                             where,
                         )
-                for stage_id in selection.get("stage_ids", []) or []:
+                for stage_id in id_list_items(selection.get("stage_ids")):
                     if stage_id not in map_stage_ids:
                         self.err("REF-STAGE", f"unit '{uid}' source selection routes to unknown stage '{stage_id}'", where)
             for nid in (data.get("artifacts") or {}).values():
@@ -345,10 +345,10 @@ class ChecksReferences:
                 # with this file by check_schemas; using it as a key would crash.
                 if isinstance(wid, str) and wid not in r.workspaces:
                     self.err("REF-WORKSPACE", f"unit '{uid}' references unknown workspace '{wid}'", where)
-            for related in data.get("related_module_ids", []) or []:
+            for related in id_list_items(data.get("related_module_ids")):
                 if related not in r.modules:
                     self.err("REF-MODULE", f"unit '{uid}' references unknown related module '{related}'", where)
-            for related_uid in [data.get("parent_unit_id"), *(data.get("child_unit_ids", []) or [])]:
+            for related_uid in [data.get("parent_unit_id"), *id_list_items(data.get("child_unit_ids"))]:
                 if related_uid and related_uid not in r.units:
                     self.err("REF-UNIT", f"unit '{uid}' references unknown unit '{related_uid}'", where)
             smid = data.get("current_study_map")
@@ -366,7 +366,7 @@ class ChecksReferences:
                 sid = entry.get("source_id") if isinstance(entry, dict) else None
                 if sid and sid not in r.sources:
                     self.err("REF-SOURCE", f"module source map references unknown source '{sid}'", where)
-                for route in entry.get("unit_routes", []) or []:
+                for route in list_items(entry.get("unit_routes")):
                     uid = route if isinstance(route, str) else (
                         route.get("unit_id") if isinstance(route, dict) else None
                     )
@@ -384,7 +384,7 @@ class ChecksReferences:
                             )
                             if isinstance(node, dict) and node.get("id")
                         }
-                        for knowledge_id in route.get("covers", []) or []:
+                        for knowledge_id in id_list_items(route.get("covers")):
                             if knowledge_id not in node_ids:
                                 self.err(
                                     "REF-KNOWLEDGE",
@@ -481,7 +481,7 @@ class ChecksReferences:
                          f"concept '{concept.get('id')}' replaced_by unknown concept '{rb}'")
         for source in r.sources.values():
             sid = source.get("id")
-            for gid in source.get("thematic_group_ids", []) or []:
+            for gid in id_list_items(source.get("thematic_group_ids")):
                 if gid not in r.thematic_groups:
                     self.err(
                         "REF-THEMATIC-GROUP",

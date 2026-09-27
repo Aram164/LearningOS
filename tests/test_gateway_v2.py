@@ -1301,7 +1301,7 @@ def test_replay_request_id_mismatch_fails_closed(
     result = _run(repo_root, mini_repo, tmp_path / "reqid-replay.json", resent, replay_only=True)
     assert result.returncode == 2, (result.returncode, result.stdout, result.stderr)
     response = json.loads(result.stdout)
-    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["code"] == "IDEMPOTENCY_CONFLICT"
     assert response["error"]["retryable"] is False
     assert "request id" in response["error"]["message"]
     assert envelope["request_id"] in response["error"]["message"]
