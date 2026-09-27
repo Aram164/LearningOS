@@ -31,9 +31,10 @@ REQUEST_ID_MAX = 128
 def _fresh_request_id(key: str) -> str:
     """Mint a new request id for this sealing run (WORKFLOWS §25c step 4).
 
-    An exact retry keeps its idempotency key by design, so a key-derived id
-    would repeat across attempts, and `los operations` would merge them into
-    one explanation (a refused attempt reads as the committed one).
+    Each sealing run is a new attempt with its own key, so a key-derived id is
+    never needed. An exact retry does not come back here: it resubmits the
+    envelope this run already produced, because replay binds the committed
+    request id and refuses a re-sealed envelope under a used key.
     """
     suffix = secrets.token_hex(4)
     stem = key[:REQUEST_ID_MAX - len("request--") - len(suffix)]
@@ -74,7 +75,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--key", required=True, help="idempotency key")
     parser.add_argument("--request-id", default=None,
                         help="request id (default: a fresh request-<key>-<random> "
-                             "per run, as §25c step 4 asks)")
+                             "per run, as §25c step 4 asks; to retry, resubmit the "
+                             "saved envelope instead of re-sealing)")
     parser.add_argument("--channel", default="operator",
                         help=f"one of: {', '.join(sorted(GATEWAY_CHANNELS))}")
     parser.add_argument("--approval-kind", default="operator-approval",

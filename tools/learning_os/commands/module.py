@@ -1087,9 +1087,16 @@ def _stage_by_id(map_data: dict | None) -> dict[str, dict]:
 
 
 def _unit_semantic_diff(live_map: dict, staged_map: dict,
-                        live_study: dict | None, staged_study: dict | None) -> dict:
-    """Reviewable diff for one unit: routes, placements, triage, learner state."""
-    unit_id = (staged_study or {}).get("unit_id") or (live_study or {}).get("unit_id") or ""
+                        live_study: dict | None, staged_study: dict | None,
+                        unit_id: str | None = None) -> dict:
+    """Reviewable diff for one unit: routes, placements, triage, learner state.
+
+    Callers pass ``unit_id``: a unit without a study map (on either side) still
+    has routes, and deriving its id from the maps alone emptied its whole diff —
+    both the review summary and the acknowledgment checks built on it.
+    """
+    unit_id = unit_id or (staged_study or {}).get("unit_id") \
+        or (live_study or {}).get("unit_id") or ""
     live_rows = _unit_route_rows(live_map, unit_id)
     staged_rows = _unit_route_rows(staged_map, unit_id)
     added = sorted(set(staged_rows) - set(live_rows))
@@ -1281,7 +1288,7 @@ def _semantic_ack_problems(module_id: str, live_repo, staged_repo,
                            if sm.unit_id == unit_id), None)
         staged_study = next((sm.data for sm in staged_repo.study_maps.values()
                              if sm.unit_id == unit_id), None)
-        diff = _unit_semantic_diff(live_map, staged_map, live_study, staged_study)
+        diff = _unit_semantic_diff(live_map, staged_map, live_study, staged_study, unit_id)
         problems.extend(f"learner-state preservation: {unit_id}: {p}"
                         for p in diff["destructive_learner_changes"])
         for rid in diff["demoted_current_or_prerequisite"]:
@@ -1340,7 +1347,7 @@ def _module_plan_check_report(root: Path, module_id: str, package: dict,
                                if sm.unit_id == uid), None)
             staged_study = next((sm.data for sm in staged_repo.study_maps.values()
                                  if sm.unit_id == uid), None)
-            units[uid] = _unit_semantic_diff(live_map, staged_map, live_study, staged_study)
+            units[uid] = _unit_semantic_diff(live_map, staged_map, live_study, staged_study, uid)
         synthesis: dict[str, dict] = {}
         for uid in sorted(seen_units):
             try:
@@ -2341,7 +2348,8 @@ def _apply_unit_route_changes(source_map: dict, module_id: str, unit_id: str,
             allowed = {"source_id", "route"} if kind == "add" else \
                 {"route_id", "fields"} if kind == "update" else {"route_id", "reason"}
             if set(row) - allowed:
-                problems.append(f"route_changes.{kind} has unknown fields")
+                problems.append(f"route_changes.{kind} has unknown fields "
+                                f"{sorted(set(row) - allowed)}; expected {sorted(allowed)}")
             route = row.get("route") if kind == "add" else row
             rid = route.get("id" if kind == "add" else "route_id") if isinstance(route, dict) else None
             if isinstance(rid, str):

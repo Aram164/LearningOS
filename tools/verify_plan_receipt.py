@@ -240,9 +240,25 @@ def verify(root: Path, args) -> int:
     if live_placements != unit_rows.get("placements_after"):
         failures.append("live placement count does not match the report")
 
+    try:
+        destination = synthesis_destination(root, args.unit)
+    except MaterialSynthesisError as exc:
+        raise ValueError(f"cannot resolve synthesis destination: {exc}") from exc
     synthesis = report.get("synthesis", {}).get(args.unit)
+    if synthesis is None:
+        # The preflight records a disposition only for units whose dossier path
+        # already resolved, so a unit the reviewed import creates has none. Its
+        # expectation then comes from the committed receipt: a dossier may exist
+        # after the commit only if this request wrote it (and must then be fresh).
+        try:
+            dossier_rel = destination.resolve().relative_to(root.resolve()).as_posix()
+        except ValueError:
+            dossier_rel = None
+        wrote = dossier_rel in {row.get("path") for row in receipt.get("writes", []) or []
+                                if isinstance(row, dict)}
+        synthesis = {"before": {"present": False}, "after": {"replaced": wrote, "fresh": wrote}}
     if not isinstance(synthesis, dict):
-        raise ValueError("report has no synthesis disposition for the target unit")
+        raise ValueError("report has an invalid synthesis disposition")
     before, after = synthesis.get("before"), synthesis.get("after")
     if not isinstance(before, dict) or not isinstance(after, dict) \
             or type(before.get("present")) is not bool \
@@ -250,10 +266,6 @@ def verify(root: Path, args) -> int:
             or type(after.get("fresh")) is not bool:
         raise ValueError("report has an invalid synthesis disposition")
     expected_dossier = before["present"] or after["replaced"]
-    try:
-        destination = synthesis_destination(root, args.unit)
-    except MaterialSynthesisError as exc:
-        raise ValueError(f"cannot resolve synthesis destination: {exc}") from exc
     if expected_dossier and not destination.is_file():
         failures.append(f"expected synthesis dossier is missing: {args.unit}")
     elif not expected_dossier and destination.exists():

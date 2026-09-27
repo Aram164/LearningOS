@@ -9,6 +9,8 @@ import tempfile
 from pathlib import Path
 from typing import cast
 
+import yaml
+
 from .errors import (
     MAX_DELIVERY_BYTES,
     MAX_DELIVERY_ENTRIES,
@@ -96,7 +98,13 @@ class FilesystemAIActionRepository:
                 if total_bytes > MAX_DELIVERY_BYTES:
                     raise DeliveryValidationError(
                         f"delivery bundle exceeds {MAX_DELIVERY_BYTES} bytes")
-        delivery = _read_yaml(source / "delivery.yaml")
+        try:
+            delivery = _read_yaml(source / "delivery.yaml")
+        except yaml.YAMLError as exc:
+            # Provider output is untrusted: a malformed file is a named refusal,
+            # never a parser traceback citing "<unicode string>".
+            raise DeliveryValidationError(
+                f"{source / 'delivery.yaml'} is not valid YAML: {exc}") from None
         if not isinstance(delivery, dict):
             raise DeliveryValidationError("delivery.yaml must contain a mapping")
         if not str(delivery.get("id", "")).strip():
