@@ -243,6 +243,18 @@ def test_forbidden_capability_is_rejected_and_import_cleaned(ai_repo: Path, tmp_
     assert not app.repository.delivery_dir("ai-delivery-test-001").exists()
 
 
+def test_malformed_delivery_yaml_is_a_named_refusal(ai_repo: Path, tmp_path: Path):
+    """Invalid provider YAML is refused naming the file, not a parser traceback
+    citing "<unicode string>" (synthetic authoring campaign D3)."""
+    app, _request, source = make_delivery(ai_repo, tmp_path)
+    (source / "delivery.yaml").write_text(
+        "id: ai-delivery-test-001\nproducer: {provider: manual, adapter: manual\n"
+        "preconditions:\n  snapshot_id: x\n", encoding="utf-8")
+    with pytest.raises(DeliveryValidationError, match="delivery.yaml is not valid YAML"):
+        app.import_delivery(source)
+    assert not app.repository.delivery_dir("ai-delivery-test-001").exists()
+
+
 def test_stale_delivery_is_rejected(ai_repo: Path, tmp_path: Path):
     app, _request, source = make_delivery(ai_repo, tmp_path)
     note = ai_repo / "knowledge/garden/handwritten-import-registration.md"

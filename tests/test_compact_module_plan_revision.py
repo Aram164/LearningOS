@@ -120,6 +120,50 @@ def test_compact_batch_reviews_and_commits_both_units_atomically(mini_repo, tmp_
         assert verified.returncode == 0, verified.stderr
 
 
+def test_receipt_verification_without_a_synthesis_disposition(mini_repo, tmp_path):
+    """A preflight records no synthesis disposition for a unit whose dossier path
+    did not resolve before the import (a unit the import creates). Verification
+    then takes its expectation from the receipt instead of rejecting the evidence
+    (synthetic authoring campaign D6: `invalid-evidence` on a committed module
+    import), and still fails closed on a dossier the request did not write."""
+    from learning_os.material_synthesis import synthesis_destination
+
+    _two_units(mini_repo)
+    draft = tmp_path / "compact.yaml"
+    write_yaml(draft, _revision(mini_repo))
+    checked = run_los(mini_repo, "module-plan-import", "module-demo",
+                      "--file", str(draft), "--check")
+    assert checked.returncode == 0, checked.stderr
+    report = json.loads(checked.stdout)
+    review = tmp_path / "review.json"
+    review.write_text(checked.stdout, encoding="utf-8")
+    applied = run_los(mini_repo, "module-plan-import", "module-demo",
+                      "--file", str(draft), "--review-report", str(review),
+                      "--apply-reviewed-sha256", report["reviewed_file_sha256"])
+    assert applied.returncode == 0, applied.stderr
+    generated = subprocess.run([sys.executable, str(ROOT / "tools/generate.py"),
+                                "--root", str(mini_repo)], text=True, capture_output=True)
+    assert generated.returncode == 0, generated.stderr
+    assert not synthesis_destination(mini_repo, "unit-demo-l02").exists()
+    assert synthesis_destination(mini_repo, "unit-demo-l01").is_file()
+    stripped = dict(report, synthesis={})
+    review.write_text(json.dumps(stripped), encoding="utf-8")
+
+    def verify(uid):
+        return subprocess.run(
+            [sys.executable, str(ROOT / "tools/verify_plan_receipt.py"),
+             "--root", str(mini_repo), "--unit", uid, "--report", str(review)],
+            text=True, capture_output=True)
+
+    no_dossier = verify("unit-demo-l02")
+    assert no_dossier.returncode == 0, no_dossier.stdout + no_dossier.stderr
+    assert no_dossier.stdout.splitlines()[0] == "state: committed-and-verified"
+    unwritten = verify("unit-demo-l01")
+    assert unwritten.returncode == 1, unwritten.stdout + unwritten.stderr
+    assert unwritten.stdout.splitlines()[0] == "state: committed-but-verification-failed"
+    assert "unexpected synthesis dossier" in unwritten.stderr
+
+
 def test_compact_batch_refuses_bad_second_unit_without_partial_write(mini_repo, tmp_path):
     _two_units(mini_repo)
     draft_data = _revision(mini_repo)
@@ -172,3 +216,43 @@ def test_compact_resource_patch_cannot_drop_independent_evidence(mini_repo, tmp_
     assert refused.returncode == 1
     assert "loses independent evidence" in refused.stderr
     assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_unit_diff_covers_a_unit_without_a_study_map():
+    """A unit with routes but no study map on either side still gets its diff:
+    the review summary and the acknowledgment checks built on it (synthetic
+    authoring campaign D13: the preflight showed `unit_id: ""` and 0 -> 0 routes
+    for a unit the package added a route to)."""
+    from learning_os.commands.module import _unit_semantic_diff
+
+    kept = {"id": "route-x-kept", "unit_id": "unit-demo-x", "scope": "current",
+            "covers": ["knowledge-x"], "locator": "Section 1"}
+    added = {"id": "route-x-added", "unit_id": "unit-demo-x", "scope": "current",
+             "covers": ["knowledge-x"], "locator": "Section 2"}
+    live = {"sources": [{"source_id": "source-demo", "unit_routes": [kept]}]}
+    staged = {"sources": [{"source_id": "source-demo", "unit_routes": [kept, added]}]}
+
+    diff = _unit_semantic_diff(live, staged, None, None, "unit-demo-x")
+    assert (diff["unit_id"], diff["routes_before"], diff["routes_after"]) == \
+        ("unit-demo-x", 1, 2)
+    assert diff["added"] == ["route-x-added"]
+
+    removed = _unit_semantic_diff(staged, live, None, None, "unit-demo-x")
+    assert removed["demoted_current_or_prerequisite"] == ["route-x-added"]
+
+
+def test_route_change_refusal_names_the_expected_keys(mini_repo, tmp_path):
+    """An add entry with a wrong key is refused naming both the unknown and the
+    expected keys, so the entry shape is recoverable from the refusal alone
+    (synthetic authoring campaign D10)."""
+    _two_units(mini_repo)
+    revision = _revision(mini_repo)
+    revision["unit_revisions"][0]["route_changes"]["add"] = [
+        {"source": "source-demo-book", "route": {"id": "route-demo-extra"}}]
+    draft = tmp_path / "compact.yaml"
+    write_yaml(draft, revision)
+    refused = run_los(mini_repo, "module-plan-import", "module-demo",
+                      "--file", str(draft), "--check")
+    assert refused.returncode != 0
+    assert "route_changes.add has unknown fields ['source']" in refused.stderr
+    assert "expected ['route', 'source_id']" in refused.stderr

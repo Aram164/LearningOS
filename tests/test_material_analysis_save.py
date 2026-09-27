@@ -189,6 +189,23 @@ def test_frozen_hash_mismatch_and_self_promotion_refuse(mini_repo):
     assert not (mini_repo / NOTE_PATH).exists()
 
 
+def test_binding_without_frozen_fields_is_a_typed_refusal(mini_repo):
+    """A schema-valid binding that omits the frozen-input fields is refused by
+    name, not a bare KeyError surfacing as INTERNAL_FAILURE, which operations
+    must read as an ambiguous, possibly-committed write (synthetic authoring
+    campaign D4)."""
+    body = BODY.encode("utf-8")
+    binding = _binding()
+    del binding["frozen_input_sha256"], binding["frozen_input_bytes"]
+    refused = _save(mini_repo, body, binding, "missing-frozen")
+    assert refused.returncode != 0
+    error = json.loads(refused.stdout)["error"]
+    assert error["code"] != "INTERNAL_FAILURE", error
+    assert "frozen_input_sha256" in error["message"]
+    assert "frozen_input_bytes" in error["message"]
+    assert not (mini_repo / NOTE_PATH).exists()
+
+
 def _register_material(mini_repo, uri: str):
     path = mini_repo / "sources" / "sources.yaml"
     registry = yaml.safe_load(path.read_text(encoding="utf-8"))

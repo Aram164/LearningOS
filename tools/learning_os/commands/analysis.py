@@ -150,6 +150,14 @@ def _precheck_analysis(analysis: object, body: bytes) -> dict:
     problem = binding_consistent(binding if isinstance(binding, dict) else {})
     if problem is not None:
         raise WriteRefused(problem)
+    missing = [field for field in ("frozen_input_sha256", "frozen_input_bytes")
+               if field not in binding]
+    if missing:
+        # A typed refusal, not a KeyError surfacing as INTERNAL_FAILURE (which
+        # operations must then treat as an ambiguous, possibly-committed write).
+        raise WriteRefused(
+            f"analysis binding lacks {', '.join(missing)}; note-analysis-prepare "
+            "derives both from the body bytes (one note is a batch of one)")
     frozen = hashlib.sha256(body).hexdigest()
     if binding["frozen_input_sha256"] != frozen:
         raise WriteRefused("analysis body does not match frozen_input_sha256")

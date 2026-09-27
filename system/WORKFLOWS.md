@@ -822,13 +822,22 @@ construction recipe — nothing else is needed.
    follows its key); reusing the refused key leaves the refusal flagged
    for reconciliation in `los operations`.
 4. **Identities.** `request_id` and `idempotency_key` are caller-chosen
-   (1–128 chars, `^[A-Za-z0-9][A-Za-z0-9._:-]*$`). Reuse the same key for
-   retries of the *same* approved intent (an exact retry replays the
-   receipt instead of writing twice); a *different* intent under a used
-   key is refused as `IDEMPOTENCY_CONFLICT`. Mint a fresh `request_id`
-   per attempt: reused ids merge their explanations in `los operations`.
+   (1–128 chars, `^[A-Za-z0-9][A-Za-z0-9._:-]*$`). An exact retry of the
+   *same* approved intent resubmits the saved sealed envelope unchanged —
+   same key **and** same `request_id` — and replays the receipt instead of
+   writing twice. Never re-seal a retry: the ledger binds each key to the
+   request that committed it, so a re-sealed envelope under a used key is
+   refused, as `IDEMPOTENCY_CONFLICT` when its intent differs (a live
+   snapshot read after the commit already differs) or fail-closed naming
+   the recorded request id when only the id differs. Mint a fresh
+   `request_id` together with a fresh key for every new attempt (step 3's
+   corrected envelope is one): reused ids merge their explanations in
+   `los operations`.
 5. **Approval.** `channel` is `operator` and `approval.kind` is
-   `operator-approval` on the operator path (`direct-user-gesture` is
+   `operator-approval` on the operator path; the review preparers
+   (`module-plan-import --check`, `unit-plan-revise --check`,
+   `note-analysis-prepare`) seal `channel: codex` with the same approval
+   kind, which is admitted too (`direct-user-gesture` is
    admitted only for a closed UI-originated allowlist).
    `approval.subject_sha256` must equal `intent_sha256(envelope)`,
    computed as below **after** every other field is final — any later
@@ -883,8 +892,10 @@ python tools/los.py capability capture.create --payload-file envelope.json
 --payload JSON-or-@FILE --key KEY --revision ART=REV` reads the snapshot
 live and emits the sealed envelope above (to stdout, or `--out` a scratch
 path — never inside the repo). It performs steps 2, 4 and 5, minting a
-fresh `request_id` per run; step 3's guards are yours to supply, one
-`--revision` each (a refusal names the set). Submit its output via step 6.
+fresh `request_id` per run — so seal once per attempt and keep the output:
+a retry resubmits that saved envelope, never a re-sealed one (step 4).
+Step 3's guards are yours to supply, one `--revision` each (a refusal names
+the set). Submit its output via step 6.
 
 ## 26. Source routing and feedback
 

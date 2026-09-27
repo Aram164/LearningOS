@@ -582,6 +582,20 @@ def assembly_problems(unit: dict, routes: list[dict], record: dict) -> list[str]
     return problems
 
 
+def unit_routes(source_map: dict, unit_id: str) -> list[dict]:
+    """The rich routes that reach ``unit_id``.
+
+    A legacy string route (a bare unit id in ``unit_routes``) is still valid
+    canonical data, readable for backward compatibility, but it carries no
+    route fields to assemble from, so it is skipped rather than dereferenced.
+    A unit reached only by legacy routes gets the ordinary "no material routes"
+    refusal.
+    """
+    return [route for entry in source_map.get("sources") or []
+            for route in (entry.get("unit_routes") or [])
+            if isinstance(route, dict) and route.get("unit_id") == unit_id]
+
+
 def _atomic_draft(path: Path, content: str) -> None:
     tmp = path.with_name(f".{path.name}.tmp")
     try:
@@ -624,9 +638,7 @@ def main() -> int:
         if module is None or source_map is None:
             problems.append(f"{unit_id}: no projected module or source map")
             continue
-        routes = [route for entry in source_map.get("sources") or []
-                  for route in (entry.get("unit_routes") or [])
-                  if route.get("unit_id") == unit_id]
+        routes = unit_routes(source_map, unit_id)
         if not routes:
             problems.append(f"{unit_id}: no material routes reach it")
             continue

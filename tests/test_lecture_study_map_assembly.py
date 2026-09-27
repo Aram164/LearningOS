@@ -110,6 +110,22 @@ def test_assembly_refuses_invisible_or_unrouted_stages():
     assert any("has no concept coverage" in problem for problem in problems)
 
 
+def test_legacy_string_routes_are_skipped_not_dereferenced():
+    """A source map mixing rich routes with legacy string routes (still valid,
+    readable for backward compatibility) must not crash route selection
+    (synthetic authoring campaign D1: AttributeError on the lineage unit)."""
+    rich = _routes()[0]
+    source_map = {"sources": [
+        {"source_id": "source-demo-book", "unit_routes": [rich]},
+        {"source_id": "source-demo-guide",
+         "unit_routes": ["unit-demo-l01", "unit-demo-l02"]},
+    ]}
+
+    assert assembler.unit_routes(source_map, "unit-demo-l01") == [rich]
+    # Reached only by a legacy route: the caller's ordinary refusal applies.
+    assert assembler.unit_routes(source_map, "unit-demo-l02") == []
+
+
 @pytest.mark.full_repo
 def test_curated_edges_still_name_live_nodes_and_concepts(repo_root):
     """A renamed node or concept must fail before the next bulk draft is written."""
