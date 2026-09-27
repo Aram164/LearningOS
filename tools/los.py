@@ -762,6 +762,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument("--check", action="store_true",
                    help="run contract, routing, and shadow-repository validation without writing")
+    p.add_argument("--staged-basis", metavar="UNIT_ID",
+                   help="with --check, print the requested unit's post-package dossier basis without writing")
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.add_argument(
@@ -792,6 +794,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument("--check", action="store_true",
                    help="run contract, routing, and shadow-repository validation without writing")
+    p.add_argument("--staged-basis", metavar="UNIT_ID",
+                   help="with --check, print the post-revision dossier basis without writing")
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.add_argument(

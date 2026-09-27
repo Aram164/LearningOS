@@ -10,7 +10,7 @@ from ..errors import TransactionFailure
 from ..githistory import GitHistoryError
 from ..loading.yamlio import UniqueKeySafeLoader
 from ..revisions import load_revisions
-from .common import REQUIRED_WORKSPACE_SECTIONS
+from .common import REQUIRED_WORKSPACE_SECTIONS, id_list_items
 
 
 class ChecksProjects:
@@ -32,19 +32,19 @@ class ChecksProjects:
         for project_id, project in r.projects.items():
             data = project.data
             where = self._rel(project.path)
-            for module_id in data.get("linked_module_ids", []) or []:
+            for module_id in id_list_items(data.get("linked_module_ids")):
                 if module_id not in r.modules or r.modules[module_id].get("compatibility_only"):
                     self.err("REF-MODULE",
                              f"project '{project_id}' references unknown active module '{module_id}'", where)
-            for unit_id in data.get("unit_ids", []) or []:
+            for unit_id in id_list_items(data.get("unit_ids")):
                 if unit_id not in r.units:
                     self.err("REF-UNIT",
                              f"project '{project_id}' references unknown unit '{unit_id}'", where)
-            for workspace_id in data.get("workspace_ids", []) or []:
+            for workspace_id in id_list_items(data.get("workspace_ids")):
                 if workspace_id not in r.workspaces:
                     self.err("REF-WORKSPACE",
                              f"project '{project_id}' references unknown workspace '{workspace_id}'", where)
-            for group_id in data.get("thematic_group_ids", []) or []:
+            for group_id in id_list_items(data.get("thematic_group_ids")):
                 if group_id not in r.thematic_groups:
                     self.err("REF-THEMATIC-GROUP",
                              f"project '{project_id}' references unknown thematic group '{group_id}'", where)

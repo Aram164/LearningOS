@@ -716,6 +716,12 @@ without refreshing its snapshot, revisions or retry identity.
    `study-map.yaml`. Both take the id as a **positional**, not `--module-id`.
    `--check` runs the contract, ordering, routing and shadow-repository
    validation and reports `"canonical_files_written": 0`.
+   When a replacement material dossier needs the post-change basis, run the
+   same package with `--check --staged-basis UNIT_ID` (also available on
+   `unit-plan-revise`). This prints the staged basis and package SHA without
+   writing canonical files. Its `validated: false` means it is preparation,
+   not an approval: insert the basis into the reviewed dossier, then run an
+   ordinary `--check` on the final package.
 4. **Apply through the gateway**, never by writing the canonical file directly
    — either through the saved-preflight shortcut above or an explicit envelope:
 
@@ -787,6 +793,12 @@ gateway envelope; review both, then submit the envelope unchanged.
 
    Replace the example source, path, range and digest with the source's
    registered material and the bytes actually observed before preparing.
+   `inspected_range` is inclusive physical PDF pages (cover = page 1) for
+   PDFs, or inclusive one-based physical file lines for Markdown and plain
+   text. A heading such as "Section 1" is a locator, not line 1. For local
+   text, `material-span UNIT_ID ROUTE_ID --extract` reports the line range
+   actually displayed in its bounded excerpt. Cite only the lines inspected;
+   a truncated excerpt does not attest to later lines.
 2. **Prepare.**
    `note-analysis-prepare --drafts drafts.json --out <dir>` with the
    staging dir outside the repository. Prep validates every draft,

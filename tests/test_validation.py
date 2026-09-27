@@ -63,7 +63,44 @@ def test_schema_invalid_record_is_a_named_error_not_a_crash(mini_repo, rel, fiel
 
     assert any(i.code == "SCHEMA" and i.path == rel for i in errors), [str(i) for i in errors]
     stopped = [i for i in errors if i.code == "SCHEMA-DEPENDENT"]
-    assert stopped and all(rel in i.message for i in stopped), [str(i) for i in errors]
+    assert all(rel in i.message for i in stopped), [str(i) for i in errors]
+
+
+@pytest.mark.parametrize(("rel", "slot", "reference_code"), [
+    ("curriculum/modules/module-demo/module.yaml", ("unit_order",), "REF-UNIT"),
+    ("curriculum/modules/module-demo/source-map.yaml", ("sources", 0, "unit_routes"), "REF-UNIT"),
+    ("projects/registry/project-demo.yaml", ("linked_module_ids",), "REF-MODULE"),
+    ("work/active/workspace-demo/CONTEXT.md", ("unit_ids",), "REF-UNIT"),
+    ("knowledge/notes/mathematics/note-demo.md", ("sources",), "REF-SOURCE"),
+])
+def test_scalar_id_list_is_schema_error_without_character_references(
+    mini_repo, rel, slot, reference_code,
+):
+    from repo_builders import add_curriculum, add_manifest_fixtures
+
+    add_curriculum(mini_repo)
+    if rel.startswith("projects/"):
+        add_manifest_fixtures(mini_repo)
+    path = mini_repo / rel
+    text = path.read_text(encoding="utf-8")
+    if path.suffix == ".md":
+        _, front, body = text.split("---\n", 2)
+        data = yaml.safe_load(front)
+    else:
+        data = yaml.safe_load(text)
+    target = data
+    for part in slot[:-1]:
+        target = target[part]
+    target[slot[-1]] = "not-a-list"
+    if path.suffix == ".md":
+        path.write_text("---\n" + yaml.safe_dump(data, sort_keys=False) + "---\n" + body,
+                        encoding="utf-8")
+    else:
+        path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+
+    errors = [i for i in run(mini_repo) if i.severity == "E"]
+    assert any(i.code == "SCHEMA" and i.path == rel for i in errors), errors
+    assert not any(i.code == reference_code and i.path == rel for i in errors), errors
 
 
 def test_schema_error_in_a_registry_partition_names_that_partition(mini_repo):

@@ -27,6 +27,9 @@
     },
     "promotion": {
       "type": "object"
+    },
+    "staged_basis": {
+      "type": "string"
     }
   },
   "oneOf": [

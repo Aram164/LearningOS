@@ -71,6 +71,12 @@ def cmd_material_span(args) -> int:
                                       "excerpt_truncated": len(part.text) > MAX_EXCERPT,
                                       "pages": list(part.pages),
                                       "page_total": part.page_total})
+                        if part.kind == "text" and excerpt:
+                            # Text bindings cite physical, one-based file lines,
+                            # including a partly displayed final line.
+                            last_line = excerpt.count("\n") + (not excerpt.endswith("\n"))
+                            entry["inspected_range_unit"] = "line"
+                            entry["inspected_range"] = {"start": 1, "end": last_line}
                     except (SliceResolutionError, OSError, UnicodeError) as exc:
                         entry.update({"extraction": "unreadable", "reason": str(exc)})
                 spans.append(entry)

@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 40
-schema_fingerprint: sha256:c91787b86a41309214cefb800bcef3847fa2b1eb226ccf9492d32e350fcfb808
+contract_version: 41
+schema_fingerprint: sha256:235ba73615470db2cac7114b52bf10cf86a3269c6c406553326ccd6617729fcc
 record_schemas: 35
 history:
 - version: 1
@@ -313,5 +313,11 @@ history:
     the stage''s current structured progress, written only through stage.progress.update
     and surfaced by resume. Additive and backward-compatible — absent means nothing
     recorded, which is what every v39 record carries.'
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 41
+  adopted: '2026-09-28'
+  note: Clarify inspected_range physical PDF page and text line units; descriptions
+    only, no stored shape change
   migration: null
   fixture: tests/fixtures/formats/v40/

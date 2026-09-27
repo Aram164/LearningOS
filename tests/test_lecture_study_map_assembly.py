@@ -131,3 +131,33 @@ def test_curated_edges_still_name_live_nodes_and_concepts(repo_root):
     """A renamed node or concept must fail before the next bulk draft is written."""
     manifest = assembler._manifest(repo_root)
     assert assembler.curation_problems(manifest) == []
+    owners = {key: [unit["id"] for unit in manifest["units"]
+                    if key in assembler._curated_keys_for_unit(unit["id"])]
+              for key in assembler.NODE_CONCEPTS}
+    assert all(len(unit_ids) == 1 for unit_ids in owners.values()), owners
+
+
+def test_curation_check_is_scoped_to_requested_units():
+    """A foreign installation need not contain another unit's curated nodes."""
+    unit_id = "unit-aml-l01"
+    keys = {key for key in assembler.NODE_CONCEPTS
+            if key.startswith("knowledge-aml-l01-")}
+    assert keys
+    concepts = {cid for key in keys for cid in assembler.NODE_CONCEPTS[key]}
+    manifest = {
+        "units": [{"id": unit_id, "knowledge_map": {"nodes": [
+            {"id": key} for key in sorted(keys)
+        ]}}],
+        "records": [{"id": cid} for cid in sorted(concepts)],
+    }
+
+    assert assembler.curation_problems(manifest, [unit_id]) == []
+    manifest["units"][0]["knowledge_map"]["nodes"].pop()
+    assert any("missing knowledge node" in issue
+               for issue in assembler.curation_problems(manifest, [unit_id]))
+    manifest["units"][0]["knowledge_map"]["nodes"] = [
+        {"id": key} for key in sorted(keys)
+    ]
+    manifest["records"].pop()
+    assert any("missing or deprecated concept" in issue
+               for issue in assembler.curation_problems(manifest, [unit_id]))

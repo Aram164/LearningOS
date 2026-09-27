@@ -23,6 +23,9 @@
     "record": {
       "type": "object"
     },
+    "staged_basis": {
+      "type": "string"
+    },
     "unit_id": {
       "type": "string"
     }
