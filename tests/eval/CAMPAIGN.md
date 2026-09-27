@@ -122,7 +122,9 @@ judge-only home directory, outside `/private/tmp` (L1, L2). Repository changes:
 - `build_world.py`: refuse `--out` inside any existing Git working tree, so a
   harness copy cannot write into the real tree (S3); record
   `product_tree_sha256` for every build and, for `WORKTREE`, the source HEAD
-  and a status digest (R6).
+  and a status digest (R6). Read only selected Git blobs for a committed
+  product revision; `git archive` fetched excluded private blobs in a partial
+  clone, so the operator harness builder now verifies their absence.
 - `prepare_native.py`: the same Git-tree fence for the world (S3).
 - `interrupt_probe.py`: restore a full pristine copy before each trial instead
   of `git reset`/`git clean`, so untracked prerequisites survive; exit 2 when

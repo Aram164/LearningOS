@@ -33,7 +33,6 @@ from __future__ import annotations
 
 import argparse
 import hashlib
-import io
 import json
 import os
 import random
@@ -41,7 +40,6 @@ import re
 import shutil
 import subprocess
 import sys
-import tarfile
 from pathlib import Path
 
 import yaml
@@ -159,24 +157,33 @@ def product_files(rev: str) -> dict[str, tuple[bytes, int, str | None]]:
                 mode = 0o755 if os.access(path, os.X_OK) else 0o644
                 files[rel] = (path.read_bytes(), mode, None)
         return files
-    # Exclude evaluation files at the Git pathspec level. Filtering tar members
-    # afterwards still asks a partial clone for the sealed oracle blob.
-    raw = subprocess.run(["git", "archive", "--format=tar", rev, "--", *PRODUCT_PATHS,
-                          ":(exclude)tests/eval"],
-                         cwd=REPO, capture_output=True)
-    if raw.returncode != 0:
-        raise BuildError(f"git archive {rev} failed: {raw.stderr.decode().strip()}")
-    with tarfile.open(fileobj=io.BytesIO(raw.stdout)) as tar:
-        for member in tar.getmembers():
-            rel = member.name
-            if rel.startswith(PRODUCT_EXCLUDE_PREFIXES):
-                continue
-            if member.issym():
-                files[rel] = (b"", 0o120000, member.linkname)
-            elif member.isfile():
-                data = tar.extractfile(member).read()
-                mode = 0o755 if member.mode & 0o111 else 0o644
-                files[rel] = (data, mode, None)
+    # `git archive` can lazy-fetch *every* blob in a partial clone before its
+    # pathspec is applied. Select tree entries first, then read only product
+    # blob ids. This keeps the sealed oracle and learner data out of the blind
+    # operator checkout's object store.
+    listing = subprocess.run(["git", "ls-tree", "-r", "-z", rev, "--", *PRODUCT_PATHS],
+                             cwd=REPO, capture_output=True)
+    if listing.returncode != 0:
+        raise BuildError(f"git ls-tree {rev} failed: {listing.stderr.decode().strip()}")
+    for entry in listing.stdout.split(b"\0"):
+        if not entry:
+            continue
+        meta, path = entry.split(b"\t", 1)
+        mode_raw, kind, oid = meta.split(b" ")
+        rel = path.decode("utf-8", "surrogateescape")
+        if rel.startswith(PRODUCT_EXCLUDE_PREFIXES):
+            continue
+        if kind != b"blob":
+            raise BuildError(f"unexpected Git object in product tree: {rel}")
+        blob = subprocess.run(["git", "cat-file", "blob", oid.decode("ascii")],
+                              cwd=REPO, capture_output=True)
+        if blob.returncode != 0:
+            raise BuildError(f"missing product blob {oid.decode('ascii')} for {rel}")
+        mode = int(mode_raw, 8)
+        if mode == 0o120000:
+            files[rel] = (b"", mode, blob.stdout.decode("utf-8", "surrogateescape"))
+        else:
+            files[rel] = (blob.stdout, 0o755 if mode & 0o111 else 0o644, None)
     return files
 
 
