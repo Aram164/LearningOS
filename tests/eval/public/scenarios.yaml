@@ -1,0 +1,336 @@
+# PUBLIC. These are Noor's requests and investigator procedures, never answers.
+# Expected results live only in the sealed oracle. Build a fresh world whenever
+# world is fresh; continue means keep this run's previous scenario state.
+schema_version: 2
+scenarios:
+  - id: S00
+    title: First contact and health
+    area: first-use
+    plans: [B]
+    world: fresh
+    learner_says: >-
+      You are taking over my LearningOS. Tell me what I am working on and what
+      needs attention, then check that its tools and views work. Do not change
+      my notes.
+    record: [first read and command, cited state, setup steps, validation and warning result, changed paths, time]
+
+  - id: S01
+    title: Inventory before a plan
+    area: authoring
+    plans: [B, A]
+    world: fresh
+    inputs: [corpus/materials/source-noor-lazy-lab/lab-notes.md]
+    learner_says: >-
+      Before changing the Synthetic query-plan lab, list everything its two
+      units can use. Tell me what is local, linked, unavailable, and still
+      unevaluated. Check the owned lab notes as well as the registered sources.
+    record: [entry read, complete material inventory, source disposition, unresolved evidence, cited paths]
+
+  - id: S02
+    title: Add two lab units through a module import
+    area: authoring
+    plans: [A]
+    world: fresh
+    learner_says: >-
+      Extend the Synthetic query-plan lab with a separate unit for auditing
+      join-key cardinality and a separate unit for materialization and source
+      changes. Use the owned lab notes. Show me the coverage audit and exact
+      proposed diff before applying it; preserve the two units already there.
+    scripted_replies:
+      - {if: "you show the full package, inventory and preflight diff", reply: "Approved exactly as shown, including the two new units."}
+    record: [audit and draft paths, preflight report, approved digest, affected owners, receipt, before and after unit order]
+
+  - id: S03
+    title: Compact two-unit revision
+    area: authoring
+    plans: [A]
+    world: continue
+    learner_says: >-
+      In the same lab, sharpen the material angle for the original plan unit
+      and add the row-count check to the lineage unit's material menu. Review
+      both as one revision. Keep unrelated stage text and learner state.
+    scripted_replies:
+      - {if: "you show both unit diffs and the preflight result", reply: "Apply those two changes together."}
+    record: [compact draft, reviewed-file digest, assembled-package digest, preflight, one receipt, preserved fields]
+
+  - id: S04
+    title: Evidence-bearing single-unit revision
+    area: authoring
+    plans: [A]
+    world: continue
+    learner_says: >-
+      Record a reviewed synthesis of the first lab unit, then correct its
+      material locator after comparing the lab notes. Carry the synthesis
+      forward only if it still describes the revised evidence.
+    scripted_replies:
+      - {if: "you show the source evidence, synthesis and exact revision diff", reply: "Yes, apply that reviewed revision."}
+    record: [initial synthesis receipt, replacement decision, revision preflight, final receipt, freshness read]
+
+  - id: S05
+    title: Bounded route patch and local override
+    area: authoring
+    plans: [A]
+    world: continue
+    learner_says: >-
+      Make the plan-unit lab route's locator and explanation more precise.
+      Keep the second stage's intentionally different angle, and show me the
+      field diff before changing anything.
+    scripted_replies:
+      - {if: "you show the exact route-patch preflight", reply: "Apply exactly that patch."}
+    record: [focused read, patch preflight, affected paths, stage effective text before and after, receipt]
+
+  - id: S06
+    title: Coverage and membership require full review
+    area: authoring
+    plans: [A]
+    world: continue
+    learner_says: >-
+      Move the optional reference from the first lab unit to the new
+      materialization unit and narrow what it claims to cover. Preserve the
+      existing learning order. Show any warnings or acknowledgments this needs.
+    scripted_replies:
+      - {if: "you show the complete source-menu and stage diff", reply: "I approve the displayed change and the specific acknowledged trade-off."}
+    record: [bounded-path refusal if attempted, full-package audit, semantic acknowledgments, preflight, receipt]
+
+  - id: S07
+    title: Prepare a map and respect UI admission
+    area: authoring
+    plans: [A]
+    world: continue
+    learner_says: >-
+      Give the original lineage unit a small ordered study map using its
+      selected material. Review it first. If this CLI session cannot admit the
+      map import, tell me exactly what must happen in the UI. Leave the
+      completed plan-unit stage and my current resume position alone.
+    scripted_replies:
+      - {if: "you show the map and no-write review", reply: "Import that map using the admitted gesture."}
+    record: [draft digest, preflight, admission channel and refusal if CLI-only, receipt only if actual UI admitted, unaffected stage and resume state]
+
+  - id: S08
+    title: Lost plan response and restart
+    area: recovery
+    plans: [A]
+    world: continue
+    learner_says: >-
+      The response to the last reviewed plan change disappeared. Find out
+      whether it committed. Do not invent a new request to make the screen
+      look successful.
+    record: [saved review report, verification command, operation and receipt identity, replay result, canonical diff]
+
+  - id: S09
+    title: Save one source analysis
+    area: analysis
+    plans: [E]
+    world: fresh
+    inputs: [corpus/materials/source-noor-lazy-lab/lab-notes.md]
+    learner_says: >-
+      Save your analysis of Section 1 of the owned lab notes. Include the
+      exact source you observed, what the example supports, and its limits.
+      Preserve your drafted wording exactly and leave its review state honest.
+    scripted_replies:
+      - {if: "you show the proposed analysis and source binding", reply: "Save exactly that analysis."}
+    record: [source digest, draft and body digest, envelope, receipt, saved body bytes, context read]
+
+  - id: S10
+    title: Batch analyses with replay
+    area: analysis
+    plans: [E]
+    world: continue
+    learner_says: >-
+      Save separate analyses for Sections 2 and 3 together. Include the
+      earlier Section 1 analysis only if the batch path can identify it as an
+      exact replay. Tell me the outcome of each item.
+    scripted_replies:
+      - {if: "you show all staged bodies and the one envelope", reply: "Save that exact batch."}
+    record: [per-item prepare report, staged hashes, one receipt, retry breakdown, note byte comparison]
+
+  - id: S11
+    title: Reject a partly bad analysis batch
+    area: analysis
+    plans: [E]
+    world: fresh
+    procedure: >-
+      On one world, prepare two valid analyses and then change one staged body
+      after review before applying. On a separate fresh world, make one item
+      name an unknown source before prepare. Do not repair either input during
+      the probe.
+    record: [both prepare results, changed body hash, refusals, before and after canonical digests, receipts]
+
+  - id: S12
+    title: Source bytes change after analysis
+    area: provenance
+    plans: [E]
+    world: fresh
+    learner_says: >-
+      In this disposable world, alter one sentence in the owned lab material
+      after saving an analysis of it. Ask the system for the explanation
+      again. Tell me whether the saved note still proves anything about the
+      new bytes.
+    record: [old and new digest, saved binding, freshness result, any write or remote fetch]
+
+  - id: S13
+    title: Bounded cross-module question
+    area: retrieval
+    plans: [E]
+    world: fresh
+    learner_says: >-
+      How does the extra customer group in my query lab relate to the wrong
+      number I traced in Tessera and the database query-optimization lecture?
+      Give me the smallest useful set of evidence and say what is uncertain.
+    record: [queries and context bytes, product-surfaced targets, file-read targets, citations, answer]
+
+  - id: S14
+    title: Attachment and ordinary progress smoke
+    area: learning
+    plans: [E]
+    world: fresh
+    learner_says: >-
+      Attach my new plan sketch to the active query-lab stage and record that
+      I can explain the predicate move, but do not mark the stage complete.
+    scripted_replies:
+      - {if: "you show the attachment and progress change", reply: "Yes, record exactly that."}
+    record: [attachment hash and path, two capability outcomes, receipts, stage state and older evidence]
+
+  - id: S15
+    title: Snapshot, revision and draft guards
+    area: adversarial
+    plans: [X]
+    world: fresh
+    procedure: >-
+      In separate world copies, preflight a valid route patch or unit revision.
+      Before apply, move the canonical snapshot, move one guarded revision, or
+      alter the reviewed draft bytes. Submit the saved request in each case.
+    record: [each guard value, exact refusal, changed paths, receipt count, fresh-review success]
+
+  - id: S16
+    title: Invalid package and warning delta
+    area: adversarial
+    plans: [X]
+    world: fresh
+    procedure: >-
+      Put one valid and one invalid unit revision in a compact module package;
+      separately create a new warning signature in a draft. Run no-write
+      preflight and compare the world before and after.
+    record: [preflight diagnostics, named source file, canonical digest, report and receipt absence]
+
+  - id: S17
+    title: Idempotency and ledger-loss residual
+    area: adversarial
+    plans: [X]
+    world: fresh
+    procedure: >-
+      On disposable copies, retry one committed write exactly, reuse its key
+      with different intent, then remove the copied idempotency ledger and
+      attempt a replay. Preserve every receipt and validator result.
+    record: [response class, receipts and ledger entries, validator result, remaining risk]
+
+  - id: S18
+    title: Interrupted large writes
+    area: recovery
+    plans: [X]
+    world: fresh
+    procedure: >-
+      Prepare one valid module import and one valid two-note analysis batch.
+      Kill each at several measured points around persistence and projection;
+      after every kill, run an ordinary read and recovery lookup.
+    record: [per-delay outcome, canonical digest, receipts, journal, projection and read result]
+
+  - id: S19
+    title: Competing writers
+    area: concurrency
+    plans: [X]
+    world: fresh
+    procedure: >-
+      Start a plan revision, a route patch on the same unit, and an unrelated
+      analysis save from one snapshot. Repeat on fresh worlds. Classify each
+      result and check for lost or duplicated writes.
+    record: [per-writer guards and result, committed order, receipts, final projection, validation]
+
+  - id: S20
+    title: Malformed authority and delivery files
+    area: robustness
+    plans: [X]
+    world: fresh
+    procedure: >-
+      On separate fresh copies, put a mapping into a unit's workspace_ids list
+      and put invalid YAML in a provider delivery.yaml. Use ordinary validate
+      and import commands, recording whether each failure names its file.
+    record: [exit and stderr, file named, traceback presence, canonical and quarantine diff]
+
+  - id: S21
+    title: Stale and rebuilt projections
+    area: robustness
+    plans: [X]
+    world: fresh
+    procedure: >-
+      Build views twice, delete only derived state in a disposable copy, then
+      rebuild. Separately change a canonical note without rebuilding and try
+      the normal read surfaces. Record stale, refused and refreshed states.
+    record: [raw output hashes, snapshot ids, warnings, read outcomes, canonical digest]
+
+  - id: S22
+    title: Backup and restore
+    area: recovery
+    plans: [X]
+    world: fresh
+    procedure: >-
+      Use prepare_native.py on this fresh synthetic world to put a clean UI
+      fixture beside Core. Make a backup manifest of Core, UI and materials;
+      restore into another disposable installation. Then corrupt one copied
+      asset and omit one material in separate cases.
+    record: [inventory and checksum results, installer dry run, restored reads, corrupt-case refusals]
+
+  - id: S23
+    title: Native Obsidian map import
+    area: ui
+    plans: [U]
+    world: fresh
+    learner_says: >-
+      In my synthetic vault, import the reviewed map for the lineage unit.
+      Show me what will change first and then use the visible Import control.
+    scripted_replies:
+      - {if: "you show the actual UI diff", reply: "Import exactly that map."}
+    record: [screenshot before and after, displayed diff, Core receipt, visible state, JavaScript errors]
+
+  - id: S24
+    title: Native stale review refusal
+    area: ui
+    plans: [U]
+    world: continue
+    procedure: >-
+      Review a second map in the UI, change its reviewed file or Core snapshot
+      before clicking Import, then use the displayed recovery path. Keep the
+      original refusal and the final state separately observable.
+    record: [reviewed digest, refusal and message, receipts, reload and fresh-review behavior, screenshot]
+
+  - id: S25
+    title: Native navigation and identity
+    area: ui
+    plans: [U]
+    world: continue
+    learner_says: >-
+      Show me the lab unit, its material options, related notes, ability state
+      and Diagnostics in this running app. Do not infer mastery from the map.
+    record: [visible Core and UI SHAs, source fingerprint, each view, uncertainty, JavaScript errors]
+
+  - id: S26
+    title: Cold and warm scale
+    area: performance
+    plans: [P]
+    world: fresh
+    procedure: >-
+      Build scale 0, 2000 and 10000 worlds from the same product and seed.
+      Measure content search cold and warm, metadata search and generation at
+      least three times each on one host with uptime and load recorded.
+    record: [world hashes, raw timings, median, spread, result hashes, host load]
+
+  - id: S27
+    title: Exact paired release evidence
+    area: release
+    plans: [R]
+    world: fresh
+    procedure: >-
+      On the frozen candidate, run the complete Core/UI gate, inspect both CI
+      workflows for the exact pair, install in the disposable vault and use
+      Diagnostics-backed live verification after reload.
+    record: [exact Core and UI SHAs, local gate, CI URLs and conclusions, install status, live report]

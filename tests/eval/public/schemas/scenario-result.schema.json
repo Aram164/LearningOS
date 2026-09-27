@@ -1,0 +1,79 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learningos-eval/scenario-result.schema.json",
+  "title": "One scenario's result (runs/<run-id>/results/<Sxx>.json)",
+  "type": "object",
+  "required": ["scenario", "run_id", "classification", "before", "consumer", "internal", "after"],
+  "additionalProperties": false,
+  "$defs": {
+    "state": {
+      "type": "object",
+      "properties": {
+        "revision": {"type": "string"},
+        "git_status": {"type": "array", "items": {"type": "string"}},
+        "canonical_digest": {"type": "string"},
+        "derived_digest": {"type": "string"},
+        "snapshot_file": {"type": "string", "description": "observations/<file>.json written by tools/observe.py"}
+      }
+    }
+  },
+  "properties": {
+    "scenario": {"type": "string", "pattern": "^S[0-9]{2}$"},
+    "run_id": {"type": "string"},
+    "classification": {"enum": ["PASS", "PASS_WITH_FRICTION", "FUNCTIONAL_FAILURE", "ROBUSTNESS_FAILURE", "USABILITY_FAILURE", "PERFORMANCE_FAILURE", "AMBIGUOUS", "NOT_RUN"]},
+    "classification_reason": {"type": "string"},
+    "before": {"$ref": "#/$defs/state"},
+    "after": {"$ref": "#/$defs/state"},
+    "consumer": {
+      "type": "object",
+      "required": ["goal", "first_action", "commands", "outcome"],
+      "properties": {
+        "goal": {"type": "string"},
+        "first_action": {"type": "string"},
+        "commands": {"type": "array", "items": {"type": "string"}},
+        "tool_calls": {"type": "integer", "minimum": 0},
+        "docs_consulted": {"type": "array", "items": {"type": "string"}},
+        "impl_files_read": {"type": "array", "items": {"type": "string"}, "description": "implementation files (tools/**, tests/**) read, each a friction signal"},
+        "retries": {"type": "integer", "minimum": 0},
+        "confusions": {"type": "array", "items": {"type": "string"}},
+        "corrective_steps": {"type": "array", "items": {"type": "string"}},
+        "questions_asked_to_learner": {"type": "array", "items": {"type": "string"}},
+        "implementation_knowledge_needed": {"type": "boolean"},
+        "wall_minutes": {"type": ["number", "null"]},
+        "outcome": {"type": "string", "description": "what the learner would see"}
+      }
+    },
+    "internal": {
+      "type": "object",
+      "properties": {
+        "request_ids": {"type": "array", "items": {"type": "string"}},
+        "receipts": {"type": "array", "items": {"type": "string"}},
+        "transaction_behavior": {"type": "string"},
+        "approval_behavior": {"type": "string"},
+        "projection_activity": {"type": "string"},
+        "persistence_activity": {"type": "string"},
+        "derived_changes": {"type": "string"},
+        "manifest_changes": {"type": "string"},
+        "unexpected_writes": {"type": "array", "items": {"type": "string"}},
+        "warnings_errors": {"type": "array", "items": {"type": "string"}},
+        "git_diff_stat": {"type": "string"},
+        "observe_diff_file": {"type": "string"}
+      }
+    },
+    "friction": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["tag", "description"],
+        "properties": {
+          "tag": {"enum": ["unnecessary-exploration", "repeated-context-reconstruction", "unclear-terminology", "hidden-prerequisite", "needs-implementation-knowledge", "unstable-output-format", "manual-generated-file-inspection", "redundant-calls", "core-ui-coupling", "unclear-safety", "unhelpful-error", "doc-contradiction", "setup-failure", "missing-capability", "other"]},
+          "description": {"type": "string"},
+          "cost": {"type": "string", "description": "e.g. '6 extra tool calls', '10 minutes'"}
+        }
+      }
+    },
+    "failures": {"type": "array", "items": {"type": "string"}, "description": "ids of records in failures.jsonl"},
+    "scenario_record": {"type": "object", "description": "the scenario's own `record:` items"},
+    "uncertainties": {"type": "array", "items": {"type": "string"}}
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "sealed": "2026-09-27",
+  "plaintext_sha256": "91564258360cb4c87f59c9daed9f76a60942f9e25ec064d982a2e3db04d6c5b0",
+  "plaintext_bytes": 4070,
+  "files": [
+    "JUDGE.md",
+    "expectations.yaml"
+  ],
+  "cipher": "openssl enc -aes-256-cbc -pbkdf2 -iter 600000 -md sha256 -salt",
+  "key_env": "LOS_EVAL_ORACLE_KEY"
+}
