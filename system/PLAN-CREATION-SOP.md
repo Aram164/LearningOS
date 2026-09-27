@@ -414,6 +414,15 @@ Choose once before Gates 1–6; do not re-derive the procedure after choosing:
   the snapshot and revision guards. Reach for the unit `--brief` only
   when the route id is unknown. No coverage audit, no plan package.
   Read only OPERATOR Start here and WORKFLOWS §25a.
+- A locator guarded by an approved synthesis dossier is refused by
+  `route.patch`, because its bounded patch cannot replace that dossier. Use
+  the full `module-plan-import` package with the final source map, unit data
+  and replacement synthesis, then review its no-write preflight. The compact
+  `unit-plan-revise` path carries existing source selections forward, so it
+  cannot update a selected route's locator guard in this case. For a locator
+  without a dossier, `route.patch` synchronizes an unambiguous linked source
+  selection; an ambiguous legacy selection is refused and must first be
+  linked to its exact route. Do not hand-edit the canonical files.
 - One existing lecture (routes plus map for that unit): `plan-edit-context
   UNIT_ID --brief`, source reading, coverage audit, one compact
   `unit-plan-revise` patch, one preflight, one reviewed apply, and

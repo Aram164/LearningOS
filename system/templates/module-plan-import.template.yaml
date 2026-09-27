@@ -165,7 +165,7 @@ workspace_updates:
 #       type: unit-material-synthesis
 #       unit_id: unit-example-l01
 #       status: approved
-#       basis: {}  # replaced by the freshly derived post-change basis
+#       basis: {}  # supply the exact post-change basis; the gateway validates it, but does not derive it
 #       route_assessments: []  # exactly one entry per final route
 #       comparisons: []
 #       concept_groups: []  # every local knowledge node mapped exactly once

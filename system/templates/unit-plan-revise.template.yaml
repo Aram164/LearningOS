@@ -70,7 +70,7 @@ route_changes:
 #   type: unit-material-synthesis
 #   unit_id: unit-example-l04
 #   status: approved
-#   basis: {}
+#   basis: {}  # supply the exact post-change basis; the gateway validates it, but does not derive it
 #   route_assessments: []
 #   comparisons: []
 #   concept_groups: []
