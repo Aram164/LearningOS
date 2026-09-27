@@ -26,6 +26,76 @@ def test_mini_repo_is_clean(mini_repo):
     assert codes(issues, "E") == [], [str(i) for i in issues]
 
 
+_SHAPE_CASES = [
+    # (file, field, malformed value): each crashed validate with a raw
+    # TypeError/AttributeError naming no file before Validator.run contained
+    # crashes on schema-invalid input.
+    ("curriculum/modules/module-demo/module.yaml", "unit_order", [{"id": "unit-demo-l01"}]),
+    ("curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml", "stages", "not-a-list"),
+    ("work/active/workspace-demo/CONTEXT.md", "unit_ids", [{"id": "unit-demo-l01"}]),
+    ("knowledge/notes/mathematics/note-demo.md", "concepts", [{"id": "concept-variance"}]),
+]
+
+
+@pytest.mark.parametrize(("rel", "field", "malformed"), _SHAPE_CASES)
+def test_schema_invalid_record_is_a_named_error_not_a_crash(mini_repo, rel, field, malformed):
+    """A record that fails its schema is reported by file, and a pass that
+    reads records in their schema shape and crashes on it becomes one error
+    naming that file (synthetic authoring campaign D2, whose unit-only repair
+    left the same crash in every sibling record)."""
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    path = mini_repo / rel
+    text = path.read_text(encoding="utf-8")
+    if path.suffix == ".md":
+        _, front, body = text.split("---\n", 2)
+        meta = yaml.safe_load(front)
+        meta[field] = malformed
+        path.write_text("---\n" + yaml.safe_dump(meta, sort_keys=False) + "---\n" + body,
+                        encoding="utf-8")
+    else:
+        data = yaml.safe_load(text)
+        data[field] = malformed
+        path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+
+    errors = [i for i in run(mini_repo) if i.severity == "E"]
+
+    assert any(i.code == "SCHEMA" and i.path == rel for i in errors), [str(i) for i in errors]
+    stopped = [i for i in errors if i.code == "SCHEMA-DEPENDENT"]
+    assert stopped and all(rel in i.message for i in stopped), [str(i) for i in errors]
+
+
+def test_schema_error_in_a_registry_partition_names_that_partition(mini_repo):
+    """A partitioned registry is schema-checked as one merged document; the
+    error must still name the partition file that holds the bad record, or the
+    schema gate's SCHEMA-DEPENDENT message sends the operator to the wrong file."""
+    partition = mini_repo / "sources" / "registry" / "extra.yaml"
+    partition.parent.mkdir(parents=True)
+    partition.write_text(yaml.safe_dump({"sources": [
+        {"id": "source-extra-book", "title": "Extra Book", "type": "book",
+         "authors": ["B. Author", {"name": "C. Author"}]},
+    ]}), encoding="utf-8")
+
+    schema = [i for i in run(mini_repo) if i.severity == "E" and i.code == "SCHEMA"]
+
+    assert schema and all(i.path == "sources/registry/extra.yaml" for i in schema), \
+        [str(i) for i in schema]
+
+
+def test_a_crash_on_schema_valid_input_stays_loud(mini_repo, monkeypatch):
+    """The schema gate contains only crashes on input already reported as
+    schema-invalid; anywhere else a crash is a validator defect."""
+    from learning_os.rules.core import Validator
+
+    def broken(self):
+        raise TypeError("defect in a validation pass")
+
+    monkeypatch.setattr(Validator, "check_links", broken)
+    with pytest.raises(TypeError, match="defect in a validation pass"):
+        run(mini_repo)
+
+
 def test_living_docs_cannot_copy_a_manifest_version(mini_repo):
     readme = mini_repo / "README.md"
     readme.write_text(
