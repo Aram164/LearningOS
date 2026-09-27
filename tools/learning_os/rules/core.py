@@ -90,7 +90,13 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
             schemas[f.stem.replace(".schema", "")] = schema
         return schemas
 
+    # A partitioned registry is checked as one merged document, so an error
+    # inside one of its records belongs to that record's partition file, not
+    # to the consolidated default passed as ``where``.
+    _MERGED_REGISTRY_FAMILIES = {"concepts": "concept", "sources": "source"}
+
     def _schema_check(self, name: str, instance, where: str):
+        family = self._MERGED_REGISTRY_FAMILIES.get(name)
         validator = self._validators.get(name)
         if validator is None:
             schema = self.schemas.get(name)
@@ -106,8 +112,19 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
             )
             self._validators[name] = validator
         for e in sorted(validator.iter_errors(instance), key=str):
-            locator = "/".join(str(p) for p in e.absolute_path)
-            self.err("SCHEMA", f"{name}: {e.message} (at {locator or 'root'})", where)
+            path = list(e.absolute_path)
+            locator = "/".join(str(p) for p in path)
+            origin = ""
+            if family and len(path) >= 2 and isinstance(path[1], int) \
+                    and isinstance(instance, dict):
+                records = instance.get(path[0])
+                record = records[path[1]] if isinstance(records, list) \
+                    and path[1] < len(records) else None
+                rec_id = record.get("id") if isinstance(record, dict) else None
+                if isinstance(rec_id, str) and rec_id:
+                    origin = self._origin_for(family, rec_id)
+            self.err("SCHEMA", f"{name}: {e.message} (at {locator or 'root'})",
+                     origin or where)
 
     def _canonical_texts(self) -> list[tuple[Path, str]]:
         """Every canonical Markdown/YAML file and its text, read once per run.
@@ -192,29 +209,51 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         self.check_tree_contract()
         self.check_contract_documentation()
         self.check_schemas()
-        self.check_identity()
-        self.check_references()
-        self.check_registries()
-        self.check_collections()
-        self.check_ownership()
-        self.check_modules()
-        self.check_curriculum()
-        self.check_learning_runtime()
-        self.check_lifecycle_coherence()
-        self.check_projects()
-        self.check_transaction_receipts()
-        self.check_ai_action_requests()
-        self.check_files()
-        self.check_workspaces()
-        self.check_learning_paths()
-        self.check_plan_rigor()
-        self.check_study_maps()
-        self.check_links()
-        self.check_generated()
-        self.check_materials()
-        self.check_hygiene()
+        invalid = sorted({i.path for i in self.issues
+                          if i.severity == "E" and i.code == "SCHEMA" and i.path})
+        checks = [
+            self.check_identity,
+            self.check_references,
+            self.check_registries,
+            self.check_collections,
+            self.check_ownership,
+            self.check_modules,
+            self.check_curriculum,
+            self.check_learning_runtime,
+            self.check_lifecycle_coherence,
+            self.check_projects,
+            self.check_transaction_receipts,
+            self.check_ai_action_requests,
+            self.check_files,
+            self.check_workspaces,
+            self.check_learning_paths,
+            self.check_plan_rigor,
+            self.check_study_maps,
+            self.check_links,
+            self.check_generated,
+            self.check_materials,
+            self.check_hygiene,
+        ]
         if self.online:
-            self.check_external_urls()
+            checks.append(self.check_external_urls)
+        for check in checks:
+            # Every pass below reads records in their schema shape. A record
+            # that failed its schema is already reported above, with its file,
+            # but a pass that reads it anyway can crash on it (a mapping used as
+            # a key: synthetic authoring campaign D2), which took the whole run
+            # down as a traceback naming no file. Only then is the crash
+            # contained, as one error naming those files; the rest of that pass
+            # is skipped. On schema-valid input a crash is a defect: it stays loud.
+            try:
+                check()
+            except (AttributeError, IndexError, KeyError, TypeError, ValueError) as exc:
+                if not invalid:
+                    raise
+                self.err(
+                    "SCHEMA-DEPENDENT",
+                    f"{check.__name__} stopped on schema-invalid input "
+                    f"({type(exc).__name__}: {exc}); fix the SCHEMA errors in "
+                    f"{', '.join(invalid)} and validate again")
         return self.issues
 
     def check_learning_runtime(self) -> None:
