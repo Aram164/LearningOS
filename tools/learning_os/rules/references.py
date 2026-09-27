@@ -337,9 +337,12 @@ class ChecksReferences:
                 for value in values:
                     if value and value not in r.notes:
                         self.err("REF-NOTE", f"unit '{uid}' references unknown artifact '{value}'", where)
-            for wid in data.get("workspace_ids", []) or []:
-                # A non-string item is a schema error, already reported with this
-                # file by check_schemas; using it as a key would crash the run.
+            workspace_ids = data.get("workspace_ids", [])
+            # A malformed scalar or mapping is already a schema error. Do not
+            # iterate a string into misleading per-character reference errors.
+            for wid in workspace_ids if isinstance(workspace_ids, list) else []:
+                # A non-string item is likewise a schema error, already reported
+                # with this file by check_schemas; using it as a key would crash.
                 if isinstance(wid, str) and wid not in r.workspaces:
                     self.err("REF-WORKSPACE", f"unit '{uid}' references unknown workspace '{wid}'", where)
             for related in data.get("related_module_ids", []) or []:
