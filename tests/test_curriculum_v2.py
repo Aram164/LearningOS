@@ -158,16 +158,17 @@ def test_a_blocked_sole_workspace_cannot_leave_its_unit_ready(mini_repo):
     assert _lifecycle_errors(mini_repo) == {"LIFECYCLE-BLOCKED-UNIT", "LIFECYCLE-BLOCKED-MAP"}
 
 
-def test_malformed_unit_workspace_ids_are_a_named_error_not_a_crash(mini_repo):
-    """A mapping inside a unit's workspace_ids is a schema error naming the
-    unit file; the reference and lifecycle rules must not crash on it
+@pytest.mark.parametrize("malformed", [[{"id": "workspace-demo"}], "not-a-list"])
+def test_malformed_unit_workspace_ids_are_a_named_error_not_a_crash(mini_repo, malformed):
+    """Malformed workspace_ids are schema errors naming the unit file;
+    the reference and lifecycle rules must not crash or fan out on them
     (synthetic authoring campaign D2: TypeError in validate, status and the
     import preflight, naming no file)."""
     add_curriculum(mini_repo)
     _set_workspace_status(mini_repo, "blocked")  # reaches the lifecycle rule too
     unit_path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
     unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
-    unit["workspace_ids"] = [{"id": "workspace-demo"}]
+    unit["workspace_ids"] = malformed
     write_yaml(unit_path, unit)
 
     issues = validate(load_repo(mini_repo))
@@ -175,6 +176,7 @@ def test_malformed_unit_workspace_ids_are_a_named_error_not_a_crash(mini_repo):
     named = [i for i in issues if i.severity == "E"
              and "units/unit-demo-l01/unit.yaml" in i.path]
     assert named, [str(i) for i in issues if i.severity == "E"]
+    assert not any(i.code == "REF-WORKSPACE" for i in issues), issues
 
 
 def test_pausing_the_unit_and_map_with_the_workspace_is_coherent(mini_repo):
