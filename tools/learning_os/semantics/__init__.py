@@ -37,6 +37,7 @@ from .dossiers import (
 )
 from .goals import (
     AUTHORIZER,
+    DETECTOR_PRECEDENCE,
     NEAR_SITTING_DAYS,
     STATES,
     TERMINAL_STATES,
@@ -92,6 +93,14 @@ from .predicates import (
 )
 from .recipes import RecipeError, recipe_classes, recipes_for
 from .scan import DEFAULT_DAYS, ScanInput, intelligence_scan, scan_observations
+from .session_counts import (
+    FEED_KEYS,
+    FeedError,
+    SessionCounts,
+    feed_is_empty,
+    feed_scan_kwargs,
+    parse_feed,
+)
 from .tasks import (
     EFFECTS,
     MODEL_ONLY_STEPS,
@@ -157,7 +166,11 @@ __all__ = [
     "WriteOp",
     "admit",
     "DEFAULT_DAYS",
+    "DETECTOR_PRECEDENCE",
+    "FEED_KEYS",
+    "FeedError",
     "ScanInput",
+    "SessionCounts",
     "build_dossier",
     "build_envelope",
     "build_trusted_context",
@@ -180,6 +193,8 @@ __all__ = [
     "emit_scope_authority",
     "endorse",
     "evaluate",
+    "feed_is_empty",
+    "feed_scan_kwargs",
     "goal_from_dict",
     "goal_to_dict",
     "impacted",
@@ -187,6 +202,7 @@ __all__ = [
     "load_dossier",
     "load_ledger",
     "needs_study_map",
+    "parse_feed",
     "plan_task",
     "query",
     "rank_clusters",

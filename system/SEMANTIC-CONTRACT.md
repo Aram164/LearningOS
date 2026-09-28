@@ -129,8 +129,9 @@ reject/defer/close decisions live separately in
 `operations/goal-ledger.yaml` (written only by `los goal`) and feed the
 detectors' `known_ids` dedup, so decided goals stop re-emitting. Goals
 sharing one cause print as one cluster (`cluster_goals`), ordered by a
-hand-written exam-proximity sort (`rank_clusters`) — a Select step, not a
-learned cost model. Readers:
+hand-written exam-proximity sort refined by detector precedence
+(`rank_clusters`: belief risk before fan-out size, `DETECTOR_PRECEDENCE`
+as tunable data) — a Select step, not a learned cost model. Readers:
 `tools/learning_os/semantics/goals.py`, proven by
 `tests/test_goal_proposals.py` and `tests/test_goal_select.py`.
 
@@ -261,9 +262,13 @@ writes. v1 observes only what the repository already records — changed
 files in a stateless recency window joined to knowledge nodes and
 source definitions, lineage staleness against the revision ledger, and
 derived study-map obligations. Critique points are deliberately
-excluded (an open point is not a work item); question, inspection, and
-correction counts have no observable source and those detectors stay
-caller-fed; dossier freshness has no live-key registry. Readers:
+excluded (an open point is not a work item); dossier freshness has no
+live-key registry. Question, inspection, and correction counts have no
+observable source inside the repository and those detectors stay
+caller-fed: a live caller counts ephemerally
+(`session_counts.SessionCounts`, in memory only, never persisted) and
+hands the counts via `--feed` or `ScanInput` fields; an empty feed
+behaves exactly like no feed. Readers:
 `tools/learning_os/semantics/scan.py`, proven by
 `tests/test_intelligence_scan.py`.
 

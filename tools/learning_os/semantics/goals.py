@@ -504,6 +504,25 @@ RETIRED_MODULE_STATUSES = frozenset({"dropped", "archived"})
 #: Modules being studied but not exam-registered: pressure-free by default.
 STUDYING_MODULE_STATUSES = frozenset({"enrolled", "active"})
 
+#: Within one urgency tier, belief risk outranks fan-out size: a lone
+#: contested claim surfaces above a ten-route obligation cluster, and
+#: system self-improvement sorts below learner-facing work. Unknown
+#: detectors sort last — a new detector earns its precedence
+#: explicitly; nothing is promoted by accident of id spelling. This is
+#: Aram-tunable data, not a fitted model: edit the order, keep the
+#: shape.
+DETECTOR_PRECEDENCE = (
+    "claims-needing-review",
+    "lineage-stale",
+    "evidence-superseded",
+    "source-changed-under-claim",
+    "covering-routes-stale",
+    "study-map-obligation",
+    "reviewer-correction-pattern",
+    "repeated-question-gap",
+    "inspection-without-dossier",
+)
+
 
 def _sort_days(days: int | None) -> float:
     return float(days) if days is not None else float("inf")
@@ -569,14 +588,18 @@ def rank_clusters(
     module_status: Mapping[str, str | None],
     cluster_modules: Mapping[str, set[str]] | None = None,
 ) -> tuple[RankedCluster, ...]:
-    """Order clusters by exam proximity. A pure sort, not a cost model.
+    """Order clusters by exam proximity, then detector precedence.
 
-    ``cluster_modules`` names the modules behind each cluster id; a
-    cluster with no known module is "everything else" (tier 4), never
-    urgent and never retired. Ties break on cluster size, then id, so the
-    same queue always prints in the same order.
+    A pure sort, not a cost model. ``cluster_modules`` names the
+    modules behind each cluster id; a cluster with no known module is
+    "everything else" (tier 4), never urgent and never retired. Ties
+    break on detector precedence (belief risk before fan-out size),
+    then cluster size, then id, so the same queue always prints in the
+    same order.
     """
     known = dict(cluster_modules or {})
+    order = {detector: index
+             for index, detector in enumerate(DETECTOR_PRECEDENCE)}
     ranked = []
     for cluster in clusters:
         tier, sitting, days = _cluster_urgency(
@@ -588,6 +611,7 @@ def rank_clusters(
     return tuple(sorted(
         ranked,
         key=lambda row: (row.tier, _sort_days(row.days_until),
+                         order.get(row.cluster.detector, len(order)),
                          -len(row.cluster.member_ids),
                          row.cluster.cluster_id),
     ))

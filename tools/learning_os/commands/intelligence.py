@@ -7,6 +7,8 @@ from __future__ import annotations
 import datetime as _dt
 import json
 import sys
+from collections.abc import Mapping
+from pathlib import Path
 
 from learning_os.genout.modules_view import _academic_deadlines
 from learning_os.githistory import GitHistoryError
@@ -23,6 +25,7 @@ from learning_os.semantics.goals import (
     rank_clusters,
 )
 from learning_os.semantics.scan import _read_goal_ledger, intelligence_scan
+from learning_os.semantics.session_counts import FeedError, feed_scan_kwargs
 
 from .support import _json_layout, _root
 
@@ -126,14 +129,16 @@ def _cluster_modules(repo, route_modules: dict[str, str],
     return modules
 
 
-def ranked_scan(root, *, days: int = 30
+def ranked_scan(root, *, days: int = 30,
+                feed: Mapping | None = None,
                 ) -> tuple[tuple[CandidateGoal, ...], tuple[RankedCluster, ...], int]:
     """Goals clustered by shared cause, ordered by exam proximity.
 
     Returns ``(goals, ranked, decided_hidden)``. Orchestration over the
-    existing detectors plus the goal ledger; still read-only.
+    existing detectors plus the goal ledger; still read-only. ``feed``
+    is a caller-supplied session-count mapping; None behaves as before.
     """
-    goals = intelligence_scan(root, days=days)
+    goals = intelligence_scan(root, days=days, feed=feed)
     clusters = cluster_goals(goals)
     repo = load_repo(root)
     deadlines = _academic_deadlines(repo)
@@ -171,6 +176,8 @@ def _full_result_route(args) -> str:
     parts = ["intelligence-scan"]
     if getattr(args, "days", 30) != 30:
         parts += ["--days", str(args.days)]
+    if getattr(args, "feed", None):
+        parts += ["--feed", str(args.feed)]
     return " ".join([*parts, "--json"])
 
 
@@ -222,14 +229,33 @@ def cmd_intelligence_scan(args) -> int:
     """Run one observation loop: observe, interpret, propose.
 
     ``--brief`` caps the page at five ranked groups plus totals; with
-    ``--json`` that is the agent entry path.
+    ``--json`` that is the agent entry path. ``--feed`` reads a
+    caller-owned JSON session-count file (see session_counts) so the
+    three count detectors can fire; the scan never writes it.
     """
     if args.days < 0:
         print("intelligence scan: --days is never negative")
         return 2
+    feed = None
+    if getattr(args, "feed", None):
+        try:
+            raw = Path(args.feed).read_text(encoding="utf-8")
+        except OSError as exc:
+            print(f"intelligence scan: cannot read --feed: {exc}", file=sys.stderr)
+            return 2
+        try:
+            feed = json.loads(raw)
+        except json.JSONDecodeError as exc:
+            print(f"intelligence scan: --feed is not JSON: {exc}", file=sys.stderr)
+            return 2
+        try:
+            feed_scan_kwargs(feed)
+        except FeedError as exc:
+            print(f"intelligence scan: {exc}", file=sys.stderr)
+            return 2
     root = _root(args)
     try:
-        goals, ranked, hidden = ranked_scan(root, days=args.days)
+        goals, ranked, hidden = ranked_scan(root, days=args.days, feed=feed)
     except GitHistoryError as exc:
         print(f"intelligence scan: cannot read Git history: {exc}", file=sys.stderr)
         return 2

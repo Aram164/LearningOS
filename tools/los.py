@@ -227,6 +227,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("intelligence-scan", help="read-only observation loop: propose candidate investigations")
     p.add_argument("--days", type=int, default=30, help="recency window for changed files (default: 30)")
+    p.add_argument("--feed", default=None,
+                   help="caller-owned JSON session-count file for the count detectors (read-only)")
     p.add_argument("--json", action="store_true", help="machine-readable output")
     p.add_argument("--brief", action="store_true",
                    help="at most 5 ranked groups + totals; with --json, the agent entry path")
