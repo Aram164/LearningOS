@@ -102,6 +102,14 @@ def _inspection_rows(value: object) -> list[dict]:
         if not names:
             raise FeedError(f"malformed feed: {label}.files is empty")
         rows.append({"files": names, "count": _count(count, f"{label}.count")})
+    seen: set[frozenset] = set()
+    for index, row in enumerate(rows):
+        key = frozenset(row["files"])
+        if key in seen:
+            raise FeedError(
+                f"malformed feed: inspection_counts[{index}] repeats an "
+                "already-listed file set")
+        seen.add(key)
     return rows
 
 
@@ -188,7 +196,7 @@ class SessionCounts:
 
     def note_inspection(self, files: Sequence[str]) -> None:
         """One task read this exact file set together."""
-        names = tuple(sorted(_string_list(files, "inspection files")))
+        names = tuple(sorted(set(_string_list(files, "inspection files"))))
         if not names:
             raise FeedError("malformed session count: inspection files is empty")
         self._inspections[names] = self._inspections.get(names, 0) + 1
