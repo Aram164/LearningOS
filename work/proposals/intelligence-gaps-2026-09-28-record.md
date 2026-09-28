@@ -55,6 +55,20 @@ Proposed one-line ratification (confirm or correct in your own words):
 
 - Runtime VOQ-class/dossier coverage source, so feeds need not declare
   cover (needs a design that respects the fixtures-are-test-only decision).
-- `unit.plan.revise` Phase B extension (ranking item 1) + the dossier-publish
-  lineage question (ranking item 2).
+- Dossier-publish lineage question (ranking item 1). The proposed
+  `unit.plan.revise` Phase B extension was removed from the backlog after
+  verifying that unit revisions already use the module import's Phase B
+  preflight and lineage write path.
 - VOQ coverage for new predicates (cap rule is disjunctive; coverage thins).
+
+## Fast operator follow-through
+
+`resume --study` now offers a nearest-exam stage and one exact required-resource
+locator without changing the resume pointer; it reports the recorded
+registration state. `material-span` now gives the explicit local-observation
+steps when a route is remote or a registered file is missing. A `log:` message
+is a direct, verbatim capture request under the existing gateway, routed to a
+stage only when the stage was explicitly identified in the conversation.
+Goal deferrals may name a `revisit_on` date; the scan re-emits the candidate on
+that date without authorizing it. None of these paths fetches material,
+chooses a goal disposition, or writes during a read.

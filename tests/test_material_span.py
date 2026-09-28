@@ -92,6 +92,10 @@ def test_remote_span_is_never_fetched_implicitly(mini_repo: Path):
     assert data["availability"] == "remote-unobserved"
     assert data["spans"] == []
     assert data["url"] == "https://example.invalid/book"
+    assert "Open the URL explicitly" in data["next_action"]
+    assert "register an authorized local copy" in data["next_action"]
+    assert "make inventory" in data["next_action"]
+    assert f"material-span unit-demo-l01 {_route(mini_repo)} --extract" in data["next_action"]
 
 
 def test_out_of_range_pdf_locator_names_the_actual_problem(tmp_path: Path):

@@ -241,10 +241,14 @@ def build_parser() -> argparse.ArgumentParser:
     g.add_argument("--defer", action="store_true")
     g.add_argument("--close", action="store_true")
     p.add_argument("--note", default=None, help="why this decision, in Aram's words")
+    p.add_argument("--revisit-on", default=None,
+                   help="for --defer only: let the goal reappear on this YYYY-MM-DD date")
     p.set_defaults(func=cmd_goal)
 
     p = sub.add_parser("resume", help="one-screen return to study: stage, requirement, evidence, exam")
     p.add_argument("--json", action="store_true", help="machine-readable dossier")
+    p.add_argument("--study", action="store_true",
+                   help="show the nearest recorded exam's active stage as a read-only study suggestion")
     p.set_defaults(func=cmd_resume)
 
     p = sub.add_parser("dossier", help="serve one unit's materialized context bundle")

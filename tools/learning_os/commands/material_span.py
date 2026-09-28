@@ -43,6 +43,20 @@ def cmd_material_span(args) -> int:
                       "local-unavailable" if projected.get("material_uri") else
                       "remote-unobserved" if route.get("url") or source.get("url") else
                       "unavailable")
+            next_action = None
+            if status == "remote-unobserved":
+                next_action = (
+                    "Open the URL explicitly to read it. For local extraction, "
+                    "register an authorized local copy as material, run "
+                    "make inventory, then rerun material-span "
+                    f"{unit.id} {route['id']} --extract. No remote bytes "
+                    "were observed here."
+                )
+            elif status == "local-unavailable":
+                next_action = (
+                    "Restore the registered local file, run make inventory, "
+                    f"then rerun material-span {unit.id} {route['id']} --extract."
+                )
             analysis = _brief_analysis_refs(root, repo, unit, [route])
             notes = analysis["analysis_notes"]
             analysis["analysis_notes_total"] = len(notes)
@@ -87,6 +101,7 @@ def cmd_material_span(args) -> int:
                 "locator": route.get("locator"),
                 "url": route.get("url") or source.get("url"),
                 "availability": status,
+                "next_action": next_action,
                 "analysis_refs": analysis,
                 "spans": spans,
                 "expansion": None if args.extract else

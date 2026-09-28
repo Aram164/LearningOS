@@ -174,6 +174,60 @@ def _resolve_stage(repo):
                   "touched — start any stage to set one")
 
 
+def _study_option(repo):
+    """Suggest one current stage for the nearest recorded exam, without changing intent."""
+    today = _dt.date.today()
+    exams = []
+    for row in _academic_deadlines(repo):
+        if not isinstance(row, dict) or row.get("kind") != "exam":
+            continue
+        module_id = row.get("module_id")
+        module = repo.modules.get(module_id)
+        if not isinstance(module, dict) or module.get("status") != "enrolled":
+            continue
+        if row.get("registration_state") not in {"registered", "unregistered"}:
+            continue
+        try:
+            date = _dt.date.fromisoformat(row.get("start_date", ""))
+        except (TypeError, ValueError):
+            continue
+        if date >= today:
+            exams.append((date, str(module_id), row))
+    if not exams:
+        return (None, "no upcoming exam is recorded for an enrolled module")
+    date, module_id, exam = min(exams, key=lambda item: (item[0], item[1]))
+    maps = [study_map for study_map in repo.study_maps.values()
+            if study_map.module_id == module_id
+            and (study_map.data or {}).get("status") == "active"]
+    if len(maps) != 1:
+        return (None, f"{module_id} has {len(maps)} active study maps; "
+                      "choose a stage explicitly before using study mode")
+    study_map = maps[0]
+    stage_id = (study_map.data or {}).get("current_stage")
+    stage = next((row for row in (study_map.data or {}).get("stages", [])
+                  if isinstance(row, dict) and row.get("id") == stage_id), None)
+    if not isinstance(stage_id, str) or stage is None \
+            or study_map.unit_id not in repo.units:
+        return (None, f"{study_map.id} has no resolvable current stage")
+    if stage.get("status") in {"complete", "archived"}:
+        return (None, f"{study_map.id} names a completed current stage; "
+                      "choose a stage explicitly before using study mode")
+    resource = next((row for row in stage.get("resources", [])
+                     if isinstance(row, dict)
+                     and row.get("scope_triage") == "required-now"
+                     and row.get("label") and row.get("locator")), None)
+    option = {
+        "exam_date": date.isoformat(),
+        "registration_state": exam.get("registration_state"),
+        "open": {"label": resource["label"], "locator": resource["locator"],
+                 "source_id": resource.get("source_id")} if resource else None,
+        "learner_choice": False,
+    }
+    resolved = ("nearest recorded exam (study suggestion)", module_id,
+                study_map.unit_id, study_map.id, stage_id)
+    return (resolved, option)
+
+
 #: Trailing excerpt kept in the dossier: progress notes append, so the
 #: tail is the latest recorded work. Bounded so the screen stays one page.
 STAGE_NOTE_EXCERPT_CHARS = 800
@@ -314,7 +368,14 @@ def cmd_resume(args) -> int:
     """Compile and print the return-to-study screen. Read-only."""
     root = _root(args)
     repo = load_repo(root)
-    resolved = _resolve_stage(repo)
+    study_option = None
+    if getattr(args, "study", False):
+        resolved, study_option = _study_option(repo)
+        if resolved is None:
+            print(f"los: {study_option}", file=sys.stderr)
+            return 2
+    else:
+        resolved = _resolve_stage(repo)
     if resolved[0] is None:
         print(f"los: {resolved[1]}", file=sys.stderr)
         return 2
@@ -384,15 +445,25 @@ def cmd_resume(args) -> int:
         print(f"los: {exc}", file=sys.stderr)
         return 2
     if args.json:
-        print(json.dumps(
-            {"key": dossier.key, "via": via,
-             "content": {section: value for section, value in dossier.content}},
-            **_json_layout(), sort_keys=True, ensure_ascii=False))
+        output = {"key": dossier.key, "via": via,
+                  "content": {section: value for section, value in dossier.content}}
+        if study_option is not None:
+            output["study_option"] = study_option
+        print(json.dumps(output, **_json_layout(), sort_keys=True, ensure_ascii=False))
         return 0
     aims = _recorded_aims(repo, module_id, unit_id)
-    print(_render(dossier, requirement, observations, open_items, sittings,
-                  titles, via_detail, len(stale_here), top_cluster, aims,
-                  stage_note, stage_progress))
+    rendered = _render(dossier, requirement, observations, open_items, sittings,
+                       titles, via_detail, len(stale_here), top_cluster, aims,
+                       stage_note, stage_progress)
+    if study_option is not None:
+        lines = [f"Study suggestion for {study_option['exam_date']} "
+                 f"(registration recorded as {study_option['registration_state'] or 'unknown'}; "
+                 "your resume pointer is unchanged)"]
+        resource = study_option["open"]
+        if resource:
+            lines.append(f"  Open {resource['label']} at {resource['locator']}")
+        rendered = "\n".join([*lines, "", rendered])
+    print(rendered)
     return 0
 
 

@@ -111,6 +111,9 @@ Decide which read answers the question before reading:
   `inspect WORKSPACE_ID`; use `inspect coordination` when priorities matter.
   The brief reports where study stopped and recorded workspace options; neither
   chooses the next priority for Aram.
+- `resume --study` offers the current stage of the nearest recorded exam's
+  single active study map, including one required resource locator when present.
+  It labels registration state and never moves the learner's resume pointer.
 - What changed, what wants a decision → `intelligence-scan --brief --json`:
   five ranked groups plus totals, the agent entry path. The full queue only
   for explicit bulk review; inspect a named route or unit first.
@@ -122,7 +125,8 @@ Decide which read answers the question before reading:
   learner choice.
 - A detector candidate is a signal, never an instruction. `los goal <id>
   --reject|--defer|--close` records Aram's explicit decision; do not choose
-  a disposition on his behalf.
+  a disposition on his behalf. `--defer --revisit-on YYYY-MM-DD` hides a goal
+  only until that date; its return to the scan is a candidate, not approval.
 
 Task-shaped entry preserves complete material access through `inspect ID`.
 Its `domain_atlas` glance summarizes all projected notes and shelves across
@@ -363,6 +367,12 @@ Stage-specific learning belongs in its stage note. Unrelated quick capture goes
 to `work/inbox/`. A deliberately half-formed idea that should gestate goes to
 `knowledge/garden/`. The operator, not the learner, handles filing. Every one
 of these writes goes through a GatewayEnvelopeV2 built per WORKFLOWS §25c.
+When Aram starts a message with `log:`, treat the following text as an explicit
+request to capture it verbatim. If the stage was explicitly identified in the
+current conversation, append it to that stage's working note through
+`stage.note.write`; otherwise use `capture.create` for the inbox. Report the
+destination and receipt. The capture does not imply progress or mastery and
+does not move the resume pointer.
 
 Read the applicable platform adapter, then the task-relevant sections of
 `system/ARCHITECTURE.md`, `system/WORKFLOWS.md`, and the schemas/contracts they

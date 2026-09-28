@@ -9,6 +9,7 @@ builder keeps content-addressed keys; the command resolves and renders.
 from __future__ import annotations
 
 import copy
+import datetime as _dt
 import json
 from pathlib import Path
 
@@ -110,6 +111,53 @@ def _runtime_repo(mini_repo: Path) -> Path:
     stage["runtime_target"] = copy.deepcopy(TARGET)
     write_yaml(mini_repo / MAP, data)
     return mini_repo
+
+
+def test_study_mode_suggests_a_recorded_exam_stage_without_moving_pointer(mini_repo: Path):
+    root = _runtime_repo(mini_repo)
+    module_path = root / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
+    module["examination"]["sittings"][1]["date"] = date
+    module["attempts"][1]["date"] = date
+    write_yaml(module_path, module)
+    study_map = yaml.safe_load((root / MAP).read_text(encoding="utf-8"))
+    study_map["stages"][0]["resources"][0]["scope_triage"] = "required-now"
+    write_yaml(root / MAP, study_map)
+    pointer = (root / "curriculum/resume.yaml").read_bytes()
+
+    proc = run_los(root, "resume", "--study", "--json")
+    assert proc.returncode == 0, proc.stderr
+    payload = json.loads(proc.stdout)
+    assert payload["via"] == "nearest recorded exam (study suggestion)"
+    assert payload["study_option"]["exam_date"] == date
+    assert payload["study_option"]["learner_choice"] is False
+    assert payload["study_option"]["open"]["locator"] == "§1"
+    assert (root / "curriculum/resume.yaml").read_bytes() == pointer
+
+
+def test_study_mode_refuses_to_guess_without_one_active_map(mini_repo: Path):
+    root = _runtime_repo(mini_repo)
+    study_map = yaml.safe_load((root / MAP).read_text(encoding="utf-8"))
+    study_map["status"] = "ready"
+    write_yaml(root / MAP, study_map)
+    proc = run_los(root, "resume", "--study")
+    assert proc.returncode == 2
+    assert "has 0 active study maps" in proc.stderr
+
+
+def test_study_mode_does_not_offer_a_withdrawn_sitting(mini_repo: Path):
+    root = _runtime_repo(mini_repo)
+    module_path = root / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
+    module["examination"]["sittings"][1]["date"] = date
+    module["attempts"][1]["date"] = date
+    module["attempts"][1]["result"] = "withdrawn"
+    write_yaml(module_path, module)
+    proc = run_los(root, "resume", "--study")
+    assert proc.returncode == 2
+    assert "no upcoming exam" in proc.stderr
 
 
 def test_resume_renders_the_pointer_stage(mini_repo: Path):

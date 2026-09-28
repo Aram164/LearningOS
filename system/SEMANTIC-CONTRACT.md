@@ -93,9 +93,9 @@ Storage is a receipt-adjacent sidecar (`operations/transactions/lineage.yaml`,
 schema beside the other contracts), never a canonical edit and never a
 projection — lineage must survive a rebuild. Backfill is lazy: records are
 created when a claim is judged, never bulk-migrated. Since Phase B,
-prospective claims are bound at admission: a `module.plan.import` that
-creates, repairs, or removes a covers edge carries per-claim evidence or
-refuses before apply, and the gateway persists the admitted records
+prospective claims are bound at admission: a `module.plan.import` or
+`unit.plan.revise` that creates, repairs, or removes a covers edge carries
+per-claim evidence or refuses before apply. The gateway persists the admitted records
 (`admitted_by` request binding, `supersedes` repair chain) in the same
 transaction as the canonical mutation. Readers:
 `tools/learning_os/semantics/lineage.py`, proven by
@@ -127,7 +127,9 @@ one step at a time; only Aram authorizes. The queue lives under
 `work/proposals/goals/`, one file per goal. Aram's explicit
 reject/defer/close decisions live separately in
 `operations/goal-ledger.yaml` (written only by `los goal`) and feed the
-detectors' `known_ids` dedup, so decided goals stop re-emitting. Goals
+detectors' `known_ids` dedup, so decided goals stop re-emitting. A deferred
+goal with an explicit `revisit_on` date reappears on that date as a candidate,
+never as an authorization. Goals
 sharing one cause print as one cluster (`cluster_goals`), ordered by a
 hand-written exam-proximity sort refined by detector precedence
 (`rank_clusters`: belief risk before fan-out size, `DETECTOR_PRECEDENCE`

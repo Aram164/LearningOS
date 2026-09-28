@@ -64,6 +64,29 @@ def test_goal_decision_is_revisable(mini_repo: Path):
     assert ledger["decisions"]["g1"]["state"] == "closed"
 
 
+def test_deferred_goal_reappears_on_explicit_revisit_date(mini_repo: Path):
+    today = _dt.date.today()
+    revisit_on = (today + _dt.timedelta(days=3)).isoformat()
+    proc = run_los(mini_repo, "goal", "g1", "--defer", "--revisit-on", revisit_on)
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout)["revisit_on"] == revisit_on
+    assert _read_goal_ledger(mini_repo, today=today) == ("g1",)
+    assert _read_goal_ledger(mini_repo, today=today + _dt.timedelta(days=3)) == ()
+    assert _read_goal_ledger(mini_repo, today=today + _dt.timedelta(days=4)) == ()
+
+
+def test_revisit_date_refuses_non_deferral_and_invalid_dates(mini_repo: Path):
+    for args in (
+        ("--close", "2099-01-01"),
+        ("--defer", "20260930"),
+        ("--defer", "not-a-date"),
+        ("--defer", _dt.date.today().isoformat()),
+    ):
+        proc = run_los(mini_repo, "goal", "g1", args[0], "--revisit-on", args[1])
+        assert proc.returncode == 2
+    assert not (mini_repo / "operations/goal-ledger.yaml").exists()
+
+
 def test_decided_goals_leave_the_scan(mini_repo: Path):
     assert run_los(mini_repo, "goal", "study-map-obligation:unit-x", "--reject").returncode == 0
     assert run_los(mini_repo, "goal", "lineage-stale:claim-y", "--defer").returncode == 0
