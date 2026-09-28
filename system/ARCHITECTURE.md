@@ -198,6 +198,7 @@ repository/
 ├── generated/             gitignored, rebuildable; shape declared by manifest-contract.yaml
 ├── bases/                 installed Obsidian Bases shelves (ADR-006); gitignored
 ├── tools/                 the operator CLI and the learning_os package; see tools/README.md
+├── .jules/                AI operator memory and journals
 └── tests/                 the test suite and its frozen format fixtures
 ```
 
