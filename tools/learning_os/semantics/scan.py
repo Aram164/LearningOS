@@ -21,10 +21,16 @@ v1 observes what the repository already records and nothing else:
 
 Deliberately excluded: critique points (OPERATOR.md boundary 17 — an
 open point is not a work item, and the scan must not convert any into
-goals); question, inspection, and correction counts (no observable
-source exists, and creating one would be telemetry — those detectors
-stay caller-fed); dossier freshness (no registry of live dossier keys;
-Phase 5 left serving as operator wiring).
+goals); dossier freshness (no registry of live dossier keys; Phase 5
+left serving as operator wiring).
+
+Question, inspection, and correction counts have no observable source
+inside the repository, and creating one would be telemetry — those
+detectors stay caller-fed. A live caller counts ephemerally
+(``session_counts.SessionCounts``, in memory only, never persisted)
+and hands the counts to the scan (``--feed`` file or ``ScanInput``
+fields). The scan records nothing; an empty feed behaves exactly
+like no feed.
 """
 
 from __future__ import annotations
@@ -32,8 +38,8 @@ from __future__ import annotations
 import hashlib
 import math
 import time
-from collections.abc import Sequence
-from dataclasses import dataclass
+from collections.abc import Mapping, Sequence
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 import yaml
@@ -50,11 +56,15 @@ from .goals import (
     CandidateGoal,
     detect_claims_needing_review,
     detect_covering_routes_stale,
+    detect_inspection_without_dossier,
+    detect_repeated_question_gap,
+    detect_reviewer_correction_pattern,
     detect_source_changed_under_claim,
     stale_observations,
 )
 from .lineage import effective_statuses, load_ledger
 from .predicates import CONTRACT_VERSION, needs_study_map
+from .session_counts import feed_scan_kwargs
 
 #: Revision ledger: the current-revisions source for staleness.
 REVISIONS_RELATIVE = "operations/transactions/revisions.yaml"
@@ -118,6 +128,13 @@ class ScanInput:
     node_units: tuple[tuple[str, str], ...] = ()
     claim_reviews: tuple[tuple[str, str, str], ...] = ()
     known_ids: tuple[str, ...] = ()
+    # Caller-fed session counts (see session_counts.py). Empty means
+    # unfed: the three count detectors stay silent, exactly as before.
+    question_counts: tuple[tuple[str, int], ...] = ()
+    inspection_counts: tuple[tuple[tuple[str, ...], int], ...] = ()
+    correction_counts: tuple[tuple[str, int], ...] = ()
+    voq_classes: tuple[str, ...] = ()
+    dossier_sets: tuple[tuple[str, ...], ...] = ()
 
 
 def _emit(goal_id: str, detector: str, title: str,
@@ -152,6 +169,25 @@ def scan_observations(observations: ScanInput) -> tuple[CandidateGoal, ...]:
                 for cid, reviewed, status in observations.claim_reviews},
         known_ids=list(observations.known_ids),
     ))
+    if observations.question_counts:
+        goals.extend(detect_repeated_question_gap(
+            question_counts=dict(observations.question_counts),
+            voq_classes=list(observations.voq_classes),
+            known_ids=list(observations.known_ids),
+        ))
+    if observations.inspection_counts:
+        goals.extend(detect_inspection_without_dossier(
+            inspection_counts={
+                files: count
+                for files, count in observations.inspection_counts},
+            dossier_sets=[list(entry) for entry in observations.dossier_sets],
+            known_ids=list(observations.known_ids),
+        ))
+    if observations.correction_counts:
+        goals.extend(detect_reviewer_correction_pattern(
+            correction_counts=dict(observations.correction_counts),
+            known_ids=list(observations.known_ids),
+        ))
     for claim_id, moved in observations.stale_claims:
         goal_id = f"lineage-stale:{claim_id}"
         if goal_id in known:
@@ -529,6 +565,17 @@ def collect_observations(root: Path | str, *,
 
 
 def intelligence_scan(root: Path | str, *,
-                      days: int = DEFAULT_DAYS) -> tuple[CandidateGoal, ...]:
-    """One observation loop: read the world, interpret, propose."""
-    return scan_observations(collect_observations(root, days=days))
+                      days: int = DEFAULT_DAYS,
+                      feed: Mapping | None = None,
+                      ) -> tuple[CandidateGoal, ...]:
+    """One observation loop: read the world, interpret, propose.
+
+    ``feed`` is a caller-supplied session-count mapping (see
+    ``session_counts.parse_feed`` for the shape). None or empty
+    behaves exactly like no feed: the three count detectors stay
+    silent. The scan records nothing either way.
+    """
+    observations = collect_observations(root, days=days)
+    if feed:
+        observations = replace(observations, **feed_scan_kwargs(feed))
+    return scan_observations(observations)

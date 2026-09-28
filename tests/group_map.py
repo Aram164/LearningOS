@@ -70,6 +70,7 @@ GROUPS: dict[str, list[str]] = {
         "test_semantic_contract.py",
         "test_semantic_lineage.py",
         "test_session_compiler.py",
+        "test_session_counts.py",
         "test_synthesis_analysis_refs.py",
         "test_unit_dossier_command.py",
         "test_verified_operator_questions.py",
