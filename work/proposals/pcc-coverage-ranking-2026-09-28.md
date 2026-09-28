@@ -5,16 +5,18 @@ Date: 2026-09-28. Parent: `intelligence-plane-plan.md` Phase 6; contract:
 admission"). Source of the capability inventory: `system/contracts/capabilities.yaml`.
 
 The contract is explicit that PCC today is library machinery plus one
-bounded integration — not a universal wrapper. This note ranks every
+shared bounded integration — not a universal wrapper. This note ranks every
 write path by the semantic risk an unbound agent write carries, so the
 next envelope work starts at the top and the never-list stays deliberate.
 
 ## Covered today
 
-- `module.plan.import`: Phase B preflight + atomic lineage persistence for
-  changed route-`covers` edges (per-claim evidence or refuse). Partial by
-  design: structural changes in the same import ride the preflight and
-  snapshot guard, not claim binding.
+- `module.plan.import` and `unit.plan.revise`: Phase B preflight + atomic
+  lineage persistence for changed route-`covers` edges (per-claim evidence or
+  refuse). `unit.plan.revise` assembles a module package and calls the same
+  import path; `tests/test_unit_plan_revision.py` exercises a covers revision
+  and checks the written lineage. Partial by design: structural changes in
+  the package ride the preflight and snapshot guard, not claim binding.
 
 ## Never needs envelopes (producer is the ground truth)
 
@@ -38,31 +40,25 @@ through them): `path.note.write`, `path.progress.update`, `path.attachment.add`,
 
 ## Ranked TODO (agent-envelope paths into semantic state)
 
-1. **`unit.plan.revise` — first.** Same blast radius as `module.plan.import`
-   (routes, covers edges) and it *writes* `operations/transactions/lineage.yaml`,
-   but has no Phase B evidence binding. It is the one unbound writer to the
-   sidecar. Extending the Phase B preflight to this path closes the largest
-   hole with existing machinery.
-2. **`unit.material-synthesis.publish` — second, pending one question.** It
+1. **`unit.material-synthesis.publish` — first, pending one question.** It
    writes whole-dossier route assessments (semantic judgments) under
    whole-dossier approval — but dossier freshness is a lineage claim family,
    and nothing here shows publish emitting lineage records. If it does not,
    dossiers are judged claims without trail. Confirm, then bind or record why not.
-3. **`note.revise` — third.** Explicitly reviewed semantic replacement of
+2. **`note.revise` — second.** Explicitly reviewed semantic replacement of
    durable notes: existing meaning changes under agent authorship. Approval
    exists; evidence/read-set binding does not.
-4. **`route.patch` — fourth.** Bounded to declared descriptive material
+3. **`route.patch` — third.** Bounded to declared descriptive material
    fields with full shadow validation, so the blast radius is small — but it
    is the highest-frequency agent write path into routes, and frequency is
    its own risk.
-5. **`note.create`, `note.analysis.save`, `note.analysis.save_batch`,
+4. **`note.create`, `note.analysis.save`, `note.analysis.save_batch`,
    `note.evidence.add` — last.** Additive and byte-preserving with
    handler-owned review defaults; nothing existing changes meaning. Envelope
    value here is provenance completeness, not risk.
 
 ## Recommendation
 
-Do 1 next (Phase B extension, same pattern as the import path). Fold 2's
-question into that work — if publish emits no lineage, that is a second
-finding, not a second project. 3–5 are ordered backlog, each a bounded
-preflight integration; no new envelope machinery is needed for any of them.
+Resolve 1's lineage question before changing its writer. If publish emits no
+lineage, decide whether its freshness judgment needs a prospective record.
+2–4 remain an ordered backlog of bounded preflight integrations.

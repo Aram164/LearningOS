@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import datetime as _dt
 import json
+import re
 import sys
 
 import yaml
@@ -44,6 +45,21 @@ def cmd_goal(args) -> int:
         print("los: goal id is one whitespace-free token", file=sys.stderr)
         return 2
     state = "rejected" if args.reject else "deferred" if args.defer else "closed"
+    revisit_on = getattr(args, "revisit_on", None)
+    if revisit_on is not None:
+        if state != "deferred":
+            print("los: --revisit-on requires --defer", file=sys.stderr)
+            return 2
+        try:
+            if not isinstance(revisit_on, str) or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", revisit_on):
+                raise ValueError("not YYYY-MM-DD")
+            day = _dt.date.fromisoformat(revisit_on)
+        except (TypeError, ValueError):
+            print("los: --revisit-on needs an ISO date (YYYY-MM-DD)", file=sys.stderr)
+            return 2
+        if day <= _dt.date.today():
+            print("los: --revisit-on must be a future date", file=sys.stderr)
+            return 2
     with _operator_lock(root):
         path = root / LEDGER_RELATIVE
         try:
@@ -73,6 +89,8 @@ def cmd_goal(args) -> int:
                   file=sys.stderr)
             return 2
         entry: dict = {"state": state, "decided_at": _dt.date.today().isoformat()}
+        if revisit_on is not None:
+            entry["revisit_on"] = revisit_on
         if args.note is not None:
             entry["note"] = args.note
         data["decisions"] = {**decisions, goal_id: entry}
@@ -85,5 +103,8 @@ def cmd_goal(args) -> int:
         except WriteRefused as exc:
             print(f"los: {exc}", file=sys.stderr)
             return 2
-    print(json.dumps({"ok": True, "goal_id": goal_id, "state": state}))
+    result = {"ok": True, "goal_id": goal_id, "state": state}
+    if revisit_on is not None:
+        result["revisit_on"] = revisit_on
+    print(json.dumps(result))
     return 0

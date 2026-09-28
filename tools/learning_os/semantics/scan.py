@@ -35,6 +35,7 @@ like no feed.
 
 from __future__ import annotations
 
+import datetime as _dt
 import hashlib
 import math
 import time
@@ -97,7 +98,7 @@ def _unit_ids_by_path(root: Path, repo) -> dict[str, str]:
     return owners
 
 
-def _read_goal_ledger(root: Path) -> tuple[str, ...]:
+def _read_goal_ledger(root: Path, *, today: _dt.date | None = None) -> tuple[str, ...]:
     """Goal ids Aram already decided. Tolerant: missing or malformed input
     reads as no decisions, so the scan never crashes on operational state
     and never invents a decision nobody recorded."""
@@ -107,11 +108,23 @@ def _read_goal_ledger(root: Path) -> tuple[str, ...]:
     decisions = data.get("decisions")
     if not isinstance(decisions, dict):
         return ()
-    return tuple(sorted(
-        goal_id for goal_id, row in decisions.items()
-        if isinstance(goal_id, str) and goal_id
-        and isinstance(row, dict) and row.get("state") in DECIDED_GOAL_STATES
-    ))
+    day = today or _dt.date.today()
+    known = []
+    for goal_id, row in decisions.items():
+        if not isinstance(goal_id, str) or not goal_id or not isinstance(row, dict):
+            continue
+        state = row.get("state")
+        if state not in DECIDED_GOAL_STATES:
+            continue
+        if state == "deferred" and row.get("revisit_on") is not None:
+            try:
+                revisit = _dt.date.fromisoformat(row["revisit_on"])
+            except (TypeError, ValueError):
+                continue  # Bad operational data cannot silently suppress a goal.
+            if revisit <= day:
+                continue
+        known.append(goal_id)
+    return tuple(sorted(known))
 
 
 @dataclass(frozen=True)

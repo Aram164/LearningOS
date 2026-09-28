@@ -19,6 +19,7 @@
         "properties": {
           "state": { "enum": ["rejected", "deferred", "closed"] },
           "decided_at": { "type": "string", "format": "date" },
+          "revisit_on": { "type": "string", "format": "date" },
           "note": { "type": "string" }
         }
       }
