@@ -74,6 +74,13 @@ def test_blank_classes_and_empty_sets_refuse():
         counts.note_inspection(["ok.yaml", " "])
 
 
+def test_note_inspection_dedupes_files_within_one_set():
+    counts = SessionCounts()
+    counts.note_inspection(["b.yaml", "a.yaml", "b.yaml"])
+    assert counts.snapshot()["inspection_counts"] == [
+        {"files": ["a.yaml", "b.yaml"], "count": 1}]
+
+
 def test_counters_hold_no_persistence_surface():
     counts = SessionCounts()
     counts.note_question("scope-authority")
@@ -132,6 +139,17 @@ def test_parse_feed_refuses_unknown_keys_and_bad_counts():
         parse_feed({"voq_classes": "is-clean"})
     with pytest.raises(FeedError):
         parse_feed(["not", "a", "mapping"])
+
+
+def test_parse_feed_refuses_duplicate_inspection_sets():
+    with pytest.raises(FeedError):
+        parse_feed({"inspection_counts": [
+            {"files": ["a.yaml"], "count": 5},
+            {"files": ["a.yaml"], "count": 2}]})
+    with pytest.raises(FeedError):
+        parse_feed({"inspection_counts": [
+            {"files": ["a.yaml", "b.yaml"], "count": 5},
+            {"files": ["b.yaml", "a.yaml"], "count": 2}]})
 
 
 def test_feed_scan_kwargs_renders_sorted_scan_tuples():
@@ -276,6 +294,29 @@ def test_precedence_covers_every_known_detector():
     }
 
 
+def test_precedence_orders_every_known_detector():
+    detectors = ["inspection-without-dossier", "covering-routes-stale",
+                 "lineage-stale", "claims-needing-review",
+                 "study-map-obligation", "evidence-superseded",
+                 "source-changed-under-claim", "repeated-question-gap",
+                 "reviewer-correction-pattern"]
+    clusters = [_ranked_cluster(f"c-{detector}", detector, f"g-{detector}")
+                for detector in detectors]
+    ranked = rank_clusters(clusters, today=_dt.date(2026, 9, 28),
+                           deadlines=[], module_status={})
+    assert [row.cluster.detector for row in ranked] == [
+        "claims-needing-review",
+        "lineage-stale",
+        "evidence-superseded",
+        "source-changed-under-claim",
+        "covering-routes-stale",
+        "study-map-obligation",
+        "reviewer-correction-pattern",
+        "repeated-question-gap",
+        "inspection-without-dossier",
+    ]
+
+
 def test_unknown_detectors_sort_last_deterministically():
     known = _ranked_cluster("c-known", "lineage-stale", "g1")
     novel = _ranked_cluster("c-novel", "future-detector", "g2")
@@ -325,6 +366,29 @@ def test_cli_feed_fires_the_count_detectors(mini_repo, tmp_path):
     assert "reviewer-correction-pattern:route-repair" in goal_ids
     assert "repeated-question-gap:is-clean" not in goal_ids
     assert feed_path.read_bytes() == before
+
+
+def _tree_snapshot(root):
+    """Relpath to bytes for every file under root."""
+    snapshot = {}
+    for path in sorted(root.rglob("*")):
+        if path.is_file():
+            snapshot[path.relative_to(root).as_posix()] = path.read_bytes()
+    return snapshot
+
+
+def test_cli_fed_scan_writes_nothing_to_the_repo(mini_repo, tmp_path):
+    feed_path = tmp_path / "session-feed.json"
+    feed_path.write_text(json.dumps({
+        "question_counts": {"scope-authority": 5},
+        "inspection_counts": [{"files": ["a.yaml", "b.yaml"], "count": 4}],
+        "correction_counts": {"route-repair": 3},
+    }), encoding="utf-8")
+    before = _tree_snapshot(mini_repo)
+    proc = run_los(mini_repo, "intelligence-scan", "--days", "0",
+                   "--feed", str(feed_path))
+    assert proc.returncode == 0, proc.stderr
+    assert _tree_snapshot(mini_repo) == before
 
 
 def test_cli_feed_refuses_gracefully(mini_repo, tmp_path):
