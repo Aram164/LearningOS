@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 41
-schema_fingerprint: sha256:235ba73615470db2cac7114b52bf10cf86a3269c6c406553326ccd6617729fcc
+contract_version: 42
+schema_fingerprint: sha256:d6a8d54b16c80aa83518eba794fc79df26c69c4688615f8af5046eca82835eb1
 record_schemas: 35
 history:
 - version: 1
@@ -319,5 +319,11 @@ history:
   adopted: '2026-09-28'
   note: Clarify inspected_range physical PDF page and text line units; descriptions
     only, no stored shape change
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 42
+  adopted: '2026-09-29'
+  note: 'useful_sections entries require exactly one section-to-note pair (no migration:
+    all 136 loaded entries already single-key)'
   migration: null
   fixture: tests/fixtures/formats/v40/

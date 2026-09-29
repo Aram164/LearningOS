@@ -59,6 +59,7 @@ from learning_os.commands.atlas import (  # noqa: E402
 )
 from learning_os.commands.capability import cmd_capability  # noqa: E402
 from learning_os.commands.capture import cmd_capture  # noqa: E402
+from learning_os.commands.collection_entry import cmd_collection_entry_revise  # noqa: E402
 from learning_os.commands.detour import cmd_detour_create, cmd_detour_resolve  # noqa: E402
 from learning_os.commands.dossier import cmd_dossier  # noqa: E402
 from learning_os.commands.garden import cmd_garden_seed_create  # noqa: E402
@@ -1019,6 +1020,22 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_source_intake_record)
+
+    p = sub.add_parser(
+        "collection-entry-revise",
+        help="revise one collection entry's why line",
+    )
+    record = p.add_mutually_exclusive_group(required=True)
+    record.add_argument("--file")
+    record.add_argument("--record", type=json_object)
+    p.add_argument("--check", action="store_true",
+                   help="report the line-level diff without writing")
+    p.add_argument("--expected-diff-sha256", default=None, type=sha256_value,
+                   help="diff hash from a check run; apply refuses anything else")
+    p.add_argument("--approve", action="store_true")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_collection_entry_revise)
 
     p = sub.add_parser(
         "source-revise",

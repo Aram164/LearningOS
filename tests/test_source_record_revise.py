@@ -97,7 +97,8 @@ def test_check_attach_reports_diff_and_writes_nothing(mini_repo, tmp_path):
     assert row["id"] == "source-demo-book"
     assert set(row["fields"]) == {"material", "evaluations"}
     assert row["fields"]["material"] == {"before": None, "after": URI}
-    assert row["refers"] == {"routes": [], "dossiers": []}
+    assert row["refers"] == {"routes": [], "dossiers": [],
+                                "collections": []}
     assert target.read_bytes() == before
 
 
@@ -139,6 +140,23 @@ def _dossier_unit(root: Path) -> Path:
     source_map = yaml.safe_load(source_map_path.read_text(encoding="utf-8"))
     source_map["sources"][0]["unit_routes"] = [route]
     write_yaml(source_map_path, source_map)
+    write_yaml(root / "sources" / "collections" / "demo-bookshelf.yaml", {
+        "title": "Demo bookshelf", "entries": [
+            {"source": "source-demo-book", "group": "demo-group",
+             "why": "The demo book — download never landed."},
+            {"source": "source-demo-paper", "group": "demo-group",
+             "why": "An unrelated entry."},
+        ]})
+    registry_path = root / "sources" / "sources.yaml"
+    registry = yaml.safe_load(registry_path.read_text(encoding="utf-8"))
+    registry["sources"].append({
+        "id": "source-demo-paper", "title": "Demo Paper", "type": "paper",
+        "authors": ["P. Apier"],
+        "evaluations": [{"concepts": ["concept-expected-value"],
+                         "roles": ["first-learning"], "level": "introductory",
+                         "strengths": ["a crisp derivation"]}],
+    })
+    write_yaml(registry_path, registry)
     return unit_dir
 
 
@@ -169,10 +187,116 @@ def test_check_lists_referring_routes_and_bound_dossiers(mini_repo, tmp_path):
         "module_id": "module-demo", "unit_id": "unit-demo-l01",
         "route_id": "route-demo-l01-book"}]
     assert row["refers"]["dossiers"] == ["unit-demo-l01"]
+    assert row["refers"]["collections"] == [
+        {"collection": "demo-bookshelf", "group": "demo-group",
+         "why": "The demo book — download never landed."}]
     # The draft dossier's basis moves, but nothing approved stales: no
     # replacement is required and the check still passes.
     assert row["affected_units"] == ["unit-demo-l01"]
     assert row["replacements"] == {}
+
+
+def _grinstead_shaped_unit(root: Path, screened: int = 28) -> Path:
+    """A 29-route unit: 28 stable screened routes plus one Grinstead-like
+    route that inherits the source record's material (no vault_path)."""
+    from repo_builders import _sliced_route, add_curriculum
+
+    add_curriculum(root)
+    module_dir = root / "curriculum" / "modules" / "module-demo"
+    unit_dir = module_dir / "units" / "unit-demo-l01"
+    unit_path = unit_dir / "unit.yaml"
+    unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
+    unit["knowledge_map"] = {
+        "summary": "Expected value connects outcomes to probability weights.",
+        "nodes": [
+            {"id": "knowledge-demo-outcomes", "title": "Outcomes",
+             "summary": "A variable maps outcomes to values."},
+            {"id": "knowledge-demo-expectation", "title": "Expectation",
+             "summary": "Expectation is a probability-weighted average."},
+        ],
+    }
+    write_yaml(unit_path, unit)
+    # Stable routes carry their own vault path plus a file locator, so their
+    # checksums never consult the source record (like L04's other 28 routes).
+    demo = root.parent / "materials" / "mathematics" / "demo"
+    manifest_path = root / "records" / "materials-manifest.yaml"
+    manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
+    routes = []
+    for i in range(1, screened + 1):
+        name = f"stable-{i:02d}.pdf"
+        data = f"%PDF-1.4 stable bytes {i}\n".encode()
+        (demo / name).write_bytes(data)
+        manifest["files"][f"mathematics/demo/{name}"] = {
+            "size": len(data), "sha256": _sha(data)}
+        route = _sliced_route(f"route-demo-l01-r{i:02d}", name)
+        route["vault_path"] = f"material://source-demo-book/{name}"
+        route["scope"] = "complementary"
+        routes.append(route)
+    write_yaml(manifest_path, manifest)
+    grinstead = _sliced_route("route-demo-grinstead", "Chapter 4")
+    grinstead["scope"] = "complementary"
+    routes.append(grinstead)
+    source_map_path = module_dir / "source-map.yaml"
+    source_map = yaml.safe_load(source_map_path.read_text(encoding="utf-8"))
+    source_map["sources"][0]["unit_routes"] = routes
+    write_yaml(source_map_path, source_map)
+    return unit_dir
+
+
+def _shaped_dossier(root: Path, screened: int = 28) -> dict:
+    """Fresh approved dossier for the Grinstead-shaped unit, all screened."""
+    from learning_os.material_synthesis import current_unit_material_basis
+
+    basis = current_unit_material_basis(root, "unit-demo-l01")
+    basis["ai_provenance"] = {"request_id": "ai-request-shape-demo",
+                              "delivery_id": "ai-delivery-demo",
+                              "provider": "manual-bundle"}
+    route_ids = ([f"route-demo-l01-r{i:02d}" for i in range(1, screened + 1)]
+                 + ["route-demo-grinstead"])
+    locators = {f"route-demo-l01-r{i:02d}": f"stable-{i:02d}.pdf"
+                for i in range(1, screened + 1)}
+    locators["route-demo-grinstead"] = "Chapter 4"
+    return {
+        "schema_version": 1, "id": "material-synthesis-demo-l01",
+        "type": "unit-material-synthesis", "unit_id": "unit-demo-l01",
+        "status": "approved", "basis": basis,
+        "route_assessments": [{
+            "route_id": rid, "source_id": "source-demo-book",
+            "locator": locators[rid], "review_status": "screened",
+            "concept_ids": ["concept-expected-value"],
+            "reason": f"Screened for the demo lecture ({rid}).",
+        } for rid in route_ids],
+        "comparisons": [],
+        "concept_groups": [{
+            "concept_id": "concept-expected-value",
+            "narrative": "Expectation prices every outcome.",
+            "local_node_ids": ["knowledge-demo-outcomes",
+                               "knowledge-demo-expectation"],
+            "related_unit_ids": ["unit-demo-l01"],
+            "bridge_note_ids": ["note-demo"],
+        }],
+    }
+
+
+def _rebase_request(digest: str, provenance=None, **overrides):
+    request = {
+        "unit_id": "unit-demo-l01", "dossier_digest": digest,
+        "route_ids": ["route-demo-grinstead"],
+        "provenance": provenance or {"request_id": "ai-request-rebase",
+                                     "delivery_id": "ai-delivery-rebase",
+                                     "provider": "manual-bundle"},
+    }
+    request.update(overrides)
+    return request
+
+
+def _dossier_digest(data: dict) -> str:
+    import hashlib as _hashlib
+    import json as _json
+
+    canonical = _json.dumps(data, sort_keys=True,
+                            ensure_ascii=False).encode("utf-8")
+    return "sha256:" + _hashlib.sha256(canonical).hexdigest()
 
 
 def _staged_replacement(root: Path) -> dict:
@@ -239,6 +363,187 @@ def test_attach_refuses_an_unneeded_replacement(mini_repo, tmp_path):
         "is not needed")
 
 
+def _shaped_setup(mini_repo: Path):
+    _with_material_tree(mini_repo)
+    unit_dir = _grinstead_shaped_unit(mini_repo)
+    dossier = _shaped_dossier(mini_repo)
+    _write_dossier(unit_dir, dossier)
+    live = yaml.safe_load(
+        (unit_dir / "material-synthesis.yaml").read_text(encoding="utf-8"))
+    return unit_dir, live
+
+
+def test_rebase_shortcut_rebases_one_screened_route(mini_repo, tmp_path):
+    unit_dir, live = _shaped_setup(mini_repo)
+    record = _revise(dossier_rebases=[
+        _rebase_request(_dossier_digest(live))])
+    package = _package(tmp_path, record)
+    proc = run_los(mini_repo, "source-revise", "--file", str(package), "--check")
+    assert proc.returncode == 0, proc.stderr + proc.stdout
+    # The observed full-replacement check was 43 KB; the shortcut stays small
+    # and never echoes the other 28 assessments (route IDs in `refers` stay).
+    assert len(proc.stdout) < 10000, len(proc.stdout)
+    assert "Screened for the demo lecture (route-demo-l01-r05)" not in proc.stdout
+    body = json.loads(proc.stdout)
+    (row,) = body["diff"]
+    assert row["affected_units"] == ["unit-demo-l01"]
+    (moved,) = row["rebases"]["unit-demo-l01"]["routes"]
+    assert moved["route_id"] == "route-demo-grinstead"
+    assert moved["before"] != moved["after"]
+    assert moved["reason"] == live["route_assessments"][-1]["reason"]
+    assert body["artifact_ids"] == ["source-demo-book", "unit-demo-l01"]
+    applied = approved_v2_call(
+        mini_repo, capability="source.record.revise",
+        payload={"record": record,
+                 "expected_diff_sha256": body["diff_sha256"]},
+        artifact_ids=["source-demo-book", "unit-demo-l01"],
+        idempotency_key="revise-apply-rebase")
+    assert applied.returncode == 0, applied.stderr + applied.stdout
+    written = yaml.safe_load(
+        (unit_dir / "material-synthesis.yaml").read_text(encoding="utf-8"))
+    assert written["route_assessments"] == live["route_assessments"]
+    assert written["comparisons"] == live["comparisons"]
+    assert written["concept_groups"] == live["concept_groups"]
+    assert written["basis"]["material_checksums"]["route-demo-grinstead"] == \
+        moved["after"]
+    assert written["basis"]["ai_provenance"]["request_id"] == "ai-request-rebase"
+    revisions = yaml.safe_load(
+        (mini_repo / "operations" / "transactions" / "revisions.yaml")
+        .read_text(encoding="utf-8"))
+    assert revisions["revisions"]["unit-demo-l01"] == 1
+
+
+def test_rebase_refuses_deep_reviewed_and_evidenced_routes(mini_repo, tmp_path):
+    unit_dir, live = _shaped_setup(mini_repo)
+    deep = yaml.safe_load(yaml.safe_dump(live))
+    target = deep["route_assessments"][-1]
+    target["review_status"] = "deep-reviewed"
+    for field in ("contribution", "assumptions", "notation", "exercise_value",
+                  "best_for", "limitations", "scope_of_absence"):
+        target[field] = f"Deep {field} prose."
+    del target["reason"]
+    target["evidence"] = [{
+        "locator": "Chapter 4", "checksum": live["basis"]["material_checksums"][
+            "route-demo-grinstead"]}]
+    _write_dossier(unit_dir, deep)
+    changed = yaml.safe_load(
+        (unit_dir / "material-synthesis.yaml").read_text(encoding="utf-8"))
+    _refuses(mini_repo, _package(tmp_path, _revise(dossier_rebases=[
+        _rebase_request(_dossier_digest(changed))])),
+        "is not screened")
+    evidenced = yaml.safe_load(yaml.safe_dump(live))
+    evidenced["route_assessments"][-1]["evidence"] = [{
+        "locator": "Chapter 4", "checksum": live["basis"]["material_checksums"][
+            "route-demo-grinstead"]}]
+    _write_dossier(unit_dir, evidenced)
+    changed = yaml.safe_load(
+        (unit_dir / "material-synthesis.yaml").read_text(encoding="utf-8"))
+    _refuses(mini_repo, _package(tmp_path, _revise(dossier_rebases=[
+        _rebase_request(_dossier_digest(changed))])),
+        "carries evidence")
+
+
+def test_rebase_refuses_comparisons_and_stale_dossiers(mini_repo, tmp_path):
+    unit_dir, live = _shaped_setup(mini_repo)
+    compared = yaml.safe_load(yaml.safe_dump(live))
+    for assessment in compared["route_assessments"][-2:]:
+        assessment["review_status"] = "deep-reviewed"
+        for field in ("contribution", "assumptions", "notation",
+                      "exercise_value", "best_for", "limitations",
+                      "scope_of_absence"):
+            assessment[field] = f"Deep {field} prose."
+        del assessment["reason"]
+        assessment["evidence"] = [{
+            "locator": "Chapter 4",
+            "checksum": live["basis"]["material_checksums"][
+                assessment["route_id"]]}]
+    compared["comparisons"] = [{
+        "left_route_id": "route-demo-l01-r28",
+        "right_route_id": "route-demo-grinstead",
+        "relation": "complements", "narrative": "Both cover expectation.",
+        "concept_ids": ["concept-expected-value"],
+        "evidence": {"left": [], "right": []},
+    }]
+    _write_dossier(unit_dir, compared)
+    changed = yaml.safe_load(
+        (unit_dir / "material-synthesis.yaml").read_text(encoding="utf-8"))
+    _refuses(mini_repo, _package(tmp_path, _revise(dossier_rebases=[
+        _rebase_request(_dossier_digest(changed))])),
+        "comparison")
+    stale = yaml.safe_load(yaml.safe_dump(live))
+    stale["basis"]["material_checksums"]["route-demo-grinstead"] = "sha256:" + "0" * 64
+    _write_dossier(unit_dir, stale)
+    changed = yaml.safe_load(
+        (unit_dir / "material-synthesis.yaml").read_text(encoding="utf-8"))
+    _refuses(mini_repo, _package(tmp_path, _revise(dossier_rebases=[
+        _rebase_request(_dossier_digest(changed))])),
+        "already stale")
+
+
+def test_rebase_validates_the_request_itself(mini_repo, tmp_path):
+    unit_dir, live = _shaped_setup(mini_repo)
+    digest = _dossier_digest(live)
+    _refuses(mini_repo, _package(tmp_path, _revise(dossier_rebases=[
+        _rebase_request(digest, route_ids=[])])), "route_ids")
+    _refuses(mini_repo, _package(tmp_path, _revise(dossier_rebases=[
+        _rebase_request(digest, route_ids=["route-demo-grinstead",
+                                           "route-demo-l01-r01"])])),
+        "route_ids")
+    _refuses(mini_repo, _package(tmp_path, _revise(dossier_rebases=[
+        _rebase_request("sha256:" + "f" * 64)])), "changed since")
+    both = _revise(
+        material_syntheses=[{"unit_id": "unit-demo-l01", "dossier": {}}],
+        dossier_rebases=[_rebase_request(digest)])
+    _refuses(mini_repo, _package(tmp_path, both), "only one of")
+    _refuses(mini_repo, _package(tmp_path, _revise(dossier_rebases=[
+        _rebase_request(digest, provenance={"provider": "local"})])),
+        "provenance")
+
+
+def test_rebase_refuses_a_dossier_changed_after_check(mini_repo, tmp_path):
+    unit_dir, live = _shaped_setup(mini_repo)
+    record = _revise(dossier_rebases=[_rebase_request(_dossier_digest(live))])
+    checked = _check(mini_repo, _package(tmp_path, record))
+    live["route_assessments"][-1]["reason"] = "Reworded after check."
+    _write_dossier(unit_dir, live)
+    proc = approved_v2_call(
+        mini_repo, capability="source.record.revise",
+        payload={"record": record,
+                 "expected_diff_sha256": checked["diff_sha256"]},
+        artifact_ids=["source-demo-book", "unit-demo-l01"],
+        idempotency_key="revise-rebase-raced")
+    outer = json.loads(proc.stdout)["error"]["message"]
+    assert "changed since" in json.loads(outer)["error"]
+
+
+def test_rebase_guard_rejects_a_second_moved_basis_field():
+    from learning_os.commands.source_catalog import _rebase_routes_or_refuse
+
+    live = {"source_map_checksum": "sha256:" + "a" * 64,
+            "route_set_checksum": "sha256:" + "b" * 64,
+            "material_checksums": {"route-x": "sha256:" + "c" * 64},
+            "policy": "tiered-v2"}
+    staged = dict(live, route_set_checksum="sha256:" + "d" * 64)
+    try:
+        _rebase_routes_or_refuse("source-s", "unit-u", live, staged,
+                                 {"route-x": {}}, [], ["route-x"])
+    except Exception as exc:  # noqa: BLE001 - asserting the refusal text
+        assert "only material_checksums" in str(exc)
+    else:
+        raise AssertionError("a moved route set must refuse the shortcut")
+    staged_ok = dict(live, material_checksums={"route-x": "sha256:" + "e" * 64})
+    try:
+        _rebase_routes_or_refuse(
+            "source-s", "unit-u", live, staged_ok,
+            {"route-x": {"review_status": "screened", "reason": "r",
+                         "analysis_refs": [{"note_id": "note-x"}]}},
+            [], ["route-x"])
+    except Exception as exc:  # noqa: BLE001 - asserting the refusal text
+        assert "analysis references" in str(exc)
+    else:
+        raise AssertionError("analysis refs must refuse the shortcut")
+
+
 def test_revise_rejects_unknown_and_malformed_ids(mini_repo, tmp_path):
     _with_material_tree(mini_repo)
     _refuses(mini_repo, _package(tmp_path, _revise(id="source-ghost")),
@@ -253,6 +558,21 @@ def test_revise_refuses_foreign_fields(mini_repo, tmp_path):
              "owned by intake")
     _refuses(mini_repo, _package(tmp_path, _revise(topics=["t"])),
              "outside the revise allowlist")
+
+
+def test_revise_rejects_locator_use_sections_with_the_pair_form(mini_repo, tmp_path):
+    _with_material_tree(mini_repo)
+    bad = [{"concepts": ["concept-expected-value"], "roles": ["first-learning"],
+            "level": "introductory", "strengths": ["s"],
+            "useful_sections": [{"locator": "§4.1", "use": "conditioning"}]}]
+    _refuses(mini_repo, _package(tmp_path, _revise(evaluations=bad)),
+             "section-to-note pair")
+    other_two_keys = [{"concepts": ["concept-expected-value"],
+                       "roles": ["first-learning"], "level": "introductory",
+                       "strengths": ["s"],
+                       "useful_sections": [{"a": "1", "b": "2"}]}]
+    _refuses(mini_repo, _package(tmp_path, _revise(evaluations=other_two_keys)),
+             "useful_sections")
 
 
 def test_revise_with_no_changes_is_refused(mini_repo, tmp_path):
