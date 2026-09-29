@@ -46,6 +46,15 @@ stages:
     route_id: route-84b3767dc900c066ef0a88e5
     angle: 'The scope checklist: the fifteen 2026 decks decide what is examinable before any repair is
       chosen.'
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD L01-L15 scope spine' against the stage 'SaD.0 — cold
+        diagnostic and scope calibration'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:45637b7336fcef6faf8be3cfcd3d6b30ba5af2631a95fc5cc65998d83715db0a
   - kind: practise
     label: Representative current exercise diagnostic
     source_id: source-sad-uebungen
@@ -58,6 +67,15 @@ stages:
       is headed “Übungsblatt 4” (Berlin, 10.06.2026). The earlier claim that no Blatt 3 or Blatt 4 exists
       was wrong. That sheet’s heading is dated 2026 while its Moodle link reads sds25; the provenance
       ambiguity is recorded and no exam date is inferred from it.'
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD exercises and clustering authority' against the stage
+        'SaD.0 — cold diagnostic and scope calibration'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:358b6385ddae148582408ac1931a80ae8d7a68112b116dbeb34990ef5e467a19
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-calibrate/notes.md
   attachments: []
   source_feedback: []
@@ -92,6 +110,15 @@ stages:
     scope_triage: required-now
     route_id: route-84b3767dc900c066ef0a88e5
     angle: The two decks that own the descriptive definitions this stage is checked against.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD L01-L15 scope spine' against the stage 'SaD.1 — descriptive
+        statistics, data quality, and base rates (L01–L02)'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:7cefb19004c8bdd3574748a79bfc0e7470d264acd73a3530ca6b88cd62441bf0
   - kind: practise
     label: Current descriptive practice
     source_id: source-sad-uebungen
@@ -99,6 +126,15 @@ stages:
     scope_triage: required-now
     route_id: route-427abe0fd724b6323bd2bf36
     angle: The assessed descriptive sheet and its worked tutorial, in the course’s own notation.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD exercises and clustering authority' against the stage
+        'SaD.1 — descriptive statistics, data quality, and base rates (L01–L02)'. The stage description
+        selects that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:3e60d792d1840a1981fb1e8d20e29194dd15085daac38a3aab36f0a69d3241ac
   - kind: reference
     label: 'Existing L01–L02 durable notes: note-sad-l01-introduction, note-sad-l01-exercise-bank, note-sad-l02-descriptive-basics,
       note-sad-l02-exercise-bank'
@@ -115,6 +151,15 @@ stages:
     route_id: route-5ef907d26eefddbfc3abd22c
     angle: German derivation and vocabulary for a descriptive step the deck pass got wrong; only the error-matched
       sections.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Fahrmeir — German Statistics derivation spine' against the stage
+        'SaD.1 — descriptive statistics, data quality, and base rates (L01–L02)'. The stage description
+        selects that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:d554d58a50546561f1db9d51ce841bc78dcbc229c091f5b8f68df9c9445e74a5
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s01-descriptive/notes.md
   attachments: []
   source_feedback: []
@@ -146,6 +191,15 @@ stages:
     scope_triage: required-now
     route_id: route-84b3767dc900c066ef0a88e5
     angle: The deck that owns the correlation, least-squares and gradient-descent definitions.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD L01-L15 scope spine' against the stage 'SaD.2 — correlation,
+        regression, and optimization (L03)'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:cfe5afba00059ce96771a4a6ebc2e806a9fb236b335702562f02e9385b0fdfe3
   - kind: practise
     label: Current L03 practice
     source_id: source-sad-uebungen
@@ -153,6 +207,15 @@ stages:
     scope_triage: required-now
     route_id: route-427abe0fd724b6323bd2bf36
     angle: The assessed regression tasks and their worked tutorial.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD exercises and clustering authority' against the stage
+        'SaD.2 — correlation, regression, and optimization (L03)'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:e64b11537609c4d3fbc158d52ef0501b25677a2f931af1d34d8617a3326bf404
   - kind: reference
     label: SaD × AML × ISLP regression bridge (note-regression-sad-aml-islp-bridge)
     vault_path: knowledge/notes/cross-domain/note-regression-sad-aml-islp-bridge.md
@@ -168,6 +231,15 @@ stages:
     route_id: route-5ef907d26eefddbfc3abd22c
     angle: German treatment of correlation, causation and the Ausgleichsgerade; only the sections a recorded
       error points at.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Fahrmeir — German Statistics derivation spine' against the stage
+        'SaD.2 — correlation, regression, and optimization (L03)'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:c5dfe6651574d2133ad4ba3f4bc59c02336e8a0c75c6e68a02d54264f15a7f5c
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s02-regression/notes.md
   attachments: []
   source_feedback: []
@@ -201,6 +273,15 @@ stages:
     scope_triage: required-now
     route_id: route-84b3767dc900c066ef0a88e5
     angle: The decks that own the probability axioms, Bayes and the counting grid.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD L01-L15 scope spine' against the stage 'SaD.3 — probability,
+        Bayes, independence, and counting (L04–L05)'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:8c6762e54c2fa721e40c8b5c25c297c61aeffccaae22920c979ce9e16dbe7618
   - kind: practise
     label: Current probability and counting practice
     source_id: source-sad-uebungen
@@ -208,6 +289,15 @@ stages:
     scope_triage: required-now
     route_id: route-427abe0fd724b6323bd2bf36
     angle: The assessed probability and counting tasks with their worked tutorial.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD exercises and clustering authority' against the stage
+        'SaD.3 — probability, Bayes, independence, and counting (L04–L05)'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:98f881501fce286541716780f47cd10fb39e32829db173e93ed19da4bf303136
   - kind: read
     label: Blitzstein conditioning and strategic counting
     source_id: source-blitzstein-hwang
@@ -217,6 +307,15 @@ stages:
     route_id: route-d24a91f3c931a404ae77ff90
     angle: Story-first repair for an order/repetition or Bayes-intuition failure, opened only after the
       gate fails.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blitzstein — conditioning and strategic counting' against the stage
+        'SaD.3 — probability, Bayes, independence, and counting (L04–L05)'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:db2dca9ad2451421ab77f7c78c4b04b7cbe80a57246d2465c42bf0ed6dde9d1f
   - kind: reference
     label: 'Existing L04–L05 durable notes: note-sad-l04-probability-bayes, note-sad-l04-exercise-bank,
       note-sad-l05-combinatorics, note-sad-l05-exercise-bank'
@@ -254,6 +353,15 @@ stages:
     scope_triage: required-now
     route_id: route-84b3767dc900c066ef0a88e5
     angle: The deck that owns PMF/PDF/CDF, expectation and variance.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD L01-L15 scope spine' against the stage 'SaD.4 — random
+        variables, expectation, variance, and CDFs (L06)'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:ed0e79726627b8c6968f9a03692eea60e1fea9daedd4c3cee0e8c9bae1018d45
   - kind: practise
     label: Current L06 practice
     source_id: source-sad-uebungen
@@ -261,6 +369,15 @@ stages:
     scope_triage: required-now
     route_id: route-427abe0fd724b6323bd2bf36
     angle: The assessed random-variable tasks and their worked tutorial.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD exercises and clustering authority' against the stage
+        'SaD.4 — random variables, expectation, variance, and CDFs (L06)'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:eab043256004b6ea0b79be341873dadd226d7f901862b5c34890d4a15c0872cd
   - kind: read
     label: Fahrmeir random-variable layer
     source_id: source-fahrmeir-statistik
@@ -270,6 +387,15 @@ stages:
     route_id: route-5ef907d26eefddbfc3abd22c
     angle: German derivation of the random-variable machinery in the exam’s register; only the error-matched
       sections.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Fahrmeir — German Statistics derivation spine' against the stage
+        'SaD.4 — random variables, expectation, variance, and CDFs (L06)'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:a9c98ca263114b1a50bf5775631fbb90c8f57b398cb28b83bb4999a76f3ffda3
   - kind: reference
     label: Legacy L06–L10 synthesis and cold checks (note-sad-probability-inference-deep-plan)
     vault_path: knowledge/notes/mathematics/note-sad-probability-inference-deep-plan.md
@@ -308,6 +434,15 @@ stages:
     scope_triage: required-now
     route_id: route-84b3767dc900c066ef0a88e5
     angle: The deck that owns the named discrete families and the model-choice grid.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD L01-L15 scope spine' against the stage 'SaD.5 — discrete
+        distributions and model choice (L07)'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:6e3434b109cde7e40bc2355cfd3adc0e6ca3eb5f102b2e835ebaddf23f5340b6
   - kind: practise
     label: Current L07 practice
     source_id: source-sad-uebungen
@@ -315,6 +450,15 @@ stages:
     scope_triage: required-now
     route_id: route-427abe0fd724b6323bd2bf36
     angle: The assessed distribution tasks and their worked tutorial.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD exercises and clustering authority' against the stage
+        'SaD.5 — discrete distributions and model choice (L07)'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:a6064dfb2ae9e01ea1a9e1adf38e4d04a7a5e19739df75f336a3b3037a05246f
   - kind: read
     label: Fahrmeir named discrete distributions
     source_id: source-fahrmeir-statistik
@@ -323,6 +467,15 @@ stages:
     scope_triage: required-now
     route_id: route-5ef907d26eefddbfc3abd22c
     angle: German definitions of the named discrete models, with their conditions stated explicitly.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Fahrmeir — German Statistics derivation spine' against the stage
+        'SaD.5 — discrete distributions and model choice (L07)'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:f453cb378e1b1141a64a1cadff0068ca6f1ffad03014e85c0bf2862137e78f40
   - kind: practise
     label: Fahrmeir Arbeitsbuch distribution drills
     source_id: source-fahrmeir-arbeitsbuch
@@ -330,6 +483,15 @@ stages:
     scope_triage: helpful-now
     route_id: route-eed7d55ff58f1e488e9c30c9
     angle: Solution-backed German drills on the exact family a current task exposed.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Fahrmeir Arbeitsbuch — solution-backed repair' against the stage
+        'SaD.5 — discrete distributions and model choice (L07)'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:8c7ca90cca37f0ccee6b3969ea67641a8349fc6b96bedeb890b305d03f1ef32f
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s05-discrete-distributions/notes.md
   attachments: []
   source_feedback: []
@@ -363,6 +525,15 @@ stages:
     scope_triage: required-now
     route_id: route-84b3767dc900c066ef0a88e5
     angle: The deck that owns standardisation, the CLT and the likelihood derivation.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD L01-L15 scope spine' against the stage 'SaD.6 — Normal
+        distribution, CLT, approximations, and likelihood (L08)'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:0f373f334aeac1a3f26c488e2f01c0a1a4ae19673beeccb6efa4b4bd2981a721
   - kind: practise
     label: Current L08 practice
     source_id: source-sad-uebungen
@@ -371,6 +542,15 @@ stages:
     scope_triage: required-now
     route_id: route-427abe0fd724b6323bd2bf36
     angle: The assessed Normal/CLT tasks and their worked tutorial.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD exercises and clustering authority' against the stage
+        'SaD.6 — Normal distribution, CLT, approximations, and likelihood (L08)'. The stage description
+        selects that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:9e2bc1b780d594b419d8109220f3efbcdd257b68ce1723f9b115e50b92ca3c44
   - kind: read
     label: Fahrmeir Normal and limit-theorem layer
     source_id: source-fahrmeir-statistik
@@ -380,6 +560,15 @@ stages:
     scope_triage: required-now
     route_id: route-5ef907d26eefddbfc3abd22c
     angle: German statement of the Normal family, the limit theorems and the approximation rules.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Fahrmeir — German Statistics derivation spine' against the stage
+        'SaD.6 — Normal distribution, CLT, approximations, and likelihood (L08)'. The stage description
+        selects that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:6329f201d298d4942e628ad39c252b660e23bd3639271a633d51ccf7a3a40122
   - kind: read
     label: One CLT or MLE visual repair
     source_id: source-statquest
@@ -388,6 +577,15 @@ stages:
     scope_triage: helpful-now
     route_id: route-adbac42d6f53614447d25d56
     angle: One ten-minute visual repair, chosen by the diagnostic — not a course to work through.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'StatQuest — one short L08 intuition repair' against the stage 'SaD.6
+        — Normal distribution, CLT, approximations, and likelihood (L08)'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:71c8de5437fc26b52611d4817e01bf35b08e3bc0b223fbad1dabf1137016d521
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s06-normal-clt-likelihood/notes.md
   attachments: []
   source_feedback: []
@@ -419,6 +617,15 @@ stages:
     scope_triage: required-now
     route_id: route-84b3767dc900c066ef0a88e5
     angle: The deck that owns estimators, standard error and interval construction.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD L01-L15 scope spine' against the stage 'SaD.7 — estimators,
+        uncertainty, and confidence intervals (L09)'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:ff1a571d70c1f02d4d9dba1d0591498ddbcaff8bf357f8b6b73885c1838a8906
   - kind: practise
     label: Current L09 practice
     source_id: source-sad-uebungen
@@ -427,6 +634,15 @@ stages:
     scope_triage: required-now
     route_id: route-427abe0fd724b6323bd2bf36
     angle: The bootstrap/interval task and its worked tutorial — a bootstrap exercise, not a direct z-interval.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD exercises and clustering authority' against the stage
+        'SaD.7 — estimators, uncertainty, and confidence intervals (L09)'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:db4eea2fc3c5b370913431467299d3efee085fcd8fc70625e73153253caf4cc6
   - kind: read
     label: Fahrmeir parameter estimation
     source_id: source-fahrmeir-statistik
@@ -434,6 +650,15 @@ stages:
     scope_triage: required-now
     route_id: route-5ef907d26eefddbfc3abd22c
     angle: German vocabulary for Schätzer and Konfidenzintervall after an estimation error.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Fahrmeir — German Statistics derivation spine' against the stage
+        'SaD.7 — estimators, uncertainty, and confidence intervals (L09)'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:2673c9bfdbdbf2511c54005a6cfdeff31824a625fef220ba58c0975b9728c8aa
   - kind: practise
     label: Fahrmeir Arbeitsbuch estimation drills
     source_id: source-fahrmeir-arbeitsbuch
@@ -441,6 +666,15 @@ stages:
     scope_triage: helpful-now
     route_id: route-eed7d55ff58f1e488e9c30c9
     angle: Solution-backed German estimation drills, opened only after a current task exposed the gap.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Fahrmeir Arbeitsbuch — solution-backed repair' against the stage
+        'SaD.7 — estimators, uncertainty, and confidence intervals (L09)'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:09068d206dd6b9a8c72b3c8ca1c7f200798922c5f6ea6ee880745d0b88ebc59c
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s07-estimation/notes.md
   attachments: []
   source_feedback: []
@@ -474,6 +708,15 @@ stages:
     scope_triage: required-now
     route_id: route-84b3767dc900c066ef0a88e5
     angle: The deck that owns the test decisions — and carries the z-statistic erratum corrected in L10.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD L01-L15 scope spine' against the stage 'SaD.8 — hypothesis
+        tests, p-values, errors, and power (L10)'. The stage description selects that stage's task or
+        reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:b653f55294f81db75d0b952332faed20207efca83fd61f128b32f57e4c76abcf
   - kind: practise
     label: Current L10 practice
     source_id: source-sad-uebungen
@@ -481,6 +724,15 @@ stages:
     scope_triage: required-now
     route_id: route-427abe0fd724b6323bd2bf36
     angle: The assessed testing tasks and their worked tutorials.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD exercises and clustering authority' against the stage
+        'SaD.8 — hypothesis tests, p-values, errors, and power (L10)'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:291cc05db6152b3aea4fcadb49074fc0b3a5e456ed8903c08aab663663aa84a8
   - kind: read
     label: Fahrmeir hypothesis tests
     source_id: source-fahrmeir-statistik
@@ -489,6 +741,15 @@ stages:
     scope_triage: required-now
     route_id: route-5ef907d26eefddbfc3abd22c
     angle: German testing principles — Fehlentscheidungen, Gütefunktion, Überschreitungswahrscheinlichkeit.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Fahrmeir — German Statistics derivation spine' against the stage
+        'SaD.8 — hypothesis tests, p-values, errors, and power (L10)'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:6c6d7a658241a13f3a4a5ac0376425fe4c83eb324362f5c79b608b196ad048b2
   - kind: practise
     label: FAU solved testing transfer
     source_id: source-fau-klausur-ws1415
@@ -498,6 +759,15 @@ stages:
     route_id: route-6869536b1af99f612e9ffc59
     angle: Solved German exam items on the exact test that failed; the paper as a whole stays reserved
       for the timed half-mock in SaD.X.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'FAU solved German Statistics transfer' against the stage 'SaD.8 —
+        hypothesis tests, p-values, errors, and power (L10)'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:9ab7856505fe891d1044c4d7f17f11194ee8006d24eb91946e43adecc35a7d8a
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s08-testing/notes.md
   attachments: []
   source_feedback: []
@@ -528,6 +798,15 @@ stages:
     scope_triage: required-now
     route_id: route-84b3767dc900c066ef0a88e5
     angle: The deck that owns the workflow, leakage and evaluation vocabulary, including the ROC/PR distinction.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD L01-L15 scope spine' against the stage 'SaD.9 — data-science
+        workflow, leakage, and evaluation (L11)'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:81ff6e09154b897114990ba631a36058b49bc0b17220a9a179e4395d0581b99f
   - kind: practise
     label: Current L11 evaluation practice
     source_id: source-sad-uebungen
@@ -535,6 +814,15 @@ stages:
     scope_triage: required-now
     route_id: route-427abe0fd724b6323bd2bf36
     angle: The assessed evaluation task and its worked tutorial.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD exercises and clustering authority' against the stage
+        'SaD.9 — data-science workflow, leakage, and evaluation (L11)'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:6b68aa3c8b34234506096df350b8c991d5457e20d98f37c9ab39655f26112ff1
   - kind: read
     label: Kelleher workflow framing
     source_id: source-kelleher-fmlpda
@@ -544,6 +832,15 @@ stages:
     route_id: route-fabc07c65cb1dee886db114f
     angle: The step before L11 starts — turning a stated goal into a target feature — plus evaluation
       designs at length.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kelleher — SaD machine-learning companion' against the stage 'SaD.9
+        — data-science workflow, leakage, and evaluation (L11)'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:3b6e8174f2b4077d5d6d60ff31fdb211e6d0cb71116216a7cdb3cabc98a7f678
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s09-workflow-evaluation/notes.md
   attachments: []
   source_feedback: []
@@ -574,6 +871,15 @@ stages:
     scope_triage: required-now
     route_id: route-84b3767dc900c066ef0a88e5
     angle: The deck that owns entropy, information gain, pruning and the ensembles.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD L01-L15 scope spine' against the stage 'SaD.10 — decision
+        trees and ensembles (L12)'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:3b405f324e390d20212b3da25e215bdf24ed3799083bb5d7411c2a11c3440ba2
   - kind: read
     label: Kelleher information-based learning
     source_id: source-kelleher-fmlpda
@@ -583,6 +889,15 @@ stages:
     route_id: route-fabc07c65cb1dee886db114f
     angle: One ID3 example worked with the arithmetic printed at every node — the calculation an exam
       sets.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kelleher — SaD machine-learning companion' against the stage 'SaD.10
+        — decision trees and ensembles (L12)'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:3f71f9c5e6e45f4a92e0a8ef1ba78bc195dfcffa5f4bea029315d60a2c4a530a
   - kind: practise
     label: Cornell solution-backed trees and AdaBoost
     source_id: source-cs4780-homeworks
@@ -596,6 +911,15 @@ stages:
       was wrong. Problem 2 is a normalisation proof, not a multi-round numeric AdaBoost trace. The Fall
       PDF and TeX differ on Problem 1(b), so that pruning solution is not certified: do not treat the
       neighbouring solution file as its answer key.'
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Cornell solution-backed tree and k-NN tasks' against the stage 'SaD.10
+        — decision trees and ensembles (L12)'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:76e9c2299bdca77496b699b5d19bfc1cbc9c5e94bc94eabc87767f75a6cda361
   - kind: practise
     label: MIT ID3/tree tracing reserve
     source_id: source-mit-6034-quizzes
@@ -604,6 +928,15 @@ stages:
     scope_triage: helpful-now
     route_id: route-0591d0ea916475d5ea97b91d
     angle: A compact hand-traced tree under exam format, with official intermediate steps to check against.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'MIT trace problems for trees and neural networks' against the stage
+        'SaD.10 — decision trees and ensembles (L12)'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:4e0eefdd4667489568dc616a8087c54b267f4d435bbc754ea1d51de137bddc6a
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s10-trees-ensembles/notes.md
   attachments: []
   source_feedback: []
@@ -636,6 +969,15 @@ stages:
     scope_triage: required-now
     route_id: route-84b3767dc900c066ef0a88e5
     angle: The deck that owns k-NN, the distance measures and the metric caveats.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD L01-L15 scope spine' against the stage 'SaD.11 — similarity,
+        k-NN, search, and clustering (L13 + UE7)'. The stage description selects that stage's task or
+        reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:ba4feabf2cdab0fc6129ac277b4422f7e381f23113e23154f6b1f706b2eacabd
   - kind: practise
     label: Current UE7 clustering/similarity bridge
     source_id: source-sad-uebungen
@@ -644,6 +986,15 @@ stages:
     scope_triage: required-now
     route_id: route-427abe0fd724b6323bd2bf36
     angle: The clustering authority — the one SaD topic with no lecture deck of its own.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD exercises and clustering authority' against the stage
+        'SaD.11 — similarity, k-NN, search, and clustering (L13 + UE7)'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:7fc9aff22893354f43ae84b45cdf695edb78542738d4e6bced0d396a2ab2ed84
   - kind: reference
     label: Existing instance-based reference (note-sad-l11-instance-based)
     vault_path: knowledge/notes/mathematics/note-sad-l11-instance-based.md
@@ -661,6 +1012,15 @@ stages:
     angle_detail: 'Take the Fall 2018 PDF first: it is the k-NN problem with a published solution PDF.
       The 2017 Spring set is HTML and weights distance measures and dimensionality more heavily, so it
       is the second pass rather than an equivalent alternative.'
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Cornell solution-backed tree and k-NN tasks' against the stage 'SaD.11
+        — similarity, k-NN, search, and clustering (L13 + UE7)'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:2152e4628a838b87bc4d47432a866effc7ae4def43bf222d69db6958a964f6ec
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s11-similarity-clustering/notes.md
   attachments: []
   source_feedback: []
@@ -692,13 +1052,39 @@ stages:
     scope_triage: required-now
     route_id: route-84b3767dc900c066ef0a88e5
     angle: The deck that owns smoothing, continuous features and the Bayesian-network sketch.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD L01-L15 scope spine' against the stage 'SaD.12 — Naive
+        Bayes extensions and Bayesian networks (L14)'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:3e227d729863bd38513b33dd9ee7c41d24ed8cfbcf26e854d8fb3e96f17355e1
   - kind: practise
     label: Current L14 probability-based practice
     source_id: source-sad-uebungen
-    locator: exercise-slides/UE6.pdf probability-based learning section
+    locator: exercise-slides/UE4.pdf, PDF pp. 9-12, Aufgabe 2(a)-(d)
     scope_triage: required-now
     route_id: route-427abe0fd724b6323bd2bf36
-    angle: The assessed probability-based learning tasks and their worked tutorial.
+    angle: Practises the categorical Naive Bayes recap and its conditional-independence assumption.
+    vault_path: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+    angle_detail: UE4 PDF pp. 9-10 derive total probability and Bayes; pp. 11-12 compare two class scores
+      for basketball and swimming, then question conditional independence. UE6 contains tests, neural
+      networks and evaluation, so the earlier probability-based-learning locator was misleading. This
+      recap does not cover Gaussian/count likelihoods or Bayesian networks; keep the other L14 materials
+      for those.
+    angle_review:
+      kind: correction
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Replaces the UE6 probability-based-learning pointer with the inspected UE4 categorical
+        Naive Bayes recap, explicitly limiting the claim to that content.
+      fingerprint: sha256:949c66f75d7d3c8acb9a7fa115d946e3a2ca8878a0c377d88472ff4e9becb220
+      evidence:
+      - material_uri: material://source-sad-ss26-lectures/exercise-slides/UE4.pdf
+        file_sha256: sha256:4d3703977a1bdfdddc3c9ba25caf75de20a0b323d6c4fc62af71b896a67589e5
+        locator: PDF pp. 9-12, Aufgabe 2(a)-(d)
   - kind: read
     label: Kelleher probability-based learning
     source_id: source-kelleher-fmlpda
@@ -708,6 +1094,15 @@ stages:
     scope_triage: helpful-now
     route_id: route-fabc07c65cb1dee886db114f
     angle: Naive Bayes first, then the graphical generalisation — the order the deck compresses.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kelleher — SaD machine-learning companion' against the stage 'SaD.12
+        — Naive Bayes extensions and Bayesian networks (L14)'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:4527a035a0ddfefbae83a5a72dce662a6db4f8a7355bdf7d501c8afad7f93974
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s12-probabilistic-learning/notes.md
   attachments: []
   source_feedback: []
@@ -739,6 +1134,15 @@ stages:
     scope_triage: required-now
     route_id: route-84b3767dc900c066ef0a88e5
     angle: The deck that owns the forward pass, backpropagation and the closing outlook.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD L01-L15 scope spine' against the stage 'SaD.13 — neural
+        networks, backpropagation, and training (L15)'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:7eeccbf4d4186b461cfacd5df97e8ed37fad44168c8084ebd32273601b8e4991
   - kind: practise
     label: Current L15 forward task
     source_id: source-sad-uebungen
@@ -746,6 +1150,15 @@ stages:
     scope_triage: required-now
     route_id: route-427abe0fd724b6323bd2bf36
     angle: The assessed by-hand forward task and its worked tutorial.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD exercises and clustering authority' against the stage
+        'SaD.13 — neural networks, backpropagation, and training (L15)'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:68b7ba4a3c78b40e0f7807667461a6b07e8d822bdc2434ac3d390b719cffdf6e
   - kind: practise
     label: One solution-backed neural-network trace
     source_id: source-mit-6034-quizzes
@@ -754,6 +1167,15 @@ stages:
     scope_triage: required-now
     route_id: route-0591d0ea916475d5ea97b91d
     angle: A two-layer network traced by hand under exam format, with official intermediate steps.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'MIT trace problems for trees and neural networks' against the stage
+        'SaD.13 — neural networks, backpropagation, and training (L15)'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:2a8d03fb17e362abd486d31b49fa96dc9d5b576c1c29709a7646b7c4d5a65583
   - kind: read
     label: Kelleher error-based learning — the regression and optimization prerequisite
     source_id: source-kelleher-fmlpda
@@ -767,6 +1189,15 @@ stages:
     angle_detail: §7.6 (PDF p. 416) states in the book’s own words that the chapter does not cover artificial
       neural networks. Use it for the error surface, the descent step and the learning rate; the multilayer
       and backpropagation material comes from the dedicated network routes on L15.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kelleher — SaD machine-learning companion' against the stage 'SaD.13
+        — neural networks, backpropagation, and training (L15)'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:1fadcfbd7debd97a91cce7470957d6be902c6d2735811ec6d646312a6f8056c2
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s13-neural-networks/notes.md
   attachments: []
   source_feedback: []
@@ -807,6 +1238,15 @@ stages:
     route_id: route-6869536b1af99f612e9ffc59
     angle: 'The one external paper long enough to be a real Statistics-only half-mock: taken once, timed,
       before the solutions are opened.'
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'FAU solved German Statistics transfer' against the stage 'SaD.X —
+        Statistics-only retrieval and timed half-mocks'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:8951e94e8dbbaa16d4f3c62cdb0b93cbe26a320d153a35c5aa0f1ee969924a2d
   - kind: practise
     label: Fresh external German Statistics tasks
     source_id: source-sad-klausuren-extern
@@ -817,6 +1257,15 @@ stages:
     route_id: route-e6b26b277916b868a8da65a5
     angle: 'German exam wording from four other examiners: take topic-matched tasks not already spent,
       filtered against the current decks.'
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'External German Statistics exam bank' against the stage 'SaD.X —
+        Statistics-only retrieval and timed half-mocks'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:1813923e0eb8af76d0f66dae389979c7c200411890dafb87fede3d6312c1d50d
   - kind: practise
     label: MIT 18.05 solved-exam reserve
     source_id: source-mit-1805
@@ -824,6 +1273,15 @@ stages:
     scope_triage: helpful-now
     route_id: route-1e172cc16490b20444290684
     angle: One English reserve question, only when every German equivalent on that topic is spent.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'MIT 18.05 solved-exam reserve' against the stage 'SaD.X — Statistics-only
+        retrieval and timed half-mocks'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:13e8c3a172b89b61b0999bc481cbfbe7ae4503c63181a3b42e082616c0e824aa
   - kind: read
     label: Current SaD decks for correction authority
     source_id: source-sad-ss26-lectures
@@ -831,6 +1289,15 @@ stages:
     scope_triage: required-now
     route_id: route-84b3767dc900c066ef0a88e5
     angle: 'The correction authority: the deck that owns a definition settles it, not the external paper.'
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current SaD L01-L15 scope spine' against the stage 'SaD.X — Statistics-only
+        retrieval and timed half-mocks'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:ae2ca6e3b07cd1071e58f1d68bbb8919612c8a098a537616afa201310c6e78de
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-exam-prep/stages/stage-m2-sad-s14-exam-transfer/notes.md
   attachments: []
   source_feedback: []

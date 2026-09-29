@@ -144,7 +144,7 @@ list to also update.
      preserves source, group, order and all other entries.
 3. **List it (optional):** if it belongs in a curated per-domain list, add an
    entry to the matching `sources/collections/<name>.yaml` (workflow 6b).
-4. **Verify:** `python tools/validate.py --compact` then `python tools/generate.py`.
+4. **Verify:** `.venv/bin/python tools/validate.py --compact` then `.venv/bin/python tools/generate.py`.
 
 **Video intake and examination.** At intake, use only the title, publisher,
 description and known course or playlist structure to place a provisional
@@ -503,7 +503,7 @@ Modules and workspaces are deliberately decoupled: one module may spawn several 
    prospective sea.
 3. **Open the first workspace(s).** Create one workspace per distinct effort (workflow 1) — not one per module. A combined module examined under a single grade may still be one exam-prep workspace; an independent project gets its own. A course is not a continuous effort, so `standing: false`.
 4. **Wire dependencies, if any.** If the new effort waits on or feeds another, record that in `COORDINATION.md` Dependencies (workflow 9). No exam dates here — they live in the owning academic module.
-5. **Rebuild and validate** (`python tools/generate.py`, then `python tools/validate.py --compact`).
+5. **Rebuild and validate** (`.venv/bin/python tools/generate.py`, then `.venv/bin/python tools/validate.py --compact`).
 
 Check before creating: never open a workspace before its module record exists, and never mint a second record for a module already present.
 
@@ -747,7 +747,7 @@ without refreshing its snapshot, revisions or retry identity.
    — either through the saved-preflight shortcut above or an explicit envelope:
 
    ```bash
-   python tools/los.py capability module.plan.import --payload-file envelope.json
+   .venv/bin/python tools/los.py capability module.plan.import --payload-file envelope.json
    ```
 
    `module-plan-import … --expected-snapshot` does **not** write. Every
@@ -832,7 +832,7 @@ gateway envelope; review both, then submit the envelope unchanged.
 4. **Submit** the exact envelope:
 
    ```bash
-   python tools/los.py capability note.analysis.save_batch --payload-file <out>/envelope.json
+   .venv/bin/python tools/los.py capability note.analysis.save_batch --payload-file <out>/envelope.json
    ```
 
    Any canonical change between prep and submit surfaces as
@@ -848,9 +848,9 @@ mutating commands (`capture --text`, `note-revise`, …) refuse with exit 2
 disabled"*) by design, never by accident. This section is the complete
 construction recipe — nothing else is needed.
 
-1. **Payload schema.** `python tools/los.py capabilities <name> --json`
+1. **Payload schema.** `.venv/bin/python tools/los.py capabilities <name> --json`
    is the payload contract for capability `<name>`.
-2. **Snapshot.** `python tools/los.py bootstrap --compact` prints
+2. **Snapshot.** `.venv/bin/python tools/los.py bootstrap --compact` prints
    `snapshot_id` (`sha256:…`); that exact string is `expected_snapshot`.
    Any canonical change between reading it and submitting refuses the
    write as `STALE_SNAPSHOT` (exit 3) — re-read and re-seal.
@@ -897,7 +897,7 @@ construction recipe — nothing else is needed.
    The approval subject is the operator's assertion that the learner
    approved this exact intent, guarded by the snapshot/revision checks —
    not cryptographic proof that a human was present.
-6. **Submit.** `python tools/los.py capability <name> --payload-file
+6. **Submit.** `.venv/bin/python tools/los.py capability <name> --payload-file
    envelope.json`. Exit 0 commits (or replays); exit 2 refuses; exit 3
    is `STALE_SNAPSHOT`.
 
@@ -929,18 +929,18 @@ not a missing diagnosis: the `message` names the defect.
 **Worked capture.** Inbox capture (`§2`) via the envelope route:
 
 ```bash
-SNAP=$(python tools/los.py bootstrap --compact \
-  | python -c 'import json,sys; print(json.load(sys.stdin)["snapshot_id"])')
+SNAP=$(.venv/bin/python tools/los.py bootstrap --compact \
+  | .venv/bin/python -c 'import json,sys; print(json.load(sys.stdin)["snapshot_id"])')
 # envelope.json: schema_version 2, request_id "request-<key>",
 # idempotency_key "<key>", capability "capture.create", channel "operator",
 # expected_snapshot "$SNAP",
 # expected_revisions {"capture-request:<key>": 0},
 # approval {"kind": "operator-approval", "subject_sha256": <intent hash>},
 # payload {"text": "…"}
-python tools/los.py capability capture.create --payload-file envelope.json
+.venv/bin/python tools/los.py capability capture.create --payload-file envelope.json
 ```
 
-**Sealing helper.** `python tools/seal_envelope.py --capability NAME
+**Sealing helper.** `.venv/bin/python tools/seal_envelope.py --capability NAME
 --payload JSON-or-@FILE --key KEY --revision ART=REV` reads the snapshot
 live and emits the sealed envelope above (to stdout, or `--out` a scratch
 path — never inside the repo). It performs steps 2, 4 and 5, minting a
@@ -1045,3 +1045,38 @@ names the first stage known to have failed (`core.admission`,
 `core.snapshot_guard`, `core.revision_guard`, `core.approval`,
 `core.replay`, `core.validation`, `core.commit`, `core.receipt`,
 `core.projection`, `ui.*`), or null when the operation settled.
+
+## 29. Review a stage's material angle
+
+A route describes a material's general contribution; a placement may narrow
+that purpose for one stage. Preserve that distinction after reviewing both
+texts. The optional resource `angle_review` records `kind: refinement`, the
+actual reviewer, date, rationale, and `angle_review_fingerprint` from
+`learning_os.rules.plan_rigor`. It is canonical operator evidence; the manifest
+continues to publish the descriptions under its existing interface contract.
+A refinement attests only to the relationship between those descriptions.
+
+Use `kind: correction` for an actual source-content correction. Cite exact
+inspected `material_uri`, `file_sha256`, and physical-page locator in `evidence`.
+An exact-file route accepts evidence only from its targets; a broad route
+requires an exact file within its source's declared material authority. Remote
+unobserved sources cannot supply local byte evidence. Changing the descriptions,
+route, stage purpose, placement, or cited source bytes makes the review stale.
+Never refresh only its fingerprint to silence the warning.
+
+Draft outside the repository, run `unit-map-import UNIT --file MAP --replace
+--check`, review its concrete diff, and submit the content-bound
+`unit.map.import` envelope described in §25c. This carries forward learner
+state; it grants no ability, evidence credit, or mastery.
+
+## 30. Review exact goal decisions together
+
+`los goal ID --reject|--defer|--close` remains the single-decision sidecar path.
+For several explicit IDs, pass each ID as its own argument and add `--check`.
+The preview lists every before/after decision and its `reviewed_sha256`.
+Apply those same arguments with `--reviewed-sha256` after Aram approves them.
+The hash covers the exact IDs, decision, note, revisit date, and existing ledger;
+a changed proposal or ledger refuses without a write. Patterns and duplicate
+IDs are refused. Detector names, urgency tiers, and group proximity never grant
+authority to decide other goals. `--revisit-on` remains a future date used only
+with `--defer`; no batch runs automatically.

@@ -12,6 +12,7 @@ already decided.
 from __future__ import annotations
 
 import datetime as _dt
+import hashlib
 import json
 import re
 import sys
@@ -40,9 +41,13 @@ def _validate_ledger(data: dict) -> list[str]:
 def cmd_goal(args) -> int:
     """Record one explicit goal decision. ``los goal <id> --reject|--defer|--close``."""
     root = _root(args)
-    goal_id = (args.goal_id or "").strip()
-    if not goal_id or any(char.isspace() for char in goal_id):
-        print("los: goal id is one whitespace-free token", file=sys.stderr)
+    supplied = args.goal_id if isinstance(args.goal_id, list) else [args.goal_id]
+    goal_ids = [item.strip() for item in supplied if isinstance(item, str)]
+    if len(goal_ids) != len(supplied) or not goal_ids or len(set(goal_ids)) != len(goal_ids) \
+            or any(not item or any(char.isspace() for char in item)
+                   or any(char in item for char in "*?[]") for item in goal_ids):
+        print("los: supply distinct exact goal ids, each one whitespace-free token; patterns are refused",
+              file=sys.stderr)
         return 2
     state = "rejected" if args.reject else "deferred" if args.defer else "closed"
     revisit_on = getattr(args, "revisit_on", None)
@@ -93,17 +98,37 @@ def cmd_goal(args) -> int:
             entry["revisit_on"] = revisit_on
         if args.note is not None:
             entry["note"] = args.note
-        data["decisions"] = {**decisions, goal_id: entry}
+        reviewed = {
+            "ledger_bytes_sha256": "sha256:" + hashlib.sha256(raw.encode("utf-8")).hexdigest(),
+            "goal_ids": goal_ids,
+            "decision": entry,
+        }
+        review_sha = "sha256:" + hashlib.sha256(json.dumps(
+            reviewed, sort_keys=True, ensure_ascii=False, separators=(",", ":")
+        ).encode("utf-8")).hexdigest()
+        data["decisions"] = {**decisions, **{goal_id: dict(entry) for goal_id in goal_ids}}
         problems = _validate_ledger(data)
         if problems:
             print(f"los: {problems[0]}", file=sys.stderr)
             return 2
+        if getattr(args, "check", False):
+            print(json.dumps({"ok": True, "check": True, "reviewed_sha256": review_sha,
+                              "goal_ids": goal_ids, "state": state,
+                              "changes": [{"goal_id": goal_id, "before": decisions.get(goal_id),
+                                           "after": entry} for goal_id in goal_ids]}))
+            return 0
+        expected = getattr(args, "reviewed_sha256", None)
+        if (len(goal_ids) > 1 and expected is None) or (expected is not None and expected != review_sha):
+            print("los: batch apply needs the exact --check reviewed-sha256; changed ledger or decisions require a fresh review",
+                  file=sys.stderr)
+            return 3
         try:
             _atomic_text(path, yaml.safe_dump(data, sort_keys=False, allow_unicode=True))
         except WriteRefused as exc:
             print(f"los: {exc}", file=sys.stderr)
             return 2
-    result = {"ok": True, "goal_id": goal_id, "state": state}
+    result = {"ok": True, "state": state}
+    result["goal_id" if len(goal_ids) == 1 else "goal_ids"] = goal_ids[0] if len(goal_ids) == 1 else goal_ids
     if revisit_on is not None:
         result["revisit_on"] = revisit_on
     print(json.dumps(result))

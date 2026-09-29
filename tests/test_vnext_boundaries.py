@@ -376,6 +376,36 @@ def test_multi_pass_dossier_publishes_exactly_one_synthesis(
     assert (unit_dir / "material-synthesis.yaml").is_file()
     assert [path.name for path in unit_dir.glob("material-synthesis*.yaml")] == [
         "material-synthesis.yaml"]
+    from learning_os.semantics.lineage import CONTRACT_VERSION, effective_statuses, load_ledger
+    from learning_os.semantics.scan import live_evidence_digest
+
+    records = load_ledger(mini_repo)
+    claim = records[f"dossier:{synthesis['id']}"]
+    assert claim.claim_kind == "dossier-freshness"
+    assert claim.admitted_by.request_id == envelope["request_id"]
+    assert claim.admitted_by.idempotency_key == envelope["idempotency_key"]
+    def status():
+        hashes = {key: live_evidence_digest(mini_repo, key, {})
+                  for key, _ in claim.derived_from.source_hashes}
+        return effective_statuses(records, CONTRACT_VERSION, {}, hashes)[claim.claim_id].status
+    assert status() == "supported"
+    receipts = list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+    receipt = yaml.safe_load(receipts[-1].read_text())
+    assert "operations/transactions/lineage.yaml" in json.dumps(receipt)
+    # Exact replay returns the same result without another lineage judgment.
+    ledger_bytes = (mini_repo / "operations/transactions/lineage.yaml").read_bytes()
+    replayed = _run_delivery_apply(repo_root, mini_repo, tmp_path / "replay-multipass.json", envelope)
+    assert replayed.returncode == 0, replayed.stderr
+    assert (mini_repo / "operations/transactions/lineage.yaml").read_bytes() == ledger_bytes
+    # Presentation corrections must stay fresh; inspected byte changes must stale.
+    source_map_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
+    source_map = yaml.safe_load(source_map_path.read_text())
+    source_map["sources"][0]["unit_routes"][0]["angle"] = "Rephrased purpose."
+    write_yaml(source_map_path, source_map)
+    assert status() == "supported"
+    material = mini_repo.parent / "materials/source-demo-book/lecture-01.pdf"
+    material.write_bytes(material.read_bytes() + b"\nchanged evidence\n")
+    assert status() == "stale"
 
 
 def test_publish_refuses_cross_file_page_confusion(
@@ -628,7 +658,8 @@ def test_unit_delivery_apply_is_content_bound_receipt_v2_and_replay_safe(
         {
             "capability": "unit.material-synthesis.publish",
             "declared_writes": [
-                "curriculum/modules/**/units/**/material-synthesis.yaml"
+                "curriculum/modules/**/units/**/material-synthesis.yaml",
+                "operations/transactions/lineage.yaml",
             ],
         },
     ]
@@ -687,6 +718,7 @@ def test_unit_delivery_apply_refuses_artifact_changed_after_approval_atomically(
         / "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml"
     ).exists()
     assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+    assert not (mini_repo / "operations/transactions/lineage.yaml").exists()
 
 
 def test_unit_delivery_apply_requires_exact_subject_and_cannot_run_directly(

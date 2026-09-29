@@ -21,8 +21,8 @@ v1 observes what the repository already records and nothing else:
 
 Deliberately excluded: critique points (OPERATOR.md boundary 17 — an
 open point is not a work item, and the scan must not convert any into
-goals); dossier freshness (no registry of live dossier keys; Phase 5
-left serving as operator wiring).
+goals). Prospective material-synthesis publications register freshness lineage;
+unregistered context dossiers remain operator wiring, with no historical backfill.
 
 Question, inspection, and correction counts have no observable source
 inside the repository, and creating one would be telemetry — those
@@ -416,15 +416,37 @@ def _scan_manifest_files(root: Path) -> dict:
     return files if isinstance(files, dict) else {}
 
 
-def live_evidence_digest(root: Path, key: str, manifest_files: dict) -> str | None:
+def live_evidence_digest(root: Path, key: str, manifest_files: dict, *, repo=None) -> str | None:
     """Resolve one stored source-hash key against live bytes.
 
-    Mirrors the Phase B digest binding in ``commands.module``: manifest keys
+    Material-synthesis basis keys use the publisher's evidential fields and live
+    local bytes, excluding prose and revision-only changes. Mirrors the Phase B
+    digest binding in ``commands.module``: manifest keys
     read the registered checksum, file keys hash current bytes inside the
     repository. Returns ``None`` when the dependency is missing, escapes,
     unreadable, or in an unknown namespace. Callers treat ``None`` as
     stale: an unsupported namespace has no trustworthy live value.
     """
+    if key.startswith("material-synthesis-basis:"):
+        from ..material_synthesis import (
+            MaterialSynthesisError,
+            current_unit_material_basis,
+            material_basis_checksum,
+            material_synthesis_freshness,
+            synthesis_destination,
+        )
+        unit_id = key[len("material-synthesis-basis:"):]
+        try:
+            repo = load_repo(root) if repo is None else repo
+            cache = {}
+            basis = current_unit_material_basis(root, unit_id, repo=repo, cache=cache)
+            value = _read_yaml(synthesis_destination(root, unit_id))
+            if not isinstance(value, dict) or material_synthesis_freshness(
+                    root, unit_id, value, repo=repo, cache=cache)["status"] != "current":
+                return None
+            return material_basis_checksum(basis)
+        except (MaterialSynthesisError, OSError, ValueError):
+            return None
     if key.startswith("manifest:"):
         ref = key[len("manifest:"):]
         entry = manifest_files.get(ref)
@@ -480,7 +502,7 @@ def collect_observations(root: Path | str, *,
         for key in dict(lineage.derived_from.source_hashes):
             if key not in live_all and key not in attempted:
                 attempted.add(key)
-                live = live_evidence_digest(root, key, manifest_files)
+                live = live_evidence_digest(root, key, manifest_files, repo=repo)
                 if live is not None:
                     live_all[key] = live
     effective = effective_statuses(

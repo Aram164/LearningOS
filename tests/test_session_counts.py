@@ -406,3 +406,32 @@ def test_cli_feed_refuses_gracefully(mini_repo, tmp_path):
     proc = run_los(mini_repo, "intelligence-scan", "--feed", str(malformed))
     assert proc.returncode == 2
     assert "malformed feed" in proc.stderr
+
+
+@pytest.mark.parametrize("value", [None, 1, False, "", "file.yaml", {}, {"x": []}])
+def test_dossier_sets_requires_a_list_of_lists(value):
+    with pytest.raises(FeedError, match="dossier_sets"):
+        parse_feed({"dossier_sets": value})
+
+
+@pytest.mark.parametrize("raw", [
+    b'{"dossier_sets": null}',
+    b'{"dossier_sets": {}}',
+    b'{"question_counts": {"scope-authority": 5, "scope-authority": 0}}',
+    b'{"question_counts": {"scope-authority": 5}, "question_counts": {}}',
+    b'{"inspection_counts": [{"files": ["a.yaml"], "count": 4, "count": 0}]}',
+    b'\xff',
+    b'[' * 1500 + b']' * 1500,
+])
+def test_cli_feed_refuses_ambiguous_or_unreadable_input_without_writing(
+    mini_repo, tmp_path, raw,
+):
+    feed_path = tmp_path / "untrusted-feed.json"
+    feed_path.write_bytes(raw)
+    before = _tree_snapshot(mini_repo)
+    proc = run_los(mini_repo, "intelligence-scan", "--feed", str(feed_path))
+    assert proc.returncode == 2
+    assert "--feed" in proc.stderr or "malformed feed" in proc.stderr
+    assert "Traceback" not in proc.stderr
+    assert _tree_snapshot(mini_repo) == before
+    assert feed_path.read_bytes() == raw

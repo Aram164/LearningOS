@@ -69,8 +69,37 @@ def _seed_material(root: Path, name: str, data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
+def test_unit_note_scope_uses_the_sources_declared_material_authority(mini_repo):
+    from repo_builders import _sliced_route, _sliced_unit
+
+    from learning_os.commands.reads import _route_material_files, _unit_note_scope
+    from learning_os.loader import load_repo
+
+    route = _sliced_route("route-demo-alias", "shared.pdf, PDF pp. 1-3")
+    _sliced_unit(mini_repo, [route])
+    registry_path = mini_repo / "sources/sources.yaml"
+    registry = yaml.safe_load(registry_path.read_text())
+    registry["sources"][0]["material"] = "material://source-shared-library/"
+    write_yaml(registry_path, registry)
+    _seed_material(mini_repo, "source-shared-library/shared.pdf", b"observed shared bytes")
+    repo = load_repo(mini_repo)
+    binding = {"source_id": "source-demo-book", "material": "source-shared-library/shared.pdf",
+               "inspected_range": {"start": 1, "end": 3}}
+    assert _route_material_files(repo, "source-demo-book", route) == {binding["material"]}
+    assert _unit_note_scope(repo, binding, [("source-demo-book", route)]) == "direct"
+    # Identity still requires the exact file; a same-folder neighbor is related.
+    binding["material"] = "source-shared-library/neighbor.pdf"
+    assert _unit_note_scope(repo, binding, [("source-demo-book", route)]) == "related"
+
+
 def _seed_unit(root: Path):
-    add_curriculum(root)
+    # Expanded routes, not the bare add_curriculum string joins: unit scope
+    # is route-based, so a same-source note proves nothing until a route
+    # names its file. The source-id-prefixed materials layout lets
+    # material:// URIs resolve without a .flat farm.
+    from repo_builders import _sliced_route, _sliced_unit
+
+    _sliced_unit(root, [_sliced_route("route-demo-density", "deck.pdf, pp. 1-3")])
     unit_dir = root / "curriculum/modules/module-demo/units/unit-demo-l01"
     write_yaml(unit_dir / "material-synthesis.yaml", {
         "schema_version": 1, "id": "material-synthesis-demo-l01",
@@ -119,9 +148,9 @@ def test_finds_analysis_by_need_with_freshness_and_open_refs(mini_repo):
 
 
 def test_concept_alias_purpose_and_unit_filters(mini_repo):
-    digest = _seed_material(mini_repo, "deck.pdf", b"live bytes")
+    digest = _seed_material(mini_repo, "source-demo-book/deck.pdf", b"live bytes")
     _plant_note(mini_repo, "note-context-density-pp001-003", ANALYSIS_BODY,
-                 _binding("deck.pdf", digest, ANALYSIS_BODY,
+                 _binding("source-demo-book/deck.pdf", digest, ANALYSIS_BODY,
                           anchors=[{"topic": "Density", "purpose": "intuition",
                                     "locator": "p. 2"}]),
                  concepts=["concept-expected-value"])
@@ -143,9 +172,23 @@ def test_concept_alias_purpose_and_unit_filters(mini_repo):
     assert [row.get("id", row.get("route_id")) for row in purposed["items"]] == [
         "note-context-density-pp001-003"]
 
+    _plant_note(mini_repo, "note-context-related-pp001-003",
+                 "Density from an unrouted file.\n",
+                 _binding("source-demo-book/other.pdf", "ee" * 32,
+                          "Density from an unrouted file.\n"))
     scoped = _context(mini_repo, "density", "--unit", "unit-demo-l01")
     assert [row.get("id", row.get("route_id")) for row in scoped["items"]] == [
         "note-context-density-pp001-003", "route-demo-density"]
+    assert scoped["items"][0]["scope"] == "direct"
+    assert scoped["pool"]["related_analysis_notes"] == 1
+    widened = _context(mini_repo, "density", "--unit", "unit-demo-l01",
+                       "--include-related")
+    widened_notes = [row for row in widened["items"]
+                     if row["origin"] == "analysis-note"]
+    assert [row["id"] for row in widened_notes] == [
+        "note-context-density-pp001-003", "note-context-related-pp001-003"]
+    assert [row["scope"] for row in widened_notes] == ["direct", "related"]
+    assert widened["searched"]["include_related"] is True
 
     unknown = run_los(mini_repo, "material-context", "density",
                        "--concept", "concept-nope")
@@ -365,4 +408,370 @@ def test_ranking_keeps_stable_order_without_recorded_feedback(mini_repo):
     for row in result["items"]:
         assert row["use_evidence"] == {"counts": {}, "positive": 0,
                                        "mismatch": 0}
-    assert "use-evidence" in result["ranked_by"]
+
+
+# ------------------------------------------------- route-based unit scope
+def _seed_routed_unit(root: Path):
+    """Expanded routes over a source-id-prefixed materials layout.
+
+    materials/source-demo-book/<file> is seeded per route file, so
+    material:// URIs resolve without a .flat farm. Routes cover every
+    material-derivation path: vault_path, locator file, source-record
+    inheritance, and a multi-range locator (identity only).
+    """
+    from repo_builders import _sliced_route, _sliced_unit
+
+    _sliced_unit(root, [
+        {**_sliced_route("route-demo-vault", "deck.pdf, pp. 1-3"),
+         "vault_path": "material://source-demo-book/deck.pdf"},
+        _sliced_route("route-demo-locator", "slides.pdf, PDF pp. 1-2"),
+        _sliced_route("route-demo-inherit",
+                      "Lecture reader, curated selection"),
+        {**_sliced_route("route-demo-multi", "multi.pdf, pp. 1-2; pp. 5-6"),
+         "vault_path": "material://source-demo-book/multi.pdf"},
+    ])
+    registry_path = root / "sources/sources.yaml"
+    registry = yaml.safe_load(registry_path.read_text(encoding="utf-8"))
+    registry["sources"][0]["material"] = \
+        "material://source-demo-book/reader.pdf"
+    write_yaml(registry_path, registry)
+    digests = {}
+    for name, data in (("deck.pdf", b"deck bytes"),
+                       ("slides.pdf", b"slides bytes"),
+                       ("reader.pdf", b"reader bytes"),
+                       ("multi.pdf", b"multi bytes"),
+                       ("other.pdf", b"other bytes")):
+        digests[name] = _seed_material(
+            root, f"source-demo-book/{name}", data)
+    return digests
+
+
+def _scope_binding(material: str, digest: str, body: str, start: int,
+                   end: int, **overrides):
+    return _binding(material, digest, body,
+                    inspected_range={"start": start, "end": end},
+                    **overrides)
+
+
+def test_unit_scope_splits_direct_from_related_by_route(mini_repo):
+    digests = _seed_routed_unit(mini_repo)
+    _register_source(mini_repo, "source-demo-paper", "Demo Paper")
+    bodies = {
+        "note-scope-a-vault-direct": "Density from the deck.\n",
+        "note-scope-b-locator-direct": "Density from the slides.\n",
+        "note-scope-c-inherit-direct": "Density from the reader.\n",
+        "note-scope-d-multi-direct": "Density from the multi-range file.\n",
+        "note-scope-e-vault-disjoint": "Density from disjoint deck pages.\n",
+        "note-scope-f-other-file": "Density from an unrouted file.\n",
+        "note-scope-g-unavailable-file": "Density from an unverified binding.\n",
+        "note-scope-h-foreign": "Density from another source.\n",
+    }
+    specs = {
+        "note-scope-a-vault-direct": ("deck.pdf", 2, 4, {}),
+        "note-scope-b-locator-direct": ("slides.pdf", 2, 2, {}),
+        "note-scope-c-inherit-direct": ("reader.pdf", 5, 9, {}),
+        "note-scope-d-multi-direct": ("multi.pdf", 99, 100, {}),
+        "note-scope-e-vault-disjoint": ("deck.pdf", 10, 12, {}),
+        "note-scope-f-other-file": ("other.pdf", 1, 3, {}),
+        "note-scope-g-unavailable-file": (
+            "deck.pdf", 1, 2, {"resolution": "unavailable"}),
+        "note-scope-h-foreign": ("paper.pdf", 1, 2,
+                                 {"source_id": "source-demo-paper"}),
+    }
+    for note_id, body in bodies.items():
+        name, start, end, overrides = specs[note_id]
+        digest = digests.get(name, "ef" * 32)
+        _plant_note(mini_repo, note_id, body,
+                    _scope_binding(f"source-demo-book/{name}"
+                                   if name != "paper.pdf" else name,
+                                   digest, body, start, end, **overrides))
+    scoped = _context(mini_repo, "density", "--unit", "unit-demo-l01")
+    notes = [row for row in scoped["items"]
+             if row["origin"] == "analysis-note"]
+    assert [row["id"] for row in notes] == [
+        "note-scope-a-vault-direct", "note-scope-b-locator-direct",
+        "note-scope-c-inherit-direct", "note-scope-d-multi-direct"]
+    assert {row["scope"] for row in notes} == {"direct"}
+    assert scoped["pool"]["related_analysis_notes"] == 3
+    widened = _context(mini_repo, "density", "--unit", "unit-demo-l01",
+                       "--include-related", "--limit", "20")
+    notes = [row for row in widened["items"]
+             if row["origin"] == "analysis-note"]
+    assert [row["id"] for row in notes] == [
+        "note-scope-a-vault-direct", "note-scope-b-locator-direct",
+        "note-scope-c-inherit-direct", "note-scope-d-multi-direct",
+        "note-scope-e-vault-disjoint", "note-scope-f-other-file",
+        "note-scope-g-unavailable-file"]
+    assert [row["scope"] for row in notes] == ["direct"] * 4 + ["related"] * 3
+    world = _context(mini_repo, "density", "--limit", "20")
+    assert "note-scope-h-foreign" in [row["id"] for row in world["items"]]
+
+
+def test_title_and_body_match_with_true_lines_and_no_provenance_hits(
+        mini_repo):
+    deck = _seed_material(mini_repo, "deck.pdf", b"deck bytes")
+    _plant_note(mini_repo, "note-title-density",
+                 "Uniform variables explained.\n",
+                 _binding("deck.pdf", deck, "Uniform variables explained.\n"),
+                 title="Density overview")
+    body = "Alpha line.\nBeta density line.\nGamma line.\n"
+    line_path = _plant_note(mini_repo, "note-body-density", body,
+                            _binding("deck.pdf", deck, body))
+    _plant_note(mini_repo, "note-provenance-trap",
+                 "Unrelated text about integrals.\n",
+                 _binding("density.pdf", "ef" * 32,
+                          "Unrelated text about integrals.\n"))
+    result = _context(mini_repo, "density", "--limit", "20")
+    by_id = {row["id"]: row for row in result["items"]}
+    assert set(by_id) == {"note-title-density", "note-body-density"}
+    assert by_id["note-title-density"]["match"]["snippets"] == [
+        {"label": "title", "text": "Density overview"}]
+    expected = next(i + 1 for i, line in enumerate(
+        line_path.read_text(encoding="utf-8").splitlines())
+        if "Beta density line." in line)
+    assert by_id["note-body-density"]["match"]["snippets"] == [
+        {"line": expected, "text": "Beta density line."}]
+    assert _context(mini_repo, "density integrals",
+                     "--limit", "20")["total"] == 0
+
+
+def test_include_related_is_refused_without_unit(mini_repo):
+    proc = run_los(mini_repo, "material-context", "density",
+                   "--include-related")
+    assert proc.returncode == 2
+    assert "needs --unit" in proc.stderr
+
+
+def _seed_routed_dossier(root: Path):
+    unit_dir = root / "curriculum/modules/module-demo/units/unit-demo-l01"
+    write_yaml(unit_dir / "material-synthesis.yaml", {
+        "schema_version": 1, "id": "material-synthesis-demo-l01",
+        "type": "unit-material-synthesis", "unit_id": "unit-demo-l01",
+        "status": "approved",
+        "route_assessments": [
+            {"route_id": "route-demo-vault", "source_id": "source-demo-book",
+             "locator": "deck.pdf, pp. 1-3", "review_status": "deep-reviewed",
+             "concept_ids": ["concept-expected-value"],
+             "contribution": "Derives density intuition from first principles.",
+             "best_for": "A worked example of uniform density integration."},
+            {"route_id": "route-demo-ghost", "source_id": "source-demo-book",
+             "locator": "ghost.pdf, pp. 1-3", "review_status": "deep-reviewed",
+             "concept_ids": ["concept-expected-value"],
+             "contribution": "Density from an assessment without a route.",
+             "best_for": "Proves the material filter follows routes."},
+        ],
+    })
+
+
+def test_material_filter_and_material_only_requests(mini_repo):
+    digests = _seed_routed_unit(mini_repo)
+    _seed_routed_dossier(mini_repo)
+    deck_body = "Density from the deck.\n"
+    _plant_note(mini_repo, "note-filter-deck", deck_body,
+                _scope_binding("source-demo-book/deck.pdf",
+                               digests["deck.pdf"], deck_body, 1, 2))
+    slides_body = "Density from the slides.\n"
+    _plant_note(mini_repo, "note-filter-slides", slides_body,
+                _scope_binding("source-demo-book/slides.pdf",
+                               digests["slides.pdf"], slides_body, 1, 2))
+    only = _context(mini_repo, "--material", "source-demo-book/deck.pdf")
+    assert only["searched"]["material"] == "source-demo-book/deck.pdf"
+    assert only["searched"]["query_terms"] == []
+    assert {(row.get("id"), row.get("route_id")) for row in only["items"]} == {
+        ("note-filter-deck", None), (None, "route-demo-vault")}
+    assert only["items"][0]["match"]["terms"] == []
+    queried = _context(mini_repo, "density", "--material",
+                       "source-demo-book/slides.pdf")
+    assert [row.get("id", row.get("route_id"))
+            for row in queried["items"]] == ["note-filter-slides"]
+    assert queried["items"][0]["match"]["material"] == \
+        "source-demo-book/slides.pdf"
+    assert _context(mini_repo, "quasistrophoid", "--material",
+                     "source-demo-book/deck.pdf")["total"] == 0
+    for bad in ("../escape.pdf", "/abs.pdf", ""):
+        proc = run_los(mini_repo, "material-context", "--material", bad)
+        assert proc.returncode == 2, bad
+        assert "materials-tree-relative" in proc.stderr, bad
+
+
+def _second_unit_with_same_file_route(root: Path):
+    from repo_builders import _sliced_route
+
+    module_dir = root / "curriculum/modules/module-demo"
+    module = yaml.safe_load((module_dir / "module.yaml").read_text(
+        encoding="utf-8"))
+    module["unit_order"].append("unit-demo-l02")
+    write_yaml(module_dir / "module.yaml", module)
+    unit = yaml.safe_load(
+        (module_dir / "units/unit-demo-l01/unit.yaml").read_text(
+            encoding="utf-8"))
+    unit.update(id="unit-demo-l02", title="Second lecture", order=2)
+    unit.pop("current_study_map", None)
+    write_yaml(module_dir / "units/unit-demo-l02/unit.yaml", unit)
+    source_map = yaml.safe_load(
+        (module_dir / "source-map.yaml").read_text(encoding="utf-8"))
+    route = _sliced_route("route-demo-l02-deck", "deck.pdf, pp. 1-3")
+    route["unit_id"] = "unit-demo-l02"
+    source_map["sources"][0]["unit_routes"].append(route)
+    write_yaml(module_dir / "source-map.yaml", source_map)
+
+
+def test_continuation_refuses_changed_filters(mini_repo):
+    digests = _seed_routed_unit(mini_repo)
+    _second_unit_with_same_file_route(mini_repo)
+    anchor = {"topic": "Density", "purpose": "intuition", "locator": "p. 1"}
+    for note_id, body in (("note-page-a", "Density alpha.\n"),
+                          ("note-page-b", "Density beta.\n")):
+        _plant_note(mini_repo, note_id, body,
+                    _scope_binding("source-demo-book/deck.pdf",
+                                   digests["deck.pdf"], body, 1, 2,
+                                   anchors=[anchor]))
+    first = _context(mini_repo, "density", "--unit", "unit-demo-l01",
+                     "--limit", "1")
+    assert first["total"] == 2 and first["next_offset"] == 1
+    guards = ["--offset", "1", "--expected-snapshot", first["snapshot_id"],
+              "--expected-observations", first["observations_sha256"]]
+    same = _context(mini_repo, "density", "--unit", "unit-demo-l01",
+                     "--limit", "1", *guards)
+    assert [row["id"] for row in same["items"]] == ["note-page-b"]
+    # Every flip keeps the same observed bytes: only the filter binding
+    # moves, so each refusal proves the filters are bound.
+    for argv in (["density alpha", "--unit", "unit-demo-l01"],
+                ["density", "--unit", "unit-demo-l01",
+                 "--purpose", "intuition"],
+                ["density", "--unit", "unit-demo-l01",
+                 "--material", "source-demo-book/deck.pdf"],
+                ["density", "--unit", "unit-demo-l01", "--include-related"],
+                ["density", "--unit", "unit-demo-l02"]):
+        proc = run_los(mini_repo, "material-context", *argv,
+                       "--limit", "1", *guards)
+        assert proc.returncode == 2, argv
+        assert "changed between pages" in proc.stderr, argv
+
+
+def test_continuation_allows_normalized_equivalent_filters(mini_repo):
+    digests = _seed_routed_unit(mini_repo)
+    for note_id, body in (("note-norm-a", "Density worked example.\n"),
+                          ("note-norm-b", "Worked density drill.\n")):
+        _plant_note(mini_repo, note_id, body,
+                    _scope_binding("source-demo-book/deck.pdf",
+                                   digests["deck.pdf"], body, 1, 2),
+                    concepts=["concept-expected-value"])
+    first = _context(mini_repo, "density worked", "--limit", "1")
+    guards = ["--offset", "1", "--expected-snapshot", first["snapshot_id"],
+              "--expected-observations", first["observations_sha256"]]
+    reordered = _context(mini_repo, "worked density", "--limit", "1",
+                         *guards)
+    assert [row["id"] for row in reordered["items"]] == ["note-norm-b"]
+    assert reordered["observations_sha256"] == first["observations_sha256"]
+    aliased = _context(mini_repo, "density", "--concept", "Erwartungswert",
+                       "--limit", "1")
+    id_guards = ["--offset", "1", "--expected-snapshot",
+                 aliased["snapshot_id"], "--expected-observations",
+                 aliased["observations_sha256"]]
+    by_id = _context(mini_repo, "density", "--concept",
+                      "concept-expected-value", "--limit", "1", *id_guards)
+    assert [row["id"] for row in by_id["items"]] == ["note-norm-b"]
+
+
+def test_string_route_units_list_same_source_notes_as_related_only(
+        mini_repo):
+    add_curriculum(mini_repo)
+    digest = _seed_material(mini_repo, "deck.pdf", b"deck bytes")
+    body = "Density from a string-routed source.\n"
+    _plant_note(mini_repo, "note-legacy-density", body,
+                _binding("deck.pdf", digest, body))
+    scoped = _context(mini_repo, "density", "--unit", "unit-demo-l01")
+    assert scoped["items"] == []
+    assert scoped["pool"]["related_analysis_notes"] == 1
+    widened = _context(mini_repo, "density", "--unit", "unit-demo-l01",
+                       "--include-related")
+    assert [row["id"] for row in widened["items"]] == ["note-legacy-density"]
+    assert widened["items"][0]["scope"] == "related"
+
+
+def test_unit_note_scope_defensive_branches(tmp_path):
+    from types import SimpleNamespace
+
+    from learning_os.commands.reads import _unit_note_scope
+
+    learningos = tmp_path / "LearningOS"
+    materials = learningos / "materials"
+    (materials / "source-demo-book").mkdir(parents=True)
+    repo = SimpleNamespace(materials_root=materials,
+                           learningos_root=learningos,
+                           sources={"source-demo-book": {}})
+    routes = [("source-demo-book", {"locator": "deck.pdf, pp. 1-3"})]
+    good = {"source_id": "source-demo-book",
+            "material": "source-demo-book/deck.pdf",
+            "inspected_range": {"start": 2, "end": 2}}
+    assert _unit_note_scope(repo, good, routes) == "direct"
+    assert _unit_note_scope(repo, {}, routes) is None
+    assert _unit_note_scope(repo, None, routes) is None
+    for broken in ({"start": "1", "end": 3}, {"start": 1}, {}, None):
+        binding = dict(good, inspected_range=broken)
+        assert _unit_note_scope(repo, binding, routes) == "related"
+
+
+def test_two_file_route_labels_both_files_direct(mini_repo):
+    from repo_builders import _sliced_route, _sliced_unit
+
+    _sliced_unit(mini_repo, [
+        _sliced_route("route-demo-dual",
+                      "dual-a.pdf, pp. 1-2; dual-b.pdf, pp. 5-6"),
+    ])
+    digests = {}
+    for name, data in (("dual-a.pdf", b"a bytes"),
+                       ("dual-b.pdf", b"b bytes"),
+                       ("other.pdf", b"other bytes")):
+        digests[name] = _seed_material(
+            mini_repo, f"source-demo-book/{name}", data)
+    bodies = {
+        "note-dual-a": "Density from the first file.\n",
+        "note-dual-b": "Density from the second file.\n",
+        "note-dual-other": "Density from an unrouted file.\n",
+    }
+    for note_id, body in bodies.items():
+        name = {"note-dual-a": "dual-a.pdf",
+                "note-dual-b": "dual-b.pdf",
+                "note-dual-other": "other.pdf"}[note_id]
+        _plant_note(mini_repo, note_id, body,
+                    _scope_binding(f"source-demo-book/{name}",
+                                   digests[name], body, 1, 2))
+    scoped = _context(mini_repo, "density", "--unit", "unit-demo-l01")
+    notes = [row for row in scoped["items"]
+             if row["origin"] == "analysis-note"]
+    assert [row["id"] for row in notes] == ["note-dual-a", "note-dual-b"]
+    assert {row["scope"] for row in notes} == {"direct"}
+    assert scoped["pool"]["related_analysis_notes"] == 1
+    widened = _context(mini_repo, "density", "--unit", "unit-demo-l01",
+                       "--include-related", "--limit", "20")
+    by_id = {row["id"]: row for row in widened["items"]
+             if row["origin"] == "analysis-note"}
+    assert by_id["note-dual-other"]["scope"] == "related"
+
+    unit_dir = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01"
+    write_yaml(unit_dir / "material-synthesis.yaml", {
+        "schema_version": 1, "id": "material-synthesis-demo-l01",
+        "type": "unit-material-synthesis", "unit_id": "unit-demo-l01",
+        "status": "approved",
+        "route_assessments": [{
+            "route_id": "route-demo-dual",
+            "source_id": "source-demo-book",
+            "locator": "dual-a.pdf, pp. 1-2; dual-b.pdf, pp. 5-6",
+            "review_status": "deep-reviewed",
+            "concept_ids": ["concept-expected-value"],
+            "contribution": "Density from the deliberate two-file route.",
+            "best_for": "Proves the material filter follows both files.",
+        }],
+    })
+    for name in ("dual-a.pdf", "dual-b.pdf"):
+        filtered = _context(mini_repo, "--material",
+                            f"source-demo-book/{name}")
+        note_id = "note-dual-a" if name == "dual-a.pdf" else "note-dual-b"
+        assert {(row.get("id"), row.get("route_id"))
+               for row in filtered["items"]} == {
+            (note_id, None), (None, "route-demo-dual")}
+    other = _context(mini_repo, "--material", "source-demo-book/other.pdf")
+    assert all(row.get("route_id") != "route-demo-dual"
+               for row in other["items"])

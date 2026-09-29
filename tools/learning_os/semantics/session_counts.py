@@ -59,7 +59,7 @@ def _token(value: object, label: str) -> str:
 
 def _string_list(value: object, label: str) -> list[str]:
     """A list of non-empty strings. A bare string is never a list."""
-    if isinstance(value, str) or not isinstance(value, Sequence):
+    if isinstance(value, (str, bytes, bytearray)) or not isinstance(value, Sequence):
         raise FeedError(f"malformed feed: {label} is not a list of strings")
     return [_token(item, f"{label} entry") for item in value]
 
@@ -129,6 +129,9 @@ def parse_feed(data: object) -> dict:
             "malformed feed: unknown keys "
             f"{sorted(str(key) for key in unknown)}")
     inspections = _inspection_rows(data.get("inspection_counts", []))
+    dossiers = data.get("dossier_sets", [])
+    if isinstance(dossiers, (str, bytes, bytearray)) or not isinstance(dossiers, Sequence):
+        raise FeedError("malformed feed: dossier_sets is not a list of lists")
     return {
         "question_counts": _count_map(
             data.get("question_counts", {}), "question_counts"),
@@ -138,7 +141,7 @@ def parse_feed(data: object) -> dict:
         "voq_classes": _string_list(data.get("voq_classes", []), "voq_classes"),
         "dossier_sets": [
             _string_list(entry, f"dossier_sets[{index}]")
-            for index, entry in enumerate(data.get("dossier_sets", []))
+            for index, entry in enumerate(dossiers)
         ],
     }
 

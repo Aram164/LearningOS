@@ -74,6 +74,33 @@ def material_uri_authority(ref) -> str | None:
     return material_path.parts[0] if material_path.parts else None
 
 
+def canonical_material_uri(ref) -> str | None:
+    """The canonical spelling of a material URI, or None if it has none.
+
+    Resolution parses the payload with ``PurePosixPath``, which collapses
+    ``//`` and drops ``.`` segments before the authority check — so dot and
+    double-slash spellings resolve to the same bytes as the clean form.
+    This answers "what did the operator mean" the same way, so writers can
+    refuse the odd spelling while naming the form to use instead. Anything
+    resolution refuses outright (non-URIs, absolute payloads, backslashes,
+    ``..``) has no canonical form and returns None.
+    """
+    if not isinstance(ref, str) or not ref.startswith(MATERIAL_SCHEME):
+        return None
+
+    payload = ref[len(MATERIAL_SCHEME):]
+
+    if not payload or payload.startswith("/") or "\\" in payload:
+        return None
+
+    parts = [part for part in payload.split("/") if part not in {"", "."}]
+
+    if not parts or any(part == ".." for part in parts):
+        return None
+
+    return MATERIAL_SCHEME + "/".join(parts)
+
+
 def safe_material_locator(value) -> str | None:
     """Accept only one safe, file-shaped POSIX locator."""
     if not isinstance(value, str):
@@ -215,6 +242,9 @@ def material_location(repo: Repo, ref) -> dict:
 def project_material_resource(repo: Repo, resource: dict) -> dict:
     """Add one core-resolved local target to a stage resource."""
     projected = dict(resource)
+    # The review is canonical operator evidence. Interfaces consume the
+    # reviewed descriptions, never the attestation's internal payload.
+    projected.pop("angle_review", None)
 
     if projected.get("material_path"):
         return projected

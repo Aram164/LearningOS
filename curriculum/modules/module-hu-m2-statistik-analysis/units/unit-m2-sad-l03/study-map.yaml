@@ -37,6 +37,15 @@ stages:
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L03 correlation and regression deck' against the stage 'Paired
+        data and scatterplots'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:5a8366509be2c3f422b3365f3a1ca6f10a496e8e0faac50d3e06856f81052e25
   - material_ref:
       route_id: route-e958371305abdd06a667a4e2
       inherit:
@@ -51,6 +60,15 @@ stages:
       not this scatterplot. Defer Aufgabe 2(a) to covariance and 2(b)-(c) to simple regression.'
     scope_triage: required-now
     route_id: route-e958371305abdd06a667a4e2
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 1, Aufgabe 2 — correlation and simple regression' against the
+        stage 'Paired data and scatterplots'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:1f23e5f8d50f0683837987ccfb1c596fb06769c9179fb9065694844f78017973
   - material_ref:
       route_id: route-f7249a8bba66bc3ac7724629
       inherit:
@@ -63,6 +81,15 @@ stages:
     locator: exercise-slides/UE2.pdf, physical PDF pp. 22–23
     angle: Provides five age–income pairs that can be plotted by hand.
     angle_detail: Use the small table before revealing the covariance answer on p. 24.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE2, slides 20-28 — covariance and Pearson correlation' against the
+        stage 'Paired data and scatterplots'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:92c299c5eef3e94138b17268a6c1dc28d4553c5539c56e9d396b34c2559b8a0b
   - material_ref:
       route_id: route-8c971b3609d60d48474a7e65
       inherit:
@@ -76,6 +103,15 @@ stages:
     angle: Centers a scatterplot at the two means to explain contributions from its four quadrants.
     angle_detail: 'Use the picture before calculating covariance: same-sign centered deviations contribute
       positively and opposite signs negatively.'
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Fahrmeir Chapter 3 — multivariate description and regression' against
+        the stage 'Paired data and scatterplots'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:c50d90a05a391a35aab38f7068255e5b31b71a1cf702f8dbfd3abadb005e194a
   - material_ref:
       route_id: route-bf71c1ee8aee769abb6dd6d0
       inherit:
@@ -89,6 +125,15 @@ stages:
     angle: Lets you rearrange paired observations and inspect the resulting point pattern.
     angle_detail: Explore the scatterplot first; the fitted line and squared-error display become useful
       in the regression stage.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Setosa — ordinary least squares, interactive' against the stage 'Paired
+        data and scatterplots'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:124a7293a6ece9894fa9e53ae5adeb470f8e39ede787db80c6a0c022b9b163f7
   - material_ref:
       route_id: route-c36a55ce03e709469e710d7e
       inherit:
@@ -102,6 +147,15 @@ stages:
     angle: Uses possum measurements to distinguish a fitted prediction from its signed vertical residual.
     angle_detail: Compare the possum scatterplot, the worked residual on p. 309 and the residual-pattern
       plots on p. 310.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'OpenIntro — correlation and linear regression' against the stage
+        'Paired data and scatterplots'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:a73688e99e95dcdd3162ceac0bb610ea431678aa9a79e07baca22213aea74718
   - material_ref:
       route_id: route-bc80e5a45b7923d64981001e
       inherit:
@@ -115,6 +169,15 @@ stages:
       table'
     angle: Supplies ten paired observations with named units and a manageable hand-calculation size.
     angle_detail: Plot tenure against salary before exposing the printed regression solution.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'HS Harz pp. 6-7 — Kendall association and linear regression' against
+        the stage 'Paired data and scatterplots'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:a39db8707510f150c70138edc098ed2d36b1e084b4dee446a0dc1b991b87d968
   - material_ref:
       route_id: route-62f0ce97ea80883abf322143
       inherit:
@@ -128,6 +191,15 @@ stages:
     angle: Uses office size and rental price to motivate a scatterplot and a predictive line.
     angle_detail: Identify the unit of each axis and distinguish a plotted observation from the line’s
       predicted rent.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kelleher §§7.2–7.3 — office rentals, loss surfaces and weight updates'
+        against the stage 'Paired data and scatterplots'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:94e957cf8c1e364b07a42a98196a7f14ce8048671564e6b178be2b5931880885
   - material_ref:
       route_id: route-3d874eb98ed79f75cbf88ef7
       inherit:
@@ -141,6 +213,15 @@ stages:
     angle: Uses Anscombe’s quartet to show what the scatterplot reveals beyond a correlation and fitted
       line.
     angle_detail: Draw or inspect all four plots before interpreting the shared numerical summaries.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Arbeitsbuch Chapter 3 — correlation and regression drills' against
+        the stage 'Paired data and scatterplots'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:b0cf0d4e5373d112b48745c76159d410a0be4434e7b094b3f8c7a11ebfc8bb5b
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-paired-data/notes.md
   attachments: []
   source_feedback: []
@@ -171,6 +252,15 @@ stages:
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L03 correlation and regression deck' against the stage 'Covariance
+        and Pearson correlation'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:2891e00ca5703a7b2ab564b274e53e14e06cbeda6b1c03920a5c186a45ab8b2d
   - material_ref:
       route_id: route-e958371305abdd06a667a4e2
       inherit:
@@ -198,6 +288,15 @@ stages:
     locator: exercise-slides/UE2.pdf, physical PDF pp. 22–26
     angle: Works covariance first and then normalizes it into Pearson r on the same five pairs.
     angle_detail: Attempt the prompts on pp. 23 and 25 before reading their following answer slides.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE2, slides 20-28 — covariance and Pearson correlation' against the
+        stage 'Covariance and Pearson correlation'. The stage description selects that stage's task or
+        reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:c5368b400036fcb8ede04d364900fe9cd59b8580b72e6f817a07908cfa48a905
   - material_ref:
       route_id: route-adde7a7fe7cf2ed16214142c
       inherit:
@@ -226,6 +325,15 @@ stages:
     angle: Builds covariance from signed products and normalizes by both marginal standard deviations.
     angle_detail: The descriptive divisor here is n. Blatt 1 requests n−1; Pearson r is unchanged if the
       normalization uses the same convention consistently.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Fahrmeir Chapter 3 — multivariate description and regression' against
+        the stage 'Covariance and Pearson correlation'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:ac41da2bcf45768d7a50190c33f2bddbd1e0a88710d8f764ec20213b0643c427
   - material_ref:
       route_id: route-3d874eb98ed79f75cbf88ef7
       inherit:
@@ -239,6 +347,15 @@ stages:
     angle: Recalculates Pearson correlation after adding one extreme observation.
     angle_detail: Compare the ten-point and eleven-point results. Spearman provides an optional rank-based
       contrast, not a replacement for the requested Pearson calculation.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Arbeitsbuch Chapter 3 — correlation and regression drills' against
+        the stage 'Covariance and Pearson correlation'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:993d014258712ee7f72ff3d0bb3a724e8d480a6b01591abc472e1208d5b4b85a
   - material_ref:
       route_id: route-c36a55ce03e709469e710d7e
       inherit:
@@ -252,6 +369,15 @@ stages:
     angle: Explains Pearson correlation as strength and direction of a linear association.
     angle_detail: Compare the eight scatterplots and their correlation coefficients on p. 311; this is
       a visual interpretation of Pearson r, not a covariance derivation.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'OpenIntro — correlation and linear regression' against the stage
+        'Covariance and Pearson correlation'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:5251c4ba8c43c3d9c6a2171f5cfad1c832ed5b82afb9392e47279417cbdda497
   - material_ref:
       route_id: route-1d5ebe1552e3c9bdb2923b53
       inherit:
@@ -265,6 +391,15 @@ stages:
     angle: Builds covariance from the cross term in the variance of a sum.
     angle_detail: 'Return after L06: this uses expected values and random variables, not the finite-sample
       covariance divisor in Blatt 1.'
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Dekking — correlation and regression exercises' against the stage
+        'Covariance and Pearson correlation'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:332afa4432810f0fb4ec5fe649335b0faa42a30762cc38d72c41d2f4c4e7e585
   - material_ref:
       route_id: route-bce0d0f7e70cdad184b8cfe4
       inherit:
@@ -318,6 +453,15 @@ stages:
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L03 correlation and regression deck' against the stage 'Correlation
+        is not causation'. The stage description selects that stage's task or reading purpose from the
+        broader route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:a7c6d3409de71c9cecfc9e764793b54726a9b0c413523d0bef77d6db1c5ebef2
   - material_ref:
       route_id: route-e958371305abdd06a667a4e2
       inherit:
@@ -331,6 +475,15 @@ stages:
     angle: Asks what the computed gold–silver correlation means in context.
     angle_detail: Describe an observed association across the listed dates; neither a strong r nor the
       regression establishes which metal causes the other price to change.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 1, Aufgabe 2 — correlation and simple regression' against the
+        stage 'Correlation is not causation'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:95a606950814b8c76328a9d1135db3c3d341cb27ea4b5ce4a7d94d3693207dc8
   - material_ref:
       route_id: route-f7249a8bba66bc3ac7724629
       inherit:
@@ -344,6 +497,15 @@ stages:
     angle: Asks for an age–income interpretation after the calculation and distinguishes correlation from
       independence.
     angle_detail: State what the observed association supports, then separate it from a causal claim.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE2, slides 20-28 — covariance and Pearson correlation' against the
+        stage 'Correlation is not causation'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:32edf230e71a0d619284fd0a1c9a2b68e8559d555ba3db0a530c788588d228d7
   - material_ref:
       route_id: route-adde7a7fe7cf2ed16214142c
       inherit:
@@ -372,6 +534,15 @@ stages:
     angle: Uses omitted third variables and grouped patients to explain spurious or hidden correlation.
     angle_detail: Separate association strength, direction of influence and causal explanation. The word-vocabulary/height
       example introduces age as a common cause.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Fahrmeir Chapter 3 — multivariate description and regression' against
+        the stage 'Correlation is not causation'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:8264345eff7dbb0ec5c6b9aebcb6f094dd6fb8f9b254e51cd973e30872998c3d
   - material_ref:
       route_id: route-bf71c1ee8aee769abb6dd6d0
       inherit:
@@ -385,6 +556,15 @@ stages:
     angle: Lets you change one observation and see the fitted line respond.
     angle_detail: Use this to question the stability of a summary. The interaction illustrates sensitivity;
       it does not establish causation.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Setosa — ordinary least squares, interactive' against the stage 'Correlation
+        is not causation'. The stage description selects that stage's task or reading purpose from the
+        broader route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:5194239fb515c2070a2b8f18e3394bb875f377c29cb3d291d510b2a698b24de8
   - material_ref:
       route_id: route-c36a55ce03e709469e710d7e
       inherit:
@@ -399,6 +579,15 @@ stages:
     angle_detail: A curved pattern can survive the fitted line. Compare the residual plots and the outlier
       examples before interpreting correlation; this slice supplies diagnostics rather than a causal-identification
       argument.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'OpenIntro — correlation and linear regression' against the stage
+        'Correlation is not causation'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:59dcf776255fbc5c0c6a0684282c6c24670e396e216aedc10a7e2777c6b68a4e
   - material_ref:
       route_id: route-1d5ebe1552e3c9bdb2923b53
       inherit:
@@ -412,6 +601,15 @@ stages:
     angle: Separates independence from zero covariance.
     angle_detail: Return after L06 for the expectation-based argument. Uncorrelated is weaker than independent
       and is a different question from whether an association is causal.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Dekking — correlation and regression exercises' against the stage
+        'Correlation is not causation'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:795814641e46899a89e5518508932357733402bddc187fb321cb793ed6130744
   - material_ref:
       route_id: route-bc80e5a45b7923d64981001e
       inherit:
@@ -426,6 +624,15 @@ stages:
     angle: Compares a modest explained-variation value with the visible tenure–salary pattern.
     angle_detail: This is association and model-fit interpretation; Kendall’s comparison is optional and
       no causal claim follows.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'HS Harz pp. 6-7 — Kendall association and linear regression' against
+        the stage 'Correlation is not causation'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:e2495215a49043849f1d86f3914c75e47448f532051557aaa59dc32b6073ac42
   - material_ref:
       route_id: route-3d874eb98ed79f75cbf88ef7
       inherit:
@@ -439,6 +646,15 @@ stages:
     angle: Compares an aggregate relationship with separate subgroup relationships.
     angle_detail: Plot the groups and describe the association within each. A difference between grouped
       and pooled association does not by itself establish causation.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Arbeitsbuch Chapter 3 — correlation and regression drills' against
+        the stage 'Correlation is not causation'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:f36e3205ce75fbea5108d4887c0302316a9fc68cb1a1c6790371e0227f327d37
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-interpretation/notes.md
   attachments: []
   source_feedback: []
@@ -469,6 +685,15 @@ stages:
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L03 correlation and regression deck' against the stage 'Simple
+        linear regression and least squares'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:1fe42c5dbab5e6483077cdf643ddc83e01fb5995983e3854d82d25405e555237
   - material_ref:
       route_id: route-e958371305abdd06a667a4e2
       inherit:
@@ -497,6 +722,15 @@ stages:
     angle: Recaps the single-predictor slope and intercept before extending the model.
     angle_detail: Use the short formula recap here; the complete two-feature income example on pp. 32–35
       belongs in the multivariate stage.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE2, slides 30-35 — regression prediction and RMSE' against the stage
+        'Simple linear regression and least squares'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:ffa35b3396271189a2c41047626a3d5039d2eaa3ecbb889310410ea98f34576d
   - material_ref:
       route_id: route-adde7a7fe7cf2ed16214142c
       inherit:
@@ -525,6 +759,15 @@ stages:
     angle: Derives the fitted line by minimizing squared vertical deviations from the observed responses.
     angle_detail: 'The response direction matters: fitting Y from X is a different optimization from fitting
       X from Y. Track the intercept and slope in the rent example.'
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Fahrmeir Chapter 3 — multivariate description and regression' against
+        the stage 'Simple linear regression and least squares'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:a7bdaa4d498518e745810e7b8dded2a6f478611e8ad199ede54a7370b2ee150a
   - material_ref:
       route_id: route-3d874eb98ed79f75cbf88ef7
       inherit:
@@ -538,6 +781,15 @@ stages:
     angle: Fits a dose–reaction-time line and interprets a prediction, its slope and R².
     angle_detail: Use the supplied sums for hand calculation, then compare the solution. Interpret the
       coefficient within the fitted model rather than treating its numerical value alone as causal evidence.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Arbeitsbuch Chapter 3 — correlation and regression drills' against
+        the stage 'Simple linear regression and least squares'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:351566731868c974ccc541f614c8480171999f8b6c6a2294632b00e5b2abe2fa
   - material_ref:
       route_id: route-340dd98b7e8f177fce11b9f5
       inherit:
@@ -551,6 +803,15 @@ stages:
     angle: Fits sales against one advertising budget by minimizing residual sum of squares.
     angle_detail: Keep fitted coefficients, predictions and observed sales separate. Reserve the coefficient-inference
       discussion for after estimation and testing.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'ISLP Chapter 3 — statistical regression bridge' against the stage
+        'Simple linear regression and least squares'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:04a0bfc2e91158186ac477c55e22ccc8dc63235762607c61954f8b471572ab76
   - material_ref:
       route_id: route-869eeded8dda6eb8ab78ff9a
       inherit:
@@ -564,6 +825,15 @@ stages:
     angle: Provides the matrix generalization of the scalar derivative argument.
     angle_detail: Return in the multivariate stage when design matrices are familiar. The article differentiates
       the squared-error norm and assumes an invertible Gram matrix.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Bendersky — derivation of the normal equation' against the stage
+        'Simple linear regression and least squares'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:66e3042ede20575349f391488b9fa555bf42e0f5d4b51d83e2af9e10a3686956
   - material_ref:
       route_id: route-bf71c1ee8aee769abb6dd6d0
       inherit:
@@ -588,6 +858,15 @@ stages:
     angle: Connects squared-error fitting to a Gaussian observation model.
     angle_detail: 'Probability bridge after L08: identify the noise assumptions before deriving the objective.'
     url: https://mml-book.github.io/book/mml-book.pdf#page=297
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'MML Ch 9 — linear regression from the mathematical side' against
+        the stage 'Simple linear regression and least squares'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:8e6b00f1d0209412f076903810375402359d2bb6e3b919b280f50b033e1b589c
   - material_ref:
       route_id: route-c36a55ce03e709469e710d7e
       inherit:
@@ -601,6 +880,15 @@ stages:
     angle: Turns a least-squares line into slope, intercept and residual interpretations.
     angle_detail: 'Work from the aid–income summary statistics to slope, intercept and a prediction. Skip
       Example 8.11: its standard error, t statistic and p-value belong after L09–L10.'
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'OpenIntro — correlation and linear regression' against the stage
+        'Simple linear regression and least squares'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:cdd9e178451a66cb48bfa3238f290f68b88ea901b8a54ea23712d9f5440d12a2
   - material_ref:
       route_id: route-1d5ebe1552e3c9bdb2923b53
       inherit:
@@ -615,6 +903,15 @@ stages:
       the two sample means.
     angle_detail: Reproduce the two derivative equations, then use quick exercise 22.2 to check the centre-of-gravity
       property. The unbiasedness proof later on p. 334 and the Normal-likelihood bridge require probability.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Dekking — correlation and regression exercises' against the stage
+        'Simple linear regression and least squares'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:5920819d3bcd91d80e78cf162a29ac105ad69dab5f91b76be878cecb98036256
   - material_ref:
       route_id: route-bc80e5a45b7923d64981001e
       inherit:
@@ -628,6 +925,15 @@ stages:
     angle: Builds a helper table for a tenure–salary slope and then calculates R².
     angle_detail: Cover the immediately printed solution while calculating. Compare the line and scatterplot
       after checking the arithmetic.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'HS Harz pp. 6-7 — Kendall association and linear regression' against
+        the stage 'Simple linear regression and least squares'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:26becc1cc8ed832d9f745254767f2d163df23aa1a484484cb7420feb9bbefaaf
   - material_ref:
       route_id: route-8535a338657698b9de4791a8
       inherit:
@@ -641,6 +947,15 @@ stages:
     angle: Turns the fitted-line formula into a NumPy prediction example.
     angle_detail: Track the all-ones intercept column and the shape of the target vector before running
       the normal-equation code.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Géron Ch 4 — normal equation, descent code and feature scaling' against
+        the stage 'Simple linear regression and least squares'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:29094b3d11adfc8708148e3b3a7405e75b2d244109b60f2e462599d718484f79
   - material_ref:
       route_id: route-62f0ce97ea80883abf322143
       inherit:
@@ -654,6 +969,15 @@ stages:
     angle: Compares candidate slopes by their squared rental-price errors.
     angle_detail: 'Follow the numerical error totals into the loss surface: a location in weight space
       represents an entire fitted line.'
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kelleher §§7.2–7.3 — office rentals, loss surfaces and weight updates'
+        against the stage 'Simple linear regression and least squares'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:a05c660a31adf9e80e43884618909545e08e31193b87f40ec2944ca2a1250a78
   - material_ref:
       route_id: route-sad-l03-cs229-regression
       inherit:
@@ -667,6 +991,15 @@ stages:
     angle: Defines the intercept feature and squared-error objective on housing data.
     angle_detail: Reproduce the derivation before comparing with the course notation. The number of observations
       and the number of features use different symbols; track their dimensions.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'CS229 notes — LMS and normal-equation derivations' against the stage
+        'Simple linear regression and least squares'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:6963d9f4b1ca8468020524b54d6a26934107a07be54fda23d98be655d84a7f5f
   - material_ref:
       route_id: route-sad-l03-csc411-regression
       inherit:
@@ -679,6 +1012,15 @@ stages:
     locator: §2.1, PDF pp. 10–11
     angle: Solves for the intercept first and substitutes it back to derive the slope.
     angle_detail: This gives a short calculus derivation of the centered least-squares formula.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'CSC411 notes — scalar fit, design matrix and gradient checks' against
+        the stage 'Simple linear regression and least squares'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:b072819922e7a957c6b27b4658dfe77f73438c155e26957a1ca5224015703055
   - material_ref:
       route_id: route-sad-l03-statquest-ols
       inherit:
@@ -734,6 +1076,15 @@ stages:
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L03 correlation and regression deck' against the stage 'Multivariate
+        linear regression and the design matrix'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:be6b936b1aeb7deee3f0d90c223687800872078c4edc76386769166ee1673206
   - material_ref:
       route_id: route-6b78db21b974a13178ff0860
       inherit:
@@ -788,6 +1139,15 @@ stages:
     angle: Explains a partial slope as association while the other predictors are held fixed.
     angle_detail: Compare separate newspaper/radio fits with the joint model and its predictor-correlation
       table.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'ISLP Chapter 3 — statistical regression bridge' against the stage
+        'Multivariate linear regression and the design matrix'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:6bf224d974f23794d52fb4567ed4753275ab7271f1e1e56cecfda0e3a7f63502
   - material_ref:
       route_id: route-869eeded8dda6eb8ab78ff9a
       inherit:
@@ -813,6 +1173,15 @@ stages:
     angle_detail: Check the matrix dimensions and full-column-rank condition. Linear refers to the fitted
       parameters.
     url: https://mml-book.github.io/book/mml-book.pdf#page=300
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'MML Ch 9 — linear regression from the mathematical side' against
+        the stage 'Multivariate linear regression and the design matrix'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:a800fb7c8eac59f2fcbeb14f110b386e4c05f45fcdbac88fe2c292bc4bce606d
   - material_ref:
       route_id: route-31ee3e63a209ca409054dda3
       inherit:
@@ -826,6 +1195,15 @@ stages:
     angle: Substitutes a concrete house into a model with numeric and dummy predictors.
     angle_detail: Compare the predicted price with and without a garage while holding the remaining inputs
       fixed; outputs are in thousands of euros. Skip the preceding significance tests.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'University of Cologne pp. 7-8 — multivariate regression interpretation'
+        against the stage 'Multivariate linear regression and the design matrix'. The stage description
+        selects that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:52d9e50d10ce6368e52ccb6a4135e63c654f61f490f6c686ba47755b6408eb6d
   - material_ref:
       route_id: route-8535a338657698b9de4791a8
       inherit:
@@ -839,6 +1217,15 @@ stages:
     angle: Expresses the prediction and least-squares solution as array operations.
     angle_detail: Check how feature count changes the weight-vector and matrix dimensions. The computational
       comparison explains why an iterative method can be useful.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Géron Ch 4 — normal equation, descent code and feature scaling' against
+        the stage 'Multivariate linear regression and the design matrix'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:df40f264315ec73509142dcc544f4533cafafc930c3860bc8f98686764f2b604
   - material_ref:
       route_id: route-a4e1a4e84bb805c906d73d1f
       inherit:
@@ -865,6 +1252,15 @@ stages:
       intercept.
     angle_detail: Expand the dot product and match each weight with one feature. This explains the parameterization;
       it does not derive an inverse-matrix solution.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kelleher §§7.2–7.3 — office rentals, loss surfaces and weight updates'
+        against the stage 'Multivariate linear regression and the design matrix'. The stage description
+        selects that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:5cdf6d3f04c74bb218319582bf33bdb5f7e1039237ea9de5f2b1b6cf629b710f
   - material_ref:
       route_id: route-sad-l03-cs229-regression
       inherit:
@@ -878,6 +1274,15 @@ stages:
     angle: Expands the residual vector and differentiates the matrix objective to derive the normal equations.
     angle_detail: Reproduce the derivation before comparing with the course notation. The number of observations
       and the number of features use different symbols; track their dimensions.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'CS229 notes — LMS and normal-equation derivations' against the stage
+        'Multivariate linear regression and the design matrix'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:90de78d4421f0054379bef4b080836a305c10baaae9376b0c7add592e3fd94db
   - material_ref:
       route_id: route-sad-l03-csc411-regression
       inherit:
@@ -891,6 +1296,15 @@ stages:
     angle: Shows the augmented input, weight vector and full design matrix side by side.
     angle_detail: The constant intercept feature is last here; it is often first in the course. The ordering
       is a convention, but must match the weights.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'CSC411 notes — scalar fit, design matrix and gradient checks' against
+        the stage 'Multivariate linear regression and the design matrix'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:ea2aed157206efc94cf6c27e2e948d5f435ade756e2ab89729df9276cfb8a28d
   - material_ref:
       route_id: route-sad-l03-esl-projection
       inherit:
@@ -918,6 +1332,15 @@ stages:
       training loss.
     angle_detail: Track the switch from d features to p=d+1 parameters. Stop before the model-selection
       discussion in §5.3.2.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kroese §§5.2–5.3.1 — model, observed fit and training loss' against
+        the stage 'Multivariate linear regression and the design matrix'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:7fb00038cce34d62dc431aa814d99ce5024bd07f2725653bdca098bcf279bab0
   - material_ref:
       route_id: route-sad-l03-murphy-regression
       inherit:
@@ -960,6 +1383,15 @@ stages:
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L03 correlation and regression deck' against the stage 'Gradient
+        descent as an alternative optimizer'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:9dba238524b74a4cb4438f35f6288f76036862ed1f08e123766a0ec0b48f7871
   - material_ref:
       route_id: route-aa8a395d2936e94fd38796e0
       inherit:
@@ -985,6 +1417,15 @@ stages:
     angle: Works the two-point gradient numerically and tracks its MSE over successive updates.
     angle_detail: Distinguish the old predictions and MSE from the updated weights displayed in each row.
       Compare the learning-rate examples on p. 43.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE3, slides 40-45 — gradient descent and normalization walkthrough'
+        against the stage 'Gradient descent as an alternative optimizer'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:9fec68d30edf05e03959601f117adaf933cc3f5a529e9a324855db9fe0fce815
   - material_ref:
       route_id: route-ced0625bb9bbca4add20f4f3
       inherit:
@@ -1010,6 +1451,15 @@ stages:
     angle: Derives a weight update and traces the first two iterations on the rental data.
     angle_detail: Follow prediction → error → feature-weighted error → new weight. Keep the old and new
       parameter vectors distinct when reproducing the update.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kelleher §§7.2–7.3 — office rentals, loss surfaces and weight updates'
+        against the stage 'Gradient descent as an alternative optimizer'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:98a06c1fb348cbec6a8f0de0fda5fd65f2df0d2b12dca5536f5b088287d24a20
   - material_ref:
       route_id: route-43b3f03133fe9a8c6bc71a8a
       inherit:
@@ -1024,6 +1474,15 @@ stages:
     angle_detail: Reproduce Example 7.1’s vector update, then read the step-size discussion and the least-squares
       example. Unlike the Gaussian regression chapter, this slice needs vector calculus but no likelihood
       theory.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'MML Ch 9 — linear regression from the mathematical side' against
+        the stage 'Gradient descent as an alternative optimizer'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:defbf28549aa965fc7036abfdc86f66c811840a5ac0e8bde46992340c22c635b
   - material_ref:
       route_id: route-8535a338657698b9de4791a8
       inherit:
@@ -1037,6 +1496,15 @@ stages:
     angle: Pairs the contour picture with a short vectorized gradient-descent loop.
     angle_detail: Compare the gradient formula with the code, then vary the learning rate. Distinguish
       the number of training observations from the number of parameters.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Géron Ch 4 — normal equation, descent code and feature scaling' against
+        the stage 'Gradient descent as an alternative optimizer'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:28b4a2bf08bcbaddac6c93b97f3080e89f3530e6487268486e64c616e489a668
   - material_ref:
       route_id: route-sad-l03-cs229-regression
       inherit:
@@ -1050,6 +1518,15 @@ stages:
     angle: Derives the error-times-feature update and compares batch with per-example updates.
     angle_detail: Reproduce the derivation before comparing with the course notation. The number of observations
       and the number of features use different symbols; track their dimensions.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'CS229 notes — LMS and normal-equation derivations' against the stage
+        'Gradient descent as an alternative optimizer'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:bc5326d761915b8ca7f7afe379f1c90bf7aafe06ccadd2148a397c25b9247031
   - material_ref:
       route_id: route-sad-l03-csc411-regression
       inherit:
@@ -1063,6 +1540,15 @@ stages:
     angle: Adds line search and a finite-difference check to the basic gradient-descent loop.
     angle_detail: Use p. 60 to check an implemented derivative before trusting its optimization trajectory;
       the line search is an optional extension.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'CSC411 notes — scalar fit, design matrix and gradient checks' against
+        the stage 'Gradient descent as an alternative optimizer'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:d88b8da1f27ed36ac299c6212cd6b499cc02e071630f4c607d92f1e0e859a3f3
   - material_ref:
       route_id: route-sad-l03-statquest-gd
       inherit:
@@ -1106,6 +1592,15 @@ stages:
     scope_triage: required-now
     route_id: route-915c0c30301715706f857321
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L03 correlation and regression deck' against the stage 'Scaling,
+        coefficient interpretation, and model limits'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:f97e52c815c273320e72b1fc98cf21072fa3e72c0a1ca68af9ab797b584cb806
   - material_ref:
       route_id: route-6b78db21b974a13178ff0860
       inherit:
@@ -1120,6 +1615,15 @@ stages:
     angle_detail: Interpret RMSE on the response scale. Training RMSE is not a validation estimate. Execution
       needs the missing Seattle CSV and matching template; use the complete UE2 RMSE example for immediate
       practice.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 1, Aufgabe 3 — multivariate regression' against the stage 'Scaling,
+        coefficient interpretation, and model limits'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:85441135bbd8da3b14974a78fa3f4a5f4d6aaa127a58fd402c770457888f3e22
   - material_ref:
       route_id: route-3331bd0f1465151518d0d323
       inherit:
@@ -1133,6 +1637,15 @@ stages:
     angle: Calculates RMSE from actual and predicted income values.
     angle_detail: Square residuals, average them and take the root. This checks prediction-error units;
       it does not evaluate causal importance or out-of-sample performance.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE2, slides 30-35 — regression prediction and RMSE' against the stage
+        'Scaling, coefficient interpretation, and model limits'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:c0e6969f662900e108bb26df5a2556db0e6fb86011ef019fff8824e5871b4b6a
   - material_ref:
       route_id: route-9858d63c791d015034a2641f
       inherit:
@@ -1146,6 +1659,15 @@ stages:
     angle: Contrasts house-size and bedroom-count scales before standardizing each feature.
     angle_detail: The purpose is to reduce scale imbalance in optimization. Standardizing does not make
       all features equally informative or all gradient components equal.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE3, slides 40-45 — gradient descent and normalization walkthrough'
+        against the stage 'Scaling, coefficient interpretation, and model limits'. The stage description
+        selects that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:a4acd9fd288a383176197afc4535d8f3aa8e8dbd6a0923a2659ae72899625f40
   - material_ref:
       route_id: route-62f0ce97ea80883abf322143
       inherit:
@@ -1159,6 +1681,15 @@ stages:
     angle: Explains the very small learning rate used in the unnormalized rental example.
     angle_detail: Read the large error-delta values together with the feature and target units, then compare
       the normalization discussion. Weight size alone is not feature importance.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kelleher §§7.2–7.3 — office rentals, loss surfaces and weight updates'
+        against the stage 'Scaling, coefficient interpretation, and model limits'. The stage description
+        selects that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:fb0009cf2659f80c5f82d7dae19cc2530c9d5d0d42efc216cab46d2d3a6eab3b
   - material_ref:
       route_id: route-340dd98b7e8f177fce11b9f5
       inherit:
@@ -1172,6 +1703,15 @@ stages:
     angle: Shows why units, correlated predictors and residual patterns affect coefficient interpretation.
     angle_detail: Inspect the advertising comparison and the diagnostic plots. A fitted association is
       not a causal effect; uncertainty calculations require the later inference assumptions.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'ISLP Chapter 3 — statistical regression bridge' against the stage
+        'Scaling, coefficient interpretation, and model limits'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:bc28c40060929987474852681481b86060bc5056d0f0fc41ba3e91f063960d44
   - material_ref:
       route_id: route-31ee3e63a209ca409054dda3
       inherit:
@@ -1185,6 +1725,15 @@ stages:
     angle: Uses a garage dummy and a location-by-plot-area interaction to refine coefficient interpretation.
     angle_detail: Explain the dummy’s conditional difference, then the interaction’s change in the plot-area
       slope. This is a model-specification extension rather than a scaling calculation.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'University of Cologne pp. 7-8 — multivariate regression interpretation'
+        against the stage 'Scaling, coefficient interpretation, and model limits'. The stage description
+        selects that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:febbf5b16f2ce2bf4259a54b576e51ecd73a25e4ffb5b23cc5ff849ad90492d4
   - material_ref:
       route_id: route-8535a338657698b9de4791a8
       inherit:
@@ -1198,6 +1747,15 @@ stages:
     angle: Explains slow, zigzagging descent through elongated contours caused by unequal feature scales.
     angle_detail: Compare the axes and descent paths before and after scaling. Scaling changes the optimization
       geometry; it does not make every feature equally informative.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Géron Ch 4 — normal equation, descent code and feature scaling' against
+        the stage 'Scaling, coefficient interpretation, and model limits'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:4f1291290c6fea91797ce524d72344ec9cfc3a81084e0cfc459439484964b3da
   - material_ref:
       route_id: route-3d874eb98ed79f75cbf88ef7
       inherit:
@@ -1211,6 +1769,15 @@ stages:
     angle: Challenges identical regression summaries by comparing four very different point patterns.
     angle_detail: Explain why a line and r should be reported with the scatterplot. This is a model-diagnostics
       exercise rather than a feature-scaling calculation.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Arbeitsbuch Chapter 3 — correlation and regression drills' against
+        the stage 'Scaling, coefficient interpretation, and model limits'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:55f37e0309992a3cb2472407992bbc9121eb7d43039a185a8000bd2f4615acef
   - material_ref:
       route_id: route-c36a55ce03e709469e710d7e
       inherit:
@@ -1224,6 +1791,15 @@ stages:
     angle: Separates extrapolation, influential points and the units of a slope from the size of a correlation.
     angle_detail: Read the extrapolation example, inspect the leverage/influence plots, then answer exercise
       8.17 on correlation, intercept and slope units. The exercises on p. 330 practise outlier classification.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'OpenIntro — correlation and linear regression' against the stage
+        'Scaling, coefficient interpretation, and model limits'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:dc3fcc99d0b22a0c76b8ef7c062be4590c037cc663d7613f2a9a8ee6bae14703
   - material_ref:
       route_id: route-bf71c1ee8aee769abb6dd6d0
       inherit:
@@ -1237,6 +1813,15 @@ stages:
     angle: Tests how moving an extreme observation changes the fitted line.
     angle_detail: Compare the interaction with OpenIntro’s leverage and influence explanation. This addresses
       model sensitivity rather than a feature-scaling algorithm.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Setosa — ordinary least squares, interactive' against the stage 'Scaling,
+        coefficient interpretation, and model limits'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:0dcfd3fe18c9d3fb2b01489941a0a7c9034c49dfce3d09c4646c285600f6618e
   - material_ref:
       route_id: route-sad-l03-esl-projection
       inherit:
@@ -1250,6 +1835,15 @@ stages:
     angle: Uses orthogonalized predictors to explain a partial slope and unstable coefficients.
     angle_detail: The residualized predictor becomes short when other predictors nearly explain it. Follow
       this geometric argument; variance and Z-score interpretations require later inference.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'ESL §3.2 — least squares as orthogonal projection' against the stage
+        'Scaling, coefficient interpretation, and model limits'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:6fa87f83285a41bc8ea18019e05299ea1493936ad101cd9af592a454df742e38
   - material_ref:
       route_id: route-sad-l03-murphy-regression
       inherit:
@@ -1264,6 +1858,15 @@ stages:
       fit.
     angle_detail: Compare SVD, QR and iterative solvers as optional numerical extensions; stop before
       weighted least squares. This gives substance to the course’s numerical-stability warning.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Murphy §11.2.2 — projection, uniqueness and numerical solvers' against
+        the stage 'Scaling, coefficient interpretation, and model limits'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:9650e0709d55ebd209be80040a31c411a1bf27333d5dc536080a5fd5b185d4c4
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/stages/stage-sad-l03-scaling-weights/notes.md
   attachments: []
   source_feedback: []

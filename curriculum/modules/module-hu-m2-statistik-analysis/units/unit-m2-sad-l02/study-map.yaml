@@ -37,6 +37,15 @@ stages:
     scope_triage: required-now
     route_id: route-0f03e63079982eab2c3f883b
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L02 basic-concepts deck' against the stage 'Population, sample,
+        object, feature, and realization'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:52caf6d5a79755a8e87b917a483f18d81b16c87d5ddd11c24dd6b637c07b272b
   - material_ref:
       route_id: route-a3f76afb1ab8903d3a0a046d
       inherit:
@@ -102,6 +111,15 @@ stages:
     scope_triage: required-now
     route_id: route-0f03e63079982eab2c3f883b
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L02 basic-concepts deck' against the stage 'Feature types
+        and measurement scales'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:1a118db7957f1d69d2acedd9935b3424874fc9f37a2ddd96d8c73c1adbae720a
   - material_ref:
       route_id: route-9c04d8cb806ca1614d8ec83b
       inherit:
@@ -213,6 +231,15 @@ stages:
     scope_triage: required-now
     route_id: route-0f03e63079982eab2c3f883b
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L02 basic-concepts deck' against the stage 'Frequency distributions
+        and histograms'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:3546eddeee6a042b568a30ba2f3708fd12eb9c953a3a821ad04df0b65cddc453
   - material_ref:
       route_id: route-9c04d8cb806ca1614d8ec83b
       inherit:
@@ -350,6 +377,15 @@ stages:
     scope_triage: required-now
     route_id: route-0f03e63079982eab2c3f883b
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L02 basic-concepts deck' against the stage 'Location, quantiles,
+        and boxplots'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:c1db12d90b79fca5e9d61df17a26e5b74d4ef663b7e8be47bedcf0c0e2608aa2
   - material_ref:
       route_id: route-9c04d8cb806ca1614d8ec83b
       inherit:
@@ -497,6 +533,15 @@ stages:
     scope_triage: required-now
     route_id: route-0f03e63079982eab2c3f883b
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L02 basic-concepts deck' against the stage 'Range, variance,
+        standard deviation, and divisors'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:84a135c699445113cb4474ca44a039884d1f8ff8d4a9a6b732b3f253f3f7ac0d
   - material_ref:
       route_id: route-9c04d8cb806ca1614d8ec83b
       inherit:
@@ -643,6 +688,15 @@ stages:
     scope_triage: required-now
     route_id: route-0f03e63079982eab2c3f883b
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L02 basic-concepts deck' against the stage 'Aggregation and
+        Simpson's paradox'. The stage description selects that stage's task or reading purpose from the
+        broader route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:c81330bf96af7b640d41f9ee1d8a89b0e63ec2da882f6ea064eb43ed9fbc899e
   - id: resource-openintro-l02-simpson
     route_id: route-a225112e34dbc25aa40a9926
     node_scaffold_note: Contingency-table preparation for Simpson's paradox; the route teaches sampling
@@ -655,6 +709,15 @@ stages:
     angle_detail: This is scaffolding, not a verified worked Simpson reversal; use L02 PDF pp. 19-20 for
       the reversal itself.
     scope_triage: helpful-now
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'OpenIntro Chapters 1–2 — descriptive foundations' against the stage
+        'Aggregation and Simpson's paradox'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:74d5dfc323c747ab1c596e923d657e749d88c786b8d23dd61fcaf0d47decd706
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l02/stages/stage-sad-l02-simpson/notes.md
   attachments: []
   source_feedback: []
@@ -684,6 +747,15 @@ stages:
     scope_triage: required-now
     route_id: route-0f03e63079982eab2c3f883b
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L02 basic-concepts deck' against the stage 'Representative
+        samples and sampling bias'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:8bd775963e334ecd38d0fcbadc697de9998f1421598b3f349f5ed0806589c306
   - material_ref:
       route_id: route-a3f76afb1ab8903d3a0a046d
       inherit:

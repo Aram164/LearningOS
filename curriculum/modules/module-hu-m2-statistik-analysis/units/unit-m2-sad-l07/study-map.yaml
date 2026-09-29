@@ -38,6 +38,15 @@ stages:
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L07 discrete-distributions deck' against the stage 'Distribution
+        choice from assumptions'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:ef4242b703e63adccf263d9df3c16946f7619ca36498743aac5a16e2498a2fba
   - material_ref:
       route_id: route-475a87b6ec22bf8e77f9de71
       inherit:
@@ -92,6 +101,15 @@ stages:
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L07 discrete-distributions deck' against the stage 'Bernoulli
+        trials and the Binomial distribution'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:4bb6c150aacfc3b0988460a2678a9c9c3b236fa5200279f8596a8db55044315e
   - material_ref:
       route_id: route-475a87b6ec22bf8e77f9de71
       inherit:
@@ -157,6 +175,15 @@ stages:
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L07 discrete-distributions deck' against the stage 'Hypergeometric
+        sampling without replacement'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:725c920bbdfedcfa1777a1de08e8dbbf97184d13117cb900d43a8332d244d2c8
   - material_ref:
       route_id: route-475a87b6ec22bf8e77f9de71
       inherit:
@@ -226,6 +253,15 @@ stages:
     node_scaffold_note: Closest related material, a negative-binomial sketch; the deck has no dedicated
       Geometric lesson — reference contrast only.
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L07 discrete-distributions deck' against the stage 'Geometric
+        waiting times'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:5ffdaaed765660827c3ae8250931c44754dca941bf6cfbb851aa4777d292696b
   - material_ref:
       route_id: route-6ffaf5d7ec9d500ff4c5286e
       inherit:
@@ -240,6 +276,15 @@ stages:
     angle_detail: Read pp. 38–42 for the stopping-rule contrast, PMF, CDF and die-roll question. Page
       43 accidentally says E(X)=0.5 for p=0.5; under its convention E(X)=1/p=2. Page 44 contrasts fixed
       trials with waiting time. No memorylessness formula is given here.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route '2025 discrete-distributions deck' against the stage 'Geometric waiting
+        times'. The stage description selects that stage's task or reading purpose from the broader route;
+        preserve the narrower description. This relation review asserts no new source observation or learner
+        achievement.
+      fingerprint: sha256:56c8c106a8a1af593f970a968b0dfdaacaf707c742ba14dd5b95af86ae712aeb
   - material_ref:
       route_id: route-64c6506fd426173a5b124d5a
       inherit:
@@ -255,6 +300,15 @@ stages:
     angle_detail: The insurance-file example on pp. 145–147 builds (1−p)^(n−1)p from independent Bernoulli
       trials, gives the mean and variance, and warns that independence is essential. This is the calculation
       check for the p. 43 prior-year typo.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'OpenIntro Chapter 4 — common distributions' against the stage 'Geometric
+        waiting times'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:2c3427ee5d6f2d21abef30249ec176e4fd4a98a44002818a0d2f9a73a0425828
   - material_ref:
       route_id: route-sad-l07-geometric-blatt4-clt
       inherit:
@@ -296,6 +350,15 @@ stages:
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L07 discrete-distributions deck' against the stage 'Poisson
+        event counts'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:ccb72b03e94a6a50c80ac113ddc11aa97681db9f7967d966b1ba3858270cc2f6
   - material_ref:
       route_id: route-475a87b6ec22bf8e77f9de71
       inherit:
@@ -365,6 +428,15 @@ stages:
     scope_triage: required-now
     route_id: route-66b70c94de7bc040921d186c
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L07 discrete-distributions deck' against the stage 'Limits,
+        approximations, and moment signatures'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:41ae5df29ba0e7a47b1fe69b677a5613deaa389ab3b254d7baa5fee114b4c673
   - material_ref:
       route_id: route-52083707f01a014c3e2c267b
       inherit:

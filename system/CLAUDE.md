@@ -8,7 +8,7 @@
 >
 > If context is tight and you read nothing else in this repository, obey these:
 >
-> 1. **Never edit anything under `generated/`** — it is a disposable view. Fix the canonical data, then rebuild (`python tools/generate.py`).
+> 1. **Never edit anything under `generated/`** — it is a disposable view. Fix the canonical data, then rebuild (`.venv/bin/python tools/generate.py`).
 > 2. **Exam, registration and grade facts live ONLY in the owning academic module's `curriculum/modules/<module-id>/module.yaml`.** `records/modules.yaml` is a frozen compatibility snapshot. Decisions, priorities, deferrals and cross-workspace dependencies live ONLY in `work/COORDINATION.md`. Never copy either into prose.
 > 3. **Never rewrite, simplify, or "improve" a note body.** User reasoning is preserved verbatim; semantic edits need an explicit request and a reviewable diff.
 > 4. **Never delete** canonical notes, concepts, sources, relations, module records, or original handwritten material without explicit approval.
@@ -16,7 +16,7 @@
 > 6. **Answer exam questions from the owning partitioned academic module; answer "what next" from the current atomic manifest plus the freshly rebuilt coordination view** — never from stored prose copies or the global resume pointer alone. The manifest version belongs to `system/contracts/manifest-contract.yaml`; do not copy it into prose.
 > 7. **Never declare mastery** — show evidence trails or their documented absence.
 > 8. **External code stays external** (§13) — LearningOS never indexes, validates, or manages sibling repositories such as `Stratum/`; inspect relevant code only when the current task needs it.
-> 9. **Run `python tools/validate.py --compact` after any batch of edits** and before ending a session. Work is not done until it prints **0 errors** and `python tools/warning_baseline.py --check` reports **no new warning signature**. Existing warnings stay visible (counted in the summary line, listed in `generated/reports/validation-report.md`) and never block — they are the deferred content debt of CRITIQUE-POINTS §1, and the baseline is what separates them from a warning you just introduced.
+> 9. **Run `.venv/bin/python tools/validate.py --compact` after any batch of edits** and before ending a session. Work is not done until it prints **0 errors** and `.venv/bin/python tools/warning_baseline.py --check` reports **no new warning signature**. Existing warnings stay visible (counted in the summary line, listed in `generated/reports/validation-report.md`) and never block — they are the deferred content debt of CRITIQUE-POINTS §1, and the baseline is what separates them from a warning you just introduced.
 > 10. **When unsure: least destructive reversible action, then ask.** The tiebreaker is always "reduce organizational burden rather than create it."
 > 11. **Study state belongs to module → unit → current map → stage.** Workspaces coordinate through explicit IDs. Never collapse many active units into one global path or infer joins from prose.
 > 12. **General AI is read-only.** Canonical writes use an action-specific gateway capability, current snapshot, post-action scope check, validation, and regeneration. Session closure stages only the gateway ledger and never the protected Canvas files.
@@ -295,7 +295,7 @@ specific garden note — the operator:
    canonical note, so it follows the visible-review rules (§4);
 5. moves the approved note into the Fortress, adds the frontmatter, and registers
    new concepts/sources only as needed;
-6. runs `python tools/validate.py --compact` and rebuilds views; the promoted idea now
+6. runs `.venv/bin/python tools/validate.py --compact` and rebuilds views; the promoted idea now
    participates in the canon, and its garden file is removed (its history stays
    in Git).
 

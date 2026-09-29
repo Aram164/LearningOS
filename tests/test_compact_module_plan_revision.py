@@ -333,6 +333,16 @@ def test_source_join_refuses_unknown_and_repeated_sources(mini_repo, tmp_path):
     _refuses_join(mini_repo, tmp_path, twice, "same source twice")
 
 
+def test_source_join_refuses_an_empty_source_id_as_missing(mini_repo, tmp_path):
+    """An empty join source_id is a missing id, not an unregistered source:
+    'not registered: ' names nothing to look up."""
+    _two_units(mini_repo)
+    _register_paper(mini_repo)
+    revision = _join_revision(mini_repo)
+    revision["source_joins"][0]["source_id"] = ""
+    _refuses_join(mini_repo, tmp_path, revision, "needs a source_id")
+
+
 def test_source_join_refuses_falsy_non_list_joins(mini_repo, tmp_path):
     """A mistyped `source_joins: {}` must fail loudly, not join nothing
     while the revision succeeds."""

@@ -38,6 +38,15 @@ stages:
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L10 hypothesis-testing deck' against the stage 'Null model,
+        alternative, statistic, and reference distribution'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:f09901917499fa00b8fde4c91e7e966378b73f1111e587152326e6aaf8edcb39
   - material_ref:
       route_id: route-73776780d8ed70192944e3bf
       inherit:
@@ -107,6 +116,15 @@ stages:
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L10 hypothesis-testing deck' against the stage 'Tails, critical
+        regions, and p-values'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:67e5f55eb09fa1f8347cc5b2ae29d6633052aa1995fdb75f1d143e77a8d0c6b7
   - material_ref:
       route_id: route-73776780d8ed70192944e3bf
       inherit:
@@ -160,6 +178,15 @@ stages:
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L10 hypothesis-testing deck' against the stage 'Type I error,
+        Type II error, and power'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:91fbe3e6de4fe9c4eaf4b96f9ff2b7756849701aff61519586115cd8e28cfc17
   - material_ref:
       route_id: route-335f1041911c33391d4a59b8
       inherit:
@@ -222,6 +249,15 @@ stages:
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L10 hypothesis-testing deck' against the stage 'z and t tests
+        for means'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:1e10d3889a62b79800d744202e4d7ba60b6ff451a9185ac74310607c81985857
   - material_ref:
       route_id: route-73776780d8ed70192944e3bf
       inherit:
@@ -287,6 +323,15 @@ stages:
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L10 hypothesis-testing deck' against the stage 'Confidence
+        intervals and test duality'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:3e2ef55ea6a03c5fa4e19b28a86074b3d2300c84c291abb89fba1332685f657c
   - material_ref:
       route_id: route-431abda7307c32a597e47e16
       inherit:
@@ -344,6 +389,15 @@ stages:
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L10 hypothesis-testing deck' against the stage 'Chi-square
+        tests for categorical data'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:7acc2b538b61e6ed19d40592e7ce447b871da524885118478ae205cd23ca7cc2
   - material_ref:
       route_id: route-a5f4d77def369d34f2f8fe23
       inherit:
@@ -399,6 +453,15 @@ stages:
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L10 hypothesis-testing deck' against the stage 'Rank and
+        permutation tests'. The stage description selects that stage's task or reading purpose from the
+        broader route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:e5cbd92979a119531d4a314b6ce4b9bced4df8f108fa52bea27df94252ead677
   - material_ref:
       route_id: route-73776780d8ed70192944e3bf
       inherit:
@@ -454,6 +517,15 @@ stages:
     scope_triage: required-now
     route_id: route-37b273e6be586546e32355cb
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L10 hypothesis-testing deck' against the stage 'Multiple
+        testing and Bonferroni correction'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:13af0223be275f440d525ab1c7830e71f6604f3f3048ef8e65449b44072ef01b
   - material_ref:
       route_id: route-b51a9ce76538f13c02e94238
       inherit:

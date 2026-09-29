@@ -707,7 +707,7 @@ def test_module_plan_import_adds_units_sources_and_workspace_join(mini_repo, tmp
     example = re.search(r"```bash\n\s*([^\n]+)\n\s*```", section)
     assert example is not None
     words = shlex.split(example.group(1))
-    assert words == ["python", "tools/los.py", "capability", "module.plan.import",
+    assert words == [".venv/bin/python", "tools/los.py", "capability", "module.plan.import",
                      "--payload-file", "envelope.json"]
     envelope = approved_v2_envelope(
         mini_repo, capability="module.plan.import",

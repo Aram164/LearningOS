@@ -1,0 +1,12 @@
+# Minimal frozen topic vocabulary for the v5 format fixture.
+#
+# Deliberately small: a fixture proves the FORMAT still loads, not that the live
+# vocabulary is complete. It carries no `domain` on purpose — the field is
+# optional, and this fixture has no curriculum/thematic-groups.yaml, so a domain
+# here would reference a group that does not exist and fail REF-TOPIC-DOMAIN for
+# reasons that have nothing to do with the format.
+topics:
+  - id: topic-probability
+    title: Probability
+  - id: topic-statistical-learning
+    title: Statistical & Classical ML

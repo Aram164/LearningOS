@@ -90,6 +90,7 @@
   "$defs": {
     "legacyResource": {
       "type": "object",
+      "allOf": [{"if": {"required": ["angle_review"]}, "then": {"anyOf": [{"required": ["route_id"]}, {"required": ["material_ref"]}]}}],
       "required": ["kind"],
       "additionalProperties": false,
       "anyOf": [{"required": ["label"]}, {"required": ["material_ref"], "properties": {"material_ref": {"properties": {"inherit": {"contains": {"const": "label"}}}}}}],
@@ -103,6 +104,7 @@
         "locator": {"type": "string"},
         "angle": {"type": "string", "pattern": "\\S"},
         "angle_detail": {"type": "string", "pattern": "\\S"},
+        "angle_review": {"$ref": "https://learningos.local/schema/learning-plan-v1#/$defs/angleReview"},
         "url": {"type": "string", "format": "uri"},
         "vault_path": {"type": "string"},
         "scope_triage": {"enum": ["required-now", "helpful-now", "deferred", "reference-only"]},

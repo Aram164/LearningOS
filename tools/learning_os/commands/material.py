@@ -29,6 +29,7 @@ from .reads import (
     _freshness_label,
     _print_stable,
     _snapshot,
+    _unit_note_scope,
 )
 from .support import (
     WriteRefused,
@@ -314,23 +315,29 @@ def _unit_audit(root, repo, unit) -> dict:
     }
 
 
-def _brief_analysis_refs(root, repo, unit, routes) -> dict:
-    """Reusable analysis references for one unit's sources: ids, never bodies.
+def _brief_analysis_refs(root, repo, unit, routes, *, include_related=False) -> dict:
+    """Reusable analysis references for one unit's routes: ids, never bodies.
 
     The same durable records material-context searches — analysis notes
-    bound to this unit's source ids plus approved unit assessments — as
-    identifiers with freshness, review, and resolution labels. Follow-up
-    reads fetch bodies through the expand commands, never from here.
+    standing direct against this unit's routes plus approved unit
+    assessments — as identifiers with freshness, review, and resolution
+    labels. Same-source-only notes are counted with an expansion hint,
+    listed only through --include-related. Follow-up reads fetch bodies
+    through the expand commands, never from here.
     """
-    unit_source_ids = {r.get("source_id") for r in routes if r.get("source_id")}
+    pairs = [(route.get("source_id"), route) for route in routes
+             if route.get("source_id")]
     refs = []
+    related = []
     for note in _analysis_notes(repo):
         binding = note.meta["material_analysis"]
-        if binding.get("source_id") not in unit_source_ids:
+        standing = _unit_note_scope(repo, binding, pairs)
+        if standing is None:
             continue
-        refs.append({
+        (refs if standing == "direct" else related).append({
             "note_id": note.id,
             "source_id": binding.get("source_id"),
+            "scope": standing,
             "resolution": binding.get("resolution"),
             "review": note.meta.get("semantic_review"),
             "inspected_range": binding.get("inspected_range") or {},
@@ -357,13 +364,20 @@ def _brief_analysis_refs(root, repo, unit, routes) -> dict:
     by_resolution: dict = {}
     for ref in refs:
         by_resolution[ref["resolution"]] = by_resolution.get(ref["resolution"], 0) + 1
-    return {"analysis_notes": refs,
-            "approved_assessment_routes": sorted(assessed),
-            "stale_assessment_routes": sorted(stale),
-            "analysis_by_resolution": by_resolution}
+    out = {"analysis_notes": refs,
+           "related_count": len(related),
+           "related_expand": (f"los plan-edit-context {unit.id} "
+                              "--brief --include-related"),
+           "approved_assessment_routes": sorted(assessed),
+           "stale_assessment_routes": sorted(stale),
+           "analysis_by_resolution": by_resolution}
+    if include_related:
+        out["related_notes"] = related
+    return out
 
 
-def _brief_payload(root, repo, unit, routes, study_map, artifacts) -> dict:
+def _brief_payload(root, repo, unit, routes, study_map, artifacts,
+                   *, include_related=False) -> dict:
     """The brief preparation form: what the next command needs, nothing else.
 
     Identities, guards, id inventories, the audit's missing-evidence lists,
@@ -393,7 +407,8 @@ def _brief_payload(root, repo, unit, routes, study_map, artifacts) -> dict:
                 len(s.get("resources", []) or []) for s in stage_rows),
         },
         "unit_audit": _unit_audit(root, repo, unit),
-        "analysis_refs": _brief_analysis_refs(root, repo, unit, routes),
+        "analysis_refs": _brief_analysis_refs(
+            root, repo, unit, routes, include_related=include_related),
         "required_inputs": {
             "route_patch": {
                 "route_id": (f"one of the {len(route_ids)} inventoried route ids"),
@@ -470,6 +485,10 @@ def cmd_plan_edit_context(args) -> int:
         if getattr(args, "brief", False) and getattr(args, "audit", False):
             raise WriteRefused(
                 "plan-edit-context --brief already carries the unit audit")
+        if getattr(args, "include_related", False) and not getattr(
+                args, "brief", False):
+            raise WriteRefused(
+                "plan-edit-context --include-related needs --brief")
         if args.route_id:
             payload.update(_route_entry(
                 routes, study_map, source_map, unit, args.route_id))
@@ -486,7 +505,9 @@ def cmd_plan_edit_context(args) -> int:
                             "scope": "one stage only — universe questions "
                                      "(e.g. no source covers X) need the full unit context"})
         elif getattr(args, "brief", False):
-            payload = _brief_payload(root, repo, unit, routes, study_map, artifacts)
+            payload = _brief_payload(
+                root, repo, unit, routes, study_map, artifacts,
+                include_related=bool(getattr(args, "include_related", False)))
         else:
             # Present the compact form even before an existing map is migrated.
             # Expansion inputs are included once, never separately per stage.

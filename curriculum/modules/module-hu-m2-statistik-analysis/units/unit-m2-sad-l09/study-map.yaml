@@ -38,6 +38,15 @@ stages:
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L09 estimation deck' against the stage 'Statistics, estimators,
+        and estimates'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:8ff74585cbc05e33dc7dd896727d41f04d2a6c23f356c6fb0c0a7f6d9c5a8b71
   - material_ref:
       route_id: route-1396da832b2294453043b59b
       inherit:
@@ -53,6 +62,15 @@ stages:
       yet.'
     scope_triage: required-now
     route_id: route-1396da832b2294453043b59b
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval' against
+        the stage 'Statistics, estimators, and estimates'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:a79274ae5081a453a5a23e12853e8d68632b80c2b98367127ae60580f5fc72a6
   - material_ref:
       route_id: route-c53fea2ffaf7c83506f57ba8
       inherit:
@@ -97,6 +115,15 @@ stages:
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L09 estimation deck' against the stage 'Bias, consistency,
+        efficiency, and mean squared error'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:de4698c1a8cd9f780dc9125c607d850374ff76f7df9bf747d49fe47d2b0dbe2c
   - material_ref:
       route_id: route-7847d85f81696a1bf1a87cf2
       inherit:
@@ -151,6 +178,15 @@ stages:
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L09 estimation deck' against the stage 'Sampling distributions
+        and standard errors'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:ebbccf69e09186e39ef77d9b576fbef1138bb83cd0ca72dc157b5b52abeb9fed
   - material_ref:
       route_id: route-1396da832b2294453043b59b
       inherit:
@@ -165,6 +201,15 @@ stages:
       estimator. Defer bootstrap calculation in (a) to the bootstrap stage.'
     scope_triage: required-now
     route_id: route-1396da832b2294453043b59b
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval' against
+        the stage 'Sampling distributions and standard errors'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:ceadf336280ebcb483e86da7aad86b826e54a8a7a6323d0b6084f4f122a52782
   - material_ref:
       route_id: route-cdfc3800327de87be7846b02
       inherit:
@@ -221,6 +266,14 @@ stages:
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L09 estimation deck' against the stage 'z confidence intervals'.
+        The stage description selects that stage's task or reading purpose from the broader route; preserve
+        the narrower description. This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:65c348756933aaef7857797c0b568aad18dac3970dbc1bf667b24a2762a13cc2
   - material_ref:
       route_id: route-23f516ac8b071207600e7094
       inherit:
@@ -275,6 +328,14 @@ stages:
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L09 estimation deck' against the stage 't confidence intervals'.
+        The stage description selects that stage's task or reading purpose from the broader route; preserve
+        the narrower description. This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:1e5c13839a074d10a568182fdfc02fe9cadf95a4f8e50b5e268cf1b73ca6d239
   - material_ref:
       route_id: route-23f516ac8b071207600e7094
       inherit:
@@ -329,6 +390,14 @@ stages:
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L09 estimation deck' against the stage 'Bootstrap estimation'.
+        The stage description selects that stage's task or reading purpose from the broader route; preserve
+        the narrower description. This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:b6f387446a295eddfe327da4b32e5de5a61d46ffac92eebb047aa9f1a66144ce
   - material_ref:
       route_id: route-1396da832b2294453043b59b
       inherit:
@@ -343,6 +412,15 @@ stages:
       the 80% interval and the distinction from sample standard deviation.
     scope_triage: required-now
     route_id: route-1396da832b2294453043b59b
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 4, Aufgabe 2 — point estimate, bootstrap and interval' against
+        the stage 'Bootstrap estimation'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:f4e185ca2c374c928f993961bc7cd217b94bbb7bcb9d2fc742a477809cdd465a
   - material_ref:
       route_id: route-cdfc3800327de87be7846b02
       inherit:
@@ -369,6 +447,15 @@ stages:
     angle_detail: Page 71 gives the n-of-n with-replacement algorithm and 95% percentile endpoints; pp.
       82–87 contrast a Normal-based interval with empirical tail trimming. Page 88 says the five-value
       example is too small for dependable inference. Use after current Blatt 4 and UE6.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route '2025 point and interval estimation deck' against the stage 'Bootstrap
+        estimation'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:3684c1ea41bf090353833e751d83815c4104b32ee458f7aa54b03352d9703a64
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l09/stages/stage-sad-l09-bootstrap/notes.md
   attachments: []
   source_feedback: []
@@ -398,6 +485,15 @@ stages:
     scope_triage: required-now
     route_id: route-86a1ed6bed9d05cc93b50bad
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L09 estimation deck' against the stage 'Statistical uncertainty
+        versus data bias'. The stage description selects that stage's task or reading purpose from the
+        broader route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:cecb2739273d985802f8c4a8a5a1792a1dd8ff55488a63d009985e6d23eb01bd
   - material_ref:
       route_id: route-c53fea2ffaf7c83506f57ba8
       inherit:

@@ -14,9 +14,19 @@ from learning_os.fingerprint import canonical_fingerprint
 from learning_os.garden import garden_id
 from learning_os.genout.atlas import ATLAS_DOMAINS
 from learning_os.loader import load_repo
-from learning_os.loading import Repo, load_garden, load_notes
+from learning_os.loading import FRONTMATTER_RE, Repo, load_garden, load_notes
 from learning_os.material_analysis import observe_local_material
+from learning_os.material_slices import parse_locator_page_ranges
 from learning_os.material_synthesis import material_synthesis_freshness
+from learning_os.materials_resolution import (
+    MATERIAL_RESOURCE_SUFFIXES,
+    MATERIAL_SCHEME,
+    MATERIAL_SUFFIX_TOKEN,
+    leading_material_locator,
+    material_location,
+    material_uri_authority,
+    safe_material_locator,
+)
 from learning_os.search.index import NoteBlob, build_registry
 from learning_os.search.model import POSTINGS_NODE_ID
 from learning_os.search.query import candidates
@@ -884,6 +894,241 @@ def _approved_assessments(repo):
     return found
 
 
+def _materials_rel_for_uri(repo, uri) -> str | None:
+    """The materials-relative file a ``material://`` URI names, or None.
+
+    Identity only: the file need not exist. Anything resolving outside
+    the materials tree — or to a directory rather than a material file —
+    is not a material path at all, so folder-level URIs prove no file.
+    """
+    if not isinstance(uri, str) or not uri:
+        return None
+    path = material_location(repo, uri).get("material_path")
+    if not isinstance(path, str) or not path.startswith("materials/"):
+        return None
+    rel = path[len("materials/"):]
+    if PurePosixPath(rel).suffix.lower() not in MATERIAL_RESOURCE_SUFFIXES:
+        return None
+    return rel
+
+
+def _route_material_files(repo, source_id, route) -> set[str]:
+    """Every materials-relative file one route reads, or empty when unproven.
+
+    A route's own ``vault_path`` wins as a single file; otherwise a
+    semicolon-separated locator naming two or more files resolves to the
+    set it names — the same deliberate two-file binding the dossier basis
+    resolves for freshness; otherwise the locator's leading file resolves
+    against the route's source; otherwise the route inherits the source
+    record's held material. The multi-file branch is strict: every part
+    must name exactly one safe distinct file, otherwise the route proves
+    no file at all rather than guessing one. String routes, prose-only
+    locators, and material-less sources prove no file.
+    """
+    if not isinstance(route, dict):
+        route = {}
+    vault = _materials_rel_for_uri(repo, route.get("vault_path"))
+    if vault is not None:
+        return {vault}
+    record = repo.sources.get(source_id) if isinstance(source_id, str) else None
+    held = record.get("material") if isinstance(record, dict) else None
+    authority = material_uri_authority(held)
+    if authority is None and isinstance(source_id, str) and source_id:
+        # Legacy routes can name an exact source-id-prefixed file without
+        # a source-level material field. A declared shared authority wins.
+        authority = source_id
+    locator = route.get("locator")
+    if (isinstance(locator, str) and ";" in locator
+            and len(MATERIAL_SUFFIX_TOKEN.findall(locator)) >= 2):
+        if authority is None:
+            return set()
+        candidates: list[str] = []
+        for part in locator.split(";"):
+            matches = list(MATERIAL_SUFFIX_TOKEN.finditer(part))
+            if len(matches) != 1:
+                return set()
+            candidate = safe_material_locator(part[:matches[0].end()].strip())
+            if candidate is None:
+                return set()
+            candidates.append(candidate)
+        if len(candidates) < 2 or len(candidates) != len(set(candidates)):
+            return set()
+        resolved: set[str] = set()
+        for candidate in candidates:
+            found = _materials_rel_for_uri(
+                repo, f"{MATERIAL_SCHEME}{authority}/{candidate}")
+            if found is None:
+                return set()
+            resolved.add(found)
+        return resolved
+    head = None
+    if isinstance(locator, str):
+        # Strict first, then the weaker head-of-prose question — the same
+        # order the material projection resolves a row.
+        head = safe_material_locator(locator) or leading_material_locator(locator)
+    if head and authority:
+        found = _materials_rel_for_uri(
+            repo, f"{MATERIAL_SCHEME}{authority}/{head}")
+        if found is not None:
+            return {found}
+    inherited = _materials_rel_for_uri(repo, held)
+    return {inherited} if inherited is not None else set()
+
+
+def _route_material_file(repo, source_id, route) -> str | None:
+    """The materials-relative file one route reads, or None when unprovable.
+
+    Single-file view of `_route_material_files`: exactly one proven file
+    returns it, zero or several prove no single file.
+    """
+    files = _route_material_files(repo, source_id, route)
+    return next(iter(files)) if len(files) == 1 else None
+
+
+def _single_route_range(route) -> tuple[int, int] | None:
+    """The one usable page range a route states, or None.
+
+    Zero ranges (a whole-file route) and several ranges (a curated tour)
+    both decline the page test: only a single stated range narrows what a
+    note about the file must overlap to count as direct evidence.
+    """
+    locator = route.get("locator") if isinstance(route, dict) else None
+    ranges = parse_locator_page_ranges(locator) if isinstance(locator, str) else []
+    return ranges[0] if len(ranges) == 1 else None
+
+
+def _note_pages(binding) -> tuple[int, int] | None:
+    """A note's inspected physical page window, or None when unstated."""
+    inspected = binding.get("inspected_range") if isinstance(binding, dict) else None
+    if not isinstance(inspected, dict):
+        return None
+    start, end = inspected.get("start"), inspected.get("end")
+    if (isinstance(start, bool) or isinstance(end, bool)
+            or not isinstance(start, int) or not isinstance(end, int)):
+        return None
+    return (start, end) if start <= end else None
+
+
+def _unit_note_scope(repo, binding, routes) -> str | None:
+    """"direct", "related", or None: one note's standing against unit routes.
+
+    THE shared note-to-route rule: material-context and the plan brief
+    both answer from here. Material identity comes from existing
+    resolution, never from a shared source id alone, and a route stating
+    a single usable page range additionally requires physical overlap with
+    the note's inspected window. Same-source-only notes are related, never
+    direct; notes touching neither the source nor the file are out.
+    ``routes`` is (source_id, route-dict) pairs; string routes arrive as
+    (source_id, {}) and prove identity only through inheritance.
+    """
+    if not isinstance(binding, dict):
+        return None
+    note_sid = binding.get("source_id")
+    note_ref = binding.get("material")
+    pages = _note_pages(binding)
+    standing = None
+    for source_id, route in routes:
+        same_source = (isinstance(note_sid, str) and note_sid
+                       and note_sid == source_id)
+        route_files = _route_material_files(repo, source_id, route)
+        same_file = (isinstance(note_ref, str) and note_ref
+                     and note_ref in route_files)
+        if not same_source and not same_file:
+            continue
+        if same_source and same_file:
+            window = _single_route_range(route) if len(route_files) == 1 else None
+            if window is None or (
+                    pages is not None
+                    and window[0] <= pages[1] and pages[0] <= window[1]):
+                return "direct"
+        standing = "related"
+    return standing
+
+
+def _unit_route_pairs(repo, unit_id) -> list:
+    """(source_id, route-dict) pairs routed to one unit.
+
+    The same membership the scope check always used — a bare unit id or
+    an expanded route carrying it — with string routes arriving as empty
+    dicts so the shared rule, not the caller, decides what they prove.
+    """
+    unit = repo.units[unit_id]
+    source_map = repo.module_source_maps.get(unit.module_id) or {}
+    pairs = []
+    for source in source_map.get("sources", []) or []:
+        if not isinstance(source, dict) or not source.get("source_id"):
+            continue
+        for route in source.get("unit_routes", []) or []:
+            if route == unit.id:
+                pairs.append((source["source_id"], {}))
+            elif isinstance(route, dict) and route.get("unit_id") == unit.id:
+                pairs.append((source["source_id"], route))
+    return pairs
+
+
+def _route_material_index(repo, unit_id=None) -> dict:
+    """route_id -> (source_id, route-dict), for one unit or every module."""
+    if unit_id is not None:
+        return {route.get("id"): pair for pair in _unit_route_pairs(repo, unit_id)
+                for route in [pair[1]] if route.get("id")}
+    index = {}
+    for source_map in (repo.module_source_maps or {}).values():
+        if not isinstance(source_map, dict):
+            continue
+        for source in source_map.get("sources", []) or []:
+            if not isinstance(source, dict) or not source.get("source_id"):
+                continue
+            for route in source.get("unit_routes", []) or []:
+                if isinstance(route, dict) and route.get("id"):
+                    index.setdefault(route["id"], (source["source_id"], route))
+    return index
+
+
+def _check_material_ref(root, ref) -> str:
+    """The exact materials-tree path a --material filter names, else refused.
+
+    Exact: no canonicalization, so a near-miss matches nothing rather than
+    something nearby. The boundary is still enforced — an escape refuses
+    instead of reading outside the tree.
+    """
+    materials = root.parent / "materials"
+    pure = PurePosixPath(ref) if isinstance(ref, str) else None
+    if (pure is None or not ref or pure.is_absolute()
+            or "\\" in ref
+            or any(part in {".", ".."} for part in pure.parts)):
+        raise WriteRefused(f"--material must be a materials-tree-relative path: {ref!r}")
+    try:
+        (materials / ref).resolve(strict=False).relative_to(materials.resolve())
+    except (OSError, ValueError) as exc:
+        raise WriteRefused(
+            f"--material must be a materials-tree-relative path: {ref!r}") from exc
+    return ref
+
+
+def _explanation_snippets(title, text, body_offset, terms) -> list:
+    """Title label plus true-file-line body windows for matched terms.
+
+    A title hit yields one title snippet; body hits reuse the content
+    search's windowing over the full text, so the reported lines are true
+    file lines even though matching never sees the frontmatter. At most
+    eight snippets either way, the title counting as one.
+    """
+    snippets = []
+    if any(regex.search(title) for regex in terms):
+        snippets.append({"label": "title", "text": title})
+    body = text[body_offset:]
+    positions = sorted({match.start() for regex in terms
+                        if (match := regex.search(body)) is not None})
+    for position in positions[:8 - len(snippets)]:
+        absolute = body_offset + position
+        start = max(text.rfind("\n", 0, absolute) + 1, absolute - 100)
+        end = text.find("\n", absolute)
+        end = min(end if end >= 0 else len(text), absolute + 180)
+        snippets.append({"line": text.count("\n", 0, absolute) + 1,
+                         "text": text[start:end]})
+    return snippets
+
+
 def _freshness_label(root, binding, observations=None):
     """Live source freshness: current, stale, or unreadable. Never inferred.
 
@@ -932,22 +1177,82 @@ def _assessment_purpose_hit(assessment, purpose):
                for field in ("best_for", "exercise_value"))
 
 
+def _analysis_note_item(root, note, *, raw_terms, terms, concept_id, purpose,
+                        unit, material_ref, scope, evidence, observations):
+    """One matched analysis note, or None when the terms miss.
+
+    Terms match the explanation text — title plus body — with lexical AND;
+    frontmatter (provenance paths, digests, ids) never matches. Title hits
+    yield a title snippet; body hits yield true file line numbers. The
+    scope label exists only under --unit, where direct and related mean
+    something.
+    """
+    raw = _note_bytes(root, note)
+    text = raw.decode("utf-8")
+    title = note.meta.get("title", note.id)
+    front = FRONTMATTER_RE.match(text)
+    body_offset = front.end() if front else 0
+    body = text[body_offset:]
+    matched = [raw_term for raw_term, regex in zip(raw_terms, terms, strict=True)
+               if regex.search(title) or regex.search(body)]
+    if len(matched) != len(raw_terms):
+        return None
+    binding = note.meta["material_analysis"]
+    inspected = binding.get("inspected_range") or {}
+    reasons = {"terms": matched}
+    if concept_id is not None:
+        reasons["concept"] = concept_id
+    if purpose:
+        reasons["purpose"] = purpose
+    if unit:
+        reasons["unit"] = unit
+    if material_ref is not None:
+        reasons["material"] = material_ref
+    item = {
+        "origin": "analysis-note",
+        "id": note.id, "title": title,
+        "path": note.path.relative_to(root).as_posix(),
+        "use_evidence": _evidence_label(
+            evidence.get(binding.get("source_id")) or {}),
+        "match": {**reasons, "snippets": _explanation_snippets(
+            title, text, body_offset, terms)},
+        "source": {
+            "ref": binding.get("material"),
+            "pages": [inspected.get("start"), inspected.get("end")],
+            "freshness": _freshness_label(root, binding, observations),
+        },
+        "review": {
+            "semantic_review": note.meta.get("semantic_review"),
+            "resolution": binding.get("resolution"),
+        },
+        "anchors": binding.get("anchors") or [],
+    }
+    if scope is not None:
+        item["scope"] = scope
+    return item
+
+
 def cmd_material_context(args) -> int:
     """Find saved explanations from an explanation need.
 
     Corpus: durable analysis notes plus the route assessments of approved
-    unit syntheses. Matching is deterministic lexical AND over terms, with
-    declared concept aliases, purpose substrings, and unit scope as filters.
-    Ranking is recorded stage use-evidence per source (positive feedback
-    first, mismatch feedback last); ties keep stable order (notes by id,
-    then assessments by unit and route), which is the whole answer until
-    feedback exists.
+    unit syntheses. Matching is deterministic lexical AND over terms against
+    explanation text — note title plus body, never provenance frontmatter —
+    with declared concept aliases, purpose substrings, unit scope, and an
+    exact materials path as filters. Unit scope is route-based: direct notes
+    share a routed file (and overlap its single stated page range when it
+    states one); same-source-only notes are related, listed only through
+    --include-related. Ranking is recorded stage use-evidence per source
+    (positive feedback first, mismatch feedback last); ties keep stable
+    order (notes by id, then assessments by unit and route), which is the
+    whole answer until feedback exists.
     Freshness is observed live per result: notes carry source freshness,
     assessments carry their dossier's current freshness next to the stored
     review status. Review state and resolution are reported, never
-    inferred. Every response binds the external observations it used
-    (`observations_sha256`); a continuation re-verifies them, so pages
-    never describe different source states under one identity. An empty
+    inferred. Every response binds the external observations and the
+    normalized filters it used (`observations_sha256`); a continuation
+    re-verifies them, so pages never describe different source states — or
+    different filters — under one identity. An empty
     result describes the searched records only — never proof that no
     source explains the topic.
     """
@@ -960,8 +1265,14 @@ def cmd_material_context(args) -> int:
                 "previous response")
         raw_terms = (args.query or "").split()
         terms = [re.compile(re.escape(term), re.IGNORECASE) for term in raw_terms]
-        if not terms:
-            raise WriteRefused("material context requires a nonempty query")
+        material_ref = getattr(args, "material", None)
+        if not terms and material_ref is None:
+            raise WriteRefused(
+                "material context requires a nonempty query or --material")
+        if getattr(args, "include_related", False) and not args.unit:
+            raise WriteRefused("--include-related needs --unit")
+        if material_ref is not None:
+            _check_material_ref(root, material_ref)
         with _operator_lock(root):
             snapshot = _snapshot(root, args.expected_snapshot)
             repo = load_repo(root)
@@ -983,31 +1294,54 @@ def cmd_material_context(args) -> int:
             if args.unit and args.unit not in repo.units:
                 raise WriteRefused(f"unknown unit: {args.unit!r}")
             assessments = _approved_assessments(repo)
+            related_count = 0
+            searched_related: list = []
             if args.unit:
                 assessments = [row for row in assessments if row[1] == args.unit]
-                unit = repo.units[args.unit]
-                source_map = repo.module_source_maps.get(unit.module_id) or {}
-                unit_sources = {
-                    source["source_id"]
-                    for source in source_map.get("sources", []) or []
-                    if isinstance(source, dict) and source.get("source_id")
-                    and any(route == unit.id or (
-                        isinstance(route, dict) and route.get("unit_id") == unit.id
-                    ) for route in source.get("unit_routes", []) or [])
-                }
-                notes = [note for note in _analysis_notes(repo)
-                         if note.meta["material_analysis"].get("source_id") in unit_sources]
+                pairs = _unit_route_pairs(repo, args.unit)
+                direct_pool = []
+                related_pool = []
+                for note in _analysis_notes(repo):
+                    standing = _unit_note_scope(
+                        repo, note.meta.get("material_analysis") or {}, pairs)
+                    if standing == "direct":
+                        direct_pool.append(note)
+                    elif standing == "related":
+                        related_pool.append(note)
+                notes = direct_pool
+                related_count = len(related_pool)
+                if args.include_related:
+                    searched_related = related_pool
             else:
                 notes = _analysis_notes(repo)
             if concept_id is not None:
                 notes = [note for note in notes
                          if concept_id in (note.meta.get("concepts") or [])]
+                searched_related = [
+                    note for note in searched_related
+                    if concept_id in (note.meta.get("concepts") or [])]
                 assessments = [row for row in assessments
                                if concept_id in (row[2].get("concept_ids") or [])]
             notes = [note for note in notes
                      if _note_purpose_hit(note.meta["material_analysis"], args.purpose)]
+            searched_related = [
+                note for note in searched_related
+                if _note_purpose_hit(note.meta["material_analysis"], args.purpose)]
             assessments = [row for row in assessments
                            if _assessment_purpose_hit(row[2], args.purpose)]
+            if material_ref is not None:
+                notes = [note for note in notes
+                         if (note.meta.get("material_analysis") or {}).get("material")
+                         == material_ref]
+                searched_related = [
+                    note for note in searched_related
+                    if (note.meta.get("material_analysis") or {}).get("material")
+                    == material_ref]
+                route_index = _route_material_index(repo, args.unit)
+                assessments = [
+                    row for row in assessments
+                    if material_ref in _route_material_files(
+                        repo, *route_index.get(row[2].get("route_id"), (None, {})))]
             # Use evidence is deliberately global: feedback says a source
             # served in some stage, which bears on every result bound to
             # that source, however the query scoped the pool.
@@ -1015,6 +1349,9 @@ def cmd_material_context(args) -> int:
             pool = {
                 "analysis_notes": len(notes),
                 "assessments": len(assessments),
+                # Related notes are counted, never pooled: the resolution
+                # tallies below describe the default-visible direct set.
+                "related_analysis_notes": related_count,
                 "analysis_by_resolution": {},
                 "analysis_unreviewed": 0,
             }
@@ -1029,44 +1366,14 @@ def cmd_material_context(args) -> int:
             observations: dict[str, str] = {}
             dossier_freshness: dict[str, dict] = {}
             for note in notes:
-                raw = _note_bytes(root, note)
-                text = raw.decode("utf-8")
-                matched = [raw_term for raw_term, regex in zip(raw_terms, terms, strict=True)
-                           if regex.search(text)]
-                if len(matched) != len(raw_terms):
-                    continue
-                binding = note.meta["material_analysis"]
-                inspected = binding.get("inspected_range") or {}
-                verified = _match_verified(
-                    [(note.id, note.meta.get("title", note.id),
-                      note.path.relative_to(root).as_posix(), raw)], terms)
-                reasons = {"terms": matched}
-                if concept_id is not None:
-                    reasons["concept"] = concept_id
-                if args.purpose:
-                    reasons["purpose"] = args.purpose
-                if args.unit:
-                    reasons["unit"] = args.unit
-                use_evidence = _evidence_label(
-                    evidence.get(binding.get("source_id")) or {})
-                items.append({
-                    "origin": "analysis-note",
-                    "id": note.id, "title": note.meta.get("title", note.id),
-                    "path": note.path.relative_to(root).as_posix(),
-                    "use_evidence": use_evidence,
-                    "match": {**reasons,
-                              "snippets": verified[0]["snippets"] if verified else []},
-                    "source": {
-                        "ref": binding.get("material"),
-                        "pages": [inspected.get("start"), inspected.get("end")],
-                        "freshness": _freshness_label(root, binding, observations),
-                    },
-                    "review": {
-                        "semantic_review": note.meta.get("semantic_review"),
-                        "resolution": binding.get("resolution"),
-                    },
-                    "anchors": binding.get("anchors") or [],
-                })
+                item = _analysis_note_item(
+                    root, note, raw_terms=raw_terms, terms=terms,
+                    concept_id=concept_id, purpose=args.purpose,
+                    unit=args.unit, material_ref=material_ref,
+                    scope="direct" if args.unit else None,
+                    evidence=evidence, observations=observations)
+                if item is not None:
+                    items.append(item)
             for synthesis_id, unit_id, assessment in assessments:
                 joined = "\n".join(str(assessment.get(field) or "")
                                    for field in ASSESSMENT_TEXT_FIELDS)
@@ -1088,6 +1395,8 @@ def cmd_material_context(args) -> int:
                     reasons["purpose"] = args.purpose
                 if args.unit:
                     reasons["unit"] = args.unit
+                if material_ref is not None:
+                    reasons["material"] = material_ref
                 origin = repo.unit_material_synthesis_origins.get(synthesis_id)
                 fresh = dossier_freshness.get(synthesis_id)
                 if fresh is None:
@@ -1126,24 +1435,54 @@ def cmd_material_context(args) -> int:
                         "route_id": assessment.get("route_id"),
                     },
                 })
+            related_items = []
+            for note in searched_related:
+                item = _analysis_note_item(
+                    root, note, raw_terms=raw_terms, terms=terms,
+                    concept_id=concept_id, purpose=args.purpose,
+                    unit=args.unit, material_ref=material_ref,
+                    scope="related",
+                    evidence=evidence, observations=observations)
+                if item is not None:
+                    related_items.append(item)
             # Stable sort: evidence ranks, ties keep insertion order
             # (notes by id, then assessments by unit and route). Without
             # recorded feedback every key is (0, 0) and the order is
-            # exactly the pre-ranking stable order.
+            # exactly the pre-ranking stable order. Related notes rank
+            # under the same key but append after every direct item.
             items.sort(key=lambda row: (-row["use_evidence"]["positive"],
                                         row["use_evidence"]["mismatch"]))
+            related_items.sort(key=lambda row: (
+                -row["use_evidence"]["positive"],
+                row["use_evidence"]["mismatch"]))
+            items.extend(related_items)
+            # The continuation binds the normalized filters alongside the
+            # observed bytes: equivalent filters (reordered terms, a
+            # concept alias for its id) page on, changed ones refuse.
+            observations["filter/query"] = " ".join(
+                sorted(term.casefold() for term in raw_terms))
+            observations["filter/unit"] = args.unit or ""
+            observations["filter/concept"] = concept_id or ""
+            observations["filter/purpose"] = (args.purpose or "").casefold()
+            observations["filter/material"] = material_ref or ""
+            observations["filter/related"] = \
+                "related" if args.include_related else "direct"
             observed = _observations_digest(observations)
             expected_observations = getattr(args, "expected_observations", None)
             if expected_observations is not None and expected_observations != observed:
                 raise WriteRefused(
-                    "material observed by this query changed between pages; "
-                    "re-run from offset 0")
+                    "material or filters observed by this query changed "
+                    "between pages; re-run from offset 0")
+            ranked_by = ("recorded stage use-evidence per source: positive "
+                         "feedback first, mismatch feedback last; ties keep "
+                         "stable order (notes by id, then assessments by "
+                         "unit and route)")
+            if args.include_related:
+                ranked_by += ("; --include-related appends related notes "
+                              "under the same ranking")
             payload = {
                 "contract": "material-context",
-                "ranked_by": ("recorded stage use-evidence per source: "
-                              "positive feedback first, mismatch feedback "
-                              "last; ties keep stable order (notes by id, "
-                              "then assessments by unit and route)"),
+                "ranked_by": ranked_by,
                 "items": items[offset:offset + limit],
                 "total": len(items),
                 "next_offset": offset + limit if offset + limit < len(items) else None,
@@ -1151,6 +1490,8 @@ def cmd_material_context(args) -> int:
                 "searched": {
                     "query_terms": raw_terms, "concept": concept_id,
                     "purpose": args.purpose, "unit": args.unit,
+                    "material": material_ref,
+                    "include_related": bool(args.include_related),
                     "analysis_notes": len(_analysis_notes(repo)),
                     "assessments": len(_approved_assessments(repo)),
                 },

@@ -42,9 +42,11 @@ from learning_os.masters_planning import (
 )
 from learning_os.material_synthesis import (
     current_unit_material_basis,
+    publication_lineage,
     synthesis_destination,
     validate_unit_material_synthesis,
 )
+from learning_os.semantics.lineage import LEDGER_RELATIVE
 
 from .support import (
     WriteRefused,
@@ -105,9 +107,12 @@ def cmd_unit_material_synthesis_publish(args) -> int:
         if not _expected_ok(root, args.expected_snapshot):
             return 3
         destination = synthesis_destination(root, args.unit_id)
+        content = _dump_yaml(value)
+        request = current_gateway_request()
+        lineage = publication_lineage(root, args.unit_id, value, content, request)
         code, errors, confirmation = _write_transaction(
             root,
-            {destination: _dump_yaml(value)},
+            {destination: content, root / LEDGER_RELATIVE: lineage},
             capability="unit.material-synthesis.publish",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=(args.unit_id, value["id"]),

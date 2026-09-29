@@ -9,8 +9,35 @@
       "type": "string",
       "pattern": "\\S"
     },
+    "angleReview": {
+      "description": "Declared review of a stage description's relation to its route, bound to their exact payload. Refinement preserves a deliberate stage purpose. Correction additionally cites inspected local source bytes. No learning credit or independent source verification is inferred from a refinement.",
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["kind", "reviewed_by", "reviewed_on", "fingerprint", "rationale"],
+      "properties": {
+        "kind": {"enum": ["refinement", "correction"]},
+        "reviewed_by": {"type": "string", "pattern": "\\S"},
+        "reviewed_on": {"type": "string", "format": "date"},
+        "fingerprint": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "rationale": {"type": "string", "pattern": "\\S"},
+        "evidence": {
+          "type": "array", "minItems": 1,
+          "items": {
+            "type": "object", "additionalProperties": false,
+            "required": ["material_uri", "file_sha256", "locator"],
+            "properties": {
+              "material_uri": {"type": "string", "pattern": "^material://source-[^/]+/.+"},
+              "file_sha256": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+              "locator": {"type": "string", "pattern": "\\S"}
+            }
+          }
+        }
+      },
+      "allOf": [{"if": {"properties": {"kind": {"const": "correction"}}}, "then": {"required": ["evidence"]}}]
+    },
     "resource": {
       "type": "object",
+      "allOf": [{"if": {"required": ["angle_review"]}, "then": {"anyOf": [{"required": ["route_id"]}, {"required": ["material_ref"]}]}}],
       "additionalProperties": false,
       "required": [
         "kind"
@@ -54,6 +81,7 @@
           "type": "string",
           "pattern": "\\S"
         },
+        "angle_review": {"$ref": "#/$defs/angleReview"},
         "url": {
           "type": "string",
           "format": "uri"

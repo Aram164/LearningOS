@@ -336,7 +336,7 @@ def test_replay_refuses_a_delegated_grant_its_bound_delivery_never_used(
     on_disk = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
     on_disk["authority"]["grants"].append({
         "capability": "unit.material-synthesis.publish",
-        "declared_writes": ["curriculum/modules/**/units/**/material-synthesis.yaml"],
+        "declared_writes": list(app.capability_definitions()["unit.material-synthesis.publish"].writes),
     })
     receipt_path.write_text(yaml.safe_dump(on_disk, sort_keys=False), encoding="utf-8")
 

@@ -421,9 +421,9 @@ def test_scan_proposes_dependent_revalidation_after_evidence_moves(
     calls: list[str] = []
     real_digest = scan_module.live_evidence_digest
 
-    def counting(root, key, manifest):
+    def counting(root, key, manifest, **kwargs):
         calls.append(key)
-        return real_digest(root, key, manifest)
+        return real_digest(root, key, manifest, **kwargs)
 
     monkeypatch.setattr(scan_module, "live_evidence_digest", counting)
     evidence.write_text("v2", encoding="utf-8")
@@ -473,9 +473,9 @@ def test_missing_evidence_resolves_once_for_all_claims_sharing_it(
     calls: list[str] = []
     real_digest = scan_module.live_evidence_digest
 
-    def counting(root, key, manifest):
+    def counting(root, key, manifest, **kwargs):
         calls.append(key)
-        return real_digest(root, key, manifest)
+        return real_digest(root, key, manifest, **kwargs)
 
     monkeypatch.setattr(scan_module, "live_evidence_digest", counting)
     obs = collect_observations(mini_repo, days=0)

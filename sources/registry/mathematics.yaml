@@ -445,12 +445,21 @@ sources:
   - J. Laurie Snell
   url: https://www.math.dartmouth.edu/~prob/prob/prob.pdf
   evaluations:
-  - roles:
+  - concepts:
+    - concept-conditional-probability
+    - concept-bayes-theorem
+    roles:
     - first-learning
+    level: introductory
     strengths:
-    - The gentle, computation-flavored free book — lots of worked examples + simulation; completes the
-      softer-probability set. ❌ Download never landed (the one missing from the Jul 14 batch) — still
-      an open pull
+    - In §4.1, the worked die and urn examples build conditional probability by restricting outcomes,
+      then reverse the urn tree to explain Bayes probabilities; the Monty Hall example makes the host’s
+      choice rule explicit.
+    useful_sections:
+    - §4.1, physical PDF pp. 141–149: Discrete conditioning, reversed urn tree, Monty Hall observation
+        protocol, and the product test for independence.
+    reviewed: '2026-09-29'
+  material: material://source-grinstead-snell/grinstead.pdf
 - id: source-henning-dierks
   thematic_group_ids:
   - thematic-group-mathematics

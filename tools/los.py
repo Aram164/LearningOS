@@ -195,10 +195,16 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_bootstrap)
 
     p = sub.add_parser("material-context", help="find saved explanations by need, with freshness and review state")
-    p.add_argument("query")
+    p.add_argument("query", nargs="?", default="",
+                   help="explanation need; optional when --material names the file")
     p.add_argument("--concept", default=None, help="concept id or declared alias filter")
     p.add_argument("--purpose", default=None, help="purpose substring filter (anchors, best use, exercise value)")
-    p.add_argument("--unit", default=None, help="unit scope for assessments and linked analyses")
+    p.add_argument("--unit", default=None,
+                   help="unit scope: direct route-bound evidence plus the unit's own approved assessments")
+    p.add_argument("--include-related", action="store_true",
+                   help="with --unit: append same-source related notes, labelled related")
+    p.add_argument("--material", default=None, metavar="REF",
+                   help="exact materials-tree path filter; allows material-only requests")
     p.add_argument("--limit", type=int, default=5)
     p.add_argument("--offset", type=int, default=0)
     p.add_argument("--expected-snapshot", default=None)
@@ -239,7 +245,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_intelligence_scan)
 
     p = sub.add_parser("goal", help="record Aram's explicit decision on a proposed goal")
-    p.add_argument("goal_id", help="candidate goal id from intelligence-scan")
+    p.add_argument("goal_id", nargs="+", help="exact candidate goal ids from intelligence-scan")
     g = p.add_mutually_exclusive_group(required=True)
     g.add_argument("--reject", action="store_true")
     g.add_argument("--defer", action="store_true")
@@ -247,6 +253,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--note", default=None, help="why this decision, in Aram's words")
     p.add_argument("--revisit-on", default=None,
                    help="for --defer only: let the goal reappear on this YYYY-MM-DD date")
+    p.add_argument("--check", action="store_true", help="preview exact decisions without writing")
+    p.add_argument("--reviewed-sha256", type=sha256_value, default=None,
+                   help="required for a batch: exact decision and ledger hash returned by --check")
     p.set_defaults(func=cmd_goal)
 
     p = sub.add_parser("resume", help="one-screen return to study: stage, requirement, evidence, exam")
@@ -687,6 +696,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--brief", action="store_true",
                    help="brief preparation form: identities, guards, id inventories, "
                         "missing evidence, analysis refs, preflight checks, expand commands")
+    p.add_argument("--include-related", action="store_true",
+                   help="with --brief: list the same-source related analysis notes too")
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_plan_edit_context)
 

@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 44
-schema_fingerprint: sha256:d57499e16fb7a011c10e5c2f099349aae142ab6428a222f63482be0f597f108a
+contract_version: 46
+schema_fingerprint: sha256:2635c0e4364174b48e75a61f02bd29c40c2d7912da5276d065a7c42471e64aa7
 record_schemas: 35
 history:
 - version: 1
@@ -335,5 +335,17 @@ history:
 - version: 44
   adopted: '2026-09-29'
   note: useful_sections bans empty and blank keys
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 45
+  adopted: '2026-09-29'
+  note: 'source evaluation items require at least one property (no migration: no stored
+    evaluation is empty)'
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 46
+  adopted: '2026-09-30'
+  note: Optional content-bound reviews distinguish stage angle refinements from source
+    corrections; existing plans remain readable without a migration.
   migration: null
   fixture: tests/fixtures/formats/v40/

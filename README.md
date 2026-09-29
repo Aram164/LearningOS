@@ -17,8 +17,8 @@ links, and rebuilds views. Everything under `generated/` is a disposable view �
 never edit it.
 
 1. **With Claude:** open this folder in a chat and say what you're working on.
-   The operator starts from `system/OPERATOR.md` via `python tools/los.py
-   capabilities --compact --json` and `python tools/los.py bootstrap --brief`
+   The operator starts from `system/OPERATOR.md` via `.venv/bin/python tools/los.py
+   capabilities --compact --json` and `.venv/bin/python tools/los.py bootstrap --brief`
    (guards, resume, owed work, deadlines, and runnable expands on one page),
    then reads your active workspace and the coordination facts behind it, plus
    the at-a-glance block of `generated/domain-atlas.md` (the cross-domain map;
@@ -31,7 +31,7 @@ never edit it.
    do next?" dashboard is `generated/coordination-view.md`; your knowledge is
    under `knowledge/notes/`; capture anything into `work/inbox/` (the
    operator writes it through a `capture.create` envelope per WORKFLOWS
-   §25c — the bare `python tools/los.py capture --text "…"` is refused
+   §25c — the bare `.venv/bin/python tools/los.py capture --text "…"` is refused
    without one).
 3. **After editing:** run `make check`. The pre-commit hook blocks commits while
    the validator reports **errors**; warnings print and never block. To see
@@ -84,7 +84,7 @@ never in prose copies.
 
 **An effort ends:** its workspace is archived whole; the durable notes stay.
 
-**Trust but verify:** `python tools/validate.py --compact` after any batch of
+**Trust but verify:** `.venv/bin/python tools/validate.py --compact` after any batch of
 edits (session-end habit); the full warning list lands in
 `generated/reports/validation-report.md`. Never edit anything under the generated output tree —
 it's a disposable view; delete it freely.
@@ -96,7 +96,7 @@ Everything is plain text; nothing requires any tool to read. The four questions:
 - **Exam dates, registrations, grades?** Open the owning academic module under
   `curriculum/modules/` — it is
   commented and readable raw. This file is the only truth for those facts.
-- **What should I do next?** Run `make views` (or `python tools/generate.py`),
+- **What should I do next?** Run `make views` (or `.venv/bin/python tools/generate.py`),
   then open `generated/coordination-view.md` — exam spine, every workspace's
   next action, neglect signals. Check its `Generated:` line — it names
   uncommitted changes when the tree is dirty; if views feel stale, rebuild
@@ -153,7 +153,7 @@ artifacts, not a replacement for canonical validation, the paired release gate,
 or a current snapshot guard on a subsequent write.
 
 Interface layers (the Obsidian UI project, scripts, other agents) use the
-stable CLI gateway instead of parsing YAML — `python tools/los.py status
+stable CLI gateway instead of parsing YAML — `.venv/bin/python tools/los.py status
 --json | validate | generate | capture` (ADR-006). Provider-independent AI
 actions use the same gateway through `ai-action-list`, `ai-action-prepare`,
 `ai-action-import-delivery`, `ai-action-validate-delivery`,
@@ -209,7 +209,7 @@ deliberate decision. When `SCHEMA-CONTRACT-DRIFT` fires:
    understands. A completed migration cannot be replayed on a later live
    format; write a new migration instead. See `tools/migrations/README.md`.
 3. **Bump the contract:**
-   `python tools/schema_contract.py --bump --note "…" [--migration …]`
+   `.venv/bin/python tools/schema_contract.py --bump --note "…" [--migration …]`
 4. **Freeze the new shape** as a *new* `tests/fixtures/formats/v<N+1>/` and add
    it to `FORMATS` in `tests/test_format_fixtures.py`.
 
@@ -243,7 +243,7 @@ and break the other repository. It happened, with `topics`.
 
 When `MANIFEST-CONTRACT-DRIFT` fires:
 
-1. **Bump:** `python tools/manifest_contract.py --bump --note "…"` — it rebuilds
+1. **Bump:** `.venv/bin/python tools/manifest_contract.py --bump --note "…"` — it rebuilds
    with enforcement off, adopts the shape actually produced, and records the
    history entry. `--show` prints the current shape without changing anything.
 2. **Mirror into the UI in the same change** — `contracts/manifest-v<N>.lock.json`,

@@ -38,10 +38,12 @@ from learning_os.material_synthesis import (
     current_unit_material_basis,
     inspected_material_by_route,
     inspected_pages_by_route,
+    publication_lineage,
     synthesis_destination,
     validate_synthesis_page_provenance,
     validate_unit_material_synthesis,
 )
+from learning_os.semantics.lineage import LEDGER_RELATIVE
 from learning_os.transactions import (
     TransactionConflict,
     TransactionFailure,
@@ -815,7 +817,10 @@ class AIActionService:
                     raise DeliveryValidationError(
                         f"a dossier for {target_id} already exists; explicit supersedes is required"
                     )
-                staged[destination] = (_dump_yaml(synthesis), capability)
+                content = _dump_yaml(synthesis)
+                staged[destination] = (content, capability)
+                staged[self.root / LEDGER_RELATIVE] = (
+                    publication_lineage(self.root, target_id, synthesis, content, authority), capability)
                 (updated_ids if destination.is_file() else created_ids).append(synthesis["id"])
             else:
                 raise DeliveryValidationError(f"unsupported pilot capability: {capability}")

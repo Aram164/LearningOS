@@ -35,10 +35,10 @@ def test_entry_doc_commands_execute_through_the_declared_gateway(mini_repo, tmp_
     blocks = re.findall(r"```bash\n(.*?)\n```", operator, flags=re.DOTALL)
     commands = [line for block in blocks for line in block.splitlines() if line.strip()]
     assert commands == [
-        "python tools/warning_baseline.py --check",
-        "python tools/los.py capabilities --compact --json",
-        "python tools/los.py capabilities stage.progress.update --json",
-        "python tools/los.py capability stage.progress.update --payload-file ENVELOPE.json",
+        ".venv/bin/python tools/warning_baseline.py --check",
+        ".venv/bin/python tools/los.py capabilities --compact --json",
+        ".venv/bin/python tools/los.py capabilities stage.progress.update --json",
+        ".venv/bin/python tools/los.py capability stage.progress.update --payload-file ENVELOPE.json",
     ]
     # Task-shaped entry: the unconditional startup read is documented in
     # every entry doc, the open-question bootstrap likewise, while the
@@ -51,8 +51,8 @@ def test_entry_doc_commands_execute_through_the_declared_gateway(mini_repo, tmp_
     bootstrap_section = claude.split("## 2. Bootstrap order", 1)[1].split("## 3.", 1)[0]
     assert "capabilities --compact --json" in " ".join(bootstrap_section.split())
     assert "bootstrap --brief" in " ".join(bootstrap_section.split())
-    assert "python tools/validate.py --compact" in claude
-    assert "python tools/warning_baseline.py --check" in claude
+    assert ".venv/bin/python tools/validate.py --compact" in claude
+    assert ".venv/bin/python tools/warning_baseline.py --check" in claude
 
     add_curriculum(mini_repo)
     write_baseline(mini_repo, collect(mini_repo)[0], "entry-doc fixture")
@@ -67,7 +67,7 @@ def test_entry_doc_commands_execute_through_the_declared_gateway(mini_repo, tmp_
     envelope_path.write_text(json.dumps(envelope), encoding="utf-8")
     for command in commands:
         executable, script, *args = shlex.split(command)
-        assert executable == "python"
+        assert executable == ".venv/bin/python"
         args = [str(envelope_path) if arg == "ENVELOPE.json" else arg
                 for arg in args]
         proc = subprocess.run(

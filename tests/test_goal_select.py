@@ -13,6 +13,7 @@ import datetime as _dt
 import json
 from pathlib import Path
 
+import pytest
 import yaml
 from repo_builders import run_los
 
@@ -62,6 +63,43 @@ def test_goal_decision_is_revisable(mini_repo: Path):
     ledger = yaml.safe_load(
         (mini_repo / "operations/goal-ledger.yaml").read_text(encoding="utf-8"))
     assert ledger["decisions"]["g1"]["state"] == "closed"
+
+
+def test_exact_batch_requires_review_and_preserves_other_decisions(mini_repo):
+    ledger_path = mini_repo / "operations/goal-ledger.yaml"
+    assert run_los(mini_repo, "goal", "g-untouched", "--reject").returncode == 0
+    before = ledger_path.read_bytes()
+    ids = ["lineage-stale:one", "lineage-stale:two"]
+    args = ("goal", *ids, "--defer", "--note", "Explicit scoped decision")
+    assert run_los(mini_repo, *args).returncode == 3
+    checked = run_los(mini_repo, *args, "--check")
+    assert checked.returncode == 0, checked.stderr
+    report = json.loads(checked.stdout)
+    assert report["goal_ids"] == ids
+    assert ledger_path.read_bytes() == before
+    # A different proposal cannot borrow the same authority.
+    assert run_los(mini_repo, "goal", *ids, "--close", "--reviewed-sha256",
+                   report["reviewed_sha256"]).returncode == 3
+    applied = run_los(mini_repo, *args, "--reviewed-sha256", report["reviewed_sha256"])
+    assert applied.returncode == 0, applied.stderr
+    data = yaml.safe_load(ledger_path.read_text())["decisions"]
+    assert data["g-untouched"]["state"] == "rejected"
+    assert all(data[goal_id]["state"] == "deferred" for goal_id in ids)
+
+
+def test_batch_refuses_a_changed_ledger(mini_repo):
+    args = ("goal", "lineage-stale:one", "lineage-stale:two", "--close")
+    checked = json.loads(run_los(mini_repo, *args, "--check").stdout)
+    assert run_los(mini_repo, "goal", "another", "--reject").returncode == 0
+    before = (mini_repo / "operations/goal-ledger.yaml").read_bytes()
+    assert run_los(mini_repo, *args, "--reviewed-sha256", checked["reviewed_sha256"]).returncode == 3
+    assert (mini_repo / "operations/goal-ledger.yaml").read_bytes() == before
+
+
+@pytest.mark.parametrize("ids", [("same", "same"), ("lineage-stale:*",), (" ",)])
+def test_goal_batches_never_expand_patterns_or_duplicate_ids(mini_repo, ids):
+    assert run_los(mini_repo, "goal", *ids, "--defer", "--check").returncode == 2
+    assert not (mini_repo / "operations/goal-ledger.yaml").exists()
 
 
 def test_deferred_goal_reappears_on_explicit_revisit_date(mini_repo: Path):

@@ -13,7 +13,7 @@ backfilling them is a decision Aram has deferred, not an oversight.
 Deferring them cost the ability to tell a deferred warning from a new one.
 `operations/validation-warning-baseline.yaml` restores it: every warning
 signature — **(code, path) with its multiplicity** — is recorded, and
-`python tools/warning_baseline.py --check` fails on a new signature or a grown
+`.venv/bin/python tools/warning_baseline.py --check` fails on a new signature or a grown
 one. A signature rather than a total, because a total is gamed by trading one
 warning for another.
 
@@ -157,6 +157,16 @@ route, and the definitions they enforce are in `PLAN-CREATION-SOP.md`.
 - **W** `ROUTE-ANGLE-DETAIL-MISSING` — a route has a one-line `angle` but no
   `angle_detail` for the hover.
 - **W** `ROUTE-NO-TARGET` — a route names no `locator`, `url` or `vault_path`.
+- **W** `ANGLE-DIVERGES-FROM-ROUTE` — a stage's angle differs from its route
+  without a current `angle_review`. A reviewed refinement preserves the
+  deliberate stage purpose; a correction additionally names inspected local
+  material, its exact content digest, and locator. The attestation names its
+  actual reviewer and never grants learning credit or source verification
+  beyond the cited scope.
+- **W** `ANGLE-REVIEW-STALE` — the review no longer matches its route, source
+  identity, stage purpose, or placement. Correction evidence must still resolve
+  to that route's exact local file with the recorded digest. Re-review changed
+  inputs; do not carry an old review forward by changing its fingerprint alone.
 
 These are warnings and not errors on purpose. The backfill is incremental
 (WORKFLOWS §6a repays visibility debt on use, never in bulk), and a rule that

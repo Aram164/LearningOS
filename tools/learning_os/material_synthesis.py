@@ -24,6 +24,12 @@ from learning_os.materials_resolution import (
     route_material_checksum,
     stable_checksum,
 )
+from learning_os.semantics.lineage import (
+    dump_ledger,
+    emit_dossier_freshness,
+    load_ledger,
+    to_dict,
+)
 from learning_os.transactions import artifact_revision
 
 #: Widest cited page span the provenance check expands before refusing.
@@ -78,6 +84,36 @@ _COMPARED_BASIS_FIELDS = (
     "material_checksums",
     "policy",
 )
+
+
+def material_basis_checksum(basis: dict) -> str:
+    """The same evidential basis used by freshness, excluding revision counters."""
+    return stable_checksum({key: basis.get(key) for key in _COMPARED_BASIS_FIELDS})
+
+
+def publication_lineage(root: Path, unit_id: str, value: dict, content: str, request) -> str:
+    """Prepare the sidecar for the same transaction as a reviewed publication.
+
+    Both the direct publisher and approved-delivery publisher use this owner.
+    Only prospective judgments are recorded; prior dossiers are never backfilled.
+    """
+    destination = synthesis_destination(root, unit_id)
+    records = load_ledger(root)
+    claim_id = f"dossier:{value['id']}"
+    prior = records.get(claim_id)
+    records[claim_id] = emit_dossier_freshness(
+        dossier_key=value["id"],
+        hashes={
+            f"file:{destination.relative_to(root).as_posix()}":
+                "sha256:" + hashlib.sha256(content.encode("utf-8")).hexdigest(),
+            f"material-synthesis-basis:{unit_id}":
+                material_basis_checksum(current_unit_material_basis(root, unit_id)),
+        },
+        judged_by=request.channel,
+        admitted_by={"request_id": request.request_id, "idempotency_key": request.idempotency_key},
+        supersedes=to_dict(prior) if prior is not None else None,
+    )
+    return dump_ledger(records)
 
 def current_unit_material_basis(
     root: Path,

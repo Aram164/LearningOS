@@ -46,10 +46,10 @@ def _seed_unit(root: Path):
     from learning_os.material_synthesis import current_unit_material_basis
 
     add_curriculum(root)
-    digest = _seed_material(root, "deck.pdf", b"%PDF brief\n")
+    digest = _seed_material(root, "source-demo-book/deck.pdf", b"%PDF brief\n")
     _plant_note(root, "note-brief-density", ANALYSIS_BODY, {
         "resolution": "resolved",
-        "material": "deck.pdf",
+        "material": "source-demo-book/deck.pdf",
         "source_id": "source-demo-book",
         "recorded_source_digest": digest,
         "live_source_digest": digest,
@@ -140,6 +140,11 @@ def test_brief_expand_commands_run_as_printed(mini_repo):
     proc = run_los(mini_repo, *argv)
     assert proc.returncode == 0, proc.stderr
     assert json.loads(proc.stdout)["items"]
+    hint = payload["analysis_refs"]["related_expand"]
+    argv = shlex.split(hint)
+    assert argv.pop(0) == "los"
+    proc = run_los(mini_repo, *argv)
+    assert proc.returncode == 0, proc.stderr
 
 
 def test_brief_splits_stale_assessment_routes(mini_repo):
@@ -153,6 +158,41 @@ def test_brief_splits_stale_assessment_routes(mini_repo):
     refs = _brief(mini_repo)["analysis_refs"]
     assert refs["approved_assessment_routes"] == []
     assert refs["stale_assessment_routes"] == ["route-demo-density"]
+
+
+def test_brief_lists_direct_refs_with_related_count_and_hint(mini_repo):
+    _seed_unit(mini_repo)
+    body = "Density from an unrouted file.\n"
+    _plant_note(mini_repo, "note-brief-related", body, {
+        "resolution": "resolved",
+        "material": "source-demo-book/other.pdf",
+        "source_id": "source-demo-book",
+        "recorded_source_digest": "ee" * 32,
+        "live_source_digest": "ee" * 32,
+        "inspected_range": {"start": 1, "end": 3},
+        "frozen_input_sha256": hashlib.sha256(body.encode("utf-8")).hexdigest(),
+        "frozen_input_bytes": len(body.encode("utf-8")),
+    })
+    refs = _brief(mini_repo)["analysis_refs"]
+    assert [ref["note_id"] for ref in refs["analysis_notes"]] == [
+        "note-brief-density"]
+    assert refs["analysis_notes"][0]["scope"] == "direct"
+    assert refs["related_count"] == 1
+    assert refs["related_expand"] == (
+        "los plan-edit-context unit-demo-l01 --brief --include-related")
+    assert "related_notes" not in refs
+    widened = _brief(mini_repo, "--include-related")["analysis_refs"]
+    assert [ref["note_id"] for ref in widened["related_notes"]] == [
+        "note-brief-related"]
+    assert widened["related_notes"][0]["scope"] == "related"
+
+
+def test_brief_include_related_is_refused_without_brief(mini_repo):
+    _seed_unit(mini_repo)
+    proc = run_los(mini_repo, "plan-edit-context", "unit-demo-l01",
+                   "--route-id", "route-demo-density", "--include-related")
+    assert proc.returncode == 2
+    assert "needs --brief" in proc.stderr
 
 
 def test_brief_refuses_selectors_and_audit(mini_repo):

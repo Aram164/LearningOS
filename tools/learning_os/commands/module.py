@@ -1771,7 +1771,7 @@ def _assemble_compact_module_revision(repo, module_id: str,
             problems.append(f"{where} has unknown fields: {sorted(unknown)}")
             continue
         sid = join.get("source_id")
-        if not isinstance(sid, str):
+        if not isinstance(sid, str) or not sid:
             problems.append(f"{where} needs a source_id")
             continue
         if sid not in repo.sources:

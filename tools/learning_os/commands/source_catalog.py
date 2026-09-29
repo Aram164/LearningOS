@@ -44,6 +44,7 @@ from learning_os.material_synthesis import (
 )
 from learning_os.materials_resolution import (
     MATERIAL_SCHEME,
+    canonical_material_uri,
     material_uri_authority,
     sha256_file,
 )
@@ -567,6 +568,12 @@ def _resolve_revise_material(root: Path, repo, uri: str,
         raise WriteRefused(
             f"{sid}: material URI authority '{authority}' must equal the source id"
         )
+    canonical = canonical_material_uri(uri)
+    if canonical is not None and canonical != uri:
+        raise WriteRefused(
+            f"{sid}: '{uri}' is not the canonical material spelling; "
+            f"use '{canonical}'"
+        )
     payload = str(uri)[len(MATERIAL_SCHEME):]
     physical = repo.learningos_root / "materials"
     if physical.is_symlink() or not physical.is_dir():
@@ -911,6 +918,19 @@ def _plan_revise(root: Path, item: Any) -> dict:
                     "'material_syntheses' and 'dossier_rebases'"
                 )
             if uid not in required:
+                unit = (repo.units or {}).get(uid)
+                if unit is None:
+                    raise WriteRefused(
+                        f"{sid}: unit '{uid}' is not registered"
+                    )
+                unit_path = getattr(unit, "path", None)
+                dossier_path = (unit_path.parent / "material-synthesis.yaml"
+                                if unit_path is not None else None)
+                if dossier_path is not None and not dossier_path.exists():
+                    raise WriteRefused(
+                        f"{sid}: rebase for '{uid}' has no dossier to rebase "
+                        "(no material-synthesis.yaml there)"
+                    )
                 raise WriteRefused(
                     f"{sid}: rebase for '{uid}' is not needed "
                     "(no approved dossier basis changes there)"

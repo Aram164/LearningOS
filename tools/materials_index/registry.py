@@ -107,6 +107,13 @@ def load_collection_domains() -> dict[str, str]:
                 continue
             group = e.get("group") if isinstance(e, dict) else None
             resolved = group_domains.get(group, dom)
+            if (not resolved and group_domains
+                    and isinstance(group, str) and group):
+                # A present-but-unmapped group in a group-mapped collection
+                # is a typo or a future subject: surface it under its own
+                # name for the extras clause instead of dropping it into
+                # Online. Groupless entries keep the generic bucket.
+                resolved = group
             if resolved:
                 out.setdefault(sid, resolved)
     return out

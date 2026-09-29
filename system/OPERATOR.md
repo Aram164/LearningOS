@@ -13,7 +13,8 @@ that is not both current and binding.
 
 `system/` holds several thousand lines of prose. Not all of it is rules. The
 index at `system/contracts/normative-corpus.yaml` classifies every
-`system/*.md` and `system/adr/*.md` file exactly once — class, status,
+owned `AGENTS.md`, `README.md`, `system/*.md`, `system/adr/*.md`, and
+`system/skills/*/SKILL.md` file exactly once — class, status,
 authority, owner, and its supersession edges — and `make check` fails if a
 document is added without being classified, or if a retired document is still
 marked binding.
@@ -31,7 +32,7 @@ block — `tools/validate.py` exits 0 with them, and the pre-commit hook lets
 them through by design. What is not permitted is a *new* one:
 
 ```bash
-python tools/warning_baseline.py --check
+.venv/bin/python tools/warning_baseline.py --check
 ```
 
 compares the current warning signatures against
@@ -53,10 +54,12 @@ always names its file. Fix the defect; do not route around the guard.
 ## Start here
 
 Do not recursively discover the repository. Entry is task-shaped: start
-with the read that answers the task.
+with the read that answers the task. Use the project environment: run every
+command below with `.venv/bin/python`, and if it does not exist run
+`make setup` once first.
 
 ```bash
-python tools/los.py capabilities --compact --json
+.venv/bin/python tools/los.py capabilities --compact --json
 ```
 
 The capability index is discovery only. Before using a capability, fetch its
@@ -101,7 +104,10 @@ Decide which read answers the question before reading:
   and revision guards. Reach for the unit `--brief` only for unit
   coverage, source-completeness, or unknown ids.
 - A material question → saved context first (`material-context`), else one
-  exact span (`material-span UNIT_ID ROUTE_ID`); never trawl.
+  exact span (`material-span UNIT_ID ROUTE_ID`); never trawl. With `--unit`,
+  default results are route-direct only; `--include-related` appends
+  same-source notes labelled `related`, and `--material PATH` filters notes
+  and assessments to one exact materials file.
 - A new video → title/description and course/playlist membership for provisional
   intake. Examine with Gemini Notebook only when selected for use, verify
   against exact video timestamps, then save the bounded analysis; see
@@ -261,7 +267,7 @@ Skills and projects use modules and units without false academic metadata.
 12. Every app mutation carries the current manifest snapshot. On conflict,
     reload rather than overwrite.
 13. Validate after authored changes. Acceptance requires zero errors and no new
-    or grown warning signature (`python tools/warning_baseline.py --check`).
+    or grown warning signature (`.venv/bin/python tools/warning_baseline.py --check`).
     Baseline-exempt operational and clock-derived advisories stay visible and
     never block; see "What 'clean' means" above.
 14. Source completeness is mandatory. Every learning source named by an
@@ -313,8 +319,8 @@ schema, then submit one envelope (fields and intent hash: WORKFLOWS §25a,
 step 4):
 
 ```bash
-python tools/los.py capabilities stage.progress.update --json
-python tools/los.py capability stage.progress.update --payload-file ENVELOPE.json
+.venv/bin/python tools/los.py capabilities stage.progress.update --json
+.venv/bin/python tools/los.py capability stage.progress.update --payload-file ENVELOPE.json
 ```
 
 `unit-source-selection` accepts only a rich material route already exposed on

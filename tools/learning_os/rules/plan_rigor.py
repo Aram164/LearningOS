@@ -16,7 +16,32 @@ it was deliberately removed.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
+
+from ..materials_resolution import material_uri_authority, resolve_route_material_files, sha256_file
+
+
+def angle_review_fingerprint(route: dict, stage: dict, resource: dict) -> str:
+    """Bind a declared relation review to the actual route and placement.
+
+    This attests to the relation between the descriptions, not to mastery or
+    independently verified source content. Corrections additionally need
+    inspected, content-bound material evidence.
+    """
+    payload = {
+        "contract": "angle-review-v1",
+        "route": route,
+        "stage": {key: stage.get(key) for key in
+                  ("id", "title", "objective", "knowledge_node_id")},
+        "placement": {key: resource.get(key) for key in
+                      ("route_id", "source_id", "kind", "locator", "angle",
+                       "angle_detail", "scope_triage", "vault_path", "url")},
+    }
+    raw = json.dumps(payload, sort_keys=True, ensure_ascii=False,
+                     separators=(",", ":")).encode("utf-8")
+    return "sha256:" + hashlib.sha256(raw).hexdigest()
 
 # A locator is exact when it names a numbered division AND a page. Slides and
 # videos are exempt from the page half: a deck locator names a file and a slide
@@ -169,8 +194,63 @@ class ChecksPlanRigor:
                     continue
                 for route in entry.get("unit_routes", []) or []:
                     if isinstance(route, dict) and isinstance(route.get("id"), str):
-                        index[route["id"]] = route
+                        index[route["id"]] = {**route, "source_id": entry.get("source_id")}
         return index
+
+
+    def _angle_review_current(self, route: dict, stage: dict, resource: dict) -> bool:
+        review = resource.get("angle_review")
+        if not isinstance(review, dict) \
+                or not isinstance(review.get("kind"), str) \
+                or review["kind"] not in {"refinement", "correction"} \
+                or any(not isinstance(review.get(key), str) or not review[key].strip()
+                       for key in ("reviewed_by", "reviewed_on", "rationale")):
+            return False
+        try:
+            if review.get("fingerprint") != angle_review_fingerprint(route, stage, resource):
+                return False
+        except (TypeError, ValueError):
+            return False
+        if review["kind"] == "refinement":
+            return True
+        evidence = review.get("evidence")
+        if not isinstance(evidence, list) or not evidence:
+            return False
+        # Resolve only the named route. Evidence from a similarly named file
+        # or a different source can never authorize a correction.
+        try:
+            files = {item.material_uri: item.path
+                     for item in resolve_route_material_files(self.repo, route)}
+            cache = getattr(self, "_angle_evidence_hashes", None)
+            if cache is None:
+                self._angle_evidence_hashes = cache = {}
+            for item in evidence:
+                if not isinstance(item, dict) or not isinstance(item.get("material_uri"), str) \
+                        or not isinstance(item.get("locator"), str) \
+                        or not item["locator"].strip():
+                    return False
+                uri = item["material_uri"]
+                path = files.get(uri)
+                # A broad course route can have no single file target. Its
+                # correction must still name exact inspected bytes belonging
+                # to that source's declared material authority. A route with
+                # exact targets cannot substitute another file from the shelf.
+                if not files:
+                    source = self.repo.sources.get(route.get("source_id"), {})
+                    authority = material_uri_authority(source.get("material"))
+                    if not authority or material_uri_authority(uri) != authority:
+                        return False
+                    named = resolve_route_material_files(self.repo, {**route, "vault_path": uri})
+                    path = next((f.path for f in named if f.material_uri == uri), None)
+                if path is None:
+                    return False
+                if path not in cache:
+                    cache[path] = sha256_file(path)
+                if item.get("file_sha256") != cache[path]:
+                    return False
+        except (OSError, ValueError, AttributeError):
+            return False
+        return True
 
 
     def _check_row_angle(self, smid: str, stage: dict, resource: dict,
@@ -193,16 +273,22 @@ class ChecksPlanRigor:
         justifies the difference — comes after that triage.
         """
         angle = str(resource.get("angle") or "").strip()
-        if not angle:
-            return
         route_id = resource.get("route_id")
         if not isinstance(route_id, str):
             ref = resource.get("material_ref")
             route_id = ref.get("route_id") if isinstance(ref, dict) else None
-        if not isinstance(route_id, str):
+        route = routes.get(route_id) if isinstance(route_id, str) else None
+        if "angle_review" in resource:
+            if angle and route is not None and self._angle_review_current(route, stage, resource):
+                return
+            self.warn(
+                "ANGLE-REVIEW-STALE",
+                f"study map '{smid}' stage '{stage.get('id')}' has an invalid or stale "
+                f"angle review for {route_id} — review the changed inputs again",
+                where,
+            )
             return
-        route = routes.get(route_id)
-        if route is None:
+        if not angle or route is None:
             return
         route_angle = str(route.get("angle") or "").strip()
         if not route_angle or " ".join(angle.split()) == " ".join(route_angle.split()):

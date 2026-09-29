@@ -9,10 +9,10 @@
 # Excludes symlinks (.flat/), .DS_Store, the generated catalogue
 # (README.md, FILES.txt, INDEX.html) and the per-folder SOURCES.md indexes.
 schema_version: 1
-captured: '2026-09-13'
+captured: '2026-09-29'
 totals:
-  files: 1517
-  bytes: 2102513721
+  files: 1519
+  bytes: 2105714887
 files:
   ? _unsorted/Das gelbe Rechenbuch. Für Ingenieure, Naturwissenschaftler und Mathematiker. Rechenverfahren
     der Höheren Mathematik in... (Peter Furlan) (z-lib.org).pdf
@@ -3662,6 +3662,9 @@ files:
   mathematics/probability-statistics/fau-klausur-ws1415/FAU-Erlangen_Statistik-Klausur_WS14-15_mit-Loesungen.pdf:
     size: 641337
     sha256: 2f43940b2ca5923fa22242b8ba486b1bf139a23b1cde078e0eba349797146811
+  mathematics/probability-statistics/grinstead-snell/grinstead.pdf:
+    size: 2993135
+    sha256: 763eab9894983ddfd6cd7f84685548d1515a9326a2d9fd015474534460551a5e
   mathematics/probability-statistics/openintro-statistics/openintro.pdf:
     size: 20696835
     sha256: 9fa1e268dc2ae9db51915b5c21a009c9ab67ba73c47de5536b7716ac41321657
@@ -3818,6 +3821,9 @@ files:
   mathematics/probability-statistics/sad-ss26-lectures/lecture-slides/15_neural_networks.pdf:
     size: 1281311
     sha256: a2ee0b2daf83d68061af0b9671044b7439f4795c4ef3e7779bc71e6f55d5948a
+  mathematics/probability-statistics/sad-ss26-lectures/notes/L03-gradient-descent-derivation.pdf:
+    size: 208031
+    sha256: 5f012888d8418c2fdd21ba75798d6b688fcf76ae8357e6cb2cb92fad59af8668
   mathematics/probability-statistics/schaums-probability/schaums-probability.pdf:
     size: 8470816
     sha256: 61da484e946322c2f43091d92975391efe7436f497f6880f3ec704790c2c3720

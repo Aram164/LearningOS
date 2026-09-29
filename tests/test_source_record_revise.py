@@ -383,6 +383,27 @@ def test_attach_refuses_an_unneeded_replacement(mini_repo, tmp_path):
         "is not needed")
 
 
+def test_rebase_for_a_unit_without_a_dossier_names_the_missing_file(
+        mini_repo, tmp_path):
+    """A rebase for a known unit with no dossier file must not report
+    'not needed': dropping it would attach while the dossier is missing."""
+    from repo_builders import add_curriculum
+
+    _with_material_tree(mini_repo)
+    add_curriculum(mini_repo)
+    _refuses(mini_repo, _package(tmp_path, _revise(
+        dossier_rebases=[_rebase_request("sha256:deadbeef")])),
+        "has no dossier to rebase")
+
+
+def test_rebase_for_an_unknown_unit_names_the_unit(mini_repo, tmp_path):
+    _with_material_tree(mini_repo)
+    _refuses(mini_repo, _package(tmp_path, _revise(
+        dossier_rebases=[_rebase_request("sha256:deadbeef",
+                                         unit_id="unit-ghost")])),
+        "unit 'unit-ghost' is not registered")
+
+
 def _shaped_setup(mini_repo: Path):
     _with_material_tree(mini_repo)
     unit_dir = _grinstead_shaped_unit(mini_repo)
@@ -614,6 +635,47 @@ def test_malformed_evaluations_refuse_cleanly(mini_repo, tmp_path):
     bad_sections = _revise()
     bad_sections["evaluations"] = [{"useful_sections": 42}]
     _refuses(mini_repo, _package(tmp_path, bad_sections), "useful_sections")
+    empty_item = _revise()
+    empty_item["evaluations"] = [{}]
+    _refuses(mini_repo, _package(tmp_path, empty_item), "evaluations")
+
+
+def test_canonical_material_uri_spellings():
+    from learning_os.materials_resolution import canonical_material_uri
+
+    assert canonical_material_uri(URI) == URI
+    assert canonical_material_uri(
+        "material://source-demo-book/./demo.pdf") == URI
+    assert canonical_material_uri(
+        "material://source-demo-book//demo.pdf") == URI
+    assert canonical_material_uri(
+        "material://source-demo-book/demo.pdf/") == URI
+    assert canonical_material_uri(
+        "material://source-demo-book/../demo.pdf") is None
+    assert canonical_material_uri(
+        "material://source-demo-book") == "material://source-demo-book"
+    assert canonical_material_uri("not-a-uri") is None
+    assert canonical_material_uri(None) is None
+    assert canonical_material_uri("material:///abs.pdf") is None
+    assert canonical_material_uri("material://a\\b") is None
+
+
+def test_revise_refuses_non_canonical_material_spellings(mini_repo, tmp_path):
+    """Dot, double-slash and trailing-slash spellings resolve to the same
+    bytes but must not be recorded verbatim: the refusal names the
+    canonical spelling instead."""
+    _with_material_tree(mini_repo)
+    for odd in ("material://source-demo-book/./demo.pdf",
+                "material://source-demo-book//demo.pdf",
+                "material://source-demo-book/demo.pdf/"):
+        proc = run_los(mini_repo, "source-revise", "--file",
+                       str(_package(tmp_path, _revise(
+                           material=odd, material_sha256=_sha()))), "--check")
+        assert proc.returncode == 2, proc.stdout + proc.stderr
+        body = json.loads(proc.stdout)
+        assert body["ok"] is False
+        assert "canonical" in body["error"], body["error"]
+        assert URI in body["error"], body["error"]
 
 
 def test_revise_with_no_changes_is_refused(mini_repo, tmp_path):

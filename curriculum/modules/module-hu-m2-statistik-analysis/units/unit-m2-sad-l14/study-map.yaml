@@ -38,6 +38,15 @@ stages:
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L14 probability-based learning deck' against the stage 'Naive
+        Bayes decision rule'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:99bb14b9b396727f5bc8cd88f7d5a220e218847124dbb6befdef322a433c311e
   - material_ref:
       route_id: route-bccca809087fa5eefd5f492c
       inherit:
@@ -239,6 +248,15 @@ stages:
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L14 probability-based learning deck' against the stage 'Zero
+        counts and Laplace smoothing'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:f884478bebc711a374201399a23a9de7f1e3b826c9a9ee598c5cee4e05dac8ad
   - material_ref:
       route_id: route-bccca809087fa5eefd5f492c
       inherit:
@@ -359,6 +377,15 @@ stages:
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L14 probability-based learning deck' against the stage 'Numerical
+        attributes and discretization'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:5b13c0cd692c783a21e479d9f04b35aa7779eb84537de1f70c71b729d5d1b28d
   - material_ref:
       route_id: route-b3d516335f24f55b1d6ddc00
       inherit:
@@ -436,6 +463,15 @@ stages:
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L14 probability-based learning deck' against the stage 'Gaussian
+        Naive Bayes'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:9ce3d74dd091999415d36f6ee1da9519880167186c94400d6be5627b0cf57883
   - material_ref:
       route_id: route-b3d516335f24f55b1d6ddc00
       inherit:
@@ -559,6 +595,15 @@ stages:
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L14 probability-based learning deck' against the stage 'Multinomial
+        Naive Bayes and log space'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:c2d37286787e132f668e290df046da9630920415112dffdd2fab76fd463de2d3
   - material_ref:
       route_id: route-c6ef21e8e56052473f0d7cef
       inherit:
@@ -678,6 +723,15 @@ stages:
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L14 probability-based learning deck' against the stage 'Bayesian
+        networks and factorization'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:4432885e53a82e339073aacf9ec7a5d906c9fc38326f344314d4300cdc3a3605
   - material_ref:
       route_id: route-9e8924fd776e576177b5fbd1
       inherit:
@@ -710,6 +764,15 @@ stages:
     angle_detail: Start from the graph and list the parents for each factor; identify Naive Bayes as a
       restricted dependency structure.
     scope_triage: helpful-now
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kelleher Chapter 6 — probability-based learning' against the stage
+        'Bayesian networks and factorization'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:da2c8495fd8d402608f7dda9fa20e9780c8e4d0ed7f8bd059e048e8eb97db471
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-bayes-net/notes.md
   attachments: []
   source_feedback: []
@@ -738,6 +801,15 @@ stages:
     scope_triage: required-now
     route_id: route-004fedb8926613a0d638fd20
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L14 probability-based learning deck' against the stage 'Conditional
+        independence and Markov blankets'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:2c84f730fd19ad0d4d80bd903885a4a2bd9c8b10c8985607b4c866239efb7902
   - material_ref:
       route_id: route-9e8924fd776e576177b5fbd1
       inherit:
@@ -769,6 +841,15 @@ stages:
     angle: Identify parents, children and co-parents in the Markov blanket.
     angle_detail: Use the book diagram to distinguish a blanket from only the parent set.
     scope_triage: helpful-now
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kelleher Chapter 6 — probability-based learning' against the stage
+        'Conditional independence and Markov blankets'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:3029e31e63fc4159000c21af0fb4af28bc29a211bdcef89cbd24590b11b38366
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l14/stages/stage-sad-l14-markov/notes.md
   attachments: []
   source_feedback: []

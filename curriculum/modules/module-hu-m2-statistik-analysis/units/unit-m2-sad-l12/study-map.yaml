@@ -37,6 +37,15 @@ stages:
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L12 tree-based learning deck' against the stage 'Decision
+        trees, rules, and preference bias'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:a6df068b70a0e768a217fc4ceaa252fb88d2134f1c2d2db72a5f4e8736a0084a
   - material_ref:
       route_id: route-9892260cc9d0dbf2da2b165c
       inherit:
@@ -125,6 +134,15 @@ stages:
     route_id: route-5a43ff2dd96c3c7e6aee61a4
     node_scaffold_note: Deferral pointer — advanced regression-tree and boosting treatment lives on later
       stages; this PDF is not a categorical-entropy introduction.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Cornell Fall 2018 HW8 — regression trees and AdaBoost normalization'
+        against the stage 'Decision trees, rules, and preference bias'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:68e4414a46fced7424e0e3a6729f31d033a6112a008cd4220d91e9f56ee217e8
   - material_ref:
       route_id: route-8fec57420f21e471d11c0a87
       inherit:
@@ -201,6 +219,15 @@ stages:
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L12 tree-based learning deck' against the stage 'Entropy,
+        information gain, and ID3'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:1bb1ce75ad2d2bcee36d6532376cfeb043c1060e4e339ead41216dc71c32627d
   - material_ref:
       route_id: route-9892260cc9d0dbf2da2b165c
       inherit:
@@ -266,6 +293,15 @@ stages:
     route_id: route-5a43ff2dd96c3c7e6aee61a4
     node_scaffold_note: Deferral pointer — advanced regression-tree and boosting treatment lives on later
       stages; this PDF is not a categorical-entropy introduction.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Cornell Fall 2018 HW8 — regression trees and AdaBoost normalization'
+        against the stage 'Entropy, information gain, and ID3'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:a6159b30b27daf0f1e2b8149672b2fdcfa4eb1e1183174707305a22270b0a90f
   - material_ref:
       route_id: route-8fec57420f21e471d11c0a87
       inherit:
@@ -329,6 +365,15 @@ stages:
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L12 tree-based learning deck' against the stage 'Regression
+        trees and variance reduction'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:f2ae4f46b00d52eac30610fc1a59d577aed27de00b92192eefd509b3440302a2
   - material_ref:
       route_id: route-6b5698803acbdbd638a146b6
       inherit:
@@ -417,6 +462,15 @@ stages:
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L12 tree-based learning deck' against the stage 'Tree growth,
+        stopping, and pruning'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:b976a3b4a1e75aa51b7ab662f0b64115fbec01a5c2ee7eafd0055a35cabfa3c1
   - material_ref:
       route_id: route-9892260cc9d0dbf2da2b165c
       inherit:
@@ -552,6 +606,15 @@ stages:
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L12 tree-based learning deck' against the stage 'Bagging
+        and random forests'. The stage description selects that stage's task or reading purpose from the
+        broader route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:927610f539ca7b399dafdd8685a3dd72f771664373ce00369268cfb08fc96af0
   - material_ref:
       route_id: route-9892260cc9d0dbf2da2b165c
       inherit:
@@ -701,6 +764,14 @@ stages:
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L12 tree-based learning deck' against the stage 'Boosting'.
+        The stage description selects that stage's task or reading purpose from the broader route; preserve
+        the narrower description. This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:324202721e6579d924b5835fdc74b28b780cafcd91159eb6b5bbe0dbb0c84e3c
   - material_ref:
       route_id: route-9892260cc9d0dbf2da2b165c
       inherit:
@@ -800,6 +871,15 @@ stages:
       numeric trace.
     scope_triage: helpful-now
     route_id: route-5a43ff2dd96c3c7e6aee61a4
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Cornell Fall 2018 HW8 — regression trees and AdaBoost normalization'
+        against the stage 'Boosting'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:3dcc304144cba6123ec12702976f9c9def41086366b34945218eb38e12227c97
   - material_ref:
       route_id: route-4e866ff69e5d5dde2aa2d6ba
       inherit:
@@ -863,6 +943,15 @@ stages:
     scope_triage: required-now
     route_id: route-2dae8c065ede0f1bff7b14d7
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L12 tree-based learning deck' against the stage 'Stacking
+        and ensemble tradeoffs'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:8e60686fd3f189c4f2cf853fd3f913a3cf362217d0389f554f04bc3fcbfd1f8b
   - material_ref:
       route_id: route-0f00ed6b65da6c9fdd94757f
       inherit:

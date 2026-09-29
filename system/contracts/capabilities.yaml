@@ -37,6 +37,7 @@ queries:
     - one unit's compact authored plan or one exact route and its stage overrides
     - snapshot-bound; shared descriptions occur once and expected revisions are explicit
     - an ordered batch of 1 to 20 distinct routes of one unit shares the unit snapshot and revision guards, preserves request order, and refuses atomically without a partial payload
+    - the brief lists direct analysis refs plus a related count and expansion hint; same-source-only refs list only via --include-related
   atlas.context:
     handler: atlas_context
     result: atlas-context
@@ -79,14 +80,14 @@ queries:
     invariants:
     - read-only; touches no repository file
     - searches durable analysis notes plus the route assessments of approved unit syntheses
-    - deterministic lexical AND matching; concept filter resolves declared ids and aliases; purpose and unit narrow
-    - ranked by recorded stage use-evidence per source (positive feedback first, mismatch feedback last); ties keep stable order (notes by id, then assessments by unit and route)
+    - deterministic lexical AND matching over explanation text (note title plus body); provenance frontmatter never matches; concept filter resolves declared ids and aliases; purpose, unit, and exact material narrow
+    - ranked by recorded stage use-evidence per source (positive feedback first, mismatch feedback last); ties keep stable order (notes by id, then assessments by unit and route); --include-related appends related notes under the same ranking
     - use evidence is canonical study-map data under the snapshot guard; skipped is reported, never ranking
-    - unit-scoped analysis notes follow current source-map routes, independently of synthesis approval
-    - excerpts are bounded (8 note snippets, 3 assessment fields); default 5 items, at most 20
+    - unit-scoped analysis notes follow current source-map routes, independently of synthesis approval; direct notes share a routed file (and overlap its single stated page range when it states one); same-source-only notes are related, listed only via --include-related
+    - excerpts are bounded (8 note snippets — a title label or true file line numbers — 3 assessment fields); default 5 items, at most 20
     - source freshness is observed live per result; review state and resolution are reported, never inferred
     - empty results describe the searched records only, never the absence of an explanation
-    - continuation requires the snapshot and observations_sha256 guards; changed canonical data or observed material bytes refuse mixed pages, even when an assessment remains stale
+    - continuation requires the snapshot and observations_sha256 guards; changed canonical data, observed material bytes, or normalized filters refuse mixed pages, even when an assessment remains stale
   plan.template:
     handler: plan_template
     result: plan-template-v1
@@ -412,6 +413,7 @@ commands:
     cli_command: unit-material-synthesis-publish
     writes:
     - curriculum/modules/**/units/**/material-synthesis.yaml
+    - operations/transactions/lineage.yaml
     invariants:
     - every current rich route is assessed exactly once
     - current and prerequisite routes are deep-reviewed
@@ -653,6 +655,7 @@ domain_capabilities:
   unit.material-synthesis.publish:
     writes:
     - curriculum/modules/**/units/**/material-synthesis.yaml
+    - operations/transactions/lineage.yaml
     invariants:
     - complete-current-route-coverage
     - approved-whole-unit-delivery

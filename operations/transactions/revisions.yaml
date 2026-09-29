@@ -106,6 +106,7 @@ revisions:
   source-eecs498: 1
   source-esl: 1
   source-frankfurt-algo2-course: 1
+  source-grinstead-snell: 2
   source-guo-cpython-internals: 1
   source-hogan-knowledge-graphs: 1
   source-islp: 1
@@ -249,8 +250,8 @@ revisions:
   study-map-aml-l11: 3
   study-map-job-engineering-tools-fluency: 2
   study-map-job-git-fluency: 1
-  study-map-job-polars-backend-loop: 1
-  study-map-job-polars-expressions: 13
+  study-map-job-polars-backend-loop: 2
+  study-map-job-polars-expressions: 14
   study-map-job-polars-joins-reshape: 7
   study-map-job-polars-lazy-udf-interop: 7
   study-map-job-polars-pandas-fluency: 10
@@ -261,23 +262,23 @@ revisions:
   study-map-m2-analysis-ch01: 1
   study-map-m2-analysis-ch02: 1
   study-map-m2-analysis-exam-prep: 1
-  study-map-m2-sad-clustering: 4
-  study-map-m2-sad-exam-prep: 2
-  study-map-m2-sad-l01: 4
-  study-map-m2-sad-l02: 5
-  study-map-m2-sad-l03: 8
-  study-map-m2-sad-l04: 7
-  study-map-m2-sad-l05: 6
-  study-map-m2-sad-l06: 8
-  study-map-m2-sad-l07: 9
-  study-map-m2-sad-l08: 13
-  study-map-m2-sad-l09: 7
-  study-map-m2-sad-l10: 5
-  study-map-m2-sad-l11: 7
-  study-map-m2-sad-l12: 5
-  study-map-m2-sad-l13: 5
-  study-map-m2-sad-l14: 5
-  study-map-m2-sad-l15: 6
+  study-map-m2-sad-clustering: 5
+  study-map-m2-sad-exam-prep: 3
+  study-map-m2-sad-l01: 5
+  study-map-m2-sad-l02: 6
+  study-map-m2-sad-l03: 9
+  study-map-m2-sad-l04: 8
+  study-map-m2-sad-l05: 7
+  study-map-m2-sad-l06: 9
+  study-map-m2-sad-l07: 10
+  study-map-m2-sad-l08: 14
+  study-map-m2-sad-l09: 8
+  study-map-m2-sad-l10: 6
+  study-map-m2-sad-l11: 8
+  study-map-m2-sad-l12: 6
+  study-map-m2-sad-l13: 6
+  study-map-m2-sad-l14: 6
+  study-map-m2-sad-l15: 7
   unit-algo2-exam-prep: 2
   unit-aml-exam-prep: 8
   unit-aml-l01: 6
@@ -294,9 +295,9 @@ revisions:
   unit-job-engineering-tools-fluency: 2
   unit-job-git-fluency: 1
   unit-job-polars-aggregation-windows: 2
-  unit-job-polars-backend-loop: 3
+  unit-job-polars-backend-loop: 4
   unit-job-polars-capstone-transition: 2
-  unit-job-polars-expressions: 15
+  unit-job-polars-expressions: 16
   unit-job-polars-joins-reshape: 9
   unit-job-polars-lazy-udf-interop: 9
   unit-job-polars-order-text-time: 2
@@ -314,21 +315,21 @@ revisions:
   unit-m2-analysis-ch07: 6
   unit-m2-analysis-exam-prep: 12
   unit-m2-combined-exam-rehearsal: 5
-  unit-m2-sad-clustering: 12
-  unit-m2-sad-exam-prep: 11
-  unit-m2-sad-l01: 9
-  unit-m2-sad-l02: 13
-  unit-m2-sad-l03: 23
-  unit-m2-sad-l04: 27
-  unit-m2-sad-l05: 16
-  unit-m2-sad-l06: 23
-  unit-m2-sad-l07: 20
-  unit-m2-sad-l08: 23
-  unit-m2-sad-l09: 16
-  unit-m2-sad-l10: 14
-  unit-m2-sad-l11: 14
-  unit-m2-sad-l12: 12
-  unit-m2-sad-l13: 11
-  unit-m2-sad-l14: 15
-  unit-m2-sad-l15: 16
+  unit-m2-sad-clustering: 13
+  unit-m2-sad-exam-prep: 12
+  unit-m2-sad-l01: 10
+  unit-m2-sad-l02: 14
+  unit-m2-sad-l03: 24
+  unit-m2-sad-l04: 29
+  unit-m2-sad-l05: 17
+  unit-m2-sad-l06: 24
+  unit-m2-sad-l07: 21
+  unit-m2-sad-l08: 24
+  unit-m2-sad-l09: 17
+  unit-m2-sad-l10: 15
+  unit-m2-sad-l11: 15
+  unit-m2-sad-l12: 13
+  unit-m2-sad-l13: 12
+  unit-m2-sad-l14: 16
+  unit-m2-sad-l15: 17
   workspace-thesis-mle-medical: 1

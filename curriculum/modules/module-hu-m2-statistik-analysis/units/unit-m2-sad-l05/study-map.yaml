@@ -37,6 +37,15 @@ stages:
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
     vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L05 combinatorics deck' against the stage 'The combinatorics
+        decision grid'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:e6e0cd44e790e843630ffc2acb0b9273954603ceabd86b7944eb6c02654d31b8
   - material_ref:
       route_id: route-cdaab7b53820cd4672754a63
       inherit:
@@ -50,6 +59,15 @@ stages:
     angle: Requires a separate outcome model for each verbal problem.
     angle_detail: Identify ordered draws, replacement and the event before choosing a formula; parts (d)–(e)
       additionally change independence assumptions.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 2, Aufgabe 1 — counting inside finite probability' against
+        the stage 'The combinatorics decision grid'. The stage description selects that stage's task or
+        reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:3dc24f90a755e3da80a0231b928d7e5f6af73b8980a213cf9b3a4585ce0c1164
   - material_ref:
       route_id: route-9dca93bd8f5f1512981461eb
       inherit:
@@ -64,6 +82,15 @@ stages:
     angle_detail: 'UE4 uses four die rolls, all red number cards, three further coin rounds and loss probability
       0.5 below 10%. These differ from Blatt 2. On p. 5, “first smaller” requires denominator 52·51 for
       the displayed favorable count 180: probability 15/221, not 30/221.'
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE4 pp. 4–8 — different-number examples; card-count correction' against
+        the stage 'The combinatorics decision grid'. The stage description selects that stage's task or
+        reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:ce83d9f9009822aecc139694601a0965408568e8ad05bf542335e41f9560ccd8
   - material_ref:
       route_id: route-b3ad0cc1e399ea8846c4e397
       inherit:
@@ -77,6 +104,15 @@ stages:
     angle: Builds the sampling cases from multiplication and adjustment for overcounting.
     angle_detail: The four counting formulas describe outcomes, not automatically the probability of those
       outcomes.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blitzstein Chapter 1 — strategic counting' against the stage 'The
+        combinatorics decision grid'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:1db1aeae7f54f17b609fbee1b32d1e05bf94d8195367e34a3f25e3c438c10e72
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-decision-grid/notes.md
   attachments: []
   source_feedback: []
@@ -106,6 +142,15 @@ stages:
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
     vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L05 combinatorics deck' against the stage 'Permutations and
+        indistinguishable objects'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:48dbf448e9189bc95b80e26fb9e9b6d63d713d8428712a7bba18de815f38f5b6
   - material_ref:
       route_id: route-35b2bda446c6fc49b74e3535
       inherit:
@@ -120,6 +165,15 @@ stages:
       one.
     angle_detail: The DADDY example divides by 3! for the three Ds; the flag example has more than one
       repeated group.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Schaum — combinatorics drills' against the stage 'Permutations and
+        indistinguishable objects'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:bcd6b9e5cdf98eb1620706ca8e8581b861dc938ccf016206da2d2f4d462c8fce
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-permutations/notes.md
   attachments: []
   source_feedback: []
@@ -149,6 +203,15 @@ stages:
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
     vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L05 combinatorics deck' against the stage 'Ordered selections
+        (variations)'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:b5468aeb5763b0391f10328211305885dc4f6abf5f8e5c35cc48c2706682dc97
   - material_ref:
       route_id: route-cdaab7b53820cd4672754a63
       inherit:
@@ -162,6 +225,15 @@ stages:
     angle: Uses ordered sequences for five die rolls and two successive card draws.
     angle_detail: In (b), keep the order condition “first smaller than second” and the odd-number restriction;
       do not use an unordered denominator with an ordered favorable count.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 2, Aufgabe 1 — counting inside finite probability' against
+        the stage 'Ordered selections (variations)'. The stage description selects that stage's task or
+        reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:e93942c714158acb61169de4981d4ede135ba994064ae64293403e71bf08bda0
   - material_ref:
       route_id: route-9dca93bd8f5f1512981461eb
       inherit:
@@ -176,6 +248,15 @@ stages:
     angle_detail: 'UE4 uses four die rolls, all red number cards, three further coin rounds and loss probability
       0.5 below 10%. These differ from Blatt 2. On p. 5, “first smaller” requires denominator 52·51 for
       the displayed favorable count 180: probability 15/221, not 30/221.'
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE4 pp. 4–8 — different-number examples; card-count correction' against
+        the stage 'Ordered selections (variations)'. The stage description selects that stage's task or
+        reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:21b013649721a7ad7469297b6c748b157c827f828ba70ef0eae277451509ba38
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-variations/notes.md
   attachments: []
   source_feedback: []
@@ -206,6 +287,15 @@ stages:
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
     vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L05 combinatorics deck' against the stage 'Unordered selections
+        and binomial coefficients'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:5e08b050dea632b83ba8f4b3ed787c8cd65267ace907ee566702865e4174c6d9
   - material_ref:
       route_id: route-cdaab7b53820cd4672754a63
       inherit:
@@ -219,6 +309,15 @@ stages:
     angle: Selects distinct odd ranks or the positions of the partner’s wins.
     angle_detail: 'For (c), after your initial win there are five further rounds: a final tie requires
       the partner to win three of those five rounds.'
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 2, Aufgabe 1 — counting inside finite probability' against
+        the stage 'Unordered selections and binomial coefficients'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:8383740d7fab08d9ae68d296fc88da782ba4aa50987a6e8e667f1948b27dcf1e
   - material_ref:
       route_id: route-9dca93bd8f5f1512981461eb
       inherit:
@@ -233,6 +332,15 @@ stages:
     angle_detail: 'UE4 uses four die rolls, all red number cards, three further coin rounds and loss probability
       0.5 below 10%. These differ from Blatt 2. On p. 5, “first smaller” requires denominator 52·51 for
       the displayed favorable count 180: probability 15/221, not 30/221.'
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE4 pp. 4–8 — different-number examples; card-count correction' against
+        the stage 'Unordered selections and binomial coefficients'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:6df190e6f115ada9ad6360e18b1915c80dfad4c9e5b863d4848c1710465c4e3f
   - material_ref:
       route_id: route-b3ad0cc1e399ea8846c4e397
       inherit:
@@ -246,6 +354,15 @@ stages:
     angle: Contrasts committees and teams to derive the binomial coefficient.
     angle_detail: Decide whether members have named roles; only unlabelled membership permits division
       by k!.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blitzstein Chapter 1 — strategic counting' against the stage 'Unordered
+        selections and binomial coefficients'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:2ad758719c330e483c9dcfb25c7ce363764cf33e5ad1871a1d33748e5a99f372
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-combinations/notes.md
   attachments: []
   source_feedback: []
@@ -273,6 +390,15 @@ stages:
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
     vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L05 combinatorics deck' against the stage 'Combinations with
+        repetition and stars and bars'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:da3a5394754a7b64c6d0f8c41e3a27aa079e0d84e8759e82fdac66ce039c3453
   - material_ref:
       route_id: route-b08add0fb6ed042a770114eb
       inherit:
@@ -287,6 +413,15 @@ stages:
       one to each variable.
     angle_detail: Distinguish occupied bins from bins allowed to be empty; the shift changes the total
       and the resulting binomial coefficient.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Ross — combinatorial analysis' against the stage 'Combinations with
+        repetition and stars and bars'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:21cdebcd7fde864d833a593a5dfad822c52bd1dc2b6c3b3430771c90a8264ce3
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-repetition/notes.md
   attachments: []
   source_feedback: []
@@ -318,6 +453,15 @@ stages:
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
     vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L05 combinatorics deck' against the stage 'Laplace probability,
+        complements, and hypergeometric counting'. The stage description selects that stage's task or
+        reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:b845f14bad75b8fd8fbba95ed0675a68d85fec1f44c60151eb9d6214f782ea22
   - material_ref:
       route_id: route-cdaab7b53820cd4672754a63
       inherit:
@@ -331,6 +475,15 @@ stages:
     angle: Combines complement counting, success-position counts and an explicit dependence comparison.
     angle_detail: The five-roll complement uses 1−(6·5·4·3·2)/6^5. In (d) use 0.4^n<0.02; in (e), two
       perfectly dependent securities count as one independent loss unit.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 2, Aufgabe 1 — counting inside finite probability' against
+        the stage 'Laplace probability, complements, and hypergeometric counting'. The stage description
+        selects that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:ac27b6146479c40335d8b1d3142edd0eff4ccd332899565ffe2e8e69f4a6367a
   - material_ref:
       route_id: route-9dca93bd8f5f1512981461eb
       inherit:
@@ -345,6 +498,15 @@ stages:
     angle_detail: 'UE4 uses four die rolls, all red number cards, three further coin rounds and loss probability
       0.5 below 10%. These differ from Blatt 2. On p. 5, “first smaller” requires denominator 52·51 for
       the displayed favorable count 180: probability 15/221, not 30/221.'
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE4 pp. 4–8 — different-number examples; card-count correction' against
+        the stage 'Laplace probability, complements, and hypergeometric counting'. The stage description
+        selects that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:86d2e7cf7f905790a8d94c9803d64d5ddb9d1cc01cdf37231e3c217a227e47f0
   - material_ref:
       route_id: route-b3ad0cc1e399ea8846c4e397
       inherit:
@@ -357,6 +519,15 @@ stages:
     locator: §1.4, physical PDF pp. 29–30,34–37
     angle: Pairs no-match/no-six complements with a warning about nonuniform unordered samples.
     angle_detail: Establish equally likely elementary outcomes before applying favorable over total.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blitzstein Chapter 1 — strategic counting' against the stage 'Laplace
+        probability, complements, and hypergeometric counting'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:ff24b7e781796e2d0c591cd0fb19a4e2bb5ad6a3731bdc7f67cb0bc30723a4ec
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-counting-probability/notes.md
   attachments: []
   source_feedback: []
@@ -385,6 +556,15 @@ stages:
     route_id: route-5b6e78353200f05843a1f9a0
     source_id: source-sad-ss26-lectures
     vault_path: material://source-sad-ss26-lectures/lecture-slides/05_combinatorics.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L05 combinatorics deck' against the stage 'Binomial identities
+        and Stirling approximation'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:ccdb3216a35d596432c82ac7aae1af29855c2dfdc30e2e47ad5f4c1fe378c7c3
   - kind: read
     scope_triage: helpful-now
     route_id: route-b08add0fb6ed042a770114eb
@@ -398,6 +578,15 @@ stages:
       - label
       - source_id
       - vault_path
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Ross — combinatorial analysis' against the stage 'Binomial identities
+        and Stirling approximation'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:b84e0a03029b82bee11d8b9f39b4aae3ffbdd94a85e6ad548e58b0c49b08c46f
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l05/stages/stage-sad-l05-identities/notes.md
   attachments: []
   source_feedback: []

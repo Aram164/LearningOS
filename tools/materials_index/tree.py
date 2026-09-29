@@ -130,7 +130,12 @@ def classify_source_node(node):
     top = parts[0]
     if top == "Books":
         sub = parts[1] if len(parts) > 1 else ""
-        return BOOKS_SUBFOLDER_DOMAIN.get(sub, "ML"), None
+        if sub in BOOKS_SUBFOLDER_DOMAIN:
+            return BOOKS_SUBFOLDER_DOMAIN[sub], None
+        # Unknown subfolders keep their own name for the extras clause —
+        # filing them under ML hid them in the wrong subject. A source at
+        # the Books/ root itself belongs to the Books reference library.
+        return (sub or "Books"), None
     if top in MODULE_DOMAINS:
         return top, (parts[1] if len(parts) > 1 else None)
     return display_for_top(top), None

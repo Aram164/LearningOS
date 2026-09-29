@@ -80,6 +80,14 @@ def test_an_unindexed_document_is_an_error(tmp_path):
     assert any("system/NEW-RULES.md" == issue.path for issue in issues)
 
 
+@pytest.mark.parametrize("relative", ["AGENTS.md", "README.md"])
+def test_core_entry_documents_must_be_classified(tmp_path, relative):
+    root = _corpus(tmp_path, [_entry("system/OPERATOR.md")])
+    (root / relative).write_text("# Entry adapter\n", encoding="utf-8")
+    assert any(issue.code == "MISSING" and issue.path == relative
+               for issue in nc.check(root))
+
+
 def test_an_unindexed_adr_is_an_error(tmp_path):
     root = _corpus(tmp_path, [_entry("system/OPERATOR.md")])
     (root / "system" / "adr" / "ADR-099-x-2026-09-01.md").write_text("# x\n", encoding="utf-8")

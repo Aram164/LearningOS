@@ -264,8 +264,13 @@ writes. v1 observes only what the repository already records — changed
 files in a stateless recency window joined to knowledge nodes and
 source definitions, lineage staleness against the revision ledger, and
 derived study-map obligations. Critique points are deliberately
-excluded (an open point is not a work item); dossier freshness has no
-live-key registry. Question, inspection, and correction counts have no
+excluded (an open point is not a work item). Prospective material-synthesis
+publication records its freshness lineage atomically with the approved dossier,
+bound to its bytes and the same evidential basis used by material freshness.
+Presentation prose and revision-only changes do not stale it; changed local
+material bytes do. Unregistered context dossiers remain operator wiring, and
+older publications gain no invented historical judgments. Question, inspection,
+and correction counts have no
 observable source inside the repository and those detectors stay
 caller-fed: a live caller counts ephemerally
 (`session_counts.SessionCounts`, in memory only, never persisted) and

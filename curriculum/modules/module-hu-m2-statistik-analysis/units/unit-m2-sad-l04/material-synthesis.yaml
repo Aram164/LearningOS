@@ -1,8 +1,8 @@
 basis:
-  ai_provenance:
-    delivery_id: ai-delivery-sad-l04-pilot
-    provider: manual-bundle
-    request_id: ai-request-sad-l04-pilot
+  unit_revision: 27
+  source_map_revision: 59
+  source_map_checksum: sha256:2dbb846594706449c415a2a3ee6164439c6dd2e7160a96a5a67f528c2ac4a8ca
+  route_set_checksum: sha256:8a630c90fe9f52d41ca3ae5c8b5e7bc873093c5f31f11767bfa9ae8e55b6082f
   material_checksums:
     route-0afeba6c2e9a73159d6ad420: sha256:a60b0290379e3c97a1af58e5c042ce33ff6492bfdd1bd1ace19b7b3f9548a209
     route-1d4c3d5164052df9c540d079: sha256:d82c5b0a7e6b67246280855bbf098419fe9d9d736303c678861ebcd3206d10b0
@@ -28,16 +28,16 @@ basis:
     route-e488632c39efaf524b49f243: sha256:f65389b9a2e65ba6178380fb7eb985c28003cf9d258036a80b1c77ebf1322c31
     route-f99c92614d78638f193ab4d3: sha256:61da484e946322c2f43091d92975391efe7436f497f6880f3ec704790c2c3720
     route-fa96784fa40036436bf1b2cc: sha256:b334aedac636d94bc89807e81d7ee838c67edb0c5304c492c139d6cb5d65f7e8
-    route-fe8b4fbc40e7e85daf8ef25b: sha256:875305c4121a2ae680013b75b416defc8c81eeb0c7b8e07d01779b35f0e9cdaa
+    route-fe8b4fbc40e7e85daf8ef25b: sha256:763eab9894983ddfd6cd7f84685548d1515a9326a2d9fd015474534460551a5e
     route-sad-l04-kelleher-bayes: sha256:f63e0c8a76517fef8df937e1bc3cd8f6df77af124af398f011117c83464fab60
     route-sad-l04-kts-c57f26de: sha256:5ec2f6e59160d1f76e43cc3c515af2055d655465ee6577be3de4aa90fa935326
     route-sad-l04-psychexamreview-framing: sha256:1c23a6f1b6e1726c905be6dd4bdf8170f0e0d8a91e3d8ac1b5fb6353b4cd04cc
     route-sad-l04-tijms-intuition: sha256:7efa2440829e6b5e455df2ca57e4a7c64e84aae9c18c0aef9fe1a7019dc1d99e
   policy: tiered-v2
-  route_set_checksum: sha256:8a630c90fe9f52d41ca3ae5c8b5e7bc873093c5f31f11767bfa9ae8e55b6082f
-  source_map_checksum: sha256:2dbb846594706449c415a2a3ee6164439c6dd2e7160a96a5a67f528c2ac4a8ca
-  source_map_revision: 55
-  unit_revision: 23
+  ai_provenance:
+    delivery_id: ai-delivery-sad-l04-pilot
+    provider: manual-bundle
+    request_id: ai-request-sad-l04-pilot
 comparisons:
 - concept_ids:
   - concept-bayes-theorem

@@ -38,6 +38,15 @@ stages:
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
     vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L06 random-variables deck' against the stage 'Random variables
+        and realizations'. The stage description selects that stage's task or reading purpose from the
+        broader route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:fd7fb2c7249df39c59896bf39807e635e222e53b8fdbceb541576b2446384cc6
   - material_ref:
       route_id: route-25ae05c5bd133243f7bf98aa
       inherit:
@@ -84,6 +93,15 @@ stages:
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
     vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L06 random-variables deck' against the stage 'PMF, density,
+        and CDF'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:972b01a6302bcc5a27e8f2007374a3a9b1fe3622955eb4d12a167fe1435f372d
   - material_ref:
       route_id: route-2da0864f340f4e794158cc61
       inherit:
@@ -153,6 +171,15 @@ stages:
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
     vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L06 random-variables deck' against the stage 'Functions and
+        transformations of random variables'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:bc1d0123320b6dcd236695e6a1d326d5e47f4bdfea73c1adfaca79d88727d499
   - material_ref:
       route_id: route-2da0864f340f4e794158cc61
       inherit:
@@ -222,6 +249,15 @@ stages:
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
     vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L06 random-variables deck' against the stage 'Expected value
+        and linearity'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:1ddf4d1ec5c77664b17be7c5dea5e577a668437c60e480d7ef21eb0de9481dd7
   - material_ref:
       route_id: route-2da0864f340f4e794158cc61
       inherit:
@@ -291,6 +327,15 @@ stages:
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
     vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L06 random-variables deck' against the stage 'Variance, standard
+        deviation, and covariance'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:694964fdbfc292b5300160a5a946488859a62c8c058dc1e0aaf68590743d575d
   - material_ref:
       route_id: route-2da0864f340f4e794158cc61
       inherit:
@@ -362,6 +407,15 @@ stages:
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
     vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L06 random-variables deck' against the stage 'IID samples
+        and the random sample mean'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:5cb08948eaaa07813973280713983a5d0c264122830b7fcf20161f31a0cc0000
   - material_ref:
       route_id: route-e7975557941ab093de08152e
       inherit:
@@ -418,6 +472,15 @@ stages:
     route_id: route-a2e6fc0559d93d22efbe732a
     source_id: source-sad-ss26-lectures
     vault_path: material://source-sad-ss26-lectures/lecture-slides/06_random_variables.pdf
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L06 random-variables deck' against the stage 'Chebyshev bounds
+        and the law of large numbers'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:fb1ddd0b360125b136320238c6b4c4bb741e0236277751b8c622bd2fa455641f
   - material_ref:
       route_id: route-e7975557941ab093de08152e
       inherit:
@@ -443,6 +506,15 @@ stages:
     angle: Turns Chebyshev into the LLN and interprets a simulated sequence.
     angle_detail: Read physical PDF pages 191-194. The proof controls a probability; the realization on
       p. 194 can move farther away again.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Dekking Chapters 4–7,9,13 — distributions, LOTUS and concentration'
+        against the stage 'Chebyshev bounds and the law of large numbers'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:a8cd2c6d78c66e12b0dc2e1509fd88d1e168a64941524880cd7a76c64abaafd2
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l06/stages/stage-sad-l06-concentration/notes.md
   attachments: []
   source_feedback: []

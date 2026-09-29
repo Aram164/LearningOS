@@ -378,3 +378,27 @@ imperative. The index answers "what binds" for the documents it reaches; the
 documents an agent reads *first* are not among them.
 
 Status unchanged: open. Closing it is Aram's.
+
+### Measurements for points 1–3 — 2026-09-30 cleanup
+
+Aram authorized direct implementation and the existing content warnings and
+deferred design issues in this session. Original complaints and status remain
+unchanged; closing them is still his decision.
+
+- Point 1: the remaining 342 route/placement wording differences were reviewed
+  through `unit.map.import`: 340 stage-specific refinements retained, two
+  misleading descriptions corrected against inspected local PDF bytes. The
+  optional `angle_review` in Data Contract 46 binds each relation judgment to
+  its route, stage, and placement; corrections additionally bind exact source
+  evidence. `ANGLE-REVIEW-STALE` reopens changed inputs. No progress, notes,
+  selections, or stage order changed. Current validation: no content warnings.
+- Point 2: the manifest still uses the shared canonical renderer.
+  `test_checked_in_inventory_uses_the_shared_byte_renderer` now compares the
+  checked-in inventory's bytes to that owner in the full gate, so a third writer
+  that changes ordering, wrapping, or header is detected without modifying the
+  frozen migration or pretending to verify external bytes.
+- Point 3: the corpus now covers Core's owned `AGENTS.md` and `README.md` as
+  well as the system documents and skill procedures. Missing entry
+  classifications are errors. Ancestor role instructions and the sibling UI
+  remain separate owners under the perimeter contract; no `../` corpus paths
+  or duplicated root instructions were introduced.

@@ -40,6 +40,15 @@ stages:
       alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L08 Normal, CLT, and likelihood deck' against the stage 'The
+        Normal family and its parameters'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:c0d7878d388e440468ad3d3c319a5e77640282d69fb11997b340b4f52994c853
   - material_ref:
       route_id: route-b7f7718273784bbb7843acbd
       inherit:
@@ -96,6 +105,15 @@ stages:
       alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L08 Normal, CLT, and likelihood deck' against the stage 'Standardization,
+        CDFs, and quantiles'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:31de486ff1ec880f21ffca645be4dea60cf52d76ada9b8776ba6016445e3e852
   - material_ref:
       route_id: route-b7f7718273784bbb7843acbd
       inherit:
@@ -154,6 +172,15 @@ stages:
       and alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L08 Normal, CLT, and likelihood deck' against the stage 'Linear
+        transforms and sums of independent Normals'. The stage description selects that stage's task or
+        reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:62393c47dab40bc2248429e44407f947f273585e4831149169cafba2b89f8ca6
   - material_ref:
       route_id: route-b7f7718273784bbb7843acbd
       inherit:
@@ -228,6 +255,15 @@ stages:
     scope_triage: required-now
     affordance: intervention
     route_id: route-a82f4016ebbdab30e0351c91
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L08 Normal, CLT, and likelihood deck' against the stage 'Central
+        limit theorem for sums and means; contrast with the L06 LLN'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:276f393abe5eb43e2235d095e261bac5dc766f699d360ad2814b67657211ea04
   - material_ref:
       route_id: route-b7f7718273784bbb7843acbd
       inherit:
@@ -417,6 +453,15 @@ stages:
       and alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L08 Normal, CLT, and likelihood deck' against the stage 'Normal
+        approximation and continuity correction'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:bd6c2c95d417c4352e1a4d6231653327520814a28fcf110eba2c0bc656ef381a
   - material_ref:
       route_id: route-b7f7718273784bbb7843acbd
       inherit:
@@ -488,6 +533,15 @@ stages:
       full lecture and alternative sources remain in the unit material menu.
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L08 Normal, CLT, and likelihood deck' against the stage 'Probability
+        versus likelihood'. The stage description selects that stage's task or reading purpose from the
+        broader route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:7bf4c79a4054a355dfab5b2ab4aa3d6cd35a455598405cde5014a59721703f85
   - material_ref:
       route_id: route-3c30c32cc585a9450ea0cb62
       inherit:
@@ -533,6 +587,15 @@ stages:
       errors with common variance are modeling assumptions, not a consequence of the CLT alone.
     scope_triage: required-now
     route_id: route-a82f4016ebbdab30e0351c91
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L08 Normal, CLT, and likelihood deck' against the stage 'Maximum
+        likelihood and the MSE bridge'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:729013cba383bf72aef769cd4f7fb008db4785f8ee975ac726065d3be6434e9b
   - material_ref:
       route_id: route-3c30c32cc585a9450ea0cb62
       inherit:

@@ -105,7 +105,7 @@ Produced by the operator through reasoning, never canonical: study plans, source
 ### 3.1 Root
 
 <!-- root-tree:begin — GENERATED from system/contracts/perimeter.yaml.
-     Do not hand-edit; run `python tools/tree_contract.py --write`. -->
+     Do not hand-edit; run `.venv/bin/python tools/tree_contract.py --write`. -->
 
 ```text
 semestercontext/
@@ -152,7 +152,7 @@ authored repository and interface as independent Git repositories.
 ### 3.2 Authored repository
 
 <!-- tree:begin — GENERATED from system/contracts/tree-contract.yaml.
-     Do not hand-edit; run `python tools/tree_contract.py --write`. -->
+     Do not hand-edit; run `.venv/bin/python tools/tree_contract.py --write`. -->
 
 ```text
 repository/

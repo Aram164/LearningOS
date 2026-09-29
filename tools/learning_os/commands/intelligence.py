@@ -225,6 +225,16 @@ def _print_brief_json(args, goals, ranked) -> int:
     return 0
 
 
+def _unique_feed_object(pairs: list[tuple[str, object]]) -> dict:
+    """Refuse ambiguous JSON before a duplicate key can discard evidence."""
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise FeedError(f"malformed feed: duplicate JSON key {key!r}")
+        result[key] = value
+    return result
+
+
 def cmd_intelligence_scan(args) -> int:
     """Run one observation loop: observe, interpret, propose.
 
@@ -240,12 +250,15 @@ def cmd_intelligence_scan(args) -> int:
     if getattr(args, "feed", None):
         try:
             raw = Path(args.feed).read_text(encoding="utf-8")
-        except OSError as exc:
+        except (OSError, UnicodeError) as exc:
             print(f"intelligence scan: cannot read --feed: {exc}", file=sys.stderr)
             return 2
         try:
-            feed = json.loads(raw)
-        except json.JSONDecodeError as exc:
+            feed = json.loads(raw, object_pairs_hook=_unique_feed_object)
+        except FeedError as exc:
+            print(f"intelligence scan: {exc}", file=sys.stderr)
+            return 2
+        except (ValueError, RecursionError) as exc:
             print(f"intelligence scan: --feed is not JSON: {exc}", file=sys.stderr)
             return 2
         try:

@@ -202,7 +202,7 @@ context.
 
 Triage chapters through cached summaries before full-reading. For a chapter
 range of a cached material, use
-`python tools/material_summarize.py --read --material RELATIVE_PATH --pages START-END`
+`.venv/bin/python tools/material_summarize.py --read --material RELATIVE_PATH --pages START-END`
 to retrieve the existing analysis without reopening cached page text. The
 lookup checks live source bytes and exact chapter provenance, returning
 `hit`, `missing`, `stale`, or `refused` as JSON. Pass `--digest` with a previously
@@ -558,7 +558,7 @@ make plan-check
 which is full offline validation with compact output and a saved warning
 report, the warning-baseline gate, the focused
 curriculum suites, projection regeneration, and a clean diff. For routine
-readouts outside `plan-check`, prefer `python tools/validate.py --compact`:
+readouts outside `plan-check`, prefer `.venv/bin/python tools/validate.py --compact`:
 same error gate, errors plus one summary line, the full warning list stays
 in the report. Afterwards,
 verify the receipt against the projection for the touched unit:

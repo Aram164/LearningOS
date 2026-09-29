@@ -26,17 +26,17 @@ ambient AI-action capability.
 ## Manual-bundle workflow
 
 ```bash
-python tools/los.py ai-action-list
-python tools/los.py ai-action-prepare \
+.venv/bin/python tools/los.py ai-action-list
+.venv/bin/python tools/los.py ai-action-prepare \
   --action-id garden.shelve \
   --target-kind garden-note \
   --target-id garden-note-example-attention-as-soft-knn \
   --provider manual-bundle \
   --expected-snapshot '<manifest snapshot id>'
 
-python tools/los.py ai-action-import-delivery /path/to/approved-delivery
-python tools/los.py ai-action-validate-delivery '<delivery id>'
-python tools/los.py capability ai-action.delivery.apply \
+.venv/bin/python tools/los.py ai-action-import-delivery /path/to/approved-delivery
+.venv/bin/python tools/los.py ai-action-validate-delivery '<delivery id>'
+.venv/bin/python tools/los.py capability ai-action.delivery.apply \
   --payload-file /path/to/approved-apply-v2.json
 ```
 
