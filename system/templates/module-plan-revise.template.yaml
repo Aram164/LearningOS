@@ -2,6 +2,9 @@
 # unchanged routes, units and study maps from the guarded live snapshot; do not
 # copy their full records here. Use module-plan-import.template.yaml for new
 # units, module reordering, workspace joins or source-registry changes.
+# Joining an ALREADY REGISTERED source to the module is compact: list it under
+# source_joins (it must exist in the registry — creation stays with
+# `los source-intake`), then add its routes under unit_revisions as usual.
 module_id: module-example
 plan_contract:
   version: 2
@@ -16,12 +19,20 @@ plan_contract:
     duplicates_and_numbering_checked: true
     exclusions_and_unresolved_gaps_recorded: true
 
+source_joins:
+  # Each join names a source already in the registry plus its reviewed module
+  # role; joins apply before the route additions below, atomically, in order.
+  # - source_id: source-example-course
+  #   role: spine
+  #   why: The course text carries this module's core derivations.
+  #   priority: 1
+
 unit_revisions:
   - unit_id: unit-example-l01
     route_changes:
       add: []
-      # Each addition names a source already joined to this module and the full
-      # rich route; the route's unit_id is this unit.
+      # Each addition names a source already joined to this module (above or
+      # previously) and the full rich route; the route's unit_id is this unit.
       # - source_id: source-example-course
       #   route:
       #     id: route-example-l01-drills

@@ -2,7 +2,13 @@
 
 from __future__ import annotations
 
-from .config import DOMAIN_LABELS, MODULE_LABEL, SOURCES_DOMAIN_ORDER, TYPE_GROUP, TYPE_GROUP_ORDER
+from .config import (
+    DOMAIN_LABELS,
+    MODULE_LABEL,
+    TYPE_GROUP,
+    TYPE_GROUP_ORDER,
+    ordered_display_domains,
+)
 from .registry import human_size, type_label
 from .render import render_unregistered
 from .tree import collect_loose_files
@@ -12,7 +18,7 @@ def build_files_listing(roots) -> str:
     """materials/FILES.txt (ADR-005): a names-only, grep-able listing of every
     UNREGISTERED file in the materials tree — the Foundations archive and any
     other loose material. Registered sources are deliberately absent (they are
-    findable via the registry / source-index / INDEX.html); this file exists so
+    findable via the registry / source-index / README.md); this file exists so
     "do I own something on X?" is answerable without registering 200+ archive
     files. Promotion path when a hit matters: WORKFLOWS §6a."""
     loose: list[str] = []
@@ -37,11 +43,11 @@ def build_readme(modules_by_domain, library_local_by_domain, online_by_domain,
     lines = [
         "# Materials — catalogue",
         "",
-        "> Plain-text companion to **INDEX.html** (Sources view = Modules + Library-by-type; ",
-        "> Files view = raw disk tree; flat search). ",
+        "> Plain-text map of the materials tree and the registered sources. ",
         f"> {nlocal} local sources · {n_online} online · {n_missing} missing URLs · "
         f"{ncontent} files ({nsupport} support hidden) · {human_size(total)}. ",
-        "> Rebuild with `make materials`. Local links in INDEX.html are relative to `materials/`. ",
+        "> Rebuild with `make materials`. For search and faceted browsing use ",
+        "> the Obsidian Source Explorer. ",
         "> Unregistered file names are grep-able in `FILES.txt`.",
         "",
     ]
@@ -60,7 +66,8 @@ def build_readme(modules_by_domain, library_local_by_domain, online_by_domain,
         else:
             lines.append(f"  - {m['title']} — MISSING URL{typ}")
 
-    for dom in SOURCES_DOMAIN_ORDER:
+    for dom in ordered_display_domains(modules_by_domain, library_local_by_domain,
+                                       online_by_domain, missing_by_domain):
         mods = modules_by_domain.get(dom, {})
         lib = library_local_by_domain.get(dom, [])
         onl = online_by_domain.get(dom, [])
@@ -100,7 +107,7 @@ def build_readme(modules_by_domain, library_local_by_domain, online_by_domain,
                 for m in sorted(mis, key=lambda m: (m.get("title") or "").lower()):
                     online_line(m)
         if loose:
-            lines.append(f"\n_Plus {loose} loose/unregistered file(s) — see the Files view._")
+            lines.append(f"\n_Plus {loose} loose/unregistered file(s) — see `FILES.txt`._")
 
     lines.append("")
     return "\n".join(lines)

@@ -434,6 +434,9 @@ Choose once before Gates 1–6; do not re-derive the procedure after choosing:
 
 The compact paths never substitute for structural changes: identity, scope,
 coverage, source, or membership changes still require the full plan path.
+Joining an already-registered source to the module (`source_joins`) is the one
+membership-adjacent exception: it rides the compact `unit_revisions` file shape
+through the same `module-plan-import` gate, never the registry itself.
 Snapshot guards, receipts, source completeness, and learner-state protection
 apply on all three paths. Procedure owner is WORKFLOWS §25a; this SOP owns
 Gates 0–6 only.

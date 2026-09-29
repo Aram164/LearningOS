@@ -241,6 +241,133 @@ def test_unit_diff_covers_a_unit_without_a_study_map():
     assert removed["demoted_current_or_prerequisite"] == ["route-x-added"]
 
 
+def _register_paper(root: Path) -> None:
+    path = root / "sources" / "sources.yaml"
+    data = yaml.safe_load(path.read_text())
+    data["sources"].append({
+        "id": "source-demo-paper", "title": "Demo Paper", "type": "paper",
+        "authors": ["P. Apier"],
+        "evaluations": [{"concepts": ["concept-expected-value"],
+                         "roles": ["first-learning"], "level": "introductory",
+                         "strengths": ["a crisp derivation"]}],
+    })
+    write_yaml(path, data)
+
+
+def _join_revision(root: Path) -> dict:
+    revision = _revision(root)
+    revision["source_joins"] = [{
+        "source_id": "source-demo-paper", "role": "spine",
+        "why": "The paper carries the lecture's core derivation.",
+        "priority": 1,
+    }]
+    route = {
+        "id": "route-demo-paper-l02", "unit_id": "unit-demo-l02",
+        "title": "Route route-demo-paper-l02", "format": "paper",
+        "angle": "A synthetic angle.",
+        "angle_detail": "A synthetic angle in long form for this lecture.",
+        "covers": ["knowledge-demo-expectation"],
+        "depth": "derivation", "scope": "current",
+        "locator": "paper-02.pdf, PDF pp. 2-5",
+    }
+    revision["unit_revisions"][1]["route_changes"]["add"] = [
+        {"source_id": "source-demo-paper", "route": route}]
+    revision["claim_evidence"] = [{
+        "claim_id": "covers:route-demo-paper-l02",
+        "evidence": [{"kind": "route-locator", "ref": "paper-02.pdf"}],
+    }]
+    return revision
+
+
+def _refuses_join(mini_repo: Path, tmp_path: Path, revision: dict, fragment: str):
+    draft = tmp_path / "join.yaml"
+    write_yaml(draft, revision)
+    refused = run_los(mini_repo, "module-plan-import", "module-demo",
+                      "--file", str(draft), "--check")
+    assert refused.returncode == 2, refused.stdout
+    assert fragment in refused.stderr, refused.stderr
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_source_join_adds_routes_and_patches_atomically(mini_repo, tmp_path):
+    _two_units(mini_repo)
+    _register_paper(mini_repo)
+    draft = tmp_path / "compact.yaml"
+    write_yaml(draft, _join_revision(mini_repo))
+    checked = run_los(mini_repo, "module-plan-import", "module-demo",
+                      "--file", str(draft), "--check")
+    assert checked.returncode == 0, checked.stderr
+    report = json.loads(checked.stdout)
+    assert report["canonical_files_written"] == 0
+    review = tmp_path / "review.json"
+    review.write_text(checked.stdout, encoding="utf-8")
+    applied = run_los(mini_repo, "module-plan-import", "module-demo",
+                      "--file", str(draft), "--review-report", str(review),
+                      "--apply-reviewed-sha256", report["reviewed_file_sha256"])
+    assert applied.returncode == 0, applied.stderr
+    from learning_os.loader import load_repo
+    repo = load_repo(mini_repo)
+    entries = {entry["source_id"]: entry
+               for entry in repo.module_source_maps["module-demo"]["sources"]}
+    assert set(entries) == {"source-demo-book", "source-demo-paper"}
+    joined = entries["source-demo-paper"]
+    assert (joined["role"], joined["priority"]) == ("spine", 1)
+    routes = {route["id"]: route for route in joined["unit_routes"]}
+    assert routes["route-demo-paper-l02"]["unit_id"] == "unit-demo-l02"
+    assert repo.study_maps["study-map-demo-l01"].data["stages"][0]["title"] == \
+        "First revised stage"
+
+
+def test_source_join_refuses_unknown_and_repeated_sources(mini_repo, tmp_path):
+    _two_units(mini_repo)
+    _register_paper(mini_repo)
+    ghost = _join_revision(mini_repo)
+    ghost["source_joins"][0]["source_id"] = "source-ghost"
+    ghost["unit_revisions"][1]["route_changes"]["add"][0]["source_id"] = "source-ghost"
+    _refuses_join(mini_repo, tmp_path, ghost, "not registered")
+    joined = _join_revision(mini_repo)
+    joined["source_joins"][0]["source_id"] = "source-demo-book"
+    _refuses_join(mini_repo, tmp_path, joined, "already joined")
+    twice = _join_revision(mini_repo)
+    twice["source_joins"].append(dict(twice["source_joins"][0]))
+    _refuses_join(mini_repo, tmp_path, twice, "same source twice")
+
+
+def test_source_join_validates_the_join_record(mini_repo, tmp_path):
+    _two_units(mini_repo)
+    _register_paper(mini_repo)
+    bad_role = _join_revision(mini_repo)
+    bad_role["source_joins"][0]["role"] = "required-reading"
+    _refuses_join(mini_repo, tmp_path, bad_role, "not a source-map role")
+    empty_why = _join_revision(mini_repo)
+    empty_why["source_joins"][0]["why"] = "  "
+    _refuses_join(mini_repo, tmp_path, empty_why, "non-empty 'why'")
+    bad_priority = _join_revision(mini_repo)
+    bad_priority["source_joins"][0]["priority"] = -1
+    _refuses_join(mini_repo, tmp_path, bad_priority, "'priority' must be")
+    unknown_field = _join_revision(mini_repo)
+    unknown_field["source_joins"][0]["mood"] = "hopeful"
+    _refuses_join(mini_repo, tmp_path, unknown_field, "unknown fields")
+
+
+def test_route_add_to_an_unjoined_source_is_still_refused(mini_repo, tmp_path):
+    _two_units(mini_repo)
+    _register_paper(mini_repo)
+    revision = _join_revision(mini_repo)
+    del revision["source_joins"]
+    _refuses_join(mini_repo, tmp_path, revision, "unknown source")
+
+
+def test_join_with_a_bad_second_unit_writes_nothing(mini_repo, tmp_path):
+    _two_units(mini_repo)
+    _register_paper(mini_repo)
+    revision = _join_revision(mini_repo)
+    revision["unit_revisions"][1]["stage_patches"][0]["stage_id"] = "missing-stage"
+    before = (mini_repo / "curriculum/modules/module-demo/source-map.yaml").read_bytes()
+    _refuses_join(mini_repo, tmp_path, revision, "missing or repeated stage")
+    assert (mini_repo / "curriculum/modules/module-demo/source-map.yaml").read_bytes() == before
+
+
 def test_route_change_refusal_names_the_expected_keys(mini_repo, tmp_path):
     """An add entry with a wrong key is refused naming both the unknown and the
     expected keys, so the entry shape is recoverable from the refusal alone

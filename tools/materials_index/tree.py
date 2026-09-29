@@ -12,6 +12,7 @@ from .config import (
     MODULE_DOMAINS,
     SKIP_DIRS,
     SKIP_FILES,
+    SUBJECT_DISPLAY_DOMAIN,
 )
 from .render import href_for
 
@@ -119,6 +120,10 @@ def classify_source_node(node):
         return BOOKS_SUBFOLDER_DOMAIN.get(sub, "ML"), None
     if top in MODULE_DOMAINS:
         return top, (parts[1] if len(parts) > 1 else None)
+    if top in SUBJECT_DISPLAY_DOMAIN:
+        return SUBJECT_DISPLAY_DOMAIN[top], None
+    # Unknown top (e.g. a future subject folder): keep its own name so the
+    # render loops' extras clause shows it instead of dropping it silently.
     return top, None
 
 
