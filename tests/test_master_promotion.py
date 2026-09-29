@@ -359,6 +359,28 @@ def test_prepare_creates_only_an_explicitly_adopted_new_canonical_source(mini_re
     assert not target.exists()
 
 
+def test_promotion_refuses_pseudo_field_section_keys(mini_repo):
+    """Plan promotion never passes the revise command's locator/use check,
+    so the schema itself must ban those keys: a promoted canonical source
+    carrying {'locator': ...} fails before any registry write is planned,
+    while a proper section-to-note pair promotes normally."""
+    _existing_package, _comparison = _setup(mini_repo)
+    package = _new_source_package(mini_repo)
+    source = package["adopted_sources"][0]["canonical_source"]
+    source["evaluations"] = [{
+        "concepts": ["concept-expected-value"],
+        "useful_sections": [{"locator": "Chapter 4"}],
+    }]
+    with pytest.raises(MastersPlanningError, match="useful_sections"):
+        prepare_master_promotion(mini_repo, package, now=NOW)
+    source["evaluations"] = [{
+        "concepts": ["concept-expected-value"],
+        "useful_sections": [{"Chapter 4": "Covers conditioning."}],
+    }]
+    plan = prepare_master_promotion(mini_repo, package, now=NOW)
+    assert mini_repo / "sources/registry/future-demo.yaml" in plan.writes
+
+
 def test_promotion_refuses_stale_verification_and_unresolved_mapping(mini_repo):
     package, _comparison = _setup(mini_repo)
     package["verification"]["as_of"] = (NOW.date() - dt.timedelta(days=31)).isoformat()

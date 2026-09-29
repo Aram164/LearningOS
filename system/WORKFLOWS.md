@@ -132,9 +132,12 @@ list to also update.
      units and the apply must carry their reviewed replacement dossiers —
      or, when every moved route is screened, evidence-free, analysis-free
      and outside every comparison, a reviewed `dossier_rebases` shortcut
-     naming exactly the moved routes. Anything else (deep-reviewed routes,
-     evidence, comparisons, an already-stale dossier) keeps the full
-     replacement. The check also lists referring collection entries; when a
+     naming exactly the moved routes. Both the shortcut and a full
+     replacement stamp the new basis with their own fresh
+     request_id/delivery_id — reusing the live dossier's provenance
+     unchanged is refused, since it would attest the old material.
+     Anything else (deep-reviewed routes, evidence, comparisons, an
+     already-stale dossier) keeps the full replacement. The check also lists referring collection entries; when a
      listed `why` is now false, correct it afterwards with
      `collection.entry.revise` (`los collection-entry-revise --check`, then
      the reviewed apply), which revises one entry's one-line `why` and

@@ -312,8 +312,12 @@ def _staged_replacement(root: Path) -> dict:
     record["evaluations"] = EVALS
     staged = _staged_basis(root, "source-demo-book", record)
     replacement = _valid_dossier(root, "route-demo-l01-book", "Chapter 1")
-    replacement["basis"] = {**staged, "ai_provenance":
-                            replacement["basis"]["ai_provenance"]}
+    # A reviewed replacement is a new assessment event: it carries its own
+    # provenance, never the live dossier's (which attested the old basis).
+    replacement["basis"] = {**staged, "ai_provenance": {
+        "request_id": "ai-request-replacement",
+        "delivery_id": "ai-delivery-replacement",
+        "provider": "manual-bundle"}}
     staged_sum = staged["material_checksums"]["route-demo-l01-book"]
     for assessment in replacement["route_assessments"]:
         for evidence in assessment.get("evidence", []):
@@ -354,6 +358,22 @@ def test_attach_refuses_a_live_basis_replacement(mini_repo, tmp_path):
     _refuses(mini_repo, _package(tmp_path, _revise(
         material_syntheses=[{"unit_id": "unit-demo-l01", "dossier": live}])),
         "basis is stale")
+
+
+def test_replacement_refuses_recycled_provenance(mini_repo, tmp_path):
+    from repo_builders import _valid_dossier
+
+    _with_material_tree(mini_repo)
+    unit_dir = _dossier_unit(mini_repo)
+    live = _valid_dossier(mini_repo, "route-demo-l01-book", "Chapter 1")
+    _write_dossier(unit_dir, live)
+    replacement = _staged_replacement(mini_repo)
+    replacement["basis"]["ai_provenance"] = dict(
+        live["basis"]["ai_provenance"])
+    _refuses(mini_repo, _package(tmp_path, _revise(
+        material_syntheses=[{"unit_id": "unit-demo-l01",
+                             "dossier": replacement}])),
+        "reuses the live dossier's provenance unchanged")
 
 
 def test_attach_refuses_an_unneeded_replacement(mini_repo, tmp_path):
@@ -514,6 +534,14 @@ def test_rebase_refuses_a_dossier_changed_after_check(mini_repo, tmp_path):
         idempotency_key="revise-rebase-raced")
     outer = json.loads(proc.stdout)["error"]["message"]
     assert "changed since" in json.loads(outer)["error"]
+
+
+def test_rebase_refuses_recycled_provenance(mini_repo, tmp_path):
+    _unit, live = _shaped_setup(mini_repo)
+    stale = dict(live["basis"]["ai_provenance"])
+    _refuses(mini_repo, _package(tmp_path, _revise(dossier_rebases=[
+        _rebase_request(_dossier_digest(live), provenance=stale)])),
+        "reuses the live dossier's provenance unchanged")
 
 
 def test_rebase_guard_rejects_a_second_moved_basis_field():
