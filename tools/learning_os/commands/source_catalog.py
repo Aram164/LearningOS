@@ -14,7 +14,11 @@ replaces a stale evaluation. Identity and intake-owned fields stay with
 intake; replacement of a held material is refused outright. Routes without
 their own vault_path inherit the record's material, so an attach can move a
 dossier's basis: affected approved dossiers must ship reviewed replacements,
-validated against the staged state, in the same transaction.
+validated against the staged state, in the same transaction — or a reviewed
+rebase when every moved route is screened, evidence-free, analysis-free and
+outside every comparison. The check also lists referring collection entries
+so a stale list note is noticed; collection prose itself is corrected through
+`collection.entry.revise`, never here.
 """
 
 from __future__ import annotations
@@ -98,7 +102,7 @@ SUBJECT_PARTITIONS = frozenset(PARTITION_FOR_GROUP.values())
 # `material_syntheses` carries reviewed replacement dossiers for exactly the
 # units whose approved dossier basis the new material moves.
 REVISE_FIELDS = frozenset({"id", "material", "material_sha256", "evaluations",
-                           "material_syntheses"})
+                           "material_syntheses", "dossier_rebases"})
 INTAKE_OWNED_FIELDS = (CREATE_FIELDS | CORRECT_FIELDS) - {"action", "id"}
 _SHA256_HEX = re.compile(r"^[0-9a-f]{64}$")
 
@@ -591,20 +595,101 @@ def _resolve_revise_material(root: Path, repo, uri: str,
     return relative.as_posix(), live, resolved.stat().st_size
 
 
-def _read_dossier_status(path: Path, sid: str, uid: str):
+def _read_unit_dossier(path: Path, sid: str, uid: str) -> dict:
     try:
         data = yaml.safe_load(path.read_text(encoding="utf-8"))
     except (OSError, yaml.YAMLError) as exc:
         raise WriteRefused(f"{sid}: cannot read the dossier for '{uid}': {exc}") from exc
     if not isinstance(data, dict):
         raise WriteRefused(f"{sid}: dossier for '{uid}' is not a mapping")
-    return data.get("status")
+    return data
 
 
-def _referring_routes_and_dossiers(repo, sid: str) -> dict:
-    """Every route naming this source, and every unit among them carrying a
-    material dossier file. Evidence for the reviewer; the basis comparison in
-    `_plan_revise` decides which of these the new material actually moves."""
+def _read_dossier_status(path: Path, sid: str, uid: str):
+    return _read_unit_dossier(path, sid, uid).get("status")
+
+
+def _dossier_digest(data: dict) -> str:
+    canonical = json.dumps(data, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    return "sha256:" + hashlib.sha256(canonical).hexdigest()
+
+
+def _rebase_routes_or_refuse(sid: str, uid: str, live_basis: dict,
+                             staged_basis: dict, by_route: dict,
+                             comparisons: list,
+                             requested_ids: list) -> list[dict]:
+    """Changed routes eligible for the dossier rebase shortcut, else refused.
+
+    The shortcut is deliberately narrow: only `material_checksums` may move,
+    and every moved route must be screened, evidence-free, analysis-free and
+    outside every comparison. Anything else keeps the full reviewed
+    replacement path, where a human re-examines the changed evidence.
+    """
+    for field in _COMPARED_BASIS_FIELDS:
+        if field == "material_checksums":
+            continue
+        if live_basis.get(field) != staged_basis.get(field):
+            raise WriteRefused(
+                f"{sid}: unit '{uid}' moves '{field}' too — the rebase shortcut "
+                "covers only material_checksums; use a full reviewed replacement"
+            )
+    live_sums = live_basis.get("material_checksums") or {}
+    staged_sums = staged_basis.get("material_checksums") or {}
+    if set(live_sums) != set(staged_sums):
+        raise WriteRefused(
+            f"{sid}: unit '{uid}' gains or loses checksummed routes — use a "
+            "full reviewed replacement"
+        )
+    changed = sorted(rid for rid in live_sums if live_sums[rid] != staged_sums[rid])
+    if sorted(requested_ids) != changed:
+        raise WriteRefused(
+            f"{sid}: unit '{uid}' rebase names route_ids {sorted(requested_ids)} "
+            f"but the attach moves {changed}; name exactly the moved routes"
+        )
+    compared: set[str] = set()
+    for comparison in comparisons:
+        if isinstance(comparison, dict):
+            compared.add(comparison.get("left_route_id"))
+            compared.add(comparison.get("right_route_id"))
+    moved = []
+    for rid in changed:
+        if rid in compared:
+            raise WriteRefused(
+                f"{sid}: unit '{uid}' route '{rid}' appears in a comparison — "
+                "its narrative may depend on the old material; use a full "
+                "reviewed replacement"
+            )
+        assessment = by_route.get(rid) or {}
+        status = assessment.get("review_status")
+        if status != "screened":
+            raise WriteRefused(
+                f"{sid}: unit '{uid}' route '{rid}' is not screened "
+                f"({status or 'no status'}) — use a full reviewed replacement"
+            )
+        if assessment.get("evidence"):
+            raise WriteRefused(
+                f"{sid}: unit '{uid}' route '{rid}' carries evidence bound to "
+                "the old material; use a full reviewed replacement"
+            )
+        if assessment.get("analysis_refs"):
+            raise WriteRefused(
+                f"{sid}: unit '{uid}' route '{rid}' carries analysis references "
+                "bound to the old material; use a full reviewed replacement"
+            )
+        moved.append({"route_id": rid, "before": live_sums[rid],
+                      "after": staged_sums[rid],
+                      "reason": assessment.get("reason")})
+    return moved
+
+
+def _source_referrers(repo, sid: str) -> dict:
+    """Every route, dossier and collection entry naming this source.
+
+    Evidence for the reviewer; the basis comparison in `_plan_revise`
+    decides which dossiers the new material actually moves, and collection
+    entries are listed so a stale operational claim is noticed — this
+    operation never rewrites collection content itself.
+    """
     routes = []
     for mid in sorted(repo.module_source_maps or {}):
         entries = (repo.module_source_maps[mid] or {}).get("sources") or []
@@ -625,7 +710,16 @@ def _referring_routes_and_dossiers(repo, sid: str) -> dict:
         path = getattr(unit, "path", None)
         if path is not None and (path.parent / "material-synthesis.yaml").is_file():
             dossiers.add(row["unit_id"])
-    return {"routes": routes, "dossiers": sorted(dossiers)}
+    collections = []
+    for stem in sorted(repo.collections or {}):
+        doc = repo.collections[stem] or {}
+        for entry in doc.get("entries") or []:
+            if isinstance(entry, dict) and entry.get("source") == sid:
+                collections.append({"collection": stem,
+                                    "group": entry.get("group"),
+                                    "why": entry.get("why")})
+    return {"routes": routes, "dossiers": sorted(dossiers),
+            "collections": collections}
 
 
 def _plan_revise(root: Path, item: Any) -> dict:
@@ -691,6 +785,18 @@ def _plan_revise(root: Path, item: Any) -> dict:
     elif "material_sha256" in item:
         raise WriteRefused(f"{sid}: 'material_sha256' without a 'material' change")
     if "evaluations" in item:
+        for position, evaluation in enumerate(item["evaluations"] or []):
+            sections = (evaluation.get("useful_sections")
+                        if isinstance(evaluation, dict) else None)
+            for entry in sections or []:
+                if isinstance(entry, dict) and ({"locator", "use"} & set(entry)):
+                    raise WriteRefused(
+                        f"{sid}: evaluations[{position}].useful_sections uses "
+                        "'locator'/'use' pseudo-fields — write one "
+                        "section-to-note pair per object instead, e.g. "
+                        "{'§4.1, physical PDF pp. 141–149': 'Discrete "
+                        "conditioning, reversed urn tree, ...'}"
+                    )
         record["evaluations"] = item["evaluations"]
     try:
         validate_contract(root, "sources.schema.json", {"sources": [record]})
@@ -703,14 +809,17 @@ def _plan_revise(root: Path, item: Any) -> dict:
             fields[field] = {"before": old, "after": new}
     if not fields:
         raise WriteRefused(f"{sid}: no source-record changes")
-    refers = _referring_routes_and_dossiers(repo, sid)
+    refers = _source_referrers(repo, sid)
     # Routes without their own vault_path inherit this record's material, so an
     # attach can move a dossier's basis without touching any route (SaD L04).
     # Freshness is therefore computed against the PROPOSED record; every unit
     # whose approved basis moves must ship a reviewed replacement validated
-    # against that staged state, in this same transaction.
+    # against that staged state — or a reviewed rebase when the shortcut's
+    # strict conditions hold — in this same transaction.
     affected: list[str] = []
     replacements: dict[str, dict] = {}
+    rebased: dict[str, dict] = {}
+    dossier_writes: dict[Path, str] = {}
     if "material" in fields:
         syntheses = item.get("material_syntheses", [])
         if not isinstance(syntheses, list):
@@ -726,9 +835,46 @@ def _plan_revise(root: Path, item: Any) -> dict:
             if uid in requested:
                 raise WriteRefused(f"{where} replaces '{uid}' twice")
             requested[uid] = dossier
+        rebases = item.get("dossier_rebases", [])
+        if not isinstance(rebases, list):
+            raise WriteRefused(f"{sid}: 'dossier_rebases' must be a list")
+        requested_rebases: dict[str, dict] = {}
+        for position, entry in enumerate(rebases):
+            where = f"dossier_rebases[{position}]"
+            if not isinstance(entry, dict) or set(entry) != {
+                    "unit_id", "dossier_digest", "route_ids", "provenance"}:
+                raise WriteRefused(
+                    f"{where} needs exactly unit_id, dossier_digest, "
+                    "route_ids and provenance"
+                )
+            uid, digest, rids, provenance = (
+                entry["unit_id"], entry["dossier_digest"],
+                entry["route_ids"], entry["provenance"])
+            if not isinstance(uid, str):
+                raise WriteRefused(f"{where} needs a unit id")
+            if not isinstance(digest, str) or not digest:
+                raise WriteRefused(f"{where} needs the current dossier digest")
+            if (not isinstance(rids, list) or not rids
+                    or not all(isinstance(rid, str) for rid in rids)):
+                raise WriteRefused(
+                    f"{where} 'route_ids' must be a non-empty list of route ids"
+                )
+            if (not isinstance(provenance, dict)
+                    or not all(isinstance(provenance.get(key), str)
+                               and provenance.get(key)
+                               for key in ("request_id", "delivery_id",
+                                           "provider"))):
+                raise WriteRefused(
+                    f"{where} 'provenance' must carry request_id, "
+                    "delivery_id and provider"
+                )
+            if uid in requested_rebases:
+                raise WriteRefused(f"{where} rebases '{uid}' twice")
+            requested_rebases[uid] = entry
         staged = copy.copy(repo)
         staged.sources = {**repo.sources, sid: record}
         required: list[str] = []
+        bases: dict[str, tuple[dict, dict]] = {}
         for uid in refers["dossiers"]:
             unit = (repo.units or {}).get(uid)
             if unit is None or getattr(unit, "path", None) is None:
@@ -743,6 +889,7 @@ def _plan_revise(root: Path, item: Any) -> dict:
             if any(live_basis[field] != staged_basis[field]
                    for field in _COMPARED_BASIS_FIELDS):
                 affected.append(uid)
+                bases[uid] = (live_basis, staged_basis)
                 dossier_path = unit.path.parent / "material-synthesis.yaml"
                 if _read_dossier_status(dossier_path, sid, uid) == "approved":
                     required.append(uid)
@@ -752,14 +899,25 @@ def _plan_revise(root: Path, item: Any) -> dict:
                     f"{sid}: replacement dossier for '{uid}' is not needed "
                     "(no approved dossier basis changes there)"
                 )
+        for uid in requested_rebases:
+            if uid in requested:
+                raise WriteRefused(
+                    f"{sid}: unit '{uid}' takes only one of "
+                    "'material_syntheses' and 'dossier_rebases'"
+                )
+            if uid not in required:
+                raise WriteRefused(
+                    f"{sid}: rebase for '{uid}' is not needed "
+                    "(no approved dossier basis changes there)"
+                )
         for uid in required:
-            if uid not in requested:
+            if uid not in requested and uid not in requested_rebases:
                 raise WriteRefused(
                     f"{sid}: attaching material changes the approved dossier "
                     f"basis for '{uid}'; supply a reviewed replacement dossier "
-                    "under 'material_syntheses'"
+                    "under 'material_syntheses' or a rebase under "
+                    "'dossier_rebases'"
                 )
-        dossier_writes: dict[Path, str] = {}
         for uid in sorted(requested):
             try:
                 validate_unit_material_synthesis(root, uid, requested[uid], repo=staged)
@@ -771,8 +929,48 @@ def _plan_revise(root: Path, item: Any) -> dict:
             dossier_writes[unit.path.parent / "material-synthesis.yaml"] = _dump_yaml(
                 requested[uid])
         replacements = {uid: requested[uid] for uid in sorted(requested)}
+        for uid in sorted(requested_rebases):
+            entry = requested_rebases[uid]
+            unit = repo.units[uid]
+            dossier_path = unit.path.parent / "material-synthesis.yaml"
+            live_dossier = _read_unit_dossier(dossier_path, sid, uid)
+            if _dossier_digest(live_dossier) != entry["dossier_digest"]:
+                raise WriteRefused(
+                    f"{sid}: dossier for '{uid}' changed since the rebase was "
+                    "prepared; re-run --check"
+                )
+            by_route = {row["route_id"]: row
+                        for row in live_dossier.get("route_assessments", []) or []
+                        if isinstance(row, dict) and row.get("route_id")}
+            live_basis, staged_basis = bases[uid]
+            moved = _rebase_routes_or_refuse(
+                sid, uid, live_basis, staged_basis, by_route,
+                live_dossier.get("comparisons", []) or [],
+                entry["route_ids"])
+            try:
+                validate_unit_material_synthesis(root, uid, live_dossier, repo=repo)
+            except MaterialSynthesisError as exc:
+                raise WriteRefused(
+                    f"{sid}: dossier for '{uid}' is already stale: {exc}; use "
+                    "a full reviewed replacement"
+                ) from exc
+            rebased_dossier = copy.deepcopy(live_dossier)
+            rebased_dossier["basis"] = {
+                **staged_basis, "ai_provenance": entry["provenance"]}
+            try:
+                validate_unit_material_synthesis(root, uid, rebased_dossier, repo=staged)
+            except MaterialSynthesisError as exc:
+                raise WriteRefused(
+                    f"{sid}: rebased dossier for '{uid}' is not valid: {exc}"
+                ) from exc
+            dossier_writes[dossier_path] = _dump_yaml(rebased_dossier)
+            rebased[uid] = {"routes": moved,
+                            "dossier_digest": entry["dossier_digest"],
+                            "provenance": entry["provenance"]}
     elif "material_syntheses" in item:
         raise WriteRefused(f"{sid}: 'material_syntheses' without a 'material' change")
+    elif "dossier_rebases" in item:
+        raise WriteRefused(f"{sid}: 'dossier_rebases' without a 'material' change")
     origin = repo.source_origins.get(sid)
     destination = Path(origin) if origin else root / "sources" / "sources.yaml"
     try:
@@ -790,11 +988,11 @@ def _plan_revise(root: Path, item: Any) -> dict:
         filename = destination.name
     diff = [{"id": sid, "partition": filename, "fields": fields,
              "refers": refers, "affected_units": affected,
-             "replacements": replacements}]
+             "replacements": replacements, "rebases": rebased}]
     canonical = json.dumps(diff, sort_keys=True, ensure_ascii=False).encode("utf-8")
     writes = {destination: _dump_yaml({"sources": merged})}
-    writes.update(dossier_writes if "material" in fields else {})
-    unit_ids = sorted(replacements)
+    writes.update(dossier_writes)
+    unit_ids = sorted(set(replacements) | set(rebased))
     revisions = {sid: artifact_revision(root, sid)}
     revisions.update({uid: artifact_revision(root, uid) for uid in unit_ids})
     return {

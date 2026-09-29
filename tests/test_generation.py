@@ -544,6 +544,26 @@ def test_structured_progress_stays_core_side_in_projection(mini_repo):
     assert projected["status"] == "active"
 
 
+def test_source_index_renders_one_useful_section_pair_as_one_line(mini_repo):
+    """One single-pair entry projects one reading section — never two.
+
+    Regression for the 2026-09-29 Grinstead shape complaint, where a
+    schema-valid `{locator, use}` object rendered as two bogus sections.
+    """
+    import yaml
+
+    from learning_os.genout.sources import build_source_index
+
+    path = mini_repo / "sources" / "sources.yaml"
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    data["sources"][0]["evaluations"][0]["useful_sections"] = [
+        {"§4.1, physical PDF pp. 141–149": "Discrete conditioning."}]
+    path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+    index = build_source_index(load_repo(mini_repo), generated_at="T1")
+    assert index.count("  - section — ") == 1
+    assert "§4.1, physical PDF pp. 141–149: Discrete conditioning." in index
+
+
 def test_generate_rebuilds_through_an_empty_output_dir_and_refuses_a_full_one(mini_repo):
     repo = load_repo(mini_repo)
     write_outputs(repo, generate_all(repo, generated_at="T1"))

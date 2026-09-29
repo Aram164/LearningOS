@@ -129,7 +129,16 @@ list to also update.
      never replaces a held different material, and never rewrites a curated
      collection's `why` (workflow 6b stays a separate edit). When the attach
      moves an approved dossier's material basis, the check names the affected
-     units and the apply must carry their reviewed replacement dossiers.
+     units and the apply must carry their reviewed replacement dossiers —
+     or, when every moved route is screened, evidence-free, analysis-free
+     and outside every comparison, a reviewed `dossier_rebases` shortcut
+     naming exactly the moved routes. Anything else (deep-reviewed routes,
+     evidence, comparisons, an already-stale dossier) keeps the full
+     replacement. The check also lists referring collection entries; when a
+     listed `why` is now false, correct it afterwards with
+     `collection.entry.revise` (`los collection-entry-revise --check`, then
+     the reviewed apply), which revises one entry's one-line `why` and
+     preserves source, group, order and all other entries.
 3. **List it (optional):** if it belongs in a curated per-domain list, add an
    entry to the matching `sources/collections/<name>.yaml` (workflow 6b).
 4. **Verify:** `python tools/validate.py --compact` then `python tools/generate.py`.

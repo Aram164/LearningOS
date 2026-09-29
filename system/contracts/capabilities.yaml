@@ -492,6 +492,16 @@ commands:
     - source identity is stable; evaluations, topics, material and every route, selection, note, feedback and observation are unchanged
     - a check run returns the field-level diff; apply is bound to that diff's hash, the snapshot and each record's revision
     - explicitly approved; one transaction and one receipt cover the batch
+  collection.entry.revise:
+    handler: collection_entry_revise
+    cli_command: collection-entry-revise
+    writes:
+    - sources/collections/**
+    invariants:
+    - revises the why of one existing entry in one existing collection, addressed by filename stem and source id
+    - entry order, groups, sources and all other content are unchanged; empty, multi-line and no-op lines are refused
+    - a check run returns the old and proposed line; apply is bound to that diff's hash, the snapshot and the collection's revision
+    - explicitly approved; one transaction and one receipt cover the revision
   source.record.revise:
     handler: source_record_revise
     cli_command: source-revise
@@ -504,7 +514,8 @@ commands:
     - source identity and intake-owned fields are stable; topics, routes, selections, notes, feedback and observations are unchanged
     - live bytes must match both the request hash and the materials manifest; the URI authority must be the source id and resolve through the runtime root; a held different material is never silently replaced
     - when the attach moves an approved dossier's material basis, a reviewed replacement validated against the staged state ships in the same transaction; affected units join the diff and the revision guards
-    - a check run returns the field-level diff with referring routes, bound dossiers and affected units; apply is bound to that diff's hash, the snapshot and each touched record's revision
+    - a reviewed rebase shortcut exists only when every moved route is screened, evidence-free, analysis-free and outside every comparison, and only material_checksums moves; it replays basis plus new provenance without echoing unchanged assessments, and every other case keeps the full replacement
+    - a check run returns the field-level diff with referring routes, bound dossiers, affected units and referring collection entries; apply is bound to that diff's hash, the snapshot and each touched record's revision
     - explicitly approved; one transaction and one receipt cover the revision
   detour.create:
     handler: detour_create
