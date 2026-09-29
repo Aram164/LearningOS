@@ -227,7 +227,10 @@ class MigrationPlan:
         }
 
 
-class _UniqueKeyLoader(yaml.SafeLoader):
+_SafeLoader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
+
+class _UniqueKeyLoader(_SafeLoader):
     """PyYAML loader which refuses silent duplicate-key replacement."""
 
 

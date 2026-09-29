@@ -88,7 +88,10 @@ class ReviewResolution:
     routes: tuple[RouteRow, ...]
 
 
-class _UniqueKeyLoader(yaml.SafeLoader):
+_SafeLoader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
+
+class _UniqueKeyLoader(_SafeLoader):
     """Load a review ledger without silently overwriting duplicate keys."""
 
 

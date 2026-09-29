@@ -90,7 +90,10 @@ def _digest(value: object) -> str:
         _canonical(value).encode("utf-8")).hexdigest()
 
 
-class _NoDupLoader(yaml.SafeLoader):
+_SafeLoader = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
+
+
+class _NoDupLoader(_SafeLoader):
     """YAML loader that refuses repeated mapping keys during decoding."""
 
 
