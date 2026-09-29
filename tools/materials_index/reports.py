@@ -38,7 +38,7 @@ def build_files_listing(roots) -> str:
 
 
 def build_readme(modules_by_domain, library_local_by_domain, online_by_domain,
-                 missing_by_domain, roots_by_name, nlocal, n_online, n_missing,
+                 missing_by_domain, roots_by_display, nlocal, n_online, n_missing,
                  ncontent, nsupport, total):
     lines = [
         "# Materials — catalogue",
@@ -67,13 +67,14 @@ def build_readme(modules_by_domain, library_local_by_domain, online_by_domain,
             lines.append(f"  - {m['title']} — MISSING URL{typ}")
 
     for dom in ordered_display_domains(modules_by_domain, library_local_by_domain,
-                                       online_by_domain, missing_by_domain):
+                                       online_by_domain, missing_by_domain,
+                                       roots_by_display):
         mods = modules_by_domain.get(dom, {})
         lib = library_local_by_domain.get(dom, [])
         onl = online_by_domain.get(dom, [])
         mis = missing_by_domain.get(dom, [])
-        phys = roots_by_name.get(dom)
-        loose = render_unregistered(phys)[1] if phys is not None else 0
+        loose = sum(render_unregistered(node)[1]
+                    for node in roots_by_display.get(dom, []))
         if not (mods or lib or onl or mis or loose):
             continue
         label, hint = DOMAIN_LABELS.get(dom, (dom, ""))

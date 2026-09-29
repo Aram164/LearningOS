@@ -127,7 +127,9 @@ list to also update.
      `make inventory`. The same call may replace a stale evaluation with its
      explicit final form. It never changes identity or intake-owned fields,
      never replaces a held different material, and never rewrites a curated
-     collection's `why` (workflow 6b stays a separate edit).
+     collection's `why` (workflow 6b stays a separate edit). When the attach
+     moves an approved dossier's material basis, the check names the affected
+     units and the apply must carry their reviewed replacement dossiers.
 3. **List it (optional):** if it belongs in a curated per-domain list, add an
    entry to the matching `sources/collections/<name>.yaml` (workflow 6b).
 4. **Verify:** `python tools/validate.py --compact` then `python tools/generate.py`.

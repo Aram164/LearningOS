@@ -11,11 +11,15 @@ create/correct allowlist is refused with the field named.
 existing record: it attaches verified local material (live bytes checked
 against both the request hash and the materials manifest) and optionally
 replaces a stale evaluation. Identity and intake-owned fields stay with
-intake; replacement of a held material is refused outright.
+intake; replacement of a held material is refused outright. Routes without
+their own vault_path inherit the record's material, so an attach can move a
+dossier's basis: affected approved dossiers must ship reviewed replacements,
+validated against the staged state, in the same transaction.
 """
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import re
@@ -28,6 +32,12 @@ import yaml
 
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.loader import load_repo
+from learning_os.material_synthesis import (
+    _COMPARED_BASIS_FIELDS,
+    MaterialSynthesisError,
+    current_unit_material_basis,
+    validate_unit_material_synthesis,
+)
 from learning_os.materials_resolution import (
     MATERIAL_SCHEME,
     material_uri_authority,
@@ -85,7 +95,10 @@ SUBJECT_PARTITIONS = frozenset(PARTITION_FOR_GROUP.values())
 # replacement for a stale judgment. Identity and every intake-owned field stay
 # with `source.intake.record`; `material_sha256` is request evidence and is
 # never stored on the record (the materials manifest owns hashes).
-REVISE_FIELDS = frozenset({"id", "material", "material_sha256", "evaluations"})
+# `material_syntheses` carries reviewed replacement dossiers for exactly the
+# units whose approved dossier basis the new material moves.
+REVISE_FIELDS = frozenset({"id", "material", "material_sha256", "evaluations",
+                           "material_syntheses"})
 INTAKE_OWNED_FIELDS = (CREATE_FIELDS | CORRECT_FIELDS) - {"action", "id"}
 _SHA256_HEX = re.compile(r"^[0-9a-f]{64}$")
 
@@ -536,12 +549,20 @@ def _resolve_revise_material(root: Path, repo, uri: str,
                              sid: str) -> tuple[str, str, int]:
     """Resolve a requested material URI to (manifest key, live sha256, size).
 
-    Mirrors the validator's id-first, physical-second resolution
-    (rules/materials._physical_key): a folder-level reference has no single
-    hashable byte string, so only one concrete file is attachable.
+    Resolution follows the runtime exactly (materials_resolution.
+    material_location): id-form URIs through ``repo.materials_root`` — the
+    .flat/ alias farm when it exists — with no physical-form fallback, so a
+    link the learner could not open is refused here instead of recorded. A
+    folder-level reference has no single hashable byte string, so only one
+    concrete file is attachable.
     """
-    if material_uri_authority(uri) is None:
+    authority = material_uri_authority(uri)
+    if authority is None:
         raise WriteRefused(f"{sid}: '{uri}' is not a safe material:// URI")
+    if authority != sid:
+        raise WriteRefused(
+            f"{sid}: material URI authority '{authority}' must equal the source id"
+        )
     payload = str(uri)[len(MATERIAL_SCHEME):]
     physical = repo.learningos_root / "materials"
     if physical.is_symlink() or not physical.is_dir():
@@ -549,31 +570,41 @@ def _resolve_revise_material(root: Path, repo, uri: str,
             f"{sid}: materials tree not mounted at {physical} — attach needs "
             "the live bytes, not just the URI"
         )
-    for base in (repo.materials_root, physical):
-        try:
-            resolved = resolve_symlinks_inside(physical, base / payload)
-            relative = resolved.relative_to(physical)
-        except (OSError, PathBoundaryError, ValueError):
-            continue
-        if resolved.is_dir():
-            raise WriteRefused(
-                f"{sid}: '{uri}' must resolve to one file, not a directory"
-            )
-        if not resolved.is_file():
-            continue
-        digest = sha256_file(resolved)
-        live = digest[len("sha256:"):] if digest.startswith("sha256:") else digest
-        return relative.as_posix(), live, resolved.stat().st_size
-    raise WriteRefused(
-        f"{sid}: '{uri}' does not resolve to a file in the materials tree"
-    )
+    try:
+        resolved = resolve_symlinks_inside(
+            physical, repo.materials_root / payload, strict=False)
+        relative = resolved.relative_to(physical)
+    except (OSError, PathBoundaryError, ValueError):
+        raise WriteRefused(
+            f"{sid}: '{uri}' does not resolve to a file in the materials tree"
+        ) from None
+    if resolved.is_dir():
+        raise WriteRefused(
+            f"{sid}: '{uri}' must resolve to one file, not a directory"
+        )
+    if not resolved.is_file():
+        raise WriteRefused(
+            f"{sid}: '{uri}' does not resolve to a file in the materials tree"
+        )
+    digest = sha256_file(resolved)
+    live = digest[len("sha256:"):] if digest.startswith("sha256:") else digest
+    return relative.as_posix(), live, resolved.stat().st_size
+
+
+def _read_dossier_status(path: Path, sid: str, uid: str):
+    try:
+        data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError) as exc:
+        raise WriteRefused(f"{sid}: cannot read the dossier for '{uid}': {exc}") from exc
+    if not isinstance(data, dict):
+        raise WriteRefused(f"{sid}: dossier for '{uid}' is not a mapping")
+    return data.get("status")
 
 
 def _referring_routes_and_dossiers(repo, sid: str) -> dict:
-    """Every route naming this source, and every unit among them carrying an
-    approved material dossier. Evidence for the reviewer: this operation
-    changes no route, so a listed dossier cannot go silently stale through it —
-    but a replacement would, which is why replacement is refused outright."""
+    """Every route naming this source, and every unit among them carrying a
+    material dossier file. Evidence for the reviewer; the basis comparison in
+    `_plan_revise` decides which of these the new material actually moves."""
     routes = []
     for mid in sorted(repo.module_source_maps or {}):
         entries = (repo.module_source_maps[mid] or {}).get("sources") or []
@@ -672,6 +703,76 @@ def _plan_revise(root: Path, item: Any) -> dict:
             fields[field] = {"before": old, "after": new}
     if not fields:
         raise WriteRefused(f"{sid}: no source-record changes")
+    refers = _referring_routes_and_dossiers(repo, sid)
+    # Routes without their own vault_path inherit this record's material, so an
+    # attach can move a dossier's basis without touching any route (SaD L04).
+    # Freshness is therefore computed against the PROPOSED record; every unit
+    # whose approved basis moves must ship a reviewed replacement validated
+    # against that staged state, in this same transaction.
+    affected: list[str] = []
+    replacements: dict[str, dict] = {}
+    if "material" in fields:
+        syntheses = item.get("material_syntheses", [])
+        if not isinstance(syntheses, list):
+            raise WriteRefused(f"{sid}: 'material_syntheses' must be a list")
+        requested: dict[str, dict] = {}
+        for position, entry in enumerate(syntheses):
+            where = f"material_syntheses[{position}]"
+            if not isinstance(entry, dict) or set(entry) != {"unit_id", "dossier"}:
+                raise WriteRefused(f"{where} needs exactly unit_id and dossier")
+            uid, dossier = entry["unit_id"], entry["dossier"]
+            if not isinstance(uid, str) or not isinstance(dossier, dict):
+                raise WriteRefused(f"{where} needs a unit id and a dossier mapping")
+            if uid in requested:
+                raise WriteRefused(f"{where} replaces '{uid}' twice")
+            requested[uid] = dossier
+        staged = copy.copy(repo)
+        staged.sources = {**repo.sources, sid: record}
+        required: list[str] = []
+        for uid in refers["dossiers"]:
+            unit = (repo.units or {}).get(uid)
+            if unit is None or getattr(unit, "path", None) is None:
+                raise WriteRefused(f"{sid}: unit '{uid}' is not registered")
+            try:
+                live_basis = current_unit_material_basis(root, uid, repo=repo, cache={})
+                staged_basis = current_unit_material_basis(root, uid, repo=staged, cache={})
+            except MaterialSynthesisError as exc:
+                raise WriteRefused(
+                    f"{sid}: cannot establish the dossier basis for '{uid}': {exc}"
+                ) from exc
+            if any(live_basis[field] != staged_basis[field]
+                   for field in _COMPARED_BASIS_FIELDS):
+                affected.append(uid)
+                dossier_path = unit.path.parent / "material-synthesis.yaml"
+                if _read_dossier_status(dossier_path, sid, uid) == "approved":
+                    required.append(uid)
+        for uid in requested:
+            if uid not in required:
+                raise WriteRefused(
+                    f"{sid}: replacement dossier for '{uid}' is not needed "
+                    "(no approved dossier basis changes there)"
+                )
+        for uid in required:
+            if uid not in requested:
+                raise WriteRefused(
+                    f"{sid}: attaching material changes the approved dossier "
+                    f"basis for '{uid}'; supply a reviewed replacement dossier "
+                    "under 'material_syntheses'"
+                )
+        dossier_writes: dict[Path, str] = {}
+        for uid in sorted(requested):
+            try:
+                validate_unit_material_synthesis(root, uid, requested[uid], repo=staged)
+            except MaterialSynthesisError as exc:
+                raise WriteRefused(
+                    f"{sid}: replacement dossier for '{uid}' is not valid: {exc}"
+                ) from exc
+            unit = repo.units[uid]
+            dossier_writes[unit.path.parent / "material-synthesis.yaml"] = _dump_yaml(
+                requested[uid])
+        replacements = {uid: requested[uid] for uid in sorted(requested)}
+    elif "material_syntheses" in item:
+        raise WriteRefused(f"{sid}: 'material_syntheses' without a 'material' change")
     origin = repo.source_origins.get(sid)
     destination = Path(origin) if origin else root / "sources" / "sources.yaml"
     try:
@@ -688,14 +789,20 @@ def _plan_revise(root: Path, item: Any) -> dict:
     except ValueError:
         filename = destination.name
     diff = [{"id": sid, "partition": filename, "fields": fields,
-             "refers": _referring_routes_and_dossiers(repo, sid)}]
+             "refers": refers, "affected_units": affected,
+             "replacements": replacements}]
     canonical = json.dumps(diff, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    writes = {destination: _dump_yaml({"sources": merged})}
+    writes.update(dossier_writes if "material" in fields else {})
+    unit_ids = sorted(replacements)
+    revisions = {sid: artifact_revision(root, sid)}
+    revisions.update({uid: artifact_revision(root, uid) for uid in unit_ids})
     return {
         "diff": diff,
         "diff_sha256": "sha256:" + hashlib.sha256(canonical).hexdigest(),
-        "writes": {destination: _dump_yaml({"sources": merged})},
-        "artifact_ids": [sid],
-        "expected_revisions": {sid: artifact_revision(root, sid)},
+        "writes": writes,
+        "artifact_ids": [sid] + unit_ids,
+        "expected_revisions": revisions,
     }
 
 

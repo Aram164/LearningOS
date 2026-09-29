@@ -42,12 +42,12 @@ def _material_tree(root: Path, data: bytes = PDF) -> Path:
     return target
 
 
-def _manifest(root: Path, sha: str | None = None, size: int | None = None):
+def _manifest(root: Path, sha: str | None = None, size: int | None = None,
+              rel: str = "mathematics/demo/demo.pdf"):
     write_yaml(root / "records" / "materials-manifest.yaml", {
         "schema_version": 1, "captured": "2026-09-29", "totals": {},
-        "files": {"mathematics/demo/demo.pdf":
-                  {"size": len(PDF) if size is None else size,
-                   "sha256": _sha() if sha is None else sha}},
+        "files": {rel: {"size": len(PDF) if size is None else size,
+                        "sha256": _sha() if sha is None else sha}},
     })
 
 
@@ -110,40 +110,133 @@ def test_check_evaluations_only_replace(mini_repo, tmp_path):
     assert set(row["fields"]) == {"evaluations"}
 
 
+def _dossier_unit(root: Path) -> Path:
+    """A unit whose route inherits the source record's material, L04-style.
+
+    The route carries no vault_path of its own, so attaching `material` to
+    the source flips its checksum from a route-text hash to file bytes —
+    exactly the SaD L04 Grinstead mechanics.
+    """
+    from repo_builders import _sliced_route, add_curriculum
+
+    add_curriculum(root)
+    module_dir = root / "curriculum" / "modules" / "module-demo"
+    unit_dir = module_dir / "units" / "unit-demo-l01"
+    unit_path = unit_dir / "unit.yaml"
+    unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
+    unit["knowledge_map"] = {
+        "summary": "Expected value connects outcomes to probability weights.",
+        "nodes": [
+            {"id": "knowledge-demo-outcomes", "title": "Outcomes",
+             "summary": "A variable maps outcomes to values."},
+            {"id": "knowledge-demo-expectation", "title": "Expectation",
+             "summary": "Expectation is a probability-weighted average."},
+        ],
+    }
+    write_yaml(unit_path, unit)
+    route = _sliced_route("route-demo-l01-book", "Chapter 1")
+    source_map_path = module_dir / "source-map.yaml"
+    source_map = yaml.safe_load(source_map_path.read_text(encoding="utf-8"))
+    source_map["sources"][0]["unit_routes"] = [route]
+    write_yaml(source_map_path, source_map)
+    return unit_dir
+
+
+def _write_dossier(unit_dir: Path, dossier: dict):
+    (unit_dir / "material-synthesis.yaml").write_text(
+        yaml.safe_dump(dossier, sort_keys=False), encoding="utf-8")
+
+
+def _staged_basis(root: Path, sid: str, record: dict):
+    import copy as _copy
+
+    from learning_os.loader import load_repo
+    from learning_os.material_synthesis import current_unit_material_basis
+
+    repo = load_repo(root)
+    staged = _copy.copy(repo)
+    staged.sources = {**repo.sources, sid: record}
+    return current_unit_material_basis(root, "unit-demo-l01", repo=staged)
+
+
 def test_check_lists_referring_routes_and_bound_dossiers(mini_repo, tmp_path):
     _with_material_tree(mini_repo)
-    module_dir = mini_repo / "curriculum" / "modules" / "module-demo"
-    unit_dir = module_dir / "units" / "unit-demo-l01"
-    unit_dir.mkdir(parents=True)
-    write_yaml(module_dir / "module.yaml", {
-        "id": "module-demo", "title": "Demo Module", "status": "active",
-    })
-    write_yaml(unit_dir / "unit.yaml", {
-        "id": "unit-demo-l01", "module_id": "module-demo", "title": "L01",
-        "order": 1, "knowledge_map": {"nodes": []}, "source_selections": [],
-    })
-    write_yaml(mini_repo / "curriculum" / "modules" / "module-demo"
-               / "source-map.yaml", {
-        "type": "module-source-map", "module_id": "module-demo",
-        "sources": [{"source_id": "source-demo-book", "role": "spine",
-                     "why": "demo join", "priority": 0,
-                     "unit_routes": [{"id": "route-demo-l01-book",
-                                      "unit_id": "unit-demo-l01",
-                                      "title": "Demo chapter",
-                                      "format": "book",
-                                      "angle": "The demo angle.",
-                                      "covers": [], "depth": "survey",
-                                      "scope": "current"}]}],
-    })
-    (unit_dir / "material-synthesis.yaml").write_text(
-        yaml.safe_dump({"id": "dossier-demo", "unit_id": "unit-demo-l01"}),
-        encoding="utf-8")
+    unit_dir = _dossier_unit(mini_repo)
+    _write_dossier(unit_dir, {"id": "dossier-demo", "unit_id": "unit-demo-l01"})
     body = _check(mini_repo, _package(tmp_path, _revise()))
     (row,) = body["diff"]
     assert row["refers"]["routes"] == [{
         "module_id": "module-demo", "unit_id": "unit-demo-l01",
         "route_id": "route-demo-l01-book"}]
     assert row["refers"]["dossiers"] == ["unit-demo-l01"]
+    # The draft dossier's basis moves, but nothing approved stales: no
+    # replacement is required and the check still passes.
+    assert row["affected_units"] == ["unit-demo-l01"]
+    assert row["replacements"] == {}
+
+
+def _staged_replacement(root: Path) -> dict:
+    """The reviewed replacement: live dossier shape, staged basis + checksums."""
+    import copy as _copy
+
+    from repo_builders import _valid_dossier
+
+    record = _copy.deepcopy(
+        yaml.safe_load((root / "sources" / "sources.yaml")
+                       .read_text(encoding="utf-8"))["sources"][0])
+    record["material"] = URI
+    record["evaluations"] = EVALS
+    staged = _staged_basis(root, "source-demo-book", record)
+    replacement = _valid_dossier(root, "route-demo-l01-book", "Chapter 1")
+    replacement["basis"] = {**staged, "ai_provenance":
+                            replacement["basis"]["ai_provenance"]}
+    staged_sum = staged["material_checksums"]["route-demo-l01-book"]
+    for assessment in replacement["route_assessments"]:
+        for evidence in assessment.get("evidence", []):
+            evidence["checksum"] = staged_sum
+    return replacement
+
+
+def test_attach_refuses_when_an_approved_dossier_basis_moves(mini_repo, tmp_path):
+    from repo_builders import _valid_dossier
+
+    _with_material_tree(mini_repo)
+    unit_dir = _dossier_unit(mini_repo)
+    _write_dossier(unit_dir, _valid_dossier(
+        mini_repo, "route-demo-l01-book", "Chapter 1"))
+    _refuses(mini_repo, _package(tmp_path, _revise()),
+             "approved dossier basis for 'unit-demo-l01'")
+    # A replacement validated against the STAGED basis (not live) is accepted.
+    replacement = _staged_replacement(mini_repo)
+    body = _check(mini_repo, _package(tmp_path, _revise(
+        material_syntheses=[{"unit_id": "unit-demo-l01",
+                             "dossier": replacement}])))
+    (row,) = body["diff"]
+    assert row["affected_units"] == ["unit-demo-l01"]
+    assert row["replacements"] == {"unit-demo-l01": replacement}
+    assert body["artifact_ids"] == ["source-demo-book", "unit-demo-l01"]
+    assert set(body["expected_revisions"]) == {
+        "source-demo-book", "unit-demo-l01"}
+
+
+def test_attach_refuses_a_live_basis_replacement(mini_repo, tmp_path):
+    from repo_builders import _valid_dossier
+
+    _with_material_tree(mini_repo)
+    unit_dir = _dossier_unit(mini_repo)
+    _write_dossier(unit_dir, _valid_dossier(
+        mini_repo, "route-demo-l01-book", "Chapter 1"))
+    live = _valid_dossier(mini_repo, "route-demo-l01-book", "Chapter 1")
+    _refuses(mini_repo, _package(tmp_path, _revise(
+        material_syntheses=[{"unit_id": "unit-demo-l01", "dossier": live}])),
+        "basis is stale")
+
+
+def test_attach_refuses_an_unneeded_replacement(mini_repo, tmp_path):
+    _with_material_tree(mini_repo)
+    _refuses(mini_repo, _package(tmp_path, _revise(
+        material_syntheses=[{"unit_id": "unit-demo-l01", "dossier": {}}])),
+        "is not needed")
 
 
 def test_revise_rejects_unknown_and_malformed_ids(mini_repo, tmp_path):
@@ -220,6 +313,45 @@ def test_revise_refuses_unresolvable_and_directory_material(mini_repo, tmp_path)
         "must resolve to one file")
 
 
+def test_revise_requires_the_uri_authority_to_match_the_source(mini_repo, tmp_path):
+    _with_material_tree(mini_repo)
+    flat = mini_repo.parent / "materials" / ".flat"
+    (flat / "source-other").symlink_to("../mathematics/demo")
+    record = _revise(material="material://source-other/demo.pdf")
+    _refuses(mini_repo, _package(tmp_path, record), "must equal the source id")
+    checked = _check(mini_repo, _package(tmp_path, _revise()))
+    proc = approved_v2_call(
+        mini_repo, capability="source.record.revise",
+        payload={"record": record,
+                 "expected_diff_sha256": checked["diff_sha256"]},
+        artifact_ids=["source-demo-book"], idempotency_key="revise-cross-auth")
+    outer = json.loads(proc.stdout)["error"]["message"]
+    assert "must equal the source id" in json.loads(outer)["error"]
+
+
+def test_revise_refuses_a_missing_flat_alias(mini_repo, tmp_path):
+    materials = mini_repo.parent / "materials"
+    (materials / "source-demo-book").mkdir(parents=True)
+    (materials / "source-demo-book" / "demo.pdf").write_bytes(PDF)
+    (materials / ".flat").mkdir()
+    (materials / ".flat" / "source-other").symlink_to("../source-demo-book")
+    _manifest(mini_repo, rel="source-demo-book/demo.pdf")
+    # The physical id-path file exists, but the runtime resolves through
+    # .flat/ where this source has no alias: the learner could not open it.
+    _refuses(mini_repo, _package(tmp_path, _revise()), "does not resolve to a file")
+    _material_tree(mini_repo)
+    _manifest(mini_repo)
+    checked = _check(mini_repo, _package(tmp_path, _revise()))
+    (mini_repo.parent / "materials" / ".flat" / "source-demo-book").unlink()
+    proc = approved_v2_call(
+        mini_repo, capability="source.record.revise",
+        payload={"record": _revise(),
+                 "expected_diff_sha256": checked["diff_sha256"]},
+        artifact_ids=["source-demo-book"], idempotency_key="revise-no-alias")
+    outer = json.loads(proc.stdout)["error"]["message"]
+    assert "does not resolve to a file" in json.loads(outer)["error"]
+
+
 def test_revise_never_silently_replaces_a_different_material(mini_repo, tmp_path):
     _with_material_tree(mini_repo)
     path = mini_repo / "sources" / "sources.yaml"
@@ -252,6 +384,39 @@ def test_apply_attaches_and_replaces_atomically(mini_repo, tmp_path):
         (mini_repo / "operations" / "transactions" / "revisions.yaml")
         .read_text(encoding="utf-8"))
     assert revisions["revisions"]["source-demo-book"] == 1
+
+
+def test_apply_writes_source_and_replacement_atomically(mini_repo, tmp_path):
+    from repo_builders import _valid_dossier
+
+    _with_material_tree(mini_repo)
+    unit_dir = _dossier_unit(mini_repo)
+    _write_dossier(unit_dir, _valid_dossier(
+        mini_repo, "route-demo-l01-book", "Chapter 1"))
+    replacement = _staged_replacement(mini_repo)
+    record = _revise(material_syntheses=[{"unit_id": "unit-demo-l01",
+                                          "dossier": replacement}])
+    checked = _check(mini_repo, _package(tmp_path, record))
+    proc = approved_v2_call(
+        mini_repo, capability="source.record.revise",
+        payload={"record": record,
+                 "expected_diff_sha256": checked["diff_sha256"]},
+        artifact_ids=["source-demo-book", "unit-demo-l01"],
+        idempotency_key="revise-apply-dossier")
+    assert proc.returncode == 0, proc.stderr + proc.stdout
+    body = json.loads(proc.stdout)
+    assert body["ok"] is True
+    stored = yaml.safe_load(
+        (mini_repo / "sources" / "sources.yaml").read_text(encoding="utf-8"))
+    assert stored["sources"][0]["material"] == URI
+    written = yaml.safe_load(
+        (unit_dir / "material-synthesis.yaml").read_text(encoding="utf-8"))
+    assert written == replacement
+    revisions = yaml.safe_load(
+        (mini_repo / "operations" / "transactions" / "revisions.yaml")
+        .read_text(encoding="utf-8"))
+    assert revisions["revisions"]["source-demo-book"] == 1
+    assert revisions["revisions"]["unit-demo-l01"] == 1
 
 
 def test_apply_needs_its_check_diff(mini_repo, tmp_path):
