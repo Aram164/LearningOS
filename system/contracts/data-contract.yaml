@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 43
-schema_fingerprint: sha256:63b6d51afbcab934ae393b1e44d5615b697097c8170b7e47b6eea5f4973a97c2
+contract_version: 44
+schema_fingerprint: sha256:d57499e16fb7a011c10e5c2f099349aae142ab6428a222f63482be0f597f108a
 record_schemas: 35
 history:
 - version: 1
@@ -330,5 +330,10 @@ history:
 - version: 43
   adopted: '2026-09-29'
   note: useful_sections forbids locator/use keys via propertyNames
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 44
+  adopted: '2026-09-29'
+  note: useful_sections bans empty and blank keys
   migration: null
   fixture: tests/fixtures/formats/v40/

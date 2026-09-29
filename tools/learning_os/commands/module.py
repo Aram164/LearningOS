@@ -1753,7 +1753,9 @@ def _assemble_compact_module_revision(repo, module_id: str,
     if problems:
         return None, problems
     source_map = copy.deepcopy(repo.module_source_maps.get(module_id) or {})
-    joins = revision.get("source_joins") or []
+    joins = revision.get("source_joins")
+    if joins is None:
+        joins = []
     if not isinstance(joins, list):
         return None, ["source_joins must be a list"]
     joined_ids = {entry.get("source_id") for entry in source_map.get("sources", [])

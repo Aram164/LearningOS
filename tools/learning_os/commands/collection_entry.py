@@ -198,6 +198,9 @@ def _plan_revise(root: Path, item: Any) -> dict:
             "repair the collection before revising one line"
         )
     try:
+        # Universal newlines: a CRLF shelf normalizes to LF here, like
+        # every governed write in the system — content and layout survive,
+        # endings follow the writer.
         raw = origin.read_text(encoding="utf-8")
     except OSError as exc:
         raise WriteRefused(f"cannot re-read {origin}: {exc}") from exc

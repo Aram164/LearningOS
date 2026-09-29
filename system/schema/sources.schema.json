@@ -191,11 +191,13 @@
                   "type": "array",
                   "items": {
                     "type": "object",
-                    "description": "One section-to-note pair per object: the key names the section (e.g. '§4.1, physical PDF pp. 141–149'), the value is the reading note. The projection renders every pair as an independent section, so 'locator'/'use' pseudo-fields are rejected — min/maxProperties alone would still admit a single {'locator': ...} entry, hence the propertyNames ban below.",
+                    "description": "One section-to-note pair per object: the key names the section (e.g. '§4.1, physical PDF pp. 141–149'), the value is the reading note. The projection renders every pair as an independent section, so 'locator'/'use' pseudo-fields are rejected — min/maxProperties alone would still admit a single {'locator': ...} entry, hence the propertyNames ban below, which also refuses empty and all-whitespace keys that would project as empty sections.",
                     "minProperties": 1,
                     "maxProperties": 1,
                     "propertyNames": {
-                      "not": {"enum": ["locator", "use"]}
+                      "not": {"enum": ["locator", "use"]},
+                      "minLength": 1,
+                      "pattern": ".*\\S.*"
                     },
                     "additionalProperties": {
                       "type": "string"

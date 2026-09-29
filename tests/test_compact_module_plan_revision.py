@@ -333,6 +333,18 @@ def test_source_join_refuses_unknown_and_repeated_sources(mini_repo, tmp_path):
     _refuses_join(mini_repo, tmp_path, twice, "same source twice")
 
 
+def test_source_join_refuses_falsy_non_list_joins(mini_repo, tmp_path):
+    """A mistyped `source_joins: {}` must fail loudly, not join nothing
+    while the revision succeeds."""
+    _two_units(mini_repo)
+    _register_paper(mini_repo)
+    for bad in ({}, "", 0, False):
+        revision = _join_revision(mini_repo)
+        revision["source_joins"] = bad
+        _refuses_join(mini_repo, tmp_path, revision,
+                      "source_joins must be a list")
+
+
 def test_source_join_validates_the_join_record(mini_repo, tmp_path):
     _two_units(mini_repo)
     _register_paper(mini_repo)

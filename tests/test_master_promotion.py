@@ -381,6 +381,20 @@ def test_promotion_refuses_pseudo_field_section_keys(mini_repo):
     assert mini_repo / "sources/registry/future-demo.yaml" in plan.writes
 
 
+def test_promotion_refuses_empty_and_blank_section_keys(mini_repo):
+    """An empty section name would project as an empty section; the schema
+    bans empty and all-whitespace keys for every writer at once."""
+    _existing_package, _comparison = _setup(mini_repo)
+    for bad_key in ("", "   "):
+        package = _new_source_package(mini_repo)
+        package["adopted_sources"][0]["canonical_source"]["evaluations"] = [{
+            "concepts": ["concept-expected-value"],
+            "useful_sections": [{bad_key: "A note with no section."}],
+        }]
+        with pytest.raises(MastersPlanningError, match="useful_sections"):
+            prepare_master_promotion(mini_repo, package, now=NOW)
+
+
 def test_promotion_refuses_stale_verification_and_unresolved_mapping(mini_repo):
     package, _comparison = _setup(mini_repo)
     package["verification"]["as_of"] = (NOW.date() - dt.timedelta(days=31)).isoformat()

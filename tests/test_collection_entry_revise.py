@@ -247,6 +247,54 @@ def test_apply_replaces_only_the_target_scalar(mini_repo, tmp_path):
         "      entry.\n")
 
 
+def test_apply_normalizes_crlf_endings(mini_repo, tmp_path):
+    target = mini_repo / "sources" / "collections" / "demo-bookshelf.yaml"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_bytes(
+        b"title: Demo\r\nentries:\r\n"
+        b"  - source: source-demo-book\r\n    group: demo-group\r\n"
+        b"    why: Old line.\r\n")
+    _ensure_paper(mini_repo)
+    record = _revise()
+    checked = _check(mini_repo, _package(tmp_path, record))
+    proc = approved_v2_call(
+        mini_repo, capability="collection.entry.revise",
+        payload={"record": record,
+                 "expected_diff_sha256": checked["diff_sha256"]},
+        artifact_ids=["collection:demo-bookshelf"],
+        idempotency_key="collection-crlf")
+    assert proc.returncode == 0, proc.stderr + proc.stdout
+    # Content and layout survive; endings follow the system's universal
+    # governed-write normalization, like every other capability.
+    assert target.read_bytes() == (
+        b"title: Demo\nentries:\n"
+        b"  - source: source-demo-book\n    group: demo-group\n"
+        b"    why: " + NEW_WHY.encode("utf-8") + b"\n")
+
+
+def test_apply_preserves_a_missing_final_newline(mini_repo, tmp_path):
+    target = mini_repo / "sources" / "collections" / "demo-bookshelf.yaml"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_text(
+        "title: Demo\nentries:\n"
+        "  - source: source-demo-book\n    group: demo-group\n"
+        "    why: Old line.", encoding="utf-8")
+    _ensure_paper(mini_repo)
+    record = _revise(why="New line.")
+    checked = _check(mini_repo, _package(tmp_path, record))
+    proc = approved_v2_call(
+        mini_repo, capability="collection.entry.revise",
+        payload={"record": record,
+                 "expected_diff_sha256": checked["diff_sha256"]},
+        artifact_ids=["collection:demo-bookshelf"],
+        idempotency_key="collection-noeol")
+    assert proc.returncode == 0, proc.stderr + proc.stdout
+    raw = target.read_bytes()
+    assert not raw.endswith(b"\n")
+    assert yaml.safe_load(raw.decode("utf-8"))["entries"][0]["why"] == \
+        "New line."
+
+
 def test_apply_needs_its_check_diff(mini_repo, tmp_path):
     _shelf(mini_repo)
     checked = _check(mini_repo, _package(tmp_path, _revise()))
