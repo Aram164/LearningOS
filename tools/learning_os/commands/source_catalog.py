@@ -931,8 +931,20 @@ def _plan_revise(root: Path, item: Any) -> dict:
                     f"{sid}: replacement dossier for '{uid}' is not valid: {exc}"
                 ) from exc
             unit = repo.units[uid]
-            dossier_writes[unit.path.parent / "material-synthesis.yaml"] = _dump_yaml(
-                requested[uid])
+            dossier_path = unit.path.parent / "material-synthesis.yaml"
+            live_provenance = (
+                _read_unit_dossier(dossier_path, sid, uid).get("basis") or {}
+            ).get("ai_provenance")
+            submitted = (requested[uid].get("basis") or {}).get("ai_provenance")
+            if submitted == live_provenance:
+                raise WriteRefused(
+                    f"{sid}: replacement dossier for '{uid}' reuses the live "
+                    "dossier's provenance unchanged — stamp the reviewed "
+                    "replacement with its own request_id/delivery_id "
+                    "(provenance must identify the event that produced the "
+                    "new basis, as the publish gate requires)"
+                )
+            dossier_writes[dossier_path] = _dump_yaml(requested[uid])
         replacements = {uid: requested[uid] for uid in sorted(requested)}
         for uid in sorted(requested_rebases):
             entry = requested_rebases[uid]
@@ -943,6 +955,15 @@ def _plan_revise(root: Path, item: Any) -> dict:
                 raise WriteRefused(
                     f"{sid}: dossier for '{uid}' changed since the rebase was "
                     "prepared; re-run --check"
+                )
+            live_provenance = (live_dossier.get("basis") or {}).get("ai_provenance")
+            if entry["provenance"] == live_provenance:
+                raise WriteRefused(
+                    f"{sid}: rebase for '{uid}' reuses the live dossier's "
+                    "provenance unchanged — stamp the rebase with its own "
+                    "request_id/delivery_id (provenance must identify the "
+                    "event that produced the new basis, as the publish gate "
+                    "requires)"
                 )
             by_route = {row["route_id"]: row
                         for row in live_dossier.get("route_assessments", []) or []
