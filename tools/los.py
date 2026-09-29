@@ -119,7 +119,10 @@ from learning_os.commands.review import (  # noqa: E402
 from learning_os.commands.runtime import cmd_runtime_session  # noqa: E402
 from learning_os.commands.semantic import cmd_semantic  # noqa: E402
 from learning_os.commands.source import cmd_source_feedback  # noqa: E402
-from learning_os.commands.source_catalog import cmd_source_intake_record  # noqa: E402
+from learning_os.commands.source_catalog import (  # noqa: E402
+    cmd_source_intake_record,
+    cmd_source_record_revise,
+)
 from learning_os.commands.stage import (  # noqa: E402
     cmd_stage_attach,
     cmd_stage_note,
@@ -1016,6 +1019,22 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_source_intake_record)
+
+    p = sub.add_parser(
+        "source-revise",
+        help="attach verified local material to one existing source",
+    )
+    record = p.add_mutually_exclusive_group(required=True)
+    record.add_argument("--file")
+    record.add_argument("--record", type=json_object)
+    p.add_argument("--check", action="store_true",
+                   help="report the field-level diff without writing")
+    p.add_argument("--expected-diff-sha256", default=None, type=sha256_value,
+                   help="diff hash from a check run; apply refuses anything else")
+    p.add_argument("--approve", action="store_true")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_source_record_revise)
 
     p = sub.add_parser("detour-create", help="record a prerequisite detour with a return stage")
     p.add_argument("unit_id")

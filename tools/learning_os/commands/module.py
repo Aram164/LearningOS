@@ -1726,13 +1726,22 @@ _COMPACT_STAGE_FIELDS = frozenset({
     "scope_triage", "resources", "runtime_target", "runtime_review",
 })
 
+# Mirrors module-source-map.schema.json's role enum; the assembler refuses an
+# unknown role with the join named instead of failing the staged schema check.
+_SOURCE_MAP_ROLES = frozenset({
+    "course-material", "spine", "first-exposure", "intuition", "derivation",
+    "implementation", "practice", "exam-preparation", "optional-depth",
+    "reference", "candidate",
+})
+_COMPACT_JOIN_FIELDS = frozenset({"source_id", "role", "why", "priority", "when"})
+
 
 def _assemble_compact_module_revision(repo, module_id: str,
                                       revision: dict) -> tuple[dict | None, list[str]]:
     """Expand reviewed unit deltas against one live snapshot for the existing import gate."""
     problems: list[str] = []
-    allowed = {"module_id", "plan_contract", "unit_revisions", "claim_evidence",
-               "acknowledgments"}
+    allowed = {"module_id", "plan_contract", "unit_revisions", "source_joins",
+               "claim_evidence", "acknowledgments"}
     if set(revision) - allowed:
         problems.append(f"compact module revision has unknown fields: {sorted(set(revision) - allowed)}")
     if module_id not in repo.modules:
@@ -1744,6 +1753,58 @@ def _assemble_compact_module_revision(repo, module_id: str,
     if problems:
         return None, problems
     source_map = copy.deepcopy(repo.module_source_maps.get(module_id) or {})
+    joins = revision.get("source_joins") or []
+    if not isinstance(joins, list):
+        return None, ["source_joins must be a list"]
+    joined_ids = {entry.get("source_id") for entry in source_map.get("sources", [])
+                  if isinstance(entry, dict)}
+    seen_joins: set[str] = set()
+    for position, join in enumerate(joins):
+        where = f"source_joins[{position}]"
+        if not isinstance(join, dict):
+            problems.append(f"{where} must be a mapping")
+            continue
+        unknown = set(join) - _COMPACT_JOIN_FIELDS
+        if unknown:
+            problems.append(f"{where} has unknown fields: {sorted(unknown)}")
+            continue
+        sid = join.get("source_id")
+        if not isinstance(sid, str):
+            problems.append(f"{where} needs a source_id")
+            continue
+        if sid not in repo.sources:
+            problems.append(f"{where} joins a source that is not registered: {sid}")
+            continue
+        if sid in joined_ids:
+            problems.append(f"{where} joins a source already joined to {module_id}: {sid}")
+            continue
+        if sid in seen_joins:
+            problems.append(f"{where} joins the same source twice: {sid}")
+            continue
+        role = join.get("role")
+        if role not in _SOURCE_MAP_ROLES:
+            problems.append(f"{where} role {role!r} is not a source-map role")
+            continue
+        why = join.get("why")
+        if not isinstance(why, str) or not why.strip():
+            problems.append(f"{where} needs a non-empty 'why'")
+            continue
+        priority = join.get("priority")
+        if not isinstance(priority, int) or isinstance(priority, bool) or priority < 0:
+            problems.append(f"{where} 'priority' must be an integer >= 0")
+            continue
+        when = join.get("when")
+        if when is not None and not isinstance(when, str):
+            problems.append(f"{where} 'when' must be a string")
+            continue
+        seen_joins.add(sid)
+        entry: dict = {"source_id": sid, "role": role, "why": why,
+                       "priority": priority, "unit_routes": []}
+        if when is not None:
+            entry["when"] = when
+        source_map.setdefault("sources", []).append(entry)
+    if problems:
+        return None, problems
     entries: list[dict] = []
     syntheses: list[dict] = []
     seen_units: set[str] = set()

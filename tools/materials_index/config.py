@@ -46,10 +46,14 @@ TYPE_LABEL = {"lecture": "Lecture", "book": "Book", "course": "Course",
 
 
 DOMAIN_LABELS = {
-    "ML": ("Machine Learning", "AML + AMLS course materials (slides, exams, papers, notes)"),
-    "Math": ("Mathematics", "Analysis (M2.1) + Statistik & Datenanalyse — Skript, slides, drill"),
-    "CS-Theory": ("CS Theory", "Algo 2 / AlgoDat II — practice exams"),
-    "Programming": ("Programming", "Python, Rust, Git working references"),
+    "ML": ("Machine Learning", "Machine-learning course materials, papers, notes"),
+    "Math": ("Mathematics", "Mathematics — analysis, probability & statistics, drill"),
+    "CS-Theory": ("CS Theory", "Algorithms & CS theory — structures, complexity, practice exams"),
+    "Programming": ("Programming", "Software & languages — Python, Rust, Git, engineering refs"),
+    "Optimization": ("Optimization", "Convex, combinatorial, learning theory"),
+    "ML-Systems": ("ML Systems", "Scale, compilation, performance, data for ML"),
+    "Data-Systems": ("Data Systems", "Databases, distributed, provenance, reliability"),
+    "Method-Admin": ("Method & Admin", "Study method, degree admin, StuPO / regulations"),
     "Books": ("Books — reference library", "Textbooks grouped by field (analysis, stats, ml, algorithms)"),
     "Degree": ("Degree admin", "StuPO / regulations"),
     "Foundations": ("Foundations archive", "Undergrad / general reference — NOT registered sources, browse only"),
@@ -59,7 +63,34 @@ DOMAIN_LABELS = {
 }
 
 
-DOMAIN_ORDER = ["ML", "Math", "CS-Theory", "Programming", "Books", "Degree", "Foundations"]
+# Physical walk order: the current ADR-007 subject folders first, then the
+# retained legacy tops (most are dissolved; Foundations/ still exists).
+DOMAIN_ORDER = ["mathematics", "optimization", "machine-learning",
+                "ml-systems", "data-systems", "algorithms", "software",
+                "method-admin", "ML", "Math", "CS-Theory", "Programming",
+                "Books", "Degree", "Foundations"]
+
+
+# Physical top-level folder -> canonical display domain. ADR-007 dissolved the
+# era/format/module-code folders into lowercase subject folders; both spellings
+# map here so local and online sources share one section per subject. Books/
+# keeps its own subfolder routing in tree.classify_source_node.
+SUBJECT_DISPLAY_DOMAIN = {
+    "mathematics": "Math",
+    "optimization": "Optimization",
+    "machine-learning": "ML",
+    "ml-systems": "ML-Systems",
+    "data-systems": "Data-Systems",
+    "algorithms": "CS-Theory",
+    "software": "Programming",
+    "method-admin": "Method-Admin",
+    "ML": "ML",
+    "Math": "Math",
+    "CS-Theory": "CS-Theory",
+    "Programming": "Programming",
+    "Degree": "Degree",
+    "Foundations": "Foundations",
+}
 
 
 EXTRA_ONLINE_ORDER = ["DegreePlanning", "Online"]
@@ -109,5 +140,29 @@ TYPE_GROUP_ORDER = ["Books", "Courses & lectures", "Videos", "Papers", "Docs",
                     "Software", "Websites", "Other"]
 
 
-SOURCES_DOMAIN_ORDER = ["ML", "Math", "CS-Theory", "Programming", "Degree",
-                        "Foundations", "DegreePlanning", "Online"]
+SOURCES_DOMAIN_ORDER = ["ML", "Math", "CS-Theory", "Programming",
+                        "Optimization", "ML-Systems", "Data-Systems",
+                        "Method-Admin", "Degree", "Foundations",
+                        "DegreePlanning", "Online"]
+
+
+# Collections whose entries carry their own subject in `group:` map per entry
+# instead of per file, so one multi-subject bank never misfiles a subject.
+COLLECTION_GROUP_DOMAIN = {
+    "exam-practice-banks": {"sad": "Math", "analysis": "Math", "aml": "ML",
+                            "amls": "ML", "algo2": "CS-Theory"},
+}
+
+
+def ordered_display_domains(*maps) -> list[str]:
+    """Render order: canonical domains first, then any extra domains present.
+
+    The extras clause is the structural guarantee behind "every local source
+    renders once": a future subject folder can never again be counted in the
+    summary while missing from every section.
+    """
+    present: set[str] = set()
+    for mapping in maps:
+        present.update(mapping)
+    extras = sorted(d for d in present if d not in SOURCES_DOMAIN_ORDER)
+    return list(SOURCES_DOMAIN_ORDER) + extras

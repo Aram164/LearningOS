@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from datetime import datetime
 
-from .config import DOMAIN_LABELS, HTML_ENABLED, MATERIALS, SOURCES_DOMAIN_ORDER
+from .config import DOMAIN_LABELS, HTML_ENABLED, MATERIALS, ordered_display_domains
 from .page import PAGE
 from .registry import (
     domain_for_online,
@@ -90,7 +90,8 @@ def main():
 
     # Sources view: each domain = Modules + Library-by-type (Books re-homed)
     src_sections = []
-    for dom in SOURCES_DOMAIN_ORDER:
+    for dom in ordered_display_domains(modules_by_domain, library_local_by_domain,
+                                       online_by_domain, missing_by_domain):
         html_sec = render_domain_sources(
             dom, roots_by_name.get(dom),
             modules_by_domain.get(dom, {}),

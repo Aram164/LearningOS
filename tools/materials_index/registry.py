@@ -8,6 +8,7 @@ import yaml
 
 from .config import (
     COLLECTION_DOMAIN,
+    COLLECTION_GROUP_DOMAIN,
     LOW_PRIORITY_COLLECTIONS,
     MATERIALS,
     ONLINE_DOMAIN_OVERRIDE,
@@ -93,7 +94,8 @@ def load_collection_domains() -> dict[str, str]:
                    key=lambda p: (p.stem in LOW_PRIORITY_COLLECTIONS, p.stem))
     for cf in files:
         dom = COLLECTION_DOMAIN.get(cf.stem)
-        if not dom:
+        group_domains = COLLECTION_GROUP_DOMAIN.get(cf.stem, {})
+        if not dom and not group_domains:
             continue
         try:
             data = yaml.safe_load(cf.read_text(encoding="utf-8")) or {}
@@ -101,8 +103,12 @@ def load_collection_domains() -> dict[str, str]:
             continue
         for e in (data.get("entries") or data.get("sources") or []):
             sid = (e.get("source") or e.get("id")) if isinstance(e, dict) else e
-            if sid:
-                out.setdefault(sid, dom)
+            if not sid:
+                continue
+            group = e.get("group") if isinstance(e, dict) else None
+            resolved = group_domains.get(group, dom)
+            if resolved:
+                out.setdefault(sid, resolved)
     return out
 
 

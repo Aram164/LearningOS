@@ -492,6 +492,18 @@ commands:
     - source identity is stable; evaluations, topics, material and every route, selection, note, feedback and observation are unchanged
     - a check run returns the field-level diff; apply is bound to that diff's hash, the snapshot and each record's revision
     - explicitly approved; one transaction and one receipt cover the batch
+  source.record.revise:
+    handler: source_record_revise
+    cli_command: source-revise
+    writes:
+    - sources/sources.yaml
+    - sources/registry/**
+    invariants:
+    - attaches verified local material to one existing source, with an optional explicit evaluation replacement
+    - source identity and intake-owned fields are stable; topics, routes, selections, notes, feedback and observations are unchanged
+    - live bytes must match both the request hash and the materials manifest; a held different material is never silently replaced
+    - a check run returns the field-level diff with referring routes and bound dossiers; apply is bound to that diff's hash, the snapshot and the record's revision
+    - explicitly approved; one transaction and one receipt cover the revision
   detour.create:
     handler: detour_create
     cli_command: detour-create

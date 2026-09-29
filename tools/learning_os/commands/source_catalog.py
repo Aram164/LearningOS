@@ -6,6 +6,12 @@ metadata-only source from intake evidence or corrects intake-owned fields of
 an existing record. Evaluations, topics, material, routes, selections, notes,
 feedback and observations are never touched here; anything outside the
 create/correct allowlist is refused with the field named.
+
+`source.record.revise` (`los source-revise`) is the companion writer for one
+existing record: it attaches verified local material (live bytes checked
+against both the request hash and the materials manifest) and optionally
+replaces a stale evaluation. Identity and intake-owned fields stay with
+intake; replacement of a held material is refused outright.
 """
 
 from __future__ import annotations
@@ -13,6 +19,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import unicodedata
 from pathlib import Path
 from typing import Any
 from urllib.parse import urlsplit
@@ -21,6 +28,12 @@ import yaml
 
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.loader import load_repo
+from learning_os.materials_resolution import (
+    MATERIAL_SCHEME,
+    material_uri_authority,
+    sha256_file,
+)
+from learning_os.pathing import PathBoundaryError, resolve_symlinks_inside
 from learning_os.revisions import artifact_revision
 from learning_os.rules.common import CANONICAL_TREES
 
@@ -66,6 +79,15 @@ PARTITION_FOR_GROUP = {
     "thematic-group-method-admin": "method-admin.yaml",
 }
 SUBJECT_PARTITIONS = frozenset(PARTITION_FOR_GROUP.values())
+
+# What a source-record revision may carry. `material` attaches verified local
+# bytes to a source that holds none; `evaluations` is an explicit full
+# replacement for a stale judgment. Identity and every intake-owned field stay
+# with `source.intake.record`; `material_sha256` is request evidence and is
+# never stored on the record (the materials manifest owns hashes).
+REVISE_FIELDS = frozenset({"id", "material", "material_sha256", "evaluations"})
+INTAKE_OWNED_FIELDS = (CREATE_FIELDS | CORRECT_FIELDS) - {"action", "id"}
+_SHA256_HEX = re.compile(r"^[0-9a-f]{64}$")
 
 
 def _input_record(args, label: str) -> dict:
@@ -488,6 +510,237 @@ def cmd_source_intake_record(args) -> int:
             root,
             plan["writes"],
             capability="source.intake.record",
+            expected_revisions=_expected_revisions_from_args(args),
+            artifact_ids=tuple(plan["artifact_ids"]),
+        )
+    print(json.dumps({
+        "ok": code == 0, **confirmation,
+        **({"errors": [str(error) for error in errors]} if errors else {}),
+    }, indent=2, ensure_ascii=False))
+    return code
+
+
+def _refuse_outside_revise_allowlist(item: dict, sid: str) -> None:
+    for field in sorted(set(item) - REVISE_FIELDS):
+        if field in INTAKE_OWNED_FIELDS:
+            raise WriteRefused(f"{sid}: field '{field}' is owned by intake")
+        raise WriteRefused(
+            f"{sid}: field '{field}' is outside the revise allowlist "
+            "(only 'material' and 'evaluations' are revised here; identity, "
+            "intake-owned fields, topics, routes, selections, notes, feedback "
+            "and observations are never written through revision)"
+        )
+
+
+def _resolve_revise_material(root: Path, repo, uri: str,
+                             sid: str) -> tuple[str, str, int]:
+    """Resolve a requested material URI to (manifest key, live sha256, size).
+
+    Mirrors the validator's id-first, physical-second resolution
+    (rules/materials._physical_key): a folder-level reference has no single
+    hashable byte string, so only one concrete file is attachable.
+    """
+    if material_uri_authority(uri) is None:
+        raise WriteRefused(f"{sid}: '{uri}' is not a safe material:// URI")
+    payload = str(uri)[len(MATERIAL_SCHEME):]
+    physical = repo.learningos_root / "materials"
+    if physical.is_symlink() or not physical.is_dir():
+        raise WriteRefused(
+            f"{sid}: materials tree not mounted at {physical} — attach needs "
+            "the live bytes, not just the URI"
+        )
+    for base in (repo.materials_root, physical):
+        try:
+            resolved = resolve_symlinks_inside(physical, base / payload)
+            relative = resolved.relative_to(physical)
+        except (OSError, PathBoundaryError, ValueError):
+            continue
+        if resolved.is_dir():
+            raise WriteRefused(
+                f"{sid}: '{uri}' must resolve to one file, not a directory"
+            )
+        if not resolved.is_file():
+            continue
+        digest = sha256_file(resolved)
+        live = digest[len("sha256:"):] if digest.startswith("sha256:") else digest
+        return relative.as_posix(), live, resolved.stat().st_size
+    raise WriteRefused(
+        f"{sid}: '{uri}' does not resolve to a file in the materials tree"
+    )
+
+
+def _referring_routes_and_dossiers(repo, sid: str) -> dict:
+    """Every route naming this source, and every unit among them carrying an
+    approved material dossier. Evidence for the reviewer: this operation
+    changes no route, so a listed dossier cannot go silently stale through it —
+    but a replacement would, which is why replacement is refused outright."""
+    routes = []
+    for mid in sorted(repo.module_source_maps or {}):
+        entries = (repo.module_source_maps[mid] or {}).get("sources") or []
+        for entry in entries:
+            if not isinstance(entry, dict) or entry.get("source_id") != sid:
+                continue
+            for route in entry.get("unit_routes") or []:
+                if isinstance(route, dict) and route.get("id"):
+                    routes.append({
+                        "module_id": mid, "unit_id": route.get("unit_id"),
+                        "route_id": route.get("id"),
+                    })
+    routes.sort(key=lambda row: (row["module_id"], row["unit_id"] or "",
+                                 row["route_id"]))
+    dossiers = set()
+    for row in routes:
+        unit = (repo.units or {}).get(row["unit_id"])
+        path = getattr(unit, "path", None)
+        if path is not None and (path.parent / "material-synthesis.yaml").is_file():
+            dossiers.add(row["unit_id"])
+    return {"routes": routes, "dossiers": sorted(dossiers)}
+
+
+def _plan_revise(root: Path, item: Any) -> dict:
+    """Validate one source-record revision; return its diff, writes, guards."""
+    if not isinstance(item, dict):
+        raise WriteRefused("revise payload must be an object")
+    sid = item.get("id")
+    if not isinstance(sid, str) or not SOURCE_ID.match(sid):
+        raise WriteRefused("'id' must match source-<slug>")
+    repo = load_repo(root)
+    known = repo.sources.get(sid)
+    if known is None:
+        raise WriteRefused(f"{sid}: revising an unknown source")
+    _refuse_outside_revise_allowlist(item, sid)
+    record = dict(known)
+    if "material" in item:
+        uri = item["material"]
+        if not isinstance(uri, str) or not uri.strip():
+            raise WriteRefused(f"{sid}: 'material' must be a non-empty string")
+        if uri != known.get("material"):
+            if known.get("material") is not None:
+                raise WriteRefused(
+                    f"{sid}: already holds {known['material']} — replacing a "
+                    "material binding is not supported; it would orphan every "
+                    "route and dossier resolved against those bytes"
+                )
+            want = item.get("material_sha256")
+            if not isinstance(want, str) or not _SHA256_HEX.match(want):
+                raise WriteRefused(
+                    f"{sid}: a material change needs 'material_sha256' as "
+                    "64 lowercase hex"
+                )
+            key, live, _size = _resolve_revise_material(root, repo, uri, sid)
+            manifest_path = root / "records" / "materials-manifest.yaml"
+            try:
+                manifest = yaml.safe_load(
+                    manifest_path.read_text(encoding="utf-8")) or {}
+            except (OSError, yaml.YAMLError):
+                manifest = {}
+            recorded = manifest.get("files") or {}
+            want_row = None
+            for row_key, row in recorded.items():
+                if (isinstance(row_key, str) and isinstance(row, dict)
+                        and unicodedata.normalize("NFC", row_key)
+                        == unicodedata.normalize("NFC", key)):
+                    want_row = row
+                    break
+            if want_row is None:
+                raise WriteRefused(
+                    f"{sid}: '{key}' is absent from the materials manifest — "
+                    "run `make inventory` before attaching it"
+                )
+            if want_row.get("sha256") != live:
+                raise WriteRefused(
+                    f"{sid}: live bytes of '{key}' do not match the manifest "
+                    "entry — rebuild it (`make inventory`) before attaching"
+                )
+            if live != want:
+                raise WriteRefused(
+                    f"{sid}: live bytes of '{key}' do not match the request hash"
+                )
+            record["material"] = uri
+    elif "material_sha256" in item:
+        raise WriteRefused(f"{sid}: 'material_sha256' without a 'material' change")
+    if "evaluations" in item:
+        record["evaluations"] = item["evaluations"]
+    try:
+        validate_contract(root, "sources.schema.json", {"sources": [record]})
+    except ValueError as exc:
+        raise WriteRefused(f"{sid}: {exc}") from exc
+    fields = {}
+    for field in ("material", "evaluations"):
+        old, new = known.get(field), record.get(field)
+        if old != new:
+            fields[field] = {"before": old, "after": new}
+    if not fields:
+        raise WriteRefused(f"{sid}: no source-record changes")
+    origin = repo.source_origins.get(sid)
+    destination = Path(origin) if origin else root / "sources" / "sources.yaml"
+    try:
+        current = yaml.safe_load(destination.read_text(encoding="utf-8"))
+    except (OSError, yaml.YAMLError) as exc:
+        raise WriteRefused(f"cannot re-read {destination}: {exc}") from exc
+    if not isinstance(current, dict) or not isinstance(current.get("sources"), list):
+        raise WriteRefused(f"{destination} is not a source registry file")
+    merged = [record if (isinstance(entry, dict) and entry.get("id") == sid)
+              else entry for entry in current["sources"]]
+    try:
+        filename = destination.resolve().relative_to(
+            (root / "sources").resolve()).as_posix()
+    except ValueError:
+        filename = destination.name
+    diff = [{"id": sid, "partition": filename, "fields": fields,
+             "refers": _referring_routes_and_dossiers(repo, sid)}]
+    canonical = json.dumps(diff, sort_keys=True, ensure_ascii=False).encode("utf-8")
+    return {
+        "diff": diff,
+        "diff_sha256": "sha256:" + hashlib.sha256(canonical).hexdigest(),
+        "writes": {destination: _dump_yaml({"sources": merged})},
+        "artifact_ids": [sid],
+        "expected_revisions": {sid: artifact_revision(root, sid)},
+    }
+
+
+def cmd_source_record_revise(args) -> int:
+    """Attach verified local material to one existing source, atomically."""
+    root = _root(args)
+    try:
+        data = _input_record(args, "revise record")
+        plan = _plan_revise(root, data)
+    except WriteRefused as exc:
+        print(json.dumps({"ok": False, "error": str(exc)}))
+        return 2
+    if getattr(args, "check", False):
+        print(json.dumps({
+            "ok": True, "check": True, "records": len(plan["diff"]),
+            "diff": plan["diff"], "diff_sha256": plan["diff_sha256"],
+            "expected_revisions": plan["expected_revisions"],
+            "artifact_ids": plan["artifact_ids"],
+        }, indent=2, ensure_ascii=False))
+        return 0
+    denied = _refuse_without_approval(args, "source revision")
+    if denied is not None:
+        return denied
+    _require_gateway_v2()
+    with _operator_lock(root):
+        try:
+            plan = _plan_revise(root, data)
+        except WriteRefused as exc:
+            print(json.dumps({"ok": False, "error": str(exc)}))
+            return 2
+        expected_diff = getattr(args, "expected_diff_sha256", None)
+        if not expected_diff:
+            print(json.dumps({"ok": False, "error":
+                              "apply needs --expected-diff-sha256 from a check run"}))
+            return 2
+        if expected_diff != plan["diff_sha256"]:
+            print(json.dumps({"ok": False, "error":
+                              "revision diff changed since check; re-run --check"}))
+            return 2
+        if not _expected_ok(root, args.expected_snapshot):
+            return 3
+        code, errors, confirmation = _write_transaction(
+            root,
+            plan["writes"],
+            capability="source.record.revise",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=tuple(plan["artifact_ids"]),
         )

@@ -121,6 +121,13 @@ list to also update.
      materials topic tree via the PLACEMENT map + `tools/build_materials_tree.py`,
      record `material://<source-id>/…`;
    - campus-license or paid: leave URL-only until Aram pulls/decides.
+   - already registered but URL-only: once verified local bytes exist, attach
+     them with `source.record.revise` (`los source-revise --check`, then the
+     reviewed apply) — exact `material://` URI plus the live byte hash, after
+     `make inventory`. The same call may replace a stale evaluation with its
+     explicit final form. It never changes identity or intake-owned fields,
+     never replaces a held different material, and never rewrites a curated
+     collection's `why` (workflow 6b stays a separate edit).
 3. **List it (optional):** if it belongs in a curated per-domain list, add an
    entry to the matching `sources/collections/<name>.yaml` (workflow 6b).
 4. **Verify:** `python tools/validate.py --compact` then `python tools/generate.py`.

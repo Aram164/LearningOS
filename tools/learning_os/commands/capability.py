@@ -52,6 +52,7 @@ _CONTENT_BOUND_V2 = frozenset({
     "masters-planning.catalog.update",
     "masters-planning.comparison.publish",
     "source.intake.record",
+    "source.record.revise",
     "unit.material-synthesis.publish",
     "unit.plan.revise",
 })
