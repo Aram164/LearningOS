@@ -10,11 +10,14 @@ targets, no-ops, foreign fields, and empty or multi-line replacements.
 
 from __future__ import annotations
 
+import copy
 import hashlib
 import json
 import re
 from pathlib import Path
 from typing import Any
+
+import yaml
 
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.loader import load_repo
@@ -22,7 +25,6 @@ from learning_os.revisions import artifact_revision
 
 from .support import (
     WriteRefused,
-    _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
     _operator_lock,
@@ -64,21 +66,88 @@ def _refuse_without_approval(args, label: str) -> int | None:
     return 2
 
 
-def _split_leading_comment(text: str) -> tuple[str, str]:
-    """Leading `#`/blank-line header vs. the YAML body.
+def _splice_why(raw: str, stem: str, position: int, sid: str,
+                old: str, why: str) -> str:
+    """Replace only the targeted entry's `why` scalar in the original text.
 
-    Every collection file carries at most a header comment (verified across
-    sources/collections/); splitting it out keeps the migration note intact
-    across the PyYAML round-trip, which cannot preserve comments itself.
+    A full YAML round-trip rewrites layout everywhere (81 to 91 lines on the
+    math bookshelf); the revision owns one scalar, so only its source span is
+    replaced. Indentation, the `why:` key, quoting elsewhere, sibling entries,
+    header comments and blank lines survive byte-identical. Anything the
+    splice cannot prove safe — flow style, anchors, duplicate keys, a raw
+    text that no longer carries the loaded line — is refused, never guessed.
     """
-    lines = text.splitlines(keepends=True)
-    prefix: list[str] = []
-    for line in lines:
-        if line.startswith("#") or not line.strip():
-            prefix.append(line)
-        else:
-            break
-    return "".join(prefix), "".join(lines[len(prefix):])
+    try:
+        root = yaml.compose(raw)
+    except yaml.YAMLError as exc:
+        raise WriteRefused(f"collection '{stem}' does not parse: {exc}") from exc
+    if not isinstance(root, yaml.MappingNode):
+        raise WriteRefused(f"collection '{stem}' is not a mapping")
+    entries_node = None
+    for key, value in root.value:
+        if isinstance(key, yaml.ScalarNode) and key.value == "entries":
+            entries_node = value
+    if not isinstance(entries_node, yaml.SequenceNode):
+        raise WriteRefused(f"collection '{stem}' has no entries list")
+    if position >= len(entries_node.value):
+        raise WriteRefused(
+            f"collection '{stem}' changed under the revision — re-run --check")
+    entry_node = entries_node.value[position]
+    if not isinstance(entry_node, yaml.MappingNode):
+        raise WriteRefused(
+            f"collection '{stem}' entry {position} is not a mapping")
+    fields = [(k.value, v) for k, v in entry_node.value
+              if isinstance(k, yaml.ScalarNode)]
+    if sum(1 for name, _ in fields if name == "why") != 1:
+        raise WriteRefused(
+            f"collection '{stem}' entry {position} has no single 'why' scalar")
+    sources = [v.value for name, v in fields
+               if name == "source" and isinstance(v, yaml.ScalarNode)]
+    if sources != [sid]:
+        raise WriteRefused(
+            f"collection '{stem}' changed under the revision — re-run --check")
+    value = next(v for name, v in fields if name == "why")
+    if not isinstance(value, yaml.ScalarNode) or value.value != old:
+        raise WriteRefused(
+            f"collection '{stem}' no longer carries the checked line — "
+            "re-run --check")
+    lines = raw.splitlines(keepends=True)
+    start, end = value.start_mark, value.end_mark
+    span_start = start.line
+    span_end = end.line if end.column > 0 else end.line - 1
+    # The prefix (indent, dash, `why:` key, spacing) is preserved verbatim;
+    # flow style cannot reach here with a clean suffix (a closing `}`/`]`
+    # always trails the scalar) and is refused below.
+    prefix = lines[span_start][:start.column]
+    comment = ""
+    if value.style in (">", "|"):
+        rest = lines[span_start][start.column:]
+        match = re.match(r"^[|>][+-]?[0-9]?[ \t]*(#[^\n]*)?\n?$", rest)
+        if match is None:
+            raise WriteRefused(
+                f"collection '{stem}' entry {position} carries an exotic "
+                "block header — refusing the splice")
+        comment = match.group(1) or ""
+    else:
+        rest = lines[span_end][end.column:]
+        match = re.match(r"^[ \t]*(#[^\n]*)?\n?$", rest)
+        if match is None:
+            raise WriteRefused(
+                f"collection '{stem}' entry {position} carries trailing "
+                "content after its 'why' — refusing the splice")
+        comment = match.group(1) or ""
+    dumped = yaml.safe_dump({"why": why}, width=4096, allow_unicode=True,
+                            sort_keys=False)
+    if not dumped.startswith("why: "):
+        raise WriteRefused("could not serialize the replacement line")
+    scalar_lines = dumped[len("why: "):].rstrip("\n").split("\n")
+    replacement = [prefix + scalar_lines[0] + "\n"]
+    replacement.extend(line + "\n" for line in scalar_lines[1:])
+    if comment:
+        replacement[-1] = replacement[-1][:-1] + "  " + comment + "\n"
+    if span_end == len(lines) - 1 and not lines[span_end].endswith("\n"):
+        replacement[-1] = replacement[-1][:-1]
+    return "".join(lines[:span_start] + replacement + lines[span_end + 1:])
 
 
 def _plan_revise(root: Path, item: Any) -> dict:
@@ -123,19 +192,33 @@ def _plan_revise(root: Path, item: Any) -> dict:
         raise WriteRefused(
             f"collection '{stem}' entry for {sid} already carries that line: no change"
         )
-    revised = [dict(entry) if isinstance(entry, dict) else entry
-               for entry in entries]
-    revised[position] = {**revised[position], "why": why}
-    staged = {**doc, "entries": revised}
-    try:
-        validate_contract(root, "collections.schema.json", staged)
-    except ValueError as exc:
-        raise WriteRefused(f"{stem}: {exc}") from exc
+    if not isinstance(old, str):
+        raise WriteRefused(
+            f"collection '{stem}' entry for {sid} carries a non-string 'why' — "
+            "repair the collection before revising one line"
+        )
     try:
         raw = origin.read_text(encoding="utf-8")
     except OSError as exc:
         raise WriteRefused(f"cannot re-read {origin}: {exc}") from exc
-    header, _body = _split_leading_comment(raw)
+    spliced = _splice_why(raw, stem, position, sid, old, why)
+    try:
+        before_text = yaml.safe_load(raw)
+        parsed = yaml.safe_load(spliced)
+    except yaml.YAMLError as exc:
+        raise WriteRefused(f"collection '{stem}' splice failed to parse: {exc}") from exc
+    # Differential proof, same parser both sides: the splice replaced exactly
+    # the targeted scalar and nothing else. (Comparing against the loaded doc
+    # instead would false-refuse on loader normalization such as dates.)
+    expected = copy.deepcopy(before_text)
+    expected["entries"][position]["why"] = why
+    if parsed != expected:
+        raise WriteRefused(
+            f"collection '{stem}' splice verification failed — refusing the write")
+    try:
+        validate_contract(root, "collections.schema.json", parsed)
+    except ValueError as exc:
+        raise WriteRefused(f"{stem}: {exc}") from exc
     artifact = f"collection:{stem}"
     diff = [{"collection": stem, "source": sid,
              "group": entries[position].get("group"),
@@ -144,7 +227,7 @@ def _plan_revise(root: Path, item: Any) -> dict:
     return {
         "diff": diff,
         "diff_sha256": "sha256:" + hashlib.sha256(canonical).hexdigest(),
-        "writes": {origin: header + _dump_yaml(staged)},
+        "writes": {origin: spliced},
         "artifact_ids": [artifact],
         "expected_revisions": {artifact: artifact_revision(root, artifact)},
     }
