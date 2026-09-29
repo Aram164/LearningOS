@@ -172,7 +172,10 @@ def project_collections(repo: Repo, revision: Revision) -> list[dict]:
         records.append({
             "id": name,
             "type": "topic-pack" if collection_kind == "topic-pack" else "collection",
-            "revision": revision(name, doc),
+            # The revise capability ledgers edits under "collection:<stem>";
+            # the bare stem never appears there, so reading it froze every
+            # shelf at revision 0 no matter how often it was corrected.
+            "revision": revision(f"collection:{name}", doc),
             "collection_kind": collection_kind,
             "title": doc.get("title", name),
             "path": f"sources/collections/{name}.yaml",

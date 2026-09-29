@@ -575,6 +575,19 @@ def test_revise_rejects_locator_use_sections_with_the_pair_form(mini_repo, tmp_p
              "useful_sections")
 
 
+def test_malformed_evaluations_refuse_cleanly(mini_repo, tmp_path):
+    _with_material_tree(mini_repo)
+    proc = run_los(mini_repo, "source-revise", "--file",
+                   str(_package(tmp_path, _revise(evaluations=42))), "--check")
+    assert proc.returncode == 2, proc.stdout + proc.stderr
+    body = json.loads(proc.stdout)
+    assert body["ok"] is False
+    assert "evaluations" in body["error"]
+    bad_sections = _revise()
+    bad_sections["evaluations"] = [{"useful_sections": 42}]
+    _refuses(mini_repo, _package(tmp_path, bad_sections), "useful_sections")
+
+
 def test_revise_with_no_changes_is_refused(mini_repo, tmp_path):
     path = mini_repo / "sources" / "sources.yaml"
     data = yaml.safe_load(path.read_text(encoding="utf-8"))

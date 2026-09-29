@@ -785,9 +785,14 @@ def _plan_revise(root: Path, item: Any) -> dict:
     elif "material_sha256" in item:
         raise WriteRefused(f"{sid}: 'material_sha256' without a 'material' change")
     if "evaluations" in item:
-        for position, evaluation in enumerate(item["evaluations"] or []):
+        evaluations = item["evaluations"]
+        if not isinstance(evaluations, list):
+            raise WriteRefused(f"{sid}: 'evaluations' must be a list of evaluation mappings")
+        for position, evaluation in enumerate(evaluations):
             sections = (evaluation.get("useful_sections")
                         if isinstance(evaluation, dict) else None)
+            if sections is not None and not isinstance(sections, list):
+                raise WriteRefused(f"{sid}: evaluations[{position}].useful_sections must be a list")
             for entry in sections or []:
                 if isinstance(entry, dict) and ({"locator", "use"} & set(entry)):
                     raise WriteRefused(
