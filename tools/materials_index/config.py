@@ -154,6 +154,15 @@ COLLECTION_GROUP_DOMAIN = {
 }
 
 
+def display_for_top(top: str) -> str:
+    """Display domain for a physical top-level folder.
+
+    Unknown tops keep their own name so the render loops' extras clause shows
+    them instead of dropping them silently.
+    """
+    return SUBJECT_DISPLAY_DOMAIN.get(top, top)
+
+
 def ordered_display_domains(*maps) -> list[str]:
     """Render order: canonical domains first, then any extra domains present.
 

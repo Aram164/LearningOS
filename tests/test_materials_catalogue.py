@@ -26,9 +26,18 @@ def _node(rel: str, title: str = "Grinstead and Snell"):
     }
 
 
-def _readme(lib=None, onl=None, mis=None, nlocal=1):
-    return build_readme({}, lib or {}, onl or {}, mis or {}, {},
+def _readme(lib=None, onl=None, mis=None, nlocal=1, roots=None):
+    return build_readme({}, lib or {}, onl or {}, mis or {}, roots or {},
                         nlocal, 0, 0, 1, 0, 1024)
+
+
+def _root(name, files=(), dirs=()):
+    return {"name": name, "rel": name, "title": None, "ctx": None,
+            "source_id": None, "archived": False,
+            "files": [{"name": f, "rel": f"{name}/{f}",
+                       "ext": f.rsplit(".", 1)[-1].lower(), "size": 10,
+                       "support": False, "archived": False} for f in files],
+            "dirs": list(dirs), "nfiles": len(files), "nsupport": 0, "bytes": 0}
 
 
 # ------------------------------------------------------- domain coherence
@@ -70,6 +79,18 @@ def test_unknown_top_renders_under_own_heading_rather_than_vanishing():
     text = _readme(lib={"_unsorted": [_node("_unsorted/stray")]})
     assert "\n## _unsorted" in text
     assert text.count("Grinstead and Snell") == 1
+
+
+def test_loose_files_render_under_the_new_subject_headings():
+    from materials_index.tree import group_roots_by_display
+    roots = [_root("mathematics", files=["stray.pdf"]),
+             _root("ML", files=["legacy-stray.pdf"])]
+    grouped = group_roots_by_display(roots)
+    assert set(grouped) == {"Math", "ML"}
+    text = _readme(nlocal=0, roots=grouped)
+    math = text.split("\n## Mathematics")[1].split("\n## ")[0]
+    assert "Plus 1 loose/unregistered file(s)" in math
+    assert "\n## Machine Learning" in text
 
 
 def test_readme_has_no_retired_surface_references():

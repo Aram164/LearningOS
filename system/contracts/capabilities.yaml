@@ -498,11 +498,13 @@ commands:
     writes:
     - sources/sources.yaml
     - sources/registry/**
+    - curriculum/modules/**/units/**/material-synthesis.yaml
     invariants:
     - attaches verified local material to one existing source, with an optional explicit evaluation replacement
     - source identity and intake-owned fields are stable; topics, routes, selections, notes, feedback and observations are unchanged
-    - live bytes must match both the request hash and the materials manifest; a held different material is never silently replaced
-    - a check run returns the field-level diff with referring routes and bound dossiers; apply is bound to that diff's hash, the snapshot and the record's revision
+    - live bytes must match both the request hash and the materials manifest; the URI authority must be the source id and resolve through the runtime root; a held different material is never silently replaced
+    - when the attach moves an approved dossier's material basis, a reviewed replacement validated against the staged state ships in the same transaction; affected units join the diff and the revision guards
+    - a check run returns the field-level diff with referring routes, bound dossiers and affected units; apply is bound to that diff's hash, the snapshot and each touched record's revision
     - explicitly approved; one transaction and one receipt cover the revision
   detour.create:
     handler: detour_create

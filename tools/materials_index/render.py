@@ -167,7 +167,7 @@ def render_type_group(group_name, items):
     return render_group(group_name, "".join(body), len(items), "type")
 
 
-def render_domain_sources(name, phys_node, modules, library_local, online_list, missing_list):
+def render_domain_sources(name, phys_nodes, modules, library_local, online_list, missing_list):
     label, hint = DOMAIN_LABELS.get(name, (name, ""))
     body = []
 
@@ -197,10 +197,13 @@ def render_domain_sources(name, phys_node, modules, library_local, online_list, 
 
     # --- loose / unregistered files ---------------------------------------
     nloose = 0
-    if phys_node is not None:
-        unreg_html, nloose = render_unregistered(phys_node)
-        if nloose:
-            body.append(render_group("Other / unregistered files", unreg_html, nloose, "unreg"))
+    unreg_parts = []
+    for phys_node in phys_nodes:
+        unreg_html, sub_n = render_unregistered(phys_node)
+        unreg_parts.append(unreg_html)
+        nloose += sub_n
+    if nloose:
+        body.append(render_group("Other / unregistered files", "".join(unreg_parts), nloose, "unreg"))
 
     if not body:
         return ""
