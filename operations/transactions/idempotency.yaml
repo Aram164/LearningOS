@@ -1150,6 +1150,17 @@ entries:
       module-hu-m2-statistik-analysis: 24
     snapshot_before: sha256:740c9f5ba3cf690f5ebe1104cd8b90b31ad2a4c6c4b0da675c0762a9a9945f9c
     snapshot_after: sha256:326abc52cdc47f526e706b79a5ec0e166e1918f8e1afb2687cbad64a19006171
+  legacy-lock-publish-2026-09-30-r2:
+    request_id: legacy-lock-publish-2026-09-30-r2
+    capability: legacy.archive.lock.publish
+    channel: operator
+    intent_sha256: sha256:084332e39e7c5ee9cd8b9fddd7568d4610149daabcffcf0b4b3c343d8d0418d3
+    transaction_id: transaction-20260930-040908-001
+    receipt_path: operations/transactions/transaction-20260930-040908-001.yaml
+    revisions:
+      legacy-archive-lock: 1
+    snapshot_before: sha256:7d7b4fdcbb23c2d0a8e1724215b5265b8dd7ff30fef8f75ff8ea08e6e6f2c678
+    snapshot_after: sha256:7d7b4fdcbb23c2d0a8e1724215b5265b8dd7ff30fef8f75ff8ea08e6e6f2c678
   m2-exact-locator-20260901-001:
     request_id: request-m2-exact-locator-20260901-001
     capability: module.plan.import

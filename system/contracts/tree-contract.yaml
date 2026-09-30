@@ -124,6 +124,8 @@ directories:
         purpose: applied-migration provenance
       - path: operations/diagnostics
         purpose: disposable diagnostic trace store (gitignored, deletable, never authoritative)
+      - path: operations/legacy
+        purpose: published Legacy archive lock (allowlist-only evidence)
 
   - path: migration
     owner: migration
