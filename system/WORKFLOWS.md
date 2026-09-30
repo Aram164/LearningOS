@@ -820,6 +820,10 @@ gateway envelope; review both, then submit the envelope unchanged.
    text, `material-span UNIT_ID ROUTE_ID --extract` reports the line range
    actually displayed in its bounded excerpt. Cite only the lines inspected;
    a truncated excerpt does not attest to later lines.
+   For a stage placement that narrows its parent route, add
+   `--stage STAGE_ID --resource-index N` using the zero-based resource position
+   from that stage's plan context. Core resolves the canonical placement under
+   the same snapshot guard; callers never submit an arbitrary path or locator.
 2. **Prepare.**
    `note-analysis-prepare --drafts drafts.json --out <dir>` with the
    staging dir outside the repository. Prep validates every draft,

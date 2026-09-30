@@ -12,11 +12,38 @@ from ..materials_resolution import (
     resolve_route_material_files,
     sha256_file,
 )
-from .material import _brief_analysis_refs
+from .material import _brief_analysis_refs, _map_for_unit, _route_entry
 from .reads import _print_stable, _refusal, _snapshot
 from .support import WriteRefused, _operator_lock, _root
 
 MAX_EXCERPT = 6000
+
+
+def _placement_route(repo, unit, source_map, routes, route, args):
+    """Use only a snapshot-bound canonical placement, never caller-supplied paths."""
+    stage_id = getattr(args, "stage_id", None)
+    index = getattr(args, "resource_index", None)
+    if bool(stage_id) != (index is not None):
+        raise WriteRefused("--stage and --resource-index must be supplied together")
+    if not stage_id:
+        return route, ""
+    study_map = _map_for_unit(repo, unit.id)
+    if study_map is None:
+        raise WriteRefused("unit has no stage placement to inspect")
+    stages = [row for row in study_map.data.get("stages", [])
+              if isinstance(row, dict) and row.get("id") == stage_id]
+    if len(stages) != 1 or index < 0 or index >= len(stages[0].get("resources", [])):
+        raise WriteRefused("placement is missing or ambiguous in this unit")
+    uses = _route_entry(routes, study_map, source_map, unit, route["id"])["uses"]
+    if not any(use["stage_id"] == stage_id and use["resource_index"] == index
+               for use in uses):
+        raise WriteRefused("placement is missing or does not belong to this route")
+    resource = stages[0]["resources"][index]
+    if resource.get("source_id") != route.get("source_id"):
+        raise WriteRefused("placement source does not match its route")
+    selected = {**route, **{key: resource[key] for key in ("locator", "vault_path", "url")
+                           if key in resource}}
+    return selected, f" --stage {stage_id} --resource-index {index}"
 
 
 def cmd_material_span(args) -> int:
@@ -31,11 +58,13 @@ def cmd_material_span(args) -> int:
             source_map = repo.module_source_maps.get(unit.module_id)
             if source_map is None:
                 raise WriteRefused("unit has no module source map")
-            matches = [row for row in unit_routes(source_map, unit.module_id, unit.id)
+            routes = unit_routes(source_map, unit.module_id, unit.id)
+            matches = [row for row in routes
                        if row["id"] == args.route_id]
             if len(matches) != 1:
                 raise WriteRefused("route is missing or ambiguous in this unit")
-            route = matches[0]
+            route, placement_flags = _placement_route(
+                repo, unit, source_map, routes, matches[0], args)
             source = repo.sources.get(route.get("source_id"), {})
             projected = project_material_resource(repo, route)
             files = resolve_route_material_files(repo, route)
@@ -49,13 +78,13 @@ def cmd_material_span(args) -> int:
                     "Open the URL explicitly to read it. For local extraction, "
                     "register an authorized local copy as material, run "
                     "make inventory, then rerun material-span "
-                    f"{unit.id} {route['id']} --extract. No remote bytes "
+                    f"{unit.id} {route['id']}{placement_flags} --extract. No remote bytes "
                     "were observed here."
                 )
             elif status == "local-unavailable":
                 next_action = (
                     "Restore the registered local file, run make inventory, "
-                    f"then rerun material-span {unit.id} {route['id']} --extract."
+                    f"then rerun material-span {unit.id} {route['id']}{placement_flags} --extract."
                 )
             analysis = _brief_analysis_refs(root, repo, unit, [route])
             notes = analysis["analysis_notes"]
@@ -105,7 +134,7 @@ def cmd_material_span(args) -> int:
                 "analysis_refs": analysis,
                 "spans": spans,
                 "expansion": None if args.extract else
-                    f"material-span {unit.id} {route['id']} --extract",
+                    f"material-span {unit.id} {route['id']}{placement_flags} --extract",
             })
     except (WriteRefused, OSError, ValueError) as exc:
         return _refusal(exc)

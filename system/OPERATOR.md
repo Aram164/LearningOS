@@ -104,7 +104,10 @@ Decide which read answers the question before reading:
   and revision guards. Reach for the unit `--brief` only for unit
   coverage, source-completeness, or unknown ids.
 - A material question → saved context first (`material-context`), else one
-  exact span (`material-span UNIT_ID ROUTE_ID`); never trawl. With `--unit`,
+  exact span (`material-span UNIT_ID ROUTE_ID`); never trawl. A stage's
+  narrower file or page selection uses `--stage STAGE_ID --resource-index N`
+  (the zero-based canonical resource position); both selectors are required.
+  With `--unit`,
   default results are route-direct only; `--include-related` appends
   same-source notes labelled `related`, and `--material PATH` filters notes
   and assessments to one exact materials file.

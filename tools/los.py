@@ -222,6 +222,10 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("material-span", help="describe one exact route and optionally inspect local content")
     p.add_argument("unit_id")
     p.add_argument("route_id")
+    p.add_argument("--stage", dest="stage_id", default=None,
+                   help="inspect this stage's exact placement; requires --resource-index")
+    p.add_argument("--resource-index", type=int, default=None,
+                   help="zero-based canonical stage resource index; requires --stage")
     p.add_argument("--extract", action="store_true")
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_material_span)
