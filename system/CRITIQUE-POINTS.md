@@ -402,3 +402,22 @@ unchanged; closing them is still his decision.
   classifications are errors. Ancestor role instructions and the sibling UI
   remain separate owners under the perimeter contract; no `../` corpus paths
   or duplicated root instructions were introduced.
+
+### Re-measurement — 2026-09-30 post-lock (operator; points remain open)
+
+Status unchanged on all three points; closing them is Aram's.
+
+- Point 1: `tools/plan_write_audit.py` re-run after the lock commit: 58
+  commits have changed a plan record, 41 carry a transaction receipt (71%),
+  17 do not; 329 receipts on disk. Last measured 2026-08-24 at 26% (5 of
+  19). The gateway path is still optional and its absence is still
+  invisible — only the share has moved.
+- Point 2: `test_checked_in_inventory_uses_the_shared_byte_renderer`
+  re-run after the lock commit: 1 passed. The checked-in inventory still
+  byte-matches the shared renderer. The test runs in the full
+  `make system-check` pytest suite, not in `make check` (which runs only
+  the validator).
+- Point 3: `system/contracts/normative-corpus.yaml` re-counted: 44
+  documents (was 36 on 2026-09-04) — 29 binding · 4 informative ·
+  11 historical; 33 current · 10 frozen · 1 superseded. Entrypoint still
+  `system/OPERATOR.md`. `tests/test_normative_corpus.py`: 32 passed.
