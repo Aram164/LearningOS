@@ -511,11 +511,13 @@ commands:
     - sources/sources.yaml
     - sources/registry/**
     - curriculum/modules/**/units/**/material-synthesis.yaml
+    - operations/transactions/lineage.yaml
     invariants:
     - attaches verified local material to one existing source, with an optional explicit evaluation replacement
     - source identity and intake-owned fields are stable; topics, routes, selections, notes, feedback and observations are unchanged
     - live bytes must match both the request hash and the materials manifest; the URI authority must be the source id and resolve through the runtime root; a held different material is never silently replaced
     - when the attach moves an approved dossier's material basis, a reviewed replacement validated against the staged state ships in the same transaction; affected units join the diff and the revision guards
+    - replacement and rebased dossiers carry prospective freshness lineage bound to their new bytes and staged basis in the same transaction; existing lineage is retained as superseded provenance
     - a reviewed rebase shortcut exists only when every moved route is screened, evidence-free, analysis-free and outside every comparison, and only material_checksums moves; it replays basis plus new provenance without echoing unchanged assessments, and every other case keeps the full replacement
     - a check run returns the field-level diff with referring routes, bound dossiers, affected units and referring collection entries; apply is bound to that diff's hash, the snapshot and each touched record's revision
     - explicitly approved; one transaction and one receipt cover the revision
@@ -583,6 +585,16 @@ commands:
     - source file is copied
     - never moved
     - the external attachment is bound to its exact bytes by SHA-256 before use
+  coordination.section.revise:
+    handler: coordination_section_revise
+    cli_command: coordination-section-revise
+    writes:
+    - work/COORDINATION.md
+    invariants:
+    - one existing coordination section; frontmatter and other section content are preserved
+    - reviewed text is envelope-inline and bound to the exact previous file SHA-256, snapshot and coordination revision
+    - preflight exposes before and after text; blank replacements, ambiguous sections and new section headings refuse
+    - no academic administrative record or learner evidence is changed
   workspace.next-action.update:
     handler: workspace_next_action
     cli_command: workspace-next-action

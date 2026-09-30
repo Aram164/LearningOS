@@ -316,6 +316,25 @@ def test_route_change_with_replacement_applies_atomically(mini_repo, tmp_path):
     assert report["expected_snapshot"].startswith("sha256:")
     assert report["semantic_ack_required"] == []
 
+    from gateway_helpers import approved_v2_call, file_sha256
+
+    from learning_os.semantics.lineage import CONTRACT_VERSION, effective_statuses, load_ledger
+    from learning_os.semantics.scan import live_evidence_digest
+
+    assert not (mini_repo / "operations/transactions/lineage.yaml").exists()
+    applied = approved_v2_call(
+        mini_repo, capability="module.plan.import",
+        payload={"module_id": "module-demo", "file": str(package),
+                 "file_sha256": file_sha256(package)},
+        artifact_ids=report["commit_artifact_ids"], idempotency_key="module-dossier-scope")
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    records = load_ledger(mini_repo)
+    claim_id = f"dossier:{replacement['id']}"
+    claim = records[claim_id]
+    hashes = {key: live_evidence_digest(mini_repo, key, {})
+              for key, _ in claim.derived_from.source_hashes}
+    assert effective_statuses(records, CONTRACT_VERSION, {}, hashes)[claim_id].status == "supported"
+
 
 def test_compact_revision_checks_one_lecture(mini_repo, tmp_path):
     """One context-sized patch, one preflight, no full-map copy in the input."""
@@ -1073,3 +1092,12 @@ def test_route_only_coverage_revision_stamps_actual_artifact_owners(mini_repo, t
     reads = dict(claim.derived_from.revisions)
     assert reads["unit-demo-l01"] == revisions.get("unit-demo-l01", 0) == 0
     assert reads["module-demo"] == revisions["module-demo"] == 1
+    records = load_ledger(mini_repo)
+    assert f"dossier:{dossier['id']}" in records
+    from learning_os.semantics.lineage import CONTRACT_VERSION, effective_statuses
+    from learning_os.semantics.scan import live_evidence_digest
+
+    dossier_claim = records[f"dossier:{dossier['id']}"]
+    hashes = {key: live_evidence_digest(mini_repo, key, {})
+              for key, _ in dossier_claim.derived_from.source_hashes}
+    assert effective_statuses(records, CONTRACT_VERSION, revisions, hashes)[dossier_claim.claim_id].status == "supported"

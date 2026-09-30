@@ -150,7 +150,10 @@ from learning_os.commands.vnext import (  # noqa: E402
     cmd_route_identity_migrate,
     cmd_unit_material_synthesis_publish,
 )
-from learning_os.commands.workspace import cmd_workspace_next_action  # noqa: E402
+from learning_os.commands.workspace import (  # noqa: E402
+    cmd_coordination_section_revise,
+    cmd_workspace_next_action,
+)
 from learning_os.contracts.manifest_contract import ManifestContractError  # noqa: E402
 from learning_os.contracts.payloads import json_object, sha256_value  # noqa: E402
 from learning_os.health import HealthReportError  # noqa: E402
@@ -1130,6 +1133,15 @@ def build_parser() -> argparse.ArgumentParser:
                    help="optimistic concurrency token from manifest _generated.snapshot_id")
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_path_progress)
+
+    p = sub.add_parser("coordination-section-revise", help="check or revise one reviewed coordination section")
+    p.add_argument("section", choices=("Commitments", "Priorities", "Dependencies", "Deferrals"))
+    p.add_argument("--text", required=True, help="reviewed section text, carried inline")
+    p.add_argument("--expected-content-sha256", required=True, type=sha256_value)
+    p.add_argument("--check", action="store_true", help="show the section diff without writing")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_coordination_section_revise)
 
     p = sub.add_parser("workspace-next-action", help="replace one active workspace's Next Action section")
     p.add_argument("workspace_id")

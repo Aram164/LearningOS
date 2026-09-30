@@ -397,6 +397,17 @@ entries:
       unit-m2-analysis-exam-prep: 12
     snapshot_before: sha256:d7d1ac822fd65c9aed87a2386f567972924574079ab24e5e5545305fa14fdfff
     snapshot_after: sha256:dfdb0b96b4054a6cc82f0877a37014244dca842a77a2b1c9cd5992081b7968cc
+  cleanup-independent-coordination-20260930:
+    request_id: cleanup-independent-coordination-20260930
+    capability: coordination.section.revise
+    channel: operator
+    intent_sha256: sha256:39a837ac86e2fda54246d8165aaee70a3e1cd859e06f84b638934207ab555a9b
+    transaction_id: transaction-20260930-140008-001
+    receipt_path: operations/transactions/transaction-20260930-140008-001.yaml
+    revisions:
+      coordination: 1
+    snapshot_before: sha256:5c2da76083e13289f25b2dd646f327281e005231ae7e6f5702dceb32c2673bc2
+    snapshot_after: sha256:d123999e92caf3d81dcf98c4109797a03c6552d8ca3f6603e9d7feb859300fe2
   clt-affordance-corrections-v0:
     request_id: request-clt-affordance-corrections-v0
     capability: unit.map.import

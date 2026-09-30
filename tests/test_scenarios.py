@@ -97,7 +97,7 @@ _STRONG_ADMIN_CUE = re.compile(
 )
 _ARTIFACT_DATE_CUE = re.compile(
     r"\b(?:audit|verified|verification|generated|created|updated|captured|reviewed|"
-    r"overview|validation|package|version|as\s+of)\b",
+    r"overview|validation|package|version|archived|as\s+of)\b",
     re.IGNORECASE,
 )
 
@@ -174,7 +174,11 @@ def _markdown_admin_date_mentions(text: str, forms, pattern):
             variant = _matching_variant(line, variants)
             if variant is None:
                 continue
-            contexts = [line, section]
+            # An archival event in one sentence is not an exam date merely
+            # because the same paragraph discusses registration elsewhere.
+            contexts = [sentence for sentence in re.split(r"(?<=[.!?])\s+", line)
+                        if variant in sentence]
+            contexts.append(section)
             if is_table:
                 date_cells = [index for index, cell in enumerate(cells) if variant in cell]
                 contexts = []
@@ -300,6 +304,28 @@ def test_admin_date_check_rejects_real_exam_and_registration_duplicates(tmp_path
     assert any("restates 2026-08-27" in offence for offence in offences)
     assert any("restates 2026-08-28" in offence for offence in offences)
     assert not any("exam-plan-audit" in offence for offence in offences)
+
+
+def test_admin_date_check_distinguishes_archive_events_in_exam_prose(tmp_path):
+    module = tmp_path / "curriculum/modules/module-demo/module.yaml"
+    module.parent.mkdir(parents=True)
+    module.write_text(yaml.safe_dump({
+        "examination": {"sittings": [{"date": "2026-09-30"}]},
+    }), encoding="utf-8")
+    work = tmp_path / "work"
+    work.mkdir()
+    (work / "COORDINATION.md").write_text(
+        "# Deferrals\n\n"
+        "No exam registration occurred. Workspace archived 2026-09-30 "
+        "(`archive/workspaces/2026/workspace-exam-prep/`). Reinstate next run.\n"
+        "Exam registration was not completed. Archived 2026-09-30. "
+        "The exam is scheduled on 2026-09-30.\n",
+        encoding="utf-8",
+    )
+    offences = _admin_date_offences(tmp_path)
+    assert offences == [
+        "work/COORDINATION.md:4 restates 2026-09-30 as '2026-09-30'",
+    ]
 
 
 def test_scenario_4_file_move_keeps_id(mini_repo):

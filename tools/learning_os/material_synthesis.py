@@ -97,23 +97,35 @@ def publication_lineage(root: Path, unit_id: str, value: dict, content: str, req
     Both the direct publisher and approved-delivery publisher use this owner.
     Only prospective judgments are recorded; prior dossiers are never backfilled.
     """
-    destination = synthesis_destination(root, unit_id)
     records = load_ledger(root)
     claim_id = f"dossier:{value['id']}"
-    prior = records.get(claim_id)
-    records[claim_id] = emit_dossier_freshness(
+    records[claim_id] = publication_lineage_record(
+        root, unit_id, value, content, request, prior=records.get(claim_id))
+    return dump_ledger(records)
+
+
+def publication_lineage_record(root: Path, unit_id: str, value: dict,
+                               content: str, request, *, prior=None):
+    """Bind a dossier already validated against its live or staged basis.
+
+    Import and source-attachment writers validate the proposed basis before
+    admission. Reading the live basis here would bind their new dossier to the
+    old material state and make the claim stale on its own transaction.
+    The caller merges this record with any other lineage in that transaction.
+    """
+    destination = synthesis_destination(root, unit_id)
+    return emit_dossier_freshness(
         dossier_key=value["id"],
         hashes={
             f"file:{destination.relative_to(root).as_posix()}":
                 "sha256:" + hashlib.sha256(content.encode("utf-8")).hexdigest(),
             f"material-synthesis-basis:{unit_id}":
-                material_basis_checksum(current_unit_material_basis(root, unit_id)),
+                material_basis_checksum(value["basis"]),
         },
         judged_by=request.channel,
         admitted_by={"request_id": request.request_id, "idempotency_key": request.idempotency_key},
         supersedes=to_dict(prior) if prior is not None else None,
     )
-    return dump_ledger(records)
 
 def current_unit_material_basis(
     root: Path,

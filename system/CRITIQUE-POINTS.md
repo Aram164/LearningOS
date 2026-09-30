@@ -421,3 +421,24 @@ Status unchanged on all three points; closing them is Aram's.
   documents (was 36 on 2026-09-04) — 29 binding · 4 informative ·
   11 historical; 33 current · 10 frozen · 1 superseded. Entrypoint still
   `system/OPERATOR.md`. `tests/test_normative_corpus.py`: 32 passed.
+
+### Dispositions — 2026-09-30 independent verification, Aram
+
+Aram was shown the evidence-backed closure proposals in
+`LearningOS/workbench/cleanup-2026-09-30/independent-verification/DECISIONS.md`
+and answered **"Approve closing 2 and 3"** and **"Keep point 1 open"**.
+
+- **Point 2: resolved.** The two writers share the canonical renderer and
+  checked-in inventory byte parity is enforced in the full system test gate.
+  Independent verification re-ran the parity regression successfully. This
+  closes the serialization disagreement and its missing detection guard;
+  it does not assert external backup availability or material-byte recovery.
+- **Point 3: resolved.** The enforced, complete Core-owned corpus index,
+  explicit authority/status classifications, declared entry point and
+  supersession checks address the missing bindingness index. Independent
+  verification passed all 32 corpus tests. Ancestor instructions and the
+  sibling UI retain their separate ownership.
+- **Point 1: open, by Aram's explicit decision.** Current content repairs and
+  the guided gateway path do not make arbitrary filesystem edits impossible.
+  The historical receipt measurements remain evidence, not a retroactive
+  acceptance or a reason to fabricate provenance.

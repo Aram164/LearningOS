@@ -72,3 +72,15 @@ stage only when the stage was explicitly identified in the conversation.
 Goal deferrals may name a `revisit_on` date; the scan re-emits the candidate on
 that date without authorizing it. None of these paths fetches material,
 chooses a goal disposition, or writes during a read.
+
+## Phase 4 policy ratification — 2026-09-30
+
+Aram was asked to ratify this explicit policy during the independent cleanup
+verification: no persistent agent telemetry or learned cost model; static
+first-feasible routing retains the existing authority and model-only vetoes;
+revisit on a concrete routing failure that the vetoes cannot express.
+He answered **"Approve this policy"**. Ephemeral caller-provided session
+counts remain read-only and are not persisted.
+
+This records his approval of the stated policy. The older draft rationale
+above remains a proposal, not a quotation or statement attributed to him.

@@ -34,12 +34,14 @@ from urllib.parse import urlsplit
 
 import yaml
 
+from learning_os.contracts.gateway import current_gateway_request
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.loader import load_repo
 from learning_os.material_synthesis import (
     _COMPARED_BASIS_FIELDS,
     MaterialSynthesisError,
     current_unit_material_basis,
+    publication_lineage_record,
     validate_unit_material_synthesis,
 )
 from learning_os.materials_resolution import (
@@ -51,6 +53,7 @@ from learning_os.materials_resolution import (
 from learning_os.pathing import PathBoundaryError, resolve_symlinks_inside
 from learning_os.revisions import artifact_revision
 from learning_os.rules.common import CANONICAL_TREES
+from learning_os.semantics.lineage import LEDGER_RELATIVE, dump_ledger, load_ledger
 
 from .support import (
     WriteRefused,
@@ -832,6 +835,7 @@ def _plan_revise(root: Path, item: Any) -> dict:
     replacements: dict[str, dict] = {}
     rebased: dict[str, dict] = {}
     dossier_writes: dict[Path, str] = {}
+    dossier_publications: list[tuple[str, dict, str]] = []
     if "material" in fields:
         syntheses = item.get("material_syntheses", [])
         if not isinstance(syntheses, list):
@@ -965,6 +969,7 @@ def _plan_revise(root: Path, item: Any) -> dict:
                     "new basis, as the publish gate requires)"
                 )
             dossier_writes[dossier_path] = _dump_yaml(requested[uid])
+            dossier_publications.append((uid, requested[uid], dossier_writes[dossier_path]))
         replacements = {uid: requested[uid] for uid in sorted(requested)}
         for uid in sorted(requested_rebases):
             entry = requested_rebases[uid]
@@ -1010,6 +1015,7 @@ def _plan_revise(root: Path, item: Any) -> dict:
                     f"{sid}: rebased dossier for '{uid}' is not valid: {exc}"
                 ) from exc
             dossier_writes[dossier_path] = _dump_yaml(rebased_dossier)
+            dossier_publications.append((uid, rebased_dossier, dossier_writes[dossier_path]))
             rebased[uid] = {"routes": moved,
                             "dossier_digest": entry["dossier_digest"],
                             "provenance": entry["provenance"]}
@@ -1045,6 +1051,7 @@ def _plan_revise(root: Path, item: Any) -> dict:
         "diff": diff,
         "diff_sha256": "sha256:" + hashlib.sha256(canonical).hexdigest(),
         "writes": writes,
+        "dossier_publications": dossier_publications,
         "artifact_ids": [sid] + unit_ids,
         "expected_revisions": revisions,
     }
@@ -1088,6 +1095,14 @@ def cmd_source_record_revise(args) -> int:
             return 2
         if not _expected_ok(root, args.expected_snapshot):
             return 3
+        if plan["dossier_publications"]:
+            records = load_ledger(root)
+            request = current_gateway_request()
+            for uid, dossier, content in plan["dossier_publications"]:
+                claim_id = f"dossier:{dossier['id']}"
+                records[claim_id] = publication_lineage_record(
+                    root, uid, dossier, content, request, prior=records.get(claim_id))
+            plan["writes"][root / LEDGER_RELATIVE] = dump_ledger(records)
         code, errors, confirmation = _write_transaction(
             root,
             plan["writes"],

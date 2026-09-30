@@ -28,6 +28,7 @@ from learning_os.material_analysis import observe_local_material
 from learning_os.material_refs import MaterialReferenceError, expand_map
 from learning_os.material_synthesis import (
     MaterialSynthesisError,
+    publication_lineage_record,
     synthesis_destination,
     validate_unit_material_synthesis,
 )
@@ -236,7 +237,7 @@ def _phaseB_check_item(claim_id, item, locator, manifest_files, root):
 
 
 def _phaseB_ledger_text(root, repo, module_id, package, changed, evidence_by_claim, live_routes,
-                       incremented_artifacts=None):
+                       incremented_artifacts=None, synthesis_entries=()):
     request = current_gateway_request()
     if request is None:
         raise LineageError("prospective lineage needs gateway admission context")
@@ -351,6 +352,14 @@ def _phaseB_ledger_text(root, repo, module_id, package, changed, evidence_by_cla
         if claim_id in records:
             for lineage in withdraw(list(records.values()), claim_id):
                 records[lineage.claim_id] = lineage
+    for unit_id, dossier in synthesis_entries:
+        content = _dump_yaml(dossier)
+        destination = synthesis_destination(root, unit_id)
+        if destination.is_file() and destination.read_bytes() == content.encode("utf-8"):
+            continue
+        claim_id = f"dossier:{dossier['id']}"
+        records[claim_id] = publication_lineage_record(
+            root, unit_id, dossier, content, request, prior=records.get(claim_id))
     return dump_ledger(records)
 
 
@@ -2184,11 +2193,12 @@ def cmd_module_plan_import(args) -> int:
             for problem in lineage_problems:
                 print(f"- {problem}", file=sys.stderr)
             return 1
-        if not args.check and changed_claims:
+        if not args.check and (changed_claims or synthesis_entries):
             try:
                 writes[root / LEDGER_RELATIVE] = _phaseB_ledger_text(
                     root, repo, args.module_id, package,
                     changed_claims, claim_evidence, live_routes,
+                    synthesis_entries=synthesis_entries,
                     incremented_artifacts=_minimal_artifact_ids(
                         root, args.module_id, _drop_unchanged_writes(writes), synthesis_entries)
                     if getattr(args, "_minimal_writes", False) else None)
@@ -2264,7 +2274,7 @@ def cmd_module_plan_import(args) -> int:
             result["changes"] = "present" if writes else "none"
             result["expected_write_paths"] = sorted({
                 str(p.relative_to(root)) for p in writes
-            } | ({LEDGER_RELATIVE} if changed_claims else set()))
+            } | ({LEDGER_RELATIVE} if changed_claims or synthesis_entries else set()))
             result["expected_write_sha256"] = {
                 str(p.relative_to(root)): hashlib.sha256(content.encode("utf-8")).hexdigest()
                 for p, content in writes.items()}

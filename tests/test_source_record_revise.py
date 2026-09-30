@@ -13,7 +13,9 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+from types import SimpleNamespace
 
+import pytest
 import yaml
 from gateway_helpers import approved_v2_call
 from repo_builders import run_los, write_yaml
@@ -414,8 +416,35 @@ def _shaped_setup(mini_repo: Path):
     return unit_dir, live
 
 
+def _assert_dossier_lineage(root, dossier, response):
+    from learning_os.semantics.lineage import CONTRACT_VERSION, effective_statuses, load_ledger
+    from learning_os.semantics.scan import live_evidence_digest
+
+    records = load_ledger(root)
+    claim_id = f"dossier:{dossier['id']}"
+    claim = records[claim_id]
+    assert claim.admitted_by.request_id == response["request_id"]
+    assert claim.admitted_by.idempotency_key == response["idempotency_key"]
+    hashes = {key: live_evidence_digest(root, key, {})
+              for key, _ in claim.derived_from.source_hashes}
+    assert effective_statuses(records, CONTRACT_VERSION, {}, hashes)[claim_id].status == "supported"
+    receipt = yaml.safe_load((root / response["receipt_path"]).read_text())
+    assert "operations/transactions/lineage.yaml" in {row["path"] for row in receipt["writes"]}
+    return claim
+
+
 def test_rebase_shortcut_rebases_one_screened_route(mini_repo, tmp_path):
     unit_dir, live = _shaped_setup(mini_repo)
+    from learning_os.material_synthesis import publication_lineage
+    from learning_os.semantics.lineage import load_ledger, to_dict
+
+    ledger = mini_repo / "operations/transactions/lineage.yaml"
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    ledger.write_text(publication_lineage(
+        mini_repo, "unit-demo-l01", live,
+        (unit_dir / "material-synthesis.yaml").read_text(),
+        SimpleNamespace(channel="operator", request_id="prior-publication", idempotency_key="prior")))
+    prior = to_dict(load_ledger(mini_repo)[f"dossier:{live['id']}"])
     record = _revise(dossier_rebases=[
         _rebase_request(_dossier_digest(live))])
     package = _package(tmp_path, record)
@@ -452,6 +481,8 @@ def test_rebase_shortcut_rebases_one_screened_route(mini_repo, tmp_path):
         (mini_repo / "operations" / "transactions" / "revisions.yaml")
         .read_text(encoding="utf-8"))
     assert revisions["revisions"]["unit-demo-l01"] == 1
+    claim = _assert_dossier_lineage(mini_repo, written, json.loads(applied.stdout))
+    assert claim.supersedes == prior
 
 
 def test_rebase_refuses_deep_reviewed_and_evidenced_routes(mini_repo, tmp_path):
@@ -807,6 +838,7 @@ def test_apply_attaches_and_replaces_atomically(mini_repo, tmp_path):
         (mini_repo / "operations" / "transactions" / "revisions.yaml")
         .read_text(encoding="utf-8"))
     assert revisions["revisions"]["source-demo-book"] == 1
+    assert not (mini_repo / "operations/transactions/lineage.yaml").exists()
 
 
 def test_apply_writes_source_and_replacement_atomically(mini_repo, tmp_path):
@@ -840,6 +872,58 @@ def test_apply_writes_source_and_replacement_atomically(mini_repo, tmp_path):
         .read_text(encoding="utf-8"))
     assert revisions["revisions"]["source-demo-book"] == 1
     assert revisions["revisions"]["unit-demo-l01"] == 1
+    _assert_dossier_lineage(mini_repo, written, body)
+
+
+@pytest.mark.parametrize("mode", ["replacement", "rebase"])
+def test_dossier_lineage_failure_rolls_back_source_and_dossier(
+        mini_repo, tmp_path, monkeypatch, mode):
+    from gateway_helpers import approved_v2_envelope
+
+    import learning_os.transactions as transactions
+    import los
+
+    if mode == "rebase":
+        unit_dir, live = _shaped_setup(mini_repo)
+        record = _revise(dossier_rebases=[_rebase_request(_dossier_digest(live))])
+    else:
+        from repo_builders import _valid_dossier
+
+        _with_material_tree(mini_repo)
+        unit_dir = _dossier_unit(mini_repo)
+        _write_dossier(unit_dir, _valid_dossier(mini_repo, "route-demo-l01-book", "Chapter 1"))
+        record = _revise(material_syntheses=[{
+            "unit_id": "unit-demo-l01", "dossier": _staged_replacement(mini_repo)}])
+    checked = _check(mini_repo, _package(tmp_path, record))
+    paths = [mini_repo / "sources/sources.yaml", unit_dir / "material-synthesis.yaml"]
+    before = {path: path.read_bytes() for path in paths}
+    envelope = approved_v2_envelope(
+        mini_repo, capability="source.record.revise",
+        payload={"record": record, "expected_diff_sha256": checked["diff_sha256"]},
+        artifact_ids=checked["artifact_ids"], idempotency_key=f"lineage-rollback-{mode}")
+    envelope_file = tmp_path / "envelope.json"
+    envelope_file.write_text(json.dumps(envelope))
+    namespace = los.build_parser().parse_args([
+        "--root", str(mini_repo), "capability", "source.record.revise",
+        "--payload-file", str(envelope_file)])
+    real_write = transactions._atomic_write_bytes
+    failed = False
+
+    def fail_lineage_once(path, content):
+        nonlocal failed
+        if not failed and Path(path).name == "lineage.yaml":
+            failed = True
+            raise OSError("injected dossier lineage failure")
+        return real_write(path, content)
+
+    monkeypatch.setattr(transactions, "_atomic_write_bytes", fail_lineage_once)
+    assert namespace.func(namespace) != 0
+    assert failed
+    assert all(path.read_bytes() == original for path, original in before.items())
+    assert not (mini_repo / "operations/transactions/lineage.yaml").exists()
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+    assert namespace.func(namespace) == 0
+    assert (mini_repo / "operations/transactions/lineage.yaml").is_file()
 
 
 def test_apply_needs_its_check_diff(mini_repo, tmp_path):

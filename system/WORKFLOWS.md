@@ -136,6 +136,8 @@ list to also update.
      replacement stamp the new basis with their own fresh
      request_id/delivery_id — reusing the live dossier's provenance
      unchanged is refused, since it would attest the old material.
+     Both paths also record prospective freshness lineage in the same
+     transaction, bound to the new dossier bytes and validated staged basis.
      Anything else (deep-reviewed routes, evidence, comparisons, an
      already-stale dossier) keeps the full replacement. The check also lists referring collection entries; when a
      listed `why` is now false, correct it afterwards with
@@ -360,9 +362,13 @@ No evidence registry.
 
 When a commitment, explicit priority decision, cross-workspace dependency, or deferral changes:
 
-1. edit `work/COORDINATION.md` — facts only, stated plainly;
+1. prepare the replacement text for one existing section of
+   `work/COORDINATION.md` — facts only, stated plainly — and review the
+   `coordination-section-revise --check` before/after diff;
 2. never copy exam dates, workspace statuses, or workspace lists into it;
-3. rebuild `generated/coordination-view.md`.
+3. apply through `coordination.section.revise` with the reviewed text inline,
+   the previous file SHA-256, snapshot and coordination revision. The
+   transaction records a receipt and reconciles the coordination projection.
 
 If the user states an operational fact in conversation ("I'm skipping M2,
 writing the 2. Termin"), route it: the deferral to `COORDINATION.md`, the
@@ -743,6 +749,8 @@ without refreshing its snapshot, revisions or retry identity.
    writing canonical files. Its `validated: false` means it is preparation,
    not an approval: insert the basis into the reviewed dossier, then run an
    ordinary `--check` on the final package.
+   Applying a changed replacement dossier records its prospective freshness
+   lineage alongside any route-covers lineage in the same transaction.
 4. **Apply through the gateway**, never by writing the canonical file directly
    — either through the saved-preflight shortcut above or an explicit envelope:
 
