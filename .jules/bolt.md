@@ -1,0 +1,3 @@
+## 2025-02-18 - Early Return Optimization on Primitive Leaf Nodes
+**Learning:** In highly recursive Python functions that process configuration or serialized payloads (like YAML parsing), checking exact primitive types (`type(value) is str`, etc.) *before* generic `isinstance` checks and expensive inline imports reduces overhead dramatically.
+**Action:** When optimizing highly recursive Python functions, use exact type matching for primitive leaf nodes (str, int, float, bool) to reduce overhead. Retain `isinstance()` for collections (dict, list) to prevent silent functional regressions when handling subclasses (e.g., from YAML parsers).
