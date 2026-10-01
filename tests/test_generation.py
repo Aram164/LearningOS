@@ -2,12 +2,14 @@
 
 from __future__ import annotations
 
+import datetime
 import json
 import os
 import re
 import shutil
 import subprocess
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 from stress_check import _generation_stress
@@ -191,9 +193,14 @@ def test_real_manifest_exposes_unregistered_sittings_and_registration_gate(real_
     pending = {(row.get("module_id"), row.get("start_date"), row.get("end_date"))
                for row in deadlines
                if row.get("kind") == "exam" and row.get("registration_state") == "unregistered"}
-    assert ("module-hu-aml", "2026-09-30", "2026-09-30") in pending
-    assert ("module-hu-m2-statistik-analysis", "2026-10-09", "2026-10-09") in pending
-    assert ("module-hu-algo2", "2026-10-05", "2026-10-08") in pending
+    for sitting in (
+        ("module-hu-aml", "2026-09-30", "2026-09-30"),
+        ("module-hu-m2-statistik-analysis", "2026-10-09", "2026-10-09"),
+        ("module-hu-algo2", "2026-10-05", "2026-10-08"),
+    ):
+        # Elapsed, never-chosen sittings cease being actionable. Check both
+        # inclusion and exclusion instead of expiring this test with the exam.
+        assert (sitting in pending) == (datetime.date.today().isoformat() <= sitting[2])
     [window] = [row for row in deadlines
                 if row.get("kind") == "registration-window"
                 and row.get("start_date") == "2026-08-31"
@@ -201,6 +208,35 @@ def test_real_manifest_exposes_unregistered_sittings_and_registration_gate(real_
     assert {module["module_id"] for module in window["modules"]} == {
         "module-hu-aml", "module-hu-m2-statistik-analysis", "module-hu-algo2"
     }
+
+
+@pytest.mark.full_repo
+@pytest.mark.parametrize("day,expected", [
+    ("2026-09-29", {"module-hu-aml", "module-hu-m2-statistik-analysis", "module-hu-algo2"}),
+    ("2026-09-30", {"module-hu-aml", "module-hu-m2-statistik-analysis", "module-hu-algo2"}),
+    ("2026-10-01", {"module-hu-m2-statistik-analysis", "module-hu-algo2"}),
+    ("2026-10-08", {"module-hu-m2-statistik-analysis", "module-hu-algo2"}),
+    ("2026-10-09", {"module-hu-m2-statistik-analysis"}),
+    ("2026-10-10", set()),
+])
+def test_real_sitting_expiry_boundaries(real_repo, monkeypatch, day, expected):
+    from learning_os.genout import modules_view
+
+    class FrozenDate(datetime.date):
+        @classmethod
+        def today(cls):
+            return cls.fromisoformat(day)
+
+    # Freeze only this producer's clock; the loaded authored records are read
+    # unchanged, and the shared generated-manifest fixture is never replaced.
+    monkeypatch.setattr(modules_view, "_dt", SimpleNamespace(date=FrozenDate))
+    deadlines = modules_view._academic_deadlines(real_repo)
+    target = {"module-hu-aml", "module-hu-m2-statistik-analysis", "module-hu-algo2"}
+    pending = {row["module_id"] for row in deadlines
+               if row.get("kind") == "exam"
+               and row.get("registration_state") == "unregistered"
+               and row.get("module_id") in target}
+    assert pending == expected
 
 
 # ---------------------------------------------------------------- domain atlas
