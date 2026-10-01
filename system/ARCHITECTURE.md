@@ -122,6 +122,7 @@ semestercontext/
 │   ├── README.md
 │   ├── CLAUDE.md     the Claude adapter, reachable from the umbrella
 │   └── Plans
+├── outputs/          design handoffs and implementation verification artifacts
 └── Stratum/          independent external Git repository; never traversed
 ```
 

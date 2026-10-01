@@ -112,6 +112,15 @@ entries:
     owner: learningos
     purpose: the umbrella for every LearningOS component (ADR-014).
 
+  - path: outputs
+    kind: directory
+    owner: operator
+    annotation: design handoffs and implementation verification artifacts
+    purpose: >-
+      User-requested design references, implementation handoffs and verification
+      receipts. These artifacts are non-canonical and never indexed as learning
+      records or used as learner evidence.
+
   - path: Stratum
     kind: nested_repo
     owner: external
