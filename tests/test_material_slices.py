@@ -803,3 +803,146 @@ def test_append_slices_cli_reports_the_new_pass(mini_repo):
     assert payload["ok"] is True
     assert payload["continuation"]["pass"] == 2
     assert payload["continuation"]["pages"] == list(range(21, 31))
+
+
+def _add_noisy_module(root: Path):
+    """A sibling unit's routes, named-but-routeless sources, one unrelated."""
+    module_dir = root / "curriculum/modules/module-demo"
+    unit_path = module_dir / "units/unit-demo-l01/unit.yaml"
+    unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
+    other = dict(unit)
+    other.update({"id": "unit-demo-l02", "title": "Variance", "order": 2,
+                  "status": "needs-map"})
+    other.pop("current_study_map", None)
+    write_yaml(module_dir / "units/unit-demo-l02/unit.yaml", other)
+    module_path = module_dir / "module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module["unit_order"].append("unit-demo-l02")
+    write_yaml(module_path, module)
+    unit["scope_sources"].append({"source_id": "source-demo-extra",
+                                  "authority": "slides", "locator": "Lecture 9"})
+    unit["source_selections"].append({"source_id": "source-demo-selected",
+                                      "locator": "§9 Chosen chapter",
+                                      "purpose": "Named selection"})
+    write_yaml(unit_path, unit)
+    other_route = _route("route-demo-other", "other.pdf")
+    other_route["unit_id"] = "unit-demo-l02"
+    other_route["angle"] = "Other-unit angle that must not ship."
+    map_path = module_dir / "source-map.yaml"
+    source_map = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    source_map["sources"][0]["unit_routes"].append(other_route)
+    source_map["sources"][0]["unit_routes"].append("unit-demo-l02")
+    source_map["sources"][0]["unit_routes"].append("unit-demo-l01")
+
+    def _foreign(source_id, route_id):
+        foreign = _route(route_id, "foreign.pdf")
+        foreign["unit_id"] = "unit-demo-l02"
+        return {"source_id": source_id, "role": "reference",
+                "why": f"{source_id} serves only the sibling unit.",
+                "priority": 3, "unit_routes": [foreign]}
+
+    source_map["sources"].append(_foreign("source-demo-extra", "route-demo-extra-l02"))
+    source_map["sources"].append(_foreign("source-demo-selected", "route-demo-selected-l02"))
+    source_map["sources"].append(_foreign("source-demo-unrelated", "route-demo-unrelated"))
+    write_yaml(map_path, source_map)
+
+
+def _prepare_view(root: Path, request_id: str):
+    _add_sliced_unit(root, [_route("route-demo-current", "current.pdf")],
+                     {"current.pdf": ["current content"]})
+    _add_noisy_module(root)
+    request = AIActionService(root).prepare(
+        action_id="unit.compare-materials", target_kind="unit",
+        target_id="unit-demo-l01", provider="manual-bundle",
+        request_id=request_id)
+    return request, root / f"operations/ai-actions/requests/{request_id}"
+
+
+def _view_body(bundle: Path):
+    return (bundle / "attachments/unit-source-map.yaml").read_bytes()
+
+
+def test_compare_materials_attaches_a_scoped_source_map_view(mini_repo):
+    import hashlib
+
+    _request, bundle = _prepare_view(mini_repo, "ai-request-scoped-view")
+    assert not (bundle / "attachments/source-map.yaml").exists()
+    body = _view_body(bundle)
+    view = yaml.safe_load(body.decode("utf-8"))
+    assert view["view"]["kind"] == "unit-source-map-view"
+    assert view["view"]["target_unit_id"] == "unit-demo-l01"
+    assert view["view"]["canonical_path"] == (
+        "curriculum/modules/module-demo/source-map.yaml")
+    canonical_bytes = (mini_repo / view["view"]["canonical_path"]).read_bytes()
+    assert view["view"]["canonical_sha256"] == (
+        "sha256:" + hashlib.sha256(canonical_bytes).hexdigest())
+    assert view["module_id"] == "module-demo"
+    assert b"route-demo-other" not in body
+    assert b"Other-unit angle" not in body
+    assert b"route-demo-unrelated" not in body
+    assert b"unit-demo-l02" not in body
+    book = next(row for row in view["sources"]
+                if row["source_id"] == "source-demo-book")
+    assert book["role"] == "spine" and book["priority"] == 0
+    assert [row["id"] if isinstance(row, dict) else row
+            for row in book["unit_routes"]] == [
+        "route-demo-current", "unit-demo-l01"]
+    assert book["unit_routes"][0]["locator"] == "current.pdf"
+    named = {row["source_id"]: row for row in view["sources"]}
+    assert set(named) == {"source-demo-book", "source-demo-extra",
+                          "source-demo-selected"}
+    assert named["source-demo-extra"]["unit_routes"] == []
+    assert named["source-demo-selected"]["unit_routes"] == []
+    assert view["view"]["routes_included"] == 2
+    assert view["view"]["routes_omitted"] == 5
+
+
+def test_scoped_view_keeps_canonical_basis_and_transport_identities(mini_repo):
+    import hashlib
+
+    request, bundle = _prepare_view(mini_repo, "ai-request-view-basis")
+    body = _view_body(bundle)
+    context_md = (bundle / "context.md").read_text(encoding="utf-8")
+    payload = json.loads(context_md.split("```json\n")[1].split("\n```")[0])
+    assert [row["id"] for row in payload["routes"]] == ["route-demo-current"]
+    identity = payload["source_map_view"]
+    assert identity["bundle_path"] == "attachments/unit-source-map.yaml"
+    assert identity["view_sha256"] == (
+        "sha256:" + hashlib.sha256(body).hexdigest())
+    assert identity["canonical_sha256"] == yaml.safe_load(
+        body.decode("utf-8"))["view"]["canonical_sha256"]
+    assert request["material_basis"] == current_unit_material_basis(
+        mini_repo, "unit-demo-l01")
+    assert (request["material_basis"]["source_map_checksum"]
+            != identity["view_sha256"])
+    assert request["preconditions"]["snapshot_id"]
+    index = json.loads((bundle / "attachments/slices/index.json").read_text(
+        encoding="utf-8"))
+    assert [entry["route_id"] for entry in index] == ["route-demo-current"]
+    instructions = (bundle / "instructions.md").read_text(encoding="utf-8")
+    assert "attachments/unit-source-map.yaml" in instructions
+
+
+def test_scoped_view_ignores_sibling_route_growth(mini_repo):
+    _request, first_bundle = _prepare_view(mini_repo, "ai-request-view-small")
+    first = yaml.safe_load(_view_body(first_bundle).decode("utf-8"))
+    map_path = (mini_repo / "curriculum/modules/module-demo/source-map.yaml")
+    source_map = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    for number in range(20):
+        grown = _route(f"route-demo-noise-{number:02d}", "noise.pdf")
+        grown["unit_id"] = "unit-demo-l02"
+        source_map["sources"][0]["unit_routes"].append(grown)
+    write_yaml(map_path, source_map)
+    AIActionService(mini_repo).prepare(
+        action_id="unit.compare-materials", target_kind="unit",
+        target_id="unit-demo-l01", provider="manual-bundle",
+        request_id="ai-request-view-grown")
+    second_bundle = mini_repo / "operations/ai-actions/requests/ai-request-view-grown"
+    second_body = _view_body(second_bundle)
+    second = yaml.safe_load(second_body.decode("utf-8"))
+    assert second["sources"] == first["sources"]
+    assert second["view"]["routes_included"] == first["view"]["routes_included"]
+    assert (second["view"]["routes_omitted"]
+            == first["view"]["routes_omitted"] + 20)
+    assert b"route-demo-noise" not in second_body
+    assert len(second_body) - len(_view_body(first_bundle)) < 200

@@ -10,6 +10,9 @@ queries:
     schema: system/schema/ability-context.schema.json
     invariants:
     - snapshot-bound bounded global horizon with focused expansion
+    - the horizon pages at one snapshot (--offset carries the previous snapshot); every ability appears exactly once across pages, page-local edges only, off-page incident counts per row
+    - a focused --brief carries state, totals, and provenance pointers without raw observation bodies or stage material rows
+    - --section evidence pages complete observations in ledger order at one snapshot
     - candidate abilities and bridges never affect readiness or evidence transfer
     - only reviewed equivalence with a current source digest can transfer confirmed evidence under stated conditions
     - contradictory and corrected work remains inspectable; stage completion grants nothing
@@ -38,6 +41,7 @@ queries:
     - snapshot-bound; shared descriptions occur once and expected revisions are explicit
     - an ordered batch of 1 to 20 distinct routes of one unit shares the unit snapshot and revision guards, preserves request order, and refuses atomically without a partial payload
     - the brief lists direct analysis refs plus a related count and expansion hint; same-source-only refs list only via --include-related
+    - the brief reports a neighboring-unit source-reuse count with an explicit expansion; the full neighbor map lists only via --include-neighbors
   atlas.context:
     handler: atlas_context
     result: atlas-context
@@ -85,6 +89,7 @@ queries:
     - use evidence is canonical study-map data under the snapshot guard; skipped is reported, never ranking
     - unit-scoped analysis notes follow current source-map routes, independently of synthesis approval; direct notes share a routed file (and overlap its single stated page range when it states one); same-source-only notes are related, listed only via --include-related
     - excerpts are bounded (8 note snippets — a title label or true file line numbers — 3 assessment fields); default 5 items, at most 20
+    - analysis-note anchors preview at most 8 per note with exact totals and clipping flags (purpose matches first); the complete index lists only via --include-anchors
     - source freshness is observed live per result; review state and resolution are reported, never inferred
     - empty results describe the searched records only, never the absence of an explanation
     - continuation requires the snapshot and observations_sha256 guards; changed canonical data, observed material bytes, or normalized filters refuse mixed pages, even when an assessment remains stale

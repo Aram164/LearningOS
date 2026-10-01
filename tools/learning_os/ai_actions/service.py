@@ -73,6 +73,7 @@ from .support import (
     _iso,
     _now_utc,
     _read_yaml,
+    _sha256_bytes,
     _sha256_file,
     _snapshot,
     check_request_id,
@@ -88,6 +89,76 @@ from .types import (
     RequestStatus,
     ValidatedDelivery,
 )
+
+#: Bundle name for the unit-scoped source-map read view. Deliberately not
+#: the canonical filename: the view is a filtered projection for one unit,
+#: never the module file.
+UNIT_SOURCE_MAP_VIEW_PATH = "attachments/unit-source-map.yaml"
+
+
+def _scoped_source_ids(unit) -> set[str]:
+    ids = set()
+    for key in ("scope_sources", "source_selections"):
+        for row in unit.data.get(key, []) or []:
+            if isinstance(row, dict) and row.get("source_id"):
+                ids.add(row["source_id"])
+    return ids
+
+
+def build_unit_source_map_view(*, source_map: dict, canonical_path: str,
+                               canonical_bytes: bytes, unit,
+                               target_id: str) -> tuple[bytes, dict[str, str]]:
+    """One unit's filtered source-map read view plus its transport identity.
+
+    Keeps the module identity and every parent source field, but only the
+    target unit's route entries: dict routes by unit_id plus legacy string
+    entries naming the target. Sources the unit's scope authority or
+    selections name stay with an empty route list; every other unit's
+    route body is omitted. Returns (view_bytes, identity): the view's own
+    checksum is a transport identity only, kept beside — never mixed
+    with — the canonical file digest.
+    """
+    named = _scoped_source_ids(unit)
+    sources = []
+    included = omitted = 0
+    for source_row in source_map.get("sources", []) or []:
+        if not isinstance(source_row, dict):
+            continue
+        entries = source_row.get("unit_routes", [])
+        if not isinstance(entries, list):
+            entries = []
+        kept = [entry for entry in entries
+                if (isinstance(entry, dict) and entry.get("unit_id") == target_id)
+                or (isinstance(entry, str) and entry == target_id)]
+        included += len(kept)
+        omitted += len(entries) - len(kept)
+        if not kept and source_row.get("source_id") not in named:
+            continue
+        shaped = {key: value for key, value in source_row.items()
+                  if key != "unit_routes"}
+        shaped["unit_routes"] = kept
+        sources.append(shaped)
+    view = {
+        "view": {
+            "kind": "unit-source-map-view",
+            "canonical_path": canonical_path,
+            "canonical_sha256": _sha256_bytes(canonical_bytes),
+            "target_unit_id": target_id,
+            "routes_included": included,
+            "routes_omitted": omitted,
+        },
+        "module_id": source_map.get("module_id"),
+        "sources": sources,
+    }
+    body = ("# Filtered read view: this unit's source-map slice only, not "
+            "the canonical module file.\n"
+            + _dump_yaml(view)).encode("utf-8")
+    identity = {
+        "bundle_path": UNIT_SOURCE_MAP_VIEW_PATH,
+        "view_sha256": _sha256_bytes(body),
+        "canonical_sha256": view["view"]["canonical_sha256"],
+    }
+    return body, identity
 
 
 class AIActionService:
@@ -357,6 +428,19 @@ class AIActionService:
                     "standalone_lesson": False,
                 },
             }
+            if source_map_path is not None and source_map_path.is_file():
+                canonical_bytes = source_map_path.read_bytes()
+                if source_map_path.is_relative_to(self.root):
+                    canonical_rel = source_map_path.relative_to(
+                        self.root).as_posix()
+                else:
+                    canonical_rel = source_map_path.as_posix()
+                view_body, view_identity = build_unit_source_map_view(
+                    source_map=source_map, canonical_path=canonical_rel,
+                    canonical_bytes=canonical_bytes, unit=unit,
+                    target_id=target_id)
+                bundle_files[UNIT_SOURCE_MAP_VIEW_PATH] = view_body
+                context["source_map_view"] = view_identity
             instructions = (
                 "# Compare one unit's materials\n\n"
                 "Work only from the explicitly listed local routes. List every route. "
@@ -365,6 +449,11 @@ class AIActionService:
                 "upload, create sources, create concepts, or write a standalone lesson. Return "
                 "one whole approved `unit-material-synthesis.schema.json` record as an artifact "
                 "for capability `unit.material-synthesis.publish`.\n"
+                "\n"
+                "Parent source metadata for this unit's routes is attached at "
+                "attachments/unit-source-map.yaml — a filtered view of the module map "
+                "for this unit only, never the canonical file. Request the full module "
+                "map explicitly for a genuinely broader investigation.\n"
                 "\n"
                 "Material slices are attached under attachments/slices/<route-id>.md with an "
                 "index at attachments/slices/index.json — one slice per deep-review route, "
@@ -409,8 +498,6 @@ class AIActionService:
                 + json.dumps(context, indent=2, ensure_ascii=False)
                 + "\n```\n"
             ).encode("utf-8")
-            if source_map_path is not None and source_map_path.is_file():
-                bundle_files["attachments/source-map.yaml"] = source_map_path.read_bytes()
         self.repository.save_request(request, bundle_files)
         return request
 

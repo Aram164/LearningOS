@@ -376,14 +376,17 @@ def _brief_analysis_refs(root, repo, unit, routes, *, include_related=False) -> 
     return out
 
 
-def _brief_payload(root, repo, unit, routes, study_map, artifacts,
-                   *, include_related=False) -> dict:
+def _brief_payload(root, repo, unit, routes, study_map, artifacts, snapshot,
+                   *, include_related=False, include_neighbors=False) -> dict:
     """The brief preparation form: what the next command needs, nothing else.
 
     Identities, guards, id inventories, the audit's missing-evidence lists,
     reusable analysis references, required follow-up inputs, applicable
     preflight checks, and explicit expandable commands. Full route bodies,
     the study map, and analysis prose stay behind the expand references.
+    The neighboring-unit source-reuse map is discovery information, not
+    coverage: the brief carries its count, and the complete map lists only
+    through the explicit expansion.
     """
     route_ids = sorted(r["id"] for r in routes if r.get("id"))
     stages = study_map.data.get("stages", []) if study_map else []
@@ -393,6 +396,13 @@ def _brief_payload(root, repo, unit, routes, study_map, artifacts,
         f"los plan-edit-context {unit.id} --route-ids "
         + " ".join(route_ids[i:i + MAX_BATCH_ROUTES])
         for i in range(0, len(route_ids), MAX_BATCH_ROUTES)]
+    audit = _unit_audit(root, repo, unit)
+    neighbors = audit["adjacent_unit_source_reuse"]
+    brief_audit = {key: value for key, value in audit.items()
+                   if key != "adjacent_unit_source_reuse"}
+    brief_audit["adjacent_unit_source_reuse_count"] = len(neighbors)
+    if include_neighbors:
+        brief_audit["adjacent_unit_source_reuse"] = neighbors
     return {
         "contract": "plan-edit-context-brief",
         "unit_id": unit.id,
@@ -406,7 +416,7 @@ def _brief_payload(root, repo, unit, routes, study_map, artifacts,
             "placement_count": sum(
                 len(s.get("resources", []) or []) for s in stage_rows),
         },
-        "unit_audit": _unit_audit(root, repo, unit),
+        "unit_audit": brief_audit,
         "analysis_refs": _brief_analysis_refs(
             root, repo, unit, routes, include_related=include_related),
         "required_inputs": {
@@ -445,6 +455,9 @@ def _brief_payload(root, repo, unit, routes, study_map, artifacts,
         "expand": {
             "full": f"los plan-edit-context {unit.id}",
             "full_audit": f"los plan-edit-context {unit.id} --audit",
+            "adjacent_unit_source_reuse": (
+                f"los plan-edit-context {unit.id} --brief --include-neighbors "
+                f"--expected-snapshot {snapshot}"),
             "route_batches": batches,
             "stages": {sid: f"los plan-edit-context {unit.id} --stage-id {sid}"
                        for sid in stage_ids},
@@ -489,6 +502,10 @@ def cmd_plan_edit_context(args) -> int:
                 args, "brief", False):
             raise WriteRefused(
                 "plan-edit-context --include-related needs --brief")
+        if getattr(args, "include_neighbors", False) and not getattr(
+                args, "brief", False):
+            raise WriteRefused(
+                "plan-edit-context --include-neighbors needs --brief")
         if args.route_id:
             payload.update(_route_entry(
                 routes, study_map, source_map, unit, args.route_id))
@@ -506,8 +523,9 @@ def cmd_plan_edit_context(args) -> int:
                                      "(e.g. no source covers X) need the full unit context"})
         elif getattr(args, "brief", False):
             payload = _brief_payload(
-                root, repo, unit, routes, study_map, artifacts,
-                include_related=bool(getattr(args, "include_related", False)))
+                root, repo, unit, routes, study_map, artifacts, snapshot,
+                include_related=bool(getattr(args, "include_related", False)),
+                include_neighbors=bool(getattr(args, "include_neighbors", False)))
         else:
             # Present the compact form even before an existing map is migrated.
             # Expansion inputs are included once, never separately per stage.

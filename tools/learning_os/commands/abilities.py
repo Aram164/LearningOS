@@ -47,12 +47,38 @@ def cmd_ability_context(args) -> int:
     try:
         if not 1 <= args.limit <= 50:
             raise WriteRefused("ability-context limit must be 1..50")
+        brief = getattr(args, "brief", False)
+        section = getattr(args, "section", None)
+        if brief and not args.ability_id:
+            raise WriteRefused("ability-context --brief needs a named ability")
+        if section and not args.ability_id:
+            raise WriteRefused("ability-context --section needs a named ability")
+        if brief and section:
+            raise WriteRefused("ability-context takes --brief or --section "
+                               "evidence, not both")
+        offset = getattr(args, "offset", 0) or 0
+        if offset < 0:
+            raise WriteRefused("ability-context offset must be nonnegative")
+        if args.ability_id and offset and not section:
+            raise WriteRefused("ability-context --offset pages the global "
+                               "horizon or --section evidence, not a focused "
+                               "ability")
+        if brief and args.limit != 12:
+            # 12 is the parser default: an explicit window on a single
+            # summary is silently meaningless, so it refuses instead.
+            raise WriteRefused("ability-context --brief is one summary; page "
+                               "evidence with --section evidence")
+        if offset and not args.expected_snapshot:
+            raise WriteRefused("continuation requires --expected-snapshot from the "
+                               "previous response")
         with _operator_lock(root):
             snapshot = _snapshot(root, args.expected_snapshot)
             repo = load_repo(root)
             if repo.parse_failures:
                 raise WriteRefused("ability-context refuses unreadable canonical records")
-            payload = ability_context(repo, focus=args.ability_id, limit=args.limit)
+            payload = ability_context(repo, focus=args.ability_id, limit=args.limit,
+                                      offset=offset, brief=brief, section=section,
+                                      snapshot=snapshot)
             return _print_stable(root, snapshot, {"contract": "ability-context-v1", **payload})
     except (WriteRefused, OSError, ValueError) as exc:
         from .reads import _refusal

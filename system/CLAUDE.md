@@ -47,7 +47,9 @@ material references for the app; the agent should not reproduce those copies.
 Read the applicable contracts before acting, according to the task:
 
 - **Lookup or study support:** for a named record use `inspect`, `search`,
-  `related`, or `note-read` directly; for an open "what should I work on?"
+  `related`, or `note-read` directly; discover units with exact filters
+  through `unit-list --compact`, then `inspect` the chosen ID; for an
+  open "what should I work on?"
   use `bootstrap --brief` first. Batch known record IDs in one `inspect`
   call. Return to interrupted study with `los resume` (one screen: stage,
   requirement, observations, open items, exam sittings) instead of

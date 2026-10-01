@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from datetime import UTC
 from pathlib import Path
 
 import pytest
@@ -324,3 +325,380 @@ def test_horizon_carries_its_own_bridges_and_tentative_connections(ability_root:
     assert all(row["from"] in listed and row["to"] in listed
                for row in narrow["candidate_connections"])
     assert narrow["candidate_connection_count"] == 1
+
+
+def _grow_registry(root: Path, count: int) -> list[str]:
+    """Append reviewed abilities so the horizon must page; returns their ids."""
+    path = root / "knowledge/abilities.yaml"
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    template = next(row for row in data["abilities"]
+                    if row["id"] == "ability-sad-ols")
+    ids = []
+    for number in range(count):
+        aid = f"ability-zz-extra-{number:02d}"
+        data["abilities"].append({**template, "id": aid,
+                                  "title": f"Extra ability {number}",
+                                  "preparation_routes": []})
+        ids.append(aid)
+    path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+    return ids
+
+
+def _distant_bridge(root: Path) -> None:
+    """One reviewed bridge from page one to an ability only page two lists."""
+    path = root / "knowledge/abilities.yaml"
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    template = data["bridges"][0]
+    data["bridges"].append({**template, "from": "ability-aml-ols",
+                            "to": "ability-zz-extra-57"})
+    path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+
+
+def test_horizon_pages_enumerate_every_ability_once(ability_root: Path):
+    import shlex
+
+    _grow_registry(ability_root, 58)
+    first = run_los(ability_root, "ability-context", "--limit", "50")
+    assert first.returncode == 0, first.stderr
+    page = json.loads(first.stdout)
+    assert page["total"] == 61 and page["returned"] == 50
+    assert page["offset"] == 0
+    assert page["next_offset"] == 50 and page["has_more"] is True
+    assert page["truncated"] is True
+    assert page["expand"] == "ability-context ABILITY_ID"
+    follow = run_los(ability_root, *shlex.split(page["expansions"]["next"]))
+    assert follow.returncode == 0, follow.stderr
+    tail = json.loads(follow.stdout)
+    assert tail["offset"] == 50 and tail["returned"] == 11
+    assert tail["total"] == 61
+    assert tail["next_offset"] is None and tail["has_more"] is False
+    assert tail["expansions"]["next"] is None
+    ids = ([row["id"] for row in page["abilities"]]
+           + [row["id"] for row in tail["abilities"]])
+    assert len(set(ids)) == 61
+    # One global rank, not per-page ranks: every fixture ability is
+    # uncertain, so the horizon order is the stable id order.
+    assert ids == sorted(ids)
+    assert "ability-zz-extra-57" in {row["id"] for row in tail["abilities"]}
+
+
+def test_horizon_first_page_keeps_legacy_shape(ability_root: Path):
+    brief = ability_context(load_repo(ability_root))
+    assert brief["total"] == 3 and brief["returned"] == 3
+    assert brief["offset"] == 0 and brief["next_offset"] is None
+    assert brief["has_more"] is False and brief["truncated"] is False
+    assert brief["expand"] == "ability-context ABILITY_ID"
+    assert {(row["from"], row["to"]) for row in brief["bridges"]} == {
+        ("ability-sad-ols", "ability-aml-ols"),
+        ("ability-aml-ols", "ability-aml-extension")}
+    for row in brief["abilities"]:
+        assert row["off_page_bridge_count"] == 0
+        assert row["off_page_candidate_count"] == 0
+    cli = json.loads(run_los(ability_root, "ability-context").stdout)
+    assert cli["contract"] == "ability-context-v1"
+    assert cli["expansions"] == {"next": None}
+
+
+def test_horizon_edges_stay_page_local_with_off_page_pointers(ability_root: Path):
+    _grow_registry(ability_root, 58)
+    _distant_bridge(ability_root)
+    first = run_los(ability_root, "ability-context", "--limit", "50")
+    assert first.returncode == 0, first.stderr
+    page = json.loads(first.stdout)
+    assert {(row["from"], row["to"]) for row in page["bridges"]} == {
+        ("ability-sad-ols", "ability-aml-ols"),
+        ("ability-aml-ols", "ability-aml-extension")}
+    listed = {row["id"] for row in page["abilities"]}
+    assert "ability-zz-extra-57" not in listed
+    by_id = {row["id"]: row for row in page["abilities"]}
+    assert by_id["ability-aml-ols"]["off_page_bridge_count"] == 1
+    assert by_id["ability-sad-ols"]["off_page_bridge_count"] == 0
+    assert all(row["off_page_candidate_count"] == 0
+               for row in page["abilities"])
+    second = run_los(ability_root, "ability-context", "--limit", "50",
+                     "--offset", "50",
+                     "--expected-snapshot", page["snapshot_id"])
+    assert second.returncode == 0, second.stderr
+    tail = json.loads(second.stdout)
+    assert tail["bridges"] == []
+    tail_by_id = {row["id"]: row for row in tail["abilities"]}
+    assert tail_by_id["ability-zz-extra-57"]["off_page_bridge_count"] == 1
+    assert tail_by_id["ability-zz-extra-47"]["off_page_bridge_count"] == 0
+
+
+def test_horizon_rejects_bad_windows(ability_root: Path):
+    bad = (("ability-context", "--offset", "-1"),
+           ("ability-context", "--limit", "0"),
+           ("ability-context", "--limit", "51"),
+           ("ability-context", "ability-sad-ols", "--offset", "1"),
+           ("ability-context", "--offset", "1"))
+    for args in bad:
+        result = run_los(ability_root, *args)
+        assert result.returncode != 0, args
+        assert not result.stdout, args
+
+
+def test_horizon_refuses_a_stale_snapshot(ability_root: Path):
+    first = json.loads(run_los(ability_root, "ability-context",
+                               "--limit", "1").stdout)
+    note = next(iter(load_repo(ability_root).notes.values()))
+    note.path.write_text(note.path.read_text(encoding="utf-8")
+                         + "\nA changed explanation.\n", encoding="utf-8")
+    stale = run_los(ability_root, "ability-context", "--limit", "1",
+                    "--offset", "1",
+                    "--expected-snapshot", first["snapshot_id"])
+    assert stale.returncode == 3, stale.stderr
+    assert not stale.stdout
+
+
+def test_horizon_empty_page_past_total(ability_root: Path):
+    first = json.loads(run_los(ability_root, "ability-context",
+                               "--limit", "1").stdout)
+    far = run_los(ability_root, "ability-context", "--limit", "1",
+                  "--offset", "3",
+                  "--expected-snapshot", first["snapshot_id"])
+    assert far.returncode == 0, far.stderr
+    page = json.loads(far.stdout)
+    assert page["abilities"] == [] and page["total"] == 3
+    assert page["returned"] == 0 and page["offset"] == 3
+    assert page["next_offset"] is None and page["has_more"] is False
+    assert page["truncated"] is True
+    assert page["bridges"] == []
+    assert page["expansions"] == {"next": None}
+
+
+def _history(root: Path, aid: str, count: int, *, start: int = 0):
+    """Append valid confirmed attempts with increasing ISO timestamps."""
+    from datetime import datetime, timedelta
+
+    repo = load_repo(root)
+    base = datetime(2026, 9, 23, 10, 0, tzinfo=UTC)
+    for offset in range(count):
+        number = start + offset
+        stamp = (base + timedelta(minutes=number)).strftime(
+            "%Y-%m-%dT%H:%M:%SZ")
+        _append(root, _work(repo, aid, number, timestamp=stamp))
+
+
+def _stage_encounter(root: Path, aid: str):
+    from repo_builders import add_curriculum, write_yaml
+
+    add_curriculum(root)
+    map_path = (root / "curriculum/modules/module-demo/units/unit-demo-l01"
+                "/study-map.yaml")
+    study_map = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    study_map["stages"][0]["ability_ids"] = [aid]
+    write_yaml(map_path, study_map)
+
+
+def test_focused_brief_summarizes_state_without_history(ability_root: Path):
+    import shlex
+
+    _history(ability_root, "ability-sad-ols", 30)
+    proc = run_los(ability_root, "ability-context", "ability-sad-ols",
+                   "--brief")
+    assert proc.returncode == 0, proc.stderr
+    brief = json.loads(proc.stdout)
+    full = json.loads(run_los(ability_root, "ability-context",
+                              "ability-sad-ols").stdout)
+    assert brief["brief"] is True and "brief" not in full
+    assert brief["ability"]["state"] == full["ability"]["state"] == "supported"
+    assert brief["ability"]["reasons"] == full["ability"]["reasons"]
+    assert brief["ability"]["transfer"] == full["ability"]["transfer"]
+    assert (brief["ability"]["preparation_routes"]
+            == full["ability"]["preparation_routes"])
+    assert "evidence" not in brief["ability"]
+    assert brief["ability_sha256"] == ability_fingerprint(
+        load_repo(ability_root).abilities["ability-sad-ols"])
+    summary = brief["evidence_summary"]
+    assert (summary["total"], summary["active"], summary["comparable"],
+            summary["valid"]) == (30, 30, 30, 30)
+    assert summary["superseded"] == 0
+    assert summary["corrections"] == [] and summary["corrections_total"] == 0
+    assert [pointer["role"] for pointer in summary["state_basis"]] == [
+        "latest-comparable"]
+    assert summary["state_basis"][0]["id"] == "ability-observation-29"
+    assert "I derived this from the stated problem." not in proc.stdout
+    assert len(full["ability"]["evidence"]) == 30
+    evidence = run_los(ability_root, *shlex.split(brief["expand"]["evidence"]))
+    assert evidence.returncode == 0, evidence.stderr
+    assert json.loads(evidence.stdout)["total"] == 30
+
+
+def test_focused_brief_stays_bounded_as_history_grows(ability_root: Path):
+    _history(ability_root, "ability-sad-ols", 5)
+    small = run_los(ability_root, "ability-context", "ability-sad-ols",
+                    "--brief")
+    assert small.returncode == 0, small.stderr
+    _history(ability_root, "ability-sad-ols", 25, start=5)
+    big = run_los(ability_root, "ability-context", "ability-sad-ols",
+                  "--brief")
+    assert big.returncode == 0, big.stderr
+    assert json.loads(big.stdout)["evidence_summary"]["total"] == 30
+    assert len(big.stdout) - len(small.stdout) < 500
+
+
+def test_section_evidence_pages_the_complete_ledger_once(ability_root: Path):
+    import shlex
+
+    _history(ability_root, "ability-sad-ols", 30)
+    seen = []
+    offset, snapshot = 0, None
+    first_next = None
+    while True:
+        args = ["ability-context", "ability-sad-ols", "--section", "evidence",
+                "--limit", "10", "--offset", str(offset)]
+        if snapshot is not None:
+            args += ["--expected-snapshot", snapshot]
+        proc = run_los(ability_root, *args)
+        assert proc.returncode == 0, proc.stderr
+        page = json.loads(proc.stdout)
+        assert page["section"] == "evidence"
+        assert page["focus"] == "ability-sad-ols"
+        assert page["total"] == 30
+        if first_next is None:
+            first_next = page["expansions"]["next"]
+        seen.extend(page["observations"])
+        if page["next_offset"] is None:
+            assert page["has_more"] is False
+            assert page["expansions"] == {"next": None}
+            break
+        offset, snapshot = page["next_offset"], page["snapshot_id"]
+    assert [row["id"] for row in seen] == [
+        f"ability-observation-{number}" for number in range(30)]
+    assert all(row["claim"] and row["origin"]["path"] for row in seen)
+    follow = run_los(ability_root, *shlex.split(first_next))
+    assert follow.returncode == 0, follow.stderr
+    assert [row["id"] for row in
+            json.loads(follow.stdout)["observations"]] == [
+        f"ability-observation-{number}" for number in range(10, 20)]
+
+
+def test_brief_conflicts_and_corrections_match_the_full_read(ability_root: Path):
+    repo = load_repo(ability_root)
+    _append(ability_root, _work(repo, "ability-sad-ols", 1))
+    _append(ability_root, _work(repo, "ability-sad-ols", 2,
+                                result="incorrect", assistance="hint"))
+    conflicted = json.loads(run_los(ability_root, "ability-context",
+                                    "ability-sad-ols", "--brief").stdout)
+    full = json.loads(run_los(ability_root, "ability-context",
+                              "ability-sad-ols").stdout)
+    assert conflicted["ability"]["state"] == "uncertain"
+    assert conflicted["ability"]["state"] == full["ability"]["state"]
+    assert conflicted["ability"]["reasons"] == ["conflicting later work"]
+    assert conflicted["ability"]["reasons"] == full["ability"]["reasons"]
+    assert [(pointer["role"], pointer["id"])
+            for pointer in conflicted["evidence_summary"]["state_basis"]] == [
+        ("latest-comparable", "ability-observation-1"),
+        ("later-conflict", "ability-observation-2")]
+    _append(ability_root, _work(repo, "ability-sad-ols", 3,
+                                supersedes="ability-observation-2"))
+    healed = json.loads(run_los(ability_root, "ability-context",
+                                "ability-sad-ols", "--brief").stdout)
+    full_healed = json.loads(run_los(ability_root, "ability-context",
+                                     "ability-sad-ols").stdout)
+    assert healed["ability"]["state"] == "supported"
+    assert healed["ability"]["state"] == full_healed["ability"]["state"]
+    assert healed["ability"]["reasons"] == full_healed["ability"]["reasons"]
+    summary = healed["evidence_summary"]
+    assert (summary["total"], summary["active"],
+            summary["superseded"]) == (3, 2, 1)
+    assert summary["corrections"] == [{
+        "id": "ability-observation-3", "supersedes": "ability-observation-2",
+        "origin": {"path": "work/active/workspace-demo/ability-observations.jsonl",
+                   "line": 3, "workspace_id": "workspace-demo"}}]
+    section = json.loads(run_los(
+        ability_root, "ability-context", "ability-sad-ols", "--section",
+        "evidence", "--limit", "50").stdout)
+    assert section["total"] == 3
+    assert len(section["observations"]) == 3
+
+
+def test_brief_encounters_summarize_materials_with_expansions(ability_root: Path):
+    import shlex
+
+    _history(ability_root, "ability-sad-ols", 2)
+    _stage_encounter(ability_root, "ability-sad-ols")
+    brief = json.loads(run_los(ability_root, "ability-context",
+                               "ability-sad-ols", "--brief").stdout)
+    full = json.loads(run_los(ability_root, "ability-context",
+                              "ability-sad-ols").stdout)
+    assert brief["encounters_total"] == 1
+    assert brief["encounters_truncated"] is False
+    summary = brief["encounters"][0]
+    assert summary["stage_id"] == "stage-demo"
+    assert summary["unit_id"] == "unit-demo-l01"
+    assert summary["materials_total"] == 3
+    assert (summary["materials_exact"] + summary["materials_unmapped"]) == 3
+    assert "materials" not in summary and "objective" not in summary
+    assert summary["expand"] == (
+        "plan-edit-context unit-demo-l01 --stage-id stage-demo "
+        f"--expected-snapshot {brief['snapshot_id']}")
+    assert len(full["encounters"][0]["materials"]) == 3
+    expand = run_los(ability_root, *shlex.split(summary["expand"]))
+    assert expand.returncode == 0, expand.stderr
+
+
+def test_brief_and_full_agree_across_state_transitions(ability_root: Path):
+    def _pair():
+        brief = json.loads(run_los(ability_root, "ability-context",
+                                   "ability-sad-ols", "--brief").stdout)
+        full = json.loads(run_los(ability_root, "ability-context",
+                                  "ability-sad-ols").stdout)
+        return brief["ability"], full["ability"]
+
+    repo = load_repo(ability_root)
+    _append(ability_root, _work(repo, "ability-sad-ols", 1, assistance="hint"))
+    brief, full = _pair()
+    assert brief["state"] == full["state"] == "uncertain"
+    assert brief["reasons"] == full["reasons"]
+    path = ability_root / "knowledge/abilities.yaml"
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    data["abilities"][0]["evidence_spec"] = ["a newly reviewed derivation"]
+    path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+    brief, full = _pair()
+    assert brief["state"] == full["state"] == "uncertain"
+    assert brief["reasons"] == full["reasons"]
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    data["abilities"][0]["lifecycle"] = "retired"
+    path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+    brief, full = _pair()
+    assert brief["state"] == full["state"] == "unmapped"
+    assert brief["lifecycle"] == full["lifecycle"] == "retired"
+    assert brief["reasons"] == full["reasons"]
+
+
+def test_brief_and_section_refuse_invalid_combinations(ability_root: Path):
+    bad = (("ability-context", "--brief"),
+           ("ability-context", "--section", "evidence"),
+           ("ability-context", "ability-sad-ols", "--brief",
+            "--section", "evidence"),
+           ("ability-context", "ability-sad-ols", "--brief", "--limit", "5"),
+           ("ability-context", "ability-sad-ols", "--brief", "--offset", "1"),
+           ("ability-context", "ability-sad-ols", "--section", "evidence",
+            "--offset", "1"),
+           ("ability-context", "ability-sad-ols", "--section", "evidence",
+            "--limit", "0"),
+           ("ability-context", "ability-sad-ols", "--section", "evidence",
+            "--limit", "51"),
+           ("ability-context", "ability-sad-ols", "--section", "history"))
+    for args in bad:
+        result = run_los(ability_root, *args)
+        assert result.returncode != 0, args
+        assert not result.stdout, args
+
+
+def test_section_evidence_refuses_a_stale_snapshot(ability_root: Path):
+    _history(ability_root, "ability-sad-ols", 2)
+    first = json.loads(run_los(ability_root, "ability-context",
+                               "ability-sad-ols", "--section", "evidence",
+                               "--limit", "1").stdout)
+    note = next(iter(load_repo(ability_root).notes.values()))
+    note.path.write_text(note.path.read_text(encoding="utf-8")
+                         + "\nA changed explanation.\n", encoding="utf-8")
+    stale = run_los(ability_root, "ability-context", "ability-sad-ols",
+                    "--section", "evidence", "--limit", "1",
+                    "--offset", "1",
+                    "--expected-snapshot", first["snapshot_id"])
+    assert stale.returncode == 3, stale.stderr
+    assert not stale.stdout

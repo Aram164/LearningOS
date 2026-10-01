@@ -69,6 +69,42 @@ def triage_sample() -> dict:
     return {"rows": rows, "totals": totals}
 
 
+def unit_list_sample() -> dict:
+    """Full-versus-compact unit-list volume with complete-ID parity.
+
+    Pages the compact summary at its maximum window and proves it names
+    every unit the full listing names, in a deterministic order. The
+    continuation guards fail the sample if the repository moves mid-read.
+    """
+    full, full_bytes = invoke("unit-list")
+    full_ids = sorted(row["id"] for row in full)
+    compact_bytes = 0
+    seen: list[str] = []
+    offset, snapshot, first_snapshot = 0, None, None
+    while True:
+        args = ["unit-list", "--compact", "--limit", "50",
+                "--offset", str(offset)]
+        if snapshot is not None:
+            args += ["--expected-snapshot", snapshot]
+        page, size = invoke(*args)
+        compact_bytes += size
+        if page["contract"] != "unit-list-summary":
+            raise SystemExit("compact unit-list changed contract")
+        if first_snapshot is None:
+            first_snapshot = page["snapshot_id"]
+        if page["total"] != len(full_ids):
+            raise SystemExit("compact unit-list lost unit rows")
+        seen.extend(row["id"] for row in page["items"])
+        if page["next_offset"] is None:
+            break
+        offset, snapshot = page["next_offset"], page["snapshot_id"]
+    if sorted(seen) != full_ids:
+        raise SystemExit("compact unit-list lost unit IDs")
+    return {"snapshot_id": first_snapshot, "units": len(full_ids),
+            "full_bytes": full_bytes, "compact_bytes": compact_bytes,
+            "ids_match": True}
+
+
 def sample() -> dict:
     catalogue, old_catalogue_bytes = invoke("capabilities", "--json")
     index, index_bytes = invoke("capabilities", "--compact", "--json")
@@ -92,10 +128,13 @@ def sample() -> dict:
         raise SystemExit("batch differs from individual reads; check for concurrent changes")
     if batch["snapshot_id"] != summary["snapshot_id"]:
         raise SystemExit("repository changed during inspection comparison")
+    units = unit_list_sample()
+    if units["snapshot_id"] != summary["snapshot_id"]:
+        raise SystemExit("repository changed during unit-list comparison")
 
     return {
         "snapshot_id": batch["snapshot_id"], "inspected_ids": ids,
-        "triage": triage_sample(),
+        "triage": triage_sample(), "unit_list": units,
         "stdout_bytes": {
             "full_catalogue": old_catalogue_bytes, "capability_index": index_bytes,
             "full_bootstrap": full_bytes, "compact_bootstrap": summary_bytes,
@@ -104,6 +143,8 @@ def sample() -> dict:
             "recommended_startup": index_bytes + summary_bytes,
             "individual_inspections": sum(size for _record, size in single_results),
             "batch_inspection": batch_bytes,
+            "full_unit_list": units["full_bytes"],
+            "compact_unit_list": units["compact_bytes"],
         },
         "seconds": {"individual_inspections": single_seconds, "batch_inspection": batch_seconds},
         "records_identical": True,

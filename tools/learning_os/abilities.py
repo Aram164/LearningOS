@@ -189,19 +189,47 @@ def read_ability_candidates(repo: Repo) -> list[dict]:
     return rows
 
 
-def _direct_status(ability: dict, observations: list[dict]) -> tuple[str, list[dict], list[str]]:
+def _evidence_sets(ability: dict, observations: list[dict]):
+    """Partition one ability's ledger history for state derivation.
+
+    Returns (history, active, comparable, valid, current_hash, corrections)
+    in ledger-origin order throughout. Shared by state derivation and the
+    focused brief, so the two can never disagree about what counted.
+    """
     aid = ability["id"]
     current_hash = ability_fingerprint(ability)
     corrections = {row["supersedes"] for row in observations if row.get("supersedes")}
     history = [row for row in observations if row["ability_id"] == aid]
     active = [row for row in history if row["id"] not in corrections]
     comparable = [row for row in active if row["ability_sha256"] == current_hash
-             and row["confirmed_by"] == "learner"
-             and set(ability["conditions"]).issubset(row.get("conditions", []))
-             and not set(ability["conditions"]) & set(row.get("conditions_not_met", []))]
+                  and row["confirmed_by"] == "learner"
+                  and set(ability["conditions"]).issubset(row.get("conditions", []))
+                  and not set(ability["conditions"]) & set(row.get("conditions_not_met", []))]
     valid = [row for row in comparable if row["assistance"].strip().lower() == "none"
              and (row["result"] != "correct" or
                   set(ability["evidence_spec"]).issubset(row["evidence_tags"]))]
+    return history, active, comparable, valid, current_hash, corrections
+
+
+def _latest_and_conflicts(valid, comparable):
+    """The comparable row the state stands on, plus later conflicts.
+
+    Returns (latest_or_None, conflicts): latest ranks by (timestamp, id);
+    conflicts are later incorrect or partial comparable rows. Empty valid
+    means no basis, never a guess.
+    """
+    if not valid:
+        return None, []
+    latest = sorted(valid, key=lambda row: (row["timestamp"], row["id"]))[-1]
+    conflicts = [row for row in comparable
+                 if row["result"] in {"incorrect", "partial"}
+                 and (row["timestamp"], row["id"]) > (latest["timestamp"], latest["id"])]
+    return latest, conflicts
+
+
+def _direct_status(ability: dict, observations: list[dict]) -> tuple[str, list[dict], list[str]]:
+    history, active, comparable, valid, current_hash, _corrections = _evidence_sets(
+        ability, observations)
     reasons: list[str] = []
     if any(row["ability_sha256"] != current_hash for row in active):
         reasons.append("ability definition changed since recorded work")
@@ -216,16 +244,142 @@ def _direct_status(ability: dict, observations: list[dict]) -> tuple[str, list[d
     if not valid:
         reasons.append("no current confirmed work under the stated conditions")
         return "uncertain", history, reasons
-    latest = sorted(valid, key=lambda row: (row["timestamp"], row["id"]))[-1]
+    latest, conflicts = _latest_and_conflicts(valid, comparable)
     if latest["result"] == "correct":
-        if any(row["result"] in {"incorrect", "partial"} for row in comparable
-               if (row["timestamp"], row["id"]) > (latest["timestamp"], latest["id"])):
+        if conflicts:
             return "uncertain", history, ["conflicting later work"]
         return "supported", history, ["current confirmed worked attempt"]
     return "uncertain", history, ["latest comparable attempt is partial or incorrect"]
 
 
-def ability_context(repo: Repo, *, focus: str | None = None, limit: int = 12) -> dict:
+#: Preview bound for brief encounter and candidate lists. Counts stay
+#: exact; the full collections remain one expansion away.
+_BRIEF_LIST_LIMIT = 20
+
+
+def _observation_pointer(row, *, role):
+    return {"role": role, "id": row["id"], "result": row["result"],
+            "work_ref": row["work_ref"], "origin": row["origin"]}
+
+
+def _evidence_section(repo: Repo, focus: str, observations: list[dict], *,
+                      limit: int, offset: int, snapshot) -> dict:
+    """One ability's complete observation ledger, paged in ledger-origin order.
+
+    Every row — including superseded and corrected ones — exactly once per
+    snapshot. Order is ledger append order, never timestamp rank: paging
+    must be stable while the ledger only grows.
+    """
+    history = [row for row in observations if row["ability_id"] == focus]
+    page = history[offset:offset + limit]
+    next_offset = offset + limit if offset + limit < len(history) else None
+    payload = {"focus": focus, "section": "evidence",
+               "observations": page, "total": len(history),
+               "offset": offset, "returned": len(page),
+               "next_offset": next_offset,
+               "has_more": next_offset is not None}
+    if snapshot is not None:
+        payload["expansions"] = {"next": (
+            f"ability-context {focus} --section evidence --limit {limit} "
+            f"--offset {next_offset} --expected-snapshot {snapshot}"
+            if next_offset is not None else None)}
+    return payload
+
+
+def _focused_brief(repo: Repo, focus: str, item: dict, observations: list[dict],
+                   encounters: list[dict], related_encounters: list[dict],
+                   related: list[dict], candidates: list[dict],
+                   shared_tags: list[str], bridge_freshness: dict, *,
+                   snapshot) -> dict:
+    """One ability's state summary: the answer with pointers, not bodies.
+
+    State, reasons, preparation results, and transfer explanations come
+    from the same whole-ledger derivation as the full expansion. Raw
+    observation bodies become exact totals plus the pointers that explain
+    the answer; stage material rows become counts with guarded expansions.
+    Correction links all stay visible: each one permanently removes its
+    target from the active set, so every link is load-bearing.
+    """
+    ability = repo.abilities[focus]
+    history, active, comparable, valid, _current_hash, _corrections = _evidence_sets(
+        ability, observations)
+    latest, conflicts = _latest_and_conflicts(valid, comparable)
+    basis = []
+    if latest is not None:
+        basis.append(_observation_pointer(latest, role="latest-comparable"))
+    basis.extend(_observation_pointer(row, role="later-conflict")
+                 for row in sorted(conflicts,
+                                   key=lambda row: (row["timestamp"], row["id"])))
+    correction_rows = [row for row in history if row.get("supersedes")]
+    summaries = []
+    for encounter in encounters:
+        rows = encounter["materials"]
+        summary = {
+            "module_id": encounter["module_id"], "unit_id": encounter["unit_id"],
+            "study_map_id": encounter["study_map_id"],
+            "stage_id": encounter["stage_id"],
+            "title": encounter.get("title"),
+            "status": encounter.get("status"),
+            "materials_total": len(rows),
+            "materials_exact": sum(1 for row in rows
+                                   if row["match_state"] == "exact"),
+            "materials_unmapped": sum(1 for row in rows
+                                      if row["match_state"] != "exact"),
+        }
+        if snapshot is not None:
+            summary["expand"] = (
+                f"plan-edit-context {encounter['unit_id']} "
+                f"--stage-id {encounter['stage_id']} "
+                f"--expected-snapshot {snapshot}")
+        summaries.append(summary)
+    incident_candidates = [row for row in candidates
+                           if focus in (row["from"], row["to"])]
+    payload = {
+        "brief": True,
+        "focus": focus,
+        "ability": {**ability,
+                    **{key: value for key, value in item.items()
+                       if key != "evidence"}},
+        "ability_sha256": ability_fingerprint(ability),
+        "evidence_summary": {
+            "total": len(history),
+            "active": len(active),
+            "superseded": len(history) - len(active),
+            "comparable": len(comparable),
+            "valid": len(valid),
+            "state_basis": basis,
+            "corrections": [{"id": row["id"], "supersedes": row["supersedes"],
+                             "origin": row["origin"]}
+                            for row in correction_rows],
+            "corrections_total": len(correction_rows),
+        },
+        "encounters": summaries[:_BRIEF_LIST_LIMIT],
+        "encounters_total": len(summaries),
+        "encounters_truncated": len(summaries) > _BRIEF_LIST_LIMIT,
+        "related_encounters": related_encounters[:_BRIEF_LIST_LIMIT],
+        "related_encounters_total": len(related_encounters),
+        "bridges": [{**bridge, "source_freshness": bridge_freshness[id(bridge)]}
+                    for bridge in related],
+        "candidate_connections": incident_candidates[-_BRIEF_LIST_LIMIT:],
+        "candidate_connection_count": len(incident_candidates),
+        "shared_concept_candidates": shared_tags[:_BRIEF_LIST_LIMIT],
+        "shared_concept_candidate_count": len(shared_tags),
+        "shared_concept_candidates_truncated":
+            len(shared_tags) > _BRIEF_LIST_LIMIT,
+        "expand": {"material": "material-context QUERY",
+                   "stage": "inspect STAGE_ID"},
+    }
+    if snapshot is not None:
+        payload["expand"]["evidence"] = (
+            f"ability-context {focus} --section evidence --limit 50 "
+            f"--offset 0 --expected-snapshot {snapshot}")
+    return payload
+
+
+def ability_context(repo: Repo, *, focus: str | None = None, limit: int = 12,
+                   offset: int = 0, brief: bool = False,
+                   section: str | None = None,
+                   snapshot: str | None = None) -> dict:
     """Small global horizon or one expanded ability, with explicit reasons."""
     observations = read_ability_observations(repo)
     candidates = read_ability_candidates(repo)
@@ -309,6 +463,9 @@ def ability_context(repo: Repo, *, focus: str | None = None, limit: int = 12) ->
         return result
 
     if focus:
+        if section == "evidence":
+            return _evidence_section(repo, focus, observations, limit=limit,
+                                     offset=offset, snapshot=snapshot)
         item = state(focus)
         related = [bridge for bridge in repo.ability_bridges
                    if isinstance(bridge, dict) and focus in (bridge.get("from"), bridge.get("to"))]
@@ -367,6 +524,11 @@ def ability_context(repo: Repo, *, focus: str | None = None, limit: int = 12) ->
         shared_tags = sorted(other_id for other_id, other in repo.abilities.items()
                              if other_id != focus and
                              set(other["concept_ids"]) & set(repo.abilities[focus]["concept_ids"]))
+        if brief:
+            return _focused_brief(
+                repo, focus, item, observations, encounters,
+                related_encounters, related, candidates, shared_tags,
+                bridge_freshness, snapshot=snapshot)
         return {"focus": focus, "ability": {**repo.abilities[focus], **item},
                 "bridges": [{**bridge, "source_freshness": bridge_freshness[id(bridge)]}
                             for bridge in related], "encounters": encounters,
@@ -380,21 +542,46 @@ def ability_context(repo: Repo, *, focus: str | None = None, limit: int = 12) ->
     rows = [state(aid) for aid in sorted(repo.abilities)]
     priority = {"supported": 0, "nearby": 1, "uncertain": 2, "unmapped": 3}
     rows.sort(key=lambda row: (priority[row["state"]], row["id"]))
-    listed = {row["id"] for row in rows[:limit]}
+    page = rows[offset:offset + limit]
+    listed = {row["id"] for row in page}
     # The horizon's own edges: every reviewed or candidate bridge, and every
     # tentative connection, whose two ends are both on the listed page. An
     # interface draws the map from this one read instead of expanding every
     # ability, and an edge to an ability beyond the page stays with that
-    # ability's focused expansion rather than dangling here.
+    # ability's focused expansion rather than dangling here. Each listed row
+    # carries its own off-page incident counts, so the agent knows which
+    # focused expansion holds the rest.
     horizon_bridges = [{**bridge, "source_freshness": bridge_freshness[id(bridge)]}
                        for bridge in repo.ability_bridges
                        if isinstance(bridge, dict)
                        and bridge.get("from") in listed and bridge.get("to") in listed]
     horizon_candidates = [row for row in candidates
                           if row["from"] in listed and row["to"] in listed]
-    return {"abilities": rows[:limit], "total": len(rows),
-            "bridges": horizon_bridges,
-            "candidate_connections": horizon_candidates[-20:],
-            "candidate_connection_count": len(candidates),
-            "truncated": len(rows) > limit,
-            "expand": "ability-context ABILITY_ID"}
+    for row in page:
+        row["off_page_bridge_count"] = sum(
+            1 for bridge in repo.ability_bridges
+            if isinstance(bridge, dict)
+            and row["id"] in (bridge.get("from"), bridge.get("to"))
+            and (bridge.get("from") not in listed
+                 or bridge.get("to") not in listed))
+        row["off_page_candidate_count"] = sum(
+            1 for candidate in candidates
+            if row["id"] in (candidate["from"], candidate["to"])
+            and (candidate["from"] not in listed
+                 or candidate["to"] not in listed))
+    next_offset = offset + limit if offset + limit < len(rows) else None
+    horizon = {"abilities": page, "total": len(rows),
+               "offset": offset, "returned": len(page),
+               "next_offset": next_offset,
+               "has_more": next_offset is not None,
+               "bridges": horizon_bridges,
+               "candidate_connections": horizon_candidates[-20:],
+               "candidate_connection_count": len(candidates),
+               "truncated": len(page) != len(rows),
+               "expand": "ability-context ABILITY_ID"}
+    if snapshot is not None:
+        horizon["expansions"] = {"next": (
+            f"ability-context --limit {limit} --offset {next_offset} "
+            f"--expected-snapshot {snapshot}"
+            if next_offset is not None else None)}
+    return horizon

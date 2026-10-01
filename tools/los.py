@@ -206,6 +206,8 @@ def build_parser() -> argparse.ArgumentParser:
                    help="unit scope: direct route-bound evidence plus the unit's own approved assessments")
     p.add_argument("--include-related", action="store_true",
                    help="with --unit: append same-source related notes, labelled related")
+    p.add_argument("--include-anchors", action="store_true",
+                   help="return complete anchor indexes instead of the bounded preview")
     p.add_argument("--material", default=None, metavar="REF",
                    help="exact materials-tree path filter; allows material-only requests")
     p.add_argument("--limit", type=int, default=5)
@@ -219,6 +221,12 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("ability-context", help="read the small ability horizon or expand one ability")
     p.add_argument("ability_id", nargs="?", help="one ability identity to expand")
     p.add_argument("--limit", type=int, default=12)
+    p.add_argument("--offset", type=int, default=0,
+                   help="page the global horizon or --section evidence; continuations need the previous --expected-snapshot")
+    p.add_argument("--brief", action="store_true",
+                   help="with an ability id: state summary with evidence totals and provenance pointers instead of full history and materials")
+    p.add_argument("--section", choices=("evidence",), default=None,
+                   help="with an ability id: page that section's complete rows instead of the full expansion")
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_ability_context)
 
@@ -240,6 +248,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--content", action="store_true", help="search complete durable note text with exact line snippets")
     p.add_argument("--offset", type=int, default=0)
     p.add_argument("--expected-snapshot", default=None)
+    p.add_argument("--page", action="store_true",
+                   help="paged packet with totals and a snapshot-bound continuation instead of the full array")
     p.set_defaults(func=cmd_search)
 
     p = sub.add_parser("intelligence-scan", help="read-only observation loop: propose candidate investigations")
@@ -338,6 +348,11 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--module-id", default=None)
     p.add_argument("--component-id", default=None)
     p.add_argument("--status", default=None)
+    p.add_argument("--compact", action="store_true",
+                   help="bounded summary rows with totals and continuation instead of full unit bodies")
+    p.add_argument("--offset", type=int, default=0)
+    p.add_argument("--limit", type=int, default=20)
+    p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_unit_list)
 
 
@@ -705,6 +720,8 @@ def build_parser() -> argparse.ArgumentParser:
                         "missing evidence, analysis refs, preflight checks, expand commands")
     p.add_argument("--include-related", action="store_true",
                    help="with --brief: list the same-source related analysis notes too")
+    p.add_argument("--include-neighbors", action="store_true",
+                   help="with --brief: include the full neighboring-unit source-reuse map")
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_plan_edit_context)
 

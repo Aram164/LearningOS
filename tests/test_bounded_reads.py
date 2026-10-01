@@ -614,3 +614,293 @@ def test_inspect_miss_hint_keeps_the_not_found_exit_code(mini_repo):
         assert "los: record not found: workspace-demo-ghost" in missing.stderr
         assert ("los: hint: referenced by project-snapshot-lab (project) "
                 "in workspace_ids") in missing.stderr
+
+
+def _search_array(mini_repo, *extra):
+    result = run_los(mini_repo, "search", "", *extra)
+    assert result.returncode == 0, result.stderr
+    payload = json.loads(result.stdout)
+    assert isinstance(payload, list)
+    return payload
+
+
+def test_metadata_search_offset_slices_the_array(mini_repo):
+    full = _search_array(mini_repo)
+    assert len(full) >= 2, "the mini repo must offer more than one row to page"
+    first = _search_array(mini_repo, "--limit", "1", "--offset", "0")
+    second = _search_array(mini_repo, "--limit", "1", "--offset", "1")
+    assert first == full[:1]
+    assert second == full[1:2]
+    assert first != second
+    assert _search_array(mini_repo, "--limit", "1",
+                         "--offset", str(len(full))) == []
+
+
+def test_metadata_search_page_packet_and_runnable_continuation(mini_repo):
+    import shlex
+
+    full = _search_array(mini_repo)
+    first = run_los(mini_repo, "search", "", "--page", "--limit", "2")
+    assert first.returncode == 0, first.stderr
+    page = json.loads(first.stdout)
+    assert page["schema_version"] == 1
+    assert page["contract"] == "metadata-search-page"
+    assert page["snapshot_id"]
+    assert page["total"] == len(full)
+    assert page["offset"] == 0 and page["returned"] == 2
+    assert page["next_offset"] == 2 and page["has_more"] is True
+    assert [row["id"] for row in page["items"]] == [row["id"] for row in full[:2]]
+    follow = run_los(mini_repo, *shlex.split(page["expand"]["next"]))
+    assert follow.returncode == 0, follow.stderr
+    second = json.loads(follow.stdout)
+    assert second["offset"] == 2 and second["returned"] == 2
+    assert [row["id"] for row in second["items"]] == [row["id"] for row in full[2:4]]
+    assert {row["id"] for row in page["items"]}.isdisjoint(
+        row["id"] for row in second["items"])
+
+
+def test_metadata_search_page_enumerates_every_match_once(mini_repo):
+    full = _search_array(mini_repo)
+    seen = []
+    offset, snapshot = 0, None
+    while True:
+        args = ["search", "", "--page", "--limit", "3", "--offset", str(offset)]
+        if snapshot is not None:
+            args += ["--expected-snapshot", snapshot]
+        result = run_los(mini_repo, *args)
+        assert result.returncode == 0, result.stderr
+        page = json.loads(result.stdout)
+        assert page["total"] == len(full)
+        seen.extend(row["id"] for row in page["items"])
+        if page["next_offset"] is None:
+            assert page["has_more"] is False
+            assert page["expand"]["next"] is None
+            break
+        assert page["has_more"] is True
+        offset, snapshot = page["next_offset"], page["snapshot_id"]
+    assert seen == [row["id"] for row in full]
+
+
+def test_metadata_search_page_empty_and_out_of_range(mini_repo):
+    empty = run_los(mini_repo, "search", "zephyrquux-no-such-term", "--page")
+    assert empty.returncode == 0, empty.stderr
+    payload = json.loads(empty.stdout)
+    assert payload["items"] == [] and payload["total"] == 0
+    assert payload["returned"] == 0
+    assert payload["next_offset"] is None and payload["has_more"] is False
+    first = json.loads(run_los(mini_repo, "search", "", "--page",
+                               "--limit", "1").stdout)
+    far = run_los(mini_repo, "search", "", "--page", "--limit", "1",
+                  "--offset", str(first["total"] + 5),
+                  "--expected-snapshot", first["snapshot_id"])
+    assert far.returncode == 0, far.stderr
+    payload = json.loads(far.stdout)
+    assert payload["items"] == [] and payload["total"] == first["total"]
+    assert payload["returned"] == 0
+    assert payload["next_offset"] is None and payload["has_more"] is False
+
+
+def test_metadata_search_rejects_bad_windows_and_mixed_modes(mini_repo):
+    bad = (("search", "", "--offset", "-1"),
+           ("search", "", "--limit", "0"),
+           ("search", "", "--page", "--limit", "101"),
+           ("search", "", "--page", "--offset", "1"),
+           ("search", "word", "--content", "--page"))
+    for args in bad:
+        result = run_los(mini_repo, *args)
+        assert result.returncode != 0, args
+        assert not result.stdout, args
+
+
+def test_metadata_search_refuses_a_stale_snapshot(mini_repo):
+    first = json.loads(run_los(mini_repo, "search", "", "--page",
+                               "--limit", "1").stdout)
+    note = next(iter(load_repo(mini_repo).notes.values()))
+    note.path.write_text(note.path.read_text(encoding="utf-8")
+                         + "\nA changed explanation.\n", encoding="utf-8")
+    stale = run_los(mini_repo, "search", "", "--page", "--limit", "1",
+                    "--offset", "1",
+                    "--expected-snapshot", first["snapshot_id"])
+    assert stale.returncode == 3, stale.stderr
+    assert not stale.stdout
+    array = run_los(mini_repo, "search", "", "--limit", "1",
+                    "--expected-snapshot", first["snapshot_id"])
+    assert array.returncode == 3, array.stderr
+    assert not array.stdout
+
+
+def _two_unit_repo(mini_repo):
+    import shutil
+
+    add_curriculum(mini_repo)
+    module_dir = mini_repo / "curriculum/modules/module-demo"
+    shutil.copytree(module_dir / "units/unit-demo-l01",
+                    module_dir / "units/unit-demo-l02")
+    second = module_dir / "units/unit-demo-l02"
+    unit = yaml.safe_load((second / "unit.yaml").read_text(encoding="utf-8"))
+    unit.update({"id": "unit-demo-l02", "title": "Variance", "order": 2,
+                 "status": "complete", "component_id": "component-demo-core",
+                 "current_study_map": "study-map-demo-l02"})
+    write_yaml(second / "unit.yaml", unit)
+    study_map = yaml.safe_load((second / "study-map.yaml").read_text(encoding="utf-8"))
+    study_map.update({"id": "study-map-demo-l02", "unit_id": "unit-demo-l02"})
+    note_rel = ("curriculum/modules/module-demo/units/unit-demo-l02/"
+                "stages/stage-demo/notes.md")
+    study_map["stages"][0]["working_note"] = note_rel
+    write_yaml(second / "study-map.yaml", study_map)
+    (mini_repo / note_rel).parent.mkdir(parents=True, exist_ok=True)
+    (mini_repo / note_rel).write_text("", encoding="utf-8")
+    module_path = module_dir / "module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module["unit_order"].append("unit-demo-l02")
+    write_yaml(module_path, module)
+    return mini_repo
+
+
+def _compact_unit_pages(mini_repo, *filters):
+    seen, offset, snapshot, total = [], 0, None, None
+    while True:
+        args = ["unit-list", "--compact", "--limit", "1",
+                "--offset", str(offset), *filters]
+        if snapshot is not None:
+            args += ["--expected-snapshot", snapshot]
+        result = run_los(mini_repo, *args)
+        assert result.returncode == 0, result.stderr
+        page = json.loads(result.stdout)
+        assert page["contract"] == "unit-list-summary"
+        assert page["schema_version"] == 1
+        if total is None:
+            total = page["total"]
+        assert page["total"] == total
+        seen.extend(page["items"])
+        if page["next_offset"] is None:
+            break
+        offset, snapshot = page["next_offset"], page["snapshot_id"]
+    return seen, total
+
+
+def test_compact_unit_list_matches_full_listing_for_every_filter(mini_repo):
+    _two_unit_repo(mini_repo)
+    combos = ((),
+              ("--module-id", "module-demo"),
+              ("--status", "active"), ("--status", "complete"),
+              ("--component-id", "component-demo-core"),
+              ("--component-id", "component-no-such"),
+              ("--module-id", "module-demo", "--status", "complete"),
+              ("--module-id", "module-demo",
+               "--component-id", "component-demo-core"),
+              ("--status", "complete",
+               "--component-id", "component-demo-core"),
+              ("--module-id", "module-demo", "--status", "complete",
+               "--component-id", "component-demo-core"),
+              ("--module-id", "module-no-such", "--status", "complete",
+               "--component-id", "component-demo-core"))
+    allowed = {"id", "title", "status", "module_id", "component_id", "order",
+               "current_study_map", "needs_study_map"}
+    for filters in combos:
+        full = run_los(mini_repo, "unit-list", *filters)
+        assert full.returncode == 0, (filters, full.stderr)
+        full_rows = json.loads(full.stdout)
+        items, total = _compact_unit_pages(mini_repo, *filters)
+        assert total == len(full_rows), filters
+        assert [row["id"] for row in items] == sorted(
+            row["id"] for row in full_rows), filters
+        assert len({row["id"] for row in items}) == len(items), filters
+        for row in items:
+            assert set(row) <= allowed, (filters, sorted(row))
+            assert "knowledge_map" not in row and "notes_text" not in row
+
+
+def test_compact_unit_list_empty_result_shape(mini_repo):
+    _two_unit_repo(mini_repo)
+    result = run_los(mini_repo, "unit-list", "--compact", "--status", "paused")
+    assert result.returncode == 0, result.stderr
+    page = json.loads(result.stdout)
+    assert page["items"] == [] and page["total"] == 0
+    assert page["next_offset"] is None
+    assert page["filters"] == {"status": "paused"}
+
+
+def test_compact_unit_list_keeps_nulls_and_drops_absent(mini_repo):
+    from learning_os.commands.unit import _unit_summary
+
+    assert _unit_summary({"id": "u", "component_id": None}) == {
+        "id": "u", "component_id": None}
+    _two_unit_repo(mini_repo)
+    page = json.loads(run_los(mini_repo, "unit-list", "--compact",
+                              "--limit", "50").stdout)
+    by_id = {row["id"]: row for row in page["items"]}
+    assert "component_id" not in by_id["unit-demo-l01"]
+    assert by_id["unit-demo-l02"]["component_id"] == "component-demo-core"
+
+
+def test_compact_unit_list_ignores_unit_body_growth(mini_repo):
+    _two_unit_repo(mini_repo)
+    before = json.loads(run_los(mini_repo, "unit-list", "--compact",
+                                "--limit", "50").stdout)
+    full_before = run_los(mini_repo, "unit-list").stdout
+    unit_path = (mini_repo / "curriculum/modules/module-demo"
+                 "/units/unit-demo-l01/unit.yaml")
+    unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
+    unit["knowledge_map"] = {
+        "summary": "A large lecture map.",
+        "nodes": [{"id": "knowledge-demo-large", "title": "Large node",
+                   "summary": "Large-map-marker. " * 2000}],
+    }
+    write_yaml(unit_path, unit)
+    note_path = (mini_repo / "curriculum/modules/module-demo/units"
+                 "/unit-demo-l01/stages/stage-demo/notes.md")
+    note_path.write_text("Large-note-marker. " * 2000, encoding="utf-8")
+    after = json.loads(run_los(mini_repo, "unit-list", "--compact",
+                               "--limit", "50").stdout)
+    full_after = run_los(mini_repo, "unit-list").stdout
+    assert after["items"] == before["items"]
+    assert len(full_after) > len(full_before) + 10000
+    assert "Large-map-marker" not in json.dumps(after["items"])
+    assert "Large-note-marker" not in json.dumps(after["items"])
+    detail = json.loads(run_los(mini_repo, "inspect",
+                                "unit-demo-l01").stdout)
+    assert "Large-map-marker" in json.dumps(detail)
+
+
+def test_compact_unit_list_refusals(mini_repo):
+    _two_unit_repo(mini_repo)
+    first = json.loads(run_los(mini_repo, "unit-list",
+                               "--compact").stdout)
+    bad = (("unit-list", "--compact", "--offset", "-1"),
+           ("unit-list", "--compact", "--limit", "0"),
+           ("unit-list", "--compact", "--limit", "51"),
+           ("unit-list", "--compact", "--offset", "1"),
+           ("unit-list", "--offset", "1"),
+           ("unit-list", "--limit", "5"),
+           ("unit-list", "--expected-snapshot", first["snapshot_id"]))
+    for args in bad:
+        result = run_los(mini_repo, *args)
+        assert result.returncode != 0, args
+        assert not result.stdout, args
+
+
+def test_compact_unit_list_refuses_a_stale_snapshot(mini_repo):
+    _two_unit_repo(mini_repo)
+    first = json.loads(run_los(mini_repo, "unit-list", "--compact",
+                               "--limit", "1").stdout)
+    note = next(iter(load_repo(mini_repo).notes.values()))
+    note.path.write_text(note.path.read_text(encoding="utf-8")
+                         + "\nA changed explanation.\n", encoding="utf-8")
+    stale = run_los(mini_repo, "unit-list", "--compact", "--limit", "1",
+                    "--offset", "1",
+                    "--expected-snapshot", first["snapshot_id"])
+    assert stale.returncode == 3, stale.stderr
+    assert not stale.stdout
+
+
+def test_compact_unit_list_refuses_unreadable_unit(mini_repo):
+    _two_unit_repo(mini_repo)
+    unit_path = (mini_repo / "curriculum/modules/module-demo"
+                 "/units/unit-demo-l01/unit.yaml")
+    unit_path.write_text("id: [broken\n", encoding="utf-8")
+    full = run_los(mini_repo, "unit-list")
+    assert full.returncode != 0, full.stderr
+    compact = run_los(mini_repo, "unit-list", "--compact")
+    assert compact.returncode != 0, compact.stderr
+    assert not compact.stdout

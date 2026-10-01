@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+import shlex
 import sys
 from pathlib import Path, PurePosixPath
 
@@ -1177,15 +1178,77 @@ def _assessment_purpose_hit(assessment, purpose):
                for field in ("best_for", "exercise_value"))
 
 
+_ANCHOR_PREVIEW_LIMIT = 8
+_ANCHOR_TEXT_LIMIT = 200
+
+
+def _anchor_purpose_hit(anchor, wanted) -> bool:
+    return (isinstance(anchor, dict)
+            and wanted in str(anchor.get("purpose", "")).casefold())
+
+
+def _anchor_selection(anchors, purpose):
+    """Original-order anchors with literal purpose matches first, deduplicated.
+
+    Returns (ordered, match_count): match_count is None without a purpose
+    filter. Both groups keep file order; no anchor appears twice.
+    """
+    if not purpose:
+        return list(anchors), None
+    wanted = purpose.casefold()
+    matches = [anchor for anchor in anchors
+               if _anchor_purpose_hit(anchor, wanted)]
+    seen = {id(anchor) for anchor in matches}
+    return (matches + [anchor for anchor in anchors
+                       if id(anchor) not in seen], len(matches))
+
+
+def _clip_anchor_text(anchor):
+    """The anchor with every long text field bounded, naming what clipped."""
+    if not isinstance(anchor, dict):
+        return anchor
+    clipped = []
+    shaped = {}
+    for key, value in anchor.items():
+        if isinstance(value, str) and len(value) > _ANCHOR_TEXT_LIMIT:
+            shaped[key] = value[:_ANCHOR_TEXT_LIMIT]
+            clipped.append(key)
+        else:
+            shaped[key] = value
+    shaped["clipped_fields"] = clipped
+    return shaped
+
+
+def _anchor_expansion_command(args, limit, snapshot, observed) -> str:
+    """Re-run this read from offset zero with complete anchor indexes."""
+    parts = ["material-context", args.query or ""]
+    if args.concept:
+        parts += ["--concept", args.concept]
+    if args.purpose:
+        parts += ["--purpose", args.purpose]
+    if args.unit:
+        parts += ["--unit", args.unit]
+    if getattr(args, "material", None):
+        parts += ["--material", args.material]
+    if getattr(args, "include_related", False):
+        parts += ["--include-related"]
+    parts += ["--include-anchors", "--limit", str(limit), "--offset", "0",
+              "--expected-snapshot", snapshot,
+              "--expected-observations", observed]
+    return shlex.join(parts)
+
+
 def _analysis_note_item(root, note, *, raw_terms, terms, concept_id, purpose,
-                        unit, material_ref, scope, evidence, observations):
+                        unit, material_ref, scope, evidence, observations,
+                        include_anchors=False):
     """One matched analysis note, or None when the terms miss.
 
     Terms match the explanation text — title plus body — with lexical AND;
     frontmatter (provenance paths, digests, ids) never matches. Title hits
     yield a title snippet; body hits yield true file line numbers. The
     scope label exists only under --unit, where direct and related mean
-    something.
+    something. Anchors preview bounded (purpose matches first) with exact
+    totals; the complete index needs the explicit expansion.
     """
     raw = _note_bytes(root, note)
     text = raw.decode("utf-8")
@@ -1225,8 +1288,22 @@ def _analysis_note_item(root, note, *, raw_terms, terms, concept_id, purpose,
             "semantic_review": note.meta.get("semantic_review"),
             "resolution": binding.get("resolution"),
         },
-        "anchors": binding.get("anchors") or [],
     }
+    anchors = binding.get("anchors") or []
+    ordered, match_count = _anchor_selection(anchors, purpose)
+    if include_anchors:
+        item["anchors"] = list(anchors)
+        item["anchor_returned"] = len(anchors)
+        item["anchors_truncated"] = False
+    else:
+        item["anchors"] = [_clip_anchor_text(anchor)
+                           for anchor in ordered[:_ANCHOR_PREVIEW_LIMIT]]
+        item["anchor_returned"] = len(item["anchors"])
+        item["anchors_truncated"] = len(anchors) > _ANCHOR_PREVIEW_LIMIT
+    item["anchor_total"] = len(anchors)
+    if purpose:
+        item["purpose_match_count"] = match_count
+        item["purpose_other_count"] = len(anchors) - match_count
     if scope is not None:
         item["scope"] = scope
     return item
@@ -1365,13 +1442,15 @@ def cmd_material_context(args) -> int:
             items = []
             observations: dict[str, str] = {}
             dossier_freshness: dict[str, dict] = {}
+            include_anchors = bool(getattr(args, "include_anchors", False))
             for note in notes:
                 item = _analysis_note_item(
                     root, note, raw_terms=raw_terms, terms=terms,
                     concept_id=concept_id, purpose=args.purpose,
                     unit=args.unit, material_ref=material_ref,
                     scope="direct" if args.unit else None,
-                    evidence=evidence, observations=observations)
+                    evidence=evidence, observations=observations,
+                    include_anchors=include_anchors)
                 if item is not None:
                     items.append(item)
             for synthesis_id, unit_id, assessment in assessments:
@@ -1442,7 +1521,8 @@ def cmd_material_context(args) -> int:
                     concept_id=concept_id, purpose=args.purpose,
                     unit=args.unit, material_ref=material_ref,
                     scope="related",
-                    evidence=evidence, observations=observations)
+                    evidence=evidence, observations=observations,
+                    include_anchors=include_anchors)
                 if item is not None:
                     related_items.append(item)
             # Stable sort: evidence ranks, ties keep insertion order
@@ -1480,10 +1560,11 @@ def cmd_material_context(args) -> int:
             if args.include_related:
                 ranked_by += ("; --include-related appends related notes "
                               "under the same ranking")
+            returned = items[offset:offset + limit]
             payload = {
                 "contract": "material-context",
                 "ranked_by": ranked_by,
-                "items": items[offset:offset + limit],
+                "items": returned,
                 "total": len(items),
                 "next_offset": offset + limit if offset + limit < len(items) else None,
                 "observations_sha256": observed,
@@ -1501,6 +1582,15 @@ def cmd_material_context(args) -> int:
                 payload["empty"] = (
                     "no match in the searched records; this never proves "
                     "no source explains the topic")
+            if not include_anchors and any(
+                    item.get("origin") == "analysis-note"
+                    and (item.get("anchors_truncated")
+                         or any(row.get("clipped_fields")
+                                for row in item.get("anchors", [])
+                                if isinstance(row, dict)))
+                    for item in returned):
+                payload["expand"] = {"anchors": _anchor_expansion_command(
+                    args, limit, snapshot, observed)}
             return _print_stable(root, snapshot, payload)
     except (WriteRefused, OSError, UnicodeError) as exc:
         return _refusal(exc)

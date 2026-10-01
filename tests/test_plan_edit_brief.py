@@ -205,3 +205,161 @@ def test_brief_refuses_selectors_and_audit(mini_repo):
                    "--brief", "--audit")
     assert proc.returncode == 2
     assert "already carries the unit audit" in proc.stderr
+
+
+def _second_unit(root: Path):
+    module_dir = root / "curriculum/modules/module-demo"
+    write_yaml(module_dir / "units/unit-demo-l02/unit.yaml", {
+        "id": "unit-demo-l02", "type": "unit", "module_id": "module-demo",
+        "kind": "lecture", "title": "Variance", "order": 2,
+        "scope": "The second lecture as taught.", "status": "needs-map",
+        "artifacts": {"ultimate_reference": "note-demo"},
+        "workspace_ids": ["workspace-demo"],
+    })
+    map_path = module_dir / "source-map.yaml"
+    source_map = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    source_map["sources"][0]["unit_routes"].append({
+        "id": "route-demo-l02", "unit_id": "unit-demo-l02",
+        "title": "Variance", "locator": "deck.pdf, pp. 10-12",
+        "depth": "core", "scope": "current",
+    })
+    write_yaml(map_path, source_map)
+    module_path = module_dir / "module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module["unit_order"].append("unit-demo-l02")
+    write_yaml(module_path, module)
+
+
+def _run_expansion(root: Path, command: str):
+    argv = shlex.split(command)
+    assert argv.pop(0) == "los"
+    return run_los(root, *argv)
+
+
+def test_brief_reports_neighbor_count_with_runnable_expansion(mini_repo):
+    _seed_unit(mini_repo)
+    _second_unit(mini_repo)
+    payload = _brief(mini_repo)
+    audit = payload["unit_audit"]
+    assert audit["adjacent_unit_source_reuse_count"] == 1
+    assert "adjacent_unit_source_reuse" not in audit
+    proc = _run_expansion(mini_repo, payload["expand"]["adjacent_unit_source_reuse"])
+    assert proc.returncode == 0, proc.stderr
+    widened = json.loads(proc.stdout)["unit_audit"]
+    assert widened["adjacent_unit_source_reuse"] == {
+        "unit-demo-l02": ["source-demo-book"]}
+    assert widened["adjacent_unit_source_reuse_count"] == 1
+    slim = {key: value for key, value in audit.items()
+            if key != "adjacent_unit_source_reuse_count"}
+    wide = {key: value for key, value in widened.items()
+            if key not in ("adjacent_unit_source_reuse_count",
+                           "adjacent_unit_source_reuse")}
+    assert slim == wide
+
+
+def test_brief_neighbor_expansion_matches_full_audit(mini_repo):
+    _seed_unit(mini_repo)
+    _second_unit(mini_repo)
+    payload = _brief(mini_repo)
+    proc = _run_expansion(mini_repo, payload["expand"]["adjacent_unit_source_reuse"])
+    assert proc.returncode == 0, proc.stderr
+    widened = json.loads(proc.stdout)
+    audit_proc = run_los(mini_repo, "plan-edit-context", "unit-demo-l01",
+                         "--audit")
+    assert audit_proc.returncode == 0, audit_proc.stderr
+    audit = json.loads(audit_proc.stdout)
+    assert audit["snapshot_id"] == widened["snapshot_id"] == payload["snapshot_id"]
+    assert (widened["unit_audit"]["adjacent_unit_source_reuse"]
+            == audit["unit_audit"]["adjacent_unit_source_reuse"])
+
+
+def test_brief_without_neighbors_reports_zero_and_empty_map(mini_repo):
+    _seed_unit(mini_repo)
+    payload = _brief(mini_repo)
+    assert payload["unit_audit"]["adjacent_unit_source_reuse_count"] == 0
+    assert "adjacent_unit_source_reuse" not in payload["unit_audit"]
+    proc = _run_expansion(mini_repo, payload["expand"]["adjacent_unit_source_reuse"])
+    assert proc.returncode == 0, proc.stderr
+    widened = json.loads(proc.stdout)["unit_audit"]
+    assert widened["adjacent_unit_source_reuse"] == {}
+    assert widened["adjacent_unit_source_reuse_count"] == 0
+
+
+def test_brief_neighbor_growth_stays_in_the_count(mini_repo):
+    _seed_unit(mini_repo)
+    solo_proc = run_los(mini_repo, "plan-edit-context", "unit-demo-l01",
+                        "--brief")
+    assert solo_proc.returncode == 0, solo_proc.stderr
+    solo = json.loads(solo_proc.stdout)
+    _second_unit(mini_repo)
+    duo_proc = run_los(mini_repo, "plan-edit-context", "unit-demo-l01",
+                       "--brief")
+    assert duo_proc.returncode == 0, duo_proc.stderr
+    duo = json.loads(duo_proc.stdout)
+    assert duo["unit_audit"]["adjacent_unit_source_reuse_count"] == 1
+    assert "adjacent_unit_source_reuse" not in duo["unit_audit"]
+    solo_audit = dict(solo["unit_audit"])
+    duo_audit = dict(duo["unit_audit"])
+    assert duo_audit.pop("adjacent_unit_source_reuse_count") == 1
+    assert solo_audit.pop("adjacent_unit_source_reuse_count") == 0
+    assert duo_audit == solo_audit
+    solo_expand = dict(solo["expand"])
+    duo_expand = dict(duo["expand"])
+    solo_expand.pop("adjacent_unit_source_reuse")
+    duo_expand.pop("adjacent_unit_source_reuse")
+    assert duo_expand == solo_expand
+    for key in ("contract", "unit_id", "module_id", "artifact_revisions",
+                "inventory", "analysis_refs", "required_inputs", "preflight"):
+        assert duo[key] == solo[key], key
+    assert len(duo_proc.stdout) - len(solo_proc.stdout) < 200
+
+
+def test_brief_neighbors_combine_with_related(mini_repo):
+    _seed_unit(mini_repo)
+    _second_unit(mini_repo)
+    body = "Density from an unrouted file.\n"
+    _plant_note(mini_repo, "note-brief-related", body, {
+        "resolution": "resolved",
+        "material": "source-demo-book/other.pdf",
+        "source_id": "source-demo-book",
+        "recorded_source_digest": "ee" * 32,
+        "live_source_digest": "ee" * 32,
+        "inspected_range": {"start": 1, "end": 3},
+        "frozen_input_sha256": hashlib.sha256(body.encode("utf-8")).hexdigest(),
+        "frozen_input_bytes": len(body.encode("utf-8")),
+    })
+    refs = _brief(mini_repo)["analysis_refs"]
+    assert refs["related_count"] == 1
+    widened = _brief(mini_repo, "--include-related", "--include-neighbors")
+    assert [ref["note_id"] for ref in widened["analysis_refs"]["related_notes"]] == [
+        "note-brief-related"]
+    assert widened["unit_audit"]["adjacent_unit_source_reuse"] == {
+        "unit-demo-l02": ["source-demo-book"]}
+
+
+def test_brief_include_neighbors_is_refused_without_brief(mini_repo):
+    _seed_unit(mini_repo)
+    cases = (("--route-id", "route-demo-density"),
+             ("--stage-id", "stage-demo"),
+             ("--audit",),
+             ())
+    for extra in cases:
+        proc = run_los(mini_repo, "plan-edit-context", "unit-demo-l01",
+                       *extra, "--include-neighbors")
+        assert proc.returncode == 2, extra
+        assert "needs --brief" in proc.stderr, extra
+        assert not proc.stdout, extra
+
+
+def test_brief_neighbor_expansion_refuses_a_stale_snapshot(mini_repo):
+    _seed_unit(mini_repo)
+    _second_unit(mini_repo)
+    payload = _brief(mini_repo)
+    command = payload["expand"]["adjacent_unit_source_reuse"]
+    note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
+    note.write_text(note.read_text(encoding="utf-8")
+                    + "\nA changed explanation.\n", encoding="utf-8")
+    proc = _run_expansion(mini_repo, command)
+    assert proc.returncode == 2, proc.stderr
+    assert "snapshot changed" in proc.stderr
+    assert not proc.stdout

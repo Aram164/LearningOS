@@ -775,3 +775,140 @@ def test_two_file_route_labels_both_files_direct(mini_repo):
     other = _context(mini_repo, "--material", "source-demo-book/other.pdf")
     assert all(row.get("route_id") != "route-demo-dual"
                for row in other["items"])
+
+
+def _seed_anchored_note(root: Path, count: int, matches=frozenset({0})):
+    digest = _seed_material(root, "deck.pdf", b"live bytes")
+    anchors = [{
+        "topic": f"Topic {number}",
+        "purpose": ("integration" if number in matches
+                    else "separate-topic reference"),
+        "locator": f"deck.pdf, p. {number + 1}",
+        "note": f"Anchor note {number}.",
+    } for number in range(count)]
+    _plant_note(root, "note-context-anchored", ANALYSIS_BODY,
+                _binding("deck.pdf", digest, ANALYSIS_BODY, anchors=anchors))
+    return anchors
+
+
+def test_anchor_preview_bounds_the_default_response(mini_repo):
+    _seed_anchored_note(mini_repo, 100)
+    payload = _context(mini_repo, "density", "--limit", "1")
+    item = payload["items"][0]
+    assert item["anchor_total"] == 100
+    assert item["anchor_returned"] == 8
+    assert item["anchors_truncated"] is True
+    assert [anchor["topic"] for anchor in item["anchors"]] == [
+        f"Topic {number}" for number in range(8)]
+    assert all(anchor["clipped_fields"] == [] for anchor in item["anchors"])
+    assert "expand" in payload and "anchors" in payload["expand"]
+
+
+def test_anchor_preview_ignores_index_growth(mini_repo):
+    _seed_anchored_note(mini_repo, 100)
+    small = run_los(mini_repo, "material-context", "density", "--limit", "1")
+    assert small.returncode == 0, small.stderr
+    path = mini_repo / "knowledge/notes/mathematics/note-context-anchored.md"
+    text = path.read_text(encoding="utf-8")
+    _head, sep, body = text.partition("\n---\n\n")
+    meta = yaml.safe_load(_head.removeprefix("---\n"))
+    grown = meta["material_analysis"]["anchors"] + [{
+        "topic": f"Topic {number}", "purpose": "separate-topic reference",
+        "locator": f"deck.pdf, p. {number + 1}",
+        "note": f"Anchor note {number}.",
+    } for number in range(100, 200)]
+    meta["material_analysis"]["anchors"] = grown
+    path.write_bytes(("---\n" + yaml.safe_dump(meta, sort_keys=False).rstrip()
+                      + "\n---\n\n" + body).encode("utf-8"))
+    big = run_los(mini_repo, "material-context", "density", "--limit", "1")
+    assert big.returncode == 0, big.stderr
+    grown_item = json.loads(big.stdout)["items"][0]
+    assert grown_item["anchor_total"] == 200
+    assert grown_item["anchor_returned"] == 8
+    assert len(big.stdout) - len(small.stdout) < 300
+    full = run_los(mini_repo, "material-context", "density", "--limit", "1",
+                   "--include-anchors")
+    assert full.returncode == 0, full.stderr
+    assert len(json.loads(full.stdout)["items"][0]["anchors"]) == 200
+
+
+def test_anchor_preview_puts_purpose_matches_first(mini_repo):
+    _seed_anchored_note(mini_repo, 100, matches=frozenset({50, 51}))
+    payload = _context(mini_repo, "density", "--purpose", "integration",
+                       "--limit", "1")
+    item = payload["items"][0]
+    assert item["anchor_total"] == 100
+    assert item["purpose_match_count"] == 2
+    assert item["purpose_other_count"] == 98
+    assert [anchor["topic"] for anchor in item["anchors"]] == [
+        "Topic 50", "Topic 51"] + [f"Topic {number}" for number in range(6)]
+    assert all(anchor["clipped_fields"] == [] for anchor in item["anchors"])
+
+
+def test_anchor_preview_clips_long_text_with_markers(mini_repo):
+    digest = _seed_material(mini_repo, "deck.pdf", b"live bytes")
+    _plant_note(mini_repo, "note-context-anchored", ANALYSIS_BODY, _binding(
+        "deck.pdf", digest, ANALYSIS_BODY, anchors=[
+            {"topic": "Short topic", "purpose": "integration",
+             "locator": "L" * 300, "note": "N" * 300},
+            {"topic": "Second", "purpose": "separate-topic reference",
+             "locator": "deck.pdf, p. 2", "note": "Short note."},
+        ]))
+    payload = _context(mini_repo, "density", "--limit", "1")
+    item = payload["items"][0]
+    assert item["anchor_total"] == 2
+    assert item["anchors_truncated"] is False
+    first, second = item["anchors"]
+    assert len(first["locator"]) == 200 and len(first["note"]) == 200
+    assert sorted(first["clipped_fields"]) == ["locator", "note"]
+    assert first["topic"] == "Short topic"
+    assert second["clipped_fields"] == []
+    assert "expand" in payload
+
+
+def test_include_anchors_returns_the_complete_verbatim_index(mini_repo):
+    import shlex
+
+    anchors = _seed_anchored_note(mini_repo, 100, matches=frozenset({50}))
+    preview = _context(mini_repo, "density", "--purpose", "integration",
+                       "--limit", "1")
+    proc = run_los(mini_repo, *shlex.split(preview["expand"]["anchors"]))
+    assert proc.returncode == 0, proc.stderr
+    full = json.loads(proc.stdout)
+    assert full["snapshot_id"] == preview["snapshot_id"]
+    assert full["observations_sha256"] == preview["observations_sha256"]
+    item = full["items"][0]
+    assert item["anchors"] == anchors
+    assert item["anchor_total"] == 100
+    assert item["anchor_returned"] == 100
+    assert item["anchors_truncated"] is False
+    assert item["purpose_match_count"] == 1
+    assert item["purpose_other_count"] == 99
+    assert "clipped_fields" not in json.dumps(item["anchors"])
+    assert "expand" not in full
+
+
+def test_anchor_preview_empty_and_single_notes_stay_compact(mini_repo):
+    digest = _seed_material(mini_repo, "deck.pdf", b"live bytes")
+    _plant_note(mini_repo, "note-context-bare", ANALYSIS_BODY,
+                _binding("deck.pdf", digest, ANALYSIS_BODY))
+    payload = _context(mini_repo, "density", "--limit", "5")
+    item = next(row for row in payload["items"]
+                if row.get("id") == "note-context-bare")
+    assert item["anchors"] == []
+    assert item["anchor_total"] == 0
+    assert item["anchor_returned"] == 0
+    assert item["anchors_truncated"] is False
+    assert "expand" not in payload
+    _plant_note(mini_repo, "note-context-single", ANALYSIS_BODY, _binding(
+        "deck.pdf", digest, ANALYSIS_BODY, anchors=[
+            {"topic": "Only", "purpose": "integration",
+             "locator": "deck.pdf, p. 1"},
+        ]))
+    payload = _context(mini_repo, "density", "--limit", "5")
+    item = next(row for row in payload["items"]
+                if row.get("id") == "note-context-single")
+    assert len(item["anchors"]) == 1
+    assert item["anchors"][0]["clipped_fields"] == []
+    assert "note" not in item["anchors"][0]
+    assert item["anchors_truncated"] is False

@@ -81,7 +81,9 @@ Pick one entry read; do not stack them:
   `plan-edit-context UNIT_ID --brief` first (guards, id inventories,
   missing evidence, reusable analysis refs, preflight checks, runnable
   expands), then expand one route, stage, or the full `--audit` form
-  only when the task needs complete bodies.
+  only when the task needs complete bodies. The brief counts
+  neighboring units sharing sources; add `--include-neighbors` only
+  when cross-lecture reuse is the question.
 - An open "what should I work on?" / "what next?" → `bootstrap --brief`,
   then the named workspace plus `inspect WORKSPACE_ID`; use
   `inspect coordination` when priorities matter.
@@ -110,7 +112,9 @@ Decide which read answers the question before reading:
   With `--unit`,
   default results are route-direct only; `--include-related` appends
   same-source notes labelled `related`, and `--material PATH` filters notes
-  and assessments to one exact materials file.
+  and assessments to one exact materials file. Analysis anchors preview
+  bounded (purpose matches first) with exact totals; expand a complete
+  index with the response's `--include-anchors` continuation.
 - A new video → title/description and course/playlist membership for provisional
   intake. Examine with Gemini Notebook only when selected for use, verify
   against exact video timestamps, then save the bounded analysis; see
@@ -198,7 +202,10 @@ components, units, study maps, stages, source maps, topics, joins, progress,
 resume pointer, structured academic deadlines (registered attempts, available
 sittings, and registration windows), and the Future Master's Planning boundary. Interfaces must not reconstruct
 application state by parsing canonical Markdown or YAML. Use `list-*`,
-`inspect`, `search`, and `related` for targeted reads. `search` without
+`inspect`, `search`, and `related` for targeted reads. Discover units
+with exact filters through `unit-list --compact --module-id MODULE_ID`,
+select an ID, then `inspect ID` for detail; continuations repeat the
+filters with the returned offset and snapshot. `search` without
 `--content` conjoins whitespace-separated substrings per row — every term
 must occur somewhere in the row — unranked and without snippets, so short
 stems collide and natural phrasing often returns nothing. An empty answer
@@ -212,7 +219,15 @@ backlink tables in both directions, so membership in one direction always
 implies the reverse edge. Results rank by connection strength (more
 distinct edges first), then recorded stage use-evidence per source
 (positive first, mismatch last, as in material-context), then stable id;
-each result names the edges that produced it in `via`.
+each result names the edges that produced it in `via`. Page a long
+metadata result with `search QUERY --type TYPE --page` and continue with
+the returned `--offset` and `--expected-snapshot`; the plain array
+response keeps its existing shape for explicit bulk reads. Discover
+abilities through the bounded `ability-context` horizon first —
+`--limit`/`--offset` with the previous `--expected-snapshot` past the
+first page — and expand one known ID with `ability-context ABILITY_ID`:
+`--brief` for state and connection checks, `--section evidence` for the
+complete observation ledger, per-stage expansions for materials.
 
 ## Product hierarchy
 

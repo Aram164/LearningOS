@@ -24,6 +24,7 @@ from learning_os.revisions import artifact_revision
 from learning_os.routes import route_with_identity
 from learning_os.unit_notes import unit_note_marker
 
+from .reads import _print_stable, _refusal, _snapshot, _window
 from .support import (
     WriteRefused,
     _dump_study_map,
@@ -39,9 +40,17 @@ from .support import (
     _write_transaction,
 )
 
+_UNIT_SUMMARY_FIELDS = ("id", "title", "status", "module_id", "component_id",
+                        "order", "current_study_map", "needs_study_map")
+_COMPACT_LIMIT_DEFAULT = 20
 
-def cmd_unit_list(args) -> int:
-    manifest = _fresh_manifest(_root(args))
+
+def _unit_summary(row):
+    """The eight discovery fields, with explicit nulls kept and absent dropped."""
+    return {key: row[key] for key in _UNIT_SUMMARY_FIELDS if key in row}
+
+
+def _filtered_units(manifest, args):
     rows = manifest.get("units", [])
     if args.module_id:
         rows = [row for row in rows if row.get("module_id") == args.module_id]
@@ -49,7 +58,44 @@ def cmd_unit_list(args) -> int:
         rows = [row for row in rows if row.get("component_id") == args.component_id]
     if args.status:
         rows = [row for row in rows if row.get("status") == args.status]
-    return _print_rows(rows)
+    return rows
+
+
+def _unit_list_compact(args) -> int:
+    root = _root(args)
+    try:
+        offset, limit = _window(args, 50)
+        with _operator_lock(root):
+            snapshot = _snapshot(root, args.expected_snapshot)
+            manifest = _fresh_manifest(root)
+            rows = sorted(_filtered_units(manifest, args),
+                          key=lambda row: row["id"])
+            total = len(rows)
+            items = [_unit_summary(row) for row in rows[offset:offset + limit]]
+            return _print_stable(root, snapshot, {
+                "contract": "unit-list-summary",
+                "filters": {key: value for key, value in (
+                    ("module_id", args.module_id),
+                    ("component_id", args.component_id),
+                    ("status", args.status)) if value is not None},
+                "items": items, "total": total,
+                "next_offset": offset + limit if offset + limit < total else None,
+                "detail": "inspect UNIT_ID",
+            })
+    except (WriteRefused, OSError) as exc:
+        return _refusal(exc)
+
+
+def cmd_unit_list(args) -> int:
+    if getattr(args, "compact", False):
+        return _unit_list_compact(args)
+    if (getattr(args, "offset", 0) or args.limit != _COMPACT_LIMIT_DEFAULT
+            or getattr(args, "expected_snapshot", None) is not None):
+        print("los: --offset/--limit/--expected-snapshot need --compact",
+              file=sys.stderr)
+        return 2
+    manifest = _fresh_manifest(_root(args))
+    return _print_rows(_filtered_units(manifest, args))
 
 
 # --------------------------------------------------------- map replacement

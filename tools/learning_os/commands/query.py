@@ -4,6 +4,7 @@ and the thin delegations to validate.py / generate.py."""
 from __future__ import annotations
 
 import json
+import shlex
 import sys
 from pathlib import Path
 
@@ -15,6 +16,10 @@ from learning_os.pathing import PathBoundaryError, read_text_inside
 from learning_os.rules import validate
 
 from .reads import (
+    _print_stable,
+    _refusal,
+    _snapshot,
+    _window,
     brief_bootstrap,
     compact_bootstrap,
     content_search,
@@ -27,6 +32,7 @@ from .reads import (
     structural_payload,
 )
 from .support import (
+    WriteRefused,
     _delegate,
     _fresh_manifest,
     _fresh_manifest_and_repo,
@@ -252,10 +258,21 @@ def _inbox_search_rows(root: Path) -> list[dict]:
     return rows
 
 
-def cmd_search(args) -> int:
-    if getattr(args, "content", False):
-        return content_search(args)
-    root = _root(args)
+def _array_window(args) -> tuple[int, int]:
+    """Offset/limit check for the legacy array response: unbounded, valid only."""
+    offset, limit = args.offset, args.limit
+    if offset < 0 or limit < 1:
+        raise WriteRefused("offset must be nonnegative and limit at least 1")
+    return offset, limit
+
+
+def _metadata_matches(root: Path, args) -> tuple[list[dict], list[str], list[int]]:
+    """Literal-AND metadata matches in deterministic manifest order.
+
+    Shared by the legacy array response and the opt-in page packet, so the
+    two cannot disagree about what matches. An inbox listing failure refuses
+    here: discovery must not silently omit drops.
+    """
     manifest = _fresh_manifest(root)
     words = [w for w in args.query.lower().split() if w]
     rows = list(manifest["records"])
@@ -265,8 +282,7 @@ def cmd_search(args) -> int:
         try:
             rows.extend(_inbox_search_rows(root))
         except OSError as exc:
-            print(f"los: cannot list work/inbox: {exc}", file=sys.stderr)
-            return 2
+            raise WriteRefused(f"cannot list work/inbox: {exc}") from exc
     matches = []
     hits = [0] * len(words)
     for rec in rows:
@@ -279,9 +295,66 @@ def cmd_search(args) -> int:
                 hits[index] += 1
         if all(found):
             matches.append(_discovery_row(rec))
+    return matches, words, hits
+
+
+def _metadata_next_command(args, limit: int, next_offset: int, snapshot: str) -> str:
+    parts = ["search", args.query]
+    if args.type:
+        parts += ["--type", args.type]
+    parts += ["--page", "--limit", str(limit), "--offset", str(next_offset),
+              "--expected-snapshot", snapshot]
+    return shlex.join(parts)
+
+
+def _metadata_search_page(args) -> int:
+    """Opt-in paged metadata packet: totals and a snapshot-bound continuation."""
+    root = _root(args)
+    try:
+        offset, limit = _window(args, 100)
+        with _operator_lock(root):
+            snapshot = _snapshot(root, args.expected_snapshot)
+            matches, words, hits = _metadata_matches(root, args)
+            if not matches and words:
+                print(f"los: {empty_search_hint('record', words, hits)}",
+                      file=sys.stderr)
+            total = len(matches)
+            items = matches[offset:offset + limit]
+            next_offset = offset + limit if offset + limit < total else None
+            return _print_stable(root, snapshot, {
+                "contract": "metadata-search-page",
+                "items": items, "total": total,
+                "offset": offset, "returned": len(items),
+                "next_offset": next_offset,
+                "has_more": next_offset is not None,
+                "expand": {"next": _metadata_next_command(args, limit, next_offset, snapshot)
+                           if next_offset is not None else None},
+            })
+    except (WriteRefused, OSError) as exc:
+        return _refusal(exc)
+
+
+def cmd_search(args) -> int:
+    if getattr(args, "content", False):
+        if getattr(args, "page", False):
+            print("los: --page pages metadata search; --content already paginates",
+                  file=sys.stderr)
+            return 2
+        return content_search(args)
+    if getattr(args, "page", False):
+        return _metadata_search_page(args)
+    root = _root(args)
+    try:
+        offset, limit = _array_window(args)
+        with _operator_lock(root):
+            snapshot = _snapshot(root, args.expected_snapshot)
+            matches, words, hits = _metadata_matches(root, args)
+            _snapshot(root, snapshot)
+    except (WriteRefused, OSError) as exc:
+        return _refusal(exc)
     if not matches and words:
         print(f"los: {empty_search_hint('record', words, hits)}", file=sys.stderr)
-    print(json.dumps(matches[:args.limit], **_json_layout(), sort_keys=True, ensure_ascii=False))
+    print(json.dumps(matches[offset:offset + limit], **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
 
