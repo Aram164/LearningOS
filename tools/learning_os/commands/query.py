@@ -365,7 +365,7 @@ def _metadata_search_page(args) -> int:
     root = _root(args)
     try:
         offset, limit = _window(args, 100)
-        with _operator_lock(root):
+        with _operator_lock(root, shared=True):
             snapshot = _snapshot(root, args.expected_snapshot)
             matches, words, hits = _metadata_matches(root, args, snapshot)
             if not matches and words:
@@ -401,7 +401,7 @@ def cmd_search(args) -> int:
     root = _root(args)
     try:
         offset, limit = _array_window(args)
-        with _operator_lock(root):
+        with _operator_lock(root, shared=True):
             snapshot = _snapshot(root, args.expected_snapshot)
             matches, words, hits = _metadata_matches(root, args, snapshot)
             _snapshot(root, snapshot)
@@ -445,7 +445,7 @@ def cmd_inspect(args) -> int:
     if getattr(args, "more_ids", None):
         return inspect_batch(args)
     root = _root(args)
-    with _operator_lock(root):
+    with _operator_lock(root, shared=True):
         manifest, repo = _fresh_manifest_and_repo(root)
         payload = record_payload(manifest, args.id)
         if payload is None:

@@ -54,9 +54,18 @@ from learning_os.transactions import (
 )
 
 TOOLS = Path(__file__).resolve().parent.parent.parent
-_HELD_OPERATOR_LOCKS: contextvars.ContextVar[frozenset[str]] = (
-    contextvars.ContextVar("learningos_held_operator_locks", default=frozenset())
+#: Roots locked by this context: ``((root_key, mode, handle), ...)`` with
+#: mode ``"shared"`` or ``"exclusive"``. Immutable tuples, never mutated in
+#: place: escalation replaces the whole value, and the owning scope's reset
+#: still restores the pre-scope value afterwards.
+_HELD_OPERATOR_LOCKS: contextvars.ContextVar[tuple] = (
+    contextvars.ContextVar("learningos_held_operator_locks", default=())
 )
+
+#: Positive-only cache of repository roots to their git directories. A root
+#: that gains a `.git` mid-process (tests do) must be re-probed, so misses
+#: are never cached; hits are revalidated with `is_dir`.
+_GIT_DIR_CACHE: dict[str, Path] = {}
 
 def _root(args) -> Path:
     return Path(args.root).resolve() if args.root else TOOLS.parent
@@ -154,52 +163,219 @@ def _allocate_attachment_path(attachment_dir: Path, source_name: str) -> Path:
         counter += 1
 
 
-@contextlib.contextmanager
-def _operator_lock(root: Path):
-    """Cross-process lock for every write/generation transaction.
+def _git_dir(root: Path) -> Path | None:
+    """This checkout's git directory, or None when the root has none.
+
+    `git rev-parse --git-dir` answers per checkout (a worktree names its own
+    `.git/worktrees/<name>`), so separate checkouts of one repository keep
+    separate locks. A relative answer (`.git`) resolves against the root.
+    Anything unresolvable — no git, no repository, a vanished directory —
+    answers None and the caller keeps today's temp-dir location.
+    """
+    root_key = str(root.resolve())
+    hit = _GIT_DIR_CACHE.get(root_key)
+    if hit is not None and hit.is_dir():
+        return hit
+    try:
+        proc = subprocess.run(
+            ["git", "-C", root_key, "rev-parse", "--git-dir"],
+            capture_output=True, text=True, timeout=30,
+            env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"},
+        )
+    except (OSError, subprocess.SubprocessError):
+        return None
+    if proc.returncode != 0:
+        return None
+    lines = proc.stdout.strip().splitlines()
+    if not lines or not lines[0].strip():
+        return None
+    candidate = Path(lines[0].strip())
+    resolved = candidate if candidate.is_absolute() else root / candidate
+    try:
+        if not resolved.is_dir():
+            return None
+        resolved = resolved.resolve()
+    except OSError:
+        return None
+    _GIT_DIR_CACHE[root_key] = resolved
+    return resolved
+
+
+def _process_state_dir(root: Path) -> Path:
+    """Where this checkout's operator lock and session ledgers live.
+
+    `<git-dir>/learningos/` — per checkout, never committed, surviving `git
+    clean` — so processes whose environments differ (and whose `$TMPDIR`
+    therefore disagrees) still exclude each other and still find each
+    other's ledgers. Roots without a git dir (the synthetic test
+    repositories) keep today's temp-dir location. When the anchor exists
+    but is not writable the command is refused; falling back to a temp
+    directory then would silently split the lock again.
+    """
+    git_dir = _git_dir(root)
+    if git_dir is None:
+        return Path(tempfile.gettempdir())
+    state = git_dir / "learningos"
+    try:
+        state.mkdir(parents=True, exist_ok=True)
+    except OSError as exc:
+        raise WriteRefused(
+            f"operator state directory is not writable: {state}: "
+            f"{exc.strerror or exc}") from exc
+    return state
+
+
+def _is_anchored(root: Path) -> bool:
+    return _git_dir(root) is not None
+
+
+def _operator_lock_path(root: Path) -> Path:
+    if _is_anchored(root):
+        return _process_state_dir(root) / "operator.lock"
+    token = hashlib.sha256(str(root.resolve()).encode("utf-8")).hexdigest()[:16]
+    return Path(tempfile.gettempdir()) / f"learningos-{token}.lock"
+
+
+def _held_entry(root_key: str) -> tuple[str, object] | None:
+    for key, mode, handle in _HELD_OPERATOR_LOCKS.get():
+        if key == root_key:
+            return mode, handle
+    return None
+
+
+def _acquire_flock(handle, *, exclusive: bool, lock_path: Path,
+                   timeout: float | None) -> None:
+    """Take the flock both modes contend for, announcing the wait (#101).
 
     A contender probes first and announces the wait on stderr — with the
     holder's pid, command, and start time when the lock file names them —
     instead of hanging silently. `LOS_LOCK_TIMEOUT` (or `los
-    --lock-timeout`) bounds the wait; on expiry a WriteRefused naming the
-    holder propagates, which every entry point maps to exit 2 with nothing
-    changed. Re-entrancy and crash-recovery-on-acquire are unchanged.
+    --lock-timeout`) bounds the wait identically for both modes; on expiry
+    a WriteRefused naming the holder propagates, which every entry point
+    maps to exit 2 with nothing changed.
+    """
+    flag = fcntl.LOCK_EX if exclusive else fcntl.LOCK_SH
+    try:
+        fcntl.flock(handle.fileno(), flag | fcntl.LOCK_NB)
+        return
+    except BlockingIOError:
+        pass
+    holder = _read_holder(lock_path)
+    detail = f" {holder}" if holder else ""
+    print(f"los: waiting for the operator lock{detail}", file=sys.stderr)
+    if timeout is None:
+        fcntl.flock(handle.fileno(), flag)
+        return
+    deadline = time.monotonic() + timeout
+    while True:
+        remaining = deadline - time.monotonic()
+        if remaining <= 0:
+            raise WriteRefused(
+                f"timed out after {timeout:g}s waiting for the "
+                f"operator lock{detail}") from None
+        time.sleep(min(_LOCK_POLL_INTERVAL_S, remaining))
+        try:
+            fcntl.flock(handle.fileno(), flag | fcntl.LOCK_NB)
+            return
+        except BlockingIOError:
+            continue
+
+
+def _has_armed_inflight(root: Path) -> bool:
+    """Whether a published crash journal awaits recovery (read-only probe).
+
+    Staging debris (`.preparing-*`) died before the first canonical
+    mutation, so it proves nothing and waits for the next exclusive
+    acquisition to drop it. A published journal means canonical state may
+    be torn, and a shared lock must not serve it without recovery.
+    """
+    inflight = root / "operations" / "transactions" / ".inflight"
+    try:
+        return any(not entry.name.startswith(".preparing-")
+                   for entry in inflight.iterdir())
+    except OSError:
+        return False
+
+
+def _escalate_operator_lock(root: Path) -> bool:
+    """Drop a held shared lock and take the exclusive one; True when it dropped.
+
+    Never upgrades in place: the shared lock is released first, then the
+    exclusive lock is contended for like any fresh acquisition (announced,
+    bounded by the same timeout), and only then do the holder record and
+    crash recovery run. Already-exclusive answers False having changed
+    nothing. The mode update replaces the context value; the owning
+    scope's reset still restores the pre-scope value on exit.
     """
     root_key = str(root.resolve())
-    held = _HELD_OPERATOR_LOCKS.get()
-    if root_key in held:
+    entry = _held_entry(root_key)
+    if entry is None:
+        raise RuntimeError(
+            f"cannot escalate the operator lock for {root_key}: not held")
+    mode, handle = entry
+    if mode == "exclusive":
+        return False
+    fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+    _acquire_flock(handle, exclusive=True,
+                   lock_path=_operator_lock_path(root),
+                   timeout=_lock_timeout_seconds())
+    _write_holder(handle)
+    reconcile_inflight_transactions(root)
+    _HELD_OPERATOR_LOCKS.set(tuple(
+        (key, "exclusive" if key == root_key else held_mode, held_handle)
+        for key, held_mode, held_handle in _HELD_OPERATOR_LOCKS.get()
+    ))
+    return True
+
+
+@contextlib.contextmanager
+def _operator_lock(root: Path, *, shared: bool = False):
+    """Cross-process lock for every read and write/generation transaction.
+
+    Writes take it exclusive, as before. Reads that only serve a provably
+    current manifest take it shared (`LOCK_SH`) so they no longer
+    serialize against each other; a read that must rebuild drops the
+    shared lock, takes the exclusive one, re-checks the identity, then
+    builds (see `_fresh_manifest_and_repo`). A write nested inside a
+    shared section escalates it — exclusive subsumes the read guarantee,
+    it never violates it — and a shared request inside an exclusive
+    section passes straight through.
+
+    Shared holders neither write the holder record (concurrent writers
+    would garble it) nor run crash recovery (it writes); when a published
+    crash journal is present the acquisition escalates to exclusive
+    immediately, so every read still observes post-recovery state. The
+    wait announcement and `--lock-timeout` semantics are identical for
+    both modes, and re-entrancy is unchanged.
+    """
+    root_key = str(root.resolve())
+    entry = _held_entry(root_key)
+    if entry is not None:
+        held_mode, _ = entry
+        if not shared and held_mode == "shared":
+            _escalate_operator_lock(root)
         yield
         return
-    token = hashlib.sha256(root_key.encode("utf-8")).hexdigest()[:16]
-    lock_path = Path(tempfile.gettempdir()) / f"learningos-{token}.lock"
+    lock_path = _operator_lock_path(root)
     timeout = _lock_timeout_seconds()
-    with lock_path.open("a+", encoding="utf-8") as handle:
+    try:
+        handle = lock_path.open("a+", encoding="utf-8")
+    except OSError as exc:
+        raise WriteRefused(
+            f"operator lock is not writable: {lock_path}: "
+            f"{exc.strerror or exc}") from exc
+    with handle:
+        _acquire_flock(handle, exclusive=not shared, lock_path=lock_path,
+                       timeout=timeout)
+        mode = "shared" if shared else "exclusive"
+        if not shared:
+            _write_holder(handle)
+            reconcile_inflight_transactions(root)
+        context_token = _HELD_OPERATOR_LOCKS.set(
+            _HELD_OPERATOR_LOCKS.get() + ((root_key, mode, handle),))
         try:
-            fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-        except BlockingIOError:
-            holder = _read_holder(lock_path)
-            detail = f" {holder}" if holder else ""
-            print(f"los: waiting for the operator lock{detail}", file=sys.stderr)
-            if timeout is None:
-                fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
-            else:
-                deadline = time.monotonic() + timeout
-                while True:
-                    remaining = deadline - time.monotonic()
-                    if remaining <= 0:
-                        raise WriteRefused(
-                            f"timed out after {timeout:g}s waiting for the "
-                            f"operator lock{detail}") from None
-                    time.sleep(min(_LOCK_POLL_INTERVAL_S, remaining))
-                    try:
-                        fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
-                        break
-                    except BlockingIOError:
-                        continue
-        _write_holder(handle)
-        reconcile_inflight_transactions(root)
-        context_token = _HELD_OPERATOR_LOCKS.set(held | {root_key})
-        try:
+            if shared and _has_armed_inflight(root):
+                _escalate_operator_lock(root)
             yield
         finally:
             _HELD_OPERATOR_LOCKS.reset(context_token)
@@ -390,12 +566,15 @@ def _fresh_manifest_and_repo(
     and every other read answers from payload keys the check already
     verified.
     """
-    # Every projection read takes the operator lock: acquisition runs crash
-    # recovery first, so single-ID reads, batch reads, and bootstrap all
-    # observe transaction-consistent post-recovery state instead of
-    # disagreeing after a kill (JF-21). Re-entrant: callers already holding
-    # the lock (batch inspect, bootstrap) pass straight through.
-    with _operator_lock(root):
+    # Every projection read takes the operator lock shared: concurrent
+    # current-manifest reads proceed together, and acquisition still runs
+    # crash recovery first (escalating when a journal awaits it), so
+    # single-ID reads, batch reads, and bootstrap all observe
+    # transaction-consistent post-recovery state instead of disagreeing
+    # after a kill (JF-21). Re-entrant: callers already holding the lock
+    # (batch inspect, bootstrap, gateway dispatch) pass straight through,
+    # staying exclusive when they already are.
+    with _operator_lock(root, shared=True):
         # Snapshot-bound callers already computed this under the same lock;
         # sharing it keeps the read at two hashes (see
         # test_bounded_read_hashes_twice_with_seeded_manifest).
@@ -403,9 +582,20 @@ def _fresh_manifest_and_repo(
         reused = _try_reuse_manifest(root, live, restamp=restamp)
         if reused is not None:
             return reused, _LazyRepo(root)
+        # Stale or missing: drop the shared lock, take the exclusive one,
+        # re-check the identity (a writer may have published while the
+        # shared lock was down), then build. Never upgrade in place. When
+        # the caller already held the lock exclusive, nothing dropped and
+        # the snapshot above is still the same instant — no re-hash.
+        dropped = _escalate_operator_lock(root)
+        if dropped:
+            live = f"sha256:{canonical_fingerprint(root)}"
+        reused = _try_reuse_manifest(root, live, restamp=restamp)
+        if reused is not None:
+            return reused, _LazyRepo(root)
         repo = load_repo(root)
         if snapshot_id is not None:
-            seed_source_fingerprint(repo, snapshot_id)
+            seed_source_fingerprint(repo, live)
         generated_at = stable_generated_at(root)
         backlinks = build_backlinks(repo, generated_at)
         return build_manifest(repo, generated_at, backlinks), repo
@@ -526,9 +716,18 @@ def _read_structured_file(
 # --------------------------------------------------------- curriculum writes
 #: Environment variable naming the calling session. Every gateway write and
 #: every `session-end` in one agent session must see the same value, so the
-#: harness exports it once per session (WORKFLOWS §22). The Obsidian UI
-#: exports `ui` for every child it spawns.
+#: harness exports it once per session (WORKFLOWS §25c step 4), or the agent
+#: seals `session_id` in each write envelope when the shell does not persist
+#: (WORKFLOWS §22). The Obsidian UI exports `ui` for every child it spawns.
 SESSION_ID_ENV = "LOS_SESSION_ID"
+
+#: Environment variable naming the Core client and its build, stamped by the
+#: interface on every Core child it spawns (`obsidian-ui/<build>`). An
+#: unmarked call stays valid: terminal agents send nothing, and `session-end`
+#: never refuses one. Informational only — staleness is proven by comparing
+#: the installed build against the built one (see `health._ui_plugin_check`),
+#: never by trusting this marker.
+CLIENT_ENV = "LOS_CLIENT"
 
 #: Channel assumed when no session is named and no gateway request is active
 #: (a bare `session-end`, a direct `_record_touched` call). This is the
@@ -546,38 +745,52 @@ SESSION_LEDGER_STALE_HOURS = 24
 SESSION_LEDGER_SCHEMA_VERSION = 2
 
 
-def _current_session_id(*, channel: str | None = None,
-                        explicit: str | None = None) -> str:
-    """The session identity every ledger operation resolves the same way.
+def _resolve_session_identity(*, channel: str | None = None,
+                              explicit: str | None = None
+                              ) -> tuple[str, str]:
+    """The session identity every ledger operation resolves, and its source.
 
-    An explicit id (the `--session-id` flag) wins, then the `LOS_SESSION_ID`
-    environment, then the gateway channel — so two actors that name nothing
-    still land in separate ledgers by channel (`channel:ui` vs
+    Resolution order: an explicit id (the `--session-id` flag), then the
+    sealed gateway envelope's `session_id`, then the `LOS_SESSION_ID`
+    environment, then the gateway channel — so two actors that name
+    nothing still land in separate ledgers by channel (`channel:ui` vs
     `channel:operator`), while one named session shares a single ledger
-    whatever channel its writes used.
+    whatever channel its writes used. The source is one of `explicit`,
+    `envelope`, `environment`, or `channel`.
     """
     if explicit is not None and explicit.strip():
-        return explicit.strip()
+        return explicit.strip(), "explicit"
+    request = current_gateway_request()
+    if request is not None:
+        sealed = (request.session_id or "").strip()
+        if sealed:
+            return sealed, "envelope"
     env = os.environ.get(SESSION_ID_ENV, "").strip()
     if env:
-        return env
+        return env, "environment"
     resolved = channel
     if resolved is None:
-        request = current_gateway_request()
         resolved = request.channel if request is not None else DEFAULT_SESSION_CHANNEL
-    return f"channel:{resolved}"
+    return f"channel:{resolved}", "channel"
+
+
+def _current_session_id(*, channel: str | None = None,
+                        explicit: str | None = None) -> str:
+    """The session identity every ledger operation resolves the same way."""
+    identity, _ = _resolve_session_identity(channel=channel, explicit=explicit)
+    return identity
 
 
 def _session_ledger(root: Path, session_id: str | None = None) -> Path:
-    token = hashlib.sha256(str(root).encode("utf-8")).hexdigest()[:16]
+    token = hashlib.sha256(str(root.resolve()).encode("utf-8")).hexdigest()[:16]
     identity = _current_session_id(explicit=session_id)
     slug = hashlib.sha256(identity.encode("utf-8")).hexdigest()[:16]
-    return Path(tempfile.gettempdir()) / f"learningos-{token}-{slug}-touched.json"
+    return _process_state_dir(root) / f"learningos-{token}-{slug}-touched.json"
 
 
 def _legacy_session_ledger(root: Path) -> Path:
     """The pre-session shared ledger filename, now read-only history."""
-    token = hashlib.sha256(str(root).encode("utf-8")).hexdigest()[:16]
+    token = hashlib.sha256(str(root.resolve()).encode("utf-8")).hexdigest()[:16]
     return Path(tempfile.gettempdir()) / f"learningos-{token}-touched.json"
 
 
@@ -743,25 +956,48 @@ def _load_other_session_ledgers(root: Path,
 
     Includes the pre-session shared file (reported as `legacy`, with its rows
     undated) so an upgrade never silently drops rows — they surface as
-    foreign, never staged.
+    foreign, never staged. During the transition from the temp-dir location,
+    ledgers still sitting in the old location are found here too and
+    reported as foreign — including this session's own previous-location
+    rows, which are labelled so they cannot be mistaken for the live ones.
     """
     own = _current_session_id(explicit=session_id)
-    token = hashlib.sha256(str(root).encode("utf-8")).hexdigest()[:16]
+    token = hashlib.sha256(str(root.resolve()).encode("utf-8")).hexdigest()[:16]
+    pattern = f"learningos-{token}-*-touched.json"
     others: dict[str, dict[str, dict]] = {}
-    try:
-        candidates = sorted(Path(tempfile.gettempdir()).glob(
-            f"learningos-{token}-*-touched.json"))
-    except OSError:
-        candidates = []
-    for candidate in candidates:
-        if candidate == _session_ledger(root, own):
-            continue
+    own_ledger = _session_ledger(root, own)
+
+    def _claim(candidate: Path, *, previous_location: bool) -> None:
+        if candidate == own_ledger:
+            return
         parsed = _read_sibling_session_ledger(candidate)
         if parsed is None:
-            continue
+            return
         identity, rows = parsed
-        if identity != own:
+        if identity == own:
+            if not previous_location:
+                return
+            identity = f"{own} (previous location)"
+        if identity in others:
+            others[identity] = {**rows, **others[identity]}
+        else:
             others[identity] = rows
+
+    try:
+        current = sorted(_process_state_dir(root).glob(pattern))
+    except OSError:
+        current = []
+    for candidate in current:
+        _claim(candidate, previous_location=False)
+    if _is_anchored(root):
+        # The old temp-dir location: every ledger written there before the
+        # move still surfaces, as foreign, until the OS reclaims it.
+        try:
+            previous = sorted(Path(tempfile.gettempdir()).glob(pattern))
+        except OSError:
+            previous = []
+        for candidate in previous:
+            _claim(candidate, previous_location=True)
     legacy = _legacy_session_ledger(root)
     if legacy.is_file():
         try:

@@ -35,11 +35,13 @@ from learning_os.search.query import candidates
 
 from .suggest import expansion, not_found, with_suggestions
 from .support import (
+    SESSION_ID_ENV,
     StaleSnapshot,
     WriteRefused,
     _fresh_manifest,
     _fresh_manifest_and_repo,
     _operator_lock,
+    _resolve_session_identity,
     _root,
 )
 
@@ -277,7 +279,7 @@ def inspect_batch(args) -> int:
         return _refusal("inspect accepts at most 20 IDs per batch")
     root = _root(args)
     try:
-        with _operator_lock(root):
+        with _operator_lock(root, shared=True):
             snapshot = _snapshot(root)
             manifest, repo = _fresh_manifest_and_repo(root, snapshot_id=snapshot)
             records = []
@@ -339,7 +341,7 @@ def compact_bootstrap(args) -> int:
     root = _root(args)
     try:
         offset, limit = _window(args, 50)
-        with _operator_lock(root):
+        with _operator_lock(root, shared=True):
             snapshot = _snapshot(root, args.expected_snapshot)
             manifest = _fresh_manifest(root, snapshot_id=snapshot)
             fields = ("id", "title", "status", "module_id", "program_id", "unit_id",
@@ -458,7 +460,7 @@ def brief_bootstrap(args) -> int:
                         "page the collections with --compact instead")
     root = _root(args)
     try:
-        with _operator_lock(root):
+        with _operator_lock(root, shared=True):
             snapshot = _snapshot(root, args.expected_snapshot)
             manifest = _fresh_manifest(root, snapshot_id=snapshot)
             units = sorted(manifest.get("units", []),
@@ -478,8 +480,20 @@ def brief_bootstrap(args) -> int:
             deadlines = _brief_deadlines(manifest)
             pointer = manifest.get("resume_pointer", {})
             state = _pointer_state(manifest, pointer)
+            session_id, session_source = _resolve_session_identity()
             return _print_stable(root, snapshot, {
                 "contract": "bootstrap-brief",
+                "session_identity": {
+                    "session_id": session_id,
+                    "source": session_source,
+                    "how_to_set": (
+                        f"name it before the first write — export "
+                        f"{SESSION_ID_ENV}=<id> when the shell persists, or "
+                        f"seal session_id in each write envelope "
+                        f"(seal_envelope.py --session-id <id>); without "
+                        f"either, writes share this channel's ledger"
+                    ),
+                },
                 "resume_pointer": pointer,
                 "pointer_state": state,
                 "pointer_state_note": POINTER_STATE_NOTE,
@@ -635,7 +649,7 @@ def cmd_note_read(args) -> int:
     root = _root(args)
     try:
         offset, limit = _window(args, 16000)
-        with _operator_lock(root):
+        with _operator_lock(root, shared=True):
             snapshot = _snapshot(root, args.expected_snapshot)
             repo = _note_collection(root)
             note = repo.notes.get(args.note_id)
@@ -702,7 +716,7 @@ def cmd_inbox_read(args) -> int:
         name = args.name
         if Path(name).is_absolute() or ".." in Path(name).parts:
             raise WriteRefused(f"inbox name must be relative to work/inbox: {name}")
-        with _operator_lock(root):
+        with _operator_lock(root, shared=True):
             snapshot = _snapshot(root, args.expected_snapshot)
             target = root / "work" / "inbox" / name
             if target.is_dir() and not target.is_symlink():
@@ -809,7 +823,7 @@ def content_search(args) -> int:
         terms = [re.compile(re.escape(term), re.IGNORECASE) for term in raw_terms]
         if not terms:
             raise WriteRefused("content search requires a nonempty query")
-        with _operator_lock(root):
+        with _operator_lock(root, shared=True):
             snapshot = _snapshot(root, args.expected_snapshot)
             repo = _note_collection(root)
             # A read refuses when the failures bear on the answer it is about to
@@ -1561,7 +1575,7 @@ def cmd_material_context(args) -> int:
             raise WriteRefused("--include-related needs --unit")
         if material_ref is not None:
             _check_material_ref(root, material_ref)
-        with _operator_lock(root):
+        with _operator_lock(root, shared=True):
             snapshot = _snapshot(root, args.expected_snapshot)
             repo = load_repo(root)
             note_dir = root / "knowledge" / "notes"

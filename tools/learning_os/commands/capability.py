@@ -551,6 +551,8 @@ def _context_from_v2(envelope: dict) -> GatewayRequestContext:
         raise WriteRefused(
             "approval subject does not match the current capability intent"
         )
+    raw_session = envelope.get("session_id")
+    sealed_session = raw_session.strip() if isinstance(raw_session, str) else None
     return GatewayRequestContext(
         request_id=envelope["request_id"],
         idempotency_key=envelope["idempotency_key"],
@@ -560,6 +562,7 @@ def _context_from_v2(envelope: dict) -> GatewayRequestContext:
         approval_kind=approval["kind"],
         approval_subject_sha256=approval["subject_sha256"],
         expected_snapshot=envelope["expected_snapshot"],
+        session_id=sealed_session or None,
     )
 
 
@@ -745,7 +748,8 @@ _UNPROVABLE_AGGREGATE_LEDGERS = (
 
 
 def _repair_replayed_session_ownership(root: Path,
-                                       replay: TransactionResult) -> None:
+                                       replay: TransactionResult,
+                                       session_id: str | None = None) -> None:
     """Rebuild ephemeral session ownership from the already-validated receipt.
 
     A process can die after Receipt V2 and the idempotency ledger are durable
@@ -813,14 +817,16 @@ def _repair_replayed_session_ownership(root: Path,
 
     # The repair runs outside any gateway request context, so ambient
     # session resolution would land in the default channel's ledger — not
-    # the one the original write recorded. The receipt names the writing
-    # channel, which recovers exactly that ledger when no session is named.
-    # A named session still wins: that session is performing the recovery.
+    # the one the original write recorded. The replayed envelope's sealed
+    # session recovers exactly that ledger; without one, the receipt names
+    # the writing channel, which recovers the channel ledger when no
+    # session is named. A named session still wins: that session is
+    # performing the recovery.
     origin = receipt.get("request") if isinstance(receipt, dict) else None
     origin = origin.get("channel") if isinstance(origin, dict) else None
     if not isinstance(origin, str) or not origin:
         origin = None
-    session = _current_session_id(channel=origin)
+    session = _current_session_id(channel=origin, explicit=session_id)
 
     # A lost session ledger is reconciled by hand, never reconstructed.
     #
@@ -1060,7 +1066,9 @@ def cmd_capability(args) -> int:
                 if replay is not None:
                     response = _replay_response(root, envelope, replay)
                     _validate_capability_envelope(root, response, kind="result")
-                    _repair_replayed_session_ownership(root, replay)
+                    _repair_replayed_session_ownership(
+                        root, replay,
+                        session_id=envelope.get("session_id"))
         except TransactionIdempotencyConflict as exc:
             response = _v2_response(
                 envelope,

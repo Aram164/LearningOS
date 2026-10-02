@@ -14,6 +14,7 @@ from learning_os.contracts.gateway import GATEWAY_CHANNELS
 from learning_os.unit_notes import unit_note_sections
 
 from .support import (
+    CLIENT_ENV,
     SESSION_LEDGER_STALE_HOURS,
     WriteRefused,
     _current_session_id,
@@ -324,6 +325,10 @@ def cmd_session_end(args) -> int:
                "validation": validation_line,
                "ownership_conflicts": ownership_conflicts,
                "session_id": own_session,
+               # The calling client when it marks itself (`obsidian-ui/<build>`
+               # on every UI-spawned child); None for terminal agents, which
+               # stay valid unmarked. Informational: never a refusal input.
+               "client": os.environ.get(CLIENT_ENV),
                "stale_paths": stale_paths,
                "stale_hours": SESSION_LEDGER_STALE_HOURS,
                "other_sessions": {

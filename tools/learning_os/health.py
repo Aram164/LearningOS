@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import datetime as dt
+import hashlib
 import json
 import re
+import stat
 import subprocess
 from pathlib import Path
 from typing import Any
@@ -155,6 +157,157 @@ def _core_ui_lock_check(root: Path) -> dict[str, Any]:
         ui_version=actual_version,
         core_schema_sha256=expected_hash,
         ui_schema_sha256=actual_hash,
+    )
+
+
+def _shipped_file_digest(path: Path) -> str | None:
+    """The `sha256:` digest of a shipped plugin file, or None when unusable.
+
+    Mirrors `plugin-assets.mjs shippedFileProblem`: only a regular file
+    counts — a symlink, directory, or missing path is not a build the
+    vault is running.
+    """
+    try:
+        if not stat.S_ISREG(path.lstat().st_mode):
+            return None
+        return "sha256:" + hashlib.sha256(path.read_bytes()).hexdigest()
+    except OSError:
+        return None
+
+
+def _ui_plugin_check(root: Path, *, ui_root: Path | None = None,
+                     installed_dir: Path | None = None) -> dict[str, Any]:
+    """Whether the vault runs the UI checkout's current plugin build.
+
+    The same comparison `npm run install:status`
+    (`scripts/check-install-current.mjs`) performs, from Core's side of
+    the pair: every file `plugin-assets.json` declares shipped must be
+    byte-identical between the built `plugin/` directory and the vault's
+    installed copy. A stale build is a warning, not an error — the app
+    still runs — and an absent UI checkout or a vault with nothing
+    installed is unknown, never stale: Core is usable alone.
+    """
+    root = root.resolve()
+    ui = ui_root.resolve() if ui_root is not None else root.parent / "obsidian-ui"
+    built_dir = ui / "plugin"
+    installed = (installed_dir.resolve() if installed_dir is not None
+                 else root / ".obsidian" / "plugins" / "learningos-ui")
+    try:
+        manifest = json.loads((ui / "plugin-assets.json").read_text(encoding="utf-8"))
+        if not isinstance(manifest, dict):
+            raise ValueError("plugin-assets.json is not an object")
+        shipped = manifest.get("shipped")
+        vault_owned = manifest.get("vault_owned", [])
+        if (not isinstance(shipped, list) or not shipped
+                or not all(isinstance(name, str) and name for name in shipped)
+                or not isinstance(vault_owned, list)):
+            raise ValueError("plugin-assets.json declares no shipped file list")
+    except (OSError, ValueError) as exc:
+        return _check(
+            "ui-plugin-current", "unknown",
+            f"The UI shipping manifest is unavailable: {exc}.",
+            "core-ui", "Open the paired UI checkout and run `npm run build`.",
+        )
+    try:
+        installed_missing = not installed.exists()
+    except OSError:
+        installed_missing = True
+    if installed_missing:
+        return _check(
+            "ui-plugin-current", "unknown",
+            "No plugin is installed in this vault.",
+            "core-ui", "Run `python3 install.py` in the UI checkout to install one.",
+        )
+    try:
+        if not stat.S_ISDIR(installed.lstat().st_mode):
+            raise ValueError("not a directory")
+    except (OSError, ValueError):
+        return _check(
+            "ui-plugin-current", "error",
+            f"The installed plugin path is not a real directory: {installed}.",
+            "core-ui", "Review the path yourself; nothing was changed.",
+        )
+    try:
+        if not stat.S_ISDIR(built_dir.lstat().st_mode):
+            raise ValueError("not a directory")
+    except (OSError, ValueError):
+        return _check(
+            "ui-plugin-current", "unknown",
+            "The UI checkout has no built plugin directory to compare against.",
+            "core-ui", "Run `npm run build` in the UI checkout first.",
+        )
+    rows = [{
+        "name": name,
+        "built": _shipped_file_digest(built_dir / name),
+        "installed": _shipped_file_digest(installed / name),
+    } for name in shipped]
+    missing_built = sorted(row["name"] for row in rows if row["built"] is None)
+    if missing_built:
+        return _check(
+            "ui-plugin-current", "unknown",
+            "The UI build output is incomplete: "
+            f"{', '.join(missing_built)} missing from {built_dir}.",
+            "core-ui", "Run `npm run build` in the UI checkout first.",
+        )
+    try:
+        owned = set(shipped) | set(vault_owned)
+        unexpected = sorted(
+            entry.name for entry in installed.iterdir() if entry.name not in owned)
+    except OSError:
+        unexpected = []
+    vault_problems = []
+    for name in vault_owned:
+        if not isinstance(name, str) or not name:
+            continue
+        candidate = installed / name
+        try:
+            present = candidate.lstat() is not None
+        except OSError:
+            present = False
+        if present and _shipped_file_digest(candidate) is None:
+            vault_problems.append(f"{name} is not a regular file")
+
+    def _build_identity(directory: Path) -> dict[str, Any]:
+        try:
+            info = json.loads((directory / "build-info.json").read_text(
+                encoding="utf-8"))
+        except (OSError, ValueError):
+            return {}
+        if not isinstance(info, dict):
+            return {}
+        return {key: info[key] for key in (
+            "source_fingerprint", "source_revision", "source_dirty",
+            "core_revision", "core_dirty") if key in info}
+
+    differing = [row for row in rows if row["built"] != row["installed"]]
+    if not differing and not unexpected and not vault_problems:
+        return _check(
+            "ui-plugin-current", "ok",
+            f"The vault is running this build ({len(rows)} shipped files match).",
+            "core-ui", "Reinstall the plugin after every UI rebuild.",
+        )
+    details: dict[str, Any] = {
+        "differing": [
+            {"name": row["name"], "built": row["built"],
+             "installed": row["installed"]} for row in differing
+        ],
+        "unexpected_entries": unexpected,
+        "vault_owned_problems": vault_problems,
+        "built": _build_identity(built_dir),
+        "installed_build": _build_identity(installed),
+    }
+    if unexpected or vault_problems:
+        summary = ("The installed plugin directory holds entries this build "
+                   "does not own.")
+    else:
+        summary = ("THE VAULT IS RUNNING A DIFFERENT BUILD: "
+                   f"{', '.join(row['name'] for row in differing)} "
+                   "differ(s) from this UI checkout — reinstall the plugin.")
+    return _check(
+        "ui-plugin-current", "warning", summary,
+        "core-ui", "Run `python3 install.py` in the UI checkout, then reload "
+        "Obsidian with Cmd+R.",
+        **details,
     )
 
 
@@ -327,6 +480,7 @@ def build_health_report(root: Path, *, now: dt.datetime | None = None) -> dict[s
         "core-ui", "Ship the producer schema and UI lock as one coordinated version.",
     ))
     checks.append(_core_ui_lock_check(root))
+    checks.append(_ui_plugin_check(root))
     checks.append(_projection_check(root, manifest))
 
     try:

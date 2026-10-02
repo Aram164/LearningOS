@@ -613,15 +613,16 @@ Any learning session that used guarded mutation commands ends deliberately:
 5. use `--push` only through the approved repository workflow.
 
 Do not commit on every keystroke. A session is not a canonical entity; its
-ledger lives in temporary storage only long enough to guarantee exact staging.
+ledger lives in the checkout's private state directory (`<git-dir>/learningos/`,
+never committed) only long enough to guarantee exact staging.
 If a commit or push fails, report it immediately and keep unrelated changes
 isolated.
 
 Every gateway transaction records its session: the ledger is keyed per
 session, and `session-end` lists and commits only its own rows. Name the
-session by exporting `LOS_SESSION_ID` once per agent session before any
-write — every `los` call in that session then shares one ledger, and the
-closing `session-end` (same variable) claims exactly it. Sessions that name
+session before any write as §25c step 4 describes — a sealed `session_id`,
+or `LOS_SESSION_ID` when the shell persists — and the closing `session-end`
+(same identity) claims exactly it. Sessions that name
 nothing still separate by channel: UI writes (`channel: ui`) never enter an
 agent session's ledger, and vice versa. Rows from other sessions are
 reported under `other_sessions` with their age and are never staged; rows
@@ -961,6 +962,16 @@ construction recipe — nothing else is needed.
    `request_id` together with a fresh key for every new attempt (step 3's
    corrected envelope is one): reused ids merge their explanations in
    `los operations`.
+
+   Name the session every write in one agent session shares **before the
+   first write**: seal `session_id` in each envelope (`seal_envelope.py
+   --session-id <id>`) when the harness runs every command in a fresh
+   shell where an export never persists, or export `LOS_SESSION_ID=<id>`
+   once when the shell persists. Resolution is explicit `--session-id`
+   flag, then the sealed envelope, then `LOS_SESSION_ID`, then the
+   channel default — `bootstrap --brief` prints the identity in effect
+   as `session_identity`. `session-end` closes exactly that identity's
+   ledger (§22).
 5. **Approval.** `channel` is `operator` and `approval.kind` is
    `operator-approval` on the operator path; the review preparers
    (`module-plan-import --check`, `unit-plan-revise --check`,
@@ -979,17 +990,21 @@ construction recipe — nothing else is needed.
 
 **Intent hash.** The approval subject covers exactly six fields —
 `schema_version`, `capability`, `channel`, `expected_snapshot`,
-`expected_revisions`, `payload` — and deliberately excludes
-`request_id`, `idempotency_key`, and `approval` (request identities are
-not intent). Canonical form: `json.dumps(subject, sort_keys=True,
-separators=(",", ":"), ensure_ascii=False)` encoded UTF-8, SHA-256 hex,
-prefixed `sha256:`. In Python:
+`expected_revisions`, `payload` — plus `session_id` when the envelope
+carries one, and deliberately excludes `request_id`, `idempotency_key`,
+and `approval` (request identities are not intent). The sealed session
+is intent because it routes the transaction's ledger rows. Canonical
+form: `json.dumps(subject, sort_keys=True, separators=(",", ":"),
+ensure_ascii=False)` encoded UTF-8, SHA-256 hex, prefixed `sha256:`.
+In Python:
 
 ```python
 import hashlib, json
 subject = {k: envelope[k] for k in (
     "schema_version", "capability", "channel",
     "expected_snapshot", "expected_revisions", "payload")}
+if "session_id" in envelope:
+    subject["session_id"] = envelope["session_id"]
 approval = "sha256:" + hashlib.sha256(json.dumps(
     subject, sort_keys=True, separators=(",", ":"),
     ensure_ascii=False).encode("utf-8")).hexdigest()

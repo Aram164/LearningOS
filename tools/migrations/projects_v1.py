@@ -11,12 +11,10 @@ from __future__ import annotations
 import argparse
 import contextlib
 import datetime as dt
-import fcntl
 import hashlib
 import json
 import shutil
 import sys
-import tempfile
 from pathlib import Path
 
 import yaml
@@ -53,14 +51,13 @@ def sha256(path: Path) -> str:
 
 @contextlib.contextmanager
 def lock(root: Path):
-    token = hashlib.sha256(str(root.resolve()).encode()).hexdigest()[:16]
-    path = Path(tempfile.gettempdir()) / f"learningos-{token}.lock"
-    with path.open("a+", encoding="utf-8") as handle:
-        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
-        try:
-            yield
-        finally:
-            fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+    # The shared operator lock, not a second implementation of it: a
+    # temp-dir lock of its own would no longer exclude the
+    # repository-anchored one.
+    from learning_os.commands.support import _operator_lock
+
+    with _operator_lock(root):
+        yield
 
 
 def paths(root: Path) -> dict[str, Path]:

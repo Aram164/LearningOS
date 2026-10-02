@@ -219,6 +219,11 @@ def main(argv: list[str] | None = None) -> int:
                              "saved envelope instead of re-sealing)")
     parser.add_argument("--channel", default="operator",
                         help=f"one of: {', '.join(sorted(GATEWAY_CHANNELS))}")
+    parser.add_argument("--session-id", default=None,
+                        help="sealed session identity for this write's ledger "
+                             "rows (default: none — resolution falls back to "
+                             "LOS_SESSION_ID, then the channel; WORKFLOWS §25c "
+                             "step 4)")
     parser.add_argument("--approval-kind", default="operator-approval",
                         help=f"one of: {', '.join(sorted(APPROVAL_KINDS))}")
     parser.add_argument("--snapshot", default=None,
@@ -237,6 +242,15 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.channel not in GATEWAY_CHANNELS:
         print(f"seal_envelope: unknown channel {args.channel!r}", file=sys.stderr)
+        return 2
+    sealed_session = args.session_id.strip() if args.session_id else None
+    if args.session_id is not None and not sealed_session:
+        print("seal_envelope: --session-id must name a session, not blank text",
+              file=sys.stderr)
+        return 2
+    if sealed_session is not None and len(sealed_session) > 128:
+        print("seal_envelope: --session-id is longer than 128 characters",
+              file=sys.stderr)
         return 2
     if args.approval_kind not in APPROVAL_KINDS:
         print(f"seal_envelope: unknown approval kind {args.approval_kind!r}",
@@ -284,6 +298,7 @@ def main(argv: list[str] | None = None) -> int:
         "idempotency_key": args.key,
         "capability": args.capability,
         "channel": args.channel,
+        **({"session_id": sealed_session} if sealed_session is not None else {}),
         "expected_snapshot": snapshot,
         "expected_revisions": revisions,
         "payload": payload,

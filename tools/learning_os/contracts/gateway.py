@@ -46,8 +46,15 @@ def request_artifact_id(capability: str, idempotency_key: str) -> str:
 
 
 def intent_subject(envelope: Mapping) -> dict:
-    """Return the exact approval subject; request identities are not intent."""
-    return {
+    """Return the exact approval subject; request identities are not intent.
+
+    The sealed `session_id` is intent, not identity: it routes the
+    transaction's rows into a session ledger, so tampering with it (or
+    adding or removing it) must invalidate the approval. It is covered
+    only when present, so envelopes sealed before it existed hash
+    exactly as they always did.
+    """
+    subject = {
         "schema_version": envelope.get("schema_version"),
         "capability": envelope.get("capability"),
         "channel": envelope.get("channel"),
@@ -55,6 +62,9 @@ def intent_subject(envelope: Mapping) -> dict:
         "expected_revisions": envelope.get("expected_revisions"),
         "payload": envelope.get("payload"),
     }
+    if envelope.get("session_id") is not None:
+        subject["session_id"] = envelope.get("session_id")
+    return subject
 
 
 def intent_sha256(envelope: Mapping) -> str:
@@ -80,6 +90,10 @@ class GatewayRequestContext:
     # provide it; ``None`` remains available for focused service tests and
     # historical callers that construct the context directly.
     expected_snapshot: str | None = None
+    # The sealed session identity, when the envelope carries one. Optional
+    # and additive: ``None`` preserves the environment-then-channel
+    # resolution every existing caller relies on.
+    session_id: str | None = None
 
 
 _CURRENT_REQUEST: contextvars.ContextVar[GatewayRequestContext | None] = (

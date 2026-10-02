@@ -50,7 +50,7 @@ def _placement_route(repo, unit, source_map, routes, route, args):
 def cmd_material_span(args) -> int:
     root = _root(args)
     try:
-        with _operator_lock(root):
+        with _operator_lock(root, shared=True):
             snapshot = _snapshot(root, args.expected_snapshot)
             repo = load_repo(root)
             unit = repo.units.get(args.unit_id)

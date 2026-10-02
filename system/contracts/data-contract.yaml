@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 50
-schema_fingerprint: sha256:a9def1a491e0773e319e3c47354999298e3a6ef6f5571c783cdabb57b9c82859
+contract_version: 51
+schema_fingerprint: sha256:c343fcab995539089fdf5ded6f5830667ac121c555226066ae7cb415ca614861
 record_schemas: 36
 history:
 - version: 1
@@ -376,5 +376,11 @@ history:
     written only by lineage.restamp so a re-stamp receipt is directly auditable without
     reopening the envelope. Additive and backward-compatible — absent on every other
     receipt, which is what every v49 record carries.
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 51
+  adopted: '2026-10-03'
+  note: GatewayEnvelopeV2 gains optional sealed session_id; additive and backward
+    compatible with unsealed requests, no migration
   migration: null
   fixture: tests/fixtures/formats/v46/
