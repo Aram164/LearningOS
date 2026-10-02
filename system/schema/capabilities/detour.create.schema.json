@@ -13,7 +13,13 @@
   ],
   "properties": {
     "classification": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "required-now",
+        "helpful-now",
+        "deferred",
+        "reference-only"
+      ]
     },
     "stage_id": {
       "type": "string"

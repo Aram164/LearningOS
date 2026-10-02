@@ -30,7 +30,12 @@
       "type": "string"
     },
     "kind": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "equivalence",
+        "extension",
+        "connection"
+      ]
     },
     "source_ref": {
       "type": "string"

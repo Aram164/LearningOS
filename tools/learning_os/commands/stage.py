@@ -138,12 +138,12 @@ def cmd_stage_progress(args) -> int:
             data["current_stage"] = stage["id"]
             data["status"] = "paused"
             unit_data["status"] = "paused"
-        else:
+        elif action in {"complete", "skipped"}:
             if stage.get("status") != "active":
                 print("los: complete/skip applies only to the active stage; activate it first",
                       file=sys.stderr)
                 return 2
-            stage["status"] = "complete" if action == "complete" else "skipped"
+            stage["status"] = action
             if action == "complete":
                 stage["completed"] = _dt.date.today().isoformat()
             following = next((row for row in stages[stages.index(stage) + 1:]
@@ -157,6 +157,14 @@ def cmd_stage_progress(args) -> int:
                 data["status"] = "ready-to-shelve"
                 data.setdefault("shelving", {})["state"] = "draft"
                 unit_data["status"] = "ready-to-shelve"
+        else:
+            # The gateway schema and payload_to_namespace refuse unknown
+            # values first; this is the last backstop. An open `else` here
+            # once recorded an unknown status as `skipped`.
+            print(f"los: unknown stage status: {action} "
+                  "(choose from active, paused, complete, skipped, revisit)",
+                  file=sys.stderr)
+            return 2
         summary = getattr(args, "progress_summary", None)
         upcoming = getattr(args, "progress_next", None)
         if summary is not None or upcoming is not None:

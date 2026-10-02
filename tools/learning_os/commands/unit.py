@@ -530,7 +530,7 @@ def cmd_unit_source_selection(args) -> int:
                     replacement["stage_ids"] = list(selections[index]["stage_ids"])
                 selections[index] = replacement
             selected = True
-        else:
+        elif args.action == "remove":
             if index is not None and selections[index].get("stage_ids"):
                 print(
                     "los: this choice is used by the current study path; remove it "
@@ -541,6 +541,10 @@ def cmd_unit_source_selection(args) -> int:
             if index is not None:
                 selections.pop(index)
             selected = False
+        else:
+            print(f"los: unknown source-selection action: {args.action} "
+                  "(choose from select, remove)", file=sys.stderr)
+            return 2
 
         unit_data["source_selections"] = selections
         code, errors, confirmation = _write_transaction(

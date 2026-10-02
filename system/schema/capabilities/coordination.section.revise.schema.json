@@ -19,7 +19,13 @@
       "pattern": "^sha256:[a-f0-9]{64}$"
     },
     "section": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "Commitments",
+        "Priorities",
+        "Dependencies",
+        "Deferrals"
+      ]
     },
     "text": {
       "type": "string"

@@ -37,7 +37,13 @@
       "type": "string"
     },
     "result": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "correct",
+        "incorrect",
+        "partial",
+        "abandoned"
+      ]
     },
     "supersedes": {
       "type": "string"

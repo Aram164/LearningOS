@@ -51,8 +51,13 @@ def cmd_detour_create(args) -> int:
             data["status"] = "paused"
             unit_data = copy.deepcopy(unit.data)
             unit_data["status"] = "paused"
-        else:
+        elif args.classification in {"helpful-now", "deferred", "reference-only"}:
             unit_data = unit.data
+        else:
+            print(f"los: unknown detour classification: {args.classification} "
+                  "(choose from required-now, helpful-now, deferred, "
+                  "reference-only)", file=sys.stderr)
+            return 2
         code, errors, confirmation = _write_transaction(
             root, {study_map.path: _dump_study_map(study_map, data), unit.path: _dump_yaml(unit_data)},
             capability="detour.create",

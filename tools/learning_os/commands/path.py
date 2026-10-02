@@ -92,7 +92,7 @@ def cmd_path_progress(args) -> int:
             stage.pop("completed", None)
             data["current_stage"] = stage["id"]
             data["status"] = "active"
-        else:
+        elif args.status in {"complete", "skipped"}:
             stage["status"] = args.status
             if args.status == "complete":
                 stage["completed"] = _dt.date.today().isoformat()
@@ -106,6 +106,10 @@ def cmd_path_progress(args) -> int:
                 data["status"] = "ready-to-shelve"
                 shelving = data.setdefault("shelving", {})
                 shelving["state"] = "draft"
+        else:
+            print(f"los: unknown path status: {args.status} "
+                  "(choose from active, complete, skipped)", file=sys.stderr)
+            return 2
         data["updated"] = _dt.date.today().isoformat()
         rendered = yaml.safe_dump(data, sort_keys=False, allow_unicode=True)
         code, errors, confirmation = _write_transaction(

@@ -12,7 +12,15 @@
   ],
   "properties": {
     "evidence_type": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "derivation",
+        "explanation",
+        "implementation",
+        "exercise",
+        "exam",
+        "external"
+      ]
     },
     "note_id": {
       "type": "string"

@@ -146,6 +146,7 @@ GROUPS: dict[str, list[str]] = {
         "test_workspace_next_action.py",
         "test_write_scopes.py",
         "test_gateway_v2.py",
+        "test_gateway_choice_parity.py",
     ],
     # Validation, hygiene, perimeter, audits, and architecture guards.
     "validation": [

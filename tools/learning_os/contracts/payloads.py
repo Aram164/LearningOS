@@ -110,8 +110,18 @@ def _scalar_json_type(action: argparse.Action) -> dict:
     if action.type is sha256_value:
         return {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
     if action.type is int:
-        return {"type": "integer"}
-    return {"type": "string"}
+        schema: dict = {"type": "integer"}
+    else:
+        schema = {"type": "string"}
+    choices = getattr(action, "choices", None)
+    # Argparse `choices` are the CLI's accepted vocabulary. The generated
+    # schema used to say bare `string` here, so the gateway accepted values
+    # the named command refuses — and one handler recorded an unknown status
+    # as `skipped`. A dict `choices` is a subparsers action, never a payload
+    # field; anything else enumerates the accepted values verbatim.
+    if choices and not isinstance(choices, dict):
+        schema["enum"] = list(choices)
+    return schema
 
 
 def _json_type(action: argparse.Action) -> dict:
@@ -211,6 +221,13 @@ def payload_schema(name: str, command_parser: argparse.ArgumentParser) -> dict:
         if input_field in properties:
             dependent[input_field] = [digest_field]
             dependent[digest_field] = [input_field]
+    # `--progress-next` without `--progress-summary` is refused inside the
+    # handler; the contract says so too, so the gateway refuses at payload
+    # validation. The handler keeps its check: direct CLI use never sees
+    # this schema, and only the handler can refuse a blank summary.
+    if name == "stage.progress.update" and "progress_next" in properties \
+            and "progress_summary" in properties:
+        dependent["progress_next"] = ["progress_summary"]
     if dependent:
         schema["dependentRequired"] = dependent
     return schema
@@ -228,6 +245,33 @@ def all_payload_schemas(parser: argparse.ArgumentParser, definitions) -> dict[st
     return out
 
 
+def _check_payload_choices(field: str, action: argparse.Action,
+                           value: object) -> None:
+    """Refuse a payload value the named command's `choices` would refuse.
+
+    Mirrors argparse's own check, including its leniency: an explicit null
+    is absence, not a value, and each element of a repeated flag is checked
+    on its own. A dict `choices` is a subparsers action, never a payload
+    field.
+    """
+    choices = getattr(action, "choices", None)
+    if not choices or isinstance(choices, dict) or value is None:
+        return
+    allowed = list(choices)
+    candidates = list(value) if isinstance(value, list) else [value]
+    for candidate in candidates:
+        if candidate is None:
+            continue
+        if candidate not in allowed:
+            # Deferred: the commands package imports this module at dispatch.
+            from learning_os.commands.support import WriteRefused
+
+            raise WriteRefused(
+                f"invalid payload: {field} must be one of {allowed}, "
+                f"got {candidate!r}"
+            )
+
+
 def payload_to_namespace(
     command_parser: argparse.ArgumentParser,
     payload: dict,
@@ -240,13 +284,22 @@ def payload_to_namespace(
 
     Defaults come from the parser, so a payload that omits an optional field
     behaves exactly as the named CLI command would with the flag absent.
+
+    Argparse `choices` are enforced here as well as in the generated schema:
+    the schema is the contract agents read, and this is the defence in depth
+    for any field whose schema was regenerated without them.
     """
     namespace = argparse.Namespace()
+    by_dest = {}
     for action in command_parser._actions:
         if isinstance(action, argparse._HelpAction):
             continue
         setattr(namespace, action.dest, action.default)
+        by_dest[action.dest] = action
     for key, value in payload.items():
+        action = by_dest.get(key)
+        if action is not None:
+            _check_payload_choices(key, action, value)
         setattr(namespace, key, value)
     namespace.root = root
     namespace.expected_snapshot = expected_snapshot
