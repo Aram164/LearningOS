@@ -160,6 +160,17 @@ def test_branch_deletion_skips_the_gate_even_when_dirty(pair):
     assert _invocations(pair["log"]) == []
 
 
+def test_branch_deletion_skips_the_gate_with_unborn_head(pair):
+    subprocess.run(["git", "symbolic-ref", "HEAD", "refs/heads/unborn"],
+                   cwd=pair["core"], check=True)
+    result = _run_hook(
+        pair["core"],
+        f"(delete) {ZERO_SHA} refs/heads/feature {HEAD_SHA}\n",
+    )
+    assert result.returncode == 0, result.stderr
+    assert _invocations(pair["log"]) == []
+
+
 def test_non_main_push_runs_the_lighter_local_gate(pair):
     head = _head(pair["core"])
     result = _run_hook(
@@ -364,6 +375,36 @@ def test_ui_only_change_runs_only_paired_tests_and_ui_check(pair):
         f"make -C {pair['core']} test-paired",
         f"npm --prefix {pair['ui']} run check",
     ]
+
+
+def test_changed_toolchain_cannot_reuse_the_core_baseline(pair):
+    assert _stamp(pair["core"]).returncode == 0
+    path = pair["core"] / ".git" / "learningos-verified-pairs.jsonl"
+    row = json.loads(path.read_text())
+    row["toolchain"]["digest"] = "0" * 64
+    path.write_text(json.dumps(row) + "\n")
+    ui_head = _commit(pair["ui"], "fix.txt", "UI fix after toolchain change")
+    result = _run_hook(
+        pair["ui"],
+        f"refs/heads/feature {ui_head} refs/heads/feature {ZERO_SHA}\n",
+    )
+    assert result.returncode == 0, result.stderr
+    assert _invocations(pair["log"]) == [
+        f"make -C {pair['core']} system-check",
+    ]
+
+
+def test_affected_test_discovery_failure_blocks_the_gate(tmp_path):
+    shutil.copy(REPO_ROOT / "Makefile", tmp_path / "Makefile")
+    (tmp_path / "tools").mkdir()
+    (tmp_path / "tools" / "affected_tests.py").write_text(
+        "raise SystemExit(7)\n", encoding="utf-8")
+    result = subprocess.run(
+        ["make", "--silent", "test-affected", f"PY={sys.executable}"], cwd=tmp_path,
+        capture_output=True, text=True, timeout=60,
+    )
+    assert result.returncode != 0
+    assert "no changes detected" not in result.stdout
 
 
 # ---- #113: live_install deselection outside the live root -------------------

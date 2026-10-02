@@ -1,23 +1,25 @@
 # Test area groups
 
-The suite is ~115 files / ~2200 tests / ~10 minutes. A change in one area
-should rerun only that area's tests. Groups are defined in
+A change in one area should rerun only that area's tests. The current file
+inventory and group membership are defined in
 [`group_map.py`](group_map.py), applied as pytest markers at collection time by
 [`conftest.py`](conftest.py) (no per-file marker edits), and registered in the
 pytest config in [`pyproject.toml`](../pyproject.toml).
+Use `pytest --collect-only -q` for the current test count; gate timings are
+recorded with each run instead of maintained as a second inventory here.
 
 ## The groups
 
-| Group | Files | Covers |
-|---|---|---|
-| `studyplan` | 15 | curriculum, study maps, routes, units, plan revisions, promotion |
-| `materials` | 10 | materials farm, attachments, slices, summaries, ingestion |
-| `synthesis` | 18 | semantics, synthesis, dossiers, goals, runtime, operator questions |
-| `generation` | 12 | generation, projections, views, derived state, search index, Garden |
-| `contracts` | 14 | contracts, manifest, normative corpus, tree contract, UI contract mirror |
-| `gateway` | 24 | gateways, CLI, capabilities, transactions, recovery, operations, diagnostics |
-| `validation` | 17 | validation, hygiene, perimeter, audits, architecture guards |
-| `migrations` | 6 | migrations and multi-year format compatibility |
+| Group | Covers |
+|---|---|
+| `studyplan` | curriculum, study maps, routes, units, plan revisions, promotion |
+| `materials` | materials farm, attachments, slices, summaries, ingestion |
+| `synthesis` | semantics, synthesis, dossiers, goals, runtime, operator questions |
+| `generation` | generation, projections, views, derived state, search index, Garden |
+| `contracts` | contracts, manifest, normative corpus, tree contract, UI contract mirror |
+| `gateway` | gateways, CLI, capabilities, transactions, recovery, operations, diagnostics |
+| `validation` | validation, hygiene, perimeter, audits, architecture guards |
+| `migrations` | migrations and multi-year format compatibility |
 
 A test file belongs to the subsystem it pins, not the harness it uses:
 CLI-driven write-path tests are `gateway`, while CLI-driven plan, material or

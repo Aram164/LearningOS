@@ -10,6 +10,7 @@ beside the copy, not beside the checkout).
 from __future__ import annotations
 
 import hashlib
+import os
 import shutil
 import subprocess
 import sys
@@ -61,9 +62,11 @@ def _snapshot(tree: Path) -> dict[str, str]:
 
 
 def _run(tool: str, args: list[str], scratch: Path) -> subprocess.CompletedProcess:
+    env = dict(os.environ, PYTHONPATH=str(scratch / "tools"),
+               PYTHONDONTWRITEBYTECODE="1")
     return subprocess.run(
         [sys.executable, f"tools/{tool}.py", *args],
-        cwd=scratch, capture_output=True, text=True, timeout=180)
+        cwd=scratch, env=env, capture_output=True, text=True, timeout=180)
 
 
 @pytest.fixture(scope="module")

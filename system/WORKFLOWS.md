@@ -402,6 +402,8 @@ On registration, withdrawal (Rücktritt), sitting, or grade:
    Anmeldung windows as structured `examination.sittings`
    (with `withdrawal_deadline`) / `examination.registration_windows`
    facts in that same module; attempts still record what Aram actually chose;
+   set a known withdrawal deadline on an existing sitting through
+   `module.sitting.update` (CLI `module-sitting`, envelope recipe §25c);
 3. update module `status` when warranted;
 4. rebuild module and coordination views.
 

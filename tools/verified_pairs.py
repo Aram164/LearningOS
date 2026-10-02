@@ -198,20 +198,29 @@ def _is_sha(value: object) -> bool:
 def cmd_base() -> int:
     """Print the last stamped Core SHA: the review-gate diff base.
 
-    A diff base, not a trust decision: the toolchain is deliberately not
-    consulted. The caller diffs the working tree against the last verified
-    Core commit; stamp/check semantics are unchanged.
+    The hook may skip Core tests when this base has identical content, so
+    its toolchain must match too. Exit 2 asks the hook to run the full gate
+    when older stamps exist but none is usable in this environment.
     """
     core = _core_root()
     path = _stamp_path(core)
     if path is None:
         print("verified-pairs: no Core git dir", file=sys.stderr)
         return 1
-    for row in reversed(_read_stamps(path)):
+    stamps = _read_stamps(path)
+    digest = _toolchain()["digest"]
+    for row in reversed(stamps):
         sha = row.get("core_sha")
-        if _is_sha(sha):
+        toolchain = row.get("toolchain")
+        if (_is_sha(sha) and isinstance(toolchain, dict)
+                and toolchain.get("digest") == digest
+                and _git(core, "cat-file", "-t", sha) == "commit"):
             print(sha)
             return 0
+    if stamps:
+        print("verified-pairs: no usable baseline for this toolchain",
+              file=sys.stderr)
+        return 2
     print("verified-pairs: no stamped pair yet", file=sys.stderr)
     return 1
 

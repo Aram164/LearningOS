@@ -104,7 +104,7 @@ test-group:
 # so a review branch reruns only what changed since its last verification.
 BASE ?= main
 test-affected:
-	files=`$(PY) tools/affected_tests.py --base "$(BASE)"`; \
+	files=`$(PY) tools/affected_tests.py --base "$(BASE)"` || exit $$?; \
 	if [ -z "$$files" ]; then echo "affected: no changes detected"; \
 	else $(PY) -m pytest -q $$files; fi
 
