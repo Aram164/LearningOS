@@ -6,6 +6,7 @@ attachments with its resolver transition."""
 from __future__ import annotations
 
 import hashlib
+import json
 from pathlib import Path
 
 import pytest
@@ -249,3 +250,160 @@ def test_second_fingerprint_walk_reads_no_bytes_from_disk(
     assert reads, "the walk read nothing at all — this proves nothing"
     assert SCAN_REL not in reads
     assert set(reads.values()) == {1}
+
+
+# ------------------------------------------------- status-cache pins
+def _text_cache_index(root: Path, entry: str = "ab" * 32) -> Path:
+    path = root / "generated" / "text-cache" / entry / "index.json"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps({
+        "_generated": {"warning": "GENERATED"},
+        "sha256": entry,
+        "pages": 1,
+    }) + "\n", encoding="utf-8")
+    return path
+
+
+def test_corrupted_text_cache_index_misses_and_revalidates(mini_repo: Path):
+    """GEN-JSON parses each text-cache index, so a corrupted one must
+    miss the status cache (the #103 patch pinned the cache by name
+    only and would have served the pre-corruption issues)."""
+    import learning_os.validation_cache as vc
+    from learning_os.loader import load_repo
+
+    _text_cache_index(mini_repo)
+    vc.status_issues(load_repo(mini_repo))  # warm
+    assert vc.read_cached_static_issues(mini_repo) is not None
+    (mini_repo / "generated" / "text-cache" / ("ab" * 32) / "index.json").write_text(
+        "{ not json\n", encoding="utf-8")
+    assert vc.read_cached_static_issues(mini_repo) is None
+    issues = vc.status_issues(load_repo(mini_repo))
+    assert any(i.code == "GEN-JSON" and i.severity == "E" for i in issues)
+
+
+def test_new_text_cache_entry_misses(mini_repo: Path):
+    import learning_os.validation_cache as vc
+    from learning_os.loader import load_repo
+
+    vc.status_issues(load_repo(mini_repo))  # warm, no text cache
+    assert vc.read_cached_static_issues(mini_repo) is not None
+    _text_cache_index(mini_repo)
+    assert vc.read_cached_static_issues(mini_repo) is None
+
+
+def test_rewritten_scan_misses_and_revalidates(mini_repo: Path):
+    """Definition 2 took the scans out of the content fingerprint: the
+    validator-inputs pin stats them instead, so a rewrite misses rather
+    than serving the pre-rewrite issues."""
+    import learning_os.validation_cache as vc
+    from learning_os.loader import load_repo
+
+    _declare_scan(mini_repo)
+    assert vc.status_issues(load_repo(mini_repo)) is not None
+    assert vc.read_cached_static_issues(mini_repo) is not None
+    # Same size, different bytes: the pin stats (size, mtime, ctime),
+    # and the rewrite moves mtime and ctime.
+    (mini_repo / SCAN_REL).write_bytes(b"%PDF SCAN\n")
+    assert vc.read_cached_static_issues(mini_repo) is None
+    issues = vc.status_issues(load_repo(mini_repo))
+    assert any(i.code == "ATTACH-LOCAL-CHANGED" and i.severity == "E"
+               for i in issues)
+
+
+def test_absent_then_present_scan_misses(mini_repo: Path):
+    import learning_os.validation_cache as vc
+    from learning_os.loader import load_repo
+
+    _declare_scan(mini_repo)
+    (mini_repo / SCAN_REL).unlink()
+    vc.status_issues(load_repo(mini_repo))  # warm, scan absent
+    assert vc.read_cached_static_issues(mini_repo) is not None
+    (mini_repo / SCAN_REL).write_bytes(b"%PDF scan\n")
+    assert vc.read_cached_static_issues(mini_repo) is None
+
+
+# ------------------------------------------------- GEN-INPUT pre-filter
+@pytest.mark.parametrize("text, expected", [
+    ("See generated/concept-index.md for the list.", True),
+    ("(generated/manifest.json)", True),
+    ("\ngenerated/views are disposable", True),
+    ("no reference here", False),
+    ("https://sklearn.org/modules/generated/foo", False),
+    ("xgenerated/y is a longer path", False),
+    ("/generated/y has a leading slash", False),
+    ("generated without the slash", False),
+])
+def test_generated_reference_predicate(text: str, expected: bool):
+    from learning_os.rules.registries import _references_generated
+
+    assert _references_generated(text) is expected
+
+
+def test_gen_input_still_flags_a_canonical_reference(mini_repo: Path):
+    from learning_os.loader import load_repo
+    from learning_os.rules import validate
+
+    note = mini_repo / "knowledge" / "notes" / "mathematics" / "note-demo.md"
+    note.write_text(
+        note.read_text(encoding="utf-8") + "\nSee generated/concept-index.md.\n",
+        encoding="utf-8")
+    issues = validate(load_repo(mini_repo), online=False)
+    assert any(i.code == "GEN-INPUT" and i.severity == "E" for i in issues)
+
+
+# ------------------------------------------------- one walk per validation
+def test_validate_py_performs_one_canonical_walk(
+        mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
+    """The validate.py flow (pins, load, seed, validate) walks the
+    canonical content once; the unseeded flow walks it twice for
+    identical issues."""
+    import learning_os.fingerprint as fm
+    import learning_os.validation_cache as vc
+    from learning_os.fingerprint import seed_source_fingerprint
+    from learning_os.genout import generate_all, write_outputs
+    from learning_os.loader import load_repo
+    from learning_os.rules import validate
+
+    repo_built = load_repo(mini_repo)
+    write_outputs(repo_built, generate_all(repo_built))
+
+    original_walk = fm._fingerprint_roots
+    original_read = fm.read_bytes_inside
+    walks: list = []
+    reads: dict[str, int] = {}
+
+    def counted_walk(root: Path, rel_roots, **kwargs):
+        walks.append(tuple(rel_roots))
+        return original_walk(root, rel_roots, **kwargs)
+
+    def counted_read(root: Path, path: Path) -> bytes:
+        key = path.relative_to(root).as_posix()
+        reads[key] = reads.get(key, 0) + 1
+        return original_read(root, path)
+
+    monkeypatch.setattr(fm, "_fingerprint_roots", counted_walk)
+    monkeypatch.setattr(fm, "read_bytes_inside", counted_read)
+
+    def flow(seed: bool):
+        digests.clear()
+        walks.clear()
+        reads.clear()
+        pins = vc.observe_pins(mini_repo)
+        assert pins is not None
+        repo = load_repo(mini_repo)
+        if seed:
+            seed_source_fingerprint(repo, f"sha256:{pins['canonical_fingerprint']}")
+        issues = validate(repo, online=False)
+        return (
+            list(walks),
+            dict(reads),
+            [(i.severity, i.code, i.message, i.path) for i in issues],
+        )
+
+    unseeded_walks, _unseeded_reads, unseeded_issues = flow(seed=False)
+    seeded_walks, seeded_reads, seeded_issues = flow(seed=True)
+    assert len(unseeded_walks) == 2
+    assert len(seeded_walks) == 1
+    assert seeded_issues == unseeded_issues
+    assert seeded_reads, "the walk read nothing — this proves nothing"
+    assert set(seeded_reads.values()) == {1}

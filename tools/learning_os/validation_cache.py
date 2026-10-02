@@ -22,7 +22,11 @@ Pinned inputs (all must match; anything else misses and re-validates):
   outside the canonical roots — generated/ (the GEN-* checks, and
   HYGIENE-VIEWS compares the published manifest's stamp, so ``make
   views`` alone changes the answer), system/ prose, transaction receipts,
-  the repository tree, and the two perimeter levels above it.
+  the repository tree, and the two perimeter levels above it — plus two
+  targeted stat sets inside otherwise name-only subtrees: each
+  ``generated/text-cache/*/index.json`` (GEN-JSON parses them) and each
+  declared local-only attachment (definition 2 took them out of the
+  content fingerprint, so a scan rewrite would otherwise serve stale).
 
 All pins are observed *before* validation runs and stored with its
 result. `status` holds no lock, so a write landing mid-run then leaves a
@@ -51,6 +55,7 @@ validate overwrites it.
 
 from __future__ import annotations
 
+import errno
 import hashlib
 import json
 import os
@@ -59,6 +64,7 @@ from pathlib import Path
 from typing import TYPE_CHECKING
 
 from . import __version__
+from .contracts.local_attachments import local_paths
 from .derived.identity import digest_code_identity, runtime_digest
 from .fingerprint import CANONICAL_ROOTS, canonical_fingerprint
 from .manifest_identity import materials_digest, operations_digest
@@ -76,7 +82,9 @@ CACHE_RELATIVE = Path("generated/reports/validation-report.cache.json")
 
 #: Cache contract. A reader meeting another format discards and misses.
 #: 2: the validator-inputs pin, and pins observed before validation.
-CACHE_FORMAT = 2
+#: 3: the validator-inputs pin also stats each text-cache index and each
+#: declared local-only attachment (see validator_inputs_digest).
+CACHE_FORMAT = 3
 
 #: Directory names never descended into: version control, environments and
 #: interpreter/tool caches. No rule reads inside them, and several change on
@@ -85,8 +93,11 @@ _WALK_PRUNE = frozenset({".git", ".venv", "node_modules", "__pycache__",
                          ".pytest_cache", ".ruff_cache"})
 
 #: Subtrees recorded by name only: the material text cache (~70k
-#: machine-written blobs, none of them the *.md/*.json the generated/ checks
-#: read) and the disposable diagnostics trace store, which no rule reads.
+#: machine-written page blobs, none of them read by any rule) and the
+#: disposable diagnostics trace store, which no rule reads. The exception
+#: inside the text cache is each entry's ``index.json``, which GEN-JSON
+#: parses: ``validator_inputs_digest`` stats those directly (a few
+#: hundred stats) instead of descending into the blob directories.
 _WALK_NAME_ONLY = frozenset({"generated/text-cache", "operations/diagnostics"})
 
 
@@ -129,6 +140,17 @@ def validator_inputs_digest(root: Path) -> str:
     app nor ``tools/validate.py`` forces a miss. Everything else contributes
     size, mtime and ctime — a rule added later that reads a new
     non-canonical path is covered without touching this function.
+
+    Two targeted stat sets cover validator inputs inside otherwise
+    name-only subtrees, in the same line format as the walk. Each
+    ``generated/text-cache/*/index.json`` is statted directly (GEN-JSON
+    parses it; descending into the ~70k page blobs to find it would
+    cost the listing on every read), and each declared local-only
+    attachment is statted (definition 2 took the scans out of the
+    content fingerprint, so without this a scan rewrite would serve
+    the pre-rewrite issues from the cache). An absent path contributes
+    no line: its add/delete already moves the pin by the line's
+    absence or presence.
     """
     root = root.resolve()
     digest = hashlib.sha256()
@@ -168,6 +190,33 @@ def validator_inputs_digest(root: Path) -> str:
         except OSError:
             return None
 
+    def emit_stat_path(label: str, full: str) -> None:
+        """One stat line for a directly addressed path, absent or not.
+
+        Same line format ``emit_entry`` uses for a walked file, without
+        listing its directory: an absent path contributes nothing, so
+        add/delete moves the pin by the line's absence or presence, while
+        a present-but-unstatable path keeps the walk's ``<unreadable>``.
+        """
+        try:
+            st = os.lstat(full)
+        except OSError as exc:
+            if exc.errno != errno.ENOENT:
+                emit(f"{label}\0<unreadable>")
+            return
+        if stat.S_ISLNK(st.st_mode):
+            try:
+                target = os.readlink(full)
+            except OSError:
+                target = "<unreadable>"
+            emit(f"{label}\0<link:{target}>")
+        elif stat.S_ISDIR(st.st_mode):
+            emit(f"{label}/")
+        elif not stat.S_ISREG(st.st_mode):
+            emit(f"{label}\0<not-file>")
+        else:
+            emit(f"{label}\0{st.st_size}\0{st.st_mtime_ns}\0{st.st_ctime_ns}")
+
     root_str = os.fspath(root)
     stack = [root_str]
     while stack:
@@ -192,6 +241,29 @@ def validator_inputs_digest(root: Path) -> str:
             if (entry.is_dir(follow_symlinks=False) and not entry.is_symlink()
                     and rel not in _WALK_NAME_ONLY):
                 stack.append(entry.path)
+
+    # Text-cache indexes without the blob listing: one scandir of the
+    # entry directories, then a direct stat of each ``index.json``.
+    text_cache = os.path.join(root_str, "generated", "text-cache")
+    entries = scan(text_cache)
+    if entries is not None:
+        for child in entries:
+            rel = f"generated/text-cache/{child.name}"
+            if child.is_symlink() or not child.is_dir(follow_symlinks=False):
+                # A stray file directly under the cache: GEN-JSON parses
+                # ``*.json`` here, so those read full stats, the rest names.
+                emit_entry(rel, child,
+                           names_only=not child.name.endswith(".json"))
+                continue
+            emit_entry(rel, child, names_only=False)
+            emit_stat_path(f"{rel}/index.json",
+                           os.path.join(child.path, "index.json"))
+
+    # Declared local-only attachments: present ones read full stats, so a
+    # scan rewrite misses; absent ones contribute nothing (their add/delete
+    # already moves the pin through the canonical name walk above).
+    for rel in sorted(local_paths(root)):
+        emit_stat_path(rel, os.path.join(root_str, *rel.split("/")))
 
     for label, level in (("<umbrella>", root.parent), ("<wrapper>", root.parent.parent)):
         entries = scan(os.fspath(level))

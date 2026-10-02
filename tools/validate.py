@@ -16,6 +16,7 @@ import datetime as _dt
 import time as _time
 from pathlib import Path
 
+from learning_os.fingerprint import seed_source_fingerprint  # noqa: E402
 from learning_os.loader import load_repo  # noqa: E402
 from learning_os.rules import render_report, validate  # noqa: E402
 from learning_os.rules.common import BASELINE_EXEMPT_WARNINGS  # noqa: E402
@@ -52,6 +53,12 @@ def main() -> int:
         # this run did not see (validation_cache module docstring).
         pins = observe_pins(root)
     repo = load_repo(root)
+    if pins is not None:
+        # One canonical walk per run (#112): HYGIENE-VIEWS reuses the
+        # fingerprint observed just before loading instead of walking the
+        # same bytes again. A write landing between the pin and the load
+        # is already caught: the next `status` misses on the pins.
+        seed_source_fingerprint(repo, f"sha256:{pins['canonical_fingerprint']}")
     issues = validate(repo, online=args.online)
     elapsed = _time.monotonic() - started
 

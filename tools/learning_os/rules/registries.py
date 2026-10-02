@@ -11,6 +11,20 @@ from .common import (
     JUDGMENT_HEADERS,
 )
 
+_GENERATED_REF_RE = re.compile(r"(?<![\w/])generated/")
+
+
+def _references_generated(text: str) -> bool:
+    """Whether a canonical text references the repository's own generated/ tree.
+
+    The substring pre-filter skips the lookbehind regex over texts that
+    cannot match (386 ms down to 14 ms per validation, #112). Only the
+    repository's own tree counts — 'generated/' inside URLs or longer
+    paths (e.g. sklearn.org/modules/generated/) must not be preceded by
+    a slash or word character.
+    """
+    return "generated/" in text and _GENERATED_REF_RE.search(text) is not None
+
 
 class ChecksRegistries:
     """Mixed into Validator; see rules/core.py."""
@@ -151,10 +165,7 @@ class ChecksRegistries:
         r = self.repo
         # No canonical file references generated/ as input
         for f, text in self._canonical_texts():
-            # Only the repository's own generated/ tree counts — 'generated/'
-            # inside URLs or longer paths (e.g. sklearn.org/modules/generated/)
-            # must not be preceded by a slash or word character.
-            if re.search(r"(?<![\w/])generated/", text):
+            if _references_generated(text):
                 self.err("GEN-INPUT",
                          "canonical file references 'generated/' — generated files are never inputs",
                          self._rel(f))
