@@ -191,6 +191,20 @@ MAX_STUDY_OPTIONS = 5
 MAX_STAGE_RESULTS = 5
 
 
+def _display_registration_state(state: object) -> object:
+    """The learner-facing phrase for one projected registration state.
+
+    The projection says ``unregistered`` for a sitting with no recorded
+    attempt; on this screen that absence reads as a missing fact, never
+    a decision, so it says ``registration not recorded`` — the same
+    phrase the brief uses. ``unrecorded`` (elapsed) and every settled
+    state pass through unchanged, as do the manifest values themselves.
+    """
+    if state == "unregistered":
+        return "registration not recorded"
+    return state
+
+
 def _nearest_exam(repo):
     """(date, module_id, exam row) for the nearest recorded exam, or None."""
     today = _dt.date.today()
@@ -250,7 +264,8 @@ def _single_study_option(repo, date, exam, study_map):
                       f"inspect it with `inspect {study_map.id}`")
     option = {
         "exam_date": date.isoformat(),
-        "registration_state": exam.get("registration_state"),
+        "registration_state": _display_registration_state(
+            exam.get("registration_state")),
         "open": _study_open(stage),
         "learner_choice": False,
     }
@@ -314,7 +329,8 @@ def _study_options_payload(repo, date, module_id, exam):
         "contract": "resume-study-options",
         "module_id": module_id,
         "exam_date": date.isoformat(),
-        "registration_state": exam.get("registration_state"),
+        "registration_state": _display_registration_state(
+            exam.get("registration_state")),
         "options": options,
         "select_with": "resume --study --unit UNIT_ID",
     }

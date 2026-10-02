@@ -291,6 +291,34 @@ def test_study_mode_unit_refuses_outside_the_exam_module(mini_repo: Path):
     assert "resume --unit needs --study" in bare.stderr
 
 
+def test_study_mode_reports_a_missing_registration_as_a_missing_fact(
+        mini_repo: Path):
+    # #114 item 3: `resume --study` says `registration not recorded`
+    # for an upcoming sitting with no attempt, like the brief.
+    from learning_os.commands.resume import _display_registration_state
+
+    assert _display_registration_state("unregistered") == "registration not recorded"
+    assert _display_registration_state("unrecorded") == "unrecorded"
+    assert _display_registration_state("registered") == "registered"
+    root = _runtime_repo(mini_repo)
+    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
+    module_path = root / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module["examination"]["sittings"][1]["date"] = date
+    module["attempts"] = [att for att in module["attempts"]
+                          if att.get("termin") != 2]
+    write_yaml(module_path, module)
+    proc = run_los(root, "resume", "--study", "--json")
+    assert proc.returncode == 0, proc.stderr
+    option = json.loads(proc.stdout)["study_option"]
+    assert option["exam_date"] == date
+    assert option["registration_state"] == "registration not recorded"
+    text = run_los(root, "resume", "--study")
+    assert text.returncode == 0, text.stderr
+    assert "registration recorded as registration not recorded" in text.stdout
+    assert "unregistered" not in text.stdout
+
+
 def test_study_mode_refusal_names_a_command_when_nothing_is_studyable(mini_repo: Path):
     root = _runtime_repo(mini_repo)
     date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()

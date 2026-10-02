@@ -3,15 +3,16 @@ and the reading-room / adoption additions to the generator."""
 
 from __future__ import annotations
 
+import datetime as _dt
 import json
 
 import pytest
 import yaml
 from gateway_helpers import approved_v2_call, file_sha256, request_artifact_id
-from repo_builders import run_los
+from repo_builders import add_curriculum, run_los, write_yaml
 
 from learning_os.genout import adoption_counts, generate_all
-from learning_os.genout.modules_view import _exam_spine_lines
+from learning_os.genout.modules_view import _academic_deadlines, _exam_spine_lines
 from learning_os.loader import load_repo
 
 
@@ -108,6 +109,33 @@ def test_module_view_exam_line_names_module_files_not_frozen_snapshot(mini_repo)
     lines = _exam_spine_lines(load_repo(mini_repo))
     assert "(no registered attempt in any module's module.yaml)" in lines
     assert not any("records/modules.yaml" in line for line in lines)
+
+
+def test_exam_spine_pending_lists_both_missing_fact_states(mini_repo):
+    # #114 item 3: pending means no attempt recorded — an upcoming
+    # sitting reads `registration not recorded` (the brief's phrase),
+    # an elapsed one `unrecorded`. The manifest keeps `unregistered`.
+    add_curriculum(mini_repo)
+    module_path = mini_repo / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    future = (_dt.date.today() + _dt.timedelta(days=30)).isoformat()
+    module["examination"]["sittings"][1]["date"] = future
+    module["attempts"] = [att for att in module["attempts"]
+                          if att.get("termin") != 2]
+    write_yaml(module_path, module)
+    repo = load_repo(mini_repo)
+    rows = [row for row in _academic_deadlines(repo)
+            if row.get("kind") == "exam" and row.get("termin") in (2, 3)]
+    assert {row["registration_state"] for row in rows} == {
+        "unregistered", "unrecorded"}
+    lines = _exam_spine_lines(repo)
+    assert "**Sittings with no registered attempt yet:**" in lines
+    pending = [line for line in lines
+               if "registration not recorded" in line or "unrecorded" in line]
+    assert len(pending) == 2
+    assert any("registration not recorded" in line for line in pending)
+    assert any("— unrecorded" in line for line in pending)
+    assert not any("not registered" in line for line in lines)
 
 
 # ---------------------------------------------------------------- capture

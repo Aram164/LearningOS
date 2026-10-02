@@ -190,19 +190,25 @@ def _exam_spine_lines(repo: Repo) -> list[str]:
     else:
         lines.append("(no registered attempt in any module's module.yaml)")
     deadlines = _academic_deadlines(repo)
+    # Pending means no attempt recorded: upcoming sittings read as a
+    # missing fact ("registration not recorded", the brief's phrase) and
+    # elapsed ones as the missing record they are ("unrecorded").
     pending = [row for row in deadlines
                if row.get("kind") == "exam"
-               and row.get("registration_state") == "unregistered"]
+               and row.get("registration_state") in {"unregistered", "unrecorded"}]
     if pending:
         lines.append("")
-        lines.append("**Available sittings with no registered attempt yet:**")
+        lines.append("**Sittings with no registered attempt yet:**")
         lines.append("")
         for row in pending:
             date = row["start_date"]
             if row.get("end_date") != date:
                 date += f" to {row['end_date']}"
+            state = ("registration not recorded"
+                     if row.get("registration_state") == "unregistered"
+                     else "unrecorded")
             lines.append(f"- **{date}** — {row['title']} (`{row['module_id']}`), "
-                         f"{row['label']} — not registered"
+                         f"{row['label']} — {state}"
                          + (f" · {row['notes']}" if row.get("notes") else ""))
     windows = [row for row in deadlines if row.get("kind") == "registration-window"]
     if windows:
