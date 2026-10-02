@@ -5,6 +5,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import copy
+import datetime as _dt
 import hashlib
 import json
 import os
@@ -86,6 +87,84 @@ def cmd_module_list(args) -> int:
     if args.status:
         rows = [row for row in rows if row.get("status") == args.status]
     return _print_rows(rows)
+
+
+ATTEMPT_RESULTS = ("registered", "withdrawn", "sat", "passed", "failed")
+
+
+def cmd_module_attempt(args) -> int:
+    """Record one exam attempt fact in the owning module's module.yaml.
+
+    WORKFLOWS §10's write path for "Aram registered / withdrew / sat /
+    passed / failed termin N on date D": appends a new attempts[] row, or
+    updates the existing row for the same termin when one is there. It
+    writes attempts only — no plan package, no source map. Attempt
+    consistency (chronological order, grade with passed, registered last)
+    stays owned by validation; the transaction refuses what breaks it.
+    """
+    root = _root(args)
+    if args.termin not in (1, 2, 3):
+        print(f"los: --termin must be 1, 2 or 3, got {args.termin!r}",
+              file=sys.stderr)
+        return 2
+    if args.result not in ATTEMPT_RESULTS:
+        print(f"los: --result must be one of {', '.join(ATTEMPT_RESULTS)}, "
+              f"got {args.result!r}", file=sys.stderr)
+        return 2
+    try:
+        _dt.date.fromisoformat(args.date)
+    except (TypeError, ValueError):
+        print(f"los: --date must be an ISO date (YYYY-MM-DD), got {args.date!r}",
+              file=sys.stderr)
+        return 2
+    grade = args.grade
+    if grade is not None:
+        if isinstance(grade, bool) or not isinstance(grade, (int, float)):
+            print(f"los: --grade must be a number between 1.0 and 5.0, "
+                  f"got {grade!r}", file=sys.stderr)
+            return 2
+        grade = float(grade)
+        if not 1.0 <= grade <= 5.0:
+            print("los: --grade must be between 1.0 and 5.0, "
+                  f"got {args.grade!r}", file=sys.stderr)
+            return 2
+    with _operator_lock(root):
+        if not _expected_ok(root, args.expected_snapshot):
+            return 3
+        repo = load_repo(root)
+        module = repo.modules.get(args.module_id)
+        if module is None:
+            print(f"los: module not found: {args.module_id}", file=sys.stderr)
+            return 2
+        module_path = repo.module_origins[args.module_id]
+        data = copy.deepcopy(module)
+        attempts = data.get("attempts") or []
+        data["attempts"] = attempts
+        row = next((candidate for candidate in attempts
+                    if isinstance(candidate, dict)
+                    and candidate.get("termin") == args.termin), None)
+        if row is None:
+            row = {"termin": args.termin}
+            attempts.append(row)
+        row["date"] = args.date
+        row["result"] = args.result
+        if grade is not None:
+            row["grade"] = grade
+        if args.notes is not None:
+            row["notes"] = args.notes
+        code, errors, confirmation = _write_transaction(
+            root, {module_path: _dump_yaml(data)},
+            capability="module.attempt.record",
+            expected_revisions=_expected_revisions_from_args(args),
+            artifact_ids=[args.module_id],
+        )
+        if code:
+            for issue in errors[:12]:
+                print(issue, file=sys.stderr)
+            return code
+    print(json.dumps({"ok": True, "module_id": args.module_id,
+                      "attempt": row, **confirmation}, ensure_ascii=False))
+    return 0
 
 
 _LINEAGE_EVIDENCE_KINDS = ("route-locator", "manifest", "repo-file", "external")

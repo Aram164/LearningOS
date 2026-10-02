@@ -73,6 +73,7 @@ from learning_os.commands.material import (  # noqa: E402
 )
 from learning_os.commands.material_span import cmd_material_span  # noqa: E402
 from learning_os.commands.module import (  # noqa: E402
+    cmd_module_attempt,
     cmd_module_list,
     cmd_module_plan_import,
     cmd_unit_plan_revise,
@@ -834,6 +835,25 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.set_defaults(func=cmd_module_plan_import, _parser_factory=build_parser)
     p.add_argument("--review-report", help="saved --check JSON; required for reviewed apply and exact retries")
+
+    p = sub.add_parser("module-attempt",
+                       help="record one exam attempt fact in the owning module")
+    p.add_argument("module_id")
+    p.add_argument("--termin", required=True, type=int, choices=(1, 2, 3),
+                   help="which termin this attempt is for")
+    p.add_argument("--date", required=True,
+                   help="sitting date (YYYY-MM-DD)")
+    p.add_argument("--result", required=True,
+                   choices=("registered", "withdrawn", "sat", "passed", "failed"),
+                   help="what Aram stated about this termin")
+    p.add_argument("--grade", type=float, default=None,
+                   help="optional grade (1.0-5.0; validation requires result "
+                        "passed unless the module is completed)")
+    p.add_argument("--notes", default=None,
+                   help="optional note kept on the attempt row")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_module_attempt)
 
     p = sub.add_parser("unit-plan-revise",
                        help="revise one existing lecture from a compact reviewed patch")

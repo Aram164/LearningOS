@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/module.attempt.record.schema.json",
+  "title": "payload for capability module.attempt.record",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "date",
+    "module_id",
+    "result",
+    "termin"
+  ],
+  "properties": {
+    "date": {
+      "type": "string"
+    },
+    "grade": {
+      "type": "number"
+    },
+    "module_id": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "registered",
+        "withdrawn",
+        "sat",
+        "passed",
+        "failed"
+      ]
+    },
+    "termin": {
+      "type": "integer",
+      "enum": [
+        1,
+        2,
+        3
+      ]
+    }
+  }
+}

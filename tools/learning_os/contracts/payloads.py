@@ -111,6 +111,11 @@ def _scalar_json_type(action: argparse.Action) -> dict:
         return {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
     if action.type is int:
         schema: dict = {"type": "integer"}
+    elif action.type is float:
+        # First used by module-attempt --grade: without this a float
+        # argument derives {"type": "string"}, and a gateway envelope
+        # carrying the JSON number the CLI itself parses is refused.
+        schema = {"type": "number"}
     else:
         schema = {"type": "string"}
     choices = getattr(action, "choices", None)
