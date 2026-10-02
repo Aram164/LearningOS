@@ -727,7 +727,12 @@ and the final study map; it uses this same governed import path internally.
 The saved-preflight shortcut for both commands is specified in
 `PLAN-CREATION-SOP.md` Gates 4–6: `--apply-reviewed-sha256` plus
 `--review-report` dispatches the exact envelope prepared at review time,
-without refreshing its snapshot, revisions or retry identity.
+without refreshing its snapshot, revisions or retry identity. When the
+reviewed draft is large, `unit-plan-revise … --check --report-out
+/scratch/check.json` saves the complete report — the object of review,
+apply, and recovery — and prints a compact summary without the sealed
+envelope. Bare `--check` output is unchanged; `--report-out` is refused
+with apply, `--staged-basis`, in-repository targets, and existing files.
 
 1. **Draft.** Regenerate the affected maps with
    `tools/assemble_lecture_study_maps.py --out <dir>` when the change is in the
@@ -748,7 +753,11 @@ without refreshing its snapshot, revisions or retry identity.
    `unit-plan-revise`). This prints the staged basis and package SHA without
    writing canonical files. Its `validated: false` means it is preparation,
    not an approval: insert the basis into the reviewed dossier, then run an
-   ordinary `--check` on the final package.
+   ordinary `--check` on the final package. For several existing units, the
+   compact `unit_revisions[]` shape (SOP Gate 4) also accepts an append-only
+   `resources_append` list on a stage patch: reviewed new placements with
+   fresh resource ids go after the existing authored rows without copying
+   them. Full-array `fields.resources` stays for intentional replacement.
    Applying a changed replacement dossier records its prospective freshness
    lineage alongside any route-covers lineage in the same transaction.
 4. **Apply through the gateway**, never by writing the canonical file directly

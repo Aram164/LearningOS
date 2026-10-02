@@ -841,6 +841,10 @@ def build_parser() -> argparse.ArgumentParser:
                    help="run contract, routing, and shadow-repository validation without writing")
     p.add_argument("--staged-basis", metavar="UNIT_ID",
                    help="with --check, print the post-revision dossier basis without writing")
+    p.add_argument("--report-out", metavar="PATH", default=None,
+                   help="with --check: save the complete check report as UTF-8 JSON "
+                        "outside the repository and print a compact review summary "
+                        "without the sealed envelope instead")
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.add_argument(

@@ -450,6 +450,19 @@ One existing lecture:
   --file /absolute/path/to/revision.yaml --check > /tmp/unit-revise-check.json
 ```
 
+When the reviewed draft is large, `--report-out` saves that same complete
+report itself and prints only a compact review summary — every review field
+except the sealed `gateway_envelope`, plus the saved path and SHA-256:
+
+```bash
+.venv/bin/python tools/los.py unit-plan-revise UNIT_ID \
+  --file /absolute/path/to/revision.yaml --check --report-out /tmp/unit-revise-check.json
+```
+
+Apply, receipt verification, and recovery then point at the saved file
+(`--review-report /tmp/unit-revise-check.json`); the compact stdout is for
+review only and carries no approval.
+
 Structural or multi-unit change:
 
 ```bash
@@ -469,7 +482,13 @@ records under one operator lock, then uses the same shadow validation, lineage,
 reviewed-file hash, GatewayEnvelopeV2, receipt, and atomic transaction as a
 full import. Save the compact-file `reviewed_file_sha256` from `--check` for
 `--apply-reviewed-sha256`; `assembled_package_sha256` identifies the internal
-full package and is not the file to approve.
+full package and is not the file to approve. To add placements without
+copying the array, a stage patch may carry `resources_append` instead of
+`fields.resources`: new rows with fresh resource ids land after every
+existing authored placement, in order, and the importer carries the old
+rows forward itself. The same source-reading, angle-review, and
+evidence-preservation obligations apply — the new rows and their teaching
+purpose still need review.
 
 The command checks the plan contract, source routing, schemas, references,
 module ownership, unit order, study-map state, and workspace joins in a shadow

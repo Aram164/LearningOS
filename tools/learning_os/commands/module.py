@@ -1858,25 +1858,69 @@ def _assemble_compact_module_revision(repo, module_id: str,
         if patches and current_map is None:
             problems.append(f"{where} has no current study map to patch")
             continue
-        study_map = copy.deepcopy(current_map.data) if patches and current_map else None
+        base_data = None
+        if patches and current_map is not None:
+            # An append patch carries authored placements forward, so the whole
+            # map starts from the authored form; legacy patches keep the
+            # expanded base they were reviewed against.
+            if any(isinstance(patch, dict) and "resources_append" in patch
+                   for patch in patches):
+                base_data = current_map.authored_data or current_map.data
+            else:
+                base_data = current_map.data
+        study_map = copy.deepcopy(base_data) if base_data is not None else None
         stages = {stage.get("id"): stage for stage in study_map.get("stages", [])
                   if isinstance(stage, dict)} if study_map else {}
+        existing_ids = {row.get("id") for stage in stages.values()
+                        for row in (stage.get("resources") or [])
+                        if isinstance(row, dict)}
+        existing_ids = {rid for rid in existing_ids if isinstance(rid, str)}
         seen_stages: set[str] = set()
         for stage_index, patch in enumerate(patches):
             stage_where = f"{where}.stage_patches[{stage_index}]"
-            if not isinstance(patch, dict) or set(patch) != {"stage_id", "fields"}:
-                problems.append(f"{stage_where} needs exactly stage_id and fields")
+            if not isinstance(patch, dict) or "stage_id" not in patch \
+                    or set(patch) - {"stage_id", "fields", "resources_append"}:
+                problems.append(f"{stage_where} needs stage_id plus fields and/or resources_append")
                 continue
-            sid, fields = patch["stage_id"], patch["fields"]
+            sid = patch["stage_id"]
+            fields = patch.get("fields")
+            append = patch.get("resources_append")
+            if fields is None and append is None:
+                problems.append(f"{stage_where} changes nothing; give fields and/or resources_append")
+                continue
             if not isinstance(sid, str) or sid in seen_stages or sid not in stages:
                 problems.append(f"{stage_where} names a missing or repeated stage: {sid}")
                 continue
             seen_stages.add(sid)
-            if not isinstance(fields, dict) or not fields or set(fields) - _COMPACT_STAGE_FIELDS:
-                problems.append(f"{stage_where}.fields must be non-empty and limited to "
-                                f"{sorted(_COMPACT_STAGE_FIELDS)}")
-                continue
-            stages[sid].update(copy.deepcopy(fields))
+            if fields is not None:
+                if not isinstance(fields, dict) or not fields or set(fields) - _COMPACT_STAGE_FIELDS:
+                    problems.append(f"{stage_where}.fields must be non-empty and limited to "
+                                    f"{sorted(_COMPACT_STAGE_FIELDS)}")
+                    continue
+                if append is not None and "resources" in fields:
+                    problems.append(f"{stage_where} cannot combine resources_append with fields.resources")
+                    continue
+            if append is not None:
+                if not isinstance(append, list) or not append \
+                        or any(not isinstance(row, dict) for row in append):
+                    problems.append(f"{stage_where}.resources_append must be a non-empty list of resource objects")
+                    continue
+                new_ids = [row.get("id") for row in append]
+                if any(not isinstance(rid, str) or not rid for rid in new_ids):
+                    problems.append(f"{stage_where}.resources_append needs a fresh resource id on every row")
+                    continue
+                if len(set(new_ids)) != len(new_ids):
+                    problems.append(f"{stage_where}.resources_append repeats a resource id")
+                    continue
+                collisions = [rid for rid in new_ids if rid in existing_ids]
+                if collisions:
+                    problems.append(f"{stage_where}.resources_append reuses an existing resource id: {collisions[0]}")
+                    continue
+            if fields is not None:
+                stages[sid].update(copy.deepcopy(fields))
+            if append is not None:
+                stages[sid].setdefault("resources", []).extend(copy.deepcopy(append))
+                existing_ids.update(row["id"] for row in append)
         dossier = item.get("material_synthesis")
         if dossier is not None:
             if not isinstance(dossier, dict) or dossier.get("unit_id", uid) != uid:
@@ -2290,6 +2334,17 @@ def cmd_module_plan_import(args) -> int:
                 return 1
             if fragment is not None:
                 result.update(fragment)
+            report_out = getattr(args, "report_out", None)
+            if report_out:
+                compact, failure = _save_check_report_and_compact(
+                    root, result, report_out,
+                    draft=getattr(args, "_report_out_draft", None))
+                if failure is not None:
+                    code, message = failure
+                    print(f"los: {message}; no canonical files were written",
+                          file=sys.stderr)
+                    return code
+                result = compact
         else:
             if getattr(args, "_minimal_writes", False):
                 artifact_ids = _minimal_artifact_ids(
@@ -2544,6 +2599,86 @@ def _apply_unit_route_changes(source_map: dict, module_id: str, unit_id: str,
     return new_map, summary, problems
 
 
+def _report_out_target(target_text: str) -> Path:
+    """Resolve a --report-out target against the filesystem, not the repo."""
+    return Path(target_text).expanduser().resolve()
+
+
+def _report_out_target_problem(root: Path, target_text: str, *, draft: str | None) -> str | None:
+    """Refuse a --report-out target that would endanger the review.
+
+    The saved report must land outside the repository (writing under the
+    guarded roots would move the snapshot it attests), must never replace
+    the reviewed draft, and must never overwrite an existing saved report.
+    Returns an error message, or None when the target is acceptable.
+    """
+    root_resolved = root.resolve()
+    try:
+        target = _report_out_target(target_text)
+    except OSError as exc:
+        return f"cannot resolve --report-out target: {exc}"
+    if target == root_resolved or root_resolved in target.parents:
+        return f"--report-out target must be outside the repository: {target_text}"
+    if draft:
+        try:
+            if target == Path(draft).expanduser().resolve():
+                return f"--report-out target must not replace the reviewed draft: {target_text}"
+        except OSError:
+            pass
+    parent = target.parent
+    if not parent.is_dir():
+        return f"--report-out directory does not exist: {parent}"
+    if target.exists() or target.is_symlink():
+        return f"--report-out target already exists; refusing to overwrite: {target_text}"
+    return None
+
+
+def _save_check_report_and_compact(
+    root: Path, result: dict, target_text: str, *, draft: str | None,
+) -> tuple[dict | None, tuple[int, str] | None]:
+    """Save one complete check report, return its compact stdout shape.
+
+    The saved bytes are exactly what a bare --check would print, so the
+    complete report stays the object of review, apply, receipt verification
+    and recovery. The compact response carries every review field except
+    the sealed gateway_envelope, plus the saved report's path and digest.
+    No second envelope is ever prepared. Returns (compact, None) on
+    success, or (None, (exit_code, message)) on failure.
+    """
+    problem = _report_out_target_problem(root, target_text, draft=draft)
+    if problem is not None:
+        return None, (2, problem)
+    target = _report_out_target(target_text)
+    payload = (json.dumps(result, ensure_ascii=False) + "\n").encode("utf-8")
+    try:
+        fd, tmp_name = tempfile.mkstemp(prefix=".check-report-", suffix=".tmp",
+                                        dir=str(target.parent))
+    except OSError as exc:
+        return None, (1, f"could not save --report-out report: {exc}")
+    try:
+        with os.fdopen(fd, "wb") as handle:
+            handle.write(payload)
+        try:
+            os.link(tmp_name, target)
+        except FileExistsError:
+            return None, (2, f"--report-out target already exists; refusing to overwrite: {target_text}")
+        except OSError as exc:
+            return None, (1, f"could not save --report-out report: {exc}")
+    except OSError as exc:
+        return None, (1, f"could not save --report-out report: {exc}")
+    finally:
+        with contextlib.suppress(OSError):
+            Path(tmp_name).unlink()
+    digest = "sha256:" + hashlib.sha256(payload).hexdigest()
+    compact = {key: value for key, value in result.items() if key != "gateway_envelope"}
+    compact["saved_report"] = {
+        "path": str(target),
+        "sha256": digest,
+        "bytes": len(payload),
+    }
+    return compact, None
+
+
 def cmd_unit_plan_revise(args) -> int:
     # Assembly, preflight and the report must observe one locked snapshot.
     with _operator_lock(_root(args)):
@@ -2586,6 +2721,25 @@ def _unit_plan_revise_locked(args) -> int:
         for problem in contract_problems:
             print(f"- {problem}", file=sys.stderr)
         return 2
+    report_out = getattr(args, "report_out", None)
+    if report_out:
+        if getattr(args, "apply_reviewed_sha256", None):
+            print("los: --report-out is only for --check; it cannot be combined with reviewed apply",
+                  file=sys.stderr)
+            return 2
+        if getattr(args, "staged_basis", None):
+            print("los: --report-out is only for ordinary final --check; it cannot be combined with --staged-basis",
+                  file=sys.stderr)
+            return 2
+        if not args.check:
+            print("los: --report-out needs --check; run the ordinary final preflight first",
+                  file=sys.stderr)
+            return 2
+        target_problem = _report_out_target_problem(
+            root, report_out, draft=getattr(args, "file", None))
+        if target_problem:
+            print(f"los: {target_problem}", file=sys.stderr)
+            return 2
     _apply_flag = getattr(args, "apply_reviewed_sha256", None)
     if _apply_flag:
         if args.check or getattr(args, "record", None) is not None:
@@ -2668,6 +2822,8 @@ def _unit_plan_revise_locked(args) -> int:
                 _parser_factory=getattr(args, "_parser_factory", None),
                 _capability_override="unit.plan.revise",
                 _minimal_writes=True,
+                report_out=getattr(args, "report_out", None),
+                _report_out_draft=(str(args.file) if getattr(args, "file", None) else None),
                 _review_input=(
                     "sha256:" + hashlib.sha256(revision_bytes).hexdigest()
                     if getattr(args, "record", None) is None else None,

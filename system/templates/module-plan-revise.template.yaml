@@ -57,6 +57,18 @@ unit_revisions:
           # Replacing resources means providing the complete final array for
           # this stage. Evidence-bearing placements must remain present.
           # resources: []
+      # Appending places new rows after every existing placement, in order,
+      # without copying the old array. Each row needs a fresh resource id;
+      # old rows, their order, and their evidence stay untouched. One patch
+      # cannot combine resources_append with fields.resources.
+      # - stage_id: stage-example-l01-reading
+      #   resources_append:
+      #     - id: resource-example-l01-added
+      #       kind: read
+      #       scope_triage: helpful-now
+      #       material_ref:
+      #         route_id: route-example-l01-book
+      #         inherit: [label, source_id, locator, angle, angle_detail]
   - unit_id: unit-example-l02
     stage_patches:
       - stage_id: stage-example-l02-practice

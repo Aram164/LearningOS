@@ -405,3 +405,253 @@ def test_route_change_refusal_names_the_expected_keys(mini_repo, tmp_path):
     assert refused.returncode != 0
     assert "route_changes.add has unknown fields ['source']" in refused.stderr
     assert "expected ['route', 'source_id']" in refused.stderr
+
+
+def _append_fixture(root: Path) -> list[dict]:
+    """A 23-row stage with unique ids and evidence on the first row."""
+    _two_units(root)
+    path = root / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    study = yaml.safe_load(path.read_text(encoding="utf-8"))
+    template = copy.deepcopy(study["stages"][0]["resources"][0])
+    rows = []
+    for number in range(23):
+        row = copy.deepcopy(template)
+        row["id"] = f"resource-demo-existing-{number:02d}"
+        rows.append(row)
+    rows[0]["independent_evidence"] = {
+        "reviewed_by": "test", "reviewed_on": "2026-10-01",
+        "verified_conditions": [], "note": "Preserve this assessment."}
+    study["stages"][0]["resources"] = rows
+    write_yaml(path, study)
+    write_baseline(root, collect(root)[0], "resources-append fixture")
+    return rows
+
+
+def _appended_row(root_id="resource-demo-added", **overrides):
+    row = {"id": root_id, "kind": "read", "scope_triage": "helpful-now",
+           "material_ref": {"route_id": "route-demo-book",
+                            "inherit": ["label", "source_id", "locator",
+                                        "angle", "angle_detail"]}}
+    row.update(overrides)
+    return row
+
+
+def _append_draft(root: Path, patches: list, *, unit_id="unit-demo-l01") -> dict:
+    revision = _revision(root)
+    revision["unit_revisions"] = [{"unit_id": unit_id, "stage_patches": patches}]
+    return revision
+
+
+def test_resources_append_adds_one_row_without_copying_old_ones(mini_repo, tmp_path):
+    """One new placement in, 23 old rows carried forward, counts in review."""
+    old_rows = _append_fixture(mini_repo)
+    draft_data = _append_draft(mini_repo, [{"stage_id": "stage-demo",
+                                           "resources_append": [_appended_row()]}])
+    draft = tmp_path / "append.yaml"
+    write_yaml(draft, draft_data)
+    assert draft.stat().st_size < 1024
+    assert "resource-demo-existing" not in draft.read_text(encoding="utf-8")
+    before_l02 = (mini_repo / "curriculum/modules/module-demo/units/unit-demo-l02"
+                  / "study-map.yaml").read_bytes()
+    before_map = (mini_repo / "curriculum/modules/module-demo/source-map.yaml").read_bytes()
+    before_resume = (mini_repo / "curriculum/resume.yaml").read_bytes()
+    checked = run_los(mini_repo, "module-plan-import", "module-demo",
+                      "--file", str(draft), "--check")
+    assert checked.returncode == 0, checked.stderr
+    report = json.loads(checked.stdout)
+    assert report["canonical_files_written"] == 0
+    assert report["semantic_ack_required"] == []
+    diff = report["units"]["unit-demo-l01"]
+    assert (diff["placements_before"], diff["placements_after"]) == (23, 24)
+    assert (diff["routes_before"], diff["routes_after"]) == (1, 1)
+    assert diff["added"] == diff["updated"] == diff["removed"] == []
+    assert diff["learner_state_changes"] == {}
+    assert "stage-demo" in diff["learner_state_preserved"]
+    synthesis = report["synthesis"]["unit-demo-l01"]
+    assert synthesis["before"]["fresh"] is True
+    assert synthesis["after"] == {"replaced": False, "fresh": True, "detail": None}
+    review = tmp_path / "review.json"
+    review.write_text(checked.stdout, encoding="utf-8")
+    applied = run_los(mini_repo, "module-plan-import", "module-demo",
+                      "--file", str(draft), "--review-report", str(review),
+                      "--apply-reviewed-sha256", report["reviewed_file_sha256"])
+    assert applied.returncode == 0, applied.stderr
+    response = json.loads(applied.stdout)
+    assert response["ok"] is True
+    assert response["capability"] == "module.plan.import"
+    assert len(list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))) == 1
+    live = yaml.safe_load((mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01"
+                           / "study-map.yaml").read_text(encoding="utf-8"))
+    live_rows = live["stages"][0]["resources"]
+    assert live_rows[:23] == old_rows
+    assert live_rows[23]["id"] == "resource-demo-added"
+    assert live_rows[23]["material_ref"]["route_id"] == "route-demo-book"
+    assert (mini_repo / "curriculum/modules/module-demo/units/unit-demo-l02"
+            / "study-map.yaml").read_bytes() == before_l02
+    assert (mini_repo / "curriculum/modules/module-demo/source-map.yaml").read_bytes() == before_map
+    assert (mini_repo / "curriculum/resume.yaml").read_bytes() == before_resume
+    from learning_os.loader import load_repo
+    effective = load_repo(mini_repo).study_maps["study-map-demo-l01"].data
+    added = effective["stages"][0]["resources"][23]
+    assert added["label"] == "Route route-demo-book"
+    assert added["source_id"] == "source-demo-book"
+    generated = subprocess.run([sys.executable, str(ROOT / "tools/generate.py"),
+                                "--root", str(mini_repo)], text=True, capture_output=True)
+    assert generated.returncode == 0, generated.stderr
+
+
+def test_resources_append_to_empty_stage_and_ordered_batch(mini_repo, tmp_path):
+    """Appending to an empty stage keeps explicit submission order."""
+    _two_units(mini_repo)
+    path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    study = yaml.safe_load(path.read_text(encoding="utf-8"))
+    study["stages"][0]["resources"] = []
+    write_yaml(path, study)
+    write_baseline(mini_repo, collect(mini_repo)[0], "empty-stage append fixture")
+    rows = [_appended_row(f"resource-demo-added-{suffix}")
+            for suffix in ("a", "b", "c")]
+    draft_data = _append_draft(mini_repo, [{"stage_id": "stage-demo",
+                                           "resources_append": rows}])
+    draft = tmp_path / "append-batch.yaml"
+    write_yaml(draft, draft_data)
+    checked = run_los(mini_repo, "module-plan-import", "module-demo",
+                      "--file", str(draft), "--check")
+    assert checked.returncode == 0, checked.stderr
+    report = json.loads(checked.stdout)
+    diff = report["units"]["unit-demo-l01"]
+    assert (diff["placements_before"], diff["placements_after"]) == (0, 3)
+    review = tmp_path / "review.json"
+    review.write_text(checked.stdout, encoding="utf-8")
+    applied = run_los(mini_repo, "module-plan-import", "module-demo",
+                      "--file", str(draft), "--review-report", str(review),
+                      "--apply-reviewed-sha256", report["reviewed_file_sha256"])
+    assert applied.returncode == 0, applied.stderr
+    live = yaml.safe_load(path.read_text(encoding="utf-8"))
+    assert [row["id"] for row in live["stages"][0]["resources"]] == [
+        "resource-demo-added-a", "resource-demo-added-b", "resource-demo-added-c"]
+
+
+def _append_refusal_cases():
+    row = _appended_row()
+    return [
+        ("bare-stage", [{"stage_id": "stage-demo"}], 2,
+         "changes nothing; give fields and/or resources_append"),
+        ("empty-append", [{"stage_id": "stage-demo", "resources_append": []}], 2,
+         "must be a non-empty list of resource objects"),
+        ("dict-append", [{"stage_id": "stage-demo", "resources_append": {}}], 2,
+         "must be a non-empty list of resource objects"),
+        ("scalar-row", [{"stage_id": "stage-demo", "resources_append": ["x"]}], 2,
+         "must be a non-empty list of resource objects"),
+        ("unknown-field", [{"stage_id": "stage-demo", "fields": {"title": "t"},
+                            "bogus": 1}], 2,
+         "needs stage_id plus fields and/or resources_append"),
+        ("scalar-patch", ["stage-demo"], 2,
+         "needs stage_id plus fields and/or resources_append"),
+        ("replacement-plus-append",
+         [{"stage_id": "stage-demo", "fields": {"resources": []},
+           "resources_append": [row]}], 2,
+         "cannot combine resources_append with fields.resources"),
+        ("missing-stage", [{"stage_id": "stage-missing",
+                            "resources_append": [row]}], 2,
+         "missing or repeated stage"),
+        ("repeated-stage", [{"stage_id": "stage-demo", "resources_append": [row]},
+                            {"stage_id": "stage-demo",
+                             "resources_append": [_appended_row("resource-demo-second")]}],
+         2, "missing or repeated stage"),
+        ("missing-id", [{"stage_id": "stage-demo",
+                        "resources_append": [{k: v for k, v in row.items()
+                                             if k != "id"}]}], 2,
+         "needs a fresh resource id on every row"),
+        ("batch-duplicate",
+         [{"stage_id": "stage-demo",
+           "resources_append": [row, _appended_row("resource-demo-added")]}], 2,
+         "repeats a resource id"),
+        ("colliding-id",
+         [{"stage_id": "stage-demo",
+           "resources_append": [_appended_row("resource-demo-existing-00")]}], 2,
+         "reuses an existing resource id"),
+        ("empty-fields-with-append",
+         [{"stage_id": "stage-demo", "fields": {},
+           "resources_append": [row]}], 2,
+         "fields must be non-empty"),
+        ("bad-kind",
+         [{"stage_id": "stage-demo",
+           "resources_append": [_appended_row(kind="bogus")]}], 1,
+         "'bogus' is not one of"),
+        ("missing-route",
+         [{"stage_id": "stage-demo",
+           "resources_append": [_appended_row(material_ref={
+               "route_id": "route-missing", "inherit": ["label"]})]}], 1,
+         "material_ref route-missing is missing or ambiguous"),
+        ("conflicting-override",
+         [{"stage_id": "stage-demo",
+           "resources_append": [_appended_row(label="X", material_ref={
+               "route_id": "route-demo-book", "inherit": ["label"]})]}], 1,
+         "cannot also override inherited label"),
+    ]
+
+
+def test_resources_append_refusals(mini_repo, tmp_path):
+    """Every malformed append fails closed without partial writes."""
+    old = _append_fixture(mini_repo)
+    assert old[0]["id"] == "resource-demo-existing-00"
+    before = (mini_repo / "curriculum/modules/module-demo/source-map.yaml").read_bytes()
+    for name, patches, code, fragment in _append_refusal_cases():
+        draft = tmp_path / f"{name}.yaml"
+        write_yaml(draft, _append_draft(mini_repo, patches))
+        refused = run_los(mini_repo, "module-plan-import", "module-demo",
+                          "--file", str(draft), "--check")
+        assert refused.returncode == code, (name, refused.stdout, refused.stderr)
+        assert fragment in refused.stderr, (name, refused.stderr)
+    cross = tmp_path / "cross-unit.yaml"
+    write_yaml(cross, _append_draft(mini_repo, [{"stage_id": "stage-demo-l02",
+                                                "resources_append": [_appended_row()]}]))
+    refused = run_los(mini_repo, "module-plan-import", "module-demo",
+                      "--file", str(cross), "--check")
+    assert refused.returncode == 2, refused.stderr
+    assert "missing or repeated stage" in refused.stderr
+    cross_route = tmp_path / "cross-route.yaml"
+    write_yaml(cross_route, _append_draft(mini_repo, [{"stage_id": "stage-demo",
+        "resources_append": [_appended_row(material_ref={
+            "route_id": "route-demo-book-l02", "inherit": ["label"]})]}]))
+    refused = run_los(mini_repo, "module-plan-import", "module-demo",
+                      "--file", str(cross_route), "--check")
+    assert refused.returncode == 1, refused.stderr
+    assert "missing or ambiguous in unit-demo-l01" in refused.stderr
+    assert (mini_repo / "curriculum/modules/module-demo/source-map.yaml").read_bytes() == before
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+
+def test_resources_append_apply_refuses_edited_and_stale_state(mini_repo, tmp_path):
+    """Edited drafts and moved snapshots cannot ride a saved append review."""
+    from learning_os.fingerprint import canonical_fingerprint
+
+    _append_fixture(mini_repo)
+    draft_data = _append_draft(mini_repo, [{"stage_id": "stage-demo",
+                                           "resources_append": [_appended_row()]}])
+    draft = tmp_path / "append.yaml"
+    write_yaml(draft, draft_data)
+    checked = run_los(mini_repo, "module-plan-import", "module-demo",
+                      "--file", str(draft), "--check")
+    assert checked.returncode == 0, checked.stderr
+    report = json.loads(checked.stdout)
+    review = tmp_path / "review.json"
+    review.write_text(checked.stdout, encoding="utf-8")
+    edited = tmp_path / "edited.yaml"
+    edited.write_text(draft.read_text(encoding="utf-8") + "# changed after review\n",
+                      encoding="utf-8")
+    refused = run_los(mini_repo, "module-plan-import", "module-demo",
+                      "--file", str(edited), "--review-report", str(review),
+                      "--apply-reviewed-sha256", report["reviewed_file_sha256"])
+    assert refused.returncode == 2
+    assert "reviewed bytes changed" in refused.stderr
+    (mini_repo / "work/inbox/intervening.md").write_text("New learner input.\n",
+                                                        encoding="utf-8")
+    before = canonical_fingerprint(mini_repo)
+    refused = run_los(mini_repo, "module-plan-import", "module-demo",
+                      "--file", str(draft), "--review-report", str(review),
+                      "--apply-reviewed-sha256", report["reviewed_file_sha256"])
+    assert refused.returncode != 0
+    assert "STALE_SNAPSHOT" in refused.stdout
+    assert canonical_fingerprint(mini_repo) == before
+    assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))

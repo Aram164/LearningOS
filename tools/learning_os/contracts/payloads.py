@@ -32,9 +32,11 @@ from .batch_notes import bundle_schema as batch_notes_schema
 # excluded: the CLI flag is `--expected-revision` (singular) while the
 # envelope carries `expected_revisions` (plural). `apply_reviewed_sha256`
 # is a CLI-only reviewed-apply gesture and never crosses the gateway.
+# `report_out` is a CLI-only output file: presentation, not approved content.
 ENVELOPE_OWNED = frozenset({
     "approve",
     "apply_reviewed_sha256",
+    "report_out",
     "review_report",
     "expected_snapshot",
     "expected_revision",

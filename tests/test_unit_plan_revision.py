@@ -26,8 +26,9 @@ from learning_os.contracts import perimeter as pm
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SCHEMA_DIR = REPO_ROOT / "system" / "schema" / "capabilities"
-ENVELOPE_OWNED = {"approve", "apply_reviewed_sha256", "review_report",
-                  "expected_snapshot", "expected_revision", "expected_revisions"}
+ENVELOPE_OWNED = {"approve", "apply_reviewed_sha256", "report_out",
+                  "review_report", "expected_snapshot", "expected_revision",
+                  "expected_revisions"}
 
 
 def test_generated_schemas_never_expose_envelope_owned_fields():
@@ -1101,3 +1102,245 @@ def test_route_only_coverage_revision_stamps_actual_artifact_owners(mini_repo, t
     hashes = {key: live_evidence_digest(mini_repo, key, {})
               for key, _ in dossier_claim.derived_from.source_hashes}
     assert effective_statuses(records, CONTRACT_VERSION, revisions, hashes)[dossier_claim.claim_id].status == "supported"
+
+
+def _report_out_revision(mini_repo, tmp_path):
+    """A valid angle-only revision file for --report-out tests."""
+    from repo_builders import write_yaml
+
+    _compact_setup(mini_repo)
+    draft = tmp_path / "revision.yaml"
+    write_yaml(draft, _compact_revision(
+        mini_repo,
+        route_changes={"update": [{
+            "route_id": "route-demo-book",
+            "fields": {"angle": "A sharper lecture-specific angle."}}]},
+    ))
+    return draft
+
+
+def test_report_out_saves_complete_report_with_compact_stdout(mini_repo, tmp_path):
+    """--report-out saves the bare-check bytes; stdout keeps the review only."""
+    import hashlib
+
+    from gateway_helpers import file_sha256
+    from repo_builders import run_los
+
+    draft = _report_out_revision(mini_repo, tmp_path)
+    bare = run_los(mini_repo, "unit-plan-revise", "unit-demo-l01",
+                   "--file", str(draft), "--check")
+    assert bare.returncode == 0, bare.stderr
+    saved_path = tmp_path / "check.json"
+    proc = run_los(mini_repo, "unit-plan-revise", "unit-demo-l01",
+                   "--file", str(draft), "--check",
+                   "--report-out", str(saved_path))
+    assert proc.returncode == 0, proc.stderr
+    saved_bytes = saved_path.read_bytes()
+    saved = json.loads(saved_bytes)
+    # The saved report is the bare-check report: identical except the fresh
+    # per-run envelope identity (request_id, idempotency_key) each preflight
+    # mints. Everything else, including the inline reviewed record, matches.
+    bare_report = json.loads(bare.stdout)
+    for report in (bare_report, saved):
+        assert report["gateway_envelope"].pop("request_id").startswith("request-")
+        assert report["gateway_envelope"].pop("idempotency_key")
+    assert saved == bare_report
+    assert saved["gateway_envelope"]["capability"] == "unit.plan.revise"
+    compact = json.loads(proc.stdout)
+    assert "gateway_envelope" not in compact
+    assert "approval" not in proc.stdout.lower()
+    pointer = compact.pop("saved_report")
+    assert pointer["path"] == str(saved_path.resolve())
+    assert pointer["sha256"] == "sha256:" + hashlib.sha256(saved_bytes).hexdigest()
+    assert pointer["bytes"] == len(saved_bytes)
+    assert compact == {key: value for key, value in saved.items()
+                       if key != "gateway_envelope"}
+    assert compact["canonical_files_written"] == 0
+    assert compact["reviewed_file_sha256"] == file_sha256(draft)
+
+
+def test_report_out_ignores_unchanged_content_growth(mini_repo, tmp_path):
+    """A 50 KB unchanged study map stays in the saved envelope, not stdout."""
+    import copy
+
+    from repo_builders import run_los, write_yaml
+
+    _acceptance_setup(mini_repo)
+    live = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    study_map = yaml.safe_load(live.read_text(encoding="utf-8"))
+    for stage in study_map["stages"]:
+        stage["objective"] = "UNCHANGED-PREFLIGHT-CONTEXT. " * 800
+    write_yaml(live, study_map)
+    from learning_os.warning_baseline import collect, write_baseline
+    write_baseline(mini_repo, collect(mini_repo)[0], "report-out volume fixture")
+    revision = _compact_revision(
+        mini_repo,
+        study_map=copy.deepcopy(study_map),
+        route_changes={"update": [{
+            "route_id": "route-demo-book",
+            "fields": {"angle": "A sharper lecture-specific angle."}}]},
+    )
+    draft = tmp_path / "revision.yaml"
+    write_yaml(draft, revision)
+    saved_path = tmp_path / "check.json"
+    proc = run_los(mini_repo, "unit-plan-revise", "unit-demo-l01",
+                   "--file", str(draft), "--check",
+                   "--report-out", str(saved_path))
+    assert proc.returncode == 0, proc.stderr
+    assert len(proc.stdout.encode("utf-8")) < 5 * 1024
+    assert "UNCHANGED-PREFLIGHT-CONTEXT" not in proc.stdout
+    saved_text = saved_path.read_text(encoding="utf-8")
+    assert saved_text.count("UNCHANGED-PREFLIGHT-CONTEXT") > 500
+    assert json.loads(saved_text)["canonical_files_written"] == 0
+
+
+def test_report_out_saved_report_applies_retries_and_refuses_tamper(mini_repo, tmp_path):
+    """Apply, exact retry, and tamper refusal all run against the saved report."""
+    from gateway_helpers import file_sha256
+    from repo_builders import run_los
+
+    from learning_os.fingerprint import canonical_fingerprint
+    from learning_os.loader import load_repo
+
+    draft = _report_out_revision(mini_repo, tmp_path)
+    saved_path = tmp_path / "check.json"
+    checked = run_los(mini_repo, "unit-plan-revise", "unit-demo-l01",
+                      "--file", str(draft), "--check",
+                      "--report-out", str(saved_path))
+    assert checked.returncode == 0, checked.stderr
+    sha = json.loads(saved_path.read_bytes())["reviewed_file_sha256"]
+    assert sha == file_sha256(draft)
+    before = canonical_fingerprint(mini_repo)
+    transactions = mini_repo / "operations/transactions"
+
+    def _apply(report):
+        return run_los(mini_repo, "unit-plan-revise", "unit-demo-l01",
+                       "--file", str(draft), "--apply-reviewed-sha256", sha,
+                       "--review-report", str(report))
+
+    tampered = json.loads(saved_path.read_text(encoding="utf-8"))
+    tampered["reviewed_file_sha256"] = "sha256:" + "f" * 64
+    tampered_path = tmp_path / "tampered.json"
+    tampered_path.write_text(json.dumps(tampered), encoding="utf-8")
+    refused = _apply(tampered_path)
+    assert refused.returncode != 0
+    assert canonical_fingerprint(mini_repo) == before
+    assert list(transactions.glob("transaction-*.yaml")) == []
+
+    compact_as_report = tmp_path / "compact.json"
+    compact_as_report.write_text(checked.stdout, encoding="utf-8")
+    refused = _apply(compact_as_report)
+    assert refused.returncode == 2
+    assert "no prepared gateway envelope" in refused.stderr
+    assert canonical_fingerprint(mini_repo) == before
+
+    applied = _apply(saved_path)
+    assert applied.returncode == 0, applied.stderr
+    first = json.loads(applied.stdout)
+    assert first["ok"] is True
+    assert first["capability"] == "unit.plan.revise"
+    assert len(list(transactions.glob("transaction-*.yaml"))) == 1
+    live_map = load_repo(mini_repo).module_source_maps["module-demo"]
+    row = next(route for source in live_map["sources"]
+               for route in source["unit_routes"]
+               if route.get("id") == "route-demo-book")
+    assert row["angle"] == "A sharper lecture-specific angle."
+
+    replayed = _apply(saved_path)
+    assert replayed.returncode == 0, replayed.stderr
+    second = json.loads(replayed.stdout)
+    assert second["replayed"] is True
+    assert second["transaction_id"] == first["transaction_id"]
+    assert len(list(transactions.glob("transaction-*.yaml"))) == 1
+
+
+def test_report_out_refuses_bad_combinations_and_bad_targets(mini_repo, tmp_path):
+    """Apply/staged-basis/non-check combos and dangerous targets fail closed."""
+    from gateway_helpers import file_sha256
+    from repo_builders import run_los
+
+    from learning_os.fingerprint import canonical_fingerprint
+
+    draft = _report_out_revision(mini_repo, tmp_path)
+    before = canonical_fingerprint(mini_repo)
+    target = tmp_path / "check.json"
+    base = ["unit-plan-revise", "unit-demo-l01", "--file", str(draft)]
+
+    proc = run_los(mini_repo, *base,
+                   "--apply-reviewed-sha256", file_sha256(draft),
+                   "--review-report", str(target),
+                   "--report-out", str(target))
+    assert proc.returncode == 2
+    assert proc.stdout == ""
+    assert "--report-out" in proc.stderr
+
+    proc = run_los(mini_repo, *base, "--check",
+                   "--staged-basis", "unit-demo-l01",
+                   "--report-out", str(target))
+    assert proc.returncode == 2
+    assert proc.stdout == ""
+    assert "staged-basis" in proc.stderr
+
+    proc = run_los(mini_repo, *base,
+                   "--expected-snapshot", "sha256:" + "0" * 64,
+                   "--report-out", str(target))
+    assert proc.returncode == 2
+    assert proc.stdout == ""
+    assert "--report-out" in proc.stderr
+
+    in_repo = mini_repo / "check.json"
+    proc = run_los(mini_repo, *base, "--check", "--report-out", str(in_repo))
+    assert proc.returncode == 2
+    assert not in_repo.exists()
+
+    draft_bytes = draft.read_bytes()
+    proc = run_los(mini_repo, *base, "--check", "--report-out", str(draft))
+    assert proc.returncode == 2
+    assert draft.read_bytes() == draft_bytes
+
+    sentinel = tmp_path / "existing.json"
+    sentinel.write_text("SENTINEL", encoding="utf-8")
+    proc = run_los(mini_repo, *base, "--check", "--report-out", str(sentinel))
+    assert proc.returncode == 2
+    assert proc.stdout == ""
+    assert sentinel.read_text(encoding="utf-8") == "SENTINEL"
+
+    proc = run_los(mini_repo, *base, "--check",
+                   "--report-out", str(tmp_path / "missing-dir" / "check.json"))
+    assert proc.returncode == 2
+    assert proc.stdout == ""
+    assert canonical_fingerprint(mini_repo) == before
+
+
+def test_report_out_stays_out_of_gateway_payloads(mini_repo: Path):
+    """The CLI-only output flag is not part of the unit.plan.revise contract."""
+    import los
+    from learning_os.commands.capability import _dispatch
+    from learning_os.contracts.capability_catalog import command_definitions
+    from learning_os.contracts.payloads import payload_schema, subparsers
+
+    command_parser = subparsers(los.build_parser())["unit-plan-revise"]
+    assert "report_out" not in payload_schema(
+        "unit.plan.revise", command_parser)["properties"]
+
+    definitions = command_definitions(mini_repo)
+    envelope = {
+        "schema_version": 2,
+        "request_id": "request-smuggled-report-out",
+        "idempotency_key": "smuggled-report-out-001",
+        "capability": "unit.plan.revise",
+        "channel": "codex",
+        "expected_snapshot": "sha256:" + "0" * 64,
+        "expected_revisions": {},
+        "approval": {"kind": "operator-approval",
+                     "subject_sha256": "sha256:" + "0" * 64},
+    }
+
+    def parser_factory():
+        return los.build_parser()
+
+    with pytest.raises(Exception, match="report_out"):
+        _dispatch(mini_repo, definitions["unit.plan.revise"], envelope,
+                  {"unit_id": "unit-demo-l01", "record": {},
+                   "report_out": "/tmp/check.json"},
+                  parser_factory=parser_factory)
