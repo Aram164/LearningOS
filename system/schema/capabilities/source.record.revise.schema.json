@@ -18,7 +18,29 @@
       "type": "string"
     },
     "record": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "material": {
+          "type": "string"
+        },
+        "material_sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evaluations": {},
+        "material_syntheses": {},
+        "dossier_rebases": {}
+      },
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ],
+      "description": "Attaches verified local material and/or replaces evaluations; identity and every intake-owned field stay with source.intake.record."
     }
   },
   "oneOf": [

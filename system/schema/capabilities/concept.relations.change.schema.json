@@ -10,7 +10,33 @@
   ],
   "properties": {
     "change": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "operations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string"
+              },
+              "old": {},
+              "new": {}
+            },
+            "additionalProperties": false,
+            "required": [
+              "action"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 50
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "operations"
+      ],
+      "description": "Exactly one operations list of 1 to 50 explicit operations; each names its action and carries the exact old/new rows that action needs (add: new; replace: old and new; remove: old)."
     }
   }
 }

@@ -43,9 +43,12 @@ def test_every_command_capability_has_a_payload_schema(repo_root: Path):
 def test_payload_schemas_match_the_cli_parser(repo_root: Path):
     """Regenerating must be a no-op: the checked-in files are derived, not authored."""
     import los
+    from learning_os.contracts.payload_records import resolve_all
     from learning_os.contracts.payloads import all_payload_schemas
 
-    generated = all_payload_schemas(los.build_parser(), _definitions(repo_root))
+    generated = all_payload_schemas(
+        los.build_parser(), _definitions(repo_root),
+        payload_records=resolve_all(repo_root))
     for name, schema in generated.items():
         on_disk = json.loads((repo_root / SCHEMA_DIR / f"{name}.schema.json").read_text(encoding="utf-8"))
         assert on_disk == schema, (
@@ -189,7 +192,13 @@ def test_the_gateway_has_no_capability_special_cases(repo_root: Path):
 def test_project_payload_shape_is_declared(repo_root: Path, name: str):
     """The inline object the gateway accepts is in the schema, not just the code."""
     schema = json.loads((repo_root / SCHEMA_DIR / f"{name}.schema.json").read_text(encoding="utf-8"))
-    assert schema["properties"]["project"] == {"type": "object"}
+    project = schema["properties"]["project"]
+    record = json.loads((repo_root / "system/schema/project.schema.json").read_text(encoding="utf-8"))
+    assert project["type"] == "object"
+    assert project["additionalProperties"] is False
+    assert set(project["properties"]) == set(record["properties"])
+    # Every stored required field except the one the handler defaults itself.
+    assert set(project["required"]) == set(record["required"]) - {"schema_version"}
     assert schema["oneOf"] == [{"required": ["file"]}, {"required": ["project"]}], (
         "exactly one record source must be required, and the schema must say so"
     )

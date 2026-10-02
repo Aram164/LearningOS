@@ -21,7 +21,50 @@
       "pattern": "^sha256:[a-f0-9]{64}$"
     },
     "record": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "unit_id": {
+          "type": "string"
+        },
+        "plan_contract": {
+          "type": "object"
+        },
+        "route_changes": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "study_map": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "material_synthesis": {
+          "type": [
+            "object",
+            "null"
+          ]
+        },
+        "claim_evidence": {
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "acknowledgments": {
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "plan_contract"
+      ],
+      "description": "Compact revision naming only what changes: the v1 plan_contract coverage audit, route add/update/remove ops, the reviewed final study map, and an optional replacement dossier."
     },
     "staged_basis": {
       "type": "string"

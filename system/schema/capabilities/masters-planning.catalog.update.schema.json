@@ -11,7 +11,29 @@
       "type": "string"
     },
     "record": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "schema_version": {},
+        "id": {},
+        "type": {},
+        "revision": {},
+        "updated_at": {},
+        "candidate_modules": {},
+        "candidate_sources": {},
+        "comparison_ids": {}
+      },
+      "additionalProperties": false,
+      "required": [
+        "candidate_modules",
+        "candidate_sources",
+        "comparison_ids",
+        "id",
+        "revision",
+        "schema_version",
+        "type",
+        "updated_at"
+      ],
+      "description": "The accepted fields are the full catalog record governed by system/schema/master-planning-catalog.schema.json."
     }
   },
   "oneOf": [

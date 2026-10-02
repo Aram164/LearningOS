@@ -195,6 +195,26 @@ commands:
     - source selections and identical legacy mirrors synchronize; stage overrides are preserved
     - snapshot and all affected logical revisions are guarded, including maps changed by inheritance
     - full shadow validation and warning policy precede the ordinary receipt-producing transaction
+    payload_records:
+      changes:
+        description: >-
+          A nonempty map of declared descriptive material fields to their new
+          text; keys outside this list refuse, and empty text refuses.
+        accepted:
+        - title
+        - locator
+        - angle
+        - angle_detail
+        - url
+        - vault_path
+        min_properties: 1
+        types:
+          title: string
+          locator: string
+          angle: string
+          angle_detail: string
+          url: string
+          vault_path: string
   module.materials.compact:
     handler: module_materials_compact
     cli_command: module-materials-compact
@@ -219,6 +239,30 @@ commands:
     - only explicitly supplied add, replace or remove operations; no inferred relations
     - exact previous rows, snapshot and registry revision guard changes
     - duplicates, unknown endpoints and prerequisite cycles fail atomically
+    payload_records:
+      change:
+        description: >-
+          Exactly one operations list of 1 to 50 explicit operations; each
+          names its action and carries the exact old/new rows that action
+          needs (add: new; replace: old and new; remove: old).
+        accepted:
+        - operations
+        required:
+        - operations
+        fields:
+          operations:
+            type: array
+            min_items: 1
+            max_items: 50
+            items:
+              accepted:
+              - action
+              - old
+              - new
+              required:
+              - action
+              types:
+                action: string
   atlas.question.save:
     handler: atlas_question_save
     cli_command: atlas-question-save
@@ -249,6 +293,11 @@ commands:
     - approval binds the imported delivery record and every referenced artifact by SHA-256
     - canonical destinations retain their narrow domain-capability write authorities
     - request completion and canonical writes commit atomically with one ReceiptV2
+    payload_records:
+      artifact_sha256:
+        description: >-
+          Free-form map of every artifact_ref to its exact SHA-256 digest.
+        freeform: true
   garden.seed.create:
     handler: garden_seed_create
     cli_command: garden-seed-create
@@ -275,6 +324,13 @@ commands:
     - preflight required
     - external plan files are bound to their exact bytes by SHA-256 before use
     - changed route-covers edges carry admitted evidence or refuse; admitted records persist atomically
+    payload_records:
+      promotion:
+        description: >-
+          Inline MasterPlanning promotion package; the accepted fields are the
+          full promotion record governed by
+          system/schema/master-planning-promotion.schema.json.
+        record_schema: system/schema/master-planning-promotion.schema.json
   route.identity.migrate:
     handler: route_identity_migrate
     cli_command: route-identity-migrate
@@ -287,6 +343,27 @@ commands:
     - review decisions may bind, revise, split, or retire only exact existing same-unit/source routes; authoring and preserved ambiguity remain blocked
     - the approval binds the exact diff hash, snapshot, and affected artifact revisions
     - every changed file commits atomically with one receipt
+    payload_records:
+      review:
+        description: >-
+          Inline schema-version-1 ambiguity review bound to the unresolved
+          baseline plan and canonical snapshot; decisions stay objects keyed
+          by R### review id.
+        accepted:
+        - schema_version
+        - basis_plan_sha256
+        - basis_snapshot_sha256
+        - decisions
+        required:
+        - schema_version
+        - basis_plan_sha256
+        - basis_snapshot_sha256
+        - decisions
+        types:
+          schema_version: integer
+          basis_plan_sha256: string
+          basis_snapshot_sha256: string
+          decisions: object
   legacy.job-learning.migrate:
     handler: job_learning_migrate
     cli_command: job-learning-migrate
@@ -320,6 +397,27 @@ commands:
     - body bytes are preserved verbatim and must match frozen_input_sha256
     - identical requests replay without a second note; id collision with different analysis refuses
     - saving preserves bytes; it never approves coverage, adopts plans, or records mastery
+    payload_records:
+      analysis:
+        description: >-
+          Accepted analysis input fields, a subset of the stored note record:
+          type/created/state/authorship/semantic_review are set by the handler
+          (the stored shape is system/schema/note.schema.json).
+        accepted:
+        - id
+        - title
+        - path
+        - binding
+        required:
+        - id
+        - title
+        - path
+        - binding
+        types:
+          id: string
+          title: string
+          path: string
+          binding: object
   note.analysis.save_batch:
     handler: note_analysis_save_batch
     cli_command: note-analysis-save-batch
@@ -363,6 +461,42 @@ commands:
     - reference and question roles keep their dedicated capabilities and refuse here
     - superseded notes must exist and are marked deprecated in the same transaction
     - saving preserves bytes; it never approves coverage, adopts plans, or records mastery
+    payload_records:
+      note:
+        description: >-
+          Accepted note input fields, a subset of the stored note record:
+          type/created/state/authorship/semantic_review are set by the handler
+          (the stored shape is system/schema/note.schema.json).
+        accepted:
+        - id
+        - title
+        - path
+        - role
+        - concepts
+        - sources
+        - contexts
+        - supersedes
+        required:
+        - id
+        - title
+        - path
+        types:
+          id: string
+          title: string
+          path: string
+          role: string
+          concepts:
+          - array
+          - "null"
+          sources:
+          - array
+          - "null"
+          contexts:
+          - array
+          - "null"
+          supersedes:
+          - array
+          - "null"
   unit.plan.revise:
     handler: unit_plan_revise
     cli_command: unit-plan-revise
@@ -381,6 +515,40 @@ commands:
     - artifact IDs cover exactly the semantic owners the revision touches
     - external revision files are bound to their exact bytes by SHA-256 before use
     - one transaction and one receipt cover the complete revision
+    payload_records:
+      record:
+        description: >-
+          Compact revision naming only what changes: the v1 plan_contract
+          coverage audit, route add/update/remove ops, the reviewed final
+          study map, and an optional replacement dossier.
+        accepted:
+        - unit_id
+        - plan_contract
+        - route_changes
+        - study_map
+        - material_synthesis
+        - claim_evidence
+        - acknowledgments
+        required:
+        - plan_contract
+        types:
+          unit_id: string
+          plan_contract: object
+          route_changes:
+          - object
+          - "null"
+          study_map:
+          - object
+          - "null"
+          material_synthesis:
+          - object
+          - "null"
+          claim_evidence:
+          - array
+          - "null"
+          acknowledgments:
+          - array
+          - "null"
   unit.map.import:
     handler: unit_map_import
     cli_command: unit-map-import
@@ -423,6 +591,12 @@ commands:
     - every current rich route is assessed exactly once
     - current and prerequisite routes are deep-reviewed
     - whole-dossier approval and revision guards are required
+    payload_records:
+      record:
+        description: >-
+          The accepted fields are the full dossier record governed by
+          system/schema/unit-material-synthesis.schema.json.
+        record_schema: system/schema/unit-material-synthesis.schema.json
   legacy.archive.lock.publish:
     handler: legacy_archive_lock_publish
     cli_command: legacy-archive-lock-publish
@@ -431,6 +605,12 @@ commands:
     invariants:
     - reviewed allowlist-only evidence
     - excluded boundary entries contain no paths or hashes
+    payload_records:
+      record:
+        description: >-
+          The accepted fields are the full lock record governed by
+          system/schema/legacy-archive-lock.schema.json.
+        record_schema: system/schema/legacy-archive-lock.schema.json
   masters-planning.catalog.update:
     handler: masters_planning_catalog_update
     cli_command: masters-planning-catalog-update
@@ -440,6 +620,12 @@ commands:
     - academic-only sanitized input
     - prospective ids never masquerade as canonical ids
     - revision guarded and explicitly approved
+    payload_records:
+      record:
+        description: >-
+          The accepted fields are the full catalog record governed by
+          system/schema/master-planning-catalog.schema.json.
+        record_schema: system/schema/master-planning-catalog.schema.json
   masters-planning.comparison.publish:
     handler: masters_planning_comparison_publish
     cli_command: masters-planning-comparison-publish
@@ -449,6 +635,12 @@ commands:
     - bounded to one selected candidate module
     - all selected sources are assessed exactly once
     - no scores, schedules, or time recommendations
+    payload_records:
+      record:
+        description: >-
+          The accepted fields are the full comparison record governed by
+          system/schema/candidate-source-comparison.schema.json.
+        record_schema: system/schema/candidate-source-comparison.schema.json
   stage.note.write:
     handler: stage_note
     cli_command: stage-note
@@ -499,6 +691,61 @@ commands:
     - source identity is stable; evaluations, topics, material and every route, selection, note, feedback and observation are unchanged
     - a check run returns the field-level diff; apply is bound to that diff's hash, the snapshot and each record's revision
     - explicitly approved; one transaction and one receipt cover the batch
+    payload_records:
+      record:
+        description: >-
+          Batch of 1 to 20 intake rows; each row is a create or a correct
+          carrying only its action's allowlisted fields, and the handler
+          refuses a create-only field on a correct.
+        accepted:
+        - records
+        required:
+        - records
+        fields:
+          records:
+            type: array
+            min_items: 1
+            max_items: 20
+            items:
+              accepted:
+              - action
+              - id
+              - partition
+              - title
+              - type
+              - authors
+              - organization
+              - year
+              - url
+              - identifiers
+              - discovery
+              - thematic_group_ids
+              - remove_url
+              - remove_identifiers
+              required:
+              - action
+              - id
+              types:
+                action: string
+                id: string
+                partition: string
+                type: string
+                title:
+                - string
+                - "null"
+                discovery:
+                - object
+                - "null"
+                thematic_group_ids:
+                - array
+                - "null"
+                remove_url:
+                - boolean
+                - "null"
+                remove_identifiers: array
+                identifiers:
+                - object
+                - "null"
   collection.entry.revise:
     handler: collection_entry_revise
     cli_command: collection-entry-revise
@@ -509,6 +756,23 @@ commands:
     - entry order, groups, sources and all other content are unchanged; empty, multi-line and no-op lines are refused
     - a check run returns the old and proposed line; apply is bound to that diff's hash, the snapshot and the collection's revision
     - explicitly approved; one transaction and one receipt cover the revision
+    payload_records:
+      record:
+        description: >-
+          Revises one entry's why line, addressed by collection stem and
+          source id; only why is written here.
+        accepted:
+        - collection
+        - source
+        - why
+        required:
+        - collection
+        - source
+        - why
+        types:
+          collection: string
+          source: string
+          why: string
   source.record.revise:
     handler: source_record_revise
     cli_command: source-revise
@@ -526,6 +790,27 @@ commands:
     - a reviewed rebase shortcut exists only when every moved route is screened, evidence-free, analysis-free and outside every comparison, and only material_checksums moves; it replays basis plus new provenance without echoing unchanged assessments, and every other case keeps the full replacement
     - a check run returns the field-level diff with referring routes, bound dossiers, affected units and referring collection entries; apply is bound to that diff's hash, the snapshot and each touched record's revision
     - explicitly approved; one transaction and one receipt cover the revision
+    payload_records:
+      record:
+        description: >-
+          Attaches verified local material and/or replaces evaluations;
+          identity and every intake-owned field stay with
+          source.intake.record.
+        accepted:
+        - id
+        - material
+        - material_sha256
+        - evaluations
+        - material_syntheses
+        - dossier_rebases
+        required:
+        - id
+        types:
+          id: string
+          material: string
+          material_sha256:
+          - string
+          - "null"
   detour.create:
     handler: detour_create
     cli_command: detour-create
@@ -619,6 +904,26 @@ commands:
     - project schema v1
     - no module mutation
     - external project files are bound to their exact bytes by SHA-256 before use
+    payload_records:
+      project:
+        description: >-
+          Full project record governed by system/schema/project.schema.json;
+          schema_version defaults when omitted.
+        record_schema: system/schema/project.schema.json
+        required:
+        - id
+        - type
+        - title
+        - project_type
+        - status
+        - root_uri
+        - objective
+        - milestone_ids
+        - linked_module_ids
+        - unit_ids
+        - workspace_ids
+        - thematic_group_ids
+        - boundaries
   project.update:
     handler: project_update
     cli_command: project-update
@@ -628,6 +933,26 @@ commands:
     - id and type remain stable
     - revision guarded
     - external project files are bound to their exact bytes by SHA-256 before use
+    payload_records:
+      project:
+        description: >-
+          Full project record governed by system/schema/project.schema.json;
+          schema_version defaults when omitted.
+        record_schema: system/schema/project.schema.json
+        required:
+        - id
+        - type
+        - title
+        - project_type
+        - status
+        - root_uri
+        - objective
+        - milestone_ids
+        - linked_module_ids
+        - unit_ids
+        - workspace_ids
+        - thematic_group_ids
+        - boundaries
 internal_commands:
   project.migrate:
     handler: projects_migration_apply

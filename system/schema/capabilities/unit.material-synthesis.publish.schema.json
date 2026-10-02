@@ -16,7 +16,31 @@
       "type": "string"
     },
     "record": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "schema_version": {},
+        "id": {},
+        "type": {},
+        "unit_id": {},
+        "status": {},
+        "basis": {},
+        "route_assessments": {},
+        "comparisons": {},
+        "concept_groups": {}
+      },
+      "additionalProperties": false,
+      "required": [
+        "basis",
+        "comparisons",
+        "concept_groups",
+        "id",
+        "route_assessments",
+        "schema_version",
+        "status",
+        "type",
+        "unit_id"
+      ],
+      "description": "The accepted fields are the full dossier record governed by system/schema/unit-material-synthesis.schema.json."
     },
     "unit_id": {
       "type": "string"

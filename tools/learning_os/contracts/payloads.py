@@ -172,8 +172,26 @@ def payload_fields(command_parser: argparse.ArgumentParser) -> list[argparse.Act
     ]
 
 
-def payload_schema(name: str, command_parser: argparse.ArgumentParser) -> dict:
-    """A Draft 2020-12 schema for one capability's payload."""
+def json_object_fields(command_parser: argparse.ArgumentParser) -> set[str]:
+    """Payload fields the parser declares as opaque structured objects."""
+    return {
+        action.dest for action in payload_fields(command_parser)
+        if action.type is json_object
+    }
+
+
+def payload_schema(
+    name: str,
+    command_parser: argparse.ArgumentParser,
+    *,
+    payload_records: dict[tuple[str, str], dict] | None = None,
+) -> dict:
+    """A Draft 2020-12 schema for one capability's payload.
+
+    ``payload_records`` carries the catalogue-declared accepted input
+    shapes (``contracts.payload_records.resolve_all``), merged over the
+    parser-derived surface exactly like the contract-module fragments.
+    """
     properties, required = {}, []
     for action in payload_fields(command_parser):
         properties[action.dest] = _json_type(action)
@@ -182,6 +200,9 @@ def payload_schema(name: str, command_parser: argparse.ArgumentParser) -> dict:
     for (capability_name, field), nested in _NESTED_SCHEMAS.items():
         if capability_name == name and field in properties:
             properties[field] = nested
+    for (capability_name, field), fragment in (payload_records or {}).items():
+        if capability_name == name and field in properties:
+            properties[field] = fragment
     required.extend(_GATEWAY_INLINE_REQUIRED.get(name, ()))
     schema = {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -233,15 +254,36 @@ def payload_schema(name: str, command_parser: argparse.ArgumentParser) -> dict:
     return schema
 
 
-def all_payload_schemas(parser: argparse.ArgumentParser, definitions) -> dict[str, dict]:
-    """name -> schema, for every declared command capability with a CLI command."""
+def all_payload_schemas(
+    parser: argparse.ArgumentParser,
+    definitions,
+    *,
+    payload_records: dict[tuple[str, str], dict] | None = None,
+) -> dict[str, dict]:
+    """name -> schema, for every declared command capability with a CLI command.
+
+    A catalogue declaration that names no ``json_object`` payload field is
+    a typo, not a no-op: it fails loudly here, in the generator and in the
+    derivation test alike, instead of silently declaring nothing.
+    """
     commands = subparsers(parser)
+    for capability_name, field in (payload_records or {}):
+        definition = definitions.get(capability_name)
+        command_parser = commands.get(definition.cli_command or "") \
+            if definition is not None else None
+        if command_parser is None or \
+                field not in json_object_fields(command_parser):
+            raise ValueError(
+                f"payload_records {capability_name}.{field} declares no "
+                "json_object payload field"
+            )
     out = {}
     for name, definition in sorted(definitions.items()):
         command_parser = commands.get(definition.cli_command or "")
         if command_parser is None:
             continue
-        out[name] = payload_schema(name, command_parser)
+        out[name] = payload_schema(name, command_parser,
+                                   payload_records=payload_records)
     return out
 
 

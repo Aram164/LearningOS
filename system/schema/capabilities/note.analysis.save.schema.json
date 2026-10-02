@@ -11,7 +11,29 @@
   ],
   "properties": {
     "analysis": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "binding": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "binding",
+        "id",
+        "path",
+        "title"
+      ],
+      "description": "Accepted analysis input fields, a subset of the stored note record: type/created/state/authorship/semantic_review are set by the handler (the stored shape is system/schema/note.schema.json)."
     },
     "body_file": {
       "type": "string"

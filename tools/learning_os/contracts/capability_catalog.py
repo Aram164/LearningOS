@@ -16,6 +16,21 @@ class CapabilityCatalogError(Exception):
     pass
 
 
+#: Keys a ``payload_records`` entry may carry (#93). The loader checks
+#: structure only; ``contracts.payload_records`` resolves each entry to
+#: its generated fragment and owns the deep validation.
+PAYLOAD_RECORD_KEYS = frozenset({
+    "description",
+    "accepted",
+    "required",
+    "types",
+    "fields",
+    "min_properties",
+    "record_schema",
+    "freeform",
+})
+
+
 @dataclass(frozen=True)
 class CapabilityDefinition:
     name: str
@@ -158,6 +173,33 @@ def load_capability_catalog(root: Path) -> dict:
                     raise CapabilityCatalogError(
                         f"public command {name} has no CLI command"
                     )
+                records = row.get("payload_records")
+                if records is not None:
+                    if not isinstance(records, dict) or not all(
+                        isinstance(field, str) and isinstance(entry, dict)
+                        for field, entry in records.items()
+                    ):
+                        raise CapabilityCatalogError(
+                            f"capability {name} payload_records must map "
+                            "field names to mappings"
+                        )
+                    for field, entry in records.items():
+                        unknown = sorted(set(entry) - PAYLOAD_RECORD_KEYS)
+                        if unknown:
+                            raise CapabilityCatalogError(
+                                f"capability {name} payload_records.{field} "
+                                f"has unknown keys: {', '.join(unknown)}"
+                            )
+                        sources = sum(
+                            key in entry
+                            for key in ("accepted", "record_schema", "freeform")
+                        )
+                        if sources != 1:
+                            raise CapabilityCatalogError(
+                                f"capability {name} payload_records.{field} "
+                                "needs exactly one of accepted, record_schema, "
+                                "freeform"
+                            )
 
     rows = data.get("domain_capabilities", {}) or {}
     if not isinstance(rows, dict):

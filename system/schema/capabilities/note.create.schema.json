@@ -18,7 +18,52 @@
       "pattern": "^sha256:[a-f0-9]{64}$"
     },
     "note": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        },
+        "path": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "concepts": {
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "sources": {
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "contexts": {
+          "type": [
+            "array",
+            "null"
+          ]
+        },
+        "supersedes": {
+          "type": [
+            "array",
+            "null"
+          ]
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "path",
+        "title"
+      ],
+      "description": "Accepted note input fields, a subset of the stored note record: type/created/state/authorship/semantic_review are set by the handler (the stored shape is system/schema/note.schema.json)."
     }
   },
   "dependentRequired": {

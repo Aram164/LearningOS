@@ -56,8 +56,11 @@ def test_unit_revision_schema_requires_inline_reviewed_content():
 
     schema = json.loads((SCHEMA_DIR / "unit.plan.revise.schema.json").read_text())
     validator = Draft202012Validator(schema)
-    inline = {"unit_id": "unit-test", "record": {}}
+    # The inline record carries the declared accepted fields; plan_contract
+    # is required here exactly as the handler requires it.
+    inline = {"unit_id": "unit-test", "record": {"plan_contract": {}}}
     assert not list(validator.iter_errors(inline))
+    assert list(validator.iter_errors({"unit_id": "unit-test", "record": {}}))
     file_input = {"unit_id": "unit-test", "file": "revision.yaml",
                   "file_sha256": "sha256:" + "0" * 64}
     assert list(validator.iter_errors(file_input))

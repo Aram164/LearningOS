@@ -14,6 +14,7 @@ from pathlib import Path
 TOOLS = Path(__file__).resolve().parent
 
 from learning_os.contracts.capability_catalog import command_definitions  # noqa: E402
+from learning_os.contracts.payload_records import resolve_all  # noqa: E402
 from learning_os.contracts.payloads import all_payload_schemas  # noqa: E402
 
 
@@ -21,7 +22,9 @@ def main() -> int:
     root = TOOLS.parent
     import los  # noqa: E402  (imports the parser, not a command)
 
-    schemas = all_payload_schemas(los.build_parser(), command_definitions(root))
+    schemas = all_payload_schemas(
+        los.build_parser(), command_definitions(root),
+        payload_records=resolve_all(root))
     out = root / "system" / "schema" / "capabilities"
     out.mkdir(parents=True, exist_ok=True)
     for name, schema in schemas.items():

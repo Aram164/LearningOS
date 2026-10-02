@@ -18,7 +18,78 @@
       "type": "string"
     },
     "record": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "partition": {
+                "type": "string"
+              },
+              "title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "type": {
+                "type": "string"
+              },
+              "authors": {},
+              "organization": {},
+              "year": {},
+              "url": {},
+              "identifiers": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "discovery": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "thematic_group_ids": {
+                "type": [
+                  "array",
+                  "null"
+                ]
+              },
+              "remove_url": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "remove_identifiers": {
+                "type": "array"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "action",
+              "id"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 20
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "records"
+      ],
+      "description": "Batch of 1 to 20 intake rows; each row is a create or a correct carrying only its action's allowlisted fields, and the handler refuses a create-only field on a correct."
     }
   },
   "oneOf": [

@@ -16,7 +16,29 @@
       "type": "string"
     },
     "record": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "schema_version": {},
+        "id": {},
+        "type": {},
+        "candidate_module_id": {},
+        "status": {},
+        "basis": {},
+        "source_assessments": {},
+        "comparisons": {}
+      },
+      "additionalProperties": false,
+      "required": [
+        "basis",
+        "candidate_module_id",
+        "comparisons",
+        "id",
+        "schema_version",
+        "source_assessments",
+        "status",
+        "type"
+      ],
+      "description": "The accepted fields are the full comparison record governed by system/schema/candidate-source-comparison.schema.json."
     }
   },
   "oneOf": [
