@@ -386,6 +386,23 @@ def _recorded_options(manifest) -> list[dict]:
     return sorted(options, key=lambda row: str(row["workspace_id"]))
 
 
+def _brief_deadlines(manifest: dict) -> list[dict]:
+    """Brief-visible deadlines: absence of evidence reads as a missing fact.
+
+    The projection says ``unregistered`` for a sitting with no recorded
+    attempt; the brief is the surface where that absence is most easily
+    misread as a decision, so it says ``registration not recorded``
+    instead. ``unrecorded`` (elapsed — the record should exist by now)
+    passes through unchanged. Row count and order are preserved.
+    """
+    rows = []
+    for row in manifest.get("academic_deadlines", []):
+        if isinstance(row, dict) and row.get("registration_state") == "unregistered":
+            row = {**row, "registration_state": "registration not recorded"}
+        rows.append(row)
+    return rows
+
+
 def brief_bootstrap(args) -> int:
     """One-page session entry: guards, resume, owed work, deadlines, expands.
 
@@ -419,7 +436,7 @@ def brief_bootstrap(args) -> int:
                  for row in manifest.get("study_maps", [])
                  if row.get("status") in {"active", "ready"}),
                 key=lambda row: row["id"])
-            deadlines = manifest.get("academic_deadlines", [])
+            deadlines = _brief_deadlines(manifest)
             pointer = manifest.get("resume_pointer", {})
             state = _pointer_state(manifest, pointer)
             return _print_stable(root, snapshot, {

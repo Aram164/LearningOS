@@ -20,6 +20,43 @@ def exam_spine(repo: Repo) -> list[tuple[str, str, dict, dict]]:
     return spine
 
 
+#: Module statuses whose sittings and windows are no longer actionable.
+#: A retired module keeps its records, but the deadline list is for work
+#: ahead — retired rows only mislead.
+_RETIRED_MODULE_STATUSES = frozenset({"archived", "dropped"})
+
+#: Attempt results that settle a termin: once one is recorded, the
+#: withdrawal deadline no longer governs any decision.
+_SETTLED_RESULTS = frozenset({"withdrawn", "sat", "passed", "failed"})
+
+
+def _withdrawal_deadline_row(module_id: str, module: dict, sitting: dict,
+                             termin: int, state: str, today: str) -> dict | None:
+    """A dated withdrawal-deadline row, or None while it is not relevant.
+
+    The Rücktritt deadline governs the register/withdraw decision itself,
+    so it shows both for a registered sitting and for one with no attempt
+    recorded yet. It disappears once the date passes or the termin is
+    settled as withdrawn, sat, passed, or failed.
+    """
+    deadline = str(sitting.get("withdrawal_deadline") or "")
+    if not deadline or deadline < today:
+        return None
+    if state in _SETTLED_RESULTS:
+        return None
+    label = sitting.get("label") or f"Termin {termin}"
+    return {
+        "kind": "withdrawal-deadline",
+        "start_date": deadline,
+        "end_date": deadline,
+        "module_id": module_id,
+        "title": module.get("title", module_id),
+        "termin": termin,
+        "label": f"{label} withdrawal deadline",
+        "registration_state": state,
+    }
+
+
 def _academic_deadlines(repo: Repo) -> list[dict]:
     """Project structured exam sittings and registration windows for interfaces.
 
@@ -27,13 +64,21 @@ def _academic_deadlines(repo: Repo) -> list[dict]:
     withdrew from, sat, or passed.  Examination sittings describe available
     dates even before an attempt exists; correlating the two here keeps that
     business rule out of every interface.
+
+    An elapsed sitting with no recorded attempt is a missing record, not a
+    choice: it stays visible as ``unrecorded`` until an attempt settles it.
+    Retired (archived/dropped) modules and closed registration windows
+    contribute nothing — the list is for work ahead.
     """
     deadlines: list[dict] = []
     represented_attempts: set[tuple[str, int, str]] = set()
     grouped_windows: dict[tuple[str, str, str], dict] = {}
+    today = _dt.date.today().isoformat()
 
     for mid in sorted(repo.modules):
         module = repo.modules[mid]
+        if module.get("status") in _RETIRED_MODULE_STATUSES:
+            continue
         examination = module.get("examination") or {}
         attempts = module.get("attempts", []) or []
 
@@ -49,7 +94,7 @@ def _academic_deadlines(repo: Repo) -> list[dict]:
                 and start <= str(attempt.get("date", "")) <= end
             ]
             state = "unregistered"
-            for result in ("registered", "passed", "failed", "withdrawn"):
+            for result in ("registered", "sat", "passed", "failed", "withdrawn"):
                 if any(attempt.get("result") == result for attempt in matching):
                     state = result
                     break
@@ -57,11 +102,8 @@ def _academic_deadlines(repo: Repo) -> list[dict]:
                 (mid, termin, str(attempt.get("date")))
                 for attempt in matching if attempt.get("date")
             )
-            # Availability is actionable state, not historical inventory. Keep
-            # past sittings when an attempt gives them administrative meaning,
-            # but do not advertise an elapsed, never-chosen sitting as open.
-            if state == "unregistered" and end < _dt.date.today().isoformat():
-                continue
+            if state == "unregistered" and end < today:
+                state = "unrecorded"
             deadlines.append({
                 "kind": "exam",
                 "start_date": start,
@@ -74,12 +116,18 @@ def _academic_deadlines(repo: Repo) -> list[dict]:
                 "notes": sitting.get("notes"),
                 "registration_state": state,
             })
+            withdrawal = _withdrawal_deadline_row(
+                mid, module, sitting, termin, state, today)
+            if withdrawal is not None:
+                deadlines.append(withdrawal)
 
         for window in examination.get("registration_windows", []) or []:
             opens = str(window.get("opens", ""))
             closes = str(window.get("closes", ""))
             label = str(window.get("label", "Registration window"))
             if not opens or not closes:
+                continue
+            if closes < today:
                 continue
             key = (opens, closes, label)
             grouped = grouped_windows.setdefault(key, {
@@ -97,8 +145,11 @@ def _academic_deadlines(repo: Repo) -> list[dict]:
             })
 
     # A registered attempt remains visible even if its module has not yet been
-    # backfilled with an available-sitting record.
+    # backfilled with an available-sitting record. Retired modules stay out
+    # here too: their registered rows are history, not deadlines.
     for date, mid, module, attempt in exam_spine(repo):
+        if module.get("status") in _RETIRED_MODULE_STATUSES:
+            continue
         key = (mid, int(attempt.get("termin", 1)), date)
         if key in represented_attempts:
             continue
