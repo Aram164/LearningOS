@@ -24,19 +24,30 @@ sys.path.insert(0, str(ROOT / "tests"))
 import group_map  # noqa: E402  (importable only after the tests/ path insert)
 
 
+class SelectionError(ValueError):
+    """Git could not establish which changes require verification."""
+
+
 def _git(*args: str) -> str:
-    proc = subprocess.run(["git", *args], cwd=ROOT, capture_output=True,
-                          text=True, check=False)
-    return proc.stdout if proc.returncode == 0 else ""
+    try:
+        proc = subprocess.run(["git", *args], cwd=ROOT, capture_output=True,
+                              text=True, check=False, timeout=30)
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise SelectionError(f"cannot inspect Git changes: {exc}") from exc
+    if proc.returncode != 0:
+        details = proc.stderr.strip() or f"exit {proc.returncode}"
+        raise SelectionError(f"git {' '.join(args)} failed: {details}")
+    return proc.stdout
 
 
 def changed_paths(base: str | None) -> list[str]:
     paths: list[str] = []
     if base:
         merge_base = _git("merge-base", "HEAD", base).strip()
-        if merge_base:
-            out = _git("diff", "--name-only", f"{merge_base}...HEAD")
-            paths.extend(out.split())
+        if not merge_base:
+            raise SelectionError(f"no merge base between HEAD and {base}")
+        out = _git("diff", "--name-only", f"{merge_base}...HEAD")
+        paths.extend(out.split())
     for line in _git("status", "--porcelain").splitlines():
         # Entries look like " M path", "?? path", "R  old -> new".
         entry = line[3:] if len(line) > 3 else ""
@@ -53,19 +64,26 @@ def changed_paths(base: str | None) -> list[str]:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base", default="main",
-                        help="branch base for committed changes "
-                             "(falls back to uncommitted only)")
+                        help="branch base for committed changes; unavailable "
+                             "history refuses instead of selecting no tests")
     parser.add_argument("--files", nargs="*", default=None,
                         help="explicit repo-relative paths instead of git")
     parser.add_argument("--groups", action="store_true",
                         help="print group names instead of test files")
     args = parser.parse_args(argv)
 
-    if args.files is not None:
-        paths = args.files
-    else:
-        base = args.base if _git("rev-parse", "--verify", args.base).strip() else None
-        paths = changed_paths(base)
+    try:
+        if args.files is not None:
+            paths = args.files
+        else:
+            base = _git("rev-parse", "--verify", "--end-of-options",
+                        f"{args.base}^{{commit}}").strip()
+            if not base:
+                raise SelectionError(f"cannot resolve base commit {args.base}")
+            paths = changed_paths(base)
+    except SelectionError as exc:
+        print(f"affected: cannot determine changed paths: {exc}", file=sys.stderr)
+        return 2
     if not paths:
         return 0
     groups = group_map.groups_for_paths(paths)
