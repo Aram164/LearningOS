@@ -19,6 +19,7 @@ from __future__ import annotations
 import hashlib
 import json
 import re
+from typing import Literal
 
 from ..materials_resolution import material_uri_authority, resolve_route_material_files, sha256_file
 
@@ -198,24 +199,36 @@ class ChecksPlanRigor:
         return index
 
 
-    def _angle_review_current(self, route: dict, stage: dict, resource: dict) -> bool:
+    def _angle_review_current(
+        self, route: dict, stage: dict, resource: dict
+    ) -> Literal["current", "stale", "unverifiable"]:
+        """How current a review is: stale needs re-review, unverifiable needs a mount.
+
+        "current" — the review matches its inputs and, for a correction, the
+        evidence bytes on disk. "stale" — malformed, fingerprint-mismatched,
+        or contradicted by bytes that are present. "unverifiable" — the
+        evidence file the correction cites is not here to hash: the materials
+        tree is offline or the file is absent. That last case must never read
+        as stale, because staleness is baseline-managed and would fail a run
+        with no materials tree (CI) for content that never changed.
+        """
         review = resource.get("angle_review")
         if not isinstance(review, dict) \
                 or not isinstance(review.get("kind"), str) \
                 or review["kind"] not in {"refinement", "correction"} \
                 or any(not isinstance(review.get(key), str) or not review[key].strip()
                        for key in ("reviewed_by", "reviewed_on", "rationale")):
-            return False
+            return "stale"
         try:
             if review.get("fingerprint") != angle_review_fingerprint(route, stage, resource):
-                return False
+                return "stale"
         except (TypeError, ValueError):
-            return False
+            return "stale"
         if review["kind"] == "refinement":
-            return True
+            return "current"
         evidence = review.get("evidence")
         if not isinstance(evidence, list) or not evidence:
-            return False
+            return "stale"
         # Resolve only the named route. Evidence from a similarly named file
         # or a different source can never authorize a correction.
         try:
@@ -228,7 +241,7 @@ class ChecksPlanRigor:
                 if not isinstance(item, dict) or not isinstance(item.get("material_uri"), str) \
                         or not isinstance(item.get("locator"), str) \
                         or not item["locator"].strip():
-                    return False
+                    return "stale"
                 uri = item["material_uri"]
                 path = files.get(uri)
                 # A broad course route can have no single file target. Its
@@ -239,18 +252,27 @@ class ChecksPlanRigor:
                     source = self.repo.sources.get(route.get("source_id"), {})
                     authority = material_uri_authority(source.get("material"))
                     if not authority or material_uri_authority(uri) != authority:
-                        return False
+                        return "stale"
                     named = resolve_route_material_files(self.repo, {**route, "vault_path": uri})
                     path = next((f.path for f in named if f.material_uri == uri), None)
                 if path is None:
-                    return False
+                    # The route's own files resolved but the evidence names
+                    # something else: a wrong citation, not a missing drive.
+                    if files:
+                        return "stale"
+                    return "unverifiable"
                 if path not in cache:
-                    cache[path] = sha256_file(path)
+                    try:
+                        cache[path] = sha256_file(path)
+                    except OSError:
+                        return "unverifiable"
                 if item.get("file_sha256") != cache[path]:
-                    return False
-        except (OSError, ValueError, AttributeError):
-            return False
-        return True
+                    return "stale"
+        except OSError:
+            return "unverifiable"
+        except (ValueError, AttributeError):
+            return "stale"
+        return "current"
 
 
     def _check_row_angle(self, smid: str, stage: dict, resource: dict,
@@ -279,7 +301,25 @@ class ChecksPlanRigor:
             route_id = ref.get("route_id") if isinstance(ref, dict) else None
         route = routes.get(route_id) if isinstance(route_id, str) else None
         if "angle_review" in resource:
-            if angle and route is not None and self._angle_review_current(route, stage, resource):
+            if not angle or route is None:
+                self.warn(
+                    "ANGLE-REVIEW-STALE",
+                    f"study map '{smid}' stage '{stage.get('id')}' has an invalid or stale "
+                    f"angle review for {route_id} — review the changed inputs again",
+                    where,
+                )
+                return
+            state = self._angle_review_current(route, stage, resource)
+            if state == "current":
+                return
+            if state == "unverifiable":
+                self.warn(
+                    "ANGLE-REVIEW-UNVERIFIED",
+                    f"study map '{smid}' stage '{stage.get('id')}' has an angle review for "
+                    f"{route_id} whose evidence bytes are not on this machine — re-run "
+                    f"with the materials tree mounted to verify it",
+                    where,
+                )
                 return
             self.warn(
                 "ANGLE-REVIEW-STALE",

@@ -179,7 +179,8 @@ def test_environmental_warnings_are_excluded_by_name():
     """They describe the machine, not the content, and differ per checkout."""
     from learning_os.rules.common import ENVIRONMENTAL_WARNINGS
 
-    for code in ("MATERIALS-OFFLINE", "MATERIALS-DRIFT", "HYGIENE-VIEWS", "HYGIENE-LOCK"):
+    for code in ("MATERIALS-OFFLINE", "MATERIALS-DRIFT", "HYGIENE-VIEWS", "HYGIENE-LOCK",
+                 "ANGLE-REVIEW-UNVERIFIED"):
         assert code in ENVIRONMENTAL_WARNINGS
 
 
@@ -196,6 +197,11 @@ def test_baseline_exempt_union_is_exactly_the_two_named_sets():
     for code in ("WS-NEGLECT", "INBOX-STALE"):
         assert code in DYNAMIC_ADVISORY_WARNINGS
         assert code not in ENVIRONMENTAL_WARNINGS
+    # Deliberate split (issue #86): "the bytes are not here" is environmental
+    # and baseline-exempt, while "the bytes changed" stays baseline-managed.
+    assert "ANGLE-REVIEW-UNVERIFIED" in ENVIRONMENTAL_WARNINGS
+    assert "ANGLE-REVIEW-UNVERIFIED" in BASELINE_EXEMPT_WARNINGS
+    assert "ANGLE-REVIEW-STALE" not in BASELINE_EXEMPT_WARNINGS
 
 
 def test_an_unknown_future_warning_code_is_not_exempt_by_accident():
@@ -206,6 +212,18 @@ def test_an_unknown_future_warning_code_is_not_exempt_by_accident():
     after = Counter({("TOTALLY-MADE-UP-WARNING-CODE", "x.yaml"): 1})
     regressions, _ = wb.delta(before, after)
     assert regressions, "a novel non-exempt code must still fail the gate"
+
+
+def test_angle_review_unverified_is_dropped_but_stale_is_managed():
+    """The #86 split at the gate: only "the bytes changed" can regress."""
+    from learning_os.rules.common import Issue
+
+    issues = [Issue("W", "ANGLE-REVIEW-UNVERIFIED", "evidence not on this machine", "sm.yaml"),
+              Issue("W", "ANGLE-REVIEW-STALE", "review no longer matches", "sm.yaml")]
+    signatures, errors = wb.signatures_from_issues(issues)
+    assert errors == []
+    assert ("ANGLE-REVIEW-UNVERIFIED", "sm.yaml") not in signatures
+    assert signatures[("ANGLE-REVIEW-STALE", "sm.yaml")] == 1
 
 
 # ---- exact-code exemption against the real emitting rules -------------------

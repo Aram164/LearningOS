@@ -251,9 +251,8 @@ def test_malformed_or_unevidenced_reviews_never_suppress_a_warning(change):
     assert "ANGLE-REVIEW-STALE" in _codes(checker)
 
 
-def test_correction_requires_the_named_sources_current_bytes(mini_repo):
-    from pathlib import Path
-
+def _correction_case(mini_repo):
+    """A correction review over a sliced unit, with its evidence bytes on disk."""
     from repo_builders import _sliced_route, _sliced_unit
 
     from learning_os.loader import load_repo
@@ -272,11 +271,78 @@ def test_correction_requires_the_named_sources_current_bytes(mini_repo):
         "locator": "PDF p. 1",
     }])
     resource["angle_review"]["fingerprint"] = angle_review_fingerprint(route, stage, resource)
-    assert checker._angle_review_current(route, stage, resource)
+    return checker, repo, route, stage, resource, resolved
+
+
+def test_correction_requires_the_named_sources_current_bytes(mini_repo):
+    from pathlib import Path
+
+    from learning_os.loader import load_repo
+
+    checker, _, route, stage, resource, resolved = _correction_case(mini_repo)
+    assert checker._angle_review_current(route, stage, resource) == "current"
     # A new validation pass must observe changed bytes, not its earlier cache.
     Path(resolved.path).write_bytes(Path(resolved.path).read_bytes() + b"\nchanged source\n")
     fresh_checker, _, _, _ = _angle_case()
     fresh_checker.repo = load_repo(mini_repo)
-    assert not fresh_checker._angle_review_current(route, stage, resource)
+    assert fresh_checker._angle_review_current(route, stage, resource) == "stale"
     resource["angle_review"]["evidence"][0]["material_uri"] = "material://source-other/lecture-01.pdf"
-    assert not fresh_checker._angle_review_current(route, stage, resource)
+    assert fresh_checker._angle_review_current(route, stage, resource) == "stale"
+
+
+def test_correction_with_changed_bytes_is_stale_when_mounted(mini_repo):
+    """Online, bytes present and different is stale — and a baseline regression."""
+    from collections import Counter
+
+    from learning_os.rules.common import Issue
+    from learning_os.warning_baseline import delta, signatures_from_issues
+
+    checker, repo, route, stage, resource, resolved = _correction_case(mini_repo)
+    assert checker._angle_review_current(route, stage, resource) == "current"
+    resolved.path.write_bytes(resolved.path.read_bytes() + b"\nchanged source\n")
+    fresh_checker, _, _, _ = _angle_case()
+    fresh_checker.repo = repo
+    assert fresh_checker._angle_review_current(route, stage, resource) == "stale"
+    fresh_checker._check_row_angle("sm", stage, resource, {route["id"]: route}, "study-map.yaml")
+    assert "ANGLE-REVIEW-STALE" in _codes(fresh_checker)
+    # The emitted warning survives the exempt filter and fails the gate as new.
+    issues = [Issue("W", code, message, "study-map.yaml")
+              for code, message in fresh_checker.warnings]
+    current, errors = signatures_from_issues(issues)
+    assert errors == []
+    regressions, _ = delta(Counter(), current)
+    assert any("ANGLE-REVIEW-STALE" in line for line in regressions)
+
+
+def test_correction_with_absent_evidence_is_unverifiable_not_stale(mini_repo):
+    """The CI shape: the evidence file is not on this machine, so the review
+    is unverifiable — the content did not change, only the mount did."""
+    checker, _, route, stage, resource, resolved = _correction_case(mini_repo)
+    assert checker._angle_review_current(route, stage, resource) == "current"
+    resolved.path.unlink()
+    assert checker._angle_review_current(route, stage, resource) == "unverifiable"
+    checker._check_row_angle("sm", stage, resource, {route["id"]: route}, "study-map.yaml")
+    assert "ANGLE-REVIEW-UNVERIFIED" in _codes(checker)
+    assert "ANGLE-REVIEW-STALE" not in _codes(checker)
+
+
+def test_correction_with_materials_root_offline_is_unverifiable(mini_repo):
+    """The whole materials tree absent reads the same as one file absent."""
+    import shutil
+
+    checker, _, route, stage, resource, _ = _correction_case(mini_repo)
+    assert checker._angle_review_current(route, stage, resource) == "current"
+    shutil.rmtree(mini_repo.parent / "materials")
+    assert checker._angle_review_current(route, stage, resource) == "unverifiable"
+    checker._check_row_angle("sm", stage, resource, {route["id"]: route}, "study-map.yaml")
+    assert "ANGLE-REVIEW-UNVERIFIED" in _codes(checker)
+    assert "ANGLE-REVIEW-STALE" not in _codes(checker)
+
+
+def test_fingerprint_mismatch_is_stale_online_and_offline(mini_repo):
+    """A changed input is stale in both environments — offline never excuses it."""
+    checker, _, route, stage, resource, resolved = _correction_case(mini_repo)
+    resource["angle"] = "Read a different example."
+    assert checker._angle_review_current(route, stage, resource) == "stale"
+    resolved.path.unlink()
+    assert checker._angle_review_current(route, stage, resource) == "stale"

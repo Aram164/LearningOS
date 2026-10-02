@@ -167,6 +167,12 @@ route, and the definitions they enforce are in `PLAN-CREATION-SOP.md`.
   identity, stage purpose, or placement. Correction evidence must still resolve
   to that route's exact local file with the recorded digest. Re-review changed
   inputs; do not carry an old review forward by changing its fingerprint alone.
+- **W** `ANGLE-REVIEW-UNVERIFIED` — a correction review whose evidence file is
+  not on this machine (the materials tree is offline or the file is absent),
+  so the recorded digest cannot be checked. Environmental and baseline-exempt,
+  like `MATERIALS-OFFLINE`: visible in every run, never a regression. Re-run
+  with the tree mounted; a fingerprint mismatch stays `ANGLE-REVIEW-STALE` in
+  both environments.
 
 These are warnings and not errors on purpose. The backfill is incremental
 (WORKFLOWS §6a repays visibility debt on use, never in bulk), and a rule that

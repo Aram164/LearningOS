@@ -67,6 +67,11 @@ ENVIRONMENTAL_WARNINGS = frozenset({
     "MATERIALS-DRIFT",
     "MATERIAL-URI-FORM",
     "HYGIENE-LOCK",
+    # A correction review whose evidence bytes are not on this machine (the
+    # materials tree is offline or the file is absent). The content did not
+    # change, only the mount did — like MATERIALS-OFFLINE, it must stay
+    # visible in every run without ever becoming a baseline regression.
+    "ANGLE-REVIEW-UNVERIFIED",
 })
 
 # Warnings that depend on wall-clock age rather than on any authored file's
