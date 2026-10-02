@@ -30,6 +30,31 @@ def test_note_segments_reconstruct_exact_bytes_and_refuse_stale_continuation(min
     assert not stale.stdout
 
 
+@pytest.mark.parametrize("argv", [
+    # Every _refusal caller: a not-found or usage refusal that echoes the
+    # word "snapshot" (in user input or in the missing-flag hint) is exit
+    # 2, never the optimistic-concurrency code 3. The stderr assertion
+    # proves the case actually exercises the word.
+    pytest.param(["note-read", "note-snapshot-review"], id="reads/not-found"),
+    pytest.param(["search", "snapshot", "--content", "--offset", "3"],
+                 id="reads/continuation-usage"),
+    pytest.param(["bootstrap", "--compact", "--offset", "1"],
+                 id="reads/bootstrap-continuation"),
+    pytest.param(["search", "x", "--type", "snapshot"], id="query/bad-type"),
+    pytest.param(["ability-context", "--offset", "1"], id="abilities/usage"),
+    pytest.param(["dossier", "unit-snapshot-x"], id="dossier/not-found"),
+    pytest.param(["unit-list", "--compact", "--status", "snapshot"],
+                 id="unit/bad-status"),
+    pytest.param(["material-span", "unit-snapshot-x", "route-y"],
+                 id="material-span/not-found"),
+])
+def test_snapshot_word_in_refusal_is_not_a_conflict(mini_repo, argv):
+    proc = run_los(mini_repo, *argv)
+    assert proc.returncode == 2, proc.stderr
+    assert "snapshot" in proc.stderr
+    assert not proc.stdout
+
+
 def test_content_search_finds_reasoning_beyond_summary(mini_repo):
     note = next(iter(load_repo(mini_repo).notes.values()))
     with note.path.open("a") as handle:

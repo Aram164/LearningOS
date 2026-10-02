@@ -279,7 +279,9 @@ def test_pagination_binds_observed_material(mini_repo):
                        "--offset", "1", "--expected-snapshot",
                        first["snapshot_id"], "--expected-observations",
                        first["observations_sha256"])
-    assert drifted.returncode == 2
+    # Observed state moved between pages: an optimistic-concurrency
+    # conflict (exit 3), like a stale --expected-snapshot.
+    assert drifted.returncode == 3
     assert "changed between pages" in drifted.stderr
     # A fresh first page rebinds to the moved bytes.
     rebound = _context(mini_repo, "density", "--limit", "1")
@@ -645,7 +647,9 @@ def test_continuation_refuses_changed_filters(mini_repo):
                 ["density", "--unit", "unit-demo-l02"]):
         proc = run_los(mini_repo, "material-context", *argv,
                        "--limit", "1", *guards)
-        assert proc.returncode == 2, argv
+        # The continuation's observations binding no longer matches: an
+        # optimistic-concurrency conflict (exit 3), like a stale snapshot.
+        assert proc.returncode == 3, argv
         assert "changed between pages" in proc.stderr, argv
 
 

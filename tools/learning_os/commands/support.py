@@ -9,11 +9,13 @@ import datetime as _dt
 import fcntl
 import hashlib
 import json
+import math
 import os
 import re
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 import yaml
@@ -59,6 +61,66 @@ def _root(args) -> Path:
     return Path(args.root).resolve() if args.root else TOOLS.parent
 
 
+#: Environment override for the operator-lock wait. `los --lock-timeout`
+#: sets this for the process; in-process callers set it directly. Unset or
+#: malformed means wait as long as the holder needs, announced on stderr.
+LOS_LOCK_TIMEOUT_ENV = "LOS_LOCK_TIMEOUT"
+
+#: Poll interval while a lock timeout is armed. The default (unbounded)
+#: wait keeps kernel blocking with no polling.
+_LOCK_POLL_INTERVAL_S = 0.05
+
+
+def _lock_timeout_seconds() -> float | None:
+    """The configured lock wait bound, or None for an unbounded announced wait."""
+    raw = os.environ.get(LOS_LOCK_TIMEOUT_ENV)
+    if raw is None or not raw.strip():
+        return None
+    try:
+        value = float(raw)
+    except ValueError:
+        return None
+    if not math.isfinite(value):
+        return None
+    return max(0.0, value)
+
+
+def _read_holder(lock_path: Path) -> str | None:
+    """The advisory `(held by pid N: <command>, since HH:MM:SS)` fragment.
+
+    Display only, never trusted for correctness: anything unreadable or
+    misshapen answers None and the waiter prints the bare waiting line.
+    """
+    try:
+        record = json.loads(lock_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if not isinstance(record, dict):
+        return None
+    pid = record.get("pid")
+    command = record.get("command")
+    since = record.get("since")
+    if (not isinstance(pid, int) or isinstance(pid, bool)
+            or not isinstance(command, str) or not isinstance(since, str)):
+        return None
+    return f"(held by pid {pid}: {command[:200]}, since {since[:32]})"
+
+
+def _write_holder(handle) -> None:
+    """Record this process as the lock holder. Best effort: advisory only."""
+    prog = Path(sys.argv[0]).name if sys.argv and sys.argv[0] else "los"
+    command = " ".join([prog, *sys.argv[1:3]])[:160] or "los"
+    record = {"pid": os.getpid(), "command": command,
+              "since": _dt.datetime.now().strftime("%H:%M:%S")}
+    try:
+        handle.seek(0)
+        handle.truncate()
+        handle.write(json.dumps(record))
+        handle.flush()
+    except OSError:
+        pass  # a waiter then prints the bare waiting line instead
+
+
 def _allocate_attachment_path(attachment_dir: Path, source_name: str) -> Path:
     """A destination no existing attachment occupies.
 
@@ -93,7 +155,15 @@ def _allocate_attachment_path(attachment_dir: Path, source_name: str) -> Path:
 
 @contextlib.contextmanager
 def _operator_lock(root: Path):
-    """Cross-process lock for every write/generation transaction."""
+    """Cross-process lock for every write/generation transaction.
+
+    A contender probes first and announces the wait on stderr — with the
+    holder's pid, command, and start time when the lock file names them —
+    instead of hanging silently. `LOS_LOCK_TIMEOUT` (or `los
+    --lock-timeout`) bounds the wait; on expiry a WriteRefused naming the
+    holder propagates, which every entry point maps to exit 2 with nothing
+    changed. Re-entrancy and crash-recovery-on-acquire are unchanged.
+    """
     root_key = str(root.resolve())
     held = _HELD_OPERATOR_LOCKS.get()
     if root_key in held:
@@ -101,8 +171,31 @@ def _operator_lock(root: Path):
         return
     token = hashlib.sha256(root_key.encode("utf-8")).hexdigest()[:16]
     lock_path = Path(tempfile.gettempdir()) / f"learningos-{token}.lock"
+    timeout = _lock_timeout_seconds()
     with lock_path.open("a+", encoding="utf-8") as handle:
-        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        try:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            holder = _read_holder(lock_path)
+            detail = f" {holder}" if holder else ""
+            print(f"los: waiting for the operator lock{detail}", file=sys.stderr)
+            if timeout is None:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+            else:
+                deadline = time.monotonic() + timeout
+                while True:
+                    remaining = deadline - time.monotonic()
+                    if remaining <= 0:
+                        raise WriteRefused(
+                            f"timed out after {timeout:g}s waiting for the "
+                            f"operator lock{detail}") from None
+                    time.sleep(min(_LOCK_POLL_INTERVAL_S, remaining))
+                    try:
+                        fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                        break
+                    except BlockingIOError:
+                        continue
+        _write_holder(handle)
         reconcile_inflight_transactions(root)
         context_token = _HELD_OPERATOR_LOCKS.set(held | {root_key})
         try:
@@ -114,6 +207,17 @@ def _operator_lock(root: Path):
 
 class WriteRefused(Exception):
     """A canonical write could not be performed; nothing was changed."""
+
+
+class StaleSnapshot(WriteRefused):
+    """A supplied concurrency token no longer matches live state; nothing was changed.
+
+    The only refusal that maps to exit 3 (optimistic-concurrency conflict).
+    Raised only where a supplied snapshot — or the material-context
+    observations digest — differs from the live one. Never inferred from
+    message prose: refusals echo user input, and the word "snapshot" in a
+    mistyped id or a missing-flag hint is not a conflict.
+    """
 
 
 

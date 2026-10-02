@@ -2,14 +2,12 @@
 
 from __future__ import annotations
 
-import time
-
 import yaml
 
 from ..errors import TransactionFailure
-from ..githistory import GitHistoryError
 from ..loading.yamlio import UniqueKeySafeLoader
 from ..revisions import load_revisions
+from .advisories import workspace_neglect_issues
 from .common import REQUIRED_WORKSPACE_SECTIONS, id_list_items
 
 
@@ -114,18 +112,7 @@ class ChecksProjects:
                       f"{len(non_standing)} non-standing active workspaces (target 3-7; finish or "
                       "archive something first)")
         # Neglect signal: active non-standing workspace untouched (per Git) for 21+ days
-        for ws in non_standing:
-            try:
-                ts = self._git_last_commit_ts(ws.path.parent)
-            except GitHistoryError as exc:
-                self.err("GIT-HISTORY", f"cannot check workspace neglect: {exc}")
-                break
-            if ts is None:
-                continue
-            days = (time.time() - ts) / 86400
-            if days >= 21:
-                self.warn("WS-NEGLECT",
-                          f"workspace '{ws.id}' untouched for {int(days)} days (per Git)")
+        self.issues.extend(workspace_neglect_issues(r))
 
     def check_transaction_receipts(self):
         # DEFERRED (JF-13 rebuild, 2026-09-26): detection is here, but

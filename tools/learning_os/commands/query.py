@@ -9,10 +9,11 @@ from pathlib import Path
 
 from learning_os import __version__
 from learning_os.contracts.capability_catalog import load_capability_catalog
+from learning_os.errors import unreadable_refusal
 from learning_os.genout import adoption_counts, exam_spine
 from learning_os.loader import load_repo
 from learning_os.pathing import PathBoundaryError, read_text_inside
-from learning_os.rules import validate
+from learning_os.validation_cache import status_issues
 
 from .reads import (
     _inspect_candidates,
@@ -60,9 +61,20 @@ CONTRACT_VERSION = 2
 def cmd_status(args) -> int:
     root = _root(args)
     repo = load_repo(root)
-    issues = validate(repo, online=False)
-    errors = sum(1 for i in issues if i.severity == "E")
-    warnings = sum(1 for i in issues if i.severity == "W")
+    if repo.parse_failures:
+        # Fail closed like every other manifest-backed read: the counts
+        # below would silently exclude whatever could not be read.
+        return _refusal(WriteRefused(
+            unreadable_refusal(root, repo.parse_failures, "status")))
+    # --no-validate skips validation but never the refusal above: an
+    # unreadable tree refuses before these counts are even considered.
+    no_validate = getattr(args, "no_validate", False)
+    if no_validate:
+        errors = warnings = 0
+    else:
+        issues = status_issues(repo)
+        errors = sum(1 for i in issues if i.severity == "E")
+        warnings = sum(1 for i in issues if i.severity == "W")
 
     inbox = root / "work" / "inbox"
     n_inbox = len([f for f in inbox.iterdir()
@@ -108,13 +120,13 @@ def cmd_status(args) -> int:
         # warning is NEW is a separate question with its own gate,
         # `tools/warning_baseline.py --check`; status does not run it, because
         # a status read must not depend on a recorded baseline being current.
-        "validation": {"errors": errors, "warnings": warnings,
-                       "ok": errors == 0},
+        "validation": {"skipped": True} if no_validate else {
+            "errors": errors, "warnings": warnings, "ok": errors == 0},
     }
 
     if args.json:
         print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False))
-        return 0
+        return 1 if errors else 0
 
     c = payload["counts"]
     print(f"Learning OS v3 · learning_os v{__version__} · {root}")
@@ -133,14 +145,17 @@ def cmd_status(args) -> int:
         for e in spine:
             print(f"  exam: {e['date']} — {e['title']} (Termin {e['termin']})")
     else:
-        print("  exam: no registered attempts in records/modules.yaml")
-    state = f"{errors} error(s)" if errors else "OK"
-    if warnings:
-        state += (f" · {warnings} warning(s), visible and nonblocking "
-                  "(`make warnings` for the delta)")
-    print(f"  validation: {state}")
+        print("  exam: no registered attempt in any module's module.yaml")
+    if no_validate:
+        print("  validation: skipped (--no-validate)")
+    else:
+        state = f"{errors} error(s)" if errors else "OK"
+        if warnings:
+            state += (f" · {warnings} warning(s), visible and nonblocking "
+                      "(`make warnings` for the delta)")
+        print(f"  validation: {state}")
     print("  human home page: generated/reading-room.md (make views)")
-    return 0
+    return 1 if errors else 0
 
 
 # ---------------------------------------------------- machine discovery/read

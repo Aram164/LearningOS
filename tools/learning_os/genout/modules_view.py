@@ -137,7 +137,7 @@ def _exam_spine_lines(repo: Repo) -> list[str]:
             lines.append(f"| {date} | {module.get('title', mid)} (`{mid}`) "
                          f"| {att.get('termin', '')} | {att.get('notes', '')} |")
     else:
-        lines.append("(no registered attempts in records/modules.yaml)")
+        lines.append("(no registered attempt in any module's module.yaml)")
     deadlines = _academic_deadlines(repo)
     pending = [row for row in deadlines
                if row.get("kind") == "exam"

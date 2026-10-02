@@ -43,7 +43,9 @@ def test_assessment_continuation_binds_bytes_even_when_already_stale(mini_repo, 
         assert second["items"][0]["origin"] == "unit-assessment"
         assert second["items"][0]["freshness"]["status"] == "stale"
     else:
-        assert continued.returncode == 2, continued.stdout + continued.stderr
+        # Observed bytes moved between pages: an optimistic-concurrency
+        # conflict (exit 3), like a stale --expected-snapshot.
+        assert continued.returncode == 3, continued.stdout + continued.stderr
         assert "changed between pages" in continued.stderr
         restarted = _context(mini_repo, "weighted", "--limit", "1")
         assert restarted["observations_sha256"] != first["observations_sha256"]

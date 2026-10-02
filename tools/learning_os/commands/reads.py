@@ -33,6 +33,7 @@ from learning_os.search.query import candidates
 
 from .suggest import expansion, not_found, with_suggestions
 from .support import (
+    StaleSnapshot,
     WriteRefused,
     _fresh_manifest,
     _fresh_manifest_and_repo,
@@ -53,7 +54,7 @@ def _window(args, maximum: int) -> tuple[int, int]:
 def _snapshot(root, expected=None) -> str:
     actual = f"sha256:{canonical_fingerprint(root)}"
     if expected is not None and expected != actual:
-        raise WriteRefused("snapshot changed; restart this read before continuing")
+        raise StaleSnapshot("snapshot changed; restart this read before continuing")
     return actual
 
 
@@ -66,7 +67,7 @@ def _print_stable(root, snapshot, payload) -> int:
 
 def _refusal(exc) -> int:
     print(f"los: {exc}", file=sys.stderr)
-    return 3 if "snapshot" in str(exc) else 2
+    return 3 if isinstance(exc, StaleSnapshot) else 2
 
 
 def record_payload(manifest, record_id):
@@ -1653,7 +1654,7 @@ def cmd_material_context(args) -> int:
             observed = _observations_digest(observations)
             expected_observations = getattr(args, "expected_observations", None)
             if expected_observations is not None and expected_observations != observed:
-                raise WriteRefused(
+                raise StaleSnapshot(
                     "material or filters observed by this query changed "
                     "between pages; re-run from offset 0")
             ranked_by = ("recorded stage use-evidence per source: positive "

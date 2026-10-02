@@ -27,6 +27,7 @@ conflict.
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 
 from learning_os.ai_actions import AIActionError, StaleDeliveryError  # noqa: E402
@@ -129,7 +130,12 @@ from learning_os.commands.stage import (  # noqa: E402
     cmd_stage_note,
     cmd_stage_progress,
 )
-from learning_os.commands.support import WriteRefused, _add_expected_revision_argument  # noqa: E402
+from learning_os.commands.support import (  # noqa: E402
+    LOS_LOCK_TIMEOUT_ENV,
+    StaleSnapshot,
+    WriteRefused,
+    _add_expected_revision_argument,
+)
 from learning_os.commands.unit import (  # noqa: E402
     cmd_unit_list,
     cmd_unit_map_import,
@@ -177,10 +183,17 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--root", default=None,
                         help="repository root (default: parent of tools/)")
+    parser.add_argument("--lock-timeout", type=float, default=None,
+                        metavar="SECONDS",
+                        help="bound the operator-lock wait; on expiry exit 2 "
+                             "naming the holder (same as LOS_LOCK_TIMEOUT; "
+                             "default: wait as long as needed, announced)")
     sub = parser.add_subparsers(dest="command", required=True)
 
     p = sub.add_parser("status", help="one-screen repository state")
     p.add_argument("--json", action="store_true", help="machine-readable output")
+    p.add_argument("--no-validate", action="store_true",
+                   help="skip validation entirely (the parse-failure refusal still applies)")
     p.set_defaults(func=cmd_status)
 
     p = sub.add_parser("capabilities", help="discover the stable operator contract")
@@ -1200,6 +1213,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     args = build_parser().parse_args()
+    if args.lock_timeout is not None:
+        os.environ[LOS_LOCK_TIMEOUT_ENV] = str(args.lock_timeout)
     try:
         return args.func(args)
     except StaleDeliveryError as exc:
@@ -1208,6 +1223,12 @@ def main() -> int:
     except AIActionError as exc:
         print(f"los: {exc}", file=sys.stderr)
         return 1
+    except StaleSnapshot as exc:
+        # A read whose guards (_snapshot/_print_stable) sit outside any
+        # _refusal try block, e.g. plan-edit-context: a real optimistic-
+        # concurrency conflict, exit 3 like the _refusal-covered reads.
+        print(f"los: {exc}", file=sys.stderr)
+        return 3
     except WriteRefused as exc:
         # Nothing was changed: _atomic_text cleans up its temp file and
         # _write_transaction rolls the set back before re-raising.

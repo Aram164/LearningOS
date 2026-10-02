@@ -19,6 +19,10 @@ from pathlib import Path
 from learning_os.loader import load_repo  # noqa: E402
 from learning_os.rules import render_report, validate  # noqa: E402
 from learning_os.rules.common import BASELINE_EXEMPT_WARNINGS  # noqa: E402
+from learning_os.validation_cache import (  # noqa: E402
+    discard_unreadable_cache,
+    write_static_cache,
+)
 
 
 def main() -> int:
@@ -39,6 +43,10 @@ def main() -> int:
     started = _time.monotonic()
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
     repo = load_repo(root)
+    if not args.online:
+        # A corrupt cache is a miss, not a defect: discard it before the
+        # run so neither the report nor the refreshed cache names it.
+        discard_unreadable_cache(root)
     issues = validate(repo, online=args.online)
     elapsed = _time.monotonic() - started
 
@@ -70,6 +78,15 @@ def main() -> int:
         report_dir.mkdir(parents=True, exist_ok=True)
         (report_dir / "validation-report.md").write_text(
             render_report(issues, generated_at), encoding="utf-8")
+
+    if not args.online:
+        # Offline runs refresh the status cache; --online results depend
+        # on network state and must never be served as static issues.
+        # The cache is auxiliary: a write failure never fails validation.
+        try:
+            write_static_cache(root, issues)
+        except OSError:
+            pass
 
     return 1 if errors else 0
 

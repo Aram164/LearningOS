@@ -5,11 +5,13 @@ from __future__ import annotations
 
 import json
 
+import pytest
 import yaml
 from gateway_helpers import approved_v2_call, file_sha256, request_artifact_id
 from repo_builders import run_los
 
 from learning_os.genout import adoption_counts, generate_all
+from learning_os.genout.modules_view import _exam_spine_lines
 from learning_os.loader import load_repo
 
 
@@ -37,6 +39,53 @@ def test_status_human_output_mentions_validation(mini_repo):
     assert proc.returncode == 0, proc.stderr
     assert "validation:" in proc.stdout
     assert "notes 1" in proc.stdout
+
+
+def test_status_exits_1_on_validation_errors_but_still_reports(mini_repo):
+    note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
+    note.rename(note.with_name("renamed-demo.md"))
+    proc = run_los(mini_repo, "status")
+    assert proc.returncode == 1, proc.stderr
+    assert "error(s)" in proc.stdout
+    assert "notes 1" in proc.stdout
+    json_proc = run_los(mini_repo, "status", "--json")
+    assert json_proc.returncode == 1, json_proc.stderr
+    assert json.loads(json_proc.stdout)["validation"]["ok"] is False
+
+
+@pytest.mark.parametrize("flag", [[], ["--json"]])
+def test_status_refuses_unreadable_canonical_file(mini_repo, flag):
+    concepts = mini_repo / "knowledge/concepts.yaml"
+    concepts.write_text(
+        concepts.read_text(encoding="utf-8") + "\nbroken: [unclosed\n",
+        encoding="utf-8")
+    proc = run_los(mini_repo, "status", *flag)
+    assert proc.returncode == 2, proc.stderr
+    assert "knowledge/concepts.yaml" in proc.stderr
+    assert not proc.stdout
+
+
+def _strip_attempts(mini_repo):
+    modules_path = mini_repo / "records/modules.yaml"
+    data = yaml.safe_load(modules_path.read_text(encoding="utf-8"))
+    for module in data["modules"]:
+        module["attempts"] = []
+    modules_path.write_text(yaml.safe_dump(data), encoding="utf-8")
+
+
+def test_status_exam_line_names_module_files_not_frozen_snapshot(mini_repo):
+    _strip_attempts(mini_repo)
+    proc = run_los(mini_repo, "status")
+    assert proc.returncode == 0, proc.stderr
+    assert "no registered attempt in any module's module.yaml" in proc.stdout
+    assert "records/modules.yaml" not in proc.stdout
+
+
+def test_module_view_exam_line_names_module_files_not_frozen_snapshot(mini_repo):
+    _strip_attempts(mini_repo)
+    lines = _exam_spine_lines(load_repo(mini_repo))
+    assert "(no registered attempt in any module's module.yaml)" in lines
+    assert not any("records/modules.yaml" in line for line in lines)
 
 
 # ---------------------------------------------------------------- capture

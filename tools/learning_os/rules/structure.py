@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-import time
-
 from ..loader import (
     ID_RE,
     PATH_ID_RE,
@@ -13,6 +11,7 @@ from ..loader import (
     STUDY_MAP_ID_RE,
     UNIT_ID_RE,
 )
+from .advisories import inbox_stale_issues
 from .common import KNOWLEDGE_TEXT_SUFFIXES, SUFFIX_RE
 
 
@@ -191,14 +190,4 @@ class ChecksStructure:
                               f"non-Markdown/YAML file under knowledge/: {self._rel(f)} "
                               "(books/slides belong in materials)")
         # Inbox items older than 14 days
-        inbox = r.root / "work" / "inbox"
-        if inbox.is_dir():
-            now = time.time()
-            for f in sorted(inbox.iterdir()):
-                if f.name.startswith("."):
-                    continue
-                age_days = (now - f.stat().st_mtime) / 86400
-                if age_days > 14:
-                    self.warn("INBOX-STALE",
-                              f"inbox item '{f.name}' is {int(age_days)} days old "
-                              "(unrouted capture — the inbox should trend toward empty)")
+        self.issues.extend(inbox_stale_issues(r))

@@ -244,11 +244,14 @@ def test_operator_lock_is_reentrant_in_one_dispatch(
         lambda _fd, operation: calls.append(operation),
     )
 
+    # The outer acquire probes non-blocking first; the inner re-entrant
+    # acquire performs no lock operation at all.
+    probe = command_support.fcntl.LOCK_EX | command_support.fcntl.LOCK_NB
     with command_support._operator_lock(tmp_path):
         with command_support._operator_lock(tmp_path):
-            assert calls == [command_support.fcntl.LOCK_EX]
+            assert calls == [probe]
 
-    assert calls == [command_support.fcntl.LOCK_EX, command_support.fcntl.LOCK_UN]
+    assert calls == [probe, command_support.fcntl.LOCK_UN]
 
 
 def test_projection_publication_refuses_a_changed_canonical_snapshot(

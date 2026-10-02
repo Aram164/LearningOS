@@ -242,7 +242,9 @@ def test_referenced_material_outside_route_basis_binds_continuation(mini_repo):
         mini_repo, "material-context", "weighted", "--offset", "1",
         "--expected-snapshot", stale["snapshot_id"],
         "--expected-observations", stale["observations_sha256"])
-    assert continued.returncode == 2, continued.stdout + continued.stderr
+    # Observed bytes moved between pages: an optimistic-concurrency
+    # conflict (exit 3), like a stale --expected-snapshot.
+    assert continued.returncode == 3, continued.stdout + continued.stderr
     assert "changed between pages" in continued.stderr
     fresh = _context(mini_repo, "weighted")
     assessment = next(row for row in fresh["items"] if row["origin"] == "unit-assessment")

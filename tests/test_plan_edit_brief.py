@@ -89,6 +89,20 @@ def _brief(root: Path, *args: str) -> dict:
     return json.loads(proc.stdout)
 
 
+def test_brief_refuses_stale_snapshot_with_conflict_code(mini_repo):
+    _seed_unit(mini_repo)
+    snapshot = _brief(mini_repo)["snapshot_id"]
+    note = next((mini_repo / "knowledge/notes/mathematics").glob("*.md"))
+    note.write_text(note.read_text(encoding="utf-8") + "\nA changed explanation.\n",
+                    encoding="utf-8")
+    # plan-edit-context guards outside any _refusal try block: the stale
+    # token still reaches exit 3 through the top-level handler.
+    proc = run_los(mini_repo, "plan-edit-context", "unit-demo-l01", "--brief",
+                   "--expected-snapshot", snapshot)
+    assert proc.returncode == 3, proc.stderr
+    assert not proc.stdout
+
+
 def test_brief_carries_preparation_without_bodies(mini_repo):
     _seed_unit(mini_repo)
     payload = _brief(mini_repo)
@@ -370,6 +384,8 @@ def test_brief_neighbor_expansion_refuses_a_stale_snapshot(mini_repo):
     note.write_text(note.read_text(encoding="utf-8")
                     + "\nA changed explanation.\n", encoding="utf-8")
     proc = _run_expansion(mini_repo, command)
-    assert proc.returncode == 2, proc.stderr
+    # A genuine optimistic-concurrency conflict: exit 3, like every other
+    # stale-snapshot read (the top-level handler maps StaleSnapshot).
+    assert proc.returncode == 3, proc.stderr
     assert "snapshot changed" in proc.stderr
     assert not proc.stdout
