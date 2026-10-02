@@ -25,13 +25,21 @@ from .support import (
 
 NOTES_PREFIX = Path("knowledge/notes")
 
-#: Caller-supplied fields of the ``note`` object; anything else refuses.
-#: Authorship, review state, timestamps, bindings, and evidence are owned by
-#: the handler and can never be supplied — mirroring note.analysis.save.
-NOTE_FIELDS = frozenset({
+#: Caller-supplied fields of the ``note`` object, in published order;
+#: anything else refuses. Authorship, review state, timestamps, bindings,
+#: and evidence are owned by the handler and can never be supplied —
+#: mirroring note.analysis.save.
+NOTE_FIELDS_ORDERED = (
     "id", "title", "path", "role", "concepts", "sources", "contexts",
     "supersedes",
-})
+)
+NOTE_FIELDS = frozenset(NOTE_FIELDS_ORDERED)
+
+#: Stored-record fields the handler sets on every created note. An agent
+#: that reads ``system/schema/note.schema.json`` meets them as required;
+#: sending them refuses, so the refusal names them alongside the accepted
+#: input fields instead of leaving the schema to mislead.
+NOTE_HANDLER_OWNED = ("type", "created", "state", "authorship", "semantic_review")
 
 #: Roles with a dedicated authoring capability keep it. A general creation
 #: path must not mint reference notes without a material_analysis binding
@@ -228,8 +236,13 @@ def _precheck_note(note: object, body: bytes) -> dict:
     if not isinstance(note, dict):
         raise WriteRefused("note must be an object")
     unknown = set(note) - NOTE_FIELDS
-    if unknown or not isinstance(note.get("id"), str):
-        raise WriteRefused("note has unknown fields or no note id")
+    if unknown:
+        raise WriteRefused(
+            "note has unknown fields: " + ", ".join(sorted(unknown))
+            + f" (accepted: {', '.join(NOTE_FIELDS_ORDERED)}; "
+            + f"{'/'.join(NOTE_HANDLER_OWNED)} are set by the handler)")
+    if not isinstance(note.get("id"), str):
+        raise WriteRefused("note needs a string id")
     if not body:
         raise WriteRefused("note body is empty")
     try:

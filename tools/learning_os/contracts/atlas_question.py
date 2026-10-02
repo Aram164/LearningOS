@@ -22,8 +22,15 @@ merging, and this module must not become a second copy.
 
 from __future__ import annotations
 
-#: Fields the handler accepts on a question; anything else refuses.
-QUESTION_FIELDS = frozenset({"id", "title", "text", "target", "state", "answer_notes"})
+#: Fields the handler accepts on a question, in published order; anything
+#: else refuses.
+QUESTION_FIELDS_ORDERED = ("id", "title", "text", "target", "state", "answer_notes")
+QUESTION_FIELDS = frozenset(QUESTION_FIELDS_ORDERED)
+
+#: Stored-record fields the handler sets on every saved question: the role
+#: is always ``question`` and authorship is always the learner. Sending
+#: them refuses, so the refusal names them alongside the accepted fields.
+QUESTION_HANDLER_OWNED = ("type", "role", "created", "authorship")
 
 #: Keys the gateway schema requires. Only the id: title, text, and
 #: target are required for new questions but optional for updates, and

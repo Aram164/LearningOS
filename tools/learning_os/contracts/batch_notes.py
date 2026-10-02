@@ -13,9 +13,16 @@ to edit.
 from __future__ import annotations
 
 #: Fields the handler accepts at each bundle level; anything else refuses.
-ANALYSIS_FIELDS = frozenset({"id", "title", "path", "binding"})
+#: The ordered tuple is the published order for refusals and discovery.
+ANALYSIS_FIELDS_ORDERED = ("id", "title", "path", "binding")
+ANALYSIS_FIELDS = frozenset(ANALYSIS_FIELDS_ORDERED)
 BATCH_FIELDS = frozenset({"notes"})
 BATCH_ITEM_FIELDS = frozenset({"analysis", "body_file", "body_file_sha256"})
+
+#: Stored-record fields the handler sets on every saved analysis; the role
+#: is always ``reference``. Sending them refuses, so the refusal names them
+#: alongside the accepted input fields.
+ANALYSIS_HANDLER_OWNED = ("type", "created", "state", "authorship", "semantic_review")
 
 #: Keys the gateway schema requires at each level, in published order.
 BUNDLE_REQUIRED = ("notes",)

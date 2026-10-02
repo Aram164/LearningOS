@@ -21,6 +21,8 @@ import jsonschema
 
 from ..contracts.batch_notes import (
     ANALYSIS_FIELDS,
+    ANALYSIS_FIELDS_ORDERED,
+    ANALYSIS_HANDLER_OWNED,
     BATCH_FIELDS,
     BATCH_ITEM_FIELDS,
     BATCH_MAX_NOTES,
@@ -138,8 +140,13 @@ def _precheck_analysis(analysis: object, body: bytes) -> dict:
     if not isinstance(analysis, dict):
         raise WriteRefused("analysis must be an object")
     unknown = set(analysis) - ANALYSIS_FIELDS
-    if unknown or not isinstance(analysis.get("id"), str):
-        raise WriteRefused("analysis has unknown fields or no note id")
+    if unknown:
+        raise WriteRefused(
+            "analysis has unknown fields: " + ", ".join(sorted(unknown))
+            + f" (accepted: {', '.join(ANALYSIS_FIELDS_ORDERED)}; "
+            + f"{'/'.join(ANALYSIS_HANDLER_OWNED)} are set by the handler)")
+    if not isinstance(analysis.get("id"), str):
+        raise WriteRefused("analysis needs a string id")
     if not body:
         raise WriteRefused("analysis body is empty")
     try:
