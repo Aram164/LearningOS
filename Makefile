@@ -143,6 +143,7 @@ system-check:
 	@command -v node >/dev/null || { echo "system-check: node is required to run the paired Gateway recovery test" >&2; exit 1; }
 	$(PY) -m pytest -q
 	npm --prefix ../obsidian-ui run check
+	$(PY) tools/verified_pairs.py stamp
 
 # Deliberate deep audit. Routine work stays on `make check`; release work uses
 # `make system-check`; this one command standardizes the rarer, costlier stress

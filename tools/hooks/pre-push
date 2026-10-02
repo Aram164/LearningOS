@@ -1,5 +1,13 @@
 #!/bin/sh
 # Verify the two-repository release pair, not whichever half was remembered.
+#
+# The gate is ref-aware: pure branch deletions skip it (nothing is shipped),
+# pushes to refs other than main run a lighter local gate (CI runs the full
+# paired gate on review branches anyway), and main keeps the full
+# `make system-check` — unless the exact Core/UI pair at these SHAs, with
+# this toolchain, was already stamped by a successful system-check on clean
+# trees (tools/verified_pairs.py), in which case the full gate is skipped
+# and the stamp is named.
 
 set -eu
 
@@ -33,6 +41,48 @@ if [ -f "$installed" ] && ! cmp -s "$installed" "$core/tools/hooks/pre-push"; th
     exit 1
 fi
 
+# Git feeds one line per pushed ref on stdin:
+#   <local ref> <local sha> <remote ref> <remote sha>
+# A ref whose local sha is all zeros is a deletion. An empty read (no refs)
+# takes the full gate: the safe default when there is nothing to inspect.
+ZERO="0000000000000000000000000000000000000000"
+classify_refs() {
+    deletions_only=1
+    main_pushed=0
+    while IFS= read -r line; do
+        # Word-splitting the four ref fields is the point; globbing is off
+        # so a hostile ref name can never expand to filenames.
+        set -f
+        # shellcheck disable=SC2086
+        set -- $line
+        set +f
+        [ $# -eq 4 ] || continue
+        if [ "$2" = "$ZERO" ]; then
+            continue
+        fi
+        deletions_only=0
+        if [ "$3" = "refs/heads/main" ]; then
+            main_pushed=1
+        fi
+    done
+    echo "$deletions_only $main_pushed"
+}
+refs="$(cat)"
+if [ -z "$refs" ]; then
+    echo "pre-push: no refs on stdin — running the full gate" >&2
+    main_pushed=1
+else
+    # The pipeline runs in a subshell, so the classifier reports its
+    # decision on stdout instead of assigning variables.
+    # shellcheck disable=SC2086
+    set -- $(printf '%s\n' "$refs" | classify_refs)
+    if [ "$1" = "1" ]; then
+        echo "pre-push: branch deletion only — skipping the gate"
+        exit 0
+    fi
+    main_pushed="$2"
+fi
+
 for repo in "$core" "$ui"; do
     if [ ! -d "$repo/.git" ]; then
         echo "pre-push: paired repository is missing: $repo" >&2
@@ -45,5 +95,22 @@ for repo in "$core" "$ui"; do
     fi
 done
 
-echo "pre-push: verifying LearningOS Core + Obsidian UI release pair"
-make -C "$core" system-check
+if [ -x "$core/.venv/bin/python" ]; then
+    PY="$core/.venv/bin/python"
+else
+    PY="$(command -v python3 || command -v python)"
+fi
+if [ -n "${PY:-}" ] && "$PY" "$core/tools/verified_pairs.py" check; then
+    echo "pre-push: skipping the full gate for the stamped pair above"
+    exit 0
+fi
+
+if [ "$main_pushed" = "1" ]; then
+    echo "pre-push: verifying LearningOS Core + Obsidian UI release pair"
+    make -C "$core" system-check
+else
+    echo "pre-push: non-main refs — running the lighter local gate (CI runs the full pair gate)"
+    make -C "$core" check
+    make -C "$core" test-affected
+    npm --prefix "$ui" run check
+fi

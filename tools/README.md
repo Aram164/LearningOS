@@ -29,6 +29,7 @@ runtime coverage; the exact roots and historical allowlist live in
 | `contract_bundle.py` | prototype contract tool | Side-by-side manifest contract bundler (Point-3 prototype); build/check only, never a canonical writer. |
 | `generate_capability_schemas.py` | supported maintenance | Rebuilds capability payload schemas after an approved CLI contract change. |
 | `release_pair_receipt.py` | supported release tool | Produces or verifies exact Core/UI release evidence. |
+| `verified_pairs.py` | supported release tool | Advisory memo of pairs `make system-check` verified; the pre-push hook skips the full gate for an exact stamped pair. |
 | `stress_check.py` | supported deep gate | Explicit, expensive local stress checks; not a routine edit gate. |
 | `codex_obsidian.py` | compatibility/security adapter | Fail-closed wrapper retained for the existing Agentic Copilot boundary. |
 | `assemble_lecture_study_maps.py` | bounded authoring tool | Builds review drafts from already-authored maps; never a general canonical writer. |

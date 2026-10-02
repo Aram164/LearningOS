@@ -179,6 +179,7 @@ GROUPS: dict[str, list[str]] = {
         "test_validation.py",
         "test_warning_baseline.py",
         "test_workflows.py",
+        "test_pre_push_hook.py",
     ],
     # Migrations and multi-year format compatibility.
     "migrations": [
@@ -268,6 +269,7 @@ PATH_RULES: list[tuple[str, frozenset[str] | None]] = [
     ("tools/manifest_contract.py", frozenset({"contracts"})),
     ("tools/tree_contract.py", frozenset({"contracts"})),
     ("tools/release_pair_receipt.py", frozenset({"contracts"})),
+    ("tools/verified_pairs.py", frozenset({"validation"})),
     ("tools/evaluate_operator_questions.py", frozenset({"synthesis"})),
     ("tools/codex_obsidian.py", frozenset({"gateway"})),
     ("tools/code_reachability.py", frozenset({"validation"})),

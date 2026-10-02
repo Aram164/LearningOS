@@ -54,6 +54,7 @@ ENTRYPOINTS = (
     "stress_check.py",
     "tree_contract.py",
     "validate.py",
+    "verified_pairs.py",
     "verify_plan_receipt.py",
     "warning_baseline.py",
 )
