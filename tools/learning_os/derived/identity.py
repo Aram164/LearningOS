@@ -18,6 +18,7 @@ from pathlib import Path, PurePosixPath
 
 import learning_os
 
+from ..digests import file_content
 from ..githistory import GitSnapshot, fresh_git_snapshot
 from ..pathing import PathBoundaryError, read_bytes_inside
 from .model import DerivedError
@@ -33,10 +34,12 @@ def digest_file(root: Path, path: Path) -> str:
 
     Three states digest distinctly: readable content, an inadmissible or
     unreadable link (its link value, never its target), and absence.
+    The content read goes through the shared digest layer; the three
+    states and their contributions are unchanged.
     """
     digest = hashlib.sha256()
     try:
-        digest.update(read_bytes_inside(root, path))
+        digest.update(file_content(root, path, lambda: read_bytes_inside(root, path)))
     except (OSError, PathBoundaryError):
         if not path.is_symlink() and not path.exists():
             digest.update(b"<missing>\0")

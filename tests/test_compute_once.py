@@ -407,3 +407,182 @@ def test_validate_py_performs_one_canonical_walk(
     assert seeded_issues == unseeded_issues
     assert seeded_reads, "the walk read nothing — this proves nothing"
     assert set(seeded_reads.values()) == {1}
+
+
+# ------------------------------------------------- receipt sidecar
+def _commit_capture(root: Path, key: str, request_id: str):
+    """One genuine v2 commit (receipt + ledger row)."""
+    from learning_os.contracts.gateway import GatewayRequestContext
+    from learning_os.transactions import TransactionService
+
+    target = root / f"work/inbox/{key}.md"
+    context = GatewayRequestContext(
+        request_id=request_id, idempotency_key=key,
+        capability="capture.create", channel="codex",
+        intent_sha256="sha256:" + "1" * 64,
+        approval_kind="operator-approval",
+        approval_subject_sha256="sha256:" + "1" * 64,
+    )
+    return TransactionService(root).commit(
+        capability="capture.create",
+        writes={target: "committed\n"},
+        artifact_ids=[f"capture:{key}"],
+        expected_revisions={f"capture:{key}": 0},
+        gateway_request=context,
+    )
+
+
+def _frozen(issues) -> list:
+    return [(i.severity, i.code, i.message, i.path) for i in issues]
+
+
+def test_receipt_sidecar_warm_run_matches_cold(mini_repo: Path):
+    import learning_os.rules.receipt_cache as rc
+    from learning_os.loader import load_repo
+    from learning_os.rules import validate
+
+    _commit_capture(mini_repo, "warm-a", "request-warm-a")
+    _commit_capture(mini_repo, "warm-b", "request-warm-b")
+    sidecar = mini_repo / rc.SIDECAR_RELATIVE
+    assert not sidecar.exists()
+    cold = _frozen(validate(load_repo(mini_repo), online=False))
+    assert sidecar.is_file()
+    payload = json.loads(sidecar.read_text(encoding="utf-8"))
+    assert payload["format"] == 1
+    assert isinstance(payload["_generated"], dict)
+    assert len(payload["entries"]) == 2
+    warm = _frozen(validate(load_repo(mini_repo), online=False))
+    assert warm == cold
+
+
+def test_receipt_sidecar_validates_only_new_receipts_when_warm(
+        mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
+    import learning_os.rules.receipt_cache as rc
+    from learning_os.loader import load_repo
+    from learning_os.rules import validate
+
+    _commit_capture(mini_repo, "fresh-a", "request-fresh-a")
+    validate(load_repo(mini_repo), online=False)
+    original = rc._validate_fresh
+    calls: list = []
+
+    def counted(validator, path: Path, rel: str):
+        calls.append(rel)
+        return original(validator, path, rel)
+
+    monkeypatch.setattr(rc, "_validate_fresh", counted)
+    validate(load_repo(mini_repo), online=False)
+    assert calls == []
+    _commit_capture(mini_repo, "fresh-b", "request-fresh-b")
+    validate(load_repo(mini_repo), online=False)
+    assert len(calls) == 1 and calls[0].endswith(".yaml")
+
+
+def test_receipt_sidecar_revalidates_a_changed_receipt(mini_repo: Path):
+    import yaml
+
+    import learning_os.rules.receipt_cache as rc
+    from learning_os.loader import load_repo
+    from learning_os.rules import validate
+
+    result = _commit_capture(mini_repo, "changed-a", "request-changed-a")
+    first = _frozen(validate(load_repo(mini_repo), online=False))
+    assert not [i for i in first if i[1] == "TRANSACTION-RECEIPT"]
+    receipt_path = mini_repo / result.receipt_path
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    receipt["x-tampered"] = True
+    receipt_path.write_text(
+        yaml.safe_dump(receipt, sort_keys=False, allow_unicode=True), encoding="utf-8")
+    second = _frozen(validate(load_repo(mini_repo), online=False))
+    assert any(code == "SCHEMA" and "transaction-receipt" in message
+               for _, code, message, _ in second)
+    third = _frozen(validate(load_repo(mini_repo), online=False))
+    assert third == second
+    assert (mini_repo / rc.SIDECAR_RELATIVE).is_file()
+
+
+def test_receipt_sidecar_duplicate_key_matches_cold_and_warm(mini_repo: Path):
+    import yaml
+
+    from learning_os.loader import load_repo
+    from learning_os.rules import validate
+
+    _commit_capture(mini_repo, "dup-a", "request-dup-a")
+    result_b = _commit_capture(mini_repo, "dup-b", "request-dup-b")
+    receipt_path = mini_repo / result_b.receipt_path
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    receipt["request"]["idempotency_key"] = "dup-a"
+    receipt_path.write_text(
+        yaml.safe_dump(receipt, sort_keys=False, allow_unicode=True), encoding="utf-8")
+    cold = _frozen(validate(load_repo(mini_repo), online=False))
+    assert any(code == "TRANSACTION-RECEIPT" and "duplicate idempotency key" in message
+               for _, code, message, _ in cold)
+    warm = _frozen(validate(load_repo(mini_repo), online=False))
+    assert warm == cold
+
+
+def test_receipt_sidecar_duplicate_id_matches_cold_and_warm(mini_repo: Path):
+    import yaml
+
+    from learning_os.loader import load_repo
+    from learning_os.rules import validate
+
+    result_a = _commit_capture(mini_repo, "idt-a", "request-idt-a")
+    receipt_a = yaml.safe_load(
+        (mini_repo / result_a.receipt_path).read_text(encoding="utf-8"))
+    result_b = _commit_capture(mini_repo, "idt-b", "request-idt-b")
+    receipt_path = mini_repo / result_b.receipt_path
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    receipt["id"] = receipt_a["id"]
+    receipt_path.write_text(
+        yaml.safe_dump(receipt, sort_keys=False, allow_unicode=True), encoding="utf-8")
+    cold = _frozen(validate(load_repo(mini_repo), online=False))
+    assert any(code == "TRANSACTION-RECEIPT" and "duplicate transaction receipt id" in message
+               for _, code, message, _ in cold)
+    warm = _frozen(validate(load_repo(mini_repo), online=False))
+    assert warm == cold
+
+
+def test_corrupt_receipt_sidecar_falls_back_to_the_full_pass(mini_repo: Path):
+    import learning_os.rules.receipt_cache as rc
+    from learning_os.loader import load_repo
+    from learning_os.rules import validate
+
+    _commit_capture(mini_repo, "corrupt-a", "request-corrupt-a")
+    cold = _frozen(validate(load_repo(mini_repo), online=False))
+    sidecar = mini_repo / rc.SIDECAR_RELATIVE
+    assert sidecar.is_file()
+    sidecar.write_bytes(b"\x00\xff not json {{{")
+    recovered = _frozen(validate(load_repo(mini_repo), online=False))
+    assert recovered == cold
+    # No phantom: the corrupt cache never surfaces as a GEN-JSON error
+    # about itself, and the run rewrote a valid sidecar.
+    assert not [i for i in recovered if i[1] == "GEN-JSON"]
+    assert json.loads(sidecar.read_text(encoding="utf-8"))["format"] == 1
+
+
+def test_receipt_sidecar_hash_settles_mtime_only_changes(
+        mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
+    import os
+    import time
+
+    import learning_os.rules.receipt_cache as rc
+    from learning_os.loader import load_repo
+    from learning_os.rules import validate
+
+    result = _commit_capture(mini_repo, "mtime-a", "request-mtime-a")
+    cold = _frozen(validate(load_repo(mini_repo), online=False))
+    original = rc._validate_fresh
+    calls: list = []
+
+    def counted(validator, path: Path, rel: str):
+        calls.append(rel)
+        return original(validator, path, rel)
+
+    monkeypatch.setattr(rc, "_validate_fresh", counted)
+    receipt_path = mini_repo / result.receipt_path
+    later = time.time() + 30
+    os.utime(receipt_path, (later, later))
+    warm = _frozen(validate(load_repo(mini_repo), online=False))
+    assert calls == []
+    assert warm == cold

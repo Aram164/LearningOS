@@ -9,6 +9,7 @@ from ..loading.yamlio import UniqueKeySafeLoader
 from ..revisions import load_revisions
 from .advisories import workspace_neglect_issues
 from .common import REQUIRED_WORKSPACE_SECTIONS, id_list_items
+from .receipt_cache import receipt_file_issues
 
 
 class ChecksProjects:
@@ -147,40 +148,7 @@ class ChecksProjects:
                 str(exc),
                 "operations/transactions/idempotency.yaml",
             )
-        seen: set[str] = set()
-        seen_keys: dict[str, str] = {}
-        for path in sorted(directory.glob("transaction-*.yaml")):
-            try:
-                # `yaml.safe_load` is the pure-Python loader: 214 receipts cost
-                # about a second of parsing on every validate, and every
-                # canonical write validates. This is the loader the rest of the
-                # repository already reads through — LibYAML when the C
-                # extension is present, and the same duplicate-key rule, which
-                # no current receipt trips. A file it refuses is reported below
-                # as an unparseable receipt rather than raised.
-                data = yaml.load(
-                    path.read_text(encoding="utf-8"), Loader=UniqueKeySafeLoader,
-                ) or {}
-            except Exception as exc:  # noqa: BLE001 - report as validation issue
-                self.err("TRANSACTION-RECEIPT", f"cannot parse receipt: {exc}", self._rel(path))
-                continue
-            self._schema_check("transaction-receipt", data, self._rel(path))
-            transaction_id = data.get("id") if isinstance(data, dict) else None
-            if transaction_id in seen:
-                self.err("TRANSACTION-RECEIPT",
-                         f"duplicate transaction receipt id '{transaction_id}'", self._rel(path))
-            seen.add(transaction_id)
-            # Two committed receipts sharing one idempotency key is genuinely
-            # ambiguous: replay can prove at most one of them. Ledger loss
-            # followed by key reuse produces exactly this (JF-13/L4).
-            request = data.get("request") if isinstance(data, dict) else None
-            key = request.get("idempotency_key") if isinstance(request, dict) else None
-            if isinstance(key, str) and key:
-                first = seen_keys.setdefault(key, self._rel(path))
-                if first != self._rel(path):
-                    self.err("TRANSACTION-RECEIPT",
-                             f"duplicate idempotency key '{key}' also committed "
-                             f"in {first}", self._rel(path))
+        receipt_file_issues(self)
 
     def check_ai_action_requests(self):
         from ..ai_actions.support import REQUEST_ID_PATTERN, REQUEST_ID_RE

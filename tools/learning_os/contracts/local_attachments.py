@@ -23,13 +23,14 @@ What this module makes executable:
 
 from __future__ import annotations
 
-import hashlib
 import re
 import subprocess
 from dataclasses import dataclass
 from pathlib import Path
 
 import yaml
+
+from ..digests import file_sha256
 
 LOCAL_ATTACHMENTS_RELATIVE = "system/contracts/local-attachments.yaml"
 CONTRACT_MARKER = "learningos-local-attachments"
@@ -94,12 +95,19 @@ def load(root: Path) -> dict[str, LocalAttachment]:
     return declared
 
 
-def _sha256(path: Path) -> str:
-    digest = hashlib.sha256()
+def _blocks(path: Path):
     with path.open("rb") as handle:
         while block := handle.read(_HASH_BLOCK):
-            digest.update(block)
-    return "sha256:" + digest.hexdigest()
+            yield block
+
+
+def _sha256(root: Path, path: Path) -> str:
+    """The file's ``sha256:`` digest through the shared digest layer.
+
+    The read stays the same plain streaming read: the layer only skips
+    the second hash of unchanged bytes in a process.
+    """
+    return "sha256:" + file_sha256(root, path, lambda p=path: _blocks(p))
 
 
 def _git_lines(root: Path, *args: str) -> list[str] | None:
@@ -143,7 +151,7 @@ def check(root: Path, referenced: set[str]) -> list[LocalAttachmentIssue]:
             continue
         try:
             size = target.stat().st_size
-            actual = _sha256(target) if size == pin.bytes else None
+            actual = _sha256(root, target) if size == pin.bytes else None
         except OSError as exc:
             issues.append(LocalAttachmentIssue("UNREADABLE", f"cannot read {rel}: {exc}", rel))
             continue
