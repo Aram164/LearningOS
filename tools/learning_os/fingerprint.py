@@ -105,6 +105,110 @@ def _fingerprint_roots(root: Path, rel_roots) -> str:
     return digest.hexdigest()
 
 
+def _stat_line(path: Path) -> bytes:
+    """Stat identity for change detection: size, times, mode, link value.
+
+    No content reads: a second traversal over the same enumeration detects
+    any realistic mutation (add, delete, replace, rewrite, retarget,
+    permission change) without re-hashing bytes. ctime is included so a
+    content change with a preserved mtime still moves the digest.
+    """
+    try:
+        st = path.stat()
+        line = f"{st.st_size}\0{st.st_mtime_ns}\0{st.st_ctime_ns}\0{st.st_mode}"
+    except OSError:
+        line = "<unstatable>"
+    try:
+        if path.is_symlink():
+            try:
+                line += f"\0link:{os.readlink(path)}"
+            except OSError:
+                line += "\0link:<unreadable>"
+    except OSError:
+        line += "\0link:<unreadable>"
+    return line.encode("utf-8", errors="replace")
+
+
+def canonical_data_and_stat_fingerprints(root: Path) -> tuple[str, str, str]:
+    """One walk yielding canonical, data-roots, and stat digests.
+
+    The canonical and data hex digests are byte-identical to calling
+    :func:`canonical_fingerprint` and :func:`data_roots_fingerprint`
+    separately: the data roots keep their relative order inside the
+    canonical walk, and each file's content is read once for both. The
+    stat digest covers the same enumeration without content reads, for
+    cheap post-publication change detection.
+    """
+    data_set = set(DATA_ROOTS)
+    canonical = hashlib.sha256()
+    data = hashlib.sha256()
+    stat = hashlib.sha256()
+    for rel_root in CANONICAL_ROOTS:
+        base = root / rel_root
+        if not base.exists():
+            continue
+        files = [base] if base.is_file() or base.is_symlink() else sorted(
+            path for path in base.rglob("*")
+            if path.is_file() or path.is_symlink()
+        )
+        for path in files:
+            rel = path.relative_to(root)
+            if any(part.startswith(".") for part in rel.parts):
+                continue
+            rel_bytes = rel.as_posix().encode("utf-8")
+            try:
+                content = read_bytes_inside(root, path)
+            except (OSError, PathBoundaryError):
+                content = None
+            for digest, want in ((canonical, True), (data, rel_root in data_set)):
+                if not want:
+                    continue
+                digest.update(rel_bytes)
+                digest.update(b"\0")
+                if content is not None:
+                    digest.update(content)
+                else:
+                    digest.update(b"<inadmissible-symlink>\0")
+                    if path.is_symlink():
+                        try:
+                            digest.update(os.readlink(path).encode("utf-8"))
+                        except OSError:
+                            digest.update(b"<unreadable>")
+                digest.update(b"\0")
+            stat.update(rel_bytes)
+            stat.update(b"\0")
+            stat.update(_stat_line(path))
+            stat.update(b"\0")
+    return canonical.hexdigest(), data.hexdigest(), stat.hexdigest()
+
+
+def canonical_stat_digest(root: Path) -> str:
+    """Stat-only digest over the canonical enumeration, for change checks.
+
+    Same file set and order as the content walk, but no content reads.
+    Any realistic mutation moves it; identical content with identical
+    stat (same size, times, mode, link value) is accepted as unchanged.
+    """
+    digest = hashlib.sha256()
+    for rel_root in CANONICAL_ROOTS:
+        base = root / rel_root
+        if not base.exists():
+            continue
+        files = [base] if base.is_file() or base.is_symlink() else sorted(
+            path for path in base.rglob("*")
+            if path.is_file() or path.is_symlink()
+        )
+        for path in files:
+            rel = path.relative_to(root)
+            if any(part.startswith(".") for part in rel.parts):
+                continue
+            digest.update(rel.as_posix().encode("utf-8"))
+            digest.update(b"\0")
+            digest.update(_stat_line(path))
+            digest.update(b"\0")
+    return digest.hexdigest()
+
+
 def canonical_fingerprint(root: Path) -> str:
     """Return a stable digest of the authored canonical inputs under ``root``.
 

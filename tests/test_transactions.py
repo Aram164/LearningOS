@@ -119,6 +119,68 @@ def test_source_fingerprint_cache_does_not_mutate_the_loaded_repo(
     assert not hasattr(repo, "_source_fingerprint_cache")
 
 
+def test_combined_fingerprints_match_separate_walks(mini_repo: Path):
+    """#104: one traversal yields byte-identical canonical and data digests."""
+    from learning_os.fingerprint import (
+        canonical_data_and_stat_fingerprints,
+        canonical_fingerprint,
+        data_roots_fingerprint,
+    )
+
+    canonical, data, _stat = canonical_data_and_stat_fingerprints(mini_repo)
+    assert canonical == canonical_fingerprint(mini_repo)
+    assert data == data_roots_fingerprint(mini_repo)
+
+
+def test_transaction_performs_exactly_two_canonical_walks(
+        mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
+    """#104 step 1: pre once, post once (canonical+data+stat in one walk)."""
+    expected = f"sha256:{canonical_fingerprint(mini_repo)}"
+    base = _gateway_context("capture.create", "two-walks")
+    context = GatewayRequestContext(
+        request_id=base.request_id,
+        idempotency_key=base.idempotency_key,
+        capability=base.capability,
+        channel=base.channel,
+        intent_sha256=base.intent_sha256,
+        approval_kind=base.approval_kind,
+        approval_subject_sha256=base.approval_subject_sha256,
+        expected_snapshot=expected,
+    )
+    reads: dict[str, int] = {}
+    original_read = fingerprint_module.read_bytes_inside
+
+    def counted_read(root: Path, path: Path) -> bytes:
+        key = str(path.relative_to(root)) if isinstance(path, Path) else str(path)
+        reads[key] = reads.get(key, 0) + 1
+        return original_read(root, path)
+
+    monkeypatch.setattr(fingerprint_module, "read_bytes_inside", counted_read)
+    target = mini_repo / "work/inbox/two-walks.md"
+    artifact = "capture-test:two-walks"
+    target_rel = target.relative_to(mini_repo).as_posix()
+
+    with command_support._operator_lock(mini_repo):
+        with gateway_request_context(context), verified_gateway_snapshot(
+            mini_repo, expected
+        ):
+            code, errors, confirmation = command_support._write_transaction(
+                mini_repo,
+                {target: "two walks\n"},
+                capability="capture.create",
+                expected_revisions={artifact: 0},
+                artifact_ids=[artifact],
+            )
+
+    assert (code, errors) == (0, [])
+    assert confirmation["snapshot_after"].startswith("sha256:")
+    assert reads.get(target_rel) == 1
+    for rel, count in reads.items():
+        if rel == target_rel:
+            continue
+        assert count == 2, f"{rel} read {count} times, expected pre+post only"
+
+
 def test_a_transaction_refuses_an_already_invalid_repository(
         mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
     target = mini_repo / "work/inbox/strict-validation.md"
@@ -200,15 +262,27 @@ def test_locked_v2_handler_skips_only_its_duplicate_fingerprint(
     )
     calls = 0
     original = fingerprint_module.canonical_fingerprint
+    original_combined = fingerprint_module.canonical_data_and_stat_fingerprints
 
     def counted(root: Path) -> str:
         nonlocal calls
         calls += 1
         return original(root)
 
+    def counted_combined(root: Path):
+        nonlocal calls
+        calls += 1
+        return original_combined(root)
+
     monkeypatch.setattr(fingerprint_module, "canonical_fingerprint", counted)
     monkeypatch.setattr(command_support, "canonical_fingerprint", counted)
     monkeypatch.setattr(transaction_module, "canonical_fingerprint", counted)
+    monkeypatch.setattr(
+        fingerprint_module, "canonical_data_and_stat_fingerprints",
+        counted_combined)
+    monkeypatch.setattr(
+        transaction_module, "canonical_data_and_stat_fingerprints",
+        counted_combined)
     target = mini_repo / "work/inbox/bounded-fingerprints.md"
     artifact = "capture-test:bounded-fingerprints"
 
@@ -229,9 +303,9 @@ def test_locked_v2_handler_skips_only_its_duplicate_fingerprint(
 
     assert (code, errors) == (0, [])
     assert confirmation["snapshot_after"].startswith("sha256:")
-    assert calls == 3, (
-        "the transaction needs a final pre-write scan, the projected identity, "
-        "and a fresh post-publication scan"
+    assert calls == 2, (
+        "one pre-write scan plus one combined post-commit scan "
+        "(canonical, data-roots, and stat in a single walk)"
     )
 
 

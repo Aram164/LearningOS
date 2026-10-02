@@ -65,7 +65,12 @@ from .evidence import (
 # One digest, one root list, shared with the projection (see fingerprint.py).
 # Re-exported here because the receipt fields and every existing caller name it
 # through this module.
-from .fingerprint import canonical_fingerprint, data_roots_fingerprint
+from .fingerprint import (
+    canonical_data_and_stat_fingerprints,
+    canonical_fingerprint,
+    canonical_stat_digest,
+    data_roots_fingerprint,
+)
 from .pathing import PathBoundaryError, read_text_inside
 from .revisions import artifact_revision, load_revisions
 
@@ -1520,6 +1525,24 @@ class TransactionService:
                 if path.is_dir():
                     raise TransactionFailure(f"transaction refuses to delete directory: {path}")
                 path.unlink(missing_ok=True)
+            # Deduplicated post-commit fingerprint (#104 step 1): when the
+            # guard digest is the canonical walk (the overwhelmingly common
+            # path — no caller currently supplies a double), one traversal
+            # yields canonical, data-roots, and stat digests. The canonical
+            # value seeds the projection stamp so publish performs no second
+            # walk; the stat value guards the publication window without
+            # re-hashing bytes. Computed here, before validation, so the
+            # validated repo loads at least as fresh as the seed — any
+            # mutation between seed and post-publish check is caught below.
+            use_combined = fingerprint is None
+            if use_combined:
+                post_hex, data_hex, pre_stat = (
+                    canonical_data_and_stat_fingerprints(self.root)
+                )
+                snapshot_after_id = f"sha256:{post_hex}"
+                data_roots_after_id = f"sha256:{data_hex}"
+            else:
+                pre_stat = None
             failed_stage = "core.validation"
             if validate_state is not None:
                 errors = list(validate_state())
@@ -1539,26 +1562,59 @@ class TransactionService:
             diag_tracer.emit_event(diag_conventions.EVENT_VALIDATION_PASSED)
             failed_stage = "core.projection"
             diag_tracer.emit_event(diag_conventions.EVENT_PROJECTION_STARTED)
-            projected_snapshot = publish() if publish is not None else None
+            if use_combined:
+                if publish is None:
+                    projected_snapshot = None
+                else:
+                    try:
+                        projected_snapshot = publish(snapshot_after_id)
+                    except TypeError:
+                        projected_snapshot = publish()
+            else:
+                projected_snapshot = publish() if publish is not None else None
             diag_tracer.emit_event(
                 diag_conventions.EVENT_PROJECTION_PUBLISHED,
                 attrs={"snapshot": projected_snapshot})
 
-            snapshot_after = take_fingerprint()
-            snapshot_after_id = f"sha256:{snapshot_after}"
-            # The authored-data half of the same post-commit tree, for
-            # read-only diagnostics: the resolver compares it against the
-            # current data roots to tell a contract-only move from data
-            # drift. Computed from disk even when the guard digest is a
-            # caller-supplied double — it records the tree, never the
-            # double — and it never guards a write.
-            data_roots_after_id = f"sha256:{data_roots_fingerprint(self.root)}"
-            if projected_snapshot is not None \
-                    and projected_snapshot != snapshot_after_id:
-                raise TransactionFailure(
-                    "canonical state changed during projection publication "
-                    f"(projected {projected_snapshot}, actual {snapshot_after_id})"
-                )
+            if use_combined:
+                post_stat = canonical_stat_digest(self.root)
+                if post_stat != pre_stat:
+                    actual_hex, actual_data_hex, _ = (
+                        canonical_data_and_stat_fingerprints(self.root)
+                    )
+                    actual_id = f"sha256:{actual_hex}"
+                    if projected_snapshot is not None \
+                            and projected_snapshot != actual_id:
+                        raise TransactionFailure(
+                            "canonical state changed during projection publication "
+                            f"(projected {projected_snapshot}, actual {actual_id})"
+                        )
+                    snapshot_after_id = actual_id
+                    data_roots_after_id = f"sha256:{actual_data_hex}"
+                elif projected_snapshot is not None \
+                        and projected_snapshot != snapshot_after_id:
+                    actual_hex = canonical_fingerprint(self.root)
+                    actual_id = f"sha256:{actual_hex}"
+                    raise TransactionFailure(
+                        "canonical state changed during projection publication "
+                        f"(projected {projected_snapshot}, actual {actual_id})"
+                    )
+            else:
+                snapshot_after = take_fingerprint()
+                snapshot_after_id = f"sha256:{snapshot_after}"
+                # The authored-data half of the same post-commit tree, for
+                # read-only diagnostics: the resolver compares it against the
+                # current data roots to tell a contract-only move from data
+                # drift. Computed from disk even when the guard digest is a
+                # caller-supplied double — it records the tree, never the
+                # double — and it never guards a write.
+                data_roots_after_id = f"sha256:{data_roots_fingerprint(self.root)}"
+                if projected_snapshot is not None \
+                        and projected_snapshot != snapshot_after_id:
+                    raise TransactionFailure(
+                        "canonical state changed during projection publication "
+                        f"(projected {projected_snapshot}, actual {snapshot_after_id})"
+                    )
             failed_stage = "core.commit"
             if request is not None and idempotency_path is not None \
                     and idempotency_entries is not None:

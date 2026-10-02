@@ -984,11 +984,14 @@ class AIActionService:
                 if issue.severity == "E"
             ]
 
-        def publish() -> str:
+        def publish(snapshot_after_id: str | None = None) -> str:
             nonlocal validated_repo
+            from learning_os.fingerprint import seed_source_fingerprint
             from learning_os.genout import generate_all, write_outputs
 
             repo = validated_repo or load_repo(self.root)
+            if snapshot_after_id is not None:
+                seed_source_fingerprint(repo, snapshot_after_id)
             write_outputs(repo, generate_all(repo))
             projected_snapshot = f"sha256:{source_fingerprint(repo)}"
             validated_repo = None

@@ -625,9 +625,11 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
             if issue.severity == "E"
         ]
 
-    def publish_validated_state() -> str:
+    def publish_validated_state(snapshot_after_id: str | None = None) -> str:
         nonlocal validated_repo
         repo = validated_repo or load_repo(root)
+        if snapshot_after_id is not None:
+            seed_source_fingerprint(repo, snapshot_after_id)
         _publish_repo(repo)
         projected_snapshot = f"sha256:{source_fingerprint(repo)}"
         validated_repo = None
