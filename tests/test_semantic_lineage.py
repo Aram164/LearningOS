@@ -25,9 +25,11 @@ from learning_os.semantics import (
     endorse,
     impacted,
     load_ledger,
+    node_content_digest,
     record_claim,
     refresh,
     retraction_impact,
+    route_content_digest,
     supersede,
     withdraw,
 )
@@ -571,3 +573,138 @@ def test_effective_status_is_deterministic_and_leaves_inputs_untouched():
     assert [v.claim_id for v in first.values()] == sorted(first)
     assert {cid: to_dict(lineage) for cid, lineage in records.items()} == before
     assert {cid: to_dict(lineage) for cid, lineage in shuffled.items()} == before
+
+
+def _route_row(rid="route-a", **overrides):
+    row = {"id": rid, "unit_id": "unit-demo-l01", "title": "Alpha",
+           "format": "paper", "angle": "Alpha angle.", "covers": ["n1"],
+           "depth": "derivation", "scope": "current", "locator": "paper-a.pdf"}
+    row.update(overrides)
+    return row
+
+
+def _scoped_covers(rid="route-a", covered=("n1",), route=None, nodes=None):
+    """A new-style covers claim: its route row plus its covered nodes, and
+    no artifact revision at all."""
+    route = route if route is not None else _route_row(rid)
+    nodes = nodes if nodes is not None else [
+        {"id": node, "title": node} for node in covered]
+    return emit_route_covers(
+        route_id=rid,
+        covers=list(covered),
+        read_revisions={},
+        judged_by="fixture",
+        admitted_by=_admission(),
+        source_hashes={
+            f"route-content:{rid}": route_content_digest(
+                module_id="module-demo", source_id="source-demo-book",
+                route=route),
+            **{f"node-content:{node['id']}": node_content_digest(node)
+               for node in nodes},
+        },
+    )
+
+
+def test_route_content_digest_follows_only_its_own_row():
+    base = route_content_digest(
+        module_id="module-demo", source_id="source-demo-book",
+        route=_route_row())
+    # Same row, rebuilt: same digest.
+    assert route_content_digest(
+        module_id="module-demo", source_id="source-demo-book",
+        route=_route_row()) == base
+    # Any field edit moves it — description, covers, locator, owner.
+    for edited in ({"angle": "Another angle."},
+                   {"covers": ["n1", "n2"]},
+                   {"locator": "paper-b.pdf"},
+                   {"unit_id": "unit-demo-l02"}):
+        assert route_content_digest(
+            module_id="module-demo", source_id="source-demo-book",
+            route=_route_row(**edited)) != base
+    # So does a move between sources.
+    assert route_content_digest(
+        module_id="module-demo", source_id="source-other",
+        route=_route_row()) != base
+    # An id-less row fills its stable id deterministically.
+    idless = _route_row()
+    del idless["id"]
+    first = route_content_digest(
+        module_id="module-demo", source_id="source-demo-book", route=idless)
+    assert route_content_digest(
+        module_id="module-demo", source_id="source-demo-book",
+        route=dict(idless)) == first
+
+
+def test_node_content_digest_follows_its_row():
+    base = node_content_digest({"id": "n1", "title": "One"})
+    assert node_content_digest({"title": "One", "id": "n1"}) == base
+    assert node_content_digest({"id": "n1", "title": "Two"}) != base
+
+
+def test_digest_scoped_claim_ignores_unrelated_revision_moves():
+    """Module, sibling-unit, and learner-state bumps cannot stale a claim
+    that reads only its own route row and covered nodes."""
+    claim = _scoped_covers()
+    moved_everything = {"module-demo": 59, "unit-demo-l01": 99,
+                        "unit-demo-l02": 3, "study-map:unit-demo-l01": 7}
+    assert refresh(
+        claim, CONTRACT_VERSION, moved_everything,
+        dict(claim.derived_from.source_hashes),
+    ).status == "supported"
+
+
+def test_digest_scoped_claim_stales_on_its_own_row_or_node():
+    claim = _scoped_covers()
+    live = dict(claim.derived_from.source_hashes)
+    current = {"module-demo": 59, "unit-demo-l01": 99}
+    assert refresh(claim, CONTRACT_VERSION, current, live).status == "supported"
+    moved_route = dict(live, **{"route-content:route-a": "sha256:moved"})
+    assert refresh(claim, CONTRACT_VERSION, current, moved_route).status == "stale"
+    moved_node = dict(live, **{"node-content:n1": "sha256:moved"})
+    assert refresh(claim, CONTRACT_VERSION, current, moved_node).status == "stale"
+    # A deleted route or node has no live digest: fail closed, never trusted.
+    assert refresh(
+        claim, CONTRACT_VERSION, current,
+        {key: value for key, value in live.items()
+         if key != "route-content:route-a"},
+    ).status == "stale"
+
+
+def test_legacy_claim_without_digests_keeps_revision_behaviour():
+    """Records judged before the content namespaces keep today's behaviour
+    until a fresh judgment replaces them — never auto-endorsed."""
+    legacy = emit_route_covers(
+        route_id="route-legacy", covers=["n1"],
+        read_revisions={"module-demo": 47, "unit-demo-l01": 16},
+        judged_by="fixture", admitted_by=_admission(),
+    )
+    assert "route-content:route-legacy" not in dict(
+        legacy.derived_from.source_hashes)
+    assert refresh(
+        legacy, CONTRACT_VERSION, {"module-demo": 47, "unit-demo-l01": 16}, {},
+    ).status == "supported"
+    assert refresh(
+        legacy, CONTRACT_VERSION, {"module-demo": 59, "unit-demo-l01": 16}, {},
+    ).status == "stale"
+    assert refresh(
+        legacy, CONTRACT_VERSION, {"module-demo": 47, "unit-demo-l01": 17}, {},
+    ).status == "stale"
+
+
+def test_impact_for_a_single_route_move_names_only_that_claim():
+    ours = _scoped_covers("route-a", ("n1",))
+    theirs = _scoped_covers(
+        "route-b", ("n2",), route=_route_row("route-b", unit_id="unit-demo-l02"),
+        nodes=[{"id": "n2", "title": "n2"}])
+    live = dict(theirs.derived_from.source_hashes)
+    live.update(dict(ours.derived_from.source_hashes))
+    live["route-content:route-a"] = "sha256:moved"
+    assert impacted(
+        [ours, theirs], CONTRACT_VERSION,
+        {"module-demo": 59, "unit-demo-l01": 99, "unit-demo-l02": 6}, live,
+    ) == ("covers:route-a",)
+    live["node-content:n2"] = "sha256:moved"
+    assert impacted(
+        [ours, theirs], CONTRACT_VERSION,
+        {"module-demo": 59, "unit-demo-l01": 99, "unit-demo-l02": 6}, live,
+    ) == ("covers:route-a", "covers:route-b")

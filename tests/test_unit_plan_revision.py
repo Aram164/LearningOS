@@ -1052,7 +1052,7 @@ def test_reviewed_apply_rolls_back_all_writes_on_publish_failure(mini_repo, tmp_
     assert len(list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))) == 1
 
 
-def test_route_only_coverage_revision_stamps_actual_artifact_owners(mini_repo, tmp_path):
+def test_route_only_coverage_revision_pins_route_and_nodes_not_owners(mini_repo, tmp_path):
     import copy
 
     from repo_builders import run_los, write_yaml
@@ -1090,9 +1090,16 @@ def test_route_only_coverage_revision_stamps_actual_artifact_owners(mini_repo, t
     assert applied.returncode == 0, applied.stdout + applied.stderr
     claim = load_ledger(mini_repo)["covers:route-demo-book"]
     revisions = load_revisions(mini_repo)
-    reads = dict(claim.derived_from.revisions)
-    assert reads["unit-demo-l01"] == revisions.get("unit-demo-l01", 0) == 0
-    assert reads["module-demo"] == revisions["module-demo"] == 1
+    # Covers claims stamp no artifact revisions — not even the owners the
+    # transaction incremented. The claim reads its route row plus the two
+    # covered nodes; the module revision below only proves the commit
+    # itself still bumped its owner.
+    assert revisions["module-demo"] == 1
+    assert dict(claim.derived_from.revisions) == {}
+    hashes = dict(claim.derived_from.source_hashes)
+    assert "route-content:route-demo-book" in hashes
+    assert "node-content:knowledge-demo-expectation" in hashes
+    assert "node-content:knowledge-demo-outcomes" in hashes
     records = load_ledger(mini_repo)
     assert f"dossier:{dossier['id']}" in records
     from learning_os.semantics.lineage import CONTRACT_VERSION, effective_statuses
