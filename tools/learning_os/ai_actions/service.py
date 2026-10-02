@@ -110,13 +110,15 @@ def build_unit_source_map_view(*, source_map: dict, canonical_path: str,
                                target_id: str) -> tuple[bytes, dict[str, str]]:
     """One unit's filtered source-map read view plus its transport identity.
 
-    Keeps the module identity and every parent source field, but only the
-    target unit's route entries: dict routes by unit_id plus legacy string
-    entries naming the target. Sources the unit's scope authority or
-    selections name stay with an empty route list; every other unit's
-    route body is omitted. Returns (view_bytes, identity): the view's own
-    checksum is a transport identity only, kept beside — never mixed
-    with — the canonical file digest.
+    Keeps the module identity and every parent source field, but replaces
+    the target unit's route bodies with their ids: dict routes by unit_id
+    plus legacy string entries naming the target become ``unit_route_ids``.
+    Route bodies live once in the bundle's ``context.md`` routes; this view
+    carries only parent metadata plus ids pointing there. Sources the
+    unit's scope authority or selections name stay with an empty id list;
+    every other unit's route is omitted. Returns (view_bytes, identity):
+    the view's own checksum is a transport identity only, kept beside —
+    never mixed with — the canonical file digest.
     """
     named = _scoped_source_ids(unit)
     sources = []
@@ -136,7 +138,10 @@ def build_unit_source_map_view(*, source_map: dict, canonical_path: str,
             continue
         shaped = {key: value for key, value in source_row.items()
                   if key != "unit_routes"}
-        shaped["unit_routes"] = kept
+        shaped["unit_route_ids"] = [
+            entry.get("id") if isinstance(entry, dict) else entry
+            for entry in kept
+        ]
         sources.append(shaped)
     view = {
         "view": {
@@ -450,10 +455,13 @@ class AIActionService:
                 "one whole approved `unit-material-synthesis.schema.json` record as an artifact "
                 "for capability `unit.material-synthesis.publish`.\n"
                 "\n"
-                "Parent source metadata for this unit's routes is attached at "
+                "Route bodies live once in context.md's routes. Parent source "
+                "metadata for those routes is attached at "
                 "attachments/unit-source-map.yaml — a filtered view of the module map "
-                "for this unit only, never the canonical file. Request the full module "
-                "map explicitly for a genuinely broader investigation.\n"
+                "for this unit only, never the canonical file — carrying "
+                "unit_route_ids that point at context.md, never duplicate bodies. "
+                "Request the full module map explicitly for a genuinely broader "
+                "investigation.\n"
                 "\n"
                 "Material slices are attached under attachments/slices/<route-id>.md with an "
                 "index at attachments/slices/index.json — one slice per deep-review route, "

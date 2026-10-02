@@ -884,15 +884,16 @@ def test_compare_materials_attaches_a_scoped_source_map_view(mini_repo):
     book = next(row for row in view["sources"]
                 if row["source_id"] == "source-demo-book")
     assert book["role"] == "spine" and book["priority"] == 0
-    assert [row["id"] if isinstance(row, dict) else row
-            for row in book["unit_routes"]] == [
-        "route-demo-current", "unit-demo-l01"]
-    assert book["unit_routes"][0]["locator"] == "current.pdf"
+    assert "unit_routes" not in book
+    assert book["unit_route_ids"] == ["route-demo-current", "unit-demo-l01"]
+    # Route bodies live once in context.md, never duplicated here.
+    assert b"A synthetic angle" not in body
+    assert b"current.pdf" not in body
     named = {row["source_id"]: row for row in view["sources"]}
     assert set(named) == {"source-demo-book", "source-demo-extra",
                           "source-demo-selected"}
-    assert named["source-demo-extra"]["unit_routes"] == []
-    assert named["source-demo-selected"]["unit_routes"] == []
+    assert named["source-demo-extra"]["unit_route_ids"] == []
+    assert named["source-demo-selected"]["unit_route_ids"] == []
     assert view["view"]["routes_included"] == 2
     assert view["view"]["routes_omitted"] == 5
 
@@ -946,3 +947,28 @@ def test_scoped_view_ignores_sibling_route_growth(mini_repo):
             == first["view"]["routes_omitted"] + 20)
     assert b"route-demo-noise" not in second_body
     assert len(second_body) - len(_view_body(first_bundle)) < 200
+
+
+def test_compare_bundle_holds_each_route_body_once(mini_repo):
+    """#107: context.md owns bodies; the view holds ids only."""
+    _request, bundle = _prepare_view(mini_repo, "ai-request-once")
+    context_md = (bundle / "context.md").read_text(encoding="utf-8")
+    payload = json.loads(context_md.split("```json\n")[1].split("\n```")[0])
+    context_ids = [row["id"] for row in payload["routes"]]
+    assert context_ids == ["route-demo-current"]
+    assert payload["routes"][0]["locator"] == "current.pdf"
+
+    body = _view_body(bundle)
+    view = yaml.safe_load(body.decode("utf-8"))
+    assert b"unit_routes" not in body
+    view_ids: list[str] = []
+    for source in view["sources"]:
+        assert "unit_routes" not in source
+        ids = source.get("unit_route_ids", [])
+        assert all(isinstance(item, str) for item in ids)
+        view_ids.extend(ids)
+    for route_id in context_ids:
+        assert route_id in view_ids
+    instructions = (bundle / "instructions.md").read_text(encoding="utf-8")
+    assert "context.md" in instructions
+    assert "unit_route_ids" in instructions
