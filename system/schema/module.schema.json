@@ -145,6 +145,10 @@
               },
               "notes": {
                 "type": "string"
+              },
+              "withdrawal_deadline": {
+                "type": "string",
+                "format": "date"
               }
             }
           }
@@ -256,6 +260,7 @@
             "enum": [
               "registered",
               "withdrawn",
+              "sat",
               "passed",
               "failed"
             ]

@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 47
-schema_fingerprint: sha256:3c10e9a2517e0a9e5fafa57258ee856ae7c09e2c61262c3f0f8705288cf1f879
+contract_version: 48
+schema_fingerprint: sha256:fe49520d193ad7feecd32a8eff738f5a3e57bd54e0a4e23bc8b5e9112285cf70
 record_schemas: 35
 history:
 - version: 1
@@ -354,5 +354,12 @@ history:
   note: Receipts record an optional metadata.data_roots_sha256 (authored-data digest)
     so diagnostics can tell contract-only moves from data drift; old receipts stay
     valid without a migration.
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 48
+  adopted: '2026-10-02'
+  note: module attempts gain result 'sat' (sat the sitting, outcome unknown) and examination
+    sittings gain an optional withdrawal_deadline (Rucktritt); both additive, existing
+    records validate unchanged, no migration
   migration: null
   fixture: tests/fixtures/formats/v46/
