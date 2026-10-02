@@ -36,8 +36,10 @@ baseline-managed signature that *shrinks* is reported as a repair and passes;
 it is never restored merely to match a prior total.
 
 Adopting a new baseline is an explicit act with a stated reason
-(`--update --note "…"`). An unexplained move is indistinguishable from a
-silent regression.
+(`--update --note "…"`, or `--update --ratchet --note "…"` to adopt only
+repairs — a ratchet never raises a count and refuses new or grown
+signatures). An unexplained move is indistinguishable from a silent
+regression.
 
 ## The normative corpus
 

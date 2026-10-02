@@ -117,6 +117,29 @@ def delta(baseline: Counter, current: Counter) -> tuple[list[str], list[str]]:
     return regressions, repairs
 
 
+def ratchet(baseline: Counter, current: Counter) -> Counter:
+    """Lower a baseline to the current set; refuse new or grown signatures.
+
+    Only repaired signatures move, down to their current counts, and a
+    signature repaired to zero drops out (a zero count is not a signature).
+    No count is ever raised and no new signature is ever adopted: when any
+    signature is new or grown this raises ValueError naming every one, so a
+    caller cannot adopt a regression by accident.
+    """
+    regressions, _ = delta(baseline, current)
+    if regressions:
+        joined = "\n".join(f"  NEW       {line}" for line in regressions)
+        raise ValueError(
+            f"cannot ratchet with {len(regressions)} new or grown "
+            f"warning signature(s):\n{joined}")
+    lowered: Counter = Counter()
+    for key in baseline:
+        after = current.get(key, 0)
+        if after > 0:
+            lowered[key] = after
+    return lowered
+
+
 _HEADER = """\
 # The validation warning baseline — what is deferred, and nothing more.
 #
@@ -137,9 +160,10 @@ _HEADER = """\
 # These warnings are the measured content debt of CRITIQUE-POINTS §1. Adopting
 # them here defers them; it does not close the point.
 #
-#   python tools/warning_baseline.py --check                 # gate
-#   python tools/warning_baseline.py --show                  # the delta
-#   python tools/warning_baseline.py --update --note "…"     # adopt current
+#   .venv/bin/python tools/warning_baseline.py --check                 # gate
+#   .venv/bin/python tools/warning_baseline.py --show                  # the delta
+#   .venv/bin/python tools/warning_baseline.py --update --note "…"     # adopt current
+#   .venv/bin/python tools/warning_baseline.py --update --ratchet --note "…"  # adopt repairs only
 """
 
 

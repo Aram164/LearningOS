@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import importlib.util
 import json
+import re
 import subprocess
 from collections import Counter
 from pathlib import Path
@@ -301,6 +302,141 @@ def test_ws_neglect_is_visible_but_baseline_exempt(mini_repo):
     signatures, errors = wb.collect(mini_repo)
     assert errors == []
     assert not any(code == "WS-NEGLECT" for code, _path in signatures)
+
+
+# ---- the ratchet ------------------------------------------------------------
+# The baseline is a ceiling the repository repaired below: 485 warnings
+# recorded, 0 carried. A stale ceiling lets repaired warnings return
+# unnoticed, so --update --ratchet lowers only repaired signatures and
+# --check collapses repairs to one summary line.
+
+def _run_cli(monkeypatch, capsys, *argv):
+    import sys
+
+    monkeypatch.setattr(sys, "argv", ["warning_baseline.py", *argv])
+    return wb.main(), capsys.readouterr()
+
+
+def test_ratchet_lowers_repairs_and_drops_zeros():
+    baseline = Counter({("A", "a.yaml"): 3, ("B", "b.yaml"): 1, ("C", "c.yaml"): 2})
+    current = Counter({("A", "a.yaml"): 1, ("C", "c.yaml"): 2})
+    assert wb.ratchet(baseline, current) == Counter({("A", "a.yaml"): 1,
+                                                     ("C", "c.yaml"): 2})
+
+
+def test_ratchet_never_raises_a_count_or_adopts_a_new_signature():
+    baseline = Counter({("A", "a.yaml"): 3})
+    with pytest.raises(ValueError, match=r"NEW +B at b\.yaml"):
+        wb.ratchet(baseline, Counter({("A", "a.yaml"): 3, ("B", "b.yaml"): 1}))
+    with pytest.raises(ValueError, match=r"3 → 4"):
+        wb.ratchet(baseline, Counter({("A", "a.yaml"): 4}))
+
+
+def test_ratcheted_empty_baseline_writes_schema_valid_file(tmp_path):
+    from jsonschema import Draft202012Validator
+
+    assert wb.ratchet(Counter({("A", "a.yaml"): 3}), Counter()) == Counter()
+    wb.write_baseline(tmp_path, Counter(), "ratchet to zero")
+    text = (tmp_path / wb.BASELINE_RELATIVE).read_text(encoding="utf-8")
+    Draft202012Validator(_SCHEMA).validate(yaml.safe_load(text))
+    loaded, meta = wb.load_baseline(tmp_path)
+    assert loaded == Counter() and meta["total"] == 0
+    assert ".venv/bin/python tools/warning_baseline.py --check" in text
+    assert not re.findall(r"(?<!/)python tools/warning_baseline\.py", text)
+
+
+def test_check_collapses_repairs_to_one_summary_line(mini_repo, monkeypatch, capsys):
+    _write(mini_repo, {("LOCATOR-VAGUE", "a.yaml"): 3, ("ROUTE-ANGLE-MISSING", "b.yaml"): 1})
+    code, out = _run_cli(monkeypatch, capsys, "--check", "--root", str(mini_repo))
+    assert code == 0, out.err
+    lines = out.out.strip().splitlines()
+    assert len(lines) == 3, out.out
+    assert "2 signature(s) repaired below baseline (4 → 0)" in lines[1]
+    assert "--update --ratchet --note" in lines[1]
+    assert "  repaired  " not in out.out
+
+
+def test_check_on_a_clean_tree_prints_two_lines(mini_repo, monkeypatch, capsys):
+    current, _ = wb.collect(mini_repo)
+    wb.write_baseline(mini_repo, current, "clean fixture")
+    code, out = _run_cli(monkeypatch, capsys, "--check", "--root", str(mini_repo))
+    assert code == 0, out.err
+    assert len(out.out.splitlines()) == 2, out.out
+    assert out.out.splitlines()[1].endswith("OK — zero errors, no new warning signature.")
+
+
+def test_check_shows_summary_and_new_lines_together(mini_repo, monkeypatch, capsys):
+    _write(mini_repo, {("LOCATOR-VAGUE", "a.yaml"): 3})
+    (mini_repo / "stray.md").write_text("x", encoding="utf-8")
+    code, out = _run_cli(monkeypatch, capsys, "--check", "--root", str(mini_repo))
+    assert code == 1
+    assert "1 signature(s) repaired below baseline (3 → 1)" in out.out
+    assert "NEW       HYGIENE-UNFILED at stray.md" in out.out
+
+
+def test_show_still_lists_every_repair(mini_repo, monkeypatch, capsys):
+    _write(mini_repo, {("LOCATOR-VAGUE", "a.yaml"): 3, ("ROUTE-ANGLE-MISSING", "b.yaml"): 1})
+    code, out = _run_cli(monkeypatch, capsys, "--show", "--root", str(mini_repo))
+    assert code == 0
+    assert out.out.count("  repaired  ") == 2
+
+
+def test_update_ratchet_adopts_repairs_and_a_returning_warning_fails(
+        mini_repo, monkeypatch, capsys):
+    _write(mini_repo, {("LOCATOR-VAGUE", "a.yaml"): 3})
+    code, out = _run_cli(monkeypatch, capsys, "--update", "--ratchet",
+                          "--note", "ratchet fixture", "--root", str(mini_repo))
+    assert code == 0, out.err
+    assert "ratcheted 3 → 0" in out.out
+    loaded, _ = wb.load_baseline(mini_repo)
+    assert loaded == Counter()
+    # A second run is a no-op that touches nothing.
+    before = (mini_repo / wb.BASELINE_RELATIVE).read_bytes()
+    code, out = _run_cli(monkeypatch, capsys, "--update", "--ratchet",
+                          "--note", "ratchet fixture", "--root", str(mini_repo))
+    assert code == 0
+    assert "already ratcheted" in out.out
+    assert (mini_repo / wb.BASELINE_RELATIVE).read_bytes() == before
+    # The ratcheted tree checks clean in two lines …
+    code, out = _run_cli(monkeypatch, capsys, "--check", "--root", str(mini_repo))
+    assert code == 0
+    assert len(out.out.splitlines()) == 2
+    # … and a re-introduced warning fails the gate as NEW.
+    (mini_repo / "stray.md").write_text("x", encoding="utf-8")
+    code, out = _run_cli(monkeypatch, capsys, "--check", "--root", str(mini_repo))
+    assert code == 1
+    assert "ERROR" not in out.err
+    assert "NEW       HYGIENE-UNFILED at stray.md" in out.out
+
+
+def test_update_ratchet_refuses_a_new_signature(mini_repo, monkeypatch, capsys):
+    wb.write_baseline(mini_repo, Counter(), "empty fixture")
+    (mini_repo / "stray.md").write_text("x", encoding="utf-8")
+    before = (mini_repo / wb.BASELINE_RELATIVE).read_bytes()
+    code, out = _run_cli(monkeypatch, capsys, "--update", "--ratchet",
+                          "--note", "must refuse", "--root", str(mini_repo))
+    assert code == 1
+    assert "HYGIENE-UNFILED" in out.err
+    assert (mini_repo / wb.BASELINE_RELATIVE).read_bytes() == before
+
+
+def test_ratchet_without_update_is_refused(mini_repo, monkeypatch, capsys):
+    code, out = _run_cli(monkeypatch, capsys, "--ratchet", "--root", str(mini_repo))
+    assert code == 2
+    assert "--ratchet needs --update" in out.err
+
+
+def test_update_ratchet_without_note_is_refused(mini_repo, monkeypatch, capsys):
+    code, out = _run_cli(monkeypatch, capsys, "--update", "--ratchet",
+                          "--root", str(mini_repo))
+    assert code == 2
+    assert "--update needs --note" in out.err
+
+
+def test_cli_docstring_uses_the_project_interpreter():
+    doc = wb.__doc__ or ""
+    assert ".venv/bin/python tools/warning_baseline.py --check" in doc
+    assert not re.findall(r"(?<!/)python tools/warning_baseline\.py", doc)
 
 
 # ---- the live repository ---------------------------------------------------
