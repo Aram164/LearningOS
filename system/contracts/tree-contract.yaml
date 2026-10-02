@@ -204,6 +204,9 @@ hidden:
     - path: .obsidian
       purpose: Obsidian workspace state — interface layer, never core (ADR-006)
 
+    - path: .jules
+      purpose: agent execution journal and logs
+
 # Directory names that are never declared anywhere, at any depth, because they
 # are build residue rather than structure.
 residue: ["__pycache__", ".ipynb_checkpoints"]
