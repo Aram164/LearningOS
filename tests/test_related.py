@@ -26,13 +26,28 @@ def _record(rid, rtype="note", **fields):
 
 
 def _manifest(records, backlinks=None, relations=None,
-              project_relationships=None, project_aliases=None):
+              project_relationships=None, project_aliases=None,
+              module_concept_edges=None):
     return {
         "records": records,
         "backlinks": backlinks or {},
         "relations": relations or [],
         "project_relationships": project_relationships or [],
         "project_aliases": project_aliases or {},
+        "module_concept_edges": module_concept_edges or [],
+    }
+
+
+def _stage_edge(concept_id, unit_id, stage_id, kind="stage-concept"):
+    return {
+        "module_id": "module-demo",
+        "concept_id": concept_id,
+        "evidence": [{
+            "kind": kind,
+            "unit_id": unit_id,
+            "study_map_id": "study-map-demo",
+            "stage_id": stage_id,
+        }],
     }
 
 
@@ -132,6 +147,52 @@ def test_unknown_id_answers_empty():
     manifest = _manifest([_record("a")])
     assert related_records(manifest, "missing") == []
     assert related_records(manifest, "missing", _repo_with_feedback([])) == []
+
+
+def test_stage_concept_edges_link_concept_and_unit_both_ways():
+    """Stage tags answer both directions, reasoned by the stage (#97)."""
+    manifest = _manifest(
+        [_record("concept-x", "concept"), _record("unit-u", "unit")],
+        module_concept_edges=[_stage_edge("concept-x", "unit-u", "stage-s")],
+    )
+    from_concept = {row["id"]: row
+                    for row in related_records(manifest, "concept-x")}
+    assert from_concept["unit-u"]["via"] == ["stage-concept:stage-s"]
+    from_unit = {row["id"]: row
+                 for row in related_records(manifest, "unit-u")}
+    assert from_unit["concept-x"]["via"] == ["stage-concept:stage-s"]
+
+
+def test_stage_concept_edges_ignore_knowledge_node_evidence():
+    """Node links are not stage tags, so they earn no stage edge (#97)."""
+    manifest = _manifest(
+        [_record("concept-x", "concept"), _record("unit-u", "unit")],
+        module_concept_edges=[
+            _stage_edge("concept-x", "unit-u", "stage-s",
+                        kind="knowledge-node")],
+    )
+    assert related_records(manifest, "concept-x") == []
+    assert related_records(manifest, "unit-u") == []
+
+
+def test_stage_concept_edges_leave_existing_rows_untouched():
+    """New edges add rows; existing content, order and via hold (#97)."""
+    records = [_record("concept-x", "concept"),
+               _record("note-a", concepts=["concept-x"]),
+               _record("unit-u", "unit")]
+    backlinks = {"concept_to_notes": {"concept-x": ["note-a"]}}
+    edges = [_stage_edge("concept-x", "unit-u", "stage-s")]
+    before = related_records(
+        _manifest(records, backlinks=backlinks), "concept-x")
+    after = related_records(
+        _manifest(records, backlinks=backlinks,
+                  module_concept_edges=edges), "concept-x")
+    kept = [row for row in after if row["id"] != "unit-u"]
+    assert kept == before
+    assert [row["id"] for row in after
+            if row["id"] != "unit-u"] == [row["id"] for row in before]
+    added = [row for row in after if row["id"] == "unit-u"][0]
+    assert added["via"] == ["stage-concept:stage-s"]
 
 
 def test_analysis_edges_are_labelled_distinctly_in_via():

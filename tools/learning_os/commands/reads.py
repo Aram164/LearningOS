@@ -13,6 +13,7 @@ from learning_os.errors import unreadable_refusal
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.garden import garden_id
 from learning_os.genout.atlas import ATLAS_DOMAINS
+from learning_os.genout.projection.atlas import STAGE_CONCEPT
 from learning_os.loader import load_repo
 from learning_os.loading import FRONTMATTER_RE, Repo, load_garden, load_notes
 from learning_os.material_analysis import observe_local_material
@@ -967,8 +968,11 @@ def related_records(manifest: dict, raw_id: str, repo=None, *, tallies=None) -> 
     repo when given, or the precomputed `tallies` when the caller read
     them from the manifest instead): the record's own declared edges,
     every backlink table in both directions, concept relations both ways,
-    and project relationships both ways. Unknown ids answer [] — the
-    caller owns the not-found error. Aliases resolve through project_aliases.
+    project relationships both ways, and the published module-concept
+    edges between a concept and the units whose stages tag it (each edge
+    reasoned by its stage, `stage-concept:<stage-id>`). Unknown ids
+    answer [] — the caller owns the not-found error. Aliases resolve
+    through project_aliases.
 
     Ranking is deterministic: more distinct edges first, then recorded
     stage use-evidence per source exactly as material-context ranks it
@@ -1015,6 +1019,30 @@ def related_records(manifest: dict, raw_id: str, repo=None, *, tallies=None) -> 
             link(relation.get("to"), "relation")
         if relation.get("to") == resolved:
             link(relation.get("from"), "relation")
+    # Stage concept tags ride the published module-concept edges (#97): a
+    # concept links to the units whose stages tag it, and a unit links to
+    # its stages' concepts, each edge reasoned by its exact stage. Stages
+    # are structural sub-ids, not records, so they reason the edge rather
+    # than row in it. Knowledge-node evidence stays out: the edge kind and
+    # the issue scope are stage tags only.
+    for edge in manifest.get("module_concept_edges", []) or []:
+        if not isinstance(edge, dict):
+            continue
+        concept_id = edge.get("concept_id")
+        for evidence in edge.get("evidence") or []:
+            if not isinstance(evidence, dict):
+                continue
+            if evidence.get("kind") != STAGE_CONCEPT:
+                continue
+            unit_id = evidence.get("unit_id")
+            stage_id = evidence.get("stage_id")
+            if not unit_id or not stage_id:
+                continue
+            reason = f"{STAGE_CONCEPT}:{stage_id}"
+            if resolved == concept_id:
+                link(unit_id, reason)
+            if resolved == unit_id:
+                link(concept_id, reason)
     for relation in manifest.get("project_relationships", []) or []:
         if not isinstance(relation, dict):
             continue
