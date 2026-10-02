@@ -173,3 +173,56 @@ def test_envelope_without_schema_version_is_refused_before_dispatch(
     assert result.stdout == "", "a refused envelope must print no response"
     assert ("invalid capability envelope: schema_version 2 required "
             "(WORKFLOWS §25c)") in result.stderr
+
+
+def test_guard_derivation_intercepts_every_commit_path(mini_repo: Path,
+                                                       monkeypatch):
+    """A handler that commits through its own TransactionService import is
+    still stopped at the boundary.
+
+    The AI delivery path constructs ``TransactionService`` from its own
+    import rather than through ``support._write_transaction``. Intercepting
+    one module's name would let such a handler reach the real ``commit``
+    with the dry run's placeholder approval; the class-level boundary must
+    capture it like any other.
+    """
+    import seal_envelope
+
+    import los
+    from learning_os import transactions
+
+    real_build_parser = los.build_parser
+    real_commit = transactions.TransactionService.commit
+
+    def direct_commit_handler(args):
+        probe = Path(args.root) / "work/inbox/direct-commit-probe.md"
+        transactions.TransactionService(Path(args.root)).commit(
+            capability="stage.note.write",
+            writes={probe: "direct-commit probe\n"},
+            artifact_ids=["unit-demo-l01"])
+        return 0
+
+    def build_parser():
+        parser = real_build_parser()
+        from learning_os.contracts.payloads import subparsers
+        subparsers(parser)["stage-note"].set_defaults(func=direct_commit_handler)
+        return parser
+
+    monkeypatch.setattr(los, "build_parser", build_parser)
+    before = canonical_fingerprint(mini_repo)
+    receipts = sorted((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+    snapshot, derived = seal_envelope._derive_guards_auto(
+        mini_repo, capability="stage.note.write",
+        payload={"unit_id": "unit-demo-l01", "stage_id": "stage-demo",
+                 "text": "direct-commit probe"},
+        key="guards-auto-direct-001", request_id="request-guards-auto-direct-001",
+        channel="operator", approval_kind="operator-approval", snapshot=None)
+
+    assert derived == {"unit-demo-l01": 0}
+    assert snapshot == f"sha256:{before}"
+    assert canonical_fingerprint(mini_repo) == before
+    assert sorted((mini_repo / "operations/transactions").glob(
+        "transaction-*.yaml")) == receipts
+    assert not (mini_repo / "work/inbox/direct-commit-probe.md").exists()
+    assert transactions.TransactionService.commit is real_commit

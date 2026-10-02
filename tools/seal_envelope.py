@@ -123,18 +123,20 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
         raise ValueError(
             f"capability {capability} has no bound handler to derive guards from")
 
-    real_service = _support.TransactionService
+    # Intercept at the class, not at one module's import of it: a handler
+    # may commit through ``support._write_transaction`` or through its own
+    # ``from learning_os.transactions import TransactionService`` (the AI
+    # delivery path does). Patching one module's name would let the second
+    # kind reach the real ``commit`` — with this dry run's placeholder
+    # approval — so the boundary is the method every instance shares.
+    from learning_os import transactions as _transactions
 
-    class _DryRunService:
-        """The transaction boundary, capturing instead of committing."""
+    real_commit = _transactions.TransactionService.commit
 
-        def __init__(self, service_root: Path):
-            self._service_root = service_root
-
-        def commit(self, *, artifact_ids=(), writes=None, deletes=(),
-                   **_ignored):
-            raise _DryRunCapture(transaction_artifacts(
-                self._service_root, artifact_ids, writes or {}, deletes))
+    def _dry_run_commit(self, *, artifact_ids=(), writes=None, deletes=(),
+                        **_ignored):
+        raise _DryRunCapture(transaction_artifacts(
+            self.root, artifact_ids, writes or {}, deletes))
 
     # The request identities are the envelope's own: request-scoped
     # artifacts (capture, garden) derive from the idempotency key, so the
@@ -158,7 +160,7 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
         "expected_snapshot": snapshot,
         "expected_revisions": {},
     }
-    _support.TransactionService = _DryRunService  # type: ignore[assignment]
+    _transactions.TransactionService.commit = _dry_run_commit  # type: ignore[method-assign]
     try:
         with _support._operator_lock(root):
             live_snapshot = snapshot or f"sha256:{source_fingerprint(load_repo(root))}"
@@ -192,7 +194,7 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
                 f" (exit {code}: {result.get('error', capability + ' failed')}); "
                 "seal this payload with explicit --revision guards instead")
     finally:
-        _support.TransactionService = real_service
+        _transactions.TransactionService.commit = real_commit  # type: ignore[method-assign]
 
 
 def main(argv: list[str] | None = None) -> int:
