@@ -11,6 +11,7 @@ from pathlib import Path
 import group_map
 import pytest
 import yaml
+from repo_builders import copy_real_contracts
 
 from learning_os.diagnostics.conventions import TRACE_STORE_DENY_ENV
 
@@ -143,10 +144,7 @@ def build_mini_repo(tmp_path: Path) -> Path:
         (root / d).mkdir(parents=True)
     (los / "materials").mkdir()
     shutil.copytree(REPO_ROOT / "system" / "schema", root / "system" / "schema")
-    shutil.copytree(REPO_ROOT / "system" / "contracts", root / "system" / "contracts")
-    # The real repository's local-only attachment pins name real notes'
-    # scans; a synthetic repository has neither, so it declares none.
-    (root / "system" / "contracts" / "local-attachments.yaml").unlink(missing_ok=True)
+    copy_real_contracts(REPO_ROOT, root)
 
     (root / "knowledge" / "concepts.yaml").write_text(yaml.safe_dump({
         "concepts": [

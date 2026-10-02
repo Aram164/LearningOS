@@ -538,3 +538,16 @@ def _compact_setup(mini_repo: Path):
     _audit(mini_repo)
     write_baseline(mini_repo, collect(mini_repo)[0], "unit revision fixture")
     return good
+
+
+def copy_real_contracts(source_root: Path, target_root: Path) -> None:
+    """Copy the real system/contracts/ into a synthetic repository.
+
+    The real repository's local-only attachment pins name real notes' scans;
+    a synthetic repository has neither, so it never inherits them (each pin
+    would be an ATTACH-LOCAL-ORPHAN error there).
+    """
+    shutil.copytree(source_root / "system" / "contracts",
+                    target_root / "system" / "contracts",
+                    dirs_exist_ok=True,
+                    ignore=shutil.ignore_patterns("local-attachments.yaml"))
