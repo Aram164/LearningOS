@@ -25,7 +25,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, Protocol
 
 import yaml
 
@@ -40,7 +40,22 @@ from ..loading.yamlio import UniqueKeySafeLoader
 from .common import Issue
 
 if TYPE_CHECKING:
-    from .core import Validator
+    from ..loader import Repo
+
+
+class ReceiptValidator(Protocol):
+    """The receipt pass's input surface, without importing the rule orchestrator."""
+
+    repo: Repo
+    schemas: dict
+    schema_registry: Any
+    issues: list[Issue]
+
+    def err(self, code: str, msg: str, path: str = "") -> None: ...
+
+    def _rel(self, path: Path) -> str: ...
+
+    def _schema_check(self, name: str, instance: Any, where: str) -> None: ...
 
 #: Sidecar location inside generated/. The ``validation-report`` prefix
 #: keeps it under the reports GC keep-rule and the validator's own
@@ -52,14 +67,19 @@ SIDECAR_RELATIVE = Path("generated/reports/validation-report-receipts.cache.json
 RECEIPT_CACHE_FORMAT = 2
 
 
-def _current_pins(validator: Validator) -> dict[str, str]:
+def _current_pins(validator: ReceiptValidator) -> dict[str, str]:
     """Everything a cached per-receipt verdict depends on."""
     root = validator.repo.root
     # Validator captured its schemas before this pass. A later disk read
     # could pin a new schema while the verdict used the old loaded one.
     schema = validator.schemas.get("transaction-receipt")
-    schema_pin = "<missing>" if schema is None else "sha256:" + hashlib.sha256(
-        json.dumps(schema, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()
+    schema_inputs = {
+        "receipt": schema,
+        "registry": {uri: resource.contents
+                     for uri, resource in validator.schema_registry.items()},
+    }
+    schema_pin = "sha256:" + hashlib.sha256(
+        json.dumps(schema_inputs, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()
     return {
         "code_identity": digest_code_identity(root),
         "runtime_digest": runtime_digest(),
@@ -75,7 +95,7 @@ def _unlink_quietly(path: Path) -> None:
         pass
 
 
-def _load_entries(validator: Validator) -> tuple[dict[str, Any], dict[str, str]]:
+def _load_entries(validator: ReceiptValidator) -> tuple[dict[str, Any], dict[str, str]]:
     """Cached per-receipt entries plus the pins they were read under.
 
     The pins describe the loaded schema this run uses, reused by the
@@ -214,7 +234,7 @@ def _proof_digest(entry: dict) -> str | None:
 
 
 def _validate_fresh(
-    validator: Validator, path: Path, rel: str,
+    validator: ReceiptValidator, path: Path, rel: str,
 ) -> tuple[list[Issue], Any, Any, bool, str | None]:
     """Today's per-receipt body: parse, schema-check, extract id and key.
 
@@ -272,7 +292,7 @@ def _content_hash(root: Path, path: Path) -> str | None:
         return None
 
 
-def receipt_file_issues(validator: Validator) -> None:
+def receipt_file_issues(validator: ReceiptValidator) -> None:
     """Per-receipt parse/schema issues plus cross-receipt duplicates.
 
     Only new or changed receipts pay the full check; everything else is

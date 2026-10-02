@@ -88,6 +88,28 @@ def test_receipt_cache_pins_the_schema_actually_loaded(mini_repo: Path):
     assert any(i.code == "SCHEMA" for i in new_validator.issues)
 
 
+def test_receipt_cache_invalidates_changed_external_schema_ref(mini_repo: Path):
+    from learning_os.rules.core import Validator
+
+    _commit_capture(mini_repo, "schema-ref", "request-schema-ref")
+    schema_dir = mini_repo / "system/schema"
+    receipt_path = schema_dir / "transaction-receipt.schema.json"
+    receipt_schema = json.loads(receipt_path.read_text())
+    receipt_schema["allOf"] = [{"$ref": "https://learningos.local/schema/receipt-extra.schema.json"}]
+    receipt_path.write_text(json.dumps(receipt_schema))
+    extra = schema_dir / "receipt-extra.schema.json"
+    extra.write_text(json.dumps({"$schema": "https://json-schema.org/draft/2020-12/schema",
+                                 "type": "object"}))
+    original = Validator(load_repo(mini_repo))
+    original.check_transaction_receipts()
+    assert not original.issues
+    extra.write_text(json.dumps({"$schema": "https://json-schema.org/draft/2020-12/schema",
+                                 "not": {"required": ["id"]}}))
+    changed = Validator(load_repo(mini_repo))
+    changed.check_transaction_receipts()
+    assert any(i.code == "SCHEMA" for i in changed.issues)
+
+
 def test_warm_boundary_digest_refuses_retarget_to_external_hardlink(tmp_path: Path):
     from learning_os.derived.identity import digest_file
 
