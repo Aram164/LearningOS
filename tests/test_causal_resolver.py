@@ -282,6 +282,144 @@ def test_superseded_commit_settles_without_exact_observation():
     assert behind.recovery_requirement == "verify-observation"
 
 
+def test_contract_only_drift_settles_without_exact_observation():
+    """An unchained manifest over unchanged data is settled, with the
+    contract-only reason — not verify-observation."""
+    committed = {"_path": "operations/transactions/transaction-1.yaml"}
+    diagnosis = resolve([], _authority(
+        verified_receipt=committed,
+        response_snapshot_after="sha256:aaa",
+        contract_only_drift=True,
+        contract_only_receipt_id="transaction-20260101-000009-001"))
+    assert diagnosis.canonical_outcome == "COMMITTED"
+    assert diagnosis.recovery_requirement == "none"
+    assert any("authored data unchanged" in reason
+               for reason in diagnosis.reasons)
+    assert any("transaction-20260101-000009-001" in reason
+               for reason in diagnosis.reasons)
+
+
+def test_contract_only_drift_receipt_needs_unchained_manifest_and_digest(
+        tmp_path: Path):
+    from learning_os.diagnostics.resolver import contract_only_drift_receipt
+    from learning_os.fingerprint import data_roots_fingerprint
+
+    recorded = f"sha256:{data_roots_fingerprint(tmp_path)}"
+    receipts = [{"id": "transaction-20260101-000001-001",
+                 "snapshot_after": "sha256:aaa",
+                 "metadata": {"data_roots_sha256": recorded}}]
+    # A chained manifest keeps the positional rule, never this one.
+    assert contract_only_drift_receipt(tmp_path, receipts, "sha256:aaa") is None
+    assert contract_only_drift_receipt(tmp_path, receipts, None) is None
+    assert contract_only_drift_receipt(tmp_path, [], "sha256:zzz") is None
+    assert contract_only_drift_receipt(
+        tmp_path, receipts, "sha256:zzz") == receipts[0]
+    # A newest receipt too old to record the digest keeps old behaviour.
+    old = [{"id": "transaction-20260101-000001-001",
+            "snapshot_after": "sha256:aaa", "metadata": {}}]
+    assert contract_only_drift_receipt(tmp_path, old, "sha256:zzz") is None
+
+
+def test_data_roots_digest_ignores_contract_moves_but_follows_data(
+        mini_repo: Path):
+    from learning_os.fingerprint import (
+        canonical_fingerprint,
+        data_roots_fingerprint,
+    )
+
+    before_data = data_roots_fingerprint(mini_repo)
+    before_full = canonical_fingerprint(mini_repo)
+    contracts = mini_repo / "system/contracts/capabilities.yaml"
+    contracts.write_text(
+        contracts.read_text(encoding="utf-8") + "\n# digest probe\n",
+        encoding="utf-8")
+    assert canonical_fingerprint(mini_repo) != before_full
+    assert data_roots_fingerprint(mini_repo) == before_data
+    concepts = mini_repo / "knowledge/concepts.yaml"
+    concepts.write_text(
+        concepts.read_text(encoding="utf-8") + "\n# digest probe\n",
+        encoding="utf-8")
+    assert data_roots_fingerprint(mini_repo) != before_data
+
+
+def _live_snapshot(root: Path) -> str:
+    from learning_os.fingerprint import canonical_fingerprint
+
+    return f"sha256:{canonical_fingerprint(root)}"
+
+
+def test_contract_only_commit_settles_earlier_committed_writes(
+        mini_repo: Path):
+    """After a commit touching only system/contracts, the earlier committed
+    write reads settled with the contract-only reason."""
+    _, result = _commit_capture_v2(mini_repo, "contract-drift", "request-drift")
+    assert result.snapshot_after
+    contracts = mini_repo / "system/contracts/capabilities.yaml"
+    contracts.write_text(
+        contracts.read_text(encoding="utf-8") + "\n# contract-only drift probe\n",
+        encoding="utf-8")
+    live = _live_snapshot(mini_repo)
+    authority = collect_authority(
+        mini_repo, request_id="request-drift",
+        idempotency_key="contract-drift", capability="capture.create",
+        response={"snapshot_after": result.snapshot_after},
+        manifest_snapshot=live)
+    assert authority.verification_error is None
+    assert authority.superseded_snapshot is False
+    assert authority.contract_only_drift is True
+    diagnosis = resolve([], authority)
+    assert diagnosis.canonical_outcome == "COMMITTED"
+    assert diagnosis.recovery_requirement == "none"
+    assert any("authored data unchanged" in reason
+               for reason in diagnosis.reasons)
+
+
+def test_hand_edit_to_data_keeps_verify_observation(mini_repo: Path):
+    """Authored data moved without a receipt is still the hand-edit signal:
+    verify-observation stands even though the manifest is unchained."""
+    _, result = _commit_capture_v2(mini_repo, "data-drift", "request-data")
+    target = mini_repo / "work/inbox/data-drift.md"
+    target.write_text("hand-edited outside the gateway\n", encoding="utf-8")
+    authority = collect_authority(
+        mini_repo, request_id="request-data",
+        idempotency_key="data-drift", capability="capture.create",
+        response={"snapshot_after": result.snapshot_after},
+        manifest_snapshot=_live_snapshot(mini_repo))
+    assert authority.verification_error is None
+    assert authority.contract_only_drift is False
+    diagnosis = resolve([], authority)
+    assert diagnosis.canonical_outcome == "COMMITTED"
+    assert diagnosis.recovery_requirement == "verify-observation"
+
+
+def test_old_receipt_without_digest_keeps_verify_observation(mini_repo: Path):
+    """A newest receipt from before the data-roots digest keeps today's
+    behaviour even when the drift is contract-only."""
+    import yaml
+
+    _, result = _commit_capture_v2(mini_repo, "old-receipt", "request-old")
+    receipt_path = mini_repo / result.receipt_path
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    assert receipt["metadata"].pop("data_roots_sha256")
+    receipt_path.write_text(
+        yaml.safe_dump(receipt, sort_keys=False, allow_unicode=True),
+        encoding="utf-8")
+    contracts = mini_repo / "system/contracts/capabilities.yaml"
+    contracts.write_text(
+        contracts.read_text(encoding="utf-8") + "\n# contract-only drift probe\n",
+        encoding="utf-8")
+    authority = collect_authority(
+        mini_repo, request_id="request-old",
+        idempotency_key="old-receipt", capability="capture.create",
+        response={"snapshot_after": result.snapshot_after},
+        manifest_snapshot=_live_snapshot(mini_repo))
+    assert authority.verification_error is None
+    assert authority.contract_only_drift is False
+    diagnosis = resolve([], authority)
+    assert diagnosis.canonical_outcome == "COMMITTED"
+    assert diagnosis.recovery_requirement == "verify-observation"
+
+
 def test_idempotency_conflict_proves_no_commit_for_its_attempt():
     """A definite conflict retires its own request (JF-19)."""
     attempt = [

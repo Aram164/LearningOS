@@ -434,6 +434,20 @@ def test_each_commit_has_exactly_one_append_only_receipt(tmp_path: Path):
     assert receipt["artifact_revisions"]["project-demo"] == {"before": 0, "after": 1}
 
 
+def test_each_commit_records_the_post_commit_data_roots_digest(tmp_path: Path):
+    from learning_os.fingerprint import data_roots_fingerprint
+
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+    result = TransactionService(root).commit(
+        capability="project.create", writes={target: "demo\n"}, artifact_ids=["project-demo"]
+    )
+    receipt = yaml.safe_load(result.receipt_path.read_text(encoding="utf-8"))
+    assert receipt["metadata"]["data_roots_sha256"] == (
+        f"sha256:{data_roots_fingerprint(root)}"
+    )
+
+
 def _receipt_contract_fixture(*, schema_version: int, metadata: dict) -> dict:
     receipt = {
         "schema_version": schema_version,
@@ -552,6 +566,43 @@ def test_receipt_v2_allows_only_the_known_safe_ai_metadata_shape(mini_repo: Path
                 },
                 "created_ids": ["transcription-garden-demo"],
                 "updated_ids": ["garden-demo"],
+                "deleted_ids": [],
+                "superseded_ids": [],
+                "validation": {
+                    "schemas": "passed",
+                    "references": "passed",
+                    "boundaries": "passed",
+                    "projection": "passed",
+                },
+            },
+        ),
+    )
+
+
+def test_receipt_v2_allows_the_recorded_data_roots_digest(mini_repo: Path):
+    digest = "sha256:" + "ab" * 32
+    validate_contract(
+        mini_repo,
+        "transaction-receipt.schema.json",
+        _receipt_contract_fixture(
+            schema_version=2, metadata={"data_roots_sha256": digest}),
+    )
+    validate_contract(
+        mini_repo,
+        "transaction-receipt.schema.json",
+        _receipt_contract_fixture(
+            schema_version=2,
+            metadata={
+                "data_roots_sha256": digest,
+                "request_id": "ai-request-demo",
+                "delivery_id": "delivery-demo",
+                "action_id": "garden.shelve",
+                "approved_delivery": {
+                    "delivery_sha256": "sha256:" + "4" * 64,
+                    "artifact_sha256": {},
+                },
+                "created_ids": [],
+                "updated_ids": [],
                 "deleted_ids": [],
                 "superseded_ids": [],
                 "validation": {
