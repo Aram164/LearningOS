@@ -32,10 +32,13 @@ import yaml
 UI_ROOT = Path(__file__).resolve().parents[2] / "obsidian-ui"
 HARNESS = UI_ROOT / "tests" / "gateway-recovery-harness.js"
 
-pytestmark = pytest.mark.skipif(
-    not HARNESS.is_file() or shutil.which("node") is None,
-    reason="the sibling obsidian-ui harness (or Node) is not available",
-)
+pytestmark = [
+    pytest.mark.skipif(
+        not HARNESS.is_file() or shutil.which("node") is None,
+        reason="the sibling obsidian-ui harness (or Node) is not available",
+    ),
+    pytest.mark.paired,
+]
 
 
 def _run_harness(repo_root: Path, mini_repo: Path) -> dict:

@@ -459,6 +459,7 @@ def test_idempotency_conflict_proves_no_commit_for_its_attempt():
     assert second.recovery_requirement == "reconcile-exact-request"
 
 
+@pytest.mark.paired
 def test_definitive_codes_match_the_ui_contract():
     """Core and UI must retire exactly the same dead requests. The UI list
     is authoritative prose; this test fails the drift, not the intent."""

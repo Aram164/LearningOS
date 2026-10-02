@@ -22,7 +22,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 from learning_os.contracts.bundle import build_bundle
 from learning_os.contracts.json_schema import schema_registry
 
-pytestmark = pytest.mark.full_repo
+pytestmark = [pytest.mark.full_repo, pytest.mark.paired]
 
 V15_REL = "system/contracts/manifest-v15.schema.json"
 VALIDATOR_REL = "contract-prototype/generated/manifest.validator.cjs"

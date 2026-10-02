@@ -12,7 +12,7 @@ VENV   := .venv
 # Homebrew "externally-managed-environment" errors on macOS.
 PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYTHON))
 
-.PHONY: help check warnings views materials inventory verify-materials contract test test-fast test-group test-affected bench lint code-check all setup setup-lean hooks garden status plan-check projection-check system-check stress clean-derived
+.PHONY: help check warnings views materials inventory verify-materials contract test test-fast test-group test-affected test-paired bench lint code-check all setup setup-lean hooks garden status plan-check projection-check system-check stress clean-derived
 
 help:
 	@echo "make check  - validate the repository (schemas + semantic rules)"
@@ -32,6 +32,7 @@ help:
 	@echo "make test-fast - run tests that do not load the checked-in repository state"
 	@echo "make test-group G=<area> - run one area group (see tests/GROUPS.md)"
 	@echo "make test-affected [BASE=main] - run the groups touched by this branch"
+	@echo "make test-paired - run the Core/UI boundary tests (the pre-push gate's UI-only path)"
 	@echo "make bench    - run the read-only benchmark scripts (never a gate, no thresholds)"
 	@echo "make test   - run the complete test suite, including full-repository checks"
 	@echo "make lint   - run the defect-oriented static checks used by CI"
@@ -99,11 +100,22 @@ test-group:
 
 # The groups touched by this branch (commits against BASE plus uncommitted
 # changes). A change to shared machinery reruns everything — see tests/GROUPS.md.
+# The pre-push gate passes the last stamped Core SHA as BASE when one exists,
+# so a review branch reruns only what changed since its last verification.
 BASE ?= main
 test-affected:
 	files=`$(PY) tools/affected_tests.py --base "$(BASE)"`; \
 	if [ -z "$$files" ]; then echo "affected: no changes detected"; \
 	else $(PY) -m pytest -q $$files; fi
+
+# The Core/UI boundary tests only: every Core test that reads the live sibling
+# checkout (marker `paired`, boundary pinned by tests/test_pre_push_hook.py).
+# The pre-push gate runs this instead of test-affected when Core is unchanged
+# against the last stamped pair. A command-line -m wins over PYTEST_ADDOPTS,
+# so the hook's live_install deselection never widens this selection — and no
+# paired test carries the live_install mark.
+test-paired:
+	$(PY) -m pytest -q -m "paired"
 
 # Discoverability only: the read-only benchmark scripts are noisy by nature,
 # so they are runnable but never a gate and never part of check/CI.

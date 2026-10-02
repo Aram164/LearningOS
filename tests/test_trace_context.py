@@ -364,6 +364,7 @@ def test_observation_hook_cost_is_negligible():
     not TRACE_HARNESS.is_file() or shutil.which("node") is None,
     reason="the sibling obsidian-ui trace harness (or Node) is not available",
 )
+@pytest.mark.paired
 def test_ui_client_propagates_context_core_receives(
         repo_root: Path, tmp_path: Path):
     from conftest import build_mini_repo

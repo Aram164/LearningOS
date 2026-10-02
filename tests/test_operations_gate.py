@@ -25,6 +25,8 @@ UI_ROOT = REPO_ROOT.parent / "obsidian-ui"
 HARNESS = UI_ROOT / "tests" / "operations-gate-harness.js"
 LOS = REPO_ROOT / "tools" / "los.py"
 
+pytestmark = pytest.mark.paired
+
 EXPECTED = {
     # scenario: (stage, execution, canonical, recovery)
     "G1": (None, "committed", "COMMITTED", "none"),

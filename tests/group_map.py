@@ -218,6 +218,8 @@ PATH_RULES: list[tuple[str, frozenset[str] | None]] = [
     ("tools/material_toc.py", frozenset({"materials"})),
     ("tools/ingest_transcript.py", frozenset({"materials"})),
     ("tools/build_materials_index.py", frozenset({"materials"})),
+    ("tools/build_materials_tree.py", frozenset({"materials"})),
+    ("tools/materials_index/", frozenset({"materials"})),
     ("tools/materials_manifest.py", frozenset({"materials"})),
     ("tools/normalise_material_uris.py", frozenset({"materials"})),
     ("tools/lift_angle_out_of_locator.py", frozenset({"materials", "studyplan"})),

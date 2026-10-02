@@ -10,6 +10,7 @@ dirty tree, or toolchain change re-runs the gate.
 
     python tools/verified_pairs.py stamp   # record the current clean pair
     python tools/verified_pairs.py check   # exit 0 iff the current pair is stamped
+    python tools/verified_pairs.py base    # print the last stamped Core SHA
 """
 
 from __future__ import annotations
@@ -189,12 +190,40 @@ def cmd_check() -> int:
     return 0
 
 
+def _is_sha(value: object) -> bool:
+    return (isinstance(value, str) and len(value) == 40
+            and all(c in "0123456789abcdef" for c in value))
+
+
+def cmd_base() -> int:
+    """Print the last stamped Core SHA: the review-gate diff base.
+
+    A diff base, not a trust decision: the toolchain is deliberately not
+    consulted. The caller diffs the working tree against the last verified
+    Core commit; stamp/check semantics are unchanged.
+    """
+    core = _core_root()
+    path = _stamp_path(core)
+    if path is None:
+        print("verified-pairs: no Core git dir", file=sys.stderr)
+        return 1
+    for row in reversed(_read_stamps(path)):
+        sha = row.get("core_sha")
+        if _is_sha(sha):
+            print(sha)
+            return 0
+    print("verified-pairs: no stamped pair yet", file=sys.stderr)
+    return 1
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("command", choices=("stamp", "check"))
+    parser.add_argument("command", choices=("stamp", "check", "base"))
     args = parser.parse_args(argv)
     if args.command == "stamp":
         return cmd_stamp()
+    if args.command == "base":
+        return cmd_base()
     return cmd_check()
 
 

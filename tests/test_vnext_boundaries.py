@@ -1792,6 +1792,7 @@ def test_restore_uses_the_restored_installers_new_requirements(mini_repo, tmp_pa
 
 
 @pytest.mark.full_repo
+@pytest.mark.paired
 @pytest.mark.parametrize("case", ["valid", "missing-bases", "empty-bases", "indirect-base", "missing-config"])
 def test_restore_preflight_with_current_paired_installer(mini_repo, tmp_path, repo_root, case):
     # This integration uses the actual paired install.py, not a copied set of
@@ -1894,6 +1895,7 @@ def test_restore_does_not_run_installer_before_checksum_verification(mini_repo, 
 
 
 @pytest.mark.full_repo
+@pytest.mark.paired
 def test_core_asset_reader_stays_in_step_with_paired_installer(tmp_path, repo_root):
     import runpy
 
