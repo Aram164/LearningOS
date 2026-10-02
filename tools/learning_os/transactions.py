@@ -18,6 +18,7 @@ from __future__ import annotations
 import contextlib
 import datetime as dt
 import hashlib
+import inspect
 import json
 import os
 import re
@@ -1061,6 +1062,20 @@ def _reconcile_one_journal(root: Path, tx_dir: Path) -> None:
             summary="its journal uses an unsupported schema version")
 
 
+def _accepts_snapshot_seed(publish: Callable[..., str | None]) -> bool:
+    """Whether ``publish`` takes the post-commit snapshot seed (#104).
+
+    Seeded publishers stamp the projection without a second canonical walk;
+    zero-argument publishers (migrations, test doubles) walk themselves.
+    """
+    try:
+        parameters = inspect.signature(publish).parameters.values()
+    except (TypeError, ValueError):
+        return False
+    return any(p.kind in (p.POSITIONAL_ONLY, p.POSITIONAL_OR_KEYWORD, p.VAR_POSITIONAL)
+               for p in parameters)
+
+
 class TransactionService:
     """Commit one validated set of authored writes and one append-only receipt."""
 
@@ -1566,10 +1581,12 @@ class TransactionService:
                 if publish is None:
                     projected_snapshot = None
                 else:
-                    try:
-                        projected_snapshot = publish(snapshot_after_id)
-                    except TypeError:
-                        projected_snapshot = publish()
+                    # Decided by signature, never by catching TypeError: a
+                    # publisher's own TypeError must fail the projection, not
+                    # re-run it unseeded.
+                    projected_snapshot = (publish(snapshot_after_id)
+                                          if _accepts_snapshot_seed(publish)
+                                          else publish())
             else:
                 projected_snapshot = publish() if publish is not None else None
             diag_tracer.emit_event(

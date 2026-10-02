@@ -780,6 +780,31 @@ def test_projection_failure_with_complete_rollback_is_typed(tmp_path: Path):
     assert not list((root / "operations/transactions").glob("transaction-*.yaml"))
 
 
+def test_seeded_publisher_type_error_fails_once_not_republished(tmp_path: Path):
+    """A TypeError raised inside a seed-accepting publisher is a projection
+    failure; it must never be read as "this publisher takes no seed" and
+    re-run unseeded (#104 step 1)."""
+    root = tmp_path
+    target = root / "projects/registry/project-demo.yaml"
+    calls: list[str | None] = []
+
+    def broken_publish(snapshot_after_id: str | None = None) -> str:
+        calls.append(snapshot_after_id)
+        raise TypeError("bug inside the projection")
+
+    with pytest.raises(ProjectionFailure):
+        TransactionService(root).commit(
+            capability="project.update",
+            writes={target: "new\n"},
+            artifact_ids=["project-demo"],
+            publish=broken_publish,
+            rollback_publish=lambda: None,
+        )
+    assert len(calls) == 1
+    assert calls[0] is not None and calls[0].startswith("sha256:")
+    assert not target.exists()
+
+
 def test_projection_failure_with_broken_rollback_is_typed_incomplete(
     tmp_path: Path,
 ):
