@@ -356,6 +356,40 @@ def test_symlinked_materials_tree_runs_the_full_inventory(mini_repo):
     assert "MATERIALS-DRIFT" in codes(drifted, "W")
 
 
+def test_symlinked_materials_root_keeps_inner_aliases_inside_its_target(mini_repo):
+    link = mini_repo.parent / "materials"
+    link.rmdir()
+    real = mini_repo.parent / "real-materials"
+    real.mkdir()
+    outside = mini_repo.parent / "outside-materials"
+    outside.mkdir()
+    (outside / "a.pdf").write_text("alpha", encoding="utf-8")
+    (real / ".flat").mkdir()
+    (real / ".flat/source-x").symlink_to(outside)
+    link.symlink_to(real, target_is_directory=True)
+    issues = _wire(mini_repo, uri="material://source-x/a.pdf", manifest_files={})
+    assert "MATERIALS-OFFLINE" not in codes(issues, "W")
+    assert "MATERIAL-MISSING" in codes(issues, "E")
+
+
+def test_unreadable_symlinked_materials_target_warns_offline(mini_repo, monkeypatch):
+    from learning_os.rules import materials
+
+    link = mini_repo.parent / "materials"
+    link.rmdir()
+    real = mini_repo.parent / "real-materials"
+    real.mkdir()
+    link.symlink_to(real, target_is_directory=True)
+    original = materials.os.access
+    monkeypatch.setattr(materials.os, "access", lambda path, mode: (
+        False if path == real else original(path, mode)))
+    issues = _wire(mini_repo, uri="material://a.pdf", manifest_files={})
+    assert codes(issues, "W").count("MATERIALS-OFFLINE") == 1
+    assert "MATERIAL-MISSING" not in codes(issues, "E")
+    assert any("not readable" in issue.message for issue in issues
+               if issue.code == "MATERIALS-OFFLINE")
+
+
 # --------------------------------------------------------------- URI carriers
 #
 # The sweep is a regex over documents, not a field walk, so how far a reference
