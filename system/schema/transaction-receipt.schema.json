@@ -39,6 +39,10 @@
       "type": "string",
       "pattern": "^sha256:[a-f0-9]{64}$"
     },
+    "fingerprintDefinition": {
+      "description": "Fingerprint definition the snapshot digests were computed under (2 excludes declared local-only attachments); absent on pre-exclusion receipts.",
+      "const": 2
+    },
     "v2Metadata": {
       "oneOf": [
         {
@@ -46,6 +50,7 @@
           "additionalProperties": false,
           "properties": {
             "data_roots_sha256": {"$ref": "#/$defs/dataRootsDigest"},
+            "fingerprint_definition": {"$ref": "#/$defs/fingerprintDefinition"},
             "routed_to": {
               "description": "Where inbox.resolve sent the drop. Written only by that capability; absent on every other receipt.",
               "type": "array",
@@ -72,6 +77,7 @@
           ],
           "properties": {
             "data_roots_sha256": {"$ref": "#/$defs/dataRootsDigest"},
+            "fingerprint_definition": {"$ref": "#/$defs/fingerprintDefinition"},
             "request_id": {"$ref": "#/$defs/safeArtifactId"},
             "delivery_id": {"$ref": "#/$defs/safeArtifactId"},
             "action_id": {"$ref": "#/$defs/safeArtifactId"},

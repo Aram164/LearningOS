@@ -12,6 +12,7 @@ second suite needed the same fixtures.
 
 from __future__ import annotations
 
+import hashlib
 import shutil
 import subprocess
 import sys
@@ -19,6 +20,7 @@ from pathlib import Path
 
 import yaml
 
+from learning_os.contracts.local_attachments import LOCAL_ATTACHMENTS_RELATIVE
 from learning_os.loader import load_repo, parse_frontmatter
 from learning_os.routes import deterministic_route_id
 from learning_os.warning_baseline import collect, write_baseline
@@ -385,6 +387,24 @@ def rewrite_yaml_doc(path: Path, mutate) -> None:
     data = yaml.safe_load(path.read_text(encoding="utf-8"))
     mutate(data)
     path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+
+
+def declare_scan(root: Path, rel: str, data: bytes = b"%PDF scan\n") -> None:
+    """A present, pinned local-only attachment owned by the demo note."""
+    note = root / "knowledge/notes/mathematics/note-demo.md"
+    text = note.read_text(encoding="utf-8")
+    if "attachments:" not in text:
+        note.write_text(text.replace(
+            "sources: [source-demo-book]\n",
+            f"sources: [source-demo-book]\nattachments:\n  - {rel}\n", 1),
+            encoding="utf-8")
+    (root / rel).parent.mkdir(parents=True, exist_ok=True)
+    (root / rel).write_bytes(data)
+    (root / LOCAL_ATTACHMENTS_RELATIVE).write_text(
+        "schema_version: 1\ncontract: learningos-local-attachments\nfiles:\n"
+        f"  {rel}:\n    bytes: {len(data)}\n"
+        f"    sha256: sha256:{hashlib.sha256(data).hexdigest()}\n",
+        encoding="utf-8")
 
 
 def _sliced_route(route_id: str, locator: str, scope: str = "current") -> dict:

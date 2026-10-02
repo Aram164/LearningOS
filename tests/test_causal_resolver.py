@@ -500,3 +500,159 @@ def test_shared_drift_cache_walks_the_data_roots_once(mini_repo: Path,
             manifest_snapshot=live, authority_files=shared, drift_cache=cache)
         assert authority.contract_only_drift is True
     assert len(calls) == 1
+
+
+# ------------------------------------------------- fingerprint-definition transition (#112)
+SCAN_REL = "knowledge/attachments/note-demo/scan.pdf"
+
+
+def _pre_exclusion_receipt(root: Path) -> dict:
+    """A newest receipt as the cutover left it: a definition-1
+    data-roots digest and no recorded definition."""
+    from learning_os.fingerprint import data_roots_fingerprint
+
+    return {"id": "transaction-20260101-000001-001",
+            "snapshot_after": "sha256:aaa",
+            "metadata": {"data_roots_sha256":
+                         f"sha256:{data_roots_fingerprint(root, definition=1)}"}}
+
+
+def test_definition_transition_receipt_needs_old_definition_and_digest(
+        mini_repo: Path):
+    from repo_builders import declare_scan
+
+    from learning_os.diagnostics.resolver import (
+        fingerprint_definition_transition_receipt,
+    )
+    from learning_os.fingerprint import data_roots_fingerprint
+
+    declare_scan(mini_repo, SCAN_REL)
+    receipts = [_pre_exclusion_receipt(mini_repo)]
+    # A chained manifest keeps the positional rule, never this one.
+    assert fingerprint_definition_transition_receipt(
+        mini_repo, receipts, "sha256:aaa") is None
+    assert fingerprint_definition_transition_receipt(
+        mini_repo, receipts, None) is None
+    assert fingerprint_definition_transition_receipt(
+        mini_repo, [], "sha256:zzz") is None
+    assert fingerprint_definition_transition_receipt(
+        mini_repo, receipts, "sha256:zzz") == receipts[0]
+    # A newest receipt too old to record the digest keeps old behaviour.
+    old = [{"id": "transaction-20260101-000001-001",
+            "snapshot_after": "sha256:aaa", "metadata": {}}]
+    assert fingerprint_definition_transition_receipt(
+        mini_repo, old, "sha256:zzz") is None
+    # A current-definition receipt never takes the transition, even
+    # when its digest is stale.
+    current = [{"id": "transaction-20260101-000001-001",
+                "snapshot_after": "sha256:aaa",
+                "metadata": {"data_roots_sha256": receipts[0]["metadata"]["data_roots_sha256"],
+                             "fingerprint_definition": 2}}]
+    assert fingerprint_definition_transition_receipt(
+        mini_repo, current, "sha256:zzz") is None
+    # An unknown future definition fails closed.
+    future = [{"id": "transaction-20260101-000001-001",
+               "snapshot_after": "sha256:aaa",
+               "metadata": {"data_roots_sha256":
+                            f"sha256:{data_roots_fingerprint(mini_repo)}",
+                            "fingerprint_definition": 9}}]
+    assert fingerprint_definition_transition_receipt(
+        mini_repo, future, "sha256:zzz") is None
+    # Data moved without a receipt: no transition.
+    (mini_repo / "knowledge/concepts.yaml").write_text(
+        (mini_repo / "knowledge/concepts.yaml").read_text(encoding="utf-8")
+        + "\n# hand-edited outside the gateway\n", encoding="utf-8")
+    assert fingerprint_definition_transition_receipt(
+        mini_repo, receipts, "sha256:zzz") is None
+
+
+def test_definition_transition_settles_without_exact_observation():
+    """A pre-exclusion newest receipt matching under its own definition
+    is settled, with the transition reason — not verify-observation."""
+    committed = {"_path": "operations/transactions/transaction-1.yaml"}
+    diagnosis = resolve([], _authority(
+        verified_receipt=committed,
+        response_snapshot_after="sha256:aaa",
+        definition_transition_drift=True,
+        definition_transition_receipt_id="transaction-20260101-000009-001"))
+    assert diagnosis.canonical_outcome == "COMMITTED"
+    assert diagnosis.recovery_requirement == "none"
+    assert any("definitional move, not drift" in reason
+               for reason in diagnosis.reasons)
+    assert any("transaction-20260101-000009-001" in reason
+               for reason in diagnosis.reasons)
+
+
+def _rewrite_newest_receipt_as_pre_exclusion(mini_repo: Path, receipt_path: Path):
+    """Simulate the cutover: the newest receipt keeps a definition-1
+    data-roots digest and loses its recorded definition."""
+    import yaml
+
+    from learning_os.fingerprint import data_roots_fingerprint
+
+    receipt = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
+    receipt["metadata"] = {
+        "data_roots_sha256": f"sha256:{data_roots_fingerprint(mini_repo, definition=1)}",
+    }
+    receipt_path.write_text(
+        yaml.safe_dump(receipt, sort_keys=False, allow_unicode=True),
+        encoding="utf-8")
+
+
+def test_pre_exclusion_newest_receipt_settles_earlier_committed_writes(
+        mini_repo: Path):
+    """After the cutover, a commit whose newest receipt predates the
+    local-only exclusion reads settled when the data roots match it
+    under its own definition."""
+    from repo_builders import declare_scan
+
+    declare_scan(mini_repo, SCAN_REL)
+    _, result = _commit_capture_v2(mini_repo, "transition", "request-transition")
+    _rewrite_newest_receipt_as_pre_exclusion(
+        mini_repo, mini_repo / result.receipt_path)
+    contracts = mini_repo / "system/contracts/capabilities.yaml"
+    contracts.write_text(
+        contracts.read_text(encoding="utf-8") + "\n# contract-only drift probe\n",
+        encoding="utf-8")
+    live = _live_snapshot(mini_repo)
+    authority = collect_authority(
+        mini_repo, request_id="request-transition",
+        idempotency_key="transition", capability="capture.create",
+        response={"snapshot_after": result.snapshot_after},
+        manifest_snapshot=live)
+    assert authority.verification_error is None
+    assert authority.superseded_snapshot is False
+    assert authority.contract_only_drift is False
+    assert authority.definition_transition_drift is True
+    diagnosis = resolve([], authority)
+    assert diagnosis.canonical_outcome == "COMMITTED"
+    assert diagnosis.recovery_requirement == "none"
+    assert any("definitional move, not drift" in reason
+               for reason in diagnosis.reasons)
+
+
+def test_pre_exclusion_newest_receipt_with_data_change_keeps_verify_observation(
+        mini_repo: Path):
+    """The transition proves unchanged data, not merely an old receipt:
+    a data move without a receipt keeps verify-observation."""
+    from repo_builders import declare_scan
+
+    declare_scan(mini_repo, SCAN_REL)
+    _, result = _commit_capture_v2(mini_repo, "transition-dirty", "request-transition-dirty")
+    _rewrite_newest_receipt_as_pre_exclusion(
+        mini_repo, mini_repo / result.receipt_path)
+    concepts = mini_repo / "knowledge/concepts.yaml"
+    concepts.write_text(
+        concepts.read_text(encoding="utf-8") + "\n# hand-edited outside the gateway\n",
+        encoding="utf-8")
+    authority = collect_authority(
+        mini_repo, request_id="request-transition-dirty",
+        idempotency_key="transition-dirty", capability="capture.create",
+        response={"snapshot_after": result.snapshot_after},
+        manifest_snapshot=_live_snapshot(mini_repo))
+    assert authority.verification_error is None
+    assert authority.contract_only_drift is False
+    assert authority.definition_transition_drift is False
+    diagnosis = resolve([], authority)
+    assert diagnosis.canonical_outcome == "COMMITTED"
+    assert diagnosis.recovery_requirement == "verify-observation"

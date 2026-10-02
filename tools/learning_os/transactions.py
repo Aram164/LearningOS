@@ -67,6 +67,7 @@ from .evidence import (
 # Re-exported here because the receipt fields and every existing caller name it
 # through this module.
 from .fingerprint import (
+    FINGERPRINT_DEFINITION_VERSION,
     canonical_data_and_stat_fingerprints,
     canonical_fingerprint,
     canonical_stat_digest,
@@ -1696,6 +1697,7 @@ class TransactionService:
                 "metadata": {
                     **dict(metadata or {}),
                     "data_roots_sha256": data_roots_after_id,
+                    "fingerprint_definition": FINGERPRINT_DEFINITION_VERSION,
                 },
             }
             if request is not None:

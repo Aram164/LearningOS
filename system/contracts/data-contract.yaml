@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 52
-schema_fingerprint: sha256:36c4053ef95dad12deb9feb1269aaf652e69020f0cbe53760fa60c77f5363a39
+contract_version: 53
+schema_fingerprint: sha256:ca0bfb8b2004806aaaa9c54e45db44211e4da20261a9ee9a21b1977fc34fa8a3
 record_schemas: 36
 history:
 - version: 1
@@ -388,5 +388,12 @@ history:
   adopted: '2026-10-03'
   note: Reject whitespace-only optional sealed session identities; omitted identities
     remain backward compatible, no migration
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 53
+  adopted: '2026-10-03'
+  note: Receipts optionally identify the snapshot fingerprint definition; byte-bound
+    caches and conservative legacy resolver admission preserve existing records, no
+    migration
   migration: null
   fixture: tests/fixtures/formats/v46/

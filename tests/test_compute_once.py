@@ -10,9 +10,9 @@ import json
 from pathlib import Path
 
 import pytest
+from repo_builders import declare_scan
 
 from learning_os import digests
-from learning_os.contracts.local_attachments import LOCAL_ATTACHMENTS_RELATIVE
 
 
 def _counted_blocks(path: Path, calls: list):
@@ -125,21 +125,7 @@ SCAN_REL = "knowledge/attachments/note-demo/scan.pdf"
 
 
 def _declare_scan(root: Path, data: bytes = b"%PDF scan\n") -> None:
-    """A present, pinned local-only attachment owned by the demo note."""
-    note = root / "knowledge/notes/mathematics/note-demo.md"
-    text = note.read_text(encoding="utf-8")
-    if "attachments:" not in text:
-        note.write_text(text.replace(
-            "sources: [source-demo-book]\n",
-            f"sources: [source-demo-book]\nattachments:\n  - {SCAN_REL}\n", 1),
-            encoding="utf-8")
-    (root / SCAN_REL).parent.mkdir(parents=True, exist_ok=True)
-    (root / SCAN_REL).write_bytes(data)
-    (root / LOCAL_ATTACHMENTS_RELATIVE).write_text(
-        "schema_version: 1\ncontract: learningos-local-attachments\nfiles:\n"
-        f"  {SCAN_REL}:\n    bytes: {len(data)}\n"
-        f"    sha256: sha256:{hashlib.sha256(data).hexdigest()}\n",
-        encoding="utf-8")
+    declare_scan(root, SCAN_REL, data)
 
 
 def test_declared_scan_bytes_do_not_move_the_snapshot(mini_repo: Path):
@@ -434,6 +420,18 @@ def _commit_capture(root: Path, key: str, request_id: str):
 
 def _frozen(issues) -> list:
     return [(i.severity, i.code, i.message, i.path) for i in issues]
+
+
+def test_new_receipts_record_the_fingerprint_definition(mini_repo: Path):
+    import yaml
+
+    from learning_os.fingerprint import FINGERPRINT_DEFINITION_VERSION
+
+    result = _commit_capture(mini_repo, "defrec-a", "request-defrec-a")
+    receipt = yaml.safe_load(
+        (mini_repo / result.receipt_path).read_text(encoding="utf-8"))
+    assert receipt["metadata"]["fingerprint_definition"] == FINGERPRINT_DEFINITION_VERSION
+    assert receipt["metadata"]["fingerprint_definition"] == 2
 
 
 def test_receipt_sidecar_warm_run_matches_cold(mini_repo: Path):

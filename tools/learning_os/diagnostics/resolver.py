@@ -28,7 +28,7 @@ from ..errors import (
     TransactionIdempotencyConflict,
 )
 from ..evidence import verify_committed_evidence
-from ..fingerprint import data_roots_fingerprint
+from ..fingerprint import FINGERPRINT_DEFINITION_VERSION, data_roots_fingerprint
 from ..loading.yamlio import UniqueKeySafeLoader
 from . import conventions
 
@@ -91,6 +91,17 @@ class AuthorityEvidence:
     #: The newest receipt id behind ``contract_only_drift``, for the
     #: reason trail. None unless the drift was proven contract-only.
     contract_only_receipt_id: str | None = None
+    #: True when the newest receipt predates the current fingerprint
+    #: definition yet its recorded data-roots digest matches the digest
+    #: recomputed under its own definition: the authored data is
+    #: unchanged and only the snapshot meaning moved (see
+    #: ``fingerprint_definition_transition_receipt``), so committed
+    #: writes up to it are settled. Anything else leaves this False,
+    #: keeping verify-observation.
+    definition_transition_drift: bool = False
+    #: The newest receipt id behind ``definition_transition_drift``,
+    #: for the reason trail. None unless the transition was proven.
+    definition_transition_receipt_id: str | None = None
     #: Authority files (relative paths) that yielded no evidence because
     #: they were unreadable, unparseable, or wrongly shaped. Skipped, never
     #: fatal — but recorded, so a corrupt receipt is explicit uncertainty
@@ -155,6 +166,50 @@ def contract_only_drift_receipt(
     if not isinstance(recorded, str) or not recorded:
         return None
     if f"sha256:{data_roots_fingerprint(root)}" != recorded:
+        return None
+    return newest
+
+
+def fingerprint_definition_transition_receipt(
+    root: Path, receipts: list[dict], manifest_snapshot: str | None,
+) -> dict | None:
+    """The newest receipt when it predates the current fingerprint
+    definition yet matches under its own, else None.
+
+    Definition 2 excluded declared local-only attachments from every
+    snapshot digest, so every pre-exclusion receipt's ``snapshot_after``
+    and ``data_roots_sha256`` describe bytes the current walk no longer
+    hashes. A newest receipt recording an older definition, whose
+    recorded data-roots digest equals the digest recomputed under that
+    same definition, proves the authored data is unchanged since it —
+    the move is definitional, not drift. Anything else (a chained
+    manifest, a current-definition receipt, an unknown definition, a
+    digest mismatch, a receipt too old to record the digest) answers
+    None, keeping verify-observation.
+    """
+    if not manifest_snapshot:
+        return None
+    if any(receipt.get("snapshot_after") == manifest_snapshot
+           for receipt in receipts):
+        return None
+    newest = newest_receipt(receipts)
+    if newest is None:
+        return None
+    metadata = newest.get("metadata")
+    if not isinstance(metadata, dict):
+        return None
+    definition = metadata.get("fingerprint_definition", 1)
+    if not isinstance(definition, int) or isinstance(definition, bool) \
+            or definition >= FINGERPRINT_DEFINITION_VERSION:
+        return None
+    recorded = metadata.get("data_roots_sha256")
+    if not isinstance(recorded, str) or not recorded:
+        return None
+    try:
+        current = f"sha256:{data_roots_fingerprint(root, definition=definition)}"
+    except ValueError:
+        return None
+    if current != recorded:
         return None
     return newest
 
@@ -267,6 +322,22 @@ def collect_authority(root: Path, *, request_id: str, idempotency_key: str,
         if drift_cache is not None:
             drift_cache[manifest_snapshot] = drift_receipt
     drift_id = drift_receipt.get("id") if drift_receipt is not None else None
+    # The definition-transition check re-walks the data roots under the
+    # old definition (including the scans), so it runs only when the
+    # contract-only check found nothing, and shares the drift cache
+    # under its own key.
+    transition_key = ("fingerprint-definition", manifest_snapshot)
+    if drift_receipt is not None:
+        transition_receipt = None
+    elif drift_cache is not None and transition_key in drift_cache:
+        transition_receipt = drift_cache[transition_key]
+    else:
+        transition_receipt = fingerprint_definition_transition_receipt(
+            root, receipts, manifest_snapshot)
+        if drift_cache is not None:
+            drift_cache[transition_key] = transition_receipt
+    transition_id = transition_receipt.get("id") \
+        if transition_receipt is not None else None
     return AuthorityEvidence(
         request_id=request_id,
         idempotency_key=idempotency_key,
@@ -286,6 +357,8 @@ def collect_authority(root: Path, *, request_id: str, idempotency_key: str,
             receipts, manifest_snapshot, snapshot_after),
         contract_only_drift=drift_receipt is not None,
         contract_only_receipt_id=str(drift_id) if drift_id else None,
+        definition_transition_drift=transition_receipt is not None,
+        definition_transition_receipt_id=str(transition_id) if transition_id else None,
         unreadable_authority=list(unreadable),
     )
 
@@ -566,6 +639,15 @@ def resolve(records: list[dict], authority: AuthorityEvidence) -> CausalDiagnosi
                 "live snapshot matches no receipt, but only system/schema/** "
                 "and system/contracts/** changed since the newest receipt"
                 f"{anchor}; authored data unchanged: settled")
+        elif authority.definition_transition_drift:
+            recovery = "none"
+            anchor = (f" (newest receipt {authority.definition_transition_receipt_id})"
+                      if authority.definition_transition_receipt_id else "")
+            reasons.append(
+                "live snapshot matches no receipt, but the newest receipt "
+                f"predates fingerprint definition {FINGERPRINT_DEFINITION_VERSION} "
+                "and the authored-data roots match it under its own definition"
+                f"{anchor}: definitional move, not drift: settled")
         else:
             recovery = "verify-observation"
             reasons.append("receipt exists but no observation is on record")
