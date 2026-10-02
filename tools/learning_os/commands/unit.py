@@ -25,6 +25,7 @@ from learning_os.routes import route_with_identity
 from learning_os.unit_notes import unit_note_marker
 
 from .reads import _print_stable, _refusal, _snapshot, _window
+from .suggest import not_found, with_suggestions
 from .support import (
     WriteRefused,
     _dump_study_map,
@@ -50,13 +51,50 @@ def _unit_summary(row):
     return {key: row[key] for key in _UNIT_SUMMARY_FIELDS if key in row}
 
 
+#: The unit ``status`` enum from ``system/schema/unit.schema.json``.
+#: A test pins this copy against the schema, so the two cannot drift.
+#: An unknown filter value refuses with exit 2 instead of answering an
+#: empty result, so ``total: 0`` always means "valid filter, no matches".
+UNIT_STATUSES = frozenset({
+    "needs-map", "not-started", "ready", "active", "paused",
+    "ready-to-shelve", "complete",
+})
+
+
+def _component_ids(manifest) -> set[str]:
+    """Every known component: declared on a module or named by a unit."""
+    ids = set()
+    for module in manifest.get("modules", []) or []:
+        if not isinstance(module, dict):
+            continue
+        for component in module.get("components", []) or []:
+            if isinstance(component, dict) and component.get("id"):
+                ids.add(component["id"])
+            elif isinstance(component, str) and component:
+                ids.add(component)
+    for row in manifest.get("units", []) or []:
+        if isinstance(row, dict) and row.get("component_id"):
+            ids.add(row["component_id"])
+    return ids
+
+
 def _filtered_units(manifest, args):
     rows = manifest.get("units", [])
     if args.module_id:
+        modules = [row.get("id") for row in manifest.get("modules", []) or []
+                   if isinstance(row, dict) and row.get("id")]
+        if args.module_id not in modules:
+            raise WriteRefused(not_found("module", args.module_id, modules))
         rows = [row for row in rows if row.get("module_id") == args.module_id]
     if args.component_id:
+        known = _component_ids(manifest)
+        if args.component_id not in known:
+            raise WriteRefused(not_found("component", args.component_id, known))
         rows = [row for row in rows if row.get("component_id") == args.component_id]
     if args.status:
+        if args.status not in UNIT_STATUSES:
+            raise WriteRefused(with_suggestions(
+                f"unknown status: {args.status}", args.status, UNIT_STATUSES))
         rows = [row for row in rows if row.get("status") == args.status]
     return rows
 

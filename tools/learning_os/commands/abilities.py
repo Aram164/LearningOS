@@ -19,6 +19,7 @@ from ..contracts.gateway import current_gateway_request
 from ..learning_runtime import runtime_path
 from ..loader import load_repo
 from .reads import _print_stable, _snapshot
+from .suggest import suggest
 from .support import (
     WriteRefused,
     _expected_ok,
@@ -79,6 +80,15 @@ def cmd_ability_context(args) -> int:
             payload = ability_context(repo, focus=args.ability_id, limit=args.limit,
                                       offset=offset, brief=brief, section=section,
                                       snapshot=snapshot)
+            if (args.ability_id is not None
+                    and args.ability_id not in repo.abilities
+                    and payload.get("state") == "unmapped"):
+                # An unknown identity, not a known-but-unmapped ability.
+                # The unmapped shape stays what the UI reads (its decoder
+                # tolerates extra keys); the flag and suggestions say this
+                # is a mistyped id and where to look next.
+                payload["known_identity"] = False
+                payload["suggestions"] = suggest(args.ability_id, repo.abilities)
             return _print_stable(root, snapshot, {"contract": "ability-context-v1", **payload})
     except (WriteRefused, OSError, ValueError) as exc:
         from .reads import _refusal

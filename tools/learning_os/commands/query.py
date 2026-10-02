@@ -16,6 +16,7 @@ from learning_os.pathing import PathBoundaryError, read_text_inside
 from learning_os.rules import validate
 
 from .reads import (
+    _inspect_candidates,
     _print_stable,
     _refusal,
     _snapshot,
@@ -32,6 +33,7 @@ from .reads import (
     related_records,
     structural_payload,
 )
+from .suggest import suggest
 from .support import (
     WriteRefused,
     _delegate,
@@ -236,6 +238,30 @@ def cmd_bootstrap(args) -> int:
     return 0
 
 
+#: Every record family ``search --type`` accepts: the manifest's
+#: record types plus the two virtual discovery rows (garden seeds and
+#: inbox files). An unknown value refuses with exit 2 instead of
+#: answering an empty result, so ``total: 0`` always means "valid
+#: filter, no matches". A test pins this set against the live
+#: manifest's types, so a new record family updates it explicitly.
+VALID_RECORD_TYPES = frozenset({
+    "collection", "compatibility-alias", "concept", "coordination",
+    "garden-note", "inbox-item", "module", "module-source-map", "note",
+    "program", "project", "project-relationship", "source", "study-map",
+    "topic-pack", "unit", "unit-material-synthesis", "workspace",
+})
+
+
+def _unknown_record_type(value: str) -> str:
+    """Refusal for a mistyped ``--type``: suggestions plus the valid list."""
+    hints = suggest(value, VALID_RECORD_TYPES)
+    message = f"unknown record type: {value}"
+    if hints:
+        return (f"{message} (did you mean: {', '.join(hints)}? "
+                f"valid types: {', '.join(sorted(VALID_RECORD_TYPES))})")
+    return f"{message} (valid types: {', '.join(sorted(VALID_RECORD_TYPES))})"
+
+
 def _inbox_search_rows(root: Path) -> list[dict]:
     """One discovery row per inbox file, matched on names only, never bytes.
 
@@ -337,6 +363,8 @@ def _metadata_search_page(args) -> int:
 
 
 def cmd_search(args) -> int:
+    if args.type is not None and args.type not in VALID_RECORD_TYPES:
+        return _refusal(WriteRefused(_unknown_record_type(args.type)))
     if getattr(args, "content", False):
         if getattr(args, "page", False):
             print("los: --page pages metadata search; --content already paginates",
@@ -387,7 +415,8 @@ def cmd_inspect(args) -> int:
     if payload is None:
         payload = structural_payload(manifest, args.id, repo)
     if payload is None:
-        print(f"los: {inspect_not_found(args.id)}", file=sys.stderr)
+        print(f"los: {inspect_not_found(args.id, _inspect_candidates(manifest, repo))}",
+              file=sys.stderr)
         hint = describe_unresolved_reference(manifest, args.id)
         if hint:
             print(f"los: hint: {hint}", file=sys.stderr)

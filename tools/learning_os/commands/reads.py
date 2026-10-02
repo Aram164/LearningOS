@@ -32,6 +32,7 @@ from learning_os.search.index import NoteBlob, build_registry
 from learning_os.search.model import POSTINGS_NODE_ID
 from learning_os.search.query import candidates
 
+from .suggest import not_found, with_suggestions
 from .support import (
     WriteRefused,
     _fresh_manifest,
@@ -177,11 +178,37 @@ def structural_payload(manifest: dict, record_id: str, repo=None) -> dict | None
 STRUCTURAL_PREFIXES = ("stage-", "detour-", "step-", "workstream-", "milestone-")
 
 
-def inspect_not_found(record_id: str) -> str:
+def _inspect_candidates(manifest: dict, repo=None) -> list[str]:
+    """Every id ``inspect`` could have resolved: records plus structural ids."""
+    ids = [row.get("id") for row in manifest.get("records", []) or []
+           if isinstance(row, dict) and isinstance(row.get("id"), str)]
+    ids.extend(stage.get("id") for stage in manifest.get("stages", []) or []
+               if isinstance(stage, dict) and isinstance(stage.get("id"), str))
+    for study_map in manifest.get("study_maps", []) or []:
+        if not isinstance(study_map, dict):
+            continue
+        ids.extend(detour.get("id") for detour in study_map.get("detours", []) or []
+                   if isinstance(detour, dict) and isinstance(detour.get("id"), str))
+    for record in manifest.get("records", []) or []:
+        if not isinstance(record, dict) or record.get("type") != "project":
+            continue
+        ids.extend(node["id"] for node, _ in _structure_nodes(record.get("structure")))
+        ids.extend(mid for mid in record.get("milestone_ids", []) or []
+                   if isinstance(mid, str))
+    if repo is not None:
+        for path in getattr(repo, "learning_paths", {}).values():
+            ids.extend(stage.get("id") for stage in path.data.get("stages", []) or []
+                       if isinstance(stage, dict) and isinstance(stage.get("id"), str))
+    return ids
+
+
+def inspect_not_found(record_id: str, candidates=()) -> str:
     if isinstance(record_id, str) and record_id.startswith(STRUCTURAL_PREFIXES):
-        return (f"record not found: {record_id} (no curriculum stage, path stage, "
-                "detour, project node, or milestone carries this id)")
-    return f"record not found: {record_id}"
+        return with_suggestions(
+            f"record not found: {record_id} (no curriculum stage, path stage, "
+            "detour, project node, or milestone carries this id)",
+            record_id, candidates)
+    return not_found("record", record_id, candidates)
 
 
 def describe_unresolved_reference(manifest, record_id):
@@ -225,7 +252,8 @@ def inspect_batch(args) -> int:
                     # The hint stays out of the refusal: _refusal classifies
                     # the exit code by message text, and a referrer id that
                     # says "snapshot" would turn this miss into exit 3.
-                    code = _refusal(WriteRefused(inspect_not_found(record_id)))
+                    code = _refusal(WriteRefused(inspect_not_found(
+                        record_id, _inspect_candidates(manifest, repo))))
                     hint = describe_unresolved_reference(manifest, record_id)
                     if hint:
                         print(f"los: hint: {hint}", file=sys.stderr)
@@ -501,8 +529,8 @@ def _note_collection(root):
     return repo
 
 
-def _garden_note(root, note_id):
-    """The garden seed with one stable id, or None.
+def _garden_notes(root):
+    """(stable id, note) pairs for every garden seed.
 
     Loaded lazily on a durable-note miss, so the registered-note path —
     including its parse-only-notes budget — never pays for the garden.
@@ -512,8 +540,14 @@ def _garden_note(root, note_id):
     repo = Repo(root=root)
     load_garden(repo, root)
     garden_root = root / "knowledge" / "garden"
-    for note in repo.garden_notes:
-        if garden_id(garden_root, note.path) == note_id:
+    return [(garden_id(garden_root, note.path), note)
+            for note in repo.garden_notes]
+
+
+def _garden_note(root, note_id):
+    """The garden seed with one stable id, or None."""
+    for stable_id, note in _garden_notes(root):
+        if stable_id == note_id:
             return note
     return None
 
@@ -539,9 +573,12 @@ def cmd_note_read(args) -> int:
             repo = _note_collection(root)
             note = repo.notes.get(args.note_id)
             if note is None:
-                garden = _garden_note(root, args.note_id)
+                seeds = _garden_notes(root)
+                garden = next((seed for stable_id, seed in seeds
+                               if stable_id == args.note_id), None)
                 if garden is None:
-                    raise WriteRefused(f"note not found: {args.note_id}")
+                    candidates = [*repo.notes, *[stable_id for stable_id, _ in seeds]]
+                    raise WriteRefused(not_found("note", args.note_id, candidates))
                 raw = _bytes_inside_owner(
                     root, garden.path, root / "knowledge" / "garden",
                     escape="garden path escapes its garden owner",
@@ -1424,7 +1461,8 @@ def cmd_material_context(args) -> int:
             concept_id = _resolve_concept(repo, args.concept) \
                 if args.concept else None
             if args.unit and args.unit not in repo.units:
-                raise WriteRefused(f"unknown unit: {args.unit!r}")
+                raise WriteRefused(with_suggestions(
+                    f"unknown unit: {args.unit!r}", args.unit, repo.units))
             assessments = _approved_assessments(repo)
             related_count = 0
             searched_related: list = []

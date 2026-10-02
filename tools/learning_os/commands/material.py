@@ -31,6 +31,7 @@ from .reads import (
     _snapshot,
     _unit_note_scope,
 )
+from .suggest import with_suggestions
 from .support import (
     WriteRefused,
     _dump_yaml,
@@ -52,7 +53,8 @@ def _loaded(root):
 def _unit(repo, unit_id):
     unit = repo.units.get(unit_id)
     if unit is None:
-        raise WriteRefused(f"unit not found: {unit_id}")
+        raise WriteRefused(with_suggestions(
+            f"unit not found: {unit_id}", unit_id, repo.units))
     if unit.module_id not in repo.module_source_maps:
         raise WriteRefused(f"unit {unit_id} has no module source map")
     return unit

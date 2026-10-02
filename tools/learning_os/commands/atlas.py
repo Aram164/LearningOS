@@ -15,6 +15,7 @@ from ..fingerprint import canonical_fingerprint
 from ..loader import load_repo
 from ..loading.yamlio import UniqueKeySafeLoader
 from ..revisions import artifact_revision
+from .suggest import with_suggestions
 from .support import (
     WriteRefused,
     _expected_ok,
@@ -81,7 +82,9 @@ def cmd_atlas_context(args) -> int:
             return 3
         repo = load_repo(root)
         if args.concept_id not in repo.concepts:
-            raise WriteRefused("unknown concept")
+            raise WriteRefused(with_suggestions(
+                f"unknown concept: {args.concept_id}",
+                args.concept_id, repo.concepts))
         # This is a scoped editor read, not another full-manifest endpoint.
         rows = [copy.deepcopy(row) for data in _registries(root).values()
                 for row in data["relations"]

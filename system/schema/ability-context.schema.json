@@ -17,6 +17,8 @@
     "focus": {"type": "string"},
     "state": {"type": "string"},
     "reason": {"type": "string"},
+    "known_identity": {"type": "boolean"},
+    "suggestions": {"type": "array", "items": {"type": "string"}, "maxItems": 5},
     "total": {"type": "integer", "minimum": 0},
     "offset": {"type": "integer", "minimum": 0},
     "returned": {"type": "integer", "minimum": 0},

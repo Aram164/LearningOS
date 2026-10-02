@@ -14,6 +14,7 @@ from ..materials_resolution import (
 )
 from .material import _brief_analysis_refs, _map_for_unit, _route_entry
 from .reads import _print_stable, _refusal, _snapshot
+from .suggest import MAX_SUGGESTIONS, suggest, with_suggestions
 from .support import WriteRefused, _operator_lock, _root
 
 MAX_EXCERPT = 6000
@@ -54,15 +55,32 @@ def cmd_material_span(args) -> int:
             repo = load_repo(root)
             unit = repo.units.get(args.unit_id)
             if unit is None:
-                raise WriteRefused(f"unknown unit {args.unit_id}")
+                raise WriteRefused(with_suggestions(
+                    f"unknown unit {args.unit_id}", args.unit_id, repo.units))
             source_map = repo.module_source_maps.get(unit.module_id)
             if source_map is None:
                 raise WriteRefused("unit has no module source map")
             routes = unit_routes(source_map, unit.module_id, unit.id)
             matches = [row for row in routes
                        if row["id"] == args.route_id]
-            if len(matches) != 1:
-                raise WriteRefused("route is missing or ambiguous in this unit")
+            if len(matches) > 1:
+                raise WriteRefused(
+                    f"route {args.route_id} is ambiguous in {unit.id}: "
+                    f"{len(matches)} matches")
+            if not matches:
+                route_ids = sorted(row["id"] for row in routes if row.get("id"))
+                base = f"route not found: {args.route_id} in {unit.id}"
+                if suggest(args.route_id, route_ids):
+                    raise WriteRefused(with_suggestions(
+                        base, args.route_id, route_ids))
+                # No ranked near-miss: still name the unit's routes, bounded,
+                # so the caller picks an existing one instead of guessing.
+                listed = route_ids[:MAX_SUGGESTIONS]
+                extra = len(route_ids) - len(listed)
+                detail = ", ".join([*listed, f"+{extra} more"] if extra > 0
+                                   else listed)
+                raise WriteRefused(
+                    f"{base} (routes: {detail})" if detail else base)
             route, placement_flags = _placement_route(
                 repo, unit, source_map, routes, matches[0], args)
             source = repo.sources.get(route.get("source_id"), {})

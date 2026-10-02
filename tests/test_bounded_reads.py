@@ -785,15 +785,12 @@ def test_compact_unit_list_matches_full_listing_for_every_filter(mini_repo):
               ("--module-id", "module-demo"),
               ("--status", "active"), ("--status", "complete"),
               ("--component-id", "component-demo-core"),
-              ("--component-id", "component-no-such"),
               ("--module-id", "module-demo", "--status", "complete"),
               ("--module-id", "module-demo",
                "--component-id", "component-demo-core"),
               ("--status", "complete",
                "--component-id", "component-demo-core"),
               ("--module-id", "module-demo", "--status", "complete",
-               "--component-id", "component-demo-core"),
-              ("--module-id", "module-no-such", "--status", "complete",
                "--component-id", "component-demo-core"))
     allowed = {"id", "title", "status", "module_id", "component_id", "order",
                "current_study_map", "needs_study_map"}
@@ -809,6 +806,22 @@ def test_compact_unit_list_matches_full_listing_for_every_filter(mini_repo):
         for row in items:
             assert set(row) <= allowed, (filters, sorted(row))
             assert "knowledge_map" not in row and "notes_text" not in row
+
+
+def test_compact_unit_list_refuses_unknown_filters_with_suggestions(mini_repo):
+    _two_unit_repo(mini_repo)
+    bad = ((("unit-list", "--module-id", "module-dem"),
+            "module not found: module-dem", "module-demo"),
+           (("unit-list", "--compact", "--component-id", "component-demo-cor"),
+            "component not found: component-demo-cor", "component-demo-core"),
+           (("unit-list", "--compact", "--status", "actve"),
+            "unknown status: actve", "active"))
+    for argv, message, hint in bad:
+        result = run_los(mini_repo, *argv)
+        assert result.returncode == 2, argv
+        assert message in result.stderr, argv
+        assert hint in result.stderr, argv
+        assert not result.stdout, argv
 
 
 def test_compact_unit_list_empty_result_shape(mini_repo):
