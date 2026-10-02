@@ -817,6 +817,90 @@ entries:
       unit-m2-sad-l15: 3
     snapshot_before: sha256:97af3aabad7d320e38c70ad40e068656a4ab816a7a6719fd1b953e155f227521
     snapshot_after: sha256:6c1d4b140f95d0df7ed9459e6dfaf318a28eb317339fc1a1249bde4a9d02c1b9
+  inbox-resolve-int2-01:
+    request_id: request-inbox-resolve-int2-01-9d5e373e
+    capability: inbox.resolve
+    channel: operator
+    intent_sha256: sha256:e831a3a13b660496700a0734645a0041450640315698553c9d6738111dae9682
+    transaction_id: transaction-20261002-213908-001
+    receipt_path: operations/transactions/transaction-20261002-213908-001.yaml
+    revisions:
+      file:archive/inbox/2026/complaints/README.md: 1
+      file:work/inbox/complaints/README.md: 1
+    snapshot_before: sha256:a2cbc2f04b7acc3d7668312541839d5ef47b3583ae102a2298214e754e8c6f2c
+    snapshot_after: sha256:943f403809b04d77ff9d7c452b7b27b581b2da05a132670268d6327b2e76530f
+  inbox-resolve-int2-02:
+    request_id: request-inbox-resolve-int2-02-f677c232
+    capability: inbox.resolve
+    channel: operator
+    intent_sha256: sha256:cdebba13d9f9bf76b89eb071b8e95f0a36e4b61864b033bfd18302c4482fd259
+    transaction_id: transaction-20261002-213914-001
+    receipt_path: operations/transactions/transaction-20261002-213914-001.yaml
+    revisions:
+      file:archive/inbox/2026/complaints/2026-09-28-sad-plan-import-friction.md: 1
+      file:work/inbox/complaints/2026-09-28-sad-plan-import-friction.md: 1
+    snapshot_before: sha256:943f403809b04d77ff9d7c452b7b27b581b2da05a132670268d6327b2e76530f
+    snapshot_after: sha256:b6a3205bd6e75f2dc246a2629d4d583ed9de6ebd3ecd742ebd821363a22af0e0
+  inbox-resolve-int2-03:
+    request_id: request-inbox-resolve-int2-03-c6d6b289
+    capability: inbox.resolve
+    channel: operator
+    intent_sha256: sha256:f1bff841bc95873e9b37423b11fee0b56363be84817f546da46453f04be326bb
+    transaction_id: transaction-20261002-213920-001
+    receipt_path: operations/transactions/transaction-20261002-213920-001.yaml
+    revisions:
+      file:archive/inbox/2026/complaints/2026-09-29-existing-source-local-shelving.md: 1
+      file:work/inbox/complaints/2026-09-29-existing-source-local-shelving.md: 1
+    snapshot_before: sha256:b6a3205bd6e75f2dc246a2629d4d583ed9de6ebd3ecd742ebd821363a22af0e0
+    snapshot_after: sha256:472d0c5d0e014dd5d27b0355da9a0512b392aa0a9de3a824ebf0a98f09123b05
+  inbox-resolve-int2-04:
+    request_id: request-inbox-resolve-int2-04-e5380729
+    capability: inbox.resolve
+    channel: operator
+    intent_sha256: sha256:331af9758460cb7c00f5103e8623412174b545aa1b3e5ea1c28638f96fbdb8da
+    transaction_id: transaction-20261002-213927-001
+    receipt_path: operations/transactions/transaction-20261002-213927-001.yaml
+    revisions:
+      file:archive/inbox/2026/complaints/2026-09-29-source-attach-dossier-payload.md: 1
+      file:work/inbox/complaints/2026-09-29-source-attach-dossier-payload.md: 1
+    snapshot_before: sha256:472d0c5d0e014dd5d27b0355da9a0512b392aa0a9de3a824ebf0a98f09123b05
+    snapshot_after: sha256:b3ae044cd3c3c578e32f69898a1365b1f453b53b7ed7fd8ed49bf0e5244f4834
+  inbox-resolve-int2-05:
+    request_id: request-inbox-resolve-int2-05-3a6249e8
+    capability: inbox.resolve
+    channel: operator
+    intent_sha256: sha256:48dc866d450af0955ec96ae309e7f6663ae6b5f30104c621928c690657387cf0
+    transaction_id: transaction-20261002-213933-001
+    receipt_path: operations/transactions/transaction-20261002-213933-001.yaml
+    revisions:
+      file:archive/inbox/2026/complaints/2026-09-29-useful-sections-shape.md: 1
+      file:work/inbox/complaints/2026-09-29-useful-sections-shape.md: 1
+    snapshot_before: sha256:b3ae044cd3c3c578e32f69898a1365b1f453b53b7ed7fd8ed49bf0e5244f4834
+    snapshot_after: sha256:97adeb0847f3b80e427ea1035f5fc8ded2c9d77e4e3fdffc9a45b5dfa455b962
+  inbox-resolve-int2-06:
+    request_id: request-inbox-resolve-int2-06-27a7cad4
+    capability: inbox.resolve
+    channel: operator
+    intent_sha256: sha256:130493328e50be425c50f81e14fd9b8fc2119c8c98de6d9e9407188f5cb2dd40
+    transaction_id: transaction-20261002-213939-001
+    receipt_path: operations/transactions/transaction-20261002-213939-001.yaml
+    revisions:
+      file:archive/inbox/2026/complaints/2026-09-29-collection-why-correction.md: 1
+      file:work/inbox/complaints/2026-09-29-collection-why-correction.md: 1
+    snapshot_before: sha256:97adeb0847f3b80e427ea1035f5fc8ded2c9d77e4e3fdffc9a45b5dfa455b962
+    snapshot_after: sha256:9a9343dda8814fc868b59c96e5b6bd9eefa4cd1b078479237729194965f61d86
+  inbox-resolve-int2-07:
+    request_id: request-inbox-resolve-int2-07-32433548
+    capability: inbox.resolve
+    channel: operator
+    intent_sha256: sha256:7872a1c2b22438a914e68c0e9f07f3f3eedfc14698e6e4407a9f030592507e16
+    transaction_id: transaction-20261002-213945-001
+    receipt_path: operations/transactions/transaction-20261002-213945-001.yaml
+    revisions:
+      file:archive/inbox/2026/complaints/2026-09-28-remote-video-examination.md: 1
+      file:work/inbox/complaints/2026-09-28-remote-video-examination.md: 1
+    snapshot_before: sha256:9a9343dda8814fc868b59c96e5b6bd9eefa4cd1b078479237729194965f61d86
+    snapshot_after: sha256:9b7a88ef9a0719af695d1ef4ec9ebc0650fe2b4a75a2494f9e92f6b5d0f5e075
   intelligence-e2e-l09-mit-bootstrap-20260908:
     request_id: request-intelligence-e2e-l09-mit-bootstrap-20260908
     capability: module.plan.import
