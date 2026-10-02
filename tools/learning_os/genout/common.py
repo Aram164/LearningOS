@@ -195,7 +195,12 @@ LIST_MARKER = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s+")
 
 
 def _strip_headings(text: str | None) -> str:
-    """Prefer prose after dropping headings, callouts, tables and rules.
+    """Prefer prose after dropping headings, callouts, tables, rules and comments.
+
+    HTML comment blocks (``<!-- … -->``, including multi-line) are dropped
+    the same way headings are: generator banners are not prose, and a
+    leading banner must never become the note's summary (#88). Non-greedy
+    so adjacent comments each match; an unclosed ``<!--`` is left alone.
 
     Recognised list forms: -, *, +, 1. and 1) (with or without indentation).
     Skip list items and their continuations (indented or unindented) when prose exists. 
@@ -204,6 +209,7 @@ def _strip_headings(text: str | None) -> str:
     """
     if not text:
         return ""
+    text = re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
     keep = []
     fallback = []
     in_list = False

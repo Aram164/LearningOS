@@ -462,6 +462,44 @@ def test_note_summary_prefers_prose_with_list_fallback(mini_repo, marker, contin
     assert projected["summary"] == expected
 
 
+@pytest.mark.parametrize(("body", "expected"), [
+    # A leading generator banner is not prose (#88).
+    ("<!-- GENERATED file - do not edit; promoted by tools/material_summarize.py --promote -->\n"
+     "# Title\n\nReal prose paragraph.",
+     "Real prose paragraph."),
+    # Multi-line comment blocks go the same way.
+    ("<!--\nA long note to the next editor\nspanning lines.\n-->\n\nReal prose paragraph.",
+     "Real prose paragraph."),
+    # An inline comment leaves the surrounding prose joined.
+    ("Motivation<!-- draft --> (p. 5): samples estimate means.",
+     "Motivation (p. 5): samples estimate means."),
+    # Adjacent comments each match.
+    ("<!-- one --><!-- two -->\n\nReal prose paragraph.",
+     "Real prose paragraph."),
+    # A note that is only a comment has an empty summary, never the comment.
+    ("<!-- GENERATED file - do not edit -->\n", ""),
+    ("<!--\nOnly a multi-line comment.\n-->", ""),
+])
+def test_note_summary_drops_html_comments(body, expected):
+    from learning_os.genout.common import _first_para, _strip_headings
+
+    assert _first_para(_strip_headings(body)) == expected
+
+
+def test_promoted_banner_never_becomes_the_projected_summary(mini_repo):
+    """End to end: the #88 banner shape projects the first prose paragraph."""
+    note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
+    banner = ("<!-- GENERATED file - do not edit; "
+              "promoted by tools/material_summarize.py --promote -->\n")
+    text = note.read_text(encoding="utf-8")
+    assert "Body prose." in text
+    note.write_text(text.replace("Body prose.", banner + "# Demo\n\nBody prose."),
+                    encoding="utf-8")
+    manifest = json.loads(generate_all(load_repo(mini_repo), generated_at="T1")["manifest.json"])
+    projected = next(row for row in manifest["records"] if row["id"] == "note-demo")
+    assert projected["summary"] == "Body prose."
+
+
 def test_malformed_frontmatter_prevents_publication(mini_repo):
     from repo_builders import run_los
 
