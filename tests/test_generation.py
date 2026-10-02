@@ -27,6 +27,11 @@ def strip_timestamps(content: str, name: str) -> str:
     if name.endswith((".json", ".canvas")):
         data = json.loads(content)
         data.get("_generated", {}).pop("generated_at", None)
+        if name == "manifest.identity.json":
+            # A digest of the timestamped manifest bytes: it moves exactly
+            # when they do (pinned separately below), so it is a timestamp
+            # here.
+            data.pop("manifest_sha256", None)
         return json.dumps(data, indent=2, sort_keys=True)
     return TIMESTAMP_LINE.sub("> Generated: X", content)
 
@@ -38,6 +43,11 @@ def test_generation_deterministic_except_timestamps(mini_repo):
     assert set(a) == set(b)
     for name in a:
         assert strip_timestamps(a[name], name) == strip_timestamps(b[name], name), name
+    from learning_os.manifest_identity import bytes_sha256
+    for run in (a, b):
+        identity = json.loads(run["manifest.identity.json"])
+        assert identity["manifest_sha256"] == bytes_sha256(
+            run["manifest.json"].encode("utf-8"))
 
 
 def test_generation_stress_tracks_the_declared_manifest_contract(mini_repo):

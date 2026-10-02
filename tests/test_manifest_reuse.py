@@ -306,3 +306,26 @@ def test_snapshot_bound_reads_share_one_hash_on_reuse(mini_repo, monkeypatch):
     builds = _counted(monkeypatch, "build_manifest")
     support._fresh_manifest(mini_repo, snapshot_id=snapshot)
     assert hashes == [] and builds == []
+
+
+def test_a_manifest_the_sidecar_does_not_describe_is_rebuilt(mini_repo, monkeypatch):
+    """A crash (or a concurrent read) between the two publications after a
+    code-only change leaves a sidecar beside a manifest it does not
+    describe. Both carry the same snapshot stamp, so only the pinned bytes
+    can tell them apart: the pair must rebuild, never serve the old bytes."""
+    from learning_os.manifest_identity import manifest_text
+
+    _generate(mini_repo)
+    stored = _stored_manifest(mini_repo)
+    stale = json.loads(json.dumps(stored))
+    stale["_stale_build_marker"] = "built by the previous code"
+    (mini_repo / "generated/manifest.json").write_text(
+        manifest_text(stale), encoding="utf-8")
+    assert _stored_identity(mini_repo)["snapshot_id"] == stale["_generated"]["snapshot_id"]
+    builds = _counted(monkeypatch, "build_manifest")
+
+    manifest = support._fresh_manifest(mini_repo)
+
+    assert len(builds) == 1
+    assert "_stale_build_marker" not in manifest
+    assert _without_generated(manifest) == _without_generated(stored)

@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import datetime
 import hashlib
+import json
 import os
 import stat
 from pathlib import Path
@@ -47,8 +48,23 @@ from .derived.identity import (
 #: Sidecar name inside generated/ (written by generate_all, like the manifest).
 IDENTITY_FILENAME = "manifest.identity.json"
 
-#: Sidecar contract. A reader meeting another format rebuilds.
-IDENTITY_FORMAT = 1
+#: Sidecar contract. A reader meeting another format rebuilds. Format 2
+#: pins the exact manifest bytes (``manifest_sha256``).
+IDENTITY_FORMAT = 2
+
+
+def manifest_text(manifest: dict) -> str:
+    """The one serialization ``generate_all`` publishes for manifest.json.
+
+    Shared so the bytes written and the bytes pinned in the sidecar can
+    never disagree.
+    """
+    return json.dumps(manifest, separators=(",", ":"), sort_keys=True,
+                      ensure_ascii=False) + "\n"
+
+
+def bytes_sha256(raw: bytes) -> str:
+    return "sha256:" + hashlib.sha256(raw).hexdigest()
 
 
 def materials_digest(root: Path) -> str:
@@ -168,6 +184,12 @@ def build_identity(root: Path, manifest: dict) -> dict:
         "built_date": datetime.date.today().isoformat(),
         "operations_digest": operations_digest(root),
         "materials_digest": materials_digest(root),
+        # The exact manifest bytes this identity describes. Every other pin
+        # is an input; this one binds the output, so a sidecar published
+        # beside a different manifest.json — a crash or a concurrent read
+        # between the two writes after a code-only change, when both still
+        # carry the same snapshot stamp — can never pass as current.
+        "manifest_sha256": bytes_sha256(manifest_text(manifest).encode("utf-8")),
     }
 
 

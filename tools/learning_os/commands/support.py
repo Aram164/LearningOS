@@ -37,7 +37,7 @@ from learning_os.genout import (
 )
 from learning_os.genout.common import _git_state
 from learning_os.loader import load_repo
-from learning_os.manifest_identity import IDENTITY_FILENAME, check_identity
+from learning_os.manifest_identity import IDENTITY_FILENAME, bytes_sha256, check_identity
 from learning_os.rules import validate
 from learning_os.transactions import (
     PostCommitFailure,
@@ -237,11 +237,19 @@ def _try_reuse_manifest(root: Path, live_snapshot: str, *, restamp: bool) -> dic
     path refuses.
     """
     try:
-        manifest = json.loads((root / "generated/manifest.json").read_text(encoding="utf-8"))
+        raw = (root / "generated/manifest.json").read_bytes()
         identity = json.loads((root / "generated" / IDENTITY_FILENAME).read_text(encoding="utf-8"))
     except (OSError, ValueError):
         return None
-    if not isinstance(manifest, dict) or not isinstance(identity, dict):
+    # The sidecar pins the exact manifest bytes it describes: a pair caught
+    # mid-publication (or a hand-touched file) never passes as current.
+    if not isinstance(identity, dict) or identity.get("manifest_sha256") != bytes_sha256(raw):
+        return None
+    try:
+        manifest = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, ValueError):
+        return None
+    if not isinstance(manifest, dict):
         return None
     try:
         current, _reason = check_identity(

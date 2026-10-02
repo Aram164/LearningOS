@@ -9,7 +9,7 @@ from pathlib import Path, PurePosixPath
 from ..derived.store import DERIVED_TOP_DIR
 from ..errors import TransactionFailure
 from ..loader import Repo
-from ..manifest_identity import IDENTITY_FILENAME, build_identity
+from ..manifest_identity import IDENTITY_FILENAME, build_identity, manifest_text
 from .atlas import build_domain_atlas
 from .canvas import build_concept_canvas
 from .common import stable_generated_at
@@ -46,12 +46,12 @@ def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
     outputs = {
         # These are machine projections. Keep their complete data and stable
         # key order without paying for indentation on every read/publication.
-        "manifest.json": json.dumps(manifest, separators=(",", ":"), sort_keys=True, ensure_ascii=False) + "\n",
+        "manifest.json": manifest_text(manifest),
         # The reuse sidecar: pins every input the manifest bytes depend on
         # so reads can serve the stored file when it is provably current
-        # (#83). Published before manifest.json (alphabetically first, and
-        # the manifest is always last), so a crash between the two leaves
-        # a snapshot mismatch that rebuilds rather than a false hit.
+        # (#83). It pins the manifest's exact bytes, so whichever of the two
+        # files a crash or a concurrent reader catches mid-publication, a
+        # mismatched pair rebuilds rather than serving a false hit.
         IDENTITY_FILENAME: json.dumps(build_identity(repo.root, manifest), separators=(",", ":"),
                                        sort_keys=True, ensure_ascii=False) + "\n",
         "backlinks.json": json.dumps(backlinks, separators=(",", ":"), sort_keys=True, ensure_ascii=False) + "\n",
