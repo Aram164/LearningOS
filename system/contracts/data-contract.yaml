@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 46
-schema_fingerprint: sha256:2635c0e4364174b48e75a61f02bd29c40c2d7912da5276d065a7c42471e64aa7
+contract_version: 47
+schema_fingerprint: sha256:3c10e9a2517e0a9e5fafa57258ee856ae7c09e2c61262c3f0f8705288cf1f879
 record_schemas: 35
 history:
 - version: 1
@@ -349,3 +349,10 @@ history:
     corrections; existing plans remain readable without a migration.
   migration: null
   fixture: tests/fixtures/formats/v40/
+- version: 47
+  adopted: '2026-10-02'
+  note: Receipts record an optional metadata.data_roots_sha256 (authored-data digest)
+    so diagnostics can tell contract-only moves from data drift; old receipts stay
+    valid without a migration.
+  migration: null
+  fixture: tests/fixtures/formats/v46/

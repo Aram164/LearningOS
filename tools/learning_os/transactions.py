@@ -65,7 +65,7 @@ from .evidence import (
 # One digest, one root list, shared with the projection (see fingerprint.py).
 # Re-exported here because the receipt fields and every existing caller name it
 # through this module.
-from .fingerprint import canonical_fingerprint
+from .fingerprint import canonical_fingerprint, data_roots_fingerprint
 from .pathing import PathBoundaryError, read_text_inside
 from .revisions import artifact_revision, load_revisions
 
@@ -1546,6 +1546,13 @@ class TransactionService:
 
             snapshot_after = take_fingerprint()
             snapshot_after_id = f"sha256:{snapshot_after}"
+            # The authored-data half of the same post-commit tree, for
+            # read-only diagnostics: the resolver compares it against the
+            # current data roots to tell a contract-only move from data
+            # drift. Computed from disk even when the guard digest is a
+            # caller-supplied double — it records the tree, never the
+            # double — and it never guards a write.
+            data_roots_after_id = f"sha256:{data_roots_fingerprint(self.root)}"
             if projected_snapshot is not None \
                     and projected_snapshot != snapshot_after_id:
                 raise TransactionFailure(
@@ -1613,7 +1620,10 @@ class TransactionService:
                     for artifact in artifacts
                 },
                 "writes": sorted(rows, key=lambda row: row["path"]),
-                "metadata": dict(metadata or {}),
+                "metadata": {
+                    **dict(metadata or {}),
+                    "data_roots_sha256": data_roots_after_id,
+                },
             }
             if request is not None:
                 receipt["authority"] = {

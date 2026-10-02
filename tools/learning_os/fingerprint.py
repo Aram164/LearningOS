@@ -40,6 +40,23 @@ CANONICAL_ROOTS = (
     "system/contracts",
 )
 
+#: Fingerprint roots that are code contracts, not authored data. A move
+#: confined to these roots still invalidates sealed envelopes (the write
+#: guard keeps the full root list); it only lets the causal resolver tell
+#: "contracts moved" apart from "data moved without a receipt".
+CONTRACT_ROOTS = (
+    "system/schema",
+    "system/contracts",
+)
+
+#: The authored-data half of the canonical roots. Receipts record this
+#: digest as ``metadata.data_roots_sha256`` so the resolver can compare
+#: the current data state against the newest receipt's without trusting
+#: any file the receipt did not describe.
+DATA_ROOTS = tuple(
+    root for root in CANONICAL_ROOTS if root not in CONTRACT_ROOTS
+)
+
 _SOURCE_FINGERPRINTS: weakref.WeakKeyDictionary[Repo, str] = weakref.WeakKeyDictionary()
 
 
@@ -54,15 +71,12 @@ def seed_source_fingerprint(repo: Repo, snapshot_id: str) -> None:
     _SOURCE_FINGERPRINTS[repo] = snapshot_id.removeprefix("sha256:")
 
 
-def canonical_fingerprint(root: Path) -> str:
-    """Return a stable digest of the authored canonical inputs under ``root``.
-
-    Generated outputs and the revision ledger are excluded by the root list;
-    dot-prefixed paths are skipped so editor scratch and VCS metadata cannot
-    move the digest.
-    """
+def _fingerprint_roots(root: Path, rel_roots) -> str:
+    """The canonical walk over an explicit root list. One walk, two lists:
+    the write guard keeps ``CANONICAL_ROOTS``; the data-roots digest keeps
+    ``DATA_ROOTS``. Same bytes per root either way."""
     digest = hashlib.sha256()
-    for rel_root in CANONICAL_ROOTS:
+    for rel_root in rel_roots:
         base = root / rel_root
         if not base.exists():
             continue
@@ -89,6 +103,27 @@ def canonical_fingerprint(root: Path) -> str:
                         digest.update(b"<unreadable>")
             digest.update(b"\0")
     return digest.hexdigest()
+
+
+def canonical_fingerprint(root: Path) -> str:
+    """Return a stable digest of the authored canonical inputs under ``root``.
+
+    Generated outputs and the revision ledger are excluded by the root list;
+    dot-prefixed paths are skipped so editor scratch and VCS metadata cannot
+    move the digest.
+    """
+    return _fingerprint_roots(root, CANONICAL_ROOTS)
+
+
+def data_roots_fingerprint(root: Path) -> str:
+    """Return a stable digest of the authored-data roots under ``root``.
+
+    The same walk as :func:`canonical_fingerprint` over ``DATA_ROOTS``
+    only: ``system/schema`` and ``system/contracts`` moves leave this
+    digest alone. Read-only diagnostics compare it against the newest
+    receipt's recorded value; it never guards a write.
+    """
+    return _fingerprint_roots(root, DATA_ROOTS)
 
 
 def source_fingerprint(repo: Repo) -> str:

@@ -28,6 +28,7 @@ from ..errors import (
     TransactionIdempotencyConflict,
 )
 from ..evidence import verify_committed_evidence
+from ..fingerprint import data_roots_fingerprint
 from ..loading.yamlio import UniqueKeySafeLoader
 from . import conventions
 
@@ -80,6 +81,16 @@ class AuthorityEvidence:
     #: no longer live (JF-19). A manifest behind the commit — or showing
     #: a snapshot no receipt accounts for — leaves this False.
     superseded_snapshot: bool = False
+    #: True when the live manifest matches no receipt yet the authored-data
+    #: roots equal the newest receipt's recorded state: only
+    #: ``system/schema/**`` / ``system/contracts/**`` moved since that
+    #: receipt, so committed writes up to it are settled. A data move
+    #: without a receipt — or a newest receipt too old to record the
+    #: data-roots digest — leaves this False, keeping verify-observation.
+    contract_only_drift: bool = False
+    #: The newest receipt id behind ``contract_only_drift``, for the
+    #: reason trail. None unless the drift was proven contract-only.
+    contract_only_receipt_id: str | None = None
     #: Authority files (relative paths) that yielded no evidence because
     #: they were unreadable, unparseable, or wrongly shaped. Skipped, never
     #: fatal — but recorded, so a corrupt receipt is explicit uncertainty
@@ -109,6 +120,43 @@ def manifest_covers_receipt(receipts: list[dict], manifest_snapshot: str | None,
         if receipt.get("snapshot_after") == snapshot_after)
     return bool(manifest_ids) and bool(write_ids) \
         and manifest_ids[0] >= write_ids[-1]
+
+
+def newest_receipt(receipts: list[dict]) -> dict | None:
+    """The newest receipt by time-ordered id, or None when there are none."""
+    if not receipts:
+        return None
+    return max(receipts, key=lambda receipt: str(receipt.get("id", "")))
+
+
+def contract_only_drift_receipt(
+    root: Path, receipts: list[dict], manifest_snapshot: str | None,
+) -> dict | None:
+    """The newest receipt when only contract files moved since it, else None.
+
+    Reads plus one data-roots digest, never inference: the live manifest
+    must match no receipt (anything chained keeps the positional rule),
+    and the newest receipt must record a data-roots digest equal to
+    today's. A newest receipt too old to record the digest — or any
+    authored-data move without a receipt — answers None, keeping
+    verify-observation for the hand-edit signal this check exists for.
+    """
+    if not manifest_snapshot:
+        return None
+    if any(receipt.get("snapshot_after") == manifest_snapshot
+           for receipt in receipts):
+        return None
+    newest = newest_receipt(receipts)
+    if newest is None:
+        return None
+    metadata = newest.get("metadata")
+    recorded = metadata.get("data_roots_sha256") \
+        if isinstance(metadata, dict) else None
+    if not isinstance(recorded, str) or not recorded:
+        return None
+    if f"sha256:{data_roots_fingerprint(root)}" != recorded:
+        return None
+    return newest
 
 
 def load_authority_files(root: Path) -> tuple[list[dict], dict, list[str]]:
@@ -206,6 +254,8 @@ def collect_authority(root: Path, *, request_id: str, idempotency_key: str,
     error = (response or {}).get("error") or {}
     codes = list(response_codes) if response_codes is not None else [error.get("code")]
     snapshot_after = (response or {}).get("snapshot_after")
+    drift_receipt = contract_only_drift_receipt(root, receipts, manifest_snapshot)
+    drift_id = drift_receipt.get("id") if drift_receipt is not None else None
     return AuthorityEvidence(
         request_id=request_id,
         idempotency_key=idempotency_key,
@@ -223,6 +273,8 @@ def collect_authority(root: Path, *, request_id: str, idempotency_key: str,
         observed_snapshot=observed_snapshot,
         superseded_snapshot=manifest_covers_receipt(
             receipts, manifest_snapshot, snapshot_after),
+        contract_only_drift=drift_receipt is not None,
+        contract_only_receipt_id=str(drift_id) if drift_id else None,
         unreadable_authority=list(unreadable),
     )
 
@@ -495,6 +547,14 @@ def resolve(records: list[dict], authority: AuthorityEvidence) -> CausalDiagnosi
             recovery = "none"
             reasons.append("live manifest is past this commit: settled "
                            "(the exact snapshot is historical, not missing)")
+        elif authority.contract_only_drift:
+            recovery = "none"
+            anchor = (f" (newest receipt {authority.contract_only_receipt_id})"
+                      if authority.contract_only_receipt_id else "")
+            reasons.append(
+                "live snapshot matches no receipt, but only system/schema/** "
+                "and system/contracts/** changed since the newest receipt"
+                f"{anchor}; authored data unchanged: settled")
         else:
             recovery = "verify-observation"
             reasons.append("receipt exists but no observation is on record")
