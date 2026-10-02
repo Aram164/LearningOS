@@ -168,10 +168,6 @@ directories:
     owner: tools
     purpose: the operator CLI and the learning_os package; see tools/README.md
 
-  - path: .jules
-    owner: tools
-    purpose: AI operator memory and journals
-
   - path: tests
     owner: tests
     purpose: the test suite and its frozen format fixtures
