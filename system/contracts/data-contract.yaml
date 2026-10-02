@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 51
-schema_fingerprint: sha256:c343fcab995539089fdf5ded6f5830667ac121c555226066ae7cb415ca614861
+contract_version: 52
+schema_fingerprint: sha256:36c4053ef95dad12deb9feb1269aaf652e69020f0cbe53760fa60c77f5363a39
 record_schemas: 36
 history:
 - version: 1
@@ -382,5 +382,11 @@ history:
   adopted: '2026-10-03'
   note: GatewayEnvelopeV2 gains optional sealed session_id; additive and backward
     compatible with unsealed requests, no migration
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 52
+  adopted: '2026-10-03'
+  note: Reject whitespace-only optional sealed session identities; omitted identities
+    remain backward compatible, no migration
   migration: null
   fixture: tests/fixtures/formats/v46/

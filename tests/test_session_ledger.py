@@ -15,6 +15,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
 from gateway_helpers import approved_v2_envelope, run_v2_capability
 from repo_builders import run_los
 
@@ -423,6 +424,39 @@ def test_tampered_session_id_is_unconfirmed(mini_repo, monkeypatch):
     assert json.loads(result.stdout)["error"]["code"] == "UNCONFIRMED"
 
 
+@pytest.mark.parametrize("mutation", ["change", "remove"])
+def test_sealed_session_cannot_be_changed_or_removed_after_approval(mini_repo, mutation):
+    key = f"session-tamper-{mutation}"
+    envelope = approved_v2_envelope(
+        root=mini_repo, capability="capture.create", payload={"text": "never applied"},
+        artifact_ids=[request_artifact_id("capture.create", key)], idempotency_key=key,
+    )
+    envelope["session_id"] = "original-session"
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    if mutation == "change":
+        envelope["session_id"] = "foreign-session"
+    else:
+        del envelope["session_id"]
+    result = run_v2_capability(mini_repo, envelope)
+    assert result.returncode == 2, result.stdout
+    assert json.loads(result.stdout)["error"]["code"] == "UNCONFIRMED"
+    assert not list((mini_repo / "work" / "inbox").glob("*.md"))
+
+
+def test_blank_sealed_session_is_refused_instead_of_claiming_ambient_identity(mini_repo):
+    key = "session-blank-manual"
+    envelope = approved_v2_envelope(
+        root=mini_repo, capability="capture.create", payload={"text": "never applied"},
+        artifact_ids=[request_artifact_id("capture.create", key)], idempotency_key=key,
+    )
+    envelope["session_id"] = " \t "
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    result = run_v2_capability(mini_repo, envelope)
+    assert result.returncode == 2, result.stdout
+    assert json.loads(result.stdout)["error"]["code"] == "INVALID_REQUEST"
+    assert not list((mini_repo / "work" / "inbox").glob("*.md"))
+
+
 def test_replay_recovers_the_sealed_session_without_a_named_session(
         mini_repo, monkeypatch):
     """Exact re-dispatch repairs the sealed session's ledger, env-free."""
@@ -440,6 +474,7 @@ def test_replay_recovers_the_sealed_session_without_a_named_session(
     assert first.returncode == 0, first.stderr or first.stdout
     captured = json.loads(first.stdout)["result"]["captured"]
 
+    monkeypatch.setenv("LOS_SESSION_ID", "unrelated-ambient-replay-session")
     second = run_v2_capability(mini_repo, envelope)
     assert second.returncode == 0, second.stdout
     assert json.loads(second.stdout)["replayed"] is True
@@ -447,6 +482,7 @@ def test_replay_recovers_the_sealed_session_without_a_named_session(
     recorded = command_support._load_session_paths(mini_repo, "sealed-replay-session")
     assert captured in recorded
     assert recorded[captured]["channel"] == "operator"
+    assert command_support._load_session_paths(mini_repo, "unrelated-ambient-replay-session") == {}
 
 
 def test_session_ledgers_survive_differing_tmpdirs(mini_repo, tmp_path, monkeypatch):
