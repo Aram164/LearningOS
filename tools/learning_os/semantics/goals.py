@@ -2,9 +2,9 @@
 
 The engine surfaces what is worth investigating; it never performs a
 semantic mutation itself. Detectors are pure functions over caller-supplied
-signals — repeated questions, changed nodes, inspection patterns, reviewer
-corrections — and emit goals in ``detected`` state with their rationale and
-evidence attached. A goal then walks an explicit lifecycle; only Aram moves
+signals — repeated questions, digest pins against live rows, inspection
+patterns, reviewer corrections — and emit goals in ``detected`` state
+with their rationale and evidence attached. A goal then walks an explicit lifecycle; only Aram moves
 it to ``authorized``, wired to the critique-point rule that an open point
 is not work until he says so in that session.
 
@@ -155,10 +155,72 @@ def _emit(
 # ---- detectors: read-only, thresholded, deduplicated ------------------------
 
 
+def _keys(value: object, label: str) -> list[str]:
+    """A mapping's keys, sorted, or a refusal. Empty keys are never ids."""
+    if not isinstance(value, Mapping):
+        raise GoalError(f"malformed {label}: expected a mapping")
+    try:
+        keys = sorted(value)
+    except TypeError as exc:
+        raise GoalError(f"malformed {label}: {exc}") from exc
+    for key in keys:
+        if not isinstance(key, str) or not key:
+            raise GoalError(f"malformed {label}: empty keys")
+    return keys
+
+
+def _digests(value: object, label: str) -> dict[str, str]:
+    """A non-empty-string map, or a refusal. Digests and owners alike."""
+    pins = {}
+    for key in _keys(value, label):
+        digest = value[key]  # type: ignore[index]
+        if not isinstance(digest, str) or not digest:
+            raise GoalError(f"malformed {label}: {key!r} pins nothing")
+        pins[key] = digest
+    return pins
+
+
+def _revisions(value: object, label: str) -> dict[str, int]:
+    """A revision pin map, or a refusal. Booleans are never revisions."""
+    pins = {}
+    for key in _keys(value, label):
+        revision = value[key]  # type: ignore[index]
+        if isinstance(revision, bool) or not isinstance(revision, int):
+            raise GoalError(f"malformed {label}: {key!r} pins no revision")
+        pins[key] = revision
+    return pins
+
+
+def _claim_supported(claim_id: str, statuses: Mapping[str, str]) -> bool:
+    """Whether a covers claim is eligible for row-staleness goals.
+
+    Only a supported claim can go stale under its rows: a contested
+    claim needs its reviewer, not a recompute, and a withdrawn claim
+    needs a fresh judgment, never a re-examination. The status is the
+    ledger's stored verdict, not the scan's computed freshness — a
+    supported claim whose rows moved is effectively stale, which is
+    exactly the transition these detectors report. A missing or
+    unknown status refuses loudly: the scan assembles pins and
+    statuses together, so one without the other is a broken signal,
+    not a silent one.
+    """
+    try:
+        status = statuses[claim_id]
+    except (KeyError, TypeError) as exc:
+        raise GoalError(
+            f"malformed claim statuses: {claim_id!r} names no status") from exc
+    if status not in ("supported", "stale", "contested", "withdrawn"):
+        raise GoalError(
+            f"malformed claim {claim_id!r}: unknown status {status!r}")
+    return status == "supported"
+
+
 def detect_covering_routes_stale(
     *,
-    changed_nodes: Sequence[str],
     route_covers: Mapping[str, Sequence[str]],
+    node_digest_pins: Mapping[str, Mapping[str, str]],
+    live_node_digests: Mapping[str, str],
+    claim_statuses: Mapping[str, str],
     known_ids: Sequence[str] = (),
     node_units: Mapping[str, str] | None = None,
 ) -> tuple[CandidateGoal, ...]:
@@ -168,14 +230,47 @@ def detect_covering_routes_stale(
     longer teaches. One goal per affected route, naming the changed nodes
     and the moved units behind them — the unit is the clustering key, so
     routes over the same moved unit print as the one decision they are.
+
+    Changed means the live ``node-content:`` digest no longer matches the
+    route's own covers claim pin — never file membership in a recency
+    window. A route with no judged pins, or whose every pinned node still
+    matches, stays silent. A node with no live digest (deleted,
+    unreadable, ambiguously owned) counts as changed: without bytes to
+    compare, the claim cannot stand. Only supported claims are
+    eligible — contested and withdrawn claims route to their reviewer
+    and fresh judgment instead.
     """
-    changed = set(_strings(changed_nodes, "changed nodes"))
-    owners = dict(node_units or {})
+    route_ids = _keys(route_covers, "route covers")
+    _keys(node_digest_pins, "node digest pins")
+    if not isinstance(claim_statuses, Mapping):
+        raise GoalError("malformed claim statuses: expected a mapping")
+    live = _digests(live_node_digests, "live node digests")
+    owners = _digests(node_units or {}, "node units")
     goals = []
-    for route_id in sorted(route_covers):
-        covered = set(_strings(
-            route_covers[route_id], f"covers for {route_id!r}"))
-        hit = sorted(changed & covered)
+    for route_id in route_ids:
+        _strings(route_covers[route_id], f"covers for {route_id!r}")
+        pins = node_digest_pins.get(route_id, {})
+        if not isinstance(pins, Mapping):
+            raise GoalError(
+                f"malformed node digest pins for {route_id!r}: "
+                "expected a mapping")
+        try:
+            items = sorted(pins.items())
+        except TypeError as exc:
+            raise GoalError(
+                f"malformed node digest pins for {route_id!r}: {exc}") from exc
+        for node_id, pinned in items:
+            if not isinstance(node_id, str) or not node_id \
+                    or not isinstance(pinned, str) or not pinned:
+                raise GoalError(
+                    f"malformed node digest pins for {route_id!r}")
+        if not items:
+            continue
+        if not _claim_supported(f"covers:{route_id}", claim_statuses):
+            continue
+        hit = sorted(
+            node_id for node_id, pinned in items
+            if live.get(node_id) != pinned)
         if not hit:
             continue
         moved = sorted({owners[node] for node in hit if node in owners})
@@ -195,27 +290,63 @@ def detect_covering_routes_stale(
 
 def detect_source_changed_under_claim(
     *,
-    changed_sources: Sequence[str],
-    claim_sources: Mapping[str, Sequence[str]],
+    route_digest_pins: Mapping[str, str],
+    live_route_digests: Mapping[str, str],
+    route_revision_pins: Mapping[str, Mapping[str, int]],
+    current_revisions: Mapping[str, int],
+    claim_statuses: Mapping[str, str],
     known_ids: Sequence[str] = (),
 ) -> tuple[CandidateGoal, ...]:
-    """A changed source underpins live claims: re-examine each claim."""
-    changed = set(_strings(changed_sources, "changed sources"))
+    """A claim's own route row moved underneath it: re-examine each claim.
+
+    A covers claim is hit only when its own ``route-content:`` digest no
+    longer matches the live route row — or, for old-shape claims judged
+    before per-row digests, when its pinned revisions no longer match.
+    File-level source membership in a recency window is never the
+    trigger: a co-imported source moving says nothing about this row.
+    Only supported claims are eligible — contested and withdrawn
+    claims route to their reviewer and fresh judgment instead.
+    """
+    _keys(route_revision_pins, "route revision pins")
+    if not isinstance(claim_statuses, Mapping):
+        raise GoalError("malformed claim statuses: expected a mapping")
+    new_pins = _digests(route_digest_pins, "route digest pins")
+    live = _digests(live_route_digests, "live route digests")
+    current = _revisions(current_revisions, "current revisions")
     goals = []
-    for claim_id in sorted(claim_sources):
-        pinned = set(_strings(
-            claim_sources[claim_id], f"sources for {claim_id!r}"))
-        hit = sorted(changed & pinned)
-        if not hit:
+    for route_id in sorted(set(new_pins) | set(route_revision_pins)):
+        claim_id = f"covers:{route_id}"
+        if not _claim_supported(claim_id, claim_statuses):
             continue
-        goal = _emit(
-            "source-changed-under-claim", str(claim_id),
-            f"Re-examine {claim_id}: underpinning source changed",
-            f"Pinned {', '.join(hit)}, which moved; the claim's lineage is "
-            "stale until re-judged.",
-            [f"claim:{claim_id}", *(f"source:{source}" for source in hit)],
-            known_ids,
-        )
+        if route_id in new_pins:
+            if live.get(route_id) == new_pins[route_id]:
+                continue
+            goal = _emit(
+                "source-changed-under-claim", str(claim_id),
+                f"Re-examine {claim_id}: its route row changed",
+                f"Route {route_id} no longer matches the judged row; the "
+                "claim's lineage is stale until re-judged.",
+                [f"claim:{claim_id}", f"route:{route_id}"],
+                known_ids,
+            )
+        else:
+            old_pins = _revisions(
+                route_revision_pins[route_id],
+                f"revision pins for {route_id!r}")
+            hit = sorted(
+                key for key, revision in old_pins.items()
+                if current.get(key) != revision)
+            if not hit:
+                continue
+            goal = _emit(
+                "source-changed-under-claim", str(claim_id),
+                f"Re-examine {claim_id}: pinned revisions moved",
+                f"Pinned {', '.join(hit)}, which moved; the claim's lineage "
+                "is stale until re-judged.",
+                [f"claim:{claim_id}",
+                 *(f"revision:{key}" for key in hit)],
+                known_ids,
+            )
         if goal is not None:
             goals.append(goal)
     return tuple(goals)
@@ -343,6 +474,7 @@ def detect_claims_needing_review(
     *,
     claims: Mapping[str, Mapping[str, str]],
     known_ids: Sequence[str] = (),
+    claim_units: Mapping[str, str] | None = None,
 ) -> tuple[CandidateGoal, ...]:
     """Judged claims still need a reviewer: review the unreviewed, resolve
     the contested.
@@ -352,11 +484,17 @@ def detect_claims_needing_review(
     and withdrawn claims stay out: the lineage-stale goals already cover
     the stale ones, and a withdrawn claim needs a fresh judgment through
     its own lifecycle, not a review. One goal per claim.
+
+    A claim whose unit resolves carries it as evidence, so the brief
+    clusters review debt per unit instead of printing one claim per
+    group. Claims without a unit (non-covers families, unresolvable
+    routes) stand alone, never wrongly grouped.
     """
     try:
         items = sorted(claims.items())
     except (TypeError, ValueError) as exc:
         raise GoalError(f"malformed claims: {exc}") from exc
+    owners = _digests(claim_units or {}, "claim units")
     goals = []
     for claim_id, record in items:
         if not isinstance(record, Mapping):
@@ -365,6 +503,9 @@ def detect_claims_needing_review(
         status = record.get("status", "")
         if not isinstance(reviewed_by, str) or not isinstance(status, str):
             raise GoalError(f"malformed claim {claim_id!r}: expected strings")
+        unit = owners.get(str(claim_id))
+        evidence = [f"claim:{claim_id}"] + (
+            [f"unit:{unit}"] if unit else [])
         if status in ("stale", "withdrawn"):
             continue
         if status == "contested":
@@ -373,7 +514,7 @@ def detect_claims_needing_review(
                 f"Resolve {claim_id}: contested claim needs a reviewer",
                 "A reviewer disputes the verdict itself; disagreement needs "
                 "a reviewer, not a recompute.",
-                [f"claim:{claim_id}"],
+                evidence,
                 known_ids,
             )
         elif status == "supported":
@@ -384,7 +525,7 @@ def detect_claims_needing_review(
                 f"Review {claim_id}: judged but never reviewed",
                 "Judged with no recorded review; the evidence trail must "
                 "identify the actual review and its limits.",
-                [f"claim:{claim_id}"],
+                evidence,
                 known_ids,
             )
         else:
@@ -399,16 +540,17 @@ def detect_claims_needing_review(
 
 #: Evidence prefixes that name the shared cause behind a fanned-out goal.
 #: A covering-routes goal fans out per route over the moved units; a
-#: lineage goal fans out per claim over the same moved keys; a
-#: changed-source goal fans out per claim over the same moved sources.
-#: The covering-routes key is deliberately the unit, not the node set:
-#: one decision is "this unit's nodes moved — revalidate its routes,"
-#: and an exact node set would split that decision wherever one route
-#: happens to also cover one more node.
+#: lineage goal fans out per claim over the same moved keys; a review
+#: goal fans out per claim over its unit. A changed-source goal fires
+#: for its own route row alone and shares no cause with its siblings,
+#: so it stands alone. The unit keys are deliberately the unit, not the
+#: node set: one decision is "this unit's nodes moved — revalidate its
+#: routes," and an exact node set would split that decision wherever
+#: one route happens to also cover one more node.
 CAUSE_PREFIXES = {
     "covering-routes-stale": "unit:",
     "lineage-stale": "moved:",
-    "source-changed-under-claim": "source:",
+    "claims-needing-review": "unit:",
 }
 
 
@@ -457,8 +599,8 @@ def _cluster_title(detector: str, members: list[CandidateGoal],
         return f"{len(members)} routes cover moved nodes in {joined}"
     if detector == "lineage-stale":
         return f"{len(members)} claims read moved dependencies ({joined})"
-    if detector == "source-changed-under-claim":
-        return f"{len(members)} claims pin changed sources ({joined})"
+    if detector == "claims-needing-review":
+        return f"{len(members)} claims need review in {joined}"
     return f"{len(members)} {detector} goals"
 
 

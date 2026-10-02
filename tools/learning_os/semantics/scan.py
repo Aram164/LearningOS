@@ -6,11 +6,11 @@ process, no telemetry database, no automatic writes: every run reads
 the current world and exits.
 
 v1 observes what the repository already records and nothing else:
-- changed canonical files in a recency window (git history, stateless —
-  "moved in the last N days", never "since the last scan"), joined to
-  knowledge nodes (changed unit files) and source definitions (changed
-  source-map files), fed to the covering-routes and changed-source
-  detectors;
+- per-row content digests: every covers claim pins its route row
+  (``route-content:``) and each covered knowledge node
+  (``node-content:``); the covering-routes and changed-source
+  detectors compare those pins against the live rows, so only the
+  claim whose own row moved fires — never its co-imported siblings;
 - lineage staleness via the revision ledger plus live evidence bytes,
   with moved keys as evidence (manifest digests and repo-file bytes are
   re-resolved; a hash compared to itself is not validation, so missing
@@ -37,15 +37,12 @@ from __future__ import annotations
 
 import datetime as _dt
 import hashlib
-import math
-import time
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, replace
 from pathlib import Path
 
 import yaml
 
-from ..githistory import last_commit_timestamps
 from ..learning_runtime import (
     RuntimeInputError,
     collect_requirements,
@@ -77,7 +74,10 @@ from .session_counts import feed_scan_kwargs
 #: Revision ledger: the current-revisions source for staleness.
 REVISIONS_RELATIVE = "operations/transactions/revisions.yaml"
 
-#: Default recency window. Stateless by design: see the module docstring.
+#: Retained default for the ``days`` argument. Staleness compares stored
+#: digests and revision pins against live rows, not a recency window;
+#: the argument stays so existing callers (``intelligence-scan --days``,
+#: ``ranked_scan(days=...)``) keep working unchanged.
 DEFAULT_DAYS = 30
 
 #: Aram's explicit goal decisions, written only by `los goal`.
@@ -88,20 +88,74 @@ GOAL_LEDGER_RELATIVE = "operations/goal-ledger.yaml"
 DECIDED_GOAL_STATES = ("rejected", "deferred", "closed")
 
 
-def _unit_ids_by_path(root: Path, repo) -> dict[str, str]:
-    """Unit file rel to unit id. A changed unit file is the unit that
-    moved — the covering-routes clustering key. Unresolvable paths stay
-    absent; those goals simply cluster alone, never wrongly."""
+def _node_units(repo) -> dict[str, str]:
+    """Knowledge node id to owning unit id, from the loaded units.
+
+    The covering-routes clustering key. Only exact, unambiguous
+    ownership counts: a node id claimed by zero units — or by more
+    than one — resolves to no owner, so those goals simply cluster
+    alone, never wrongly.
+    """
     owners: dict[str, str] = {}
+    ambiguous: set[str] = set()
     for unit_id, unit in (getattr(repo, "units", {}) or {}).items():
-        path = getattr(unit, "path", None)
-        if not isinstance(path, Path):
+        data = getattr(unit, "data", None)
+        if not isinstance(data, dict):
             continue
-        try:
-            rel = path.relative_to(root) if path.is_absolute() else path
-        except (OSError, ValueError):
+        knowledge = data.get("knowledge_map")
+        rows = knowledge.get("nodes") if isinstance(knowledge, dict) else None
+        if not isinstance(rows, list):
             continue
-        owners[rel.as_posix()] = unit_id
+        for row in rows:
+            if not isinstance(row, dict):
+                continue
+            node_id = str(row.get("id") or "").strip()
+            if not node_id or node_id in ambiguous:
+                continue
+            if node_id in owners and owners[node_id] != unit_id:
+                del owners[node_id]
+                ambiguous.add(node_id)
+            else:
+                owners[node_id] = unit_id
+    return owners
+
+
+def _route_units(repo) -> dict[str, str]:
+    """Route id to owning unit id, from the rows' own ``unit_id``.
+
+    The review clustering key for covers claims. Only exact,
+    unambiguous ownership counts, as in :func:`_node_units`.
+    """
+    owners: dict[str, str] = {}
+    ambiguous: set[str] = set()
+    maps = getattr(repo, "module_source_maps", {}) or {}
+    for smap in maps.values():
+        if not isinstance(smap, dict):
+            continue
+        sources = smap.get("sources")
+        if not isinstance(sources, list):
+            continue
+        for src in sources:
+            if not isinstance(src, dict):
+                continue
+            routes = src.get("unit_routes")
+            if not isinstance(routes, list):
+                continue
+            for route in routes:
+                if not isinstance(route, dict):
+                    continue
+                rid = route.get("id")
+                unit_id = route.get("unit_id")
+                if not isinstance(rid, str) or not rid \
+                        or not isinstance(unit_id, str) or not unit_id.strip():
+                    continue
+                if rid in ambiguous:
+                    continue
+                if rid in owners and owners[rid] != unit_id:
+                    del owners[rid]
+                    ambiguous.add(rid)
+                else:
+                    owners[rid] = unit_id
     return owners
 
 
@@ -138,14 +192,21 @@ def _read_goal_ledger(root: Path, *, today: _dt.date | None = None) -> tuple[str
 class ScanInput:
     """Everything the scan interprets: observations, already assembled."""
 
-    changed_nodes: tuple[str, ...] = ()
     route_covers: tuple[tuple[str, tuple[str, ...]], ...] = ()
-    changed_sources: tuple[str, ...] = ()
-    claim_sources: tuple[tuple[str, tuple[str, ...]], ...] = ()
+    route_digest_pins: tuple[tuple[str, str], ...] = ()
+    live_route_digests: tuple[tuple[str, str], ...] = ()
+    route_revision_pins: tuple[
+        tuple[str, tuple[tuple[str, int], ...]], ...] = ()
+    current_revisions: tuple[tuple[str, int], ...] = ()
+    node_digest_pins: tuple[
+        tuple[str, tuple[tuple[str, str], ...]], ...] = ()
+    live_node_digests: tuple[tuple[str, str], ...] = ()
+    claim_statuses: tuple[tuple[str, str], ...] = ()
     stale_claims: tuple[tuple[str, tuple[str, ...]], ...] = ()
     obligations: tuple[str, ...] = ()
     evidence_stale: tuple[tuple[str, str], ...] = ()
     node_units: tuple[tuple[str, str], ...] = ()
+    claim_units: tuple[tuple[str, str], ...] = ()
     claim_reviews: tuple[tuple[str, str, str], ...] = ()
     known_ids: tuple[str, ...] = ()
     # Caller-fed session counts (see session_counts.py). Empty means
@@ -172,22 +233,29 @@ def scan_observations(observations: ScanInput) -> tuple[CandidateGoal, ...]:
     known = set(observations.known_ids)
     goals: list[CandidateGoal] = []
     goals.extend(detect_covering_routes_stale(
-        changed_nodes=list(observations.changed_nodes),
         route_covers={rid: list(covers)
                       for rid, covers in observations.route_covers},
+        node_digest_pins={rid: dict(pins)
+                          for rid, pins in observations.node_digest_pins},
+        live_node_digests=dict(observations.live_node_digests),
+        claim_statuses=dict(observations.claim_statuses),
         known_ids=list(observations.known_ids),
         node_units=dict(observations.node_units),
     ))
     goals.extend(detect_source_changed_under_claim(
-        changed_sources=list(observations.changed_sources),
-        claim_sources={cid: list(sources)
-                       for cid, sources in observations.claim_sources},
+        route_digest_pins=dict(observations.route_digest_pins),
+        live_route_digests=dict(observations.live_route_digests),
+        route_revision_pins={rid: dict(pins)
+                             for rid, pins in observations.route_revision_pins},
+        current_revisions=dict(observations.current_revisions),
+        claim_statuses=dict(observations.claim_statuses),
         known_ids=list(observations.known_ids),
     ))
     goals.extend(detect_claims_needing_review(
         claims={cid: {"reviewed_by": reviewed, "status": status}
                 for cid, reviewed, status in observations.claim_reviews},
         known_ids=list(observations.known_ids),
+        claim_units=dict(observations.claim_units),
     ))
     if observations.question_counts:
         goals.extend(detect_repeated_question_gap(
@@ -255,85 +323,6 @@ def _read_yaml(path: Path):
         return None
 
 
-def _normalize_timestamp(value: object) -> float | None:
-    """Normalize one Git timestamp to epoch seconds.
-
-    The history provider returns integer strings; legitimate numeric
-    inputs are accepted as well. Booleans, malformed strings,
-    non-finite values and other types are rejected explicitly — never
-    coerced to zero — so a bad value cannot masquerade as an old change.
-    """
-    if isinstance(value, bool):
-        return None
-    if isinstance(value, (int, float)):
-        candidate = float(value)
-    elif isinstance(value, str):
-        text = value.strip()
-        if not text:
-            return None
-        try:
-            candidate = float(text)
-        except ValueError:
-            return None
-    else:
-        return None
-    if not math.isfinite(candidate):
-        return None
-    return candidate
-
-
-def _changed_files(root: Path, *, days: int) -> tuple[str, ...]:
-    """Canonical files moved in the window.
-
-    Git history is the only change feed. A repository without history
-    (plain export, unborn branch, empty log) observes nothing. An
-    unreadable history raises ``GitHistoryError`` so the caller can
-    report unavailable observations instead of presenting them as no
-    changes.
-    """
-    stamps = last_commit_timestamps(str(root))
-    cutoff = time.time() - max(days, 0) * 86400
-    recent: list[str] = []
-    for rel, stamp in stamps.items():
-        normalized = _normalize_timestamp(stamp)
-        if normalized is not None and normalized >= cutoff:
-            recent.append(rel)
-    return tuple(sorted(recent))
-
-
-def _nodes_in_unit_file(root: Path, rel: str) -> tuple[str, ...]:
-    if not rel.startswith("curriculum/modules/") \
-            or not rel.endswith("/unit.yaml"):
-        return ()
-    data = _read_yaml(root / rel)
-    if not isinstance(data, dict):
-        return ()
-    knowledge = data.get("knowledge_map")
-    nodes = knowledge.get("nodes") if isinstance(knowledge, dict) else None
-    if not isinstance(nodes, list):
-        return ()
-    return tuple(sorted(
-        str(node["id"]) for node in nodes
-        if isinstance(node, dict) and str(node.get("id") or "").strip()
-    ))
-
-
-def _sources_in_source_map(root: Path, rel: str) -> tuple[str, ...]:
-    if not rel.startswith("curriculum/modules/") \
-            or not rel.endswith("source-map.yaml"):
-        return ()
-    data = _read_yaml(root / rel)
-    if not isinstance(data, dict):
-        return ()
-    sources = data.get("sources")
-    if not isinstance(sources, list):
-        return ()
-    return tuple(sorted(
-        str(src["source_id"]) for src in sources
-        if isinstance(src, dict) and str(src.get("source_id") or "").strip()
-    ))
-
-
 def _route_covers(repo) -> dict[str, list[str]]:
     """Route id to covered knowledge nodes, from the loaded source maps."""
     covers: dict[str, list[str]] = {}
@@ -359,48 +348,6 @@ def _route_covers(repo) -> dict[str, list[str]]:
                         and isinstance(nodes, list):
                     covers[rid] = [str(n) for n in nodes]
     return covers
-
-
-def _route_sources(repo) -> dict[str, str]:
-    """Route id to owning source id, from the loaded source maps.
-
-    Only exact, unambiguous ownership counts: a route id claimed by
-    zero sources — or by more than one — resolves to no owner, so the
-    scan never invents source ownership from filename or digest-key
-    spelling.
-    """
-    owners: dict[str, str] = {}
-    ambiguous: set[str] = set()
-    maps = getattr(repo, "module_source_maps", {}) or {}
-    for smap in maps.values():
-        if not isinstance(smap, dict):
-            continue
-        sources = smap.get("sources")
-        if not isinstance(sources, list):
-            continue
-        for src in sources:
-            if not isinstance(src, dict):
-                continue
-            sid = src.get("source_id")
-            if not isinstance(sid, str) or not sid.strip():
-                continue
-            routes = src.get("unit_routes")
-            if not isinstance(routes, list):
-                continue
-            for route in routes:
-                if not isinstance(route, dict):
-                    continue
-                rid = route.get("id")
-                if not isinstance(rid, str) or not rid:
-                    continue
-                if rid in ambiguous:
-                    continue
-                if rid in owners and owners[rid] != sid:
-                    del owners[rid]
-                    ambiguous.add(rid)
-                else:
-                    owners[rid] = sid
-    return owners
 
 
 def _current_revisions(root: Path) -> dict[str, int]:
@@ -548,29 +495,21 @@ def collect_observations(root: Path | str, *,
                          days: int = DEFAULT_DAYS) -> ScanInput:
     """OBSERVE: read the current world. No writes, no queue, no memory.
 
-    Raises ``GitHistoryError`` when Git history is unreadable, so the
-    caller can report unavailable observations instead of presenting
-    them as no changes.
+    ``days`` is retained for caller compatibility and ignored:
+    staleness compares each claim's stored pins against the live rows,
+    never a recency window, so the scan needs no Git history at all.
     """
     root = Path(root)
-    changed = _changed_files(root, days=days)
     repo = load_repo(root)
-    unit_of = _unit_ids_by_path(root, repo)
-    nodes: set[str] = set()
-    node_units: dict[str, str] = {}
-    sources: set[str] = set()
-    for rel in changed:
-        unit_id = unit_of.get(rel)
-        for node_id in _nodes_in_unit_file(root, rel):
-            nodes.add(node_id)
-            if unit_id is not None:
-                node_units[node_id] = unit_id
-        sources.update(_sources_in_source_map(root, rel))
-    route_sources = _route_sources(repo)
     records = load_ledger(root)
     current = _current_revisions(root)
     manifest_files = _scan_manifest_files(root)
-    claim_sources: dict[str, list[str]] = {}
+    route_units = _route_units(repo)
+    route_digest_pins: dict[str, str] = {}
+    route_revision_pins: dict[str, dict[str, int]] = {}
+    node_digest_pins: dict[str, dict[str, str]] = {}
+    claim_units: dict[str, str] = {}
+    statuses: list[tuple[str, str]] = []
     stale: list[tuple[str, tuple[str, ...]]] = []
     reviews: list[tuple[str, str, str]] = []
     # Each stored evidence key is resolved against live bytes once per
@@ -594,16 +533,26 @@ def collect_observations(root: Path | str, *,
     for claim_id, lineage in records.items():
         reads = dict(lineage.derived_from.revisions)
         stored_hashes = dict(lineage.derived_from.source_hashes)
-        # Source ownership comes from exact route identity in the loaded
-        # source maps — never from intersecting source ids with file: or
-        # manifest: digest keys. Only route-covers claims earn ownership;
-        # every other family (or an unresolved route) pins nothing, while
-        # the independent revision/hash staleness path below still applies.
+        # Covers claims feed the row-level detectors from their own pins:
+        # a new-shape claim pins its route row plus its covered nodes,
+        # while an old-shape claim pins only artifact revisions. Every
+        # other family (or an unresolvable route) pins nothing here,
+        # while the independent revision/hash staleness path below still
+        # applies.
         if claim_id.startswith("covers:"):
-            owner = route_sources.get(claim_id[len("covers:"):])
-            claim_sources[claim_id] = [owner] if owner else []
-        else:
-            claim_sources[claim_id] = []
+            route_id = claim_id[len("covers:"):]
+            route_key = ROUTE_CONTENT_PREFIX + route_id
+            if route_key in stored_hashes:
+                route_digest_pins[route_id] = stored_hashes[route_key]
+                node_digest_pins[route_id] = {
+                    key[len(NODE_CONTENT_PREFIX):]: digest
+                    for key, digest in stored_hashes.items()
+                    if key.startswith(NODE_CONTENT_PREFIX)
+                }
+            else:
+                route_revision_pins[route_id] = dict(reads)
+            if route_id in route_units:
+                claim_units[claim_id] = route_units[route_id]
         # Live evidence bytes: resolve manifest/file hashes the same way
         # Phase B bound them. Missing or unreadable evidence fails closed;
         # unknown namespaces also have no verifiable live value.
@@ -619,6 +568,15 @@ def collect_observations(root: Path | str, *,
         if lineage.derived_from.contract_version != CONTRACT_VERSION:
             moved = sorted(set(moved) | {"contract-version"})
         verdict = effective[claim_id]
+        # The row detectors read the ledger's stored verdict: a
+        # supported claim whose rows moved is effectively stale, which
+        # is exactly the transition they report. Contested and
+        # withdrawn claims route to their reviewer and fresh judgment.
+        stored = lineage.status
+        statuses.append((
+            claim_id,
+            stored if isinstance(stored, str) else "",
+        ))
         if verdict.status == "stale":
             stale.append((
                 claim_id,
@@ -667,14 +625,30 @@ def collect_observations(root: Path | str, *,
     except RuntimeInputError:
         evidence_stale = ()
     return ScanInput(
-        changed_nodes=tuple(sorted(nodes)),
-        node_units=tuple(sorted(node_units.items())),
         route_covers=tuple(sorted(
             (rid, tuple(covers)) for rid, covers in _route_covers(repo).items()
         )),
-        changed_sources=tuple(sorted(sources)),
-        claim_sources=tuple(sorted(
-            (cid, tuple(srcs)) for cid, srcs in claim_sources.items())),
+        route_digest_pins=tuple(sorted(route_digest_pins.items())),
+        live_route_digests=tuple(sorted(
+            (key[len(ROUTE_CONTENT_PREFIX):], digest)
+            for key, digest in claim_routes.items()
+        )),
+        route_revision_pins=tuple(sorted(
+            (rid, tuple(sorted(pins.items())))
+            for rid, pins in route_revision_pins.items()
+        )),
+        current_revisions=tuple(sorted(current.items())),
+        node_digest_pins=tuple(sorted(
+            (rid, tuple(sorted(pins.items())))
+            for rid, pins in node_digest_pins.items()
+        )),
+        live_node_digests=tuple(sorted(
+            (key[len(NODE_CONTENT_PREFIX):], digest)
+            for key, digest in claim_nodes.items()
+        )),
+        claim_statuses=tuple(sorted(statuses)),
+        node_units=tuple(sorted(_node_units(repo).items())),
+        claim_units=tuple(sorted(claim_units.items())),
         stale_claims=tuple(sorted(stale)),
         obligations=tuple(sorted(obligations)),
         evidence_stale=evidence_stale,

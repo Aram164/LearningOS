@@ -23,10 +23,14 @@ LOS = Path(__file__).resolve().parent.parent / "tools" / "los.py"
 
 def _input(**overrides):
     fields = {
-        "changed_nodes": (),
         "route_covers": (),
-        "changed_sources": (),
-        "claim_sources": (),
+        "route_digest_pins": (),
+        "live_route_digests": (),
+        "route_revision_pins": (),
+        "current_revisions": (),
+        "node_digest_pins": (),
+        "live_node_digests": (),
+        "claim_statuses": (),
         "stale_claims": (),
         "obligations": (),
         "known_ids": (),
@@ -39,10 +43,14 @@ def test_empty_observations_propose_nothing():
     assert scan_observations(_input()) == ()
 
 
-def test_changed_nodes_reach_covering_routes():
+def test_moved_node_digests_reach_covering_routes():
     goals = scan_observations(_input(
-        changed_nodes=("knowledge-a",),
         route_covers=(("route-1", ("knowledge-a", "knowledge-b")),),
+        node_digest_pins=(("route-1", (("knowledge-a", "sha256:old"),
+                                       ("knowledge-b", "sha256:kept"))),),
+        live_node_digests=(("knowledge-a", "sha256:new"),
+                            ("knowledge-b", "sha256:kept")),
+        claim_statuses=(("covers:route-1", "supported"),),
     ))
     assert [(goal.goal_id, goal.detector) for goal in goals] == [
         ("covering-routes-stale:route-1", "covering-routes-stale")]
@@ -51,8 +59,10 @@ def test_changed_nodes_reach_covering_routes():
 
 def test_covering_routes_evidence_names_the_moved_unit():
     goals = scan_observations(_input(
-        changed_nodes=("knowledge-a",),
         route_covers=(("route-1", ("knowledge-a",)),),
+        node_digest_pins=(("route-1", (("knowledge-a", "sha256:old"),)),),
+        live_node_digests=(("knowledge-a", "sha256:new"),),
+        claim_statuses=(("covers:route-1", "supported"),),
         node_units=(("knowledge-a", "unit-x"),),
     ))
     (goal,) = goals
@@ -62,17 +72,31 @@ def test_covering_routes_evidence_names_the_moved_unit():
 
 def test_covering_routes_emit_without_a_unit_map():
     goals = scan_observations(_input(
-        changed_nodes=("knowledge-a",),
         route_covers=(("route-1", ("knowledge-a",)),),
+        node_digest_pins=(("route-1", (("knowledge-a", "sha256:old"),)),),
+        live_node_digests=(("knowledge-a", "sha256:new"),),
+        claim_statuses=(("covers:route-1", "supported"),),
     ))
     (goal,) = goals
     assert goal.evidence == ("route:route-1", "node:knowledge-a")
 
 
-def test_changed_sources_reach_dependent_claims():
+def test_moved_route_rows_reach_their_claim():
     goals = scan_observations(_input(
-        changed_sources=("source-x",),
-        claim_sources=(("covers:route-1", ("source-x",)),),
+        route_digest_pins=(("route-1", "sha256:old"),),
+        live_route_digests=(("route-1", "sha256:new"),),
+        claim_statuses=(("covers:route-1", "supported"),),
+    ))
+    assert [(goal.goal_id, goal.detector) for goal in goals] == [
+        ("source-changed-under-claim:covers:route-1",
+         "source-changed-under-claim")]
+
+
+def test_moved_revisions_reach_old_shape_claims():
+    goals = scan_observations(_input(
+        route_revision_pins=(("route-1", (("module-x", 2),)),),
+        current_revisions=(("module-x", 3),),
+        claim_statuses=(("covers:route-1", "supported"),),
     ))
     assert [(goal.goal_id, goal.detector) for goal in goals] == [
         ("source-changed-under-claim:covers:route-1",
@@ -106,12 +130,18 @@ def test_claim_reviews_reach_the_review_detector():
 
 def test_known_ids_dedup_every_detector():
     known = ("covering-routes-stale:route-1",
+             "source-changed-under-claim:covers:route-2",
              "lineage-stale:covers:route-9",
              "study-map-obligation:unit-needs-map",
              "claims-needing-review:covers:route-1")
     goals = scan_observations(_input(
-        changed_nodes=("knowledge-a",),
         route_covers=(("route-1", ("knowledge-a",)),),
+        node_digest_pins=(("route-1", (("knowledge-a", "sha256:old"),)),),
+        live_node_digests=(("knowledge-a", "sha256:new"),),
+        route_digest_pins=(("route-2", "sha256:old"),),
+        live_route_digests=(("route-2", "sha256:new"),),
+        claim_statuses=(("covers:route-1", "supported"),
+                        ("covers:route-2", "supported")),
         stale_claims=(("covers:route-9", ("unit-x",)),),
         obligations=("unit-needs-map",),
         claim_reviews=(("covers:route-1", "", "supported"),),
@@ -201,175 +231,82 @@ def test_live_scan_detects_changed_missing_and_unknown_evidence(mini_repo):
     assert dict(collect_observations(mini_repo, days=0).stale_claims) == expected
 
 
-def test_normalize_timestamp_rejects_non_time_values():
-    from learning_os.semantics.scan import _normalize_timestamp
+def test_scan_compares_stored_digests_not_file_membership(mini_repo, monkeypatch):
+    """Row edits flag exactly their own claim; sibling rows stay silent.
 
-    assert _normalize_timestamp("1577934245") == 1577934245.0
-    assert _normalize_timestamp(1577934245) == 1577934245.0
-    assert _normalize_timestamp(1577934245.5) == 1577934245.5
-    assert _normalize_timestamp("  1577934245  ") == 1577934245.0
-    assert _normalize_timestamp("") is None
-    assert _normalize_timestamp("2020-01-02") is None
-    assert _normalize_timestamp("not-a-time") is None
-    assert _normalize_timestamp(None) is None
-    assert _normalize_timestamp(True) is None
-    assert _normalize_timestamp(False) is None
-    assert _normalize_timestamp(float("inf")) is None
-    assert _normalize_timestamp(float("nan")) is None
-    assert _normalize_timestamp("inf") is None
-    assert _normalize_timestamp("nan") is None
-
-
-def test_scan_recency_and_source_join_use_real_git_history(mini_repo, monkeypatch):
-    """Phase 1: real commits drive recency and the route/source join.
-
-    Uses production Git history (old baseline commit plus a recent unit
-    and source-map commit) through ``collect_observations`` and the real
-    CLI — never hand-assembled normalized timestamps. A recent unit
-    change reaches its covering route, a recent source-map change
-    reaches its route-covers claim through exact route identity, an old
-    file stays excluded, an unresolved route stays absent, and an
-    unreadable history fails visibly instead of reading as no changes.
+    A quiet world — every row matching its pins — emits no
+    covering-routes or changed-source goals at all. A route-row edit
+    then flags exactly that claim, a node edit exactly the routes
+    covering that node, and a revision bump exactly the old-shape claim
+    pinning it. No Git history is read at any point: staleness is a
+    digest comparison, so even a poisoned GIT_DIR changes nothing.
     """
-    import os
-
-    import yaml
-    from repo_builders import _add_material_overview, add_curriculum, write_yaml
-
-    from learning_os import githistory
-    from learning_os.githistory import GitHistoryError
-    from learning_os.semantics.lineage import dump_ledger, emit_route_covers
-    from learning_os.semantics.scan import (
-        _changed_files,
-        collect_observations,
-        scan_observations,
+    from learning_os.semantics.lineage import (
+        dump_ledger,
+        emit_route_covers,
+        load_ledger,
     )
+    from learning_os.semantics.scan import collect_observations, scan_observations
 
-    for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR"):
-        monkeypatch.delenv(name, raising=False)
-    monkeypatch.delenv("GIT_AUTHOR_DATE", raising=False)
-    monkeypatch.delenv("GIT_COMMITTER_DATE", raising=False)
-    githistory.last_commit_dates.cache_clear()
-    githistory.last_commit_timestamps.cache_clear()
-    try:
-        from learning_os.routes import deterministic_route_id
+    route_a, route_b = _two_unit_scoped_world(mini_repo)
+    admission = {"request_id": "scan-fixture", "idempotency_key": "scan-fixture"}
+    legacy = emit_route_covers(
+        route_id="route-legacy", covers=["knowledge-demo-alpha"],
+        read_revisions={"module-demo": 3},
+        judged_by="fixture", admitted_by=admission)
+    ledger_path = mini_repo / "operations/transactions/lineage.yaml"
+    records = load_ledger(mini_repo)
+    records[legacy.claim_id] = legacy
+    ledger_path.write_text(dump_ledger(records), encoding="utf-8")
 
-        add_curriculum(mini_repo)
-        _add_material_overview(mini_repo)
-        smap_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
-        smap = yaml.safe_load(smap_path.read_text(encoding="utf-8"))
-        route = smap["sources"][0]["unit_routes"][0]
-        route_id = deterministic_route_id("module-demo", "source-demo-book", route)
-        route["id"] = route_id
-        write_yaml(smap_path, smap)
-
-        def git(*args, env=None):
-            full_env = dict(os.environ)
-            if env:
-                full_env.update(env)
-            return subprocess.run(
-                ["git", "-c", "user.name=Test User",
-                 "-c", "user.email=test@example.com",
-                 "-c", "commit.gpgsign=false", *args],
-                cwd=mini_repo, check=True, capture_output=True,
-                text=True, env=full_env,
-            ).stdout.strip()
-
-        old_env = {"GIT_AUTHOR_DATE": "2020-01-02T03:04:05+00:00",
-                   "GIT_COMMITTER_DATE": "2020-01-02T03:04:05+00:00"}
-        git("init")
-        git("add", "-A")
-        git("commit", "-m", "old baseline", env=old_env)
-
-        unit_path = (
-            mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+    def row_goals():
+        goals = scan_observations(collect_observations(mini_repo, days=30))
+        return (
+            sorted(goal.goal_id for goal in goals
+                   if goal.detector == "source-changed-under-claim"),
+            sorted(goal.goal_id for goal in goals
+                   if goal.detector == "covering-routes-stale"),
         )
-        unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
-        unit["title"] = "Expected value (recent edit)"
-        write_yaml(unit_path, unit)
-        smap = yaml.safe_load(smap_path.read_text(encoding="utf-8"))
-        smap["sources"][0]["unit_routes"][0]["angle"] = "Recent angle edit."
-        write_yaml(smap_path, smap)
-        git("add",
-            "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml",
-            "curriculum/modules/module-demo/source-map.yaml")
-        git("commit", "-m", "recent unit and source-map edits")
-        githistory.last_commit_dates.cache_clear()
-        githistory.last_commit_timestamps.cache_clear()
 
-        admission = {"request_id": "scan-fixture", "idempotency_key": "scan-fixture"}
-        owned = emit_route_covers(
-            route_id=route_id, covers=["knowledge-demo-outcomes"],
-            read_revisions={}, judged_by="fixture", admitted_by=admission)
-        stray = emit_route_covers(
-            route_id="route-unrelated", covers=["knowledge-demo-outcomes"],
-            read_revisions={}, judged_by="fixture", admitted_by=admission)
-        ledger_path = mini_repo / "operations/transactions/lineage.yaml"
-        ledger_path.parent.mkdir(parents=True, exist_ok=True)
-        ledger_path.write_text(
-            dump_ledger({owned.claim_id: owned, stray.claim_id: stray}),
-            encoding="utf-8")
+    obs = collect_observations(mini_repo, days=30)
+    assert set(dict(obs.route_digest_pins)) == {route_a, route_b}
+    assert dict(obs.route_revision_pins) == {
+        "route-legacy": (("module-demo", 3),)}
+    assert dict(obs.claim_units) == {
+        f"covers:{route_a}": "unit-demo-l01",
+        f"covers:{route_b}": "unit-demo-l02"}
+    assert row_goals() == ([], [])
 
-        unit_rel = "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
-        smap_rel = "curriculum/modules/module-demo/source-map.yaml"
-        old_only = "knowledge/notes/mathematics/note-demo.md"
-        recent = _changed_files(mini_repo, days=30)
-        assert unit_rel in recent
-        assert smap_rel in recent
-        assert old_only not in recent
-        assert old_only in _changed_files(mini_repo, days=3650)
+    monkeypatch.setenv("GIT_DIR", "/dev/null")
+    assert row_goals() == ([], [])
+    monkeypatch.delenv("GIT_DIR", raising=False)
 
-        obs = collect_observations(mini_repo, days=30)
-        assert "knowledge-demo-outcomes" in obs.changed_nodes
-        assert route_id in dict(obs.route_covers)
-        assert "source-demo-book" in obs.changed_sources
-        sources_by_claim = dict(obs.claim_sources)
-        assert sources_by_claim.get(f"covers:{route_id}") == ("source-demo-book",)
-        assert sources_by_claim.get("covers:route-unrelated") == ()
+    _rewrite_route(mini_repo, route_b, angle="Beta angle, revised.")
+    assert row_goals() == (
+        [f"source-changed-under-claim:covers:{route_b}"], [])
+    _rewrite_route(mini_repo, route_b, angle="Beta angle.")
 
-        goals = scan_observations(obs)
-        goal_ids = {goal.goal_id for goal in goals}
-        assert f"covering-routes-stale:{route_id}" in goal_ids
-        assert f"source-changed-under-claim:covers:{route_id}" in goal_ids
-        assert not any(
-            goal_id.startswith(("covering-routes-stale:", "lineage-stale:",
-                                "source-changed-under-claim:"))
-            and "route-unrelated" in goal_id
-            for goal_id in goal_ids
-        )
-        assert ("claims-needing-review:covers:route-unrelated"
-                in goal_ids)
+    _rewrite_node(mini_repo, "unit-demo-l01", "knowledge-demo-alpha",
+                  title="Alpha, reframed")
+    assert row_goals() == ([], [f"covering-routes-stale:{route_a}"])
+    _rewrite_node(mini_repo, "unit-demo-l01", "knowledge-demo-alpha",
+                  title="Alpha")
 
-        proc = subprocess.run(
-            [sys.executable, str(LOS), "--root", str(mini_repo),
-             "intelligence-scan", "--json"],
-            capture_output=True, text=True, timeout=180)
-        assert proc.returncode == 0, proc.stderr
-        payload_ids = {goal["goal_id"] for goal in json.loads(proc.stdout)["goals"]}
-        assert f"covering-routes-stale:{route_id}" in payload_ids
-        assert f"source-changed-under-claim:covers:{route_id}" in payload_ids
+    _rewrite_revision(mini_repo, "module-demo", 4)
+    assert row_goals() == (
+        ["source-changed-under-claim:covers:route-legacy"], [])
 
-        bad = subprocess.run(
-            [sys.executable, str(LOS), "--root", str(mini_repo),
-             "intelligence-scan", "--json"],
-            capture_output=True, text=True, timeout=180,
-            env={**os.environ, "GIT_DIR": "/dev/null"})
-        assert bad.returncode == 2
-        assert "Git history" in (bad.stdout + bad.stderr)
-
-        monkeypatch.setenv("GIT_DIR", "/dev/null")
-        githistory.last_commit_dates.cache_clear()
-        githistory.last_commit_timestamps.cache_clear()
-        try:
-            with pytest.raises(GitHistoryError):
-                collect_observations(mini_repo, days=30)
-        finally:
-            monkeypatch.delenv("GIT_DIR", raising=False)
-            githistory.last_commit_dates.cache_clear()
-            githistory.last_commit_timestamps.cache_clear()
-    finally:
-        githistory.last_commit_dates.cache_clear()
-        githistory.last_commit_timestamps.cache_clear()
+    proc = subprocess.run(
+        [sys.executable, str(LOS), "--root", str(mini_repo),
+         "intelligence-scan", "--json"],
+        capture_output=True, text=True, timeout=180)
+    assert proc.returncode == 0, proc.stderr
+    payload_ids = {goal["goal_id"] for goal in json.loads(proc.stdout)["goals"]}
+    assert "source-changed-under-claim:covers:route-legacy" in payload_ids
+    assert not any(
+        goal_id.startswith("covering-routes-stale:")
+        for goal_id in payload_ids
+    )
 
 
 def test_scan_proposes_dependent_revalidation_after_evidence_moves(
@@ -668,6 +605,30 @@ def test_scoped_batch_claims_start_supported(mini_repo):
 
     route_a, route_b = _two_unit_scoped_world(mini_repo)
     assert dict(collect_observations(mini_repo, days=0).stale_claims) == {}
+
+
+def test_withdrawn_claims_stay_out_of_row_detectors(mini_repo):
+    """A withdrawn claim needs a fresh judgment: even when its own
+    route row and covered node both move, no re-examination or
+    revalidation goal fires for it."""
+    from learning_os.semantics.lineage import dump_ledger, load_ledger, withdraw
+    from learning_os.semantics.scan import collect_observations, scan_observations
+
+    route_a, _route_b = _two_unit_scoped_world(mini_repo)
+    ledger_path = mini_repo / "operations/transactions/lineage.yaml"
+    records = load_ledger(mini_repo)
+    ledger_path.write_text(
+        dump_ledger({lineage.claim_id: lineage
+                     for lineage in withdraw(
+                         list(records.values()), f"covers:{route_a}")}),
+        encoding="utf-8")
+    _rewrite_route(mini_repo, route_a, angle="Alpha angle, revised.")
+    _rewrite_node(mini_repo, "unit-demo-l01", "knowledge-demo-alpha",
+                  title="Alpha, reframed")
+    goals = scan_observations(collect_observations(mini_repo, days=0))
+    assert [goal.goal_id for goal in goals
+            if goal.detector in ("source-changed-under-claim",
+                                 "covering-routes-stale")] == []
 
 
 def test_route_patch_in_sibling_unit_stales_only_that_routes_claim(mini_repo):

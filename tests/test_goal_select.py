@@ -199,19 +199,59 @@ def test_one_unit_is_one_decision_despite_extra_nodes():
     assert cluster.cause == ("unit:u-ch04",)
 
 
-def test_lineage_and_source_causes_cluster():
+def test_lineage_causes_cluster():
     goals = [
         _goal("lineage-stale:a", "lineage-stale",
               ["claim:a", "moved:file:x", "moved:rev:y"]),
         _goal("lineage-stale:b", "lineage-stale",
               ["claim:b", "moved:rev:y", "moved:file:x"]),
-        _goal("source-changed-under-claim:c", "source-changed-under-claim",
-              ["claim:c", "source:s1"]),
+    ]
+    (cluster,) = cluster_goals(goals)
+    assert cluster.member_ids == ("lineage-stale:a", "lineage-stale:b")
+    assert cluster.cause == ("moved:file:x", "moved:rev:y")
+
+
+def test_changed_source_goals_stand_alone():
+    """Each changed-source goal fires for its own route row alone and
+    shares no cause with its siblings: no shared prefix, no merge."""
+    goals = [
+        _goal("source-changed-under-claim:covers:r1",
+              "source-changed-under-claim",
+              ["claim:covers:r1", "route:r1"]),
+        _goal("source-changed-under-claim:covers:r2",
+              "source-changed-under-claim",
+              ["claim:covers:r2", "route:r2"]),
     ]
     clusters = cluster_goals(goals)
     assert len(clusters) == 2
-    assert clusters[0].member_ids == ("lineage-stale:a", "lineage-stale:b")
-    assert clusters[0].cause == ("moved:file:x", "moved:rev:y")
+    assert all(len(cluster.member_ids) == 1 for cluster in clusters)
+
+
+def test_review_goals_cluster_per_unit():
+    """Review debt prints per unit — one decision per group — while a
+    unitless claim still stands alone."""
+    goals = [
+        _goal("claims-needing-review:covers:r1", "claims-needing-review",
+              ["claim:covers:r1", "unit:u1"]),
+        _goal("claims-needing-review:covers:r2", "claims-needing-review",
+              ["claim:covers:r2", "unit:u1"]),
+        _goal("claims-needing-review:covers:r3", "claims-needing-review",
+              ["claim:covers:r3", "unit:u2"]),
+        _goal("claims-needing-review:scope:x", "claims-needing-review",
+              ["claim:scope:x"]),
+    ]
+    clusters = cluster_goals(goals)
+    assert len(clusters) == 3
+    big = next(cluster for cluster in clusters
+               if len(cluster.member_ids) == 2)
+    assert big.detector == "claims-needing-review"
+    assert big.member_ids == ("claims-needing-review:covers:r1",
+                              "claims-needing-review:covers:r2")
+    assert big.cause == ("unit:u1",)
+    assert "2 claims need review in unit:u1" == big.title
+    assert sorted(member for cluster in clusters
+                  for member in cluster.member_ids) == sorted(
+                      goal.goal_id for goal in goals)
 
 
 def test_causeless_detectors_stay_single():

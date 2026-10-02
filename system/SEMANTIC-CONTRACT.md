@@ -260,9 +260,10 @@ OBSERVE → INTERPRET → PROPOSE, then Aram decides queue entry: `los
 intelligence-scan` reads the current world, runs the Phase-3 detectors
 over what it finds, prints candidate investigations, and exits. No
 daemon, no background process, no telemetry database, no automatic
-writes. v1 observes only what the repository already records — changed
-files in a stateless recency window joined to knowledge nodes and
-source definitions, lineage staleness against the revision ledger, and
+writes. v1 observes only what the repository already records — per-row
+content digests (each covers claim pins its route row and covered
+knowledge nodes; only the claim whose own row moved fires),
+lineage staleness against the revision ledger, and
 derived study-map obligations. Critique points are deliberately
 excluded (an open point is not a work item). Prospective material-synthesis
 publication records its freshness lineage atomically with the approved dossier,

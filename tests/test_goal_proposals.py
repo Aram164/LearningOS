@@ -26,11 +26,22 @@ from learning_os.semantics import (
 
 def test_covering_routes_fire_only_for_their_nodes():
     goals = detect_covering_routes_stale(
-        changed_nodes=["knowledge-a"],
         route_covers={
             "route-1": ["knowledge-a", "knowledge-b"],
             "route-2": ["knowledge-c"],
         },
+        node_digest_pins={
+            "route-1": {"knowledge-a": "sha256:old-a",
+                        "knowledge-b": "sha256:kept-b"},
+            "route-2": {"knowledge-c": "sha256:kept-c"},
+        },
+        live_node_digests={
+            "knowledge-a": "sha256:new-a",
+            "knowledge-b": "sha256:kept-b",
+            "knowledge-c": "sha256:kept-c",
+        },
+        claim_statuses={"covers:route-1": "supported",
+                        "covers:route-2": "supported"},
     )
     assert [goal.goal_id for goal in goals] == [
         "covering-routes-stale:route-1"]
@@ -40,16 +51,97 @@ def test_covering_routes_fire_only_for_their_nodes():
     assert "route:route-1" in goal.evidence
 
 
-def test_source_changes_re_examine_only_pinned_claims():
+def test_covering_routes_stay_silent_when_digests_match():
+    """The proxy-vs-fact pin: byte-identical rows never fire, however
+    their files moved in the window the old file-membership trigger
+    watched."""
+    goals = detect_covering_routes_stale(
+        route_covers={"route-1": ["knowledge-a"]},
+        node_digest_pins={"route-1": {"knowledge-a": "sha256:same"}},
+        live_node_digests={"knowledge-a": "sha256:same"},
+        claim_statuses={"covers:route-1": "supported"},
+    )
+    assert goals == ()
+
+
+def test_covering_routes_ignore_routes_without_pins():
+    """No judged baseline, no verdict: an unclaimed route cannot be
+    stale against pins it never recorded."""
+    goals = detect_covering_routes_stale(
+        route_covers={"route-1": ["knowledge-a"]},
+        node_digest_pins={},
+        live_node_digests={"knowledge-a": "sha256:anything"},
+        claim_statuses={},
+    )
+    assert goals == ()
+
+
+def test_covering_routes_fail_closed_on_missing_live_nodes():
+    """A pinned node with no live digest (deleted, unreadable,
+    ambiguously owned) counts as changed: without bytes to compare,
+    the claim cannot stand."""
+    (goal,) = detect_covering_routes_stale(
+        route_covers={"route-1": ["knowledge-a"]},
+        node_digest_pins={"route-1": {"knowledge-a": "sha256:pinned"}},
+        live_node_digests={},
+        claim_statuses={"covers:route-1": "supported"},
+    )
+    assert goal.goal_id == "covering-routes-stale:route-1"
+
+
+def test_source_changes_fire_only_when_the_claims_own_row_moved():
+    """New-shape claims compare their own route-content digest: a
+    sibling row moving (or its source file) fires nothing here."""
     goals = detect_source_changed_under_claim(
-        changed_sources=["source-a"],
-        claim_sources={
-            "covers:route-1": ["source-a"],
-            "covers:route-2": ["source-b"],
-        },
+        route_digest_pins={"route-1": "sha256:old-1",
+                           "route-2": "sha256:kept-2"},
+        live_route_digests={"route-1": "sha256:new-1",
+                            "route-2": "sha256:kept-2"},
+        route_revision_pins={},
+        current_revisions={},
+        claim_statuses={"covers:route-1": "supported",
+                        "covers:route-2": "supported"},
     )
     assert [goal.goal_id for goal in goals] == [
         "source-changed-under-claim:covers:route-1"]
+    assert goals[0].evidence == (
+        "claim:covers:route-1", "route:route-1")
+
+
+def test_source_changes_stay_silent_when_digests_match():
+    goals = detect_source_changed_under_claim(
+        route_digest_pins={"route-1": "sha256:same"},
+        live_route_digests={"route-1": "sha256:same"},
+        route_revision_pins={},
+        current_revisions={},
+        claim_statuses={"covers:route-1": "supported"},
+    )
+    assert goals == ()
+
+
+def test_source_changes_old_shape_follows_pinned_revisions():
+    """Old-shape claims judged before per-row digests fire only when
+    their own pinned revisions moved — never on file membership."""
+    pins = {"route-1": {"module-demo": 3}}
+    statuses = {"covers:route-1": "supported"}
+    silent = detect_source_changed_under_claim(
+        route_digest_pins={},
+        live_route_digests={},
+        route_revision_pins=pins,
+        current_revisions={"module-demo": 3},
+        claim_statuses=statuses,
+    )
+    assert silent == ()
+    (goal,) = detect_source_changed_under_claim(
+        route_digest_pins={},
+        live_route_digests={},
+        route_revision_pins=pins,
+        current_revisions={"module-demo": 4},
+        claim_statuses=statuses,
+    )
+    assert goal.goal_id == "source-changed-under-claim:covers:route-1"
+    assert goal.evidence == (
+        "claim:covers:route-1", "revision:module-demo")
 
 
 def test_repeated_questions_need_threshold_and_a_gap():
@@ -151,14 +243,81 @@ def test_malformed_signals_fail_closed():
             question_counts={"x": "many"}, voq_classes=[])
     with pytest.raises(GoalError):
         detect_covering_routes_stale(
-            changed_nodes=["a"], route_covers={"r": "not-a-list"})
+            route_covers={"r": "not-a-list"},
+            node_digest_pins={},
+            live_node_digests={},
+            claim_statuses={})
+    with pytest.raises(GoalError):
+        detect_covering_routes_stale(
+            route_covers={"r": ["a"]},
+            node_digest_pins={"r": {"a": ""}},
+            live_node_digests={},
+            claim_statuses={})
+    with pytest.raises(GoalError):
+        detect_source_changed_under_claim(
+            route_digest_pins={},
+            live_route_digests={},
+            route_revision_pins={"r": {"module-x": True}},
+            current_revisions={},
+            claim_statuses={"covers:r": "supported"})
+    with pytest.raises(GoalError):
+        detect_source_changed_under_claim(
+            route_digest_pins={"r": "sha256:pinned"},
+            live_route_digests={},
+            route_revision_pins={},
+            current_revisions={},
+            claim_statuses={})
+
+
+def test_row_detectors_skip_contested_and_withdrawn_claims():
+    """A moved row under a contested claim needs its reviewer, and
+    under a withdrawn claim a fresh judgment — never a re-examination
+    goal, however far the row moved."""
+    for status in ("contested", "withdrawn"):
+        assert detect_source_changed_under_claim(
+            route_digest_pins={"route-1": "sha256:old"},
+            live_route_digests={"route-1": "sha256:new"},
+            route_revision_pins={},
+            current_revisions={},
+            claim_statuses={"covers:route-1": status},
+        ) == ()
+        assert detect_covering_routes_stale(
+            route_covers={"route-1": ["knowledge-a"]},
+            node_digest_pins={"route-1": {"knowledge-a": "sha256:old"}},
+            live_node_digests={"knowledge-a": "sha256:new"},
+            claim_statuses={"covers:route-1": status},
+        ) == ()
+
+
+def test_review_goals_carry_their_unit_for_clustering():
+    goals = detect_claims_needing_review(
+        claims={
+            "covers:route-1": {"reviewed_by": "", "status": "supported"},
+            "covers:route-2": {"reviewed_by": "", "status": "supported"},
+            "scope:proof:x": {"reviewed_by": "", "status": "supported"},
+        },
+        claim_units={"covers:route-1": "unit-a",
+                     "covers:route-2": "unit-a"},
+    )
+    assert [goal.goal_id for goal in goals] == [
+        "claims-needing-review:covers:route-1",
+        "claims-needing-review:covers:route-2",
+        "claims-needing-review:scope:proof:x",
+    ]
+    assert goals[0].evidence == ("claim:covers:route-1", "unit:unit-a")
+    assert goals[1].evidence == ("claim:covers:route-2", "unit:unit-a")
+    # No resolvable unit: stands alone, never wrongly grouped.
+    assert goals[2].evidence == ("claim:scope:proof:x",)
 
 
 def test_detectors_write_nothing(tmp_path, monkeypatch):
     """Detectors return records; the only writes are the caller's."""
     monkeypatch.chdir(tmp_path)
     detect_covering_routes_stale(
-        changed_nodes=["a"], route_covers={"r": ["a"]})
+        route_covers={"r": ["a"]},
+        node_digest_pins={"r": {"a": "sha256:pinned"}},
+        live_node_digests={"a": "sha256:pinned"},
+        claim_statuses={"covers:r": "supported"})
     detect_repeated_question_gap(
         question_counts={"x": 9}, voq_classes=[])
     assert list(tmp_path.iterdir()) == []
