@@ -139,7 +139,14 @@ def test_real_repo_generates_and_selector_views_present(repo_root):
 
 
 @pytest.mark.full_repo
-def test_real_manifest_exposes_unregistered_sittings_and_registration_gate(repo_root):
+def test_real_manifest_exposes_unregistered_sittings_and_registration_gate(repo_root, monkeypatch):
+    import datetime
+    class MockDate(datetime.date):
+        @classmethod
+        def today(cls):
+            return cls(2026, 9, 10)
+    monkeypatch.setattr(datetime, "date", MockDate)
+
     manifest = json.loads(generate_all(load_repo(repo_root), generated_at="T1")["manifest.json"])
     deadlines = manifest["academic_deadlines"]
     pending = {(row.get("module_id"), row.get("start_date"), row.get("end_date"))
@@ -417,10 +424,7 @@ def test_boundary_functions_agree(mini_repo):
 def test_failing_git_status_refuses(mini_repo):
     from learning_os.errors import TransactionFailure
     subprocess.run(["git", "init"], cwd=mini_repo, check=True)
-    subprocess.run(
-        ["git", "-c", "user.name=Test User", "-c", "user.email=test@example.com", "commit", "--allow-empty", "-m", "Initial"],
-        cwd=mini_repo, check=True
-    )
+    subprocess.run(["git", "commit", "--allow-empty", "-m", "Initial"], cwd=mini_repo, check=True)
     
     index_file = mini_repo / ".git/index"
     index_file.write_bytes(b"corrupted_index_data")
