@@ -557,6 +557,61 @@ def test_module_attempt_stale_revision_refuses(mini_repo):
     assert _demo_module_path(mini_repo).read_bytes() == before
 
 
+def test_module_sitting_bare_cli_refuses(mini_repo):
+    # #115: the governed sitting path, like its attempt neighbour,
+    # never writes from a bare named command.
+    add_curriculum(mini_repo)
+    before = _demo_module_path(mini_repo).read_bytes()
+    proc = run_los(mini_repo, "module-sitting", "module-demo",
+                   "--termin", "2", "--withdrawal-deadline", "2026-10-02")
+    assert proc.returncode == 2
+    assert "GatewayEnvelopeV2" in proc.stderr
+    assert _demo_module_path(mini_repo).read_bytes() == before
+
+
+@pytest.mark.parametrize("argv,match", [
+    (["module-ghost", "--termin", "2",
+      "--withdrawal-deadline", "2026-10-02"], "module not found"),
+    (["module-demo", "--termin", "2",
+      "--withdrawal-deadline", "10/02/2026"], "must be an ISO date"),
+    (["module-demo", "--termin", "4",
+      "--withdrawal-deadline", "2026-10-02"], "invalid choice"),
+    (["module-demo", "--termin", "1",
+      "--withdrawal-deadline", "2026-10-02"], "has no sitting for termin 1"),
+])
+def test_module_sitting_usage_errors_refuse(mini_repo, argv, match):
+    add_curriculum(mini_repo)
+    before = _demo_module_path(mini_repo).read_bytes()
+    proc = run_los(mini_repo, "module-sitting", *argv)
+    assert proc.returncode == 2, proc.stderr
+    assert match in proc.stderr
+    assert _demo_module_path(mini_repo).read_bytes() == before
+
+
+def test_module_sitting_sets_only_the_deadline(mini_repo):
+    add_curriculum(mini_repo)
+    applied = approved_v2_cli(
+        mini_repo, "module-sitting", "module-demo",
+        "--termin", "2", "--withdrawal-deadline", "2026-10-02",
+        artifact_ids=["module-demo"], idempotency_key="sitting-deadline-001")
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    result = gateway_result(applied)
+    assert result["withdrawal_deadline"] == "2026-10-02"
+    assert result["receipt_path"]
+    module = yaml.safe_load(_demo_module_path(mini_repo).read_text())
+    sittings = {row["termin"]: row
+                for row in module["examination"]["sittings"]}
+    assert sittings[2]["withdrawal_deadline"] == "2026-10-02"
+    assert "withdrawal_deadline" not in sittings[3]
+    # Attempts, notes and the sibling sitting pass through untouched.
+    assert module["attempts"][1] == {"termin": 2, "date": "2026-10-09",
+                                     "result": "registered"}
+    assert sittings[2]["date"] == "2026-10-09"
+    receipt = yaml.safe_load(
+        (mini_repo / result["receipt_path"]).read_text())
+    assert receipt["capability"] == "module.sitting.update"
+
+
 def test_non_academic_module_needs_no_institution_or_semester(mini_repo):
     add_curriculum(mini_repo)
     write_yaml(mini_repo / "curriculum/programs/program-skills.yaml", {

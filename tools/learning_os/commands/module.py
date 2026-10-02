@@ -169,6 +169,69 @@ def cmd_module_attempt(args) -> int:
     return 0
 
 
+def cmd_module_sitting(args) -> int:
+    """Record one sitting's withdrawal deadline in the owning module.yaml.
+
+    The governed write path for a published administrative fact — the
+    Rücktritt deadline of one examination sitting — next to
+    ``module.attempt.record``, which records Aram's own attempt facts.
+    It sets ``withdrawal_deadline`` on the sitting for one termin and
+    nothing else: notes, attempts, and every other sitting field pass
+    through untouched. The termin must already have a sitting; this
+    never invents examination dates.
+    """
+    root = _root(args)
+    if args.termin not in (1, 2, 3):
+        print(f"los: --termin must be 1, 2 or 3, got {args.termin!r}",
+              file=sys.stderr)
+        return 2
+    try:
+        _dt.date.fromisoformat(args.withdrawal_deadline)
+    except (TypeError, ValueError):
+        print("los: --withdrawal-deadline must be an ISO date (YYYY-MM-DD), "
+              f"got {args.withdrawal_deadline!r}", file=sys.stderr)
+        return 2
+    with _operator_lock(root):
+        if not _expected_ok(root, args.expected_snapshot):
+            return 3
+        repo = load_repo(root)
+        module = repo.modules.get(args.module_id)
+        if module is None:
+            print(f"los: {not_found('module', args.module_id, repo.modules)}",
+                  file=sys.stderr)
+            return 2
+        module_path = repo.module_origins[args.module_id]
+        data = copy.deepcopy(module)
+        sittings = (data.get("examination") or {}).get("sittings") or []
+        row = next((candidate for candidate in sittings
+                    if isinstance(candidate, dict)
+                    and candidate.get("termin") == args.termin), None)
+        if row is None:
+            known = sorted({sitting.get("termin") for sitting in sittings
+                            if isinstance(sitting, dict)
+                            and sitting.get("termin") is not None})
+            print(f"los: module {args.module_id} has no sitting for termin "
+                  f"{args.termin} (known termins: {known or 'none'})",
+                  file=sys.stderr)
+            return 2
+        row["withdrawal_deadline"] = args.withdrawal_deadline
+        code, errors, confirmation = _write_transaction(
+            root, {module_path: _dump_yaml(data)},
+            capability="module.sitting.update",
+            expected_revisions=_expected_revisions_from_args(args),
+            artifact_ids=[args.module_id],
+        )
+        if code:
+            for issue in errors[:12]:
+                print(issue, file=sys.stderr)
+            return code
+    print(json.dumps({"ok": True, "module_id": args.module_id,
+                      "termin": args.termin,
+                      "withdrawal_deadline": args.withdrawal_deadline,
+                      **confirmation}, ensure_ascii=False))
+    return 0
+
+
 _LINEAGE_EVIDENCE_KINDS = ("route-locator", "manifest", "repo-file", "external")
 
 

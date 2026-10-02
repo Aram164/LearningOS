@@ -339,6 +339,15 @@ commands:
     - one module; appends a new attempts row or updates the row for the same termin
     - termin, date, result and optional grade/notes record Aram's stated exam fact; no plan contract or source map
     - snapshot and module revision guarded, with one V2 receipt
+  module.sitting.update:
+    handler: module_sitting
+    cli_command: module-sitting
+    writes:
+    - curriculum/modules/*/module.yaml
+    invariants:
+    - one module; sets the examination sitting's withdrawal_deadline for one termin, nothing else
+    - the termin must already have a sitting; notes, attempts and every other sitting field are untouched
+    - snapshot and module revision guarded, with one V2 receipt
   module.plan.import:
     handler: module_plan_import
     cli_command: module-plan-import

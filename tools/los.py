@@ -78,6 +78,7 @@ from learning_os.commands.module import (  # noqa: E402
     cmd_module_attempt,
     cmd_module_list,
     cmd_module_plan_import,
+    cmd_module_sitting,
     cmd_unit_plan_revise,
 )
 from learning_os.commands.note import (  # noqa: E402
@@ -876,6 +877,17 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_module_attempt)
+
+    p = sub.add_parser("module-sitting",
+                       help="record one sitting's withdrawal deadline in the owning module")
+    p.add_argument("module_id")
+    p.add_argument("--termin", required=True, type=int, choices=(1, 2, 3),
+                   help="which termin this sitting is for")
+    p.add_argument("--withdrawal-deadline", required=True,
+                   help="Rücktritt deadline (YYYY-MM-DD)")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_module_sitting)
 
     p = sub.add_parser("unit-plan-revise",
                        help="revise one existing lecture from a compact reviewed patch")

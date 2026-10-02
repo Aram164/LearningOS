@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/module.sitting.update.schema.json",
+  "title": "payload for capability module.sitting.update",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "module_id",
+    "termin",
+    "withdrawal_deadline"
+  ],
+  "properties": {
+    "module_id": {
+      "type": "string"
+    },
+    "termin": {
+      "type": "integer",
+      "enum": [
+        1,
+        2,
+        3
+      ]
+    },
+    "withdrawal_deadline": {
+      "type": "string"
+    }
+  }
+}
