@@ -19,8 +19,8 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 49
-schema_fingerprint: sha256:62b647bbe74178e62f147baba9a2d4ee8950630fab30ad2d722c350ac6101aa6
+contract_version: 50
+schema_fingerprint: sha256:a9def1a491e0773e319e3c47354999298e3a6ef6f5571c783cdabb57b9c82859
 record_schemas: 36
 history:
 - version: 1
@@ -368,5 +368,13 @@ history:
   note: Add learner-stage-result record schema (untargeted stage-result ledger) and
     optional receipts metadata.routed_to for inbox.resolve; additive, old records
     and receipts stay valid without a migration
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 50
+  adopted: '2026-10-02'
+  note: Transaction receipts gain optional claims_sha256 and claims_count metadata,
+    written only by lineage.restamp so a re-stamp receipt is directly auditable without
+    reopening the envelope. Additive and backward-compatible — absent on every other
+    receipt, which is what every v49 record carries.
   migration: null
   fixture: tests/fixtures/formats/v46/

@@ -213,6 +213,11 @@ def cmd_lineage_restamp(args) -> int:
             capability=CAPABILITY,
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=(),
+            # The envelope's intent hash already binds the claim list;
+            # echoing the hash and the count here keeps the receipt
+            # directly auditable without reopening the envelope.
+            metadata={"claims_sha256": claims_sha256,
+                      "claims_count": len(ordered)},
         )
         if code:
             print("los: lineage re-stamp failed", file=sys.stderr)

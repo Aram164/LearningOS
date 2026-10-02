@@ -51,6 +51,15 @@
               "type": "array",
               "minItems": 1,
               "items": {"type": "string", "minLength": 1}
+            },
+            "claims_sha256": {
+              "description": "The exact reviewed claim list the re-stamp narrowed, bound by SHA-256. Written only by lineage.restamp; absent on every other receipt.",
+              "$ref": "#/$defs/dataRootsDigest"
+            },
+            "claims_count": {
+              "description": "How many claims the re-stamp narrowed. Written only by lineage.restamp; absent on every other receipt.",
+              "type": "integer",
+              "minimum": 1
             }
           }
         },

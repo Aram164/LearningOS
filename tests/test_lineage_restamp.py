@@ -378,6 +378,9 @@ def test_reviewed_apply_narrows_exactly_the_named_claim(tmp_path):
     receipt = yaml.safe_load(receipts[-1].read_text(encoding="utf-8"))
     assert receipt["capability"] == "lineage.restamp"
     assert receipt["status"] == "committed"
+    # #114 item 6: the receipt echoes the bound claim list for direct audit.
+    assert receipt["metadata"]["claims_sha256"] == claims_sha
+    assert receipt["metadata"]["claims_count"] == 1
 
     # A second stamping refuses: the narrowed shape stamps once.
     second = run_los(
