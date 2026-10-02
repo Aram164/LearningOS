@@ -132,9 +132,19 @@ def test_combined_fingerprints_match_separate_walks(mini_repo: Path):
     assert data == data_roots_fingerprint(mini_repo)
 
 
-def test_transaction_performs_exactly_two_canonical_walks(
+def test_transaction_walks_twice_but_reads_each_file_once(
         mini_repo: Path, monkeypatch: pytest.MonkeyPatch):
-    """#104 step 1: pre once, post once (canonical+data+stat in one walk)."""
+    """#104 step 1 + #112: pre once, post once, each byte read once.
+
+    The guard still walks twice — the pre walk and the post walk are both
+    stat-complete, and the new file is found by the post walk only — but
+    the shared digest layer serves the post walk's unchanged bytes from
+    the pre walk's reads. The cache starts cold so the transaction's own
+    pre-walk reads are counted too.
+    """
+    from learning_os import digests
+
+    digests.clear()
     expected = f"sha256:{canonical_fingerprint(mini_repo)}"
     base = _gateway_context("capture.create", "two-walks")
     context = GatewayRequestContext(
@@ -156,9 +166,25 @@ def test_transaction_performs_exactly_two_canonical_walks(
         return original_read(root, path)
 
     monkeypatch.setattr(fingerprint_module, "read_bytes_inside", counted_read)
+    walks: list[str] = []
+    original_pre = transaction_module.canonical_fingerprint
+    original_post = transaction_module.canonical_data_and_stat_fingerprints
+
+    def counted_pre(root: Path, **kwargs):
+        walks.append("pre")
+        return original_pre(root, **kwargs)
+
+    def counted_post(root: Path, **kwargs):
+        walks.append("post")
+        return original_post(root, **kwargs)
+
+    monkeypatch.setattr(transaction_module, "canonical_fingerprint", counted_pre)
+    monkeypatch.setattr(
+        transaction_module, "canonical_data_and_stat_fingerprints", counted_post)
     target = mini_repo / "work/inbox/two-walks.md"
     artifact = "capture-test:two-walks"
     target_rel = target.relative_to(mini_repo).as_posix()
+    digests.clear()
 
     with command_support._operator_lock(mini_repo):
         with gateway_request_context(context), verified_gateway_snapshot(
@@ -174,11 +200,11 @@ def test_transaction_performs_exactly_two_canonical_walks(
 
     assert (code, errors) == (0, [])
     assert confirmation["snapshot_after"].startswith("sha256:")
+    assert walks == ["pre", "post"]
     assert reads.get(target_rel) == 1
+    assert len(reads) > 1, "no unchanged file was read — this proves nothing"
     for rel, count in reads.items():
-        if rel == target_rel:
-            continue
-        assert count == 2, f"{rel} read {count} times, expected pre+post only"
+        assert count == 1, f"{rel} read {count} times, expected once"
 
 
 def test_a_transaction_refuses_an_already_invalid_repository(

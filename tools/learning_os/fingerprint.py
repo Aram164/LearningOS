@@ -13,6 +13,10 @@ of failure the receipt chain exists to prevent.
 The root list, walk, and projection memoisation now live here once.
 ``transactions`` re-exports the path-taking form; projection code calls the
 ``Repo``-taking form without making validators depend on generation modules.
+
+Every content read goes through the shared per-process digest layer
+(``digests``): the second read of unchanged bytes in a process is a stat
+plus a dict lookup, and snapshots are byte-identical warm or cold.
 """
 
 from __future__ import annotations
@@ -24,6 +28,8 @@ import weakref
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from . import digests
+from .contracts.local_attachments import local_paths
 from .pathing import PathBoundaryError, read_bytes_inside
 
 if TYPE_CHECKING:
@@ -57,6 +63,19 @@ DATA_ROOTS = tuple(
     root for root in CANONICAL_ROOTS if root not in CONTRACT_ROOTS
 )
 
+#: What the snapshot hex digests mean. 1 hashed every canonical file,
+#: including declared local-only attachments; 2 excludes the declared
+#: local-only bytes. The declaration file itself stays inside the walk,
+#: so re-pinning still moves the snapshot, and the pin check still hashes
+#: every present scan on a full validation. New receipts record this in
+#: ``metadata.fingerprint_definition``; the operations resolver compares
+#: a pre-exclusion receipt under its own definition.
+FINGERPRINT_DEFINITION_VERSION = 2
+
+#: Every definition this code can compute: the current one plus each
+#: historical shape the resolver may need for an old receipt.
+_KNOWN_DEFINITIONS = frozenset({1, FINGERPRINT_DEFINITION_VERSION})
+
 _SOURCE_FINGERPRINTS: weakref.WeakKeyDictionary[Repo, str] = weakref.WeakKeyDictionary()
 
 
@@ -71,10 +90,40 @@ def seed_source_fingerprint(repo: Repo, snapshot_id: str) -> None:
     _SOURCE_FINGERPRINTS[repo] = snapshot_id.removeprefix("sha256:")
 
 
-def _fingerprint_roots(root: Path, rel_roots) -> str:
+def _read(root: Path, path: Path) -> bytes:
+    """One boundary-checked content read through the shared digest layer.
+
+    The walk-counting tests patch ``read_bytes_inside`` in this module;
+    that stays the disk-read seam, and a layer hit never reaches it.
+    """
+    return digests.file_content(root, path, lambda: read_bytes_inside(root, path))
+
+
+def _excluded_local_paths(root: Path, definition: int) -> frozenset[str]:
+    """Declared local-only attachments, excluded from definition 2 on.
+
+    An unreadable declaration excludes nothing: hashing bytes that failed
+    to declare is the fail-closed direction (the validator reports the
+    declaration itself).
+    """
+    if definition < FINGERPRINT_DEFINITION_VERSION:
+        return frozenset()
+    return frozenset(local_paths(root))
+
+
+def _check_definition(definition: int) -> None:
+    if definition not in _KNOWN_DEFINITIONS:
+        raise ValueError(f"unknown fingerprint definition: {definition!r}")
+
+
+def _fingerprint_roots(
+    root: Path, rel_roots, *, definition: int = FINGERPRINT_DEFINITION_VERSION,
+) -> str:
     """The canonical walk over an explicit root list. One walk, two lists:
     the write guard keeps ``CANONICAL_ROOTS``; the data-roots digest keeps
     ``DATA_ROOTS``. Same bytes per root either way."""
+    _check_definition(definition)
+    excluded = _excluded_local_paths(root, definition)
     digest = hashlib.sha256()
     for rel_root in rel_roots:
         base = root / rel_root
@@ -88,10 +137,12 @@ def _fingerprint_roots(root: Path, rel_roots) -> str:
             rel = path.relative_to(root)
             if any(part.startswith(".") for part in rel.parts):
                 continue
+            if rel.as_posix() in excluded:
+                continue
             digest.update(rel.as_posix().encode("utf-8"))
             digest.update(b"\0")
             try:
-                digest.update(read_bytes_inside(root, path))
+                digest.update(_read(root, path))
             except (OSError, PathBoundaryError):
                 # An inadmissible link is still canonical filesystem state, so
                 # make it move the guard without reading the external target.
@@ -129,7 +180,9 @@ def _stat_line(path: Path) -> bytes:
     return line.encode("utf-8", errors="replace")
 
 
-def canonical_data_and_stat_fingerprints(root: Path) -> tuple[str, str, str]:
+def canonical_data_and_stat_fingerprints(
+    root: Path, *, definition: int = FINGERPRINT_DEFINITION_VERSION,
+) -> tuple[str, str, str]:
     """One walk yielding canonical, data-roots, and stat digests.
 
     The canonical and data hex digests are byte-identical to calling
@@ -139,6 +192,8 @@ def canonical_data_and_stat_fingerprints(root: Path) -> tuple[str, str, str]:
     stat digest covers the same enumeration without content reads, for
     cheap post-publication change detection.
     """
+    _check_definition(definition)
+    excluded = _excluded_local_paths(root, definition)
     data_set = set(DATA_ROOTS)
     canonical = hashlib.sha256()
     data = hashlib.sha256()
@@ -155,9 +210,11 @@ def canonical_data_and_stat_fingerprints(root: Path) -> tuple[str, str, str]:
             rel = path.relative_to(root)
             if any(part.startswith(".") for part in rel.parts):
                 continue
+            if rel.as_posix() in excluded:
+                continue
             rel_bytes = rel.as_posix().encode("utf-8")
             try:
-                content = read_bytes_inside(root, path)
+                content = _read(root, path)
             except (OSError, PathBoundaryError):
                 content = None
             for digest, want in ((canonical, True), (data, rel_root in data_set)):
@@ -182,13 +239,17 @@ def canonical_data_and_stat_fingerprints(root: Path) -> tuple[str, str, str]:
     return canonical.hexdigest(), data.hexdigest(), stat.hexdigest()
 
 
-def canonical_stat_digest(root: Path) -> str:
+def canonical_stat_digest(
+    root: Path, *, definition: int = FINGERPRINT_DEFINITION_VERSION,
+) -> str:
     """Stat-only digest over the canonical enumeration, for change checks.
 
     Same file set and order as the content walk, but no content reads.
     Any realistic mutation moves it; identical content with identical
     stat (same size, times, mode, link value) is accepted as unchanged.
     """
+    _check_definition(definition)
+    excluded = _excluded_local_paths(root, definition)
     digest = hashlib.sha256()
     for rel_root in CANONICAL_ROOTS:
         base = root / rel_root
@@ -202,6 +263,8 @@ def canonical_stat_digest(root: Path) -> str:
             rel = path.relative_to(root)
             if any(part.startswith(".") for part in rel.parts):
                 continue
+            if rel.as_posix() in excluded:
+                continue
             digest.update(rel.as_posix().encode("utf-8"))
             digest.update(b"\0")
             digest.update(_stat_line(path))
@@ -209,17 +272,23 @@ def canonical_stat_digest(root: Path) -> str:
     return digest.hexdigest()
 
 
-def canonical_fingerprint(root: Path) -> str:
+def canonical_fingerprint(
+    root: Path, *, definition: int = FINGERPRINT_DEFINITION_VERSION,
+) -> str:
     """Return a stable digest of the authored canonical inputs under ``root``.
 
     Generated outputs and the revision ledger are excluded by the root list;
     dot-prefixed paths are skipped so editor scratch and VCS metadata cannot
-    move the digest.
+    move the digest. Declared local-only attachments are excluded from
+    definition 2 on; definition 1 reproduces the pre-exclusion digest for
+    the operations resolver's transition comparison.
     """
-    return _fingerprint_roots(root, CANONICAL_ROOTS)
+    return _fingerprint_roots(root, CANONICAL_ROOTS, definition=definition)
 
 
-def data_roots_fingerprint(root: Path) -> str:
+def data_roots_fingerprint(
+    root: Path, *, definition: int = FINGERPRINT_DEFINITION_VERSION,
+) -> str:
     """Return a stable digest of the authored-data roots under ``root``.
 
     The same walk as :func:`canonical_fingerprint` over ``DATA_ROOTS``
@@ -227,7 +296,7 @@ def data_roots_fingerprint(root: Path) -> str:
     digest alone. Read-only diagnostics compare it against the newest
     receipt's recorded value; it never guards a write.
     """
-    return _fingerprint_roots(root, DATA_ROOTS)
+    return _fingerprint_roots(root, DATA_ROOTS, definition=definition)
 
 
 def source_fingerprint(repo: Repo) -> str:

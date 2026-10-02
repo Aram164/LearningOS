@@ -63,6 +63,24 @@ _CONTENT_BYTES = 0
 #: (root, relpath) -> ((inode, size, mtime_ns, ctime_ns), hex digest).
 _DIGESTS: OrderedDict[tuple[str, str], tuple[tuple, str]] = OrderedDict()
 
+#: Distinct root spellings seen -> their canonical path. Callers mix
+#: resolved and unresolved spellings of one repository in a process
+#: (the transaction service resolves, the loader keeps what it was
+#: given); without this the same file caches twice and the second walk
+#: never hits. A pure path memo, not cached proof: entries are never
+#: stat-gated and ``clear()`` leaves them alone. One small entry per
+#: distinct spelling (one per repository in production).
+_ROOTS: dict[str, str] = {}
+
+
+def _canonical_root(root: Path) -> str:
+    spelling = os.path.normpath(os.fspath(root))
+    resolved = _ROOTS.get(spelling)
+    if resolved is None:
+        resolved = os.path.realpath(spelling)
+        _ROOTS[spelling] = resolved
+    return resolved
+
 
 def _key(root: Path, path: Path) -> tuple[str, str] | None:
     """The cache key, or None for a path outside ``root`` (never cached)."""
@@ -70,7 +88,7 @@ def _key(root: Path, path: Path) -> tuple[str, str] | None:
         rel = path.relative_to(root)
     except ValueError:
         return None
-    return (os.path.normpath(os.fspath(root)), rel.as_posix())
+    return (_canonical_root(root), rel.as_posix())
 
 
 def _stat_tuple(path: Path) -> tuple[int, int, int, int]:
