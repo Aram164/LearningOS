@@ -16,7 +16,8 @@ import subprocess
 import pytest
 import yaml
 from conftest import build_mini_repo
-from repo_builders import rich_fixture, write_yaml
+from gateway_helpers import approved_v2_call
+from repo_builders import rich_fixture, run_los, write_yaml
 
 from learning_os import githistory
 from learning_os.semantics import (
@@ -239,16 +240,29 @@ def _judged_repo(tmp_path, *, evidence=(), receipt_id="transaction-20200102-0000
     assert schema_src.is_file()
     smap_rel = "curriculum/modules/module-demo/source-map.yaml"
     unit_rel = "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+    intent = "sha256:" + "1" * 64
     write_yaml(root / "operations" / "transactions" / f"{receipt_id}.yaml", {
         "schema_version": 2, "id": receipt_id, "type": "transaction-receipt",
         "status": "committed", "capability": "module.plan.import",
-        "request": {"request_id": "request-demo",
-                    "idempotency_key": "demo-key"},
+        "committed_at": "2020-01-02T03:04:05+00:00",
+        "snapshot_before": intent, "snapshot_after": intent,
+        "expected_revisions": {"module-demo": 0, "unit-demo-l01": 0},
+        "artifact_revisions": {
+            "module-demo": {"before": 0, "after": 1},
+            "unit-demo-l01": {"before": 0, "after": 1}},
+        "request": {"channel": "operator", "request_id": "request-demo",
+                    "idempotency_key": "demo-key", "intent_sha256": intent,
+                    "approval": {"kind": "operator-approval",
+                                 "subject_sha256": intent}},
+        "authority": {"capability_contract_version": 2, "enforced": True,
+                      "grants": [{"capability": "module.plan.import",
+                                  "declared_writes": ["curriculum/modules/**"]}]},
+        "metadata": {},
         "writes": [
-            {"path": smap_rel,
+            {"path": smap_rel, "sha256_before": None, "created": False,
              "sha256_after": hashlib.sha256(
                  (root / smap_rel).read_bytes()).hexdigest()},
-            {"path": unit_rel,
+            {"path": unit_rel, "sha256_before": None, "created": False,
              "sha256_after": hashlib.sha256(
                  (root / unit_rel).read_bytes()).hexdigest()},
         ],
@@ -308,3 +322,83 @@ def test_analyze_holds_a_claim_whose_evidence_moved(tmp_path):
     row = out["claims"][claim_id]
     assert row["verdict"] == "needs-review"
     assert row["reasons"] == ["evidence-unverifiable:file:work/evidence.md"]
+
+
+def _reviewed_check(root, claim_id, report_path):
+    """A sealed --check report for exactly one claim, saved outside the repo."""
+    claims_sha = claims_list_sha256([claim_id])
+    checked = run_los(
+        root, "lineage-restamp", "--check",
+        "--claim-ids", claim_id, "--claims-sha256", claims_sha)
+    assert checked.returncode == 0, checked.stderr
+    import json
+
+    report = json.loads(checked.stdout)
+    assert report["mode"] == "check"
+    assert report["claim_ids"] == [claim_id]
+    assert report["gateway_envelope"]["capability"] == "lineage.restamp"
+    report_path.write_text(checked.stdout, encoding="utf-8")
+    return report, claims_sha
+
+
+def test_reviewed_apply_narrows_exactly_the_named_claim(tmp_path):
+    """The governed path end to end: check, review, apply, receipt."""
+    root, claim_id, _route_id = _judged_repo(tmp_path)
+    _report, claims_sha = _reviewed_check(
+        root, claim_id, tmp_path / "report.json")
+    applied = run_los(
+        root, "lineage-restamp",
+        "--claim-ids", claim_id, "--claims-sha256", claims_sha,
+        "--review-report", str(tmp_path / "report.json"))
+    assert applied.returncode == 0, applied.stderr
+    import json
+
+    response = json.loads(applied.stdout)
+    assert response["ok"] is True
+    confirmation = response["result"]
+    assert confirmation["mode"] == "apply"
+    assert confirmation["claim_ids"] == [claim_id]
+
+    from learning_os.semantics.lineage import load_ledger
+
+    stamped = load_ledger(root)[claim_id]
+    assert dict(stamped.derived_from.revisions) == {}
+    assert stamped.restamped_by == "codex/operator-approval"
+    assert stamped.restamped_on
+    assert stamped.judged_by == "operator/operator-approval"
+    assert stamped.admitted_by.request_id == "request-demo"
+    assert stamped.supersedes["derived_from"]["revisions"] == {
+        "module-demo": 1, "unit-demo-l01": 1}
+    assert stamped.status == "supported"
+    assert stamped.reviewed_by == ""
+
+    receipts = sorted((root / "operations" / "transactions").glob(
+        "transaction-*.yaml"))
+    assert len(receipts) == 2
+    receipt = yaml.safe_load(receipts[-1].read_text(encoding="utf-8"))
+    assert receipt["capability"] == "lineage.restamp"
+    assert receipt["status"] == "committed"
+
+    # A second stamping refuses: the narrowed shape stamps once.
+    second = run_los(
+        root, "lineage-restamp", "--check",
+        "--claim-ids", claim_id, "--claims-sha256", claims_sha)
+    assert second.returncode == 2
+    assert "outside the supported old-shape set" in second.stderr
+
+
+def test_envelope_apply_refuses_a_claim_whose_row_moved(tmp_path):
+    root, claim_id, _route_id = _judged_repo(tmp_path)
+    smap_path = root / "curriculum/modules/module-demo/source-map.yaml"
+    smap = yaml.safe_load(smap_path.read_text(encoding="utf-8"))
+    smap["sources"][0]["unit_routes"][0]["angle"] = "A rewritten angle."
+    write_yaml(smap_path, smap)
+    _git(root, "commit", "-am", "descriptive route edit")
+    response = approved_v2_call(
+        root, capability="lineage.restamp",
+        payload={"claim_ids": [claim_id],
+                 "claims_sha256": claims_list_sha256([claim_id])},
+        artifact_ids=["file:operations/transactions/lineage.yaml"],
+        idempotency_key="restamp-refusal-demo")
+    assert response.returncode != 0
+    assert "needs-rejudgment" in (response.stdout + response.stderr)

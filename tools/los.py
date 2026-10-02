@@ -67,6 +67,7 @@ from learning_os.commands.garden import cmd_garden_seed_create  # noqa: E402
 from learning_os.commands.goal import cmd_goal  # noqa: E402
 from learning_os.commands.inbox import cmd_inbox_resolve  # noqa: E402
 from learning_os.commands.intelligence import cmd_intelligence_scan  # noqa: E402
+from learning_os.commands.lineage_restamp import cmd_lineage_restamp  # noqa: E402
 from learning_os.commands.material import (  # noqa: E402
     cmd_module_materials_compact,
     cmd_plan_edit_context,
@@ -910,6 +911,21 @@ def build_parser() -> argparse.ArgumentParser:
              "without hand-assembling an envelope",
     )
     p.set_defaults(func=cmd_unit_plan_revise, _parser_factory=build_parser)
+    p.add_argument("--review-report", help="saved --check JSON; required for reviewed apply and exact retries")
+
+    p = sub.add_parser("lineage-restamp",
+                       help="narrow judged lineage reads to per-route digests")
+    p.add_argument("--claim-ids", nargs="+", default=None, metavar="CLAIM_ID",
+                   help="exact reviewed claim ids to stamp (1 or more)")
+    p.add_argument("--claims-sha256", type=sha256_value, default=None,
+                   help="SHA-256 binding the exact reviewed claim list "
+                        "(sorted ids, one per line)")
+    p.add_argument("--check", action="store_true",
+                   help="recompute eligibility (all claims), or verify the "
+                        "plan for --claim-ids; write nothing")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_lineage_restamp, _parser_factory=build_parser)
     p.add_argument("--review-report", help="saved --check JSON; required for reviewed apply and exact retries")
 
     p = sub.add_parser("note-create", help="create one durable note from approved bytes")

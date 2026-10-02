@@ -362,6 +362,17 @@ commands:
           full promotion record governed by
           system/schema/master-planning-promotion.schema.json.
         record_schema: system/schema/master-planning-promotion.schema.json
+  lineage.restamp:
+    handler: lineage_restamp
+    cli_command: lineage-restamp
+    writes:
+    - operations/transactions/lineage.yaml
+    invariants:
+    - only supported old-shape route-covers claims; withdrawn, contested and already-narrowed claims refuse
+    - every listed claim re-verified stampable against fresh analysis at apply; a claim whose route row or covered nodes differ from the judged state refuses, listed or not
+    - evidence, judge, admission, status and review state pass through untouched; the prior record rides as supersedes with restamped_by/restamped_on
+    - the approval binds the exact claim list by SHA-256 plus the snapshot and ledger guards
+    - the narrowed ledger commits atomically with one receipt
   route.identity.migrate:
     handler: route_identity_migrate
     cli_command: route-identity-migrate
