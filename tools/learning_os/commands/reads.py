@@ -772,6 +772,35 @@ def _evidence_label(tally):
             "positive": positive, "mismatch": mismatch}
 
 
+def _use_evidence_from_manifest(manifest: dict) -> dict[str, dict[str, int]]:
+    """Recorded stage-use evidence per source id, read from the manifest.
+
+    The same tally `_use_evidence` computes from the loaded repo: every
+    study map is projected and projected stages keep `source_feedback`
+    verbatim, so the two agree exactly. Lets `related` skip the repo load
+    on the manifest-reuse fast path (#83).
+    """
+    tallies: dict[str, dict[str, int]] = {}
+    for study_map in manifest.get("study_maps", []) or []:
+        if not isinstance(study_map, dict):
+            continue
+        for stage in study_map.get("stages", []) or []:
+            if not isinstance(stage, dict):
+                continue
+            for entry in stage.get("source_feedback", []) or []:
+                if not isinstance(entry, dict):
+                    continue
+                source_id = entry.get("source_id")
+                if not source_id:
+                    continue
+                tally = tallies.setdefault(source_id, {})
+                value = entry.get("feedback")
+                if not value:
+                    continue
+                tally[value] = tally.get(value, 0) + 1
+    return tallies
+
+
 #: Declared-edge fields walked from the record itself, in stable order.
 RELATED_LIST_FIELDS = ("concepts", "sources", "contexts", "notes",
                        "program_ids", "module_ids", "unit_ids", "unit_order",
@@ -803,14 +832,15 @@ def _analysis_source_of(record) -> str | None:
     return source_id if isinstance(source_id, str) else None
 
 
-def related_records(manifest: dict, raw_id: str, repo=None) -> list[dict]:
+def related_records(manifest: dict, raw_id: str, repo=None, *, tallies=None) -> list[dict]:
     """Ranked one-hop connections for one record id.
 
     Pure over the manifest (plus recorded use-evidence tallied from the
-    repo when given): the record's own declared edges, every backlink
-    table in both directions, concept relations both ways, and project
-    relationships both ways. Unknown ids answer [] — the caller owns the
-    not-found error. Aliases resolve through project_aliases.
+    repo when given, or the precomputed `tallies` when the caller read
+    them from the manifest instead): the record's own declared edges,
+    every backlink table in both directions, concept relations both ways,
+    and project relationships both ways. Unknown ids answer [] — the
+    caller owns the not-found error. Aliases resolve through project_aliases.
 
     Ranking is deterministic: more distinct edges first, then recorded
     stage use-evidence per source exactly as material-context ranks it
@@ -864,7 +894,10 @@ def related_records(manifest: dict, raw_id: str, repo=None) -> list[dict]:
             link(relation.get("to_id"), "project_relationship")
         if relation.get("to_id") == resolved:
             link(relation.get("from_project_id"), "project_relationship")
-    tallies = _use_evidence(repo) if repo is not None else {}
+    if repo is not None:
+        tallies = _use_evidence(repo)
+    elif tallies is None:
+        tallies = {}
     ranked = []
     for rid, whys in reasons.items():
         tally = tallies.get(rid, {}) if by_id[rid].get("type") == "source" else {}

@@ -19,6 +19,7 @@ from .reads import (
     _print_stable,
     _refusal,
     _snapshot,
+    _use_evidence_from_manifest,
     _window,
     brief_bootstrap,
     compact_bootstrap,
@@ -218,7 +219,7 @@ def cmd_bootstrap(args) -> int:
         return brief_bootstrap(args)
     if getattr(args, "compact", False):
         return compact_bootstrap(args)
-    manifest = _fresh_manifest(root)
+    manifest = _fresh_manifest(root, restamp=True)
     payload = {
         "capabilities": _capabilities(root),
         "snapshot": manifest.get("_generated", {}),
@@ -266,14 +267,15 @@ def _array_window(args) -> tuple[int, int]:
     return offset, limit
 
 
-def _metadata_matches(root: Path, args) -> tuple[list[dict], list[str], list[int]]:
+def _metadata_matches(root: Path, args, snapshot: str) -> tuple[list[dict], list[str], list[int]]:
     """Literal-AND metadata matches in deterministic manifest order.
 
     Shared by the legacy array response and the opt-in page packet, so the
     two cannot disagree about what matches. An inbox listing failure refuses
-    here: discovery must not silently omit drops.
+    here: discovery must not silently omit drops. The caller's snapshot is
+    shared with the manifest read so one search hashes once, not twice.
     """
-    manifest = _fresh_manifest(root)
+    manifest = _fresh_manifest(root, snapshot_id=snapshot)
     words = [w for w in args.query.lower().split() if w]
     rows = list(manifest["records"])
     if not args.type or args.type == "garden-note":
@@ -314,7 +316,7 @@ def _metadata_search_page(args) -> int:
         offset, limit = _window(args, 100)
         with _operator_lock(root):
             snapshot = _snapshot(root, args.expected_snapshot)
-            matches, words, hits = _metadata_matches(root, args)
+            matches, words, hits = _metadata_matches(root, args, snapshot)
             if not matches and words:
                 print(f"los: {empty_search_hint('record', words, hits)}",
                       file=sys.stderr)
@@ -348,7 +350,7 @@ def cmd_search(args) -> int:
         offset, limit = _array_window(args)
         with _operator_lock(root):
             snapshot = _snapshot(root, args.expected_snapshot)
-            matches, words, hits = _metadata_matches(root, args)
+            matches, words, hits = _metadata_matches(root, args, snapshot)
             _snapshot(root, snapshot)
     except (WriteRefused, OSError) as exc:
         return _refusal(exc)
@@ -396,13 +398,16 @@ def cmd_inspect(args) -> int:
 
 def cmd_related(args) -> int:
     root = _root(args)
-    manifest, repo = _fresh_manifest_and_repo(root)
+    manifest = _fresh_manifest(root)
     by_id = {r.get("id"): r for r in manifest["records"]}
     resolved_id = (manifest.get("project_aliases") or {}).get(args.id, args.id)
     if resolved_id not in by_id:
         print(f"los: record not found: {args.id}", file=sys.stderr)
         return 2
-    out = related_records(manifest, resolved_id, repo)
+    # Tallies come from the manifest itself (identical to the repo tally),
+    # so related skips the repo load on the reuse fast path (#83).
+    out = related_records(manifest, resolved_id, None,
+                          tallies=_use_evidence_from_manifest(manifest))
     print(json.dumps(out, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 

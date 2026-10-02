@@ -22,6 +22,7 @@ from learning_os.contracts.gateway import (
     current_gateway_request,
     gateway_snapshot_is_verified,
 )
+from learning_os.derived.model import DerivedError
 from learning_os.fingerprint import (
     canonical_fingerprint,
     seed_source_fingerprint,
@@ -34,7 +35,9 @@ from learning_os.genout import (
     stable_generated_at,
     write_outputs,
 )
+from learning_os.genout.common import _git_state
 from learning_os.loader import load_repo
+from learning_os.manifest_identity import IDENTITY_FILENAME, check_identity
 from learning_os.rules import validate
 from learning_os.transactions import (
     PostCommitFailure,
@@ -200,15 +203,90 @@ def _path_or_error(root: Path, path_id: str):
     return repo, learning_path
 
 
+class _LazyRepo:
+    """``load_repo`` deferred to first attribute access (reuse fast path).
+
+    ``_fresh_manifest_and_repo`` serves the stored manifest without parsing
+    canonical inputs; callers that only read the manifest never pay for the
+    load (measured: load 0.24 s of a 2.0 s read). The first attribute access
+    loads once; afterwards this answers exactly like the real repo. Reads
+    that need repo-only state (path-stage lookup, use evidence) trigger the
+    load implicitly and stay correct.
+    """
+
+    def __init__(self, root: Path) -> None:
+        self._lazy_root = root
+        self._lazy_repo = None
+
+    def _resolve(self):
+        if self._lazy_repo is None:
+            self._lazy_repo = load_repo(self._lazy_root)
+        return self._lazy_repo
+
+    def __getattr__(self, name: str):
+        return getattr(self._resolve(), name)
+
+
+def _try_reuse_manifest(root: Path, live_snapshot: str, *, restamp: bool) -> dict | None:
+    """The stored manifest when it provably describes current state, else None.
+
+    Every mismatch, missing file, or parse error answers None so the caller
+    rebuilds exactly as before; a partially matching or corrupt file is
+    never served. Contract/git failures propagate: the fresh build raises
+    them identically, so swallowing them here would serve reads the fresh
+    path refuses.
+    """
+    try:
+        manifest = json.loads((root / "generated/manifest.json").read_text(encoding="utf-8"))
+        identity = json.loads((root / "generated" / IDENTITY_FILENAME).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if not isinstance(manifest, dict) or not isinstance(identity, dict):
+        return None
+    try:
+        current, _reason = check_identity(
+            root, manifest, identity, live_snapshot=live_snapshot)
+    except (OSError, ValueError, DerivedError):
+        return None
+    if not current:
+        return None
+    if restamp:
+        # Runtime metadata is restamped so the served manifest equals a fresh
+        # build byte for byte: git state can move (a docs-only commit) while
+        # every pinned input still matches.
+        manifest["_generated"]["generated_at"] = stable_generated_at(root)
+        revision, dirty = _git_state(root)
+        manifest["_generated"]["source_revision"] = revision
+        manifest["_generated"]["source_dirty"] = dirty
+    return manifest
+
+
 def _fresh_manifest_and_repo(
-    root: Path, *, snapshot_id: str | None = None,
+    root: Path, *, snapshot_id: str | None = None, restamp: bool = False,
 ) -> tuple[dict, object]:
+    """A current manifest plus the repo it was built from.
+
+    The manifest is served from the stored build when it is provably
+    current, otherwise rebuilt exactly as before. ``restamp`` refreshes
+    the served ``_generated`` runtime metadata (git state, timestamp) to
+    what a fresh build would stamp; pass it only when the caller surfaces
+    ``_generated`` (today: full bootstrap) — it costs several git queries
+    and every other read answers from payload keys the check already
+    verified.
+    """
     # Every projection read takes the operator lock: acquisition runs crash
     # recovery first, so single-ID reads, batch reads, and bootstrap all
     # observe transaction-consistent post-recovery state instead of
     # disagreeing after a kill (JF-21). Re-entrant: callers already holding
     # the lock (batch inspect, bootstrap) pass straight through.
     with _operator_lock(root):
+        # Snapshot-bound callers already computed this under the same lock;
+        # sharing it keeps the read at two hashes (see
+        # test_bounded_read_hashes_twice_with_seeded_manifest).
+        live = snapshot_id if snapshot_id is not None else f"sha256:{canonical_fingerprint(root)}"
+        reused = _try_reuse_manifest(root, live, restamp=restamp)
+        if reused is not None:
+            return reused, _LazyRepo(root)
         repo = load_repo(root)
         if snapshot_id is not None:
             seed_source_fingerprint(repo, snapshot_id)
@@ -217,8 +295,9 @@ def _fresh_manifest_and_repo(
         return build_manifest(repo, generated_at, backlinks), repo
 
 
-def _fresh_manifest(root: Path, *, snapshot_id: str | None = None) -> dict:
-    manifest, _ = _fresh_manifest_and_repo(root, snapshot_id=snapshot_id)
+def _fresh_manifest(root: Path, *, snapshot_id: str | None = None,
+                    restamp: bool = False) -> dict:
+    manifest, _ = _fresh_manifest_and_repo(root, snapshot_id=snapshot_id, restamp=restamp)
     return manifest
 
 

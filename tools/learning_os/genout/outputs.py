@@ -9,6 +9,7 @@ from pathlib import Path, PurePosixPath
 from ..derived.store import DERIVED_TOP_DIR
 from ..errors import TransactionFailure
 from ..loader import Repo
+from ..manifest_identity import IDENTITY_FILENAME, build_identity
 from .atlas import build_domain_atlas
 from .canvas import build_concept_canvas
 from .common import stable_generated_at
@@ -46,6 +47,13 @@ def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
         # These are machine projections. Keep their complete data and stable
         # key order without paying for indentation on every read/publication.
         "manifest.json": json.dumps(manifest, separators=(",", ":"), sort_keys=True, ensure_ascii=False) + "\n",
+        # The reuse sidecar: pins every input the manifest bytes depend on
+        # so reads can serve the stored file when it is provably current
+        # (#83). Published before manifest.json (alphabetically first, and
+        # the manifest is always last), so a crash between the two leaves
+        # a snapshot mismatch that rebuilds rather than a false hit.
+        IDENTITY_FILENAME: json.dumps(build_identity(repo.root, manifest), separators=(",", ":"),
+                                       sort_keys=True, ensure_ascii=False) + "\n",
         "backlinks.json": json.dumps(backlinks, separators=(",", ":"), sort_keys=True, ensure_ascii=False) + "\n",
         "learning-requirements.json": build_learning_requirements_json(repo, generated_at) + "\n",
         "learning-requirements.md": build_learning_requirements_md(repo),

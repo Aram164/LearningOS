@@ -67,7 +67,7 @@ def _unit_list_compact(args) -> int:
         offset, limit = _window(args, 50)
         with _operator_lock(root):
             snapshot = _snapshot(root, args.expected_snapshot)
-            manifest = _fresh_manifest(root)
+            manifest = _fresh_manifest(root, snapshot_id=snapshot)
             rows = sorted(_filtered_units(manifest, args),
                           key=lambda row: row["id"])
             total = len(rows)
