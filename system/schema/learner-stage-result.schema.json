@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/learner-stage-result",
+  "title": "LearnerStageResult",
+  "x-governs": "record",
+  "description": "An untargeted learner result against a unit/stage. Context only: it carries no credit, mastery, or requirement semantics, and authoring a requirement target later never retro-credits it.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "unit",
+    "stage",
+    "activity",
+    "result",
+    "timestamp"
+  ],
+  "properties": {
+    "unit": {
+      "description": "Owning unit id; with stage it names one current study-map stage.",
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "stage": {
+      "description": "Stage id within the unit's current study map.",
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "activity": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "result": {
+      "enum": [
+        "correct",
+        "incorrect",
+        "partial",
+        "abandoned"
+      ]
+    },
+    "assistance": {
+      "type": "string"
+    },
+    "note": {
+      "description": "Free-text note about this attempt. Prose only; never evidence.",
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^stage-result-[a-z0-9-]+$"
+    },
+    "conditions": {
+      "description": "Condition labels the learner states held for this attempt. Labels only: without a requirement target there is nothing to interpret them against.",
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "pattern": "\\S"
+      }
+    },
+    "supersedes": {
+      "type": "string",
+      "pattern": "^stage-result-[a-z0-9-]+$"
+    }
+  }
+}

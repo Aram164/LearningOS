@@ -57,19 +57,27 @@ def workspace_neglect_issues(repo) -> list[Issue]:
 
 
 def inbox_stale_issues(repo) -> list[Issue]:
-    """INBOX-STALE warnings for inbox items older than 14 days."""
+    """INBOX-STALE warnings for inbox files older than 14 days.
+
+    Each file by its own age: a drop folder judges nothing, and a file
+    nested inside one is still an unrouted capture. Dot paths and symlinks
+    are skipped, the same discovery rule as ``inbox-list``.
+    """
     issues: list[Issue] = []
     inbox = repo.root / "work" / "inbox"
     if inbox.is_dir():
         now = time.time()
-        for path in sorted(inbox.iterdir()):
-            if path.name.startswith("."):
+        for path in sorted(inbox.rglob("*")):
+            if path.is_symlink() or not path.is_file():
+                continue
+            rel = path.relative_to(inbox).as_posix()
+            if any(part.startswith(".") for part in rel.split("/")):
                 continue
             age_days = (now - path.stat().st_mtime) / 86400
             if age_days > 14:
                 issues.append(Issue(
                     "W", "INBOX-STALE",
-                    f"inbox item '{path.name}' is {int(age_days)} days old "
+                    f"inbox item '{rel}' is {int(age_days)} days old "
                     "(unrouted capture — the inbox should trend toward empty)"))
     return issues
 

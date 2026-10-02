@@ -17,6 +17,7 @@ from ..learning_runtime import (
     RuntimeInputError,
     collect_requirements,
     read_observations,
+    read_stage_results,
     runtime_review_fingerprint,
 )
 from ..loader import Repo
@@ -261,6 +262,10 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
             self.err("LEARNING-RUNTIME", f"{sidecar}: independently authored requirement sidecars are retired; author runtime_target on the owning stage")
         try:
             read_observations(self.repo, collect_requirements(self.repo))
+        except RuntimeInputError as exc:
+            self.err("LEARNING-RUNTIME", str(exc))
+        try:
+            read_stage_results(self.repo)
         except RuntimeInputError as exc:
             self.err("LEARNING-RUNTIME", str(exc))
         from ..abilities import (

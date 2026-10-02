@@ -38,6 +38,7 @@ from learning_os.loader import load_repo
 from learning_os.revisions import artifact_revision
 
 from .capability import gesture_allowed
+from .suggest import with_suggestions
 from .support import (
     _expected_ok,
     _expected_revisions_from_args,
@@ -47,6 +48,59 @@ from .support import (
 )
 
 OBSERVE_CAPABILITY = "learner.observation.append"
+
+
+def _stage_index(repo):
+    """Every study-map stage: ``stage_id -> (unit_id, has_target)``.
+
+    Only the current map of each unit is indexed: a stage id that exists
+    solely on a superseded map is not observable, and naming it as a
+    stage would point at work that no longer resolves.
+    """
+    index = {}
+    for unit in repo.units.values():
+        study_map = repo.study_maps.get((unit.data or {}).get("current_study_map"))
+        if study_map is None or study_map.unit_id != unit.id:
+            continue
+        for stage in study_map.data.get("stages", []):
+            if isinstance(stage, dict) and isinstance(stage.get("id"), str):
+                index.setdefault(stage["id"], (
+                    unit.id, isinstance(stage.get("runtime_target"), dict)))
+    return index
+
+
+def _unknown_requirement_message(repo, requirements, value):
+    """Refuse an unresolvable id with the way forward named.
+
+    A stage id whose stage carries no ``runtime_target`` is the ordinary
+    untargeted case — most stages have no target — so it names the stage,
+    the untargeted ``stage-result`` path, and the target-authoring
+    ``unit-plan-revise`` path instead of crying unknown. A stage id that
+    already has a target names the requirement id to observe. Anything
+    else is a mistyped id, with suggestions over requirements and stages.
+    """
+    stages = _stage_index(repo)
+    if value in stages:
+        unit_id, has_target = stages[value]
+        if has_target:
+            requirement_id = next(
+                (req["id"] for req in requirements
+                 if req.get("source_stage", {}).get("stage_id") == value
+                 and req.get("source_stage", {}).get("unit_id") == unit_id),
+                None,
+            )
+            observed = f" {requirement_id}" if requirement_id else ""
+            return (f"stage {value} (unit {unit_id}) already has a requirement "
+                    f"target; observe the requirement id{observed} instead of "
+                    f"the stage id")
+        return (f"stage {value} (unit {unit_id}) has no requirement target; "
+                f"record the result without credit via `stage-result "
+                f"--workspace WORKSPACE --unit {unit_id} --stage {value} "
+                f"--activity ACTIVITY --result RESULT`, or author a target "
+                f"with `unit-plan-revise {unit_id} --file REVISION.yaml "
+                f"--check` adding a runtime_target stage patch (WORKFLOWS §8)")
+    return with_suggestions(f"unknown requirement: {value}", value,
+                            [*(req["id"] for req in requirements), *stages])
 
 
 def _append_observation(
@@ -79,7 +133,8 @@ def _append_observation(
         requirements = collect_requirements(repo)
         requirement = next((req for req in requirements if req["id"] == requirement_id), None)
         if requirement is None:
-            raise RuntimeInputError(f"unknown requirement: {requirement_id}")
+            raise RuntimeInputError(
+                _unknown_requirement_message(repo, requirements, requirement_id))
         source = requirement["source_stage"]
         if (source["module_id"] not in workspace.meta.get("module_ids", [])
                 and source["unit_id"] not in workspace.meta.get("unit_ids", [])):
@@ -267,7 +322,8 @@ def cmd_observe(args) -> int:
             return 2
         requirement = next((req for req in requirements if req["id"] == args.requirement), None)
         if requirement is None:
-            print(f"los: unknown requirement: {args.requirement}", file=sys.stderr)
+            print(f"los: {_unknown_requirement_message(repo, requirements, args.requirement)}",
+                  file=sys.stderr)
             return 2
         workspace, refusal = _resolve_observe_workspace(repo, requirement, args.workspace)
         if workspace is None:

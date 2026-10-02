@@ -71,6 +71,7 @@ def build_resume_dossier(
     top_cluster: Mapping[str, object] | None = None,
     stage_note: Mapping[str, object] | None = None,
     stage_progress: Mapping[str, object] | None = None,
+    stage_results: Mapping[str, object] | None = None,
 ) -> ResumeDossier:
     """Compile one resume screen. Pure: same inputs, same key.
 
@@ -90,6 +91,12 @@ def build_resume_dossier(
     (updated, summary, next), or None when nothing is recorded. It is the
     first-class home for where work stopped; the working note remains the
     scratch record.
+
+    ``stage_results`` is the bounded untargeted-result section
+    (``results`` newest-first, ``total``, ``credit: none``), or None when
+    none were recorded. Untargeted rows are context only — they never
+    grant credit and are never retro-credited when a target is authored —
+    and the digest moves with them, like every section.
     """
     for label, value in (("unit", unit_id), ("module", module_id),
                          ("stage", stage_id), ("study map", study_map_id)):
@@ -103,6 +110,8 @@ def build_resume_dossier(
         raise ResumeDossierError("a resume dossier's stage note is a mapping or nothing")
     if stage_progress is not None and not isinstance(stage_progress, Mapping):
         raise ResumeDossierError("a resume dossier's stage progress is a mapping or nothing")
+    if stage_results is not None and not isinstance(stage_results, Mapping):
+        raise ResumeDossierError("a resume dossier's stage results are a mapping or nothing")
     try:
         sections = {
             "requirement": dict(requirement) if requirement is not None else None,
@@ -114,6 +123,7 @@ def build_resume_dossier(
             "top-cluster": dict(top_cluster) if top_cluster is not None else None,
             "stage-note": dict(stage_note) if stage_note is not None else None,
             "stage-progress": dict(stage_progress) if stage_progress is not None else None,
+            "stage-results": dict(stage_results) if stage_results is not None else None,
         }
     except (TypeError, ValueError) as exc:
         raise ResumeDossierError(f"malformed resume inputs: {exc}") from exc
@@ -131,6 +141,7 @@ def build_resume_dossier(
         ("top-cluster", sections["top-cluster"]),
         ("stage-note", sections["stage-note"]),
         ("stage-progress", sections["stage-progress"]),
+        ("stage-results", sections["stage-results"]),
     )
     return ResumeDossier(
         key=f"context://{unit_id}/resume-dossier@{digest[:16]}",

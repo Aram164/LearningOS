@@ -26,6 +26,8 @@ from learning_os.learning_runtime import (
     RuntimeInputError,
     collect_requirements,
     read_observations,
+    read_stage_results,
+    stage_results_for,
 )
 from learning_os.loader import load_repo
 from learning_os.pathing import PathBoundaryError, resolved_inside
@@ -182,6 +184,10 @@ _STUDY_STATUS_RANK = {"active": 0, "paused": 1, "ready": 2}
 
 #: At most this many options; the menu stays one screen.
 MAX_STUDY_OPTIONS = 5
+
+#: At most this many untargeted rows ride the screen; the section's
+#: ``total`` stays exact past the bound.
+MAX_STAGE_RESULTS = 5
 
 
 def _nearest_exam(repo):
@@ -558,6 +564,11 @@ def cmd_resume(args) -> int:
             if requirement is not None and obs.get("requirement") == requirement["id"]]
     except RuntimeInputError:
         observations = []
+    try:
+        untargeted = stage_results_for(
+            read_stage_results(repo), unit_id, stage_id)
+    except RuntimeInputError:
+        untargeted = []
     stale_here = [row for row in stale_observations(requirements, observations)
                   if requirement is not None and row.requirement == requirement["id"]]
     study_map = repo.study_maps.get(study_map_id)
@@ -593,13 +604,27 @@ def cmd_resume(args) -> int:
     stage_note = _stage_note_facts(root, stage)
     progress = stage.get("progress") if isinstance(stage, dict) else None
     stage_progress = progress if isinstance(progress, dict) else None
+    untargeted_rows = [
+        {"id": row.get("id"), "activity": row.get("activity"),
+         "result": row.get("result"), "timestamp": row.get("timestamp"),
+         "conditions": row.get("conditions", []),
+         "assistance": row.get("assistance", ""),
+         "note": row.get("note", "")}
+        for row in untargeted[:MAX_STAGE_RESULTS]
+    ]
+    untargeted_section = (
+        {"results": untargeted_rows, "total": len(untargeted),
+         "credit": "none"}
+        if untargeted else None
+    )
     try:
         dossier = build_resume_dossier(
             unit_id=unit_id, module_id=module_id, stage_id=stage_id,
             study_map_id=study_map_id, via=via, requirement=requirement,
             observations=obs_rows, open_items=open_items, sittings=sittings,
             titles=titles, top_cluster=top_cluster, stage_note=stage_note,
-            stage_progress=stage_progress)
+            stage_progress=stage_progress,
+            stage_results=untargeted_section)
     except ResumeDossierError as exc:
         print(f"los: {exc}", file=sys.stderr)
         return 2
@@ -613,7 +638,7 @@ def cmd_resume(args) -> int:
     aims = _recorded_aims(repo, module_id, unit_id)
     rendered = _render(dossier, requirement, observations, open_items, sittings,
                        titles, via_detail, len(stale_here), top_cluster, aims,
-                       stage_note, stage_progress)
+                       stage_note, stage_progress, untargeted_section)
     if study_option is not None:
         lines = [f"Study suggestion for {study_option['exam_date']} "
                  f"(registration recorded as {study_option['registration_state'] or 'unknown'}; "
@@ -646,7 +671,8 @@ def _render(dossier, requirement, observations, open_items, sittings,
             top_cluster: dict | None = None,
             recorded_aims: list[tuple[str, str, str]] | None = None,
             stage_note: dict | None = None,
-            stage_progress: dict | None = None) -> str:
+            stage_progress: dict | None = None,
+            stage_results: dict | None = None) -> str:
     today = _dt.date.today()
     lines = [f"{titles['module']} · {titles['unit']} · {dossier.stage_id}",
              f"  ({via_detail})", ""]
@@ -677,6 +703,14 @@ def _render(dossier, requirement, observations, open_items, sittings,
         noun = "result" if stale_count == 1 else "results"
         lines.append(f"  Changed since  {stale_count} earlier {noun} "
                      "were against a requirement that has since changed.")
+    if isinstance(stage_results, dict) and stage_results.get("total"):
+        total = stage_results["total"]
+        noun = "result" if total == 1 else "results"
+        lines.append(f"  Stage results  {total} untargeted {noun} (no credit — "
+                     "context only, never retro-credited)")
+        first = (stage_results.get("results") or [{}])[0]
+        lines.append(f"  Last untargeted  {first.get('result', '?')} "
+                     f"({first.get('timestamp', '?')}) — {first.get('activity', '?')}")
     if isinstance(stage_note, dict) and stage_note.get("working_note"):
         count = stage_note.get("lines") or 0
         noun = "line" if count == 1 else "lines"

@@ -8,6 +8,11 @@ import json
 
 import yaml
 
+from learning_os.learning_runtime import (
+    RuntimeInputError,
+    read_stage_results,
+    stage_results_for,
+)
 from learning_os.loader import load_repo
 from learning_os.material_refs import (
     MATERIAL_FIELDS,
@@ -31,6 +36,7 @@ from .reads import (
     _snapshot,
     _unit_note_scope,
 )
+from .resume import MAX_STAGE_RESULTS
 from .suggest import expansion, with_suggestions
 from .support import (
     WriteRefused,
@@ -537,9 +543,28 @@ def cmd_plan_edit_context(args) -> int:
                             "requested_route_ids": list(args.route_ids),
                             "routes": entries})
         elif getattr(args, "stage_id", None):
+            try:
+                untargeted = stage_results_for(
+                    read_stage_results(repo), unit.id, args.stage_id)
+            except RuntimeInputError as exc:
+                raise WriteRefused(str(exc)) from exc
             payload.update({"contract": "plan-edit-context-stage",
                             "requested_stage_id": args.stage_id,
                             "stage": _stage_entry(study_map, args.stage_id),
+                            "stage_results": {
+                                "results": [
+                                    {"id": row.get("id"),
+                                     "activity": row.get("activity"),
+                                     "result": row.get("result"),
+                                     "timestamp": row.get("timestamp"),
+                                     "conditions": row.get("conditions", []),
+                                     "assistance": row.get("assistance", ""),
+                                     "note": row.get("note", "")}
+                                    for row in untargeted[:MAX_STAGE_RESULTS]
+                                ],
+                                "total": len(untargeted),
+                                "credit": "none",
+                            },
                             "scope": "one stage only — universe questions "
                                      "(e.g. no source covers X) need the full unit context"})
         elif getattr(args, "brief", False):

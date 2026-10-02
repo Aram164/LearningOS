@@ -71,6 +71,7 @@ queries:
     invariants:
     - lists work/inbox files by inbox-relative name, without reading bytes
     - dot-files excluded; a missing inbox is empty
+    - each row reports its own age in days (age_days)
   note.search:
     handler: search
     result: note-content-search
@@ -183,6 +184,16 @@ commands:
     - requirement resolves within the workspace's declared module or unit scope
     - exact snapshot and workspace revision guarded; receipt and retry preserve historical evidence
     - learner observations never update concept or source semantics
+  learner.stage-result.append:
+    handler: stage_result
+    cli_command: stage-result
+    writes:
+    - work/active/*/stage-results.jsonl
+    invariants:
+    - append only to the registered active workspace's untargeted-result ledger
+    - unit and stage resolve to the unit's current study map within the workspace's declared module or unit scope
+    - exact snapshot and workspace revision guarded; receipt and retry preserve history
+    - untargeted rows never grant requirement, ability, or concept credit and are never retro-credited
   route.patch:
     handler: route_patch
     cli_command: route-patch
@@ -283,6 +294,17 @@ commands:
     - original input is preserved
     - external file input is bound to its exact bytes by SHA-256 before use
     - GatewayEnvelopeV2 content is inline or hash-bound and never comes from stdin
+  inbox.resolve:
+    handler: inbox_resolve
+    cli_command: inbox-resolve
+    writes:
+    - work/inbox/**
+    - archive/inbox/**
+    invariants:
+    - moves one named drop, or one file inside a drop folder, to archive/inbox/YYYY/ byte-identical
+    - the drop's SHA-256 must match the bytes read; a changed drop refuses
+    - routed_to names every destination that received the drop and is recorded on the receipt
+    - snapshot and touched-path revisions guarded; the archive never overwrites
   ai-action.delivery.apply:
     handler: ai_action_apply_delivery
     cli_command: ai-action-apply-delivery

@@ -45,7 +45,13 @@
           "type": "object",
           "additionalProperties": false,
           "properties": {
-            "data_roots_sha256": {"$ref": "#/$defs/dataRootsDigest"}
+            "data_roots_sha256": {"$ref": "#/$defs/dataRootsDigest"},
+            "routed_to": {
+              "description": "Where inbox.resolve sent the drop. Written only by that capability; absent on every other receipt.",
+              "type": "array",
+              "minItems": 1,
+              "items": {"type": "string", "minLength": 1}
+            }
           }
         },
         {

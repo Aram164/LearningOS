@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import sys
+import time
 from pathlib import Path
 
 from learning_os import __version__
@@ -420,8 +421,17 @@ def cmd_inbox_list(args) -> int:
     except OSError as exc:
         print(f"los: cannot list work/inbox: {exc}", file=sys.stderr)
         return 2
-    print(json.dumps([_discovery_row(rec) for rec in rows],
-                     **_json_layout(), sort_keys=True, ensure_ascii=False))
+    now = time.time()
+    inbox = root / "work" / "inbox"
+    out = []
+    for rec in rows:
+        row = _discovery_row(rec)
+        try:
+            row["age_days"] = int((now - (inbox / rec["id"]).stat().st_mtime) / 86400)
+        except OSError:
+            row["age_days"] = None
+        out.append(row)
+    print(json.dumps(out, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
 

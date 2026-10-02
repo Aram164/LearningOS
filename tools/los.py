@@ -65,6 +65,7 @@ from learning_os.commands.detour import cmd_detour_create, cmd_detour_resolve  #
 from learning_os.commands.dossier import cmd_dossier  # noqa: E402
 from learning_os.commands.garden import cmd_garden_seed_create  # noqa: E402
 from learning_os.commands.goal import cmd_goal  # noqa: E402
+from learning_os.commands.inbox import cmd_inbox_resolve  # noqa: E402
 from learning_os.commands.intelligence import cmd_intelligence_scan  # noqa: E402
 from learning_os.commands.material import (  # noqa: E402
     cmd_module_materials_compact,
@@ -131,6 +132,7 @@ from learning_os.commands.stage import (  # noqa: E402
     cmd_stage_note,
     cmd_stage_progress,
 )
+from learning_os.commands.stage_result import cmd_stage_result  # noqa: E402
 from learning_os.commands.support import (  # noqa: E402
     LOS_LOCK_TIMEOUT_ENV,
     StaleSnapshot,
@@ -650,6 +652,20 @@ def build_parser() -> argparse.ArgumentParser:
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_capture)
 
+    p = sub.add_parser("inbox-resolve",
+                       help="move one routed inbox drop to archive/inbox/YYYY/ (WORKFLOWS §21)")
+    p.add_argument("name", help="drop name relative to work/inbox/ (list names with inbox-list); "
+                               "one drop, or one file inside a drop folder")
+    p.add_argument("--drop-sha256", type=sha256_value, required=True,
+                   help="SHA-256 of the exact drop bytes read (inbox-read content_sha256 for a file; "
+                        "SHA-256 over the sorted name-to-sha map for a folder)")
+    p.add_argument("--routed-to", action="append", required=True,
+                   help="where the drop went (note id, workspace path, source id, receipt id, …); "
+                        "repeatable, at least one required, recorded on the receipt")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_inbox_resolve)
+
     p = sub.add_parser(
         "garden-seed-create",
         help="plant one free-form Garden seed without classification or AI",
@@ -951,6 +967,21 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument('--expected-snapshot', default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_observation_append)
+
+    p = sub.add_parser('stage-result', help='record an untargeted learner result against a unit/stage (no credit)')
+    p.add_argument('--workspace', required=True)
+    p.add_argument('--unit', required=True)
+    p.add_argument('--stage', required=True)
+    p.add_argument('--activity', required=True)
+    p.add_argument('--result', required=True, choices=['correct', 'incorrect', 'partial', 'abandoned'])
+    p.add_argument('--assistance', default=None)
+    p.add_argument('--note', default=None, help='free-text note stored with the result; prose only, never evidence')
+    p.add_argument('--condition', action='append', default=[],
+                   help='a condition label for this attempt; labels only until a target is authored')
+    p.add_argument('--supersedes', default=None, help='explicitly correct one earlier stage result; preserves its bytes')
+    p.add_argument('--expected-snapshot', default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_stage_result)
 
     p = sub.add_parser('ability-observation-append', help='append one learner-confirmed ability claim')
     p.add_argument('--workspace', required=True)

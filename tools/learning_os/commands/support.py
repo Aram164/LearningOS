@@ -594,7 +594,8 @@ def _record_touched(root: Path, paths) -> None:
 def _write_transaction(root: Path, writes: dict[Path, str | bytes],
                        *, capability: str = "legacy.write",
                        expected_revisions: dict[str, int] | None = None,
-                       artifact_ids=(), deletes=()) -> tuple[int, list, dict]:
+                       artifact_ids=(), deletes=(),
+                       metadata=None) -> tuple[int, list, dict]:
     """Commit one named, receipt-producing canonical transaction.
 
     Returns ``(code, errors, confirmation)``. The confirmation travels back to
@@ -650,6 +651,7 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
             publish=publish_validated_state,
             rollback_publish=lambda: _publish(root),
             touched=lambda paths: _record_touched(root, paths),
+            metadata=metadata,
         )
     except TransactionConflict as exc:
         print("los: artifact revision conflict — reload the affected record before writing",

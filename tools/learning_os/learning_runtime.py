@@ -240,3 +240,85 @@ def read_observations(repo: Repo, requirements: list[dict]) -> list[dict]:
     except (OSError, json.JSONDecodeError, TypeError, KeyError) as exc:
         raise RuntimeInputError(f"cannot read runtime observations: {exc}") from exc
     return observations
+
+
+def read_stage_results(repo: Repo) -> list[dict]:
+    """Read every untargeted stage result from the workspace ledgers.
+
+    Same append-only ledger style as :func:`read_observations`: one
+    ``stage-results.jsonl`` beside each workspace's ``CONTEXT.md``, schema
+    validated, duplicate ids refused, and a ``--supersedes`` correction
+    chain that must name one uncorrected earlier row for the same
+    unit/stage in the same ledger. Readers refuse damaged rows; a row
+    whose unit/stage no longer resolves names the stage that went away.
+    Nothing here grants credit — the evidence interpreters read the
+    observation ledgers only, so these rows are context whatever the
+    requirement state.
+    """
+    results = []
+    seen = set()
+    corrected = set()
+    try:
+        for workspace in sorted(repo.workspaces.values(), key=lambda item: item.id):
+            path = runtime_path(repo.root, workspace.path.parent / "stage-results.jsonl")
+            try:
+                content = path.read_text(encoding="utf-8")
+            except FileNotFoundError:
+                continue
+            relative = path.relative_to(repo.root).as_posix()
+            for line_number, line in enumerate(content.splitlines(), 1):
+                if not line.strip():
+                    continue
+                row = json.loads(line)
+                validate_runtime_record(repo, "learner-stage-result", row)
+                unit = repo.units.get(row["unit"])
+                study_map = (
+                    repo.study_maps.get((unit.data or {}).get("current_study_map"))
+                    if unit is not None else None
+                )
+                stage = next(
+                    (item for item in (study_map.data.get("stages", []) if study_map else [])
+                     if isinstance(item, dict) and item.get("id") == row["stage"]),
+                    None,
+                )
+                if unit is None or study_map is None or stage is None:
+                    raise RuntimeInputError(
+                        f"{relative}:{line_number}: no current study-map stage "
+                        f"{row['stage']} in unit {row['unit']} any more, but this "
+                        f"recorded result still refers to it. The ledger line "
+                        f"itself is not the fault.")
+                identity = row.get("id") or "stage-result-" + hashlib.sha256(
+                    f"{relative}:{line_number}:{line}".encode()
+                ).hexdigest()
+                if identity in seen:
+                    raise RuntimeInputError(f"duplicate stage-result ID: {identity}")
+                if row.get("supersedes"):
+                    prior = next((item for item in results if item["id"] == row["supersedes"]), None)
+                    if (prior is None or prior["unit"] != row["unit"]
+                            or prior["stage"] != row["stage"]
+                            or prior["origin"]["path"] != relative or prior["id"] in corrected):
+                        raise RuntimeInputError("correction must supersede one uncorrected earlier stage result of this unit/stage in this ledger")
+                    corrected.add(prior["id"])
+                seen.add(identity)
+                results.append({**row, "id": identity, "origin": {"path": relative, "line": line_number}})
+    except (OSError, json.JSONDecodeError, TypeError, KeyError) as exc:
+        raise RuntimeInputError(f"cannot read runtime stage results: {exc}") from exc
+    return results
+
+
+def stage_results_for(results: list[dict], unit_id: str, stage_id: str) -> list[dict]:
+    """Live (non-superseded) rows for one unit/stage, newest first.
+
+    Unparseable timestamps sort as oldest rather than crashing the read.
+    """
+    superseded = {row.get("supersedes") for row in results
+                  if isinstance(row, dict) and row.get("supersedes")}
+    live = [row for row in results
+            if isinstance(row, dict) and row.get("id") not in superseded
+            and row.get("unit") == unit_id and row.get("stage") == stage_id]
+
+    def _when(row: dict) -> str:
+        stamp = row.get("timestamp")
+        return stamp if isinstance(stamp, str) else ""
+
+    return sorted(live, key=_when, reverse=True)

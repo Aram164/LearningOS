@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/learner.stage-result.append.schema.json",
+  "title": "payload for capability learner.stage-result.append",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "activity",
+    "result",
+    "stage",
+    "unit",
+    "workspace"
+  ],
+  "properties": {
+    "activity": {
+      "type": "string"
+    },
+    "assistance": {
+      "type": "string"
+    },
+    "condition": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "note": {
+      "type": "string"
+    },
+    "result": {
+      "type": "string",
+      "enum": [
+        "correct",
+        "incorrect",
+        "partial",
+        "abandoned"
+      ]
+    },
+    "stage": {
+      "type": "string"
+    },
+    "supersedes": {
+      "type": "string"
+    },
+    "unit": {
+      "type": "string"
+    },
+    "workspace": {
+      "type": "string"
+    }
+  }
+}

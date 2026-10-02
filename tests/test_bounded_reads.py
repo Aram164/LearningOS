@@ -604,8 +604,9 @@ def test_inbox_list_lists_names_without_reading_bytes(mini_repo):
     assert [row["id"] for row in rows] == ["blob.bin", "todo.md"]
     assert all(row["type"] == "inbox-item" for row in rows)
     assert all(set(row) == {"id", "type", "title", "path", "status",
-                            "state", "deprecated"} for row in rows)
+                            "state", "deprecated", "age_days"} for row in rows)
     assert rows[0]["path"] == "work/inbox/blob.bin"
+    assert all(row["age_days"] == 0 for row in rows)
 
 
 def test_inspect_miss_on_advertised_unresolved_id_names_referring_project(mini_repo):
