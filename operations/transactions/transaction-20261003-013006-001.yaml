@@ -1,0 +1,36 @@
+schema_version: 2
+id: transaction-20261003-013006-001
+type: transaction-receipt
+status: committed
+capability: module.sitting.update
+committed_at: '2026-10-03T01:30:06+02:00'
+snapshot_before: sha256:3bd00790c56e5b08da42f129e13e32a0387235daa3330e58a8c5b7f71aafaa61
+snapshot_after: sha256:6f90a505cdfc90b3773f44affd231b7f3732dba48afd1e30d278d1afb0a58592
+expected_revisions:
+  module-hu-m2-statistik-analysis: 59
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 59
+    after: 60
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/module.yaml
+  sha256_before: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  sha256_after: 9b59a75146d3752031f51b33986f9c74068ca971ed5bc1758c2005d972149d56
+  created: false
+metadata:
+  data_roots_sha256: sha256:91c06419c62853efd0c7fb06274a7998666de2760841e36df7d9f05ed158258a
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.sitting.update
+    declared_writes:
+    - curriculum/modules/*/module.yaml
+request:
+  channel: operator
+  request_id: request-friction-r3-20261003-m2-withdrawal-ccaadbc1
+  idempotency_key: friction-r3-20261003-m2-withdrawal
+  intent_sha256: sha256:489c479b198c92c7be82b648bc65930a88b7b077904381c8842a06e1cd4bdee1
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:489c479b198c92c7be82b648bc65930a88b7b077904381c8842a06e1cd4bdee1

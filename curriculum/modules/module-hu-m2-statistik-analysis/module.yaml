@@ -26,6 +26,7 @@ examination:
     time: 13:00-16:00
     label: 2. Termin · combined M2 Klausur
     notes: ESZ 110/115; Rücktritt by 2026-10-02 via AGNES.
+    withdrawal_deadline: '2026-10-02'
   registration_windows:
   - opens: '2026-08-31'
     closes: '2026-09-10'
