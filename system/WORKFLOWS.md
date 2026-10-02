@@ -364,10 +364,12 @@ When a commitment, explicit priority decision, cross-workspace dependency, or de
 
 1. prepare the replacement text for one existing section of
    `work/COORDINATION.md` — facts only, stated plainly — and review the
-   `coordination-section-revise --check` before/after diff;
+   `coordination-section-revise --check` before/after diff (`--check`
+   needs no digest; it prints the diff with the current one);
 2. never copy exam dates, workspace statuses, or workspace lists into it;
 3. apply through `coordination.section.revise` with the reviewed text inline,
-   the previous file SHA-256, snapshot and coordination revision. The
+   the previous file SHA-256 from `inspect coordination`
+   (`content_sha256`), snapshot and coordination revision. The
    transaction records a receipt and reconciles the coordination projection.
 
 If the user states an operational fact in conversation ("I'm skipping M2,
@@ -378,9 +380,12 @@ attempt change to that academic module's partitioned `module.yaml`.
 
 On registration, withdrawal (Rücktritt), sitting, or grade:
 
-1. append or update the attempt in the owning academic module's `module.yaml` (`termin`, `date`, `result`, optional `grade`);
-2. record known available sitting dates/ranges and Anmeldung windows as
-   structured `examination.sittings` / `examination.registration_windows`
+1. append or update the attempt in the owning academic module's `module.yaml`
+   through `module.attempt.record` (CLI `module-attempt`: `termin`, `date`,
+   `result`, optional `grade` and `notes`) — never by hand edit;
+2. record known available sitting dates/ranges, Rücktritt deadlines and
+   Anmeldung windows as structured `examination.sittings`
+   (with `withdrawal_deadline`) / `examination.registration_windows`
    facts in that same module; attempts still record what Aram actually chose;
 3. update module `status` when warranted;
 4. rebuild module and coordination views.
