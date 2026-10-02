@@ -607,7 +607,7 @@ Any learning session that used guarded mutation commands ends deliberately:
    and shows session-owned files separately from unrelated changes;
 3. review that exact list;
 4. optionally rerun with `--commit-message`; only the ephemeral gateway ledger
-   is staged, and the three protected Canvas names are unconditionally removed;
+   is staged, and every `*.canvas` file is unconditionally excluded;
 5. use `--push` only through the approved repository workflow.
 
 Do not commit on every keystroke. A session is not a canonical entity; its
