@@ -124,3 +124,72 @@ def test_projection_check_requires_matching_payload(mini_repo):
     assert proj_check3["status"] == "error"
     assert "contract validation" in proj_check3["summary"].lower()
 
+
+def test_health_report_validates_once_when_stored_is_current(mini_repo, monkeypatch):
+    """#92: one schema pass when stored bytes equal a fresh build."""
+    from learning_os.contracts import manifest_contract
+    from learning_os.genout import generate_all
+    from learning_os.genout.outputs import write_outputs
+    from learning_os.loader import load_repo
+
+    repo = load_repo(mini_repo)
+    write_outputs(repo, generate_all(repo))
+
+    calls: list[str] = []
+    original = manifest_contract.check
+
+    def counting(manifest, root):
+        calls.append("check")
+        return original(manifest, root)
+
+    monkeypatch.setattr(manifest_contract, "check", counting)
+    monkeypatch.setattr(health, "check_manifest_contract", counting)
+
+    report = health.build_health_report(mini_repo)
+    assert len(calls) == 1
+    proj = next(c for c in report["checks"] if c["id"] == "projection-state")
+    assert proj["status"] == "ok"
+    contract = next(c for c in report["checks"] if c["id"] == "manifest-contract")
+    assert contract["status"] == "ok"
+
+
+def test_health_report_still_validates_stale_and_corrupt(mini_repo, monkeypatch):
+    """#92: differing stored bytes still get their own schema pass."""
+    from learning_os.contracts import manifest_contract
+    from learning_os.genout import generate_all
+    from learning_os.genout.outputs import write_outputs
+    from learning_os.loader import load_repo
+
+    repo = load_repo(mini_repo)
+    write_outputs(repo, generate_all(repo))
+    manifest_path = mini_repo / "generated" / "manifest.json"
+
+    calls: list[str] = []
+    original = manifest_contract.check
+
+    def counting(manifest, root):
+        calls.append("check")
+        return original(manifest, root)
+
+    monkeypatch.setattr(manifest_contract, "check", counting)
+    monkeypatch.setattr(health, "check_manifest_contract", counting)
+
+    altered = json.loads(manifest_path.read_text(encoding="utf-8"))
+    for rec in altered.get("records", []):
+        if "title" in rec:
+            rec["title"] = "Stale title for counting"
+            break
+    manifest_path.write_text(json.dumps(altered), encoding="utf-8")
+    calls.clear()
+    stale = health.build_health_report(mini_repo)
+    assert len(calls) == 2
+    proj = next(c for c in stale["checks"] if c["id"] == "projection-state")
+    assert proj["status"] == "warning"
+
+    manifest_path.write_text(json.dumps({"_generated": {}}), encoding="utf-8")
+    calls.clear()
+    corrupt = health.build_health_report(mini_repo)
+    assert len(calls) == 2
+    proj2 = next(c for c in corrupt["checks"] if c["id"] == "projection-state")
+    assert proj2["status"] == "error"
+

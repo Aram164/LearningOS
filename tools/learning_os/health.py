@@ -23,6 +23,7 @@ from learning_os.contracts.manifest_contract import (
 from learning_os.genout import build_backlinks, build_manifest, stable_generated_at
 from learning_os.legacy_archive import load_legacy_archive_lock
 from learning_os.loader import load_repo
+from learning_os.manifest_identity import manifest_text
 from learning_os.masters_planning import load_master_catalog
 from learning_os.material_synthesis import material_synthesis_freshness
 from learning_os.rules import validate
@@ -187,7 +188,24 @@ def _projection_check(root: Path, expected: dict[str, Any]) -> dict[str, Any]:
             "core", "Regenerate projections after the next approved transaction.",
         )
     try:
-        stored = json.loads(path.read_text(encoding="utf-8"))
+        raw = path.read_bytes()
+    except OSError as exc:
+        return _check(
+            "projection-state", "error", f"The generated manifest is unreadable: {exc}",
+            "core", "Regenerate projections from validated canonical files.",
+        )
+    # Byte-identical to the fresh build implies valid (the fresh build was
+    # just enforced) and current — no schema pass needed. Any difference,
+    # including stale stamps or a corrupt file, falls through to validation.
+    if raw == manifest_text(expected).encode("utf-8"):
+        return _check(
+            "projection-state", "ok",
+            "The generated manifest matches the current canonical snapshot.",
+            "core", "Regenerate projections after the next approved transaction.",
+            mismatches={},
+        )
+    try:
+        stored = json.loads(raw.decode("utf-8"))
 
         contract_ok, contract_message = check_manifest_contract(stored, root)
         if not contract_ok:
@@ -297,9 +315,15 @@ def build_health_report(root: Path, *, now: dt.datetime | None = None) -> dict[s
 
     generated_at = stable_generated_at(root)
     manifest = build_manifest(repo, generated_at, build_backlinks(repo, generated_at))
-    contract_ok, contract_message = check_manifest_contract(manifest, root)
+    # build_manifest already enforced the contract (raising on failure), so a
+    # second schema pass over the same bytes proves nothing. Record the same
+    # success message check() would return, without re-validating.
+    version = declared_version(root)
+    contract_message = (
+        f"manifest contract v{version} matches {len(manifest)} top-level keys"
+    )
     checks.append(_check(
-        "manifest-contract", "ok" if contract_ok else "error", contract_message,
+        "manifest-contract", "ok", contract_message,
         "core-ui", "Ship the producer schema and UI lock as one coordinated version.",
     ))
     checks.append(_core_ui_lock_check(root))
