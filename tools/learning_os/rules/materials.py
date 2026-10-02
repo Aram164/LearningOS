@@ -19,6 +19,7 @@ pre-commit hook. ``python tools/materials_manifest.py --deep`` verifies content.
 
 from __future__ import annotations
 
+import os
 import re
 import unicodedata
 from pathlib import Path
@@ -99,13 +100,36 @@ class ChecksMaterials:
         # materials/.flat/ symlink farm. Referenced URIs must therefore be
         # translated to physical paths before the inventory can be consulted.
         physical = repo.learningos_root / "materials"
-        if physical.is_symlink() or not physical.is_dir():
+        tree: Path | None = physical
+        dangling = False
+        if physical.is_symlink():
+            # Paired clones and worktrees link materials/ at the real tree:
+            # the loader resolves material:// URIs through it, so the
+            # inventory verifies against the resolved target — the same
+            # bytes the reads see. Only a link to nowhere stays offline.
+            try:
+                tree = physical.resolve(strict=True)
+            except (OSError, RuntimeError):
+                tree, dangling = None, True
+        if tree is None or not tree.is_dir():
+            if dangling:
+                why = f"materials symlink at {physical} points nowhere"
+            else:
+                why = f"materials tree not mounted at {physical}"
             self.warn("MATERIALS-OFFLINE",
-                      f"materials tree not mounted at {physical} — "
+                      f"{why} — "
                       f"{len(recorded)} inventoried file(s) unverified this run "
                       "(the manifest still records what belongs there)",
                       "records/materials-manifest.yaml")
             return
+        if not os.access(tree, os.R_OK | os.X_OK):
+            self.warn("MATERIALS-OFFLINE",
+                      f"materials tree at {physical} is not readable — "
+                      f"{len(recorded)} inventoried file(s) unverified this run "
+                      "(the manifest still records what belongs there)",
+                      "records/materials-manifest.yaml")
+            return
+        physical = tree
 
         referenced: set[str] = set()
         unresolvable: list[str] = []
@@ -230,7 +254,13 @@ class ChecksMaterials:
 
         Returns None when the URI resolves to nothing — itself the finding.
         """
-        for base, form in ((self.repo.materials_root, "id"), (physical, "physical")):
+        # The id-based farm is read off the same root the containment
+        # check admits — the resolved tree when materials/ is a link —
+        # so both bases stay under one authority. The predicate mirrors
+        # Repo.materials_root exactly.
+        flat = physical / ".flat"
+        id_base = flat if not flat.is_symlink() and flat.is_dir() else physical
+        for base, form in ((id_base, "id"), (physical, "physical")):
             try:
                 resolved = resolve_symlinks_inside(physical, base / uri_path)
                 relative = resolved.relative_to(physical)

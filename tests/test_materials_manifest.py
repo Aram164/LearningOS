@@ -308,6 +308,54 @@ def test_offline_tree_warns_once_instead_of_erroring_per_file(mini_repo):
     assert "MATERIAL-MISSING" not in codes(issues, "E")
 
 
+def test_dangling_materials_symlink_warns_offline(mini_repo):
+    """A link to nowhere is unmounted: one warning, no per-file errors."""
+    link = mini_repo.parent / "materials"
+    link.rmdir()
+    link.symlink_to(mini_repo.parent / "no-such-tree", target_is_directory=True)
+    manifest = {f"f{i}.pdf": {"size": 1, "sha256": "z"} for i in range(50)}
+    issues = _wire(mini_repo, uri="material://f0.pdf", manifest_files=manifest)
+    assert codes(issues, "W").count("MATERIALS-OFFLINE") == 1
+    assert "MATERIAL-MISSING" not in codes(issues, "E")
+
+
+def test_symlinked_materials_tree_runs_the_full_inventory(mini_repo):
+    """A link to a readable tree verifies against its target: no
+    MATERIALS-OFFLINE, and the inventory behind it is real — a deleted
+    file errors and unreferenced drift warns, exactly as with a plain
+    directory."""
+    link = mini_repo.parent / "materials"
+    link.rmdir()
+    real = mini_repo.parent / "real-materials"
+    (real / "Books").mkdir(parents=True)
+    (real / "Books" / "a.pdf").write_text("alpha", encoding="utf-8")
+    farm = real / ".flat"
+    farm.mkdir()
+    (farm / "source-x").symlink_to("../Books")
+    link.symlink_to(real, target_is_directory=True)
+    manifest = {"Books/a.pdf": {"size": 5, "sha256": "x"}}
+
+    clean = _wire(mini_repo, uri="material://source-x/a.pdf",
+                  manifest_files=manifest)
+    assert "MATERIALS-OFFLINE" not in codes(clean, "W")
+    assert "MATERIAL-MISSING" not in codes(clean, "E")
+    assert "MATERIAL-UNREGISTERED" not in codes(clean, "E")
+
+    (real / "Books" / "a.pdf").unlink()
+    broken = validate(load_repo(mini_repo))
+    assert "MATERIAL-MISSING" in codes(broken, "E")
+
+    (real / "Books" / "a.pdf").write_text("alpha", encoding="utf-8")
+    drifted_manifest = dict(manifest)
+    drifted_manifest["gone.pdf"] = {"size": 9, "sha256": "y"}
+    (mini_repo / "records" / "materials-manifest.yaml").write_text(
+        yaml.safe_dump({"schema_version": 1, "captured": "2026-08-07",
+                        "totals": {"files": 2, "bytes": 0},
+                        "files": drifted_manifest}), encoding="utf-8")
+    drifted = validate(load_repo(mini_repo))
+    assert "MATERIALS-DRIFT" in codes(drifted, "W")
+
+
 # --------------------------------------------------------------- URI carriers
 #
 # The sweep is a regex over documents, not a field walk, so how far a reference
