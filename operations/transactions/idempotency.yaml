@@ -2766,6 +2766,17 @@ entries:
       unit-m2-sad-l15: 17
     snapshot_before: sha256:3abde9c332d8c12aadf61247513bbac2a93cbba46af0bcfcacf858a801ba5bc5
     snapshot_after: sha256:4bb8ccafdbf3338910d56ab0c2be53b5f03f1540a8e18b04ca86b903f3035aef
+  reviewed-ec2a4c18743b4c96b5383023f8a518fc:
+    request_id: request-reviewed-fab851317a584d5484e409246ec0d14c
+    capability: lineage.restamp
+    channel: codex
+    intent_sha256: sha256:3a6b73374439780bfcae2edcfc861888892e397d27ec674bd5a35174a0ed04bd
+    transaction_id: transaction-20261002-213827-001
+    receipt_path: operations/transactions/transaction-20261002-213827-001.yaml
+    revisions:
+      file:operations/transactions/lineage.yaml: 1
+    snapshot_before: sha256:a2cbc2f04b7acc3d7668312541839d5ef47b3583ae102a2298214e754e8c6f2c
+    snapshot_after: sha256:a2cbc2f04b7acc3d7668312541839d5ef47b3583ae102a2298214e754e8c6f2c
   route-patch-leuphana-locator-2026-09-16:
     request_id: request-leuphana-locator-2026-09-16
     capability: route.patch

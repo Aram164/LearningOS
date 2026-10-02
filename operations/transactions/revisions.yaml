@@ -23,6 +23,7 @@ revisions:
   concept-selection-family: 1
   concept-skrub: 1
   coordination: 1
+  file:operations/transactions/lineage.yaml: 1
   job-quarantine-collapse-v1: 1
   legacy-archive-lock: 1
   master-planning-catalog: 1

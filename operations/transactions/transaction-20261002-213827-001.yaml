@@ -1,0 +1,36 @@
+schema_version: 2
+id: transaction-20261002-213827-001
+type: transaction-receipt
+status: committed
+capability: lineage.restamp
+committed_at: '2026-10-02T21:38:27+02:00'
+snapshot_before: sha256:a2cbc2f04b7acc3d7668312541839d5ef47b3583ae102a2298214e754e8c6f2c
+snapshot_after: sha256:a2cbc2f04b7acc3d7668312541839d5ef47b3583ae102a2298214e754e8c6f2c
+expected_revisions:
+  file:operations/transactions/lineage.yaml: 0
+artifact_revisions:
+  file:operations/transactions/lineage.yaml:
+    before: 0
+    after: 1
+writes:
+- path: operations/transactions/lineage.yaml
+  sha256_before: ead458400f383c64f64e240fd8e176817a47f0a079456fdd8baa1ac9aa0fc65c
+  sha256_after: 66157cca00ad7d1ab3e9034577695d65099439e2aff75cfe9b1b0c7aadbed69f
+  created: false
+metadata:
+  data_roots_sha256: sha256:e4643aec8f8ad2e8117dcb3089aa136cd085309bc60f9b8f789894e5734e2333
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: lineage.restamp
+    declared_writes:
+    - operations/transactions/lineage.yaml
+request:
+  channel: codex
+  request_id: request-reviewed-fab851317a584d5484e409246ec0d14c
+  idempotency_key: reviewed-ec2a4c18743b4c96b5383023f8a518fc
+  intent_sha256: sha256:3a6b73374439780bfcae2edcfc861888892e397d27ec674bd5a35174a0ed04bd
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:3a6b73374439780bfcae2edcfc861888892e397d27ec674bd5a35174a0ed04bd
