@@ -37,6 +37,15 @@ stages:
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L13 similarity-based learning deck' against the stage '1-NN
+        and k-NN as lazy learners'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:565945b161a086b00e8fbc102cf707f172dac5bee0b061de93b4eb47d017cfc4
   - material_ref:
       route_id: route-29f9b98724b103877b374b0c
       inherit:
@@ -180,6 +189,15 @@ stages:
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L13 similarity-based learning deck' against the stage 'Classification,
+        regression, voting, and weighting'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:464e788115bd2af49aa9e10cf0db153643240e40ecb13a8b4643106932b8a806
   - material_ref:
       route_id: route-29f9b98724b103877b374b0c
       inherit:
@@ -302,6 +320,15 @@ stages:
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L13 similarity-based learning deck' against the stage 'Similarities,
+        distances, and metric axioms'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:39163b2d0645beb2fec2a5fd6fbc793b6208c3e806c88a0827c05b1fe7917a78
   - material_ref:
       route_id: route-1e7d9a0c555b0ed171aa83c3
       inherit:
@@ -401,6 +428,15 @@ stages:
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L13 similarity-based learning deck' against the stage 'Minkowski
+        distances and feature scaling'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:e7afde42b4f784ab6904c98b150507cc04f99ae56cdeafebfb49ca9dcb0480cb
   - material_ref:
       route_id: route-1e7d9a0c555b0ed171aa83c3
       inherit:
@@ -532,6 +568,15 @@ stages:
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L13 similarity-based learning deck' against the stage 'Cosine,
+        Jaccard, and Mahalanobis measures'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:290b2f680c72ab8faa96a89d966b4a2dc75966cd2038a047564c07819a059827
   - material_ref:
       route_id: route-1e7d9a0c555b0ed171aa83c3
       inherit:
@@ -607,6 +652,15 @@ stages:
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L13 similarity-based learning deck' against the stage 'Exact
+        similarity-search indexes'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:46c3397eebb65edf1241625871f5a0c9c0f59fd9c5eae5108783e6499c2aef95
   - material_ref:
       route_id: route-29f9b98724b103877b374b0c
       inherit:
@@ -652,6 +706,15 @@ stages:
     angle_detail: Follow splitting, descent, backtracking and pruning; compare the search with brute-force
       distances.
     scope_triage: helpful-now
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kelleher Chapter 5 — similarity-based learning' against the stage
+        'Exact similarity-search indexes'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:8a651dd51bd191a1071e38cebeea015f8cb01bb5a4a05e1a2e81a6da59444c3e
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-exact-indexing/notes.md
   attachments: []
   source_feedback: []
@@ -680,6 +743,15 @@ stages:
     scope_triage: required-now
     route_id: route-a4bd194a5656658f42243df6
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L13 similarity-based learning deck' against the stage 'Approximate
+        search and locality-sensitive hashing'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:a36bc0cc06e45298fe7d15b9d57da42049992b94e64276cae809ea0c51ec68a1
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l13/stages/stage-sad-l13-lsh/notes.md
   attachments: []
   source_feedback: []

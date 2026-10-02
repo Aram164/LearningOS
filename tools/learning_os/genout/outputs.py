@@ -6,8 +6,10 @@ import json
 import os
 from pathlib import Path, PurePosixPath
 
+from ..derived.store import DERIVED_TOP_DIR
 from ..errors import TransactionFailure
 from ..loader import Repo
+from ..manifest_identity import IDENTITY_FILENAME, build_identity, manifest_text
 from .atlas import build_domain_atlas
 from .canvas import build_concept_canvas
 from .common import stable_generated_at
@@ -44,7 +46,14 @@ def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
     outputs = {
         # These are machine projections. Keep their complete data and stable
         # key order without paying for indentation on every read/publication.
-        "manifest.json": json.dumps(manifest, separators=(",", ":"), sort_keys=True, ensure_ascii=False) + "\n",
+        "manifest.json": manifest_text(manifest),
+        # The reuse sidecar: pins every input the manifest bytes depend on
+        # so reads can serve the stored file when it is provably current
+        # (#83). It pins the manifest's exact bytes, so whichever of the two
+        # files a crash or a concurrent reader catches mid-publication, a
+        # mismatched pair rebuilds rather than serving a false hit.
+        IDENTITY_FILENAME: json.dumps(build_identity(repo.root, manifest), separators=(",", ":"),
+                                       sort_keys=True, ensure_ascii=False) + "\n",
         "backlinks.json": json.dumps(backlinks, separators=(",", ":"), sort_keys=True, ensure_ascii=False) + "\n",
         "learning-requirements.json": build_learning_requirements_json(repo, generated_at) + "\n",
         "learning-requirements.md": build_learning_requirements_md(repo),
@@ -73,6 +82,14 @@ def generate_all(repo: Repo, generated_at: str | None = None) -> dict[str, str]:
 
 
 _KEEP_NAMES = {".gitkeep", ".DS_Store"}
+
+#: Sibling producers the publisher must not garbage-collect. The page-text
+#: cache, the summary cache, the dossier cache, and the derived-state cache
+#: live under generated/ (gitignored, disposable) but are owned by their own
+#: tools with their own invalidation; a rebuild of the projection must
+#: leave them alone.
+_KEEP_TOP_DIRS = frozenset({"text-cache", "summaries", "dossiers",
+                            DERIVED_TOP_DIR})
 
 
 _KEEP_REPORT_PREFIX = "validation-report"
@@ -108,9 +125,28 @@ def write_outputs(repo: Repo, outputs: dict[str, str]) -> None:
                 continue
         except FileNotFoundError:
             pass
+        except IsADirectoryError:
+            _recover_output_dir(gen, relative)
         tmp.write_bytes(content)
         os.replace(tmp, target)
     _remove_stale(gen, outputs)
+
+
+def _recover_output_dir(gen: Path, relative: PurePosixPath) -> None:
+    """Clear an empty directory blocking one output path, else refuse.
+
+    generated/ is disposable: an empty directory where a view belongs is
+    residue a rebuild may clear. Anything inside it is not ours to
+    delete — refuse with the manual recovery instead of a traceback.
+    """
+    try:
+        (gen / relative).rmdir()
+    except OSError as exc:
+        raise TransactionFailure(
+            f"generated/{relative.as_posix()} is a non-empty directory, not the "
+            "published view — move its contents away, delete it, and rebuild "
+            "(`make views`)"
+        ) from exc
 
 
 def _refuse_link(path: Path, gen: Path) -> None:
@@ -120,10 +156,38 @@ def _refuse_link(path: Path, gen: Path) -> None:
         )
 
 
+def _publisher_entries(gen: Path) -> list[Path]:
+    """Every path under ``generated/`` the publisher can write or delete.
+
+    A kept sibling cache is checked at its own top-level entry and never
+    entered: the publisher neither writes nor removes anything inside it, and
+    its producer guards its interior. Entering it cost two full walks per
+    publication — about 2 s of a 7.8 s stage-progress write with the page-text
+    cache at 72,711 files (measured 2026-09-22).
+    """
+    entries: list[Path] = []
+    for child in sorted(gen.iterdir()):
+        entries.append(child)
+        if child.name in _KEEP_TOP_DIRS or child.is_symlink() or not child.is_dir():
+            continue
+        entries.extend(sorted(child.rglob("*")))
+    return entries
+
+
 def _preflight_generated_tree(gen: Path) -> None:
     """Refuse every existing link before publishing even one new output."""
-    for path in sorted(gen.rglob("*")):
-        if path.is_symlink():
+    def walk(directory: Path):
+        # Sorting each directory gives the same Path order as sorted(rglob),
+        # while scandir avoids Path/stat work for the large kept caches.
+        with os.scandir(directory) as entries:
+            for entry in sorted(entries, key=lambda item: item.name):
+                path = Path(entry.path)
+                yield path, entry
+                if entry.is_dir(follow_symlinks=False):
+                    yield from walk(path)
+
+    for path, entry in walk(gen):
+        if entry.is_symlink():
             raise TransactionFailure(
                 "generated output path is a symbolic link: "
                 f"{path.relative_to(gen)}"
@@ -162,7 +226,7 @@ def _checked_output_path(
 def _remove_stale(gen: Path, outputs: dict[str, str]) -> None:
     expected = {PurePosixPath(rel) for rel in outputs}
     stale_dirs: list[Path] = []
-    for f in sorted(gen.rglob("*")):
+    for f in _publisher_entries(gen):
         if f.is_symlink():
             rel = PurePosixPath(f.relative_to(gen).as_posix())
             raise TransactionFailure(
@@ -177,12 +241,16 @@ def _remove_stale(gen: Path, outputs: dict[str, str]) -> None:
         if rel.parts and rel.parts[0] == "reports" \
                 and f.name.startswith(_KEEP_REPORT_PREFIX):
             continue
+        if rel.parts and rel.parts[0] in _KEEP_TOP_DIRS:
+            continue
         if rel not in expected:
             f.unlink()
     # Prune directories left empty by the deletions (deepest first);
     # rmdir refuses non-empty directories, so this is safe.
     for d in sorted(stale_dirs, reverse=True):
         if d.name == "reports":
+            continue
+        if d.relative_to(gen).parts[0] in _KEEP_TOP_DIRS:
             continue
         try:
             d.rmdir()

@@ -12,7 +12,30 @@
   ],
   "properties": {
     "changes": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "title": {
+          "type": "string"
+        },
+        "locator": {
+          "type": "string"
+        },
+        "angle": {
+          "type": "string"
+        },
+        "angle_detail": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "vault_path": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "minProperties": 1,
+      "description": "A nonempty map of declared descriptive material fields to their new text; keys outside this list refuse, and empty text refuses."
     },
     "check": {
       "type": "boolean"

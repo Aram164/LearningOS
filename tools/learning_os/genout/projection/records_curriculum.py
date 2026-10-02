@@ -117,7 +117,8 @@ def _needs_study_map(unit_data: dict, module_status: str | None,
 
 
 def project_units(repo: Repo, revision: Revision,
-                  unit_to_projects: dict[str, list[str]]) -> list[dict]:
+                  unit_to_projects: dict[str, list[str]],
+                  git_table: dict[str, str] | None = None) -> list[dict]:
     records = []
     route_refs = list(iter_route_references(repo))
     module_status = {
@@ -159,6 +160,10 @@ def project_units(repo: Repo, revision: Revision,
         records.append({
             **dict(data),
             "source_selections": projected_selections,
+            # Optional in the unit schema but required by the published
+            # manifest: a missing block projects to the empty list so a
+            # schema-valid unit stays projectable (JF-10).
+            "scope_sources": data.get("scope_sources") or [],
             "revision": revision(unit.id, data),
             "path": str(unit.path.relative_to(repo.root)),
             # Projects own units explicitly in the Project record. The legacy
@@ -175,14 +180,15 @@ def project_units(repo: Repo, revision: Revision,
             "notes_text": note_text,
             "note_sections": unit_note_sections(note_text),
             "notes_updated": _git_last_commit(
-                repo.root, note_file.relative_to(repo.root).as_posix())
+                repo.root, note_file.relative_to(repo.root).as_posix(), git_table)
                 if note_file else None,
         })
     return records
 
 
 def project_study_maps(repo: Repo, revision: Revision,
-                       source_maps: list[dict] | None = None) -> list[dict]:
+                       source_maps: list[dict] | None = None,
+                       git_table: dict[str, str] | None = None) -> list[dict]:
     # Resolve routes once in their owning source map and reuse the results.
     # Pair with the owner's keys rather than trusting a malformed module_id.
     if source_maps is None:
@@ -208,6 +214,7 @@ def project_study_maps(repo: Repo, revision: Revision,
                 data,
                 "working_note",
                 routes_by_unit.get((study_map.module_id, study_map.unit_id), ()),
+                git_table,
             ),
         })
     return records
@@ -224,21 +231,16 @@ def project_unit_material_syntheses(repo: Repo) -> list[dict]:
 
     # Local import avoids a package-initialization cycle: the synthesis module
     # is a domain service and this is a projection of its output.
-    from ...material_synthesis import (
-        material_synthesis_completeness,
-        material_synthesis_freshness,
-    )
+    from ...material_synthesis import material_synthesis_completeness
+    from .records_library import current_synthesis_freshness
 
-    cache: dict = {}
     return [
         {
             **dict(repo.unit_material_syntheses[synthesis_id]),
-            "freshness": material_synthesis_freshness(
-                repo.root,
-                str(repo.unit_material_syntheses[synthesis_id].get("unit_id", "")),
+            "freshness": current_synthesis_freshness(
+                repo,
+                synthesis_id,
                 repo.unit_material_syntheses[synthesis_id],
-                repo=repo,
-                cache=cache,
             ),
             "completeness": material_synthesis_completeness(
                 repo.root,

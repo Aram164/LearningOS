@@ -9,20 +9,28 @@ import datetime as _dt
 import fcntl
 import hashlib
 import json
+import math
 import os
 import re
 import subprocess
 import sys
 import tempfile
+import time
 from pathlib import Path
 
 import yaml
 
+from learning_os.commands.suggest import not_found
 from learning_os.contracts.gateway import (
     current_gateway_request,
     gateway_snapshot_is_verified,
 )
-from learning_os.fingerprint import canonical_fingerprint, source_fingerprint
+from learning_os.derived.model import DerivedError
+from learning_os.fingerprint import (
+    canonical_fingerprint,
+    seed_source_fingerprint,
+    source_fingerprint,
+)
 from learning_os.genout import (
     build_backlinks,
     build_manifest,
@@ -30,9 +38,13 @@ from learning_os.genout import (
     stable_generated_at,
     write_outputs,
 )
+from learning_os.genout.common import _git_state
 from learning_os.loader import load_repo
+from learning_os.manifest_identity import IDENTITY_FILENAME, bytes_sha256, check_identity
 from learning_os.rules import validate
 from learning_os.transactions import (
+    PostCommitFailure,
+    ProjectionFailure,
     TransactionConflict,
     TransactionFailure,
     TransactionService,
@@ -48,6 +60,66 @@ _HELD_OPERATOR_LOCKS: contextvars.ContextVar[frozenset[str]] = (
 
 def _root(args) -> Path:
     return Path(args.root).resolve() if args.root else TOOLS.parent
+
+
+#: Environment override for the operator-lock wait. `los --lock-timeout`
+#: sets this for the process; in-process callers set it directly. Unset or
+#: malformed means wait as long as the holder needs, announced on stderr.
+LOS_LOCK_TIMEOUT_ENV = "LOS_LOCK_TIMEOUT"
+
+#: Poll interval while a lock timeout is armed. The default (unbounded)
+#: wait keeps kernel blocking with no polling.
+_LOCK_POLL_INTERVAL_S = 0.05
+
+
+def _lock_timeout_seconds() -> float | None:
+    """The configured lock wait bound, or None for an unbounded announced wait."""
+    raw = os.environ.get(LOS_LOCK_TIMEOUT_ENV)
+    if raw is None or not raw.strip():
+        return None
+    try:
+        value = float(raw)
+    except ValueError:
+        return None
+    if not math.isfinite(value):
+        return None
+    return max(0.0, value)
+
+
+def _read_holder(lock_path: Path) -> str | None:
+    """The advisory `(held by pid N: <command>, since HH:MM:SS)` fragment.
+
+    Display only, never trusted for correctness: anything unreadable or
+    misshapen answers None and the waiter prints the bare waiting line.
+    """
+    try:
+        record = json.loads(lock_path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    if not isinstance(record, dict):
+        return None
+    pid = record.get("pid")
+    command = record.get("command")
+    since = record.get("since")
+    if (not isinstance(pid, int) or isinstance(pid, bool)
+            or not isinstance(command, str) or not isinstance(since, str)):
+        return None
+    return f"(held by pid {pid}: {command[:200]}, since {since[:32]})"
+
+
+def _write_holder(handle) -> None:
+    """Record this process as the lock holder. Best effort: advisory only."""
+    prog = Path(sys.argv[0]).name if sys.argv and sys.argv[0] else "los"
+    command = " ".join([prog, *sys.argv[1:3]])[:160] or "los"
+    record = {"pid": os.getpid(), "command": command,
+              "since": _dt.datetime.now().strftime("%H:%M:%S")}
+    try:
+        handle.seek(0)
+        handle.truncate()
+        handle.write(json.dumps(record))
+        handle.flush()
+    except OSError:
+        pass  # a waiter then prints the bare waiting line instead
 
 
 def _allocate_attachment_path(attachment_dir: Path, source_name: str) -> Path:
@@ -84,7 +156,15 @@ def _allocate_attachment_path(attachment_dir: Path, source_name: str) -> Path:
 
 @contextlib.contextmanager
 def _operator_lock(root: Path):
-    """Cross-process lock for every write/generation transaction."""
+    """Cross-process lock for every write/generation transaction.
+
+    A contender probes first and announces the wait on stderr — with the
+    holder's pid, command, and start time when the lock file names them —
+    instead of hanging silently. `LOS_LOCK_TIMEOUT` (or `los
+    --lock-timeout`) bounds the wait; on expiry a WriteRefused naming the
+    holder propagates, which every entry point maps to exit 2 with nothing
+    changed. Re-entrancy and crash-recovery-on-acquire are unchanged.
+    """
     root_key = str(root.resolve())
     held = _HELD_OPERATOR_LOCKS.get()
     if root_key in held:
@@ -92,8 +172,31 @@ def _operator_lock(root: Path):
         return
     token = hashlib.sha256(root_key.encode("utf-8")).hexdigest()[:16]
     lock_path = Path(tempfile.gettempdir()) / f"learningos-{token}.lock"
+    timeout = _lock_timeout_seconds()
     with lock_path.open("a+", encoding="utf-8") as handle:
-        fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+        try:
+            fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+        except BlockingIOError:
+            holder = _read_holder(lock_path)
+            detail = f" {holder}" if holder else ""
+            print(f"los: waiting for the operator lock{detail}", file=sys.stderr)
+            if timeout is None:
+                fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+            else:
+                deadline = time.monotonic() + timeout
+                while True:
+                    remaining = deadline - time.monotonic()
+                    if remaining <= 0:
+                        raise WriteRefused(
+                            f"timed out after {timeout:g}s waiting for the "
+                            f"operator lock{detail}") from None
+                    time.sleep(min(_LOCK_POLL_INTERVAL_S, remaining))
+                    try:
+                        fcntl.flock(handle.fileno(), fcntl.LOCK_EX | fcntl.LOCK_NB)
+                        break
+                    except BlockingIOError:
+                        continue
+        _write_holder(handle)
         reconcile_inflight_transactions(root)
         context_token = _HELD_OPERATOR_LOCKS.set(held | {root_key})
         try:
@@ -105,6 +208,17 @@ def _operator_lock(root: Path):
 
 class WriteRefused(Exception):
     """A canonical write could not be performed; nothing was changed."""
+
+
+class StaleSnapshot(WriteRefused):
+    """A supplied concurrency token no longer matches live state; nothing was changed.
+
+    The only refusal that maps to exit 3 (optimistic-concurrency conflict).
+    Raised only where a supplied snapshot — or the material-context
+    observations digest — differs from the live one. Never inferred from
+    message prose: refusals echo user input, and the word "snapshot" in a
+    mistyped id or a missing-flag hint is not a conflict.
+    """
 
 
 
@@ -156,6 +270,21 @@ def _expected_ok(root: Path, expected: str | None) -> bool:
     actual = f"sha256:{canonical_fingerprint(root)}"
     if actual == expected:
         return True
+    if current_gateway_request() is None:
+        # Found by synthetic use: a direct CLI write with a current snapshot is
+        # refused by `_write_transaction` as "use GatewayEnvelopeV2", but the
+        # same write with a stale or invented one was refused here first, as a
+        # projection conflict telling the caller to reload and try again. It
+        # cannot succeed on any snapshot, so "reload before writing" sends a
+        # script into a loop against a door that is closed for another reason.
+        # Both facts are true; the one that decides the outcome goes first.
+        print("los: canonical writes must use GatewayEnvelopeV2; direct CLI "
+              "application is disabled — reloading will not change this. The "
+              "supplied snapshot is also out of date. Submit the write with "
+              "`los capability NAME --payload-file ENVELOPE.json` "
+              "(envelope: WORKFLOWS §25c).", file=sys.stderr)
+        print(json.dumps({"expected": expected, "actual": actual}), file=sys.stderr)
+        return False
     print("los: projection conflict — authored files changed since the app loaded; "
           "reload before writing", file=sys.stderr)
     print(json.dumps({"expected": expected, "actual": actual}), file=sys.stderr)
@@ -163,8 +292,7 @@ def _expected_ok(root: Path, expected: str | None) -> bool:
 
 
 def _publish(root: Path) -> None:
-    repo = load_repo(root)
-    write_outputs(repo, generate_all(repo))
+    _publish_repo(load_repo(root))
 
 
 def _publish_repo(repo) -> None:
@@ -175,20 +303,138 @@ def _path_or_error(root: Path, path_id: str):
     repo = load_repo(root)
     learning_path = repo.learning_paths.get(path_id)
     if learning_path is None or learning_path.archived:
-        print(f"los: active learning path not found: {path_id}", file=sys.stderr)
+        active = [key for key, row in repo.learning_paths.items()
+                  if not row.archived]
+        print(f"los: {not_found('active learning path', path_id, active)}",
+              file=sys.stderr)
         return repo, None
     return repo, learning_path
 
 
-def _fresh_manifest(root: Path) -> dict:
-    repo = load_repo(root)
-    generated_at = stable_generated_at(root)
-    backlinks = build_backlinks(repo, generated_at)
-    return build_manifest(repo, generated_at, backlinks)
+class _LazyRepo:
+    """``load_repo`` deferred to first attribute access (reuse fast path).
+
+    ``_fresh_manifest_and_repo`` serves the stored manifest without parsing
+    canonical inputs; callers that only read the manifest never pay for the
+    load (measured: load 0.24 s of a 2.0 s read). The first attribute access
+    loads once; afterwards this answers exactly like the real repo. Reads
+    that need repo-only state (path-stage lookup, use evidence) trigger the
+    load implicitly and stay correct.
+    """
+
+    def __init__(self, root: Path) -> None:
+        self._lazy_root = root
+        self._lazy_repo = None
+
+    def _resolve(self):
+        if self._lazy_repo is None:
+            self._lazy_repo = load_repo(self._lazy_root)
+        return self._lazy_repo
+
+    def __getattr__(self, name: str):
+        return getattr(self._resolve(), name)
+
+
+def _try_reuse_manifest(root: Path, live_snapshot: str, *, restamp: bool) -> dict | None:
+    """The stored manifest when it provably describes current state, else None.
+
+    Every mismatch, missing file, or parse error answers None so the caller
+    rebuilds exactly as before; a partially matching or corrupt file is
+    never served. Contract/git failures propagate: the fresh build raises
+    them identically, so swallowing them here would serve reads the fresh
+    path refuses.
+    """
+    try:
+        raw = (root / "generated/manifest.json").read_bytes()
+        identity = json.loads((root / "generated" / IDENTITY_FILENAME).read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return None
+    # The sidecar pins the exact manifest bytes it describes: a pair caught
+    # mid-publication (or a hand-touched file) never passes as current.
+    if not isinstance(identity, dict) or identity.get("manifest_sha256") != bytes_sha256(raw):
+        return None
+    try:
+        manifest = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, ValueError):
+        return None
+    if not isinstance(manifest, dict):
+        return None
+    try:
+        current, _reason = check_identity(
+            root, manifest, identity, live_snapshot=live_snapshot)
+    except (OSError, ValueError, DerivedError):
+        return None
+    if not current:
+        return None
+    if restamp:
+        # Runtime metadata is restamped so the served manifest equals a fresh
+        # build byte for byte: git state can move (a docs-only commit) while
+        # every pinned input still matches.
+        manifest["_generated"]["generated_at"] = stable_generated_at(root)
+        revision, dirty = _git_state(root)
+        manifest["_generated"]["source_revision"] = revision
+        manifest["_generated"]["source_dirty"] = dirty
+    return manifest
+
+
+def _fresh_manifest_and_repo(
+    root: Path, *, snapshot_id: str | None = None, restamp: bool = False,
+) -> tuple[dict, object]:
+    """A current manifest plus the repo it was built from.
+
+    The manifest is served from the stored build when it is provably
+    current, otherwise rebuilt exactly as before. ``restamp`` refreshes
+    the served ``_generated`` runtime metadata (git state, timestamp) to
+    what a fresh build would stamp; pass it only when the caller surfaces
+    ``_generated`` (today: full bootstrap) — it costs several git queries
+    and every other read answers from payload keys the check already
+    verified.
+    """
+    # Every projection read takes the operator lock: acquisition runs crash
+    # recovery first, so single-ID reads, batch reads, and bootstrap all
+    # observe transaction-consistent post-recovery state instead of
+    # disagreeing after a kill (JF-21). Re-entrant: callers already holding
+    # the lock (batch inspect, bootstrap) pass straight through.
+    with _operator_lock(root):
+        # Snapshot-bound callers already computed this under the same lock;
+        # sharing it keeps the read at two hashes (see
+        # test_bounded_read_hashes_twice_with_seeded_manifest).
+        live = snapshot_id if snapshot_id is not None else f"sha256:{canonical_fingerprint(root)}"
+        reused = _try_reuse_manifest(root, live, restamp=restamp)
+        if reused is not None:
+            return reused, _LazyRepo(root)
+        repo = load_repo(root)
+        if snapshot_id is not None:
+            seed_source_fingerprint(repo, snapshot_id)
+        generated_at = stable_generated_at(root)
+        backlinks = build_backlinks(repo, generated_at)
+        return build_manifest(repo, generated_at, backlinks), repo
+
+
+def _fresh_manifest(root: Path, *, snapshot_id: str | None = None,
+                    restamp: bool = False) -> dict:
+    manifest, _ = _fresh_manifest_and_repo(root, snapshot_id=snapshot_id, restamp=restamp)
+    return manifest
+
+
+def _json_layout(stream=None) -> dict:
+    """Indented JSON for a person at a terminal, compact JSON on a pipe.
+
+    Agents and the UI read through pipes, where indentation was 15-22% of
+    the bytes of inspect, resume, search and semantic output and carried no
+    information (measured 2026-09-22). Any JSON parser reads both forms.
+    """
+    if stream is None:
+        stream = sys.stdout
+    try:
+        interactive = stream.isatty()
+    except (AttributeError, ValueError):
+        interactive = False
+    return {"indent": 2} if interactive else {"separators": (",", ":")}
 
 
 def _print_rows(rows: list[dict]) -> int:
-    print(json.dumps(rows, indent=2, sort_keys=True, ensure_ascii=False))
+    print(json.dumps(rows, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
 
@@ -278,7 +524,59 @@ def _read_structured_file(
 
 
 # --------------------------------------------------------- curriculum writes
-def _session_ledger(root: Path) -> Path:
+#: Environment variable naming the calling session. Every gateway write and
+#: every `session-end` in one agent session must see the same value, so the
+#: harness exports it once per session (WORKFLOWS §22). The Obsidian UI
+#: exports `ui` for every child it spawns.
+SESSION_ID_ENV = "LOS_SESSION_ID"
+
+#: Channel assumed when no session is named and no gateway request is active
+#: (a bare `session-end`, a direct `_record_touched` call). This is the
+#: operator path WORKFLOWS §25c documents, so the default claims exactly the
+#: writes the documented ceremony produces.
+DEFAULT_SESSION_CHANNEL = "operator"
+
+#: A ledger row older than this is reported as stale and is no longer staged
+#: by default. A forgotten window is surfaced, never silently inherited.
+SESSION_LEDGER_STALE_HOURS = 24
+
+#: Ephemeral ledger contract. Version 1 was the single shared file with bare
+#: `{state, sha256}` rows; version 2 keys the file per session and stamps
+#: every row with its channel and recording time.
+SESSION_LEDGER_SCHEMA_VERSION = 2
+
+
+def _current_session_id(*, channel: str | None = None,
+                        explicit: str | None = None) -> str:
+    """The session identity every ledger operation resolves the same way.
+
+    An explicit id (the `--session-id` flag) wins, then the `LOS_SESSION_ID`
+    environment, then the gateway channel — so two actors that name nothing
+    still land in separate ledgers by channel (`channel:ui` vs
+    `channel:operator`), while one named session shares a single ledger
+    whatever channel its writes used.
+    """
+    if explicit is not None and explicit.strip():
+        return explicit.strip()
+    env = os.environ.get(SESSION_ID_ENV, "").strip()
+    if env:
+        return env
+    resolved = channel
+    if resolved is None:
+        request = current_gateway_request()
+        resolved = request.channel if request is not None else DEFAULT_SESSION_CHANNEL
+    return f"channel:{resolved}"
+
+
+def _session_ledger(root: Path, session_id: str | None = None) -> Path:
+    token = hashlib.sha256(str(root).encode("utf-8")).hexdigest()[:16]
+    identity = _current_session_id(explicit=session_id)
+    slug = hashlib.sha256(identity.encode("utf-8")).hexdigest()[:16]
+    return Path(tempfile.gettempdir()) / f"learningos-{token}-{slug}-touched.json"
+
+
+def _legacy_session_ledger(root: Path) -> Path:
+    """The pre-session shared ledger filename, now read-only history."""
     token = hashlib.sha256(str(root).encode("utf-8")).hexdigest()[:16]
     return Path(tempfile.gettempdir()) / f"learningos-{token}-touched.json"
 
@@ -304,30 +602,103 @@ def _session_path_state(root: Path, relative: str) -> dict[str, str]:
     return {"state": "file", "sha256": digest}
 
 
-def _load_session_paths(root: Path) -> dict[str, dict[str, str]]:
-    ledger = _session_ledger(root)
+def _row_proven_state(row: dict) -> dict[str, str]:
+    """The bytes-proving subset of a ledger row, for live-file comparison.
+
+    Provenance (`channel`, `recorded_at`) describes the claim, not the file;
+    comparing the whole row against `_session_path_state` would refuse every
+    v2 row unconditionally.
+    """
+    proven = {"state": str(row.get("state", ""))}
+    if "sha256" in row:
+        proven["sha256"] = str(row["sha256"])
+    return proven
+
+
+def _row_recorded_at(row: dict) -> _dt.datetime | None:
+    raw = row.get("recorded_at")
+    if not isinstance(raw, str) or not raw:
+        return None
+    try:
+        moment = _dt.datetime.fromisoformat(raw)
+    except ValueError:
+        return None
+    if moment.tzinfo is None:
+        moment = moment.replace(tzinfo=_dt.UTC)
+    return moment
+
+
+def _row_is_stale(row: dict, now: _dt.datetime | None = None) -> bool:
+    """Whether a row is too old to stage without an explicit flag.
+
+    A row whose age cannot be proven is stale: staging it would inherit a
+    claim of unknown vintage.
+    """
+    moment = _row_recorded_at(row)
+    if moment is None:
+        return True
+    now = now or _dt.datetime.now(_dt.UTC)
+    return (now - moment).total_seconds() > SESSION_LEDGER_STALE_HOURS * 3600
+
+
+def _validate_session_row(relative: str, state: object) -> dict[str, str]:
+    if not isinstance(relative, str) or not relative \
+            or Path(relative).is_absolute() or ".." in Path(relative).parts \
+            or not isinstance(state, dict):
+        raise WriteRefused("session ownership ledger contains an invalid path row")
+    row = {str(key): str(value) for key, value in state.items()}
+    if not row.get("state") or not row.get("channel") or not row.get("recorded_at"):
+        raise WriteRefused("session ownership ledger contains an unstamped path row")
+    if _row_recorded_at(row) is None:
+        raise WriteRefused("session ownership ledger contains an undated path row")
+    return row
+
+
+def _load_session_paths(root: Path, session_id: str | None = None) -> dict[str, dict[str, str]]:
+    identity = _current_session_id(explicit=session_id)
+    ledger = _session_ledger(root, identity)
     if not ledger.is_file():
         return {}
     try:
         data = json.loads(ledger.read_text(encoding="utf-8"))
     except (json.JSONDecodeError, OSError) as exc:
         raise WriteRefused(f"session ownership ledger is unreadable: {exc}") from exc
-    if not isinstance(data, dict) or data.get("schema_version") != 1 \
+    if not isinstance(data, dict) \
+            or data.get("schema_version") != SESSION_LEDGER_SCHEMA_VERSION \
             or not isinstance(data.get("paths"), dict):
         raise WriteRefused("session ownership ledger has an unsupported contract")
-    output: dict[str, dict[str, str]] = {}
-    for relative, state in data["paths"].items():
-        if not isinstance(relative, str) or not relative \
-                or Path(relative).is_absolute() or ".." in Path(relative).parts \
-                or not isinstance(state, dict):
-            raise WriteRefused("session ownership ledger contains an invalid path row")
-        output[relative] = {str(key): str(value) for key, value in state.items()}
-    return output
+    if data.get("session_id") != identity:
+        raise WriteRefused("session ownership ledger names a different session")
+    return {
+        relative: _validate_session_row(relative, state)
+        for relative, state in data["paths"].items()
+    }
 
 
-def _record_touched(root: Path, paths) -> None:
-    ledger = _session_ledger(root)
-    current = _load_session_paths(root) if ledger.is_file() else {}
+def _write_session_ledger(root: Path, paths: dict[str, dict[str, str]],
+                          session_id: str | None = None) -> None:
+    identity = _current_session_id(explicit=session_id)
+    _atomic_text(_session_ledger(root, identity), json.dumps({
+        "schema_version": SESSION_LEDGER_SCHEMA_VERSION,
+        "session_id": identity,
+        "paths": dict(sorted(paths.items())),
+    }, indent=2, sort_keys=True) + "\n")
+
+
+def _stamp_session_row(root: Path, relative: str, channel: str) -> dict[str, str]:
+    row = _session_path_state(root, relative)
+    row["channel"] = channel
+    row["recorded_at"] = _dt.datetime.now(_dt.UTC).replace(
+        microsecond=0).isoformat()
+    return row
+
+
+def _record_touched(root: Path, paths, channel: str | None = None) -> None:
+    identity = _current_session_id(channel=channel)
+    ledger = _session_ledger(root, identity)
+    current = _load_session_paths(root, identity) if ledger.is_file() else {}
+    request = current_gateway_request()
+    actor = channel or (request.channel if request is not None else DEFAULT_SESSION_CHANNEL)
     for path in paths:
         p = Path(path)
         try:
@@ -338,17 +709,84 @@ def _record_touched(root: Path, paths) -> None:
         # action ledger. The protection is about the file type, not the first
         # three default names Obsidian happened to generate.
         if p.suffix.lower() != ".canvas":
-            current[rel] = _session_path_state(root, rel)
-    _atomic_text(ledger, json.dumps({
-        "schema_version": 1,
-        "paths": dict(sorted(current.items())),
-    }, indent=2, sort_keys=True) + "\n")
+            current[rel] = _stamp_session_row(root, rel, actor)
+    _write_session_ledger(root, current, identity)
+
+
+def _read_sibling_session_ledger(path: Path) -> tuple[str, dict[str, dict]] | None:
+    """Parse one foreign ledger file, tolerantly: a corrupt sibling must not
+    break this session's close — its own owner still hits the strict loader."""
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (json.JSONDecodeError, OSError, ValueError):
+        return None
+    if not isinstance(data, dict) or not isinstance(data.get("paths"), dict):
+        return None
+    identity = data.get("session_id")
+    if data.get("schema_version") != SESSION_LEDGER_SCHEMA_VERSION \
+            or not isinstance(identity, str) or not identity:
+        return None
+    rows: dict[str, dict] = {}
+    for relative, state in data["paths"].items():
+        if not isinstance(relative, str) or not relative \
+                or Path(relative).is_absolute() or ".." in Path(relative).parts \
+                or not isinstance(state, dict):
+            return None
+        rows[relative] = {str(key): str(value) for key, value in state.items()}
+    return identity, rows
+
+
+def _load_other_session_ledgers(root: Path,
+                                session_id: str | None = None
+                                ) -> dict[str, dict[str, dict]]:
+    """Every session ledger for this root except this session's own.
+
+    Includes the pre-session shared file (reported as `legacy`, with its rows
+    undated) so an upgrade never silently drops rows — they surface as
+    foreign, never staged.
+    """
+    own = _current_session_id(explicit=session_id)
+    token = hashlib.sha256(str(root).encode("utf-8")).hexdigest()[:16]
+    others: dict[str, dict[str, dict]] = {}
+    try:
+        candidates = sorted(Path(tempfile.gettempdir()).glob(
+            f"learningos-{token}-*-touched.json"))
+    except OSError:
+        candidates = []
+    for candidate in candidates:
+        if candidate == _session_ledger(root, own):
+            continue
+        parsed = _read_sibling_session_ledger(candidate)
+        if parsed is None:
+            continue
+        identity, rows = parsed
+        if identity != own:
+            others[identity] = rows
+    legacy = _legacy_session_ledger(root)
+    if legacy.is_file():
+        try:
+            data = json.loads(legacy.read_text(encoding="utf-8"))
+        except (json.JSONDecodeError, OSError, ValueError):
+            data = None
+        if isinstance(data, dict) and isinstance(data.get("paths"), dict):
+            rows = {}
+            for relative, state in data["paths"].items():
+                if isinstance(relative, str) and relative \
+                        and not Path(relative).is_absolute() \
+                        and ".." not in Path(relative).parts \
+                        and isinstance(state, dict):
+                    rows[relative] = {str(key): str(value)
+                                      for key, value in state.items()}
+            if rows:
+                others.setdefault("legacy", rows)
+    return others
 
 
 def _write_transaction(root: Path, writes: dict[Path, str | bytes],
                        *, capability: str = "legacy.write",
                        expected_revisions: dict[str, int] | None = None,
-                       artifact_ids=(), deletes=()) -> tuple[int, list, dict]:
+                       artifact_ids=(), deletes=(),
+                       metadata=None) -> tuple[int, list, dict]:
     """Commit one named, receipt-producing canonical transaction.
 
     Returns ``(code, errors, confirmation)``. The confirmation travels back to
@@ -359,9 +797,14 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
     report a receipt for a write that did not happen.
     """
     if current_gateway_request() is None:
+        # Name the way through, not only the refusal: the bare named command
+        # is what agents find first, and without a pointer the envelope format
+        # has to be reverse-engineered from the gateway source.
         return 2, [
             "canonical writes must use GatewayEnvelopeV2; direct CLI application "
-            "is disabled"
+            f"is disabled — apply it with `los capability {capability} "
+            f"--payload-file ENVELOPE.json` (payload schema: `los capabilities "
+            f"{capability} --json`; envelope: WORKFLOWS §25c)"
         ], {}
     service = TransactionService(root)
     delete_paths = tuple(Path(path) for path in deletes)
@@ -378,9 +821,11 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
             if issue.severity == "E"
         ]
 
-    def publish_validated_state() -> str:
+    def publish_validated_state(snapshot_after_id: str | None = None) -> str:
         nonlocal validated_repo
         repo = validated_repo or load_repo(root)
+        if snapshot_after_id is not None:
+            seed_source_fingerprint(repo, snapshot_after_id)
         _publish_repo(repo)
         projected_snapshot = f"sha256:{source_fingerprint(repo)}"
         validated_repo = None
@@ -397,6 +842,7 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
             publish=publish_validated_state,
             rollback_publish=lambda: _publish(root),
             touched=lambda paths: _record_touched(root, paths),
+            metadata=metadata,
         )
     except TransactionConflict as exc:
         print("los: artifact revision conflict — reload the affected record before writing",
@@ -410,6 +856,11 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
         # The V2 gateway owns the typed stale-snapshot response. Let the exact
         # expected/actual values cross that boundary without being flattened
         # into a generic transaction failure.
+        raise
+    except (ProjectionFailure, PostCommitFailure):
+        # Typed failure provenance crosses the (code, errors) channel by
+        # propagation: the gateway classifies by its attrs, and direct CLI
+        # use still exits 2 through los.py's TransactionFailure handler.
         raise
     except TransactionFailure as exc:
         # Canonical write refusal is a handled operator error, not an internal
@@ -454,7 +905,7 @@ def _unit_map_or_error(root: Path, unit_id: str):
     repo = load_repo(root)
     unit = repo.units.get(unit_id)
     if unit is None:
-        print(f"los: unit not found: {unit_id}", file=sys.stderr)
+        print(f"los: {not_found('unit', unit_id, repo.units)}", file=sys.stderr)
         return repo, None, None
     map_id = unit.data.get("current_study_map")
     study_map = repo.study_maps.get(map_id) if map_id else None
@@ -480,6 +931,43 @@ def _dump_study_map(study_map, data: dict) -> str:
     from learning_os.material_refs import preserve_map_refs
 
     return _dump_yaml(preserve_map_refs(study_map, data))
+
+
+#: The one return-to-work record. `los resume` and the app's Home both start
+#: here, so they cannot disagree about where the learner left off.
+RESUME_POINTER_PATH = "curriculum/resume.yaml"
+
+
+def _resume_pointer_write(root: Path, *, module_id: str, unit_id: str,
+                          study_map_id: str, stage_id: str) -> dict[Path, str]:
+    """The resume-pointer file for one explicit study action.
+
+    Returned as a ``{path: text}`` fragment to merge into the *same*
+    ``_write_transaction`` as the records that moved. That is the whole point:
+    the pointer is written under the operator lock the caller already holds,
+    inside the capability's declared write scope, covered by the same receipt,
+    the same post-action scope check, the same validation and the same
+    republished projection. A separate write after the transaction would be an
+    untracked side effect that could survive a rolled-back change, or be lost
+    while the change committed — and the destination would then be lying about
+    where the work actually is.
+
+    Until 2026-09-13 nothing wrote this file at all. `curriculum/resume.yaml`
+    did not exist; `los resume` silently recovered through "last recorded
+    result", and the app's Home, which reads only this pointer, said "Nothing
+    to resume yet". Activating a stage in another subject therefore left both
+    interfaces pointing at the old one (audit
+    `workbench/audits/synthetic-learner-2026-09-12`, F05).
+    """
+    pointer = {
+        "type": "resume-pointer",
+        "module_id": str(module_id),
+        "unit_id": str(unit_id),
+        "study_map_id": str(study_map_id),
+        "stage_id": str(stage_id),
+        "updated": _dt.date.today().isoformat(),
+    }
+    return {root / RESUME_POINTER_PATH: _dump_yaml(pointer)}
 
 
 def _render_frontmatter(meta: dict, body: str) -> str:
@@ -519,6 +1007,12 @@ def _replace_registry_list_record(content: str, record_id: str, record: dict) ->
 def _stage(data: dict, stage_id: str):
     return next((row for row in data.get("stages", []) or []
                  if isinstance(row, dict) and row.get("id") == stage_id), None)
+
+
+def _stage_ids(data: dict) -> list[str]:
+    """Stage ids of one study map or learning path, for not-found suggestions."""
+    return [str(row["id"]) for row in data.get("stages", []) or []
+            if isinstance(row, dict) and row.get("id")]
 
 
 # ---------------------------------------------------- validate / generate

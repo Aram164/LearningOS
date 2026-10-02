@@ -1,0 +1,41 @@
+schema_version: 2
+id: transaction-20260918-045742-001
+type: transaction-receipt
+status: committed
+capability: route.patch
+committed_at: '2026-09-18T04:57:42+02:00'
+snapshot_before: sha256:3462c9ec36b2bcb844fcd343bf52f5ee7838cc0e6f1115a4c0b23314d30f2fb7
+snapshot_after: sha256:907d2370bf73d3582d652de6986407d295e0f940a73b473f21320581e7a8cf43
+expected_revisions:
+  module-hu-m2-statistik-analysis: 53
+  unit-m2-sad-l04: 22
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 53
+    after: 54
+  unit-m2-sad-l04:
+    before: 22
+    after: 23
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: fea5b938fbd75af8ae545f2e89402dac8d8cfa1c502c4ac8e2f8f062885cf458
+  sha256_after: 62161e445a925c493cd2a1a7ad9967342478dfad19c01be7cffeca850a2870cb
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: route.patch
+    declared_writes:
+    - curriculum/modules/*/source-map.yaml
+    - curriculum/modules/*/units/*/unit.yaml
+    - curriculum/modules/*/units/*/study-map.yaml
+request:
+  channel: operator
+  request_id: op-20260918-ue3-angle-001
+  idempotency_key: ue3-angle-correction-001
+  intent_sha256: sha256:56b96df289e7934927b7c4b76b93ba306aaf3e8eb5cc2b830a03d907123c1b7b
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:56b96df289e7934927b7c4b76b93ba306aaf3e8eb5cc2b830a03d907123c1b7b

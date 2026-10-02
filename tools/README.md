@@ -21,24 +21,34 @@ runtime coverage; the exact roots and historical allowlist live in
 | `validate.py` | supported gate | Offline/online canonical validator. |
 | `generate.py` | supported gate | Deterministic generated-view publisher. |
 | `warning_baseline.py` | supported gate | No-new-warning policy. |
+| `verify_plan_receipt.py` | supported gate | Receipt/projection check for one plan transaction (`make plan-check`). |
 | `code_reachability.py` | supported code gate | Static, code-only import/reachability report. |
 | `schema_contract.py` | supported contract tool | Stored-record contract check and deliberate bump entrypoint. |
 | `tree_contract.py` | supported contract tool | Renders ARCHITECTURE §3.2 from the tree contract; `--check` is what `make check` compares. |
 | `manifest_contract.py` | supported contract tool | Published-manifest contract check and deliberate bump entrypoint. |
+| `contract_bundle.py` | prototype contract tool | Side-by-side manifest contract bundler (Point-3 prototype); build/check only, never a canonical writer. |
 | `generate_capability_schemas.py` | supported maintenance | Rebuilds capability payload schemas after an approved CLI contract change. |
 | `release_pair_receipt.py` | supported release tool | Produces or verifies exact Core/UI release evidence. |
+| `verified_pairs.py` | supported release tool | Advisory memo of pairs `make system-check` verified; the pre-push hook skips the full gate for an exact stamped pair. |
 | `stress_check.py` | supported deep gate | Explicit, expensive local stress checks; not a routine edit gate. |
 | `codex_obsidian.py` | compatibility/security adapter | Fail-closed wrapper retained for the existing Agentic Copilot boundary. |
 | `assemble_lecture_study_maps.py` | bounded authoring tool | Builds review drafts from already-authored maps; never a general canonical writer. |
 | `build_materials_index.py` | bounded materials maintenance | Builds plain-text material catalogues; its HTML surface is retired unless explicitly requested. |
 | `build_materials_tree.py` | bounded materials maintenance | Maintains the physical topic tree and `.flat` compatibility links. |
+| `material_text.py` | bounded authoring tool | Digest-keyed page-text cache for local materials; read cached pages instead of re-extracting. |
 | `material_toc.py` | bounded authoring tool | Reads local material structure while authoring or checking exact locators. |
+| `material_summarize.py` | bounded authoring tool | Admits reviewed chapter summaries; `--read --material PATH --pages START-END` returns one reusable summary with live source checks, explicit hit/missing/stale/refused status, and content integrity — serving a durable analysis note first when one binds the exact source and range. |
 | `materials_manifest.py` | bounded integrity tool | Builds/verifies the external-material checksum inventory. |
+| `ingest_transcript.py` | bounded materials maintenance | Legacy caption import for already managed material; not the two-pass YouTube examination path, which uses Gemini Notebook on demand (WORKFLOWS §6a). Writes only under `LearningOS/materials/`, never canonical state. |
 | `refresh_amls_fixture.py` | bounded fixture maintenance | Refreshes the checked-in AMLS paper inventory when its external source changes. |
 | `legacy_exit_review.py` | read-only diagnostic | Reviews the frozen legacy tree without moving or deleting it. |
+| `library_reconciliation.py` | read-only diagnostic | Occurrence-level reconciliation of the old resource lists against the source registry (two-pass source intake); reads only declared inputs and writes only inside its workspace, never canonical records. |
 | `plan_write_audit.py` | read-only diagnostic | Reports plan changes without same-commit gateway receipts. |
 | `lift_angle_out_of_locator.py` | compatibility repair | Bounded repair for the former fused locator/angle representation. |
 | `normalise_material_uris.py` | compatibility repair | Bounded conversion from former physical-path material URIs to ID-based URIs. |
+| `diagnostics_prune.py` | bounded maintenance | Prunes the disposable diagnostics trace store to its retention bound. |
+| `affected_tests.py` | supported test tool | Maps changed files to test groups for `make test-affected`; a rerun minimizer, never a gate. |
+| `seal_envelope.py` | bounded authoring tool | Seals one GatewayEnvelopeV2 from caller intent (WORKFLOWS §25c); reads the repo, writes nothing canonical. |
 
 The `materials_index/` package is private implementation for
 `build_materials_index.py`.  The `learning_os/` package structure and allowed
@@ -62,6 +72,7 @@ contract is newer than the last generation it understands.
 | `standardize_plan_template_v10.py` | retired after v10 | Historical plan-template standardization. |
 | `route_identity_v13.py` | apply retired after v13; compatibility planner retained | The public compatibility command still imports its deterministic planner and fails closed on current apply. |
 | `job_quarantine_collapse.py` | compatibility planner; direct apply always refused | The gateway-bound legacy Job capability reuses its plan and before-image verification. |
+| `summaries_to_notes_v1.py` | one-shot; direct operator execution through v35 | Freeze, map, and migrate legacy summary-cache entries to durable analysis notes via note.analysis.save; refuses changed inputs and retires by lifecycle after v35. |
 
 When the current contract needs a data rewrite, add a new migration with a new
 identifier and supported-through declaration.  Do not revive or broaden a

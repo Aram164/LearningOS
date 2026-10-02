@@ -1,0 +1,43 @@
+schema_version: 2
+id: transaction-20260930-012024-001
+type: transaction-receipt
+status: committed
+capability: unit.map.import
+committed_at: '2026-09-30T01:20:24+02:00'
+snapshot_before: sha256:181c6b8f37ba5a4b8e736a5e7fbc57b3e437679d4e895d4764b1b8832f1d3935
+snapshot_after: sha256:7f2871eab59a8e9b0c35e829506a3c99d0dda75f5cc18810b22fa1a500e60e57
+expected_revisions:
+  unit-job-polars-backend-loop: 3
+  study-map-job-polars-backend-loop: 1
+artifact_revisions:
+  study-map-job-polars-backend-loop:
+    before: 1
+    after: 2
+  unit-job-polars-backend-loop:
+    before: 3
+    after: 4
+writes:
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/study-map.yaml
+  sha256_before: 59515e81582386fdd943f9ded1acb11ff9abda19ad44b873e5b8286be968d46e
+  sha256_after: 225d96933771487b17a79ac8f8d817ec780809006c226e9811f1c7b4a534b241
+  created: false
+- path: curriculum/modules/module-job-polars/units/unit-job-polars-backend-loop/unit.yaml
+  sha256_before: c80e27cedf8d895bba77a678e30601fec2b22c24055e34ddd6177c4cdc56bbde
+  sha256_after: c80e27cedf8d895bba77a678e30601fec2b22c24055e34ddd6177c4cdc56bbde
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: unit.map.import
+    declared_writes:
+    - curriculum/modules/**/units/**
+request:
+  channel: codex
+  request_id: request-reviewed-a1228c73b5fc479487a6627eecf5a93a
+  idempotency_key: reviewed-9aa58391d570401cb0dd07aa31f3fdc5
+  intent_sha256: sha256:8d08013ac061c5a800ce8382d9eeafafc58ccbb2b091bc5e2a16d257410ab067
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:8d08013ac061c5a800ce8382d9eeafafc58ccbb2b091bc5e2a16d257410ab067

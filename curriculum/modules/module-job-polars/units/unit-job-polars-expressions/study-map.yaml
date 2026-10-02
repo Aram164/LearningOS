@@ -10,6 +10,7 @@ source_plan:
 detours: []
 stages:
 - id: stage-polars-05-expressions-and-column-creation
+  knowledge_node_id: knowledge-polars-expr-contexts
   number: 1
   title: Expression grammar, contexts, aliases, and sibling visibility
   status: pending
@@ -78,6 +79,15 @@ stages:
       edition: verify callables against 1.36.0.'
     scope_triage: required-now
     route_id: route-polars-definitive-guide-s02
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Polars book - Session 2 route' against the stage 'Expression grammar,
+        contexts, aliases, and sibling visibility'. The stage description selects that stage's task or
+        reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:46f9bcce7c273d832ac014107ce93af10a708a79d80ca07a69a47347078c7db6
   - kind: reference
     label: Official reference — docs.pola.rs — expressions and contexts
     id: resource-polars-04-04-official-reference-docs-pola-rs-expres
@@ -203,6 +213,7 @@ stages:
   source_feedback: []
   working_note: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-05-expressions-and-column-creation/notes.md
 - id: stage-polars-expr-selectors-expansion
+  knowledge_node_id: knowledge-polars-expr-expansion
   number: 2
   title: Selectors and expression expansion
   status: pending
@@ -279,6 +290,15 @@ stages:
       sheet''s Task 1 trap — the gap between the two is the finding.'
     scope_triage: required-now
     route_id: route-polars-definitive-guide-s02
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Polars book - Session 2 route' against the stage 'Selectors and expression
+        expansion'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:3132f8275fe8aab97747a9b493751f66f2be4ab7309eab3472b6d9b02b704120
   - id: resource-polars-selector-schema-drift
     kind: practise
     label: Selector schema-drift lab
@@ -311,6 +331,7 @@ stages:
     label: Answer-key self-check (22 assertions)
   source_feedback: []
 - id: stage-polars-expr-horizontal-conditional
+  knowledge_node_id: knowledge-polars-expr-horizontal
   number: 3
   title: Horizontal logic, folds, conditionals, and literals
   status: pending
@@ -412,6 +433,15 @@ stages:
       aggregations, which is the framing that makes the empty-subset error make sense.
     scope_triage: required-now
     route_id: route-polars-definitive-guide-s02
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Polars book - Session 2 route' against the stage 'Horizontal logic,
+        folds, conditionals, and literals'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:38adbd1d9a768eaeca6e1f599e6a2e8f55cafb5ddb55e3a56376e1b0b26a82d3
   working_note: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-horizontal-conditional/notes.md
   attachments:
   - path: curriculum/modules/module-job-polars/units/unit-job-polars-expressions/stages/stage-polars-expr-horizontal-conditional/attachments/s2c-exercises.md
@@ -420,6 +450,7 @@ stages:
     label: Answer-key self-check (32 assertions)
   source_feedback: []
 - id: stage-polars-expr-assignmap-lowering
+  knowledge_node_id: knowledge-polars-expr-lowering
   number: 4
   title: Translate pandas assign into native expression trees
   status: pending

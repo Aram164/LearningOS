@@ -122,6 +122,10 @@ directories:
         purpose: AI action state; requests and deliveries are gitignored
       - path: operations/migrations
         purpose: applied-migration provenance
+      - path: operations/diagnostics
+        purpose: disposable diagnostic trace store (gitignored, deletable, never authoritative)
+      - path: operations/legacy
+        purpose: published Legacy archive lock (allowlist-only evidence)
 
   - path: migration
     owner: migration
@@ -142,6 +146,8 @@ directories:
     children:
       - path: work/inbox
         purpose: the drop-anything home; the operator routes what lands here
+      - path: work/complaints
+        purpose: tracked agent friction notes; the inbox stays for learner captures
       - path: work/active
         purpose: one folder per active workspace, each with a CONTEXT.md
       - path: work/proposals
@@ -149,10 +155,12 @@ directories:
 
   - path: archive
     owner: archive
-    purpose: completed workspaces, retained and never deleted
+    purpose: completed workspaces and resolved inbox drops, retained and never deleted
     children:
       - path: archive/workspaces
         purpose: one folder per year
+      - path: archive/inbox
+        purpose: resolved inbox drops, one folder per year
 
   - path: generated
     owner: generated
@@ -188,8 +196,6 @@ hidden:
       purpose: Codex project configuration
     - path: .gitignore
       purpose: ignores generated/*, bases/, and the local environment
-    - path: .jules
-      purpose: AI agent critical learnings directory
 
   ephemeral:
     - path: .git

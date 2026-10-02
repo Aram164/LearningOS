@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/collection.entry.revise.schema.json",
+  "title": "payload for capability collection.entry.revise",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [],
+  "properties": {
+    "check": {
+      "type": "boolean"
+    },
+    "expected_diff_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "file": {
+      "type": "string"
+    },
+    "record": {
+      "type": "object",
+      "properties": {
+        "collection": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "why": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "collection",
+        "source",
+        "why"
+      ],
+      "description": "Revises one entry's why line, addressed by collection stem and source id; only why is written here."
+    }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "file"
+      ]
+    },
+    {
+      "required": [
+        "record"
+      ]
+    }
+  ]
+}

@@ -35,7 +35,9 @@ def project_workspaces(repo: Repo, revision: Revision) -> list[dict]:
     return records
 
 
-def project_learning_paths(repo: Repo, revision: Revision) -> list[dict]:
+def project_learning_paths(
+    repo: Repo, revision: Revision, git_table: dict[str, str] | None = None
+) -> list[dict]:
     records = []
     for learning_path in sorted(repo.learning_paths.values(), key=lambda p: p.id):
         data = learning_path.data
@@ -52,7 +54,7 @@ def project_learning_paths(repo: Repo, revision: Revision) -> list[dict]:
             "created": data.get("created"), "updated": data.get("updated"),
             "objective": data.get("objective", ""),
             "source_plan": data.get("source_plan"),
-            "stages": project_stages(repo, data, "notes_path"),
+            "stages": project_stages(repo, data, "notes_path", (), git_table),
             "shelving": dict(data.get("shelving", {}) or {}),
             "archived": learning_path.archived,
         })

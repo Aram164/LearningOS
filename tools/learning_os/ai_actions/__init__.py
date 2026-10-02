@@ -25,6 +25,8 @@ _EXPORTS = {
     "DeliveryValidationError": (".errors", "DeliveryValidationError"),
     "StaleDeliveryError": (".errors", "StaleDeliveryError"),
     "TargetNotFoundError": (".errors", "TargetNotFoundError"),
+    "UnresolvedMaterialError": (".errors", "UnresolvedMaterialError"),
+    "ContinuationRefusedError": (".errors", "ContinuationRefusedError"),
     "manifest_ai_projection": (".projection", "manifest_ai_projection"),
     "ActionDefinition": (".registry", "ActionDefinition"),
     "ActionRegistry": (".registry", "ActionRegistry"),

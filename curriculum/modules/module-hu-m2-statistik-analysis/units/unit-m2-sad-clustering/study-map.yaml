@@ -52,6 +52,15 @@ stages:
       once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
     scope_triage: required-now
     route_id: route-448bd2b33e64225d557d6c85
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE7 — clustering families and complete k-means trace' against the
+        stage 'Exploratory unsupervised learning'. The stage description selects that stage's task or
+        reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:566870cbfa17f2b70e560aebd1d410e4fe9e745d322c0bc4d2abc2e2af764eb8
   - material_ref:
       route_id: route-0d244a0a83df84591c6685a2
       inherit:
@@ -105,6 +114,15 @@ stages:
       once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
     scope_triage: required-now
     route_id: route-448bd2b33e64225d557d6c85
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE7 — clustering families and complete k-means trace' against the
+        stage 'Hierarchical, partitioning, and density families'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:fef6775bf5214db776bac0ee86735d4c8a339965386c5dab1efe61b4fc19faef
   - material_ref:
       route_id: route-0d244a0a83df84591c6685a2
       inherit:
@@ -204,6 +222,15 @@ stages:
       once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
     scope_triage: required-now
     route_id: route-448bd2b33e64225d557d6c85
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE7 — clustering families and complete k-means trace' against the
+        stage 'k-means objective and iterations'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:63ca7f9f110bd412c615c1b9c3d76a8891a0df8709fdb0b2e83ce8fd642bef39
   - material_ref:
       route_id: route-0d244a0a83df84591c6685a2
       inherit:
@@ -303,6 +330,15 @@ stages:
       once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
     scope_triage: required-now
     route_id: route-448bd2b33e64225d557d6c85
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE7 — clustering families and complete k-means trace' against the
+        stage 'Initialization, convergence, and local optima'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:aac5585e87b45ce7b53a07dacd2e7d04f9e41c700c4d806814f0648850f9dd2f
   - material_ref:
       route_id: route-0d244a0a83df84591c6685a2
       inherit:
@@ -391,6 +427,15 @@ stages:
       once the algorithm has been introduced. UE7 p. 77 contains historical 2025 dates, not current administration.
     scope_triage: required-now
     route_id: route-448bd2b33e64225d557d6c85
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE7 — clustering families and complete k-means trace' against the
+        stage 'Comparing clustering results'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:5d056cae68d02ca2af1dd97584c6a7075cc503a58d154b7695cf7e23a888f72d
   - material_ref:
       route_id: route-0d244a0a83df84591c6685a2
       inherit:

@@ -35,11 +35,24 @@
       "type": "string",
       "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.?(?:/|$))(?!.*//)[A-Za-z0-9][A-Za-z0-9._-]*(?:/[A-Za-z0-9][A-Za-z0-9._-]*)*$"
     },
+    "dataRootsDigest": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
     "v2Metadata": {
       "oneOf": [
         {
           "type": "object",
-          "maxProperties": 0
+          "additionalProperties": false,
+          "properties": {
+            "data_roots_sha256": {"$ref": "#/$defs/dataRootsDigest"},
+            "routed_to": {
+              "description": "Where inbox.resolve sent the drop. Written only by that capability; absent on every other receipt.",
+              "type": "array",
+              "minItems": 1,
+              "items": {"type": "string", "minLength": 1}
+            }
+          }
         },
         {
           "type": "object",
@@ -49,6 +62,7 @@
             "updated_ids", "deleted_ids", "superseded_ids", "validation"
           ],
           "properties": {
+            "data_roots_sha256": {"$ref": "#/$defs/dataRootsDigest"},
             "request_id": {"$ref": "#/$defs/safeArtifactId"},
             "delivery_id": {"$ref": "#/$defs/safeArtifactId"},
             "action_id": {"$ref": "#/$defs/safeArtifactId"},

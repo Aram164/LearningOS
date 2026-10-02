@@ -1,45 +1,57 @@
 #!/usr/bin/env python3
 """Learning OS CLI — the stable machine gateway for interface layers (ADR-006).
 
-    python tools/los.py status            # one-screen repository state
-    python tools/los.py bootstrap         # AI/app startup contract + active paths
-    python tools/los.py status --json     # same, machine-readable (stable keys)
-    python tools/los.py validate          # delegate to tools/validate.py
-    python tools/los.py generate          # delegate to tools/generate.py
-    python tools/los.py path-note ...     # save stage-bound working notes
-    python tools/los.py path-progress ... # advance the ordered path
-    python tools/los.py capture ...       # drop an unrelated capture into work/inbox/
+Agents start here (system/OPERATOR.md):
+
+    .venv/bin/python tools/los.py capabilities --compact --json  # what exists
+    .venv/bin/python tools/los.py bootstrap --brief              # session entry, one page
+    .venv/bin/python tools/los.py capabilities NAME --json       # one capability + payload schema
+    .venv/bin/python tools/los.py inspect ID [ID ...]            # records, one fresh projection
+    .venv/bin/python tools/los.py status                         # one-screen repository state
+
+`bootstrap` without --brief/--compact prints the complete projection
+(megabytes): a bulk read, never a session start.
+
+Every canonical write is a capability applied as a GatewayEnvelopeV2 through
+`capability NAME --payload-file ENVELOPE.json` (WORKFLOWS §25c). Run bare, a
+named write command only preflights (`--check`) or refuses. `validate` and
+`generate` delegate to tools/validate.py and tools/generate.py, so there is
+exactly one implementation of every rule.
 
 Interface layers (the Obsidian UI project, scripts, agents) call THESE
-commands instead of parsing YAML or reimplementing rules. The Python loader
-remains the single authority; `validate` and `generate` are thin delegations
-to the canonical scripts, so there is exactly one implementation of every
-rule.
-
-Deliberately NOT here (OPERATOR.md, CLAUDE.md §3–§5, §14): anything requiring operator
-judgment — routing inbox items, creating notes and assigning roles, harvesting
-the Garden, finishing sessions, semantic edits. `capture` is the one write
-because it is judgment-free: it puts bytes in `work/inbox/`, where routing is
-explicitly the operator's job. Exit codes: 0 ok · 1 validation errors ·
-2 usage/environment error · 3 optimistic-concurrency conflict.
+commands instead of parsing YAML or reimplementing rules. Exit codes: 0 ok ·
+1 validation errors · 2 usage/environment error · 3 optimistic-concurrency
+conflict.
 """
 
 from __future__ import annotations
 
 import argparse
+import os
 import sys
 
 from learning_os.ai_actions import AIActionError, StaleDeliveryError  # noqa: E402
 from learning_os.backup_manifest import BackupManifestError  # noqa: E402
+from learning_os.commands.abilities import (  # noqa: E402
+    cmd_ability_candidate_append,
+    cmd_ability_context,
+    cmd_ability_observation_append,
+)
 
 # Command registry: one module per domain, so a behaviour is found by name.
 from learning_os.commands.ai import (  # noqa: E402
+    cmd_ai_action_append_slices,
     cmd_ai_action_apply_delivery,
     cmd_ai_action_import_delivery,
     cmd_ai_action_list,
     cmd_ai_action_prepare,
     cmd_ai_action_status,
     cmd_ai_action_validate_delivery,
+)
+from learning_os.commands.analysis import (  # noqa: E402
+    cmd_note_analysis_prepare,
+    cmd_note_analysis_save,
+    cmd_note_analysis_save_batch,
 )
 from learning_os.commands.atlas import (  # noqa: E402
     cmd_atlas_context,
@@ -48,17 +60,33 @@ from learning_os.commands.atlas import (  # noqa: E402
 )
 from learning_os.commands.capability import cmd_capability  # noqa: E402
 from learning_os.commands.capture import cmd_capture  # noqa: E402
+from learning_os.commands.collection_entry import cmd_collection_entry_revise  # noqa: E402
 from learning_os.commands.detour import cmd_detour_create, cmd_detour_resolve  # noqa: E402
+from learning_os.commands.dossier import cmd_dossier  # noqa: E402
 from learning_os.commands.garden import cmd_garden_seed_create  # noqa: E402
+from learning_os.commands.goal import cmd_goal  # noqa: E402
+from learning_os.commands.inbox import cmd_inbox_resolve  # noqa: E402
 from learning_os.commands.intelligence import cmd_intelligence_scan  # noqa: E402
+from learning_os.commands.lineage_restamp import cmd_lineage_restamp  # noqa: E402
 from learning_os.commands.material import (  # noqa: E402
     cmd_module_materials_compact,
     cmd_plan_edit_context,
     cmd_route_patch,
 )
-from learning_os.commands.module import cmd_module_list, cmd_module_plan_import  # noqa: E402
-from learning_os.commands.note import cmd_note_evidence, cmd_note_revise  # noqa: E402
-from learning_os.commands.observation import cmd_observation_append  # noqa: E402
+from learning_os.commands.material_span import cmd_material_span  # noqa: E402
+from learning_os.commands.module import (  # noqa: E402
+    cmd_module_attempt,
+    cmd_module_list,
+    cmd_module_plan_import,
+    cmd_unit_plan_revise,
+)
+from learning_os.commands.note import (  # noqa: E402
+    cmd_note_create,
+    cmd_note_evidence,
+    cmd_note_revise,
+)
+from learning_os.commands.observation import cmd_observation_append, cmd_observe  # noqa: E402
+from learning_os.commands.operations import cmd_operations  # noqa: E402
 from learning_os.commands.path import (  # noqa: E402
     cmd_path_attach,
     cmd_path_note,
@@ -74,6 +102,7 @@ from learning_os.commands.query import (  # noqa: E402
     cmd_bootstrap,
     cmd_capabilities,
     cmd_generate,
+    cmd_inbox_list,
     cmd_inspect,
     cmd_program_list,
     cmd_related,
@@ -81,20 +110,36 @@ from learning_os.commands.query import (  # noqa: E402
     cmd_status,
     cmd_validate,
 )
-from learning_os.commands.reads import cmd_note_read  # noqa: E402
+from learning_os.commands.reads import (  # noqa: E402
+    cmd_inbox_read,
+    cmd_material_context,
+    cmd_note_read,
+)
+from learning_os.commands.resume import cmd_resume  # noqa: E402
 from learning_os.commands.review import (  # noqa: E402
     cmd_session_end,
     cmd_shelving_apply,
     cmd_shelving_prepare,
 )
 from learning_os.commands.runtime import cmd_runtime_session  # noqa: E402
+from learning_os.commands.semantic import cmd_semantic  # noqa: E402
 from learning_os.commands.source import cmd_source_feedback  # noqa: E402
+from learning_os.commands.source_catalog import (  # noqa: E402
+    cmd_source_intake_record,
+    cmd_source_record_revise,
+)
 from learning_os.commands.stage import (  # noqa: E402
     cmd_stage_attach,
     cmd_stage_note,
     cmd_stage_progress,
 )
-from learning_os.commands.support import WriteRefused, _add_expected_revision_argument  # noqa: E402
+from learning_os.commands.stage_result import cmd_stage_result  # noqa: E402
+from learning_os.commands.support import (  # noqa: E402
+    LOS_LOCK_TIMEOUT_ENV,
+    StaleSnapshot,
+    WriteRefused,
+    _add_expected_revision_argument,
+)
 from learning_os.commands.unit import (  # noqa: E402
     cmd_unit_list,
     cmd_unit_map_import,
@@ -115,6 +160,11 @@ from learning_os.commands.vnext import (  # noqa: E402
     cmd_route_identity_migrate,
     cmd_unit_material_synthesis_publish,
 )
+from learning_os.commands.workspace import (  # noqa: E402
+    cmd_coordination_section_revise,
+    cmd_workspace_next_action,
+)
+from learning_os.contracts.manifest_contract import ManifestContractError  # noqa: E402
 from learning_os.contracts.payloads import json_object, sha256_value  # noqa: E402
 from learning_os.health import HealthReportError  # noqa: E402
 from learning_os.legacy_archive import LegacyArchiveError  # noqa: E402
@@ -137,10 +187,17 @@ def build_parser() -> argparse.ArgumentParser:
         formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--root", default=None,
                         help="repository root (default: parent of tools/)")
+    parser.add_argument("--lock-timeout", type=float, default=None,
+                        metavar="SECONDS",
+                        help="bound the operator-lock wait; on expiry exit 2 "
+                             "naming the holder (same as LOS_LOCK_TIMEOUT; "
+                             "default: wait as long as needed, announced)")
     sub = parser.add_subparsers(dest="command", required=True)
 
     p = sub.add_parser("status", help="one-screen repository state")
     p.add_argument("--json", action="store_true", help="machine-readable output")
+    p.add_argument("--no-validate", action="store_true",
+                   help="skip validation entirely (the parse-failure refusal still applies)")
     p.set_defaults(func=cmd_status)
 
     p = sub.add_parser("capabilities", help="discover the stable operator contract")
@@ -150,39 +207,136 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_capabilities)
 
     p = sub.add_parser("bootstrap", help="machine bootstrap with active learning paths")
+    p.add_argument("--brief", action="store_true", help="one-page session entry: guards, resume, owed work, deadlines, expands")
     p.add_argument("--compact", action="store_true", help="bounded startup summaries; details stay available through inspect")
     p.add_argument("--offset", type=int, default=0)
     p.add_argument("--limit", type=int, default=20)
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_bootstrap)
 
-    p = sub.add_parser("search", help="search the complete fresh projection")
-    p.add_argument("query")
+    p = sub.add_parser("material-context", help="find saved explanations by need, with freshness and review state")
+    p.add_argument("query", nargs="?", default="",
+                   help="explanation need; optional when --material names the file")
+    p.add_argument("--concept", default=None, help="concept id or declared alias filter")
+    p.add_argument("--purpose", default=None, help="purpose substring filter (anchors, best use, exercise value)")
+    p.add_argument("--unit", default=None,
+                   help="unit scope: direct route-bound evidence plus the unit's own approved assessments")
+    p.add_argument("--include-related", action="store_true",
+                   help="with --unit: append same-source related notes, labelled related")
+    p.add_argument("--include-anchors", action="store_true",
+                   help="return complete anchor indexes instead of the bounded preview")
+    p.add_argument("--material", default=None, metavar="REF",
+                   help="exact materials-tree path filter; allows material-only requests")
+    p.add_argument("--limit", type=int, default=5)
+    p.add_argument("--offset", type=int, default=0)
+    p.add_argument("--expected-snapshot", default=None)
+    p.add_argument("--expected-observations", default=None,
+                   help="observations digest from the previous page; required "
+                        "when continuing past offset 0")
+    p.set_defaults(func=cmd_material_context)
+
+    p = sub.add_parser("ability-context", help="read the small ability horizon or expand one ability")
+    p.add_argument("ability_id", nargs="?", help="one ability identity to expand")
+    p.add_argument("--limit", type=int, default=12)
+    p.add_argument("--offset", type=int, default=0,
+                   help="page the global horizon or --section evidence; continuations need the previous --expected-snapshot")
+    p.add_argument("--brief", action="store_true",
+                   help="with an ability id: state summary with evidence totals and provenance pointers instead of full history and materials")
+    p.add_argument("--section", choices=("evidence",), default=None,
+                   help="with an ability id: page that section's complete rows instead of the full expansion")
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_ability_context)
+
+    p = sub.add_parser("material-span", help="describe one exact route and optionally inspect local content")
+    p.add_argument("unit_id")
+    p.add_argument("route_id")
+    p.add_argument("--stage", dest="stage_id", default=None,
+                   help="inspect this stage's exact placement; requires --resource-index")
+    p.add_argument("--resource-index", type=int, default=None,
+                   help="zero-based canonical stage resource index; requires --stage")
+    p.add_argument("--extract", action="store_true")
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_material_span)
+
+    p = sub.add_parser("search", help="search records, garden seeds, and inbox filenames; empty query lists rows")
+    p.add_argument("query", help='literal-AND substrings; "" lists every row (combine with --type, e.g. workspace)')
     p.add_argument("--type", default=None, help="optional record type")
     p.add_argument("--limit", type=int, default=50)
     p.add_argument("--content", action="store_true", help="search complete durable note text with exact line snippets")
     p.add_argument("--offset", type=int, default=0)
     p.add_argument("--expected-snapshot", default=None)
+    p.add_argument("--page", action="store_true",
+                   help="paged packet with totals and a snapshot-bound continuation instead of the full array")
     p.set_defaults(func=cmd_search)
 
     p = sub.add_parser("intelligence-scan", help="read-only observation loop: propose candidate investigations")
     p.add_argument("--days", type=int, default=30, help="recency window for changed files (default: 30)")
+    p.add_argument("--feed", default=None,
+                   help="caller-owned JSON session-count file for the count detectors (read-only)")
     p.add_argument("--json", action="store_true", help="machine-readable output")
+    p.add_argument("--brief", action="store_true",
+                   help="at most 5 ranked groups + totals; with --json, the agent entry path")
     p.set_defaults(func=cmd_intelligence_scan)
 
-    p = sub.add_parser("note-read", help="read a bounded segment of a durable note by stable ID")
+    p = sub.add_parser("goal", help="record Aram's explicit decision on a proposed goal")
+    p.add_argument("goal_id", nargs="+", help="exact candidate goal ids from intelligence-scan")
+    g = p.add_mutually_exclusive_group(required=True)
+    g.add_argument("--reject", action="store_true")
+    g.add_argument("--defer", action="store_true")
+    g.add_argument("--close", action="store_true")
+    p.add_argument("--note", default=None, help="why this decision, in Aram's words")
+    p.add_argument("--revisit-on", default=None,
+                   help="for --defer only: let the goal reappear on this YYYY-MM-DD date")
+    p.add_argument("--check", action="store_true", help="preview exact decisions without writing")
+    p.add_argument("--reviewed-sha256", type=sha256_value, default=None,
+                   help="required for a batch: exact decision and ledger hash returned by --check")
+    p.set_defaults(func=cmd_goal)
+
+    p = sub.add_parser("resume", help="one-screen return to study: stage, requirement, evidence, exam")
+    p.add_argument("--json", action="store_true", help="machine-readable dossier")
+    p.add_argument("--study", action="store_true",
+                   help="show the nearest recorded exam's active stage as a read-only study suggestion")
+    p.add_argument("--unit", default=None, metavar="UNIT_ID",
+                   help="with --study: study this exam-module unit explicitly instead of the single active map")
+    p.set_defaults(func=cmd_resume)
+
+    p = sub.add_parser("dossier", help="serve one unit's materialized context bundle")
+    p.add_argument("unit_id", help="unit whose semantic dossier to build or serve")
+    p.add_argument("--json", action="store_true", help="include the full dossier content")
+    p.set_defaults(func=cmd_dossier)
+
+    p = sub.add_parser("semantic", help="evaluate one semantic predicate; the query surface over the semantic layer")
+    p.add_argument("predicate", nargs="?", default=None, help="registered predicate name")
+    p.add_argument("--input", action="append", default=[], metavar="k=v",
+                   help="one predicate input; repeatable (values parse as JSON, else strings)")
+    p.add_argument("--list", action="store_true", help="the registry, with inputs and authority")
+    p.add_argument("--recipe", default=None, metavar="CLASS",
+                   help="worked example procedures for one question class (examples only)")
+    p.set_defaults(func=cmd_semantic)
+
+    p = sub.add_parser("note-read", help="read a bounded segment of a durable note or garden seed by stable ID")
     p.add_argument("note_id")
     p.add_argument("--offset", type=int, default=0, help="zero-based Unicode character offset")
     p.add_argument("--limit", type=int, default=8000, help="maximum characters, bounded to 16000")
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_note_read)
 
-    p = sub.add_parser("inspect", help="inspect one record by stable id")
+    p = sub.add_parser("inbox-read", help="read a bounded segment of one work/inbox file by name")
+    p.add_argument("name", help="file name relative to work/inbox/ (list names with inbox-list)")
+    p.add_argument("--offset", type=int, default=0, help="zero-based Unicode character offset")
+    p.add_argument("--limit", type=int, default=8000, help="maximum characters, bounded to 16000")
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_inbox_read)
+
+    p = sub.add_parser("inbox-list", help="list work/inbox files by name, without reading bytes")
+    p.set_defaults(func=cmd_inbox_list)
+
+    p = sub.add_parser("inspect", help="inspect one record or structural id")
     p.add_argument("id")
     p.add_argument("more_ids", nargs="*", help="inspect up to 20 records from one fresh snapshot")
     p.set_defaults(func=cmd_inspect)
 
-    p = sub.add_parser("related", help="list records related to one stable id")
+    p = sub.add_parser("related", help="list records related to one stable id, ranked with reasons")
     p.add_argument("id")
     p.set_defaults(func=cmd_related)
 
@@ -213,6 +367,11 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--module-id", default=None)
     p.add_argument("--component-id", default=None)
     p.add_argument("--status", default=None)
+    p.add_argument("--compact", action="store_true",
+                   help="bounded summary rows with totals and continuation instead of full unit bodies")
+    p.add_argument("--offset", type=int, default=0)
+    p.add_argument("--limit", type=int, default=20)
+    p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_unit_list)
 
 
@@ -276,8 +435,30 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--target-id", required=True)
     p.add_argument("--provider", default="manual-bundle")
     p.add_argument("--expected-snapshot", default=None)
-    p.add_argument("--request-id", default=None)
+    p.add_argument("--request-id", default=None,
+                   help="optional caller id; must match ^ai-request-[a-z0-9]+(-[a-z0-9]+)*$ "
+                        "(refused before anything is persisted)")
     p.set_defaults(func=cmd_ai_action_prepare)
+
+    p = sub.add_parser("ai-action-append-slices",
+                       help="attach one targeted follow-up slice pass to a prepared request")
+    p.add_argument("--request-id", required=True)
+    p.add_argument("--route-id", required=True)
+    p.add_argument("--start", required=True, type=int,
+                   help="first 1-based PDF page of the continuation range")
+    p.add_argument("--end", required=True, type=int,
+                   help="last 1-based PDF page of the continuation range")
+    p.add_argument("--kind", required=True,
+                   help="evidence gap kind: concept-coverage, prerequisite, notation, "
+                        "derivation, example, exercise or limitation")
+    p.add_argument("--concept-id", action="append", default=None,
+                   help="concept the gap concerns (repeatable)")
+    p.add_argument("--reason", required=True,
+                   help="why exactly these pages are needed")
+    p.add_argument("--material-uri", default=None,
+                   help="required when the route binds several files")
+    p.add_argument("--expected-snapshot", default=None)
+    p.set_defaults(func=cmd_ai_action_append_slices)
 
     p = sub.add_parser("ai-action-import-delivery",
                        help="import and validate an approved delivery directory")
@@ -437,6 +618,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument("--ui-root", default=None)
     p.add_argument("--materials-root", default=None)
+    p.add_argument("--out", default=None,
+                   help="write the full manifest here (atomic; refused inside a "
+                        "backed-up root) and print a short summary instead")
+    p.add_argument("--stdout", action="store_true",
+                   help="print the full manifest to stdout")
     p.add_argument("--json", action="store_true", help=argparse.SUPPRESS)
     p.set_defaults(func=cmd_backup_manifest)
 
@@ -471,6 +657,20 @@ def build_parser() -> argparse.ArgumentParser:
                    help="confirm structurally instead of in prose (used by the app)")
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_capture)
+
+    p = sub.add_parser("inbox-resolve",
+                       help="move one routed inbox drop to archive/inbox/YYYY/ (WORKFLOWS §21)")
+    p.add_argument("name", help="drop name relative to work/inbox/ (list names with inbox-list); "
+                               "one drop, or one file inside a drop folder")
+    p.add_argument("--drop-sha256", type=sha256_value, required=True,
+                   help="SHA-256 of the exact drop read: inbox-read's content_sha256 for a file, "
+                        "its drop_sha256 for a folder")
+    p.add_argument("--routed-to", action="append", required=True,
+                   help="where the drop went (note id, workspace path, source id, receipt id, …); "
+                        "repeatable, at least one required, recorded on the receipt")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_inbox_resolve)
 
     p = sub.add_parser(
         "garden-seed-create",
@@ -512,6 +712,36 @@ def build_parser() -> argparse.ArgumentParser:
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_atlas_question_save)
 
+    p = sub.add_parser("note-analysis-save", help="preserve one source analysis as a durable reference note")
+    p.add_argument("--analysis", required=True, type=json_object)
+    p.add_argument("--body-file", required=True)
+    p.add_argument(
+        "--body-file-sha256", type=sha256_value, default=None,
+        help="SHA-256 of the exact analysis bytes approved for preservation",
+    )
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_note_analysis_save)
+
+    p = sub.add_parser("note-analysis-save-batch", help="preserve up to 20 source analyses atomically under one receipt")
+    p.add_argument("--bundle", required=True, type=json_object,
+                   help='{"notes": [{"analysis": {...}, "body_file": "...", '
+                        '"body_file_sha256": "sha256:..."}]}; every item is '
+                        "validated before any note is written")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_note_analysis_save_batch)
+
+    p = sub.add_parser("note-analysis-prepare", help="stage a batch of source analyses: drafts in, body files plus exact envelope out")
+    p.add_argument("--drafts", required=True,
+                   help="UTF-8 JSON drafts file (or - for stdin): "
+                        '{"notes": [{"id", "title", "path", "binding", "body"}]} '
+                        "with bodies inline and no derived hashes")
+    p.add_argument("--out", required=True,
+                   help="staging directory outside the repository; bodies/ is "
+                        "rebuilt every run, envelope.json is overwritten")
+    p.set_defaults(func=cmd_note_analysis_prepare)
+
     p = sub.add_parser("plan-edit-context", help="read compact plan or one material's edit context")
     p.add_argument("unit_id")
     route = p.add_mutually_exclusive_group()
@@ -519,6 +749,17 @@ def build_parser() -> argparse.ArgumentParser:
                        help="one exact route and its stage overrides")
     route.add_argument("--route-ids", nargs="+", default=None, metavar="ROUTE_ID",
                        help="1 to 20 distinct routes of this unit, in requested order")
+    route.add_argument("--stage-id", default=None,
+                       help="one stage's own flags and placements, without the whole map")
+    p.add_argument("--audit", action="store_true",
+                   help="attach the deterministic unit planning audit to the full context")
+    p.add_argument("--brief", action="store_true",
+                   help="brief preparation form: identities, guards, id inventories, "
+                        "missing evidence, analysis refs, preflight checks, expand commands")
+    p.add_argument("--include-related", action="store_true",
+                   help="with --brief: list the same-source related analysis notes too")
+    p.add_argument("--include-neighbors", action="store_true",
+                   help="with --brief: include the full neighboring-unit source-reuse map")
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_plan_edit_context)
 
@@ -573,7 +814,7 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_unit_map_import)
 
     p = sub.add_parser("module-plan-import",
-                       help="transactionally import a standardized module plan and its units")
+                       help="transactionally import a full module plan or compact existing-unit batch")
     p.add_argument("module_id")
     module_plan_source = p.add_mutually_exclusive_group(required=True)
     module_plan_source.add_argument(
@@ -604,9 +845,99 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument("--check", action="store_true",
                    help="run contract, routing, and shadow-repository validation without writing")
+    p.add_argument("--staged-basis", metavar="UNIT_ID",
+                   help="with --check, print the requested unit's post-package dossier basis without writing")
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
-    p.set_defaults(func=cmd_module_plan_import)
+    p.add_argument(
+        "--apply-reviewed-sha256", type=sha256_value, default=None,
+        metavar="SHA256",
+        help="apply the exact reviewed file bytes through GatewayEnvelopeV2 "
+             "without hand-assembling an envelope",
+    )
+    p.set_defaults(func=cmd_module_plan_import, _parser_factory=build_parser)
+    p.add_argument("--review-report", help="saved --check JSON; required for reviewed apply and exact retries")
+
+    p = sub.add_parser("module-attempt",
+                       help="record one exam attempt fact in the owning module")
+    p.add_argument("module_id")
+    p.add_argument("--termin", required=True, type=int, choices=(1, 2, 3),
+                   help="which termin this attempt is for")
+    p.add_argument("--date", required=True,
+                   help="sitting date (YYYY-MM-DD)")
+    p.add_argument("--result", required=True,
+                   choices=("registered", "withdrawn", "sat", "passed", "failed"),
+                   help="what Aram stated about this termin")
+    p.add_argument("--grade", type=float, default=None,
+                   help="optional grade (1.0-5.0; validation requires result "
+                        "passed unless the module is completed)")
+    p.add_argument("--notes", default=None,
+                   help="optional note kept on the attempt row")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_module_attempt)
+
+    p = sub.add_parser("unit-plan-revise",
+                       help="revise one existing lecture from a compact reviewed patch")
+    p.add_argument("unit_id")
+    unit_revision_source = p.add_mutually_exclusive_group(required=True)
+    unit_revision_source.add_argument(
+        "--file",
+        help="reviewed compact YAML revision for one existing unit",
+    )
+    unit_revision_source.add_argument(
+        "--record",
+        type=json_object,
+        help="inline revision object; the GatewayEnvelopeV2 content-bound form",
+    )
+    p.add_argument(
+        "--file-sha256", type=sha256_value, default=None,
+        help="SHA-256 of the exact revision-file bytes approved for import",
+    )
+    p.add_argument("--check", action="store_true",
+                   help="run contract, routing, and shadow-repository validation without writing")
+    p.add_argument("--staged-basis", metavar="UNIT_ID",
+                   help="with --check, print the post-revision dossier basis without writing")
+    p.add_argument("--report-out", metavar="PATH", default=None,
+                   help="with --check: save the complete check report as UTF-8 JSON "
+                        "outside the repository and print a compact review summary "
+                        "without the sealed envelope instead")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.add_argument(
+        "--apply-reviewed-sha256", type=sha256_value, default=None,
+        metavar="SHA256",
+        help="apply the exact reviewed revision bytes through GatewayEnvelopeV2 "
+             "without hand-assembling an envelope",
+    )
+    p.set_defaults(func=cmd_unit_plan_revise, _parser_factory=build_parser)
+    p.add_argument("--review-report", help="saved --check JSON; required for reviewed apply and exact retries")
+
+    p = sub.add_parser("lineage-restamp",
+                       help="narrow judged lineage reads to per-route digests")
+    p.add_argument("--claim-ids", nargs="+", default=None, metavar="CLAIM_ID",
+                   help="exact reviewed claim ids to stamp (1 or more)")
+    p.add_argument("--claims-sha256", type=sha256_value, default=None,
+                   help="SHA-256 binding the exact reviewed claim list "
+                        "(sorted ids, one per line)")
+    p.add_argument("--check", action="store_true",
+                   help="recompute eligibility (all claims), or verify the "
+                        "plan for --claim-ids; write nothing")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_lineage_restamp, _parser_factory=build_parser)
+    p.add_argument("--review-report", help="saved --check JSON; required for reviewed apply and exact retries")
+
+    p = sub.add_parser("note-create", help="create one durable note from approved bytes")
+    p.add_argument("--note", required=True, type=json_object)
+    p.add_argument("--body-file", required=True)
+    p.add_argument(
+        "--body-file-sha256", type=sha256_value, default=None,
+        help="SHA-256 of the exact note bytes approved for creation",
+    )
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_note_create)
 
     p = sub.add_parser("note-revise",
                        help="replace one existing note after explicit full-file review")
@@ -648,11 +979,75 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument('--assistance', default=None)
     p.add_argument('--tags', default=None)
     p.add_argument('--context', default=None)
-    p.add_argument('--condition', action='append', default=[])
+    p.add_argument('--condition', action='append', default=[],
+                   help='a condition that DID hold for this attempt')
+    p.add_argument('--condition-not-met', action='append', default=[],
+                   help='a condition that did NOT hold; a different fact from '
+                        'silence, which stays unknown')
     p.add_argument('--supersedes', default=None, help='explicitly correct one earlier observation; preserves its bytes')
     p.add_argument('--expected-snapshot', default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_observation_append)
+
+    p = sub.add_parser('stage-result', help='record an untargeted learner result against a unit/stage (no credit)')
+    p.add_argument('--workspace', required=True)
+    p.add_argument('--unit', required=True)
+    p.add_argument('--stage', required=True)
+    p.add_argument('--activity', required=True)
+    p.add_argument('--result', required=True, choices=['correct', 'incorrect', 'partial', 'abandoned'])
+    p.add_argument('--assistance', default=None)
+    p.add_argument('--note', default=None, help='free-text note stored with the result; prose only, never evidence')
+    p.add_argument('--condition', action='append', default=[],
+                   help='a condition label for this attempt; labels only until a target is authored')
+    p.add_argument('--supersedes', default=None, help='explicitly correct one earlier stage result; preserves its bytes')
+    p.add_argument('--expected-snapshot', default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_stage_result)
+
+    p = sub.add_parser('ability-observation-append', help='append one learner-confirmed ability claim')
+    p.add_argument('--workspace', required=True)
+    p.add_argument('--ability', required=True)
+    p.add_argument('--claim', required=True, help='the precise claim Aram confirmed')
+    p.add_argument('--work-ref', required=True, help='pointer to the actual attempt')
+    p.add_argument('--confirmation-ref', required=True, help='pointer to Aram\'s confirmation of this claim')
+    p.add_argument('--activity', required=True)
+    p.add_argument('--result', required=True, choices=['correct', 'incorrect', 'partial', 'abandoned'])
+    p.add_argument('--assistance', required=True)
+    p.add_argument('--condition', action='append', default=[])
+    p.add_argument('--evidence-tag', action='append', default=[])
+    p.add_argument('--condition-not-met', action='append', default=[])
+    p.add_argument('--supersedes', default=None)
+    p.add_argument('--expected-snapshot', default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_ability_observation_append)
+
+    p = sub.add_parser('ability-candidate-append', help='capture a tentative ability connection')
+    p.add_argument('--from-ability', required=True)
+    p.add_argument('--to-ability', required=True)
+    p.add_argument('--kind', required=True, choices=['equivalence', 'extension', 'connection'])
+    p.add_argument('--carries', required=True)
+    p.add_argument('--changes', required=True)
+    p.add_argument('--condition', action='append', default=[])
+    p.add_argument('--source-ref', required=True)
+    p.add_argument('--expected-snapshot', default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_ability_candidate_append)
+
+    p = sub.add_parser('observe', help="record Aram's own evidence directly; the terminal session is the approval")
+    p.add_argument('requirement', help='requirement id from the current study-map stages')
+    p.add_argument('--workspace', default=None, help='active workspace owning the ledger; resolved when omitted')
+    p.add_argument('--activity', required=True)
+    p.add_argument('--result', required=True, choices=['correct', 'incorrect', 'partial', 'abandoned'])
+    p.add_argument('--assistance', default=None)
+    p.add_argument('--tags', default=None)
+    p.add_argument('--note', default=None, help='free-text note stored as the observation context')
+    p.add_argument('--condition', action='append', default=[],
+                   help='a condition that DID hold for this attempt')
+    p.add_argument('--condition-not-met', action='append', default=[],
+                   help='a condition that did NOT hold; a different fact from '
+                        'silence, which stays unknown')
+    p.add_argument('--supersedes', default=None, help='explicitly correct one earlier observation; preserves its bytes')
+    p.set_defaults(func=cmd_observe)
 
 
     p = sub.add_parser("unit-note", help="append one session-level section to a unit working note")
@@ -697,6 +1092,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("unit_id")
     p.add_argument("stage_id")
     p.add_argument("status", choices=("active", "paused", "complete", "skipped", "revisit"))
+    p.add_argument("--progress-summary", default=None,
+                   help="record where work stopped (stored on the stage row, surfaced by resume)")
+    p.add_argument("--progress-next", default=None,
+                   help="record what comes next (requires --progress-summary)")
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_stage_progress)
@@ -731,6 +1130,54 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_source_feedback)
+
+    p = sub.add_parser(
+        "source-intake",
+        help="create a metadata-only source or correct intake-owned fields",
+    )
+    record = p.add_mutually_exclusive_group(required=True)
+    record.add_argument("--file")
+    record.add_argument("--record", type=json_object)
+    p.add_argument("--check", action="store_true",
+                   help="report the field-level diff without writing")
+    p.add_argument("--expected-diff-sha256", default=None, type=sha256_value,
+                   help="diff hash from a check run; apply refuses anything else")
+    p.add_argument("--approve", action="store_true")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_source_intake_record)
+
+    p = sub.add_parser(
+        "collection-entry-revise",
+        help="revise one collection entry's why line",
+    )
+    record = p.add_mutually_exclusive_group(required=True)
+    record.add_argument("--file")
+    record.add_argument("--record", type=json_object)
+    p.add_argument("--check", action="store_true",
+                   help="report the line-level diff without writing")
+    p.add_argument("--expected-diff-sha256", default=None, type=sha256_value,
+                   help="diff hash from a check run; apply refuses anything else")
+    p.add_argument("--approve", action="store_true")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_collection_entry_revise)
+
+    p = sub.add_parser(
+        "source-revise",
+        help="attach verified local material to one existing source",
+    )
+    record = p.add_mutually_exclusive_group(required=True)
+    record.add_argument("--file")
+    record.add_argument("--record", type=json_object)
+    p.add_argument("--check", action="store_true",
+                   help="report the field-level diff without writing")
+    p.add_argument("--expected-diff-sha256", default=None, type=sha256_value,
+                   help="diff hash from a check run; apply refuses anything else")
+    p.add_argument("--approve", action="store_true")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_source_record_revise)
 
     p = sub.add_parser("detour-create", help="record a prerequisite detour with a return stage")
     p.add_argument("unit_id")
@@ -774,6 +1221,12 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("session-end", help="validate, show exact session-owned files, optionally commit/push")
     p.add_argument("--commit-message", default=None)
     p.add_argument("--push", action="store_true")
+    p.add_argument("--session-id", default=None,
+                   help="close this session id (default: LOS_SESSION_ID, else this channel's ledger)")
+    p.add_argument("--channel", default=None,
+                   help="channel ledger to close when no session id is named (default: operator)")
+    p.add_argument("--include-stale", action="store_true",
+                   help="also stage this session's rows older than the stale threshold")
     p.set_defaults(func=cmd_session_end)
 
     p = sub.add_parser("path-note", help="save or append working notes for one path stage")
@@ -795,6 +1248,28 @@ def build_parser() -> argparse.ArgumentParser:
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_path_progress)
 
+    p = sub.add_parser("coordination-section-revise", help="check or revise one reviewed coordination section")
+    p.add_argument("section", choices=("Commitments", "Priorities", "Dependencies", "Deferrals"))
+    p.add_argument("--text", required=True, help="reviewed section text, carried inline")
+    # No type=sha256_value here: a malformed digest must reach the
+    # handler, which refuses naming the real one, instead of dying in
+    # argparse without it.
+    p.add_argument("--expected-content-sha256", default=None,
+                   help="SHA-256 of work/COORDINATION.md from `inspect coordination` "
+                        "(content_sha256); required to apply, omit with --check to preview")
+    p.add_argument("--check", action="store_true", help="show the section diff without writing")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_coordination_section_revise)
+
+    p = sub.add_parser("workspace-next-action", help="replace one active workspace's Next Action section")
+    p.add_argument("workspace_id")
+    p.add_argument("--next-action", required=True,
+                   help="the new Next Action body (envelope-inline, never from stdin)")
+    p.add_argument("--expected-snapshot", default=None)
+    _add_expected_revision_argument(p)
+    p.set_defaults(func=cmd_workspace_next_action)
+
     p = sub.add_parser("path-attach", help="copy handwriting/media into a stage-owned attachment folder")
     p.add_argument("path_id")
     p.add_argument("stage_id")
@@ -809,11 +1284,20 @@ def build_parser() -> argparse.ArgumentParser:
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_path_attach)
 
+    p = sub.add_parser("operations", help="list recent causal operations or explain one request id")
+    p.add_argument("--request-id", default=None,
+                   help="explain one request instead of listing recent operations")
+    p.add_argument("--limit", type=int, default=20,
+                   help="newest operations to list (at most 50)")
+    p.set_defaults(func=cmd_operations)
+
     return parser
 
 
 def main() -> int:
     args = build_parser().parse_args()
+    if args.lock_timeout is not None:
+        os.environ[LOS_LOCK_TIMEOUT_ENV] = str(args.lock_timeout)
     try:
         return args.func(args)
     except StaleDeliveryError as exc:
@@ -822,6 +1306,12 @@ def main() -> int:
     except AIActionError as exc:
         print(f"los: {exc}", file=sys.stderr)
         return 1
+    except StaleSnapshot as exc:
+        # A read whose guards (_snapshot/_print_stable) sit outside any
+        # _refusal try block, e.g. plan-edit-context: a real optimistic-
+        # concurrency conflict, exit 3 like the _refusal-covered reads.
+        print(f"los: {exc}", file=sys.stderr)
+        return 3
     except WriteRefused as exc:
         # Nothing was changed: _atomic_text cleans up its temp file and
         # _write_transaction rolls the set back before re-raising.
@@ -832,6 +1322,15 @@ def main() -> int:
         return 2
     except (MaterialSynthesisError, LegacyArchiveError, MastersPlanningError,
             BackupManifestError, HealthReportError) as exc:
+        print(f"los: {exc}", file=sys.stderr)
+        return 2
+    except ManifestContractError as exc:
+        # Adding an undeclared key to a study map is an ordinary authoring slip,
+        # and the contract check catches it with a genuinely good message: what
+        # mismatched, why an added key is still an interface change, and the two
+        # commands that resolve it. Missing from this tuple, that message
+        # arrived at the end of a 120KB stack trace from `unit-list` and
+        # `health-report`, while `inspect` and `search` answered in one line.
         print(f"los: {exc}", file=sys.stderr)
         return 2
 

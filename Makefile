@@ -12,7 +12,7 @@ VENV   := .venv
 # Homebrew "externally-managed-environment" errors on macOS.
 PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYTHON))
 
-.PHONY: help check warnings views materials inventory verify-materials contract test test-fast bench lint code-check all setup hooks garden status system-check stress
+.PHONY: help check warnings views materials inventory verify-materials contract test test-fast test-group test-affected bench lint code-check all setup setup-lean hooks garden status plan-check projection-check system-check stress clean-derived
 
 help:
 	@echo "make check  - validate the repository (schemas + semantic rules)"
@@ -30,15 +30,21 @@ help:
 	@echo "                (manifest_contract.py) - different contracts, different consumers"
 	@echo "make garden - rebuild views, then point at the Nebula (Garden index)"
 	@echo "make test-fast - run tests that do not load the checked-in repository state"
+	@echo "make test-group G=<area> - run one area group (see tests/GROUPS.md)"
+	@echo "make test-affected [BASE=main] - run the groups touched by this branch"
 	@echo "make bench    - run the read-only benchmark scripts (never a gate, no thresholds)"
 	@echo "make test   - run the complete test suite, including full-repository checks"
 	@echo "make lint   - run the defect-oriented static checks used by CI"
 	@echo "make code-check - verify Core reachability, dependency cycles, and entrypoint direction"
+	@echo "make projection-check - verify the four migrated projections under one snapshot"
+	@echo "make clean-derived - sweep unreferenced derived-state blobs (disposable cache)"
+	@echo "make plan-check - verify a curriculum revision (focused tests, no UI build)"
 	@echo "make system-check - verify Core and the sibling Obsidian UI as one release pair"
 	@echo "make stress - system-check + production/fuzz/concurrency stress + online URL audit"
 	@echo "make all    - check + views + materials + test"
 	@echo "make hooks  - install the canonical Core hooks and the paired pre-push gate"
 	@echo "make setup  - create .venv, install deps, install Git hooks (run once per clone/move)"
+	@echo "make setup-lean - runtime-only .venv for fresh clones (no pytest/ruff; see README)"
 
 check:
 	$(PY) tools/validate.py
@@ -65,6 +71,17 @@ contract:
 	$(PY) tools/schema_contract.py
 	$(PY) tools/manifest_contract.py
 
+# Risk-based verification for a curriculum-only plan revision: full offline
+# validation, the warning gate, the focused curriculum suites, projection
+# regeneration, and a clean diff. Shared Core, schema, gateway, or UI changes
+# still require the full paired `make system-check` release gate.
+plan-check:
+	$(PY) tools/validate.py --compact
+	$(PY) tools/warning_baseline.py --check
+	$(PY) -m pytest -q tests/test_curriculum_v2.py tests/test_unit_plan_revision.py tests/test_module_plan_warning_gate.py tests/test_vnext_boundaries.py
+	$(PY) tools/generate.py
+	git diff --check
+
 garden: views
 	@echo "Garden index rebuilt -> generated/nebula.md"
 
@@ -73,6 +90,20 @@ test:
 
 test-fast:
 	$(PY) -m pytest -q -m "not full_repo"
+
+# One area group only, e.g. `make test-group G=gateway`. Groups are defined in
+# tests/group_map.py and applied as markers by tests/conftest.py.
+test-group:
+	@test -n "$(G)" || { echo "usage: make test-group G=<area>" >&2; exit 2; }
+	$(PY) -m pytest -q -m "$(G)"
+
+# The groups touched by this branch (commits against BASE plus uncommitted
+# changes). A change to shared machinery reruns everything — see tests/GROUPS.md.
+BASE ?= main
+test-affected:
+	files=`$(PY) tools/affected_tests.py --base "$(BASE)"`; \
+	if [ -z "$$files" ]; then echo "affected: no changes detected"; \
+	else $(PY) -m pytest -q $$files; fi
 
 # Discoverability only: the read-only benchmark scripts are noisy by nature,
 # so they are runnable but never a gate and never part of check/CI.
@@ -87,6 +118,12 @@ lint:
 code-check:
 	$(PY) tools/code_reachability.py
 
+projection-check:
+	$(PY) tools/generate.py --shadow-all
+
+clean-derived:
+	$(PY) tools/diagnostics_prune.py --derived-state
+
 # One command answers the question agents repeatedly had to reconstruct by
 # hand: "is the pair I am about to rely on coherent?" It intentionally changes
 # no canonical data. The UI build is deterministic and its own check refuses a
@@ -95,6 +132,7 @@ system-check:
 	$(MAKE) lint
 	$(PY) tools/validate.py --no-report
 	$(PY) tools/warning_baseline.py --check
+	$(MAKE) projection-check
 	@test -f ../obsidian-ui/package.json || { echo "system-check: sibling ../obsidian-ui is missing" >&2; exit 1; }
 # The cross-process recovery test skips itself when the UI is absent, because
 # Core is usable alone. The paired gate is the one place where that skip would
@@ -105,6 +143,7 @@ system-check:
 	@command -v node >/dev/null || { echo "system-check: node is required to run the paired Gateway recovery test" >&2; exit 1; }
 	$(PY) -m pytest -q
 	npm --prefix ../obsidian-ui run check
+	$(PY) tools/verified_pairs.py stamp
 
 # Deliberate deep audit. Routine work stays on `make check`; release work uses
 # `make system-check`; this one command standardizes the rarer, costlier stress
@@ -115,12 +154,42 @@ stress: system-check
 
 all: check views materials test
 
-setup:
-	$(PYTHON) -m venv $(VENV)
+# Viability gate for `setup`: the requested interpreter must run and meet the
+# floor before anything under $(VENV) is touched. Without this, a bogus or
+# too-old PYTHON deleted a healthy .venv before failing (F-s13-verify-01).
+# Keep the floor in sync with requires-python in pyproject.toml.
+check-python:
+	@$(PYTHON) -c 'import sys; sys.exit(0 if sys.version_info[:2] >= (3, 12) else 1)' || { echo "setup: refusing to touch $(VENV): '$(PYTHON)' is not a usable Python >= 3.12"; exit 1; }
+
+# What `setup` installs into the venv (appended to pip's -e flag, so the
+# value must stay space-free for the recursive `setup-lean` call below).
+# `setup-lean` overrides this with the runtime-only spec; a lean venv runs
+# every product command but not the test suite, and the pre-commit hook
+# skips its static checks loudly until ruff is installed (S09b-F3: full
+# .[dev] setup measured ~8x slower warm). Never name it PIP_*: make exports
+# a command-line override into every recipe's environment, and pip reads
+# any PIP_<OPTION> variable as that option's default — so every pip call,
+# including pip's own isolated build-dependency install, also installed
+# `-e .` and `make setup-lean` failed in every fresh clone.
+SETUP_SPEC ?= .[dev]
+setup: check-python
+	@if [ -x "$(VENV)/bin/python" ] && [ "$$($(VENV)/bin/python -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')" = "$$($(PYTHON) -c 'import sys; print(".".join(map(str, sys.version_info[:2])))')" ]; then \
+		echo "setup: reusing $(VENV) ($$($(VENV)/bin/python --version))"; \
+	else \
+		if [ -e "$(VENV)" ]; then echo "setup: removing stale $(VENV) (rebuilding with $$($(PYTHON) --version))"; rm -rf $(VENV); fi; \
+		$(PYTHON) -m venv $(VENV); \
+	fi
 	$(VENV)/bin/python -m pip install --upgrade pip
-	$(VENV)/bin/python -m pip install -e ".[dev]"
+	$(VENV)/bin/python -m pip install "-e$(SETUP_SPEC)"
 	$(MAKE) hooks
 	@echo "setup complete: .venv created, deps installed, hooks active."
+
+# Fresh-clone fast path: product commands work in seconds; run plain `make
+# setup` afterwards for pytest/ruff. On an existing full venv this target
+# does not uninstall anything — it only matters for fresh clones.
+setup-lean:
+	$(MAKE) setup SETUP_SPEC=.
+	@echo "setup-lean complete: runtime-only .venv (no pytest/ruff)."
 
 hooks:
 	install -m 0755 tools/hooks/pre-commit .git/hooks/pre-commit

@@ -76,6 +76,18 @@ contracts:
     severity: error
     test: tests/test_normative_corpus.py
 
+  - declaration: system/contracts/local-attachments.yaml
+    governs: >-
+      Note attachments kept on disk but out of Git (large or private scans),
+      pinned by size and SHA-256. A present file must match its pin; an absent
+      one warns (a CI checkout has none); each pin must be owned by a note's
+      attachments, and Git must neither track nor fail to ignore it.
+    enforced_by: validator
+    checker: learning_os.contracts.local_attachments
+    validator_method: check_local_attachments
+    severity: error
+    test: tests/test_local_attachments.py
+
   - declaration: system/contracts/perimeter.yaml
     governs: >-
       What may exist at the two levels above repository/ — the wrapper root and
@@ -171,16 +183,13 @@ exempt:
       declaration. Enforced by tools/release_pair_receipt.py at generate and
       verify time.
 
-  - path: system/contracts/manifest-v6.schema.json
-    reason: superseded projection schema, retained so an older artifact stays readable.
-
-  - path: system/contracts/manifest-v7.schema.json
-    reason: superseded projection schema, retained so an older artifact stays readable.
-
-  - path: system/contracts/manifest-v8.schema.json
+  - path: system/contracts/manifest-v15.schema.json
     reason: >-
       The current projection schema. Named by manifest-contract.yaml and
       enforced through it at build time, so it is not separately registered.
+      Superseded versioned schemas are not retained; their history lives in
+      Git and in manifest-contract.yaml, and every consumer mirrors only the
+      current version.
 
   - path: system/contracts/contract-register.yaml
     reason: >-

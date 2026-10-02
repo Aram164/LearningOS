@@ -462,6 +462,10 @@ def build(unit: dict, module_id: str, routes_for_unit: list[dict],
         stages.append({
             "id": stage_id,
             "number": number,
+            # The join key, kept: without it a later covers edit orphans
+            # placements and no rule can see it (2026-09-18, UE3 on the L04
+            # Bayes stage after its Bayes coverage was dropped).
+            "knowledge_node_id": str(node["id"]),
             "title": str(node.get("title") or "").strip(),
             "status": "pending",
             "objective": str(node.get("summary") or "").strip(),
@@ -505,17 +509,42 @@ def _manifest(root: Path) -> dict:
     return build_manifest(repo, generated_at, build_backlinks(repo, generated_at))
 
 
-def curation_problems(manifest: dict) -> list[str]:
+def _curated_prefix(unit_id: str) -> str:
+    """The node namespace owned by one unit in this curated workbench table."""
+    slug = unit_id.removeprefix("unit-")
+    if slug.startswith("m2-sad-"):
+        slug = slug.removeprefix("m2-")
+    return f"knowledge-{slug}-"
+
+
+def _curated_keys_for_unit(unit_id: str) -> set[str]:
+    keys = {key for key in NODE_CONCEPTS if key.startswith(_curated_prefix(unit_id))}
+    # These exam-preparation nodes predate the unit's current id.
+    if unit_id == "unit-m2-analysis-exam-prep":
+        keys.update({
+            "knowledge-m2-analysis-calibrate",
+            "knowledge-m2-analysis-anx",
+            "knowledge-m2-analysis-exkurse",
+        })
+    return keys
+
+
+def curation_problems(manifest: dict, unit_ids: list[str] | None = None) -> list[str]:
     """Keep the curated semantic edges attached to live nodes and concepts.
 
     The original workbench script claimed a renamed node would lose its
     curation loudly, but nothing actually checked for stale table keys. This
     check turns that statement into an invariant before any draft is written.
     """
+    units = {str(unit.get("id")): unit for unit in manifest.get("units", []) or []}
+    selected = set(units) if unit_ids is None else set(unit_ids)
+    curated = set(NODE_CONCEPTS) if unit_ids is None else set().union(
+        *(_curated_keys_for_unit(unit_id) for unit_id in selected)
+    )
     live_nodes = {
         str(node.get("id"))
-        for unit in manifest.get("units", []) or []
-        for node in (unit.get("knowledge_map") or {}).get("nodes", []) or []
+        for unit_id in selected
+        for node in (units.get(unit_id, {}).get("knowledge_map") or {}).get("nodes", []) or []
         if isinstance(node, dict) and node.get("id")
     }
     live_concepts = {
@@ -527,9 +556,9 @@ def curation_problems(manifest: dict) -> list[str]:
     }
     problems = [
         f"curated concept mapping names a missing knowledge node: {node_id}"
-        for node_id in sorted(set(NODE_CONCEPTS) - live_nodes)
+        for node_id in sorted(curated - live_nodes)
     ]
-    referenced = {concept_id for values in NODE_CONCEPTS.values() for concept_id in values}
+    referenced = {concept_id for key in curated for concept_id in NODE_CONCEPTS[key]}
     problems.extend(
         f"curated concept mapping names a missing or deprecated concept: {concept_id}"
         for concept_id in sorted(referenced - live_concepts)
@@ -578,6 +607,20 @@ def assembly_problems(unit: dict, routes: list[dict], record: dict) -> list[str]
     return problems
 
 
+def unit_routes(source_map: dict, unit_id: str) -> list[dict]:
+    """The rich routes that reach ``unit_id``.
+
+    A legacy string route (a bare unit id in ``unit_routes``) is still valid
+    canonical data, readable for backward compatibility, but it carries no
+    route fields to assemble from, so it is skipped rather than dereferenced.
+    A unit reached only by legacy routes gets the ordinary "no material routes"
+    refusal.
+    """
+    return [route for entry in source_map.get("sources") or []
+            for route in (entry.get("unit_routes") or [])
+            if isinstance(route, dict) and route.get("unit_id") == unit_id]
+
+
 def _atomic_draft(path: Path, content: str) -> None:
     tmp = path.with_name(f".{path.name}.tmp")
     try:
@@ -607,7 +650,7 @@ def main() -> int:
     wanted = args.unit or [
         u["id"] for u in manifest["units"] if u.get("needs_study_map")
     ]
-    problems = curation_problems(manifest)
+    problems = curation_problems(manifest, wanted)
     drafts: dict[Path, str] = {}
     for unit_id in sorted(wanted):
         unit = units.get(unit_id)
@@ -620,9 +663,7 @@ def main() -> int:
         if module is None or source_map is None:
             problems.append(f"{unit_id}: no projected module or source map")
             continue
-        routes = [route for entry in source_map.get("sources") or []
-                  for route in (entry.get("unit_routes") or [])
-                  if route.get("unit_id") == unit_id]
+        routes = unit_routes(source_map, unit_id)
         if not routes:
             problems.append(f"{unit_id}: no material routes reach it")
             continue

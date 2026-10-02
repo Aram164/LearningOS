@@ -17,16 +17,13 @@
 # These warnings are the measured content debt of CRITIQUE-POINTS §1. Adopting
 # them here defers them; it does not close the point.
 #
-#   python tools/warning_baseline.py --check                 # gate
-#   python tools/warning_baseline.py --show                  # the delta
-#   python tools/warning_baseline.py --update --note "…"     # adopt current
+#   .venv/bin/python tools/warning_baseline.py --check                 # gate
+#   .venv/bin/python tools/warning_baseline.py --show                  # the delta
+#   .venv/bin/python tools/warning_baseline.py --update --note "…"     # adopt current
+#   .venv/bin/python tools/warning_baseline.py --update --ratchet --note "…"  # adopt repairs only
 baseline_version: 1
-recorded: '2026-09-07'
-note: 'Emptied 2026-09-07: all three PERIMETER-* signatures were repaired, not traded.
-  The two shadow PDFs were deleted after re-verifying their hashes against the managed
-  copies, and mml-book.pdf was ingested into materials/ and now resolves as material://source-mml/mml-book.pdf.
-  perimeter.yaml pending_disposition is empty for the same reason. Nothing is deferred
-  here now; a new stray must be declared before it can be tolerated.'
+recorded: '2026-10-02'
+note: 'Ratchet after repairs; refs #79'
 total: 0
 distinct_signatures: 0
 signatures: []

@@ -1,0 +1,58 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/source.record.revise.schema.json",
+  "title": "payload for capability source.record.revise",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [],
+  "properties": {
+    "check": {
+      "type": "boolean"
+    },
+    "expected_diff_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "file": {
+      "type": "string"
+    },
+    "record": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "material": {
+          "type": "string"
+        },
+        "material_sha256": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "evaluations": {},
+        "material_syntheses": {},
+        "dossier_rebases": {}
+      },
+      "additionalProperties": false,
+      "required": [
+        "id"
+      ],
+      "description": "Attaches verified local material and/or replaces evaluations; identity and every intake-owned field stay with source.intake.record."
+    }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "file"
+      ]
+    },
+    {
+      "required": [
+        "record"
+      ]
+    }
+  ]
+}

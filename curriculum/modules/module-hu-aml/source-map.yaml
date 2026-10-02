@@ -4218,103 +4218,6 @@ sources:
       scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course boundary:
       It is optional depth: open it for the named gap, then return to the current deck rather than importing
       the source''s wider syllabus.'
-- source_id: source-ng-coursera
-  role: intuition
-  why: Gentle regression/logistic/GD/kernel explanations; not selected for the L08–L11 neural arc.
-  priority: 23
-  unit_routes:
-  - id: route-5cf858ae016d05f91d008978
-    unit_id: unit-aml-l03
-    title: Ng linear regression with one and multiple variables
-    format: course
-    angle: The gentlest video/course explanation of fitted lines, cost functions, vectorization, and the
-      normal-equation bridge.
-    covers:
-    - knowledge-aml-l03-problem
-    - knowledge-aml-l03-loss
-    - knowledge-aml-l03-solution
-    - knowledge-aml-l03-vectorization
-    depth: intuition
-    scope: complementary
-    locator: 'Machine Learning Specialization, Course 1 ''Supervised Machine Learning: Regression and
-      Classification'', Week 1 ''Linear regression model'' and Week 2 ''Gradient descent in practice'''
-    angle_detail: 'Contribution: The gentlest video/course explanation of fitted lines, cost functions,
-      vectorization, and the normal-equation bridge. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''Ng linear regression with one and multiple variables'' over ''Current L03
-      lecture deck'' when you need this contribution; the neighboring route instead contributes: The 2026
-      scope authority for one-predictor regression, MSE, the analytic optimum, matrix/vector refreshers,
-      vectorization, and the design matrix. Course boundary: It complements the current deck but cannot
-      override the deck''s notation, topic boundary, or examination emphasis.'
-  - id: route-d0e6480de8943d4dc68a3563
-    unit_id: unit-aml-l04
-    title: Ng features, polynomial regression, and regularization
-    format: course
-    angle: The canonical gentle just-add-x-squared explanation, followed by overfitting and regularization
-      at exactly the right introductory level.
-    covers:
-    - knowledge-aml-l04-basis
-    - knowledge-aml-l04-overfitting
-    - knowledge-aml-l04-ridge
-    - knowledge-aml-l04-lasso
-    depth: intuition
-    scope: complementary
-    locator: Machine Learning Specialization, Course 1, Week 2 'Multiple linear regression' and 'Feature
-      scaling', then Week 3 'The problem of overfitting'
-    angle_detail: 'Contribution: The canonical gentle just-add-x-squared explanation, followed by overfitting
-      and regularization at exactly the right introductory level. Depth and prerequisites: It assumes
-      the unit vocabulary but not a completed proof and is meant to make the mechanism explainable before
-      formal derivation. Discriminator: choose ''Ng features, polynomial regression, and regularization''
-      over ''Übung 04 — nonlinear regression and regularization'' when you need this contribution; the
-      neighboring route instead contributes: Worked regression, polynomial features, overfitting, Ridge/Lasso
-      geometry, scikit-learn usage, and the second exercise sheet in one current tutorial deck. Course
-      boundary: It complements the current deck but cannot override the deck''s notation, topic boundary,
-      or examination emphasis.'
-  - id: route-dddb775edaf64654e52ffd26
-    unit_id: unit-aml-l05
-    title: Ng logistic regression and regularization
-    format: course
-    angle: Gentle construction of sigmoid classification, decision boundaries, cost, and regularized logistic
-      regression.
-    covers:
-    - knowledge-aml-l05-classification
-    - knowledge-aml-l05-boundary
-    - knowledge-aml-l05-sigmoid
-    - knowledge-aml-l05-cross-entropy
-    depth: intuition
-    scope: complementary
-    locator: Machine Learning Specialization, Course 1, Week 3 'Classification with logistic regression'
-      and 'Cost function for logistic regression'
-    angle_detail: 'Contribution: Gentle construction of sigmoid classification, decision boundaries, cost,
-      and regularized logistic regression. Depth and prerequisites: It assumes the unit vocabulary but
-      not a completed proof and is meant to make the mechanism explainable before formal derivation. Discriminator:
-      choose ''Ng logistic regression and regularization'' over ''Current L05 lecture deck'' when you
-      need this contribution; the neighboring route instead contributes: The 2026 scope authority, including
-      the full separator-to-sigmoid construction and the slide-by-slide Bernoulli MLE to vectorized cross-entropy
-      derivation. Course boundary: It complements the current deck but cannot override the deck''s notation,
-      topic boundary, or examination emphasis.'
-  - id: route-34e7a26df2c02e415319d40a
-    unit_id: unit-aml-l06
-    title: Ng gradient descent in practice
-    format: course
-    angle: Feature scaling, learning-rate diagnosis, batch updates, and practical convergence checks closely
-      mirror the AML slides.
-    covers:
-    - knowledge-aml-l06-batch-gd
-    - knowledge-aml-l06-rate-scaling
-    - knowledge-aml-l06-stochastic
-    depth: intuition
-    scope: complementary
-    locator: Machine Learning Specialization, Course 1, Week 2 lessons 'Gradient descent in practice'
-      and 'Choosing the learning rate'
-    angle_detail: 'Contribution: Feature scaling, learning-rate diagnosis, batch updates, and practical
-      convergence checks closely mirror the AML slides. Depth and prerequisites: It assumes the unit vocabulary
-      but not a completed proof and is meant to make the mechanism explainable before formal derivation.
-      Discriminator: choose ''Ng gradient descent in practice'' over ''Bonusblatt 03 — gradient descent''
-      when you need this contribution; the neighboring route instead contributes: Conceptual comparison
-      of batch and stochastic descent, preprocessing/scaling, and learning-rate effects. Course boundary:
-      It complements the current deck but cannot override the deck''s notation, topic boundary, or examination
-      emphasis.'
 - source_id: source-cs4780-homeworks
   role: practice
   why: 'Complete local 2017/2018 solution-backed bank: HW1 k-NN, HW2 perceptron, HW3 probability/MLE,
@@ -5998,3 +5901,29 @@ sources:
       flatten, linear, loss, and optimizer step. It is intentionally simpler than the AMLS project and
       should be used as a traceable baseline, not as architecture advice.'
     url: https://github.com/patrickloeber/pytorchTutorial/blob/master/14_cnn.py
+- source_id: source-kamper-logreg
+  role: intuition
+  why: Free university lecture that derives the logistic decision boundary geometrically; replaces the
+    retired enrolment-walled Ng route on the one node with no free intuition-depth survivor.
+  priority: 23
+  unit_routes:
+  - id: route-aml-l05-kamper-boundary
+    unit_id: unit-aml-l05
+    title: Kamper — the decision boundary and the weight vector
+    format: video
+    angle: Derives the separator as the zero-score locus and shows the weight vector perpendicular to
+      it.
+    covers:
+    - knowledge-aml-l05-boundary
+    depth: intuition
+    scope: complementary
+    locator: '"Logistic regression 3: The decision boundary and weight vector", 00:19-01:15 for the boundary
+      as sigmoid(w''x)=0.5 and the orthogonal weight vector'
+    angle_detail: 'This node is the separator geometry — w·x = 0, the sign of the score, the threshold
+      — and it was the only L05 node left without a free intuition-depth route once the enrolment-walled
+      Ng course was retired. Kamper defines the boundary at 00:34 as the values of x where the model is
+      perfectly unsure, ties that to a probability of 0.5 at 00:49 and to the sigmoid of w-transpose-x
+      at 01:06, and shows from 00:19 that the weight vector is always orthogonal to the boundary. A StatQuest
+      logistic video was considered first and rejected: it teaches the S-curve and log-odds and never
+      reaches the geometry.'
+    url: https://www.youtube.com/watch?v=fPT8VeuFRkU

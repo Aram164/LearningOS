@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """The warning policy, made executable.
 
-    python tools/warning_baseline.py --check    # fail on any NEW warning
-    python tools/warning_baseline.py --show     # print the current delta
-    python tools/warning_baseline.py --update --note "…"   # adopt the current set
+    .venv/bin/python tools/warning_baseline.py --check    # fail on any NEW warning
+    .venv/bin/python tools/warning_baseline.py --show     # print the current delta
+    .venv/bin/python tools/warning_baseline.py --update --note "…"   # adopt the current set
+    .venv/bin/python tools/warning_baseline.py --update --ratchet --note "…"   # adopt repairs only
 
 WHY THIS EXISTS
 ---------------
@@ -52,6 +53,16 @@ Membership in either set is by exact warning code only — never a prefix, a
 severity band, or a path heuristic — so an unknown future warning code is
 baseline-managed by default, and every other authored-content warning (a new
 `LOCATOR-VAGUE`, a grown `ROUTE-ANGLE-DETAIL-MISSING`) still fails the gate.
+
+RATCHETING THE BASELINE DOWN
+----------------------------
+A repair (a signature that shrinks) passes the gate but stays in the file at
+its old count, so the same warnings could return unnoticed. `--update
+--ratchet --note "…"` lowers only repaired signatures to their current counts
+(dropping those at zero) and refuses when any signature is new or grown — it
+can never adopt a regression, so it is safe to run after every repair commit.
+`--check` collapses repairs to one summary line with that hint; `--show`
+still lists every repair.
 """
 
 from __future__ import annotations
@@ -70,6 +81,7 @@ from learning_os.warning_baseline import (  # noqa: E402,F401
     collect,
     delta,
     load_baseline,
+    ratchet,
     signatures_from_issues,
     write_baseline,
 )
@@ -85,10 +97,18 @@ def main() -> int:
                       help="print the delta without deciding anything")
     mode.add_argument("--update", action="store_true",
                       help="adopt the current set as the baseline")
+    parser.add_argument("--ratchet", action="store_true",
+                        help="with --update: only lower repaired signatures to "
+                             "their current counts, refusing new or grown ones")
     parser.add_argument("--note", default="",
                         help="why the baseline moved (required with --update)")
     parser.add_argument("--root", default=None)
     args = parser.parse_args()
+
+    if args.ratchet and not args.update:
+        print("warning-baseline: --ratchet needs --update",
+              file=sys.stderr)
+        return 2
 
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
     current, errors = collect(root)
@@ -103,6 +123,24 @@ def main() -> int:
             print("warning-baseline: --update needs --note explaining the move",
                   file=sys.stderr)
             return 2
+        if args.ratchet:
+            try:
+                lowered = ratchet(baseline, current)
+            except ValueError as exc:
+                print(f"warning-baseline: {exc}", file=sys.stderr)
+                print("warning-baseline: --ratchet only lowers repaired "
+                      "signatures; fix the new or grown ones first.",
+                      file=sys.stderr)
+                return 1
+            if lowered == baseline:
+                print("warning-baseline: already ratcheted — the baseline "
+                      "matches the current set.")
+                return 0
+            write_baseline(root, lowered, args.note)
+            print(f"warning-baseline: ratcheted {sum(baseline.values())} → "
+                  f"{sum(lowered.values())} warning(s) across "
+                  f"{len(lowered)} signature(s) — {BASELINE_RELATIVE}")
+            return 0
         write_baseline(root, current, args.note)
         print(f"warning-baseline: adopted {sum(current.values())} warning(s) "
               f"across {len(current)} signature(s) — {BASELINE_RELATIVE}")
@@ -115,13 +153,20 @@ def main() -> int:
     print(f"warning-baseline: {total_after} warning(s) across {len(current)} "
           f"signature(s); baseline {total_before} across {len(baseline)}"
           + (f" (recorded {meta['recorded']})" if meta.get("recorded") else ""))
-    for line in repairs:
-        print(f"  repaired  {line}")
+    if args.show:
+        for line in repairs:
+            print(f"  repaired  {line}")
+        for line in regressions:
+            print(f"  NEW       {line}")
+        return 0
+
+    if repairs:
+        print(f"  {len(repairs)} signature(s) repaired below baseline "
+              f"({total_before} → {total_after}); adopt with "
+              "`.venv/bin/python tools/warning_baseline.py --update "
+              "--ratchet --note \"…\"` (`--show` lists every repair)")
     for line in regressions:
         print(f"  NEW       {line}")
-
-    if args.show:
-        return 0
 
     if errors:
         print(f"\nwarning-baseline: {len(errors)} validation ERROR(s) — "
@@ -136,7 +181,7 @@ def main() -> int:
               "`--update --note \"…\"`.", file=sys.stderr)
         return 1
 
-    print("\nwarning-baseline: OK — zero errors, no new warning signature.")
+    print("warning-baseline: OK — zero errors, no new warning signature.")
     return 0
 
 

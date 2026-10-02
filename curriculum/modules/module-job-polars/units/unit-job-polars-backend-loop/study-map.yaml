@@ -10,6 +10,7 @@ source_plan:
 detours: []
 stages:
 - id: stage-polars-backend-trace-lifecycle
+  knowledge_node_id: knowledge-polars-stratum-lifecycle
   number: 1
   title: Trace capture, logical rewrite, selection, and execution
   status: pending
@@ -43,6 +44,15 @@ stages:
       into the current repository; do not infer unimplemented behavior.
     scope_triage: required-now
     route_id: route-stratum-paper-s09
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'stratum paper - Session 9 architecture route' against the stage 'Trace
+        capture, logical rewrite, selection, and execution'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:71355baf35944dadbcfde2517ba0711766401169670e2200df41c038d7c2e9bb
   - id: resource-note-extract-dataframe-op
     kind: read
     label: extract_dataframe_op dispatch map
@@ -71,6 +81,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-polars-backend-decision-loop
+  knowledge_node_id: knowledge-polars-implementation-decision
   number: 2
   title: Apply the backend implementation decision loop
   status: pending
@@ -103,6 +114,15 @@ stages:
       compare it with Stratum's current dispatch.
     scope_triage: required-now
     route_id: route-python-depth-drills-s09
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Python Depth Drills - Session 9 support route' against the stage
+        'Apply the backend implementation decision loop'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:17454a4bbcd8c5929197f20a77c3e21c29c0f6970452412af966c02f88fa8a10
   - id: resource-note-joinop-loop
     kind: read
     label: JoinOp logical note
@@ -123,6 +143,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-polars-backend-family-transfer
+  knowledge_node_id: knowledge-polars-family-transfer
   number: 3
   title: Transfer the loop across four logical families
   status: pending
@@ -179,6 +200,7 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-polars-backend-regression-policy
+  knowledge_node_id: knowledge-polars-regression-policy
   number: 4
   title: Failure policy and regression gate
   status: pending
@@ -217,6 +239,15 @@ stages:
     vault_path: material://source-python-depth-drills/SHELF.md
     source_id: source-python-depth-drills
     route_id: route-python-depth-drills-s09
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Python Depth Drills - Session 9 support route' against the stage
+        'Failure policy and regression gate'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:605f94ae713fd6dea7b6d7e981c39afb327067caf64b548157f07a220655aa06
   - id: resource-regression-generated-case
     kind: practise
     label: Generated-edge regression lab

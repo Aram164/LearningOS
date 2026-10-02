@@ -13,7 +13,8 @@ that is not both current and binding.
 
 `system/` holds several thousand lines of prose. Not all of it is rules. The
 index at `system/contracts/normative-corpus.yaml` classifies every
-`system/*.md` and `system/adr/*.md` file exactly once — class, status,
+owned `AGENTS.md`, `README.md`, `system/*.md`, `system/adr/*.md`, and
+`system/skills/*/SKILL.md` file exactly once — class, status,
 authority, owner, and its supersession edges — and `make check` fails if a
 document is added without being classified, or if a retired document is still
 marked binding.
@@ -31,7 +32,7 @@ block — `tools/validate.py` exits 0 with them, and the pre-commit hook lets
 them through by design. What is not permitted is a *new* one:
 
 ```bash
-python tools/warning_baseline.py --check
+.venv/bin/python tools/warning_baseline.py --check
 ```
 
 compares the current warning signatures against
@@ -45,13 +46,20 @@ gate by exact code, never by heuristic. A baseline-managed signature that
 shrinks is a repair and passes; it is never restored merely to match the old
 total.
 
+Fail-closed: one validation error anywhere
+in the tree blocks *every* canonical write, even an unrelated capture, and
+reads refuse rather than silently omit what they cannot verify. The error
+always names its file. Fix the defect; do not route around the guard.
+
 ## Start here
 
-Do not recursively discover the repository. Begin with:
+Do not recursively discover the repository. Entry is task-shaped: start
+with the read that answers the task. Use the project environment: run every
+command below with `.venv/bin/python`, and if it does not exist run
+`make setup` once first.
 
 ```bash
-python tools/los.py capabilities --compact --json
-python tools/los.py bootstrap --compact
+.venv/bin/python tools/los.py capabilities --compact --json
 ```
 
 The capability index is discovery only. Before using a capability, fetch its
@@ -59,25 +67,137 @@ complete definition with `capabilities NAME --json`; command details include
 the declared payload schema. The complete catalogue remains available through
 `capabilities --json` when the task needs it.
 
-Compact startup preserves complete material access through `inspect ID`.
+Responses print follow-up reads as bare argument strings with no program
+prefix. Run one as `.venv/bin/python tools/los.py <expansion>` (or
+`.venv/bin/los <expansion>`); ALL-CAPS words are placeholders to fill from
+the response. A printed `--expected-snapshot` pins the follow-up to the same
+records — when it reports a conflict, re-read the parent first.
+
+Pick one entry read; do not stack them:
+
+- A named route → `plan-edit-context UNIT_ID --route-id ROUTE_ID`
+  (or `--route-ids A B ...` for 1–20 routes of one unit in one
+  snapshot-bound call), then `route-patch --check`. The route response
+  already carries the snapshot and exact revision guards; do not read
+  `bootstrap` or the unit brief first.
+- A named stage → `plan-edit-context UNIT_ID --stage-id STAGE_ID` for edits
+  (snapshot and revision guards); `inspect STAGE_ID` answers read-only
+  questions with the projected row plus owners.
+- Unit coverage, source-completeness, or unknown route/stage ids →
+  `plan-edit-context UNIT_ID --brief` first (guards, id inventories,
+  missing evidence, reusable analysis refs, preflight checks, runnable
+  expands), then expand one route, stage, or the full `--audit` form
+  only when the task needs complete bodies. The brief counts
+  neighboring units sharing sources; add `--include-neighbors` only
+  when cross-lecture reuse is the question.
+- An open "what should I work on?" / "what next?" → `bootstrap --brief`,
+  then the named workspace plus `inspect WORKSPACE_ID`; use
+  `inspect coordination` when priorities matter.
+
+`bootstrap --brief` is the open-question entry: guards, resume, owed work,
+deadlines, and runnable expands on one page. `--compact` pages the full
+collections when the brief's expands are not enough. Start with one of
+them, not both as routine startup; expand to the other later only when
+the task needs it. Full `bootstrap` is an explicit bulk read, not routine
+startup.
+
+Decide which read answers the question before reading:
+
+- A named record → `inspect ID`, including structural sub-ids (curriculum
+  and path stages, detours, project nodes, milestones — each answers with
+  its owners). A named stage edit →
+  `plan-edit-context UNIT_ID --stage-id STAGE_ID` for the guards. A named
+  route → `plan-edit-context UNIT_ID --route-id ROUTE_ID` (or the
+  `--route-ids` batch); the route response already carries the snapshot
+  and revision guards. Reach for the unit `--brief` only for unit
+  coverage, source-completeness, or unknown ids.
+- A material question → saved context first (`material-context`), else one
+  exact span (`material-span UNIT_ID ROUTE_ID`); never trawl. A stage's
+  narrower file or page selection uses `--stage STAGE_ID --resource-index N`
+  (the zero-based canonical resource position); both selectors are required.
+  With `--unit`,
+  default results are route-direct only; `--include-related` appends
+  same-source notes labelled `related`, and `--material PATH` filters notes
+  and assessments to one exact materials file. Analysis anchors preview
+  bounded (purpose matches first) with exact totals; the response's
+  `--include-anchors` continuation expands the same page's complete index
+  under the same guards. Changed data refuses the saved expansion instead
+  of silently switching pages: restart from offset 0 then.
+- A new video → title/description and course/playlist membership for provisional
+  intake. Examine with Gemini Notebook only when selected for use, verify
+  against exact video timestamps, then save the bounded analysis; see
+  `system/WORKFLOWS.md` §6a.
+- An open "what should I work on?" / "what next?" → `bootstrap --brief`
+  (the open-question entry above), then the named workspace plus
+  `inspect WORKSPACE_ID`; use `inspect coordination` when priorities matter.
+  The brief reports where study stopped and recorded workspace options; neither
+  chooses the next priority for Aram.
+- `resume --study` offers the nearest recorded exam's study path — its single
+  active map's current stage, or a bounded menu when zero or several maps are
+  active (select one with `resume --study --unit UNIT_ID`) — including one
+  required resource locator when present. It labels registration state and
+  never moves the learner's resume pointer.
+- What changed, what wants a decision → `intelligence-scan --brief --json`:
+  five ranked groups plus totals, the agent entry path. The full queue only
+  for explicit bulk review; inspect a named route or unit first.
+- Coordination decisions and workspace next actions are recorded evidence.
+  Show their source and decision date when present, then compare them with
+  current status, deadlines, and newer decisions. Ask Aram when they conflict
+  or his current intent remains unclear. `resume` shows up to two sourced,
+  dated recorded-aim excerpts beside its stage; they are context, not a new
+  learner choice.
+- A detector candidate is a signal, never an instruction. `los goal <id>
+  --reject|--defer|--close` records Aram's explicit decision; do not choose
+  a disposition on his behalf. `--defer --revisit-on YYYY-MM-DD` hides a goal
+  only until that date; its return to the scan is a candidate, not approval.
+
+Task-shaped entry preserves complete material access through `inspect ID`.
 Its `domain_atlas` glance summarizes all projected notes and shelves across
-domains, independently of pagination; open the domain atlas for the full map.
+domains, independently of pagination; open the domain atlas for the full map
+(on a fresh install run `make setup` first, then `make views` —
+`generated/` starts empty).
 Read several known records with `inspect ID1 ID2 ...` (at most 20) to share one
 fresh projection; the batch preserves requested order, includes a snapshot,
 and refuses missing IDs or changes during the read. Use `note-read` for note
-bodies. Full `bootstrap` is an explicit bulk read, not routine agent startup.
-For plan editing, use `plan-edit-context UNIT_ID`; add `--route-id ROUTE_ID`
-for one material and its stage-specific overrides. Read several known routes
-with `--route-ids A B ...` (1 to 20 distinct routes of one unit, in order) to
-share one snapshot and load; the batch preserves requested order and refuses
-missing, duplicate, or out-of-bounds ids without a partial payload. Shared
-descriptions occur once. Before changing material details, run `route-patch UNIT_ID ROUTE_ID
---changes JSON --check`, then apply the same changes through `route.patch`
-with the returned snapshot and exact revision guards. Full plan imports are
-for structure, ordering, scope, or resource membership changes.
+bodies — durable notes and garden seeds alike, by stable id. Ask governance
+questions through `semantic PREDICATE --input k=v`
+(`semantic --list` names the 23 registered predicates;
+`semantic --recipe CLASS` shows the worked example procedures for one
+question class, examples only) instead of
+re-deriving meaning from scattered YAML.
+For plan editing, start with the focused read: `--route-id ROUTE_ID`
+(or the `--route-ids` batch) for one material and its stage-specific
+overrides, `--stage-id STAGE_ID` for one stage's own flags and placements
+instead of the whole map. Each carries its snapshot and revision guards.
+Read several known routes with `--route-ids A B ...` (1 to 20 distinct
+routes of one unit, in order) to share one snapshot and load; the batch
+preserves requested order and refuses missing, duplicate, or out-of-bounds
+ids without a partial payload. Shared descriptions occur once. Start with
+`plan-edit-context UNIT_ID --brief` only for unit coverage,
+source-completeness, or unknown ids: guards, id inventories, missing
+evidence, reusable analysis refs, preflight checks, and runnable expand
+commands.
+The brief's `unit_audit.synthesis.replacement_required_if_evidential_routes_change`
+reports whether an existing dossier needs replacement if a proposed route change
+alters evidence; `fresh` reports the dossier's current validity separately.
+The actual revision preflight decides whether the proposed change is evidential.
+Universe questions still need the full unit context. Before changing
+material details, run `route-patch UNIT_ID ROUTE_ID --changes JSON --check`,
+then apply the same changes through `route.patch` with the returned
+snapshot and exact revision guards. Full plan imports are for structure,
+ordering, scope, or resource membership changes.
 Continue a summary page with its returned offset and snapshot. Read saved
 reasoning with `note-read NOTE_ID` (bounded Unicode-character segments) and
 search beyond note summaries with `search QUERY --type note --content`.
+Read a stage's working-note content from its parent map: `inspect
+STUDY_MAP_ID` carries every stage's `notes_text` (`inspect STAGE_ID` does
+not resolve stages). The `notes_updated` on those stages is the note file's
+last-commit date, not the write date — uncommitted gateway writes do not
+move it. List inbox drops with `inbox-list`, then read one with
+`inbox-read NAME` (bounded segments of one `work/inbox/` file by name;
+binary drops refuse). `search` without
+`--content` matches records, garden seeds, and inbox filenames, so all
+three are discoverable without reading files.
 Continuation reads require the previous response's `--expected-snapshot`;
 changed content is a restart, never a silently mixed result.
 
@@ -92,7 +212,38 @@ components, units, study maps, stages, source maps, topics, joins, progress,
 resume pointer, structured academic deadlines (registered attempts, available
 sittings, and registration windows), and the Future Master's Planning boundary. Interfaces must not reconstruct
 application state by parsing canonical Markdown or YAML. Use `list-*`,
-`inspect`, `search`, and `related` for targeted reads.
+`inspect`, `search`, and `related` for targeted reads. Discover units
+with exact filters through `unit-list --compact --module-id MODULE_ID`,
+select an ID, then `inspect ID` for detail; continuations repeat the
+filters with the returned offset and snapshot. `search` without
+`--content` conjoins whitespace-separated substrings per row — every term
+must occur somewhere in the row — unranked and without snippets, so short
+stems collide and natural phrasing often returns nothing. An empty answer
+names per-term hit counts on stderr, so the eliminating term is visible.
+An empty query lists every row instead of matching: `search "" --type
+workspace` is the workspace list, and the same holds for every other
+record family, garden seeds, and inbox filenames (up to `--limit`).
+`related ID`
+walks one hop over the record's own declared edges plus the manifest's
+backlink tables in both directions, so membership in one direction always
+implies the reverse edge. Results rank by connection strength (more
+distinct edges first), then recorded stage use-evidence per source
+(positive first, mismatch last, as in material-context), then stable id;
+each result names the edges that produced it in `via`. A concept answers
+the units whose stages tag it, and a unit its stages' concepts, each edge
+reasoned by its stage (`stage-concept:<stage-id>` in `via`). Existing analyses
+of a source answer here too: `related SOURCE_ID` lists the notes
+analysing it (labelled `analyses` in `via`); `material-context` stays the
+need-shaped query path. Page a long
+metadata result with `search QUERY --type TYPE --page` and continue with
+the returned `--offset` and `--expected-snapshot`; the plain array
+response keeps its existing shape for explicit bulk reads. Discover
+abilities through the bounded `ability-context` horizon first —
+`--limit`/`--offset` with the previous `--expected-snapshot` past the
+first page — and expand one known ID with `ability-context ABILITY_ID`:
+`--brief` for state and connection checks (bounded correction/conflict
+examples with exact totals), `--section evidence` for the complete
+observation ledger, per-stage expansions for materials.
 
 ## Product hierarchy
 
@@ -150,7 +301,7 @@ Skills and projects use modules and units without false academic metadata.
 12. Every app mutation carries the current manifest snapshot. On conflict,
     reload rather than overwrite.
 13. Validate after authored changes. Acceptance requires zero errors and no new
-    or grown warning signature (`python tools/warning_baseline.py --check`).
+    or grown warning signature (`.venv/bin/python tools/warning_baseline.py --check`).
     Baseline-exempt operational and clock-derived advisories stay visible and
     never block; see "What 'clean' means" above.
 14. Source completeness is mandatory. Every learning source named by an
@@ -165,6 +316,7 @@ Skills and projects use modules and units without false academic metadata.
     creation templates.
 16. A plan is created **and revised** through the declared capabilities —
     `module.plan.import` for a module's source map and its units,
+    `unit.plan.revise` for one existing unit's reviewed material revision,
     `unit.map.import` for one unit's study map, or `route.patch` for one
     existing route's descriptive material fields — never by writing the canonical
     file directly. Drafting happens outside the repository
@@ -192,12 +344,18 @@ Record actual choices in `source_selections`. If ordered tracking would help,
 the unit may then have at most one current study map using only those choices.
 Work in its stages while preserving independent state for every other unit.
 
+These are gateway capabilities: `unit.source-selection.set`, `unit.note.append`,
+`stage.progress.update`, `source.feedback.record`, `detour.create` (named
+commands `unit-source-selection`, `unit-note`, `stage-progress`,
+`source-feedback`, `detour-create`). Run bare, a named command never writes:
+every canonical write refuses without a GatewayEnvelopeV2. Read the payload
+schema, seal one envelope with `tools/seal_envelope.py --capability NAME
+--payload @PAYLOAD.json --key UNIQUE-KEY --guards auto` — guard derivation
+is the default path, WORKFLOWS §25c — then submit it:
+
 ```bash
-python tools/los.py unit-source-selection UNIT_ID SOURCE_ID LOCATOR select --purpose "Why this angle fits"
-python tools/los.py unit-note UNIT_ID --text "..." --stage-id STAGE_ID --expected-snapshot SNAPSHOT
-python tools/los.py stage-progress UNIT_ID STAGE_ID complete --expected-snapshot SNAPSHOT
-python tools/los.py source-feedback UNIT_ID STAGE_ID SOURCE_ID helpful --expected-snapshot SNAPSHOT
-python tools/los.py detour-create UNIT_ID STAGE_ID --title "Gap" --classification required-now --expected-snapshot SNAPSHOT
+.venv/bin/python tools/los.py capabilities stage.progress.update --json
+.venv/bin/python tools/los.py capability stage.progress.update --payload-file ENVELOPE.json
 ```
 
 `unit-source-selection` accepts only a rich material route already exposed on
@@ -213,12 +371,20 @@ maps, complete rich source routing, optional study maps, and workspace joins), f
 [`PLAN-CREATION-SOP.md`](PLAN-CREATION-SOP.md). Complete its material-coverage
 audit, build from the canonical template, and require the no-write gate
 `.venv/bin/python tools/los.py module-plan-import MODULE_ID --file PLAN.yaml
---check` to pass before applying the same package with `--expected-snapshot`.
-The gateway never deletes units or creates durable notes.
+--check` to pass before applying the same package through the
+`module.plan.import` capability (WORKFLOWS §25a).
+For several existing units, the same command accepts the compact
+`unit_revisions[]` shape in `system/templates/module-plan-revise.template.yaml`;
+it assembles unchanged records internally and keeps the same guarded import.
+`module-plan-import` never deletes units and never creates durable notes; the
+capabilities that do create durable notes are `note.create` (one general
+durable note, with atomic succession), `note.analysis.save` (one source
+analysis), `note.analysis.save_batch` (up to 20 source analyses atomically),
+and `atlas.question.save` (learner questions).
 
 An explicitly reviewed semantic replacement of one existing durable note uses
-`los note-revise NOTE_ID --file REVISED.md --approve --expected-snapshot
-SNAPSHOT`. It preserves the note's ID, path, and role; moves, merges, splits,
+the `note.revise` capability (named command `note-revise NOTE_ID --file
+REVISED.md`). It preserves the note's ID, path, and role; moves, merges, splits,
 and role changes remain outside this capability.
 
 A stage owns its working note, attachments, exact resources, source-use
@@ -240,7 +406,20 @@ excluded. Commit and optional push occur only after explicit confirmation.
 
 Stage-specific learning belongs in its stage note. Unrelated quick capture goes
 to `work/inbox/`. A deliberately half-formed idea that should gestate goes to
-`knowledge/garden/`. The operator, not the learner, handles filing.
+`knowledge/garden/`. The operator, not the learner, handles filing. Every one
+of these writes goes through a GatewayEnvelopeV2 built per WORKFLOWS §25c.
+When Aram starts a message with `log:`, treat the following text as an explicit
+request to capture it verbatim. If the stage was explicitly identified in the
+current conversation, append it to that stage's working note through
+`stage.note.write`; otherwise use `capture.create` for the inbox. Report the
+destination and receipt. The capture does not imply progress or mastery and
+does not move the resume pointer.
+
+Agent friction — an agent's own observation about navigating or changing
+LearningOS — is not a learner capture: record it directly in
+`work/complaints/` (see its README), never in the inbox. A routed inbox
+drop leaves through `inbox.resolve`, naming where it went (WORKFLOWS
+§21); the inbox trends toward empty.
 
 Read the applicable platform adapter, then the task-relevant sections of
 `system/ARCHITECTURE.md`, `system/WORKFLOWS.md`, and the schemas/contracts they

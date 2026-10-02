@@ -4,13 +4,21 @@ from __future__ import annotations
 
 import copy
 import json
+import re
+import shlex
 import subprocess
 import sys
 from pathlib import Path
 
 import pytest
 import yaml
-from gateway_helpers import approved_v2_cli, file_sha256, request_artifact_id
+from gateway_helpers import (
+    approved_v2_cli,
+    approved_v2_envelope,
+    file_sha256,
+    request_artifact_id,
+    run_v2_capability,
+)
 from repo_builders import _add_material_overview, add_curriculum, run_los, write_yaml
 
 from learning_os.contracts.manifest_contract import declared_version
@@ -156,6 +164,27 @@ def test_a_blocked_sole_workspace_cannot_leave_its_unit_ready(mini_repo):
     assert _lifecycle_errors(mini_repo) == {"LIFECYCLE-BLOCKED-UNIT", "LIFECYCLE-BLOCKED-MAP"}
 
 
+@pytest.mark.parametrize("malformed", [[{"id": "workspace-demo"}], "not-a-list"])
+def test_malformed_unit_workspace_ids_are_a_named_error_not_a_crash(mini_repo, malformed):
+    """Malformed workspace_ids are schema errors naming the unit file;
+    the reference and lifecycle rules must not crash or fan out on them
+    (synthetic authoring campaign D2: TypeError in validate, status and the
+    import preflight, naming no file)."""
+    add_curriculum(mini_repo)
+    _set_workspace_status(mini_repo, "blocked")  # reaches the lifecycle rule too
+    unit_path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+    unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
+    unit["workspace_ids"] = malformed
+    write_yaml(unit_path, unit)
+
+    issues = validate(load_repo(mini_repo))
+
+    named = [i for i in issues if i.severity == "E"
+             and "units/unit-demo-l01/unit.yaml" in i.path]
+    assert named, [str(i) for i in issues if i.severity == "E"]
+    assert not any(i.code == "REF-WORKSPACE" for i in issues), issues
+
+
 def test_pausing_the_unit_and_map_with_the_workspace_is_coherent(mini_repo):
     add_curriculum(mini_repo)
     _set_workspace_status(mini_repo, "blocked")
@@ -208,17 +237,324 @@ def test_manifest_v2_exposes_full_curriculum_and_reverse_indexes(mini_repo):
     assert manifest["indexes"]["source_to_units"] == {"source-demo-book": ["unit-demo-l01"]}
     assert manifest["resume_pointer"]["stage_id"] == "stage-demo"
     assert manifest["progress"]["module-demo"]["stages_total"] == 1
+    # The 2.-PZ window closed 2026-09-10, so it leaves the actionable
+    # list; the elapsed termin-3 sitting with no attempt stays visible as
+    # unrecorded instead of silently dropping out.
     assert manifest["academic_deadlines"] == [
-        {"kind": "registration-window", "start_date": "2026-08-31",
-         "end_date": "2026-09-10", "label": "2.-PZ Anmeldung",
-         "modules": [{"module_id": "module-demo", "title": "Demo Module",
-                      "action": "Register via AGNES.", "termins": [2]}]},
+        {"kind": "exam", "start_date": "2000-01-01", "end_date": "2000-01-01",
+         "module_id": "module-demo", "title": "Demo Module", "termin": 3,
+         "label": "Elapsed sitting with no attempt", "time": None, "notes": None,
+         "registration_state": "unrecorded"},
         {"kind": "exam", "start_date": "2026-10-09", "end_date": "2026-10-09",
          "module_id": "module-demo", "title": "Demo Module", "termin": 2,
          "label": "2. Termin", "time": "13:00-16:00", "notes": None,
          "registration_state": "registered"},
     ]
-    assert "Elapsed unregistered sitting" not in json.dumps(manifest["academic_deadlines"])
+
+
+# ------------------------------------------------- module.attempt.record (#90)
+
+
+def _demo_module_path(mini_repo):
+    return mini_repo / "curriculum/modules/module-demo/module.yaml"
+
+
+def _read_demo_module(mini_repo):
+    return yaml.safe_load(_demo_module_path(mini_repo).read_text(encoding="utf-8"))
+
+
+def _deadline_rows(mini_repo):
+    repo = load_repo(mini_repo)
+    assert [issue for issue in validate(repo) if issue.severity == "E"] == []
+    manifest = json.loads(generate_all(repo, "T1")["manifest.json"])
+    return manifest["academic_deadlines"]
+
+
+def test_module_attempt_records_a_registration_visible_on_every_read(mini_repo):
+    """One envelope, no plan package: every read reports the sitting as registered."""
+    import datetime as _dt
+
+    add_curriculum(mini_repo)
+    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
+    module = _read_demo_module(mini_repo)
+    module["examination"]["sittings"][1]["date"] = date
+    module["attempts"] = [att for att in module["attempts"] if att.get("termin") != 2]
+    write_yaml(_demo_module_path(mini_repo), module)
+
+    applied = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "2", "--date", date, "--result", "registered",
+        artifact_ids=["module-demo"], idempotency_key="attempt-e2e-001")
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    result = gateway_result(applied)
+    assert result["attempt"] == {"termin": 2, "date": date, "result": "registered"}
+    receipt = yaml.safe_load((mini_repo / result["receipt_path"]).read_text())
+    assert {row["path"] for row in receipt["writes"]} == {
+        "curriculum/modules/module-demo/module.yaml"}
+    stored = _read_demo_module(mini_repo)
+    assert {"termin": 2, "date": date, "result": "registered"} in stored["attempts"]
+
+    rows = [row for row in _deadline_rows(mini_repo) if row.get("kind") == "exam"]
+    mine = next(row for row in rows if row["termin"] == 2)
+    assert (mine["start_date"], mine["registration_state"]) == (date, "registered")
+
+    study = run_los(mini_repo, "resume", "--study", "--json")
+    assert study.returncode == 0, study.stderr
+    option = json.loads(study.stdout)["study_option"]
+    assert (option["exam_date"], option["registration_state"]) == (date, "registered")
+
+    brief = run_los(mini_repo, "bootstrap", "--brief")
+    assert brief.returncode == 0, brief.stderr
+    brows = [row for row in json.loads(brief.stdout)["academic_deadlines"]
+             if row.get("termin") == 2]
+    assert [(row["start_date"], row["registration_state"]) for row in brows] == [
+        (date, "registered")]
+
+    status = run_los(mini_repo, "status", "--json")
+    assert status.returncode == 0, status.stderr
+    spine = json.loads(status.stdout)["exam_spine"]
+    assert {"date": date, "module_id": "module-demo",
+            "title": "Demo Module", "termin": 2} in spine
+
+
+def test_module_attempt_updates_the_same_termin_and_maps_sat(mini_repo):
+    add_curriculum(mini_repo)
+    applied = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "2", "--date", "2026-10-09", "--result", "sat",
+        "--notes", "sat, awaiting grade",
+        artifact_ids=["module-demo"], idempotency_key="attempt-sat-001")
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    stored = _read_demo_module(mini_repo)
+    assert [att for att in stored["attempts"] if att.get("termin") == 2] == [
+        {"termin": 2, "date": "2026-10-09", "result": "sat",
+         "notes": "sat, awaiting grade"}]
+    rows = [row for row in _deadline_rows(mini_repo) if row.get("kind") == "exam"]
+    assert next(row for row in rows if row["termin"] == 2)["registration_state"] == "sat"
+
+
+def test_module_attempt_records_passed_with_grade(mini_repo):
+    add_curriculum(mini_repo)
+    applied = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "2", "--date", "2026-10-09", "--result", "passed",
+        "--grade", "2.3",
+        artifact_ids=["module-demo"], idempotency_key="attempt-grade-001")
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    stored = _read_demo_module(mini_repo)
+    assert [att for att in stored["attempts"] if att.get("termin") == 2] == [
+        {"termin": 2, "date": "2026-10-09", "result": "passed", "grade": 2.3}]
+
+
+def test_elapsed_unrecorded_sitting_settles_once_recorded(mini_repo, monkeypatch):
+    import datetime as _dt
+    from types import SimpleNamespace
+
+    from learning_os.genout import modules_view
+
+    add_curriculum(mini_repo)
+    module = _read_demo_module(mini_repo)
+    module["attempts"] = [att for att in module["attempts"] if att.get("termin") != 2]
+    write_yaml(_demo_module_path(mini_repo), module)
+
+    class FrozenDate(_dt.date):
+        @classmethod
+        def today(cls):
+            return cls.fromisoformat("2026-10-10")
+
+    # Freeze only this producer's clock, as the sitting-expiry tests do.
+    monkeypatch.setattr(modules_view, "_dt", SimpleNamespace(date=FrozenDate))
+    rows = modules_view._academic_deadlines(load_repo(mini_repo))
+    mine = next(row for row in rows if row.get("termin") == 2)
+    assert (mine["start_date"], mine["registration_state"]) == ("2026-10-09", "unrecorded")
+
+    applied = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "2", "--date", "2026-10-09", "--result", "withdrawn",
+        artifact_ids=["module-demo"], idempotency_key="attempt-settle-001")
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    rows = modules_view._academic_deadlines(load_repo(mini_repo))
+    assert next(row for row in rows if row.get("termin") == 2)[
+        "registration_state"] == "withdrawn"
+
+
+def test_withdrawal_deadline_row_appears_and_disappears(mini_repo):
+    add_curriculum(mini_repo)
+    module = _read_demo_module(mini_repo)
+    # Clock-independent: move the sitting far ahead with its deadline.
+    module["examination"]["sittings"][1]["date"] = "2099-02-01"
+    module["examination"]["sittings"][1]["withdrawal_deadline"] = "2099-01-05"
+    module["attempts"] = [att for att in module["attempts"] if att.get("termin") != 2]
+    write_yaml(_demo_module_path(mini_repo), module)
+
+    rows = [row for row in _deadline_rows(mini_repo)
+            if row.get("kind") == "withdrawal-deadline"]
+    assert rows == [{
+        "kind": "withdrawal-deadline", "start_date": "2099-01-05",
+        "end_date": "2099-01-05", "module_id": "module-demo",
+        "title": "Demo Module", "termin": 2,
+        "label": "2. Termin withdrawal deadline",
+        "registration_state": "unregistered"}]
+
+    registered = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "2", "--date", "2099-02-01", "--result", "registered",
+        artifact_ids=["module-demo"], idempotency_key="attempt-wd-001")
+    assert registered.returncode == 0, registered.stdout + registered.stderr
+    rows = [row for row in _deadline_rows(mini_repo)
+            if row.get("kind") == "withdrawal-deadline"]
+    assert [row["registration_state"] for row in rows] == ["registered"]
+
+    withdrawn = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "2", "--date", "2099-02-01", "--result", "withdrawn",
+        artifact_ids=["module-demo"], idempotency_key="attempt-wd-002")
+    assert withdrawn.returncode == 0, withdrawn.stdout + withdrawn.stderr
+    rows = [row for row in _deadline_rows(mini_repo)
+            if row.get("kind") == "withdrawal-deadline"]
+    assert rows == []
+    exams = [row for row in _deadline_rows(mini_repo) if row.get("kind") == "exam"]
+    assert next(row for row in exams if row["termin"] == 2)[
+        "registration_state"] == "withdrawn"
+
+    # A passed deadline never projects, even with no attempt recorded.
+    module = _read_demo_module(mini_repo)
+    module["attempts"] = [att for att in module["attempts"] if att.get("termin") != 2]
+    module["examination"]["sittings"][1]["withdrawal_deadline"] = "2000-01-01"
+    write_yaml(_demo_module_path(mini_repo), module)
+    assert [row for row in _deadline_rows(mini_repo)
+            if row.get("kind") == "withdrawal-deadline"] == []
+
+
+@pytest.mark.parametrize("status", ["archived", "dropped"])
+def test_retired_modules_contribute_no_deadline_rows(mini_repo, status):
+    add_curriculum(mini_repo)
+    module = _read_demo_module(mini_repo)
+    module["status"] = status
+    # An open window and a registered attempt would both project rows for
+    # an active module; retirement must suppress all of them.
+    module["examination"]["registration_windows"].append(
+        {"opens": "2026-01-01", "closes": "2099-01-01",
+         "label": "Open window", "termins": [2]})
+    write_yaml(_demo_module_path(mini_repo), module)
+    assert _deadline_rows(mini_repo) == []
+
+
+def test_open_registration_window_stays_while_closed_leaves(mini_repo):
+    add_curriculum(mini_repo)
+    module = _read_demo_module(mini_repo)
+    module["examination"]["registration_windows"].append(
+        {"opens": "2026-01-01", "closes": "2099-01-01",
+         "label": "Open window", "action": "Register.", "termins": [2]})
+    write_yaml(_demo_module_path(mini_repo), module)
+    windows = [row for row in _deadline_rows(mini_repo)
+               if row.get("kind") == "registration-window"]
+    assert [(row["label"], row["start_date"], row["end_date"]) for row in windows] == [
+        ("Open window", "2026-01-01", "2099-01-01")]
+
+
+def test_module_attempt_bare_cli_refuses(mini_repo):
+    add_curriculum(mini_repo)
+    before = _demo_module_path(mini_repo).read_bytes()
+    proc = run_los(mini_repo, "module-attempt", "module-demo",
+                   "--termin", "2", "--date", "2026-10-09", "--result", "registered")
+    assert proc.returncode == 2
+    assert "GatewayEnvelopeV2" in proc.stderr
+    assert _demo_module_path(mini_repo).read_bytes() == before
+
+
+@pytest.mark.parametrize("argv,match", [
+    (["module-ghost", "--termin", "2", "--date", "2026-10-09",
+      "--result", "registered"], "module not found"),
+    (["module-demo", "--termin", "2", "--date", "10/09/2026",
+      "--result", "registered"], "must be an ISO date"),
+    (["module-demo", "--termin", "2", "--date", "2026-10-09",
+      "--result", "registered", "--grade", "6.0"], "between 1.0 and 5.0"),
+    (["module-demo", "--termin", "4", "--date", "2026-10-09",
+      "--result", "registered"], "invalid choice"),
+    (["module-demo", "--termin", "2", "--date", "2026-10-09",
+      "--result", "maybe"], "invalid choice"),
+])
+def test_module_attempt_usage_errors_refuse(mini_repo, argv, match):
+    add_curriculum(mini_repo)
+    before = _demo_module_path(mini_repo).read_bytes()
+    proc = run_los(mini_repo, "module-attempt", *argv)
+    assert proc.returncode == 2, proc.stderr
+    assert match in proc.stderr
+    assert _demo_module_path(mini_repo).read_bytes() == before
+
+
+def test_module_attempt_grade_without_passed_refuses(mini_repo):
+    add_curriculum(mini_repo)
+    before = _demo_module_path(mini_repo).read_bytes()
+    refused = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "2", "--date", "2026-10-09", "--result", "registered",
+        "--grade", "1.3",
+        artifact_ids=["module-demo"], idempotency_key="attempt-nograde-001")
+    assert refused.returncode == 2
+    assert "MOD-GRADE" in gateway_error(refused)
+    assert _demo_module_path(mini_repo).read_bytes() == before
+
+
+def test_module_attempt_out_of_order_refuses(mini_repo):
+    add_curriculum(mini_repo)
+    settled = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "2", "--date", "2026-10-09", "--result", "withdrawn",
+        artifact_ids=["module-demo"], idempotency_key="attempt-order-000")
+    assert settled.returncode == 0, settled.stdout + settled.stderr
+    before = _demo_module_path(mini_repo).read_bytes()
+    refused = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "3", "--date", "2026-01-01", "--result", "withdrawn",
+        artifact_ids=["module-demo"], idempotency_key="attempt-order-001")
+    assert refused.returncode == 2
+    assert "MOD-ORDER" in gateway_error(refused)
+    assert _demo_module_path(mini_repo).read_bytes() == before
+
+
+def test_module_attempt_registered_must_be_last_refuses(mini_repo):
+    add_curriculum(mini_repo)
+    before = _demo_module_path(mini_repo).read_bytes()
+    refused = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "3", "--date", "2027-02-01", "--result", "registered",
+        artifact_ids=["module-demo"], idempotency_key="attempt-last-001")
+    assert refused.returncode == 2
+    assert "MOD-REGISTERED" in gateway_error(refused)
+    assert _demo_module_path(mini_repo).read_bytes() == before
+
+
+def test_module_attempt_unknown_result_refuses_before_any_write(mini_repo):
+    add_curriculum(mini_repo)
+    before = _demo_module_path(mini_repo).read_bytes()
+    envelope = approved_v2_envelope(
+        mini_repo, capability="module.attempt.record",
+        payload={"module_id": "module-demo", "termin": 2,
+                 "date": "2026-10-09", "result": "maybe"},
+        artifact_ids=["module-demo"], idempotency_key="attempt-unknown-001")
+    refused = run_v2_capability(mini_repo, envelope)
+    assert refused.returncode == 2
+    assert "invalid payload" in gateway_error(refused)
+    assert _demo_module_path(mini_repo).read_bytes() == before
+
+
+def test_module_attempt_stale_revision_refuses(mini_repo):
+    from learning_os.contracts.gateway import intent_sha256
+
+    add_curriculum(mini_repo)
+    before = _demo_module_path(mini_repo).read_bytes()
+    envelope = approved_v2_envelope(
+        mini_repo, capability="module.attempt.record",
+        payload={"module_id": "module-demo", "termin": 2,
+                 "date": "2026-10-09", "result": "sat"},
+        artifact_ids=["module-demo"], idempotency_key="attempt-stale-001")
+    envelope["expected_revisions"] = {"module-demo": 99}
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    refused = run_v2_capability(mini_repo, envelope)
+    assert refused.returncode == 3
+    assert _demo_module_path(mini_repo).read_bytes() == before
 
 
 def test_non_academic_module_needs_no_institution_or_semester(mini_repo):
@@ -285,6 +621,120 @@ def test_stage_feedback_detour_and_progress_are_unit_scoped(mini_repo):
     repo = load_repo(mini_repo)
     assert repo.study_maps["study-map-demo-l01"].data["status"] == "ready-to-shelve"
     assert repo.units["unit-demo-l01"].data["status"] == "ready-to-shelve"
+
+
+def test_stage_progress_offers_the_observation_verb(mini_repo):
+    """Completing a stage with an authored requirement names the exact
+    ``los observe`` invocation — a suggestion in the receipt, never a
+    second write."""
+    from learning_os.commands.stage import _observe_offer
+
+    add_curriculum(mini_repo)
+    assert _observe_offer("unit-demo-l01", {"id": "stage-demo"}) == {}
+    staged = yaml.safe_load(
+        (mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml")
+        .read_text(encoding="utf-8"))
+    staged["stages"][0]["concepts"] = ["concept-expected-value"]
+    staged["stages"][0]["runtime_target"] = {
+        "concept": "concept-expected-value",
+        "capability": {"kind": "explain", "operands": ["expectation"]},
+        "conditions": ["unfamiliar-example"],
+        "evidence_spec": ["explain-reason"],
+    }
+    write_yaml(mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
+               staged)
+    assert _observe_offer("unit-demo-l01", staged["stages"][0]) == {
+        "observe_requirement": "req-demo-l01-demo",
+        # The offer names the conditions this target declares. Stopping at
+        # activity and result taught a command that could not produce evidence
+        # the interpreter credits, and whose negative result could not be read
+        # as a failure of this target at all (audit
+        # `workbench/audits/synthetic-learner-2026-09-12`, F02).
+        "observe_next": "los observe req-demo-l01-demo --activity <what-you-did> "
+                        "--result <correct|incorrect|partial|abandoned> "
+                        "--condition unfamiliar-example",
+        "observe_conditions": ["unfamiliar-example"],
+        "observe_note": "keep only the conditions that actually held; an "
+                        "omitted one is read as unknown, never as met",
+    }
+    completed = approved_v2_cli(
+        mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "complete",
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="curriculum-stage-complete-offers-observe",
+    )
+    assert completed.returncode == 0, completed.stderr
+    result = gateway_result(completed)
+    assert result["observe_requirement"] == "req-demo-l01-demo"
+    assert result["observe_next"].startswith("los observe req-demo-l01-demo ")
+    observations = list((mini_repo).glob("**/observations.jsonl"))
+    assert observations == []
+
+
+def _v1_demo_map(mini_repo):
+    """Backfill the demo study map to plan_template_version 1 in place."""
+    path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    data["plan_template_version"] = 1
+    for number, stage in enumerate(data["stages"], 1):
+        stage["number"] = number
+        stage.setdefault("exam_critical", False)
+        stage.setdefault("concepts", ["concept-expected-value"])
+    write_yaml(path, data)
+
+
+def test_stage_progress_records_structured_progress(mini_repo):
+    """--progress-summary/--progress-next land on the stage row with a date."""
+    add_curriculum(mini_repo)
+    _v1_demo_map(mini_repo)
+    updated = approved_v2_cli(
+        mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "active",
+        "--progress-summary", "Worked §1; the example needs a second pass.",
+        "--progress-next", "Re-derive closed-book.",
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="curriculum-stage-progress-records",
+    )
+    assert updated.returncode == 0, updated.stderr
+    result = gateway_result(updated)
+    assert re.fullmatch(r"\d{4}-\d{2}-\d{2}", result["progress"]["updated"])
+    assert result["progress"]["summary"] == "Worked §1; the example needs a second pass."
+    assert result["progress"]["next"] == "Re-derive closed-book."
+    stage = load_repo(mini_repo).study_maps["study-map-demo-l01"].data["stages"][0]
+    assert stage["progress"]["summary"].startswith("Worked §1")
+    assert stage["status"] == "active"
+
+
+def test_stage_progress_next_needs_a_summary(mini_repo):
+    add_curriculum(mini_repo)
+    _v1_demo_map(mini_repo)
+    orphan = approved_v2_cli(
+        mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "active",
+        "--progress-next", "Without a summary.",
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="curriculum-stage-progress-orphan-next",
+    )
+    assert orphan.returncode != 0
+    blank = approved_v2_cli(
+        mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "active",
+        "--progress-summary", "   ",
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="curriculum-stage-progress-blank",
+    )
+    assert blank.returncode != 0
+    stage = load_repo(mini_repo).study_maps["study-map-demo-l01"].data["stages"][0]
+    assert "progress" not in stage
+
+
+def test_stage_progress_refuses_on_legacy_maps(mini_repo):
+    """Structured progress is a template-v1 stage field; legacy maps refuse."""
+    add_curriculum(mini_repo)
+    legacy = approved_v2_cli(
+        mini_repo, "stage-progress", "unit-demo-l01", "stage-demo", "active",
+        "--progress-summary", "Not for legacy shapes.",
+        artifact_ids=["unit-demo-l01", "study-map-demo-l01"],
+        idempotency_key="curriculum-stage-progress-legacy",
+    )
+    assert legacy.returncode != 0
+    assert "progress" in legacy.stdout + legacy.stderr
 
 
 def test_stage_note_snapshot_guard_and_german_search(mini_repo):
@@ -563,12 +1013,29 @@ def test_module_plan_import_adds_units_sources_and_workspace_join(mini_repo, tmp
                         str(package))
     assert unguarded.returncode == 2
     snapshot = f"sha256:{source_fingerprint(load_repo(mini_repo))}"
-    proc = approved_v2_cli(
-        mini_repo, "module-plan-import", "module-demo", "--file", str(package),
-        "--file-sha256", file_sha256(package),
+    # Execute the literal gateway example in WORKFLOWS §25a against this
+    # reviewed disposable package, so the agent-facing syntax cannot drift.
+    workflows = (ROOT / "system/WORKFLOWS.md").read_text(encoding="utf-8")
+    section = workflows.split("## 25a. Revise an existing plan", 1)[1].split("## 26.", 1)[0]
+    example = re.search(r"```bash\n\s*([^\n]+)\n\s*```", section)
+    assert example is not None
+    words = shlex.split(example.group(1))
+    assert words == [".venv/bin/python", "tools/los.py", "capability", "module.plan.import",
+                     "--payload-file", "envelope.json"]
+    envelope = approved_v2_envelope(
+        mini_repo, capability="module.plan.import",
+        payload={"module_id": "module-demo", "file": str(package),
+                 "file_sha256": file_sha256(package)},
         artifact_ids=["module-demo", "unit-demo-l02"],
         idempotency_key="curriculum-module-plan-import",
         expected_snapshot=snapshot,
+    )
+    envelope_file = tmp_path / "envelope.json"
+    envelope_file.write_text(json.dumps(envelope), encoding="utf-8")
+    proc = subprocess.run(
+        [sys.executable, str(ROOT / words[1]), "--root", str(mini_repo),
+         *words[2:-1], str(envelope_file)],
+        capture_output=True, text=True, timeout=120,
     )
     assert proc.returncode == 0, proc.stderr
     repo = load_repo(mini_repo)
@@ -1054,12 +1521,12 @@ def _amls_inventory() -> dict:
 
 
 @pytest.mark.full_repo
-def test_amls_complete_paper_inventory_is_wired_per_lecture(repo_root):
+def test_amls_complete_paper_inventory_is_wired_per_lecture(real_repo):
     inventory = _amls_inventory()
     assert inventory["totals"]["curated"] == 60
     assert inventory["totals"]["bibliography"] == 283
 
-    repo = load_repo(repo_root)
+    repo = real_repo
     source = repo.sources["source-amls-ss26-lectures"]
     assert source["material"] == "material://source-amls-ss26-lectures"
     assert source["identifiers"]["paper-reading-list"].endswith(
@@ -1667,9 +2134,9 @@ def test_material_resource_projection_refuses_compound_and_unsafe_uris(
 
 
 @pytest.mark.full_repo
-def test_aml_units_and_exam_stages_keep_the_reviewed_sequence(repo_root):
+def test_aml_units_and_exam_stages_keep_the_reviewed_sequence(real_repo):
     """Expanded material menus must not rearrange the AML learning surface."""
-    repo = load_repo(repo_root)
+    repo = real_repo
     module = repo.modules["module-hu-aml"]
     expected_units = [
         *[f"unit-aml-l{lecture:02d}" for lecture in range(1, 12)],
@@ -1708,9 +2175,9 @@ def test_aml_units_and_exam_stages_keep_the_reviewed_sequence(repo_root):
 
 
 @pytest.mark.full_repo
-def test_sad_lectures_are_knowledge_maps_with_complete_material_menus(repo_root):
+def test_sad_lectures_are_knowledge_maps_with_complete_material_menus(repo_root, real_repo):
     """SaD follows the same choose-a-source semantics as AML, lecture by lecture."""
-    repo = load_repo(repo_root)
+    repo = real_repo
     module_dir = (
         repo_root
         / "curriculum/modules/module-hu-m2-statistik-analysis"
@@ -1774,14 +2241,14 @@ def test_sad_lectures_are_knowledge_maps_with_complete_material_menus(repo_root)
 
 
 @pytest.mark.full_repo
-def test_amls_bundle_resources_carry_stable_ids(repo_root):
+def test_amls_bundle_resources_carry_stable_ids(real_repo):
     """A bundled source must be addressable item by item, not just as a bundle.
 
     `source-amls-ss26-lectures` backs ~96 stage resources. Without per-resource
     identity, every judgment about any of them files under one source id, so
     "SystemML was excellent" and "TASO was unnecessary" become the same record.
     """
-    repo = load_repo(repo_root)
+    repo = real_repo
     ided, bare = [], []
     for study_map in repo.study_maps.values():
         if not str(study_map.data.get("id", "")).startswith("study-map-amls"):
@@ -1802,7 +2269,7 @@ def test_amls_bundle_resources_carry_stable_ids(repo_root):
 
 
 @pytest.mark.full_repo
-def test_a_paper_cited_by_two_lectures_shares_one_resource_id(repo_root):
+def test_a_paper_cited_by_two_lectures_shares_one_resource_id(real_repo):
     """Identity belongs to the paper, not to the citation.
 
     AMLS cites "Attention Is All You Need" from both L04 and L07, and the
@@ -1811,7 +2278,7 @@ def test_a_paper_cited_by_two_lectures_shares_one_resource_id(repo_root):
     a paper instead of accumulating on the paper — which is the reuse ADR-009
     is for. This test fails if someone "fixes" the duplicate ids.
     """
-    repo = load_repo(repo_root)
+    repo = real_repo
     by_id = {}
     for study_map in repo.study_maps.values():
         for stage in study_map.data.get("stages", []) or []:
@@ -1832,7 +2299,7 @@ def test_a_paper_cited_by_two_lectures_shares_one_resource_id(repo_root):
 
 
 @pytest.mark.full_repo
-def test_topics_are_a_closed_vocabulary(repo_root):
+def test_topics_are_a_closed_vocabulary(real_repo, real_issues):
     """An unlisted topic must be an error, or the facet decays into tag soup.
 
     The whole reason `topics` is a controlled vocabulary rather than free tags is
@@ -1840,8 +2307,7 @@ def test_topics_are_a_closed_vocabulary(repo_root):
     within a year. That only holds if the validator actually refuses unknown
     values.
     """
-    from learning_os.rules import validate as _validate
-    repo = load_repo(repo_root)
+    repo = real_repo
     assert repo.topics, "sources/topics.yaml did not load"
     for tid in repo.topics:
         assert tid.startswith("topic-")
@@ -1849,11 +2315,11 @@ def test_topics_are_a_closed_vocabulary(repo_root):
     for source in repo.sources.values():
         for tid in source.get("topics", []) or []:
             assert tid in repo.topics, f"{source['id']} uses unknown topic {tid}"
-    assert not [i for i in _validate(repo) if i.severity == "E"]
+    assert not [i for i in real_issues if i.severity == "E"]
 
 
 @pytest.mark.full_repo
-def test_topics_are_independent_of_thematic_groups(repo_root):
+def test_topics_are_independent_of_thematic_groups(real_repo):
     """One identity, many classifications — the point of the facet.
 
     If topics could only come from a source's own domain, the polyhierarchy
@@ -1861,7 +2327,7 @@ def test_topics_are_independent_of_thematic_groups(repo_root):
     This asserts at least one source carries a topic whose display domain is not
     among that source's own thematic groups.
     """
-    repo = load_repo(repo_root)
+    repo = real_repo
     crossing = []
     for source in repo.sources.values():
         groups = set(source.get("thematic_group_ids", []) or [])
@@ -1876,24 +2342,45 @@ def test_topics_are_independent_of_thematic_groups(repo_root):
 
 
 @pytest.mark.full_repo
-def test_library_view_reports_unclassified_rather_than_hiding_it(repo_root):
+def test_library_view_reports_unclassified_rather_than_hiding_it(real_repo):
     """Sparse is the honest state under on-use population, so it must be visible.
 
-    A faceted browser that showed only classified sources would silently imply
-    the Library is smaller than it is, and would create pressure to bulk-backfill
+    A browser that showed only classified sources would silently imply the
+    Library is smaller than it is, and would create pressure to bulk-backfill
     topics — the exact judgment-inventing pass ADR-005 forbids.
+
+    The view became a folder tree (domain -> modules/material types) rather than
+    five counted facets, so the headings this once pinned are gone. The two
+    properties it was actually defending are not, and are asserted harder here:
+    the unclassified state is still stated in full, and every source is still
+    enumerated — which the tree must satisfy for ALL sources, not a sample,
+    because a folder tree's whole claim is that nothing is missing.
     """
     from learning_os.genout import build_library
-    repo = load_repo(repo_root)
+    repo = real_repo
     view = build_library(repo, "T1")
-    assert "## By topic" in view and "## By domain" in view
-    assert "## By purpose" in view and "## By form" in view
-    assert "## By current use" in view
-    assert "Not yet classified by topic" in view
-    # enumerate, don't count: buckets must list their members
-    assert "## Members" in view
-    for sid in list(repo.sources)[:3]:
-        assert f"`{sid}`" in view, f"{sid} appears in no bucket listing"
+
+    # The domains are the top level, and the facets that do not shape the tree
+    # survive as the appendix rather than being dropped.
+    for group in repo.thematic_groups.values():
+        assert f"## {group['title']}/" in view, f"{group['title']} has no folder"
+    assert "## Other ways in" in view
+    assert "**By purpose**" in view and "**By topic**" in view
+
+    # Sparsity is stated, not hidden, and ADR-005 is named as the reason.
+    untopiced = [s for s in repo.sources.values() if not (s.get("topics") or [])]
+    if untopiced:
+        assert "carry no topic" in view and "ADR-005" in view
+
+    # Enumerate, don't count — now for every source, not the first three.
+    missing = [sid for sid in repo.sources if f"`{sid}`" not in view]
+    assert not missing, (
+        f"{len(missing)} source(s) appear in no folder: {missing[:5]}"
+    )
+
+    # And the view says so itself, rather than leaving it to be trusted.
+    assert f"**{len(repo.sources)} sources.**" in view
+    assert "reachable" in view
 
 
 def test_source_feedback_can_name_a_resource(mini_repo):

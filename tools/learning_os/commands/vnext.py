@@ -20,6 +20,8 @@ from migrations.job_quarantine_collapse import (
 from migrations.route_identity_v13 import plan_migration, plan_sha256
 
 from learning_os.backup_manifest import (
+    BackupManifestError,
+    backup_authorities,
     build_backup_manifest,
     verify_backup_manifest,
     verify_restored_system,
@@ -42,12 +44,15 @@ from learning_os.masters_planning import (
 )
 from learning_os.material_synthesis import (
     current_unit_material_basis,
+    publication_lineage,
     synthesis_destination,
     validate_unit_material_synthesis,
 )
+from learning_os.semantics.lineage import LEDGER_RELATIVE
 
 from .support import (
     WriteRefused,
+    _atomic_text,
     _dump_yaml,
     _expected_ok,
     _expected_revisions_from_args,
@@ -105,9 +110,12 @@ def cmd_unit_material_synthesis_publish(args) -> int:
         if not _expected_ok(root, args.expected_snapshot):
             return 3
         destination = synthesis_destination(root, args.unit_id)
+        content = _dump_yaml(value)
+        request = current_gateway_request()
+        lineage = publication_lineage(root, args.unit_id, value, content, request)
         code, errors, confirmation = _write_transaction(
             root,
-            {destination: _dump_yaml(value)},
+            {destination: content, root / LEDGER_RELATIVE: lineage},
             capability="unit.material-synthesis.publish",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=(args.unit_id, value["id"]),
@@ -364,14 +372,44 @@ def cmd_health_report(args) -> int:
 
 
 def cmd_backup_manifest(args) -> int:
-    manifest = build_backup_manifest(
-        _root(args),
-        ui_root=Path(args.ui_root).expanduser().resolve() if args.ui_root else None,
-        materials_root=(Path(args.materials_root).expanduser().resolve()
+    root = _root(args)
+    authorities = backup_authorities(
+        root,
+        ui_root=Path(args.ui_root).expanduser() if args.ui_root else None,
+        materials_root=(Path(args.materials_root).expanduser()
                         if args.materials_root else None),
     )
-    print(json.dumps(manifest, indent=2, ensure_ascii=False))
-    return 0
+    manifest = build_backup_manifest(
+        root, ui_root=authorities["ui"], materials_root=authorities["materials"])
+    if args.out:
+        target = Path(args.out).expanduser()
+        resolved = target.resolve()
+        for label, authority in authorities.items():
+            if resolved == authority or authority in resolved.parents:
+                raise BackupManifestError(
+                    f"refusing to write the manifest inside the backed-up "
+                    f"{label} root: {args.out}")
+        _atomic_text(target, json.dumps(manifest, indent=2, ensure_ascii=False) + "\n")
+        if args.stdout:
+            print(json.dumps(manifest, indent=2, ensure_ascii=False))
+            return 0
+        print(json.dumps({
+            "ok": True,
+            "out": str(resolved),
+            "roots": manifest["roots"],
+            "entries": len(manifest["entries"]),
+            "aggregate_sha256": manifest["aggregate_sha256"],
+        }, indent=2, ensure_ascii=False))
+        return 0
+    if args.stdout:
+        print(json.dumps(manifest, indent=2, ensure_ascii=False))
+        return 0
+    size_kb = len(json.dumps(manifest, ensure_ascii=False).encode("utf-8")) / 1024
+    raise BackupManifestError(
+        f"backup-manifest prints nothing by default: the manifest holds "
+        f"{len(manifest['entries'])} entries (~{size_kb:.0f} KB). Write it "
+        f"with --out PATH (outside every backed-up root) or print it with "
+        f"--stdout")
 
 
 def cmd_backup_verify(args) -> int:

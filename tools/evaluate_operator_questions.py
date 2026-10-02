@@ -409,10 +409,14 @@ def cmd_score(args: argparse.Namespace) -> int:
     report = score_trials(records, load_answers(args.answers))
     _write_json(Path(args.out), report)
     counts = report["counts"]
-    print(f"score {counts['pass']}/{len(report['verdicts'])} "
-          f"({counts['unanswered']} unanswered, "
-          f"{counts['unadjudicated']} unadjudicated, "
-          f"{counts['fixture-rot']} fixture-rot)")
+    # The headline never prints a bare fraction while verdicts await
+    # adjudication: `1/5` reads as a model score, but unadjudicated rows
+    # are adjudication debt, not signal. Every class is named so no
+    # outcome — including fail — can hide inside a ratio.
+    print(f"{counts['pass']} pass · {counts['fail']} fail · "
+          f"{counts['unadjudicated']} awaiting adjudication · "
+          f"{counts['unanswered']} unanswered · "
+          f"{counts['fixture-rot']} rot — of {len(report['verdicts'])}")
     return 0
 
 

@@ -94,13 +94,18 @@ stages:
     scope_triage: helpful-now
   - kind: watch
     label: 3Blue1Brown — the limits episode
-    locator: 'Chapter 7, Essence of calculus: ''Limits, L''Hôpital''s rule, and epsilon delta definitions'''
+    locator: 'transcript/kfF40MiS7zA.md (Kapitel 7, Essence of calculus: ''Limits, L''Hopital''s rule,
+      and epsilon delta definitions'', 18:26). The epsilon-delta passage runs [06:00]-[10:30]; everything
+      from [11:00] is l''Hospital and belongs to Chapter 6.'
     angle: A short visual preview for when the *picture* of a limit is missing, not the technique.
     angle_detail: Ten to fifteen minutes, watched once, before rather than instead of the script. It shows
       the ε-δ picture geometrically, which is the one thing a written definition cannot do. It is not
       a source of rigour and should never be the thing an exam answer is reconstructed from. The l'Hôpital
-      half of the same episode belongs to Chapter 6.
+      half of the same episode belongs to Chapter 6. A German transcript of this episode is now a managed
+      material (fetched 2026-09-11), so the epsilon-delta passage can be read and quoted at [06:00]-[10:30]
+      without watching the video.
     scope_triage: helpful-now
+    vault_path: material://source-3b1b-essence-of-calculus/transcript/kfF40MiS7zA.md
   - kind: practise
     label: Fritzsche §2.3 Grenzwerte von Funktionen
     locator: fritzsche.pdf §2.3 Grenzwerte von Funktionen p. 77; Lösungen in Kap. 5 Anhang from p. 253
@@ -170,14 +175,19 @@ stages:
       of Dirichlet''s Function'' p. 53, ''The Min/Max Theorem and Bolzano''s Intermediate Value Theorem''
       p. 56, ''Uniform Continuity and the Definition of the Derivative'' p. 59; ''Pointwise and Uniform
       Convergence of Sequences of Functions'' p. 81, ''Uniform Convergence, the Weierstrass M-Test, and
-      Interchanging Limits'' p. 84'
+      Interchanging Limits'' p. 84; Theorem 149 (x is a cluster point of S iff a sequence in S minus {x}
+      converges to x) p. 47 is Lemma 5.3, and Theorem 174 (f+g, f*g and the quotient continuous at c)
+      p. 54 is Satz 5.20. Satz 5.21, continuity of a composition, is not stated here.'
     angle: The permitted window for this chapter, named lecture by lecture — including the two lectures
       that are the whole of §5.7.
-    angle_detail: The p. 50 lecture is the sequence criterion for function limits, which is the script's
-      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet's function directly,
-      which is WV1.2's construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
-      the pre-2026-08-29 record said 'lectures 23-24' without saying what they were. Still one blocked
-      idea at a time.
+    angle_detail: 'The p. 50 lecture is the sequence criterion for function limits, which is the script''s
+      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet''s function directly,
+      which is WV1.2''s construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
+      the pre-2026-08-29 record said ''lectures 23-24'' without saying what they were. Still one blocked
+      idea at a time. Checked against the notes on 2026-09-12 rather than against the lecture titles:
+      17 of the 20 kleine Beweise are numbered theorems in this PDF, with proofs, at page granularity
+      a 70-minute video cannot match. Read the theorem, then watch the lecture only if the written proof
+      does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise
@@ -409,13 +419,18 @@ stages:
     scope_triage: helpful-now
   - kind: watch
     label: 3Blue1Brown — the limits episode
-    locator: 'Chapter 7, Essence of calculus: ''Limits, L''Hôpital''s rule, and epsilon delta definitions'''
+    locator: 'transcript/kfF40MiS7zA.md (Kapitel 7, Essence of calculus: ''Limits, L''Hopital''s rule,
+      and epsilon delta definitions'', 18:26). The epsilon-delta passage runs [06:00]-[10:30]; everything
+      from [11:00] is l''Hospital and belongs to Chapter 6.'
     angle: A short visual preview for when the *picture* of a limit is missing, not the technique.
     angle_detail: Ten to fifteen minutes, watched once, before rather than instead of the script. It shows
       the ε-δ picture geometrically, which is the one thing a written definition cannot do. It is not
       a source of rigour and should never be the thing an exam answer is reconstructed from. The l'Hôpital
-      half of the same episode belongs to Chapter 6.
+      half of the same episode belongs to Chapter 6. A German transcript of this episode is now a managed
+      material (fetched 2026-09-11), so the epsilon-delta passage can be read and quoted at [06:00]-[10:30]
+      without watching the video.
     scope_triage: helpful-now
+    vault_path: material://source-3b1b-essence-of-calculus/transcript/kfF40MiS7zA.md
   - kind: practise
     label: Fritzsche §2.3 Grenzwerte von Funktionen
     locator: fritzsche.pdf §2.3 Grenzwerte von Funktionen p. 77; Lösungen in Kap. 5 Anhang from p. 253
@@ -473,14 +488,19 @@ stages:
       of Dirichlet''s Function'' p. 53, ''The Min/Max Theorem and Bolzano''s Intermediate Value Theorem''
       p. 56, ''Uniform Continuity and the Definition of the Derivative'' p. 59; ''Pointwise and Uniform
       Convergence of Sequences of Functions'' p. 81, ''Uniform Convergence, the Weierstrass M-Test, and
-      Interchanging Limits'' p. 84'
+      Interchanging Limits'' p. 84; Theorem 149 (x is a cluster point of S iff a sequence in S minus {x}
+      converges to x) p. 47 is Lemma 5.3, and Theorem 174 (f+g, f*g and the quotient continuous at c)
+      p. 54 is Satz 5.20. Satz 5.21, continuity of a composition, is not stated here.'
     angle: The permitted window for this chapter, named lecture by lecture — including the two lectures
       that are the whole of §5.7.
-    angle_detail: The p. 50 lecture is the sequence criterion for function limits, which is the script's
-      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet's function directly,
-      which is WV1.2's construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
-      the pre-2026-08-29 record said 'lectures 23-24' without saying what they were. Still one blocked
-      idea at a time.
+    angle_detail: 'The p. 50 lecture is the sequence criterion for function limits, which is the script''s
+      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet''s function directly,
+      which is WV1.2''s construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
+      the pre-2026-08-29 record said ''lectures 23-24'' without saying what they were. Still one blocked
+      idea at a time. Checked against the notes on 2026-09-12 rather than against the lecture titles:
+      17 of the 20 kleine Beweise are numbered theorems in this PDF, with proofs, at page granularity
+      a 70-minute video cannot match. Read the theorem, then watch the lecture only if the written proof
+      does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise
@@ -807,14 +827,19 @@ stages:
       of Dirichlet''s Function'' p. 53, ''The Min/Max Theorem and Bolzano''s Intermediate Value Theorem''
       p. 56, ''Uniform Continuity and the Definition of the Derivative'' p. 59; ''Pointwise and Uniform
       Convergence of Sequences of Functions'' p. 81, ''Uniform Convergence, the Weierstrass M-Test, and
-      Interchanging Limits'' p. 84'
+      Interchanging Limits'' p. 84; Theorem 149 (x is a cluster point of S iff a sequence in S minus {x}
+      converges to x) p. 47 is Lemma 5.3, and Theorem 174 (f+g, f*g and the quotient continuous at c)
+      p. 54 is Satz 5.20. Satz 5.21, continuity of a composition, is not stated here.'
     angle: The permitted window for this chapter, named lecture by lecture — including the two lectures
       that are the whole of §5.7.
-    angle_detail: The p. 50 lecture is the sequence criterion for function limits, which is the script's
-      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet's function directly,
-      which is WV1.2's construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
-      the pre-2026-08-29 record said 'lectures 23-24' without saying what they were. Still one blocked
-      idea at a time.
+    angle_detail: 'The p. 50 lecture is the sequence criterion for function limits, which is the script''s
+      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet''s function directly,
+      which is WV1.2''s construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
+      the pre-2026-08-29 record said ''lectures 23-24'' without saying what they were. Still one blocked
+      idea at a time. Checked against the notes on 2026-09-12 rather than against the lecture titles:
+      17 of the 20 kleine Beweise are numbered theorems in this PDF, with proofs, at page granularity
+      a 70-minute video cannot match. Read the theorem, then watch the lecture only if the written proof
+      does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise
@@ -1093,14 +1118,19 @@ stages:
       of Dirichlet''s Function'' p. 53, ''The Min/Max Theorem and Bolzano''s Intermediate Value Theorem''
       p. 56, ''Uniform Continuity and the Definition of the Derivative'' p. 59; ''Pointwise and Uniform
       Convergence of Sequences of Functions'' p. 81, ''Uniform Convergence, the Weierstrass M-Test, and
-      Interchanging Limits'' p. 84'
+      Interchanging Limits'' p. 84; Theorem 149 (x is a cluster point of S iff a sequence in S minus {x}
+      converges to x) p. 47 is Lemma 5.3, and Theorem 174 (f+g, f*g and the quotient continuous at c)
+      p. 54 is Satz 5.20. Satz 5.21, continuity of a composition, is not stated here.'
     angle: The permitted window for this chapter, named lecture by lecture — including the two lectures
       that are the whole of §5.7.
-    angle_detail: The p. 50 lecture is the sequence criterion for function limits, which is the script's
-      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet's function directly,
-      which is WV1.2's construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
-      the pre-2026-08-29 record said 'lectures 23-24' without saying what they were. Still one blocked
-      idea at a time.
+    angle_detail: 'The p. 50 lecture is the sequence criterion for function limits, which is the script''s
+      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet''s function directly,
+      which is WV1.2''s construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
+      the pre-2026-08-29 record said ''lectures 23-24'' without saying what they were. Still one blocked
+      idea at a time. Checked against the notes on 2026-09-12 rather than against the lecture titles:
+      17 of the 20 kleine Beweise are numbered theorems in this PDF, with proofs, at page granularity
+      a 70-minute video cannot match. Read the theorem, then watch the lecture only if the written proof
+      does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise
@@ -1379,14 +1409,19 @@ stages:
       of Dirichlet''s Function'' p. 53, ''The Min/Max Theorem and Bolzano''s Intermediate Value Theorem''
       p. 56, ''Uniform Continuity and the Definition of the Derivative'' p. 59; ''Pointwise and Uniform
       Convergence of Sequences of Functions'' p. 81, ''Uniform Convergence, the Weierstrass M-Test, and
-      Interchanging Limits'' p. 84'
+      Interchanging Limits'' p. 84; Theorem 149 (x is a cluster point of S iff a sequence in S minus {x}
+      converges to x) p. 47 is Lemma 5.3, and Theorem 174 (f+g, f*g and the quotient continuous at c)
+      p. 54 is Satz 5.20. Satz 5.21, continuity of a composition, is not stated here.'
     angle: The permitted window for this chapter, named lecture by lecture — including the two lectures
       that are the whole of §5.7.
-    angle_detail: The p. 50 lecture is the sequence criterion for function limits, which is the script's
-      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet's function directly,
-      which is WV1.2's construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
-      the pre-2026-08-29 record said 'lectures 23-24' without saying what they were. Still one blocked
-      idea at a time.
+    angle_detail: 'The p. 50 lecture is the sequence criterion for function limits, which is the script''s
+      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet''s function directly,
+      which is WV1.2''s construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
+      the pre-2026-08-29 record said ''lectures 23-24'' without saying what they were. Still one blocked
+      idea at a time. Checked against the notes on 2026-09-12 rather than against the lecture titles:
+      17 of the 20 kleine Beweise are numbered theorems in this PDF, with proofs, at page granularity
+      a 70-minute video cannot match. Read the theorem, then watch the lecture only if the written proof
+      does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise
@@ -1639,14 +1674,19 @@ stages:
       of Dirichlet''s Function'' p. 53, ''The Min/Max Theorem and Bolzano''s Intermediate Value Theorem''
       p. 56, ''Uniform Continuity and the Definition of the Derivative'' p. 59; ''Pointwise and Uniform
       Convergence of Sequences of Functions'' p. 81, ''Uniform Convergence, the Weierstrass M-Test, and
-      Interchanging Limits'' p. 84'
+      Interchanging Limits'' p. 84; Theorem 149 (x is a cluster point of S iff a sequence in S minus {x}
+      converges to x) p. 47 is Lemma 5.3, and Theorem 174 (f+g, f*g and the quotient continuous at c)
+      p. 54 is Satz 5.20. Satz 5.21, continuity of a composition, is not stated here.'
     angle: The permitted window for this chapter, named lecture by lecture — including the two lectures
       that are the whole of §5.7.
-    angle_detail: The p. 50 lecture is the sequence criterion for function limits, which is the script's
-      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet's function directly,
-      which is WV1.2's construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
-      the pre-2026-08-29 record said 'lectures 23-24' without saying what they were. Still one blocked
-      idea at a time.
+    angle_detail: 'The p. 50 lecture is the sequence criterion for function limits, which is the script''s
+      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet''s function directly,
+      which is WV1.2''s construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
+      the pre-2026-08-29 record said ''lectures 23-24'' without saying what they were. Still one blocked
+      idea at a time. Checked against the notes on 2026-09-12 rather than against the lecture titles:
+      17 of the 20 kleine Beweise are numbered theorems in this PDF, with proofs, at page granularity
+      a 70-minute video cannot match. Read the theorem, then watch the lecture only if the written proof
+      does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise
@@ -1873,14 +1913,19 @@ stages:
       of Dirichlet''s Function'' p. 53, ''The Min/Max Theorem and Bolzano''s Intermediate Value Theorem''
       p. 56, ''Uniform Continuity and the Definition of the Derivative'' p. 59; ''Pointwise and Uniform
       Convergence of Sequences of Functions'' p. 81, ''Uniform Convergence, the Weierstrass M-Test, and
-      Interchanging Limits'' p. 84'
+      Interchanging Limits'' p. 84; Theorem 149 (x is a cluster point of S iff a sequence in S minus {x}
+      converges to x) p. 47 is Lemma 5.3, and Theorem 174 (f+g, f*g and the quotient continuous at c)
+      p. 54 is Satz 5.20. Satz 5.21, continuity of a composition, is not stated here.'
     angle: The permitted window for this chapter, named lecture by lecture — including the two lectures
       that are the whole of §5.7.
-    angle_detail: The p. 50 lecture is the sequence criterion for function limits, which is the script's
-      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet's function directly,
-      which is WV1.2's construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
-      the pre-2026-08-29 record said 'lectures 23-24' without saying what they were. Still one blocked
-      idea at a time.
+    angle_detail: 'The p. 50 lecture is the sequence criterion for function limits, which is the script''s
+      Satz 5.6 and the thing Serie 8.4 grades. The p. 53 lecture covers Dirichlet''s function directly,
+      which is WV1.2''s construction. Note that this route now names the §5.7 lectures (pp. 81, 84) explicitly;
+      the pre-2026-08-29 record said ''lectures 23-24'' without saying what they were. Still one blocked
+      idea at a time. Checked against the notes on 2026-09-12 rather than against the lecture titles:
+      17 of the 20 kleine Beweise are numbered theorems in this PDF, with proofs, at page granularity
+      a 70-minute video cannot match. Read the theorem, then watch the lecture only if the written proof
+      does not land.'
     vault_path: material://source-mit-18100a/mit18_100af20_lec_full2.pdf
     scope_triage: helpful-now
   - kind: practise

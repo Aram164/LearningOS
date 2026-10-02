@@ -46,11 +46,37 @@ def validate_runtime_record(repo: Repo, name: str, value: dict) -> None:
     errors = sorted(Draft202012Validator(schema, format_checker=FormatChecker()).iter_errors(value), key=str)
     if errors:
         raise RuntimeInputError(f"{name}: {errors[0].message}")
+    if name == "learner-observation" and set(value.get("conditions", ())) & set(value.get("conditions_not_met", ())):
+        raise RuntimeInputError("learner-observation: conditions and conditions_not_met must be disjoint")
 
 
 def requirement_fingerprint(requirement: dict) -> str:
     data = json.dumps(requirement, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
     return "sha256:" + hashlib.sha256(data.encode()).hexdigest()
+
+
+def activity_fingerprint(repo: Repo, resource: dict) -> str | None:
+    """Bind suitability to the exact local prompt bytes and authored scope.
+
+    Materials use the shared boundary-checked resolver. Hashes attest identity,
+    not correctness or the learner's familiarity with the activity.
+    """
+    from .materials_resolution import project_material_resource
+
+    projected = project_material_resource(repo, resource)
+    try:
+        if projected.get("material_exists") is True and projected.get("material_path"):
+            path = repo.learningos_root / projected["material_path"]
+        elif resource.get("vault_path") and not resource["vault_path"].startswith("material://"):
+            path = runtime_path(repo.root, repo.root / resource["vault_path"])
+        else:
+            return None
+        payload = {key: resource.get(key) for key in (
+            "route_id", "source", "source_id", "vault_path", "locator", "label", "angle", "angle_detail")}
+        payload["content_sha256"] = hashlib.sha256(path.read_bytes()).hexdigest()
+        return requirement_fingerprint(payload)
+    except (RuntimeInputError, OSError):
+        return None
 
 
 RUNTIME_REVIEW_VERSION = "runtime-review-v1"
@@ -77,6 +103,8 @@ def runtime_review_fingerprint(stage: dict) -> str:
         "runtime_target": stage.get("runtime_target"),
         "affordances": pairs,
     }
+    if "ability_ids" in stage:
+        payload["ability_ids"] = sorted(stage["ability_ids"])
     data = json.dumps(payload, sort_keys=True, ensure_ascii=False, separators=(",", ":"))
     return "sha256:" + hashlib.sha256(data.encode()).hexdigest()
 
@@ -181,7 +209,19 @@ def read_observations(repo: Repo, requirements: list[dict]) -> list[dict]:
                 obs = json.loads(line)
                 validate_runtime_record(repo, "learner-observation", obs)
                 if obs["requirement"] not in known:
-                    raise RuntimeInputError(f"{relative}:{line_number}: unknown requirement {obs['requirement']}")
+                    # The ledger line is where this is noticed, not where it went
+                    # wrong. A requirement exists only while its stage declares a
+                    # `runtime_target`, so retiring or re-homing that stage orphans
+                    # every attempt already recorded against it — and the reader
+                    # then pointed at observations.jsonl, which is the one file
+                    # that is still correct. Say which stage stopped declaring it.
+                    raise RuntimeInputError(
+                        f"{relative}:{line_number}: no stage declares requirement "
+                        f"{obs['requirement']} any more, but this recorded attempt "
+                        f"still refers to it. A requirement exists only while its "
+                        f"study-map stage carries a runtime_target: restore that "
+                        f"target, or supersede/relocate the attempts recorded "
+                        f"against it. The ledger line itself is not the fault.")
                 # Legacy records have no ID. Bind a reproducible ID to their
                 # exact ledger location and bytes, rather than a timestamp.
                 identity = obs.get("id") or "observation-" + hashlib.sha256(
@@ -200,3 +240,85 @@ def read_observations(repo: Repo, requirements: list[dict]) -> list[dict]:
     except (OSError, json.JSONDecodeError, TypeError, KeyError) as exc:
         raise RuntimeInputError(f"cannot read runtime observations: {exc}") from exc
     return observations
+
+
+def read_stage_results(repo: Repo) -> list[dict]:
+    """Read every untargeted stage result from the workspace ledgers.
+
+    Same append-only ledger style as :func:`read_observations`: one
+    ``stage-results.jsonl`` beside each workspace's ``CONTEXT.md``, schema
+    validated, duplicate ids refused, and a ``--supersedes`` correction
+    chain that must name one uncorrected earlier row for the same
+    unit/stage in the same ledger. Readers refuse damaged rows; a row
+    whose unit/stage no longer resolves names the stage that went away.
+    Nothing here grants credit — the evidence interpreters read the
+    observation ledgers only, so these rows are context whatever the
+    requirement state.
+    """
+    results = []
+    seen = set()
+    corrected = set()
+    try:
+        for workspace in sorted(repo.workspaces.values(), key=lambda item: item.id):
+            path = runtime_path(repo.root, workspace.path.parent / "stage-results.jsonl")
+            try:
+                content = path.read_text(encoding="utf-8")
+            except FileNotFoundError:
+                continue
+            relative = path.relative_to(repo.root).as_posix()
+            for line_number, line in enumerate(content.splitlines(), 1):
+                if not line.strip():
+                    continue
+                row = json.loads(line)
+                validate_runtime_record(repo, "learner-stage-result", row)
+                unit = repo.units.get(row["unit"])
+                study_map = (
+                    repo.study_maps.get((unit.data or {}).get("current_study_map"))
+                    if unit is not None else None
+                )
+                stage = next(
+                    (item for item in (study_map.data.get("stages", []) if study_map else [])
+                     if isinstance(item, dict) and item.get("id") == row["stage"]),
+                    None,
+                )
+                if unit is None or study_map is None or stage is None:
+                    raise RuntimeInputError(
+                        f"{relative}:{line_number}: no current study-map stage "
+                        f"{row['stage']} in unit {row['unit']} any more, but this "
+                        f"recorded result still refers to it. The ledger line "
+                        f"itself is not the fault.")
+                identity = row.get("id") or "stage-result-" + hashlib.sha256(
+                    f"{relative}:{line_number}:{line}".encode()
+                ).hexdigest()
+                if identity in seen:
+                    raise RuntimeInputError(f"duplicate stage-result ID: {identity}")
+                if row.get("supersedes"):
+                    prior = next((item for item in results if item["id"] == row["supersedes"]), None)
+                    if (prior is None or prior["unit"] != row["unit"]
+                            or prior["stage"] != row["stage"]
+                            or prior["origin"]["path"] != relative or prior["id"] in corrected):
+                        raise RuntimeInputError("correction must supersede one uncorrected earlier stage result of this unit/stage in this ledger")
+                    corrected.add(prior["id"])
+                seen.add(identity)
+                results.append({**row, "id": identity, "origin": {"path": relative, "line": line_number}})
+    except (OSError, json.JSONDecodeError, TypeError, KeyError) as exc:
+        raise RuntimeInputError(f"cannot read runtime stage results: {exc}") from exc
+    return results
+
+
+def stage_results_for(results: list[dict], unit_id: str, stage_id: str) -> list[dict]:
+    """Live (non-superseded) rows for one unit/stage, newest first.
+
+    Unparseable timestamps sort as oldest rather than crashing the read.
+    """
+    superseded = {row.get("supersedes") for row in results
+                  if isinstance(row, dict) and row.get("supersedes")}
+    live = [row for row in results
+            if isinstance(row, dict) and row.get("id") not in superseded
+            and row.get("unit") == unit_id and row.get("stage") == stage_id]
+
+    def _when(row: dict) -> str:
+        stamp = row.get("timestamp")
+        return stamp if isinstance(stamp, str) else ""
+
+    return sorted(live, key=_when, reverse=True)

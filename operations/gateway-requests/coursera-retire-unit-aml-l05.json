@@ -1,0 +1,22 @@
+{
+  "schema_version": 2,
+  "request_id": "request-coursera-retire-unit-aml-l05",
+  "idempotency_key": "coursera-retire-unit-aml-l05-2026-09-16",
+  "capability": "unit.map.import",
+  "channel": "operator",
+  "expected_snapshot": "sha256:283adcc20cfd0b556b1dce1b74bc2965ccc9e562ad8d86b4c0e956dcefd7b3f7",
+  "expected_revisions": {
+    "unit-aml-l05": 5,
+    "study-map-aml-l05": 3
+  },
+  "payload": {
+    "unit_id": "unit-aml-l05",
+    "file": "work/active/workspace-aml-exam-prep/outputs/coursera-replacement-2026-09-16/map-drafts/unit-aml-l05.study-map.yaml",
+    "file_sha256": "sha256:5927ff298dcde4547256943338444290263159b6eadc570dd820e75fa173ec5b",
+    "replace": true
+  },
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:37e4104c8595298c54aee723342749b74fb974e37bd99bbc4b66f2db137d3487"
+  }
+}

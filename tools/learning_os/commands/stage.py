@@ -7,6 +7,9 @@ import datetime as _dt
 import json
 import sys
 
+from learning_os.learning_runtime import requirement_id_for
+
+from .suggest import not_found
 from .support import (
     WriteRefused,
     _allocate_attachment_path,
@@ -16,8 +19,10 @@ from .support import (
     _expected_revisions_from_args,
     _operator_lock,
     _read_content_bound_file,
+    _resume_pointer_write,
     _root,
     _stage,
+    _stage_ids,
     _unit_map_or_error,
     _write_transaction,
 )
@@ -33,7 +38,8 @@ def cmd_stage_note(args) -> int:
             return 2
         stage = _stage(study_map.data, args.stage_id)
         if stage is None:
-            print(f"los: stage not found: {args.stage_id}", file=sys.stderr)
+            print(f"los: {not_found('stage', args.stage_id, _stage_ids(study_map.data))}",
+                  file=sys.stderr)
             return 2
         target = root / str(stage.get("working_note", ""))
         if not stage.get("working_note"):
@@ -69,6 +75,42 @@ def cmd_stage_note(args) -> int:
     return 0
 
 
+def _observe_offer(unit_id: str, stage: dict) -> dict:
+    """The observation verb for one stage's requirement, or nothing.
+
+    Pure and read-only: when the stage authors a runtime requirement, name
+    the exact ``los observe`` invocation that would record evidence against
+    it. Otherwise return no keys. Suggesting never writes — the ledger
+    still moves only through ``los observe``.
+    """
+    target = stage.get("runtime_target")
+    if not isinstance(target, dict):
+        return {}
+    requirement_id = requirement_id_for(unit_id, str(stage.get("id", "")))
+    # Name the conditions this target actually declares. The offer used to
+    # stop at activity and result, so the command it taught could not produce
+    # evidence the interpreter would credit, and a difficulty reported through
+    # it could not be read as a failure of this target at all (audit
+    # `synthetic-learner-2026-09-12`, F02). The flags are prompts to state what
+    # happened, never defaults to accept — an unmet condition is dropped, not
+    # asserted.
+    conditions = [str(name) for name in (target.get("conditions") or [])
+                  if str(name).strip()]
+    flags = "".join(f" --condition {name}" for name in conditions)
+    offer = {
+        "observe_requirement": requirement_id,
+        "observe_next": f"los observe {requirement_id} --activity <what-you-did> "
+                        f"--result <correct|incorrect|partial|abandoned>{flags}",
+    }
+    if conditions:
+        offer["observe_conditions"] = conditions
+        offer["observe_note"] = (
+            "keep only the conditions that actually held; an omitted one is "
+            "read as unknown, never as met"
+        )
+    return offer
+
+
 def cmd_stage_progress(args) -> int:
     root = _root(args)
     with _operator_lock(root):
@@ -82,7 +124,8 @@ def cmd_stage_progress(args) -> int:
         stages = data.get("stages", []) or []
         stage = _stage(data, args.stage_id)
         if stage is None:
-            print(f"los: stage not found: {args.stage_id}", file=sys.stderr)
+            print(f"los: {not_found('stage', args.stage_id, _stage_ids(data))}",
+                  file=sys.stderr)
             return 2
         action = args.status
         if action in {"active", "revisit"}:
@@ -99,12 +142,12 @@ def cmd_stage_progress(args) -> int:
             data["current_stage"] = stage["id"]
             data["status"] = "paused"
             unit_data["status"] = "paused"
-        else:
+        elif action in {"complete", "skipped"}:
             if stage.get("status") != "active":
                 print("los: complete/skip applies only to the active stage; activate it first",
                       file=sys.stderr)
                 return 2
-            stage["status"] = "complete" if action == "complete" else "skipped"
+            stage["status"] = action
             if action == "complete":
                 stage["completed"] = _dt.date.today().isoformat()
             following = next((row for row in stages[stages.index(stage) + 1:]
@@ -118,8 +161,43 @@ def cmd_stage_progress(args) -> int:
                 data["status"] = "ready-to-shelve"
                 data.setdefault("shelving", {})["state"] = "draft"
                 unit_data["status"] = "ready-to-shelve"
+        else:
+            # The gateway schema and payload_to_namespace refuse unknown
+            # values first; this is the last backstop. An open `else` here
+            # once recorded an unknown status as `skipped`.
+            print(f"los: unknown stage status: {action} "
+                  "(choose from active, paused, complete, skipped, revisit)",
+                  file=sys.stderr)
+            return 2
+        summary = getattr(args, "progress_summary", None)
+        upcoming = getattr(args, "progress_next", None)
+        if summary is not None or upcoming is not None:
+            if summary is None or not summary.strip():
+                print("los: --progress-next needs --progress-summary", file=sys.stderr)
+                return 2
+            if upcoming is not None and not upcoming.strip():
+                print("los: --progress-next must not be blank", file=sys.stderr)
+                return 2
+            entry = {"updated": _dt.date.today().isoformat(),
+                     "summary": summary.strip()}
+            if upcoming is not None:
+                entry["next"] = upcoming.strip()
+            stage["progress"] = entry
+        # One rule for every branch: the destination is the stage this action
+        # just made current. Activate or revisit and you return to it; pause it
+        # and you return to the thing you paused, which is what pausing means;
+        # complete or skip and you return to the stage that became current
+        # after it, or — when the map has run out of stages — to the finished
+        # one, where `resume` can honestly say it is ready to shelve. Other
+        # units keep their own active maps; this names where *he* is, not what
+        # is open.
+        resume_stage = str(data.get("current_stage") or stage["id"])
         code, errors, confirmation = _write_transaction(
-            root, {study_map.path: _dump_study_map(study_map, data), unit.path: _dump_yaml(unit_data)},
+            root, {study_map.path: _dump_study_map(study_map, data),
+                   unit.path: _dump_yaml(unit_data),
+                   **_resume_pointer_write(
+                       root, module_id=unit.module_id, unit_id=args.unit_id,
+                       study_map_id=study_map.id, stage_id=resume_stage)},
             capability="stage.progress.update",
             expected_revisions=_expected_revisions_from_args(args),
             artifact_ids=[args.unit_id, study_map.id],
@@ -131,6 +209,8 @@ def cmd_stage_progress(args) -> int:
     print(json.dumps({"ok": True, "unit_id": args.unit_id, "stage_id": args.stage_id,
                       "status": action, "map_status": data["status"],
                       "current_stage": data["current_stage"],
+                      **({"progress": stage["progress"]} if "progress" in stage else {}),
+                      **_observe_offer(args.unit_id, stage),
                       **confirmation}, ensure_ascii=False))
     return 0
 
@@ -155,7 +235,8 @@ def cmd_stage_attach(args) -> int:
         data = copy.deepcopy(study_map.data)
         stage = _stage(data, args.stage_id)
         if stage is None:
-            print(f"los: stage not found: {args.stage_id}", file=sys.stderr)
+            print(f"los: {not_found('stage', args.stage_id, _stage_ids(data))}",
+                  file=sys.stderr)
             return 2
         note_path = root / stage["working_note"]
         attachment_dir = note_path.parent / "attachments"

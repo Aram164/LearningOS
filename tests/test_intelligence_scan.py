@@ -9,6 +9,7 @@ proving the command works on the checked-in state.
 from __future__ import annotations
 
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -48,6 +49,26 @@ def test_changed_nodes_reach_covering_routes():
     assert goals[0].state == "detected"
 
 
+def test_covering_routes_evidence_names_the_moved_unit():
+    goals = scan_observations(_input(
+        changed_nodes=("knowledge-a",),
+        route_covers=(("route-1", ("knowledge-a",)),),
+        node_units=(("knowledge-a", "unit-x"),),
+    ))
+    (goal,) = goals
+    assert goal.evidence == (
+        "route:route-1", "node:knowledge-a", "unit:unit-x")
+
+
+def test_covering_routes_emit_without_a_unit_map():
+    goals = scan_observations(_input(
+        changed_nodes=("knowledge-a",),
+        route_covers=(("route-1", ("knowledge-a",)),),
+    ))
+    (goal,) = goals
+    assert goal.evidence == ("route:route-1", "node:knowledge-a")
+
+
 def test_changed_sources_reach_dependent_claims():
     goals = scan_observations(_input(
         changed_sources=("source-x",),
@@ -71,15 +92,29 @@ def test_stale_claims_and_obligations_emit_with_evidence():
     assert goals[1].evidence == ("unit:unit-needs-map",)
 
 
+def test_claim_reviews_reach_the_review_detector():
+    goals = scan_observations(_input(
+        claim_reviews=(("covers:route-1", "", "supported"),
+                       ("covers:route-2", "aram", "supported"),
+                       ("covers:route-3", "aram", "contested")),
+    ))
+    assert [(goal.goal_id, goal.detector) for goal in goals] == [
+        ("claims-needing-review:covers:route-1", "claims-needing-review"),
+        ("claims-needing-review:covers:route-3", "claims-needing-review"),
+    ]
+
+
 def test_known_ids_dedup_every_detector():
     known = ("covering-routes-stale:route-1",
              "lineage-stale:covers:route-9",
-             "study-map-obligation:unit-needs-map")
+             "study-map-obligation:unit-needs-map",
+             "claims-needing-review:covers:route-1")
     goals = scan_observations(_input(
         changed_nodes=("knowledge-a",),
         route_covers=(("route-1", ("knowledge-a",)),),
         stale_claims=(("covers:route-9", ("unit-x",)),),
         obligations=("unit-needs-map",),
+        claim_reviews=(("covers:route-1", "", "supported"),),
         known_ids=known,
     ))
     assert goals == ()
@@ -296,7 +331,14 @@ def test_scan_recency_and_source_join_use_real_git_history(mini_repo, monkeypatc
         goal_ids = {goal.goal_id for goal in goals}
         assert f"covering-routes-stale:{route_id}" in goal_ids
         assert f"source-changed-under-claim:covers:{route_id}" in goal_ids
-        assert not any("route-unrelated" in goal_id for goal_id in goal_ids)
+        assert not any(
+            goal_id.startswith(("covering-routes-stale:", "lineage-stale:",
+                                "source-changed-under-claim:"))
+            and "route-unrelated" in goal_id
+            for goal_id in goal_ids
+        )
+        assert ("claims-needing-review:covers:route-unrelated"
+                in goal_ids)
 
         proc = subprocess.run(
             [sys.executable, str(LOS), "--root", str(mini_repo),
@@ -379,9 +421,9 @@ def test_scan_proposes_dependent_revalidation_after_evidence_moves(
     calls: list[str] = []
     real_digest = scan_module.live_evidence_digest
 
-    def counting(root, key, manifest):
+    def counting(root, key, manifest, **kwargs):
         calls.append(key)
-        return real_digest(root, key, manifest)
+        return real_digest(root, key, manifest, **kwargs)
 
     monkeypatch.setattr(scan_module, "live_evidence_digest", counting)
     evidence.write_text("v2", encoding="utf-8")
@@ -431,11 +473,243 @@ def test_missing_evidence_resolves_once_for_all_claims_sharing_it(
     calls: list[str] = []
     real_digest = scan_module.live_evidence_digest
 
-    def counting(root, key, manifest):
+    def counting(root, key, manifest, **kwargs):
         calls.append(key)
-        return real_digest(root, key, manifest)
+        return real_digest(root, key, manifest, **kwargs)
 
     monkeypatch.setattr(scan_module, "live_evidence_digest", counting)
     obs = collect_observations(mini_repo, days=0)
     assert calls == ["file:work/gone.md"]
     assert sorted(claim for claim, _keys in obs.stale_claims) == sorted(made)
+
+
+def test_brief_json_on_a_quiet_repo_is_empty_but_totalled(mini_repo):
+    proc = subprocess.run(
+        [sys.executable, str(LOS), "--root", str(mini_repo),
+         "intelligence-scan", "--brief", "--json"],
+        capture_output=True, text=True, timeout=180)
+    assert proc.returncode == 0, proc.stderr
+    assert json.loads(proc.stdout) == {
+        "contract": "intelligence-scan-brief", "groups": [],
+        "omitted_goals": 0, "omitted_groups": 0,
+        "total_goals": 0, "total_groups": 0,
+        "full_result": "intelligence-scan --json",
+    }
+
+
+@pytest.mark.full_repo
+def test_brief_json_caps_the_checked_in_queue_at_five():
+    root = Path(__file__).resolve().parent.parent
+    proc = subprocess.run(
+        [sys.executable, str(LOS), "--root", str(root),
+         "intelligence-scan", "--brief", "--json"],
+        capture_output=True, text=True, timeout=300)
+    assert proc.returncode == 0, proc.stderr
+    payload = json.loads(proc.stdout)
+    assert payload["contract"] == "intelligence-scan-brief"
+    groups = payload["groups"]
+    assert len(groups) <= 5
+    assert payload["total_groups"] == len(groups) + payload["omitted_groups"]
+    assert payload["total_goals"] == (
+        sum(group["member_count"] for group in groups) + payload["omitted_goals"])
+    assert payload["full_result"] == "intelligence-scan --json"
+    for rank, group in enumerate(groups, start=1):
+        assert group["rank"] == rank
+        assert {"cluster_id", "detector", "title", "tier", "tier_label",
+               "nearest_sitting", "days_until", "member_count",
+               "sample_goal_ids", "omitted_members"} <= set(group)
+        assert len(group["sample_goal_ids"]) <= 6
+        assert (len(group["sample_goal_ids"]) + group["omitted_members"]
+                == group["member_count"])
+    # Ranks follow the full queue's order.
+    full = subprocess.run(
+        [sys.executable, str(LOS), "--root", str(root), "intelligence-scan"],
+        capture_output=True, text=True, timeout=300)
+    assert full.returncode == 0, full.stderr
+    titles = [line.split("] ", 1)[1] for line in full.stdout.splitlines()
+              if re.match(r"^\d+\. \[", line)]
+    assert [group["title"] for group in groups] == titles[:len(groups)]
+
+
+@pytest.mark.full_repo
+def test_brief_human_page_shows_five_groups_then_the_omitted_tail():
+    root = Path(__file__).resolve().parent.parent
+    proc = subprocess.run(
+        [sys.executable, str(LOS), "--root", str(root),
+         "intelligence-scan", "--brief"],
+        capture_output=True, text=True, timeout=300)
+    assert proc.returncode == 0, proc.stderr
+    rows = [line for line in proc.stdout.splitlines()
+            if re.match(r"^\d+\. \[", line)]
+    assert len(rows) <= 5
+    total = int(re.search(r"in (\d+) group", proc.stdout.splitlines()[0]).group(1))
+    if total > 5:
+        assert "omitted -- rerun without --brief for the full queue" in proc.stdout
+
+
+def _two_unit_scoped_world(mini_repo):
+    """Two units judged in one batch, one route claim each, new-style reads.
+
+    Returns (route_a, route_b): the judged route ids. Each claim pins its
+    own route row plus its own covered node and no artifact revision —
+    exactly what a batch import now records.
+    """
+    import yaml
+    from repo_builders import add_curriculum, write_yaml
+
+    from learning_os.revisions import dump_revisions
+    from learning_os.route_identity import route_with_identity
+    from learning_os.semantics.lineage import (
+        dump_ledger,
+        emit_route_covers,
+        node_content_digest,
+        route_content_digest,
+    )
+
+    add_curriculum(mini_repo)
+    module_dir = mini_repo / "curriculum/modules/module-demo"
+    smap_path = module_dir / "source-map.yaml"
+    smap = yaml.safe_load(smap_path.read_text(encoding="utf-8"))
+    smap["sources"][0]["unit_routes"] = [
+        route_with_identity("module-demo", "source-demo-book", {
+            "unit_id": unit_id, "title": title, "format": "paper",
+            "angle": angle, "covers": [node], "depth": "derivation",
+            "scope": "current", "locator": locator})
+        for unit_id, title, angle, node, locator in (
+            ("unit-demo-l01", "Alpha route", "Alpha angle.",
+             "knowledge-demo-alpha", "paper-a.pdf"),
+            ("unit-demo-l02", "Beta route", "Beta angle.",
+             "knowledge-demo-beta", "paper-b.pdf"),
+        )
+    ]
+    write_yaml(smap_path, smap)
+    live_rows = {row["id"]: row
+                 for row in smap["sources"][0]["unit_routes"]}
+    route_a, route_b = (row["id"] for row in smap["sources"][0]["unit_routes"])
+    node_rows = {
+        "knowledge-demo-alpha": {"id": "knowledge-demo-alpha",
+                                 "title": "Alpha", "summary": "First."},
+        "knowledge-demo-beta": {"id": "knowledge-demo-beta",
+                                "title": "Beta", "summary": "Second."},
+    }
+    unit1_path = module_dir / "units/unit-demo-l01/unit.yaml"
+    unit1 = yaml.safe_load(unit1_path.read_text(encoding="utf-8"))
+    unit1["knowledge_map"] = {
+        "summary": "Alpha nodes.", "nodes": [node_rows["knowledge-demo-alpha"]]}
+    write_yaml(unit1_path, unit1)
+    write_yaml(module_dir / "units/unit-demo-l02/unit.yaml", {
+        "id": "unit-demo-l02", "type": "unit", "module_id": "module-demo",
+        "kind": "lecture", "title": "Second lecture", "order": 2,
+        "scope": "The lecture as taught.", "status": "active",
+        "knowledge_map": {
+            "summary": "Beta nodes.",
+            "nodes": [node_rows["knowledge-demo-beta"]]},
+    })
+    transactions = mini_repo / "operations/transactions"
+    transactions.mkdir(parents=True, exist_ok=True)
+    revisions = {"module-demo": 3, "unit-demo-l01": 2, "unit-demo-l02": 5}
+    (transactions / "revisions.yaml").write_text(
+        dump_revisions(revisions), encoding="utf-8")
+    admission = {"request_id": "scan-fixture", "idempotency_key": "scan-fixture"}
+    claims = {}
+    for rid, node in ((route_a, "knowledge-demo-alpha"),
+                      (route_b, "knowledge-demo-beta")):
+        claim = emit_route_covers(
+            route_id=rid, covers=[node], read_revisions={},
+            judged_by="fixture", admitted_by=admission,
+            source_hashes={
+                f"route-content:{rid}": route_content_digest(
+                    module_id="module-demo", source_id="source-demo-book",
+                    route=live_rows[rid]),
+                f"node-content:{node}": node_content_digest(node_rows[node]),
+            })
+        claims[claim.claim_id] = claim
+    (transactions / "lineage.yaml").write_text(
+        dump_ledger(claims), encoding="utf-8")
+    return route_a, route_b
+
+
+def _rewrite_revision(mini_repo, artifact, revision):
+    from learning_os.revisions import dump_revisions, load_revisions
+
+    current = load_revisions(mini_repo)
+    current[artifact] = revision
+    path = mini_repo / "operations/transactions/revisions.yaml"
+    path.write_text(dump_revisions(current), encoding="utf-8")
+
+
+def _rewrite_route(mini_repo, route_id, **fields):
+    import yaml
+    from repo_builders import write_yaml
+
+    smap_path = (mini_repo / "curriculum/modules/module-demo/source-map.yaml")
+    smap = yaml.safe_load(smap_path.read_text(encoding="utf-8"))
+    for row in smap["sources"][0]["unit_routes"]:
+        if row["id"] == route_id:
+            row.update(fields)
+    write_yaml(smap_path, smap)
+
+
+def _rewrite_node(mini_repo, unit_id, node_id, **fields):
+    import yaml
+    from repo_builders import write_yaml
+
+    unit_path = (mini_repo / "curriculum/modules/module-demo/units"
+                 / unit_id / "unit.yaml")
+    unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
+    for row in unit["knowledge_map"]["nodes"]:
+        if row["id"] == node_id:
+            row.update(fields)
+    write_yaml(unit_path, unit)
+
+
+def test_scoped_batch_claims_start_supported(mini_repo):
+    from learning_os.semantics.scan import collect_observations
+
+    route_a, route_b = _two_unit_scoped_world(mini_repo)
+    assert dict(collect_observations(mini_repo, days=0).stale_claims) == {}
+
+
+def test_route_patch_in_sibling_unit_stales_only_that_routes_claim(mini_repo):
+    """A route.patch bumps module + owning unit: with scoped reads only the
+    patched route's claim stales, never the batch sibling's."""
+    from learning_os.semantics.scan import collect_observations
+
+    route_a, route_b = _two_unit_scoped_world(mini_repo)
+    _rewrite_route(mini_repo, route_b, angle="Beta angle, revised.")
+    _rewrite_revision(mini_repo, "module-demo", 4)
+    _rewrite_revision(mini_repo, "unit-demo-l02", 6)
+    stale = dict(collect_observations(mini_repo, days=0).stale_claims)
+    assert set(stale) == {f"covers:{route_b}"}
+    assert stale[f"covers:{route_b}"] == (f"route-content:{route_b}",)
+
+
+def test_progress_write_in_own_unit_leaves_route_claim_supported(mini_repo):
+    """stage.progress.update bumps the unit revision: learner state is not a
+    coverage read, so the unit's route claims stay supported."""
+    from learning_os.semantics.scan import collect_observations
+
+    _two_unit_scoped_world(mini_repo)
+    _rewrite_revision(mini_repo, "unit-demo-l01", 3)
+    _rewrite_revision(mini_repo, "study-map:unit-demo-l01", 1)
+    assert dict(collect_observations(mini_repo, days=0).stale_claims) == {}
+
+
+def test_own_route_row_edit_stales_exactly_that_claim(mini_repo):
+    from learning_os.semantics.scan import collect_observations
+
+    route_a, _route_b = _two_unit_scoped_world(mini_repo)
+    _rewrite_route(mini_repo, route_a, angle="Alpha angle, revised.")
+    stale = dict(collect_observations(mini_repo, days=0).stale_claims)
+    assert set(stale) == {f"covers:{route_a}"}
+
+
+def test_covered_node_edit_stales_exactly_the_covering_claim(mini_repo):
+    from learning_os.semantics.scan import collect_observations
+
+    route_a, _route_b = _two_unit_scoped_world(mini_repo)
+    _rewrite_node(mini_repo, "unit-demo-l01", "knowledge-demo-alpha",
+                  title="Alpha, reframed")
+    stale = dict(collect_observations(mini_repo, days=0).stale_claims)
+    assert set(stale) == {f"covers:{route_a}"}
+    assert stale[f"covers:{route_a}"] == ("node-content:knowledge-demo-alpha",)

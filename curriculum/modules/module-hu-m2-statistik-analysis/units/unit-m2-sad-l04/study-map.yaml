@@ -37,6 +37,39 @@ stages:
       how risk is perceived; the online quiz is not required to read the example.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L04 probability and Naive Bayes deck' against the stage 'Human
+        probability judgments and framing'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:1808101f7a384f4742e2638427b7f924bcf66efc8ba0c283c67f6786a2cb6a61
+  - material_ref:
+      route_id: route-sad-l04-psychexamreview-framing
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+      - url
+    route_id: route-sad-l04-psychexamreview-framing
+    kind: watch
+    scope_triage: helpful-now
+  - material_ref:
+      route_id: route-sad-l04-tijms-intuition
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+      - vault_path
+    route_id: route-sad-l04-tijms-intuition
+    kind: read
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-framing/notes.md
   attachments: []
   source_feedback: []
@@ -65,9 +98,20 @@ stages:
     locator: lecture-slides/04_probability.pdf, PDF pp. 16-21,24-25
     angle: Builds an outcome space from combinations of email attributes, then defines events as subsets.
     angle_detail: Distinguish possible attribute combinations from the eight observed training emails
-      and their relative frequencies.
+      and their relative frequencies. Note two slide slips on these pages. p. 17 labels '{2,4,6}' the
+      'odd event', and p. 25 prints (3+2-3)/8 with P(A∪C) where (3+2-2)/8 with P(A∪B) is meant (both results,
+      3/8, still hold).
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L04 probability and Naive Bayes deck' against the stage 'Random
+        experiments, outcomes, and event spaces'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:aa77d83175011329cf3442f4d1a339071b38fcdf2de116877f5ce29fb0c2be24
   - material_ref:
       route_id: route-a577afe5626f081623095a82
       inherit:
@@ -80,6 +124,15 @@ stages:
     locator: exercise-slides/blatt-02.pdf, physical PDF p. 1, Aufgabe 1(a)–(b)
     angle: Requires explicit sample spaces for repeated die rolls and ordered card draws.
     angle_detail: Describe the event and sampling mechanism before counting favorable outcomes.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes' against
+        the stage 'Random experiments, outcomes, and event spaces'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:14a2559b503021b535c70a7057eb58beebdbbafb298f9561998cd1798f9765e9
   - material_ref:
       route_id: route-78ae1df0aa949bb2a8a872dc
       inherit:
@@ -93,6 +146,15 @@ stages:
     angle: Uses a light-bulb experiment to distinguish outcomes, events and the event collection.
     angle_detail: Track an outcome versus its singleton event; do not confuse Ω with the collection of
       its subsets.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE3, slides 15-38 — events, axioms and conditional probability' against
+        the stage 'Random experiments, outcomes, and event spaces'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:9a70435c87ce86bb0c1712b586e10cdc4d7233ec5e0d045479a7130a7b4d1c34
   - material_ref:
       route_id: route-0afeba6c2e9a73159d6ad420
       inherit:
@@ -105,6 +167,15 @@ stages:
     angle: Separates outcome space, events, relative frequency and a probability space in German.
     angle_detail: Read physical PDF pp. 19–23. Use the prior-year wording as a comparison; the current
       2026 terminology remains the course authority.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route '2025 probability deck with notes' against the stage 'Random experiments,
+        outcomes, and event spaces'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:a0d0eda8463c16611345e3714bcc3d70e4f28636bfbac1ff533b69e25c25368b
   - material_ref:
       route_id: route-e488632c39efaf524b49f243
       inherit:
@@ -112,11 +183,20 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-e488632c39efaf524b49f243
     locator: §4.1.1–4.1.2, physical PDF pp. 195–201
     angle: Turns set operations into concrete die events.
     angle_detail: Connect union, intersection and complement to verbal statements before assigning probabilities.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Fahrmeir Chapter 4 — probability foundations' against the stage 'Random
+        experiments, outcomes, and event spaces'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:1958a22d01ca97f8bd9cf067ba6f43c7c8b0ed090b1df2d4acdd561f4f2a7c58
   - material_ref:
       route_id: route-66691da3faf6c5780cf0b66d
       inherit:
@@ -129,6 +209,15 @@ stages:
     locator: §3.1.1–3.1.4, physical PDF pp. 81–86
     angle: Contrasts disjoint outcomes with events that overlap.
     angle_detail: Translate each verbal event into its possible outcomes before applying an addition rule.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'OpenIntro — probability foundations' against the stage 'Random experiments,
+        outcomes, and event spaces'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:531fdf3e6a32cb0cd12cfcce43915e3de8dcd1f2be56dc82b5bf094e0dff8932
   - material_ref:
       route_id: route-ac99d1d809345a00721a6f99
       inherit:
@@ -136,12 +225,21 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-ac99d1d809345a00721a6f99
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, physical PDF p. 5, 1.1.1–1.1.3; solutions
       p. 8
     angle: Checks disjointness and the equal-likelihood assumption of Laplace probability.
     angle_detail: Explain why each statement is true or false; do not stop at a one-word answer.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Leuphana-Merz pp. 5-10 — probability and conditional-probability
+        drills' against the stage 'Random experiments, outcomes, and event spaces'. The stage description
+        selects that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:2fcaaf364cfaf9c7bacc1c5acfd0fd93f3058298f735305a84ae6d08391df9ff
   - material_ref:
       route_id: route-9a18c8d3ccfb21c3f023b850
       inherit:
@@ -167,6 +265,15 @@ stages:
     angle: Builds the outcome space of a die-and-coin experiment.
     angle_detail: List the twelve elementary outcomes before assigning the probability of the recorded
       number being even.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Arbeitsbuch Chapter 4 — conditional probability and Bayes' against
+        the stage 'Random experiments, outcomes, and event spaces'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:fd6e8c6b06b41b76cca9dfb7d87b214b2bf2ede805d33f761beb1b8d1010a93a
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-events/notes.md
   attachments: []
   source_feedback: []
@@ -194,10 +301,21 @@ stages:
     kind: read
     locator: lecture-slides/04_probability.pdf, PDF pp. 22-23,26-30
     angle: Derives the union rule by disjoint decomposition and uses a complement for the birthday problem.
-    angle_detail: For the birthday calculation, state the uniform-day and independent-birthday assumptions
-      before multiplying the no-match probabilities.
+    angle_detail: For the birthday calculation, use the slide's explicit assumptions (uniform 1/365 days;
+      no seasonal bias; no twins) and note that birthday independence enters only through the urn-with-replacement
+      model before multiplying the no-match probabilities. Stating independence explicitly when solving
+      remains good practice.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L04 probability and Naive Bayes deck' against the stage 'Probability
+        axioms and derived rules'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:cd2488fdcbc53d457c304e034259971f2369bc35e5257020458ccdf8a3ece1d8
   - material_ref:
       route_id: route-a577afe5626f081623095a82
       inherit:
@@ -210,6 +328,15 @@ stages:
     locator: exercise-slides/blatt-02.pdf, physical PDF p. 1, Aufgabe 1(a)
     angle: Uses the complement of no repeated face to calculate at least one repeated die result.
     angle_detail: The five rolls are independent; the no-repeat event is the easier event to count.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes' against
+        the stage 'Probability axioms and derived rules'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:9f7ce0c4b104f8146e2cc954a78d3a8ac0b71580ebc73d8f7e54670c56727f61
   - material_ref:
       route_id: route-78ae1df0aa949bb2a8a872dc
       inherit:
@@ -223,6 +350,15 @@ stages:
     angle: Applies the probability rules to a repeated double-six dice game.
     angle_detail: Try p. 25 before the worked complement calculation; keep one trial’s event distinct
       from the repeated experiment.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE3, slides 15-38 — events, axioms and conditional probability' against
+        the stage 'Probability axioms and derived rules'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:c313bedc8028aa5bd05e2945f9bca917e69d1c889ec41b164021f4d86ffa41de
   - material_ref:
       route_id: route-0afeba6c2e9a73159d6ad420
       inherit:
@@ -235,6 +371,15 @@ stages:
     angle: Puts the axioms and the derived union rule on adjacent slides.
     angle_detail: Read physical PDF pp. 24–25. Identify which displayed statements are assumptions and
       which are consequences.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route '2025 probability deck with notes' against the stage 'Probability
+        axioms and derived rules'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:c6cabeeed4bd2e4e3e9f82bc7ecad8c9503d52aa20f7945b046aa802f9f7a0ad
   - material_ref:
       route_id: route-e488632c39efaf524b49f243
       inherit:
@@ -247,6 +392,15 @@ stages:
     locator: §4.1.3, physical PDF pp. 201–206
     angle: States the axioms and develops their calculation rules in German notation.
     angle_detail: Distinguish axioms from the extra assumption of equiprobable elementary outcomes.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Fahrmeir Chapter 4 — probability foundations' against the stage 'Probability
+        axioms and derived rules'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:f278aa6f3035105375ff2bcac5c09b891a3737660c0c5ac8e58023fbd6c9216e
   - material_ref:
       route_id: route-87f36cab308f54f199bc3034
       inherit:
@@ -254,12 +408,21 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-87f36cab308f54f199bc3034
     locator: Aufgabe 4.2, physical PDF p. 83; solution p. 89
     angle: Reconstructs a 2×4 student contingency table and computes event probabilities from its cells.
     angle_detail: Use disjoint cells for intersections and complements; check the denominator is the full
       group of 150.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Arbeitsbuch Chapter 4 — conditional probability and Bayes' against
+        the stage 'Probability axioms and derived rules'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:4c8d84f5e73334155926c9d73eb0ca0209f75eb6cea0d7d8ff5a044452f94bb0
   - material_ref:
       route_id: route-fa96784fa40036436bf1b2cc
       inherit:
@@ -267,12 +430,21 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-fa96784fa40036436bf1b2cc
     locator: Ch 2 §§2.1–2.4, physical PDF pp. 24–31
     angle: Starts with sample spaces and events before assigning probability and deriving rules.
     angle_detail: Use the embedded checks to test whether an outcome, event and probability assignment
       are distinct.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Dekking — probability exercise bank' against the stage 'Probability
+        axioms and derived rules'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:4cc309743a934d0088731c3b249c3db2fed08b277b9dc12972041853d5d9c83b
   - material_ref:
       route_id: route-8de21f881a829cb3dec1d55d
       inherit:
@@ -280,12 +452,21 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-8de21f881a829cb3dec1d55d
     locator: Ch 2 §§2.3–2.4, physical PDF pp. 54–58
     angle: Derives complements, monotonicity and the two-event union rule from the axioms.
     angle_detail: Notice the countable-additivity formulation, which goes beyond the finite sample spaces
       used in the course.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Ross — formal probability foundations' against the stage 'Probability
+        axioms and derived rules'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:d8ffecef7817d2bcf2eb2c0f23e423d5f666236a685c169d95109e9b7a7bb118
   - material_ref:
       route_id: route-f99c92614d78638f193ab4d3
       inherit:
@@ -298,6 +479,15 @@ stages:
     locator: Ch 3, physical PDF pp. 40–43, axioms and Theorem 3.5
     angle: Gives a compact derivation of the union formula using disjoint parts.
     angle_detail: Reproduce the decomposition in Theorem 3.5 and compare it with the course proof.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Schaum — probability and Bayes worked problems' against the stage
+        'Probability axioms and derived rules'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:bd97cd1aad1d1c96e36d7060c8a9b08f1dbb8d4567988451c9381333184a62bb
   - material_ref:
       route_id: route-ac99d1d809345a00721a6f99
       inherit:
@@ -305,13 +495,22 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-ac99d1d809345a00721a6f99
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, physical PDF p. 5, 1.1.4; solution
       p. 8
     angle: Asks for the axioms and their meanings in words.
     angle_detail: Compare the finite-event formulation with the course and distinguish the normalization
       rule from additivity.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Leuphana-Merz pp. 5-10 — probability and conditional-probability
+        drills' against the stage 'Probability axioms and derived rules'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:ab20cb1654f887b0b647cd8d6bdbf1df4e31c9cf63ee3e0790b83d139461f4fe
   - material_ref:
       route_id: route-9a18c8d3ccfb21c3f023b850
       inherit:
@@ -356,6 +555,15 @@ stages:
       disjoint for i≠j; the printed unrestricted index condition is too strong.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L04 probability and Naive Bayes deck' against the stage 'Conditional
+        probability and total probability'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:eb5b0ad08b68465f5dd5785b2fae13191b3e39153ec0fd941ce75be62037f718
   - material_ref:
       route_id: route-a577afe5626f081623095a82
       inherit:
@@ -368,6 +576,15 @@ stages:
     locator: exercise-slides/blatt-02.pdf, physical PDF p. 2, Aufgabe 2(a)
     angle: Combines age-group-specific basketball rates with the 3:2 group proportions.
     angle_detail: Use a total-probability sum; the conditional rates are not the group sizes.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes' against
+        the stage 'Conditional probability and total probability'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:a05ae8574ffed62dbb835068d3b62aaedbf61ad28f76e44dff76d481a677dc35
   - material_ref:
       route_id: route-78ae1df0aa949bb2a8a872dc
       inherit:
@@ -381,6 +598,15 @@ stages:
     angle: Uses a restricted sample space to explain conditional probability and independence.
     angle_detail: On p. 32 the only denominator condition needed is P(B)>0; disjoint A and B give conditional
       probability zero.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE3, slides 15-38 — events, axioms and conditional probability' against
+        the stage 'Conditional probability and total probability'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:30b770ee4214eb7f9d0b2e5cb3703d8ce89a15a2a0157e9d536ebf380e563c69
   - material_ref:
       route_id: route-c355ecc8ea7599015a21abfe
       inherit:
@@ -396,6 +622,15 @@ stages:
       The current Blatt 2 instead uses 70%/35%, 3:2 and 50%/25%. Follow the method, not these numerical
       answers, when checking Blatt 2. The scores on p. 11 are proportional to posteriors, not normalized
       probabilities.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE4 — sports-club worked example with different numbers from Blatt
+        2' against the stage 'Conditional probability and total probability'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:474265fc8b32c9ba76720719d3ed47d5c42bdf4c5e069a41d2816b46be16a37a
   - material_ref:
       route_id: route-0afeba6c2e9a73159d6ad420
       inherit:
@@ -408,6 +643,15 @@ stages:
     angle: Builds a conditional-probability comparison gradually on a ten-point diagram.
     angle_detail: Read physical PDF pp. 35–43. Follow which points remain in the conditioning subset;
       do not confuse the conditional proportion with the original 0.6.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route '2025 probability deck with notes' against the stage 'Conditional
+        probability and total probability'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:8c9829d8b21919458cf9f4db8d1b86ba39a16a6e65b7286ca5fc72412d22fb73
   - material_ref:
       route_id: route-e488632c39efaf524b49f243
       inherit:
@@ -415,12 +659,21 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-e488632c39efaf524b49f243
     locator: §4.4, physical PDF pp. 221–224; §4.6, pp. 228–230
     angle: Moves from restricted relative frequencies to a partition-based total-probability calculation.
     angle_detail: Use the die and study-duration examples for the denominator, then the tournament example
       for the weighted sum.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Fahrmeir Chapter 4 — probability foundations' against the stage 'Conditional
+        probability and total probability'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:7e68510918864cb5bd08c1b567bb4388912adbe4d752df4d9569d3db918e0bbc
   - material_ref:
       route_id: route-87f36cab308f54f199bc3034
       inherit:
@@ -428,23 +681,41 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-87f36cab308f54f199bc3034
     locator: Aufgabe 4.7(a)–(c), physical PDF p. 85; solution p. 93
     angle: Translates subgroup rates into joint events, a marginal total and a reversed conditional.
     angle_detail: Keep the population of 60 and the conditioning group distinct in every denominator.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Arbeitsbuch Chapter 4 — conditional probability and Bayes' against
+        the stage 'Conditional probability and total probability'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:a5af5e7ef273bf823b3b3c29a35ad8ade1fc7589f3eca6df9b3f332716686240
   - material_ref:
       route_id: route-fe8b4fbc40e7e85daf8ef25b
       inherit:
       - label
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-fe8b4fbc40e7e85daf8ef25b
     locator: §4.1, physical PDF pp. 141–143
     angle: Reassigns probability after restricting possible die or urn outcomes.
     angle_detail: Compute the conditional denominator from the event that was actually observed.
     url: https://math.dartmouth.edu/~prob/prob/prob.pdf#page=141
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Grinstead & Snell Ch 4 — conditional probability' against the stage
+        'Conditional probability and total probability'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:deeaf747695d7bbc25121981d47fbaf39c0baa3504114d9c4141bc4036a155d7
   - material_ref:
       route_id: route-b48ac5af55a8c900d68bb0c9
       inherit:
@@ -452,12 +723,21 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-b48ac5af55a8c900d68bb0c9
     locator: §2.2, physical PDF pp. 63–66; §2.3, pp. 69–72
     angle: Makes conditioning a removal of impossible pebbles followed by renormalization.
     angle_detail: Compare the restricted sample space with a tree-based calculation; then use the partition
       picture for total probability.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blitzstein Chapter 2 — conditioning and Bayes' against the stage
+        'Conditional probability and total probability'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:baeb2200bff54684023805b8f0358eb9a46b741c3f46eadf8e82be75ee95072d
   - material_ref:
       route_id: route-395d30ff10c3ab149d789c7c
       inherit:
@@ -465,13 +745,22 @@ stages:
       - source_id
       - url
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-395d30ff10c3ab149d789c7c
     locator: 'Lecture 2, "Conditioning and Bayes’ Rule": lesson page, Slides and Recitation 2'
     angle: Collects the multiplication rule, total probability and conditioning practice on one lesson
       page.
     angle_detail: Use the written slide and problem links. This is a collection entry, not a direct exercise-PDF
       target.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'MIT 6.041SC — conditional probability, Bayes and independence lectures'
+        against the stage 'Conditional probability and total probability'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:569ee192366d57f02936712b90abb8ad872cb4a0bdd4f0e0e38a67997ff3d8ed
   - material_ref:
       route_id: route-66691da3faf6c5780cf0b66d
       inherit:
@@ -486,6 +775,15 @@ stages:
       table.
     angle_detail: Changing the conditioning event changes the denominator; identify the relevant row or
       column explicitly.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'OpenIntro — probability foundations' against the stage 'Conditional
+        probability and total probability'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:b2e24d35e00ca4154354b6561ce8c8b44515fd70a9fcd4d031305eaa4d82a342
   - material_ref:
       route_id: route-fa96784fa40036436bf1b2cc
       inherit:
@@ -493,12 +791,21 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-fa96784fa40036436bf1b2cc
     locator: §§3.1–3.2, physical PDF pp. 36–40
     angle: Treats new information as a change to the probability model’s conditioning.
     angle_detail: Identify the observed event before applying the ratio definition; use the immediate
       quick exercises as checks.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Dekking — probability exercise bank' against the stage 'Conditional
+        probability and total probability'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:8da08bfd0b11b8c031297d1c266bd3ae995c43def2936b74f8c7e6b505033eba
   - material_ref:
       route_id: route-44431ac89d714785b2bab31b
       inherit:
@@ -512,6 +819,15 @@ stages:
     angle_detail: Multiply along branches, add compatible paths, and identify the conditioning event before
       normalizing.
     url: https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/mit18_05_s22_class03-prep.pdf#page=1
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'MIT 18.05 — probability notes and solved problems' against the stage
+        'Conditional probability and total probability'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:325b6f63190831100d414d30c84d7553eb948dcd7cfc731dc3f4b298fcb77ebb
   - material_ref:
       route_id: route-e3418e502d6ca2dcdf2f2c9d
       inherit:
@@ -519,12 +835,21 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-e3418e502d6ca2dcdf2f2c9d
     locator: physical PDF p. 4, Aufgabe 1 item 2; solution p. 22 item 2
     angle: Distinguishes the overall bad-orange rate from the bad-orange rate conditional on Brazilian
       origin.
     angle_detail: Translate 0.30 and 0.35 into the corresponding probabilities before comparing them.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'FAU pp. 4 and 22 — total probability, Bayes and independence' against
+        the stage 'Conditional probability and total probability'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:f8a0b32a02c12533e086489f7457e93c0b7a479f18adfdd7b89a084f18b53928
   - material_ref:
       route_id: route-510e0c869360f72413e11c13
       inherit:
@@ -532,12 +857,21 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-510e0c869360f72413e11c13
     locator: §1.4, physical PDF pp. 44–52
     angle: Uses colored capsules and branches to distinguish joint probabilities from conditional ones.
     angle_detail: Multiply down branches, then sum the paths representing the event; total probability
       is a weighted average.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Pitman — conditional probability selections' against the stage 'Conditional
+        probability and total probability'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:9b451ada0003b5e3ffffaf6569a37705ca840e59cb83bb3d1e3e29e9b391abbb
   - material_ref:
       route_id: route-8c0f35f6c57e551481433291
       inherit:
@@ -545,12 +879,21 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-8c0f35f6c57e551481433291
     locator: §6.1, physical PDF pp. 219–224; §8.1, pp. 255–258
     angle: Shows why the way information is obtained changes a conditional probability.
     angle_detail: Compare the host’s rule in Monty Hall with knowing at least one die is six; state the
       observation process.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Tijms — simulation-first probability intuition' against the stage
+        'Conditional probability and total probability'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:a8a21d027f42c64cc0d140f23924a3fc1aef85973d4fdc33c66e9d167bb0d7d0
   - material_ref:
       route_id: route-8de21f881a829cb3dec1d55d
       inherit:
@@ -558,12 +901,21 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-8de21f881a829cb3dec1d55d
     locator: Ch 3 §3.2, physical PDF pp. 101–103
     angle: Contrasts first-toss-heads evidence with at-least-one-heads evidence.
     angle_detail: The two statements leave different possible outcomes, so they give different conditional
       probabilities.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Ross — formal probability foundations' against the stage 'Conditional
+        probability and total probability'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:01c780b7e38d1ff8ce6b8941def63c6220336d30427d27d6a4931a2ea0a2c1f6
   - material_ref:
       route_id: route-f99c92614d78638f193ab4d3
       inherit:
@@ -571,11 +923,20 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-f99c92614d78638f193ab4d3
     locator: Ch 4, physical PDF pp. 56–58; solved problems 4.1–4.3, pp. 61–62
     angle: Combines a reduced-sample-space picture with short coin and dice calculations.
     angle_detail: Attempt the numbered solved problems before uncovering their immediately following explanations.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Schaum — probability and Bayes worked problems' against the stage
+        'Conditional probability and total probability'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:78fbbc55fa1db62a217185c791b54bb23d438a3cd01df0492827e9721dfef8a0
   - material_ref:
       route_id: route-de38ce9e78f4dd052d5013b4
       inherit:
@@ -590,6 +951,15 @@ stages:
     angle_detail: Use the already linked course collection to find Lectures 4–5 and Strategic Practice
       2. This pass verified the textbook slices; full lecture playback and every practice problem were
       deferred under the video budget.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Harvard Stat 110 — conditioning and Bayes lectures' against the stage
+        'Conditional probability and total probability'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:d81ba0fbd9ff671233b06fc776804cfcb37e82e834d5df74c03e997d2a105bef
   - material_ref:
       route_id: route-ac99d1d809345a00721a6f99
       inherit:
@@ -597,12 +967,21 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-ac99d1d809345a00721a6f99
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, physical PDF p. 6, 1.2.3; solution
       p. 9
     angle: Combines city/rural proportions with the corresponding regular-voter rates.
     angle_detail: Compute the total regular-voter proportion before attempting the inverse conditional.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Leuphana-Merz pp. 5-10 — probability and conditional-probability
+        drills' against the stage 'Conditional probability and total probability'. The stage description
+        selects that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:44a99cd2052f14037b20864f3dac402f3514a7beda0d669f1262d183356fe568
   - material_ref:
       route_id: route-9a18c8d3ccfb21c3f023b850
       inherit:
@@ -623,10 +1002,31 @@ stages:
       - source_id
       - url
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-361d03e96b7b4416138c8def
     angle: Makes conditioning a restriction to the region consistent with the evidence.
     angle_detail: Identify the evidence region before comparing the relative areas inside it.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route '3Blue1Brown — Bayes as changing areas (illustrated lesson)' against
+        the stage 'Conditional probability and total probability'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:c5d8d7cdb8b4117b42769d15481b5d39b74f1de1748bbe3c8ae130abd3bfaaf4
+  - material_ref:
+      route_id: route-sad-l04-kts-c57f26de
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+      - url
+    route_id: route-sad-l04-kts-c57f26de
+    kind: watch
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-conditional/notes.md
   attachments: []
   source_feedback: []
@@ -658,8 +1058,19 @@ stages:
       example.
     angle_detail: On physical p. 44, 0.1% means 0.001, not the displayed 0.0001. Use that prevalence consistently.
       Pages 45–47 illustrate a separate secretary problem; they are not another diagnostic-test calculation.
+      The ∀i,j partition wording on p. 43 is corrected in the conditional stage (pairwise disjoint for
+      i≠j).
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L04 probability and Naive Bayes deck' against the stage 'Bayes'
+        law and posterior reasoning'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:1974f7a5ca1a832fe06e45fcf36fc3a9806158de2cb125c74adbf2845e1829df
   - material_ref:
       route_id: route-a577afe5626f081623095a82
       inherit:
@@ -673,6 +1084,15 @@ stages:
     angle: Inverts the basketball conditioning to ask for the youth share among players.
     angle_detail: Use the denominator from part (a) with the current sheet’s numbers, not UE4’s different
       table.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes' against
+        the stage 'Bayes' law and posterior reasoning'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:c2a0f602ff9f15bfdd663f04b62897162532423838f50d7144bc521472a00a93
   - material_ref:
       route_id: route-78ae1df0aa949bb2a8a872dc
       inherit:
@@ -682,11 +1102,23 @@ stages:
     kind: practise
     scope_triage: required-now
     route_id: route-78ae1df0aa949bb2a8a872dc
+    node_scaffold_note: Total-probability denominator (84.5% correct-diagnosis, 21.5% marginal positive)
+      the Bayes inversion needs; route stops before posterior inversion.
     locator: exercise-slides/UE3.pdf, physical PDF pp. 34–38
-    angle: Works a diagnostic-test inversion with sensitivity 80%, false-positive rate 15% and prevalence
-      10%.
+    angle: Works a diagnostic-test total-probability calculation (correct-diagnosis rate 84.5%, marginal
+      positive rate 21.5%) with sensitivity 80%, false-positive rate 15% and prevalence 10%; it performs
+      no posterior inversion.
     angle_detail: Attempt pp. 35 and 37 before reading the following answer slides. These parameters differ
       from the lecture example.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE3, slides 15-38 — events, axioms and conditional probability' against
+        the stage 'Bayes' law and posterior reasoning'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:11d4cd1c4bc646b583fedca5fc0ab3d0f8ecada8978c42a4c0c7d2354f10b45c
   - material_ref:
       route_id: route-c355ecc8ea7599015a21abfe
       inherit:
@@ -702,6 +1134,15 @@ stages:
       The current Blatt 2 instead uses 70%/35%, 3:2 and 50%/25%. Follow the method, not these numerical
       answers, when checking Blatt 2. The scores on p. 11 are proportional to posteriors, not normalized
       probabilities.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE4 — sports-club worked example with different numbers from Blatt
+        2' against the stage 'Bayes' law and posterior reasoning'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:2b38713bf8b6c824148044825656794bc9a762c44129788ca850f47cefffe3de
   - material_ref:
       route_id: route-0afeba6c2e9a73159d6ad420
       inherit:
@@ -714,6 +1155,15 @@ stages:
     angle: Separates the total-probability formula from the inversion formula and its motivation.
     angle_detail: Read physical PDF pp. 48–54. Compare the direction that is easy to estimate with the
       direction needed for prediction.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route '2025 probability deck with notes' against the stage 'Bayes' law and
+        posterior reasoning'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:8e8fbddb4f1c17bd85192c1296a92d11da86b15cdad817aaab81991ac01b2b2b
   - material_ref:
       route_id: route-e488632c39efaf524b49f243
       inherit:
@@ -721,12 +1171,21 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-e488632c39efaf524b49f243
     locator: §4.7, physical PDF pp. 230–233
     angle: Checks a rare-condition posterior with a table of 100,000 hypothetical people.
     angle_detail: Compare the true-positive and false-positive counts; the table and equation should give
       the same result.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Fahrmeir Chapter 4 — probability foundations' against the stage 'Bayes'
+        law and posterior reasoning'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:9643a52f22841e2714639d07c8d93e29869a19f57e4405a33916de303879286d
   - material_ref:
       route_id: route-87f36cab308f54f199bc3034
       inherit:
@@ -741,19 +1200,37 @@ stages:
       probability.
     angle_detail: Work from the 15-in-10,000 base rate; compare the result with the much higher base-rate
       test in Aufgabe 4.10.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Arbeitsbuch Chapter 4 — conditional probability and Bayes' against
+        the stage 'Bayes' law and posterior reasoning'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:25d4d3a2fb68fae2ecda02c9224ca4d5a37c83cf2b85a01a9232f7d696a69e5d
   - material_ref:
       route_id: route-fe8b4fbc40e7e85daf8ef25b
       inherit:
       - label
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-fe8b4fbc40e7e85daf8ef25b
     locator: §4.1, physical PDF pp. 143–147
     angle: Draws both forward and reversed urn trees, then models the host’s choices in Monty Hall.
     angle_detail: The branch weights encode the observation protocol; a revealed goat is not independent
       of the hidden prize location.
     url: https://math.dartmouth.edu/~prob/prob/prob.pdf#page=143
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Grinstead & Snell Ch 4 — conditional probability' against the stage
+        'Bayes' law and posterior reasoning'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:cf3f32d99b5016d571f6579fdff3793529769fc5f33fe3485fe090c1b9b92e21
   - material_ref:
       route_id: route-b48ac5af55a8c900d68bb0c9
       inherit:
@@ -761,12 +1238,21 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-b48ac5af55a8c900d68bb0c9
     locator: §2.3, physical PDF pp. 70–73
     angle: Derives Bayes in probability and odds forms and updates which coin was chosen.
     angle_detail: The random-coin example separates the prior over models from the likelihood of the observed
       tosses; the odds form is optional.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blitzstein Chapter 2 — conditioning and Bayes' against the stage
+        'Bayes' law and posterior reasoning'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:0295687853bbc47dac3b8f0188cd070270982c9a08ddd901fd1644b84eb948a2
   - material_ref:
       route_id: route-395d30ff10c3ab149d789c7c
       inherit:
@@ -774,12 +1260,21 @@ stages:
       - source_id
       - url
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-395d30ff10c3ab149d789c7c
     locator: 'Lecture 2, "Conditioning and Bayes’ Rule": Recitation 2, problem 4 "The Monty Hall Problem"'
     angle: Provides a named Monty Hall practice option alongside the conditioning lesson.
     angle_detail: The question and solution links are separate; the accompanying help video is optional
       and unreviewed.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'MIT 6.041SC — conditional probability, Bayes and independence lectures'
+        against the stage 'Bayes' law and posterior reasoning'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:c0d9d11bc9bdf63420a0b74a0c4aaad005e689a374ce80c2e8d6d788e8a9a2e5
   - material_ref:
       route_id: route-66691da3faf6c5780cf0b66d
       inherit:
@@ -787,11 +1282,20 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-66691da3faf6c5780cf0b66d
     locator: §3.2.7–3.2.8, physical PDF pp. 102–108
     angle: Uses trees to organize the joint paths needed for Bayes inversion.
     angle_detail: Multiply along each path and sum all paths compatible with the evidence before normalizing.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'OpenIntro — probability foundations' against the stage 'Bayes' law
+        and posterior reasoning'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:23f9338265465e1561bd89cb900f20d1b0496e83285d83b4e27b4c1a6b0216d3
   - material_ref:
       route_id: route-fa96784fa40036436bf1b2cc
       inherit:
@@ -799,25 +1303,43 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-fa96784fa40036436bf1b2cc
     locator: §3.3, physical PDF pp. 41–43; exercise 3.4, p. 48; answer p. 434
     angle: Uses a cattle-testing example to connect false positives, total probability and Bayes.
     angle_detail: Exercise 3.4 changes the prevalence; it is a separate numerical check with an Appendix
       C answer.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Dekking — probability exercise bank' against the stage 'Bayes' law
+        and posterior reasoning'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:deba9131e23657987fe45167a6baad3ef5328576ac4532ac7c2ea37cb97513b3
   - material_ref:
       route_id: route-44431ac89d714785b2bab31b
       inherit:
       - label
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-44431ac89d714785b2bab31b
     locator: Class 3 §7–7.1, physical PDF pp. 8–11
     angle: Checks the base-rate calculation using equations, a tree and area rectangles.
     angle_detail: Compare true-positive and false-positive contributions rather than substituting sensitivity
       for a posterior.
     url: https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/mit18_05_s22_class03-prep.pdf#page=8
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'MIT 18.05 — probability notes and solved problems' against the stage
+        'Bayes' law and posterior reasoning'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:1f231f49e555fdefdbf15b54c0945edfbb4289e337c11ea00710f0671d4a29d2
   - material_ref:
       route_id: route-510e0c869360f72413e11c13
       inherit:
@@ -825,12 +1347,21 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-510e0c869360f72413e11c13
     locator: §1.5, physical PDF pp. 58–62
     angle: Updates which of three boxes was chosen after observing a white ball.
     angle_detail: Keep the prior box probabilities separate from the within-box color probabilities; derive
       the normalization rather than memorizing it.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Pitman — conditional probability selections' against the stage 'Bayes'
+        law and posterior reasoning'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:2b738f5ce170e3d507321cdbebfd36dc2c35551fa90bcfe2444ed52373101b70
   - material_ref:
       route_id: route-8c0f35f6c57e551481433291
       inherit:
@@ -838,12 +1369,21 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-8c0f35f6c57e551481433291
     locator: §6.2–6.2.1, physical PDF pp. 224–228
     angle: Compares test-result trees in a high-risk subgroup and a low-prevalence population.
     angle_detail: Keep test characteristics fixed while tracking how the prior changes the proportion
       of positives that are true positives.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Tijms — simulation-first probability intuition' against the stage
+        'Bayes' law and posterior reasoning'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:c7cf783f8f6229517128ff239d482ac52d07188f07411d8c6ab7729d81fc35dd
   - material_ref:
       route_id: route-8de21f881a829cb3dec1d55d
       inherit:
@@ -851,11 +1391,20 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-8de21f881a829cb3dec1d55d
     locator: Ch 3 §3.3, physical PDF pp. 120–122
     angle: Uses failure to find a missing plane as evidence that updates probabilities across search regions.
     angle_detail: A failed search is not proof of absence; the detection chance enters the likelihood.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Ross — formal probability foundations' against the stage 'Bayes'
+        law and posterior reasoning'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:dfe1350c7b3f2c9258e320184c392576469022efa85a169497f50f0f1ca708e8
   - material_ref:
       route_id: route-f99c92614d78638f193ab4d3
       inherit:
@@ -863,12 +1412,21 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-f99c92614d78638f193ab4d3
     locator: Ch 4, physical PDF p. 59, Example 4.6 and Bayes theorem; problem 4.15, p. 65
     angle: Uses machines with different production shares and defect rates to set up inverse attribution.
     angle_detail: Compute the total defect probability before attributing a defective item to a machine;
       read the problem’s actual rates.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Schaum — probability and Bayes worked problems' against the stage
+        'Bayes' law and posterior reasoning'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:8573dc1ba2fad356deb301a37c177adcaf378c3f252470ae3027845ee9f93d29
   - material_ref:
       route_id: route-de38ce9e78f4dd052d5013b4
       inherit:
@@ -883,6 +1441,15 @@ stages:
     angle_detail: Use the already linked course collection to find Lectures 4–5 and Strategic Practice
       2. This pass verified the textbook slices; full lecture playback and every practice problem were
       deferred under the video budget.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Harvard Stat 110 — conditioning and Bayes lectures' against the stage
+        'Bayes' law and posterior reasoning'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:2be004c4e0a8dd1d05a68abcece54229b94116f022f243ff9bc22b2ccc6d6704
   - material_ref:
       route_id: route-ac99d1d809345a00721a6f99
       inherit:
@@ -897,6 +1464,15 @@ stages:
     angle: Asks whether a regular voter comes from the city.
     angle_detail: Use the weighted city contribution over the total; the solution is separate from the
       question.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Leuphana-Merz pp. 5-10 — probability and conditional-probability
+        drills' against the stage 'Bayes' law and posterior reasoning'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:a941aee017b37ba7e55caba60db68a40cecab24857df3dc42fd6e1cb061bc39f
   - material_ref:
       route_id: route-9a18c8d3ccfb21c3f023b850
       inherit:
@@ -922,6 +1498,15 @@ stages:
     angle: Shows the posterior as the relevant part of the evidence region divided by all of it.
     angle_detail: Track how the prior area and evidence likelihood jointly determine that region; compare
       this picture with the tree calculation.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route '3Blue1Brown — Bayes as changing areas (illustrated lesson)' against
+        the stage 'Bayes' law and posterior reasoning'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:a1da04d72b8b0bc431219cbf22c068f54f4615dda2f408b5fe7ddcac9056a389
   - material_ref:
       route_id: route-sad-l04-kelleher-bayes
       inherit:
@@ -930,11 +1515,32 @@ stages:
       - vault_path
     route_id: route-sad-l04-kelleher-bayes
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     locator: §6.2.1, physical PDF pp. 287–289
     angle: Shows why the evidence probability normalizes the class-specific numerator.
     angle_detail: The shorthand opening sentence suppresses this denominator; use the full equations.
       Conditional probability need not express a causal mechanism.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kelleher §§6.2–6.3 — factorization and a categorical loan example'
+        against the stage 'Bayes' law and posterior reasoning'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:fe09a95db5fbe2f682075985f81c4353f6f951ddb7b198df82282a6877c02918
+  - material_ref:
+      route_id: route-sad-l04-kts-c57f26de
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+      - url
+    route_id: route-sad-l04-kts-c57f26de
+    kind: watch
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-bayes/notes.md
   attachments: []
   source_feedback: []
@@ -967,6 +1573,15 @@ stages:
       prove independence, and conditional formulas require a positive-probability conditioning event.
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L04 probability and Naive Bayes deck' against the stage 'Independence
+        and conditional independence'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:e599de058abcc134c689bf27bd3400b9635c0165320cd0684a6f74ceb0bac704
   - material_ref:
       route_id: route-a577afe5626f081623095a82
       inherit:
@@ -980,6 +1595,15 @@ stages:
     angle: Contrasts independent portfolio losses with two perfectly dependent securities.
     angle_detail: Compare how the product changes in (e). For 2(d), the supplied marginal sports rates
       do not establish conditional independence.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes' against
+        the stage 'Independence and conditional independence'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:2ba7825c0dbdab1934aed8f83f28e2eab0141fb9d948c439b085635ad1885bd7
   - material_ref:
       route_id: route-78ae1df0aa949bb2a8a872dc
       inherit:
@@ -992,6 +1616,15 @@ stages:
     locator: exercise-slides/UE3.pdf, physical PDF pp. 32–33
     angle: Collects equivalent independence statements beside the conditional-probability definition.
     angle_detail: Apply conditional forms only when their denominators are positive; otherwise use P(A∩B)=P(A)P(B).
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE3, slides 15-38 — events, axioms and conditional probability' against
+        the stage 'Independence and conditional independence'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:5de3766250c84a23154b45e081516807151e89988173736e2838d401baefdaa5
   - material_ref:
       route_id: route-0afeba6c2e9a73159d6ad420
       inherit:
@@ -1005,6 +1638,15 @@ stages:
       Naive Bayes.
     angle_detail: Read physical PDF pp. 44–47,55–56. Compare the conditioning context in each product;
       ordinary and conditional independence are separate statements.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route '2025 probability deck with notes' against the stage 'Independence
+        and conditional independence'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:f1729415ed7216cbc472f0960176cff33714243b7ea6b33793d6fbb0364537ff
   - material_ref:
       route_id: route-e488632c39efaf524b49f243
       inherit:
@@ -1012,12 +1654,21 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-e488632c39efaf524b49f243
     locator: §4.5, physical PDF pp. 224–228
     angle: Derives the product criterion and relates it to unchanged conditional probabilities.
     angle_detail: Use the two-roll example; distinguish a property of specified events from a blanket
       causal assertion.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Fahrmeir Chapter 4 — probability foundations' against the stage 'Independence
+        and conditional independence'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:c31ce9f2dbc686f04d0b612a03d07a042b70bbd7b0671faa4efb3459ebd82a0d
   - material_ref:
       route_id: route-87f36cab308f54f199bc3034
       inherit:
@@ -1025,25 +1676,43 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-87f36cab308f54f199bc3034
     locator: Aufgabe 4.6, physical PDF p. 85, solution p. 92; Aufgabe 4.9(d), pp. 86–87, solution p. 94
     angle: Pairs an independence proof with a check using a finite Venn-diagram dataset.
     angle_detail: Use the complement rule in 4.6; in 4.9 compare a joint probability with the product
       of its marginals.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Arbeitsbuch Chapter 4 — conditional probability and Bayes' against
+        the stage 'Independence and conditional independence'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:f3973253373389132d9d0d47ff26b1d512ae79caa28c2d013818cfaf66307b90
   - material_ref:
       route_id: route-fe8b4fbc40e7e85daf8ef25b
       inherit:
       - label
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-fe8b4fbc40e7e85daf8ef25b
     locator: §4.1, physical PDF pp. 147–149
     angle: Proves the product test for two events and checks it on coin events.
     angle_detail: Conditional equalities require positive event probabilities; the product test handles
       zero-probability cases too.
     url: https://math.dartmouth.edu/~prob/prob/prob.pdf#page=147
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Grinstead & Snell Ch 4 — conditional probability' against the stage
+        'Independence and conditional independence'. The stage description selects that stage's task or
+        reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:941e3c2f6d50d26d01de81d450f518df163d1f25b64272fd74cdecc5c5c8eff7
   - material_ref:
       route_id: route-b48ac5af55a8c900d68bb0c9
       inherit:
@@ -1057,6 +1726,15 @@ stages:
     angle: Gives examples where conditional and unconditional independence disagree.
     angle_detail: Use the random-coin and phone-call examples to see why neither kind of independence
       implies the other; pairwise independence also needs care.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blitzstein Chapter 2 — conditioning and Bayes' against the stage
+        'Independence and conditional independence'. The stage description selects that stage's task or
+        reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:c9f93a03cddcb1fab88360b07044e2348082cb13c8c22bfffa830eae96a7d392
   - material_ref:
       route_id: route-878acd203c5603b70539868d
       inherit:
@@ -1064,24 +1742,42 @@ stages:
       - source_id
       - url
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-878acd203c5603b70539868d
     locator: Appendix B §B.1, physical PDF pp. 3–5
     angle: Separates the bag-of-words representation from the conditional-independence assumption.
     angle_detail: Ignoring word order does not by itself prove independence of evidence given the class.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Jurafsky & Martin Appendix B — naive Bayes, text classification and
+        sentiment' against the stage 'Independence and conditional independence'. The stage description
+        selects that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:347859fc0de6a3bbc3366fe12753c26750eef518849eb3d9de07a6bbc42bb5cf
   - material_ref:
       route_id: route-395d30ff10c3ab149d789c7c
       inherit:
       - label
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-395d30ff10c3ab149d789c7c
     locator: 'Lecture 3, "Independence": slides, Recitation 3 and Tutorial 1'
     angle: Collects two-event and collection-of-events independence with written practice.
     angle_detail: Use the Lecture 3 page rather than the conditioning page; it also links Problem Set
       2 and its solutions.
     url: https://ocw.mit.edu/courses/6-041sc-probabilistic-systems-analysis-and-applied-probability-fall-2013/pages/unit-i/lecture-3/
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'MIT 6.041SC — conditional probability, Bayes and independence lectures'
+        against the stage 'Independence and conditional independence'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:94d78b496e887c88571aa60de82ac023dd158a4204ae628b3db213dc157cc913
   - material_ref:
       route_id: route-66691da3faf6c5780cf0b66d
       inherit:
@@ -1089,12 +1785,21 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-66691da3faf6c5780cf0b66d
     locator: §3.1.7, physical PDF pp. 89–91; §3.2.6, pp. 101–102
     angle: Checks independence using both the multiplication rule and conditional probabilities.
     angle_detail: Keep mutually exclusive events separate from independent events; neither term means
       the other.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'OpenIntro — probability foundations' against the stage 'Independence
+        and conditional independence'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:fa4320f4449ec3b971c719e2a11aaf9244801cf9b9ca91cf3a8b5a06a7294fb2
   - material_ref:
       route_id: route-fa96784fa40036436bf1b2cc
       inherit:
@@ -1102,24 +1807,42 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-fa96784fa40036436bf1b2cc
     locator: §3.4, physical PDF pp. 43–46
     angle: Tests independence through joint probabilities and the product rule.
     angle_detail: Apply the formula to specified events rather than assuming everyday unrelatedness is
       a proof.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Dekking — probability exercise bank' against the stage 'Independence
+        and conditional independence'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:7a45553fb0bf537494caf1318e72cbc95416b20e4b568c38280881d1d1657a55
   - material_ref:
       route_id: route-44431ac89d714785b2bab31b
       inherit:
       - label
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-44431ac89d714785b2bab31b
     locator: Class 3 §6, physical PDF pp. 6–8
     angle: Checks independence on cards and warns that experimental carryover can violate it.
     angle_detail: The coin-in-honey example explains why repeated trials are not automatically independent.
     url: https://ocw.mit.edu/courses/18-05-introduction-to-probability-and-statistics-spring-2022/mit18_05_s22_class03-prep.pdf#page=6
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'MIT 18.05 — probability notes and solved problems' against the stage
+        'Independence and conditional independence'. The stage description selects that stage's task or
+        reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:f35c206ffac96250c1d446227699800c18e8a7fc3556b60e825ed734f453618b
   - material_ref:
       route_id: route-e3418e502d6ca2dcdf2f2c9d
       inherit:
@@ -1127,12 +1850,21 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-e3418e502d6ca2dcdf2f2c9d
     locator: physical PDF p. 4, Aufgabe 1 item 2; solution p. 22 item 2
     angle: Refutes independence by comparing a conditional probability with its marginal.
     angle_detail: Since 0.35 differs from 0.30, the specified events are dependent. No posterior inversion
       is asked.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'FAU pp. 4 and 22 — total probability, Bayes and independence' against
+        the stage 'Independence and conditional independence'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:174a28e7fb3114fa8c6ddccfe04fd8b3fd5e8c27269be157fd1659388c47b1df
   - material_ref:
       route_id: route-510e0c869360f72413e11c13
       inherit:
@@ -1140,12 +1872,21 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-510e0c869360f72413e11c13
     locator: §1.4, physical PDF pp. 53–55
     angle: Connects unchanged conditional probabilities with system-reliability calculations.
     angle_detail: 'Read the warning about common-cause failures: independence is a modeling assumption
       that can fail in practice.'
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Pitman — conditional probability selections' against the stage 'Independence
+        and conditional independence'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:31d97a3a6f56b86d327a0a151480d7aedb564fecfda3aa897e6ed6dd2203b659
   - material_ref:
       route_id: route-8de21f881a829cb3dec1d55d
       inherit:
@@ -1153,12 +1894,21 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-8de21f881a829cb3dec1d55d
     locator: Ch 3 §3.4, physical PDF pp. 128–132
     angle: Uses card and dice events to distinguish pairwise checks from independence of a collection.
     angle_detail: Check the joint event as well as each pair; marginal pairwise equalities do not settle
       a higher-order product.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Ross — formal probability foundations' against the stage 'Independence
+        and conditional independence'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:9a580a3656805576dac9f1f38c190618bd6f3133358fd9105d1d8a85821cfc68
   - material_ref:
       route_id: route-f99c92614d78638f193ab4d3
       inherit:
@@ -1166,12 +1916,21 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-f99c92614d78638f193ab4d3
     locator: Ch 4, physical PDF pp. 59–61, independence and Examples 4.8–4.11
     angle: Checks independence numerically and applies it to repeated trials.
     angle_detail: Separate the independence assumption for trials from properties of events within one
       trial.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Schaum — probability and Bayes worked problems' against the stage
+        'Independence and conditional independence'. The stage description selects that stage's task or
+        reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:0b9bfbe4a340b216e1f20978ebf5e9bf2aa55ba9d85aa7dcf54ad88943ee2e5a
   - material_ref:
       route_id: route-de38ce9e78f4dd052d5013b4
       inherit:
@@ -1186,6 +1945,15 @@ stages:
     angle_detail: Use the already linked course collection to find Lectures 4–5 and Strategic Practice
       2. This pass verified the textbook slices; full lecture playback and every practice problem were
       deferred under the video budget.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Harvard Stat 110 — conditioning and Bayes lectures' against the stage
+        'Independence and conditional independence'. The stage description selects that stage's task or
+        reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:19e7807db0547d76903f3443b6d45ea81a7da730e8c12f8adb4ffec6e0f00cfb
   - material_ref:
       route_id: route-ac99d1d809345a00721a6f99
       inherit:
@@ -1193,12 +1961,21 @@ stages:
       - vault_path
       - source_id
     kind: practise
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-ac99d1d809345a00721a6f99
     locator: Leuphana-Merz_Statistik-2_Uebungsbuch-mit-Klausur.pdf, physical PDF p. 5, 1.1.5; solution
       p. 8
     angle: Tests the meaning of an unchanged conditional probability.
     angle_detail: State the positive-denominator conditions for conditional forms of independence.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Leuphana-Merz pp. 5-10 — probability and conditional-probability
+        drills' against the stage 'Independence and conditional independence'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:12ee1b3cd9e7a9de9a66f1dc1926c4c03cc5230c42c3f2895bac5d2bb661ec20
   - material_ref:
       route_id: route-sad-l04-kelleher-bayes
       inherit:
@@ -1207,11 +1984,32 @@ stages:
       - vault_path
     route_id: route-sad-l04-kelleher-bayes
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     locator: §6.2.3, physical PDF pp. 295–298
     angle: Compares a full joint table with a smaller set of conditional factors.
     angle_detail: The reduction in stored probabilities depends on the conditional-independence assumption;
       it does not establish that assumption from the data.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kelleher §§6.2–6.3 — factorization and a categorical loan example'
+        against the stage 'Independence and conditional independence'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:d4f19663815f74466dce8961e92cd549cffc57c8cf25566747636870aea5b704
+  - material_ref:
+      route_id: route-sad-l04-kts-c57f26de
+      inherit:
+      - label
+      - locator
+      - angle
+      - angle_detail
+      - source_id
+      - url
+    route_id: route-sad-l04-kts-c57f26de
+    kind: watch
+    scope_triage: helpful-now
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-independence/notes.md
   attachments: []
   source_feedback: []
@@ -1245,6 +2043,15 @@ stages:
       posterior probabilities.'
     scope_triage: required-now
     route_id: route-1d4c3d5164052df9c540d079
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L04 probability and Naive Bayes deck' against the stage 'Categorical
+        Naive Bayes classifier'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:704286242524a43c9f1ea34816e3f74dfb6fe8f8269c8742e4dddf80ea87d3ff
   - material_ref:
       route_id: route-a577afe5626f081623095a82
       inherit:
@@ -1258,6 +2065,15 @@ stages:
     angle: Classifies a basketball-and-swimming participant using two within-age-group likelihoods.
     angle_detail: Multiply the prior by both conditional rates for each class, compare scores, and state
       the independence assumption.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 2, Aufgaben 1-2 — probability, Bayes and Naive Bayes' against
+        the stage 'Categorical Naive Bayes classifier'. The stage description selects that stage's task
+        or reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:e31979a6308877abca6dc1e0a201407808f6641325aa39044ed35296338e1eeb
   - material_ref:
       route_id: route-c355ecc8ea7599015a21abfe
       inherit:
@@ -1273,6 +2089,15 @@ stages:
       The current Blatt 2 instead uses 70%/35%, 3:2 and 50%/25%. Follow the method, not these numerical
       answers, when checking Blatt 2. The scores on p. 11 are proportional to posteriors, not normalized
       probabilities.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'UE4 — sports-club worked example with different numbers from Blatt
+        2' against the stage 'Categorical Naive Bayes classifier'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:0d9be305e69a3d7c8190910ced227093966a9b64c593d91dff2ded566910eee2
   - material_ref:
       route_id: route-878acd203c5603b70539868d
       inherit:
@@ -1286,6 +2111,15 @@ stages:
     angle: Shows how class-document counts and class-token counts enter different estimates.
     angle_detail: Track document counts in the prior and token counts in the likelihood. The binary variant
       clips counts; defer smoothing details to L14 if they interrupt the first classifier pass.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Jurafsky & Martin Appendix B — naive Bayes, text classification and
+        sentiment' against the stage 'Categorical Naive Bayes classifier'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:8863fbe7e25d84d365fce74ca11ec6ac8486cbe1f4b1c94cf03ad24192be25cc
   - material_ref:
       route_id: route-37c710174c2a5be9353cb154
       inherit:
@@ -1296,7 +2130,7 @@ stages:
       - source_id
       - url
     kind: watch
-    scope_triage: reference-only
+    scope_triage: helpful-now
     route_id: route-37c710174c2a5be9353cb154
   - material_ref:
       route_id: route-c8fc9d587448ab88b808180a
@@ -1305,12 +2139,24 @@ stages:
       - vault_path
       - source_id
     kind: read
-    scope_triage: helpful-now
+    scope_triage: reference-only
     route_id: route-c8fc9d587448ab88b808180a
     locator: cs229-notes.pdf §4.2, physical PDF pp. 43–45; §4.2.1 begins p. 46
     angle: Makes the independence assumption and indicator-based estimates explicit for binary word features.
     angle_detail: Use the displayed model and class scores now. The likelihood derivation is a return
-      reading after L08; Laplace smoothing starts the later L14 extension.
+      reading after L08; this deck only names Laplace smoothing as a remedy and defers it to 'later'.
+      The canonical curriculum routes that follow-up to unit-m2-sad-l14, whose unit/stage metadata explicitly
+      targets zero counts and Laplace smoothing (L14 source material itself was not inspected in this
+      repair).
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'CS229 §4.2 — Naive Bayes event models' against the stage 'Categorical
+        Naive Bayes classifier'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:71535a02b115468c753129075f3397d85da09bc12ff2f13fe3836e2db6e5caf4
   - material_ref:
       route_id: route-0afeba6c2e9a73159d6ad420
       inherit:
@@ -1324,6 +2170,15 @@ stages:
     angle_detail: Read physical PDF pp. 61–68,85–91. The example gives Geld count 3 for Geld Geld Geld.
       Contrast this with the current deck’s binary presence representation before copying probability
       estimates.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route '2025 probability deck with notes' against the stage 'Categorical
+        Naive Bayes classifier'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:fe0b19b2cb3525e7e70de54dccafc073fc537a3be5a39f55baa6e64f91d9c639
   - material_ref:
       route_id: route-sad-l04-kelleher-bayes
       inherit:
@@ -1337,6 +2192,15 @@ stages:
     angle: Builds class priors and categorical likelihoods from a twenty-row loan dataset.
     angle_detail: Trace the counts for credit history, guarantor/coapplicant and accommodation. Stop before
       §6.4 smoothing; this example is available without external code or a missing CSV.
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Kelleher §§6.2–6.3 — factorization and a categorical loan example'
+        against the stage 'Categorical Naive Bayes classifier'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:993d04e6be53640e34a50af27f03ca859c55760155fba4b0e3862e456968efe8
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l04/stages/stage-sad-l04-naive-bayes/notes.md
   attachments: []
   source_feedback: []

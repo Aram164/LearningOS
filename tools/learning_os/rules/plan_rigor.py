@@ -16,7 +16,33 @@ it was deliberately removed.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
+from typing import Literal
+
+from ..materials_resolution import material_uri_authority, resolve_route_material_files, sha256_file
+
+
+def angle_review_fingerprint(route: dict, stage: dict, resource: dict) -> str:
+    """Bind a declared relation review to the actual route and placement.
+
+    This attests to the relation between the descriptions, not to mastery or
+    independently verified source content. Corrections additionally need
+    inspected, content-bound material evidence.
+    """
+    payload = {
+        "contract": "angle-review-v1",
+        "route": route,
+        "stage": {key: stage.get(key) for key in
+                  ("id", "title", "objective", "knowledge_node_id")},
+        "placement": {key: resource.get(key) for key in
+                      ("route_id", "source_id", "kind", "locator", "angle",
+                       "angle_detail", "scope_triage", "vault_path", "url")},
+    }
+    raw = json.dumps(payload, sort_keys=True, ensure_ascii=False,
+                     separators=(",", ":")).encode("utf-8")
+    return "sha256:" + hashlib.sha256(raw).hexdigest()
 
 # A locator is exact when it names a numbered division AND a page. Slides and
 # videos are exempt from the page half: a deck locator names a file and a slide
@@ -160,17 +186,264 @@ class ChecksPlanRigor:
                 f"hover", where,
             )
 
+    def _routes_by_id(self) -> dict[str, dict]:
+        """Every rich route in the repository, by stable id."""
+        index: dict[str, dict] = {}
+        for source_map in self.repo.module_source_maps.values():
+            for entry in source_map.get("sources", []) or []:
+                if not isinstance(entry, dict):
+                    continue
+                for route in entry.get("unit_routes", []) or []:
+                    if isinstance(route, dict) and isinstance(route.get("id"), str):
+                        index[route["id"]] = {**route, "source_id": entry.get("source_id")}
+        return index
+
+
+    def _angle_review_current(
+        self, route: dict, stage: dict, resource: dict
+    ) -> Literal["current", "stale", "unverifiable"]:
+        """How current a review is: stale needs re-review, unverifiable needs a mount.
+
+        "current" — the review matches its inputs and, for a correction, the
+        evidence bytes on disk. "stale" — malformed, fingerprint-mismatched,
+        or contradicted by bytes that are present. "unverifiable" — the
+        evidence file the correction cites is not here to hash: the materials
+        tree is offline or the file is absent. That last case must never read
+        as stale, because staleness is baseline-managed and would fail a run
+        with no materials tree (CI) for content that never changed.
+        """
+        review = resource.get("angle_review")
+        if not isinstance(review, dict) \
+                or not isinstance(review.get("kind"), str) \
+                or review["kind"] not in {"refinement", "correction"} \
+                or any(not isinstance(review.get(key), str) or not review[key].strip()
+                       for key in ("reviewed_by", "reviewed_on", "rationale")):
+            return "stale"
+        try:
+            if review.get("fingerprint") != angle_review_fingerprint(route, stage, resource):
+                return "stale"
+        except (TypeError, ValueError):
+            return "stale"
+        if review["kind"] == "refinement":
+            return "current"
+        evidence = review.get("evidence")
+        if not isinstance(evidence, list) or not evidence:
+            return "stale"
+        # Resolve only the named route. Evidence from a similarly named file
+        # or a different source can never authorize a correction.
+        try:
+            files = {item.material_uri: item.path
+                     for item in resolve_route_material_files(self.repo, route)}
+            cache = getattr(self, "_angle_evidence_hashes", None)
+            if cache is None:
+                self._angle_evidence_hashes = cache = {}
+            for item in evidence:
+                if not isinstance(item, dict) or not isinstance(item.get("material_uri"), str) \
+                        or not isinstance(item.get("locator"), str) \
+                        or not item["locator"].strip():
+                    return "stale"
+                uri = item["material_uri"]
+                path = files.get(uri)
+                # A broad course route can have no single file target. Its
+                # correction must still name exact inspected bytes belonging
+                # to that source's declared material authority. A route with
+                # exact targets cannot substitute another file from the shelf.
+                if not files:
+                    source = self.repo.sources.get(route.get("source_id"), {})
+                    authority = material_uri_authority(source.get("material"))
+                    if not authority or material_uri_authority(uri) != authority:
+                        return "stale"
+                    named = resolve_route_material_files(self.repo, {**route, "vault_path": uri})
+                    path = next((f.path for f in named if f.material_uri == uri), None)
+                if path is None:
+                    # The route's own files resolved but the evidence names
+                    # something else: a wrong citation, not a missing drive.
+                    if files:
+                        return "stale"
+                    return "unverifiable"
+                if path not in cache:
+                    try:
+                        cache[path] = sha256_file(path)
+                    except OSError:
+                        return "unverifiable"
+                if item.get("file_sha256") != cache[path]:
+                    return "stale"
+        except OSError:
+            return "unverifiable"
+        except (ValueError, AttributeError):
+            return "stale"
+        return "current"
+
+
+    def _check_row_angle(self, smid: str, stage: dict, resource: dict,
+                         routes: dict[str, dict], where: str) -> None:
+        """A stage row's angle against the route it claims to place.
+
+        The angle a learner reads at session time lives on the row, not on the
+        route, and the two drifted apart without anything noticing: an audit on
+        2026-09-18 found 404 rows whose angle contradicts its own route, while
+        `assemble_lecture_study_maps.py` — the documented path for structural
+        plan revisions — regenerates none of them and would overwrite every one.
+        The L04 UE3 repair is the shape of it: the row was corrected to
+        "total-probability ... no posterior inversion" while its route still
+        says "sensitivity/specificity" and still claims to cover Bayes.
+
+        A warning, not an error, and deliberately not yet in the baseline: each
+        row is either a legitimate per-placement refinement or an unrecorded
+        correction, and only a human reading both can say which. Enforcement —
+        a required supersession pointer to the synthesis assessment that
+        justifies the difference — comes after that triage.
+        """
+        angle = str(resource.get("angle") or "").strip()
+        route_id = resource.get("route_id")
+        if not isinstance(route_id, str):
+            ref = resource.get("material_ref")
+            route_id = ref.get("route_id") if isinstance(ref, dict) else None
+        route = routes.get(route_id) if isinstance(route_id, str) else None
+        if "angle_review" in resource:
+            if not angle or route is None:
+                self.warn(
+                    "ANGLE-REVIEW-STALE",
+                    f"study map '{smid}' stage '{stage.get('id')}' has an invalid or stale "
+                    f"angle review for {route_id} — review the changed inputs again",
+                    where,
+                )
+                return
+            state = self._angle_review_current(route, stage, resource)
+            if state == "current":
+                return
+            if state == "unverifiable":
+                self.warn(
+                    "ANGLE-REVIEW-UNVERIFIED",
+                    f"study map '{smid}' stage '{stage.get('id')}' has an angle review for "
+                    f"{route_id} whose evidence bytes are not on this machine — re-run "
+                    f"with the materials tree mounted to verify it",
+                    where,
+                )
+                return
+            self.warn(
+                "ANGLE-REVIEW-STALE",
+                f"study map '{smid}' stage '{stage.get('id')}' has an invalid or stale "
+                f"angle review for {route_id} — review the changed inputs again",
+                where,
+            )
+            return
+        if not angle or route is None:
+            return
+        route_angle = str(route.get("angle") or "").strip()
+        if not route_angle or " ".join(angle.split()) == " ".join(route_angle.split()):
+            return
+        self.warn(
+            "ANGLE-DIVERGES-FROM-ROUTE",
+            f"study map '{smid}' stage '{stage.get('id')}' gives {route_id} an "
+            f"angle its route does not carry ('{angle[:48]}…' vs "
+            f"'{route_angle[:48]}…') — refine the route, or record which "
+            f"synthesis assessment corrects it",
+            where,
+        )
+
     # ----------------------------------------------------- study-map rows
+    def _stage_node_id(self, smid: str, stage: dict, unit_nodes: set[str] | None,
+                       where: str) -> str | None:
+        """The knowledge node a stage teaches: explicit key, else id convention.
+
+        The assembler joins node to routes via `covers` and used to throw the
+        key away at emission, so a later covers edit orphaned placements with
+        nothing able to see it (2026-09-18: UE3 still placed on the L04 Bayes
+        stage after its Bayes coverage was dropped). Stages that follow the
+        `stage-<slug>` / `knowledge-<slug>` convention link back silently;
+        only the unlinkable ones warn — the backfill is incremental, like
+        every other rigor check in this file.
+        """
+        if unit_nodes is None:
+            return None
+        key = stage.get("knowledge_node_id")
+        if isinstance(key, str) and key.strip():
+            if unit_nodes is not None and key not in unit_nodes:
+                self.warn(
+                    "STAGE-NODE-UNLINKED",
+                    f"study map '{smid}' stage '{stage.get('id')}' names node "
+                    f"'{key}' absent from its unit's knowledge map — fix the "
+                    f"key or the map",
+                    where,
+                )
+                return None
+            return key
+        if unit_nodes is not None:
+            stage_id = str(stage.get("id") or "")
+            if stage_id.startswith("stage-"):
+                inferred = "knowledge-" + stage_id[len("stage-"):]
+                if inferred in unit_nodes:
+                    return inferred
+        self.warn(
+            "STAGE-NODE-UNLINKED",
+            f"study map '{smid}' stage '{stage.get('id')}' carries no "
+            f"knowledge_node_id and its id matches no live node — name the "
+            f"node the stage teaches",
+            where,
+        )
+        return None
+
+    def _check_row_node(self, smid: str, stage: dict, node_id: str,
+                        resource: dict, routes: dict[str, dict], where: str) -> None:
+        """A placed route against the node of the stage it sits on.
+
+        A warning, not an error: the placement may be deliberate scaffolding
+        (UE3's total-probability calculation is the denominator the Bayes
+        stage inverts). A non-blank ``node_scaffold_note`` on the resource
+        records that call and silences the warning; anything else must move
+        or gain covers.
+        """
+        route_id = resource.get("route_id")
+        if not isinstance(route_id, str):
+            ref = resource.get("material_ref")
+            route_id = ref.get("route_id") if isinstance(ref, dict) else None
+        if not isinstance(route_id, str):
+            return
+        route = routes.get(route_id)
+        if route is None:
+            return
+        covers = [str(node) for node in (route.get("covers") or [])]
+        if node_id not in covers:
+            note = resource.get("node_scaffold_note")
+            if isinstance(note, str) and note.strip():
+                return
+            self.warn(
+                "RESOURCE-NODE-ORPHAN",
+                f"study map '{smid}' stage '{stage.get('id')}' teaches node "
+                f"'{node_id}' but {route_id} no longer covers it — move the "
+                f"placement, extend the route covers, or record "
+                f"node_scaffold_note",
+                where,
+            )
+
     def _check_stage_resource_rigor(self) -> None:
         r = self.repo
+        routes = self._routes_by_id()
         for smid, study_map in r.study_maps.items():
             where = self._rel(study_map.path)
+            unit = r.units.get(study_map.unit_id)
+            unit_nodes: set[str] | None = None
+            if unit is not None and isinstance(unit.data.get("knowledge_map"), dict):
+                # Units without a knowledge map (roadmaps, fluency drills)
+                # have no nodes to link against; their stages stay unchecked
+                # rather than warning once per stage about a map that by
+                # design does not exist.
+                unit_nodes = {
+                    str(node.get("id"))
+                    for node in (unit.data.get("knowledge_map") or {}).get("nodes", []) or []
+                    if isinstance(node, dict) and node.get("id")
+                }
             for stage in study_map.data.get("stages", []) or []:
                 if not isinstance(stage, dict):
                     continue
+                node_id = self._stage_node_id(smid, stage, unit_nodes, where)
                 for resource in stage.get("resources", []) or []:
                     if not isinstance(resource, dict):
                         continue
+                    self._check_row_angle(smid, stage, resource, routes, where)
+                    if node_id is not None:
+                        self._check_row_node(smid, stage, node_id, resource, routes, where)
                     locator = str(resource.get("locator") or "")
                     if _looks_fused(locator):
                         self.err(

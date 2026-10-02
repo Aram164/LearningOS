@@ -18,8 +18,30 @@ import argparse
 import json
 import re
 
+from .atlas_question import question_schema as atlas_question_schema
+from .batch_notes import bundle_schema as batch_notes_schema
+
 # Owned by the envelope, never by the payload.
-ENVELOPE_OWNED = frozenset({"expected_snapshot", "expected_revision"})
+#
+# `approve` is the operator's gesture on the envelope, and the concurrency
+# tokens live there so a caller cannot send two answers to the same question.
+# The CLI keeps `--approve` for direct human use; only the generated V2
+# payload schema excludes it. `check` is deliberately NOT here: it is a
+# per-command dry-run mode the gateway honors, and existing callers request
+# `--check` through the envelope payload. Both revision spellings stay
+# excluded: the CLI flag is `--expected-revision` (singular) while the
+# envelope carries `expected_revisions` (plural). `apply_reviewed_sha256`
+# is a CLI-only reviewed-apply gesture and never crosses the gateway.
+# `report_out` is a CLI-only output file: presentation, not approved content.
+ENVELOPE_OWNED = frozenset({
+    "approve",
+    "apply_reviewed_sha256",
+    "report_out",
+    "review_report",
+    "expected_snapshot",
+    "expected_revision",
+    "expected_revisions",
+})
 # Argparse bookkeeping that is not part of any capability's surface.
 NOT_A_PAYLOAD_FIELD = frozenset({"help", "func", "command", "root", "json"})
 
@@ -31,6 +53,21 @@ _GATEWAY_INLINE_REQUIRED = {
     "path.note.write": ("text",),
     "stage.note.write": ("text",),
     "unit.note.append": ("text",),
+    "unit.plan.revise": ("record",),
+}
+
+#: Nested subschemas for object-typed payload fields the CLI parser cannot
+#: express. Argparse declares only that a field IS an object; the registered
+#: fragment states what the gateway requires inside it. Keyed by
+#: (capability, field) so the merge stays scoped, and the generated files
+#: remain a deterministic function of parser plus registry. Each fragment is
+#: built by its own contract module — which the handler imports too — never
+#: written inline here: one source of truth, mirrored nowhere. A nested shape
+#: must mirror its handler's checks, never invent stricter ones: direct CLI
+#: use never sees the schema.
+_NESTED_SCHEMAS: dict[tuple[str, str], dict] = {
+    ("note.analysis.save_batch", "bundle"): batch_notes_schema(),
+    ("atlas.question.save", "question"): atlas_question_schema(),
 }
 
 
@@ -73,8 +110,23 @@ def _scalar_json_type(action: argparse.Action) -> dict:
     if action.type is sha256_value:
         return {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
     if action.type is int:
-        return {"type": "integer"}
-    return {"type": "string"}
+        schema: dict = {"type": "integer"}
+    elif action.type is float:
+        # First used by module-attempt --grade: without this a float
+        # argument derives {"type": "string"}, and a gateway envelope
+        # carrying the JSON number the CLI itself parses is refused.
+        schema = {"type": "number"}
+    else:
+        schema = {"type": "string"}
+    choices = getattr(action, "choices", None)
+    # Argparse `choices` are the CLI's accepted vocabulary. The generated
+    # schema used to say bare `string` here, so the gateway accepted values
+    # the named command refuses — and one handler recorded an unknown status
+    # as `skipped`. A dict `choices` is a subparsers action, never a payload
+    # field; anything else enumerates the accepted values verbatim.
+    if choices and not isinstance(choices, dict):
+        schema["enum"] = list(choices)
+    return schema
 
 
 def _json_type(action: argparse.Action) -> dict:
@@ -125,13 +177,37 @@ def payload_fields(command_parser: argparse.ArgumentParser) -> list[argparse.Act
     ]
 
 
-def payload_schema(name: str, command_parser: argparse.ArgumentParser) -> dict:
-    """A Draft 2020-12 schema for one capability's payload."""
+def json_object_fields(command_parser: argparse.ArgumentParser) -> set[str]:
+    """Payload fields the parser declares as opaque structured objects."""
+    return {
+        action.dest for action in payload_fields(command_parser)
+        if action.type is json_object
+    }
+
+
+def payload_schema(
+    name: str,
+    command_parser: argparse.ArgumentParser,
+    *,
+    payload_records: dict[tuple[str, str], dict] | None = None,
+) -> dict:
+    """A Draft 2020-12 schema for one capability's payload.
+
+    ``payload_records`` carries the catalogue-declared accepted input
+    shapes (``contracts.payload_records.resolve_all``), merged over the
+    parser-derived surface exactly like the contract-module fragments.
+    """
     properties, required = {}, []
     for action in payload_fields(command_parser):
         properties[action.dest] = _json_type(action)
         if action.required or not action.option_strings:
             required.append(action.dest)
+    for (capability_name, field), nested in _NESTED_SCHEMAS.items():
+        if capability_name == name and field in properties:
+            properties[field] = nested
+    for (capability_name, field), fragment in (payload_records or {}).items():
+        if capability_name == name and field in properties:
+            properties[field] = fragment
     required.extend(_GATEWAY_INLINE_REQUIRED.get(name, ()))
     schema = {
         "$schema": "https://json-schema.org/draft/2020-12/schema",
@@ -171,21 +247,76 @@ def payload_schema(name: str, command_parser: argparse.ArgumentParser) -> dict:
         if input_field in properties:
             dependent[input_field] = [digest_field]
             dependent[digest_field] = [input_field]
+    # `--progress-next` without `--progress-summary` is refused inside the
+    # handler; the contract says so too, so the gateway refuses at payload
+    # validation. The handler keeps its check: direct CLI use never sees
+    # this schema, and only the handler can refuse a blank summary.
+    if name == "stage.progress.update" and "progress_next" in properties \
+            and "progress_summary" in properties:
+        dependent["progress_next"] = ["progress_summary"]
     if dependent:
         schema["dependentRequired"] = dependent
     return schema
 
 
-def all_payload_schemas(parser: argparse.ArgumentParser, definitions) -> dict[str, dict]:
-    """name -> schema, for every declared command capability with a CLI command."""
+def all_payload_schemas(
+    parser: argparse.ArgumentParser,
+    definitions,
+    *,
+    payload_records: dict[tuple[str, str], dict] | None = None,
+) -> dict[str, dict]:
+    """name -> schema, for every declared command capability with a CLI command.
+
+    A catalogue declaration that names no ``json_object`` payload field is
+    a typo, not a no-op: it fails loudly here, in the generator and in the
+    derivation test alike, instead of silently declaring nothing.
+    """
     commands = subparsers(parser)
+    for capability_name, field in (payload_records or {}):
+        definition = definitions.get(capability_name)
+        command_parser = commands.get(definition.cli_command or "") \
+            if definition is not None else None
+        if command_parser is None or \
+                field not in json_object_fields(command_parser):
+            raise ValueError(
+                f"payload_records {capability_name}.{field} declares no "
+                "json_object payload field"
+            )
     out = {}
     for name, definition in sorted(definitions.items()):
         command_parser = commands.get(definition.cli_command or "")
         if command_parser is None:
             continue
-        out[name] = payload_schema(name, command_parser)
+        out[name] = payload_schema(name, command_parser,
+                                   payload_records=payload_records)
     return out
+
+
+def _check_payload_choices(field: str, action: argparse.Action,
+                           value: object) -> None:
+    """Refuse a payload value the named command's `choices` would refuse.
+
+    Mirrors argparse's own check, including its leniency: an explicit null
+    is absence, not a value, and each element of a repeated flag is checked
+    on its own. A dict `choices` is a subparsers action, never a payload
+    field.
+    """
+    choices = getattr(action, "choices", None)
+    if not choices or isinstance(choices, dict) or value is None:
+        return
+    allowed = list(choices)
+    candidates = list(value) if isinstance(value, list) else [value]
+    for candidate in candidates:
+        if candidate is None:
+            continue
+        if candidate not in allowed:
+            # Deferred: the commands package imports this module at dispatch.
+            from learning_os.commands.support import WriteRefused
+
+            raise WriteRefused(
+                f"invalid payload: {field} must be one of {allowed}, "
+                f"got {candidate!r}"
+            )
 
 
 def payload_to_namespace(
@@ -200,13 +331,22 @@ def payload_to_namespace(
 
     Defaults come from the parser, so a payload that omits an optional field
     behaves exactly as the named CLI command would with the flag absent.
+
+    Argparse `choices` are enforced here as well as in the generated schema:
+    the schema is the contract agents read, and this is the defence in depth
+    for any field whose schema was regenerated without them.
     """
     namespace = argparse.Namespace()
+    by_dest = {}
     for action in command_parser._actions:
         if isinstance(action, argparse._HelpAction):
             continue
         setattr(namespace, action.dest, action.default)
+        by_dest[action.dest] = action
     for key, value in payload.items():
+        action = by_dest.get(key)
+        if action is not None:
+            _check_payload_choices(key, action, value)
         setattr(namespace, key, value)
     namespace.root = root
     namespace.expected_snapshot = expected_snapshot

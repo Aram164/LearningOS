@@ -13,7 +13,7 @@ backfilling them is a decision Aram has deferred, not an oversight.
 Deferring them cost the ability to tell a deferred warning from a new one.
 `operations/validation-warning-baseline.yaml` restores it: every warning
 signature — **(code, path) with its multiplicity** — is recorded, and
-`python tools/warning_baseline.py --check` fails on a new signature or a grown
+`.venv/bin/python tools/warning_baseline.py --check` fails on a new signature or a grown
 one. A signature rather than a total, because a total is gamed by trading one
 warning for another.
 
@@ -36,8 +36,10 @@ baseline-managed signature that *shrinks* is reported as a repair and passes;
 it is never restored merely to match a prior total.
 
 Adopting a new baseline is an explicit act with a stated reason
-(`--update --note "…"`). An unexplained move is indistinguishable from a
-silent regression.
+(`--update --note "…"`, or `--update --ratchet --note "…"` to adopt only
+repairs — a ratchet never raises a count and refuses new or grown
+signatures). An unexplained move is indistinguishable from a silent
+regression.
 
 ## The normative corpus
 
@@ -157,6 +159,22 @@ route, and the definitions they enforce are in `PLAN-CREATION-SOP.md`.
 - **W** `ROUTE-ANGLE-DETAIL-MISSING` — a route has a one-line `angle` but no
   `angle_detail` for the hover.
 - **W** `ROUTE-NO-TARGET` — a route names no `locator`, `url` or `vault_path`.
+- **W** `ANGLE-DIVERGES-FROM-ROUTE` — a stage's angle differs from its route
+  without a current `angle_review`. A reviewed refinement preserves the
+  deliberate stage purpose; a correction additionally names inspected local
+  material, its exact content digest, and locator. The attestation names its
+  actual reviewer and never grants learning credit or source verification
+  beyond the cited scope.
+- **W** `ANGLE-REVIEW-STALE` — the review no longer matches its route, source
+  identity, stage purpose, or placement. Correction evidence must still resolve
+  to that route's exact local file with the recorded digest. Re-review changed
+  inputs; do not carry an old review forward by changing its fingerprint alone.
+- **W** `ANGLE-REVIEW-UNVERIFIED` — a correction review whose evidence file is
+  not on this machine (the materials tree is offline or the file is absent),
+  so the recorded digest cannot be checked. Environmental and baseline-exempt,
+  like `MATERIALS-OFFLINE`: visible in every run, never a regression. Re-run
+  with the tree mounted; a fingerprint mismatch stays `ANGLE-REVIEW-STALE` in
+  both environments.
 
 These are warnings and not errors on purpose. The backfill is incremental
 (WORKFLOWS §6a repays visibility debt on use, never in bulk), and a rule that
@@ -262,3 +280,16 @@ transaction receipt must conform to readable Receipt v1 or authoritative
 Receipt v2 and have a unique ID.
 The revision ledger is operational metadata and is not interpreted as a
 receipt.
+
+- **E** `AI-REQUEST-ID`: every `operations/ai-actions/requests/*/request.yaml`
+  bundle carries an `id` matching `^ai-request-[a-z0-9]+(?:-[a-z0-9]+)*$`; any
+  other id breaks every projection read, so the bundle must be removed or
+  renamed until reads can publish the manifest.
+- **E** `AI-REQUEST-BUNDLE`: every request bundle parses as YAML and contains
+  a mapping; an unparseable bundle is an error naming its file.
+- **E** `TRANSACTION-RECEIPT`: no two committed receipts share one
+  idempotency key — ledger loss followed by key reuse commits twice, and
+  replay can prove at most one of the pair.
+- **E** `TRANSACTION-IDEMPOTENCY`: `operations/transactions/idempotency.yaml`
+  parses when present (a missing file is fine: no gateway writes yet); an
+  unreadable ledger fails closed at commit time and is an error here.

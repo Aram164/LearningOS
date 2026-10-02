@@ -89,16 +89,6 @@ stages:
     kind: practise
     scope_triage: helpful-now
   - material_ref:
-      route_id: route-5cf858ae016d05f91d008978
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-    kind: read
-    scope_triage: helpful-now
-  - material_ref:
       route_id: route-3fd95ab2e612f27020ad178f
       inherit:
       - label
@@ -293,16 +283,6 @@ stages:
     kind: practise
     scope_triage: helpful-now
   - material_ref:
-      route_id: route-5cf858ae016d05f91d008978
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-    kind: read
-    scope_triage: helpful-now
-  - material_ref:
       route_id: route-de41680ef804c0fc37e8e06d
       inherit:
       - label
@@ -356,6 +336,8 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-aml-l03-solution
+  ability_ids:
+  - ability-aml-ols-simple
   number: 3
   title: Closed-form least-squares solution
   status: pending
@@ -524,16 +506,6 @@ stages:
       - angle
       - angle_detail
     kind: practise
-    scope_triage: helpful-now
-  - material_ref:
-      route_id: route-5cf858ae016d05f91d008978
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
-    kind: read
     scope_triage: helpful-now
   - material_ref:
       route_id: route-de41680ef804c0fc37e8e06d
@@ -799,16 +771,6 @@ stages:
       - angle
       - angle_detail
       - vault_path
-    kind: read
-    scope_triage: helpful-now
-  - material_ref:
-      route_id: route-5cf858ae016d05f91d008978
-      inherit:
-      - label
-      - source_id
-      - locator
-      - angle
-      - angle_detail
     kind: read
     scope_triage: helpful-now
   - material_ref:

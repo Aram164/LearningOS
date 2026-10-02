@@ -23,6 +23,7 @@ import shutil
 from pathlib import Path
 
 import pytest
+from repo_builders import copy_real_contracts
 
 from learning_os.loader import load_repo
 from learning_os.rules import validate
@@ -81,7 +82,7 @@ def _materialise(version: str, repo_root, tmp_path):
 
     # Current schemas and current contract — deliberately not the frozen ones.
     shutil.copytree(repo_root / "system" / "schema", root / "system" / "schema")
-    shutil.copytree(repo_root / "system" / "contracts", root / "system" / "contracts")
+    copy_real_contracts(repo_root, root)
     (root / "generated" / "reports").mkdir(parents=True)
     (root / "work" / "inbox").mkdir(parents=True, exist_ok=True)
     (root / "archive" / "workspaces").mkdir(parents=True)

@@ -13,13 +13,6 @@ scope: 'Algorithmen und Datenstrukturen II (Kratsch, HU Berlin, SoSe 2026), exam
   is NOT held, and there are NO HU Übungsblätter for any topic except stable matching. Übungen are ungraded
   (module record), but this leaves the oral with no examiner-calibrated practice, which is why the per-topic
   viva drills carry the diagnostic load.'
-# Status stays `paused`, deliberately. This unit, its study map and its workspace
-# were found disagreeing in the 2026-08-08 engineering audit and were moved to
-# paused/blocked together; a validator invariant now enforces that they move
-# together. The 2026-08-16 build produced a complete REINSTATEMENT PACKAGE - it
-# does not reactivate the module. Reinstating means setting this unit, the study
-# map and workspace-algo2-exam-prep back to active TOGETHER, and registering in
-# the 2.-PZ Anmeldung window (closes 2026-09-10; dates in module.yaml).
 status: paused
 knowledge_map:
   summary: Twelve topics in one methodological arc. The course opens and closes on the same question -
@@ -170,9 +163,6 @@ scope_sources:
   authority: reference
   locator: Eight solved ALGO2 exams 2021-2024; written format from another university - use as explain-aloud
     drill only
-# Empty by design (WORKFLOWS §6): this records Aram's actual choices, and he has
-# made none yet. The routes to choose FROM live in the module source-map and in
-# each topic's exercise bank.
 source_selections: []
 current_study_map: study-map-algo2-exam-prep
 artifacts:

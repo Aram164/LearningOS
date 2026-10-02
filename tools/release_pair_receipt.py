@@ -5,6 +5,7 @@
         --core-root . --ui-root ../obsidian-ui \\
         --core-sha <40 lowercase hex> --ui-sha <40 lowercase hex> \\
         --workflow-run-id <id> --workflow-run-attempt <n> \\
+        --live-install-scope not-run-live-install-deselected|full \\
         --out pair-receipt.json
 
     python tools/release_pair_receipt.py verify \\
@@ -39,6 +40,7 @@ from jsonschema import Draft202012Validator
 ROOT = Path(__file__).resolve().parent.parent
 SCHEMA_PATH = ROOT / "system" / "contracts" / "release-pair-receipt.schema.json"
 SHIPPED_ASSETS = ("main.js", "styles.css", "manifest.json", "build-info.json")
+LIVE_INSTALL_SCOPES = ("not-run-live-install-deselected", "full")
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from learning_os.contracts.manifest_contract import (  # noqa: E402
@@ -155,15 +157,22 @@ def generate(
     ui_sha: str,
     workflow_run_id: str,
     workflow_run_attempt: str,
+    live_install_scope: str,
 ) -> dict:
     """Build one schema-validated receipt from the current, already-built pair.
 
     Refuses rather than guesses at every step: a dirty worktree, a HEAD that
-    does not equal the requested SHA, or a build-info.json that disagrees with
-    either SHA all raise before a receipt is produced.
+    does not equal the requested SHA, an undeclared live-install scope, or a
+    build-info.json that disagrees with either SHA all raise before a receipt
+    is produced.
     """
     core_sha = _require_full_sha(core_sha, "core_sha")
     ui_sha = _require_full_sha(ui_sha, "ui_sha")
+    if live_install_scope not in LIVE_INSTALL_SCOPES:
+        raise ReleasePairReceiptError(
+            f"live_install_scope must be one of {', '.join(LIVE_INSTALL_SCOPES)}: "
+            f"{live_install_scope!r}"
+        )
 
     _require_clean_head(core_root, core_sha, "Core")
     _require_clean_head(ui_root, ui_sha, "UI")
@@ -236,6 +245,7 @@ def generate(
         "shipped_asset_sha256": shipped_asset_sha256,
         "system_check_passed": True,
         "stress_scope": "not-run-materials-unprovisioned",
+        "live_install_scope": live_install_scope,
         "workflow_run_id": str(workflow_run_id),
         "workflow_run_attempt": str(workflow_run_attempt),
     }
@@ -317,6 +327,7 @@ def _cli_generate(args: argparse.Namespace) -> int:
             ui_sha=args.ui_sha,
             workflow_run_id=args.workflow_run_id,
             workflow_run_attempt=args.workflow_run_attempt,
+            live_install_scope=args.live_install_scope,
         )
     except ReleasePairReceiptError as exc:
         print(f"release-pair-receipt: {exc}", file=sys.stderr)
@@ -359,6 +370,10 @@ def main() -> int:
     generate_parser.add_argument("--ui-sha", required=True)
     generate_parser.add_argument("--workflow-run-id", required=True)
     generate_parser.add_argument("--workflow-run-attempt", required=True)
+    generate_parser.add_argument(
+        "--live-install-scope", required=True,
+        help="whether the paired gate ran the live_install tests or deselected them: "
+             "not-run-live-install-deselected (CI) or full (the live installation)")
     generate_parser.add_argument("--out", required=True)
     generate_parser.set_defaults(func=_cli_generate)
 

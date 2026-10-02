@@ -16,7 +16,6 @@ from learning_os.contracts import (
     validate_contract,
 )
 from learning_os.contracts.capability_catalog import query_definitions
-from learning_os.loader import load_repo
 
 SHARED_PLAN_SCHEMA = "https://learningos.local/schema/learning-plan-v1"
 
@@ -67,8 +66,8 @@ def test_curriculum_import_refuses_the_unreplaced_source_plan_placeholder():
 
 
 @pytest.mark.full_repo
-def test_every_active_curriculum_plan_uses_current_template(repo_root):
-    repo = load_repo(repo_root)
+def test_every_active_curriculum_plan_uses_current_template(real_repo):
+    repo = real_repo
     assert repo.study_maps
     for study_map in repo.study_maps.values():
         assert study_map.data["plan_template_version"] == 1, study_map.path
@@ -86,6 +85,17 @@ def test_module_import_template_carries_current_plan_contract(repo_root):
     study_map = template["units"][0]["study_map"]
     validate_contract(repo_root, "study-map.schema.json", study_map)
     assert "estimate_minutes" not in study_map["stages"][0]
+
+
+def test_unit_revise_template_carries_the_compact_contract(repo_root):
+    from learning_os.contracts import PLAN_TEMPLATE_VERSION
+
+    raw = (repo_root / "system" / "templates" / "unit-plan-revise.template.yaml") \
+        .read_text(encoding="utf-8")
+    template = yaml.safe_load(raw)
+    assert template["plan_contract"]["version"] == 1
+    assert template["plan_contract"]["plan_template_version"] == PLAN_TEMPLATE_VERSION
+    assert set(template["route_changes"]) == {"add", "update", "remove"}
 
 
 # --------------------------------------------------------------- reachability

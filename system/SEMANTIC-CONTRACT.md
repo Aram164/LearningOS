@@ -17,7 +17,7 @@ This layer is **interpretation, not stored truth**:
   (`genout.projection`) keeps answering derivations per row; the contract
   owns their meaning so agents read one declared layer.
 
-## Predicates (Phase 1: 23)
+## Predicates (Phase 1: 26)
 
 Each predicate names its authoritative inputs — the only facts it may read —
 and its fallback rule for incomplete or unknown input. The fallback direction
@@ -50,6 +50,9 @@ goal-detector motivating it.
 | `RelationMayApply` | type, endpoints, inferred flag | ADR-015; OPERATOR.md rule 2 | inferred or malformed never applies |
 | `DossierFresh` | cached/current hashes | Phase 5 dossier contract | empty maps never fresh |
 | `AttemptConsistent` | attempt/sitting termins | OPERATOR.md rule 5 | malformed lists inconsistent |
+| `NeedsSourceReview` | reviewed flag, bytes-current flag | OPERATOR.md rule 2 | non-boolean inputs never fire |
+| `RequiresHumanJudgment` | decision kind, rule-decidable flag | OPERATOR.md rule 10, boundary 17 | malformed inputs never fire |
+| `CurrentScopeAuthority` | fact kind + owning ids, superseded paths, replacement | ARCHITECTURE.md §5.5; OPERATOR.md boundaries 4–5 | unknown or superseded-without-replacement → `"unknown"` |
 
 Staleness is not completeness: artifacts a claim never read cannot stale
 it, and an unreadable read set is stale rather than trusted. Deleting this
@@ -90,9 +93,9 @@ Storage is a receipt-adjacent sidecar (`operations/transactions/lineage.yaml`,
 schema beside the other contracts), never a canonical edit and never a
 projection — lineage must survive a rebuild. Backfill is lazy: records are
 created when a claim is judged, never bulk-migrated. Since Phase B,
-prospective claims are bound at admission: a `module.plan.import` that
-creates, repairs, or removes a covers edge carries per-claim evidence or
-refuses before apply, and the gateway persists the admitted records
+prospective claims are bound at admission: a `module.plan.import` or
+`unit.plan.revise` that creates, repairs, or removes a covers edge carries
+per-claim evidence or refuses before apply. The gateway persists the admitted records
 (`admitted_by` request binding, `supersedes` repair chain) in the same
 transaction as the canonical mutation. Readers:
 `tools/learning_os/semantics/lineage.py`, proven by
@@ -110,16 +113,29 @@ identify the actual review and its limits.
 ## Candidate goals (Phase 3)
 
 The engine surfaces what is worth investigating and never mutates meaning
-itself. Five read-only detectors — covering routes gone stale, sources
+itself. Six read-only detectors — covering routes gone stale, sources
 changed under claims, repeated question classes with no VOQ, inspections
-with no dossier, systematic reviewer corrections — emit goals with
-rationale and evidence, thresholded and deduplicated. Each goal then walks
+with no dossier, systematic reviewer corrections, judged claims still
+needing a reviewer — emit goals with rationale and evidence, thresholded
+and deduplicated. The sixth motivates the review predicates:
+`NeedsSourceReview` fires on its signals, `RequiresHumanJudgment` on its
+contested goals, and reviewers re-resolve moved authorities through
+`CurrentScopeAuthority`. Each goal then walks
 `detected → formulated → eligible → proposed → authorized → planned →
 executing → verified → closed` (plus `deferred/rejected/stale/superseded`),
 one step at a time; only Aram authorizes. The queue lives under
-`work/proposals/goals/`, one file per goal. Readers:
+`work/proposals/goals/`, one file per goal. Aram's explicit
+reject/defer/close decisions live separately in
+`operations/goal-ledger.yaml` (written only by `los goal`) and feed the
+detectors' `known_ids` dedup, so decided goals stop re-emitting. A deferred
+goal with an explicit `revisit_on` date reappears on that date as a candidate,
+never as an authorization. Goals
+sharing one cause print as one cluster (`cluster_goals`), ordered by a
+hand-written exam-proximity sort refined by detector precedence
+(`rank_clusters`: belief risk before fan-out size, `DETECTOR_PRECEDENCE`
+as tunable data) — a Select step, not a learned cost model. Readers:
 `tools/learning_os/semantics/goals.py`, proven by
-`tests/test_goal_proposals.py`.
+`tests/test_goal_proposals.py` and `tests/test_goal_select.py`.
 
 ## Agent tasks (Phase 4, amended: no tracking, no costs)
 
@@ -155,12 +171,21 @@ plus the digest, and a cache file whose content fails its hashes is
 refused, never served. Evidence is content-addressed: callers resolve
 each locator to the digest behind it (materials manifest checksums), so
 changed bytes invalidate even when the URI never moves.
-Freshness delegates to `DossierFresh`. Dossiers live under
-`generated/dossiers/`, covered by the existing no-hand-edit path — no
-canonical file may reference them, and the builder plus the store take
-explicit paths and never walk the repository. Readers:
+Freshness delegates to `DossierFresh`. The same content-addressed
+discipline compiles the per-session resume screen (`los resume`):
+stage, requirement, recorded evidence, open items, last result, exam
+sitting, and the single top-ranked goal cluster (best-effort, read-only;
+seeing it files nothing) as `context://<unit-id>/resume-dossier@<digest>`,
+resolved from the pointer, the last result, or the last touch, in that
+labeled order.
+The resume builder is `tools/learning_os/genout/resume_dossier.py`, proven by
+`tests/test_resume_dossier.py`; `los resume` renders its result without storing
+a cache file. Semantic dossiers live under `generated/dossiers/`, covered by
+the existing no-hand-edit path — no canonical file may reference them. Readers:
 `tools/learning_os/semantics/dossiers.py`, proven by
-`tests/test_context_dossiers.py`.
+`tests/test_context_dossiers.py`. Served by the read-only
+`los dossier UNIT_ID` caller (`tools/learning_os/commands/dossier.py`,
+proven by `tests/test_unit_dossier_command.py`).
 
 ## Proof-carrying change (Phase 6, hardened: claims, not verdicts)
 
@@ -190,6 +215,45 @@ is preflight, and the snapshot guard stays the final word. Readers:
 `tools/learning_os/semantics/changes.py`, proven by
 `tests/test_proof_carrying_change.py`.
 
+Asymmetric admission: proof-carrying assumes an *untrusted* producer, so
+the envelope ceremony binds agent-authored writes uniformly — except
+where the producer is the ground truth. Aram recording his own results
+(`learner.observation.append` via `los observe`) carries
+`approval.kind == "direct-user-gesture"`: the snapshot is taken under the
+operator lock rather than asserted, over the same intent subject, into a
+byte-identical receipt.
+
+Two closed sets carry that kind, and the difference between them is the
+producer, never the capability. **`GESTURE_ALLOWLIST`** admits it from any
+channel, for writes that are the learner's own study record or his own
+choice among authored material — his evidence, captures and Garden seeds,
+progress, session notes, attachments, detours, resource feedback, Atlas
+questions, source selections. **`UI_REVIEWED_ALLOWLIST`** admits it only
+over `channel == "ui"`, for the workflows where the application shows
+the exact change before a deliberate Save or Apply: `concept.relations.change`
+(ADR-017's hand-authored connections), `review.prepare`, `review.apply`,
+`unit.map.import` after its no-write preflight, and, from Review, the two
+append-only ability records — `learner.ability-observation.append` (a claim
+Aram confirms, whose confirmation pointer names that app request) and
+`ability.candidate.append` (a tentative connection that carries nothing).
+That Save *is* the
+explicit approval these contracts already required; the review was
+happening on screen and the envelope had no way to say so. It is not a
+second approval protocol, and a `ui` channel label is provenance inside
+this trusted local application — not cryptographic proof that a human was
+present, and not treated as more than that. What actually protects
+canonical state is unchanged: exact previous rows, registry and artifact
+revisions, the snapshot, duplicate/endpoint/cycle checks, exact-byte
+binding of reviewed files, the import preflight.
+
+Everything else fails closed, from every channel, and any agent-origin
+envelope claiming a gesture for a reviewed-UI capability fails closed too.
+An admitted remote envelope still asserts its full snapshot and intent.
+Until 2026-09-13 this paragraph described a three-capability allowlist
+that the code and WORKFLOWS had already outgrown; a contract that
+disagrees with its enforcement is the failure this document exists to
+prevent. Proven by `tests/test_observation_gesture.py`.
+
 ## Intelligence scan
 
 OBSERVE → INTERPRET → PROPOSE, then Aram decides queue entry: `los
@@ -200,9 +264,18 @@ writes. v1 observes only what the repository already records — changed
 files in a stateless recency window joined to knowledge nodes and
 source definitions, lineage staleness against the revision ledger, and
 derived study-map obligations. Critique points are deliberately
-excluded (an open point is not a work item); question, inspection, and
-correction counts have no observable source and those detectors stay
-caller-fed; dossier freshness has no live-key registry. Readers:
+excluded (an open point is not a work item). Prospective material-synthesis
+publication records its freshness lineage atomically with the approved dossier,
+bound to its bytes and the same evidential basis used by material freshness.
+Presentation prose and revision-only changes do not stale it; changed local
+material bytes do. Unregistered context dossiers remain operator wiring, and
+older publications gain no invented historical judgments. Question, inspection,
+and correction counts have no
+observable source inside the repository and those detectors stay
+caller-fed: a live caller counts ephemerally
+(`session_counts.SessionCounts`, in memory only, never persisted) and
+hands the counts via `--feed` or `ScanInput` fields; an empty feed
+behaves exactly like no feed. Readers:
 `tools/learning_os/semantics/scan.py`, proven by
 `tests/test_intelligence_scan.py`.
 
@@ -244,10 +317,21 @@ with updated predicates, fixtures, and lineage.
 
 ## Status
 
-Phase 1 (contract + VOQs): 23 predicates end-to-end with registry plus
+Phase 1 (contract + VOQs): 26 predicates end-to-end with registry plus
 `evaluate()` entry point, proven by `tests/test_semantic_contract.py` and
 the VOQ suite. Phase 1.5 adds the policy-query envelope; Phase 2 adds
 lineage above. Full vision and work plan:
 `work/proposals/intelligence-plane-plan.md`; phase records:
 `work/proposals/intelligence-plane-phase0-record.md`,
 `work/proposals/intelligence-plane-phase1-record.md`.
+
+
+### Assessment suitability and learner evidence
+
+A runtime content review is bound to the requirement and exact activity content/scope,
+not just to a stable route ID. It establishes that an activity permits the target
+assessment; unfamiliarity and assistance remain facts about each reported attempt.
+Unreviewed, stale or asset-incomplete activities may support practice but cannot
+produce a ready independent-assessment claim. Explicit prior exposure and mapped
+attempt history constrain future proposals. Full intake and correction semantics
+are owned by WORKFLOWS §8 and the shared independentEvidenceReview schema.

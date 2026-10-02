@@ -46,6 +46,13 @@ def test_build_records_every_durable_file(tmp_path):
     assert len(manifest["files"]["Books/a.pdf"]["sha256"]) == 64
 
 
+def test_checked_in_inventory_uses_the_shared_byte_renderer(repo_root):
+    """A future third writer must not reintroduce inventory serialization churn."""
+    path = repo_root / "records/materials-manifest.yaml"
+    raw = path.read_text(encoding="utf-8")
+    assert raw == mm.render_manifest(yaml.safe_load(raw))
+
+
 def test_build_excludes_symlinks_noise_and_generated_catalogue(tmp_path):
     base = make_tree(tmp_path / "materials", {
         "Books/a.pdf": "alpha",

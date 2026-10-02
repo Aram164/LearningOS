@@ -105,7 +105,7 @@ Produced by the operator through reasoning, never canonical: study plans, source
 ### 3.1 Root
 
 <!-- root-tree:begin — GENERATED from system/contracts/perimeter.yaml.
-     Do not hand-edit; run `python tools/tree_contract.py --write`. -->
+     Do not hand-edit; run `.venv/bin/python tools/tree_contract.py --write`. -->
 
 ```text
 semestercontext/
@@ -122,6 +122,7 @@ semestercontext/
 │   ├── README.md
 │   ├── CLAUDE.md     the Claude adapter, reachable from the umbrella
 │   └── Plans
+├── outputs/          design handoffs and implementation verification artifacts
 └── Stratum/          independent external Git repository; never traversed
 ```
 
@@ -152,7 +153,7 @@ authored repository and interface as independent Git repositories.
 ### 3.2 Authored repository
 
 <!-- tree:begin — GENERATED from system/contracts/tree-contract.yaml.
-     Do not hand-edit; run `python tools/tree_contract.py --write`. -->
+     Do not hand-edit; run `.venv/bin/python tools/tree_contract.py --write`. -->
 
 ```text
 repository/
@@ -182,7 +183,9 @@ repository/
 │   ├── transactions/      one receipt per applied transaction
 │   ├── gateway-requests/  request envelopes
 │   ├── ai-actions/        AI action state; requests and deliveries are gitignored
-│   └── migrations/        applied-migration provenance
+│   ├── migrations/        applied-migration provenance
+│   ├── diagnostics/       disposable diagnostic trace store (gitignored, deletable, never authoritative)
+│   └── legacy/            published Legacy archive lock (allowlist-only evidence)
 ├── migration/             migration state, preserved originals and reports
 │   ├── backups/           pre-migration copies, retained
 │   ├── reports/           what each migration did
@@ -190,10 +193,12 @@ repository/
 │   └── curriculum-v2/     the module-first conversion — map, report and originals
 ├── work/                  the coordination layer and its queues
 │   ├── inbox/             the drop-anything home; the operator routes what lands here
+│   ├── complaints/        tracked agent friction notes; the inbox stays for learner captures
 │   ├── active/            one folder per active workspace, each with a CONTEXT.md
 │   └── proposals/         approved proposals and their phase records; nothing here authorizes itself
-├── archive/               completed workspaces, retained and never deleted
-│   └── workspaces/        one folder per year
+├── archive/               completed workspaces and resolved inbox drops, retained and never deleted
+│   ├── workspaces/        one folder per year
+│   └── inbox/             resolved inbox drops, one folder per year
 ├── generated/             gitignored, rebuildable; shape declared by manifest-contract.yaml
 ├── bases/                 installed Obsidian Bases shelves (ADR-006); gitignored
 ├── tools/                 the operator CLI and the learning_os package; see tools/README.md
@@ -229,12 +234,15 @@ instead of repeating selected fields. The explicit field list preserves absent
 fields and stage-specific overrides; priority, action kind, resource identity,
 feedback and progress stay stage-owned. The loader expands references within
 the same module and unit, refusing missing or ambiguous routes and overlapping
-inherited/local fields. Runtime consumers and manifest v9 retain their complete
-expanded shape. Editing context exposes the compact shape with its route
+inherited/local fields. Runtime consumers and the manifest declared in
+`system/contracts/manifest-contract.yaml` retain their complete expanded
+shape. Editing context exposes the compact shape with its route
 definitions once; ordinary state saves preserve that storage form.
 | Legacy module snapshot | `records/modules.yaml` | compatibility/migration only |
 | Coordination facts | `work/COORDINATION.md` | fixed |
 | Quick capture (anything, unprocessed) | `work/inbox/` | any name; the operator routes |
+| Agent friction notes | `work/complaints/` | dated Markdown, one file per issue; never in the inbox |
+| Resolved inbox drops | `archive/inbox/<year>/` | moved byte-identical via `inbox.resolve`, never overwritten |
 | Workspace operational files | `work/active/<workspace-id>/{CONTEXT.md, scratch/, inputs/, outputs/}` | scratch is free-form |
 | Archived workspace | `archive/workspaces/<year>/<workspace-id>/` | moved whole, unchanged |
 | External material with a registered source | `LearningOS/materials/<area>/…/<slug>/` (topic tree) | `material://<source-id>/…` resolves via `materials/.flat/source-<id>` symlinks |
@@ -246,9 +254,9 @@ definitions once; ordinary state saves preserve that storage form.
 
 1. **A note's filename is always `<note-id>.md`.** IDs never change, so filenames never change; only the bucket folder may change on a move. Identity still lives in frontmatter — the filename is a derived convenience the validator enforces, never the identity itself.
 2. **Buckets are the seven listed** (decision 2026-07-16: `algorithms/` added for CS-theory content — CLRS-style material fits neither mathematics nor programming). A new bucket requires an ADR; buckets are routing neighborhoods, never taxonomy.
-3. **Attachments are canonical user artifacts**, not materials: handwritten scans and photos live *inside* the authored repository under `knowledge/attachments/<note-id>/`, are Git-tracked, and are referenced from the owning note's `attachments` frontmatter as repo-relative paths. Books, slide packs, and videos are never attachments — they are materials. The user may periodically prune old scans to reclaim space once transcriptions are reviewed; the operator never deletes originals on its own initiative.
+3. **Attachments are canonical user artifacts**, not materials: handwritten scans and photos live *inside* the authored repository under `knowledge/attachments/<note-id>/`, are Git-tracked, and are referenced from the owning note's `attachments` frontmatter as repo-relative paths. The exception is a scan too large or too private to publish: it stays at the same path but is **local-only** — gitignored, still backed up (the backup walk reads disk), and pinned by size and SHA-256 in `system/contracts/local-attachments.yaml`, which the validator checks (a changed file is an error; an absent one, as in CI, warns). Books, slide packs, and videos are never attachments — they are materials. The user may periodically prune old scans to reclaim space once transcriptions are reviewed; the operator never deletes originals on its own initiative.
 4. **Materials are identified by source, placed by topic** (amended 2026-07-17, user decision). Every registered source with local files owns exactly one folder, physically located in the human topic tree (`ML/`, `Math/`, `CS-Theory/`, `Books/` shared library, `Programming/`, `Degree/`). Identity remains id-based: `materials/.flat/` carries one `source-<id>` symlink per source folder so every `material://<source-id>/…` URI resolves unchanged; registry records never encode physical positions. The tree, `.flat/`, and per-module `SOURCES.md` lists are maintained solely by `tools/build_materials_tree.py` (PLACEMENT map = single source of truth; moving a folder = edit map, re-run). Unregistered dumps land in `materials/_unsorted/` until registered.
-5. **`work/inbox/` is the zero-friction capture point.** Photos of handwritten pages, pasted links, fragments — no naming, no metadata required at capture time. Routing inbox items into workspaces, notes, or registries is the operator's job; the inbox should trend toward empty.
+5. **`work/inbox/` is the zero-friction capture point.** Photos of handwritten pages, pasted links, fragments — no naming, no metadata required at capture time. Routing inbox items into workspaces, notes, or registries is the operator's job; a routed drop then leaves through `inbox.resolve`, naming where it went, so the inbox trends toward empty.
 6. **Only Markdown and YAML belong under `knowledge/`** (plus images under `attachments/`). Binary files elsewhere in the authored tree are validator warnings.
 
 ---
@@ -338,6 +346,35 @@ Operations that change a note's **conceptual identity** are architectural events
 - discarding earlier reasoning or converting uncertainty into certainty.
 
 Each requires explicit user approval and leaves an explicit trail: the successor note declares `supersedes: [note-old-id]`. The reverse link (superseded-by) is **generated**, not stored — reverse links never become canonical fields. Git preserves the historical text; the repository preserves the semantic identity.
+
+### 5.6 Source-analysis notes
+
+Agent-authored source-chapter analysis is retained as an ordinary durable
+note (`role: reference`, `authorship: operator-drafted`) with an optional
+`material_analysis` binding: source identity, recorded and live source
+digests, inspected range, and retrieval anchors. Notes are saved only
+through the `note.analysis.save` gateway capability, which owns authorship
+and review defaults, refuses collisions, and accepts a `resolved` binding
+only for material it observes at the claimed digest under the source's
+registered material. A unit assessment may reference
+such a note through `analysis_refs` instead of copying its prose; each ref
+pins the note revision and content digest the approver saw, so a later note
+edit stales the dossier until re-review. Referenced analysis also requires
+its inspected source bytes to remain current; refreshing a route's material
+basis does not renew an interpretation of older bytes. The derived projection
+binds both the referenced note and its observed source. Saving preserves a draft; it never
+approves its claims or represents the learner's understanding.
+
+### 5.7 General note creation
+
+Every other durable note is created only through the `note.create` gateway
+capability, which owns authorship and review defaults, preserves the approved
+body bytes verbatim, and refuses id collisions (updates go through
+`note.revise`). The `reference` and `question` roles keep their dedicated
+capabilities above and are refused here, so provenance bindings and
+question wording can never be bypassed by the general path. A successor
+declares `supersedes` in the same call and deprecates its predecessors
+atomically (§5.5).
 
 ---
 
@@ -567,8 +604,9 @@ evaluation. A later evaluation change is an approval-gated proposal.
 
 Workspaces retain their independent lifecycle and coordinate curriculum work
 with explicit `program_ids`, `module_ids`, and `unit_ids`. Naming and prose are
-never used to infer v2 relationships. The current resume pointer is generated
-as a convenience and cannot hide any module, unit, or map.
+never used to infer v2 relationships. The current resume pointer is written by
+the learner's own explicit progress action (§22b) and cannot hide any module,
+unit, or map.
 
 `curriculum/quarantine/index.yaml` is the only normally loadable record at the
 Master's boundary. The loader, validator's normal scan, manifest, bootstrap,
@@ -617,6 +655,23 @@ Chats are transient; workspaces are persistent. A chat operates on one primary w
     labels both with one word ("Continue") destroys a distinction the core is
     careful to keep: show "Resume where you left off" and "Planned next"
     separately, and let them disagree, because they legitimately do.
+22b. It is nevertheless **authoritative about where you stopped**, and there is
+    exactly one of it. `stage.progress.update` writes it, naming the stage that
+    action made current, inside the same transaction as the records that moved —
+    same operator lock, same declared write scope, same receipt, same post-action
+    scope check, same republished projection. Activating or revisiting selects
+    the work; pausing keeps the destination on what you paused, because that is
+    what pausing means; completing or skipping follows to whatever stage became
+    current, or stays on the finished one when the map has run out. Other units
+    keep their own active maps: this records where *he* is, not what is open.
+    Every interface starts here, and what any of them does when it is missing is
+    *recovery* — labelled as such, never presented as the answer. Evidence
+    chronology and commit timestamps are recovery inputs, never a statement of
+    intent: recording a result against one subject says nothing about which
+    subject he chose to sit down with next. Until 2026-09-13 nothing wrote this
+    file, so recovery *was* the destination and both interfaces disagreed with
+    the learner and with each other (audit
+    `workbench/audits/synthetic-learner-2026-09-12`, F05).
 22a. `unit_order` is an ordering, not a claim that every entry is the same kind
     of thing. Each unit carries `kind` (`lecture`, `topic`, `lecture-cluster`,
     `milestone`, `exam-block`, `bridge`), the manifest projects it, and
@@ -676,6 +731,7 @@ Projects live under `projects/registry/` and are independent from curriculum
 modules. A project may have no fixed structure, a linear structure, parallel
 workstreams, or nested steps. Project relationships are explicit records under
 `projects/relations/`; aliases preserve old deep links during compatibility
-gates. The current manifest-v5 projection exposes Projects together with
+gates. The manifest projection declared in `system/contracts/manifest-contract.yaml`
+exposes Projects together with
 Core-owned Review and Garden state. Projection changes remain producer-owned
 and must be mirrored in the UI contract lock in the same release.

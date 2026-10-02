@@ -27,6 +27,7 @@ carry no assumptions and cascade only to themselves.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, replace
@@ -35,6 +36,7 @@ from pathlib import Path
 import yaml
 from jsonschema import Draft202012Validator
 
+from ..route_identity import route_with_identity
 from .predicates import CONTRACT_VERSION, claim_stale
 
 #: The receipt-adjacent sidecar. Canonical records never carry lineage;
@@ -52,6 +54,46 @@ CLAIM_KINDS = ("route-covers", "scope-authority", "dossier-freshness")
 #: Lineage statuses. ``contested`` needs a reviewer, not a recompute;
 #: ``withdrawn`` needs a fresh judgment, never a recompute.
 STATUSES = ("supported", "stale", "contested", "withdrawn")
+
+#: Source-hash namespaces pinning what a route-covers judgment actually
+#: read: the route row itself plus each covered knowledge node — never
+#: the module revision, never co-imported units, never learner state.
+#: Records judged before these namespaces keep their revision reads and
+#: today's behaviour until a fresh judgment replaces them.
+ROUTE_CONTENT_PREFIX = "route-content:"
+NODE_CONTENT_PREFIX = "node-content:"
+
+
+def _canonical_bytes(value: Mapping) -> bytes:
+    return json.dumps(
+        dict(value),
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        default=str,
+    ).encode("utf-8")
+
+
+def route_content_digest(*, module_id: str, source_id: str, route: Mapping) -> str:
+    """Content identity of one source-map route row, as judged.
+
+    The row as :func:`route_with_identity` returns it (stable id filled
+    in) plus its owning source: any descriptive edit, re-cover, or move
+    changes the digest, while edits to sibling routes, other units, or
+    the module record leave it alone.
+    """
+    if not isinstance(route, Mapping):
+        raise LineageError("a route content digest needs the route row mapping")
+    row = {**route_with_identity(module_id, source_id, dict(route)),
+           "source_id": source_id}
+    return "sha256:" + hashlib.sha256(_canonical_bytes(row)).hexdigest()
+
+
+def node_content_digest(node: Mapping) -> str:
+    """Content identity of one knowledge-map node row, as judged."""
+    if not isinstance(node, Mapping):
+        raise LineageError("a node content digest needs the node row mapping")
+    return "sha256:" + hashlib.sha256(_canonical_bytes(node)).hexdigest()
 
 
 class LineageError(ValueError):
@@ -98,6 +140,8 @@ class ClaimLineage:
     contested_by: str = ""
     contest_reason: str = ""
     supersedes: Mapping[str, object] | None = None
+    restamped_by: str = ""
+    restamped_on: str = ""
 
 
 @dataclass(frozen=True)
@@ -265,6 +309,83 @@ def supersede(
         judged_by=judged_by,
         admitted_by=admitted_by,
         supersedes=to_dict(prior),
+    )
+
+
+def restamp_claim(
+    prior: ClaimLineage,
+    *,
+    source_hashes: Mapping[str, str],
+    restamped_by: str,
+    restamped_on: str,
+) -> ClaimLineage:
+    """Narrow one route-covers claim's reads to per-row content digests.
+
+    The governed re-stamp (#94): the coarse revision pins are dropped,
+    the given route-content/node-content digests join the kept evidence
+    hashes, and evidence trails, judge, admission, status and review
+    state pass through untouched. The prior record rides as
+    ``supersedes`` instead of being erased, and the stamping is
+    attributed with ``restamped_by``/``restamped_on``.
+
+    A re-stamp is not a re-judgment and never endorses: anything but a
+    supported old-shape route-covers claim refuses — a withdrawn claim
+    returns only through fresh judgment, a contested one needs its
+    reviewer, and an already-stamped claim is never stamped twice.
+    """
+    if prior.claim_kind != "route-covers":
+        raise LineageError(
+            f"claim {prior.claim_id!r} is not a route-covers claim; "
+            "only route coverage earns a re-stamp")
+    if prior.status != "supported":
+        raise LineageError(
+            f"claim {prior.claim_id!r} is {prior.status}, not supported; "
+            "a re-stamp narrows reads, never lifts an explicit state")
+    if not isinstance(restamped_by, str) or not restamped_by.strip():
+        raise LineageError(
+            f"claim {prior.claim_id!r} needs who re-stamped it")
+    if not isinstance(restamped_on, str) or not restamped_on.strip():
+        raise LineageError(
+            f"claim {prior.claim_id!r} needs when it was re-stamped")
+    kept = dict(prior.derived_from.source_hashes)
+    if any(key.startswith(ROUTE_CONTENT_PREFIX) or key.startswith(NODE_CONTENT_PREFIX)
+           for key in kept):
+        raise LineageError(
+            f"claim {prior.claim_id!r} already carries narrowed reads; "
+            "a re-stamp never stamps twice")
+    route_id, nodes = parse_covers_statement(prior.claim_id, prior.statement)
+    try:
+        fresh = {str(key): str(value) for key, value in dict(source_hashes).items()}
+    except (TypeError, ValueError) as exc:
+        raise LineageError(
+            f"malformed narrowed reads for {prior.claim_id!r}: {exc}") from exc
+    missing = [ROUTE_CONTENT_PREFIX + route_id] + sorted(
+        NODE_CONTENT_PREFIX + node for node in set(nodes))
+    absent = [key for key in missing if key not in fresh]
+    if absent:
+        raise LineageError(
+            f"claim {prior.claim_id!r} narrows reads without "
+            f"{', '.join(absent)}")
+    return ClaimLineage(
+        claim_id=prior.claim_id,
+        claim_kind=prior.claim_kind,
+        statement=prior.statement,
+        derived_from=DerivedFrom(
+            contract_version=prior.derived_from.contract_version,
+            revisions=(),
+            source_hashes=tuple(sorted({**kept, **fresh}.items())),
+            evidence=prior.derived_from.evidence,
+            assumes=prior.derived_from.assumes,
+        ),
+        judged_by=prior.judged_by,
+        admitted_by=prior.admitted_by,
+        status=prior.status,
+        reviewed_by=prior.reviewed_by,
+        contested_by=prior.contested_by,
+        contest_reason=prior.contest_reason,
+        supersedes=to_dict(prior),
+        restamped_by=restamped_by,
+        restamped_on=restamped_on,
     )
 
 
@@ -484,6 +605,33 @@ def withdraw(
 # ---- emission: the three high-value claim families --------------------------
 
 
+def parse_covers_statement(claim_id: str, statement: str) -> tuple[str, tuple[str, ...]]:
+    """The route and covered nodes a route-covers statement names.
+
+    Inverse of :func:`emit_route_covers`' statement shape
+    (``"<route> covers a, b"`` or ``"<route> covers nothing"``). Raises
+    ``LineageError`` when the statement does not name the claim's own
+    route — a re-stamp parses the judged node set from these words, so
+    an unparsable statement refuses rather than guesses.
+    """
+    if not claim_id.startswith("covers:"):
+        raise LineageError(f"claim {claim_id!r} is not a route-covers claim")
+    route_id = claim_id[len("covers:"):]
+    if not route_id:
+        raise LineageError(f"claim {claim_id!r} names no route")
+    if statement == f"{route_id} covers nothing":
+        return route_id, ()
+    prefix = f"{route_id} covers "
+    if not statement.startswith(prefix):
+        raise LineageError(
+            f"claim {claim_id!r} carries an unparsable statement: {statement!r}")
+    nodes = tuple(part.strip() for part in statement[len(prefix):].split(","))
+    if not nodes or any(not node for node in nodes):
+        raise LineageError(
+            f"claim {claim_id!r} carries an unparsable statement: {statement!r}")
+    return route_id, nodes
+
+
 def emit_route_covers(
     *,
     route_id: str,
@@ -593,6 +741,10 @@ def to_dict(lineage: ClaimLineage) -> dict:
             "by": lineage.contested_by,
             "reason": lineage.contest_reason,
         }
+    if lineage.restamped_by:
+        record["restamped_by"] = lineage.restamped_by
+    if lineage.restamped_on:
+        record["restamped_on"] = lineage.restamped_on
     return record
 
 
@@ -640,6 +792,8 @@ def from_dict(record: dict) -> ClaimLineage:
             contested_by=str(contest.get("by") or ""),
             contest_reason=str(contest.get("reason") or ""),
             supersedes=dict(prior) if prior is not None else None,
+            restamped_by=str(record.get("restamped_by") or ""),
+            restamped_on=str(record.get("restamped_on") or ""),
         )
     except (KeyError, TypeError, ValueError) as exc:
         raise LineageError(f"malformed lineage record: {exc}") from exc

@@ -12,7 +12,8 @@
   ],
   "properties": {
     "artifact_sha256": {
-      "type": "object"
+      "type": "object",
+      "description": "Free-form map of every artifact_ref to its exact SHA-256 digest."
     },
     "delivery_id": {
       "type": "string"

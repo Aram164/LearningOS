@@ -10,6 +10,7 @@ from pathlib import Path
 
 import pytest
 import yaml
+from repo_builders import copy_real_contracts
 
 from learning_os.ai_actions import (
     ActionPolicyError,
@@ -37,11 +38,7 @@ def write_yaml(path: Path, value) -> None:
 
 @pytest.fixture()
 def ai_repo(mini_repo: Path) -> Path:
-    shutil.copytree(
-        ROOT / "system" / "contracts",
-        mini_repo / "system" / "contracts",
-        dirs_exist_ok=True,
-    )
+    copy_real_contracts(ROOT, mini_repo)
     for rel in (
         "operations/ai-actions/requests",
         "operations/ai-actions/deliveries",
@@ -243,6 +240,18 @@ def test_forbidden_capability_is_rejected_and_import_cleaned(ai_repo: Path, tmp_
     assert not app.repository.delivery_dir("ai-delivery-test-001").exists()
 
 
+def test_malformed_delivery_yaml_is_a_named_refusal(ai_repo: Path, tmp_path: Path):
+    """Invalid provider YAML is refused naming the file, not a parser traceback
+    citing "<unicode string>" (synthetic authoring campaign D3)."""
+    app, _request, source = make_delivery(ai_repo, tmp_path)
+    (source / "delivery.yaml").write_text(
+        "id: ai-delivery-test-001\nproducer: {provider: manual, adapter: manual\n"
+        "preconditions:\n  snapshot_id: x\n", encoding="utf-8")
+    with pytest.raises(DeliveryValidationError, match="delivery.yaml is not valid YAML"):
+        app.import_delivery(source)
+    assert not app.repository.delivery_dir("ai-delivery-test-001").exists()
+
+
 def test_stale_delivery_is_rejected(ai_repo: Path, tmp_path: Path):
     app, _request, source = make_delivery(ai_repo, tmp_path)
     note = ai_repo / "knowledge/garden/handwritten-import-registration.md"
@@ -324,7 +333,7 @@ def test_replay_refuses_a_delegated_grant_its_bound_delivery_never_used(
     on_disk = yaml.safe_load(receipt_path.read_text(encoding="utf-8"))
     on_disk["authority"]["grants"].append({
         "capability": "unit.material-synthesis.publish",
-        "declared_writes": ["curriculum/modules/**/units/**/material-synthesis.yaml"],
+        "declared_writes": list(app.capability_definitions()["unit.material-synthesis.publish"].writes),
     })
     receipt_path.write_text(yaml.safe_dump(on_disk, sort_keys=False), encoding="utf-8")
 
@@ -736,3 +745,107 @@ def test_ai_bundle_locks_current_manifest_contract(ai_repo: Path):
         lock["manifest_contract_version"]
         == declared_version(ai_repo)
     )
+
+
+def test_prepare_refuses_a_request_id_the_manifest_cannot_publish(ai_repo: Path):
+    """A caller id outside the ai-request pattern is refused pre-persist (JF-08)."""
+    from learning_os.ai_actions.support import REQUEST_ID_PATTERN
+
+    app = service(ai_repo)
+    requests_dir = ai_repo / "operations/ai-actions/requests"
+    before = sorted(p.name for p in requests_dir.iterdir())
+    with pytest.raises(DeliveryValidationError, match="does not match"):
+        app.prepare(action_id="garden.shelve", target_kind="garden-note",
+                    target_id=target_id(ai_repo), provider="manual-bundle",
+                    request_id="my-request-1")
+    assert sorted(p.name for p in requests_dir.iterdir()) == before
+    # The enforced pattern is the manifest schema's, read from the declaration
+    # so a contract bump cannot silently desync the two copies.
+    contract = yaml.safe_load(
+        (ai_repo / "system/contracts/manifest-contract.yaml").read_text(encoding="utf-8"))
+    schema = json.loads((ai_repo / contract["schema_path"]).read_text(encoding="utf-8"))
+    assert schema["$defs"]["aiRequest"]["properties"]["id"]["pattern"] == REQUEST_ID_PATTERN
+
+
+def _defective_delivery(root: Path, tmp_path: Path, name: str, body: dict):
+    """Prepare a request and stage a hand-authored (defective) delivery dir."""
+    app = service(root)
+    tid = target_id(root)
+    request = app.prepare(
+        action_id="garden.shelve", target_kind="garden-note", target_id=tid,
+        provider="manual-bundle", request_id=f"ai-request-{name}")
+    source = tmp_path / name
+    (source / "artifacts").mkdir(parents=True)
+    (source / "artifacts/transcription.md").write_text("reading\n", encoding="utf-8")
+    write_yaml(source / "delivery.yaml", {"request_id": request["id"], **body})
+    return app, request, source
+
+
+def test_import_reports_every_shape_problem_in_one_round(ai_repo: Path, tmp_path: Path):
+    """A hand-authored delivery learns all its defects at once (JF-07)."""
+    app, _request, source = _defective_delivery(
+        ai_repo, tmp_path, "jf07a", {"id": "ai-delivery-jf07a"})
+    with pytest.raises(DeliveryValidationError) as caught:
+        app.import_delivery(source)
+    message = str(caught.value)
+    for marker in ("ai-action-delivery", "action_id", "producer.adapter",
+                   "preconditions", "user_approved", "operation"):
+        assert marker in message, message
+
+
+def test_adapter_mismatch_names_both_sides_of_the_asymmetry(ai_repo: Path, tmp_path: Path):
+    """The delivery says producer, the request says provider (JF-07)."""
+    app, request, source = _defective_delivery(ai_repo, tmp_path, "jf07b", {
+        "id": "ai-delivery-jf07b", "schema_version": 1,
+        "type": "ai-action-delivery", "action_id": "garden.shelve",
+        # Request-style key on purpose: the delivery-side field is `producer`.
+        "provider": {"provider": "manual", "adapter": "manual-bundle"},
+        "approval": {"user_approved": True},
+        "operations": [{"capability": "garden.add-transcription",
+                        "target_id": target_id(ai_repo),
+                        "artifact_ref": "artifacts/transcription.md"}],
+    })
+    body = yaml.safe_load((source / "delivery.yaml").read_text())
+    body["preconditions"] = request["preconditions"]
+    write_yaml(source / "delivery.yaml", body)
+    with pytest.raises(DeliveryValidationError, match="producer\\.adapter"):
+        app.import_delivery(source)
+    with pytest.raises(DeliveryValidationError) as caught:
+        app.import_delivery(source)
+    assert "provider.adapter" in str(caught.value)
+
+
+def test_missing_delivery_identities_name_their_fields(ai_repo: Path, tmp_path: Path):
+    app = service(ai_repo)
+    tid = target_id(ai_repo)
+    request = app.prepare(
+        action_id="garden.shelve", target_kind="garden-note", target_id=tid,
+        provider="manual-bundle", request_id="ai-request-jf07c")
+    no_id = tmp_path / "jf07c-no-id"
+    no_id.mkdir()
+    write_yaml(no_id / "delivery.yaml",
+               {"request_id": request["id"], "type": "ai-action-delivery"})
+    with pytest.raises(DeliveryValidationError, match="non-empty id"):
+        app.import_delivery(no_id)
+    no_request = tmp_path / "jf07c-no-request"
+    no_request.mkdir()
+    write_yaml(no_request / "delivery.yaml",
+               {"id": "ai-delivery-jf07c", "type": "ai-action-delivery"})
+    with pytest.raises(DeliveryValidationError, match="request_id"):
+        app.import_delivery(no_request)
+
+
+def test_validator_names_a_persisted_bundle_with_a_bad_request_id(ai_repo: Path):
+    """A hand-made bundle id outside the pattern is an error naming it (JF-08)."""
+    from learning_os.loader import load_repo
+    from learning_os.rules import validate
+
+    bundle = ai_repo / "operations/ai-actions/requests/my-request-1/request.yaml"
+    write_yaml(bundle, {"id": "my-request-1", "type": "ai-action-request"})
+    errors = [i for i in validate(load_repo(ai_repo)) if i.code == "AI-REQUEST-ID"]
+    assert len(errors) == 1
+    assert "my-request-1" in errors[0].message
+    assert "request.yaml" in errors[0].path
+    write_yaml(bundle, {"id": "ai-request-ok-1", "type": "ai-action-request"})
+    codes = [i.code for i in validate(load_repo(ai_repo))]
+    assert "AI-REQUEST-ID" not in codes

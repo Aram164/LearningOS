@@ -1,0 +1,370 @@
+# Manual dispositions for legacy/LEARNING-RESOURCES.md (origin key lr).
+# Reviewed line by line against the registry on 2026-09-23.
+schema: library-reconciliation-dispositions/v1
+objects:
+- id: source-rohrer-e2eml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:50:u1', role: alias, note: "record stores e2eml.school/blog.html; ⚠ unverified which of the two domains is current"}
+  - {ref: 'lr:67:u1', role: child}
+  - {ref: 'lr:67:u2', role: child}
+  - {ref: 'lr:68:u1', role: child, title: "Ch 6–9: How optimization works (4 parts)"}
+  - {ref: 'lr:69:u1', role: child}
+  - {ref: 'lr:70:u1', role: child}
+  - {ref: 'lr:71:u1', role: child}
+  - {ref: 'lr:72:u1', role: child}
+  - {ref: 'lr:73:u1', role: child}
+  - {ref: 'lr:74:u1', role: child}
+  - {ref: 'lr:75:u1', role: child}
+  - {ref: 'lr:76:u1', role: child}
+  - {ref: 'lr:76:u2', role: child}
+  - {ref: 'lr:77:u1', role: child}
+  - {ref: 'lr:78:u1', role: child}
+  - {ref: 'lr:79:u1', role: child}
+  - {ref: 'lr:79:u2', role: child}
+  - {ref: 'lr:80:u1', role: child}
+  - {ref: 'lr:81:u1', role: child}
+  - {ref: 'lr:81:u2', role: child, title: "Making Python Faster: multiprocessing"}
+  - {ref: 'lr:81:u3', role: child, title: "Making Python Faster: threading"}
+  - {ref: 'lr:82:u1', role: child}
+  - {ref: 'lr:83:u1', role: child, title: "Resource list: Linear Algebra"}
+  - {ref: 'lr:83:u2', role: child, title: "Resource list: Calculus"}
+  - {ref: 'lr:83:u3', role: child, title: "Resource list: Statistics"}
+  - {ref: 'lr:83:u4', role: child, title: "Resource list: NumPy"}
+  - {ref: 'lr:83:u5', role: child, title: "Resource list: C++"}
+  - {ref: 'lr:83:u6', role: child, title: "Resource list: Git"}
+  - {ref: 'lr:84:u1', role: child}
+- id: source-cs231n-notes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:53:u1', role: child, title: "ConvNets notes"}
+  - {ref: 'lr:53:u2', role: child, title: "Understanding and visualizing CNNs"}
+  - {ref: 'lr:59:u1', role: child, title: "Image classification (k-NN, cross-validation)"}
+  - {ref: 'lr:59:u2', role: child, title: "Optimization / SGD"}
+- id: source-sklearn-user-guide
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:56:u1', role: child, title: "Example: underfitting vs. overfitting"}
+  - {ref: 'lr:56:u2', role: child, title: "Linear models (Ridge/Lasso) user guide"}
+  - {ref: 'lr:221:u1', role: child, title: "Getting started"}
+  - {ref: 'lr:221:u2', role: child, title: "Developing estimators"}
+  - {ref: 'lr:221:u3', role: child, title: "Pipelines and composite estimators (compose guide)"}
+  - {ref: 'lr:221:u4', role: child, title: "Example: ColumnTransformer with mixed types"}
+  - {ref: 'lr:227:u1', role: child, title: "Algorithm cheat-sheet (estimator map)"}
+  - {ref: 'lr:229:u3', role: companion, title: "Documentation PDF"}
+- id: source-stat110
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:96:u1', role: alias, note: "row says HarvardX STAT110x; the link is the Stat 110 course site. Record stores projects.iq.harvard.edu/stat110; ⚠ unverified which site is current"}
+  - {ref: 'lr:96:u2', role: child, title: "Handouts"}
+  - {ref: 'lr:261:u1', role: child, title: "Strategic practice and homework with solutions"}
+- id: source-karpathy-micrograd
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:97:u1', role: companion, title: "Neural Networks: Zero to Hero (playlist)", note: "⚠ the row links the whole playlist but describes micrograd, its first lecture; whether the playlist becomes its own source is left to first use"}
+- id: source-mit-ocw-nn-training
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:98:e1', role: mention}
+- id: source-cs229-notes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:114:u3', role: landing, note: "web source of the notes; the record holds only the local copy"}
+- id: source-mit-6036
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:115:u1', role: alias, note: "course/ page of the same run; the record stores about/"}
+  - {ref: 'lr:146:u1', role: alias, note: "MIT Learn catalogue entry for the same course"}
+  - {ref: 'lr:268:u1', role: alias, note: "course/ page of the same run; the record stores about/"}
+- id: source-ng-coursera
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:116:u1', role: companion, title: "2011 course, full 103-video mirror (playlist)", note: "⚠ edition: the record's url is the 2022 Coursera specialization while its materials-repo and evaluation describe the 2011 course; step 8 should split the editions or correct the landing"}
+- id: source-kurzes-tutorium-statistik
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:119:u1', role: alias, note: "channel-id URL; the record stores the @pdmb handle. ⚠ unverified that both name the same channel"}
+- id: source-eecs498
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:122:u2', role: companion, title: "Course site (Fall 2020)"}
+- id: source-cmu-10414
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:124:u1', role: child, title: "Lectures page"}
+  - {ref: 'lr:124:u2', role: companion, title: "Lecture videos (YouTube playlist)"}
+- id: source-mit-18100a
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:129:u1', role: companion, title: "Lecture videos (YouTube playlist)"}
+  - {ref: 'lr:300:u1', role: child, title: "Assignments and exams page (OCW)"}
+  - {ref: 'lr:300:u2', role: companion, title: "Community solutions repo (18.100B)", note: "⚠ solutions are for 18.100B, a sibling course; kept as the check aid the row describes"}
+- id: source-daniel-jung
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:131:e1', role: mention}
+- id: source-mathepeter
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:131:e1', role: mention}
+- id: source-pagh-cuckoo-hashing
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:138:e1', role: mention}
+- id: source-sleator-tarjan-splay
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:138:e1', role: mention}
+- id: source-strang-calculus
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:133:p1', role: local}
+- id: source-islp
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:162:e1', role: mention}
+- id: source-blitzstein-hwang
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:164:u1', role: alias, note: "Aram's Drive copy of the same book; the record holds the local copy"}
+  - {ref: 'lr:164:u2', role: companion, title: "Official source (Stat 110 site)"}
+- id: source-dekking-mips
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:166:e1', role: mention}
+- id: source-henze-stochastik
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:167:e1', role: mention}
+- id: source-tijms-understanding-probability
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:169:p1', role: local}
+- id: source-grinstead-snell
+  kind: existing-active-source
+  extra_mentions: ['lr:172']
+  occurrences: []
+- id: source-fluent-python
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:174:p1', role: local}
+- id: source-murphy-pml1
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:176:u1', role: landing, note: "official PDF release; the record holds only the local copy"}
+  - {ref: 'lr:176:u2', role: companion, title: "Exercise solutions (official PDF)"}
+  - {ref: 'lr:176:p2', role: local, note: "solutions copy; no file of this name in the materials manifest"}
+- id: source-csc411-notes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:178:p1', role: local}
+- id: source-clrs
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:181:p2', role: local, note: "English 3rd edition, the same edition as the German 4. Auflage"}
+- id: source-dms-grundwerkzeuge
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:182:p1', role: local}
+- id: source-ottmann-widmayer
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:182:p2', role: local}
+- id: source-sutton-barto-rl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:187:u1', role: companion, title: "Full book PDF (2018)"}
+- id: source-pydata-handbook
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:188:u1', role: companion, title: "Prose web book"}
+  - {ref: 'lr:188:p1', role: local}
+- id: source-geron-handson
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:200:p2', role: duplicate, note: "second local copy in the AMLS folder"}
+- id: source-dmmls-boehm
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:202:e1', role: mention}
+- id: source-mlsysbook-vol1
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:203:u1', role: companion, title: "Combined book (Vol 1 + Vol 2)", note: "combined-book URL; Vol 2 is source-mlsysbook-vol2"}
+  - {ref: 'lr:343:u1', role: companion, title: "Book site with quizzes", note: "site root; Vol 2 is source-mlsysbook-vol2"}
+  - {ref: 'lr:343:p3', role: alias, note: "stale pre-split snapshot; not in the materials manifest"}
+- id: source-mlsysbook-vol2
+  kind: existing-active-source
+  extra_mentions: ['lr:203', 'lr:343']
+  occurrences: []
+- id: source-mlc-book
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:205:u1', role: alias, note: "courses page; the record stores mlc.ai/"}
+- id: source-huyen-ai-engineering
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:206:e1', role: mention}
+- id: source-kelleher-fmlpda
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:207:p1', role: local}
+- id: source-fpp-statistics
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:208:e1', role: mention}
+- id: source-baertl-statistik-buch
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:209:e1', role: mention}
+- id: source-bishop-prml
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:210:e1', role: mention}
+- id: source-stratum-paper
+  kind: existing-active-source
+  extra_mentions: ['lr:225']
+  occurrences: []
+- id: source-python-cheatsheets
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:228:p1', role: local}
+- id: source-cs229-project-archive
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:231:u1', role: alias, note: "record stores projects_backup.html"}
+- id: source-zeiler-fergus-occlusion
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:246:e1', role: mention}
+- id: source-belkin-double-descent
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:249:e1', role: mention}
+- id: source-buneman-why-where
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:250:p1', role: local, note: "⚠ local copy removed by the 2026-07-17 purge (migration/materials-reconciliation-2026-07-17.md); the record has no material"}
+- id: source-mlinspect-debugging
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:251:p1', role: local, note: "⚠ local copy removed by the 2026-07-17 purge (migration/materials-reconciliation-2026-07-17.md); the record has no material"}
+- id: source-mit-6034-quizzes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:263:u1', role: child, title: "Past exams (Fall 2010)"}
+  - {ref: 'lr:263:u2', role: companion, title: "Past exams (Spring 2005)", note: "another course year's quiz set, kept with the quiz bank"}
+  - {ref: 'lr:263:u3', role: child, title: "Quiz 3 (2010)"}
+  - {ref: 'lr:263:u4', role: child, title: "Quiz 3 (2007)"}
+- id: source-cs4780-homeworks
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:266:p2', role: local, note: "the homework folder's README.md (HW map)"}
+- id: source-sad-klausuren-extern
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:284:u1', role: companion, title: "Uni Köln Musterlösung (source PDF)"}
+  - {ref: 'lr:285:u1', role: companion, title: "Regensburg (Löh) W-Theorie & Statistik Klausur (source PDF)"}
+  - {ref: 'lr:289:p1', role: local}
+- id: source-analysis-klausuren-extern
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:297:u1', role: companion, title: "Marburg Analysis I Klausuren (source PDF)"}
+  - {ref: 'lr:298:u1', role: companion, title: "Regensburg Analysis I Klausur (source PDF)"}
+  - {ref: 'lr:299:u1', role: companion, title: "MIT 18.100C (Fall 2012) problem sets (OCW)"}
+  - {ref: 'lr:299:u2', role: companion, title: "MIT 18.100C (Fall 2012) practice final (OCW)"}
+  - {ref: 'lr:299:p1', role: local}
+- id: source-algo2-frankfurt-klausuren
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:317:u1', role: landing, note: "online exam archive; the record holds only the local set"}
+- id: source-frankfurt-algo2-course
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:320:u1', role: child, title: "Übungsblatt 2: Netzwerkfluss I"}
+  - {ref: 'lr:320:u2', role: duplicate}
+  - {ref: 'lr:320:u3', role: child, title: "Übungsblatt 3: Netzwerkfluss II"}
+  - {ref: 'lr:320:u4', role: child, title: "Übungsblatt 4: Amortisierte Analyse"}
+- id: source-kit-algorithmen2
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:327:u2', role: companion, title: "Course page"}
+- id: source-cmu-15451-splay-notes
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:329:u2', role: companion, title: "Older full course notes (Spring 2016)"}
+- id: source-mit-6172
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:340:u1', role: child, title: "Practice quizzes with solutions (OCW)"}
+- id: source-amls-prior-archives
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:344:e1', role: duplicate, note: "back-reference to the SS23 recordings row"}
+- id: source-guo-cpython-internals
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:381:u1', role: companion, title: "Series page (pgbovine.net)"}
+- id: source-cs229-2018-videos
+  kind: new-active-source
+  title: "Stanford CS229 Machine Learning (Autumn 2018 lectures, Andrew Ng)"
+  type: video
+  shelf: thematic-group-machine-learning
+  note: "a different course year from source-cs229-2022-videos, kept distinct per the plan's edition rule"
+  occurrences:
+  - {ref: 'lr:114:u2', role: landing}
+- id: source-skrub
+  kind: new-active-source
+  title: "skrub — machine learning with dataframes (Python library)"
+  type: software
+  shelf: thematic-group-ml-systems
+  note: "not registered in July because of the Job quarantine, which ADR-013 retired"
+  occurrences:
+  - {ref: 'lr:224:u1', role: landing}
+- id: out-of-scope:template-placeholder
+  kind: out-of-scope
+  reason: "Example or convention path in the index's own instructions (status vocabulary, folder-layout rule), not an item"
+  occurrences: ['lr:32:p1', 'lr:40:p1', 'lr:40:p2', 'lr:40:p3', 'lr:40:p4', 'lr:40:p5', 'lr:40:p6', 'lr:40:p7', 'lr:40:p8', 'lr:40:p9', 'lr:40:p10']
+- id: out-of-scope:tooling
+  kind: out-of-scope
+  reason: "Tooling named in instructions; not a learning source"
+  occurrences:
+  - {ref: 'lr:32:p2', note: "retired pre-v3 validator"}
+- id: out-of-scope:internal-document
+  kind: out-of-scope
+  reason: "Internal plan or note document (moved per migration/path-map.csv)"
+  occurrences:
+  - {ref: 'lr:40:p11', note: "the six Master's lists, declared as origins in this pass"}
+  - {ref: 'lr:385:p5', note: "deleted legacy plan copy"}
+- id: out-of-scope:folder-reference
+  kind: out-of-scope
+  reason: "Folder named as a location in prose; the files it held are dispositioned through their own occurrences"
+  occurrences: ['lr:164:p1', 'lr:172:p1', 'lr:293:p2', 'lr:307:p1']
+- id: out-of-scope:fragment
+  kind: out-of-scope
+  reason: "Elided URL or path pattern in prose, not a locator"
+  occurrences: ['lr:283:p2']
+- id: out-of-scope:action-item
+  kind: out-of-scope
+  reason: "A to-do for obtaining material from people or course platforms; not a teaching object"
+  occurrences: ['lr:273:e1', 'lr:274:e1', 'lr:275:e1']
+- id: out-of-scope:course-logistics
+  kind: out-of-scope
+  reason: "Course administration (Moodle, topic lists); not a teaching object"
+  occurrences: ['lr:353:e1']
+- id: out-of-scope:discovery-pointer
+  kind: out-of-scope
+  reason: "Article or list used to discover sources; the sources it yielded are dispositioned separately"
+  occurrences: ['lr:142:u1']
+- id: out-of-scope:external-code-repository
+  kind: out-of-scope
+  reason: "Stratum is an external sibling code repository (CLAUDE.md §13); LearningOS never indexes it"
+  occurrences: ['lr:225:p1']
+- id: source-nielsen-nndl
+  kind: existing-active-source
+  occurrences:
+  - {ref: 'lr:173:u1', role: child, title: "Chapter 1"}
+- id: source-statquest
+  kind: existing-active-source
+  extra_mentions: ['lr:54']
+  occurrences: []

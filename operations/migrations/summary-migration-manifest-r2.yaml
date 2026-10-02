@@ -1,0 +1,317 @@
+tool: summaries-to-notes-v1
+contract_version: 35
+migrated_at: '2026-09-21'
+mapping_sha256: d45088670205cee12674b9ed0a3a70b88943c4335914db00cf2f7ebd36a00e19
+notes:
+- note_id: note-06-random-variables-pp015-023
+  note_path: knowledge/notes/mathematics/note-06-random-variables-pp015-023.md
+  replayed: false
+  save:
+    schema_version: 2
+    request_id: request-summaries-migrate-note-06-random-variables-pp015-023
+    idempotency_key: summaries-migrate-note-06-random-variables-pp015-023
+    capability: note.analysis.save
+    ok: true
+    replayed: false
+    transaction_id: transaction-20260921-012228-001
+    receipt_path: operations/transactions/transaction-20260921-012228-001.yaml
+    snapshot_after: sha256:120d110cc594c88377b703b65ed793cf315abbeef55f58566c6264d406537681
+    result:
+      ok: true
+      replayed: false
+      note_id: note-06-random-variables-pp015-023
+      note_path: knowledge/notes/mathematics/note-06-random-variables-pp015-023.md
+      transaction_id: transaction-20260921-012228-001
+      receipt_path: operations/transactions/transaction-20260921-012228-001.yaml
+      artifact_revisions:
+        note-06-random-variables-pp015-023: 1
+      snapshot_after: sha256:120d110cc594c88377b703b65ed793cf315abbeef55f58566c6264d406537681
+    error: null
+- note_id: note-06-random-variables-pp024-032
+  note_path: knowledge/notes/mathematics/note-06-random-variables-pp024-032.md
+  replayed: false
+  save:
+    schema_version: 2
+    request_id: request-summaries-migrate-note-06-random-variables-pp024-032
+    idempotency_key: summaries-migrate-note-06-random-variables-pp024-032
+    capability: note.analysis.save
+    ok: true
+    replayed: false
+    transaction_id: transaction-20260921-012237-001
+    receipt_path: operations/transactions/transaction-20260921-012237-001.yaml
+    snapshot_after: sha256:f3f75f2f212206d9e2d9be2a5894537f283182f667e7cdff55fddeacb8446b10
+    result:
+      ok: true
+      replayed: false
+      note_id: note-06-random-variables-pp024-032
+      note_path: knowledge/notes/mathematics/note-06-random-variables-pp024-032.md
+      transaction_id: transaction-20260921-012237-001
+      receipt_path: operations/transactions/transaction-20260921-012237-001.yaml
+      artifact_revisions:
+        note-06-random-variables-pp024-032: 1
+      snapshot_after: sha256:f3f75f2f212206d9e2d9be2a5894537f283182f667e7cdff55fddeacb8446b10
+    error: null
+- note_id: note-06-random-variables-pp034-042
+  note_path: knowledge/notes/mathematics/note-06-random-variables-pp034-042.md
+  replayed: false
+  save:
+    schema_version: 2
+    request_id: request-summaries-migrate-note-06-random-variables-pp034-042
+    idempotency_key: summaries-migrate-note-06-random-variables-pp034-042
+    capability: note.analysis.save
+    ok: true
+    replayed: false
+    transaction_id: transaction-20260921-012247-001
+    receipt_path: operations/transactions/transaction-20260921-012247-001.yaml
+    snapshot_after: sha256:a5e2af4ca6d6399935f5857451a63c052c98c599bb47e212bf6a49a13e2d6d47
+    result:
+      ok: true
+      replayed: false
+      note_id: note-06-random-variables-pp034-042
+      note_path: knowledge/notes/mathematics/note-06-random-variables-pp034-042.md
+      transaction_id: transaction-20260921-012247-001
+      receipt_path: operations/transactions/transaction-20260921-012247-001.yaml
+      artifact_revisions:
+        note-06-random-variables-pp034-042: 1
+      snapshot_after: sha256:a5e2af4ca6d6399935f5857451a63c052c98c599bb47e212bf6a49a13e2d6d47
+    error: null
+- note_id: note-06-random-variables-pp044-050
+  note_path: knowledge/notes/mathematics/note-06-random-variables-pp044-050.md
+  replayed: false
+  save:
+    schema_version: 2
+    request_id: request-summaries-migrate-note-06-random-variables-pp044-050
+    idempotency_key: summaries-migrate-note-06-random-variables-pp044-050
+    capability: note.analysis.save
+    ok: true
+    replayed: false
+    transaction_id: transaction-20260921-012256-001
+    receipt_path: operations/transactions/transaction-20260921-012256-001.yaml
+    snapshot_after: sha256:59a9241d25396a870c539d3aa4b0fcad5392fcb75fd005bf7cc2d919ad266efb
+    result:
+      ok: true
+      replayed: false
+      note_id: note-06-random-variables-pp044-050
+      note_path: knowledge/notes/mathematics/note-06-random-variables-pp044-050.md
+      transaction_id: transaction-20260921-012256-001
+      receipt_path: operations/transactions/transaction-20260921-012256-001.yaml
+      artifact_revisions:
+        note-06-random-variables-pp044-050: 1
+      snapshot_after: sha256:59a9241d25396a870c539d3aa4b0fcad5392fcb75fd005bf7cc2d919ad266efb
+    error: null
+- note_id: note-06-random-variables-pp005-008
+  note_path: knowledge/notes/mathematics/note-06-random-variables-pp005-008.md
+  replayed: false
+  save:
+    schema_version: 2
+    request_id: request-summaries-migrate-note-06-random-variables-pp005-008
+    idempotency_key: summaries-migrate-note-06-random-variables-pp005-008
+    capability: note.analysis.save
+    ok: true
+    replayed: false
+    transaction_id: transaction-20260921-012305-001
+    receipt_path: operations/transactions/transaction-20260921-012305-001.yaml
+    snapshot_after: sha256:b441707537b5832a12b86d30113ba15d7e93a31a6dbe57520cf6b8115e056bd1
+    result:
+      ok: true
+      replayed: false
+      note_id: note-06-random-variables-pp005-008
+      note_path: knowledge/notes/mathematics/note-06-random-variables-pp005-008.md
+      transaction_id: transaction-20260921-012305-001
+      receipt_path: operations/transactions/transaction-20260921-012305-001.yaml
+      artifact_revisions:
+        note-06-random-variables-pp005-008: 1
+      snapshot_after: sha256:b441707537b5832a12b86d30113ba15d7e93a31a6dbe57520cf6b8115e056bd1
+    error: null
+- note_id: note-06-random-variables-pp052-060
+  note_path: knowledge/notes/mathematics/note-06-random-variables-pp052-060.md
+  replayed: false
+  save:
+    schema_version: 2
+    request_id: request-summaries-migrate-note-06-random-variables-pp052-060
+    idempotency_key: summaries-migrate-note-06-random-variables-pp052-060
+    capability: note.analysis.save
+    ok: true
+    replayed: false
+    transaction_id: transaction-20260921-012315-001
+    receipt_path: operations/transactions/transaction-20260921-012315-001.yaml
+    snapshot_after: sha256:be920d67f5a1e511ecb0f8bc0c969d8da8e668960b91e93b54929368d6074433
+    result:
+      ok: true
+      replayed: false
+      note_id: note-06-random-variables-pp052-060
+      note_path: knowledge/notes/mathematics/note-06-random-variables-pp052-060.md
+      transaction_id: transaction-20260921-012315-001
+      receipt_path: operations/transactions/transaction-20260921-012315-001.yaml
+      artifact_revisions:
+        note-06-random-variables-pp052-060: 1
+      snapshot_after: sha256:be920d67f5a1e511ecb0f8bc0c969d8da8e668960b91e93b54929368d6074433
+    error: null
+- note_id: note-06-random-variables-pp009-013
+  note_path: knowledge/notes/mathematics/note-06-random-variables-pp009-013.md
+  replayed: false
+  save:
+    schema_version: 2
+    request_id: request-summaries-migrate-note-06-random-variables-pp009-013
+    idempotency_key: summaries-migrate-note-06-random-variables-pp009-013
+    capability: note.analysis.save
+    ok: true
+    replayed: false
+    transaction_id: transaction-20260921-012324-001
+    receipt_path: operations/transactions/transaction-20260921-012324-001.yaml
+    snapshot_after: sha256:7aefb6d760ba7c887645e36a10703b1238e8ae3c225a0c94ce9b2b4343099f31
+    result:
+      ok: true
+      replayed: false
+      note_id: note-06-random-variables-pp009-013
+      note_path: knowledge/notes/mathematics/note-06-random-variables-pp009-013.md
+      transaction_id: transaction-20260921-012324-001
+      receipt_path: operations/transactions/transaction-20260921-012324-001.yaml
+      artifact_revisions:
+        note-06-random-variables-pp009-013: 1
+      snapshot_after: sha256:7aefb6d760ba7c887645e36a10703b1238e8ae3c225a0c94ce9b2b4343099f31
+    error: null
+- note_id: note-11-datascience-intro-pp012-020
+  note_path: knowledge/notes/mathematics/note-11-datascience-intro-pp012-020.md
+  replayed: false
+  save:
+    schema_version: 2
+    request_id: request-summaries-migrate-note-11-datascience-intro-pp012-020
+    idempotency_key: summaries-migrate-note-11-datascience-intro-pp012-020
+    capability: note.analysis.save
+    ok: true
+    replayed: false
+    transaction_id: transaction-20260921-012334-001
+    receipt_path: operations/transactions/transaction-20260921-012334-001.yaml
+    snapshot_after: sha256:2995bb3201c0c6d7d805a4c17a4914467316f5f0d909f39a612f71de32230169
+    result:
+      ok: true
+      replayed: false
+      note_id: note-11-datascience-intro-pp012-020
+      note_path: knowledge/notes/mathematics/note-11-datascience-intro-pp012-020.md
+      transaction_id: transaction-20260921-012334-001
+      receipt_path: operations/transactions/transaction-20260921-012334-001.yaml
+      artifact_revisions:
+        note-11-datascience-intro-pp012-020: 1
+      snapshot_after: sha256:2995bb3201c0c6d7d805a4c17a4914467316f5f0d909f39a612f71de32230169
+    error: null
+- note_id: note-11-datascience-intro-pp021-032
+  note_path: knowledge/notes/mathematics/note-11-datascience-intro-pp021-032.md
+  replayed: false
+  save:
+    schema_version: 2
+    request_id: request-summaries-migrate-note-11-datascience-intro-pp021-032
+    idempotency_key: summaries-migrate-note-11-datascience-intro-pp021-032
+    capability: note.analysis.save
+    ok: true
+    replayed: false
+    transaction_id: transaction-20260921-012344-001
+    receipt_path: operations/transactions/transaction-20260921-012344-001.yaml
+    snapshot_after: sha256:a8058e0901e5fe8cd4572c1ee19f46ff53448b0fa5e3779d9e80c2f650ffb7dd
+    result:
+      ok: true
+      replayed: false
+      note_id: note-11-datascience-intro-pp021-032
+      note_path: knowledge/notes/mathematics/note-11-datascience-intro-pp021-032.md
+      transaction_id: transaction-20260921-012344-001
+      receipt_path: operations/transactions/transaction-20260921-012344-001.yaml
+      artifact_revisions:
+        note-11-datascience-intro-pp021-032: 1
+      snapshot_after: sha256:a8058e0901e5fe8cd4572c1ee19f46ff53448b0fa5e3779d9e80c2f650ffb7dd
+    error: null
+- note_id: note-11-datascience-intro-pp003-011
+  note_path: knowledge/notes/mathematics/note-11-datascience-intro-pp003-011.md
+  replayed: false
+  save:
+    schema_version: 2
+    request_id: request-summaries-migrate-note-11-datascience-intro-pp003-011
+    idempotency_key: summaries-migrate-note-11-datascience-intro-pp003-011
+    capability: note.analysis.save
+    ok: true
+    replayed: false
+    transaction_id: transaction-20260921-012353-001
+    receipt_path: operations/transactions/transaction-20260921-012353-001.yaml
+    snapshot_after: sha256:6bf83cd1ef7f3160cb019121c5f5c26b1728ed710fa68fdb79f0c846829ce92c
+    result:
+      ok: true
+      replayed: false
+      note_id: note-11-datascience-intro-pp003-011
+      note_path: knowledge/notes/mathematics/note-11-datascience-intro-pp003-011.md
+      transaction_id: transaction-20260921-012353-001
+      receipt_path: operations/transactions/transaction-20260921-012353-001.yaml
+      artifact_revisions:
+        note-11-datascience-intro-pp003-011: 1
+      snapshot_after: sha256:6bf83cd1ef7f3160cb019121c5f5c26b1728ed710fa68fdb79f0c846829ce92c
+    error: null
+- note_id: note-11-datascience-intro-pp033-038
+  note_path: knowledge/notes/mathematics/note-11-datascience-intro-pp033-038.md
+  replayed: false
+  save:
+    schema_version: 2
+    request_id: request-summaries-migrate-note-11-datascience-intro-pp033-038
+    idempotency_key: summaries-migrate-note-11-datascience-intro-pp033-038
+    capability: note.analysis.save
+    ok: true
+    replayed: false
+    transaction_id: transaction-20260921-012403-001
+    receipt_path: operations/transactions/transaction-20260921-012403-001.yaml
+    snapshot_after: sha256:e2b69bc99826d01daec6a242065b0461a26e0770a7387bf0f2b72f6e5380e8ac
+    result:
+      ok: true
+      replayed: false
+      note_id: note-11-datascience-intro-pp033-038
+      note_path: knowledge/notes/mathematics/note-11-datascience-intro-pp033-038.md
+      transaction_id: transaction-20260921-012403-001
+      receipt_path: operations/transactions/transaction-20260921-012403-001.yaml
+      artifact_revisions:
+        note-11-datascience-intro-pp033-038: 1
+      snapshot_after: sha256:e2b69bc99826d01daec6a242065b0461a26e0770a7387bf0f2b72f6e5380e8ac
+    error: null
+- note_id: note-11-datascience-intro-pp039-046
+  note_path: knowledge/notes/mathematics/note-11-datascience-intro-pp039-046.md
+  replayed: false
+  save:
+    schema_version: 2
+    request_id: request-summaries-migrate-note-11-datascience-intro-pp039-046
+    idempotency_key: summaries-migrate-note-11-datascience-intro-pp039-046
+    capability: note.analysis.save
+    ok: true
+    replayed: false
+    transaction_id: transaction-20260921-012412-001
+    receipt_path: operations/transactions/transaction-20260921-012412-001.yaml
+    snapshot_after: sha256:b108111aad3b59092b565b6d471bcf29546de0696f72cb27424d05db9c56f20d
+    result:
+      ok: true
+      replayed: false
+      note_id: note-11-datascience-intro-pp039-046
+      note_path: knowledge/notes/mathematics/note-11-datascience-intro-pp039-046.md
+      transaction_id: transaction-20260921-012412-001
+      receipt_path: operations/transactions/transaction-20260921-012412-001.yaml
+      artifact_revisions:
+        note-11-datascience-intro-pp039-046: 1
+      snapshot_after: sha256:b108111aad3b59092b565b6d471bcf29546de0696f72cb27424d05db9c56f20d
+    error: null
+- note_id: note-11-datascience-intro-pp047-049
+  note_path: knowledge/notes/mathematics/note-11-datascience-intro-pp047-049.md
+  replayed: false
+  save:
+    schema_version: 2
+    request_id: request-summaries-migrate-note-11-datascience-intro-pp047-049
+    idempotency_key: summaries-migrate-note-11-datascience-intro-pp047-049
+    capability: note.analysis.save
+    ok: true
+    replayed: false
+    transaction_id: transaction-20260921-012422-001
+    receipt_path: operations/transactions/transaction-20260921-012422-001.yaml
+    snapshot_after: sha256:69440fc323348cdaf57211f69b8fa59289eb8c78bbd976009b44f1d5f5935070
+    result:
+      ok: true
+      replayed: false
+      note_id: note-11-datascience-intro-pp047-049
+      note_path: knowledge/notes/mathematics/note-11-datascience-intro-pp047-049.md
+      transaction_id: transaction-20260921-012422-001
+      receipt_path: operations/transactions/transaction-20260921-012422-001.yaml
+      artifact_revisions:
+        note-11-datascience-intro-pp047-049: 1
+      snapshot_after: sha256:69440fc323348cdaf57211f69b8fa59289eb8c78bbd976009b44f1d5f5935070
+    error: null

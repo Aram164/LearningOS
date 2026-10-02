@@ -8,7 +8,7 @@
 >
 > If context is tight and you read nothing else in this repository, obey these:
 >
-> 1. **Never edit anything under `generated/`** — it is a disposable view. Fix the canonical data, then rebuild (`python tools/generate.py`).
+> 1. **Never edit anything under `generated/`** — it is a disposable view. Fix the canonical data, then rebuild (`.venv/bin/python tools/generate.py`).
 > 2. **Exam, registration and grade facts live ONLY in the owning academic module's `curriculum/modules/<module-id>/module.yaml`.** `records/modules.yaml` is a frozen compatibility snapshot. Decisions, priorities, deferrals and cross-workspace dependencies live ONLY in `work/COORDINATION.md`. Never copy either into prose.
 > 3. **Never rewrite, simplify, or "improve" a note body.** User reasoning is preserved verbatim; semantic edits need an explicit request and a reviewable diff.
 > 4. **Never delete** canonical notes, concepts, sources, relations, module records, or original handwritten material without explicit approval.
@@ -16,7 +16,7 @@
 > 6. **Answer exam questions from the owning partitioned academic module; answer "what next" from the current atomic manifest plus the freshly rebuilt coordination view** — never from stored prose copies or the global resume pointer alone. The manifest version belongs to `system/contracts/manifest-contract.yaml`; do not copy it into prose.
 > 7. **Never declare mastery** — show evidence trails or their documented absence.
 > 8. **External code stays external** (§13) — LearningOS never indexes, validates, or manages sibling repositories such as `Stratum/`; inspect relevant code only when the current task needs it.
-> 9. **Run `python tools/validate.py` after any batch of edits** and before ending a session. Work is not done until it prints **0 errors** and `python tools/warning_baseline.py --check` reports **no new warning signature**. Existing warnings stay visible and never block — they are the deferred content debt of CRITIQUE-POINTS §1, and the baseline is what separates them from a warning you just introduced.
+> 9. **Run `.venv/bin/python tools/validate.py --compact` after any batch of edits** and before ending a session. Work is not done until it prints **0 errors** and `.venv/bin/python tools/warning_baseline.py --check` reports **no new warning signature**. Existing warnings stay visible (counted in the summary line, listed in `generated/reports/validation-report.md`) and never block — they are the deferred content debt of CRITIQUE-POINTS §1, and the baseline is what separates them from a warning you just introduced.
 > 10. **When unsure: least destructive reversible action, then ask.** The tiebreaker is always "reduce organizational burden rather than create it."
 > 11. **Study state belongs to module → unit → current map → stage.** Workspaces coordinate through explicit IDs. Never collapse many active units into one global path or infer joins from prose.
 > 12. **General AI is read-only.** Canonical writes use an action-specific gateway capability, current snapshot, post-action scope check, validation, and regeneration. Session closure stages only the gateway ledger and never the protected Canvas files.
@@ -29,23 +29,34 @@ Claude is the primary mechanical operator and retrieval assistant for Learning O
 
 ## 2. Bootstrap order
 
-Start with `system/OPERATOR.md` and its compact discovery commands. Consult
-`system/contracts/normative-corpus.yaml` before treating a document as binding.
-`CLAUDE.md` at the repository root links to this file; do not read both copies.
-The complete catalogue and full bootstrap remain available for bulk work, but
-are not the default context for an agent task.
-For material maintenance, prefer `plan-edit-context UNIT_ID --route-id ROUTE_ID`
-and the reviewed `route.patch` preflight/apply workflow in WORKFLOWS §25a.
-Use compact `plan-edit-context UNIT_ID` for map edits. Core expands shared
+Start with `system/OPERATOR.md` and its task-shaped entry (`capabilities
+--compact --json` for discovery, then the one entry read the task needs).
+Consult `system/contracts/normative-corpus.yaml` before treating a document
+as binding. `CLAUDE.md` at the repository root links to this file; do not
+read both copies. The complete catalogue and full bootstrap remain available
+for bulk work, but are not the default context for an agent task. Start
+with one of `bootstrap --brief` and `bootstrap --compact`, not both as
+routine startup; expand to the other later only when the task needs it.
+For material maintenance, start from `plan-edit-context UNIT_ID --route-id
+ROUTE_ID` (or the `--route-ids` batch) for a named route, `--stage-id` for
+a named stage, and follow the reviewed `route.patch` preflight/apply
+workflow in WORKFLOWS §25a. Reach for the unit `--brief` only for unit
+coverage, source-completeness, or unknown ids. Core expands shared
 material references for the app; the agent should not reproduce those copies.
 
 Read the applicable contracts before acting, according to the task:
 
-- **Lookup or study support:** use compact bootstrap, then `inspect`, `search`,
-  `related`, or `note-read` for the relevant records. Batch known record IDs in
-  one `inspect` call. Read the relevant workspace and coordination facts when
-  they bear on the question. For cross-domain discovery, consult the **At a
-  glance** block of the current `generated/domain-atlas.md` before narrowing.
+- **Lookup or study support:** for a named record use `inspect`, `search`,
+  `related`, or `note-read` directly; discover units with exact filters
+  through `unit-list --compact`, then `inspect` the chosen ID; for an
+  open "what should I work on?"
+  use `bootstrap --brief` first. Batch known record IDs in one `inspect`
+  call. Return to interrupted study with `los resume` (one screen: stage,
+  requirement, observations, open items, exam sittings) instead of
+  re-deriving state. Read the relevant workspace and coordination facts
+  when they bear on the question. For cross-domain discovery, consult the
+  **At a glance** block of the current `generated/domain-atlas.md` before
+  narrowing.
 - **An authorized mutation:** fetch `capabilities NAME --json`, then read the
   owning sections of `system/ARCHITECTURE.md` and `system/WORKFLOWS.md`, the
   relevant schema and its referenced definitions, and the relevant rules in
@@ -73,13 +84,14 @@ Claude may perform the following without separate approval:
 - create missing target directories;
 - generate stable IDs according to the schema (no gratuitous suffixes);
 - create new workspace scaffolding;
-- route `work/inbox/` captures to the appropriate workspace, note, or registry (filing is deterministic per ARCHITECTURE §3.3 — the user never makes filing decisions);
+- route `work/inbox/` captures to the appropriate workspace, note, or registry (filing is deterministic per ARCHITECTURE §3.3 — the user never makes filing decisions), then resolve the routed drop through `inbox.resolve` naming where it went (WORKFLOWS §21);
+- record agent friction encountered while navigating or changing LearningOS directly in `work/complaints/` (see its README) — never in the inbox, which stays for learner captures;
 - assign the default note role (`synthesis`) or the obvious role for new artifacts;
 - normalize filenames while preserving IDs;
 - add or correct clearly mechanical metadata;
 - sort registry records deterministically;
 - rebuild all generated files, including coordination and module views;
-- record a module event (registration, withdrawal, sitting, grade) exactly as stated by the user or an official document;
+- record a module event (registration, withdrawal, sitting, grade) exactly as stated by the user or an official document, through `module.attempt.record` (CLI `module-attempt`);
 - update `COORDINATION.md` facts exactly as stated by the user;
 - append a numbered point to `system/CRITIQUE-POINTS.md` carrying the user's complaint verbatim, and add measured evidence under an existing open point — but never act on a point in the same breath as recording it, and never soften or rewrite the user's statement of it (that file's own rules govern);
 - draft a plan revision with `tools/assemble_lecture_study_maps.py --out …` and apply it through `module-plan-import` or `unit-map-import` (WORKFLOWS §25a) — but **never write a `study-map.yaml` or a `source-map.yaml` directly**: a hand edit validates clean and passes the hook, so nothing objects, while skipping the snapshot guard, the revision check and the receipt. Measured 2026-08-24: only 26% of plan-changing commits carry a receipt, and the largest offender was the operator (CRITIQUE-POINTS §1);
@@ -286,7 +298,7 @@ specific garden note — the operator:
    canonical note, so it follows the visible-review rules (§4);
 5. moves the approved note into the Fortress, adds the frontmatter, and registers
    new concepts/sources only as needed;
-6. runs `python tools/validate.py` and rebuilds views; the promoted idea now
+6. runs `.venv/bin/python tools/validate.py --compact` and rebuilds views; the promoted idea now
    participates in the canon, and its garden file is removed (its history stays
    in Git).
 

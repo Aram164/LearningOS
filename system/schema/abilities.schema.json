@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/abilities",
+  "title": "Ability registry",
+  "x-governs": "record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["abilities", "bridges"],
+  "properties": {
+    "abilities": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/ability"}
+    },
+    "bridges": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/bridge"}
+    }
+  },
+  "$defs": {
+    "id": {"type": "string", "pattern": "^ability-[a-z0-9]+(?:-[a-z0-9]+)*$"},
+    "text": {"type": "string", "minLength": 1, "pattern": "\\S"},
+    "route": {
+      "type": "object", "additionalProperties": false,
+      "required": ["all_of", "reason"],
+      "properties": {
+        "all_of": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/id"}},
+        "reason": {"$ref": "#/$defs/text"},
+        "source": {"$ref": "#/$defs/text"}
+      }
+    },
+    "ability": {
+      "type": "object", "additionalProperties": false,
+      "required": ["id", "title", "claim", "conditions", "evidence_spec", "concept_ids", "review"],
+      "properties": {
+        "id": {"$ref": "#/$defs/id"},
+        "title": {"$ref": "#/$defs/text"},
+        "lifecycle": {"enum": ["active", "retired"]},
+        "claim": {"$ref": "#/$defs/text"},
+        "source": {"$ref": "#/$defs/text"},
+        "conditions": {"type": "array", "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+        "evidence_spec": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"$ref": "#/$defs/text"}},
+        "concept_ids": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "pattern": "^concept-[a-z0-9-]+$"}},
+        "module_ids": {"type": "array", "uniqueItems": true, "items": {"type": "string", "pattern": "^module-[a-z0-9-]+$"}},
+        "preparation_routes": {"type": "array", "items": {"$ref": "#/$defs/route"}},
+        "review": {"type": "object", "additionalProperties": false, "required": ["state"], "properties": {
+          "state": {"enum": ["candidate", "reviewed"]},
+          "reviewed_by": {"$ref": "#/$defs/text"},
+          "reviewed_on": {"type": "string", "format": "date"}
+        }}
+      }
+    },
+    "bridge": {
+      "type": "object", "additionalProperties": false,
+      "required": ["from", "to", "kind", "carries", "changes", "conditions", "source", "review"],
+      "properties": {
+        "from": {"$ref": "#/$defs/id"}, "to": {"$ref": "#/$defs/id"},
+        "kind": {"enum": ["equivalence", "extension", "connection"]},
+        "carries": {"$ref": "#/$defs/text"}, "changes": {"$ref": "#/$defs/text"},
+        "conditions": {"type": "array", "items": {"$ref": "#/$defs/text"}},
+        "source": {"$ref": "#/$defs/text"},
+        "source_sha256": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+        "review": {"type": "object", "additionalProperties": false, "required": ["state"], "properties": {
+          "state": {"enum": ["candidate", "reviewed"]},
+          "reviewed_by": {"$ref": "#/$defs/text"},
+          "reviewed_on": {"type": "string", "format": "date"}
+        }}
+      },
+      "allOf": [{"if": {"properties": {"review": {"properties": {"state": {"const": "reviewed"}}}}},
+                 "then": {"required": ["source_sha256"]}}]
+    }
+  }
+}

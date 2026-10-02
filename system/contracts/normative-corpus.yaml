@@ -51,12 +51,29 @@
 # Adding a document under system/ without adding it here fails `make check`.
 # That is the point: the corpus cannot grow silently again.
 
-corpus_version: 1
+corpus_version: 2
 entrypoint: system/OPERATOR.md
 
 documents:
 
   # ---- the binding spine ---------------------------------------------------
+
+  - path: AGENTS.md
+    class: adapter
+    status: current
+    authority: binding
+    owner: operator-contract
+    summary: >-
+      Core's agent entry adapter points at OPERATOR and the parent workspace's
+      role instructions. Ancestor instructions belong to their owning tree.
+
+  - path: README.md
+    class: reference
+    status: current
+    authority: informative
+    owner: documentation
+    summary: >-
+      Setup and command guide; the binding operator contract governs operations.
 
   - path: system/OPERATOR.md
     class: contract

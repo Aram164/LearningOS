@@ -19,9 +19,9 @@
 #   4. freeze the new shape as tests/fixtures/formats/v<N>/
 #
 # Rebuild with: python tools/schema_contract.py --bump
-contract_version: 21
-schema_fingerprint: sha256:b3aac52d489fb7379aeedf09cc083412325ba06260866d573a49ebf7e5ce4833
-record_schemas: 32
+contract_version: 49
+schema_fingerprint: sha256:62b647bbe74178e62f147baba9a2d4ee8950630fab30ad2d722c350ac6101aa6
+record_schemas: 36
 history:
 - version: 1
   adopted: '2026-08-07'
@@ -190,3 +190,183 @@ history:
     for §19.6 first slice; no existing data required to change
   migration: null
   fixture: tests/fixtures/formats/v12/
+- version: 22
+  adopted: '2026-09-13'
+  note: study-map resources gained independent_evidence (per-activity review of which
+    target conditions an activity actually tests) and source-map routes gained exposes_solutions_for
+    (which activities a material answers); both are optional and additive — audit
+    synthetic-learner-2026-09-12 F03
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 23
+  adopted: '2026-09-13'
+  note: 'source-map routes gained requires_assets: the files an activity itself needs
+    (dataset, code template), distinct from the material being reachable — audit synthetic-learner-2026-09-12
+    F06'
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 24
+  adopted: '2026-09-13'
+  note: 'learner observations gained conditions_not_met: conditions the learner states
+    did NOT hold, disjoint from conditions and distinct from silence, so ''a different
+    situation'' is actionable — review repair-review-2026-09-13 D4'
+  migration: null
+  fixture: tests/fixtures/formats/v12/
+- version: 25
+  adopted: '2026-09-13'
+  note: Bind assessment suitability to exact requirement and activity bytes/scope;
+    accept reviews on both current-template and legacy resources. Explicit prior exposure
+    can exclude assessment while practice remains available. Optional additions; no
+    migration.
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 26
+  adopted: '2026-09-18'
+  note: 'unit-material-synthesis basis policy tiered-v1 -> tiered-v2: route_set_checksum
+    and source_map_checksum now hash evidential projections, not whole rows or file
+    bytes'
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 27
+  adopted: '2026-09-18'
+  note: unit-material-synthesis basis policy accepts tiered-v1 and tiered-v2 during
+    the basis-projection migration
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 28
+  adopted: '2026-09-18'
+  note: unit-material-synthesis basis policy pinned to tiered-v2; both published dossiers
+    rebased onto the narrowed basis projection
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 29
+  adopted: '2026-09-18'
+  note: unit-material-synthesis gains optional scope_of_absence ahead of the backfill
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 30
+  adopted: '2026-09-18'
+  note: scope_of_absence required on every deep-reviewed assessment; both published
+    dossiers backfilled from their own slice indexes
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 31
+  adopted: '2026-09-18'
+  note: stageCore gains optional knowledge_node_id (assembler-emitted join key; legacy
+    stages link by id convention)
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 32
+  adopted: '2026-09-18'
+  note: legacyStage gains optional knowledge_node_id (same join key for pre-template
+    maps)
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 33
+  adopted: '2026-09-20'
+  note: 'add optional node_scaffold_note to study-map resource (v1 + legacy): records
+    deliberate scaffolding placements; no existing data invalidated, no migration'
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 34
+  adopted: '2026-09-21'
+  note: 'note: optional material_analysis provenance binding for durable source-chapter
+    analyses (additive; existing notes validate unchanged)'
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 35
+  adopted: '2026-09-21'
+  note: 'note.material_analysis: required frozen_input_bytes records the preserved
+    body length (additive; no notes written under v34 yet)'
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 36
+  adopted: '2026-09-21'
+  note: 'unit-material-synthesis route assessments gain optional analysis_refs: pinned
+    note revision, approved-content digest, exact anchor, and inspected material identity
+    per referenced analysis note (additive, no migration)'
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 37
+  adopted: '2026-09-23'
+  note: Add independent ability records, optional stage links, confirmed observations
+    with conditions and evidence criteria, tentative connection candidates, and source-bound
+    reviewed bridges
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 38
+  adopted: '2026-09-23'
+  note: Allow stable ability identities to retire while preserving historical observations
+    (additive; existing records remain active)
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 39
+  adopted: '2026-09-23'
+  note: sources gain optional metadata-only discovery provenance with child titles
+    (two-pass intake); Master's candidates gain url, identifiers, child titles, possible
+    use and type (additive; existing records stay valid)
+  migration: null
+  fixture: tests/fixtures/formats/v25/
+- version: 40
+  adopted: '2026-09-26'
+  note: 'study-map stages gain an optional progress record (updated, summary, next):
+    the stage''s current structured progress, written only through stage.progress.update
+    and surfaced by resume. Additive and backward-compatible — absent means nothing
+    recorded, which is what every v39 record carries.'
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 41
+  adopted: '2026-09-28'
+  note: Clarify inspected_range physical PDF page and text line units; descriptions
+    only, no stored shape change
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 42
+  adopted: '2026-09-29'
+  note: 'useful_sections entries require exactly one section-to-note pair (no migration:
+    all 136 loaded entries already single-key)'
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 43
+  adopted: '2026-09-29'
+  note: useful_sections forbids locator/use keys via propertyNames
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 44
+  adopted: '2026-09-29'
+  note: useful_sections bans empty and blank keys
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 45
+  adopted: '2026-09-29'
+  note: 'source evaluation items require at least one property (no migration: no stored
+    evaluation is empty)'
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 46
+  adopted: '2026-09-30'
+  note: Optional content-bound reviews distinguish stage angle refinements from source
+    corrections; existing plans remain readable without a migration.
+  migration: null
+  fixture: tests/fixtures/formats/v40/
+- version: 47
+  adopted: '2026-10-02'
+  note: Receipts record an optional metadata.data_roots_sha256 (authored-data digest)
+    so diagnostics can tell contract-only moves from data drift; old receipts stay
+    valid without a migration.
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 48
+  adopted: '2026-10-02'
+  note: module attempts gain result 'sat' (sat the sitting, outcome unknown) and examination
+    sittings gain an optional withdrawal_deadline (Rucktritt); both additive, existing
+    records validate unchanged, no migration
+  migration: null
+  fixture: tests/fixtures/formats/v46/
+- version: 49
+  adopted: '2026-10-02'
+  note: Add learner-stage-result record schema (untargeted stage-result ledger) and
+    optional receipts metadata.routed_to for inbox.resolve; additive, old records
+    and receipts stay valid without a migration
+  migration: null
+  fixture: tests/fixtures/formats/v46/

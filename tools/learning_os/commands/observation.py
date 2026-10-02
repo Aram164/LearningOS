@@ -1,4 +1,15 @@
-"""Append learner evidence through the existing snapshot/revision transaction."""
+"""Append learner evidence through the existing snapshot/revision transaction.
+
+Two entries, one core. ``observation-append`` is the agent-facing capability
+handler: it requires a GatewayEnvelopeV2 and the caller asserts the approved
+snapshot. ``observe`` is Aram's own direct path (Finding 0: asymmetric
+admission): the producer is the ground truth about himself, the ledger is
+append-only with a tested ``--supersedes`` correction path, and the write
+lands at the end of a study session — so the snapshot is *taken* under the
+operator lock instead of *asserted* by a tired caller. For a single writer
+holding a lock that is the same guarantee. The receipt is byte-identical in
+shape; only ``approval.kind`` reads ``direct-user-gesture``.
+"""
 
 from __future__ import annotations
 
@@ -7,7 +18,14 @@ import sys
 from datetime import UTC, datetime
 from uuid import uuid4
 
-from learning_os.contracts.gateway import current_gateway_request
+from learning_os.contracts.gateway import (
+    GatewayRequestContext,
+    current_gateway_request,
+    gateway_request_context,
+    intent_sha256,
+    verified_gateway_snapshot,
+)
+from learning_os.fingerprint import canonical_fingerprint
 from learning_os.learning_runtime import (
     RuntimeInputError,
     collect_requirements,
@@ -17,7 +35,10 @@ from learning_os.learning_runtime import (
     validate_runtime_record,
 )
 from learning_os.loader import load_repo
+from learning_os.revisions import artifact_revision
 
+from .capability import gesture_allowed
+from .suggest import with_suggestions
 from .support import (
     _expected_ok,
     _expected_revisions_from_args,
@@ -26,6 +47,197 @@ from .support import (
     _write_transaction,
 )
 
+OBSERVE_CAPABILITY = "learner.observation.append"
+
+
+def _stage_index(repo):
+    """Every study-map stage: ``stage_id -> (unit_id, has_target)``.
+
+    Only the current map of each unit is indexed: a stage id that exists
+    solely on a superseded map is not observable, and naming it as a
+    stage would point at work that no longer resolves.
+    """
+    index = {}
+    for unit in repo.units.values():
+        study_map = repo.study_maps.get((unit.data or {}).get("current_study_map"))
+        if study_map is None or study_map.unit_id != unit.id:
+            continue
+        for stage in study_map.data.get("stages", []):
+            if isinstance(stage, dict) and isinstance(stage.get("id"), str):
+                index.setdefault(stage["id"], (
+                    unit.id, isinstance(stage.get("runtime_target"), dict)))
+    return index
+
+
+def _unknown_requirement_message(repo, requirements, value):
+    """Refuse an unresolvable id with the way forward named.
+
+    A stage id whose stage carries no ``runtime_target`` is the ordinary
+    untargeted case — most stages have no target — so it names the stage,
+    the untargeted ``stage-result`` path, and the target-authoring
+    ``unit-plan-revise`` path instead of crying unknown. A stage id that
+    already has a target names the requirement id to observe. Anything
+    else is a mistyped id, with suggestions over requirements and stages.
+    """
+    stages = _stage_index(repo)
+    if value in stages:
+        unit_id, has_target = stages[value]
+        if has_target:
+            requirement_id = next(
+                (req["id"] for req in requirements
+                 if req.get("source_stage", {}).get("stage_id") == value
+                 and req.get("source_stage", {}).get("unit_id") == unit_id),
+                None,
+            )
+            observed = f" {requirement_id}" if requirement_id else ""
+            return (f"stage {value} (unit {unit_id}) already has a requirement "
+                    f"target; observe the requirement id{observed} instead of "
+                    f"the stage id")
+        return (f"stage {value} (unit {unit_id}) has no requirement target; "
+                f"record the result without credit via `stage-result "
+                f"--workspace WORKSPACE --unit {unit_id} --stage {value} "
+                f"--activity ACTIVITY --result RESULT`, or author a target "
+                f"with `unit-plan-revise {unit_id} --file REVISION.yaml "
+                f"--check` adding a runtime_target stage patch (WORKFLOWS §8)")
+    return with_suggestions(f"unknown requirement: {value}", value,
+                            [*(req["id"] for req in requirements), *stages])
+
+
+def _append_observation(
+    root,
+    *,
+    workspace_id: str,
+    requirement_id: str,
+    activity: str,
+    result: str,
+    conditions,
+    conditions_not_met,
+    tags: str | None,
+    assistance: str | None,
+    context_note: str | None,
+    supersedes: str | None,
+    expected_snapshot,
+    expected_revisions: dict,
+) -> tuple[int, dict]:
+    """Shared append core. The caller holds the operator lock and a live
+    gateway request. Returns ``(code, result)``; errors are already reported.
+    """
+    if not _expected_ok(root, expected_snapshot):
+        return 3, {}
+    repo = load_repo(root)
+    workspace = repo.workspaces.get(workspace_id)
+    if workspace is None or workspace.archived or workspace.status != "active":
+        print("los: observations require a registered active workspace", file=sys.stderr)
+        return 2, {}
+    try:
+        requirements = collect_requirements(repo)
+        requirement = next((req for req in requirements if req["id"] == requirement_id), None)
+        if requirement is None:
+            raise RuntimeInputError(
+                _unknown_requirement_message(repo, requirements, requirement_id))
+        source = requirement["source_stage"]
+        if (source["module_id"] not in workspace.meta.get("module_ids", [])
+                and source["unit_id"] not in workspace.meta.get("unit_ids", [])):
+            raise RuntimeInputError("requirement is outside the workspace's declared module/unit scope")
+        historical = read_observations(repo, requirements)
+        ledger = runtime_path(root, workspace.path.parent / "observations.jsonl")
+        obs = {
+            "id": "observation-" + uuid4().hex,
+            "requirement": requirement_id,
+            "requirement_sha256": requirement_fingerprint(requirement),
+            "activity": activity,
+            "result": result,
+            "timestamp": datetime.now(UTC).isoformat(),
+            "conditions": list(conditions or []),
+            "evidence_tags": [tag.strip() for tag in (tags or "").split(",") if tag.strip()],
+        }
+        refuted = list(conditions_not_met or [])
+        if refuted:
+            both = sorted(set(obs["conditions"]) & set(refuted))
+            if both:
+                raise RuntimeInputError(
+                    "a condition cannot be recorded as both met and not met: "
+                    + ", ".join(both))
+            obs["conditions_not_met"] = refuted
+        if assistance is not None:
+            obs["assistance"] = assistance
+        if context_note is not None:
+            obs["context"] = context_note
+        if supersedes:
+            prior = next((item for item in historical if item["id"] == supersedes), None)
+            if (prior is None or prior["requirement"] != requirement_id
+                    or prior["origin"]["path"] != ledger.relative_to(root).as_posix()
+                    or any(item.get("supersedes") == prior["id"] for item in historical)):
+                raise RuntimeInputError("correction must supersede one uncorrected observation of this requirement in this ledger")
+            obs["supersedes"] = supersedes
+        validate_runtime_record(repo, "learner-observation", obs)
+        try:
+            old = ledger.read_text(encoding="utf-8")
+        except FileNotFoundError:
+            old = ""
+        separator = "\n" if old and not old.endswith("\n") else ""
+        new = old + separator + json.dumps(obs, sort_keys=True, ensure_ascii=False) + "\n"
+        code, errors, confirmation = _write_transaction(
+            root, {ledger: new}, capability=OBSERVE_CAPABILITY,
+            expected_revisions=expected_revisions, artifact_ids=[workspace.id],
+        )
+        if code:
+            for error in errors[:12]:
+                print(error, file=sys.stderr)
+            return code, {}
+    except (RuntimeInputError, OSError) as exc:
+        print(f"los: {exc}", file=sys.stderr)
+        return 2, {}
+    return 0, {"ok": True, "observation_id": obs["id"],
+               "workspace_id": workspace.id,
+               **_condition_notice(requirement, obs), **confirmation}
+
+
+def _condition_notice(requirement: dict, obs: dict) -> dict:
+    """Say what this record does and does not establish, while he can still fix it.
+
+    The write succeeded either way — the ledger is his, and refusing a report
+    of difficulty because it lacked flags would be worse than accepting it.
+    But a report that cannot be read as a failure of the current target needs
+    to say so at the moment it is filed. It used to persist silently and leave
+    the requirement reading `demonstrated`, `satisfied`, no next steps: the
+    successful save was the only feedback, and it concealed that the report
+    had no effect (audit `synthetic-learner-2026-09-12`, F02).
+    """
+    if obs["result"] not in {"incorrect", "partial"}:
+        return {}
+    declared = set(requirement.get("conditions", []))
+    refuted = sorted(declared & set(obs.get("conditions_not_met", [])))
+    if refuted:
+        return {"refuted_conditions": refuted,
+                "interpretation_notice": (
+                    f"recorded as a different situation ({', '.join(refuted)} "
+                    f"did not hold), so it is not read as a failure of this "
+                    f"target and resets nothing")}
+    missing = sorted(declared - set(obs.get("conditions", [])))
+    if not missing:
+        return {"interpretation_notice":
+                "recorded under every condition this target declares; it is "
+                "read as a failure of this target"}
+    flags = " ".join(f"--condition {name}" for name in missing)
+    not_met = " ".join(f"--condition-not-met {name}" for name in missing)
+    return {
+        "unstated_conditions": missing,
+        "interpretation_notice": (
+            f"this result does not say whether the target's conditions held "
+            f"({', '.join(missing)}), so it is held as unresolved: it is not "
+            f"read as a failure of this target, and the successes recorded "
+            f"before it stop counting toward a current conclusion until this "
+            f"is settled. Settle it by superseding this record — "
+            f"los observe {requirement['id']} --activity {obs['activity']} "
+            f"--result {obs['result']} --supersedes {obs['id']} — adding "
+            f"{flags} for the conditions that held, or {not_met} for the ones "
+            f"that did not. Two distinct qualified activities recorded after "
+            f"this also establish a new basis, without claiming the missing "
+            f"facts were ever known."
+        ),
+    }
+
 
 def cmd_observation_append(args) -> int:
     root = _root(args)
@@ -33,62 +245,145 @@ def cmd_observation_append(args) -> int:
         print("los: observations require GatewayEnvelopeV2; direct CLI application is disabled", file=sys.stderr)
         return 2
     with _operator_lock(root):
-        if not _expected_ok(root, args.expected_snapshot):
-            return 3
-        repo = load_repo(root)
-        workspace = repo.workspaces.get(args.workspace)
+        code, result = _append_observation(
+            root,
+            workspace_id=args.workspace,
+            requirement_id=args.requirement,
+            activity=args.activity,
+            result=args.result,
+            conditions=args.condition,
+            conditions_not_met=args.condition_not_met,
+            tags=args.tags,
+            assistance=args.assistance,
+            context_note=args.context,
+            supersedes=args.supersedes,
+            expected_snapshot=args.expected_snapshot,
+            expected_revisions=_expected_revisions_from_args(args),
+        )
+    if code:
+        return code
+    print(json.dumps(result))
+    return 0
+
+
+def _resolve_observe_workspace(repo, requirement, explicit_id):
+    """Return ``(workspace, refusal)`` for the direct path.
+
+    An explicit id behaves exactly like ``observation-append``. An omitted
+    id resolves the single active workspace covering the requirement's
+    module or unit scope; zero or several candidates refuse rather than
+    guess, because the ledger line cannot move workspaces afterwards.
+    """
+    source = requirement["source_stage"]
+
+    def covers(workspace) -> bool:
+        return (source["module_id"] in workspace.meta.get("module_ids", [])
+                or source["unit_id"] in workspace.meta.get("unit_ids", []))
+
+    if explicit_id is not None:
+        workspace = repo.workspaces.get(explicit_id)
         if workspace is None or workspace.archived or workspace.status != "active":
-            print("los: observations require a registered active workspace", file=sys.stderr)
-            return 2
+            return None, "observations require a registered active workspace"
+        if not covers(workspace):
+            return None, "requirement is outside the workspace's declared module/unit scope"
+        return workspace, ""
+    candidates = sorted(
+        workspace.id for workspace in repo.workspaces.values()
+        if not workspace.archived and workspace.status == "active" and covers(workspace)
+    )
+    if not candidates:
+        return None, (f"no active workspace covers requirement {requirement['id']}; "
+                      "pass --workspace to choose one")
+    if len(candidates) > 1:
+        return None, (f"requirement {requirement['id']} is covered by "
+                      f"{len(candidates)} workspaces ({', '.join(candidates)}); "
+                      "pass --workspace to choose one")
+    return repo.workspaces[candidates[0]], ""
+
+
+def cmd_observe(args) -> int:
+    """Record Aram's own evidence with no envelope ceremony.
+
+    The terminal session is the approval: the snapshot and the revision
+    guard are taken under the operator lock, and the intent hash is
+    computed internally over the same subject the envelope would carry.
+    """
+    root = _root(args)
+    if not gesture_allowed(OBSERVE_CAPABILITY):
+        print("los: the direct observation path is not admitted", file=sys.stderr)
+        return 2
+    with _operator_lock(root):
+        snapshot = f"sha256:{canonical_fingerprint(root)}"
+        repo = load_repo(root)
         try:
             requirements = collect_requirements(repo)
-            requirement = next((req for req in requirements if req["id"] == args.requirement), None)
-            if requirement is None:
-                raise RuntimeInputError(f"unknown requirement: {args.requirement}")
-            source = requirement["source_stage"]
-            if (source["module_id"] not in workspace.meta.get("module_ids", [])
-                    and source["unit_id"] not in workspace.meta.get("unit_ids", [])):
-                raise RuntimeInputError("requirement is outside the workspace's declared module/unit scope")
-            historical = read_observations(repo, requirements)
-            ledger = runtime_path(root, workspace.path.parent / "observations.jsonl")
-            obs = {
-                "id": "observation-" + uuid4().hex,
-                "requirement": args.requirement,
-                "requirement_sha256": requirement_fingerprint(requirement),
-                "activity": args.activity,
-                "result": args.result,
-                "timestamp": datetime.now(UTC).isoformat(),
-                "conditions": args.condition or [],
-                "evidence_tags": [tag.strip() for tag in (args.tags or "").split(",") if tag.strip()],
-            }
-            if args.assistance is not None:
-                obs["assistance"] = args.assistance
-            if args.context is not None:
-                obs["context"] = args.context
-            if args.supersedes:
-                prior = next((item for item in historical if item["id"] == args.supersedes), None)
-                if (prior is None or prior["requirement"] != args.requirement
-                        or prior["origin"]["path"] != ledger.relative_to(root).as_posix()
-                        or any(item.get("supersedes") == prior["id"] for item in historical)):
-                    raise RuntimeInputError("correction must supersede one uncorrected observation of this requirement in this ledger")
-                obs["supersedes"] = args.supersedes
-            validate_runtime_record(repo, "learner-observation", obs)
-            try:
-                old = ledger.read_text(encoding="utf-8")
-            except FileNotFoundError:
-                old = ""
-            separator = "\n" if old and not old.endswith("\n") else ""
-            new = old + separator + json.dumps(obs, sort_keys=True, ensure_ascii=False) + "\n"
-            code, errors, confirmation = _write_transaction(
-                root, {ledger: new}, capability="learner.observation.append",
-                expected_revisions=_expected_revisions_from_args(args), artifact_ids=[workspace.id],
-            )
-            if code:
-                for error in errors[:12]:
-                    print(error, file=sys.stderr)
-                return code
-        except (RuntimeInputError, OSError) as exc:
+        except RuntimeInputError as exc:
             print(f"los: {exc}", file=sys.stderr)
             return 2
-    print(json.dumps({"ok": True, "observation_id": obs["id"], "workspace_id": workspace.id, **confirmation}))
+        requirement = next((req for req in requirements if req["id"] == args.requirement), None)
+        if requirement is None:
+            print(f"los: {_unknown_requirement_message(repo, requirements, args.requirement)}",
+                  file=sys.stderr)
+            return 2
+        workspace, refusal = _resolve_observe_workspace(repo, requirement, args.workspace)
+        if workspace is None:
+            print(f"los: {refusal}", file=sys.stderr)
+            return 2
+        payload: dict = {
+            "workspace": workspace.id,
+            "requirement": requirement["id"],
+            "activity": args.activity,
+            "result": args.result,
+        }
+        if args.assistance is not None:
+            payload["assistance"] = args.assistance
+        if args.tags is not None:
+            payload["tags"] = args.tags
+        if args.note is not None:
+            payload["context"] = args.note
+        if args.condition:
+            payload["condition"] = list(args.condition)
+        if args.condition_not_met:
+            payload["condition_not_met"] = list(args.condition_not_met)
+        if args.supersedes:
+            payload["supersedes"] = args.supersedes
+        expected_revisions = {workspace.id: artifact_revision(root, workspace.id)}
+        subject = intent_sha256({
+            "schema_version": 2,
+            "capability": OBSERVE_CAPABILITY,
+            "channel": "operator",
+            "expected_snapshot": snapshot,
+            "expected_revisions": expected_revisions,
+            "payload": payload,
+        })
+        key = uuid4().hex
+        context = GatewayRequestContext(
+            request_id=f"observe-{key}",
+            idempotency_key=f"observe-{key}",
+            capability=OBSERVE_CAPABILITY,
+            channel="operator",
+            intent_sha256=subject,
+            approval_kind="direct-user-gesture",
+            approval_subject_sha256=subject,
+            expected_snapshot=snapshot,
+        )
+        with gateway_request_context(context), verified_gateway_snapshot(root, snapshot):
+            code, result = _append_observation(
+                root,
+                workspace_id=workspace.id,
+                requirement_id=requirement["id"],
+                activity=args.activity,
+                result=args.result,
+                conditions=args.condition,
+                conditions_not_met=args.condition_not_met,
+                tags=args.tags,
+                assistance=args.assistance,
+                context_note=args.note,
+                supersedes=args.supersedes,
+                expected_snapshot=snapshot,
+                expected_revisions=expected_revisions,
+            )
+    if code:
+        return code
+    print(json.dumps(result))
     return 0

@@ -1,0 +1,141 @@
+schema_version: 2
+id: transaction-20260912-043511-001
+type: transaction-receipt
+status: committed
+capability: module.plan.import
+committed_at: '2026-09-12T04:35:11+02:00'
+snapshot_before: sha256:96cfe3a938fda197affd53eab3b7602a4cace6c37abed1fd163b591831450d89
+snapshot_after: sha256:0986cd043199f921fb3edc2d1e9b177300bcc82273144ee838f53e6338b758db
+expected_revisions:
+  module-hu-m2-statistik-analysis: 38
+  unit-m2-analysis-ch01: 4
+  unit-m2-analysis-ch02: 7
+  unit-m2-analysis-ch03: 4
+  unit-m2-analysis-ch04: 4
+  unit-m2-analysis-ch05: 4
+  unit-m2-analysis-ch06: 4
+  unit-m2-analysis-ch07: 4
+  unit-m2-analysis-exam-prep: 10
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 38
+    after: 39
+  unit-m2-analysis-ch01:
+    before: 4
+    after: 5
+  unit-m2-analysis-ch02:
+    before: 7
+    after: 8
+  unit-m2-analysis-ch03:
+    before: 4
+    after: 5
+  unit-m2-analysis-ch04:
+    before: 4
+    after: 5
+  unit-m2-analysis-ch05:
+    before: 4
+    after: 5
+  unit-m2-analysis-ch06:
+    before: 4
+    after: 5
+  unit-m2-analysis-ch07:
+    before: 4
+    after: 5
+  unit-m2-analysis-exam-prep:
+    before: 10
+    after: 11
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/module.yaml
+  sha256_before: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  sha256_after: 637bc37adb1984352758508c90c8feab50645f84b340233e300963b3d85a98a8
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/source-map.yaml
+  sha256_before: 3aa44bc60fe84537e979530f2638ac6dace13055f90111ac44bb5a9e1663dcca
+  sha256_after: 337dff70ed4d11a7501426a88c63cf965221b6237616c2a2933f044d46d9c00b
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch01/study-map.yaml
+  sha256_before: 286ec3f29956a546b9b4fd7e7fcdcadba0092e3afbfda759ecea1600b3707af6
+  sha256_after: 286ec3f29956a546b9b4fd7e7fcdcadba0092e3afbfda759ecea1600b3707af6
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch01/unit.yaml
+  sha256_before: 89f97aa9b16fe23416e3da7f207e3e58f80e44fcc726e91a27e4a6d36109f8cd
+  sha256_after: 89f97aa9b16fe23416e3da7f207e3e58f80e44fcc726e91a27e4a6d36109f8cd
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/study-map.yaml
+  sha256_before: f5f5f8d628f0812116ffa5d807f7668ae005d5985e526d786bdf3920caf92abb
+  sha256_after: f5f5f8d628f0812116ffa5d807f7668ae005d5985e526d786bdf3920caf92abb
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch02/unit.yaml
+  sha256_before: 6826531739a1b4d75f8981c0d14a53a8e6e6f1bf8f7cb501163c9dd4ecb5cb06
+  sha256_after: 6826531739a1b4d75f8981c0d14a53a8e6e6f1bf8f7cb501163c9dd4ecb5cb06
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/study-map.yaml
+  sha256_before: e68821ed23f43f08e3f6690e90cb4a8cc6c23b44b4031c74619bc181bb117604
+  sha256_after: e68821ed23f43f08e3f6690e90cb4a8cc6c23b44b4031c74619bc181bb117604
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch03/unit.yaml
+  sha256_before: a5ce570f18228017ee9e68821fba92663289320e6fd129866150ed98f4260adb
+  sha256_after: a5ce570f18228017ee9e68821fba92663289320e6fd129866150ed98f4260adb
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch04/study-map.yaml
+  sha256_before: d86c4d158578fe01a4f77847c8eeb882d182396b79fd97ed88c7b317715d8299
+  sha256_after: d86c4d158578fe01a4f77847c8eeb882d182396b79fd97ed88c7b317715d8299
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch04/unit.yaml
+  sha256_before: 3b316b632d7ecf8a9cfc38b3aee2fab338030e8cc23af9b17fa4d8cac9a17e52
+  sha256_after: 3b316b632d7ecf8a9cfc38b3aee2fab338030e8cc23af9b17fa4d8cac9a17e52
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/study-map.yaml
+  sha256_before: b99f482c93ff18d240a0a4cf9565f9e4a2d6efaa8fcb465ea7fda72f181cc0d6
+  sha256_after: d1112d4e615b9802a6a08bd31a08a80d76295ea16a972d261f4101058d4dc64e
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch05/unit.yaml
+  sha256_before: 89b2e2a5ebf1c1c5555cb49ceabdefdf52f181dafc0eff850ef8543ca6e4b280
+  sha256_after: 89b2e2a5ebf1c1c5555cb49ceabdefdf52f181dafc0eff850ef8543ca6e4b280
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/study-map.yaml
+  sha256_before: a0507756997930022206746d0fa94511128e1fbabdadf56141b4b8546da0ec13
+  sha256_after: c17b9b9aa874baa0b240cd2611f4194bac74bdc110054ac579ed9a445b4a3151
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch06/unit.yaml
+  sha256_before: 85e32d0e54d33ab1d85fb6deaeaec222f77b71ea0734781afd5ed3ad36cb4b0f
+  sha256_after: 85e32d0e54d33ab1d85fb6deaeaec222f77b71ea0734781afd5ed3ad36cb4b0f
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch07/study-map.yaml
+  sha256_before: 68777eb1f27c692cfa3c4fc507ffd0170f87df8ca3e892b9ab3471bafba5e314
+  sha256_after: a2b8f0ddcd4c334c8cf46788e8fc1f44b927b0df4db046adcffb8af3d17ca1af
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-ch07/unit.yaml
+  sha256_before: 1db0a70d066c58202e61e422b7caba7c324e3efb06a0ec764e1d8ecacfd2fb1a
+  sha256_after: 1db0a70d066c58202e61e422b7caba7c324e3efb06a0ec764e1d8ecacfd2fb1a
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/study-map.yaml
+  sha256_before: 339bdb76b4edcd9ccfae19b189f62050ecfd44b56dccd10cc9402d2e23f5933b
+  sha256_after: 339bdb76b4edcd9ccfae19b189f62050ecfd44b56dccd10cc9402d2e23f5933b
+  created: false
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-analysis-exam-prep/unit.yaml
+  sha256_before: b556d97d7acf19facee573fd49c4bc4270aa694ae55494932dae58c293aa1836
+  sha256_after: b556d97d7acf19facee573fd49c4bc4270aa694ae55494932dae58c293aa1836
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.plan.import
+    declared_writes:
+    - curriculum/modules/**
+    - work/active/**
+    - sources/sources.yaml
+    - sources/registry/**
+    - curriculum/quarantine/masters-planning/catalog.yaml
+    - curriculum/quarantine/masters-planning/promotions/**
+    - operations/transactions/lineage.yaml
+request:
+  channel: operator
+  request_id: 24131e13-ef12-4cf2-8340-d68937225b9b
+  idempotency_key: 39804718-14fa-406a-aeef-d1c23bf5ae83
+  intent_sha256: sha256:c5061374c9c97286cf5e032b2085c13fb065fe173e29a9f987ca0b02977efca6
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:c5061374c9c97286cf5e032b2085c13fb065fe173e29a9f987ca0b02977efca6

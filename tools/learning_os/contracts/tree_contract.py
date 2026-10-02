@@ -30,6 +30,7 @@ number in the prose is written down anywhere.
 
 from __future__ import annotations
 
+import os
 import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -226,6 +227,7 @@ def _git_ignored(root: Path, relative: str) -> bool:
         result = subprocess.run(
             ["git", "check-ignore", "-q", candidate],
             cwd=root, capture_output=True, timeout=30, check=False,
+            env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"},
         )
         if result.returncode == 0:
             return True

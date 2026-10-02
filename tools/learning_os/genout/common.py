@@ -10,7 +10,7 @@ from pathlib import Path
 from .. import __version__
 from ..errors import TransactionFailure
 from ..fingerprint import CANONICAL_ROOTS
-from ..githistory import GitHistoryError, last_commit_date, read_history
+from ..githistory import GitHistoryError, _lookup, last_commit_date, read_history
 
 LECTURE_KEY_RE = re.compile(r"^(?:VL\s*)?L?\d{1,2}\b")
 
@@ -91,7 +91,18 @@ def _letter_toc(entries: list[tuple[str, str]]) -> list[str]:
     return lines
 
 
-def _git_last_commit(root: Path, rel: str) -> str:
+def _git_last_commit(
+    root: Path, rel: str, git_table: dict[str, str] | None = None
+) -> str:
+    """Last-commit date for one path, from an attempt table or the live cache.
+
+    A snapshot transaction passes its attempt table (G1a) so every builder
+    observes the same history the input digests pinned; ``None`` keeps the
+    legacy cached read for one-shot callers. Same lookup either way, so an
+    injected table matching the live history yields byte-identical values.
+    """
+    if git_table is not None:
+        return _lookup(git_table, rel) or ""
     try:
         return last_commit_date(root, rel)
     except GitHistoryError as exc:
@@ -104,10 +115,27 @@ def stable_generated_at(root: Path) -> str:
     Regenerating without new commits yields byte-for-byte identical output
     (improvement: no wall-clock noise in generated files). Falls back to a
     fixed marker for a tree without history (e.g. synthetic test repos).
+
+    A tree with uncommitted canonical changes stamps
+    "(last commit, uncommitted changes)" instead of the bare commit time,
+    so the README's human-fallback freshness check can see what the
+    validator's hygiene warning already reports. The marker is a pure
+    function of tree state — identical trees still rebuild
+    byte-identically — and clean trees stamp exactly as before.
+
+    A UTC commit time is always spelled ``+00:00``. Git's ``%cI`` spelling
+    of UTC differs by version (observed: 2.42 prints ``+00:00``; 2.54 and
+    2.55 print ``Z``), so without this one normalisation the same history
+    stamps different view bytes on different machines.
     """
     try:
         ts = read_history(root, "-1", "--format=%cI").strip()
+        if ts.endswith("Z"):
+            ts = ts[:-1] + "+00:00"
         if ts:
+            _, dirty = _git_state(root)
+            if dirty:
+                return f"{ts} (last commit, uncommitted changes)"
             return f"{ts} (last commit)"
     except GitHistoryError as exc:
         raise TransactionFailure(f"failed to read git history: {exc}") from exc
@@ -129,7 +157,7 @@ def _git_state(root: Path) -> tuple[str | None, bool]:
         return None, False
 
     try:
-        env = {**os.environ, "LC_ALL": "C"}
+        env = {**os.environ, "LC_ALL": "C", "GIT_OPTIONAL_LOCKS": "0"}
         if git_dir and "GIT_DIR" not in env:
             env["GIT_DIR"] = git_dir
 
@@ -167,7 +195,12 @@ LIST_MARKER = re.compile(r"^\s*(?:[-*+]|\d+[.)])\s+")
 
 
 def _strip_headings(text: str | None) -> str:
-    """Prefer prose after dropping headings, callouts, tables and rules.
+    """Prefer prose after dropping headings, callouts, tables, rules and comments.
+
+    HTML comment blocks (``<!-- … -->``, including multi-line) are dropped
+    the same way headings are: generator banners are not prose, and a
+    leading banner must never become the note's summary (#88). Non-greedy
+    so adjacent comments each match; an unclosed ``<!--`` is left alone.
 
     Recognised list forms: -, *, +, 1. and 1) (with or without indentation).
     Skip list items and their continuations (indented or unindented) when prose exists. 
@@ -176,6 +209,7 @@ def _strip_headings(text: str | None) -> str:
     """
     if not text:
         return ""
+    text = re.sub(r"<!--.*?-->", "", text, flags=re.DOTALL)
     keep = []
     fallback = []
     in_list = False

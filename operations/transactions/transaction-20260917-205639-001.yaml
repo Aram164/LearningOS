@@ -1,0 +1,64 @@
+schema_version: 2
+id: transaction-20260917-205639-001
+type: transaction-receipt
+status: committed
+capability: ai-action.delivery.apply
+committed_at: '2026-09-17T20:56:39+02:00'
+snapshot_before: sha256:c1249a84ba48d27d9a28094b5f06d02508725e3d89449d131b0a8912ea4218d6
+snapshot_after: sha256:56fd76577a49a6bebccb91730343a811160496662667b077250b6db15d3251f2
+expected_revisions:
+  unit-m2-sad-l03: 18
+  material-synthesis-m2-sad-l03-pilot: 0
+artifact_revisions:
+  material-synthesis-m2-sad-l03-pilot:
+    before: 0
+    after: 1
+  unit-m2-sad-l03:
+    before: 18
+    after: 19
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l03/material-synthesis.yaml
+  sha256_before: null
+  sha256_after: 6cf43e051bf5e9273ad7068b59f3d7720b3d996b6121214d3e183ace02b8c1b0
+  created: true
+- path: operations/ai-actions/requests/ai-request-sad-l03-pilot2/request.yaml
+  sha256_before: fba95fa2f6e8c6269f39bbcd299493fe3e7809c60bfae9a26d46deb2f0d083c6
+  sha256_after: f60c3badf8e2940b30f191561f69a9ab9e6f3f4767a7f1c9240dfd64d7a15c8d
+  created: false
+metadata:
+  request_id: ai-request-sad-l03-pilot2
+  delivery_id: ai-delivery-sad-l03-pilot2
+  action_id: unit.compare-materials
+  approved_delivery:
+    delivery_sha256: sha256:b27ea3cf9a4f32d7d9ca99bf0f4fc629dfff89a4b0b9696ea00714b7bcdbded9
+    artifact_sha256:
+      material-synthesis.json: sha256:fe7c1aa0a4988cc8724bc251740cc78c64f634bf87c9bd687d18755af637e692
+  created_ids:
+  - material-synthesis-m2-sad-l03-pilot
+  updated_ids:
+  - unit-m2-sad-l03
+  deleted_ids: []
+  superseded_ids: []
+  validation:
+    schemas: passed
+    references: passed
+    boundaries: passed
+    projection: passed
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: ai-action.delivery.apply
+    declared_writes:
+    - operations/ai-actions/requests/**
+  - capability: unit.material-synthesis.publish
+    declared_writes:
+    - curriculum/modules/**/units/**/material-synthesis.yaml
+request:
+  channel: operator
+  request_id: request-ai-delivery-apply-sad-l03-pilot2
+  idempotency_key: ai-delivery-sad-l03-pilot2-apply-002
+  intent_sha256: sha256:bb40225f1335a32f8112b8fb75f91db1635a9c45cd952c2336e78af9434c373e
+  approval:
+    kind: approved-delivery
+    subject_sha256: sha256:bb40225f1335a32f8112b8fb75f91db1635a9c45cd952c2336e78af9434c373e

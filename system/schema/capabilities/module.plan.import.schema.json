@@ -9,9 +9,6 @@
     "module_id"
   ],
   "properties": {
-    "approve": {
-      "type": "boolean"
-    },
     "check": {
       "type": "boolean"
     },
@@ -29,7 +26,36 @@
       "type": "string"
     },
     "promotion": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "schema_version": {},
+        "id": {},
+        "type": {},
+        "recorded_at": {},
+        "candidate_module_id": {},
+        "canonical_module_id": {},
+        "catalog_revision": {},
+        "verification": {},
+        "adopted_sources": {},
+        "module_plan": {}
+      },
+      "additionalProperties": false,
+      "required": [
+        "adopted_sources",
+        "candidate_module_id",
+        "canonical_module_id",
+        "catalog_revision",
+        "id",
+        "module_plan",
+        "recorded_at",
+        "schema_version",
+        "type",
+        "verification"
+      ],
+      "description": "Inline MasterPlanning promotion package; the accepted fields are the full promotion record governed by system/schema/master-planning-promotion.schema.json."
+    },
+    "staged_basis": {
+      "type": "string"
     }
   },
   "oneOf": [

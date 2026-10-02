@@ -5,11 +5,26 @@ from __future__ import annotations
 import tomllib
 from pathlib import Path
 
+import pytest
 from code_reachability import analyse
+from group_map import groups_for_paths
+from group_map import tests_for_groups as selected_tests
 
 from learning_os import __version__
 
 ROOT = Path(__file__).resolve().parents[1]
+
+
+@pytest.mark.parametrize(("source", "regression"), [
+    ("material_synthesis.py", "test_synthesis_analysis_refs.py"),
+    ("material_analysis.py", "test_synthesis_analysis_refs.py"),
+    ("commands/analysis.py", "test_material_analysis_save.py"),
+    ("commands/reads.py", "test_material_context.py"),
+    ("commands/material.py", "test_plan_edit_brief.py"),
+])
+def test_affected_selection_includes_owning_regressions(source, regression):
+    selected = selected_tests(groups_for_paths([f"tools/learning_os/{source}"]))
+    assert f"tests/{regression}" in selected
 
 
 def test_checked_in_core_modules_are_statically_classified():

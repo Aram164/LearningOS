@@ -24,28 +24,38 @@ TOOLS_ROOT = Path(__file__).resolve().parent
 # deliberately a gate failure until its lifecycle is classified in this list
 # and in tools/README.md.
 ENTRYPOINTS = (
+    "affected_tests.py",
     "assemble_lecture_study_maps.py",
     "build_materials_index.py",
     "build_materials_tree.py",
     "code_reachability.py",
     "codex_obsidian.py",
+    "contract_bundle.py",
+    "diagnostics_prune.py",
     "evaluate_operator_questions.py",
     "generate.py",
     "generate_capability_schemas.py",
+    "ingest_transcript.py",
     "legacy_exit_review.py",
+    "library_reconciliation.py",
     "lift_angle_out_of_locator.py",
     "los.py",
     "manifest_contract.py",
+    "material_text.py",
     "material_toc.py",
+    "material_summarize.py",
     "materials_manifest.py",
     "normalise_material_uris.py",
     "plan_write_audit.py",
     "refresh_amls_fixture.py",
     "release_pair_receipt.py",
     "schema_contract.py",
+    "seal_envelope.py",
     "stress_check.py",
     "tree_contract.py",
     "validate.py",
+    "verified_pairs.py",
+    "verify_plan_receipt.py",
     "warning_baseline.py",
 )
 
@@ -60,8 +70,13 @@ PACKAGE_ROOTS: Mapping[str, str] = {
 
 # Completed migrations stay executable as historical evidence, but are not
 # standing runtime dependencies.  Current data-contract v14 makes each listed
-# migration's apply path fail closed through migration_lifecycle.py.
+# migration's apply path fail closed through migration_lifecycle.py.  A live
+# one-shot migration executed directly by the operator (never imported) is
+# listed here instead, with its lifecycle bound, until it retires the same way.
 UNREACHABLE_ALLOWLIST: Mapping[str, str] = {
+    "migrations.summaries_to_notes_v1": (
+        "one-shot summary migration, directly executed (through v35)"
+    ),
     "migrations.curriculum_v2": "retired module-first migration (through v0)",
     "migrations.library_taxonomy_v1": "retired taxonomy migration (through v1)",
     "migrations.projects_v1": "retired project migration (through v0)",

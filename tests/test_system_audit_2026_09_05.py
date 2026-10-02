@@ -429,7 +429,7 @@ def test_dossier_projection_loads_the_repository_once_and_hashes_once(
     mini_repo: Path, monkeypatch: pytest.MonkeyPatch
 ):
     """F13: many dossiers must not multiply repository loads or file hashes."""
-    from learning_os import material_synthesis
+    from learning_os import material_synthesis, materials_resolution
     from learning_os.genout import build_manifest
     from learning_os.loader import load_repo
     from learning_os.routes import deterministic_route_id
@@ -489,6 +489,7 @@ def test_dossier_projection_loads_the_repository_once_and_hashes_once(
                     "exercise_value": "One worked calculation.",
                     "best_for": "Rebuilding the derivation.",
                     "limitations": "No continuous variables.",
+                    "scope_of_absence": "lecture-01.pdf, PDF p. 1 of 1",
                     "evidence": [{
                         "locator": "lecture-01.pdf",
                         "checksum": basis["material_checksums"][route_id],
@@ -504,7 +505,7 @@ def test_dossier_projection_loads_the_repository_once_and_hashes_once(
     loads: list[str] = []
     hashed: list[bytes] = []
     real_load = material_synthesis.load_repo
-    real_hash = material_synthesis._sha256_bytes
+    real_hash = materials_resolution.sha256_bytes
 
     def counted_load(root, *args, **kwargs):
         loads.append(str(root))
@@ -515,7 +516,7 @@ def test_dossier_projection_loads_the_repository_once_and_hashes_once(
         return real_hash(value)
 
     monkeypatch.setattr(material_synthesis, "load_repo", counted_load)
-    monkeypatch.setattr(material_synthesis, "_sha256_bytes", counted_hash)
+    monkeypatch.setattr(materials_resolution, "sha256_bytes", counted_hash)
 
     repo = load_repo(mini_repo)
     manifest = build_manifest(repo, "T1")
@@ -609,7 +610,11 @@ def test_the_sop_and_the_contract_agree_on_where_a_draft_goes():
     sop = re.sub(r"\s+", " ", raw)
     assert "OPERATOR rule 16 owns this" in sop
     assert "moves the snapshot" in sop
-    assert "Capture `snapshot.snapshot_id` after the draft" in sop
+    # Both entry reads the SOP cites (bootstrap --compact, plan-edit-context)
+    # emit top-level snapshot_id via _print_stable; the nested
+    # snapshot.snapshot_id belongs to full bootstrap, which plan work no
+    # longer runs.
+    assert "Capture `snapshot_id` after the draft" in sop
     # And the fact that makes the ordering necessary is itself checkable:
     from learning_os.fingerprint import CANONICAL_ROOTS
     assert "work" in CANONICAL_ROOTS

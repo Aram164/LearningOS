@@ -36,6 +36,15 @@ stages:
     scope_triage: required-now
     route_id: route-739f3af86a81ba6168a13cda
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L11 data-science introduction deck' against the stage 'The
+        data-science pipeline'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:6e98e3acf75e06426cdf34fc3cb7e2a43854bbf4e8158f6226c30405e896c0ae
   - material_ref:
       route_id: route-ef56936eca783d424d37e8f9
       inherit:
@@ -102,6 +111,15 @@ stages:
     scope_triage: required-now
     route_id: route-739f3af86a81ba6168a13cda
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L11 data-science introduction deck' against the stage 'Supervised
+        and unsupervised tasks'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:331cf1953757b024f2297462415fac5473698a697e946bc2e3b6d7ec00f03559
   - material_ref:
       route_id: route-ef56936eca783d424d37e8f9
       inherit:
@@ -188,6 +206,15 @@ stages:
     scope_triage: required-now
     route_id: route-739f3af86a81ba6168a13cda
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L11 data-science introduction deck' against the stage 'Data
+        types, features, and representation'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:d9172f4294b31236ddbfeb486b667170993d69789e4ad700afbe1487f9c58ffa
   - material_ref:
       route_id: route-ef56936eca783d424d37e8f9
       inherit:
@@ -255,14 +282,23 @@ stages:
   resources:
   - kind: read
     label: Current L11 data-science introduction deck
-    locator: lecture-slides/11_datascience_intro.pdf, PDF pp. 24-26,44-46
+    locator: lecture-slides/11_datascience_intro.pdf, PDF pp. 22-26,44-46
     angle: The current lecture's focused reading for train, validation, test, cross-validation, and bootstrap.
-    angle_detail: Read physical PDF pages 24-26,44-46 for this stage. Printed slide labels may differ.
+    angle_detail: Read physical PDF pages 22-26,44-46 for this stage. Printed slide labels may differ.
       This slice focuses the existing deck route; the complete lecture remains accessible through the
       unit material menu.
     scope_triage: required-now
     route_id: route-739f3af86a81ba6168a13cda
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L11 data-science introduction deck' against the stage 'Train,
+        validation, test, cross-validation, and bootstrap'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:d22c32eb2749f600b5fddc52d385d00445a626e82f433d6637c4e833e73d393b
   - material_ref:
       route_id: route-15a92bbc0ec66bf68eb86eac
       inherit:
@@ -319,17 +355,6 @@ stages:
     kind: read
     scope_triage: helpful-now
     route_id: route-86eed70f7803c597932af9c1
-  - material_ref:
-      route_id: route-3779cdc11dbbbbe4d52b87ee
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-3779cdc11dbbbbe4d52b87ee
   - material_ref:
       route_id: route-ad19f7b757106baf204564cc
       inherit:
@@ -417,6 +442,15 @@ stages:
     scope_triage: required-now
     route_id: route-739f3af86a81ba6168a13cda
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L11 data-science introduction deck' against the stage 'Loss
+        functions, hypotheses, and inductive bias'. The stage description selects that stage's task or
+        reading purpose from the broader route; preserve the narrower description. This relation review
+        asserts no new source observation or learner achievement.
+      fingerprint: sha256:2e14b997a6432d4159559885539110114ad9d7ed23285a821b4b209b43ad13f6
   - material_ref:
       route_id: route-ef56936eca783d424d37e8f9
       inherit:
@@ -511,6 +545,15 @@ stages:
     scope_triage: required-now
     route_id: route-739f3af86a81ba6168a13cda
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L11 data-science introduction deck' against the stage 'Evaluation
+        metrics and class imbalance'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:8c96dc57cb1c4b50d42473889fd1751c43025d0113ae910c469638236530afce
   - material_ref:
       route_id: route-7727f3ae5952b397465b1a0b
       inherit:
@@ -593,17 +636,6 @@ stages:
     scope_triage: helpful-now
     route_id: route-86eed70f7803c597932af9c1
   - material_ref:
-      route_id: route-3779cdc11dbbbbe4d52b87ee
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-3779cdc11dbbbbe4d52b87ee
-  - material_ref:
       route_id: route-4bef9e4af486bc5c7c1517db
       inherit:
       - label
@@ -669,6 +701,15 @@ stages:
     scope_triage: required-now
     route_id: route-739f3af86a81ba6168a13cda
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L11 data-science introduction deck' against the stage 'Underfitting,
+        overfitting, and bias-variance'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:19195fcc3298e95ea3f44b91692d3bc7aaad64489179b5b4384c2ef2f52ccb14
   - material_ref:
       route_id: route-15a92bbc0ec66bf68eb86eac
       inherit:
@@ -725,17 +766,6 @@ stages:
     kind: read
     scope_triage: helpful-now
     route_id: route-86eed70f7803c597932af9c1
-  - material_ref:
-      route_id: route-3779cdc11dbbbbe4d52b87ee
-      inherit:
-      - label
-      - locator
-      - angle
-      - angle_detail
-      - source_id
-    kind: read
-    scope_triage: helpful-now
-    route_id: route-3779cdc11dbbbbe4d52b87ee
   - material_ref:
       route_id: route-ad19f7b757106baf204564cc
       inherit:

@@ -140,3 +140,55 @@ def test_heldout_ids_stay_held_out(voqs):
         for relative in NO_LEAK_PATHS:
             text = (root / relative).read_text(encoding="utf-8")
             assert voq_id not in text, f"{voq_id} leaks into {relative}"
+
+
+def test_recipe_output_for_every_class_contains_no_held_out_id(voqs):
+    """The recipe surface serves examples only: no held-out id may appear
+    in any class's recipe output, however the loader is asked."""
+    import json
+
+    from learning_os.semantics.recipes import recipe_classes, recipes_for
+
+    heldout_ids = [voq["id"] for voq in voqs if voq["split"] == "heldout"]
+    assert len(heldout_ids) == 5
+    classes = recipe_classes()
+    assert len(classes) == 6
+    for class_name in classes:
+        text = json.dumps(recipes_for(class_name), sort_keys=True)
+        for voq_id in heldout_ids:
+            assert voq_id not in text, f"{voq_id} leaks into recipe {class_name}"
+
+
+def test_recipe_serves_worked_procedures_and_refuses_unknown_class():
+    import pytest
+
+    from learning_os.semantics.recipes import RecipeError, recipes_for
+
+    rows = recipes_for("scope-authority")
+    assert rows, "the scope-authority class must have an example recipe"
+    for row in rows:
+        assert set(row) == {"id", "question", "procedure", "notes"}
+        assert set(row["procedure"]) == {"predicate", "inputs"}
+        assert row["procedure"]["predicate"] in PREDICATES
+    with pytest.raises(RecipeError, match="no example recipe"):
+        recipes_for("class-that-does-not-exist")
+
+
+def test_recipe_command_serves_examples_only(mini_repo):
+    """`los semantic --recipe CLASS` prints worked example procedures and
+    never a held-out id; an unknown class fails closed naming its options."""
+    import json
+
+    from repo_builders import run_los
+
+    from learning_os.semantics.recipes import recipes_for
+
+    proc = run_los(mini_repo, "semantic", "--recipe", "scope-authority")
+    assert proc.returncode == 0, proc.stderr
+    payload = json.loads(proc.stdout)
+    assert payload == {"class": "scope-authority", "recipes": recipes_for("scope-authority")}
+    assert len(payload["recipes"]) >= 1
+    missing = run_los(mini_repo, "semantic", "--recipe", "class-that-does-not-exist")
+    assert missing.returncode == 2
+    assert not missing.stdout
+    assert "no example recipe" in missing.stderr

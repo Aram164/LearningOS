@@ -35,3 +35,11 @@ class StaleDeliveryError(AIActionError):
 
 class TargetNotFoundError(AIActionError):
     pass
+
+
+class UnresolvedMaterialError(AIActionError):
+    """A mandatory route's exact material cannot be read; no request was prepared."""
+
+
+class ContinuationRefusedError(AIActionError):
+    """A follow-up slice was refused; the request keeps its earlier passes."""

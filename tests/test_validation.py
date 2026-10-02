@@ -26,6 +26,113 @@ def test_mini_repo_is_clean(mini_repo):
     assert codes(issues, "E") == [], [str(i) for i in issues]
 
 
+_SHAPE_CASES = [
+    # (file, field, malformed value): each crashed validate with a raw
+    # TypeError/AttributeError naming no file before Validator.run contained
+    # crashes on schema-invalid input.
+    ("curriculum/modules/module-demo/module.yaml", "unit_order", [{"id": "unit-demo-l01"}]),
+    ("curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml", "stages", "not-a-list"),
+    ("work/active/workspace-demo/CONTEXT.md", "unit_ids", [{"id": "unit-demo-l01"}]),
+    ("knowledge/notes/mathematics/note-demo.md", "concepts", [{"id": "concept-variance"}]),
+]
+
+
+@pytest.mark.parametrize(("rel", "field", "malformed"), _SHAPE_CASES)
+def test_schema_invalid_record_is_a_named_error_not_a_crash(mini_repo, rel, field, malformed):
+    """A record that fails its schema is reported by file, and a pass that
+    reads records in their schema shape and crashes on it becomes one error
+    naming that file (synthetic authoring campaign D2, whose unit-only repair
+    left the same crash in every sibling record)."""
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    path = mini_repo / rel
+    text = path.read_text(encoding="utf-8")
+    if path.suffix == ".md":
+        _, front, body = text.split("---\n", 2)
+        meta = yaml.safe_load(front)
+        meta[field] = malformed
+        path.write_text("---\n" + yaml.safe_dump(meta, sort_keys=False) + "---\n" + body,
+                        encoding="utf-8")
+    else:
+        data = yaml.safe_load(text)
+        data[field] = malformed
+        path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+
+    errors = [i for i in run(mini_repo) if i.severity == "E"]
+
+    assert any(i.code == "SCHEMA" and i.path == rel for i in errors), [str(i) for i in errors]
+    stopped = [i for i in errors if i.code == "SCHEMA-DEPENDENT"]
+    assert all(rel in i.message for i in stopped), [str(i) for i in errors]
+
+
+@pytest.mark.parametrize(("rel", "slot", "reference_code"), [
+    ("curriculum/modules/module-demo/module.yaml", ("unit_order",), "REF-UNIT"),
+    ("curriculum/modules/module-demo/source-map.yaml", ("sources", 0, "unit_routes"), "REF-UNIT"),
+    ("projects/registry/project-demo.yaml", ("linked_module_ids",), "REF-MODULE"),
+    ("work/active/workspace-demo/CONTEXT.md", ("unit_ids",), "REF-UNIT"),
+    ("knowledge/notes/mathematics/note-demo.md", ("sources",), "REF-SOURCE"),
+])
+def test_scalar_id_list_is_schema_error_without_character_references(
+    mini_repo, rel, slot, reference_code,
+):
+    from repo_builders import add_curriculum, add_manifest_fixtures
+
+    add_curriculum(mini_repo)
+    if rel.startswith("projects/"):
+        add_manifest_fixtures(mini_repo)
+    path = mini_repo / rel
+    text = path.read_text(encoding="utf-8")
+    if path.suffix == ".md":
+        _, front, body = text.split("---\n", 2)
+        data = yaml.safe_load(front)
+    else:
+        data = yaml.safe_load(text)
+    target = data
+    for part in slot[:-1]:
+        target = target[part]
+    target[slot[-1]] = "not-a-list"
+    if path.suffix == ".md":
+        path.write_text("---\n" + yaml.safe_dump(data, sort_keys=False) + "---\n" + body,
+                        encoding="utf-8")
+    else:
+        path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+
+    errors = [i for i in run(mini_repo) if i.severity == "E"]
+    assert any(i.code == "SCHEMA" and i.path == rel for i in errors), errors
+    assert not any(i.code == reference_code and i.path == rel for i in errors), errors
+
+
+def test_schema_error_in_a_registry_partition_names_that_partition(mini_repo):
+    """A partitioned registry is schema-checked as one merged document; the
+    error must still name the partition file that holds the bad record, or the
+    schema gate's SCHEMA-DEPENDENT message sends the operator to the wrong file."""
+    partition = mini_repo / "sources" / "registry" / "extra.yaml"
+    partition.parent.mkdir(parents=True)
+    partition.write_text(yaml.safe_dump({"sources": [
+        {"id": "source-extra-book", "title": "Extra Book", "type": "book",
+         "authors": ["B. Author", {"name": "C. Author"}]},
+    ]}), encoding="utf-8")
+
+    schema = [i for i in run(mini_repo) if i.severity == "E" and i.code == "SCHEMA"]
+
+    assert schema and all(i.path == "sources/registry/extra.yaml" for i in schema), \
+        [str(i) for i in schema]
+
+
+def test_a_crash_on_schema_valid_input_stays_loud(mini_repo, monkeypatch):
+    """The schema gate contains only crashes on input already reported as
+    schema-invalid; anywhere else a crash is a validator defect."""
+    from learning_os.rules.core import Validator
+
+    def broken(self):
+        raise TypeError("defect in a validation pass")
+
+    monkeypatch.setattr(Validator, "check_links", broken)
+    with pytest.raises(TypeError, match="defect in a validation pass"):
+        run(mini_repo)
+
+
 def test_living_docs_cannot_copy_a_manifest_version(mini_repo):
     readme = mini_repo / "README.md"
     readme.write_text(
@@ -36,8 +143,8 @@ def test_living_docs_cannot_copy_a_manifest_version(mini_repo):
 
 
 @pytest.mark.full_repo
-def test_real_repository_has_no_errors(repo_root):
-    issues = run(repo_root)
+def test_real_repository_has_no_errors(real_issues):
+    issues = real_issues
     errors = [str(i) for i in issues if i.severity == "E"]
     assert errors == [], errors
 
@@ -117,6 +224,39 @@ def test_duplicate_relation_edge_is_error(mini_repo):
     assert "REL-DUP" in codes(run(mini_repo), "E")
 
 
+def _receipt(path, transaction_id, key):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(yaml.safe_dump({
+        "id": transaction_id,
+        "request": {"idempotency_key": key},
+    }), encoding="utf-8")
+
+
+def test_duplicate_idempotency_key_across_receipts_is_error(mini_repo):
+    """Ledger loss + key reuse commits twice; the pair must be loud (JF-13)."""
+    directory = mini_repo / "operations/transactions"
+    _receipt(directory / "transaction-20260101-000000-001.yaml",
+             "transaction-20260101-000000-001", "shared-key")
+    _receipt(directory / "transaction-20260101-000001-001.yaml",
+             "transaction-20260101-000001-001", "shared-key")
+    messages = [str(i) for i in run(mini_repo) if i.severity == "E"]
+    assert any("duplicate idempotency key 'shared-key'" in m for m in messages), messages
+    _receipt(directory / "transaction-20260101-000001-001.yaml",
+             "transaction-20260101-000001-001", "other-key")
+    messages = [str(i) for i in run(mini_repo) if i.severity == "E"]
+    assert not any("duplicate idempotency key" in m for m in messages), messages
+
+
+def test_unreadable_idempotency_ledger_is_error_but_missing_is_fine(mini_repo):
+    """Commit fails closed on a corrupt ledger; validate must say so (JF-13)."""
+    ledger = mini_repo / "operations/transactions/idempotency.yaml"
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    ledger.write_text("entries: [unclosed\n", encoding="utf-8")
+    assert "TRANSACTION-IDEMPOTENCY" in codes(run(mini_repo), "E")
+    ledger.unlink()
+    assert "TRANSACTION-IDEMPOTENCY" not in codes(run(mini_repo), "E")
+
+
 def _relations(mini_repo, rows):
     """Replace the relation registry with exactly ``rows``."""
     f = mini_repo / "knowledge" / "concept-relations.yaml"
@@ -194,6 +334,26 @@ def test_generated_reference_in_canonical_file_is_error(mini_repo):
     note = mini_repo / "knowledge" / "notes" / "mathematics" / "note-demo.md"
     note.write_text(note.read_text() + "\nSee generated/concept-index.md for the list.\n")
     assert "GEN-INPUT" in codes(run(mini_repo), "E")
+
+
+def test_a_view_shaped_like_a_directory_is_a_named_error_not_a_crash(mini_repo):
+    manifest = mini_repo / "generated/manifest.json"
+    manifest.parent.mkdir(parents=True, exist_ok=True)
+    manifest.mkdir(exist_ok=True)
+    issues = [i for i in run(mini_repo)
+              if i.code == "GEN-JSON" and i.severity == "E"]
+    assert len(issues) == 1, [str(i) for i in run(mini_repo)]
+    assert "directory" in str(issues[0]) and "rebuild" in str(issues[0])
+
+
+def test_a_view_shaped_like_a_broken_symlink_names_the_symlink(mini_repo):
+    manifest = mini_repo / "generated/manifest.json"
+    manifest.parent.mkdir(parents=True, exist_ok=True)
+    manifest.symlink_to(mini_repo / "generated/nowhere.json")
+    issues = [i for i in run(mini_repo)
+              if i.code == "GEN-JSON" and i.severity == "E"]
+    assert len(issues) == 1, [str(i) for i in run(mini_repo)]
+    assert "symlink" in str(issues[0]) and "rebuild" in str(issues[0])
 
 
 def test_crosswalk_judgment_table_warns(mini_repo):
@@ -304,3 +464,22 @@ def test_material_uri_unresolved_is_warning_not_error(mini_repo):
     issues = run(mini_repo)
     assert "URI-MATERIAL" in codes(issues, "W")
     assert "URI-MATERIAL" not in codes(issues, "E")
+
+
+def test_compact_mode_without_report_keeps_warning_details(mini_repo, repo_root):
+    """Compact verification stays readable without hiding the warning debt."""
+    import subprocess
+    import sys
+
+    script = repo_root / "tools" / "validate.py"
+    proc = subprocess.run(
+        [sys.executable, str(script), "--compact", "--no-report",
+         "--root", str(mini_repo)],
+        text=True, capture_output=True,
+    )
+    assert proc.returncode == 0, proc.stderr
+    lines = [line for line in proc.stdout.splitlines() if line.strip()]
+    for issue in run(mini_repo):
+        assert str(issue) in proc.stdout
+    assert lines[-1].endswith("OK") or "OK (" in lines[-1]
+    assert "warning(s)" in lines[-1]

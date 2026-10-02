@@ -36,6 +36,15 @@ stages:
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L15 neural-networks deck' against the stage 'Artificial neurons
+        and linear-model equivalence'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:44d3b6a077f63eb66e50782cd0bbaebf0aa9386f4b986b75a9170ad4f7472191
   - material_ref:
       route_id: route-0da2566fcc8b7596c490b316
       inherit:
@@ -48,6 +57,15 @@ stages:
     angle_detail: Calculate only the two affine outputs by matrix multiplication.
     scope_triage: required-now
     route_id: route-0da2566fcc8b7596c490b316
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy' against
+        the stage 'Artificial neurons and linear-model equivalence'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:c83c8b70af9b50df819d56b89adda9042602f4bfea6c6b2fec571db2beeac6b4
   - material_ref:
       route_id: route-c4d58a44da44dd50667c670f
       inherit:
@@ -215,6 +233,15 @@ stages:
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L15 neural-networks deck' against the stage 'Nonlinearity,
+        activation functions, and XOR'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:5726a54cabb963ee8d4cb6c023be2ea6eea8a91ef5f2d459617d05c343b11dd6
   - material_ref:
       route_id: route-c4d58a44da44dd50667c670f
       inherit:
@@ -414,6 +441,15 @@ stages:
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L15 neural-networks deck' against the stage 'One-hot targets,
+        output layers, and softmax'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:44c53279d84d691c5597ded15d98884bd34383c31cfc68c60a51466ddb9fc717
   - material_ref:
       route_id: route-0da2566fcc8b7596c490b316
       inherit:
@@ -428,6 +464,15 @@ stages:
       for the loss stage.
     scope_triage: required-now
     route_id: route-0da2566fcc8b7596c490b316
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy' against
+        the stage 'One-hot targets, output layers, and softmax'. The stage description selects that stage's
+        task or reading purpose from the broader route; preserve the narrower description. This relation
+        review asserts no new source observation or learner achievement.
+      fingerprint: sha256:5ba82b3b5c48a3b89b92277136bbe0ece644b78f57c088ecf6ad2387fe97d9aa
   - material_ref:
       route_id: route-c4d58a44da44dd50667c670f
       inherit:
@@ -526,6 +571,8 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-sad-l15-forward
+  ability_ids:
+  - ability-mlp-forward-shapes
   number: 4
   title: Multilayer forward passes, shapes, and parameter counts
   status: pending
@@ -553,6 +600,15 @@ stages:
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L15 neural-networks deck' against the stage 'Multilayer forward
+        passes, shapes, and parameter counts'. The stage description selects that stage's task or reading
+        purpose from the broader route; preserve the narrower description. This relation review asserts
+        no new source observation or learner achievement.
+      fingerprint: sha256:cbe3840463067d07e9775beca2d69f697383fbe61e0dd50985261d5326606010
   - material_ref:
       route_id: route-0da2566fcc8b7596c490b316
       inherit:
@@ -567,6 +623,15 @@ stages:
       composition. This sheet is a one-layer task.
     scope_triage: required-now
     route_id: route-0da2566fcc8b7596c490b316
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy' against
+        the stage 'Multilayer forward passes, shapes, and parameter counts'. The stage description selects
+        that stage's task or reading purpose from the broader route; preserve the narrower description.
+        This relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:9060a7702f285e0521fdb5abd2959d1f3fcae90ae8127c89929bc41861ba7717
   - material_ref:
       route_id: route-c4d58a44da44dd50667c670f
       inherit:
@@ -856,6 +921,8 @@ stages:
   attachments: []
   source_feedback: []
 - id: stage-sad-l15-backprop
+  ability_ids:
+  - ability-sad-backprop-local
   number: 5
   title: Loss gradients and backpropagation
   status: pending
@@ -882,6 +949,15 @@ stages:
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L15 neural-networks deck' against the stage 'Loss gradients
+        and backpropagation'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:a66b4f5f10b77c379f1119bbc6a27ad8dde9778a04fcde6b910fc76b564e05f6
   - material_ref:
       route_id: route-dd5f555433ae41e4cd19802b
       inherit:
@@ -1114,6 +1190,15 @@ stages:
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L15 neural-networks deck' against the stage 'Training, generalization,
+        and practical choices'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:503064ff8371bd980a38c9d6e0bc7acf216937f70dad717ff57049fd6dcaa29a
   - material_ref:
       route_id: route-0da2566fcc8b7596c490b316
       inherit:
@@ -1128,6 +1213,15 @@ stages:
       in (b). This is a loss check, not evidence of a training trajectory.
     scope_triage: required-now
     route_id: route-0da2566fcc8b7596c490b316
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Blatt 5, Aufgabe 2 — forward pass, softmax and cross-entropy' against
+        the stage 'Training, generalization, and practical choices'. The stage description selects that
+        stage's task or reading purpose from the broader route; preserve the narrower description. This
+        relation review asserts no new source observation or learner achievement.
+      fingerprint: sha256:95c3c1be81a711d3f44e27f68e7ebf82b9b0ba25c1a7c6388495f3605d50bea7
   - material_ref:
       route_id: route-c4d58a44da44dd50667c670f
       inherit:
@@ -1183,16 +1277,25 @@ stages:
       - vault_path
       - source_id
     kind: read
-    locator: Ch 7 Error-based Learning, pdf pp. 351-424 (the multi-layer network and backpropagation sections)
-    angle: Arrives at neural networks by extending the linear model of L03 rather than by starting over
-      — the same route L15's first slides take.
-    angle_detail: Because Kelleher's Ch 7 is one continuous argument from simple linear regression to
-      multi-layer networks, the continuity L15 asserts on its opening slide (a neuron without an activation
-      is a linear model) is the chapter's actual structure. Reading it in order makes backpropagation
-      feel like the same gradient descent applied through more layers, which is the correct impression
-      and not the one a standalone treatment gives.
+    locator: Ch7 Error-based Learning, PDF pp. 351-375 (regression, error surfaces and gradient descent)
+    angle: Revisits regression and gradient descent as prerequisites for neural-network training.
+    angle_detail: The inspected Chapter 7 introduction names regression, gradient descent, logistic regression
+      and support vector machines, not multilayer networks or backpropagation. PDF pp. 351-375 develop
+      regression error surfaces and weight updates. Use the L15 lecture for neural-network and backpropagation
+      content.
     scope_triage: helpful-now
     route_id: route-53e4963eac07776c8fbfef06
+    angle_review:
+      kind: correction
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Corrects an unsupported claim that Chapter 7 teaches multilayer networks and backpropagation.
+        The inspected introduction and regression/GD pages support a prerequisite role only.
+      fingerprint: sha256:819bf66ec2d21669ebd2518452b814ae120ebe102089befe3e0593c47d5f9dd4
+      evidence:
+      - material_uri: material://source-kelleher-fmlpda/kelleher.pdf
+        file_sha256: sha256:f63e0c8a76517fef8df937e1bc3cd8f6df77af124af398f011117c83464fab60
+        locator: PDF pp. 351, 360, 365, 370, 375
   - material_ref:
       route_id: route-a04a07038b21e44d84b93c0b
       inherit:
@@ -1323,6 +1426,15 @@ stages:
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L15 neural-networks deck' against the stage 'Expressiveness
+        and universal approximation'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:4dbfd71c5460a7f83e6306286d18c73bcd6bbe5c937970759d505dd98948909d
   - material_ref:
       route_id: route-37563c3b8ff1e0463522c15c
       inherit:
@@ -1409,6 +1521,15 @@ stages:
     scope_triage: required-now
     route_id: route-5ee4a829346813cea44ac041
     source_id: source-sad-ss26-lectures
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L15 neural-networks deck' against the stage 'CNN, RNN, and
+        Transformer outlook'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:b318abd1c37a33a943edd48b09e6fdb964026bad008300c6587dbf264239948a
   - material_ref:
       route_id: route-37563c3b8ff1e0463522c15c
       inherit:

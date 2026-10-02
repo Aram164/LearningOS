@@ -56,11 +56,11 @@ clean Q/A separation; self-test → `role: mock-exam`, with solutions, difficult
 aliases), relations (§5), sources (§6a).
 
 **Close the loop:** the acceptance gate is OPERATOR rule 13, not a stricter
-local one — `python tools/validate.py` to **zero errors**, then
-`python tools/warning_baseline.py --check` for **no new or grown warning
+local one — `.venv/bin/python tools/validate.py --compact` to **zero errors**, then
+`.venv/bin/python tools/warning_baseline.py --check` for **no new or grown warning
 signature**. The measured baseline warnings stay visible and never block;
 demanding zero of them would make this skill unrunnable against the system as
-it is. Then `python tools/generate.py`, then diff-review against the coverage
+it is. Then `.venv/bin/python tools/generate.py`, then diff-review against the coverage
 audit.
 
 ## Quality bar

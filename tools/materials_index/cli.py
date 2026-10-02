@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from datetime import datetime
 
-from .config import DOMAIN_LABELS, HTML_ENABLED, MATERIALS, SOURCES_DOMAIN_ORDER
+from .config import DOMAIN_LABELS, HTML_ENABLED, MATERIALS, ordered_display_domains
 from .page import PAGE
 from .registry import (
     domain_for_online,
@@ -23,6 +23,7 @@ from .tree import (
     collect_leaves,
     collect_source_nodes,
     collect_types,
+    group_roots_by_display,
 )
 
 
@@ -33,7 +34,7 @@ def main():
     flatmap = load_flat_map()
     coll_domains = load_collection_domains()
     roots = build_tree(sources, flatmap)
-    roots_by_name = {r["name"]: r for r in roots}
+    roots_by_display = group_roots_by_display(roots)
 
     local_ids = set(flatmap.values())
     online_ids = [sid for sid in sources if sid not in local_ids]
@@ -90,9 +91,11 @@ def main():
 
     # Sources view: each domain = Modules + Library-by-type (Books re-homed)
     src_sections = []
-    for dom in SOURCES_DOMAIN_ORDER:
+    for dom in ordered_display_domains(modules_by_domain, library_local_by_domain,
+                                       online_by_domain, missing_by_domain,
+                                       roots_by_display):
         html_sec = render_domain_sources(
-            dom, roots_by_name.get(dom),
+            dom, roots_by_display.get(dom, []),
             modules_by_domain.get(dom, {}),
             library_local_by_domain.get(dom, []),
             online_by_domain.get(dom, []),
@@ -133,7 +136,7 @@ def main():
                       f"({exc.strerror}) — delete it by hand; continuing")
     (MATERIALS / "README.md").write_text(
         build_readme(modules_by_domain, library_local_by_domain, online_by_domain,
-                     missing_by_domain, roots_by_name, len(local_ids), n_online,
+                     missing_by_domain, roots_by_display, len(local_ids), n_online,
                      n_missing, ncontent, nsupport, total), encoding="utf-8")
     files_txt = build_files_listing(roots)
     (MATERIALS / "FILES.txt").write_text(files_txt, encoding="utf-8")

@@ -25,8 +25,10 @@ import pytest
 PACKAGES = [
     "learning_os.ai_actions",
     "learning_os.commands",
+    "learning_os.derived",
     "learning_os.genout",
     "learning_os.rules",
+    "learning_os.search",
     "materials_index",
 ]
 

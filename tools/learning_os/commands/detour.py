@@ -7,6 +7,7 @@ import json
 import re
 import sys
 
+from .suggest import not_found
 from .support import (
     _dump_study_map,
     _dump_yaml,
@@ -15,6 +16,7 @@ from .support import (
     _operator_lock,
     _root,
     _stage,
+    _stage_ids,
     _unit_map_or_error,
     _write_transaction,
 )
@@ -31,7 +33,8 @@ def cmd_detour_create(args) -> int:
         data = copy.deepcopy(study_map.data)
         stage = _stage(data, args.stage_id)
         if stage is None:
-            print(f"los: stage not found: {args.stage_id}", file=sys.stderr)
+            print(f"los: {not_found('stage', args.stage_id, _stage_ids(data))}",
+                  file=sys.stderr)
             return 2
         base = re.sub(r"[^a-z0-9]+", "-", args.title.lower()).strip("-") or "gap"
         did = f"detour-{base}"
@@ -51,8 +54,13 @@ def cmd_detour_create(args) -> int:
             data["status"] = "paused"
             unit_data = copy.deepcopy(unit.data)
             unit_data["status"] = "paused"
-        else:
+        elif args.classification in {"helpful-now", "deferred", "reference-only"}:
             unit_data = unit.data
+        else:
+            print(f"los: unknown detour classification: {args.classification} "
+                  "(choose from required-now, helpful-now, deferred, "
+                  "reference-only)", file=sys.stderr)
+            return 2
         code, errors, confirmation = _write_transaction(
             root, {study_map.path: _dump_study_map(study_map, data), unit.path: _dump_yaml(unit_data)},
             capability="detour.create",

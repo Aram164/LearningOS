@@ -79,21 +79,46 @@ A plan is complete only when all of the following are true:
 
 ## Gate 0 — establish the contract and repository state
 
-Run:
+Follow [OPERATOR.md](OPERATOR.md) task-shaped entry; do not run both
+`bootstrap --brief` and `bootstrap --compact` as routine startup — a later,
+needed expansion is allowed. For plan work, run once:
 
 ```bash
-.venv/bin/python tools/los.py capabilities --json
-.venv/bin/python tools/los.py bootstrap
+.venv/bin/python tools/los.py capabilities --compact --json
 git status --short
 ```
+
+Fetch one capability's complete definition only for the capability you will
+use:
+
+```bash
+.venv/bin/python tools/los.py capabilities NAME --json
+```
+
+Full `capabilities --json` and full `bootstrap` are explicit bulk reads for
+tasks that need the complete catalogue or the full projection, not routine
+startup. For plan work, read focused context instead of the full projection:
+a named route starts with `plan-edit-context UNIT_ID --route-id ROUTE_ID`
+(or the `--route-ids` batch) and `route-patch --check`; a named stage
+starts with `--stage-id`. Reach for `plan-edit-context UNIT_ID --brief`
+(identities, guards, id inventories, missing evidence, reusable analysis
+refs, preflight checks, and runnable expand commands) only for unit
+coverage, source-completeness, or unknown ids, then expand one route,
+stage, or the full `--audit` form only when the task needs complete bodies.
+Use `inspect ID` for records, `note-read` for note bodies, and
+`material-context QUERY --unit UNIT_ID` when the need is an explanation
+rather than a known file.
 
 Preserve unrelated changes. Read the current module, source map, units, optional
 study maps, workspace, the relevant JSON Schemas, and any earlier plan package
 before drafting. Older plans are evidence about possible coverage, never the
-semantic authority or a required output shape. Copy `snapshot.snapshot_id` from
-`bootstrap` **after** the coverage audit and any in-repository draft exist —
-both live under canonical roots and move the fingerprint (Gate 3). The actual
-import requires the id; a preflight may run without it, but an import may not.
+semantic authority or a required output shape. Copy `snapshot_id` from
+the entry read you used **after** the coverage audit and any in-repository draft
+exist — both live under canonical roots and move the fingerprint (Gate 3). For
+structural work that entry read is `bootstrap --compact`, run once, late; for
+single-unit work it is the focused `plan-edit-context` response. Never run
+`bootstrap --brief` for plan work. The actual import requires the id; a
+preflight may run without it, but an import may not.
 
 ## Gate 1 — build the material inventory before writing stages
 
@@ -116,7 +141,15 @@ Inventory all of these, even when they will not be selected:
 
 `rg --files` is the first file inventory tool. If the materials tree is
 gitignored and therefore invisible to it, use a narrowly scoped `find` on the
-exact material root. Sibling code repositories are not automatic material
+exact material root. Start from the checked-in rails before scanning:
+`records/materials-manifest.yaml` carries checksums for the external materials
+tree (`make inventory` rebuilds it after adding or moving sources),
+`materials/FILES.txt` (`make materials`) lists every unregistered file by
+name, and `tools/material_toc.py --toc` prints a local material's contents
+with PDF pages while `--verify --page N --expect "…"` checks a locator
+against the file. For repeated reading, refresh the digest-keyed page-text
+cache (`tools/material_text.py --refresh`, under `generated/text-cache/`)
+and read cached pages instead of re-extracting. Sibling code repositories are not automatic material
 roots. If the current task explicitly needs Stratum context, inspect only the
 relevant paths and turn confirmed learning into ordinary LearningOS records;
 do not register or copy the repository as managed LearningOS content.
@@ -134,6 +167,17 @@ third-party summaries are discovery aids, not final evidence.
 
 The count of registered source IDs is not a completeness test. The audit's
 item-by-item inventory is the completeness evidence.
+
+An audit may carry a fenced `inventory-v1` block: explicitly scoped material
+roots plus one disposition row per observed file (`routed`, `linked`,
+`out-of-scope`, `duplicate`). When the block is present the preflight
+enumerates exactly those roots and refuses missing rows, unobserved rows,
+digest drift, and undeclared duplicate bytes; the check report binds the
+observed set and a reviewed apply refuses moved material. Audits without
+the block keep the legacy marker plus boolean path. Either way the agent
+still identifies implicit bibliography references and judges scope,
+duplicates by meaning, and usefulness — code proves row/byte equality,
+never understanding.
 
 ## Gate 2 — reconcile scope and granularity
 
@@ -155,6 +199,36 @@ Create one lecture unit per ordinary lecture. Split combined plans such as
 `L06–L10` into L06, L07, L08, L09, and L10. A combined exam-synthesis unit may
 remain only as an auxiliary review unit with explicit parent/child or purpose
 context.
+
+Triage chapters through cached summaries before full-reading. For a chapter
+range of a cached material, use
+`.venv/bin/python tools/material_summarize.py --read --material RELATIVE_PATH --pages START-END`
+to retrieve the existing analysis without reopening cached page text. The
+lookup checks live source bytes and exact chapter provenance, returning
+`hit`, `missing`, `stale`, or `refused` as JSON. Pass `--digest` with a previously
+selected source digest to detect changed source bytes explicitly. A hit includes
+the summary and its digest; new summaries have a checked content checksum,
+while older summaries are explicitly labelled `legacy-unrecorded` for integrity
+and retain the existing reviewed-summary trust boundary. No semantic quality
+claim follows from a checksum. Refused reads require resolving the reported
+problem; stale reads require selecting the current source and chapter again.
+Use hits for triage,
+and record an explicit grade — `accept`, `defer`, or `reject` — with a
+one-line reason and the summary digest. On a miss, full-read the chapter,
+decide, and preserve the resulting analysis as a durable reference note
+through `note.analysis.save` — that note, not a cache entry, is the retained
+record. (`--promote` into the digest-keyed summary cache remains only for
+legacy cache maintenance.) When the starting point is an explanation need
+rather than a known chapter, search saved analyses and approved assessments
+with `material-context` instead of guessing file ranges; assessment results
+carry their dossier's live freshness next to the stored review status, and
+every response binds its material observations for paged continuations. A
+unit assessment may reference a durable analysis note through `analysis_refs`
+(note id, pinned note revision, approved-content digest, exact anchor,
+material identity and inspected range) instead of copying its prose; a later
+note edit stales the dossier until re-review. Summaries and referenced analyses select and suggest angles
+only: coverage claims, locators, and routes still require the opened material,
+and a route evidenced only by a summary fails review.
 
 For every unit, finish its semantic map before considering stages:
 
@@ -201,7 +275,7 @@ learner-approved pedagogy.
 **Where a draft goes, and when the snapshot is taken.** OPERATOR rule 16 owns
 this: a draft is never a canonical curriculum file, and only the gateway writes
 one. `work/` is inside the canonical fingerprint, so writing a draft into a
-workspace's `outputs/` *moves the snapshot*. Capture `snapshot.snapshot_id`
+workspace's `outputs/` *moves the snapshot*. Capture `snapshot_id`
 after the draft and the coverage audit exist, not before — an id taken first is
 already stale by the time the import quotes it. A draft that is scratch rather
 than a reviewed record belongs outside the repository (`LearningOS/workbench/`),
@@ -328,20 +402,131 @@ Additional package invariants:
 - absence of a matching exercise is recorded, not filled by mislabelling a
   nearby sheet.
 
+## Which path: choose once, then follow only that path
+
+Choose once before Gates 1–6; do not re-derive the procedure after choosing:
+
+- One material field (title, locator, angle, angle_detail, URL/vault_path)
+  on an existing route: `plan-edit-context UNIT_ID --route-id ROUTE_ID`
+  (or `--route-ids` for 1–20 routes in one snapshot-bound call — prefer
+  the batch over repeated single reads), then `route-patch --check` and
+  gateway apply per WORKFLOWS §25a. The route response already carries
+  the snapshot and revision guards. Reach for the unit `--brief` only
+  when the route id is unknown. No coverage audit, no plan package.
+  Read only OPERATOR Start here and WORKFLOWS §25a.
+- A locator guarded by an approved synthesis dossier is refused by
+  `route.patch`, because its bounded patch cannot replace that dossier. Use
+  the full `module-plan-import` package with the final source map, unit data
+  and replacement synthesis, then review its no-write preflight. The compact
+  `unit-plan-revise` path carries existing source selections forward, so it
+  cannot update a selected route's locator guard in this case. For a locator
+  without a dossier, `route.patch` synchronizes an unambiguous linked source
+  selection; an ambiguous legacy selection is refused and must first be
+  linked to its exact route. Do not hand-edit the canonical files.
+- One existing lecture (routes plus map for that unit): `plan-edit-context
+  UNIT_ID --brief`, source reading, coverage audit, one compact
+  `unit-plan-revise` patch, one preflight, one reviewed apply, and
+  `make plan-check`. Read OPERATOR Start here, WORKFLOWS §25a, and SOP
+  Gates 0–6.
+- Structural change (multi-unit changes, new units, unit ordering, workspace
+  joins, source-registry patches): full Gates 1–6 via `module-plan-import`.
+  Read the full SOP Gates 0–6 plus WORKFLOWS §25a.
+
+The compact paths never substitute for structural changes: identity, scope,
+coverage, source, or membership changes still require the full plan path.
+Joining an already-registered source to the module (`source_joins`) is the one
+membership-adjacent exception: it rides the compact `unit_revisions` file shape
+through the same `module-plan-import` gate, never the registry itself.
+Snapshot guards, receipts, source completeness, and learner-state protection
+apply on all three paths. Procedure owner is WORKFLOWS §25a; this SOP owns
+Gates 0–6 only.
+
 ## Gate 4 — run the no-write preflight
 
-Run:
+One existing lecture:
+
+```bash
+.venv/bin/python tools/los.py unit-plan-revise UNIT_ID \
+  --file /absolute/path/to/revision.yaml --check > /tmp/unit-revise-check.json
+```
+
+When the reviewed draft is large, `--report-out` saves that same complete
+report itself and prints only a compact review summary — every review field
+except the sealed `gateway_envelope`, plus the saved path and SHA-256:
+
+```bash
+.venv/bin/python tools/los.py unit-plan-revise UNIT_ID \
+  --file /absolute/path/to/revision.yaml --check --report-out /tmp/unit-revise-check.json
+```
+
+Apply, receipt verification, and recovery then point at the saved file
+(`--review-report /tmp/unit-revise-check.json`); the compact stdout is for
+review only and carries no approval.
+
+Structural or multi-unit change:
 
 ```bash
 .venv/bin/python tools/los.py module-plan-import MODULE_ID \
   --file work/active/WORKSPACE/outputs/PLAN.yaml --check
 ```
 
+For revisions to several **existing** units in one module, the same command
+also accepts the compact shape in
+`system/templates/module-plan-revise.template.yaml`: `unit_revisions[]` names
+only route changes and stage field patches. It cannot add units, reorder stages,
+change module metadata, or update workspaces; use the full import template for
+those operations. Each `stage_patches[].fields.resources` value is the complete
+final resource array for that stage, so the existing learner-evidence gate still
+protects every evidence-bearing placement. The importer assembles unchanged
+records under one operator lock, then uses the same shadow validation, lineage,
+reviewed-file hash, GatewayEnvelopeV2, receipt, and atomic transaction as a
+full import. Save the compact-file `reviewed_file_sha256` from `--check` for
+`--apply-reviewed-sha256`; `assembled_package_sha256` identifies the internal
+full package and is not the file to approve. To add placements without
+copying the array, a stage patch may carry `resources_append` instead of
+`fields.resources`: new rows with fresh resource ids land after every
+existing authored placement, in order, and the importer carries the old
+rows forward itself. The same source-reading, angle-review, and
+evidence-preservation obligations apply — the new rows and their teaching
+purpose still need review.
+
 The command checks the plan contract, source routing, schemas, references,
 module ownership, unit order, study-map state, and workspace joins in a shadow
-repository. Success reports `canonical_files_written: 0`. A failure is a
+repository, plus the real-tree perimeter layer — an undeclared sibling fails
+`--check` exactly as it would fail live. Success reports a stable review
+artifact: the reviewed-file SHA-256, current snapshot, expected revisions,
+artifact IDs, affected and byte-changing files, route/source/placement counts
+before and after, added/updated/removed routes, demotions and promotions,
+unplaced menu routes, synthesis freshness before and after, preserved
+learner-state fields, and `canonical_files_written: 0`. When the coverage
+audit carries an `inventory-v1` block the report additionally binds the
+observed material set (`observed_material`) with a generated row view
+(`inventory_view`). A failure is a
 rejected plan, not a rollback: correct the package or audit and rerun the check;
 do not patch canonical YAML to make a defective package pass.
+
+Save the complete successful JSON report outside the canonical roots. It
+contains `reviewed_file_sha256` for the original input bytes and
+`assembled_package_sha256` for the internally assembled module package;
+these are different for a compact revision. The report also retains the
+prepared `gateway_envelope`, exact write paths/checksums and actual artifact
+owners. Keep this file until receipt verification and any recovery are done.
+Moving the report under `work/` after preflight changes the guarded snapshot.
+
+Two further gates ride on the same report. A route addition, removal, locator
+change, or evidence-relevant coverage change on a unit with an approved
+synthesis dossier requires a replacement `material_synthesis` validated
+together with the new maps against the staged post-change state — pure
+`angle`/`angle_detail` edits keep the dossier. Suspicious-but-legitimate
+changes (demoting current exercises, promoting advanced-reference material,
+removing last coverage of a node, exact-to-unresolved swaps, coverage
+reduction, learner-state edits, cross-lecture moves) appear under
+`semantic_ack_required` and need a documented `acknowledgments[]`
+`{kind, target, reason}` entry each.
+Deleting stages, losing evidence-bearing resource placements, changing
+recorded completion/progress or note ownership, and deleting attachments or
+feedback are hard refusals. An acknowledgment cannot override them; use the
+owning learner-state workflow for a deliberate state transition.
 
 Read the first diagnostic completely before changing anything. Then scan for
 all occurrences of the same failure class (for example, every non-schema role
@@ -349,29 +534,67 @@ or every missing source route) and fix the class once.
 
 ## Gate 5 — apply once with optimistic concurrency
 
-After a successful check, run `bootstrap` again and use its current snapshot:
+After reviewing the report SHA, apply the exact reviewed bytes — no
+hand-assembled envelope, no copied snapshot, revision, or intent hash:
 
 ```bash
-.venv/bin/python tools/los.py module-plan-import MODULE_ID \
-  --file work/active/WORKSPACE/outputs/PLAN.yaml \
-  --expected-snapshot sha256:CURRENT_SNAPSHOT
+.venv/bin/python tools/los.py unit-plan-revise UNIT_ID \
+  --file /absolute/path/to/revision.yaml \
+  --apply-reviewed-sha256 sha256:REVIEWED_FILE_HASH_FROM_CHECK \
+  --review-report /tmp/unit-revise-check.json
 ```
 
-If the snapshot conflicts, reload, review the intervening changes, regenerate
-the package if necessary, and preflight again. Never bypass the guard.
+The helper hashes and parses the same single read of the file, checks it
+against the saved request, and dispatches that exact GatewayEnvelopeV2.
+The handler runs its normal validation under the gateway lock. The same flags
+exist on `module-plan-import`; save its preflight JSON as well. Neither
+snapshot, revisions nor request identity are refreshed during apply. If the
+snapshot moved underneath, the gateway answers
+`STALE_SNAPSHOT`: reload, review the intervening changes, regenerate the
+package if necessary, and preflight again. Never bypass the guard.
+
+If the response is lost, retry the same command with the same saved report:
+the original request identity makes this an exact replay, not another commit.
+The report's `gateway_envelope` can also be passed to `los capability` with
+`--replay-only` to verify recovery without reopening the revision file.
+Do not create a new preflight/request to recover an uncertain application.
+To resume and verify from the saved report alone — after an interruption,
+a lost response, or a session restart — run
+`tools/verify_plan_receipt.py --report REPORT.json --unit UNIT_ID`, which
+resolves the request and receipt identity itself and reports one state:
+`committed-and-verified`, `committed-but-verification-failed`,
+`not-applied-or-stale-preflight`, or `uncertain-requires-replay-lookup`.
+A failed verification is never permission to issue a new mutation.
 
 ## Gate 6 — post-import acceptance
 
-Run, in order:
+Curriculum-only revisions run the scoped gate:
 
 ```bash
-make check
-make views
-make check
-.venv/bin/python -m pytest -q tests/test_curriculum_v2.py
-git diff --check
-git status --short
+make plan-check
 ```
+
+which is full offline validation with compact output and a saved warning
+report, the warning-baseline gate, the focused
+curriculum suites, projection regeneration, and a clean diff. For routine
+readouts outside `plan-check`, prefer `.venv/bin/python tools/validate.py --compact`:
+same error gate, errors plus one summary line, the full warning list stays
+in the report. Afterwards,
+verify the receipt against the projection for the touched unit:
+
+```bash
+.venv/bin/python tools/verify_plan_receipt.py \
+  --unit UNIT_ID --report /tmp/unit-revise-check.json \
+  --expect-artifacts EXACT_COMMIT_ARTIFACT_IDS_FROM_REPORT
+```
+
+(`--receipt` may still name the expected receipt explicitly; when omitted
+the command resolves it from the report through the idempotency ledger.)
+
+`make system-check` stays mandatory at the shared-code boundary: Core
+changes, schema or manifest-contract changes, gateway changes, UI changes,
+and commit/release preparation. Do not run the full release suite for every
+ordinary curriculum revision.
 
 Also run `.venv/bin/python tools/validate.py --online` when registered or newly
 selected web sources changed. If the module is still covered by a compatibility

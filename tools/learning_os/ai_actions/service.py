@@ -23,11 +23,27 @@ from learning_os.contracts.write_scopes import WriteScopeError, require_write_sc
 from learning_os.fingerprint import source_fingerprint
 from learning_os.garden import project_garden_entries
 from learning_os.loader import load_repo
+from learning_os.material_slices import (
+    MAX_SLICE_BYTES_TOTAL,
+    SLICE_BUNDLE_PREFIX,
+    ContinuationError,
+    SliceResolutionError,
+    build_unit_slices,
+    continuation_record_dict,
+    plan_continuation,
+    read_bundle_slice_index,
+    slice_index_entry,
+)
 from learning_os.material_synthesis import (
     current_unit_material_basis,
+    inspected_material_by_route,
+    inspected_pages_by_route,
+    publication_lineage,
     synthesis_destination,
+    validate_synthesis_page_provenance,
     validate_unit_material_synthesis,
 )
+from learning_os.semantics.lineage import LEDGER_RELATIVE
 from learning_os.transactions import (
     TransactionConflict,
     TransactionFailure,
@@ -41,21 +57,26 @@ from learning_os.transactions import (
 from .binding import read_bound_delivery, validated_sha256
 from .errors import (
     ActionPolicyError,
+    ContinuationRefusedError,
     DeliveryValidationError,
     StaleDeliveryError,
     TargetNotFoundError,
+    UnresolvedMaterialError,
 )
 from .registry import ActionRegistry, AdapterRegistry
 from .storage import FilesystemAIActionRepository
 from .support import (
     Clock,
+    _atomic_text,
     _dump_yaml,
     _inside,
     _iso,
     _now_utc,
     _read_yaml,
+    _sha256_bytes,
     _sha256_file,
     _snapshot,
+    check_request_id,
     parse_frontmatter_request_id,
 )
 from .types import (
@@ -68,6 +89,81 @@ from .types import (
     RequestStatus,
     ValidatedDelivery,
 )
+
+#: Bundle name for the unit-scoped source-map read view. Deliberately not
+#: the canonical filename: the view is a filtered projection for one unit,
+#: never the module file.
+UNIT_SOURCE_MAP_VIEW_PATH = "attachments/unit-source-map.yaml"
+
+
+def _scoped_source_ids(unit) -> set[str]:
+    ids = set()
+    for key in ("scope_sources", "source_selections"):
+        for row in unit.data.get(key, []) or []:
+            if isinstance(row, dict) and row.get("source_id"):
+                ids.add(row["source_id"])
+    return ids
+
+
+def build_unit_source_map_view(*, source_map: dict, canonical_path: str,
+                               canonical_bytes: bytes, unit,
+                               target_id: str) -> tuple[bytes, dict[str, str]]:
+    """One unit's filtered source-map read view plus its transport identity.
+
+    Keeps the module identity and every parent source field, but replaces
+    the target unit's route bodies with their ids: dict routes by unit_id
+    plus legacy string entries naming the target become ``unit_route_ids``.
+    Route bodies live once in the bundle's ``context.md`` routes; this view
+    carries only parent metadata plus ids pointing there. Sources the
+    unit's scope authority or selections name stay with an empty id list;
+    every other unit's route is omitted. Returns (view_bytes, identity):
+    the view's own checksum is a transport identity only, kept beside —
+    never mixed with — the canonical file digest.
+    """
+    named = _scoped_source_ids(unit)
+    sources = []
+    included = omitted = 0
+    for source_row in source_map.get("sources", []) or []:
+        if not isinstance(source_row, dict):
+            continue
+        entries = source_row.get("unit_routes", [])
+        if not isinstance(entries, list):
+            entries = []
+        kept = [entry for entry in entries
+                if (isinstance(entry, dict) and entry.get("unit_id") == target_id)
+                or (isinstance(entry, str) and entry == target_id)]
+        included += len(kept)
+        omitted += len(entries) - len(kept)
+        if not kept and source_row.get("source_id") not in named:
+            continue
+        shaped = {key: value for key, value in source_row.items()
+                  if key != "unit_routes"}
+        shaped["unit_route_ids"] = [
+            entry.get("id") if isinstance(entry, dict) else entry
+            for entry in kept
+        ]
+        sources.append(shaped)
+    view = {
+        "view": {
+            "kind": "unit-source-map-view",
+            "canonical_path": canonical_path,
+            "canonical_sha256": _sha256_bytes(canonical_bytes),
+            "target_unit_id": target_id,
+            "routes_included": included,
+            "routes_omitted": omitted,
+        },
+        "module_id": source_map.get("module_id"),
+        "sources": sources,
+    }
+    body = ("# Filtered read view: this unit's source-map slice only, not "
+            "the canonical module file.\n"
+            + _dump_yaml(view)).encode("utf-8")
+    identity = {
+        "bundle_path": UNIT_SOURCE_MAP_VIEW_PATH,
+        "view_sha256": _sha256_bytes(body),
+        "canonical_sha256": view["view"]["canonical_sha256"],
+    }
+    return body, identity
 
 
 class AIActionService:
@@ -214,7 +310,14 @@ class AIActionService:
                 f"expected snapshot {expected_snapshot}, current snapshot is {snapshot}"
             )
         now = self.clock()
-        request_id = request_id or f"ai-request-{now:%Y%m%d-%H%M%S}-{uuid4().hex[:6]}"
+        if request_id is not None:
+            # A caller-supplied id that the manifest cannot publish would be
+            # persisted and then break every projection read (JF-08): refuse
+            # before anything is written. The minted default matches by
+            # construction.
+            check_request_id(request_id)
+        else:
+            request_id = f"ai-request-{now:%Y%m%d-%H%M%S}-{uuid4().hex[:6]}"
         original: OriginalArtifact = {
             "id": f"original-{target_id}",
             "canonical_path": target["path"],
@@ -300,6 +403,18 @@ class AIActionService:
                 "attachment_ids": [original["id"]],
                 "originals": [original],
             }
+            basis = current_unit_material_basis(self.root, target_id, repo=repo)
+            request["material_basis"] = basis
+            try:
+                slices = build_unit_slices(repo, routes, basis=basis)
+            except SliceResolutionError as exc:
+                raise UnresolvedMaterialError(f"{exc} No request was prepared.") from exc
+            for slice_, body in slices:
+                bundle_files[slice_.bundle_path] = body
+            bundle_files[f"{SLICE_BUNDLE_PREFIX}/index.json"] = (
+                json.dumps([slice_index_entry(slice_) for slice_, _ in slices],
+                           indent=2) + "\n"
+            ).encode("utf-8")
             context = {
                 "target": {k: target[k] for k in
                            ("id", "type", "title", "path", "state", "revision")},
@@ -307,7 +422,7 @@ class AIActionService:
                 "related_module_ids": unit.data.get("related_module_ids", []),
                 "artifacts": unit.data.get("artifacts", {}),
                 "routes": routes,
-                "basis": current_unit_material_basis(self.root, target_id),
+                "basis": basis,
                 "policy": {
                     "all_routes_listed": True,
                     "deep_scopes": ["current", "prerequisite"],
@@ -318,6 +433,19 @@ class AIActionService:
                     "standalone_lesson": False,
                 },
             }
+            if source_map_path is not None and source_map_path.is_file():
+                canonical_bytes = source_map_path.read_bytes()
+                if source_map_path.is_relative_to(self.root):
+                    canonical_rel = source_map_path.relative_to(
+                        self.root).as_posix()
+                else:
+                    canonical_rel = source_map_path.as_posix()
+                view_body, view_identity = build_unit_source_map_view(
+                    source_map=source_map, canonical_path=canonical_rel,
+                    canonical_bytes=canonical_bytes, unit=unit,
+                    target_id=target_id)
+                bundle_files[UNIT_SOURCE_MAP_VIEW_PATH] = view_body
+                context["source_map_view"] = view_identity
             instructions = (
                 "# Compare one unit's materials\n\n"
                 "Work only from the explicitly listed local routes. List every route. "
@@ -326,6 +454,51 @@ class AIActionService:
                 "upload, create sources, create concepts, or write a standalone lesson. Return "
                 "one whole approved `unit-material-synthesis.schema.json` record as an artifact "
                 "for capability `unit.material-synthesis.publish`.\n"
+                "\n"
+                "Route bodies live once in context.md's routes. Parent source "
+                "metadata for those routes is attached at "
+                "attachments/unit-source-map.yaml — a filtered view of the module map "
+                "for this unit only, never the canonical file — carrying "
+                "unit_route_ids that point at context.md, never duplicate bodies. "
+                "Request the full module map explicitly for a genuinely broader "
+                "investigation.\n"
+                "\n"
+                "Material slices are attached under attachments/slices/<route-id>.md with an "
+                "index at attachments/slices/index.json — one slice per deep-review route, "
+                "nothing else was read. Judge the attached pages themselves: fill contribution, "
+                "assumptions, notation, exercise_value, best_for and limitations from the slice "
+                "text and cite exact slice pages in every evidence note (e.g. 'PDF pp. 386-393'). "
+                "Every deep-reviewed assessment must also carry scope_of_absence: the exact "
+                "pages this review had in front of it, in the same house style and naming "
+                "every file (e.g. 'UE3.pdf, PDF pp. 15-38 of 54'). Copy it from the slice "
+                "index; it is checked against the attachment exactly like evidence. "
+                "evidence.checksum is always the material_checksum from the slice header — never "
+                "the slice_sha256, which only proves the transport bytes of the extracted text. "
+                "Every evidence item for a PDF route must cite the exact inspected pages in "
+                "house style (e.g. 'PDF pp. 386-393'); evidence without exact page citations, "
+                "or citing pages beyond the attachment, is rejected at publish. On routes "
+                "binding several files, name the file in every evidence locator (e.g. "
+                "'part-b.pdf, PDF pp. 21-23'); text-material evidence names its file and "
+                "cites no pages. "
+                "When a slice header reports truncation, record it in limitations; never claim "
+                "pages beyond the attachment.\n"
+                "\n"
+                "When the attached pages cannot support a claim, do not guess and do not "
+                "claim absence: absence from the inspected pages is never proof of absence "
+                "from the source. Every negative sentence you write in contribution or "
+                "limitations is read as bounded by scope_of_absence and by nothing wider, so "
+                "write it that way: 'no worked solution in pp. 15-38', never 'no worked "
+                "solution'. A published dossier once said a 54-page exercise set contained no "
+                "sheet solution on the strength of 24 inspected pages; that claim ranged over "
+                "30 pages nobody had opened. State the concrete evidence gap in the "
+                "discussion — which "
+                "concept, what kind of material is missing (concept-coverage, prerequisite, "
+                "notation, derivation, example, exercise or limitation) and which exact pages "
+                "should be read next. The operator may then attach a targeted continuation "
+                "pass to this same request; passes stay small and bounded and stop after a "
+                "few rounds. Request another pass only for a named gap; stop as soon as the "
+                "evidence suffices, or record the point as not established from inspected "
+                "material.\n"
             )
             bundle_files["instructions.md"] = instructions.encode("utf-8")
             bundle_files["context.md"] = (
@@ -333,10 +506,118 @@ class AIActionService:
                 + json.dumps(context, indent=2, ensure_ascii=False)
                 + "\n```\n"
             ).encode("utf-8")
-            if source_map_path is not None and source_map_path.is_file():
-                bundle_files["attachments/source-map.yaml"] = source_map_path.read_bytes()
         self.repository.save_request(request, bundle_files)
         return request
+
+    def append_slices(
+        self,
+        *,
+        request_id: str,
+        route_id: str,
+        start: int,
+        end: int,
+        kind: str,
+        concept_ids: list[str],
+        reason: str,
+        material_uri: str | None = None,
+        expected_snapshot: str | None = None,
+    ) -> dict[str, Any]:
+        """Attach one targeted follow-up pass to a prepared compare request.
+
+        Pass 1 came from preparation; this adds pass 2 (or 3) for exactly
+        one route with an explicit page range and a stated evidence gap.
+        The snapshot and the material bytes are re-verified first: anything
+        that moved since preparation refuses with a re-prepare instruction
+        instead of mixing stale reads. Only ``prepared`` requests grow;
+        deliveries, canonical records and other actions are untouched.
+        """
+        request = self.repository.get_request(request_id)
+        if request.get("action_id") != "unit.compare-materials":
+            raise ActionPolicyError(
+                f"continuations only amend unit.compare-materials requests: {request_id}")
+        if request.get("status") != "prepared":
+            raise ActionPolicyError(
+                f"request {request_id} is {request.get('status')}; "
+                "only prepared requests accept continuation passes")
+        snapshot = _snapshot(self.root)
+        if expected_snapshot and expected_snapshot != snapshot:
+            raise StaleDeliveryError(
+                f"expected snapshot {expected_snapshot}, current snapshot is {snapshot}"
+            )
+        if snapshot != (request.get("preconditions") or {}).get("snapshot_id"):
+            raise StaleDeliveryError(
+                "records changed since request preparation; "
+                "re-prepare the request instead of continuing it")
+        target_id = str((request.get("target") or {}).get("id"))
+        repo = load_repo(self.root)
+        unit = repo.units.get(target_id)
+        if unit is None:
+            raise TargetNotFoundError(f"Unit target not found: {target_id}")
+        source_map = repo.module_source_maps.get(unit.module_id) or {}
+        route: dict[str, Any] | None = None
+        for source_row in source_map.get("sources", []) or []:
+            if not isinstance(source_row, dict):
+                continue
+            for row in source_row.get("unit_routes", []) or []:
+                if isinstance(row, dict) and row.get("unit_id") == target_id \
+                        and str(row.get("id")) == route_id:
+                    route = {**row, "source_id": source_row.get("source_id")}
+        if route is None:
+            raise ActionPolicyError(
+                f"route {route_id} is not part of this request's unit")
+        bundle_dir = self.repository.request_dir(str(request["id"]))
+        index_records = read_bundle_slice_index(bundle_dir)
+        prior = [entry for entry in index_records
+                 if isinstance(entry, dict) and entry.get("route_id") == route_id]
+        if not prior:
+            raise ContinuationRefusedError(
+                f"route {route_id} continuation refused: "
+                "it has no first-pass slice to continue from")
+        stored_basis = request.get("material_basis")
+        if not isinstance(stored_basis, dict) or not stored_basis.get("material_checksums"):
+            raise ContinuationRefusedError(
+                f"route {route_id} continuation refused: this request predates "
+                "slice-basis binding; re-prepare the request instead of continuing it")
+        inspected = inspected_pages_by_route(index_records).get(route_id, [])
+        try:
+            record, index_entry, body = plan_continuation(
+                repo, route, basis=stored_basis, inspected=inspected,
+                passes_used=len(prior), start=start, end=end, kind=kind,
+                concept_ids=concept_ids, reason=reason, material_uri=material_uri,
+            )
+        except ContinuationError as exc:
+            raise ContinuationRefusedError(str(exc)) from exc
+        spent = len(body)
+        for entry in index_records:
+            if not isinstance(entry, dict):
+                continue
+            existing = bundle_dir / str(entry.get("bundle_path", ""))
+            if existing.is_file():
+                spent += existing.stat().st_size
+        if spent > MAX_SLICE_BYTES_TOTAL:
+            raise ContinuationRefusedError(
+                f"route {route_id} continuation refused: its slice tips the bundle "
+                f"over the {MAX_SLICE_BYTES_TOTAL}-byte ceiling")
+        record_path = (f"{SLICE_BUNDLE_PREFIX}/continuations/"
+                       f"pass-{record.pass_number}-{route_id}.yaml")
+        record_target = bundle_dir / record_path
+        record_target.parent.mkdir(parents=True, exist_ok=True)
+        _atomic_text(record_target, _dump_yaml(continuation_record_dict(record)))
+        slice_target = bundle_dir / index_entry["bundle_path"]
+        slice_target.parent.mkdir(parents=True, exist_ok=True)
+        slice_target.write_bytes(body)
+        index_records.append(index_entry)
+        _atomic_text(bundle_dir / SLICE_BUNDLE_PREFIX / "index.json",
+                     json.dumps(index_records, indent=2) + "\n")
+        passes = list(request.get("reading_passes") or [])
+        passes.append({"route_id": route_id, "pass": record.pass_number,
+                       "bundle_path": index_entry["bundle_path"],
+                       "continuation": record_path})
+        request["reading_passes"] = passes
+        self.repository.update_request(request)
+        return {"request_id": str(request["id"]), "route_id": route_id,
+                "pass": record.pass_number, "bundle_path": index_entry["bundle_path"],
+                "pages": list(range(start, end + 1)), "page_total": record.page_total}
 
     def import_delivery(self, source: Path) -> DeliveryRecord:
         delivery, staged = self.repository.stage_delivery_directory(source)
@@ -360,37 +641,64 @@ class AIActionService:
 
     def _validate(self, delivery: DeliveryRecord, directory: Path) -> ValidatedDelivery:
         delivery_id = str(delivery.get("id", ""))
+        if not str(delivery.get("request_id", "")):
+            raise DeliveryValidationError("delivery must name its request_id")
         request = self.repository.get_request(str(delivery.get("request_id", "")))
+        # Shape problems aggregate: a hand-authored delivery should learn
+        # everything wrong with it in one round, not one field per import
+        # (JF-07). Live freshness guards below still fail fast.
+        problems: list[str] = []
         if delivery.get("type") != "ai-action-delivery":
-            raise DeliveryValidationError("delivery type must be ai-action-delivery")
+            problems.append("delivery type must be ai-action-delivery")
         if delivery.get("action_id") != request.get("action_id"):
-            raise DeliveryValidationError("delivery action does not match request")
+            problems.append(
+                f"delivery action_id {delivery.get('action_id')!r} does not match "
+                f"prepared request {request.get('action_id')!r}")
         producer = delivery.get("producer") or {}
-        if producer.get("adapter") != (request.get("provider") or {}).get("adapter"):
-            raise DeliveryValidationError("delivery adapter does not match prepared request")
+        expected_adapter = (request.get("provider") or {}).get("adapter")
+        if producer.get("adapter") != expected_adapter:
+            problems.append(
+                f"delivery producer.adapter {producer.get('adapter')!r} does not match "
+                f"prepared request provider.adapter {expected_adapter!r}")
         if delivery.get("preconditions") != request.get("preconditions"):
-            raise DeliveryValidationError("delivery preconditions do not match prepared request")
+            problems.append(
+                "delivery preconditions must equal the prepared request preconditions")
         if not (delivery.get("approval") or {}).get("user_approved"):
-            raise DeliveryValidationError("delivery lacks recorded user approval")
+            problems.append("delivery approval.user_approved must be true")
         operations = delivery.get("operations")
         if not isinstance(operations, list) or not operations:
-            raise DeliveryValidationError("delivery must contain at least one operation")
-        allowed = set(request.get("allowed_capabilities", []))
-        forbidden = set(request.get("forbidden_capabilities", []))
-        target_id = str((request.get("target") or {}).get("id", ""))
-        for operation in operations:
-            if not isinstance(operation, dict):
-                raise DeliveryValidationError("each delivery operation must be a mapping")
-            capability = operation.get("capability")
-            if capability in forbidden or capability not in allowed:
-                raise DeliveryValidationError(f"capability is not allowed: {capability}")
-            if operation.get("target_id") and operation.get("target_id") != target_id:
-                raise DeliveryValidationError("operation targets an unrelated artifact")
-            artifact_ref = operation.get("artifact_ref")
-            if artifact_ref:
-                artifact = _inside(directory, str(artifact_ref))
-                if not artifact.is_file():
-                    raise DeliveryValidationError(f"delivery artifact is missing: {artifact_ref}")
+            problems.append("delivery must contain at least one operation")
+        else:
+            allowed = set(request.get("allowed_capabilities", []))
+            forbidden = set(request.get("forbidden_capabilities", []))
+            target_id = str((request.get("target") or {}).get("id", ""))
+            for index, operation in enumerate(operations):
+                where = f"operations[{index}]"
+                if not isinstance(operation, dict):
+                    problems.append(f"{where} must be a mapping")
+                    continue
+                capability = operation.get("capability")
+                if capability in forbidden or capability not in allowed:
+                    problems.append(
+                        f"{where} capability is not allowed: {capability!r}")
+                if operation.get("target_id") and operation.get("target_id") != target_id:
+                    problems.append(f"{where} targets an unrelated artifact")
+                artifact_ref = operation.get("artifact_ref")
+                if artifact_ref:
+                    try:
+                        artifact = _inside(directory, str(artifact_ref))
+                    except DeliveryValidationError as exc:
+                        problems.append(f"{where} artifact_ref is unsafe: {exc}")
+                    else:
+                        if not artifact.is_file():
+                            problems.append(
+                                f"{where} artifact is missing: {artifact_ref}")
+        if problems:
+            shown = problems[:12]
+            if len(problems) > 12:
+                shown.append(f"{len(problems) - 12} further problem(s) omitted")
+            raise DeliveryValidationError(
+                f"delivery {delivery_id!r} is invalid: " + "; ".join(shown))
         # Staleness is scoped to what the delivery actually reasoned about.  The
         # repository-wide fingerprint is provenance, not a gate: rejecting a
         # delivery because an unrelated note moved (feature specification §20.4
@@ -581,6 +889,14 @@ class AIActionService:
                     validate_unit_material_synthesis(self.root, target_id, synthesis)
                 except ValueError as exc:
                     raise DeliveryValidationError(str(exc)) from exc
+                bundle_dir = self.repository.request_dir(str(request["id"]))
+                index_records = read_bundle_slice_index(bundle_dir)
+                if index_records:
+                    try:
+                        validate_synthesis_page_provenance(
+                            inspected_material_by_route(index_records), synthesis)
+                    except ValueError as exc:
+                        raise DeliveryValidationError(str(exc)) from exc
                 provenance = (synthesis.get("basis") or {}).get("ai_provenance") or {}
                 expected_provider = (request.get("provider") or {}).get("preferred")
                 if provenance != {
@@ -596,7 +912,10 @@ class AIActionService:
                     raise DeliveryValidationError(
                         f"a dossier for {target_id} already exists; explicit supersedes is required"
                     )
-                staged[destination] = (_dump_yaml(synthesis), capability)
+                content = _dump_yaml(synthesis)
+                staged[destination] = (content, capability)
+                staged[self.root / LEDGER_RELATIVE] = (
+                    publication_lineage(self.root, target_id, synthesis, content, authority), capability)
                 (updated_ids if destination.is_file() else created_ids).append(synthesis["id"])
             else:
                 raise DeliveryValidationError(f"unsupported pilot capability: {capability}")
@@ -665,11 +984,14 @@ class AIActionService:
                 if issue.severity == "E"
             ]
 
-        def publish() -> str:
+        def publish(snapshot_after_id: str | None = None) -> str:
             nonlocal validated_repo
+            from learning_os.fingerprint import seed_source_fingerprint
             from learning_os.genout import generate_all, write_outputs
 
             repo = validated_repo or load_repo(self.root)
+            if snapshot_after_id is not None:
+                seed_source_fingerprint(repo, snapshot_after_id)
             write_outputs(repo, generate_all(repo))
             projected_snapshot = f"sha256:{source_fingerprint(repo)}"
             validated_repo = None

@@ -15,14 +15,23 @@ which therefore no longer reaches into projection internals for identity.
 
 from __future__ import annotations
 
+import hashlib
+import json
 import re
 from pathlib import Path, PurePosixPath
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any, NamedTuple
 
 from .pathing import PathBoundaryError, resolve_symlinks_inside
 
 if TYPE_CHECKING:  # pragma: no cover - typing only
     from .loader import Repo
+
+
+class ResolvedMaterialFile(NamedTuple):
+    """One exact local file named by a route: its material URI and path."""
+
+    material_uri: str
+    path: Path
 
 MATERIAL_SCHEME = "material://"
 
@@ -65,6 +74,33 @@ def material_uri_authority(ref) -> str | None:
     return material_path.parts[0] if material_path.parts else None
 
 
+def canonical_material_uri(ref) -> str | None:
+    """The canonical spelling of a material URI, or None if it has none.
+
+    Resolution parses the payload with ``PurePosixPath``, which collapses
+    ``//`` and drops ``.`` segments before the authority check — so dot and
+    double-slash spellings resolve to the same bytes as the clean form.
+    This answers "what did the operator mean" the same way, so writers can
+    refuse the odd spelling while naming the form to use instead. Anything
+    resolution refuses outright (non-URIs, absolute payloads, backslashes,
+    ``..``) has no canonical form and returns None.
+    """
+    if not isinstance(ref, str) or not ref.startswith(MATERIAL_SCHEME):
+        return None
+
+    payload = ref[len(MATERIAL_SCHEME):]
+
+    if not payload or payload.startswith("/") or "\\" in payload:
+        return None
+
+    parts = [part for part in payload.split("/") if part not in {"", "."}]
+
+    if not parts or any(part == ".." for part in parts):
+        return None
+
+    return MATERIAL_SCHEME + "/".join(parts)
+
+
 def safe_material_locator(value) -> str | None:
     """Accept only one safe, file-shaped POSIX locator."""
     if not isinstance(value, str):
@@ -92,6 +128,68 @@ def safe_material_locator(value) -> str | None:
         return None
 
     return locator_path.as_posix()
+
+
+def leading_material_locator(value) -> str | None:
+    """The file path a prose locator *begins* with, or None.
+
+    ``safe_material_locator`` answers "is this locator exactly one file path".
+    The authored house style is a path followed by prose — ``lecture-slides/
+    10_testing.pdf, PDF pp. 5-9`` — so that stricter question answers None for
+    a row whose target is unambiguous and sitting at the front of the string.
+    This answers the weaker question and is tried only after the strict one
+    declines.
+
+    Weaker is not loose. Every guard that prevents resolving to a file nobody
+    asked for is kept: exactly one material-suffix token in the whole locator
+    (so ``a.pdf through b.pdf`` stays ambiguous and is refused), no absolute
+    path, no ``.`` or ``..`` component, no backslash or newline. Nothing is
+    scanned or basename-matched — the head either names a real file under the
+    source, or the caller's existence check reports it missing, exactly as an
+    unresolvable locator does today.
+    """
+    if not isinstance(value, str):
+        return None
+
+    text = PAGE_COUNT_SUFFIX.sub("", value.strip())
+
+    if "\\" in text or "\n" in text:
+        return None
+    if len(MATERIAL_SUFFIX_TOKEN.findall(text)) != 1:
+        return None
+
+    match = MATERIAL_SUFFIX_TOKEN.search(text)
+    if match is None:  # pragma: no cover - findall just proved one exists
+        return None
+    head = text[:match.end()].strip()
+    if not head:
+        return None
+
+    head_path = PurePosixPath(head)
+    if head_path.is_absolute() or any(
+            part in {"", ".", ".."} for part in head_path.parts):
+        return None
+    if head_path.suffix.lower() not in MATERIAL_RESOURCE_SUFFIXES:
+        return None
+
+    return head_path.as_posix()
+
+
+def single_file_material(source_material) -> str | None:
+    """A source's own ``material://`` URI when it names one concrete file.
+
+    A source whose material is a directory (a lecture-slides folder) cannot
+    stand in for a row: which file the row meant is exactly what the locator
+    carries. A source whose material *is* the file has no such ambiguity, so a
+    row that names it without repeating the path resolves to the one thing it
+    could mean.
+    """
+    if material_uri_authority(source_material) is None:
+        return None
+    payload = str(source_material)[len(MATERIAL_SCHEME):]
+    if PurePosixPath(payload).suffix.lower() not in MATERIAL_RESOURCE_SUFFIXES:
+        return None
+    return str(source_material)
 
 
 def resolve_material_target(
@@ -144,11 +242,15 @@ def material_location(repo: Repo, ref) -> dict:
 def project_material_resource(repo: Repo, resource: dict) -> dict:
     """Add one core-resolved local target to a stage resource."""
     projected = dict(resource)
+    # The review is canonical operator evidence. Interfaces consume the
+    # reviewed descriptions, never the attestation's internal payload.
+    projected.pop("angle_review", None)
 
     if projected.get("material_path"):
         return projected
 
     material_uri = None
+    derived = False
     vault_path = projected.get("vault_path")
 
     if isinstance(vault_path, str) and vault_path:
@@ -166,12 +268,232 @@ def project_material_resource(repo: Repo, resource: dict) -> dict:
         )
         authority = material_uri_authority(source_material)
 
+        if locator is None:
+            locator = leading_material_locator(projected.get("locator"))
+            derived = locator is not None
+
         if locator and authority:
             material_uri = f"material://{authority}/{locator}"
+        elif authority:
+            material_uri = single_file_material(source_material)
+            derived = material_uri is not None
 
     if not material_uri:
         return projected
 
+    location = material_location(repo, material_uri)
+
+    # An authored `vault_path` is an assertion: if it names nothing, that is a
+    # defect and the interface must say so. A locator-derived target is a
+    # reading of prose — when the path it reads out is not there, the reading
+    # was wrong, and offering a target that does not exist is worse than
+    # offering none. So a derivation publishes only what it can resolve, which
+    # also keeps the projection's standing invariant intact: every exposed
+    # `material_path` is a real file whenever the materials tree is mounted.
+    if derived and location.get("material_exists") is not True:
+        return projected
+
     projected["material_uri"] = material_uri
-    projected.update(material_location(repo, material_uri))
+    projected.update(location)
     return projected
+
+
+def resolve_route_material_files(
+    repo: Repo, route: dict[str, Any],
+) -> list[ResolvedMaterialFile]:
+    """Resolve every exact local file named by one route, or none.
+
+    Most routes name one file and use the ordinary material projection.  A
+    small but important class (including SaD L03's current exercise route)
+    deliberately binds two files with a semicolon.  Treating that locator as
+    prose made freshness fall back to a route-text hash, so changing either
+    reviewed PDF did not stale the dossier.  The multi-file branch is strict:
+    every semicolon-delimited part must name exactly one safe existing file,
+    otherwise no partial byte-coverage claim is made.
+    """
+    projected = project_material_resource(repo, {
+        "source_id": route.get("source_id"),
+        "locator": route.get("locator"),
+        "vault_path": route.get("vault_path"),
+    })
+    material_uri = projected.get("material_uri")
+    relative = projected.get("material_path")
+    if isinstance(material_uri, str) and isinstance(relative, str) \
+            and projected.get("material_exists"):
+        path = repo.learningos_root / relative
+        if path.is_file() and not path.is_symlink():
+            return [ResolvedMaterialFile(material_uri, path)]
+
+    locator = route.get("locator")
+    source = repo.sources.get(route.get("source_id"))
+    source_material = source.get("material") if isinstance(source, dict) else None
+    authority = material_uri_authority(source_material)
+    if not isinstance(locator, str) or ";" not in locator or not authority:
+        return []
+
+    candidates: list[str] = []
+    for part in locator.split(";"):
+        matches = list(MATERIAL_SUFFIX_TOKEN.finditer(part))
+        if len(matches) != 1:
+            return []
+        candidate = safe_material_locator(part[:matches[0].end()].strip())
+        if candidate is None:
+            return []
+        candidates.append(candidate)
+    if len(candidates) < 2 or len(candidates) != len(set(candidates)):
+        return []
+
+    files: list[ResolvedMaterialFile] = []
+    for candidate in candidates:
+        uri = f"material://{authority}/{candidate}"
+        location = material_location(repo, uri)
+        relative = location.get("material_path")
+        if not isinstance(relative, str) or not location.get("material_exists"):
+            return []
+        path = repo.learningos_root / relative
+        if not path.is_file() or path.is_symlink():
+            return []
+        files.append(ResolvedMaterialFile(uri, path))
+    return files
+
+
+def sha256_bytes(value: bytes) -> str:
+    return "sha256:" + hashlib.sha256(value).hexdigest()
+
+
+def sha256_file(path: Path, cache: dict[Path, str] | None = None) -> str:
+    """Hash one material file, at most once per build.
+
+    Routes deliberately share files — a lecture deck reached by four routes is
+    one deck — and every route hashed it again. The memo is created per build
+    and never outlives it, so a file that changes between builds is still
+    rehashed and a stale dossier still goes stale (2026-09-05 audit, F13).
+    """
+    if cache is None:
+        return sha256_bytes(path.read_bytes())
+    key = Path(path).resolve()
+    checksum = cache.get(key)
+    if checksum is None:
+        checksum = sha256_bytes(path.read_bytes())
+        cache[key] = checksum
+    return checksum
+
+
+def stable_checksum(value: Any) -> str:
+    payload = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
+    return sha256_bytes(payload.encode("utf-8"))
+
+
+# What a reviewed dossier actually rests on. `route_material_checksum` pins the
+# material's bytes; these pin the route's own claims about that material — what
+# was read (`locator`), what it is (`format`), what it is said to cover, and
+# whether it is in scope at all.
+EVIDENTIAL_ROUTE_FIELDS = (
+    "id",
+    "unit_id",
+    "source_id",
+    "locator",
+    "url",
+    "vault_path",
+    "format",
+    "covers",
+    "scope",
+    "exposes_solutions_for",
+)
+
+# What it does not rest on. Hashing whole route rows meant a prose-only edit —
+# correcting a wrong `angle` — staled an entire unit's dossier, so the system
+# rewarded recording the correction anywhere except the canonical route. `depth`
+# and `requires_assets` classify how to use a material rather than assert what
+# it contains, and no assessment cites either.
+EXEMPT_ROUTE_FIELDS = (
+    "angle",
+    "angle_detail",
+    "title",
+    "depth",
+    "requires_assets",
+)
+
+
+def evidential_route_projection(route: dict[str, Any]) -> dict[str, Any]:
+    """One route reduced to the fields a reviewed dossier depends on.
+
+    Both lists are exhaustive on purpose. A field belonging to neither raises,
+    so a new source-map field has to be classified once — deliberately, in this
+    module — instead of silently joining the basis or silently escaping it.
+    """
+    unknown = sorted(set(route) - set(EVIDENTIAL_ROUTE_FIELDS) - set(EXEMPT_ROUTE_FIELDS))
+    if unknown:
+        raise ValueError(
+            f"route fields are not classified for the material basis: {unknown}. "
+            "Add each to EVIDENTIAL_ROUTE_FIELDS or EXEMPT_ROUTE_FIELDS in "
+            "learning_os.materials_resolution."
+        )
+    return {key: route[key] for key in EVIDENTIAL_ROUTE_FIELDS if key in route}
+
+
+# The same classification one level up. A source record's standing in the module
+# is evidential — `role` is what "scope authority" is read from. Its `priority`
+# ordering and its `why`/`when` prose are not, and `unit_routes` is projected
+# separately so a route belonging to some other unit cannot stale this one.
+EVIDENTIAL_SOURCE_FIELDS = ("source_id", "role")
+EXEMPT_SOURCE_FIELDS = ("priority", "why", "when", "unit_routes")
+
+
+def evidential_source_map_projection(
+    source_map: dict[str, Any],
+    unit_id: str,
+) -> dict[str, Any]:
+    """The module source map reduced to what one unit's dossier rests on.
+
+    Hashing the file's bytes made every dossier in a module depend on every
+    word in it: correcting an angle on some other unit's route staled this
+    unit too. Only the sources this unit actually routes to are projected, and
+    only their standing — never their prose.
+    """
+    sources: list[dict[str, Any]] = []
+    for source in source_map.get("sources", []) or []:
+        if not isinstance(source, dict):
+            continue
+        routes = source.get("unit_routes", []) or []
+        if not any(isinstance(route, dict) and route.get("unit_id") == unit_id
+                   for route in routes):
+            continue
+        unknown = sorted(set(source) - set(EVIDENTIAL_SOURCE_FIELDS)
+                         - set(EXEMPT_SOURCE_FIELDS))
+        if unknown:
+            raise ValueError(
+                f"source fields are not classified for the material basis: {unknown}. "
+                "Add each to EVIDENTIAL_SOURCE_FIELDS or EXEMPT_SOURCE_FIELDS in "
+                "learning_os.materials_resolution."
+            )
+        sources.append({key: source[key] for key in EVIDENTIAL_SOURCE_FIELDS
+                        if key in source})
+    return {
+        "module_id": source_map.get("module_id"),
+        "sources": sorted(sources, key=lambda row: str(row.get("source_id"))),
+    }
+
+
+def route_material_checksum(repo: Repo, route: dict[str, Any],
+                            cache: dict[Path, str] | None = None) -> str:
+    """Freshness token for the exact material one route binds.
+
+    Hash local material bytes when resolvable — one file directly, several
+    files as a stable aggregate over their URIs and hashes; otherwise hash
+    the exact route. Remote and deliberately unavailable resources still need
+    a stable token. The route hash is explicitly provenance, not a claim
+    that remote bytes were reviewed.
+    """
+    files = resolve_route_material_files(repo, route)
+    if len(files) == 1:
+        return sha256_file(files[0].path, cache)
+    if files:
+        return stable_checksum([
+            {"material_uri": row.material_uri, "sha256": sha256_file(row.path, cache)}
+            for row in sorted(files, key=lambda row: row.material_uri)
+        ])
+    return stable_checksum({
+        key: route.get(key)
+        for key in ("id", "source_id", "unit_id", "locator", "url", "vault_path")
+    })

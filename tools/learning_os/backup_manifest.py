@@ -158,10 +158,14 @@ def _inside(authority: Path, relative: str) -> Path:
     cursor = authority
     for part in (() if relative == "." else rel.parts):
         cursor = cursor / part
-        if cursor.is_symlink():
-            raise BackupManifestError(
-                f"backup declaration traverses a symlink: {relative}"
-            )
+        try:
+            if cursor.is_symlink():
+                raise BackupManifestError(
+                    f"backup declaration traverses a symlink: {relative}"
+                )
+        except OSError as exc:
+            # Re-raise as BackupManifestError if checking symlink fails due to unreadable paths
+            raise BackupManifestError(f"backup path is unreadable: {cursor}") from exc
     try:
         resolved = lexical.resolve(strict=False)
         resolved.relative_to(authority)
@@ -241,6 +245,7 @@ def _git_provenance(root: Path) -> dict[str, Any]:
             return subprocess.run(
                 ["git", "-C", str(root), *args],
                 capture_output=True, text=True, check=False, timeout=10,
+                env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"},
             )
         except (OSError, subprocess.SubprocessError):
             return None
@@ -276,6 +281,56 @@ def _declared_contract_version(root: Path) -> int | None:
     return None
 
 
+def _admitted_paths(authority: Path, declared: dict[str, Any],
+                    excluded: set[str]) -> set[str]:
+    """Every file the backup contract admits under one authority.
+
+    Shared by the inventory and by restore verification, because the two must
+    agree about what the backup is supposed to contain. Keeping a second copy
+    of these rules for the verifier would be the `curriculum/thematic-groups`
+    defect again — two lists that must match, discovered when they do not.
+    """
+    found: set[str] = set()
+    for relative in declared["files"]:
+        path = _inside(authority, relative)
+        if _admit_file(authority, path, excluded):
+            found.add(path.relative_to(authority).as_posix())
+    for relative in declared["trees"]:
+        if any(part in excluded for part in PurePosixPath(relative).parts):
+            continue
+        tree = _inside(authority, relative)
+        tree_stat = _inspect_path(tree)
+        if tree_stat is None or not stat.S_ISDIR(tree_stat.st_mode):
+            continue
+        for parent, dirs, files in os.walk(tree, onerror=_refuse_unreadable):
+            dirs[:] = [name for name in dirs if name not in excluded]
+            for name in files:
+                path = Path(parent) / name
+                if _admit_file(authority, path, excluded):
+                    found.add(path.relative_to(authority).as_posix())
+    return found
+
+
+def backup_authorities(
+    root: Path,
+    *,
+    ui_root: Path | None = None,
+    materials_root: Path | None = None,
+) -> dict[str, Path]:
+    """The three resolved backup authorities for one Core checkout.
+
+    Shared by the inventory and by the `--out` guard, because the two must
+    agree about what "inside a backed-up root" means. Keeping a second copy
+    of the sibling defaults for the guard would be two lists that must match.
+    """
+    root = root.resolve()
+    return {
+        "core": root,
+        "ui": (ui_root or root.parent / "obsidian-ui").resolve(),
+        "materials": (materials_root or root.parent / "materials").resolve(),
+    }
+
+
 def build_backup_manifest(
     root: Path,
     *,
@@ -283,10 +338,11 @@ def build_backup_manifest(
     materials_root: Path | None = None,
     now: dt.datetime | None = None,
 ) -> dict[str, Any]:
-    root = root.resolve()
-    ui_root = (ui_root or root.parent / "obsidian-ui").resolve()
-    materials_root = (materials_root or root.parent / "materials").resolve()
-    authorities = {"core": root, "ui": ui_root, "materials": materials_root}
+    authorities = backup_authorities(
+        root, ui_root=ui_root, materials_root=materials_root)
+    root = authorities["core"]
+    ui_root = authorities["ui"]
+    materials_root = authorities["materials"]
     contract = _load_contract(root)
     excluded = set(contract.get("excluded_names") or [])
     entries: dict[tuple[str, str], dict[str, Any]] = {}
@@ -294,38 +350,19 @@ def build_backup_manifest(
         if not authority.is_dir():
             raise BackupManifestError(f"backup authority is unavailable: {label}: {authority}")
         declared = contract["roots"][label]
-        for relative in declared["files"]:
-            path = _inside(authority, relative)
-            if _admit_file(authority, path, excluded):
-                rel = path.relative_to(authority).as_posix()
-                entries[(label, rel)] = {
-                    "root": label, "path": rel, "size": path.stat().st_size,
-                    "sha256": _sha256_file(path),
-                }
-        for relative in declared["trees"]:
-            if any(part in excluded for part in PurePosixPath(relative).parts):
-                continue
-            tree = _inside(authority, relative)
-            tree_stat = _inspect_path(tree)
-            if tree_stat is None or not stat.S_ISDIR(tree_stat.st_mode):
-                continue
-            # `rglob` suppresses the errors raised while descending, so an
-            # unreadable directory yielded nothing and raised nothing — the same
-            # answer as an empty one, and its contents left the inventory
-            # without a trace (#25). `os.walk` reports those failures instead.
-            # `excluded` is applied to directory names *before* descending, so a
-            # tree the contract deliberately skips is never read, never fails,
-            # and is never confused with one that could not be read.
-            for parent, dirs, files in os.walk(tree, onerror=_refuse_unreadable):
-                dirs[:] = [name for name in dirs if name not in excluded]
-                for name in files:
-                    path = Path(parent) / name
-                    if _admit_file(authority, path, excluded):
-                        rel = path.relative_to(authority).as_posix()
-                        entries[(label, rel)] = {
-                            "root": label, "path": rel, "size": path.stat().st_size,
-                            "sha256": _sha256_file(path),
-                        }
+        # `rglob` suppressed the errors raised while descending, so an
+        # unreadable directory yielded nothing and raised nothing — the same
+        # answer as an empty one, and its contents left the inventory without a
+        # trace (#25). The shared walk uses `os.walk` and reports those, and
+        # prunes excluded directory names before descending, so a tree the
+        # contract deliberately skips is never read, never fails, and is never
+        # confused with one that could not be read.
+        for rel in _admitted_paths(authority, declared, excluded):
+            path = authority / rel
+            entries[(label, rel)] = {
+                "root": label, "path": rel, "size": path.stat().st_size,
+                "sha256": _sha256_file(path),
+            }
         if label == "ui":
             # Derived, not declared: the contract names `plugin-assets.json` and
             # this reads what that declares, so the shipping inventory has one
@@ -469,6 +506,24 @@ def verify_backup_manifest(
             issues.append({"root": row["root"], "path": row["path"], "issue": "missing"})
         elif path.stat().st_size != row["size"] or _sha256_file(path) != row["sha256"]:
             issues.append({"root": row["root"], "path": row["path"], "issue": "checksum-mismatch"})
+    # Walking only the manifest answers "is everything we saved still here",
+    # never "is anything here that we did not save". A canonical file the backup
+    # never contained — left by an earlier partial restore, or planted — passed
+    # verification untouched and was then loaded as real curriculum: a synthetic
+    # restore with one extra note reported ok, and `load_repo` read 119 notes
+    # where the backup held 118. `install.py` and `check-install-current.mjs`
+    # already refuse an entry their manifest does not account for; a restore is
+    # where that matters most. Named, never removed — an unexplained file may be
+    # the only copy of something.
+    contract = _load_contract(root)
+    excluded = set(contract.get("excluded_names") or [])
+    for label, authority in authorities.items():
+        declared = contract["roots"].get(label)
+        if declared is None or not authority.is_dir():
+            continue
+        listed = {row["path"] for row in rows if row["root"] == label}
+        for relative in sorted(_admitted_paths(authority, declared, excluded) - listed):
+            issues.append({"root": label, "path": relative, "issue": "unaccounted"})
     return {"ok": not issues, "checked": len(manifest["entries"]), "issues": issues}
 
 

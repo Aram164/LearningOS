@@ -193,8 +193,19 @@ def cache_path(root: Path, dossier: Dossier) -> Path:
     return root / DOSSIERS_RELATIVE / f"{dossier.unit_id}-{digest[:16]}.json"
 
 
+#: Cache document tag, so a semantic dossier is never mistaken for a
+#: resume dossier sharing the same cache root.
+DOSSIER_DOCUMENT_TYPE = "semantic-dossier-v1"
+
+
 def _cache_document(dossier: Dossier) -> dict:
+    # `_generated` and `type` ride outside the hashed content: the poison
+    # check covers `hashes` plus `content` plus `key` only, exactly like the
+    # resume dossier cache beside it. The validator requires the key on
+    # every generated JSON file (GEN-HEADER).
     return {
+        "_generated": "GENERATED file - do not edit; rebuilt by los dossier",
+        "type": DOSSIER_DOCUMENT_TYPE,
         "key": dossier.key,
         "unit_id": dossier.unit_id,
         "hashes": dict(dossier.hashes),

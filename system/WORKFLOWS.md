@@ -29,7 +29,7 @@ deadline:              # non-exam operational deadline only; exam dates live in 
 ---
 ```
 
-Body sections — `Objective`, `Current Scope`, `Open Questions`, and `Next Action` are required; `Temporary Source Menu`, `Current Plan`, `Durable Notes`, and `Deferred` optional.
+Body sections — `Objective`, `Current Scope`, `Open Questions`, and `Next Action` are required; `Temporary Source Menu`, `Current Plan`, `Durable Notes`, and `Deferred` optional. Update `Next Action` only through the `workspace-next-action` capability envelope (§25c) — never by editing CONTEXT.md directly.
 
 **Scope triage:** when the effort's topic expands into prerequisites and side-paths, label items *required now / helpful now / defer / reference only* (in `Current Scope` and on the source menu). Accepted "not now" decisions go under `Deferred` with one line of reasoning — a deferral is a recorded decision the system can replay, not a thought to re-have.
 
@@ -39,21 +39,38 @@ If the active count reaches 8+, the validator warns: finish or archive something
 
 Put fragments, quotations awaiting processing, rough diagrams, temporary source lists, partial calculations, and lecture-specific checklists in workspace `scratch/` or `inputs/`. Temporary capture does not require canonical metadata.
 
-When no workspace is obvious, drop anything into `work/inbox/` — no naming, no metadata. The operator routes inbox items to their deterministic destination (ARCHITECTURE §3.3); the inbox trends toward empty.
+When no workspace is obvious, drop anything into `work/inbox/` — no naming, no metadata. The operator routes inbox items to their deterministic destination (ARCHITECTURE §3.3); the inbox trends toward empty. The write itself goes through a `capture.create` envelope (§25c): the bare `capture --text` command is refused by design.
 
 ## 3. Create or evolve a durable note
 
+Durable notes are created only through a gateway capability (§25c) — never by
+saving the file directly. Pick the capability by what the note is:
+
+- a source-chapter analysis → `note.analysis.save` (one) or
+  `note.analysis.save_batch` (up to 20 under one receipt);
+- a learner's recorded question → `atlas.question.save`;
+- session scratch promoted in bulk at closure → shelving: `review.prepare`,
+  then `review.apply` on explicitly approved items only;
+- anything else durable → `note.create` below.
+
 1. search for an existing note with the same purpose;
-2. update it when appropriate;
+2. update it when appropriate, through `note.revise` after explicit approval —
+   identity, path, and role stay stable;
 3. otherwise assign a stable note ID (no gratuitous numeric suffix);
-4. assign a role if not `synthesis` (`exercise-bank`, `mock-exam`, `crosswalk`, …);
-5. save as `knowledge/notes/<bucket>/<note-id>.md` — filename is always the ID, bucket is the nearest reasonable domain;
-6. attach relevant concept and source IDs;
+4. assign a role if not `synthesis` (`exercise-bank`, `mock-exam`,
+   `crosswalk`, …); `reference` and `question` keep their dedicated
+   capabilities and are refused by `note.create`;
+5. stage the exact body bytes and apply them with a `note.create` envelope
+   (§25c): the handler writes `knowledge/notes/<bucket>/<note-id>.md` —
+   filename is always the ID, bucket is the nearest reasonable domain;
+6. attach relevant concept and source IDs (each must already be registered);
 7. preserve uncertainty and unfinished reasoning;
 8. add the workspace ID as context when useful;
-9. rebuild generated outputs.
+9. validate, then rebuild generated outputs.
 
-Do not require polish or completeness.
+Do not require polish or completeness. A successor that replaces an earlier
+note declares `supersedes` in the same `note.create` call, which deprecates
+the predecessor atomically (workflow 15).
 
 ## 4. Add a concept
 
@@ -89,10 +106,14 @@ The single path for EVERY new find — course, video, book, blog, paper, tool.
 This replaces the legacy LEARNING-RESOURCES intake protocol; there is no other
 list to also update.
 
-1. **Register** the source (steps 1–5 above) in `sources/sources.yaml` or a
-   `sources/registry/*.yaml` partition. One record per teaching object; the
+1. **Register** the source (steps 1–5 above) through its gateway, never by
+   editing the registry file directly. One record per teaching object; the
    one-line "why it earns its place" goes into the evaluation, never into a
-   note or plan file.
+   note or plan file. A find shelved from a list or page before anything is
+   examined registers metadata-only through `source.intake.record`
+   (`los source-intake`), which requires `discovery` provenance and refuses
+   evaluations; an examination that overturns the shelf corrects the record
+   through the same capability.
 2. **Place the material:**
    - web-native (ALL videos, courses, blogs, interactive): `url` on the record
      — videos are never downloaded;
@@ -100,9 +121,43 @@ list to also update.
      materials topic tree via the PLACEMENT map + `tools/build_materials_tree.py`,
      record `material://<source-id>/…`;
    - campus-license or paid: leave URL-only until Aram pulls/decides.
+   - already registered but URL-only: once verified local bytes exist, attach
+     them with `source.record.revise` (`los source-revise --check`, then the
+     reviewed apply) — exact `material://` URI plus the live byte hash, after
+     `make inventory`. The same call may replace a stale evaluation with its
+     explicit final form. It never changes identity or intake-owned fields,
+     never replaces a held different material, and never rewrites a curated
+     collection's `why` (workflow 6b stays a separate edit). When the attach
+     moves an approved dossier's material basis, the check names the affected
+     units and the apply must carry their reviewed replacement dossiers —
+     or, when every moved route is screened, evidence-free, analysis-free
+     and outside every comparison, a reviewed `dossier_rebases` shortcut
+     naming exactly the moved routes. Both the shortcut and a full
+     replacement stamp the new basis with their own fresh
+     request_id/delivery_id — reusing the live dossier's provenance
+     unchanged is refused, since it would attest the old material.
+     Both paths also record prospective freshness lineage in the same
+     transaction, bound to the new dossier bytes and validated staged basis.
+     Anything else (deep-reviewed routes, evidence, comparisons, an
+     already-stale dossier) keeps the full replacement. The check also lists referring collection entries; when a
+     listed `why` is now false, correct it afterwards with
+     `collection.entry.revise` (`los collection-entry-revise --check`, then
+     the reviewed apply), which revises one entry's one-line `why` and
+     preserves source, group, order and all other entries.
 3. **List it (optional):** if it belongs in a curated per-domain list, add an
    entry to the matching `sources/collections/<name>.yaml` (workflow 6b).
-4. **Verify:** `python tools/validate.py` then `python tools/generate.py`.
+4. **Verify:** `.venv/bin/python tools/validate.py --compact` then `.venv/bin/python tools/generate.py`.
+
+**Video intake and examination.** At intake, use only the title, publisher,
+description and known course or playlist structure to place a provisional
+record. A course or playlist is one source with its known videos as titled
+child links; a standalone video is its own source. Do not transcribe a backlog.
+When a video is selected for actual study, use Gemini Notebook to extract and
+examine its content, then verify the relevant claims against the exact video
+and timestamps before approving a durable analysis. Save what it covers, what
+the learner should use and the evidence through the existing material-analysis
+path; correct the provisional shelf if that examination changes the judgment.
+The caption-import maintenance tool is not the examination path for this intake.
 
 **Source-completeness gate (mandatory):** before importing a plan, enumerate
 every learning source named by its authoritative templates, bibliographies,
@@ -161,6 +216,151 @@ Temporary → workspace `Open Questions`; durable local → section in a note; d
 
 ## 8. Record evidence
 
+Learner evidence (Aram's own results) is append-only and takes the direct
+path: `los observe <requirement> --activity exercise --result partial
+--condition unfamiliar-example --note "..."`. The terminal session is the
+approval — snapshot and revision guard are taken under the operator lock,
+never asserted by the caller — because the author is the ground truth
+about himself and the ledger carries a tested `--supersedes` correction
+path.
+
+Most stages have no requirement target yet: evidence intake is
+target-bound, and only a stage carrying a `runtime_target` block produces
+a requirement. For those stages `observe` refuses by naming the stage —
+never "unknown requirement", which is reserved for a mistyped id (with
+suggestions) — and points here. Record the result without credit through
+the untargeted ledger instead: seal a `learner.stage-result.append`
+envelope (§25c) with the workspace, unit, stage, activity, enumerated
+result, and optional assistance, conditions and note. The row lands in
+the workspace's `stage-results.jsonl`, shows in `resume` and
+`plan-edit-context --stage-id` labelled "no credit", and grants no
+ability or requirement credit. When a target is later authored for the
+stage — `unit-plan-revise UNIT --file REVISION.yaml --check` with a
+`runtime_target` stage patch, then the reviewed apply — those rows stay
+visible as context only; they are never retro-credited.
+
+**Conditions are claims, and an absent one is never a quiet yes.** A condition
+can be recorded three ways and they are three different facts:
+`--condition X` says X held, `--condition-not-met X` says X did not, and
+saying neither leaves it *unknown*. The two lists are disjoint, and intake
+refuses a record that claims both.
+
+The interpreter reads a negative result four ways, and keeping them apart is
+the point. Carrying every condition the target declares makes it a *failure of
+this target*, which resets the successes before it. Naming one of them as
+not met makes it *a different situation* — it bears on something else, so it
+resets nothing and leaves nothing open. A different `requirement_sha256` makes
+it *stale*, about a question that has since changed. Anything else is
+**unresolved**: a report of difficulty against this target that does not say
+whether the target's conditions held. An unresolved result withholds the
+satisfied verdict and asks; it does not infer "unfamiliar", "uncued" or
+"unassisted" from a missing flag, and it does not call the work fragile
+either, because that would assert a breakdown nobody recorded.
+
+**A difficulty resets the evidence basis; it never deletes the history.** The
+successes that produced the previous conclusion stop counting toward it, and
+the activities among them are *spent*: redoing one is consistent with the
+difficulty rather than an answer to it. Settle a difficulty by superseding the
+record with the conditions stated either way, or by recording **two distinct
+qualified activities afterwards that were not already credited** — which
+establishes a new basis without pretending the missing facts were ever known.
+Recovering once does not make earlier credited activities available to establish
+a new basis after a later difficulty.
+The original report stays on the record, and the `demonstrated` reason then
+names the exact later activities that justified moving on. Attempts that could
+not count are listed rather than silently dropped. This applies to a qualified
+failure as well as to an unresolved report: the defect is evidence that
+predates the difficulty answering it, and that is the same either way.
+
+`los observe` names the unstated conditions, both ways to state them, and the
+exact `--supersedes` line; the session output carries the same sentence.
+Until 2026-09-13 the unresolved case was discarded in silence — a partial
+result filed through this very command without `--condition` flags left the
+requirement reading `demonstrated`, `satisfied`, no next steps (audit
+`workbench/audits/synthetic-learner-2026-09-12`, F02) — and until the review
+that followed, repeating one already-credited activity cleared the report
+(review `workbench/audits/repair-review-2026-09-13`, R1/D4).
+
+Assessment proposals distinguish reviewed content from the learner's actual attempt.
+A stage resource's `independent_evidence` review must match the current
+`requirement_sha256` and `activity_sha256` returned by `runtime-session` in
+`session.resource_reviews`. The activity binding hashes the exact local file
+and its route identity, locator and authored prompt. A changed target, file or
+scope requires review again. Both current-template and legacy maps accept the
+same review shape. Unbound older records remain readable as practice.
+
+For example, a reviewed resource carries `reviewed_by: codex`,
+`reviewed_on: '2026-09-13'`, `verified_conditions: [unfamiliar-example,
+no-explicit-clt-cue]` and the two exact SHA-256 values from the current proposal.
+Those condition names mean the prompt *can support* such an attempt, not that
+this learner was unfamiliar or unassisted. Record actual conditions separately.
+A reviewed empty condition list is an explicit negative suitability verdict.
+
+Without a current suitable assessment, `plan_status` is `blocked`, but usable
+reading and practice remain in `steps`, labelled as practice. A required missing
+asset disqualifies the whole assigned activity as assessment; its precise part
+and source are named. It does not imply all paper work is impossible.
+
+Use exact route IDs as observation activities when working on mapped tasks.
+Recorded attempts establish familiarity; explicit prior exposure can also be
+supplied as `--context-json '{"exposed_resources":["route-example-solutions"]}'`.
+The runtime checks the material-owned `exposes_solutions_for` relationship
+across those reports and the proposed steps, including structural replacements
+in either direction. Merely opening a file records no reading or exposure.
+The operator must carry forward reported exposure or record the actual attempt;
+an unreported encounter remains unknown, never a verified lack of exposure.
+
+`direct-user-gesture` is admitted for a closed, named set, and the test is
+what the write *is*, not which process sent it: **the learner's own study
+activity, or his own choice among material someone already authored** —
+progress, his prose, his files, his experience of a resource, his questions,
+his selections — bounded to one unit, stage or workspace and guarded by exact
+artifact revisions.
+
+A second, narrower set carries the same approval kind **only over the `ui`
+channel**: the workflows where the application shows the exact change
+before a deliberate Save or Apply — `concept.relations.change` (ADR-017's
+hand-authored connections), `review.prepare`, `review.apply`,
+`unit.map.import` after its no-write `--check` preflight, and the two
+append-only ability records confirmed from Review:
+`learner.ability-observation.append`, whose confirmation pointer names the app
+request, and `ability.candidate.append`, which carries no evidence. That Save is the
+explicit approval those contracts already required. It is not a second
+approval protocol and not an extra confirmation dialog, and the `ui` label is
+provenance inside this trusted local application rather than proof a human was
+present; the guards that actually protect canonical state — exact previous
+rows, registry and artifact revisions, the snapshot, duplicate/endpoint/cycle
+checks, exact-byte binding, the preflight — are unchanged. Choosing a file is
+not approval to import it; running the preflight and then applying those exact
+bytes is.
+
+Everything else is admitted from no channel at all: module plans, route
+patches, note revision and evidence, material synthesis, AI-action delivery,
+identity migrations. Those keep the full GatewayEnvelopeV2 ceremony through an
+approved operator request, and an agent-origin envelope claiming a gesture for
+*any* capability — including the reviewed-UI ones — fails closed.
+
+Ability IDs are stable. Rename the title without changing the ID. To retire an
+identity, retain its registry row with `lifecycle: retired`; its observations
+stay readable, but it cannot receive new observations or candidates and cannot
+support a current ability through a bridge. Do not delete or reuse the ID.
+
+Both sets live in `system/contracts/capabilities.yaml` (`admission:` and
+`admission_channels:`) and `tools/learning_os/commands/capability.py`
+(`GESTURE_ALLOWLIST`, `UI_REVIEWED_ALLOWLIST`); the contract describes the
+policy, the Python sets enforce it, and `tests/test_observation_gesture.py`
+fails when they disagree. An interface keeps its own copy — the Obsidian UI's
+is `UI_GESTURE_CAPABILITIES`, checked against this one by its
+`scripts/check-contract.mjs`. Refusals name the route back to a permitted
+write rather than the approval kind: until 2026-09-13 the list held only the
+three writers that existed when it was introduced, while the installed UI
+drove eleven more through the same gesture, and four ordinary study actions
+died in front of the learner with
+`direct-user-gesture is not admitted for detour.create` (audit
+`workbench/audits/synthetic-learner-2026-09-12`, F01); the reviewed-UI set was
+added after that repair refused the Atlas connection editor a current ADR
+requires (review `workbench/audits/repair-review-2026-09-13`, D1).
+
 Use note metadata or prose references:
 
 ```yaml
@@ -177,9 +377,15 @@ No evidence registry.
 
 When a commitment, explicit priority decision, cross-workspace dependency, or deferral changes:
 
-1. edit `work/COORDINATION.md` — facts only, stated plainly;
+1. prepare the replacement text for one existing section of
+   `work/COORDINATION.md` — facts only, stated plainly — and review the
+   `coordination-section-revise --check` before/after diff (`--check`
+   needs no digest; it prints the diff with the current one);
 2. never copy exam dates, workspace statuses, or workspace lists into it;
-3. rebuild `generated/coordination-view.md`.
+3. apply through `coordination.section.revise` with the reviewed text inline,
+   the previous file SHA-256 from `inspect coordination`
+   (`content_sha256`), snapshot and coordination revision. The
+   transaction records a receipt and reconciles the coordination projection.
 
 If the user states an operational fact in conversation ("I'm skipping M2,
 writing the 2. Termin"), route it: the deferral to `COORDINATION.md`, the
@@ -189,9 +395,12 @@ attempt change to that academic module's partitioned `module.yaml`.
 
 On registration, withdrawal (Rücktritt), sitting, or grade:
 
-1. append or update the attempt in the owning academic module's `module.yaml` (`termin`, `date`, `result`, optional `grade`);
-2. record known available sitting dates/ranges and Anmeldung windows as
-   structured `examination.sittings` / `examination.registration_windows`
+1. append or update the attempt in the owning academic module's `module.yaml`
+   through `module.attempt.record` (CLI `module-attempt`: `termin`, `date`,
+   `result`, optional `grade` and `notes`) — never by hand edit;
+2. record known available sitting dates/ranges, Rücktritt deadlines and
+   Anmeldung windows as structured `examination.sittings`
+   (with `withdrawal_deadline`) / `examination.registration_windows`
    facts in that same module; attempts still record what Aram actually chose;
 3. update module `status` when warranted;
 4. rebuild module and coordination views.
@@ -241,13 +450,10 @@ Preserve the ID; repair explicit path links; keep ID-based references unchanged;
 
 ## 15. Deprecate or supersede
 
-Prefer preservation over deletion:
-
-```yaml
-state: deprecated
-supersedes:
-  - note-old-id
-```
+Prefer preservation over deletion. A successor is an ordinary `note.create`
+call whose record declares `supersedes: [note-old-id, …]`; every listed
+predecessor must exist and is marked `state: deprecated` in the same
+transaction. The reverse link is generated, never stored (ARCHITECTURE §5.5).
 
 Concepts: `deprecated: true` + `replaced_by`. Generated indexes mark deprecated records but do not erase them.
 
@@ -263,7 +469,7 @@ Concepts: `deprecated: true` + `replaced_by`. Generated indexes mark deprecated 
 The user drops photos/scans into `work/inbox/` (or a workspace `inputs/`) and says what they are. The operator does everything else:
 
 1. determine the owning note: extend an existing note or mint a new ID;
-2. move the originals to `knowledge/attachments/<note-id>/page-01.jpg`, `page-02.jpg`, … — originals are canonical and Git-tracked, never deleted without explicit approval;
+2. move the originals to `knowledge/attachments/<note-id>/page-01.jpg`, `page-02.jpg`, … — originals are canonical and Git-tracked, never deleted without explicit approval; a scan too large or private to publish is instead pinned in `system/contracts/local-attachments.yaml` and gitignored at the same path (local-only, still backed up);
 3. transcribe faithfully into the note body — preserve the user's reasoning, uncertainty, wrong turns, and notation; never substitute a generic textbook explanation;
 4. set `transcription: ai-assisted`, `authorship: user`, `semantic_review: unreviewed`;
 5. list the attachment paths in the note's `attachments` frontmatter;
@@ -323,7 +529,7 @@ Modules and workspaces are deliberately decoupled: one module may spawn several 
    prospective sea.
 3. **Open the first workspace(s).** Create one workspace per distinct effort (workflow 1) — not one per module. A combined module examined under a single grade may still be one exam-prep workspace; an independent project gets its own. A course is not a continuous effort, so `standing: false`.
 4. **Wire dependencies, if any.** If the new effort waits on or feeds another, record that in `COORDINATION.md` Dependencies (workflow 9). No exam dates here — they live in the owning academic module.
-5. **Rebuild and validate** (`python tools/generate.py`, then `python tools/validate.py`).
+5. **Rebuild and validate** (`.venv/bin/python tools/generate.py`, then `.venv/bin/python tools/validate.py --compact`).
 
 Check before creating: never open a workspace before its module record exists, and never mint a second record for a module already present.
 
@@ -362,7 +568,7 @@ Worked case: AML's 1. Termin was withdrawn and the 2. Termin (2026-09-30) is sti
 
 Routing destinations are already deterministic (ARCHITECTURE §3.3); this is the loop that applies them, not a new routing policy. It invents no destinations — each item is pointed at the workflow that already owns it. `work/inbox/` is the zero-friction capture point and should trend toward empty. Process it by taking each item in turn and routing it to its single deterministic destination:
 
-1. **Durable understanding** (a worked derivation, a synthesis worth finding again) → a note under `knowledge/` (workflow 3); handwritten photos or scans → workflow 17.
+1. **Durable understanding** (a worked derivation, a synthesis worth finding again) → a note under `knowledge/` through the workflow-3 capability (`note.create` envelope — never a direct save); handwritten photos or scans → workflow 17.
 2. **Temporary material** tied to an active effort (fragments, a rough source list, lecture-specific checklists) → that workspace's `scratch/` or `inputs/` (workflow 2).
 3. **A new learning resource** (course, video, book, blog, paper, tool) → register it (workflow 6a); add to a curated list if it belongs on one (workflow 6b).
 4. **An operational fact** (commitment, priority, dependency, deferral) → `COORDINATION.md` (workflow 9).
@@ -371,6 +577,26 @@ Routing destinations are already deterministic (ARCHITECTURE §3.3); this is the
 6. **A concept or relation worth registering** → workflow 4 or workflow 5.
 
 When an item is genuinely ambiguous, prefer capturing it into the most likely workspace's `scratch/` over guessing a canonical home (least destructive, then ask); Aram never makes the filing decision — the operator does. Rebuild generated outputs once any registry changed.
+
+Read the inbox through the product, never by catting files: `inbox-list`
+names every drop, `search` matches inbox filenames, and `inbox-read NAME`
+returns bounded segments of one drop (binary drops refuse — they have no
+text read).
+
+Routing is only half the loop: once a drop has reached its destination,
+resolve it through `inbox.resolve`, naming where it went. Seal the
+envelope (§25c) with the drop's SHA-256 — `inbox-read` reports it as
+`content_sha256` — and a non-empty `routed_to` list (note id, workspace
+path, source id, receipt id, …). The drop moves byte-identical to
+`archive/inbox/YYYY/`; a changed drop refuses, and the receipt names both
+endpoints plus `routed_to`. A drop folder resolves whole, or file by
+file: `inbox-read FOLDER` lists its files and reports the whole-folder
+digest as `drop_sha256`. `inbox-list` reports each file's age, and
+`INBOX-STALE` flags each file recursively by its own age.
+
+Agent friction notes are not inbox drops: they live directly in
+`work/complaints/` (see its README), so the inbox stays for learner
+captures.
 
 ## 22. End a session
 
@@ -388,6 +614,17 @@ Do not commit on every keystroke. A session is not a canonical entity; its
 ledger lives in temporary storage only long enough to guarantee exact staging.
 If a commit or push fails, report it immediately and keep unrelated changes
 isolated.
+
+Every gateway transaction records its session: the ledger is keyed per
+session, and `session-end` lists and commits only its own rows. Name the
+session by exporting `LOS_SESSION_ID` once per agent session before any
+write — every `los` call in that session then shares one ledger, and the
+closing `session-end` (same variable) claims exactly it. Sessions that name
+nothing still separate by channel: UI writes (`channel: ui`) never enter an
+agent session's ledger, and vice versa. Rows from other sessions are
+reported under `other_sessions` with their age and are never staged; rows
+older than 24 hours are reported as stale and need `--include-stale` to
+stage. A review-only close deletes only its own session's ledger.
 
 ## 23. Process a lecture
 
@@ -493,15 +730,19 @@ single versioned lock; do not put the current version in import paths.
 
 ## 25a. Revise an existing plan
 
-§23 covers a lecture arriving. This covers the far more common case: a plan
-that already exists and needs changing — a locator sharpened, an angle written,
-a source routed to a stage it was missing from, a stage's material menu
-extended.
+This section owns the revision procedure; [PLAN-CREATION-SOP.md](PLAN-CREATION-SOP.md)
+Gates 0–6 own the acceptance gates. §23 covers a lecture arriving. This covers
+the far more common case: a plan that already exists and needs changing — a
+locator sharpened, an angle written, a source routed to a stage it was missing
+from, a stage's material menu extended.
 
 For one existing material's title, locator, angle, angle detail, URL or vault
-path, use the bounded `route.patch` capability. Read `plan-edit-context UNIT_ID
---route-id ROUTE_ID`, then run `route-patch UNIT_ID ROUTE_ID --changes JSON
---check`. To read several routes at once, pass `--route-ids` with 1 to 20
+path, use the bounded `route.patch` capability. Start from
+`plan-edit-context UNIT_ID --route-id ROUTE_ID` for the named route — the
+route response already carries the snapshot and revision guards — then run
+`route-patch UNIT_ID ROUTE_ID --changes JSON --check`. Reach for the unit
+`--brief` only when the route id is unknown or the task needs unit
+coverage. To read several routes at once, pass `--route-ids` with 1 to 20
 exact route ids: the batch shares the unit snapshot and revision guards,
 preserves request order, and refuses atomically. The preflight returns the concrete field diff, affected files,
 snapshot, and exact expected revisions. Apply those same changes through a
@@ -513,7 +754,7 @@ or membership still requires the full plan path below.
 
 Stored resources may carry `material_ref` with a route ID and an explicit
 `inherit` field list. Core expands these for all learning views and preserves
-them during progress, note, feedback and shelving saves. Work from compact
+them during progress, note, feedback and shelving saves. Work from focused
 `plan-edit-context` output when revising a map; do not copy a full `inspect`
 result into the authored plan. An intentionally different stage explanation
 belongs in a local field, removed from the inheritance list.
@@ -526,6 +767,18 @@ reconstruct every effective map exactly; ambiguous or independent materials
 remain inline. It does not replace the material-coverage audit for new plans.
 
 For structural plan revisions, use the creation/import path:
+
+For one existing lecture, `unit-plan-revise` accepts compact route operations
+and the final study map; it uses this same governed import path internally.
+The saved-preflight shortcut for both commands is specified in
+`PLAN-CREATION-SOP.md` Gates 4–6: `--apply-reviewed-sha256` plus
+`--review-report` dispatches the exact envelope prepared at review time,
+without refreshing its snapshot, revisions or retry identity. When the
+reviewed draft is large, `unit-plan-revise … --check --report-out
+/scratch/check.json` saves the complete report — the object of review,
+apply, and recovery — and prints a compact summary without the sealed
+envelope. Bare `--check` output is unchanged; `--report-out` is refused
+with apply, `--staged-basis`, in-repository targets, and existing files.
 
 1. **Draft.** Regenerate the affected maps with
    `tools/assemble_lecture_study_maps.py --out <dir>` when the change is in the
@@ -541,11 +794,23 @@ For structural plan revisions, use the creation/import path:
    `study-map.yaml`. Both take the id as a **positional**, not `--module-id`.
    `--check` runs the contract, ordering, routing and shadow-repository
    validation and reports `"canonical_files_written": 0`.
+   When a replacement material dossier needs the post-change basis, run the
+   same package with `--check --staged-basis UNIT_ID` (also available on
+   `unit-plan-revise`). This prints the staged basis and package SHA without
+   writing canonical files. Its `validated: false` means it is preparation,
+   not an approval: insert the basis into the reviewed dossier, then run an
+   ordinary `--check` on the final package. For several existing units, the
+   compact `unit_revisions[]` shape (SOP Gate 4) also accepts an append-only
+   `resources_append` list on a stage patch: reviewed new placements with
+   fresh resource ids go after the existing authored rows without copying
+   them. Full-array `fields.resources` stays for intentional replacement.
+   Applying a changed replacement dossier records its prospective freshness
+   lineage alongside any route-covers lineage in the same transaction.
 4. **Apply through the gateway**, never by writing the canonical file directly
-   — and note that "through the gateway" means an envelope, not a flag:
+   — either through the saved-preflight shortcut above or an explicit envelope:
 
    ```bash
-   python tools/los.py capability module.plan.import --payload-file envelope.json
+   .venv/bin/python tools/los.py capability module.plan.import --payload-file envelope.json
    ```
 
    `module-plan-import … --expected-snapshot` does **not** write. Every
@@ -554,16 +819,22 @@ For structural plan revisions, use the creation/import path:
    direct CLI application is disabled"*), so the bare CLI can preflight and
    nothing more. The envelope carries `schema_version: 2`, `request_id`,
    `idempotency_key`, `capability`, `channel`, `expected_snapshot` (from
-   `los.py bootstrap`), `expected_revisions` covering **exactly** every
+   the entry read: the focused `plan-edit-context` response or `bootstrap`),
+   `expected_revisions` covering **exactly** every
    artifact the transaction touches — the module plus each unit in the
    package, no more and no fewer — an `approval` whose `subject_sha256` is
    `intent_sha256(envelope)`, and the payload. `approve` never appears in the
-   payload; a `file` payload always carries its `file_sha256`.
+   payload; a `file` payload always carries its `file_sha256`. The complete
+   envelope construction (intent hash, revision guards, approval kinds,
+   refusal shape) is §25c; this step states only what plan revision adds.
 
    `module.plan.import` additionally requires a coverage audit under
    `work/active/` carrying the literal headings `## Local`, `## Linked` and
    `## Completeness`, with all six `plan_contract.checks` true. Start from
-   `system/templates/plan-coverage-audit.template.md`.
+   `system/templates/plan-coverage-audit.template.md`. The audit may carry a
+   fenced `inventory-v1` block of scoped roots and disposition rows; the
+   preflight then reconciles rows against observed bytes and binds the set
+   to the saved report (PLAN-CREATION-SOP.md Gate 1).
 
    For work *inside* a stage — `stage-progress`, `stage-note`,
    `source-feedback`, `detour-create` — this section does not apply; that is
@@ -576,6 +847,182 @@ receipt, and afterwards nothing distinguishes it from a mediated write.
 `tools/plan_write_audit.py` measures how much of the plan surface has changed
 that way. A migration under `tools/migrations/` is the one legitimate exception,
 and it is legitimate because it is recorded.
+
+## 25b. Save a batch of source analyses
+
+One drafts file produces one reviewable staging dir plus the exact
+gateway envelope; review both, then submit the envelope unchanged.
+
+1. **Draft.** Write UTF-8 JSON:
+   `{"notes": [{"id", "title", "path", "binding", "body"}]}` with bodies
+   inline — 1 to 20 notes, no `frozen_input_*` fields (prep derives every
+   hash from the body bytes). Body bytes are exactly the UTF-8 encoding of
+   each body string: leading whitespace and CRLF survive verbatim.
+   For a resolved local source, `binding.material` is a path relative to the
+   `materials/` tree, without a `material://` scheme or a leading `materials/`.
+   The drafter supplies `live_source_digest` equal to
+   `recorded_source_digest` as bare 64-character hex for the observed bytes;
+   prep derives only `frozen_input_*`. One note uses the same batch format:
+
+   ```json
+   {"notes": [{"id": "note-example-analysis", "title": "Example analysis",
+     "path": "knowledge/notes/data-systems/note-example-analysis.md",
+     "binding": {"resolution": "resolved", "source_id": "source-example-course",
+       "material": "course/deck.pdf",
+       "recorded_source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "live_source_digest": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+       "inspected_range": {"start": 1, "end": 3}},
+     "body": "Analysis of the inspected pages.\n"}]}
+   ```
+
+   Replace the example source, path, range and digest with the source's
+   registered material and the bytes actually observed before preparing.
+   `inspected_range` is inclusive physical PDF pages (cover = page 1) for
+   PDFs, or inclusive one-based physical file lines for Markdown and plain
+   text. A heading such as "Section 1" is a locator, not line 1. For local
+   text, `material-span UNIT_ID ROUTE_ID --extract` reports the line range
+   actually displayed in its bounded excerpt. Cite only the lines inspected;
+   a truncated excerpt does not attest to later lines.
+   For a stage placement that narrows its parent route, add
+   `--stage STAGE_ID --resource-index N` using the zero-based resource position
+   from that stage's plan context. Core resolves the canonical placement under
+   the same snapshot guard; callers never submit an arbitrary path or locator.
+2. **Prepare.**
+   `note-analysis-prepare --drafts drafts.json --out <dir>` with the
+   staging dir outside the repository. Prep validates every draft,
+   derives the hashes, dry-checks each note against current state (new
+   vs replay, collisions, resolved-source observability), then stages
+   `bodies/<note-id>.bin` plus `envelope.json` and prints the per-note
+   report. It writes nothing canonical; `bodies/` is rebuilt every run.
+3. **Review** the staged bodies and the envelope. This is the step the
+   gateway cannot do for you.
+4. **Submit** the exact envelope:
+
+   ```bash
+   .venv/bin/python tools/los.py capability note.analysis.save_batch --payload-file <out>/envelope.json
+   ```
+
+   Any canonical change between prep and submit surfaces as
+   `STALE_SNAPSHOT` — re-run prep. Tampered or moved staging files are
+   refused by the content hashes and intent binding, never silently
+   accepted.
+
+## 25c. Build a write envelope (GatewayEnvelopeV2)
+
+Every canonical write is submitted as an explicit envelope; the bare
+mutating commands (`capture --text`, `note-revise`, …) refuse with exit 2
+(*"canonical writes must use GatewayEnvelopeV2; direct CLI application is
+disabled"*) by design, never by accident. This section is the complete
+construction recipe — nothing else is needed.
+
+1. **Payload schema.** `.venv/bin/python tools/los.py capabilities <name> --json`
+   is the payload contract for capability `<name>`.
+2. **Snapshot.** `.venv/bin/python tools/los.py bootstrap --compact` prints
+   `snapshot_id` (`sha256:…`); that exact string is `expected_snapshot`.
+   Any canonical change between reading it and submitting refuses the
+   write as `STALE_SNAPSHOT` (exit 3) — re-read and re-seal.
+3. **Revision guards.** `expected_revisions` maps every artifact the
+   transaction touches to its current revision. The default path is the
+   sealing helper's `--guards auto` (below): it derives the exact set
+   with a gateway dry run that stops before any write, and reads the
+   revisions under the same lock as the snapshot, so the sealed envelope
+   commits on the first submission. The manual path — read
+   `operations/transactions/revisions.yaml` (an artifact absent from the
+   ledger has revision 0 — the legitimate no-recorded-revision baseline,
+   backstopped by the snapshot guard; the ledger file itself does not
+   exist until the first write commits, before that guard every touched
+   artifact at 0), guess the set from the common shapes, and fix it from
+   the refusal's `artifacts=[...]` — stays for envelopes built by hand.
+   Two capabilities name their write
+   target only inside the handler, so the caller cannot guard a path and
+   guards the request instead: `capture.create` takes
+   `capture-request:<idempotency-key>`, `garden.seed.create` takes
+   `garden-request:<idempotency-key>`, both at revision 0 for a fresh
+   key (`--guards auto` derives these from the sealing key). Common
+   shapes: `stage.note.write` guards its unit;
+   `stage.progress.update` and `stage.attachment.add` guard the unit and
+   that unit's study map. A refusal names the exact expected set
+   (`artifacts=[...]`) — copy it, re-read revisions, and re-seal. That
+   refusal committed nothing and the corrected envelope is a new intent,
+   so seal it under a fresh idempotency key (a request-scoped guard
+   follows its key); reusing the refused key leaves the refusal flagged
+   for reconciliation in `los operations`.
+4. **Identities.** `request_id` and `idempotency_key` are caller-chosen
+   (1–128 chars, `^[A-Za-z0-9][A-Za-z0-9._:-]*$`). An exact retry of the
+   *same* approved intent resubmits the saved sealed envelope unchanged —
+   same key **and** same `request_id` — and replays the receipt instead of
+   writing twice. Never re-seal a retry: the ledger binds each key to the
+   request that committed it, so a re-sealed envelope under a used key is
+   refused, as `IDEMPOTENCY_CONFLICT` when its intent differs (a live
+   snapshot read after the commit already differs) or fail-closed naming
+   the recorded request id when only the id differs. Mint a fresh
+   `request_id` together with a fresh key for every new attempt (step 3's
+   corrected envelope is one): reused ids merge their explanations in
+   `los operations`.
+5. **Approval.** `channel` is `operator` and `approval.kind` is
+   `operator-approval` on the operator path; the review preparers
+   (`module-plan-import --check`, `unit-plan-revise --check`,
+   `note-analysis-prepare`) seal `channel: codex` with the same approval
+   kind, which is admitted too (`direct-user-gesture` is
+   admitted only for a closed UI-originated allowlist).
+   `approval.subject_sha256` must equal `intent_sha256(envelope)`,
+   computed as below **after** every other field is final — any later
+   edit invalidates it and the write is refused as `UNCONFIRMED`.
+   The approval subject is the operator's assertion that the learner
+   approved this exact intent, guarded by the snapshot/revision checks —
+   not cryptographic proof that a human was present.
+6. **Submit.** `.venv/bin/python tools/los.py capability <name> --payload-file
+   envelope.json`. Exit 0 commits (or replays); exit 2 refuses; exit 3
+   is `STALE_SNAPSHOT`.
+
+**Intent hash.** The approval subject covers exactly six fields —
+`schema_version`, `capability`, `channel`, `expected_snapshot`,
+`expected_revisions`, `payload` — and deliberately excludes
+`request_id`, `idempotency_key`, and `approval` (request identities are
+not intent). Canonical form: `json.dumps(subject, sort_keys=True,
+separators=(",", ":"), ensure_ascii=False)` encoded UTF-8, SHA-256 hex,
+prefixed `sha256:`. In Python:
+
+```python
+import hashlib, json
+subject = {k: envelope[k] for k in (
+    "schema_version", "capability", "channel",
+    "expected_snapshot", "expected_revisions", "payload")}
+approval = "sha256:" + hashlib.sha256(json.dumps(
+    subject, sort_keys=True, separators=(",", ":"),
+    ensure_ascii=False).encode("utf-8")).hexdigest()
+```
+
+**Refusal shape.** A refusal answers `ok: false` with
+`error: {code, message, retryable, details}`. `details` is `{}` on
+`UNCONFIRMED` and on every prose-classified refusal — only the typed
+projection/commit outcomes (`PROJECTION_FAILED`, post-commit
+`INTERNAL_FAILURE`) carry stage details. An empty `details` is normal,
+not a missing diagnosis: the `message` names the defect.
+
+**Worked capture.** Inbox capture (`§2`) via the envelope route:
+
+```bash
+SNAP=$(.venv/bin/python tools/los.py bootstrap --compact \
+  | .venv/bin/python -c 'import json,sys; print(json.load(sys.stdin)["snapshot_id"])')
+# envelope.json: schema_version 2, request_id "request-<key>",
+# idempotency_key "<key>", capability "capture.create", channel "operator",
+# expected_snapshot "$SNAP",
+# expected_revisions {"capture-request:<key>": 0},
+# approval {"kind": "operator-approval", "subject_sha256": <intent hash>},
+# payload {"text": "…"}
+.venv/bin/python tools/los.py capability capture.create --payload-file envelope.json
+```
+
+**Sealing helper.** `.venv/bin/python tools/seal_envelope.py --capability NAME
+--payload JSON-or-@FILE --key KEY --guards auto` reads the snapshot live,
+derives the exact guard set, and emits the sealed envelope above (to
+stdout, or `--out` a scratch path — never inside the repo). It performs
+steps 2, 3, 4 and 5, minting a fresh `request_id` per run — so seal once
+per attempt and keep the output: a retry resubmits that saved envelope,
+never a re-sealed one (step 4). The derived guard set is printed on
+stderr for the approval record. An explicit `--revision ART=REV` stays
+and wins over the derived entry when given. Submit the output via step 6.
 
 ## 26. Source routing and feedback
 
@@ -591,6 +1038,30 @@ Use `source-feedback` for lightweight personal evidence (`helpful`,
 `useful-for-review`, or `skipped`). Feedback remains on that stage. If it
 suggests a global evaluation change, prepare a separate reviewable proposal.
 
+**Locator page grammar.** A locator that names pages says which numbering it
+means, because a deck's printed slide number routinely differs from its
+position in the file. Write `PDF pp. 20-22` or `physical PDF pp. 214–220` or
+`physical pp. 14–19` when you mean positions in the file; interfaces open at
+that page, or carry it as an instruction when the viewer cannot be positioned.
+A bare `pp. 20-22`, a `§4.3` and `slides 5-20` are printed labels or section
+numbers, and are deliberately *not* read as file positions: an interface that
+guesses lands the learner confidently on the wrong page, which is worse than
+landing on page 1. The consumer is `pageDestination` in the Obsidian UI's
+`src/infrastructure/resource-target.ts`; until 2026-09-13 nothing carried the
+page at all, and opening a stage's lecture showed page 1 of 38 (audit
+`workbench/audits/synthetic-learner-2026-09-12`, F07).
+
+**Two kinds of readiness.** That a material opens is not that its activity can
+be done. A route whose task needs supplied files — a dataset to analyse, a code
+template to fill in — declares them in `requires_assets`, each with the part it
+belongs to and where the exact file comes from. The session then keeps the
+route and names the parts that cannot be attempted, instead of reporting the
+whole assignment ready: Blatt 4 Aufgabe 3(b) needs
+`International_Education_Costs.csv` and an `aufgabe3.py` template from Moodle,
+the source map had already recorded their absence in prose, and the proposal
+still said ready (F06). Register the exact files through this workflow when you
+have them; never substitute a different dataset or template for a named one.
+
 ## 27. Promote a future Master's module
 
 Use only after the future program actually begins. Enter the boundary
@@ -600,3 +1071,122 @@ register only adopted resources, create units from confirmed scope, add
 explicit workspace joins, validate, regenerate, and review. The quarantined
 originals and migration mapping remain Git-tracked. No bulk promotion is
 allowed.
+
+## 28. Read an operation (`los operations`)
+
+This is the only surface that explains a write request after the fact.
+`los operations` lists recent causal operations (newest first, `--limit`
+up to 50); `los operations --request-id ID` explains one request with a
+full diagnosis, timeline, and receipt facts. An unknown id answers
+`{"error": "unknown request_id"}` (exit 2).
+
+The diagnosis carries three outcomes plus what must still happen:
+
+- `execution_outcome` — what the instrumentation observed
+  (`committed`, `rolled-back`, `refused`, `transport-lost`, `unknown`).
+  Deliberately the weakest: `rolled-back` means rollback *appeared* to
+  complete, which never proves the write is absent.
+- `canonical_outcome` — what the canonical store definitely did:
+  `COMMITTED` (a receipt verified through the strict resolver),
+  `NOT_COMMITTED` (a definitive no-commit refusal:
+  `INVALID_REQUEST`, `UNKNOWN_CAPABILITY`, `STALE_SNAPSHOT`,
+  `REVISION_CONFLICT`, `OUT_OF_SCOPE`, `AMBIGUOUS_MIGRATION`,
+  `VALIDATION_FAILED`, `PROJECTION_FAILED`, `UNCONFIRMED`,
+  `IDEMPOTENCY_CONFLICT` — the full list is
+  `DEFINITIVE_NO_COMMIT_CODES` in
+  `tools/learning_os/diagnostics/conventions.py`), or `AMBIGUOUS`
+  (the evidence cannot decide — an honest answer that keeps the
+  recovery record open).
+- `projection_outcome` — what re-publication did (`published`,
+  `failed`, `skipped`, `unknown`).
+- `recovery_requirement` — what must still happen: `none` (settled or
+  definitively absent), `verify-observation` (receipt exists, no
+  projection observation yet — run `make views` to settle it), or
+  `reconcile-exact-request` (ambiguous outcome — reconcile that exact
+  request). `needs_attention` is true exactly when this is not `none`.
+
+Settlement rule: a commit settles while the live manifest is at or past
+it — the manifest's receipt is at or after the write's — with reason
+"live manifest is past this commit". A behind or unknown manifest keeps
+`verify-observation`; regenerating views (`make views`) is the
+documented settling step. The learner-facing `ui_outcome` is `SETTLED`
+(committed, nothing owed), `REFUSED` (definitively absent, nothing
+owed), or `BLOCKED` (anything else).
+
+Request ids are caller-chosen and not unique: when one id was reused
+across distinct idempotency keys, the explanation names every distinct
+request instead of silently covering only the first. `failure_stage`
+names the first stage known to have failed (`core.admission`,
+`core.snapshot_guard`, `core.revision_guard`, `core.approval`,
+`core.replay`, `core.validation`, `core.commit`, `core.receipt`,
+`core.projection`, `ui.*`), or null when the operation settled.
+
+## 29. Review a stage's material angle
+
+A route describes a material's general contribution; a placement may narrow
+that purpose for one stage. Preserve that distinction after reviewing both
+texts. The optional resource `angle_review` records `kind: refinement`, the
+actual reviewer, date, rationale, and `angle_review_fingerprint` from
+`learning_os.rules.plan_rigor`. It is canonical operator evidence; the manifest
+continues to publish the descriptions under its existing interface contract.
+A refinement attests only to the relationship between those descriptions.
+
+Use `kind: correction` for an actual source-content correction. Cite exact
+inspected `material_uri`, `file_sha256`, and physical-page locator in `evidence`.
+An exact-file route accepts evidence only from its targets; a broad route
+requires an exact file within its source's declared material authority. Remote
+unobserved sources cannot supply local byte evidence. Changing the descriptions,
+route, stage purpose, placement, or cited source bytes makes the review stale.
+Never refresh only its fingerprint to silence the warning.
+
+Draft outside the repository, run `unit-map-import UNIT --file MAP --replace
+--check`, review its concrete diff, and submit the content-bound
+`unit.map.import` envelope described in §25c. This carries forward learner
+state; it grants no ability, evidence credit, or mastery.
+
+## 30. Review exact goal decisions together
+
+`los goal ID --reject|--defer|--close` remains the single-decision sidecar path.
+For several explicit IDs, pass each ID as its own argument and add `--check`.
+The preview lists every before/after decision and its `reviewed_sha256`.
+Apply those same arguments with `--reviewed-sha256` after Aram approves them.
+The hash covers the exact IDs, decision, note, revisit date, and existing ledger;
+a changed proposal or ledger refuses without a write. Patterns and duplicate
+IDs are refused. Detector names, urgency tiers, and group proximity never grant
+authority to decide other goals. `--revisit-on` remains a future date used only
+with `--defer`; no batch runs automatically.
+
+## 31. Back up and restore
+
+The materials tree lives outside git, so for it the backup is the only
+protection. A backup carries three roots in full, exactly as
+`system/contracts/backup-roots.yaml` allowlists them:
+
+- Core's canonical data (knowledge, sources, records, projects, work,
+  curriculum data, transaction ledgers, contracts and schemas) — never
+  Core's code, which git already versions; the manifest records the commit
+  the data belongs with instead;
+- the Obsidian UI checkout in full (sources, tests, contracts, scripts,
+  vault config, and the shipped plugin assets `plugin-assets.json`
+  declares);
+- the materials tree in full.
+
+Take the backup:
+
+1. run `los backup-manifest --out /path/outside/every/root/manifest.json`
+   (`--ui-root` / `--materials-root` override the sibling defaults). The
+   command refuses a path inside any backed-up root, writes atomically,
+   and prints a short summary (roots, entry count, aggregate digest,
+   path) instead of the megabyte of JSON — the full manifest stays
+   available behind the explicit `--stdout` flag;
+2. copy the three roots beside the manifest (`cp -a` each authority);
+   recovery pairs the restored data with a Core checkout at the commit
+   the manifest's `provenance` records;
+3. after any restore — and as a drill before relying on one — run
+   `los backup-verify --manifest manifest.json --restored-core … --restored-ui …
+   --restored-materials …`. `--checksums-only` checks integrity without
+   executing restored code; the full form additionally runs the restored
+   installer in dry-run mode with projection, validation, and restored UI
+   bundle smoke checks.
+
+Cadence: back up before each exam period and after each materials import.

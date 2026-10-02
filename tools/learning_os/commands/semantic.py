@@ -1,0 +1,72 @@
+"""`los semantic`: the query surface over the 26 semantic predicates.
+
+A semantic layer exists to be queried — applications stop re-deriving
+meaning from scattered YAML because they can ask. Each predicate already
+carries its input names, authority, and prose; this command is the thin
+dispatcher over ``evaluate()``. Read-only, JSON out.
+"""
+
+from __future__ import annotations
+
+import json
+import sys
+
+from learning_os.semantics.predicates import PREDICATES, evaluate
+from learning_os.semantics.recipes import RecipeError, recipes_for
+
+from .support import _json_layout
+
+
+def _coerce(raw: str) -> object:
+    """One ``--input k=v`` value. JSON first (numbers, booleans, arrays,
+    objects, quoted strings), falling back to the bare string — so
+    ``--input scope=current`` and ``--input
+    entries='[{"type":"derivation","ref":"note://x"}]'`` both work."""
+    try:
+        return json.loads(raw)
+    except (json.JSONDecodeError, ValueError):
+        return raw
+
+
+def cmd_semantic(args) -> int:
+    """Evaluate one predicate, list the registry, or serve a recipe."""
+    if getattr(args, "recipe", None):
+        try:
+            rows = recipes_for(args.recipe)
+        except RecipeError as exc:
+            print(f"los: {exc}", file=sys.stderr)
+            return 2
+        print(json.dumps({"class": args.recipe, "recipes": rows},
+                         **_json_layout(), sort_keys=True, ensure_ascii=False))
+        return 0
+    if args.list:
+        print(json.dumps(
+            [{"name": name,
+              "inputs": list(PREDICATES[name].authoritative_inputs),
+              "authority": PREDICATES[name].authority,
+              "description": PREDICATES[name].description}
+             for name in sorted(PREDICATES)],
+            **_json_layout(), sort_keys=True, ensure_ascii=False))
+        return 0
+    name = args.predicate
+    if name not in PREDICATES:
+        print(f"los: unknown semantic predicate: {name}", file=sys.stderr)
+        print(f"los: see `los semantic --list` for the {len(PREDICATES)} "
+              "registered names", file=sys.stderr)
+        return 2
+    inputs: dict[str, object] = {}
+    for item in args.input or []:
+        key, separator, value = item.partition("=")
+        if not separator or not key.strip():
+            print(f"los: --input takes k=v, got {item!r}", file=sys.stderr)
+            return 2
+        inputs[key.strip()] = _coerce(value)
+    try:
+        verdict = evaluate(name, **inputs)
+    except TypeError as exc:
+        print(f"los: malformed inputs for {name}: {exc}", file=sys.stderr)
+        return 2
+    print(json.dumps({"predicate": name, "verdict": verdict,
+                      "inputs": inputs},
+                     **_json_layout(), sort_keys=True, ensure_ascii=False))
+    return 0

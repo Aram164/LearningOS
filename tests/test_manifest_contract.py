@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import shutil
 
 import pytest
 import yaml
@@ -45,6 +46,20 @@ def test_built_manifest_matches_the_declared_contract(mini_repo):
 def test_generated_manifest_announces_the_declared_version(mini_repo):
     manifest = json.loads(generate_all(load_repo(mini_repo), "T1")["manifest.json"])
     assert manifest["_generated"]["contract_version"] == declared_version(mini_repo)
+
+
+def test_schema_title_names_the_declared_version(mini_repo):
+    """The versioned schema file must say which version it is.
+
+    The title read "manifest v9" from v9 through v13 because nothing checked
+    it — every bump copied the file and updated $id and const, never the
+    title. Read from the declaration, so this cannot pin a stale literal.
+    """
+    contract = yaml.safe_load(contract_path(mini_repo).read_text(encoding="utf-8"))
+    schema = json.loads((mini_repo / contract["schema_path"]).read_text(encoding="utf-8"))
+    version = contract["contract_version"]
+    assert schema["title"] == f"LearningOS atomic manifest v{version}"
+    assert schema["$id"].endswith(f"/manifest-v{version}.schema.json")
 
 
 def test_topics_is_part_of_the_contract(mini_repo):
@@ -93,7 +108,7 @@ def test_schema_path_must_stay_inside_the_repository(mini_repo):
     """A contract cannot redirect producer validation to arbitrary bytes."""
     manifest = _manifest(mini_repo)
     contract = yaml.safe_load(contract_path(mini_repo).read_text(encoding="utf-8"))
-    contract["schema_path"] = "../manifest-v8.schema.json"
+    contract["schema_path"] = "../escape.schema.json"
     contract_path(mini_repo).write_text(
         yaml.safe_dump(contract, sort_keys=False), encoding="utf-8")
 
@@ -103,7 +118,7 @@ def test_schema_path_must_stay_inside_the_repository(mini_repo):
     assert "schema_path must be repository-relative" in message
 
 
-def test_v8_schema_rejects_an_edge_without_evidence(mini_repo):
+def test_schema_rejects_an_edge_without_evidence(mini_repo):
     manifest = _manifest(mini_repo)
     manifest["module_concept_edges"] = [{
         "module_id": "module-demo",
@@ -118,7 +133,7 @@ def test_v8_schema_rejects_an_edge_without_evidence(mini_repo):
     assert "non-empty" in message
 
 
-def test_v8_schema_rejects_an_undeclared_edge_field(mini_repo):
+def test_schema_rejects_an_undeclared_edge_field(mini_repo):
     manifest = _manifest(mini_repo)
     manifest["module_concept_edges"] = [{
         "module_id": "module-demo",
@@ -168,25 +183,31 @@ def test_bump_escape_hatch_lets_the_shape_be_inspected(mini_repo):
 
 
 def test_bump_selects_and_hashes_the_new_versions_schema(mini_repo):
-    """Regression: a bump must never retain the previous schema pointer."""
+    """Regression: a bump must never retain the previous schema pointer.
+
+    The successor schema is staged in the synthetic repo (a copy of the
+    current one), because superseded versioned schemas are not retained on
+    disk — the test proves the bump selects the new pointer, not that old
+    files exist.
+    """
     path = contract_path(mini_repo)
     contract = yaml.safe_load(path.read_text(encoding="utf-8"))
-    v7_schema = mini_repo / "system/contracts/manifest-v7.schema.json"
-    contract.update({
-        "contract_version": 7,
-        "schema_path": "system/contracts/manifest-v7.schema.json",
-        "schema_sha256": f"sha256:{hashlib.sha256(v7_schema.read_bytes()).hexdigest()}",
-    })
-    path.write_text(yaml.safe_dump(contract, sort_keys=False), encoding="utf-8")
+    current = int(contract["contract_version"])
+    successor = current + 1
+    successor_rel = f"system/contracts/manifest-v{successor}.schema.json"
+    shutil.copyfile(
+        mini_repo / contract["schema_path"],
+        mini_repo / successor_rel,
+    )
     manifest = _manifest(mini_repo, enforce_contract=False)
 
-    updated = bump(manifest, mini_repo, "test v8 bump")
-    v8_schema = mini_repo / "system/contracts/manifest-v8.schema.json"
+    updated = bump(manifest, mini_repo, f"test v{successor} bump")
+    successor_schema = mini_repo / successor_rel
 
-    assert updated["contract_version"] == 8
-    assert updated["schema_path"] == "system/contracts/manifest-v8.schema.json"
+    assert updated["contract_version"] == successor
+    assert updated["schema_path"] == successor_rel
     assert updated["schema_sha256"] == (
-        f"sha256:{hashlib.sha256(v8_schema.read_bytes()).hexdigest()}"
+        f"sha256:{hashlib.sha256(successor_schema.read_bytes()).hexdigest()}"
     )
 
 
@@ -214,3 +235,75 @@ def test_missing_contract_is_a_clear_failure_not_a_silent_pass(mini_repo):
     with pytest.raises(ManifestContractError) as excinfo:
         enforce({}, mini_repo)
     assert "no declared version" in str(excinfo.value)
+
+
+def test_a_contract_mismatch_reaches_the_cli_as_one_line(mini_repo):
+    """Found by synthetic use: `unit-list` answered with a 120KB stack trace.
+
+    Adding an undeclared key to a study map is an ordinary authoring slip, and
+    the contract check catches it with a message that names the mismatch, says
+    why an added key is still an interface change, and gives the two commands
+    that resolve it. `ManifestContractError` was missing from the CLI's handled
+    tuple, so `unit-list` and `health-report` raised it uncaught and buried
+    that message under the traceback, while `inspect` and `search` — which
+    reach the same check by another path — answered in one line.
+    """
+    from repo_builders import add_curriculum, run_los, write_yaml
+
+    add_curriculum(mini_repo)
+    path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    data = yaml.safe_load(path.read_text())
+    data["stages"][0]["resources"][0]["note"] = "a key the published shape does not declare"
+    write_yaml(path, data)
+
+    for command in ("unit-list", "health-report"):
+        proc = run_los(mini_repo, command)
+        assert proc.returncode == 2, f"{command}: {proc.stdout}{proc.stderr}"
+        assert "Traceback" not in proc.stderr, f"{command} raised instead of reporting"
+        assert proc.stderr.startswith("los: the published manifest no longer matches")
+
+
+def test_supersedes_and_mention_edges_stay_projectable(mini_repo):
+    """A schema-valid supersedes edge publishes as plain id strings (JF-09)."""
+    demo = mini_repo / "knowledge/notes/mathematics/note-demo.md"
+    old = mini_repo / "knowledge/notes/mathematics/note-old.md"
+    old.write_text(
+        demo.read_text(encoding="utf-8")
+        .replace("id: note-demo", "id: note-old")
+        .replace("title: Demo note", "title: Old note"),
+        encoding="utf-8",
+    )
+    text = demo.read_text(encoding="utf-8")
+    marker = "sources: [source-demo-book]\n---"
+    assert marker in text
+    text = text.replace(marker, "sources: [source-demo-book]\nsupersedes: [note-old]\n---")
+    demo.write_text(text + "\nSee note://note-old for the earlier version.\n",
+                    encoding="utf-8")
+    from learning_os.genout.concepts import build_backlinks
+    from learning_os.loader import load_repo
+
+    repo = load_repo(mini_repo)
+    manifest = build_manifest(repo, "T1", build_backlinks(repo, "T1"))
+    ok, message = check(manifest, mini_repo)
+    assert ok, message
+    assert manifest["backlinks"]["note_incoming"]["note-old"] == ["note-demo"]
+
+
+def test_unit_without_scope_sources_stays_projectable(mini_repo):
+    """A unit carrying only schema-required fields still publishes (JF-10)."""
+    from repo_builders import add_curriculum, write_yaml
+
+    add_curriculum(mini_repo)
+    path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+    write_yaml(path, {
+        "id": "unit-demo-l01", "type": "unit", "module_id": "module-demo",
+        "kind": "lecture", "title": "Expected value", "order": 1,
+        "scope": "The lecture as taught.", "status": "active",
+        "artifacts": {"ultimate_reference": "note-demo"},
+        "workspace_ids": ["workspace-demo"],
+    })
+    manifest = _manifest(mini_repo)
+    ok, message = check(manifest, mini_repo)
+    assert ok, message
+    [unit] = [r for r in manifest["units"] if r["id"] == "unit-demo-l01"]
+    assert unit["scope_sources"] == []

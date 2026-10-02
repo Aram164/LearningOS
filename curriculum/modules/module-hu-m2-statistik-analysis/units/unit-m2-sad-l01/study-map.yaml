@@ -38,6 +38,15 @@ stages:
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L01 introduction deck' against the stage 'One dataset, several
+        legitimate questions'. The stage description selects that stage's task or reading purpose from
+        the broader route; preserve the narrower description. This relation review asserts no new source
+        observation or learner achievement.
+      fingerprint: sha256:8d87b79855fbb9343831e55787f884186d80d2f4dec6066148a2e7ba4941dc63
   - material_ref:
       route_id: route-e4fe4b297a44d7835827d2e7
       inherit:
@@ -104,6 +113,15 @@ stages:
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L01 introduction deck' against the stage 'Mean, median, mode,
+        and robustness'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:adf3019934fd66e929e3092537117364f206a0b2cd42a30c86178ef36131dd82
   - material_ref:
       route_id: route-e4fe4b297a44d7835827d2e7
       inherit:
@@ -205,6 +223,15 @@ stages:
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L01 introduction deck' against the stage 'Frequencies, histograms,
+        and empirical distributions'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:4c2dfb8aa9d1414691bbcaa61cc2410985dcd91ab83c9438786c9b3a92079659
   - material_ref:
       route_id: route-0c68f75d11118a811949ead0
       inherit:
@@ -284,6 +311,15 @@ stages:
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L01 introduction deck' against the stage 'Samples, populations,
+        and context'. The stage description selects that stage's task or reading purpose from the broader
+        route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:dfb346244a6b07636f10d939fb6aec4788a8efe08ae4edf21a410231c3a03a45
   - material_ref:
       route_id: route-e4fe4b297a44d7835827d2e7
       inherit:
@@ -374,6 +410,15 @@ stages:
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L01 introduction deck' against the stage 'Confusion matrices
+        and classification metrics'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:f4f45e081259a2f8e8563296e58c5cfc9602f20e8ce97e0b957cc84dc191574b
   - material_ref:
       route_id: route-66d61878473ae7da314c77a8
       inherit:
@@ -438,6 +483,15 @@ stages:
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L01 introduction deck' against the stage 'Base rates and
+        Bayes by counting'. The stage description selects that stage's task or reading purpose from the
+        broader route; preserve the narrower description. This relation review asserts no new source observation
+        or learner achievement.
+      fingerprint: sha256:937060beb8fda801816ab826274e64d21dfe6cb5e6ccec4bc783a315b8c1f465
   - material_ref:
       route_id: route-66d61878473ae7da314c77a8
       inherit:
@@ -490,6 +544,15 @@ stages:
     vault_path: material://source-sad-ss26-lectures/lecture-slides/01_introduction.pdf
     scope_triage: required-now
     route_id: route-7cb7d44175d018bdebbdbd33
+    angle_review:
+      kind: refinement
+      reviewed_by: Codex under Aram cleanup authorization
+      reviewed_on: '2026-09-30'
+      rationale: Reviewed the route 'Current L01 introduction deck' against the stage 'From description
+        to inference and prediction'. The stage description selects that stage's task or reading purpose
+        from the broader route; preserve the narrower description. This relation review asserts no new
+        source observation or learner achievement.
+      fingerprint: sha256:0fda16c1e35a28c43b16cacf03f3b8bab0e53217be465398309b79884815879e
   working_note: curriculum/modules/module-hu-m2-statistik-analysis/units/unit-m2-sad-l01/stages/stage-sad-l01-course-map/notes.md
   attachments: []
   source_feedback: []

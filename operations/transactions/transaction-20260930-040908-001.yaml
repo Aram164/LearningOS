@@ -1,0 +1,35 @@
+schema_version: 2
+id: transaction-20260930-040908-001
+type: transaction-receipt
+status: committed
+capability: legacy.archive.lock.publish
+committed_at: '2026-09-30T04:09:08+02:00'
+snapshot_before: sha256:7d7b4fdcbb23c2d0a8e1724215b5265b8dd7ff30fef8f75ff8ea08e6e6f2c678
+snapshot_after: sha256:7d7b4fdcbb23c2d0a8e1724215b5265b8dd7ff30fef8f75ff8ea08e6e6f2c678
+expected_revisions:
+  legacy-archive-lock: 0
+artifact_revisions:
+  legacy-archive-lock:
+    before: 0
+    after: 1
+writes:
+- path: operations/legacy/archive-lock.yaml
+  sha256_before: null
+  sha256_after: 636f99425d45d604f9ab7a1e165edac6df9332d7244cea9751027623b0677156
+  created: true
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: legacy.archive.lock.publish
+    declared_writes:
+    - operations/legacy/archive-lock.yaml
+request:
+  channel: operator
+  request_id: legacy-lock-publish-2026-09-30-r2
+  idempotency_key: legacy-lock-publish-2026-09-30-r2
+  intent_sha256: sha256:084332e39e7c5ee9cd8b9fddd7568d4610149daabcffcf0b4b3c343d8d0418d3
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:084332e39e7c5ee9cd8b9fddd7568d4610149daabcffcf0b4b3c343d8d0418d3

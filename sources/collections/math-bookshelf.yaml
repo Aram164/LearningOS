@@ -45,7 +45,7 @@ entries:
     why: "Not a textbook — a large bank of fully solved problems across SaD 04–08; pair with any reading book."
   - source: source-grinstead-snell
     group: probability-ladder
-    why: "The gentle computation-flavored free book (AMS open access). ❌ Still an open pull — download never landed."
+    why: "The gentle computation-first book in the probability ladder; local §4.1 (PDF pp. 141–149) explains conditioning, Bayes trees, Monty Hall, and event independence."
   - source: source-kelleher-fmlpda
     group: sad-ml-half
     why: "TOC-confirmed: Ch 4–7 = SaD 12–15 one-to-one — anchors the SaD crosswalk ML-half rows; worked toy examples in exactly the SaD exam style."

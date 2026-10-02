@@ -23,6 +23,18 @@ MD_LINK_RE = re.compile(r"\[[^\]]*\]\(([^)\s]+)\)")
 SUFFIX_RE = re.compile(r"^(?P<base>.+)-(?P<num>\d{1,2})$")
 WORKSPACE_TOKEN_RE = re.compile(r"\bworkspace-[a-z0-9]+(?:-[a-z0-9]+)*\b")
 
+
+def id_list_items(value):
+    """Iterate valid ID-shaped items; schema errors own malformed list shapes."""
+    return (item for item in value if isinstance(item, str)) \
+        if isinstance(value, list) else ()
+
+
+def list_items(value):
+    """Do not iterate a schema-invalid scalar string as a list of characters."""
+    return value if isinstance(value, list) else ()
+
+
 REQUIRED_WORKSPACE_SECTIONS = ("Objective", "Current Scope", "Open Questions", "Next Action")
 COORDINATION_SECTIONS = ("Commitments", "Priorities", "Dependencies", "Deferrals")
 
@@ -30,7 +42,7 @@ COORDINATION_SECTIONS = ("Commitments", "Priorities", "Dependencies", "Deferrals
 JUDGMENT_HEADERS = {"strengths", "weaknesses", "level", "best for", "best-for"}
 
 GENERATED_ALLOWED = {
-    "manifest.json", "concept-index.md", "source-index.md", "module-view.md",
+    "manifest.json", "manifest.identity.json", "concept-index.md", "source-index.md", "module-view.md",
     "coordination-view.md", "dependency-report.md", "concept-map.md",
     "backlinks.json", "nebula.md", "domain-atlas.md", "reading-room.md",
     "concept-canvas.canvas", "library.md", "study-plans.md",
@@ -49,12 +61,20 @@ GENERATED_REPORT_PREFIXES = ("validation-report", "health")
 # and after the change, so treating them as blockers makes an unrelated command
 # fail because a drive happens to be offline. Errors always block regardless.
 ENVIRONMENTAL_WARNINGS = frozenset({
+    # A pinned local-only attachment that is not on this machine (a CI
+    # checkout or a fresh clone): the pin still records what belongs there.
+    "ATTACH-LOCAL-ABSENT",
     "HYGIENE-VIEWS",
     "MATERIALS-MANIFEST",
     "MATERIALS-OFFLINE",
     "MATERIALS-DRIFT",
     "MATERIAL-URI-FORM",
     "HYGIENE-LOCK",
+    # A correction review whose evidence bytes are not on this machine (the
+    # materials tree is offline or the file is absent). The content did not
+    # change, only the mount did — like MATERIALS-OFFLINE, it must stay
+    # visible in every run without ever becoming a baseline regression.
+    "ANGLE-REVIEW-UNVERIFIED",
 })
 
 # Warnings that depend on wall-clock age rather than on any authored file's

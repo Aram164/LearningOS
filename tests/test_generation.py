@@ -2,16 +2,22 @@
 
 from __future__ import annotations
 
+import datetime
 import json
+import os
 import re
 import shutil
 import subprocess
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 from stress_check import _generation_stress
 
+from learning_os.errors import TransactionFailure
 from learning_os.genout import generate_all, write_outputs
+from learning_os.genout.outputs import _KEEP_TOP_DIRS
+from learning_os.genout.projection.stages import project_stages
 from learning_os.loader import load_repo
 
 TIMESTAMP_LINE = re.compile(r"^> Generated: .*$", re.MULTILINE)
@@ -21,6 +27,11 @@ def strip_timestamps(content: str, name: str) -> str:
     if name.endswith((".json", ".canvas")):
         data = json.loads(content)
         data.get("_generated", {}).pop("generated_at", None)
+        if name == "manifest.identity.json":
+            # A digest of the timestamped manifest bytes: it moves exactly
+            # when they do (pinned separately below), so it is a timestamp
+            # here.
+            data.pop("manifest_sha256", None)
         return json.dumps(data, indent=2, sort_keys=True)
     return TIMESTAMP_LINE.sub("> Generated: X", content)
 
@@ -32,6 +43,11 @@ def test_generation_deterministic_except_timestamps(mini_repo):
     assert set(a) == set(b)
     for name in a:
         assert strip_timestamps(a[name], name) == strip_timestamps(b[name], name), name
+    from learning_os.manifest_identity import bytes_sha256
+    for run in (a, b):
+        identity = json.loads(run["manifest.identity.json"])
+        assert identity["manifest_sha256"] == bytes_sha256(
+            run["manifest.json"].encode("utf-8"))
 
 
 def test_generation_stress_tracks_the_declared_manifest_contract(mini_repo):
@@ -56,6 +72,49 @@ def test_generated_reset_rebuilds_everything(mini_repo):
         assert (gen / rel).exists(), rel
     # canonical intact
     assert (mini_repo / "knowledge" / "notes" / "mathematics" / "note-demo.md").exists()
+
+
+def test_projection_rebuild_keeps_sibling_caches(mini_repo):
+    """Sibling producers survive `make views`: text-cache, summaries, and
+    dossiers are owned by their own tools, so stale-sweeping must leave
+    them alone while still removing genuinely stale views."""
+    repo = load_repo(mini_repo)
+    gen = mini_repo / "generated"
+    kept = gen / "text-cache" / ("ab" * 32) / "pp-0001.txt"
+    kept.parent.mkdir(parents=True, exist_ok=True)
+    kept.write_text("cached page", encoding="utf-8")
+    summary = gen / "summaries" / ("cd" * 32) / "pages-1-2" / "summary.md"
+    summary.parent.mkdir(parents=True, exist_ok=True)
+    summary.write_text("GENERATED\ncached summary", encoding="utf-8")
+    dossier = gen / "dossiers" / "unit-demo-l01-0123456789abcdef.json"
+    dossier.parent.mkdir(parents=True, exist_ok=True)
+    dossier.write_text('{"key": "context://unit-demo-l01/semantic-dossier@0123"}',
+                       encoding="utf-8")
+    stale = gen / "views-of-deleted-collection.md"
+    stale.write_text("stale", encoding="utf-8")
+    write_outputs(repo, generate_all(repo, generated_at="T1"))
+    assert kept.read_text(encoding="utf-8") == "cached page"
+    assert summary.exists()
+    assert dossier.exists()
+    assert not stale.exists()
+
+
+def test_projection_rebuild_keeps_every_owned_cache_directory(mini_repo):
+    gen = mini_repo / "generated"
+    kept = []
+    for name in sorted(_KEEP_TOP_DIRS):
+        path = gen / name / "nested" / "cache.txt"
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_text(name, encoding="utf-8")
+        kept.append((path, name))
+    stale = gen / "stale.md"
+    stale.write_text("stale", encoding="utf-8")
+
+    write_outputs(load_repo(mini_repo), {"manifest.json": "new\n"})
+
+    for path, name in kept:
+        assert path.read_text(encoding="utf-8") == name
+    assert not stale.exists()
 
 
 def test_every_output_carries_generated_warning(mini_repo):
@@ -126,9 +185,8 @@ def test_generated_is_gitignored(repo_root):
 
 
 @pytest.mark.full_repo
-def test_real_repo_generates_and_selector_views_present(repo_root):
-    repo = load_repo(repo_root)
-    outputs = generate_all(repo, generated_at="T1")
+def test_real_repo_generates_and_selector_views_present(real_generated):
+    outputs = real_generated
     src_index = outputs["source-index.md"]
     assert "## Selector view — per lecture" in src_index
     assert "## Selector view — per concept" in src_index
@@ -138,23 +196,95 @@ def test_real_repo_generates_and_selector_views_present(repo_root):
     assert "## Neglect signals (Git)" in coord
 
 
+def _t2_state(module, day, end):
+    """The state the projector derives for a second-termin sitting.
+
+    A recorded attempt settles it; otherwise it is unregistered while
+    upcoming and unrecorded once elapsed. Mirrors the projector's own
+    rule so these live-data tests stay correct after Aram records his
+    registrations — the future #90 enables.
+    """
+    matching = [att for att in module.get("attempts", []) or []
+                if att.get("termin") == 2 and str(att.get("date", "")) == end]
+    for result in ("registered", "sat", "passed", "failed", "withdrawn"):
+        if any(att.get("result") == result for att in matching):
+            return result
+    return "unregistered" if day <= end else "unrecorded"
+
+
 @pytest.mark.full_repo
-def test_real_manifest_exposes_unregistered_sittings_and_registration_gate(repo_root):
-    manifest = json.loads(generate_all(load_repo(repo_root), generated_at="T1")["manifest.json"])
+def test_real_manifest_reports_missing_records_and_drops_retired_rows(
+        real_manifest, real_repo):
+    manifest = real_manifest
     deadlines = manifest["academic_deadlines"]
-    pending = {(row.get("module_id"), row.get("start_date"), row.get("end_date"))
-               for row in deadlines
-               if row.get("kind") == "exam" and row.get("registration_state") == "unregistered"}
-    assert ("module-hu-aml", "2026-09-30", "2026-09-30") in pending
-    assert ("module-hu-m2-statistik-analysis", "2026-10-09", "2026-10-09") in pending
-    assert ("module-hu-algo2", "2026-10-05", "2026-10-08") in pending
-    [window] = [row for row in deadlines
+    today = datetime.date.today().isoformat()
+    exams = {(row.get("module_id"), row.get("start_date")): row.get("registration_state")
+             for row in deadlines if row.get("kind") == "exam"}
+    # A sitting with no recorded attempt is a visible missing record on
+    # both sides of its date — never silently removed, never a false
+    # "unregistered"-as-choice once elapsed.
+    for module_id, end in (("module-hu-aml", "2026-09-30"),
+                           ("module-hu-m2-statistik-analysis", "2026-10-09")):
+        module = real_repo.modules[module_id]
+        assert exams.get((module_id, end)) == _t2_state(module, today, end)
+    # Past sittings with attempts stay visible as history.
+    assert exams.get(("module-hu-aml", "2026-07-22")) == "withdrawn"
+    assert exams.get(("module-hu-m2-statistik-analysis", "2026-07-27")) == "withdrawn"
+    # Retired modules contribute no exam rows, open or otherwise.
+    assert {(module_id, start) for (module_id, start) in exams
+            if module_id in {"module-hu-algo2", "module-hu-amls"}} == set()
+    for row in deadlines:
+        for entry in row.get("modules", []) or []:
+            assert entry["module_id"] not in {"module-hu-algo2", "module-hu-amls"}
+    # The closed 2.-PZ window is gone; any surviving window must be open.
+    assert not [row for row in deadlines
                 if row.get("kind") == "registration-window"
-                and row.get("start_date") == "2026-08-31"
-                and row.get("end_date") == "2026-09-10"]
-    assert {module["module_id"] for module in window["modules"]} == {
-        "module-hu-aml", "module-hu-m2-statistik-analysis", "module-hu-algo2"
-    }
+                and row.get("label") == "2.-PZ Anmeldung"]
+    for row in deadlines:
+        if row.get("kind") == "registration-window":
+            assert row["end_date"] >= today
+
+
+@pytest.mark.full_repo
+@pytest.mark.parametrize("day", [
+    "2026-09-05", "2026-09-29", "2026-09-30", "2026-10-01",
+    "2026-10-08", "2026-10-09", "2026-10-10",
+])
+def test_real_sitting_expiry_boundaries(real_repo, monkeypatch, day):
+    from learning_os.genout import modules_view
+
+    class FrozenDate(datetime.date):
+        @classmethod
+        def today(cls):
+            return cls.fromisoformat(day)
+
+    # Freeze only this producer's clock; the loaded authored records are read
+    # unchanged, and the shared generated-manifest fixture is never replaced.
+    monkeypatch.setattr(modules_view, "_dt", SimpleNamespace(date=FrozenDate))
+    deadlines = modules_view._academic_deadlines(real_repo)
+    target = {"module-hu-aml": "2026-09-30",
+              "module-hu-m2-statistik-analysis": "2026-10-09"}
+    got = {row["module_id"]: row["registration_state"] for row in deadlines
+           if row.get("kind") == "exam" and row.get("termin") == 2
+           and row.get("module_id") in target}
+    assert got == {module_id: _t2_state(real_repo.modules[module_id], day, end)
+                   for module_id, end in target.items()}
+    # Retired modules never contribute, on either side of a boundary.
+    retired = {"module-hu-algo2", "module-hu-amls"}
+    assert {row.get("module_id") for row in deadlines
+            if row.get("module_id") in retired} == set()
+    for row in deadlines:
+        for entry in row.get("modules", []) or []:
+            assert entry["module_id"] not in retired
+    windows = [row for row in deadlines
+               if row.get("kind") == "registration-window"
+               and row.get("label") == "2.-PZ Anmeldung"]
+    if day <= "2026-09-10":
+        assert len(windows) == 1
+        assert {entry["module_id"] for entry in windows[0]["modules"]} == {
+            "module-hu-aml", "module-hu-m2-statistik-analysis"}
+    else:
+        assert windows == []
 
 
 # ---------------------------------------------------------------- domain atlas
@@ -339,6 +469,32 @@ def test_successful_git_queries_publish_answer(tmp_path, monkeypatch, status, di
     assert _git_state(tmp_path) == ("deadbeef", dirty)
 
 
+def test_git_state_reads_without_refreshing_index_or_leaving_lock(tmp_path):
+    """A stat-only change stays clean without a read-side Git index write."""
+    from learning_os.genout.common import _git_state
+
+    subprocess.run(["git", "init", "-q"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "config", "user.name", "Test"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "config", "user.email", "test@example.com"],
+                   cwd=tmp_path, check=True)
+    tracked = tmp_path / "knowledge" / "concepts.yaml"
+    tracked.parent.mkdir()
+    tracked.write_text("concepts: []\n", encoding="utf-8")
+    subprocess.run(["git", "add", "knowledge/concepts.yaml"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "commit", "-qm", "initial"], cwd=tmp_path, check=True)
+
+    index = tmp_path / ".git" / "index"
+    before = index.read_bytes()
+    stamp = tracked.stat()
+    os.utime(tracked, ns=(stamp.st_atime_ns, stamp.st_mtime_ns + 2_000_000_000))
+
+    revision, dirty = _git_state(tmp_path)
+    assert len(revision) == 40
+    assert dirty is False
+    assert index.read_bytes() == before
+    assert not (tmp_path / ".git" / "index.lock").exists()
+
+
 @pytest.mark.parametrize("marker", ["-", "*", "+", "1.", "12.", "1)", "12)"])
 @pytest.mark.parametrize("continuation", ["  continuation", "continuation"])
 @pytest.mark.parametrize("with_prose", [True, False])
@@ -352,6 +508,44 @@ def test_note_summary_prefers_prose_with_list_fallback(mini_repo, marker, contin
     projected = next(row for row in manifest["records"] if row["id"] == "note-demo")
     expected = "Real prose paragraph." if with_prose else "first item continuation second item"
     assert projected["summary"] == expected
+
+
+@pytest.mark.parametrize(("body", "expected"), [
+    # A leading generator banner is not prose (#88).
+    ("<!-- GENERATED file - do not edit; promoted by tools/material_summarize.py --promote -->\n"
+     "# Title\n\nReal prose paragraph.",
+     "Real prose paragraph."),
+    # Multi-line comment blocks go the same way.
+    ("<!--\nA long note to the next editor\nspanning lines.\n-->\n\nReal prose paragraph.",
+     "Real prose paragraph."),
+    # An inline comment leaves the surrounding prose joined.
+    ("Motivation<!-- draft --> (p. 5): samples estimate means.",
+     "Motivation (p. 5): samples estimate means."),
+    # Adjacent comments each match.
+    ("<!-- one --><!-- two -->\n\nReal prose paragraph.",
+     "Real prose paragraph."),
+    # A note that is only a comment has an empty summary, never the comment.
+    ("<!-- GENERATED file - do not edit -->\n", ""),
+    ("<!--\nOnly a multi-line comment.\n-->", ""),
+])
+def test_note_summary_drops_html_comments(body, expected):
+    from learning_os.genout.common import _first_para, _strip_headings
+
+    assert _first_para(_strip_headings(body)) == expected
+
+
+def test_promoted_banner_never_becomes_the_projected_summary(mini_repo):
+    """End to end: the #88 banner shape projects the first prose paragraph."""
+    note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
+    banner = ("<!-- GENERATED file - do not edit; "
+              "promoted by tools/material_summarize.py --promote -->\n")
+    text = note.read_text(encoding="utf-8")
+    assert "Body prose." in text
+    note.write_text(text.replace("Body prose.", banner + "# Demo\n\nBody prose."),
+                    encoding="utf-8")
+    manifest = json.loads(generate_all(load_repo(mini_repo), generated_at="T1")["manifest.json"])
+    projected = next(row for row in manifest["records"] if row["id"] == "note-demo")
+    assert projected["summary"] == "Body prose."
 
 
 def test_malformed_frontmatter_prevents_publication(mini_repo):
@@ -417,7 +611,8 @@ def test_boundary_functions_agree(mini_repo):
 def test_failing_git_status_refuses(mini_repo):
     from learning_os.errors import TransactionFailure
     subprocess.run(["git", "init"], cwd=mini_repo, check=True)
-    subprocess.run(["git", "commit", "--allow-empty", "-m", "Initial"], cwd=mini_repo, check=True)
+    subprocess.run(["git", "-c", "user.name=Test", "-c", "user.email=test@example.com",
+                    "commit", "--allow-empty", "-m", "Initial"], cwd=mini_repo, check=True)
     
     index_file = mini_repo / ".git/index"
     index_file.write_bytes(b"corrupted_index_data")
@@ -454,3 +649,56 @@ def test_tools_generate_malformed_frontmatter_prevents_publication(mini_repo):
     
     # the existing manifest must not be overwritten
     assert manifest_path.read_bytes() == manifest_bytes
+
+
+def test_structured_progress_stays_core_side_in_projection(mini_repo):
+    """Stage progress is canonical-only: projecting it would change the
+    published manifest shape, so it strips like knowledge_node_id."""
+    repo = load_repo(mini_repo)
+    data = {"stages": [{
+        "id": "stage-demo", "title": "Demo", "status": "active",
+        "resources": [],
+        "progress": {"updated": "2026-09-26", "summary": "Worked §1.",
+                      "next": "Again."},
+    }]}
+    [projected] = project_stages(repo, data, "working_note")
+    assert "progress" not in projected
+    assert projected["status"] == "active"
+
+
+def test_source_index_renders_one_useful_section_pair_as_one_line(mini_repo):
+    """One single-pair entry projects one reading section — never two.
+
+    Regression for the 2026-09-29 Grinstead shape complaint, where a
+    schema-valid `{locator, use}` object rendered as two bogus sections.
+    """
+    import yaml
+
+    from learning_os.genout.sources import build_source_index
+
+    path = mini_repo / "sources" / "sources.yaml"
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    data["sources"][0]["evaluations"][0]["useful_sections"] = [
+        {"§4.1, physical PDF pp. 141–149": "Discrete conditioning."}]
+    path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+    index = build_source_index(load_repo(mini_repo), generated_at="T1")
+    assert index.count("  - section — ") == 1
+    assert "§4.1, physical PDF pp. 141–149: Discrete conditioning." in index
+
+
+def test_generate_rebuilds_through_an_empty_output_dir_and_refuses_a_full_one(mini_repo):
+    repo = load_repo(mini_repo)
+    write_outputs(repo, generate_all(repo, generated_at="T1"))
+    manifest = mini_repo / "generated/manifest.json"
+    manifest.unlink()
+    manifest.mkdir()
+    write_outputs(load_repo(mini_repo),
+                  generate_all(load_repo(mini_repo), generated_at="T1"))
+    assert manifest.is_file()
+    manifest.unlink()
+    manifest.mkdir()
+    (manifest / "keep.txt").write_text("not ours", encoding="utf-8")
+    with pytest.raises(TransactionFailure, match="non-empty directory"):
+        write_outputs(load_repo(mini_repo),
+                      generate_all(load_repo(mini_repo), generated_at="T1"))
+    assert (manifest / "keep.txt").is_file()

@@ -184,13 +184,21 @@ def test_manifest_evidence_binds_its_digest(tmp_path):
                                    changed, evidence, live)
     records = load_ledger(_write_ledger_text(tmp_path, text))
     record = records["covers:route-keep"]
-    assert record.derived_from.source_hashes == (("manifest:book/demo.pdf", "abc"),)
+    from learning_os.semantics.lineage import route_content_digest
+
+    package_route = package["source_map"]["sources"][0]["unit_routes"][0]
+    assert dict(record.derived_from.source_hashes) == {
+        "manifest:book/demo.pdf": "abc",
+        # The fixture stub carries no knowledge nodes, so the covered n1/n3
+        # earn no keys — only the route row itself is pinned.
+        "route-content:route-keep": route_content_digest(
+            module_id="module-demo", source_id="source-demo-book",
+            route=package_route),
+    }
     assert record.admitted_by.request_id == "request-phaseB"
-    # Post-apply stamping: the gateway increments module-demo on commit, so
-    # the new claim stores 4, not the pre-commit 3. The touched unit is not
-    # in the package units, so it stays at current instead of incrementing.
-    assert dict(record.derived_from.revisions) == {
-        "module-demo": 4, "unit-demo-l01": 2}
+    # Per-route reads only: no module revision stamp, no touched-unit stamp.
+    # Nothing was declared, so the revision map is empty.
+    assert dict(record.derived_from.revisions) == {}
 
 
 def _write_ledger_text(tmp_path, text):
@@ -258,6 +266,15 @@ def _write_demo_plan(mini_repo, tmp_path):
         "nodes": [{"id": "knowledge-demo-alpha", "title": "Alpha",
                    "summary": "First node."}],
     }
+    # A unit that gains a knowledge map must name its stages' nodes, or the
+    # plan shadow gate refuses: an unlinkable stage is the finding the
+    # STAGE-NODE-UNLINKED rule exists for, not test scaffolding to exempt.
+    map_path = (mini_repo / "curriculum/modules/module-demo/units"
+                / "unit-demo-l01/study-map.yaml")
+    study_map = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    study_map["stages"][0]["knowledge_node_id"] = "knowledge-demo-alpha"
+    map_path.write_text(yaml.safe_dump(study_map, sort_keys=False,
+                                       allow_unicode=True), encoding="utf-8")
     audit_rel = "work/active/workspace-demo/outputs/demo-b-coverage-audit.md"
     audit = mini_repo / audit_rel
     audit.parent.mkdir(parents=True, exist_ok=True)
@@ -393,9 +410,10 @@ def test_declared_reads_and_external_trail_persist(tmp_path):
     record = load_ledger(_write_ledger_text(tmp_path, text))["covers:route-keep"]
     # Declared reads store post-apply validity for incremented artifacts:
     # module-demo was fresh at 3 pre-commit and commits at 4, while the
-    # untouched some-artifact stays at 7.
+    # untouched some-artifact stays at 7. The stamped unit base is gone —
+    # declared reads are the whole revision map now.
     assert dict(record.derived_from.revisions) == {
-        "module-demo": 4, "unit-demo-l01": 2, "some-artifact": 7}
+        "module-demo": 4, "some-artifact": 7}
     assert record.derived_from.evidence == (
         "external:https://example.edu/r -- trail: opened 2026-09-08, section verified",)
 
@@ -476,7 +494,7 @@ def test_mid_commit_failure_rolls_back_lineage_and_canonical(
 
 
 def test_new_claim_supported_immediately_after_own_commit(tmp_path):
-    from learning_os.semantics.lineage import refresh
+    from learning_os.semantics.lineage import refresh, route_content_digest
     from learning_os.semantics.predicates import CONTRACT_VERSION
 
     root = _root_with_revisions(tmp_path, REVS)
@@ -491,15 +509,27 @@ def test_new_claim_supported_immediately_after_own_commit(tmp_path):
                                    changed, evidence, live)
     records = load_ledger(_write_ledger_text(tmp_path, text))
     # The gateway increments exactly module-demo here (no package units), so
-    # post-apply state is module-demo 4 with the touched unit unmoved.
+    # post-apply state is module-demo 4 with the touched unit unmoved — and
+    # the new claims read neither. Post-apply content is the package rows.
     post = {"module-demo": 4, "unit-demo-l01": 2}
-    for claim_id in ("covers:route-keep", "covers:route-new"):
+    package_rows = {
+        route["id"]: route
+        for route in package["source_map"]["sources"][0]["unit_routes"]
+    }
+    for claim_id, rid in (("covers:route-keep", "route-keep"),
+                          ("covers:route-new", "route-new")):
+        record = records[claim_id]
+        assert dict(record.derived_from.source_hashes)[
+            f"route-content:{rid}"] == route_content_digest(
+            module_id="module-demo", source_id="source-demo-book",
+            route=package_rows[rid])
         assert refresh(
-            records[claim_id], CONTRACT_VERSION, post, {},
+            record, CONTRACT_VERSION, post,
+            dict(record.derived_from.source_hashes),
         ).status == "supported"
 
 
-def test_touched_unit_without_package_entry_stays_at_current(tmp_path):
+def test_touched_units_are_not_stamped(tmp_path):
     root = _root_with_revisions(tmp_path, REVS)
     package = _package(_changed_map(), _evidence_for(
         "covers:route-keep") + _evidence_for(
@@ -512,16 +542,24 @@ def test_touched_unit_without_package_entry_stays_at_current(tmp_path):
         text = _phaseB_ledger_text(root, _repo(LIVE), "module-demo", package,
                                    changed, evidence, live)
     record = load_ledger(_write_ledger_text(tmp_path, text))["covers:route-keep"]
-    assert dict(record.derived_from.revisions)["unit-demo-l01"] == 2
+    assert dict(record.derived_from.revisions) == {}
+    assert "route-content:route-keep" in dict(record.derived_from.source_hashes)
 
 
-def test_package_unit_gets_post_apply_bump(tmp_path):
+def test_package_units_are_not_stamped_but_their_nodes_are_pinned(tmp_path):
+    from learning_os.semantics.lineage import (
+        node_content_digest,
+        route_content_digest,
+    )
+
     root = _root_with_revisions(tmp_path, REVS)
     package = _package(_changed_map(), _evidence_for(
         "covers:route-keep") + _evidence_for(
         "covers:route-new", ref="Ch 9"))
+    nodes = [{"id": "n1", "title": "One"}, {"id": "n3", "title": "Three"}]
     package["units"] = [{"unit": {"id": "unit-demo-l01",
-                                  "module_id": "module-demo"}}]
+                                  "module_id": "module-demo",
+                                  "knowledge_map": {"nodes": nodes}}}]
     problems, changed, evidence, live = _phaseB_validate(
         root, _repo(LIVE), "module-demo", package)
     assert problems == []
@@ -529,8 +567,76 @@ def test_package_unit_gets_post_apply_bump(tmp_path):
         text = _phaseB_ledger_text(root, _repo(LIVE), "module-demo", package,
                                    changed, evidence, live)
     record = load_ledger(_write_ledger_text(tmp_path, text))["covers:route-keep"]
-    assert dict(record.derived_from.revisions) == {
-        "module-demo": 4, "unit-demo-l01": 3}
+    assert dict(record.derived_from.revisions) == {}
+    package_route = package["source_map"]["sources"][0]["unit_routes"][0]
+    assert dict(record.derived_from.source_hashes) == {
+        "route-content:route-keep": route_content_digest(
+            module_id="module-demo", source_id="source-demo-book",
+            route=package_route),
+        # Post-apply node rows come from the package unit entry.
+        "node-content:n1": node_content_digest(nodes[0]),
+        "node-content:n3": node_content_digest(nodes[1]),
+    }
+
+
+def _route_in(unit_id, rid, covers, locator="Ch 1, the only section"):
+    return {"id": rid, "unit_id": unit_id, "covers": covers,
+            "locator": locator, "angle": "a", "scope": "course"}
+
+
+def test_batch_import_scopes_each_claim_to_its_own_route(tmp_path):
+    from learning_os.semantics.lineage import (
+        node_content_digest,
+        route_content_digest,
+    )
+
+    live = _map(_route_in("unit-demo-l01", "route-a", ["n1"]),
+                _route_in("unit-demo-l02", "route-b", ["n2"]))
+    root = _root_with_revisions(
+        tmp_path, {"module-demo": 3, "unit-demo-l01": 2, "unit-demo-l02": 5})
+    package = _package(
+        _map(_route_in("unit-demo-l01", "route-a", ["n1", "n3"]),
+             _route_in("unit-demo-l02", "route-b", ["n2", "n4"])),
+        _evidence_for("covers:route-a") + _evidence_for("covers:route-b"))
+    package["units"] = [
+        {"unit": {"id": "unit-demo-l01", "module_id": "module-demo",
+                  "knowledge_map": {"nodes": [
+                      {"id": "n1", "title": "One"},
+                      {"id": "n3", "title": "Three"}]}}},
+        {"unit": {"id": "unit-demo-l02", "module_id": "module-demo",
+                  "knowledge_map": {"nodes": [
+                      {"id": "n2", "title": "Two"},
+                      {"id": "n4", "title": "Four"}]}}},
+    ]
+    problems, changed, evidence, live_routes = _phaseB_validate(
+        root, _repo(live), "module-demo", package)
+    assert problems == []
+    with gateway_request_context(_request()):
+        text = _phaseB_ledger_text(root, _repo(live), "module-demo", package,
+                                   changed, evidence, live_routes)
+    records = load_ledger(_write_ledger_text(tmp_path, text))
+    package_rows = {
+        route["id"]: route
+        for route in package["source_map"]["sources"][0]["unit_routes"]
+    }
+    node_rows = {
+        node["id"]: node
+        for entry in package["units"]
+        for node in entry["unit"]["knowledge_map"]["nodes"]
+    }
+    for rid, covered in (("route-a", ["n1", "n3"]),
+                         ("route-b", ["n2", "n4"])):
+        record = records[f"covers:{rid}"]
+        # No module revision, no touched-unit stamp — one import batch, but
+        # each claim reads only its own route and its own covered nodes.
+        assert dict(record.derived_from.revisions) == {}
+        assert dict(record.derived_from.source_hashes) == {
+            f"route-content:{rid}": route_content_digest(
+                module_id="module-demo", source_id="source-demo-book",
+                route=package_rows[rid]),
+            **{f"node-content:{node}": node_content_digest(node_rows[node])
+               for node in covered},
+        }
 
 
 def test_manifest_digest_mutation_stales_and_missing_fails_closed(tmp_path):
@@ -555,13 +661,22 @@ def test_manifest_digest_mutation_stales_and_missing_fails_closed(tmp_path):
                                    changed, evidence, live)
     record = load_ledger(_write_ledger_text(tmp_path, text))["covers:route-keep"]
     post = {"module-demo": 4, "unit-demo-l01": 2}
+    # The route row never moves in this test; only the manifest entry does.
+    route_live = {
+        key: value for key, value in dict(record.derived_from.source_hashes).items()
+        if key.startswith("route-content:")
+    }
+    assert len(route_live) == 1
 
     def _live():
         from learning_os.semantics.scan import _scan_manifest_files
 
         files = _scan_manifest_files(root)
         digest = live_evidence_digest(root, "manifest:book/demo.pdf", files)
-        return {} if digest is None else {"manifest:book/demo.pdf": digest}
+        live = dict(route_live)
+        if digest is not None:
+            live["manifest:book/demo.pdf"] = digest
+        return live
 
     assert refresh(record, CONTRACT_VERSION, post, _live()).status == "supported"
     (root / "records" / "materials-manifest.yaml").write_text(
@@ -570,7 +685,7 @@ def test_manifest_digest_mutation_stales_and_missing_fails_closed(tmp_path):
     assert refresh(record, CONTRACT_VERSION, post, _live()).status == "stale"
     (root / "records" / "materials-manifest.yaml").write_text(
         yaml.safe_dump({"files": {}}), encoding="utf-8")
-    assert _live() == {}
+    assert _live() == route_live
     assert refresh(record, CONTRACT_VERSION, post, _live()).status == "stale"
 
 
@@ -598,15 +713,23 @@ def test_file_bytes_mutation_stales_and_unrelated_unchanged(tmp_path):
     records = load_ledger(_write_ledger_text(tmp_path, text))
     record = records["covers:route-keep"]
     expected = "sha256:" + _hashlib.sha256(b"version one").hexdigest()
-    assert dict(record.derived_from.source_hashes) == {
-        "file:work/evidence.md": expected}
+    stored = dict(record.derived_from.source_hashes)
+    assert stored["file:work/evidence.md"] == expected
+    route_live = {
+        key: value for key, value in stored.items()
+        if key.startswith("route-content:")
+    }
+    assert len(route_live) == 1
     post = {"module-demo": 4, "unit-demo-l01": 2}
 
     def _live_for(key):
         from learning_os.semantics.scan import _scan_manifest_files
 
         digest = live_evidence_digest(root, key, _scan_manifest_files(root))
-        return {} if digest is None else {key: digest}
+        live = dict(route_live)
+        if digest is not None:
+            live[key] = digest
+        return live
 
     assert refresh(
         record, CONTRACT_VERSION, post, _live_for("file:work/evidence.md"),
@@ -615,7 +738,8 @@ def test_file_bytes_mutation_stales_and_unrelated_unchanged(tmp_path):
     assert refresh(
         record, CONTRACT_VERSION, post, _live_for("file:work/evidence.md"),
     ).status == "stale"
-    # An unrelated hash-less claim on the same revisions stays supported.
+    # A claim pinning only its route row stays supported: the evidence file
+    # it never read cannot stale it.
     other_package = _package(
         _map(_route("route-keep", ["n1", "n3"])),
         _evidence_for("covers:route-keep"))
@@ -627,9 +751,12 @@ def test_file_bytes_mutation_stales_and_unrelated_unchanged(tmp_path):
                                          other_package, changed2, evidence2, live2)
     other = load_ledger(_write_ledger_text(tmp_path, other_text))[
         "covers:route-keep"]
-    assert refresh(other, CONTRACT_VERSION, post, {}).status == "supported"
+    assert refresh(
+        other, CONTRACT_VERSION, post,
+        dict(other.derived_from.source_hashes),
+    ).status == "supported"
     target.unlink()
-    assert _live_for("file:work/evidence.md") == {}
+    assert _live_for("file:work/evidence.md") == route_live
     assert refresh(
         record, CONTRACT_VERSION, post, _live_for("file:work/evidence.md"),
     ).status == "stale"
@@ -660,10 +787,12 @@ def test_deleted_edge_withdraw_spares_new_claim_post_apply(tmp_path):
     records = load_ledger(_write_ledger_text(tmp_path, text))
     assert records["covers:route-drop"].status == "withdrawn"
     post = {"module-demo": 4, "unit-demo-l01": 2}
+    kept = records["covers:route-keep"]
     assert refresh(
-        records["covers:route-keep"], CONTRACT_VERSION, post, {},
+        kept, CONTRACT_VERSION, post,
+        dict(kept.derived_from.source_hashes),
     ).status == "supported"
-    assert records["covers:route-keep"].status == "supported"
+    assert kept.status == "supported"
 
 
 def test_post_commit_supported_end_to_end_via_gateway(mini_repo, tmp_path):
@@ -706,6 +835,21 @@ def test_post_commit_supported_end_to_end_via_gateway(mini_repo, tmp_path):
     assert refused.returncode == 1
     assert "without claim evidence" in refused.stderr
     package_data["claim_evidence"] = evidence
+    # The semantic review gate (unit revisions, Step 9) names menu shrinkage
+    # explicitly: a removal-only package carries its own acknowledgment.
+    package_data["acknowledgments"] = [{
+        "kind": "coverage-reduction", "target": "unit-demo-l01",
+        "reason": "Withdrawing the superseded rich route to its legacy edge; "
+                  "lineage records the withdrawal.",
+    }, {
+        "kind": "coverage-loss", "target": "knowledge-demo-alpha",
+        "reason": "The legacy edge carries no covers claim; the node is "
+                  "deliberately uncovered until its replacement route lands.",
+    }, {
+        "kind": "demotion", "target": "route-demo-rich",
+        "reason": "Withdrawing the current route to its legacy edge; the "
+                  "withdrawal is the point of this package.",
+    }]
     write_yaml(package, package_data)
     removed = approved_v2_cli(
         mini_repo, "module-plan-import", "module-demo",

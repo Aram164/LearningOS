@@ -1,0 +1,35 @@
+schema_version: 2
+id: transaction-20260930-140008-001
+type: transaction-receipt
+status: committed
+capability: coordination.section.revise
+committed_at: '2026-09-30T14:00:08+02:00'
+snapshot_before: sha256:5c2da76083e13289f25b2dd646f327281e005231ae7e6f5702dceb32c2673bc2
+snapshot_after: sha256:d123999e92caf3d81dcf98c4109797a03c6552d8ca3f6603e9d7feb859300fe2
+expected_revisions:
+  coordination: 0
+artifact_revisions:
+  coordination:
+    before: 0
+    after: 1
+writes:
+- path: work/COORDINATION.md
+  sha256_before: eb773cdc7509950edfb4d79c7d07c38a24580d2733119356e27c0e29cf18cb49
+  sha256_after: 210204c75f516bad6a2a267543f8d913d9235e7f56687b4d0c32f0aa0f25936b
+  created: false
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: coordination.section.revise
+    declared_writes:
+    - work/COORDINATION.md
+request:
+  channel: operator
+  request_id: cleanup-independent-coordination-20260930
+  idempotency_key: cleanup-independent-coordination-20260930
+  intent_sha256: sha256:39a837ac86e2fda54246d8165aaee70a3e1cd859e06f84b638934207ab555a9b
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:39a837ac86e2fda54246d8165aaee70a3e1cd859e06f84b638934207ab555a9b

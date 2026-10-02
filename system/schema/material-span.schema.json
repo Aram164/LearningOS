@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learningos.local/schema/material-span-v1",
+  "title": "Material span response",
+  "x-governs": "artifact",
+  "type": "object",
+  "required": ["schema_version", "snapshot_id", "contract", "unit_id", "module_id", "route_id", "source_id", "availability", "analysis_refs", "spans"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "snapshot_id": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
+    "contract": {"const": "material-span-v1"},
+    "unit_id": {"type": "string"}, "module_id": {"type": "string"},
+    "route_id": {"type": "string"}, "source_id": {"type": "string"},
+    "locator": {"type": ["string", "null"]}, "url": {"type": ["string", "null"]},
+    "availability": {"enum": ["local-observed", "local-unavailable", "remote-unobserved", "unavailable"]},
+    "analysis_refs": {"type": "object"},
+    "spans": {"type": "array", "items": {"type": "object"}},
+    "expansion": {"type": ["string", "null"]}
+  }
+}

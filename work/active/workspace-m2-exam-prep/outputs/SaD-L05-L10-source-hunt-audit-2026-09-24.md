@@ -1,0 +1,24 @@
+# SaD L05–L10 source hunt and placement audit — 2026-09-24
+
+Scope: six current SoSe 2026 lecture decks, their current exercise assets, the 2025 variants, and the registered probability/statistics book and linked-source menus. The source inventory and URL dispositions in `SaD-extensive-source-coverage-audit-2026-08-27.md` remain the item-level baseline; this pass reconciled their 184 current L05–L10 routes with the live module source map and six study maps. No new material bytes were added. Linked episode routes with earlier timestamp evidence remain menu options; this pass did not repeat playback or claim fresh verification of every video.
+
+## Local
+
+- Current lecture decks L05–L10 and Blatt 2–5, UE4–UE7 were checked at the task-relevant pages. Current decks and sheets remain scope and practice authority. Source-bound findings are in `knowledge/notes/mathematics/note-sad-l05-counting-probability-pp028-030.md`, `note-sad-l07-distribution-boundary-pp013-014.md`, `note-sad-l08-clt-pp020-021.md`, `note-sad-l09-resampling-p045.md`, `note-sad-l09-ue6-bootstrap-pp010-013.md`, and `note-sad-l10-testing-discipline-pp056-065.md`.
+- 2025 L07 pp. 38–44 supplies the trial-count Geometric PMF/CDF and a faulty p. 43 expectation bullet. Blitzstein §4.3 pp. 174–178 counts failures instead; the two conventions must be named. Exact findings: `note-sad-l07-2025-geometric-pp038-044.md` and `note-sad-l07-blitzstein-geom-convention-pp174-178.md`. Selected as a focused L07 aid and reference, respectively.
+- 2025 L09 pp. 22–30 derives Normal mean/variance MLE and is a distinct optional L08 bridge; pp. 68–88 supplies the bootstrap algorithm and interval choices absent from current L09 p. 45. Exact findings: `note-sad-l08-2025-gaussian-mle-pp022-030.md` and `note-sad-l09-2025-bootstrap-pp068-088.md`. The L08 cross-lecture menu route is selected as optional; the L09 slice is a stage aid after the current sheet.
+- 2025 L10 pp. 43–45 and Fahrmeir §10.3, PDF pp. 445–446 give the correct Bonferroni threshold. The current extra Fahrmeir route's “Kapitel 12” locator is wrong; the verified section is Chapter 10. Exact findings: `note-sad-l10-2025-bonferroni-pp043-045.md` and `note-sad-l10-fahrmeir-bonferroni-pp445-446.md`. Selected as a short course-native correction and a German numerical derivation.
+- ISLP Ch. 13 pp. 571–581 distinguishes FWER from FDR. Current L10 does not teach FDR/BH, and Aram chose to keep that extension optional. Exact finding: `note-sad-l10-islp-fwer-fdr-pp571-581.md`.
+- UE7 pp. 77–84 offers a historical self-check question list. Its p. 77 names 2025 exam dates despite the file's current local folder, so it is reference-only and is not evidence of 2026 exam scope. Exact finding: `note-sad-ue7-historical-exam-prompts-pp077-084.md`. No new per-lecture route is justified by this checklist alone.
+- The Swanson probability monograph's contents centre formal logic, measure theory and the principle of indifference. It is retained as an off-scope library reference for this introductory L05–L10 path. Other local book and exam-bank slices already have live lecture-specific routes; where the route overlaps another, the menu retains a distinct collection versus exact-slice purpose rather than forcing both into stages.
+
+## Linked
+
+- Existing linked videos and course pages remain in the complete menus with their current exact episode/section locators or explicit collection-level limitations. Unplaced routes are menu options, not evidence gaps by themselves. The August source coverage audit records their earlier dispositions. No new URL is introduced by this revision.
+
+## Completeness
+
+- Complete menu, selective stages: retain distinct routes and source-specific angles in the module source map; limit the ordered path to the current deck, a matching current task/solution where one exists, and a small number of verified gap-filling aids. No source selection is inferred for the learner.
+- L05 and L06 need angle/placement cleanup, not a new source. L07 gains the prior-year Geometric explanation in its stage. L08 gains one optional cross-lecture MLE route. L09 gains the prior-year bootstrap method in its stage and keeps the current UE6 solution central. L10 uses current/prior-year/Fahrmeir multiplicity evidence and makes FDR optional.
+- Source errors and scope limits stay visible beside use: L05 lottery arithmetic, L07 Geometric convention and prior-year expectation slip, L08 LLN attribution, L09 resampling-versus-bootstrap, L10 power and Bonferroni slips. The historical UE7 checklist cannot enlarge current scope.
+- The six units and 42 stage IDs keep their order, status, current-stage pointers, notes, attachments, feedback, and learner source selections. No unrelated module, unit, source registry, or generated file is part of the intended change.

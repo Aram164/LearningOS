@@ -15,45 +15,31 @@ from typing import Any
 
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.loader import load_repo
+from learning_os.material_analysis import observe_local_material
+from learning_os.material_slices import parse_locator_page_ranges
 from learning_os.materials_resolution import (
     MATERIAL_SUFFIX_TOKEN,
-    material_location,
-    material_uri_authority,
-    project_material_resource,
-    safe_material_locator,
+    evidential_route_projection,
+    evidential_source_map_projection,
+    route_material_checksum,
+    stable_checksum,
+)
+from learning_os.semantics.lineage import (
+    dump_ledger,
+    emit_dossier_freshness,
+    load_ledger,
+    to_dict,
 )
 from learning_os.transactions import artifact_revision
+
+#: Widest cited page span the provenance check expands before refusing.
+#: Real evidence cites dozens of pages at most; anything wider cannot be
+#: covered by bounded slices and is rejected as uncitable, never sampled.
+_MAX_CITED_SPAN = 100_000
 
 
 class MaterialSynthesisError(ValueError):
     """A dossier is invalid or stale; callers must leave canonical state unchanged."""
-
-
-def _sha256_bytes(value: bytes) -> str:
-    return "sha256:" + hashlib.sha256(value).hexdigest()
-
-
-def _sha256_file(path: Path, cache: dict[Path, str] | None = None) -> str:
-    """Hash one material file, at most once per build.
-
-    Routes deliberately share files — a lecture deck reached by four routes is
-    one deck — and every route hashed it again. The memo is created per build
-    and never outlives it, so a file that changes between builds is still
-    rehashed and a stale dossier still goes stale (2026-09-05 audit, F13).
-    """
-    if cache is None:
-        return _sha256_bytes(path.read_bytes())
-    key = Path(path).resolve()
-    checksum = cache.get(key)
-    if checksum is None:
-        checksum = _sha256_bytes(path.read_bytes())
-        cache[key] = checksum
-    return checksum
-
-
-def _stable_checksum(value: Any) -> str:
-    payload = json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":"))
-    return _sha256_bytes(payload.encode("utf-8"))
 
 
 def _rich_routes(repo, unit_id: str) -> list[dict[str, Any]]:
@@ -74,84 +60,72 @@ def _rich_routes(repo, unit_id: str) -> list[dict[str, Any]]:
     return output
 
 
-def _route_material_files(repo, route: dict[str, Any]) -> list[tuple[str, Path]]:
-    """Resolve every exact local file named by one route, or none.
+# `unit_revision` is recorded but deliberately not compared. Publishing a
+# dossier guards the unit artifact, so the commit bumps the unit's revision
+# after the basis has already been derived: every dossier was born one
+# revision behind and reported "stale basis" from the moment it was written
+# (L03 recorded 19 against a live 20, L04 recorded 17 against 20). It travels
+# as provenance, like a continued file SHA. What the dossier genuinely owes
+# the unit — a concept group for every local knowledge node, exactly once —
+# is enforced directly by `validate_unit_material_synthesis` at publish.
+#
+# `source_map_revision` is recorded but deliberately not compared, for the
+# same reason at module granularity: it is a logical counter that moves on
+# every canonical edit to the module, prose included. Comparing it reimposed
+# through the back door the exact punishment the evidential checksums were
+# built to remove — a corrected angle staling every dossier in the module,
+# including other units'. A prose change moves no evidential checksum, so the
+# dossier stays current; an evidential change moves exactly the checksums of
+# the units that rest on it. The revision travels as provenance so a reader
+# can still tell which module state was live at review time.
+_COMPARED_BASIS_FIELDS = (
+    "source_map_checksum",
+    "route_set_checksum",
+    "material_checksums",
+    "policy",
+)
 
-    Most routes name one file and use the ordinary material projection.  A
-    small but important class (including SaD L03's current exercise route)
-    deliberately binds two files with a semicolon.  Treating that locator as
-    prose made freshness fall back to a route-text hash, so changing either
-    reviewed PDF did not stale the dossier.  The multi-file branch is strict:
-    every semicolon-delimited part must name exactly one safe existing file,
-    otherwise no partial byte-coverage claim is made.
+
+def material_basis_checksum(basis: dict) -> str:
+    """The same evidential basis used by freshness, excluding revision counters."""
+    return stable_checksum({key: basis.get(key) for key in _COMPARED_BASIS_FIELDS})
+
+
+def publication_lineage(root: Path, unit_id: str, value: dict, content: str, request) -> str:
+    """Prepare the sidecar for the same transaction as a reviewed publication.
+
+    Both the direct publisher and approved-delivery publisher use this owner.
+    Only prospective judgments are recorded; prior dossiers are never backfilled.
     """
-    projected = project_material_resource(repo, {
-        "source_id": route.get("source_id"),
-        "locator": route.get("locator"),
-        "vault_path": route.get("vault_path"),
-    })
-    material_uri = projected.get("material_uri")
-    relative = projected.get("material_path")
-    if isinstance(material_uri, str) and isinstance(relative, str) \
-            and projected.get("material_exists"):
-        path = repo.learningos_root / relative
-        if path.is_file() and not path.is_symlink():
-            return [(material_uri, path)]
-
-    locator = route.get("locator")
-    source = repo.sources.get(route.get("source_id"))
-    source_material = source.get("material") if isinstance(source, dict) else None
-    authority = material_uri_authority(source_material)
-    if not isinstance(locator, str) or ";" not in locator or not authority:
-        return []
-
-    candidates: list[str] = []
-    for part in locator.split(";"):
-        matches = list(MATERIAL_SUFFIX_TOKEN.finditer(part))
-        if len(matches) != 1:
-            return []
-        candidate = safe_material_locator(part[:matches[0].end()].strip())
-        if candidate is None:
-            return []
-        candidates.append(candidate)
-    if len(candidates) < 2 or len(candidates) != len(set(candidates)):
-        return []
-
-    files: list[tuple[str, Path]] = []
-    for candidate in candidates:
-        uri = f"material://{authority}/{candidate}"
-        location = material_location(repo, uri)
-        relative = location.get("material_path")
-        if not isinstance(relative, str) or not location.get("material_exists"):
-            return []
-        path = repo.learningos_root / relative
-        if not path.is_file() or path.is_symlink():
-            return []
-        files.append((uri, path))
-    return files
+    records = load_ledger(root)
+    claim_id = f"dossier:{value['id']}"
+    records[claim_id] = publication_lineage_record(
+        root, unit_id, value, content, request, prior=records.get(claim_id))
+    return dump_ledger(records)
 
 
-def _route_material_checksum(repo, route: dict[str, Any],
-                             cache: dict[Path, str] | None = None) -> str:
-    """Hash local material bytes when resolvable; otherwise hash the exact route.
+def publication_lineage_record(root: Path, unit_id: str, value: dict,
+                               content: str, request, *, prior=None):
+    """Bind a dossier already validated against its live or staged basis.
 
-    Remote and deliberately unavailable resources still need a stable freshness
-    token.  The route hash is explicitly provenance, not a claim that remote
-    bytes were reviewed.
+    Import and source-attachment writers validate the proposed basis before
+    admission. Reading the live basis here would bind their new dossier to the
+    old material state and make the claim stale on its own transaction.
+    The caller merges this record with any other lineage in that transaction.
     """
-    files = _route_material_files(repo, route)
-    if len(files) == 1:
-        return _sha256_file(files[0][1], cache)
-    if files:
-        return _stable_checksum([
-            {"material_uri": uri, "sha256": _sha256_file(path, cache)}
-            for uri, path in sorted(files, key=lambda row: row[0])
-        ])
-    return _stable_checksum({
-        key: route.get(key)
-        for key in ("id", "source_id", "unit_id", "locator", "url", "vault_path")
-    })
-
+    destination = synthesis_destination(root, unit_id)
+    return emit_dossier_freshness(
+        dossier_key=value["id"],
+        hashes={
+            f"file:{destination.relative_to(root).as_posix()}":
+                "sha256:" + hashlib.sha256(content.encode("utf-8")).hexdigest(),
+            f"material-synthesis-basis:{unit_id}":
+                material_basis_checksum(value["basis"]),
+        },
+        judged_by=request.channel,
+        admitted_by={"request_id": request.request_id, "idempotency_key": request.idempotency_key},
+        supersedes=to_dict(prior) if prior is not None else None,
+    )
 
 def current_unit_material_basis(
     root: Path,
@@ -190,25 +164,99 @@ def current_unit_material_basis(
     return {
         "unit_revision": artifact_revision(root, unit_id),
         # Module-plan transactions guard the module source map with the owning
-        # module artifact revision.  Keep that revision alongside the byte
-        # checksum: either a coordinated module-plan change or an out-of-band
-        # byte change makes a reviewed dossier stale.
+        # module artifact revision.  Keep that revision as provenance only:
+        # the evidential checksums below are what stale a dossier, so a
+        # prose-only edit moves nothing while an evidential edit moves exactly
+        # the affected units.  The checksum covers the map's evidential
+        # projection for THIS unit, not the file's bytes — hashing the bytes
+        # made every dossier in a module depend on every word in it, so a prose
+        # fix on an unrelated unit's route staled this one too.
         "source_map_revision": artifact_revision(root, unit.module_id),
-        "source_map_checksum": _sha256_file(source_map_path, cache),
-        "route_set_checksum": _stable_checksum(route_rows),
+        "source_map_checksum": stable_checksum(
+            evidential_source_map_projection(
+                repo.module_source_maps.get(unit.module_id) or {}, unit_id
+            )
+        ),
+        # Prose is deliberately outside the hash. Hashing whole rows made a
+        # typo fix in one `angle` stale a whole unit's dossier, which is the
+        # wrong incentive: the canonical route is exactly where a corrected
+        # angle belongs.
+        "route_set_checksum": stable_checksum(
+            [evidential_route_projection(route) for route in route_rows]
+        ),
         "material_checksums": {
-            str(route["id"]): _route_material_checksum(repo, route, cache)
+            str(route["id"]): route_material_checksum(repo, route, cache)
             for route in route_rows
         },
-        "policy": "tiered-v1",
+        "policy": "tiered-v2",
     }
+
+
+#: Freshness reason when a referenced analysis note moved past its approval.
+ANALYSIS_REFS_STALE = "analysis-refs-stale"
+
+
+def _analysis_ref_problem(root: Path, repo, ref: dict, *,
+                          cache: dict[Path, str] | None = None) -> str | None:
+    """Why an analysis ref no longer names its approved evidence, else None.
+
+    The ref pins the note revision the approver saw plus the exact anchor
+    and inspected material identity. A later note edit, a retargeted
+    anchor, or a changed inspected range all invalidate the ref — the
+    dossier keeps its prose but must be re-reviewed before it can claim
+    this evidence again. Shape is the schema's job; this checks the live
+    binding against the recorded one.
+    """
+    if not isinstance(ref, dict):
+        return "ref is not an object"
+    note = (repo.notes or {}).get(ref.get("note_id"))
+    if note is None:
+        return "note is missing"
+    binding = note.meta.get("material_analysis")
+    if not isinstance(binding, dict):
+        return "note carries no material analysis"
+    if artifact_revision(root, note.id) != ref.get("note_revision"):
+        return "note was revised after approval"
+    try:
+        live_digest = f"sha256:{hashlib.sha256(note.path.read_bytes()).hexdigest()}"
+    except OSError:
+        return "note bytes are unreadable"
+    if live_digest != ref.get("note_digest"):
+        return "note bytes differ from the approved content"
+    wanted = ref.get("anchor") or {}
+    anchors = binding.get("anchors") or []
+    if not any(isinstance(item, dict)
+               and item.get("topic") == wanted.get("topic")
+               and item.get("purpose") == wanted.get("purpose")
+               and item.get("locator") == wanted.get("locator")
+               for item in anchors):
+        return "anchor is not among the note's recorded anchors"
+    if binding.get("material") != ref.get("material"):
+        return "material identity differs from the note's binding"
+    if binding.get("inspected_range") != ref.get("inspected_range"):
+        return "inspected range differs from the note's binding"
+    observation = observe_local_material(
+        root.parent / "materials", str(binding.get("material") or ""),
+        str(binding.get("recorded_source_digest") or ""), cache=cache)
+    if observation["status"] != "current":
+        return f"analysis source is not current ({observation['status']})"
+    return None
 
 
 def validate_unit_material_synthesis(
     root: Path,
     unit_id: str,
     value: dict[str, Any],
+    *,
+    repo=None,
 ) -> dict[str, Any]:
+    """Validate one dossier against the repository at ``root``.
+
+    ``repo`` accepts an already-loaded repository so a caller validating
+    staged post-change state (a shadow copy carrying planned writes) does not
+    re-read the live tree and does not validate the wrong state. Omitting it
+    keeps the standalone contract against the live repository.
+    """
     try:
         validate_contract(root, "unit-material-synthesis.schema.json", value)
     except ValueError as exc:
@@ -216,7 +264,8 @@ def validate_unit_material_synthesis(
     if value.get("unit_id") != unit_id:
         raise MaterialSynthesisError("dossier unit_id does not match the requested unit")
 
-    repo = load_repo(root)
+    if repo is None:
+        repo = load_repo(root)
     unit = repo.units.get(unit_id)
     if unit is None:
         raise MaterialSynthesisError(f"unit not found: {unit_id}")
@@ -247,11 +296,16 @@ def validate_unit_material_synthesis(
             )
 
     basis = value["basis"]
-    current = current_unit_material_basis(root, unit_id)
-    for field in ("unit_revision", "source_map_revision", "source_map_checksum",
-                  "route_set_checksum", "material_checksums", "policy"):
-        if basis.get(field) != current[field]:
-            raise MaterialSynthesisError(f"dossier basis is stale at {field}")
+    material_cache: dict[Path, str] = {}
+    current = current_unit_material_basis(root, unit_id, repo=repo, cache=material_cache)
+    stale = [field for field in _COMPARED_BASIS_FIELDS
+             if basis.get(field) != current[field]]
+    if stale:
+        expected = {field: current[field] for field in stale}
+        raise MaterialSynthesisError(
+            "dossier basis is stale; expected values for changed fields: "
+            + json.dumps(expected, sort_keys=True, ensure_ascii=False)
+        )
 
     concept_ids = set(repo.concepts)
     note_ids = set(repo.notes)
@@ -289,6 +343,13 @@ def validate_unit_material_synthesis(
                 raise MaterialSynthesisError(
                     f"{row['route_id']} evidence checksum does not match its material basis"
                 )
+        for ref in row.get("analysis_refs", []) or []:
+            problem = _analysis_ref_problem(root, repo, ref, cache=material_cache)
+            if problem is not None:
+                raise MaterialSynthesisError(
+                    f"{row['route_id']} analysis ref to {ref.get('note_id')} "
+                    f"is no longer the approved evidence ({problem}); re-review the dossier"
+                )
     seen_comparisons: set[tuple[str, str, str]] = set()
     for comparison in value["comparisons"]:
         left, right = comparison["left_route_id"], comparison["right_route_id"]
@@ -320,6 +381,204 @@ def validate_unit_material_synthesis(
     return value
 
 
+def inspected_pages_by_route(
+    index_records: list[dict[str, Any]],
+) -> dict[str, list[int]]:
+    """Union of inspected PDF pages per route across every slice pass."""
+    inspected: dict[str, set[int]] = {}
+    for record in index_records or []:
+        if not isinstance(record, dict):
+            continue
+        route_id = record.get("route_id")
+        if not isinstance(route_id, str):
+            continue
+        pages = inspected.setdefault(route_id, set())
+        for part in record.get("parts", []) or []:
+            if not isinstance(part, dict):
+                continue
+            for page in part.get("pages", []) or []:
+                if isinstance(page, bool):
+                    continue
+                if isinstance(page, int) and page >= 1:
+                    pages.add(page)
+    return {route_id: sorted(pages) for route_id, pages in inspected.items()}
+
+
+def inspected_material_by_route(
+    index_records: list[dict[str, Any]],
+) -> dict[str, dict[str, dict[str, Any]]]:
+    """Inspected pages per route AND material: route -> uri -> record.
+
+    A route-level page union cannot tell part-a p.22 from part-b p.22, so
+    provenance keeps file identity: kind, inspected pages and the file hash
+    of every sliced part, across all passes.
+    """
+    inspected: dict[str, dict[str, dict[str, Any]]] = {}
+    for record in index_records or []:
+        if not isinstance(record, dict):
+            continue
+        route_id = record.get("route_id")
+        if not isinstance(route_id, str):
+            continue
+        materials = inspected.setdefault(route_id, {})
+        for part in record.get("parts", []) or []:
+            if not isinstance(part, dict):
+                continue
+            uri = part.get("material_uri")
+            if not isinstance(uri, str):
+                continue
+            entry = materials.setdefault(uri, {"kind": part.get("kind"),
+                                               "pages": set(),
+                                               "file_sha256": part.get("file_sha256")})
+            for page in part.get("pages", []) or []:
+                if isinstance(page, int) and not isinstance(page, bool) and page >= 1:
+                    entry["pages"].add(page)
+    return {
+        route_id: {
+            uri: {"kind": entry["kind"], "pages": sorted(entry["pages"]),
+                  "file_sha256": entry["file_sha256"]}
+            for uri, entry in materials.items()
+        }
+        for route_id, materials in inspected.items()
+    }
+
+
+def _evidence_filename(locator: Any) -> str | None:
+    """The single material file an evidence locator names, if exactly one.
+
+    House-style filenames carry no whitespace, so each suffix-token span is
+    recovered by walking left to the previous boundary. Zero or several
+    distinct names mean the locator does not identify one file.
+    """
+    if not isinstance(locator, str):
+        return None
+    names: list[str] = []
+    for match in MATERIAL_SUFFIX_TOKEN.finditer(locator):
+        after = locator[match.end():match.end() + 1]
+        if after and (after.isalnum() or after == "."):
+            continue
+        boundary = max(locator.rfind(char, 0, match.start())
+                       for char in (" ", "\t", "\n", ",", ";", '"', "'", "(", "["))
+        candidate = locator[boundary + 1:match.end()]
+        if candidate and candidate not in names:
+            names.append(candidate)
+    if len(names) != 1:
+        return None
+    return names[0]
+
+
+def _evidence_material(materials: dict[str, dict[str, Any]], locator: Any,
+                       *, where: str) -> str:
+    """The one bound material an evidence locator can own pages from.
+
+    A single-material route is unambiguous. Otherwise the locator must name
+    exactly one bound file — except when it cites pages and only one bound
+    material has a page model, which can only be that PDF.
+    """
+    if len(materials) == 1:
+        return next(iter(materials))
+    filename = _evidence_filename(locator)
+    if filename is not None:
+        hits = [uri for uri in materials if uri.rsplit("/", 1)[-1] == filename]
+        if len(hits) == 1:
+            return hits[0]
+    refs = parse_locator_page_ranges(locator)
+    if filename is None and refs:
+        pdfs = [uri for uri, info in materials.items() if info.get("kind") == "pdf"]
+        if len(pdfs) == 1:
+            return pdfs[0]
+    bound = ", ".join(sorted(uri.rsplit("/", 1)[-1] for uri in materials))
+    raise MaterialSynthesisError(
+        f"{where} evidence must name exactly one of the route's files "
+        f"({bound}); got {locator!r}")
+
+
+def _check_material_evidence(materials: dict[str, dict[str, Any]], locator: Any,
+                             *, where: str) -> None:
+    """One evidence locator against its owning material, or raise."""
+    uri = _evidence_material(materials, locator, where=where)
+    info = materials[uri]
+    name = uri.rsplit("/", 1)[-1]
+    ranges = parse_locator_page_ranges(locator)
+    if info.get("kind") == "pdf":
+        if not ranges:
+            raise MaterialSynthesisError(
+                f"{where} evidence must cite exact PDF pages in house style "
+                f"(e.g. '{name}, PDF pp. 34-41'); got {locator!r}")
+        seen = set(info.get("pages", []))
+        beyond: list[int] = []
+        for start, end in ranges:
+            for page in range(start, min(end, start + _MAX_CITED_SPAN) + 1):
+                if page not in seen:
+                    beyond.append(page)
+                    if len(beyond) >= 5:
+                        break
+            if len(beyond) >= 5:
+                break
+        if beyond:
+            raise MaterialSynthesisError(
+                f"{where} evidence cites {name} pages never inspected "
+                f"(e.g. p.{beyond[0]}); inspected: {sorted(seen)}")
+    elif ranges:
+        raise MaterialSynthesisError(
+            f"{where} evidence cites pages from text material {name}, "
+            f"which has no page model; got {locator!r}")
+
+
+def validate_synthesis_page_provenance(
+    inspected: dict[str, dict[str, dict[str, Any]]],
+    synthesis: dict[str, Any],
+) -> None:
+    """Refuse evidence that is not grounded in the attached slices.
+
+    Provenance is per material, not per route: part-a p.22 and part-b p.22
+    are different claims and checked against their own inspected sets.
+    Routes without a reading record keep their legacy behavior, so bundles
+    prepared without slices stay valid. Applies to assessments and both
+    comparison sides alike.
+    """
+    for row in synthesis.get("route_assessments", []) or []:
+        if not isinstance(row, dict) or row.get("review_status") != "deep-reviewed":
+            continue
+        route_id = str(row.get("route_id"))
+        materials = inspected.get(route_id)
+        if not materials:
+            continue
+        for evidence in row.get("evidence", []) or []:
+            if not isinstance(evidence, dict):
+                continue
+            _check_material_evidence(materials, evidence.get("locator"),
+                                     where=route_id)
+        # The bound every negative claim in this assessment is limited to. It
+        # is checked exactly like evidence, because that is what it is: a claim
+        # about which pages were in front of the reviewer. An unbounded "no
+        # worked solution here" over a file whose pages nobody opened is the
+        # one thing the reading budget cannot detect on its own.
+        scope = row.get("scope_of_absence")
+        if scope is not None:
+            _check_material_evidence(materials, scope,
+                                     where=f"{route_id} scope_of_absence")
+    for comparison in synthesis.get("comparisons", []) or []:
+        if not isinstance(comparison, dict):
+            continue
+        evidence = comparison.get("evidence")
+        if not isinstance(evidence, dict):
+            continue
+        for side, key in (("left", "left_route_id"), ("right", "right_route_id")):
+            route_id = comparison.get(key)
+            rows = evidence.get(side)
+            if not isinstance(route_id, str) or not isinstance(rows, list):
+                continue
+            materials = inspected.get(route_id)
+            if not materials:
+                continue
+            for item in rows:
+                if not isinstance(item, dict):
+                    continue
+                _check_material_evidence(materials, item.get("locator"),
+                                         where=f"comparison {side} of {route_id}")
+
+
 def material_synthesis_freshness(
     root: Path,
     unit_id: str,
@@ -329,6 +588,8 @@ def material_synthesis_freshness(
     cache: dict[Path, str] | None = None,
 ) -> dict[str, Any]:
     """Return derived freshness without trusting a stored status flag."""
+    if cache is None:
+        cache = {}
     reasons: list[str] = []
     try:
         current = current_unit_material_basis(root, unit_id, repo=repo, cache=cache)
@@ -339,10 +600,20 @@ def material_synthesis_freshness(
         # local failure, while an ordinary manifest exposes only a stable code.
         return {"status": "stale", "reasons": ["current-basis-unavailable"]}
     basis = value.get("basis") or {}
-    for field in ("unit_revision", "source_map_revision", "source_map_checksum",
-                  "route_set_checksum", "material_checksums", "policy"):
+    for field in _COMPARED_BASIS_FIELDS:
         if basis.get(field) != current.get(field):
             reasons.append(field)
+    refs = [ref for row in value.get("route_assessments", []) or []
+            if isinstance(row, dict)
+            for ref in (row.get("analysis_refs", []) or [])]
+    if refs:
+        notes_repo = repo if repo is not None else load_repo(root)
+        # Observe every reference, even after one proves stale: callers bind
+        # all observed source bytes into continuation identities.
+        problems = [_analysis_ref_problem(root, notes_repo, ref, cache=cache)
+                    for ref in refs]
+        if any(problem is not None for problem in problems):
+            reasons.append(ANALYSIS_REFS_STALE)
     return {"status": "current" if not reasons else "stale", "reasons": reasons}
 
 

@@ -10,10 +10,16 @@ from pathlib import Path
 import jsonschema
 import yaml
 
+from ..contracts.atlas_question import (
+    QUESTION_FIELDS,
+    QUESTION_FIELDS_ORDERED,
+    QUESTION_HANDLER_OWNED,
+)
 from ..fingerprint import canonical_fingerprint
 from ..loader import load_repo
 from ..loading.yamlio import UniqueKeySafeLoader
 from ..revisions import artifact_revision
+from .suggest import with_suggestions
 from .support import (
     WriteRefused,
     _expected_ok,
@@ -80,7 +86,9 @@ def cmd_atlas_context(args) -> int:
             return 3
         repo = load_repo(root)
         if args.concept_id not in repo.concepts:
-            raise WriteRefused("unknown concept")
+            raise WriteRefused(with_suggestions(
+                f"unknown concept: {args.concept_id}",
+                args.concept_id, repo.concepts))
         # This is a scoped editor read, not another full-manifest endpoint.
         rows = [copy.deepcopy(row) for data in _registries(root).values()
                 for row in data["relations"]
@@ -157,9 +165,16 @@ def cmd_atlas_question_save(args) -> int:
     question = args.question
     if not isinstance(question, dict):
         raise WriteRefused("question must be an object")
-    allowed = {"id", "title", "text", "target", "state", "answer_notes"}
-    if set(question) - allowed or not isinstance(question.get("id"), str):
-        raise WriteRefused("question has unknown fields or no note id")
+    unknown = set(question) - QUESTION_FIELDS
+    if unknown:
+        raise WriteRefused(
+            "question has unknown fields: " + ", ".join(sorted(unknown))
+            + f" (accepted: {', '.join(QUESTION_FIELDS_ORDERED)}; "
+            + f"{'/'.join(QUESTION_HANDLER_OWNED)} are set by the handler)")
+    if not isinstance(question.get("id"), str):
+        raise WriteRefused("question needs a string id")
+    if "target" in question and not isinstance(question["target"], dict):
+        raise WriteRefused("question target must be an object")
     with _operator_lock(root):
         if not _expected_ok(root, args.expected_snapshot):
             return 3

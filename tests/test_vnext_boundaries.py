@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 import yaml
-from repo_builders import add_curriculum, write_yaml
+from repo_builders import add_curriculum, run_los, write_minimal_pdf, write_yaml
 
 from learning_os.ai_actions import AIActionService
 from learning_os.backup_manifest import (
@@ -77,9 +77,11 @@ def _add_routed_unit(root: Path) -> None:
     registry = yaml.safe_load(registry_path.read_text(encoding="utf-8"))
     registry["sources"][0]["material"] = "material://source-demo-book/book.pdf"
     write_yaml(registry_path, registry)
-    material = root.parent / "materials/source-demo-book/lecture-01.pdf"
-    material.parent.mkdir(parents=True, exist_ok=True)
-    material.write_bytes(b"synthetic expected-value lecture")
+    write_minimal_pdf(
+        root.parent / "materials/source-demo-book/lecture-01.pdf",
+        ["synthetic expected-value lecture",
+         "the weighted sum over finite outcomes"],
+    )
 
 
 def _synthesis(root: Path) -> dict:
@@ -111,6 +113,7 @@ def _synthesis(root: Path) -> dict:
             "exercise_value": "Includes a small worked calculation.",
             "best_for": "Checking the lecture's core derivation.",
             "limitations": "Does not cover continuous variables.",
+            "scope_of_absence": "lecture-01.pdf, PDF p. 1 of 1",
             "evidence": [{"locator": "lecture-01.pdf p.1", "checksum": checksum}],
         }],
         "comparisons": [],
@@ -141,13 +144,61 @@ def test_material_synthesis_covers_routes_and_derives_staleness(mini_repo):
         "status": "current", "reasons": [],
     }
 
+    # Prose is outside the basis. Rewording an angle is how a wrong judgment
+    # gets corrected in the canonical place, and it must not cost a whole
+    # unit's reviewed dossier — the old whole-row hash made exactly that edit
+    # stale everything, so corrections migrated into the ungoverned study map.
     source_map = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
     changed = yaml.safe_load(source_map.read_text(encoding="utf-8"))
     changed["sources"][0]["unit_routes"][0]["angle"] = "A changed route judgment."
     write_yaml(source_map, changed)
+    assert material_synthesis_freshness(mini_repo, "unit-demo-l01", value) == {
+        "status": "current", "reasons": [],
+    }
+
+    # A canonical prose fix travels through a gateway transaction, which bumps
+    # the module's logical revision. The dossier must survive that too: the
+    # old compared-revision guard staled every dossier in the module at this
+    # point, including units the edit never touched.
+    from learning_os.revisions import (
+        dump_revisions,
+        load_revisions,
+        revision_ledger_path,
+    )
+    ledger_path = revision_ledger_path(mini_repo)
+    ledger_path.parent.mkdir(parents=True, exist_ok=True)
+    revisions = load_revisions(mini_repo)
+    revisions["module-demo"] = revisions.get("module-demo", 0) + 1
+    ledger_path.write_text(dump_revisions(revisions), encoding="utf-8")
+    assert material_synthesis_freshness(mini_repo, "unit-demo-l01", value) == {
+        "status": "current", "reasons": [],
+    }
+
+    # What the dossier does rest on still stales it: a coverage claim the
+    # assessments were written against is gone.
+    changed["sources"][0]["unit_routes"][0]["covers"] = ["knowledge-demo-l01-extra"]
+    write_yaml(source_map, changed)
     freshness = material_synthesis_freshness(mini_repo, "unit-demo-l01", value)
     assert freshness["status"] == "stale"
     assert "route_set_checksum" in freshness["reasons"]
+
+
+def test_material_basis_refuses_an_unclassified_route_field():
+    """A new source-map field must be classified before it can ride the basis.
+
+    Silently hashing it would make some future prose field stale every dossier
+    again; silently dropping it could hide a real evidential change. Neither is
+    a decision this module gets to make on its own.
+    """
+    from learning_os.materials_resolution import evidential_route_projection
+
+    route = {"id": "route-demo", "source_id": "source-demo", "locator": "a.pdf",
+             "covers": ["knowledge-demo"], "scope": "current", "angle": "prose"}
+    assert "angle" not in evidential_route_projection(route)
+    assert evidential_route_projection(route)["covers"] == ["knowledge-demo"]
+
+    with pytest.raises(ValueError, match="not classified for the material basis"):
+        evidential_route_projection({**route, "reading_time": "20 minutes"})
 
 
 def test_material_synthesis_hashes_every_file_in_a_multi_file_route(mini_repo):
@@ -252,6 +303,235 @@ def test_unit_compare_materials_prepares_bounded_local_request(mini_repo):
     assert "route-demo-l01-book" in context
     assert "repository.read-external" not in context
     assert not any(path.suffix == ".pdf" for path in bundle.rglob("*"))
+    slice_doc = bundle / "attachments/slices/route-demo-l01-book.md"
+    assert slice_doc.is_file()
+    header = slice_doc.read_text(encoding="utf-8")
+    assert "synthetic expected-value lecture" in header
+    assert "material_checksum: sha256:" in header
+    assert "slice_sha256: sha256:" in header
+    index = json.loads((bundle / "attachments/slices/index.json").read_text(encoding="utf-8"))
+    assert [entry["route_id"] for entry in index] == ["route-demo-l01-book"]
+    assert index[0]["material_checksum"] != index[0]["slice_sha256"]
+
+
+def test_multi_pass_dossier_publishes_exactly_one_synthesis(
+    mini_repo, repo_root, tmp_path,
+):
+    _add_routed_unit(mini_repo)
+    write_minimal_pdf(
+        mini_repo.parent / "materials/source-demo-book/lecture-01.pdf",
+        [f"lecture line {n}" for n in range(1, 26)],
+    )
+    app = AIActionService(mini_repo)
+    request = app.prepare(
+        action_id="unit.compare-materials",
+        target_kind="unit",
+        target_id="unit-demo-l01",
+        provider="manual-bundle",
+        request_id="ai-request-multipass",
+    )
+    app.append_slices(
+        request_id=request["id"], route_id="route-demo-l01-book",
+        start=21, end=23, kind="example", concept_ids=["concept-expected-value"],
+        reason="worked examples follow the definition section")
+    source = tmp_path / "approved-multipass-delivery"
+    (source / "artifacts").mkdir(parents=True)
+    synthesis = _synthesis(mini_repo)
+    synthesis["route_assessments"][0]["evidence"] = [{
+        "locator": "lecture-01.pdf, pdf pp. 21-23",
+        "checksum": synthesis["route_assessments"][0]["evidence"][0]["checksum"],
+    }]
+    synthesis["basis"]["ai_provenance"] = {
+        "request_id": request["id"],
+        "delivery_id": "ai-delivery-multipass",
+        "provider": "manual-bundle",
+    }
+    write_yaml(source / "artifacts/material-synthesis.yaml", synthesis)
+    write_yaml(source / "delivery.yaml", {
+        "schema_version": 1,
+        "id": "ai-delivery-multipass",
+        "type": "ai-action-delivery",
+        "request_id": request["id"],
+        "action_id": "unit.compare-materials",
+        "status": "ready",
+        "producer": {"provider": "manual", "adapter": "manual-bundle"},
+        "approval": {
+            "user_approved": True,
+            "approved_at": "2026-08-25T12:00:00+00:00",
+        },
+        "operations": [{
+            "capability": "unit.material-synthesis.publish",
+            "target_id": "unit-demo-l01",
+            "artifact_ref": "artifacts/material-synthesis.yaml",
+        }],
+        "preconditions": request["preconditions"],
+    })
+    delivery = app.import_delivery(source)
+    envelope = _delivery_apply_envelope(mini_repo, app, delivery["id"])
+    applied = _run_delivery_apply(
+        repo_root, mini_repo, tmp_path / "apply-multipass.json", envelope,
+    )
+    assert applied.returncode == 0, applied.stderr
+    unit_dir = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01"
+    assert (unit_dir / "material-synthesis.yaml").is_file()
+    assert [path.name for path in unit_dir.glob("material-synthesis*.yaml")] == [
+        "material-synthesis.yaml"]
+    from learning_os.semantics.lineage import CONTRACT_VERSION, effective_statuses, load_ledger
+    from learning_os.semantics.scan import live_evidence_digest
+
+    records = load_ledger(mini_repo)
+    claim = records[f"dossier:{synthesis['id']}"]
+    assert claim.claim_kind == "dossier-freshness"
+    assert claim.admitted_by.request_id == envelope["request_id"]
+    assert claim.admitted_by.idempotency_key == envelope["idempotency_key"]
+    def status():
+        hashes = {key: live_evidence_digest(mini_repo, key, {})
+                  for key, _ in claim.derived_from.source_hashes}
+        return effective_statuses(records, CONTRACT_VERSION, {}, hashes)[claim.claim_id].status
+    assert status() == "supported"
+    receipts = list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+    receipt = yaml.safe_load(receipts[-1].read_text())
+    assert "operations/transactions/lineage.yaml" in json.dumps(receipt)
+    # Exact replay returns the same result without another lineage judgment.
+    ledger_bytes = (mini_repo / "operations/transactions/lineage.yaml").read_bytes()
+    replayed = _run_delivery_apply(repo_root, mini_repo, tmp_path / "replay-multipass.json", envelope)
+    assert replayed.returncode == 0, replayed.stderr
+    assert (mini_repo / "operations/transactions/lineage.yaml").read_bytes() == ledger_bytes
+    # Presentation corrections must stay fresh; inspected byte changes must stale.
+    source_map_path = mini_repo / "curriculum/modules/module-demo/source-map.yaml"
+    source_map = yaml.safe_load(source_map_path.read_text())
+    source_map["sources"][0]["unit_routes"][0]["angle"] = "Rephrased purpose."
+    write_yaml(source_map_path, source_map)
+    assert status() == "supported"
+    material = mini_repo.parent / "materials/source-demo-book/lecture-01.pdf"
+    material.write_bytes(material.read_bytes() + b"\nchanged evidence\n")
+    assert status() == "stale"
+
+
+def test_publish_refuses_cross_file_page_confusion(
+    mini_repo, repo_root, tmp_path,
+):
+    _add_routed_unit(mini_repo)
+    write_minimal_pdf(
+        mini_repo.parent / "materials/source-demo-book/part-b.pdf",
+        [f"second file line {n}" for n in range(1, 26)],
+    )
+    source_map_path = (
+        mini_repo / "curriculum/modules/module-demo/source-map.yaml")
+    source_map = yaml.safe_load(source_map_path.read_text(encoding="utf-8"))
+    source_map["sources"][0]["unit_routes"][0]["locator"] = (
+        "lecture-01.pdf, reviewed section; part-b.pdf")
+    write_yaml(source_map_path, source_map)
+    app = AIActionService(mini_repo)
+    request = app.prepare(
+        action_id="unit.compare-materials",
+        target_kind="unit",
+        target_id="unit-demo-l01",
+        provider="manual-bundle",
+        request_id="ai-request-crossfile",
+    )
+    app.append_slices(
+        request_id=request["id"], route_id="route-demo-l01-book",
+        start=21, end=23, kind="example", concept_ids=["concept-expected-value"],
+        reason="examples continue in the second file",
+        material_uri="material://source-demo-book/part-b.pdf")
+    source = tmp_path / "rejected-crossfile-delivery"
+    (source / "artifacts").mkdir(parents=True)
+    synthesis = _synthesis(mini_repo)
+    synthesis["route_assessments"][0]["locator"] = (
+        "lecture-01.pdf, reviewed section; part-b.pdf")
+    synthesis["route_assessments"][0]["evidence"] = [{
+        "locator": "lecture-01.pdf, PDF p.22",
+        "checksum": synthesis["route_assessments"][0]["evidence"][0]["checksum"],
+    }]
+    synthesis["basis"]["ai_provenance"] = {
+        "request_id": request["id"],
+        "delivery_id": "ai-delivery-crossfile",
+        "provider": "manual-bundle",
+    }
+    write_yaml(source / "artifacts/material-synthesis.yaml", synthesis)
+    write_yaml(source / "delivery.yaml", {
+        "schema_version": 1,
+        "id": "ai-delivery-crossfile",
+        "type": "ai-action-delivery",
+        "request_id": request["id"],
+        "action_id": "unit.compare-materials",
+        "status": "ready",
+        "producer": {"provider": "manual", "adapter": "manual-bundle"},
+        "approval": {
+            "user_approved": True,
+            "approved_at": "2026-08-25T12:00:00+00:00",
+        },
+        "operations": [{
+            "capability": "unit.material-synthesis.publish",
+            "target_id": "unit-demo-l01",
+            "artifact_ref": "artifacts/material-synthesis.yaml",
+        }],
+        "preconditions": request["preconditions"],
+    })
+    delivery = app.import_delivery(source)
+    envelope = _delivery_apply_envelope(mini_repo, app, delivery["id"])
+    refused = _run_delivery_apply(
+        repo_root, mini_repo, tmp_path / "apply-crossfile.json", envelope,
+    )
+    assert refused.returncode != 0
+    assert "lecture-01.pdf pages never inspected" in (refused.stdout + refused.stderr)
+    assert not (
+        mini_repo
+        / "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml"
+    ).exists()
+
+
+def test_publish_refuses_evidence_citing_uninspected_pages(
+    mini_repo, repo_root, tmp_path,
+):
+    _add_routed_unit(mini_repo)
+    app = AIActionService(mini_repo)
+    request = app.prepare(
+        action_id="unit.compare-materials",
+        target_kind="unit",
+        target_id="unit-demo-l01",
+        provider="manual-bundle",
+        request_id="ai-request-unread-pages",
+    )
+    source = tmp_path / "rejected-unread-delivery"
+    (source / "artifacts").mkdir(parents=True)
+    synthesis = _synthesis(mini_repo)
+    synthesis["route_assessments"][0]["evidence"] = [{
+        "locator": "lecture-01.pdf p.9",
+        "checksum": synthesis["route_assessments"][0]["evidence"][0]["checksum"],
+    }]
+    write_yaml(source / "artifacts/material-synthesis.yaml", synthesis)
+    write_yaml(source / "delivery.yaml", {
+        "schema_version": 1,
+        "id": "ai-delivery-unread",
+        "type": "ai-action-delivery",
+        "request_id": request["id"],
+        "action_id": "unit.compare-materials",
+        "status": "ready",
+        "producer": {"provider": "manual", "adapter": "manual-bundle"},
+        "approval": {
+            "user_approved": True,
+            "approved_at": "2026-08-25T12:00:00+00:00",
+        },
+        "operations": [{
+            "capability": "unit.material-synthesis.publish",
+            "target_id": "unit-demo-l01",
+            "artifact_ref": "artifacts/material-synthesis.yaml",
+        }],
+        "preconditions": request["preconditions"],
+    })
+    delivery = app.import_delivery(source)
+    envelope = _delivery_apply_envelope(mini_repo, app, delivery["id"])
+    refused = _run_delivery_apply(
+        repo_root, mini_repo, tmp_path / "apply-unread.json", envelope,
+    )
+    assert refused.returncode != 0
+    assert "never inspected" in (refused.stdout + refused.stderr)
+    assert not (
+        mini_repo
+        / "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml"
+    ).exists()
 
 
 def _import_unit_synthesis_delivery(root: Path, tmp_path: Path):
@@ -378,7 +658,8 @@ def test_unit_delivery_apply_is_content_bound_receipt_v2_and_replay_safe(
         {
             "capability": "unit.material-synthesis.publish",
             "declared_writes": [
-                "curriculum/modules/**/units/**/material-synthesis.yaml"
+                "curriculum/modules/**/units/**/material-synthesis.yaml",
+                "operations/transactions/lineage.yaml",
             ],
         },
     ]
@@ -437,6 +718,7 @@ def test_unit_delivery_apply_refuses_artifact_changed_after_approval_atomically(
         / "curriculum/modules/module-demo/units/unit-demo-l01/material-synthesis.yaml"
     ).exists()
     assert not list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+    assert not (mini_repo / "operations/transactions/lineage.yaml").exists()
 
 
 def test_unit_delivery_apply_requires_exact_subject_and_cannot_run_directly(
@@ -850,6 +1132,173 @@ def test_backup_manifest_is_allowlisted_and_verifies_new_roots(mini_repo, tmp_pa
     )
     assert not result["ok"]
     assert any(row["issue"] == "checksum-mismatch" for row in result["issues"])
+
+    # Found by synthetic use: verification walked only the manifest, so it could
+    # say "is everything we saved still here" and never "is anything here that
+    # we did not save". A canonical note the backup never contained passed, and
+    # `load_repo` then read it as real curriculum.
+    (restored_ui / "src/app.ts").write_text(
+        (ui / "src/app.ts").read_text(encoding="utf-8"), encoding="utf-8")
+    planted = restored_core / "knowledge/notes/planted.md"
+    planted.parent.mkdir(parents=True, exist_ok=True)
+    planted.write_text("---\nid: note-planted\n---\nnever backed up\n", encoding="utf-8")
+    extra = verify_backup_manifest(
+        mini_repo, manifest,
+        restored_core=restored_core,
+        restored_ui=restored_ui,
+        restored_materials=restored_materials,
+    )
+    assert not extra["ok"]
+    assert {"root": "core", "path": "knowledge/notes/planted.md",
+            "issue": "unaccounted"} in extra["issues"]
+    assert planted.exists(), "an unexplained file is named, never removed"
+    planted.unlink()
+    assert verify_backup_manifest(
+        mini_repo, manifest,
+        restored_core=restored_core,
+        restored_ui=restored_ui,
+        restored_materials=restored_materials,
+    )["ok"], "the clean restore must not trip the unaccounted check"
+
+
+def _backup_cli_fixture(mini_repo: Path, tmp_path: Path) -> dict[str, Path]:
+    """Synthetic UI + materials authorities for the backup CLI tests."""
+    ui = tmp_path / "ui"
+    (ui / "src").mkdir(parents=True)
+    (ui / "src/app.ts").write_text("export {};", encoding="utf-8")
+    (ui / "contracts").mkdir()
+    contract = yaml.safe_load(
+        (mini_repo / "system/contracts/manifest-contract.yaml").read_text(encoding="utf-8")
+    )
+    lock_name = f"manifest-v{contract['contract_version']}.lock.json"
+    (ui / "contracts" / lock_name).write_text(json.dumps({
+        "contract_version": contract["contract_version"],
+        "schema_sha256": contract["schema_sha256"],
+    }), encoding="utf-8")
+    (ui / "plugin").mkdir()
+    for name in ("main.js", "styles.css", "manifest.json", "build-info.json"):
+        (ui / "plugin" / name).write_text("void 0;\n", encoding="utf-8")
+    (ui / "plugin-assets.json").write_text(json.dumps({
+        "schema_version": 1,
+        "type": "learningos-ui-plugin-assets",
+        "shipped": ["main.js", "styles.css", "manifest.json", "build-info.json"],
+        "vault_owned": ["data.json"],
+    }), encoding="utf-8")
+    _installer_fixture(ui)
+    materials = tmp_path / "materials"
+    (materials / "source-demo").mkdir(parents=True)
+    (materials / "source-demo/a.pdf").write_bytes(b"pdf")
+    return {"ui": ui, "materials": materials}
+
+
+def test_backup_manifest_out_writes_file_and_prints_summary(mini_repo, tmp_path):
+    roots = _backup_cli_fixture(mini_repo, tmp_path)
+    target = tmp_path / "scratch" / "manifest.json"
+    result = run_los(
+        mini_repo, "backup-manifest",
+        "--ui-root", str(roots["ui"]),
+        "--materials-root", str(roots["materials"]),
+        "--out", str(target),
+    )
+    assert result.returncode == 0, result.stderr
+    assert len(result.stdout.encode("utf-8")) < 1024, (
+        f"--out summary must stay well under 1 KB, got {len(result.stdout)} bytes")
+    summary = json.loads(result.stdout)
+    assert summary["ok"] is True
+    assert summary["roots"] == ["core", "materials", "ui"]
+    assert summary["entries"] > 0
+    assert summary["aggregate_sha256"].startswith("sha256:")
+    assert summary["out"] == str(target.resolve())
+    stored = json.loads(target.read_text(encoding="utf-8"))
+    assert stored["type"] == "backup-manifest"
+    assert len(stored["entries"]) == summary["entries"]
+    assert stored["aggregate_sha256"] == summary["aggregate_sha256"]
+    assert not list(target.parent.glob(".manifest.json.tmp")), (
+        "the atomic write must not leave its temp sibling behind")
+
+
+@pytest.mark.parametrize("authority", ["core", "ui", "materials"])
+def test_backup_manifest_out_refuses_paths_inside_backed_up_roots(
+        mini_repo, tmp_path, authority):
+    roots = _backup_cli_fixture(mini_repo, tmp_path)
+    roots["core"] = mini_repo
+    target = roots[authority] / "manifest.json"
+    result = run_los(
+        mini_repo, "backup-manifest",
+        "--ui-root", str(roots["ui"]),
+        "--materials-root", str(roots["materials"]),
+        "--out", str(target),
+    )
+    assert result.returncode == 2, result.stdout
+    assert "refusing" in result.stderr
+    assert authority in result.stderr
+    assert not target.exists()
+
+
+def test_backup_manifest_stdout_keeps_the_full_output(mini_repo, tmp_path):
+    roots = _backup_cli_fixture(mini_repo, tmp_path)
+    result = run_los(
+        mini_repo, "backup-manifest",
+        "--ui-root", str(roots["ui"]),
+        "--materials-root", str(roots["materials"]),
+        "--stdout",
+    )
+    assert result.returncode == 0, result.stderr
+    manifest = json.loads(result.stdout)
+    assert manifest["type"] == "backup-manifest"
+    assert manifest["entries"]
+
+
+def test_backup_manifest_bare_call_names_out_instead_of_flooding(mini_repo, tmp_path):
+    roots = _backup_cli_fixture(mini_repo, tmp_path)
+    result = run_los(
+        mini_repo, "backup-manifest",
+        "--ui-root", str(roots["ui"]),
+        "--materials-root", str(roots["materials"]),
+    )
+    assert result.returncode == 2
+    assert "--out" in result.stderr
+    assert "--stdout" in result.stderr
+    assert "entries" in result.stderr
+    assert result.stdout == "", "a bare call must not print the manifest"
+
+
+def test_backup_workflow_end_to_end_in_scratch(mini_repo, tmp_path):
+    """WORKFLOWS §31 literally: manifest outside the roots, copy, verify."""
+    roots = _backup_cli_fixture(mini_repo, tmp_path)
+    backup_dir = tmp_path / "backup"
+    backup_dir.mkdir()
+    manifest_path = backup_dir / "manifest.json"
+    taken = run_los(
+        mini_repo, "backup-manifest",
+        "--ui-root", str(roots["ui"]),
+        "--materials-root", str(roots["materials"]),
+        "--out", str(manifest_path),
+    )
+    assert taken.returncode == 0, taken.stderr
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    restore = tmp_path / "restore"
+    restored = {
+        "core": restore / "core",
+        "ui": restore / "ui",
+        "materials": restore / "materials",
+    }
+    sources = {"core": mini_repo, **roots}
+    for row in manifest["entries"]:
+        dest = restored[row["root"]] / row["path"]
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(sources[row["root"]] / row["path"], dest)
+
+    verified = run_los(
+        mini_repo, "backup-verify",
+        "--manifest", str(manifest_path),
+        "--restored-core", str(restored["core"]),
+        "--restored-ui", str(restored["ui"]),
+        "--restored-materials", str(restored["materials"]),
+    )
+    assert verified.returncode == 0, verified.stdout + verified.stderr
+    assert json.loads(verified.stdout)["ok"] is True
 
 
 @contextlib.contextmanager
@@ -1570,6 +2019,64 @@ def test_quarantined_workspaces_stay_out_of_the_inventory(mini_repo, tmp_path):
     materials.mkdir()
     manifest = build_backup_manifest(mini_repo, ui_root=ui, materials_root=materials)
     assert not [row for row in manifest["entries"] if "workspace-sealed" in row["path"]]
+
+
+def test_populated_catalogue_leaves_normal_surfaces_byte_identical(mini_repo):
+    """R9: step 6 must prove candidates never leak into ordinary use.
+
+    With a populated catalogue present, the ordinary manifest's content, the
+    loader inventory and validation are byte- and issue-identical to the
+    catalogue's absence. The interface's search, workload and recommendations
+    read only the atomic manifest, so identical content bytes there prove those
+    surfaces too; the dashboard still opens only on an explicit gesture and
+    declares every isolation flag false. Only the tree-attesting fingerprint
+    in `_generated` moves, as it must — it attests every file, quarantine
+    included.
+    """
+    from learning_os.genout import build_manifest
+    from learning_os.loader import load_repo
+    from learning_os.masters_planning import (
+        master_catalog_destination,
+        masters_planning_dashboard,
+    )
+    from learning_os.rules import validate
+
+    def snapshot():
+        repo = load_repo(mini_repo)
+        built = build_manifest(repo, "T1")
+        manifest = json.dumps(
+            {key: built[key] for key in built if key != "_generated"},
+            sort_keys=True)
+        inventory = {
+            "sources": sorted(repo.sources),
+            "modules": sorted(getattr(repo, "modules", {})),
+            "notes": sorted(getattr(repo, "notes", {})),
+        }
+        issues = sorted(
+            (issue.severity, issue.code, issue.message)
+            for issue in validate(repo) if issue.severity == "E")
+        return manifest, inventory, issues
+
+    before = snapshot()
+    assert before[2] == []
+    catalog = _catalog()
+    catalog["candidate_sources"][0]["url"] = "https://example.invalid/cs000/"
+    catalog["candidate_sources"][0]["identifiers"] = {
+        "lec-01": "https://example.invalid/cs000/lec01"}
+    catalog["candidate_sources"][0]["child_titles"] = {"lec-01": "Lecture 1"}
+    catalog["candidate_sources"][0]["possible_use"] = "Possibly the attention block."
+    catalog["candidate_sources"][0]["type"] = "course"
+    catalog["comparison_ids"] = []
+    destination = master_catalog_destination(mini_repo)
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    write_yaml(destination, validate_master_catalog(mini_repo, catalog))
+    assert snapshot() == before
+    with pytest.raises(MastersPlanningError, match="explicit access gesture"):
+        masters_planning_dashboard(mini_repo, confirmed=False)
+    opened = masters_planning_dashboard(mini_repo, confirmed=True)
+    assert opened["catalog"]["candidate_sources"][0]["url"] == \
+        "https://example.invalid/cs000/"
+    assert all(value is False for value in opened["isolation"].values())
 
 
 @pytest.mark.full_repo

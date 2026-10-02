@@ -11,14 +11,32 @@
     "unit_id"
   ],
   "properties": {
+    "progress_next": {
+      "type": "string"
+    },
+    "progress_summary": {
+      "type": "string"
+    },
     "stage_id": {
       "type": "string"
     },
     "status": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "active",
+        "paused",
+        "complete",
+        "skipped",
+        "revisit"
+      ]
     },
     "unit_id": {
       "type": "string"
     }
+  },
+  "dependentRequired": {
+    "progress_next": [
+      "progress_summary"
+    ]
   }
 }

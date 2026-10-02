@@ -13,7 +13,15 @@
   ],
   "properties": {
     "feedback": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "helpful",
+        "too-advanced",
+        "wrong-perspective",
+        "useful-for-derivation",
+        "useful-for-review",
+        "skipped"
+      ]
     },
     "note": {
       "type": "string"

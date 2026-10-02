@@ -194,7 +194,8 @@ class ChecksCurriculum:
             # Read the join from both sides: either declaration is enough to
             # count as a context, so a one-sided edit can only ever ADD an
             # unblocked context and relax this rule, never invent a failure.
-            declared = set(unit.data.get("workspace_ids") or [])
+            declared = {wid for wid in unit.data.get("workspace_ids") or []
+                        if isinstance(wid, str)}  # non-strings: schema error, reported
             contexts = {w.id for w in active
                         if uid in (w.meta.get("unit_ids") or []) or w.id in declared}
             if not contexts or not contexts.issubset(blocked):

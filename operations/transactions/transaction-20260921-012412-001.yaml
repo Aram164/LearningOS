@@ -1,0 +1,35 @@
+schema_version: 2
+id: transaction-20260921-012412-001
+type: transaction-receipt
+status: committed
+capability: note.analysis.save
+committed_at: '2026-09-21T01:24:12+02:00'
+snapshot_before: sha256:e2b69bc99826d01daec6a242065b0461a26e0770a7387bf0f2b72f6e5380e8ac
+snapshot_after: sha256:b108111aad3b59092b565b6d471bcf29546de0696f72cb27424d05db9c56f20d
+expected_revisions:
+  note-11-datascience-intro-pp039-046: 0
+artifact_revisions:
+  note-11-datascience-intro-pp039-046:
+    before: 0
+    after: 1
+writes:
+- path: knowledge/notes/mathematics/note-11-datascience-intro-pp039-046.md
+  sha256_before: null
+  sha256_after: 8498cd2fdecbcfd7975794be43bf6e99cd0905463de547cfcb43aa23270d0278
+  created: true
+metadata: {}
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: note.analysis.save
+    declared_writes:
+    - knowledge/notes/**
+request:
+  channel: operator
+  request_id: request-summaries-migrate-note-11-datascience-intro-pp039-046
+  idempotency_key: summaries-migrate-note-11-datascience-intro-pp039-046
+  intent_sha256: sha256:89f03f39f0363b50a4995c5ec35aaad0d61201bdd9e6197d534eb8309fea2998
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:89f03f39f0363b50a4995c5ec35aaad0d61201bdd9e6197d534eb8309fea2998

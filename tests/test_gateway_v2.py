@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -10,11 +11,29 @@ import yaml
 from gateway_helpers import file_sha256, request_artifact_id
 from jsonschema import Draft202012Validator
 
-from learning_os.commands.capability import _classify_failure
+from learning_os.commands.capability import _classify_failure, _projection_error
 from learning_os.commands.support import _read_content_bound_file, _session_ledger
 from learning_os.contracts.gateway import GatewayRequestContext, intent_sha256
 from learning_os.fingerprint import canonical_fingerprint
-from learning_os.transactions import TransactionIdempotencyConflict, TransactionService
+from learning_os.transactions import (
+    ProjectionFailure,
+    TransactionFailure,
+    TransactionIdempotencyConflict,
+    TransactionService,
+)
+
+
+@pytest.fixture(autouse=True)
+def _named_test_session(monkeypatch):
+    """One named session for the whole module.
+
+    The envelopes here seal `channel: ui` while the in-process ledger reads
+    resolve outside any gateway request; without a named session the two
+    sides would land in different per-session ledgers. The variable is
+    inherited by every `los` subprocess these tests spawn, so writers and
+    readers agree exactly as one agent session's shell would.
+    """
+    monkeypatch.setenv("LOS_SESSION_ID", "test-gateway-v2")
 
 
 def _envelope(root: Path, *, text: str = "bounded capture",
@@ -598,6 +617,151 @@ def test_gateway_v2_never_classifies_an_incomplete_rollback_as_no_commit(
     assert error["retryable"] is True
 
 
+def test_gateway_v2_projection_failure_carries_typed_provenance(
+    mini_repo: Path, repo_root: Path, tmp_path: Path
+):
+    """End to end: a projection failure reaches the gateway typed.
+
+    Read-only generated/ breaks both publication and rollback
+    republication, so rollback is incomplete and the code stays
+    INTERNAL_FAILURE — but the details prove the typed path was taken
+    (subsystem plus rollback outcome) rather than the prose fallback,
+    which never sets details.
+    """
+    generated = mini_repo / "generated"
+    generated.mkdir(exist_ok=True)
+    os.chmod(generated, 0o555)
+    try:
+        envelope = _envelope(mini_repo)
+        refused = _run(repo_root, mini_repo, tmp_path / "projection.json", envelope)
+    finally:
+        os.chmod(generated, 0o755)
+    assert refused.returncode == 2
+    response = json.loads(refused.stdout)
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is True
+    assert response["error"]["details"] == {
+        "stage": "core.projection",
+        "rollback_complete": False,
+    }
+
+
+def test_gateway_v2_post_commit_hook_failure_is_never_a_definitive_refusal(
+    mini_repo: Path, repo_root: Path, tmp_path: Path
+):
+    """Critical: a committed write must not return INVALID_REQUEST.
+
+    The receipt is durable before the session-ownership ledger write, so a
+    ledger failure still committed. The gateway must answer INTERNAL_FAILURE
+    with the receipt facts — and an exact retry must then replay the
+    committed receipt instead of the UI discarding its recovery evidence.
+    """
+    ledger = _session_ledger(mini_repo.resolve())
+    assert not ledger.exists()
+    ledger.mkdir()
+    try:
+        envelope = _envelope(mini_repo)
+        failed = _run(repo_root, mini_repo, tmp_path / "post-commit.json", envelope)
+    finally:
+        ledger.rmdir()
+    assert failed.returncode == 2
+    response = json.loads(failed.stdout)
+    assert response["ok"] is False
+    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["retryable"] is True
+    assert response["error"]["details"] == {
+        "stage": "core.commit",
+        "committed": True,
+    }
+    assert response["transaction_id"]
+    assert response["receipt_path"]
+    assert response["snapshot_after"]
+    assert list((mini_repo / "operations/transactions").glob("transaction-*.yaml"))
+
+    # The retry discovers the committed receipt, but session ownership died
+    # with the first attempt's ledger write, so repair fails closed instead
+    # of inventing authorship. Still INTERNAL_FAILURE — never definitive.
+    replayed = _run(repo_root, mini_repo, tmp_path / "post-commit-retry.json", envelope)
+    assert replayed.returncode == 2
+    retry = json.loads(replayed.stdout)
+    assert retry["error"]["code"] == "INTERNAL_FAILURE"
+    assert retry["error"]["retryable"] is False
+    assert "session ledger" in retry["error"]["message"]
+
+    # Once any later write re-establishes the ledger, the exact retry of
+    # the original envelope replays the committed receipt.
+    second = _envelope(mini_repo, key="capture-v2-002", text="second write")
+    second["request_id"] = "request-capture-v2-002"
+    second["approval"]["subject_sha256"] = intent_sha256(second)
+    settled = _run(repo_root, mini_repo, tmp_path / "post-commit-second.json", second)
+    assert settled.returncode == 0
+
+    replayed = _run(repo_root, mini_repo, tmp_path / "post-commit-retry2.json", envelope)
+    assert replayed.returncode == 0
+    retry = json.loads(replayed.stdout)
+    assert retry["ok"] is True
+    assert retry["replayed"] is True
+    assert retry["transaction_id"] == response["transaction_id"]
+
+
+@pytest.mark.parametrize(
+    ("rollback_complete", "code"),
+    [(True, "PROJECTION_FAILED"), (False, "INTERNAL_FAILURE")],
+)
+def test_projection_error_maps_rollback_outcome_not_prose(
+    rollback_complete: bool, code: str
+):
+    """Errno text stays errno text; the flag decides the code."""
+    error = _projection_error(ProjectionFailure(
+        "[Errno 13] Permission denied: 'generated/manifest.json'",
+        rollback_complete=rollback_complete))
+    assert error["code"] == code
+    assert error["retryable"] is True
+    assert error["details"] == {
+        "stage": "core.projection",
+        "rollback_complete": rollback_complete,
+    }
+
+
+def test_projection_error_maps_pre_existing_defect_to_validation_failed():
+    """A pre-state that cannot publish is a validation refusal (JF-11)."""
+    error = _projection_error(ProjectionFailure(
+        "the published manifest no longer matches (drifted shape); rolled back "
+        "completely but the restored pre-state cannot be re-published "
+        "(TransactionFailure); the defect pre-exists this write",
+        rollback_complete=True, pre_existing_defect=True))
+    assert error["code"] == "VALIDATION_FAILED"
+    assert error["retryable"] is False
+    assert error["details"] == {
+        "stage": "core.projection",
+        "rollback_complete": True,
+        "pre_existing_defect": True,
+    }
+
+
+def test_gateway_v2_classifies_unpublishable_prestate_as_validation_failed():
+    """The pre-existing-defect case is recognized by typed flag (JF-11).
+
+    Even a hostile message naming earlier classifier tokens (snapshot,
+    projection, approval) must not divert the refusal: the flag decides,
+    never the prose.
+    """
+    failure = TransactionFailure(
+        "transaction failed canonical validation: E PARSE: some note has invalid "
+        "YAML frontmatter; rolled back completely but the restored pre-state "
+        "cannot be re-published (TransactionFailure); the defect pre-exists "
+        "this write; snapshot projection approval",
+        pre_existing_defect=True,
+    )
+    error = _classify_failure(2, str(failure), failure=failure)
+    assert error["code"] == "VALIDATION_FAILED"
+    assert error["retryable"] is False
+    assert error["message"] == str(failure)
+    # ... and without the flag the same prose is just prose: tokens rule.
+    untyped = _classify_failure(2, str(failure))
+    assert untyped["code"] != "VALIDATION_FAILED", untyped
+
+
 def test_gateway_v2_returns_typed_unknown_capability(
     mini_repo: Path, repo_root: Path, tmp_path: Path
 ):
@@ -835,6 +999,8 @@ def test_gateway_v2_refuses_a_guard_naming_someone_elses_request(
     response = json.loads(refused.stdout)
     assert response["ok"] is False
     assert "cover exactly every transaction artifact" in response["error"]["message"]
+    expected = request_artifact_id("capture.create", "capture-foreign-guard-001")
+    assert f"artifacts=['{expected}']" in response["error"]["message"]
     assert not list((mini_repo / "work/inbox").glob("*.md"))
 
 
@@ -1148,9 +1314,11 @@ def test_replay_request_id_mismatch_fails_closed(
     result = _run(repo_root, mini_repo, tmp_path / "reqid-replay.json", resent, replay_only=True)
     assert result.returncode == 2, (result.returncode, result.stdout, result.stderr)
     response = json.loads(result.stdout)
-    assert response["error"]["code"] == "INTERNAL_FAILURE"
+    assert response["error"]["code"] == "IDEMPOTENCY_CONFLICT"
     assert response["error"]["retryable"] is False
     assert "request id" in response["error"]["message"]
+    assert envelope["request_id"] in response["error"]["message"]
+    assert "saved envelope unchanged" in response["error"]["message"]
 
 
 def test_replay_channel_mismatch_fails_closed(mini_repo: Path, repo_root: Path, tmp_path: Path):
@@ -1379,3 +1547,65 @@ def test_two_concurrent_replays_of_the_same_transaction_do_not_duplicate_rows(
     assert list(ledger["paths"]).count(captured) == 1, (
         "concurrent replays of the same transaction must not duplicate the ownership row"
     )
+
+
+def test_seal_envelope_helper_produces_submittable_capture(repo_root, mini_repo,
+                                                           tmp_path):
+    payload_file = tmp_path / "payload.json"
+    payload_file.write_text(json.dumps({"text": "sealed by helper"}),
+                            encoding="utf-8")
+    out = tmp_path / "sealed.json"
+    before = {path for path in mini_repo.rglob("*")}
+    sealed = subprocess.run(
+        [sys.executable, str(repo_root / "tools/seal_envelope.py"),
+         "--root", str(mini_repo), "--capability", "capture.create",
+         "--payload", "@" + str(payload_file), "--key", "seal-helper-001",
+         "--revision", "capture-request:seal-helper-001=0",
+         "--out", str(out)],
+        capture_output=True, text=True)
+    assert sealed.returncode == 0, sealed.stderr
+    assert {path for path in mini_repo.rglob("*")} == before
+    envelope = json.loads(out.read_text(encoding="utf-8"))
+    assert envelope["capability"] == "capture.create"
+    assert envelope["channel"] == "operator"
+    assert envelope["idempotency_key"] == "seal-helper-001"
+    assert envelope["approval"]["kind"] == "operator-approval"
+    applied = _run(repo_root, mini_repo, tmp_path / "apply.json", envelope)
+    assert applied.returncode == 0, applied.stdout
+    assert json.loads(applied.stdout)["ok"] is True
+
+
+def test_seal_envelope_helper_refuses_out_inside_repo(repo_root, mini_repo,
+                                                      tmp_path):
+    refused = subprocess.run(
+        [sys.executable, str(repo_root / "tools/seal_envelope.py"),
+         "--root", str(mini_repo), "--capability", "capture.create",
+         "--payload", '{"text": "x"}', "--key", "seal-helper-002",
+         "--revision", "capture-request:seal-helper-002=0",
+         "--out", str(mini_repo / "sealed.json")],
+        capture_output=True, text=True)
+    assert refused.returncode == 2
+    assert "refusing to write" in refused.stderr
+    assert not (mini_repo / "sealed.json").exists()
+
+
+def test_seal_envelope_helper_mints_a_fresh_bounded_request_id(repo_root, mini_repo,
+                                                              tmp_path):
+    # §25c step 4: an exact retry keeps its key but needs a new request id,
+    # or `los operations` merges the attempts into one explanation. A
+    # longest legal key must still leave a legal request id.
+    key = "k" * 128
+    sealed = [subprocess.run(
+        [sys.executable, str(repo_root / "tools/seal_envelope.py"),
+         "--root", str(mini_repo), "--capability", "capture.create",
+         "--payload", '{"text": "sealed twice"}', "--key", key,
+         "--revision", f"{request_artifact_id('capture.create', key)}=0"],
+        capture_output=True, text=True) for _ in range(2)]
+    assert all(run.returncode == 0 for run in sealed), [r.stderr for r in sealed]
+    envelopes = [json.loads(run.stdout) for run in sealed]
+    first, second = (envelope["request_id"] for envelope in envelopes)
+    assert first != second
+    assert envelopes[0]["approval"] == envelopes[1]["approval"]
+    applied = _run(repo_root, mini_repo, tmp_path / "apply.json", envelopes[1])
+    assert applied.returncode == 0, applied.stdout
+    assert json.loads(applied.stdout)["request_id"] == second

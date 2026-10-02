@@ -9,15 +9,34 @@
     "plan_sha256"
   ],
   "properties": {
-    "approve": {
-      "type": "boolean"
-    },
     "plan_sha256": {
       "type": "string",
       "pattern": "^sha256:[a-f0-9]{64}$"
     },
     "review": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "schema_version": {
+          "type": "integer"
+        },
+        "basis_plan_sha256": {
+          "type": "string"
+        },
+        "basis_snapshot_sha256": {
+          "type": "string"
+        },
+        "decisions": {
+          "type": "object"
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "basis_plan_sha256",
+        "basis_snapshot_sha256",
+        "decisions",
+        "schema_version"
+      ],
+      "description": "Inline schema-version-1 ambiguity review bound to the unresolved baseline plan and canonical snapshot; decisions stay objects keyed by R### review id."
     }
   }
 }

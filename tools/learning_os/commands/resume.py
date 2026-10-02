@@ -1,0 +1,773 @@
+"""`los resume`: the one-screen return to study.
+
+Read-only. Resolves the stage to resume — the resume pointer when it is
+valid, else the requirement of the last recorded result (the ledger Finding
+0 fills), else the most recently touched study map — then compiles the
+screen from the five readers that already exist: the stage, its
+requirement, live observations, open items, and the exam sittings.
+"""
+
+from __future__ import annotations
+
+import datetime as _dt
+import json
+import re
+import sys
+from pathlib import Path
+
+from learning_os.genout.common import _first_para
+from learning_os.genout.modules_view import _academic_deadlines
+from learning_os.genout.resume_dossier import (
+    ResumeDossierError,
+    build_resume_dossier,
+)
+from learning_os.githistory import GitHistoryError, last_commit_date
+from learning_os.learning_runtime import (
+    RuntimeInputError,
+    collect_requirements,
+    read_observations,
+    read_stage_results,
+    stage_results_for,
+)
+from learning_os.loader import load_repo
+from learning_os.pathing import PathBoundaryError, resolved_inside
+from learning_os.semantics.goals import stale_observations
+
+from .support import _json_layout, _root
+
+
+def _live_observations(observations: list[dict]) -> list[dict]:
+    """Non-superseded observations, newest first. Unparseable timestamps
+    sort as oldest rather than crashing the screen."""
+    superseded = {obs.get("supersedes") for obs in observations
+                  if isinstance(obs, dict) and obs.get("supersedes")}
+    live = [obs for obs in observations
+            if isinstance(obs, dict) and obs.get("id") not in superseded]
+
+    def _when(obs: dict) -> str:
+        stamp = obs.get("timestamp")
+        if not isinstance(stamp, str):
+            return ""
+        try:
+            _dt.datetime.fromisoformat(stamp)
+        except ValueError:
+            return ""
+        return stamp
+
+    return sorted(live, key=_when, reverse=True)
+
+
+def _resolve_stage(repo):
+    """Return ``(via, module_id, unit_id, study_map_id, stage_id)``.
+
+    The pointer wins when it resolves. It is the learner's own last explicit
+    study action — `stage.progress.update` writes it in the same transaction
+    as the records that moved — so nothing derived may outrank it. What
+    follows is *recovery* for a pointer that is missing or no longer resolves,
+    labeled as such on the screen: the last recorded result, then the most
+    recently touched study map.
+
+    Recovery guesses, and it should look like a guess. It reads commit
+    timestamps and evidence chronology, neither of which is a statement of
+    intent: a result recorded against one subject says nothing about which
+    subject he chose to sit down with next. Before 2026-09-13 nothing wrote
+    the pointer at all, so this fallback *was* the destination, and activating
+    an Analysis stage still sent him back to Statistics (audit
+    `workbench/audits/synthetic-learner-2026-09-12`, F05).
+    """
+    pointer = repo.resume_pointer if isinstance(repo.resume_pointer, dict) else {}
+    # Reaching past this point at all is recovery, and the screen says so
+    # either way. A pointer that exists but no longer resolves and a pointer
+    # that was never written are the same thing to the learner — both mean
+    # "nobody recorded where you were, so this is a guess" — and labelling
+    # only the first left the second reading like an answer.
+    stale = True
+    if pointer:
+        unit = repo.units.get(str(pointer.get("unit_id") or ""))
+        study_map = repo.study_maps.get(str(pointer.get("study_map_id") or ""))
+        stages = study_map.data.get("stages", []) \
+            if study_map is not None else []
+        stage = next((s for s in stages
+                      if isinstance(s, dict) and s.get("id") == pointer.get("stage_id")),
+                     None)
+        if unit is not None and study_map is not None and stage is not None \
+                and unit.module_id == pointer.get("module_id") \
+                and study_map.unit_id == unit.id \
+                and study_map.module_id == unit.module_id:
+            return ("resume pointer", unit.module_id, unit.id,
+                    study_map.id, str(stage["id"]))
+    try:
+        requirements = collect_requirements(repo)
+    except RuntimeInputError:
+        requirements = []
+    try:
+        observations = _live_observations(read_observations(repo, requirements))
+    except RuntimeInputError:
+        observations = []
+    known = {req["id"]: req for req in requirements if isinstance(req, dict)}
+    for obs in observations:
+        req = known.get(obs.get("requirement", ""))
+        if not isinstance(req, dict):
+            continue
+        source = req.get("source_stage", {})
+        unit = repo.units.get(str(source.get("unit_id") or ""))
+        study_map = repo.study_maps.get(
+            (unit.data or {}).get("current_study_map", "")) if unit else None
+        if unit is None or study_map is None:
+            continue
+        label = "last recorded result"
+        if stale:
+            label += " (resume pointer missing or stale)"
+        return (label, unit.module_id, unit.id, study_map.id,
+                str(source.get("stage_id") or ""))
+    try:
+        from learning_os.githistory import last_commit_timestamps
+
+        stamps = last_commit_timestamps(str(repo.root))
+    except GitHistoryError:
+        stamps = {}
+    touched: list[tuple[float, str]] = []
+    for rel, stamp in stamps.items():
+        if not rel.endswith("study-map.yaml"):
+            continue
+        try:
+            when = float(stamp)
+        except (TypeError, ValueError):
+            continue
+        touched.append((when, rel))
+    # Newest touch wins, and only that. This used to skip past the newest map
+    # to find one whose stage had an authored runtime requirement — so the
+    # recovered destination preferred a stage the evidence loop could be
+    # demonstrated on over the stage most recently worked. One authored
+    # requirement exists today, which made "prefer a runtime stage" and
+    # "always return to that one stage" the same rule. A screen honestly
+    # reporting "none authored" for the map he actually touched is the
+    # truthful answer; steering him somewhere else to have something to show
+    # is not (audit `synthetic-learner-2026-09-12`, F05).
+    maps = {}
+    for study_map in repo.study_maps.values():
+        try:
+            rel = study_map.path.relative_to(repo.root).as_posix()
+        except (OSError, ValueError, AttributeError):
+            continue
+        maps[rel] = study_map
+    fallback = None
+    for _, rel in sorted(touched, reverse=True):
+        study_map = maps.get(rel)
+        if study_map is None:
+            continue
+        current = (study_map.data or {}).get("current_stage")
+        stages = [s for s in (study_map.data or {}).get("stages", [])
+                  if isinstance(s, dict)]
+        stage = next((s for s in stages if s.get("id") == current),
+                     stages[0] if stages else None)
+        if stage is None:
+            continue
+        label = "recently touched stage"
+        if stale:
+            label += " (resume pointer missing or stale)"
+        fallback = (label, study_map.module_id, study_map.unit_id,
+                    study_map.id, str(stage["id"]))
+        break
+    if fallback is not None:
+        return fallback
+    return (None, "no resumable stage: the resume pointer is missing or stale, "
+                  "no results were ever recorded, and no study map was ever "
+                  "touched — start any stage to set one")
+
+
+#: Study-map statuses eligible for the exam menu, best first. Active
+#: maps are work in progress, paused ones are shelved tracks worth
+#: resuming, ready ones are prepared ground; anything else (not-started
+#: and beyond) is not a next step.
+_STUDY_STATUS_RANK = {"active": 0, "paused": 1, "ready": 2}
+
+#: At most this many options; the menu stays one screen.
+MAX_STUDY_OPTIONS = 5
+
+#: At most this many untargeted rows ride the screen; the section's
+#: ``total`` stays exact past the bound.
+MAX_STAGE_RESULTS = 5
+
+
+def _nearest_exam(repo):
+    """(date, module_id, exam row) for the nearest recorded exam, or None."""
+    today = _dt.date.today()
+    exams = []
+    for row in _academic_deadlines(repo):
+        if not isinstance(row, dict) or row.get("kind") != "exam":
+            continue
+        module_id = row.get("module_id")
+        module = repo.modules.get(module_id)
+        if not isinstance(module, dict) or module.get("status") != "enrolled":
+            continue
+        if row.get("registration_state") not in {"registered", "unregistered"}:
+            continue
+        try:
+            date = _dt.date.fromisoformat(row.get("start_date", ""))
+        except (TypeError, ValueError):
+            continue
+        if date >= today:
+            exams.append((date, str(module_id), row))
+    if not exams:
+        return None
+    return min(exams, key=lambda item: (item[0], item[1]))
+
+
+def _study_open(stage):
+    """The first required-now resource locator, or None (today's shape)."""
+    resource = next((row for row in stage.get("resources", [])
+                     if isinstance(row, dict)
+                     and row.get("scope_triage") == "required-now"
+                     and row.get("label") and row.get("locator")), None)
+    if resource is None:
+        return None
+    return {"label": resource["label"], "locator": resource["locator"],
+            "source_id": resource.get("source_id")}
+
+
+def _study_stage(repo, study_map):
+    """(stage_id, stage) for one map's current stage, else None."""
+    stage_id = (study_map.data or {}).get("current_stage")
+    stage = next((row for row in (study_map.data or {}).get("stages", [])
+                  if isinstance(row, dict) and row.get("id") == stage_id), None)
+    if not isinstance(stage_id, str) or stage is None \
+            or study_map.unit_id not in repo.units:
+        return None
+    return stage_id, stage
+
+
+def _single_study_option(repo, date, exam, study_map):
+    """Today's single suggestion: the resolved stage plus the option row."""
+    found = _study_stage(repo, study_map)
+    if found is None:
+        return (None, f"{study_map.id} has no resolvable current stage; "
+                      f"inspect it with `inspect {study_map.id}`")
+    stage_id, stage = found
+    if stage.get("status") in {"complete", "archived"}:
+        return (None, f"{study_map.id} names a completed current stage; "
+                      f"inspect it with `inspect {study_map.id}`")
+    option = {
+        "exam_date": date.isoformat(),
+        "registration_state": exam.get("registration_state"),
+        "open": _study_open(stage),
+        "learner_choice": False,
+    }
+    resolved = ("nearest recorded exam (study suggestion)", study_map.module_id,
+                study_map.unit_id, study_map.id, stage_id)
+    return (resolved, option)
+
+
+def _study_option_row(repo, study_map):
+    """One menu row, or None when the map names nothing studyable.
+
+    A map whose current stage is missing, unresolvable, or already
+    complete offers no next step, so it offers no row either — the menu
+    lists stages to study, not maps to admire.
+    """
+    found = _study_stage(repo, study_map)
+    if found is None:
+        return None
+    stage_id, stage = found
+    if stage.get("status") in {"complete", "archived"}:
+        return None
+    return {
+        "unit_id": study_map.unit_id,
+        "study_map_id": study_map.id,
+        "current_stage": stage_id,
+        "stage_title": stage.get("title") or stage_id,
+        "open": _study_open(stage),
+        "learner_choice": False,
+    }
+
+
+def _study_options_payload(repo, date, module_id, exam):
+    """The bounded exam menu: payload dict, or a refusal when it is empty.
+
+    Active maps first, then paused, then ready, each run in curriculum
+    order; at most five rows. Every refusal names a command that exists.
+    """
+    pool = [study_map for study_map in repo.study_maps.values()
+            if study_map.module_id == module_id
+            and (study_map.data or {}).get("status") in _STUDY_STATUS_RANK]
+
+    def order(study_map):
+        unit = repo.units.get(study_map.unit_id)
+        rank = (unit.data or {}).get("order") if unit is not None else None
+        return (_STUDY_STATUS_RANK[(study_map.data or {}).get("status")],
+                rank is None, rank if isinstance(rank, int) else 0,
+                study_map.unit_id, study_map.id)
+
+    options = []
+    for study_map in sorted(pool, key=order):
+        row = _study_option_row(repo, study_map)
+        if row is not None:
+            options.append(row)
+        if len(options) >= MAX_STUDY_OPTIONS:
+            break
+    if not options:
+        return (f"{module_id} has no active, paused, or ready study maps "
+                f"with a current stage; list its units with `unit-list "
+                f"--compact --module-id {module_id}`")
+    return {
+        "contract": "resume-study-options",
+        "module_id": module_id,
+        "exam_date": date.isoformat(),
+        "registration_state": exam.get("registration_state"),
+        "options": options,
+        "select_with": "resume --study --unit UNIT_ID",
+    }
+
+
+def _study_option(repo, unit_id=None):
+    """One study suggestion, the options menu, or a refusal.
+
+    Returns ``(resolved, option)`` exactly as today when the exam module
+    has one active map — or when ``--unit`` selects one map explicitly.
+    When the exam module has 0 or >=2 active maps, returns ``(None,
+    options-payload)``: a bounded menu, never a guess. Otherwise
+    ``(None, refusal-text)``, where every refusal names a command that
+    exists. Never moves the resume pointer on any path.
+    """
+    exam = _nearest_exam(repo)
+    if exam is None:
+        return (None, "no upcoming exam is recorded for an enrolled module; "
+                      "`status` shows the recorded exam spine")
+    date, module_id, exam_row = exam
+    if unit_id is not None:
+        unit = repo.units.get(unit_id)
+        if unit is None:
+            return (None, f"unit not found: {unit_id}; list the exam "
+                          f"module's units with `unit-list --compact "
+                          f"--module-id {module_id}`")
+        if unit.module_id != module_id:
+            return (None, f"unit {unit_id} is outside the nearest-exam "
+                          f"module {module_id}; run `resume --study` to "
+                          "list its options")
+        pool = sorted(
+            (study_map for study_map in repo.study_maps.values()
+             if study_map.unit_id == unit_id
+             and (study_map.data or {}).get("status") in _STUDY_STATUS_RANK),
+            key=lambda row: (_STUDY_STATUS_RANK[(row.data or {}).get("status")],
+                             row.id))
+        if not pool:
+            return (None, f"unit {unit_id} has no active, paused, or ready "
+                          f"study map; inspect it with `inspect {unit_id}`")
+        return _single_study_option(repo, date, exam_row, pool[0])
+    maps = [study_map for study_map in repo.study_maps.values()
+            if study_map.module_id == module_id
+            and (study_map.data or {}).get("status") == "active"]
+    if len(maps) == 1:
+        return _single_study_option(repo, date, exam_row, maps[0])
+    return (None, _study_options_payload(repo, date, module_id, exam_row))
+
+
+#: Trailing excerpt kept in the dossier: progress notes append, so the
+#: tail is the latest recorded work. Bounded so the screen stays one page.
+STAGE_NOTE_EXCERPT_CHARS = 800
+
+
+def _stage_note_facts(root: Path, stage: dict) -> dict | None:
+    """Bounded facts about one stage's working note, or None.
+
+    None means the stage names no note. A missing or unreadable file is
+    zero lines — "nothing recorded yet", never an error: resume is a
+    best-effort screen, and the validator (not this read) names defects.
+    A note path escaping the tree is also None; serving it would be the
+    defect this read must not add.
+    """
+    if not isinstance(stage, dict):
+        return None
+    rel = stage.get("working_note")
+    if not isinstance(rel, str) or not rel:
+        return None
+    try:
+        candidate = resolved_inside(root, root / rel, strict=False)
+    except PathBoundaryError:
+        return None
+    try:
+        text = candidate.read_text(encoding="utf-8", errors="replace") \
+            if candidate.is_file() else ""
+    except OSError:
+        text = ""
+    excerpt = text[-STAGE_NOTE_EXCERPT_CHARS:]
+    if len(text) > STAGE_NOTE_EXCERPT_CHARS:
+        excerpt = excerpt.split("\n", 1)[-1]
+    try:
+        updated = last_commit_date(root, rel) or None
+    except GitHistoryError:
+        updated = None
+    return {"working_note": rel, "lines": len(text.splitlines()),
+            "updated": updated, "excerpt": excerpt}
+
+
+def _top_cluster(root: Path) -> dict | None:
+    """The single highest-ranked goal cluster, or None.
+
+    Best-effort read-only: a scan that cannot run (no Git history, bad
+    input) leaves the screen unchanged rather than refusing it. Bounded
+    to one cluster with countdown-free fields, so the dossier digest
+    moves when the top cluster moves and never with the clock.
+    """
+    try:
+        from .intelligence import ranked_scan
+
+        _, ranked, _ = ranked_scan(root, days=30)
+    except (GitHistoryError, OSError, ValueError):
+        return None
+    if not ranked:
+        return None
+    row = ranked[0]
+    cluster = row.cluster
+    return {
+        "cluster_id": cluster.cluster_id,
+        "detector": cluster.detector,
+        "title": cluster.title,
+        "tier": row.tier,
+        "nearest_sitting": row.nearest_sitting,
+        "member_count": len(cluster.member_ids),
+    }
+
+
+def _open_items(root: Path, repo, unit_id: str, stage_id: str,
+                requirement_id: str | None) -> tuple[str, ...]:
+    """Workspace Deferred bullets plus deferred-item lines naming this unit."""
+    items: list[str] = []
+
+    def covers(meta: dict) -> bool:
+        return unit_id in meta.get("unit_ids", [])
+
+    for workspace in sorted(repo.workspaces.values(), key=lambda ws: ws.id):
+        if workspace.archived or workspace.status != "active" \
+                or not covers(workspace.meta):
+            continue
+        section = workspace.section("Deferred")
+        if not section:
+            continue
+        items.extend(
+            line[2:].strip() for line in section.splitlines()
+            if line.startswith("- ") and line[2:].strip())
+    needles = {unit_id, stage_id, *( [requirement_id] if requirement_id else [])}
+    proposals = root / "work/proposals"
+    try:
+        deferred = sorted(proposals.glob("deferred-items-*.md"))
+    except OSError:
+        deferred = []
+    for path in deferred:
+        try:
+            lines = path.read_text(encoding="utf-8").splitlines()
+        except OSError:
+            continue
+        items.extend(
+            line.strip()[:200] for line in lines
+            if any(needle in line for needle in needles) and line.strip())
+    return tuple(items[:8])
+
+
+def _recorded_aims(repo, module_id: str, unit_id: str) -> list[tuple[str, str, str]]:
+    """At most two sourced planning excerpts; neither is a fresh priority."""
+    aims: list[tuple[str, str, str]] = []
+
+    def excerpt(value: str, limit: int) -> str:
+        value = value.replace("**", "").replace("`", "")
+        if len(value) <= limit:
+            return value
+        prefix = value[:limit]
+        sentences = [match.end() for match in re.finditer(r"[.!?](?:\s|$)", prefix)
+                     if match.end() >= limit // 2]
+        return (prefix[:sentences[-1]].rstrip() if sentences else
+                prefix.rsplit(" ", 1)[0]) + "…"
+
+    if repo.coordination is not None:
+        priority = _first_para(repo.coordination.section("Priorities"))
+        if priority:
+            date = re.search(r"\b\d{4}-\d{2}-\d{2}\b", priority)
+            label = f"Coordination decision {date.group()}" if date else "Coordination priorities (undated)"
+            aims.append((label, excerpt(priority, 260), "work/COORDINATION.md#Priorities"))
+    owning = [ws for ws in repo.workspaces.values()
+              if not ws.archived and ws.status == "active"
+              and (unit_id in (ws.meta.get("unit_ids") or [])
+                   or module_id in (ws.meta.get("module_ids") or []))]
+    owning.sort(key=lambda ws: (unit_id not in (ws.meta.get("unit_ids") or []), ws.id))
+    if owning:
+        workspace = owning[0]
+        next_action = _first_para(workspace.section("Next Action"))
+        if next_action:
+            source = workspace.path.relative_to(repo.root).as_posix() + "#Next-Action"
+            aims.append((f"Workspace {workspace.id}", excerpt(next_action, 450), source))
+    return aims
+
+
+def _print_study_options(args, payload) -> int:
+    """The exam menu: bounded options with sitting and registration.
+
+    Read-only: options are a menu, not a decision, so the resume pointer
+    is never moved here. Text stays one screen; --json carries the same
+    rows for machines.
+    """
+    if args.json:
+        print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False))
+        return 0
+    registration = payload["registration_state"] or "unknown"
+    lines = [f"Study options for {payload['exam_date']} ({payload['module_id']}; "
+             f"registration recorded as {registration}; "
+             "your resume pointer is unchanged)"]
+    for row in payload["options"]:
+        line = (f"  {row['unit_id']} · {row['current_stage']} "
+                f"\"{row['stage_title']}\" [{row['study_map_id']}]")
+        if row["open"]:
+            line += f" — open {row['open']['label']} at {row['open']['locator']}"
+        lines.append(line)
+    lines.append("Select one with `resume --study --unit UNIT_ID`.")
+    print("\n".join(lines))
+    return 0
+
+
+def cmd_resume(args) -> int:
+    """Compile and print the return-to-study screen. Read-only."""
+    root = _root(args)
+    repo = load_repo(root)
+    study_option = None
+    if getattr(args, "study", False):
+        resolved, study_option = _study_option(
+            repo, unit_id=getattr(args, "unit", None))
+        if resolved is None:
+            if isinstance(study_option, dict):
+                return _print_study_options(args, study_option)
+            print(f"los: {study_option}", file=sys.stderr)
+            return 2
+    elif getattr(args, "unit", None):
+        print("los: resume --unit needs --study", file=sys.stderr)
+        return 2
+    else:
+        resolved = _resolve_stage(repo)
+    if resolved[0] is None:
+        print(f"los: {resolved[1]}", file=sys.stderr)
+        return 2
+    via, module_id, unit_id, study_map_id, stage_id = resolved
+    pointer = repo.resume_pointer if isinstance(repo.resume_pointer, dict) else {}
+    via_detail = f"via {via}"
+    if via == "resume pointer" and isinstance(pointer.get("updated"), str):
+        via_detail += f"; pointer updated {pointer['updated']}{_ago(pointer['updated'])}"
+    try:
+        requirements = collect_requirements(repo)
+    except RuntimeInputError:
+        requirements = []
+    requirement = next(
+        (req for req in requirements
+         if req.get("source_stage", {}).get("unit_id") == unit_id
+         and req.get("source_stage", {}).get("stage_id") == stage_id),
+        None)
+    try:
+        observations = [obs for obs in _live_observations(
+            read_observations(repo, requirements))
+            if requirement is not None and obs.get("requirement") == requirement["id"]]
+    except RuntimeInputError:
+        observations = []
+    try:
+        untargeted = stage_results_for(
+            read_stage_results(repo), unit_id, stage_id)
+    except RuntimeInputError:
+        untargeted = []
+    stale_here = [row for row in stale_observations(requirements, observations)
+                  if requirement is not None and row.requirement == requirement["id"]]
+    study_map = repo.study_maps.get(study_map_id)
+    stages = (study_map.data or {}).get("stages", []) if study_map else []
+    stage = next((s for s in stages
+                  if isinstance(s, dict) and s.get("id") == stage_id), {})
+    unit = repo.units.get(unit_id)
+    module = repo.modules.get(module_id, {})
+    titles = {
+        "module": str(module.get("title", module_id)) if isinstance(module, dict) else module_id,
+        "unit": str((unit.data or {}).get("title", unit_id)) if unit else unit_id,
+        "stage": str(stage.get("title", stage_id)) if isinstance(stage, dict) else stage_id,
+    }
+    open_items = _open_items(
+        root, repo, unit_id, stage_id,
+        requirement["id"] if isinstance(requirement, dict) else None)
+    sittings = [
+        {"label": row.get("label"), "start_date": row.get("start_date"),
+         "end_date": row.get("end_date"),
+         "registration_state": row.get("registration_state")}
+        for row in _academic_deadlines(repo)
+        if isinstance(row, dict) and row.get("kind") == "exam"
+        and row.get("module_id") == module_id
+    ]
+    obs_rows = [
+        {"id": obs.get("id"), "result": obs.get("result"),
+         "timestamp": obs.get("timestamp"),
+         "conditions": obs.get("conditions", []),
+         "context": obs.get("context", "")}
+        for obs in observations
+    ]
+    top_cluster = _top_cluster(root)
+    stage_note = _stage_note_facts(root, stage)
+    progress = stage.get("progress") if isinstance(stage, dict) else None
+    stage_progress = progress if isinstance(progress, dict) else None
+    untargeted_rows = [
+        {"id": row.get("id"), "activity": row.get("activity"),
+         "result": row.get("result"), "timestamp": row.get("timestamp"),
+         "conditions": row.get("conditions", []),
+         "assistance": row.get("assistance", ""),
+         "note": row.get("note", "")}
+        for row in untargeted[:MAX_STAGE_RESULTS]
+    ]
+    untargeted_section = (
+        {"results": untargeted_rows, "total": len(untargeted),
+         "credit": "none"}
+        if untargeted else None
+    )
+    try:
+        dossier = build_resume_dossier(
+            unit_id=unit_id, module_id=module_id, stage_id=stage_id,
+            study_map_id=study_map_id, via=via, requirement=requirement,
+            observations=obs_rows, open_items=open_items, sittings=sittings,
+            titles=titles, top_cluster=top_cluster, stage_note=stage_note,
+            stage_progress=stage_progress,
+            stage_results=untargeted_section)
+    except ResumeDossierError as exc:
+        print(f"los: {exc}", file=sys.stderr)
+        return 2
+    if args.json:
+        output = {"key": dossier.key, "via": via,
+                  "content": {section: value for section, value in dossier.content}}
+        if study_option is not None:
+            output["study_option"] = study_option
+        print(json.dumps(output, **_json_layout(), sort_keys=True, ensure_ascii=False))
+        return 0
+    aims = _recorded_aims(repo, module_id, unit_id)
+    rendered = _render(dossier, requirement, observations, open_items, sittings,
+                       titles, via_detail, len(stale_here), top_cluster, aims,
+                       stage_note, stage_progress, untargeted_section)
+    if study_option is not None:
+        lines = [f"Study suggestion for {study_option['exam_date']} "
+                 f"(registration recorded as {study_option['registration_state'] or 'unknown'}; "
+                 "your resume pointer is unchanged)"]
+        resource = study_option["open"]
+        if resource:
+            lines.append(f"  Open {resource['label']} at {resource['locator']}")
+        rendered = "\n".join([*lines, "", rendered])
+    print(rendered)
+    return 0
+
+
+def _ago(day: str) -> str:
+    """Render-time relative time; never hashed, never trusted to parse."""
+    try:
+        delta = (_dt.date.today() - _dt.date.fromisoformat(day)).days
+    except ValueError:
+        return ""
+    if delta < 0:
+        return ""
+    if delta == 0:
+        return " (today)"
+    if delta == 1:
+        return " (yesterday)"
+    return f" ({delta} days ago)"
+
+
+def _render(dossier, requirement, observations, open_items, sittings,
+            titles, via_detail: str, stale_count: int = 0,
+            top_cluster: dict | None = None,
+            recorded_aims: list[tuple[str, str, str]] | None = None,
+            stage_note: dict | None = None,
+            stage_progress: dict | None = None,
+            stage_results: dict | None = None) -> str:
+    today = _dt.date.today()
+    lines = [f"{titles['module']} · {titles['unit']} · {dossier.stage_id}",
+             f"  ({via_detail})", ""]
+    if recorded_aims:
+        lines.append("  Recorded aims (compare with current dates and state):")
+        for label, excerpt, source in recorded_aims[:2]:
+            lines.append(f"    {label}: {excerpt}")
+            lines.append(f"      source: {source}")
+        lines.append("")
+    if isinstance(requirement, dict):
+        capability = requirement.get("capability", {})
+        concept = str(requirement.get("concept", ""))
+        lines.append(f"  Requirement  {concept}")
+        lines.append(f"               capability: {json.dumps(capability, sort_keys=True)}")
+        lines.append(f"               under: {', '.join(requirement.get('conditions', [])) or '—'}")
+        lines.append(f"               evidence: {', '.join(requirement.get('evidence_spec', [])) or '—'}")
+    else:
+        lines.append("  Requirement  none authored for this stage")
+    lines.append("")
+    if observations:
+        lines.append(f"  Evidence     {len(observations)} recorded")
+        last = observations[0]
+        lines.append(f"  Last result  {last.get('result')} ({last.get('timestamp', '?')})")
+    else:
+        lines.append("  Evidence     none recorded yet")
+        lines.append("  Last result  none")
+    if stale_count:
+        noun = "result" if stale_count == 1 else "results"
+        lines.append(f"  Changed since  {stale_count} earlier {noun} "
+                     "were against a requirement that has since changed.")
+    if isinstance(stage_results, dict) and stage_results.get("total"):
+        total = stage_results["total"]
+        noun = "result" if total == 1 else "results"
+        lines.append(f"  Stage results  {total} untargeted {noun} (no credit — "
+                     "context only, never retro-credited)")
+        first = (stage_results.get("results") or [{}])[0]
+        lines.append(f"  Last untargeted  {first.get('result', '?')} "
+                     f"({first.get('timestamp', '?')}) — {first.get('activity', '?')}")
+    if isinstance(stage_note, dict) and stage_note.get("working_note"):
+        count = stage_note.get("lines") or 0
+        noun = "line" if count == 1 else "lines"
+        when = f", updated {stage_note['updated']}" if stage_note.get("updated") else ""
+        if count > 0:
+            lines.append(f"  Stage note   {count} {noun} recorded ({stage_note['working_note']}{when})")
+            tail = [line for line in (stage_note.get("excerpt") or "").splitlines()
+                    if line.strip()][-3:]
+            lines.extend(f"               {line[:200]}" for line in tail)
+        else:
+            lines.append(f"  Stage note   nothing recorded yet ({stage_note['working_note']})")
+    if isinstance(stage_progress, dict) and stage_progress.get("summary"):
+        when = f" (updated {stage_progress['updated']})" if stage_progress.get("updated") else ""
+        lines.append(f"  Progress     {str(stage_progress['summary'])[:200]}{when}")
+        if stage_progress.get("next"):
+            lines.append(f"               next: {str(stage_progress['next'])[:200]}")
+    lines.append("")
+    if open_items:
+        lines.append(f"  Open here    {open_items[0]}")
+        lines.extend(f"               {item}" for item in open_items[1:])
+    else:
+        lines.append("  Open here    —")
+    lines.append("")
+    if isinstance(top_cluster, dict) and top_cluster.get("cluster_id"):
+        count = top_cluster.get("member_count", 0)
+        noun = "goal" if count == 1 else "goals"
+        lines.append(f"  Top goal     {top_cluster.get('title', '?')} ({count} {noun})")
+        sitting = top_cluster.get("nearest_sitting") or ""
+        when = ""
+        if isinstance(sitting, str) and sitting:
+            try:
+                days = (_dt.date.fromisoformat(sitting) - today).days
+                when = f" — {sitting} ({days} days)" if days >= 0 else f" — {sitting}"
+            except ValueError:
+                when = f" — {sitting}"
+        lines.append(f"               tier {top_cluster.get('tier', '?')}{when}; "
+                     "seeing it files nothing")
+        lines.append("               decide per goal id: "
+                     "los goal <id> --reject|--defer|--close")
+        lines.append("")
+    if isinstance(requirement, dict):
+        lines.append(f"  Next         los observe {requirement['id']} --activity <what-you-did> "
+                     "--result <correct|incorrect|partial|abandoned>")
+    else:
+        lines.append(f"  Next         los stage-note {dossier.unit_id} {dossier.stage_id} "
+                     "--text <what-you-did>")
+    upcoming = [(row.get("start_date", ""), row) for row in sittings
+                if isinstance(row.get("start_date"), str)
+                and row["start_date"] >= today.isoformat()]
+    if upcoming:
+        start, row = sorted(upcoming)[0]
+        try:
+            days = (_dt.date.fromisoformat(start) - today).days
+            when = f"{start} ({days} days)"
+        except ValueError:
+            when = start
+        lines.append(f"  Exam         {row.get('label', '')} — {when}")
+    else:
+        lines.append("  Exam         no upcoming sitting recorded")
+    return "\n".join(lines)

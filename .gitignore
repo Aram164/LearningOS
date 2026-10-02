@@ -28,3 +28,18 @@ operations/ai-actions/incoming/
 # between a process dying mid-write and the next run rolling it back, and hold
 # copies of canonical files — never a thing to commit.
 operations/transactions/.inflight/
+
+# Diagnostic trace store (track #2, Phase 3A). Non-authoritative, disposable,
+# bounded operation history: IDs and references only, never payload text.
+# Deleting it changes no canonical behavior; the resolver degrades to
+# authority-only verdicts. Outside the canonical fingerprint roots.
+operations/diagnostics/
+
+# Local-only note attachments: canonical, on disk, backed up, never published.
+# Each is pinned by size and SHA-256 in system/contracts/local-attachments.yaml;
+# the validator refuses a listed path that Git tracks or that no rule here covers.
+/knowledge/attachments/note-sad-descriptive-probability-handwritten/teil-01-part1.pdf
+/knowledge/attachments/note-sad-descriptive-probability-handwritten/teil-01-part2.pdf
+/knowledge/attachments/note-sad-distributions-handwritten/teil-02-part1.pdf
+/knowledge/attachments/note-sad-distributions-handwritten/teil-02-part2.pdf
+/knowledge/attachments/note-sad-hypothesis-testing-handwritten/teil-03.pdf

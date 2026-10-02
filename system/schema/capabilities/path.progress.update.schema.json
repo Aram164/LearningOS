@@ -18,7 +18,12 @@
       "type": "string"
     },
     "status": {
-      "type": "string"
+      "type": "string",
+      "enum": [
+        "active",
+        "complete",
+        "skipped"
+      ]
     }
   }
 }

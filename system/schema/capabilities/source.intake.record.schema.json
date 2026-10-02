@@ -1,0 +1,107 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "capabilities/source.intake.record.schema.json",
+  "title": "payload for capability source.intake.record",
+  "description": "Derived from the los CLI parser for this capability's named command. Do not hand-edit; regenerate with tools/generate_capability_schemas.py.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [],
+  "properties": {
+    "check": {
+      "type": "boolean"
+    },
+    "expected_diff_sha256": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "file": {
+      "type": "string"
+    },
+    "record": {
+      "type": "object",
+      "properties": {
+        "records": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string"
+              },
+              "id": {
+                "type": "string"
+              },
+              "partition": {
+                "type": "string"
+              },
+              "title": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "type": {
+                "type": "string"
+              },
+              "authors": {},
+              "organization": {},
+              "year": {},
+              "url": {},
+              "identifiers": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "discovery": {
+                "type": [
+                  "object",
+                  "null"
+                ]
+              },
+              "thematic_group_ids": {
+                "type": [
+                  "array",
+                  "null"
+                ]
+              },
+              "remove_url": {
+                "type": [
+                  "boolean",
+                  "null"
+                ]
+              },
+              "remove_identifiers": {
+                "type": "array"
+              }
+            },
+            "additionalProperties": false,
+            "required": [
+              "action",
+              "id"
+            ]
+          },
+          "minItems": 1,
+          "maxItems": 20
+        }
+      },
+      "additionalProperties": false,
+      "required": [
+        "records"
+      ],
+      "description": "Batch of 1 to 20 intake rows; each row is a create or a correct carrying only its action's allowlisted fields, and the handler refuses a create-only field on a correct."
+    }
+  },
+  "oneOf": [
+    {
+      "required": [
+        "file"
+      ]
+    },
+    {
+      "required": [
+        "record"
+      ]
+    }
+  ]
+}

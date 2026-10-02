@@ -5,17 +5,48 @@ from __future__ import annotations
 
 import json
 import sys
+import time
 from pathlib import Path
 
 from learning_os import __version__
 from learning_os.contracts.capability_catalog import load_capability_catalog
+from learning_os.errors import unreadable_refusal
 from learning_os.genout import adoption_counts, exam_spine
 from learning_os.loader import load_repo
 from learning_os.pathing import PathBoundaryError, read_text_inside
-from learning_os.rules import validate
+from learning_os.validation_cache import observe_pins, status_issues
 
-from .reads import compact_bootstrap, content_search, inspect_batch, record_payload
-from .support import _delegate, _fresh_manifest, _operator_lock, _print_rows, _publish, _root
+from .reads import (
+    _inspect_candidates,
+    _print_stable,
+    _refusal,
+    _snapshot,
+    _use_evidence_from_manifest,
+    _window,
+    brief_bootstrap,
+    compact_bootstrap,
+    content_search,
+    describe_unresolved_reference,
+    empty_search_hint,
+    inspect_batch,
+    inspect_not_found,
+    record_payload,
+    related_records,
+    structural_payload,
+    with_coordination_digests,
+)
+from .suggest import expansion, suggest
+from .support import (
+    WriteRefused,
+    _delegate,
+    _fresh_manifest,
+    _fresh_manifest_and_repo,
+    _json_layout,
+    _operator_lock,
+    _print_rows,
+    _publish,
+    _root,
+)
 
 # The OPERATOR contract (system/OPERATOR.md) — what `los.py capabilities`
 # announces about the gateway itself. This is a third, independent version:
@@ -31,10 +62,24 @@ CONTRACT_VERSION = 2
 # ----------------------------------------------------------------- status
 def cmd_status(args) -> int:
     root = _root(args)
+    no_validate = getattr(args, "no_validate", False)
+    # Cache pins are observed before anything is read, so a write landing
+    # mid-read can only cost a later miss, never a stale hit.
+    pins = None if no_validate else observe_pins(root)
     repo = load_repo(root)
-    issues = validate(repo, online=False)
-    errors = sum(1 for i in issues if i.severity == "E")
-    warnings = sum(1 for i in issues if i.severity == "W")
+    if repo.parse_failures:
+        # Fail closed like every other manifest-backed read: the counts
+        # below would silently exclude whatever could not be read.
+        return _refusal(WriteRefused(
+            unreadable_refusal(root, repo.parse_failures, "status")))
+    # --no-validate skips validation but never the refusal above: an
+    # unreadable tree refuses before these counts are even considered.
+    if no_validate:
+        errors = warnings = 0
+    else:
+        issues = status_issues(repo, pins)
+        errors = sum(1 for i in issues if i.severity == "E")
+        warnings = sum(1 for i in issues if i.severity == "W")
 
     inbox = root / "work" / "inbox"
     n_inbox = len([f for f in inbox.iterdir()
@@ -80,13 +125,13 @@ def cmd_status(args) -> int:
         # warning is NEW is a separate question with its own gate,
         # `tools/warning_baseline.py --check`; status does not run it, because
         # a status read must not depend on a recorded baseline being current.
-        "validation": {"errors": errors, "warnings": warnings,
-                       "ok": errors == 0},
+        "validation": {"skipped": True} if no_validate else {
+            "errors": errors, "warnings": warnings, "ok": errors == 0},
     }
 
     if args.json:
-        print(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False))
-        return 0
+        print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False))
+        return 1 if errors else 0
 
     c = payload["counts"]
     print(f"Learning OS v3 · learning_os v{__version__} · {root}")
@@ -105,14 +150,17 @@ def cmd_status(args) -> int:
         for e in spine:
             print(f"  exam: {e['date']} — {e['title']} (Termin {e['termin']})")
     else:
-        print("  exam: no registered attempts in records/modules.yaml")
-    state = f"{errors} error(s)" if errors else "OK"
-    if warnings:
-        state += (f" · {warnings} warning(s), visible and nonblocking "
-                  "(`make warnings` for the delta)")
-    print(f"  validation: {state}")
+        print("  exam: no registered attempt in any module's module.yaml")
+    if no_validate:
+        print("  validation: skipped (--no-validate)")
+    else:
+        state = f"{errors} error(s)" if errors else "OK"
+        if warnings:
+            state += (f" · {warnings} warning(s), visible and nonblocking "
+                      "(`make warnings` for the delta)")
+        print(f"  validation: {state}")
     print("  human home page: generated/reading-room.md (make views)")
-    return 0
+    return 1 if errors else 0
 
 
 # ---------------------------------------------------- machine discovery/read
@@ -176,7 +224,7 @@ def cmd_capabilities(args) -> int:
     if compact or name:
         print(json.dumps(payload, ensure_ascii=False, separators=(",", ":")))
         return 0
-    print(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False)
+    print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False)
           if args.json else "\n".join(
               [f"LearningOS operator contract v{payload['contract_version']}",
                f"  gateway: {payload['gateway']}",
@@ -188,9 +236,11 @@ def cmd_capabilities(args) -> int:
 
 def cmd_bootstrap(args) -> int:
     root = _root(args)
+    if getattr(args, "brief", False):
+        return brief_bootstrap(args)
     if getattr(args, "compact", False):
         return compact_bootstrap(args)
-    manifest = _fresh_manifest(root)
+    manifest = _fresh_manifest(root, restamp=True)
     payload = {
         "capabilities": _capabilities(root),
         "snapshot": manifest.get("_generated", {}),
@@ -203,73 +253,222 @@ def cmd_bootstrap(args) -> int:
         "resume_pointer": manifest.get("resume_pointer", {}),
         "next": "Resume the pointer or choose any visible module and unit.",
     }
-    print(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False))
+    print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
 
-def cmd_search(args) -> int:
-    if getattr(args, "content", False):
-        return content_search(args)
-    manifest = _fresh_manifest(_root(args))
+#: Every record family ``search --type`` accepts: the manifest's
+#: record types plus the two virtual discovery rows (garden seeds and
+#: inbox files). An unknown value refuses with exit 2 instead of
+#: answering an empty result, so ``total: 0`` always means "valid
+#: filter, no matches". A test pins this set against the live
+#: manifest's types, so a new record family updates it explicitly.
+VALID_RECORD_TYPES = frozenset({
+    "collection", "compatibility-alias", "concept", "coordination",
+    "garden-note", "inbox-item", "module", "module-source-map", "note",
+    "program", "project", "project-relationship", "source", "study-map",
+    "topic-pack", "unit", "unit-material-synthesis", "workspace",
+})
+
+
+def _unknown_record_type(value: str) -> str:
+    """Refusal for a mistyped ``--type``: suggestions plus the valid list."""
+    hints = suggest(value, VALID_RECORD_TYPES)
+    message = f"unknown record type: {value}"
+    if hints:
+        return (f"{message} (did you mean: {', '.join(hints)}? "
+                f"valid types: {', '.join(sorted(VALID_RECORD_TYPES))})")
+    return f"{message} (valid types: {', '.join(sorted(VALID_RECORD_TYPES))})"
+
+
+def _inbox_search_rows(root: Path) -> list[dict]:
+    """One discovery row per inbox file, matched on names only, never bytes.
+
+    Inbox drops are arbitrary files (binary captures included), so the
+    metadata search reads no content here: the haystack is the file name
+    and path. Content stays behind ``inbox-read``, which refuses non-text.
+    Raises OSError when the listing itself fails; a missing inbox is empty.
+    """
+    inbox = root / "work" / "inbox"
+    if not inbox.is_dir():
+        return []
+    rows = []
+    for path in sorted(inbox.rglob("*")):
+        if not path.is_file():
+            continue
+        rel = path.relative_to(inbox).as_posix()
+        if any(part.startswith(".") for part in rel.split("/")):
+            continue
+        rows.append({"id": rel, "type": "inbox-item", "title": path.name,
+                     "path": f"work/inbox/{rel}"})
+    return rows
+
+
+def _array_window(args) -> tuple[int, int]:
+    """Offset/limit check for the legacy array response: unbounded, valid only."""
+    offset, limit = args.offset, args.limit
+    if offset < 0 or limit < 1:
+        raise WriteRefused("offset must be nonnegative and limit at least 1")
+    return offset, limit
+
+
+def _metadata_matches(root: Path, args, snapshot: str) -> tuple[list[dict], list[str], list[int]]:
+    """Literal-AND metadata matches in deterministic manifest order.
+
+    Shared by the legacy array response and the opt-in page packet, so the
+    two cannot disagree about what matches. An inbox listing failure refuses
+    here: discovery must not silently omit drops. The caller's snapshot is
+    shared with the manifest read so one search hashes once, not twice.
+    """
+    manifest = _fresh_manifest(root, snapshot_id=snapshot)
     words = [w for w in args.query.lower().split() if w]
+    rows = list(manifest["records"])
+    if not args.type or args.type == "garden-note":
+        rows.extend(manifest.get("garden_entries", []) or [])
+    if not args.type or args.type == "inbox-item":
+        try:
+            rows.extend(_inbox_search_rows(root))
+        except OSError as exc:
+            raise WriteRefused(f"cannot list work/inbox: {exc}") from exc
     matches = []
-    for rec in manifest["records"]:
+    hits = [0] * len(words)
+    for rec in rows:
         if args.type and rec.get("type") != args.type:
             continue
         hay = json.dumps(rec, ensure_ascii=False).lower()
-        if all(word in hay for word in words):
-            matches.append({k: rec.get(k) for k in ("id", "type", "title", "path", "status")})
-    print(json.dumps(matches[:args.limit], indent=2, sort_keys=True, ensure_ascii=False))
+        found = [word in hay for word in words]
+        for index, hit in enumerate(found):
+            if hit:
+                hits[index] += 1
+        if all(found):
+            matches.append(_discovery_row(rec))
+    return matches, words, hits
+
+
+def _metadata_next_command(args, limit: int, next_offset: int, snapshot: str) -> str:
+    parts = ["search", args.query]
+    if args.type:
+        parts += ["--type", args.type]
+    parts += ["--page", "--limit", str(limit), "--offset", str(next_offset),
+              "--expected-snapshot", snapshot]
+    return expansion(*parts)
+
+
+def _metadata_search_page(args) -> int:
+    """Opt-in paged metadata packet: totals and a snapshot-bound continuation."""
+    root = _root(args)
+    try:
+        offset, limit = _window(args, 100)
+        with _operator_lock(root):
+            snapshot = _snapshot(root, args.expected_snapshot)
+            matches, words, hits = _metadata_matches(root, args, snapshot)
+            if not matches and words:
+                print(f"los: {empty_search_hint('record', words, hits)}",
+                      file=sys.stderr)
+            total = len(matches)
+            items = matches[offset:offset + limit]
+            next_offset = offset + limit if offset + limit < total else None
+            return _print_stable(root, snapshot, {
+                "contract": "metadata-search-page",
+                "items": items, "total": total,
+                "offset": offset, "returned": len(items),
+                "next_offset": next_offset,
+                "has_more": next_offset is not None,
+                "expand": {"next": _metadata_next_command(args, limit, next_offset, snapshot)
+                           if next_offset is not None else None},
+            })
+    except (WriteRefused, OSError) as exc:
+        return _refusal(exc)
+
+
+def cmd_search(args) -> int:
+    if args.type is not None and args.type not in VALID_RECORD_TYPES:
+        return _refusal(WriteRefused(_unknown_record_type(args.type)))
+    if getattr(args, "content", False):
+        if getattr(args, "page", False):
+            print("los: --page pages metadata search; --content already paginates",
+                  file=sys.stderr)
+            return 2
+        return content_search(args)
+    if getattr(args, "page", False):
+        return _metadata_search_page(args)
+    root = _root(args)
+    try:
+        offset, limit = _array_window(args)
+        with _operator_lock(root):
+            snapshot = _snapshot(root, args.expected_snapshot)
+            matches, words, hits = _metadata_matches(root, args, snapshot)
+            _snapshot(root, snapshot)
+    except (WriteRefused, OSError) as exc:
+        return _refusal(exc)
+    if not matches and words:
+        print(f"los: {empty_search_hint('record', words, hits)}", file=sys.stderr)
+    print(json.dumps(matches[offset:offset + limit], **_json_layout(), sort_keys=True, ensure_ascii=False))
+    return 0
+
+
+def _discovery_row(rec):
+    """One stable discovery row, shared by search and inbox-list."""
+    return {k: rec.get(k) for k in
+            ("id", "type", "title", "path", "status",
+             "state", "deprecated")}
+
+
+def cmd_inbox_list(args) -> int:
+    root = _root(args)
+    try:
+        rows = _inbox_search_rows(root)
+    except OSError as exc:
+        print(f"los: cannot list work/inbox: {exc}", file=sys.stderr)
+        return 2
+    now = time.time()
+    inbox = root / "work" / "inbox"
+    out = []
+    for rec in rows:
+        row = _discovery_row(rec)
+        try:
+            row["age_days"] = int((now - (inbox / rec["id"]).stat().st_mtime) / 86400)
+        except OSError:
+            row["age_days"] = None
+        out.append(row)
+    print(json.dumps(out, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
 
 def cmd_inspect(args) -> int:
     if getattr(args, "more_ids", None):
         return inspect_batch(args)
-    manifest = _fresh_manifest(_root(args))
-    payload = record_payload(manifest, args.id)
-    if payload is None:
-        print(f"los: record not found: {args.id}", file=sys.stderr)
-        return 2
-    print(json.dumps(payload, indent=2, sort_keys=True, ensure_ascii=False))
+    root = _root(args)
+    with _operator_lock(root):
+        manifest, repo = _fresh_manifest_and_repo(root)
+        payload = record_payload(manifest, args.id)
+        if payload is None:
+            payload = structural_payload(manifest, args.id, repo)
+        if payload is None:
+            print(f"los: {inspect_not_found(args.id, _inspect_candidates(manifest, repo))}",
+                  file=sys.stderr)
+            hint = describe_unresolved_reference(manifest, args.id)
+            if hint:
+                print(f"los: hint: {hint}", file=sys.stderr)
+            return 2
+        payload = with_coordination_digests(root, payload)
+    print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
 
 def cmd_related(args) -> int:
-    manifest = _fresh_manifest(_root(args))
+    root = _root(args)
+    manifest = _fresh_manifest(root)
     by_id = {r.get("id"): r for r in manifest["records"]}
     resolved_id = (manifest.get("project_aliases") or {}).get(args.id, args.id)
-    rec = by_id.get(resolved_id)
-    if rec is None:
+    if resolved_id not in by_id:
         print(f"los: record not found: {args.id}", file=sys.stderr)
         return 2
-    ids = set()
-    for key in ("concepts", "sources", "contexts", "notes", "program_ids",
-                "module_ids", "unit_ids", "unit_order", "related_module_ids"):
-        ids.update(rec.get(key, []) or [])
-    if rec.get("workspace_id"):
-        ids.add(rec["workspace_id"])
-    for key in ("area_id", "module_id", "unit_id", "current_study_map"):
-        if rec.get(key):
-            ids.add(rec[key])
-    backlinks = manifest.get("backlinks", {})
-    for table in ("concept_to_notes", "source_to_notes", "workspace_to_notes",
-                  "module_to_workspaces", "unit_to_workspaces", "module_to_units",
-                  "source_to_units"):
-        ids.update((backlinks.get(table) or {}).get(args.id, []) or [])
-    for relation in manifest.get("relations", []):
-        if relation.get("from") == args.id:
-            ids.add(relation.get("to"))
-        if relation.get("to") == resolved_id:
-            ids.add(relation.get("from"))
-    for relation in manifest.get("project_relationships", []):
-        if relation.get("from_project_id") == resolved_id:
-            ids.add(relation.get("to_id"))
-        if relation.get("to_id") == resolved_id:
-            ids.add(relation.get("from_project_id"))
-    out = [{k: by_id[rid].get(k) for k in ("id", "type", "title", "path")}
-           for rid in sorted(ids) if rid in by_id]
-    print(json.dumps(out, indent=2, sort_keys=True, ensure_ascii=False))
+    # Tallies come from the manifest itself (identical to the repo tally),
+    # so related skips the repo load on the reuse fast path (#83).
+    out = related_records(manifest, resolved_id, None,
+                          tallies=_use_evidence_from_manifest(manifest))
+    print(json.dumps(out, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
 

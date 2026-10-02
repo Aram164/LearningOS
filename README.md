@@ -17,16 +17,22 @@ links, and rebuilds views. Everything under `generated/` is a disposable view �
 never edit it.
 
 1. **With Claude:** open this folder in a chat and say what you're working on.
-   The operator reads `CLAUDE.md`, then `work/COORDINATION.md` +
-   the relevant `curriculum/modules/*/module.yaml`, then your active workspace, plus the at-a-glance
-   block of `generated/domain-atlas.md` (the cross-domain map). That's the
-   whole interface.
+   The operator starts from `system/OPERATOR.md` via `.venv/bin/python tools/los.py
+   capabilities --compact --json` and `.venv/bin/python tools/los.py bootstrap --brief`
+   (guards, resume, owed work, deadlines, and runnable expands on one page),
+   then reads your active workspace and the coordination facts behind it, plus
+   the at-a-glance block of `generated/domain-atlas.md` (the cross-domain map;
+   on a fresh install run `make setup` first, then `make views` —
+   `generated/` starts empty).
+   That's the whole interface.
 2. **By hand:** the one-page home is `generated/reading-room.md` (run
    `make views` to refresh) — exams, workspaces, recent notes, queues, all
    linked. Exam facts live in each owning academic module; the full "what should I
    do next?" dashboard is `generated/coordination-view.md`; your knowledge is
-   under `knowledge/notes/`; capture anything into `work/inbox/` (or
-   `python tools/los.py capture --text "…"`).
+   under `knowledge/notes/`; capture anything into `work/inbox/` (the
+   operator writes it through a `capture.create` envelope per WORKFLOWS
+   §25c — the bare `.venv/bin/python tools/los.py capture --text "…"` is refused
+   without one).
 3. **After editing:** run `make check`. The pre-commit hook blocks commits while
    the validator reports **errors**; warnings print and never block. To see
    whether you introduced one, run `make warnings` — it compares the warning
@@ -46,11 +52,13 @@ The rest of this file is the full manual; the four commands are under
 
 ## How to use it (the whole manual)
 
-**Start a session:** open this folder in a chat. The operator reads `CLAUDE.md`,
-then `work/COORDINATION.md` + the module-first `curriculum/` tree, then your active
-workspace — plus the at-a-glance block of `generated/domain-atlas.md`, so every
-session starts with the full cross-domain map in view. You just say what
-you're working on.
+**Start a session:** open this folder in a chat. The operator boots from
+`system/OPERATOR.md` with `bootstrap --brief` (guards, resume, owed work,
+deadlines, expands), then reads your active workspace and the coordination
+facts behind it — plus the at-a-glance block of `generated/domain-atlas.md`
+(on a fresh install run `make setup` first, then `make views`),
+so every session starts with the full cross-domain map in view. You just say
+what you're working on.
 
 **"What should I do next?"** → the operator rebuilds and reads the coordination
 view (exam spine + every workspace's next action). Recommendations are computed
@@ -76,8 +84,9 @@ never in prose copies.
 
 **An effort ends:** its workspace is archived whole; the durable notes stay.
 
-**Trust but verify:** `python tools/validate.py` after any batch of edits
-(session-end habit). Never edit anything under the generated output tree —
+**Trust but verify:** `.venv/bin/python tools/validate.py --compact` after any batch of
+edits (session-end habit); the full warning list lands in
+`generated/reports/validation-report.md`. Never edit anything under the generated output tree —
 it's a disposable view; delete it freely.
 
 ## Without the operator (human fallback — no Claude needed)
@@ -87,10 +96,11 @@ Everything is plain text; nothing requires any tool to read. The four questions:
 - **Exam dates, registrations, grades?** Open the owning academic module under
   `curriculum/modules/` — it is
   commented and readable raw. This file is the only truth for those facts.
-- **What should I do next?** Run `make views` (or `python tools/generate.py`),
+- **What should I do next?** Run `make views` (or `.venv/bin/python tools/generate.py`),
   then open `generated/coordination-view.md` — exam spine, every workspace's
-  next action, neglect signals. Check its `Generated:` timestamp; if views feel
-  stale, rebuild (the post-commit hook does this automatically after commits).
+  next action, neglect signals. Check its `Generated:` line — it names
+  uncommitted changes when the tree is dirty; if views feel stale, rebuild
+  (the post-commit hook does this automatically after commits).
 - **Where is my knowledge on X?** Browse `knowledge/notes/<domain>/` —
   filenames say what they are — or ctrl-F `generated/concept-index.md`
   (German terms work; aliases are indexed). The prerequisite graph is drawn in
@@ -107,6 +117,7 @@ anything — a text editor and Git are enough to operate this repository forever
 
 ```bash
 make setup      # once per clone/move: create .venv, install deps, install Git hooks
+make setup-lean # fresh-clone fast path: runtime-only .venv (no pytest/ruff)
 make check      # validate (schemas + VALIDATION.md rules) — errors block, warnings do not
 make warnings   # the warning delta against the recorded baseline; fails only on a NEW one
 make views      # rebuild everything under the gitignored output tree
@@ -115,6 +126,7 @@ make inventory  # rebuild the materials manifest (see "Materials durability")
 make test-fast  # quick feedback: synthetic fixtures, no checked-in repository load
 make test       # complete suite, including full-repository integration checks
 make code-check # static reachability/layer/cycle gate; reads code only
+make projection-check # one guarded equivalence proof for the four migrated projections
 make system-check # Core lint/validation/tests + the sibling UI's complete check
 make stress     # deliberate deep audit: release pair + production/fuzz/concurrency + URLs
 make            # list the one-word commands
@@ -126,8 +138,22 @@ stress command is the single owner of repeated generation, atomic publication,
 concurrent CLI reads, repeated UI rounds, and online URL reachability; those
 checks should not be reconstructed as personal shell recipes.
 
+`make system-check` includes `make projection-check` automatically. For a
+standalone machine-readable verdict, run
+`.venv/bin/python tools/generate.py --shadow-all --json`. One command compares
+the manifest, backlinks, concept map, and dependency report with their full
+builders, checks that all results describe one stable input state, and returns
+`verified`, `mismatch`, or `refused` (exit codes 0, 1, and 2). It chooses timestamps
+inside guarded attempts and retries concurrent changes automatically. The
+compact report includes the snapshot, artifact hashes, and reuse counts; agents
+do not need to coordinate the individual shadow commands or reconstruct their
+consistency checks. Published views stay unchanged; disposable derived state
+may be refreshed. This is a projection-equivalence check for the four named
+artifacts, not a replacement for canonical validation, the paired release gate,
+or a current snapshot guard on a subsequent write.
+
 Interface layers (the Obsidian UI project, scripts, other agents) use the
-stable CLI gateway instead of parsing YAML — `python tools/los.py status
+stable CLI gateway instead of parsing YAML — `.venv/bin/python tools/los.py status
 --json | validate | generate | capture` (ADR-006). Provider-independent AI
 actions use the same gateway through `ai-action-list`, `ai-action-prepare`,
 `ai-action-import-delivery`, `ai-action-validate-delivery`,
@@ -183,7 +209,7 @@ deliberate decision. When `SCHEMA-CONTRACT-DRIFT` fires:
    understands. A completed migration cannot be replayed on a later live
    format; write a new migration instead. See `tools/migrations/README.md`.
 3. **Bump the contract:**
-   `python tools/schema_contract.py --bump --note "…" [--migration …]`
+   `.venv/bin/python tools/schema_contract.py --bump --note "…" [--migration …]`
 4. **Freeze the new shape** as a *new* `tests/fixtures/formats/v<N+1>/` and add
    it to `FORMATS` in `tests/test_format_fixtures.py`.
 
@@ -217,7 +243,7 @@ and break the other repository. It happened, with `topics`.
 
 When `MANIFEST-CONTRACT-DRIFT` fires:
 
-1. **Bump:** `python tools/manifest_contract.py --bump --note "…"` — it rebuilds
+1. **Bump:** `.venv/bin/python tools/manifest_contract.py --bump --note "…"` — it rebuilds
    with enforcement off, adopts the shape actually produced, and records the
    history entry. `--show` prints the current shape without changing anything.
 2. **Mirror into the UI in the same change** — `contracts/manifest-v<N>.lock.json`,

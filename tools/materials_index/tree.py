@@ -12,6 +12,7 @@ from .config import (
     MODULE_DOMAINS,
     SKIP_DIRS,
     SKIP_FILES,
+    display_for_top,
 )
 from .render import href_for
 
@@ -87,6 +88,19 @@ def build_tree(sources, flatmap):
             roots.append(node_for(p, None, False, False))
     return roots
 
+def group_roots_by_display(roots):
+    """Physical tree roots grouped under their display domains.
+
+    A display can own several physical spellings at once (``mathematics/``
+    beside a retained ``Math/``); both renderers consume this grouping so
+    loose-file counts always land under the heading the sources use.
+    """
+    grouped: dict[str, list] = {}
+    for root in roots:
+        grouped.setdefault(display_for_top(root["name"]), []).append(root)
+    return grouped
+
+
 def collect_leaves(node, crumb, out):
     ctype = (node["ctx"] or {}).get("type", "") or ""
     cblob = (node["ctx"] or {}).get("blob", "") or ""
@@ -116,10 +130,15 @@ def classify_source_node(node):
     top = parts[0]
     if top == "Books":
         sub = parts[1] if len(parts) > 1 else ""
-        return BOOKS_SUBFOLDER_DOMAIN.get(sub, "ML"), None
+        if sub in BOOKS_SUBFOLDER_DOMAIN:
+            return BOOKS_SUBFOLDER_DOMAIN[sub], None
+        # Unknown subfolders keep their own name for the extras clause —
+        # filing them under ML hid them in the wrong subject. A source at
+        # the Books/ root itself belongs to the Books reference library.
+        return (sub or "Books"), None
     if top in MODULE_DOMAINS:
         return top, (parts[1] if len(parts) > 1 else None)
-    return top, None
+    return display_for_top(top), None
 
 
 def collect_types(sources, local_ids, online_ids):

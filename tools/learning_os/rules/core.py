@@ -17,10 +17,11 @@ from ..learning_runtime import (
     RuntimeInputError,
     collect_requirements,
     read_observations,
+    read_stage_results,
     runtime_review_fingerprint,
 )
 from ..loader import Repo
-from .common import Issue
+from .common import CANONICAL_TREES, Issue, _in_garden, _in_quarantine
 from .contract import ChecksContract
 from .curriculum import ChecksCurriculum
 from .generated import ChecksGenerated
@@ -40,6 +41,18 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         self.online = online
         self.issues: list[Issue] = []
         self.schemas = self._load_schemas()
+        # One validator per schema, not one per instance checked. Building a
+        # Draft202012Validator re-resolves every `$ref` against the registry,
+        # and a full run checks 578 instances against ~40 schemas — so that
+        # resolution was repeated more than an order of magnitude more often
+        # than there are schemas to resolve. Reuse is the documented pattern;
+        # `iter_errors` does not mutate the validator.
+        self._validators: dict[str, jsonschema.Draft202012Validator] = {}
+        # Without a format checker jsonschema ignores "format" entirely, so
+        # `2026-13-45` validated clean on the most operationally critical field
+        # in the repository — exam dates. One checker serves every validator.
+        self._format_checker = jsonschema.FormatChecker()
+        self._canonical_text_cache: list[tuple[Path, str]] | None = None
         try:
             self.schema_registry = schema_registry(
                 self.repo.root / "system" / "schema"
@@ -78,22 +91,65 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
             schemas[f.stem.replace(".schema", "")] = schema
         return schemas
 
+    # A partitioned registry is checked as one merged document, so an error
+    # inside one of its records belongs to that record's partition file, not
+    # to the consolidated default passed as ``where``.
+    _MERGED_REGISTRY_FAMILIES = {"concepts": "concept", "sources": "source"}
+
     def _schema_check(self, name: str, instance, where: str):
-        schema = self.schemas.get(name)
-        if schema is None:
-            self.err("SCHEMA-MISSING", f"no schema '{name}' in system/schema/", where)
-            return
-        # Without a format checker jsonschema ignores "format" entirely, so
-        # `2026-13-45` validated clean on the most operationally critical field
-        # in the repository — exam dates.
-        validator = jsonschema.Draft202012Validator(
-            schema,
-            registry=self.schema_registry,
-            format_checker=jsonschema.FormatChecker(),
-        )
+        family = self._MERGED_REGISTRY_FAMILIES.get(name)
+        validator = self._validators.get(name)
+        if validator is None:
+            schema = self.schemas.get(name)
+            if schema is None:
+                # Deliberately not cached: a missing schema is reported for
+                # every instance that needed it, exactly as before.
+                self.err("SCHEMA-MISSING", f"no schema '{name}' in system/schema/", where)
+                return
+            validator = jsonschema.Draft202012Validator(
+                schema,
+                registry=self.schema_registry,
+                format_checker=self._format_checker,
+            )
+            self._validators[name] = validator
         for e in sorted(validator.iter_errors(instance), key=str):
-            locator = "/".join(str(p) for p in e.absolute_path)
-            self.err("SCHEMA", f"{name}: {e.message} (at {locator or 'root'})", where)
+            path = list(e.absolute_path)
+            locator = "/".join(str(p) for p in path)
+            origin = ""
+            if family and len(path) >= 2 and isinstance(path[1], int) \
+                    and isinstance(instance, dict):
+                records = instance.get(path[0])
+                record = records[path[1]] if isinstance(records, list) \
+                    and path[1] < len(records) else None
+                rec_id = record.get("id") if isinstance(record, dict) else None
+                if isinstance(rec_id, str) and rec_id:
+                    origin = self._origin_for(family, rec_id)
+            self.err("SCHEMA", f"{name}: {e.message} (at {locator or 'root'})",
+                     origin or where)
+
+    def _canonical_texts(self) -> list[tuple[Path, str]]:
+        """Every canonical Markdown/YAML file and its text, read once per run.
+
+        The ownership sweep, the material-integrity sweep and the link check
+        each used to walk and read these ~1,200 files on their own. Garden
+        and quarantine stay excluded exactly as each sweep excluded them.
+        """
+        if self._canonical_text_cache is None:
+            root = self.repo.root
+            rows: list[tuple[Path, str]] = []
+            for tree in CANONICAL_TREES:
+                base = root / tree
+                if not base.is_dir():
+                    continue
+                for path in sorted(base.rglob("*")):
+                    if path.suffix.lower() not in (".md", ".yaml", ".yml") \
+                            or not path.is_file():
+                        continue
+                    if _in_garden(root, path) or _in_quarantine(root, path):
+                        continue
+                    rows.append((path, path.read_text(encoding="utf-8", errors="replace")))
+            self._canonical_text_cache = rows
+        return self._canonical_text_cache
 
     def _rel(self, p: Path) -> str:
         try:
@@ -115,6 +171,9 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         if family == "concept":
             o = r.concept_origins.get(rec_id)
             return self._rel(o) if o else "knowledge/concepts.yaml"
+        if family == "ability":
+            o = r.ability_origins.get(rec_id)
+            return self._rel(o) if o else "knowledge/abilities.yaml"
         if family == "source":
             o = r.source_origins.get(rec_id)
             return self._rel(o) if o else "sources/sources.yaml"
@@ -149,30 +208,54 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
         self.check_normative_corpus()
         self.check_perimeter()
         self.check_tree_contract()
+        self.check_local_attachments()
         self.check_contract_documentation()
         self.check_schemas()
-        self.check_identity()
-        self.check_references()
-        self.check_registries()
-        self.check_collections()
-        self.check_ownership()
-        self.check_modules()
-        self.check_curriculum()
-        self.check_learning_runtime()
-        self.check_lifecycle_coherence()
-        self.check_projects()
-        self.check_transaction_receipts()
-        self.check_files()
-        self.check_workspaces()
-        self.check_learning_paths()
-        self.check_plan_rigor()
-        self.check_study_maps()
-        self.check_links()
-        self.check_generated()
-        self.check_materials()
-        self.check_hygiene()
+        invalid = sorted({i.path for i in self.issues
+                          if i.severity == "E" and i.code == "SCHEMA" and i.path})
+        checks = [
+            self.check_identity,
+            self.check_references,
+            self.check_registries,
+            self.check_collections,
+            self.check_ownership,
+            self.check_modules,
+            self.check_curriculum,
+            self.check_learning_runtime,
+            self.check_lifecycle_coherence,
+            self.check_projects,
+            self.check_transaction_receipts,
+            self.check_ai_action_requests,
+            self.check_files,
+            self.check_workspaces,
+            self.check_learning_paths,
+            self.check_plan_rigor,
+            self.check_study_maps,
+            self.check_links,
+            self.check_generated,
+            self.check_materials,
+            self.check_hygiene,
+        ]
         if self.online:
-            self.check_external_urls()
+            checks.append(self.check_external_urls)
+        for check in checks:
+            # Every pass below reads records in their schema shape. A record
+            # that failed its schema is already reported above, with its file,
+            # but a pass that reads it anyway can crash on it (a mapping used as
+            # a key: synthetic authoring campaign D2), which took the whole run
+            # down as a traceback naming no file. Only then is the crash
+            # contained, as one error naming those files; the rest of that pass
+            # is skipped. On schema-valid input a crash is a defect: it stays loud.
+            try:
+                check()
+            except (AttributeError, IndexError, KeyError, TypeError, ValueError) as exc:
+                if not invalid:
+                    raise
+                self.err(
+                    "SCHEMA-DEPENDENT",
+                    f"{check.__name__} stopped on schema-invalid input "
+                    f"({type(exc).__name__}: {exc}); fix the SCHEMA errors in "
+                    f"{', '.join(invalid)} and validate again")
         return self.issues
 
     def check_learning_runtime(self) -> None:
@@ -182,6 +265,25 @@ class Validator(ChecksContract, ChecksCurriculum, ChecksGenerated, ChecksHygiene
             read_observations(self.repo, collect_requirements(self.repo))
         except RuntimeInputError as exc:
             self.err("LEARNING-RUNTIME", str(exc))
+        try:
+            read_stage_results(self.repo)
+        except RuntimeInputError as exc:
+            self.err("LEARNING-RUNTIME", str(exc))
+        from ..abilities import (
+            read_ability_candidates,
+            read_ability_observations,
+            validate_ability_registry,
+        )
+        for issue in validate_ability_registry(self.repo):
+            self.err("ABILITY-REFERENCE", issue, "knowledge/abilities.yaml")
+        try:
+            read_ability_observations(self.repo)
+        except (RuntimeInputError, OSError) as exc:
+            self.err("ABILITY-EVIDENCE", str(exc))
+        try:
+            read_ability_candidates(self.repo)
+        except (RuntimeInputError, OSError) as exc:
+            self.err("ABILITY-CANDIDATE", str(exc))
         self.check_runtime_review()
 
     def check_runtime_review(self) -> None:

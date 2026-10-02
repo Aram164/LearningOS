@@ -64,7 +64,7 @@ SCHEMA_RELATIVE = "system/contracts/normative-corpus.schema.json"
 #: demand a warning gate the contract does not set, and drop the qualification
 #: on which units owe a study map. Covering only the top-level documents left
 #: the drift where nothing was looking.
-CORPUS_GLOBS = ("system/*.md", "system/adr/*.md", "system/skills/*/SKILL.md")
+CORPUS_GLOBS = ("AGENTS.md", "README.md", "system/*.md", "system/adr/*.md", "system/skills/*/SKILL.md")
 
 RETIRED_STATUSES = frozenset({"superseded", "frozen"})
 

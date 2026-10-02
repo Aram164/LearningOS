@@ -1,0 +1,12 @@
+{
+ "video_id": "qBigTkBLU6g",
+ "verdicts": [
+  {
+   "knowledge_node": "knowledge-sad-l01-distributions",
+   "verdict": "confirm",
+   "recorded_confidence": "high",
+   "evidence": "[01:12] \"we divide the range of values into bins\" / [01:53] \"use a distribution to approximate your data\" / [02:05] \"we might use a normal distribution\" / [02:26] \"how wide to make the bins is tricky\"",
+   "reason": "Histogram construction, the empirical-to-distribution step, and the bin-width tradeoff are all worked on data."
+  }
+ ]
+}

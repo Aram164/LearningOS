@@ -2,7 +2,8 @@
 
 Run with .venv/bin/python tests/benchmark_agent_reads.py. Fresh CLI processes
 exercise the old and recommended startup paths against the same repository.
-Bytes measure response volume, not model tokens or billed cost.
+Bytes measure response volume, not model tokens or billed cost. The triage
+arm reads gitignored generated views, so no snapshot guard applies to it.
 """
 
 from __future__ import annotations
@@ -22,6 +23,86 @@ LOS = ROOT / "tools/los.py"
 def invoke(*arguments: str) -> tuple[dict, int]:
     raw = subprocess.check_output([sys.executable, str(LOS), *arguments], cwd=ROOT)
     return json.loads(raw), len(raw)
+
+
+def triage_sample() -> dict:
+    """Summary-vs-full read volume over cached chapters.
+
+    Phase 0 runs denominator-only: with no summaries cached, the arm
+    reports the text-cache totals a full-read triage must ingest.
+    """
+    rows = []
+    for meta in sorted((ROOT / "generated").glob("summaries/*/pages-*/meta.json")):
+        try:
+            record = json.loads(meta.read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            continue
+        digest = record.get("sha256")
+        span = record.get("page_range") or []
+        if not digest or len(span) != 2:
+            continue
+        try:
+            summary_bytes = len((meta.parent / "summary.md").read_bytes())
+        except OSError:
+            continue
+        full_bytes = 0
+        for page in range(span[0], span[1] + 1):
+            page_path = (ROOT / "generated" / "text-cache" / digest
+                         / f"pp-{page:04d}.txt")
+            try:
+                full_bytes += len(page_path.read_bytes())
+            except OSError:
+                full_bytes = 0
+                break
+        if not full_bytes:
+            continue
+        rows.append({"material": record.get("material"), "digest": digest,
+                     "page_range": span, "summary_bytes": summary_bytes,
+                     "full_bytes": full_bytes})
+    cached_materials = len(list((ROOT / "generated").glob("text-cache/*/index.json")))
+    totals = {"chapters": len(rows),
+              "summary_bytes": sum(row["summary_bytes"] for row in rows),
+              "full_bytes": sum(row["full_bytes"] for row in rows),
+              "cached_materials": cached_materials}
+    totals["ratio"] = (totals["summary_bytes"] / totals["full_bytes"]
+                       if totals["full_bytes"] else None)
+    return {"rows": rows, "totals": totals}
+
+
+def unit_list_sample() -> dict:
+    """Full-versus-compact unit-list volume with complete-ID parity.
+
+    Pages the compact summary at its maximum window and proves it names
+    every unit the full listing names, in a deterministic order. The
+    continuation guards fail the sample if the repository moves mid-read.
+    """
+    full, full_bytes = invoke("unit-list")
+    full_ids = sorted(row["id"] for row in full)
+    compact_bytes = 0
+    seen: list[str] = []
+    offset, snapshot, first_snapshot = 0, None, None
+    while True:
+        args = ["unit-list", "--compact", "--limit", "50",
+                "--offset", str(offset)]
+        if snapshot is not None:
+            args += ["--expected-snapshot", snapshot]
+        page, size = invoke(*args)
+        compact_bytes += size
+        if page["contract"] != "unit-list-summary":
+            raise SystemExit("compact unit-list changed contract")
+        if first_snapshot is None:
+            first_snapshot = page["snapshot_id"]
+        if page["total"] != len(full_ids):
+            raise SystemExit("compact unit-list lost unit rows")
+        seen.extend(row["id"] for row in page["items"])
+        if page["next_offset"] is None:
+            break
+        offset, snapshot = page["next_offset"], page["snapshot_id"]
+    if sorted(seen) != full_ids:
+        raise SystemExit("compact unit-list lost unit IDs")
+    return {"snapshot_id": first_snapshot, "units": len(full_ids),
+            "full_bytes": full_bytes, "compact_bytes": compact_bytes,
+            "ids_match": True}
 
 
 def sample() -> dict:
@@ -47,8 +128,13 @@ def sample() -> dict:
         raise SystemExit("batch differs from individual reads; check for concurrent changes")
     if batch["snapshot_id"] != summary["snapshot_id"]:
         raise SystemExit("repository changed during inspection comparison")
+    units = unit_list_sample()
+    if units["snapshot_id"] != summary["snapshot_id"]:
+        raise SystemExit("repository changed during unit-list comparison")
+
     return {
         "snapshot_id": batch["snapshot_id"], "inspected_ids": ids,
+        "triage": triage_sample(), "unit_list": units,
         "stdout_bytes": {
             "full_catalogue": old_catalogue_bytes, "capability_index": index_bytes,
             "full_bootstrap": full_bytes, "compact_bootstrap": summary_bytes,
@@ -57,6 +143,8 @@ def sample() -> dict:
             "recommended_startup": index_bytes + summary_bytes,
             "individual_inspections": sum(size for _record, size in single_results),
             "batch_inspection": batch_bytes,
+            "full_unit_list": units["full_bytes"],
+            "compact_unit_list": units["compact_bytes"],
         },
         "seconds": {"individual_inspections": single_seconds, "batch_inspection": batch_seconds},
         "records_identical": True,

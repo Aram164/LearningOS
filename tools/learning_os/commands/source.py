@@ -7,6 +7,7 @@ import datetime as _dt
 import json
 import sys
 
+from .suggest import not_found
 from .support import (
     _dump_study_map,
     _expected_ok,
@@ -14,6 +15,7 @@ from .support import (
     _operator_lock,
     _root,
     _stage,
+    _stage_ids,
     _unit_map_or_error,
     _write_transaction,
 )
@@ -33,7 +35,8 @@ def cmd_source_feedback(args) -> int:
         data = copy.deepcopy(study_map.data)
         stage = _stage(data, args.stage_id)
         if stage is None:
-            print(f"los: stage not found: {args.stage_id}", file=sys.stderr)
+            print(f"los: {not_found('stage', args.stage_id, _stage_ids(data))}",
+                  file=sys.stderr)
             return 2
         entry = {"source_id": args.source_id, "feedback": args.feedback,
                  "recorded": _dt.date.today().isoformat()}

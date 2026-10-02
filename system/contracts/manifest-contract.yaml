@@ -38,10 +38,15 @@
 #      this file was written to prevent.
 #
 # Rebuild with: python tools/manifest_contract.py --bump --note "…"
+#
+# DEFERRED (v16 garden/inbox, 2026-09-26): v15 already publishes
+# `garden_entries`, and inbox stays served by `search`/`inbox-read`. The
+# trigger that reopens this is a consumer needing inbox or garden
+# *content* — not just presence — inside the atomic manifest read.
 # Keys that were once published and must never come back under this name.
 # `exam_spine` was a strict subset of `academic_deadlines` — a second shape for
 # the same facts (ADR-006, 2026-08-03).
-contract_version: 9
+contract_version: 15
 top_level_keys:
 - _generated
 - academic_deadlines
@@ -98,8 +103,8 @@ index_keys:
 - unit_to_study_map
 - workspace_to_modules
 - workspace_to_units
-schema_path: system/contracts/manifest-v9.schema.json
-schema_sha256: sha256:09f1b5d492a32d387cc942fe6c9ae5a17b48e5e3b02f325320c3070667642ddb
+schema_path: system/contracts/manifest-v15.schema.json
+schema_sha256: sha256:c487c6ed2e05c05425c6b41bd291e566b16a7e1ee3af667ae00763608d7e121f
 forbidden_top_level_keys:
 - exam_spine
 history:
@@ -162,3 +167,35 @@ history:
   note: 'note records carry atlas_question: a learner''s recorded question against
     a concept or an authored relation (ADR-017)'
   mirrored_in_ui: contracts/manifest-v9.lock.json
+- version: 10
+  adopted: '2026-09-13'
+  note: Publish material-owned solution exposure and required activity assets; mirror
+    optional fields in the UI reader.
+  mirrored_in_ui: contracts/manifest-v10.lock.json
+- version: 11
+  adopted: '2026-09-18'
+  note: route assessments carry scope_of_absence; freshness reasons drop unit_revision,
+    which a publish can never satisfy
+  mirrored_in_ui: contracts/manifest-v11.lock.json
+- version: 12
+  adopted: '2026-09-21'
+  note: 'note records carry material_analysis: the provenance binding of a durable
+    source-chapter analysis (resolution, recorded/live digests, inspected range, frozen
+    input hash)'
+  mirrored_in_ui: contracts/manifest-v12.lock.json
+- version: 13
+  adopted: '2026-09-21'
+  note: route assessments gain optional analysis_refs (pinned note revision, exact
+    anchor, inspected material identity); freshness reasons gain analysis-refs-stale
+  mirrored_in_ui: contracts/manifest-v13.lock.json
+- version: 14
+  adopted: '2026-09-21'
+  note: schema title names the declared version (was 'manifest v9' since v9); no shape
+    change
+  mirrored_in_ui: contracts/manifest-v14.lock.json
+- version: 15
+  adopted: '2026-09-23'
+  note: 'projected sources carry bounded discovery provenance (or null) and
+    examination: evaluated, the count of current approved assessment routes,
+    and metadata_placed (two-pass intake Library badge and agent source read)'
+  mirrored_in_ui: contracts/manifest-v15.lock.json

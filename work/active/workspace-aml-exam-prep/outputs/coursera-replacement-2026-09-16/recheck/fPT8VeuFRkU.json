@@ -1,0 +1,12 @@
+{
+ "video_id": "fPT8VeuFRkU",
+ "verdicts": [
+  {
+   "knowledge_node": "knowledge-aml-l05-boundary",
+   "verdict": "confirm",
+   "recorded_confidence": "high",
+   "evidence": "[00:22] \"the weight vector is always orthogonal to the decision boundary\" / [00:34] \"the decision boundary are the values of x for which we're perfectly unsure about\" / [00:49] \"a 0.5 for the probability of belonging to the positive class\" / [01:06] \"of w transpose times x\"",
+   "reason": "The separator is derived as the locus where the sigmoid of w-transpose-x gives 0.5, i.e. the score is zero, and the weight vector is shown orthogonal to it — the geometry the node asks for, not just the sigmoid story."
+  }
+ ]
+}

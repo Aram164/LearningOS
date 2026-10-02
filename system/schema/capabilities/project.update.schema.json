@@ -17,7 +17,48 @@
       "pattern": "^sha256:[a-f0-9]{64}$"
     },
     "project": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "schema_version": {},
+        "id": {},
+        "type": {},
+        "revision": {},
+        "title": {},
+        "project_type": {},
+        "status": {},
+        "root_uri": {},
+        "objective": {},
+        "milestone_ids": {},
+        "linked_module_ids": {},
+        "unit_ids": {},
+        "workspace_ids": {},
+        "thematic_group_ids": {},
+        "boundaries": {},
+        "structure": {},
+        "files": {},
+        "decisions": {},
+        "migrated_from": {},
+        "migrated_at": {},
+        "migration": {},
+        "source_sha256": {}
+      },
+      "additionalProperties": false,
+      "required": [
+        "boundaries",
+        "id",
+        "linked_module_ids",
+        "milestone_ids",
+        "objective",
+        "project_type",
+        "root_uri",
+        "status",
+        "thematic_group_ids",
+        "title",
+        "type",
+        "unit_ids",
+        "workspace_ids"
+      ],
+      "description": "Full project record governed by system/schema/project.schema.json; schema_version defaults when omitted."
     },
     "project_id": {
       "type": "string"

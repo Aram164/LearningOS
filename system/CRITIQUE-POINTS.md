@@ -378,3 +378,67 @@ imperative. The index answers "what binds" for the documents it reaches; the
 documents an agent reads *first* are not among them.
 
 Status unchanged: open. Closing it is Aram's.
+
+### Measurements for points 1–3 — 2026-09-30 cleanup
+
+Aram authorized direct implementation and the existing content warnings and
+deferred design issues in this session. Original complaints and status remain
+unchanged; closing them is still his decision.
+
+- Point 1: the remaining 342 route/placement wording differences were reviewed
+  through `unit.map.import`: 340 stage-specific refinements retained, two
+  misleading descriptions corrected against inspected local PDF bytes. The
+  optional `angle_review` in Data Contract 46 binds each relation judgment to
+  its route, stage, and placement; corrections additionally bind exact source
+  evidence. `ANGLE-REVIEW-STALE` reopens changed inputs. No progress, notes,
+  selections, or stage order changed. Current validation: no content warnings.
+- Point 2: the manifest still uses the shared canonical renderer.
+  `test_checked_in_inventory_uses_the_shared_byte_renderer` now compares the
+  checked-in inventory's bytes to that owner in the full gate, so a third writer
+  that changes ordering, wrapping, or header is detected without modifying the
+  frozen migration or pretending to verify external bytes.
+- Point 3: the corpus now covers Core's owned `AGENTS.md` and `README.md` as
+  well as the system documents and skill procedures. Missing entry
+  classifications are errors. Ancestor role instructions and the sibling UI
+  remain separate owners under the perimeter contract; no `../` corpus paths
+  or duplicated root instructions were introduced.
+
+### Re-measurement — 2026-09-30 post-lock (operator; points remain open)
+
+Status unchanged on all three points; closing them is Aram's.
+
+- Point 1: `tools/plan_write_audit.py` re-run after the lock commit: 58
+  commits have changed a plan record, 41 carry a transaction receipt (71%),
+  17 do not; 329 receipts on disk. Last measured 2026-08-24 at 26% (5 of
+  19). The gateway path is still optional and its absence is still
+  invisible — only the share has moved.
+- Point 2: `test_checked_in_inventory_uses_the_shared_byte_renderer`
+  re-run after the lock commit: 1 passed. The checked-in inventory still
+  byte-matches the shared renderer. The test runs in the full
+  `make system-check` pytest suite, not in `make check` (which runs only
+  the validator).
+- Point 3: `system/contracts/normative-corpus.yaml` re-counted: 44
+  documents (was 36 on 2026-09-04) — 29 binding · 4 informative ·
+  11 historical; 33 current · 10 frozen · 1 superseded. Entrypoint still
+  `system/OPERATOR.md`. `tests/test_normative_corpus.py`: 32 passed.
+
+### Dispositions — 2026-09-30 independent verification, Aram
+
+Aram was shown the evidence-backed closure proposals in
+`LearningOS/workbench/cleanup-2026-09-30/independent-verification/DECISIONS.md`
+and answered **"Approve closing 2 and 3"** and **"Keep point 1 open"**.
+
+- **Point 2: resolved.** The two writers share the canonical renderer and
+  checked-in inventory byte parity is enforced in the full system test gate.
+  Independent verification re-ran the parity regression successfully. This
+  closes the serialization disagreement and its missing detection guard;
+  it does not assert external backup availability or material-byte recovery.
+- **Point 3: resolved.** The enforced, complete Core-owned corpus index,
+  explicit authority/status classifications, declared entry point and
+  supersession checks address the missing bindingness index. Independent
+  verification passed all 32 corpus tests. Ancestor instructions and the
+  sibling UI retain their separate ownership.
+- **Point 1: open, by Aram's explicit decision.** Current content repairs and
+  the guided gateway path do not make arbitrary filesystem edits impossible.
+  The historical receipt measurements remain evidence, not a retroactive
+  acceptance or a reason to fabricate provenance.

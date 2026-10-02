@@ -27,7 +27,7 @@
     "corpus_path": {
       "type": "string",
       "description": "A normative prose document: a top-level system document, an ADR, or an operator skill. Skills joined the corpus after the 2026-09-05 audit (F14) — a runbook an operator follows instead of the spine drifts exactly where nothing is looking.",
-      "pattern": "^system/(adr/[A-Za-z0-9._-]+\\.md|skills/[A-Za-z0-9._-]+/SKILL\\.md|[A-Za-z0-9._-]+\\.md)$"
+      "pattern": "^(AGENTS\\.md|README\\.md|system/(adr/[A-Za-z0-9._-]+\\.md|skills/[A-Za-z0-9._-]+/SKILL\\.md|[A-Za-z0-9._-]+\\.md))$"
     },
     "document": {
       "type": "object",

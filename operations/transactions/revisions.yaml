@@ -22,19 +22,67 @@ revisions:
   concept-projection-family: 1
   concept-selection-family: 1
   concept-skrub: 1
+  coordination: 1
+  file:archive/inbox/2026/complaints/2026-09-28-remote-video-examination.md: 1
+  file:archive/inbox/2026/complaints/2026-09-28-sad-plan-import-friction.md: 1
+  file:archive/inbox/2026/complaints/2026-09-29-collection-why-correction.md: 1
+  file:archive/inbox/2026/complaints/2026-09-29-existing-source-local-shelving.md: 1
+  file:archive/inbox/2026/complaints/2026-09-29-source-attach-dossier-payload.md: 1
+  file:archive/inbox/2026/complaints/2026-09-29-useful-sections-shape.md: 1
+  file:archive/inbox/2026/complaints/README.md: 1
+  file:operations/transactions/lineage.yaml: 1
+  file:work/inbox/complaints/2026-09-28-remote-video-examination.md: 1
+  file:work/inbox/complaints/2026-09-28-sad-plan-import-friction.md: 1
+  file:work/inbox/complaints/2026-09-29-collection-why-correction.md: 1
+  file:work/inbox/complaints/2026-09-29-existing-source-local-shelving.md: 1
+  file:work/inbox/complaints/2026-09-29-source-attach-dossier-payload.md: 1
+  file:work/inbox/complaints/2026-09-29-useful-sections-shape.md: 1
+  file:work/inbox/complaints/README.md: 1
   job-quarantine-collapse-v1: 1
+  legacy-archive-lock: 1
+  master-planning-catalog: 1
+  material-synthesis-m2-sad-l03: 3
+  material-synthesis-m2-sad-l03-pilot: 1
+  material-synthesis-m2-sad-l04: 4
   materials-manifest: 1
   module-hu-algo2: 2
-  module-hu-aml: 12
-  module-hu-m2-statistik-analysis: 38
+  module-hu-aml: 13
+  module-hu-m2-statistik-analysis: 59
   module-job-engineering-tools: 1
   module-job-git: 1
   module-job-polars: 3
   module-job-python-engineering: 1
   module-job-rust-engineering: 1
   module-project-bachelor-thesis: 1
+  note-06-random-variables-pp005-008: 1
+  note-06-random-variables-pp009-013: 1
+  note-06-random-variables-pp015-023: 1
+  note-06-random-variables-pp024-032: 1
+  note-06-random-variables-pp034-042: 1
+  note-06-random-variables-pp044-050: 1
+  note-06-random-variables-pp052-060: 1
+  note-11-datascience-intro-pp003-011: 1
+  note-11-datascience-intro-pp012-020: 1
+  note-11-datascience-intro-pp021-032: 1
+  note-11-datascience-intro-pp033-038: 1
+  note-11-datascience-intro-pp039-046: 1
+  note-11-datascience-intro-pp047-049: 1
   note-pandas-groupby-signatures: 1
   note-pandas-polars-aggregation-contentions: 3
+  note-sad-l05-counting-probability-pp028-030: 1
+  note-sad-l07-2025-geometric-pp038-044: 1
+  note-sad-l07-blitzstein-geom-convention-pp174-178: 1
+  note-sad-l07-distribution-boundary-pp013-014: 1
+  note-sad-l08-2025-gaussian-mle-pp022-030: 1
+  note-sad-l08-clt-pp020-021: 1
+  note-sad-l09-2025-bootstrap-pp068-088: 1
+  note-sad-l09-resampling-p045: 1
+  note-sad-l09-ue6-bootstrap-pp010-013: 1
+  note-sad-l10-2025-bonferroni-pp043-045: 1
+  note-sad-l10-fahrmeir-bonferroni-pp445-446: 1
+  note-sad-l10-islp-fwer-fdr-pp571-581: 1
+  note-sad-l10-testing-discipline-pp056-065: 1
+  note-sad-ue7-historical-exam-prompts-pp077-084: 1
   note-skrub-dataop-dag: 1
   note-skrub-evaluation-engine: 1
   note-stratum-extract-dataframe-op: 1
@@ -56,14 +104,63 @@ revisions:
   program-job-boundary: 1
   program-thesis-projects: 1
   project-bachelor-thesis: 1
+  source-3b1b-neural-networks: 1
+  source-algo2-frankfurt-klausuren: 1
+  source-amls-prior-archives: 1
+  source-analysis-klausuren-extern: 1
+  source-arora-barak: 1
+  source-bermbach-csb: 1
+  source-blitzstein-hwang: 1
+  source-caltech-lfd: 1
+  source-captum: 1
+  source-cmu-10414: 1
+  source-cmu-15445: 1
+  source-cmu-15451-splay-notes: 1
+  source-cs229-2018-videos: 1
+  source-cs229-notes: 1
+  source-cs229-project-archive: 1
+  source-cs231n-notes: 1
+  source-eecs498: 1
+  source-esl: 1
+  source-frankfurt-algo2-course: 1
+  source-grinstead-snell: 2
+  source-guo-cpython-internals: 1
+  source-hogan-knowledge-graphs: 1
+  source-islp: 1
+  source-kaggle-winning-solutions: 1
+  source-karpathy-micrograd: 1
+  source-kit-algorithmen2: 1
   source-map-job-engineering-tools: 1
   source-map-job-git: 1
   source-map-job-polars: 1
   source-map-job-python-engineering: 1
   source-map-job-rust-engineering: 1
+  source-mit-18100a: 1
+  source-mit-6034-quizzes: 1
+  source-mit-6036: 1
+  source-mit-6172: 1
+  source-mit-6s191: 1
+  source-mit-missing-semester: 1
+  source-mlc-book: 1
+  source-mlsysbook-vol1: 1
+  source-mmds-book: 1
+  source-mml: 1
+  source-murphy-pml1: 1
+  source-ng-coursera: 1
+  source-nielsen-nndl: 1
+  source-nyu-dl: 1
   source-polars-definitive-guide: 1
+  source-pydata-handbook: 1
+  source-rohrer-e2eml: 1
+  source-sad-klausuren-extern: 1
   source-scalable-dataframe-systems-paper: 1
+  source-sklearn-user-guide: 1
+  source-skrub: 1
+  source-stat110: 1
   source-stratum-paper: 1
+  source-sutton-barto-rl: 1
+  source-toussaint-optimization-script: 1
+  source-tu-python-ml-course: 1
   stage-git-01-snapshots-objects-the-commit-dag-and-refs: 1
   stage-git-02-the-state-triangle-working-tree-index-and-head: 1
   stage-git-03-intentional-staging-and-atomic-commits: 1
@@ -159,19 +256,19 @@ revisions:
   stage-rust-19-pull-based-advanced-clinic-unsafe-macros-and-typ: 1
   study-map-aml-l01: 3
   study-map-aml-l02: 3
-  study-map-aml-l03: 3
-  study-map-aml-l04: 3
-  study-map-aml-l05: 3
-  study-map-aml-l06: 3
+  study-map-aml-l03: 5
+  study-map-aml-l04: 4
+  study-map-aml-l05: 4
+  study-map-aml-l06: 4
   study-map-aml-l07: 3
   study-map-aml-l08: 3
-  study-map-aml-l09: 3
+  study-map-aml-l09: 4
   study-map-aml-l10: 5
   study-map-aml-l11: 3
   study-map-job-engineering-tools-fluency: 2
   study-map-job-git-fluency: 1
-  study-map-job-polars-backend-loop: 1
-  study-map-job-polars-expressions: 13
+  study-map-job-polars-backend-loop: 2
+  study-map-job-polars-expressions: 14
   study-map-job-polars-joins-reshape: 7
   study-map-job-polars-lazy-udf-interop: 7
   study-map-job-polars-pandas-fluency: 10
@@ -182,74 +279,74 @@ revisions:
   study-map-m2-analysis-ch01: 1
   study-map-m2-analysis-ch02: 1
   study-map-m2-analysis-exam-prep: 1
-  study-map-m2-sad-clustering: 4
-  study-map-m2-sad-exam-prep: 2
-  study-map-m2-sad-l01: 4
-  study-map-m2-sad-l02: 5
-  study-map-m2-sad-l03: 5
-  study-map-m2-sad-l04: 5
-  study-map-m2-sad-l05: 6
-  study-map-m2-sad-l06: 8
-  study-map-m2-sad-l07: 9
-  study-map-m2-sad-l08: 13
-  study-map-m2-sad-l09: 7
-  study-map-m2-sad-l10: 5
-  study-map-m2-sad-l11: 5
-  study-map-m2-sad-l12: 5
-  study-map-m2-sad-l13: 5
-  study-map-m2-sad-l14: 5
-  study-map-m2-sad-l15: 5
-  unit-algo2-exam-prep: 1
-  unit-aml-exam-prep: 7
+  study-map-m2-sad-clustering: 5
+  study-map-m2-sad-exam-prep: 3
+  study-map-m2-sad-l01: 5
+  study-map-m2-sad-l02: 6
+  study-map-m2-sad-l03: 9
+  study-map-m2-sad-l04: 8
+  study-map-m2-sad-l05: 7
+  study-map-m2-sad-l06: 9
+  study-map-m2-sad-l07: 10
+  study-map-m2-sad-l08: 14
+  study-map-m2-sad-l09: 8
+  study-map-m2-sad-l10: 6
+  study-map-m2-sad-l11: 8
+  study-map-m2-sad-l12: 6
+  study-map-m2-sad-l13: 6
+  study-map-m2-sad-l14: 6
+  study-map-m2-sad-l15: 7
+  unit-algo2-exam-prep: 2
+  unit-aml-exam-prep: 8
   unit-aml-l01: 6
   unit-aml-l02: 6
-  unit-aml-l03: 5
-  unit-aml-l04: 5
-  unit-aml-l05: 5
-  unit-aml-l06: 5
+  unit-aml-l03: 7
+  unit-aml-l04: 6
+  unit-aml-l05: 6
+  unit-aml-l06: 6
   unit-aml-l07: 6
   unit-aml-l08: 5
-  unit-aml-l09: 5
+  unit-aml-l09: 6
   unit-aml-l10: 8
   unit-aml-l11: 7
   unit-job-engineering-tools-fluency: 2
   unit-job-git-fluency: 1
-  unit-job-polars-aggregation-windows: 1
-  unit-job-polars-backend-loop: 2
-  unit-job-polars-capstone-transition: 1
-  unit-job-polars-expressions: 14
-  unit-job-polars-joins-reshape: 8
-  unit-job-polars-lazy-udf-interop: 8
-  unit-job-polars-order-text-time: 1
-  unit-job-polars-pandas-fluency: 11
-  unit-job-polars-schema-missing-types: 8
-  unit-job-polars-selection-backend: 11
+  unit-job-polars-aggregation-windows: 2
+  unit-job-polars-backend-loop: 4
+  unit-job-polars-capstone-transition: 2
+  unit-job-polars-expressions: 16
+  unit-job-polars-joins-reshape: 9
+  unit-job-polars-lazy-udf-interop: 9
+  unit-job-polars-order-text-time: 2
+  unit-job-polars-pandas-fluency: 12
+  unit-job-polars-schema-missing-types: 9
+  unit-job-polars-selection-backend: 12
   unit-job-python-engineering-fluency: 2
   unit-job-rust-engineering-fluency: 1
-  unit-m2-analysis-ch01: 4
-  unit-m2-analysis-ch02: 7
-  unit-m2-analysis-ch03: 4
-  unit-m2-analysis-ch04: 4
-  unit-m2-analysis-ch05: 4
-  unit-m2-analysis-ch06: 4
-  unit-m2-analysis-ch07: 4
-  unit-m2-analysis-exam-prep: 10
-  unit-m2-combined-exam-rehearsal: 4
-  unit-m2-sad-clustering: 12
-  unit-m2-sad-exam-prep: 10
-  unit-m2-sad-l01: 9
-  unit-m2-sad-l02: 11
-  unit-m2-sad-l03: 16
-  unit-m2-sad-l04: 17
-  unit-m2-sad-l05: 14
-  unit-m2-sad-l06: 20
-  unit-m2-sad-l07: 17
-  unit-m2-sad-l08: 21
-  unit-m2-sad-l09: 14
-  unit-m2-sad-l10: 12
-  unit-m2-sad-l11: 11
-  unit-m2-sad-l12: 11
-  unit-m2-sad-l13: 11
-  unit-m2-sad-l14: 15
-  unit-m2-sad-l15: 15
+  unit-m2-analysis-ch01: 6
+  unit-m2-analysis-ch02: 9
+  unit-m2-analysis-ch03: 8
+  unit-m2-analysis-ch04: 6
+  unit-m2-analysis-ch05: 8
+  unit-m2-analysis-ch06: 7
+  unit-m2-analysis-ch07: 6
+  unit-m2-analysis-exam-prep: 12
+  unit-m2-combined-exam-rehearsal: 5
+  unit-m2-sad-clustering: 13
+  unit-m2-sad-exam-prep: 12
+  unit-m2-sad-l01: 10
+  unit-m2-sad-l02: 14
+  unit-m2-sad-l03: 24
+  unit-m2-sad-l04: 29
+  unit-m2-sad-l05: 17
+  unit-m2-sad-l06: 24
+  unit-m2-sad-l07: 21
+  unit-m2-sad-l08: 24
+  unit-m2-sad-l09: 17
+  unit-m2-sad-l10: 15
+  unit-m2-sad-l11: 15
+  unit-m2-sad-l12: 13
+  unit-m2-sad-l13: 12
+  unit-m2-sad-l14: 16
+  unit-m2-sad-l15: 17
   workspace-thesis-mle-medical: 1

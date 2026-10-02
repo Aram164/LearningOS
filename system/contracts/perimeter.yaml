@@ -112,6 +112,15 @@ entries:
     owner: learningos
     purpose: the umbrella for every LearningOS component (ADR-014).
 
+  - path: outputs
+    kind: directory
+    owner: operator
+    annotation: design handoffs and implementation verification artifacts
+    purpose: >-
+      User-requested design references, implementation handoffs and verification
+      receipts. These artifacts are non-canonical and never indexed as learning
+      records or used as learner evidence.
+
   - path: Stratum
     kind: nested_repo
     owner: external
@@ -207,6 +216,10 @@ pending_disposition:
       it to a declared wrapper entry. Already proved not a duplicate: sha256
       4345cf71…a27483 differs from the workbench RESEARCH.txt (53f66bdf…bbe4),
       so it must not be disposed of as a shadow.
+  - path: HANDOFF.md
+    disposition: >-
+      transient cross-session handoff at the wrapper root (2026-09-29 issue
+      cleanup). Delete when consumed and remove this entry with the file.
   # 2026-09-10: the consolidated research/autonomy/runtime dossier moved to
   # LearningOS/workbench/ per Aram (active handoff artifact, explicitly
   # non-canonical) and this entry was removed; workbench/ is a declared

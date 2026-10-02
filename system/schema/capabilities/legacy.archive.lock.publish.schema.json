@@ -7,14 +7,31 @@
   "additionalProperties": false,
   "required": [],
   "properties": {
-    "approve": {
-      "type": "boolean"
-    },
     "file": {
       "type": "string"
     },
     "record": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "schema_version": {},
+        "id": {},
+        "type": {},
+        "created_at": {},
+        "entries": {},
+        "excluded": {},
+        "verification": {}
+      },
+      "additionalProperties": false,
+      "required": [
+        "created_at",
+        "entries",
+        "excluded",
+        "id",
+        "schema_version",
+        "type",
+        "verification"
+      ],
+      "description": "The accepted fields are the full lock record governed by system/schema/legacy-archive-lock.schema.json."
     }
   },
   "oneOf": [
