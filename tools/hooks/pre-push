@@ -8,6 +8,17 @@
 # this toolchain, was already stamped by a successful system-check on clean
 # trees (tools/verified_pairs.py), in which case the full gate is skipped
 # and the stamp is named.
+#
+# Three things the gate refuses to guess about:
+# - WHAT is pushed: every pushed ref's local SHA must equal the checked-out
+#   HEAD of the repository being pushed, else the gate verifies the wrong
+#   commit. Deletions still skip.
+# - WHAT changed: review pushes diff against the last stamped Core SHA when
+#   one exists, else main. When Core is unchanged against that base, only
+#   the UI check plus the paired-contract tests run (`make test-paired`).
+# - WHERE it runs: outside the live wrapper root (detected the way the
+#   perimeter contract detects it) the gate applies CI's live_install
+#   deselection and says so, so agent clones can pass.
 
 set -eu
 
@@ -41,14 +52,25 @@ if [ -f "$installed" ] && ! cmp -s "$installed" "$core/tools/hooks/pre-push"; th
     exit 1
 fi
 
+if [ -x "$core/.venv/bin/python" ]; then
+    PY="$core/.venv/bin/python"
+else
+    PY="$(command -v python3 || command -v python)"
+fi
+
 # Git feeds one line per pushed ref on stdin:
 #   <local ref> <local sha> <remote ref> <remote sha>
 # A ref whose local sha is all zeros is a deletion. An empty read (no refs)
 # takes the full gate: the safe default when there is nothing to inspect.
 ZERO="0000000000000000000000000000000000000000"
+HEAD_SHA="$(git -C "$current" rev-parse HEAD 2>/dev/null)" || {
+    echo "pre-push: cannot resolve HEAD of $current — nothing to verify against" >&2
+    exit 1
+}
 classify_refs() {
     deletions_only=1
     main_pushed=0
+    mismatch=""
     while IFS= read -r line; do
         # Word-splitting the four ref fields is the point; globbing is off
         # so a hostile ref name can never expand to filenames.
@@ -64,13 +86,19 @@ classify_refs() {
         if [ "$3" = "refs/heads/main" ]; then
             main_pushed=1
         fi
+        # The gate verifies the checkout. A pushed SHA that is not the
+        # checkout is a different commit and is refused below.
+        if [ -z "$mismatch" ] && [ "$2" != "$HEAD_SHA" ]; then
+            mismatch="$1:$2:$3"
+        fi
     done
-    echo "$deletions_only $main_pushed"
+    echo "$deletions_only $main_pushed $mismatch"
 }
 refs="$(cat)"
 if [ -z "$refs" ]; then
     echo "pre-push: no refs on stdin — running the full gate" >&2
     main_pushed=1
+    mismatch=""
 else
     # The pipeline runs in a subshell, so the classifier reports its
     # decision on stdout instead of assigning variables.
@@ -81,6 +109,19 @@ else
         exit 0
     fi
     main_pushed="$2"
+    mismatch="${3:-}"
+fi
+
+if [ -n "$mismatch" ]; then
+    local_ref="${mismatch%%:*}"
+    rest="${mismatch#*:}"
+    pushed_sha="${rest%%:*}"
+    remote_ref="${rest#*:}"
+    echo "pre-push: refusing to verify $local_ref ($pushed_sha): it is not the" >&2
+    echo "pre-push: checked-out HEAD ($HEAD_SHA) of $current —" >&2
+    echo "pre-push: check out the commit you are pushing and retry" >&2
+    echo "pre-push: (pushing $local_ref to $remote_ref)" >&2
+    exit 1
 fi
 
 for repo in "$core" "$ui"; do
@@ -95,22 +136,60 @@ for repo in "$core" "$ui"; do
     fi
 done
 
-if [ -x "$core/.venv/bin/python" ]; then
-    PY="$core/.venv/bin/python"
-else
-    PY="$(command -v python3 || command -v python)"
-fi
 if [ -n "${PY:-}" ] && "$PY" "$core/tools/verified_pairs.py" check; then
     echo "pre-push: skipping the full gate for the stamped pair above"
     exit 0
+fi
+
+# Outside the live wrapper root the live_install tests cannot pass (they need
+# state no checkout carries), so CI deselects them by name — and so does this
+# gate. Detection is the perimeter contract's own applicability test, not a
+# second guess about what "live" means. Any detection failure answers "not
+# live": the gates below still run, only the live-only tests are set aside.
+if [ -n "${PY:-}" ] && ! CORE_ROOT="$core" "$PY" -c "
+import os, sys
+sys.path.insert(0, os.path.join(os.environ['CORE_ROOT'], 'tools'))
+from pathlib import Path
+from learning_os.contracts import perimeter as pm
+root = Path(os.environ['CORE_ROOT'])
+sys.exit(0 if pm.applies(root, pm.load(root)) else 1)
+" >/dev/null 2>&1; then
+    case "${PYTEST_ADDOPTS:-}" in
+        *live_install*)
+            echo "pre-push: outside the live wrapper root — keeping the existing PYTEST_ADDOPTS (already mentions live_install)"
+            ;;
+        *)
+            export PYTEST_ADDOPTS="${PYTEST_ADDOPTS:+$PYTEST_ADDOPTS }-m \"not live_install\""
+            echo "pre-push: outside the live wrapper root — deselecting live_install tests (PYTEST_ADDOPTS='$PYTEST_ADDOPTS')"
+            ;;
+    esac
 fi
 
 if [ "$main_pushed" = "1" ]; then
     echo "pre-push: verifying LearningOS Core + Obsidian UI release pair"
     make -C "$core" system-check
 else
-    echo "pre-push: non-main refs — running the lighter local gate (CI runs the full pair gate)"
-    make -C "$core" check
-    make -C "$core" test-affected
-    npm --prefix "$ui" run check
+    STAMPED_BASE=""
+    if [ -n "${PY:-}" ] \
+        && STAMPED_BASE="$("$PY" "$core/tools/verified_pairs.py" base 2>/dev/null)"; then
+        :
+    else
+        STAMPED_BASE=""
+    fi
+    if [ -n "$STAMPED_BASE" ] \
+        && git -C "$core" diff --quiet "$STAMPED_BASE" HEAD -- 2>/dev/null; then
+        echo "pre-push: Core is unchanged against the last stamped pair ($STAMPED_BASE) — running the UI check plus the paired-contract tests"
+        make -C "$core" test-paired
+        npm --prefix "$ui" run check
+    elif [ -n "$STAMPED_BASE" ]; then
+        echo "pre-push: non-main refs — diffing Core against the last stamped pair ($STAMPED_BASE; CI runs the full pair gate)"
+        make -C "$core" check
+        make -C "$core" test-affected BASE="$STAMPED_BASE"
+        npm --prefix "$ui" run check
+    else
+        echo "pre-push: non-main refs — running the lighter local gate (CI runs the full pair gate)"
+        make -C "$core" check
+        make -C "$core" test-affected
+        npm --prefix "$ui" run check
+    fi
 fi

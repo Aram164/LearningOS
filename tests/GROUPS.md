@@ -54,8 +54,10 @@ schemas, canonical data — selects every group**, as does any unknown path.
 The mapping fails closed by design: when in doubt it reruns more, never less.
 
 Sibling UI changes (outside this repository) are not visible to the script:
-a UI change means rerunning at least `contracts` and `gateway`, and the
-release still goes through the full paired `make system-check`.
+after a UI change rerun `make test-paired` (the `paired` marker: every Core
+test that reads the live sibling checkout), and the release still goes
+through the full paired `make system-check`. The pre-push gate runs
+`test-paired` itself when Core is unchanged against the last stamped pair.
 
 ## Adding a test file
 
