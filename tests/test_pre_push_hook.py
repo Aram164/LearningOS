@@ -394,6 +394,29 @@ def test_changed_toolchain_cannot_reuse_the_core_baseline(pair):
     ]
 
 
+def test_unrelated_stamped_commit_cannot_supply_a_diff_baseline(pair):
+    assert _stamp(pair["core"]).returncode == 0
+    empty_tree = subprocess.run(
+        ["git", "mktree"], cwd=pair["core"], input="", capture_output=True,
+        text=True, check=True).stdout.strip()
+    unrelated = subprocess.run(
+        ["git", "commit-tree", empty_tree, "-m", "unrelated stamped history"],
+        cwd=pair["core"], capture_output=True, text=True, check=True).stdout.strip()
+    path = pair["core"] / ".git" / "learningos-verified-pairs.jsonl"
+    row = json.loads(path.read_text())
+    row["core_sha"] = unrelated
+    path.write_text(json.dumps(row) + "\n")
+    head = _head(pair["core"])
+    result = _run_hook(
+        pair["core"],
+        f"refs/heads/feature {head} refs/heads/feature {ZERO_SHA}\n",
+    )
+    assert result.returncode == 0, result.stderr
+    assert _invocations(pair["log"]) == [
+        f"make -C {pair['core']} system-check",
+    ]
+
+
 def test_affected_test_discovery_failure_blocks_the_gate(tmp_path):
     shutil.copy(REPO_ROOT / "Makefile", tmp_path / "Makefile")
     (tmp_path / "tools").mkdir()

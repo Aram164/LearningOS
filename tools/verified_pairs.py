@@ -214,7 +214,8 @@ def cmd_base() -> int:
         toolchain = row.get("toolchain")
         if (_is_sha(sha) and isinstance(toolchain, dict)
                 and toolchain.get("digest") == digest
-                and _git(core, "cat-file", "-t", sha) == "commit"):
+                and _git(core, "cat-file", "-t", sha) == "commit"
+                and _is_sha(_git(core, "merge-base", "HEAD", sha))):
             print(sha)
             return 0
     if stamps:
