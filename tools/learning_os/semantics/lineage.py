@@ -27,6 +27,7 @@ carry no assumptions and cascade only to themselves.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, replace
@@ -35,6 +36,7 @@ from pathlib import Path
 import yaml
 from jsonschema import Draft202012Validator
 
+from ..route_identity import route_with_identity
 from .predicates import CONTRACT_VERSION, claim_stale
 
 #: The receipt-adjacent sidecar. Canonical records never carry lineage;
@@ -52,6 +54,46 @@ CLAIM_KINDS = ("route-covers", "scope-authority", "dossier-freshness")
 #: Lineage statuses. ``contested`` needs a reviewer, not a recompute;
 #: ``withdrawn`` needs a fresh judgment, never a recompute.
 STATUSES = ("supported", "stale", "contested", "withdrawn")
+
+#: Source-hash namespaces pinning what a route-covers judgment actually
+#: read: the route row itself plus each covered knowledge node — never
+#: the module revision, never co-imported units, never learner state.
+#: Records judged before these namespaces keep their revision reads and
+#: today's behaviour until a fresh judgment replaces them.
+ROUTE_CONTENT_PREFIX = "route-content:"
+NODE_CONTENT_PREFIX = "node-content:"
+
+
+def _canonical_bytes(value: Mapping) -> bytes:
+    return json.dumps(
+        dict(value),
+        ensure_ascii=False,
+        sort_keys=True,
+        separators=(",", ":"),
+        default=str,
+    ).encode("utf-8")
+
+
+def route_content_digest(*, module_id: str, source_id: str, route: Mapping) -> str:
+    """Content identity of one source-map route row, as judged.
+
+    The row as :func:`route_with_identity` returns it (stable id filled
+    in) plus its owning source: any descriptive edit, re-cover, or move
+    changes the digest, while edits to sibling routes, other units, or
+    the module record leave it alone.
+    """
+    if not isinstance(route, Mapping):
+        raise LineageError("a route content digest needs the route row mapping")
+    row = {**route_with_identity(module_id, source_id, dict(route)),
+           "source_id": source_id}
+    return "sha256:" + hashlib.sha256(_canonical_bytes(row)).hexdigest()
+
+
+def node_content_digest(node: Mapping) -> str:
+    """Content identity of one knowledge-map node row, as judged."""
+    if not isinstance(node, Mapping):
+        raise LineageError("a node content digest needs the node row mapping")
+    return "sha256:" + hashlib.sha256(_canonical_bytes(node)).hexdigest()
 
 
 class LineageError(ValueError):

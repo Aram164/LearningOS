@@ -38,10 +38,14 @@ from learning_os.revisions import load_revisions
 from learning_os.rules import validate
 from learning_os.semantics.lineage import (
     LEDGER_RELATIVE,
+    NODE_CONTENT_PREFIX,
+    ROUTE_CONTENT_PREFIX,
     LineageError,
     dump_ledger,
     emit_route_covers,
     load_ledger,
+    node_content_digest,
+    route_content_digest,
     to_dict,
     withdraw,
 )
@@ -108,6 +112,36 @@ def _source_map_routes(source_map) -> dict:
             if isinstance(route, dict) and route.get("id"):
                 routes[str(route["id"])] = route
     return routes
+
+
+def _source_map_routes_with_source(source_map) -> dict:
+    """Route id to (owning source id, row), for content-digest reads."""
+    routes = {}
+    if not isinstance(source_map, dict):
+        return routes
+    for source in source_map.get("sources", []) or []:
+        if not isinstance(source, dict):
+            continue
+        source_id = str(source.get("source_id") or "")
+        for route in source.get("unit_routes") or []:
+            if isinstance(route, dict) and route.get("id"):
+                routes[str(route["id"])] = (source_id, route)
+    return routes
+
+
+def _knowledge_node_rows(unit_data) -> dict:
+    """Knowledge node id to row for one unit mapping, or {} when absent."""
+    if not isinstance(unit_data, dict):
+        return {}
+    knowledge = unit_data.get("knowledge_map")
+    nodes = knowledge.get("nodes") if isinstance(knowledge, dict) else None
+    if not isinstance(nodes, list):
+        return {}
+    rows = {}
+    for node in nodes:
+        if isinstance(node, dict) and str(node.get("id") or "").strip():
+            rows[str(node["id"])] = node
+    return rows
 
 
 def _phaseB_validate(root: Path, repo, module_id: str, package: dict):
@@ -250,16 +284,23 @@ def _phaseB_ledger_text(root, repo, module_id, package, changed, evidence_by_cla
     manifest_files = _materials_files(root)
     records = dict(load_ledger(root))
     package_routes = _source_map_routes(package.get("source_map"))
-    touched_units = set()
-    for rid in sorted(changed):
-        unit_id = str((package_routes.get(rid) or live_routes.get(rid) or {}).get("unit_id") or "")
-        if unit_id:
-            touched_units.add(unit_id)
+    # Post-apply route rows with ownership: the package row when this import
+    # carries the route, else the live row (a deletion still emits before
+    # its withdrawal below). Package unit rows likewise override live rows,
+    # so covered-node digests describe post-apply validity.
+    live_map = (getattr(repo, "module_source_maps", {}) or {}).get(module_id) or {}
+    package_owned = _source_map_routes_with_source(package.get("source_map"))
+    live_owned = _source_map_routes_with_source(live_map)
+    post_apply_nodes: dict = {}
+    for unit in (getattr(repo, "units", {}) or {}).values():
+        post_apply_nodes.update(_knowledge_node_rows(getattr(unit, "data", None)))
     # Post-apply stamping: the gateway increments exactly module_id and the
     # units supplied in the package (see cmd_module_plan_import artifact_ids).
-    # Stamping pre-commit values leaves every new claim immediately stale
-    # after its own commit. Touched units absent from the package are not
-    # incremented, so they stay at current.
+    # Declared reads store post-apply validity for those artifacts so the new
+    # claim is supported immediately after its own commit. Nothing else is
+    # stamped: each covers claim reads its own route row plus its covered
+    # nodes (content digests below), never the module revision and never
+    # co-imported units or learner state.
     package_unit_ids = set()
     for entry in package.get("units", []) or []:
         unit_data = entry.get("unit") if isinstance(entry, dict) else None
@@ -267,17 +308,10 @@ def _phaseB_ledger_text(root, repo, module_id, package, changed, evidence_by_cla
         if isinstance(uid, str) and uid \
                 and unit_data.get("module_id") == module_id:
             package_unit_ids.add(uid)
+        if isinstance(unit_data, dict):
+            post_apply_nodes.update(_knowledge_node_rows(unit_data))
     incremented = ({module_id} | package_unit_ids) if incremented_artifacts is None \
         else set(incremented_artifacts)
-
-    def _post_apply(artifact: str) -> int:
-        base = current_revisions.get(artifact, 0)
-        return base + 1 if artifact in incremented else base
-
-    stamped = {module_id: _post_apply(module_id)}
-    for unit_id in sorted(touched_units):
-        if unit_id not in stamped:
-            stamped[unit_id] = _post_apply(unit_id)
     for rid in sorted(changed):
         claim_id = "covers:" + rid
         trails = []
@@ -325,15 +359,29 @@ def _phaseB_ledger_text(root, repo, module_id, package, changed, evidence_by_cla
         except (TypeError, ValueError) as exc:
             raise LineageError(
                 f"{claim_id} declares malformed revision: {exc}") from exc
-        read_revisions = dict(stamped)
+        # Declared reads were validated fresh against pre-commit state;
+        # store post-apply validity for incremented artifacts so the new
+        # claim is supported immediately after its own commit.
+        read_revisions = {}
         for artifact, revision in declared.items():
-            # Declared reads were validated fresh against pre-commit state;
-            # store post-apply validity for incremented artifacts so the new
-            # claim is supported immediately after its own commit.
             if artifact in incremented:
                 read_revisions[artifact] = current_revisions.get(artifact, 0) + 1
             else:
                 read_revisions[artifact] = revision
+        # The judgment's own reads: this route's row plus the nodes it
+        # covers. A covered node without a post-apply row earns no key —
+        # canonical validation owns covers resolvability, and the ledger
+        # never invents a digest for a row that is not there.
+        owned = package_owned.get(rid) or live_owned.get(rid)
+        if owned is not None:
+            source_id, route_row = owned
+            digests[ROUTE_CONTENT_PREFIX + rid] = route_content_digest(
+                module_id=module_id, source_id=source_id, route=route_row)
+        for node_id in changed[rid]:
+            node_row = post_apply_nodes.get(str(node_id))
+            if node_row is not None:
+                digests[NODE_CONTENT_PREFIX + str(node_id)] = node_content_digest(
+                    node_row)
         prior = records.get(claim_id)
         records[claim_id] = emit_route_covers(
             route_id=rid,

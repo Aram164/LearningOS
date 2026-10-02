@@ -62,6 +62,8 @@ from .goals import (
     transition,
 )
 from .lineage import (
+    NODE_CONTENT_PREFIX,
+    ROUTE_CONTENT_PREFIX,
     AdmittedBy,
     ClaimLineage,
     DerivedFrom,
@@ -77,9 +79,11 @@ from .lineage import (
     endorse,
     impacted,
     load_ledger,
+    node_content_digest,
     record_claim,
     refresh,
     retraction_impact,
+    route_content_digest,
     supersede,
     withdraw,
 )
@@ -212,6 +216,10 @@ __all__ = [
     "record_claim",
     "AdmittedBy",
     "StaleEvidence",
+    "NODE_CONTENT_PREFIX",
+    "ROUTE_CONTENT_PREFIX",
+    "node_content_digest",
+    "route_content_digest",
     "refresh",
     "retraction_impact",
     "stale_observations",

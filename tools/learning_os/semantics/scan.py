@@ -63,7 +63,14 @@ from .goals import (
     detect_source_changed_under_claim,
     stale_observations,
 )
-from .lineage import effective_statuses, load_ledger
+from .lineage import (
+    NODE_CONTENT_PREFIX,
+    ROUTE_CONTENT_PREFIX,
+    effective_statuses,
+    load_ledger,
+    node_content_digest,
+    route_content_digest,
+)
 from .predicates import CONTRACT_VERSION, needs_study_map
 from .session_counts import feed_scan_kwargs
 
@@ -416,17 +423,91 @@ def _scan_manifest_files(root: Path) -> dict:
     return files if isinstance(files, dict) else {}
 
 
-def live_evidence_digest(root: Path, key: str, manifest_files: dict, *, repo=None) -> str | None:
+def _live_claim_digests(repo) -> tuple[dict[str, str], dict[str, str]]:
+    """Live route-row and knowledge-node digests, keyed by claim-read key.
+
+    Mirrors the Phase B digest binding in ``commands.module``: one entry
+    per stored route row and per knowledge node. An id claimed twice with
+    different digests resolves to no digest — the scan never invents
+    ownership, and the affected claims fail closed to stale.
+    """
+    routes: dict[str, str] = {}
+    dropped_routes: set[str] = set()
+    maps = getattr(repo, "module_source_maps", {}) or {}
+    for module_id, smap in maps.items():
+        if not isinstance(smap, dict):
+            continue
+        for src in smap.get("sources") or []:
+            if not isinstance(src, dict):
+                continue
+            source_id = str(src.get("source_id") or "")
+            for row in src.get("unit_routes") or []:
+                if not isinstance(row, dict) or not row.get("id"):
+                    continue
+                key = ROUTE_CONTENT_PREFIX + str(row["id"])
+                if key in dropped_routes:
+                    continue
+                digest = route_content_digest(
+                    module_id=str(module_id), source_id=source_id, route=row)
+                if key in routes and routes[key] != digest:
+                    del routes[key]
+                    dropped_routes.add(key)
+                else:
+                    routes[key] = digest
+    nodes: dict[str, str] = {}
+    dropped_nodes: set[str] = set()
+    for unit in (getattr(repo, "units", {}) or {}).values():
+        data = getattr(unit, "data", None)
+        if not isinstance(data, dict):
+            continue
+        knowledge = data.get("knowledge_map")
+        rows = knowledge.get("nodes") if isinstance(knowledge, dict) else None
+        if not isinstance(rows, list):
+            continue
+        for row in rows:
+            if not isinstance(row, dict) or not str(row.get("id") or "").strip():
+                continue
+            key = NODE_CONTENT_PREFIX + str(row["id"])
+            if key in dropped_nodes:
+                continue
+            digest = node_content_digest(row)
+            if key in nodes and nodes[key] != digest:
+                del nodes[key]
+                dropped_nodes.add(key)
+            else:
+                nodes[key] = digest
+    return routes, nodes
+
+
+def live_evidence_digest(root: Path, key: str, manifest_files: dict, *, repo=None,
+                         route_digests: dict[str, str] | None = None,
+                         node_digests: dict[str, str] | None = None) -> str | None:
     """Resolve one stored source-hash key against live bytes.
 
     Material-synthesis basis keys use the publisher's evidential fields and live
     local bytes, excluding prose and revision-only changes. Mirrors the Phase B
     digest binding in ``commands.module``: manifest keys
     read the registered checksum, file keys hash current bytes inside the
-    repository. Returns ``None`` when the dependency is missing, escapes,
-    unreadable, or in an unknown namespace. Callers treat ``None`` as
-    stale: an unsupported namespace has no trustworthy live value.
+    repository, route-content and node-content keys hash the live route row
+    and knowledge node the covers judgment read. Returns ``None`` when the
+    dependency is missing, escapes, unreadable, or in an unknown namespace.
+    Callers treat ``None`` as stale: an unsupported namespace has no
+    trustworthy live value.
     """
+    if key.startswith(ROUTE_CONTENT_PREFIX) or key.startswith(NODE_CONTENT_PREFIX):
+        if route_digests is None or node_digests is None:
+            try:
+                repo = load_repo(root) if repo is None else repo
+                live_routes, live_nodes = _live_claim_digests(repo)
+            except (OSError, ValueError):
+                return None
+            if route_digests is None:
+                route_digests = live_routes
+            if node_digests is None:
+                node_digests = live_nodes
+        if key.startswith(ROUTE_CONTENT_PREFIX):
+            return route_digests.get(key)
+        return node_digests.get(key)
     if key.startswith("material-synthesis-basis:"):
         from ..material_synthesis import (
             MaterialSynthesisError,
@@ -498,11 +579,14 @@ def collect_observations(root: Path | str, *,
     # closed downstream, exactly as before.
     live_all: dict[str, str] = {}
     attempted: set[str] = set()
+    claim_routes, claim_nodes = _live_claim_digests(repo)
     for lineage in records.values():
         for key in dict(lineage.derived_from.source_hashes):
             if key not in live_all and key not in attempted:
                 attempted.add(key)
-                live = live_evidence_digest(root, key, manifest_files, repo=repo)
+                live = live_evidence_digest(
+                    root, key, manifest_files, repo=repo,
+                    route_digests=claim_routes, node_digests=claim_nodes)
                 if live is not None:
                     live_all[key] = live
     effective = effective_statuses(
