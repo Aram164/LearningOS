@@ -6,6 +6,8 @@ import datetime as dt
 import json
 from types import SimpleNamespace
 
+import pytest
+
 from learning_os import health
 
 
@@ -269,3 +271,60 @@ def test_health_report_carries_the_plugin_check(mini_repo):
     row = next(c for c in report["checks"] if c["id"] == "ui-plugin-current")
     assert row["status"] == "unknown"
 
+
+@pytest.mark.parametrize("component", [".obsidian", "plugins", "learningos-ui"])
+def test_plugin_check_refuses_symlinked_installed_path_components(tmp_path, component):
+    vault, ui, installed = _plugin_pair(
+        tmp_path, installed_info={"source_fingerprint": "fp-new", "source_revision": "rev-new"})
+    target = next(path for path in [installed, installed.parent, installed.parent.parent]
+                  if path.name == component)
+    moved = tmp_path / "indirect-install"
+    target.rename(moved)
+    target.symlink_to(moved, target_is_directory=True)
+    # Explicit installed_dir must be inspected as supplied, without resolving
+    # away the symlink that the installer and install:status refuse.
+    row = health._ui_plugin_check(vault, ui_root=ui, installed_dir=installed)
+    assert row["status"] == "error"
+
+
+def test_plugin_check_refuses_interrupted_install_even_when_bytes_match(tmp_path):
+    vault, ui, installed = _plugin_pair(
+        tmp_path, installed_info={"source_fingerprint": "fp-new", "source_revision": "rev-new"})
+    (installed.parent / ".learningos-ui-install-transaction.json").write_text("{}")
+    row = health._ui_plugin_check(vault, ui_root=ui)
+    assert row["status"] == "error"
+    assert "transaction" in row["summary"].lower()
+
+
+def test_plugin_check_never_approves_an_undeclared_build_file(tmp_path):
+    vault, ui, _installed = _plugin_pair(
+        tmp_path, installed_info={"source_fingerprint": "fp-new", "source_revision": "rev-new"})
+    (ui / "plugin" / "unshipped.js").write_text("not in the shipping manifest")
+    row = health._ui_plugin_check(vault, ui_root=ui)
+    assert row["status"] == "error"
+    assert "unshipped.js" in row["summary"]
+
+
+@pytest.mark.parametrize("change", [
+    {"schema_version": 2}, {"type": "other"}, {"unknown": True},
+    {"shipped": ["../outside"]}, {"shipped": ["main.js", "main.js"]},
+    {"vault_owned": ["main.js"]}, {"vault_owned": [{"invalid": "entry"}]},
+])
+def test_plugin_check_rejects_malformed_shipping_manifest(tmp_path, change):
+    vault, ui, _installed = _plugin_pair(tmp_path)
+    manifest_path = ui / "plugin-assets.json"
+    manifest = json.loads(manifest_path.read_text())
+    manifest.update(change)
+    manifest_path.write_text(json.dumps(manifest))
+    row = health._ui_plugin_check(vault, ui_root=ui)
+    assert row["status"] == "unknown"
+    assert "unavailable" in row["summary"]
+
+
+def test_plugin_check_empty_install_directory_is_unknown(tmp_path):
+    vault, ui, installed = _plugin_pair(tmp_path)
+    for entry in installed.iterdir():
+        entry.unlink()
+    row = health._ui_plugin_check(vault, ui_root=ui)
+    assert row["status"] == "unknown"
+    assert "No plugin is installed" in row["summary"]
