@@ -61,6 +61,9 @@ GENERATED_REPORT_PREFIXES = ("validation-report", "health")
 # and after the change, so treating them as blockers makes an unrelated command
 # fail because a drive happens to be offline. Errors always block regardless.
 ENVIRONMENTAL_WARNINGS = frozenset({
+    # A pinned local-only attachment that is not on this machine (a CI
+    # checkout or a fresh clone): the pin still records what belongs there.
+    "ATTACH-LOCAL-ABSENT",
     "HYGIENE-VIEWS",
     "MATERIALS-MANIFEST",
     "MATERIALS-OFFLINE",

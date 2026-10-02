@@ -115,6 +115,29 @@ class ChecksContract:
             else:
                 self.warn(code, issue.message, issue.path)
 
+    def check_local_attachments(self):
+        """Attachments kept out of Git: pinned, owned, ignored and untracked.
+
+        A pinned scan that is present must match its size and SHA-256 — it is
+        the only copy outside backups. An absent one is environmental (a CI
+        checkout has none), so it warns; everything else is an error.
+        """
+        from ..contracts import local_attachments
+
+        referenced = {
+            str(entry).removeprefix("./")
+            for note in self.repo.notes.values()
+            for entry in (note.meta.get("attachments", []) or [])
+        }
+        for issue in local_attachments.check(self.repo.root, referenced):
+            code = f"ATTACH-LOCAL-{issue.code}"
+            # Two explicit calls, as in check_perimeter: the contract register
+            # test reads this source to prove an `error` row reports errors.
+            if issue.severity == "E":
+                self.err(code, issue.message, issue.path)
+            else:
+                self.warn(code, issue.message, issue.path)
+
     def check_tree_contract(self):
         """The directory skeleton on disk, and the prose that renders it.
 

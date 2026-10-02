@@ -76,6 +76,18 @@ contracts:
     severity: error
     test: tests/test_normative_corpus.py
 
+  - declaration: system/contracts/local-attachments.yaml
+    governs: >-
+      Note attachments kept on disk but out of Git (large or private scans),
+      pinned by size and SHA-256. A present file must match its pin; an absent
+      one warns (a CI checkout has none); each pin must be owned by a note's
+      attachments, and Git must neither track nor fail to ignore it.
+    enforced_by: validator
+    checker: learning_os.contracts.local_attachments
+    validator_method: check_local_attachments
+    severity: error
+    test: tests/test_local_attachments.py
+
   - declaration: system/contracts/perimeter.yaml
     governs: >-
       What may exist at the two levels above repository/ — the wrapper root and

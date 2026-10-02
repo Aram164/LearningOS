@@ -1,0 +1,34 @@
+schema_version: 1
+contract: learningos-local-attachments
+#
+# Note attachments that stay canonical (ARCHITECTURE rule 3) but are kept out of
+# Git: large or private scans that would otherwise dominate the published
+# repository. Each lives at its usual knowledge/attachments/<note-id>/ path,
+# a .gitignore rule covers it, and backups still carry it (the backup walk reads
+# disk, not the index). The pin is the only record of what belongs there on a
+# machine that lacks the file, so a present file must match it exactly.
+#
+# Checked by learning_os.contracts.local_attachments on every validation:
+#   present and different -> ATTACH-LOCAL-CHANGED (error)
+#   absent                -> ATTACH-LOCAL-ABSENT  (environmental warning; CI)
+#   unowned, tracked, or not ignored -> errors
+#
+# The five handwritten SaD volumes were committed whole under the 2026-07-17
+# attachment policy; they left the published history on 2026-10-02 (about
+# 265 MB of a 295 MB pack). Re-pin deliberately if a scan is ever replaced.
+files:
+  knowledge/attachments/note-sad-descriptive-probability-handwritten/teil-01-part1.pdf:
+    bytes: 59528073
+    sha256: sha256:488c4ea4b04e9a2378671e9ff3d8eff1d8598c9379c4e66a42cb960cf4bb3a7c
+  knowledge/attachments/note-sad-descriptive-probability-handwritten/teil-01-part2.pdf:
+    bytes: 49645301
+    sha256: sha256:fa89438d68ca2636b538cafbda131240d526d8dd1e49b539491c3292a3e77b3e
+  knowledge/attachments/note-sad-distributions-handwritten/teil-02-part1.pdf:
+    bytes: 52512247
+    sha256: sha256:250db4993fb56abc24b042740f6b778137d194d40e04286ecda7b2792a87c7ea
+  knowledge/attachments/note-sad-distributions-handwritten/teil-02-part2.pdf:
+    bytes: 48923823
+    sha256: sha256:e7c39e02b0fbadf7d7682208703359dcb0b7668fab5ba6bcce4c968a1b7c1517
+  knowledge/attachments/note-sad-hypothesis-testing-handwritten/teil-03.pdf:
+    bytes: 67224902
+    sha256: sha256:65f866eaea0b30ee31c8a1fe7f2c958af59efe8b6649d2182530d2d1cc47dd62

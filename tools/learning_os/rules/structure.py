@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from ..contracts import local_attachments
 from ..loader import (
     ID_RE,
     PATH_ID_RE,
@@ -152,6 +153,10 @@ class ChecksStructure:
                          self._rel(note.path))
         # Attachments resolve; orphaned attachment folders
         attach_root = r.root / "knowledge" / "attachments"
+        # Declared local-only attachments (system/contracts/local-attachments.yaml)
+        # are absent from every CI checkout by design; check_local_attachments
+        # reports them, so a missing one is not ATTACH-MISSING here.
+        local_only = local_attachments.local_paths(r.root)
         referenced_dirs = set()
         for note in r.notes.values():
             note_attach_dir = (attach_root / note.id).resolve()
@@ -169,6 +174,8 @@ class ChecksStructure:
                              self._rel(note.path))
                     continue  # not owned by this note — do not run the existence check
                 if not p.exists():
+                    if str(entry).removeprefix("./") in local_only:
+                        continue
                     self.err("ATTACH-MISSING", f"attachment '{entry}' does not resolve",
                              self._rel(note.path))
         if attach_root.is_dir():

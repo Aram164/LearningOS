@@ -469,7 +469,7 @@ Concepts: `deprecated: true` + `replaced_by`. Generated indexes mark deprecated 
 The user drops photos/scans into `work/inbox/` (or a workspace `inputs/`) and says what they are. The operator does everything else:
 
 1. determine the owning note: extend an existing note or mint a new ID;
-2. move the originals to `knowledge/attachments/<note-id>/page-01.jpg`, `page-02.jpg`, … — originals are canonical and Git-tracked, never deleted without explicit approval;
+2. move the originals to `knowledge/attachments/<note-id>/page-01.jpg`, `page-02.jpg`, … — originals are canonical and Git-tracked, never deleted without explicit approval; a scan too large or private to publish is instead pinned in `system/contracts/local-attachments.yaml` and gitignored at the same path (local-only, still backed up);
 3. transcribe faithfully into the note body — preserve the user's reasoning, uncertainty, wrong turns, and notation; never substitute a generic textbook explanation;
 4. set `transcription: ai-assisted`, `authorship: user`, `semantic_review: unreviewed`;
 5. list the attachment paths in the note's `attachments` frontmatter;

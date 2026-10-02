@@ -144,6 +144,9 @@ def build_mini_repo(tmp_path: Path) -> Path:
     (los / "materials").mkdir()
     shutil.copytree(REPO_ROOT / "system" / "schema", root / "system" / "schema")
     shutil.copytree(REPO_ROOT / "system" / "contracts", root / "system" / "contracts")
+    # The real repository's local-only attachment pins name real notes'
+    # scans; a synthetic repository has neither, so it declares none.
+    (root / "system" / "contracts" / "local-attachments.yaml").unlink(missing_ok=True)
 
     (root / "knowledge" / "concepts.yaml").write_text(yaml.safe_dump({
         "concepts": [
