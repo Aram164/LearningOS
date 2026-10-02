@@ -13,7 +13,7 @@ from learning_os.errors import unreadable_refusal
 from learning_os.genout import adoption_counts, exam_spine
 from learning_os.loader import load_repo
 from learning_os.pathing import PathBoundaryError, read_text_inside
-from learning_os.validation_cache import status_issues
+from learning_os.validation_cache import observe_pins, status_issues
 
 from .reads import (
     _inspect_candidates,
@@ -60,6 +60,10 @@ CONTRACT_VERSION = 2
 # ----------------------------------------------------------------- status
 def cmd_status(args) -> int:
     root = _root(args)
+    no_validate = getattr(args, "no_validate", False)
+    # Cache pins are observed before anything is read, so a write landing
+    # mid-read can only cost a later miss, never a stale hit.
+    pins = None if no_validate else observe_pins(root)
     repo = load_repo(root)
     if repo.parse_failures:
         # Fail closed like every other manifest-backed read: the counts
@@ -68,11 +72,10 @@ def cmd_status(args) -> int:
             unreadable_refusal(root, repo.parse_failures, "status")))
     # --no-validate skips validation but never the refusal above: an
     # unreadable tree refuses before these counts are even considered.
-    no_validate = getattr(args, "no_validate", False)
     if no_validate:
         errors = warnings = 0
     else:
-        issues = status_issues(repo)
+        issues = status_issues(repo, pins)
         errors = sum(1 for i in issues if i.severity == "E")
         warnings = sum(1 for i in issues if i.severity == "W")
 

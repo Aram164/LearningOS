@@ -5,12 +5,11 @@ from __future__ import annotations
 import json
 import os
 import subprocess
-import time
 from pathlib import Path
 
 from ..fingerprint import source_fingerprint
 from ..githistory import GitHistoryError, last_commit_timestamp, read_history
-from .common import STALE_LOCK_AGE_S
+from .advisories import stale_index_lock_issues
 
 
 class ChecksHygiene:
@@ -30,20 +29,8 @@ class ChecksHygiene:
         self._hygiene_unfiled()
 
     def _hygiene_stale_locks(self):
-        # The repository's own .git plus the container repo above it (if any).
-        candidates = [self.repo.root / ".git" / "index.lock"]
-        container = self.repo.root.parent.parent
-        if (container / ".git").is_dir():
-            candidates.append(container / ".git" / "index.lock")
-        now = time.time()
-        for lock in candidates:
-            try:
-                if lock.is_file() and now - lock.stat().st_mtime > STALE_LOCK_AGE_S:
-                    self.warn("HYGIENE-LOCK",
-                              "stale git index.lock (crashed git process) — commits are "
-                              f"silently blocked until it is removed: rm '{lock}'")
-            except OSError:
-                continue
+        # Clock-derived, so owned by advisories: status recomputes it live.
+        self.issues.extend(stale_index_lock_issues(self.repo))
 
     def _hygiene_stale_views(self):
         manifest = self.repo.root / "generated" / "manifest.json"

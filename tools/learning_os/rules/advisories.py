@@ -1,13 +1,14 @@
 """Clock-derived validation advisories, computed live on every cached read.
 
-`WS-NEGLECT` and `INBOX-STALE` depend on wall-clock age rather than on any
-authored file's content: a release turns red with no authored change simply
-because time passed. The status validation cache (#103) therefore serves
-every other issue from the cache and recomputes these two live.
+`WS-NEGLECT`, `INBOX-STALE` and `HYGIENE-LOCK` depend on wall-clock age
+rather than on any authored file's content: a release turns red with no
+authored change simply because time passed. The status validation cache
+(#103) therefore serves every other issue from the cache and recomputes
+these live.
 
-Both checks stay owned here once: the Validator's `check_workspaces` and
-`check_files` delegate to these functions, so a full run and a cache hit
-can never disagree on what the advisories say.
+The checks stay owned here once: the Validator's `check_workspaces`,
+`check_files` and `check_hygiene` delegate to these functions, so a full
+run and a cache hit can never disagree on what the advisories say.
 """
 
 from __future__ import annotations
@@ -15,7 +16,12 @@ from __future__ import annotations
 import time
 
 from ..githistory import GitHistoryError, last_commit_timestamp
-from .common import DYNAMIC_ADVISORY_WARNINGS, Issue
+from .common import DYNAMIC_ADVISORY_WARNINGS, STALE_LOCK_AGE_S, Issue
+
+#: Clock-derived codes outside DYNAMIC_ADVISORY_WARNINGS. HYGIENE-LOCK stays
+#: out of that set on purpose: the set also exempts its members from the
+#: warning baseline, and a stale lock is a real finding, not elapsed time.
+_LIVE_HYGIENE_CODES = frozenset({"HYGIENE-LOCK"})
 
 #: Message prefix of the GIT-HISTORY error the neglect check raises when
 #: history is unreadable. Hygiene raises GIT-HISTORY too, for a different
@@ -68,20 +74,44 @@ def inbox_stale_issues(repo) -> list[Issue]:
     return issues
 
 
+def stale_index_lock_issues(repo) -> list[Issue]:
+    """HYGIENE-LOCK for a git index.lock older than STALE_LOCK_AGE_S.
+
+    The repository's own .git plus the container repo above it (if any).
+    """
+    issues: list[Issue] = []
+    candidates = [repo.root / ".git" / "index.lock"]
+    container = repo.root.parent.parent
+    if (container / ".git").is_dir():
+        candidates.append(container / ".git" / "index.lock")
+    now = time.time()
+    for lock in candidates:
+        try:
+            if lock.is_file() and now - lock.stat().st_mtime > STALE_LOCK_AGE_S:
+                issues.append(Issue(
+                    "W", "HYGIENE-LOCK",
+                    "stale git index.lock (crashed git process) — commits are "
+                    f"silently blocked until it is removed: rm '{lock}'"))
+        except OSError:
+            continue
+    return issues
+
+
 def advisory_issues(repo) -> list[Issue]:
-    """Both clock-derived advisories, in Validator.run order."""
-    return inbox_stale_issues(repo) + workspace_neglect_issues(repo)
+    """Every clock-derived advisory, in Validator.run order."""
+    return (inbox_stale_issues(repo) + workspace_neglect_issues(repo)
+            + stale_index_lock_issues(repo))
 
 
 def is_live_advisory(issue: Issue) -> bool:
     """Whether the cache-hit path recomputes this issue live.
 
-    The two dynamic codes, plus the neglect check's own GIT-HISTORY
+    The dynamic codes and HYGIENE-LOCK, plus the neglect check's own GIT-HISTORY
     error — which shares its code with hygiene's unrelated one and is
     told apart by the message prefix this module constructs.
     """
     assert isinstance(issue, Issue)
-    if issue.code in DYNAMIC_ADVISORY_WARNINGS:
+    if issue.code in DYNAMIC_ADVISORY_WARNINGS or issue.code in _LIVE_HYGIENE_CODES:
         return True
     return (issue.code == "GIT-HISTORY"
             and issue.message.startswith(NEGLECT_GIT_HISTORY_PREFIX))

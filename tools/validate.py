@@ -21,6 +21,7 @@ from learning_os.rules import render_report, validate  # noqa: E402
 from learning_os.rules.common import BASELINE_EXEMPT_WARNINGS  # noqa: E402
 from learning_os.validation_cache import (  # noqa: E402
     discard_unreadable_cache,
+    observe_pins,
     write_static_cache,
 )
 
@@ -42,11 +43,15 @@ def main() -> int:
 
     started = _time.monotonic()
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
-    repo = load_repo(root)
+    pins = None
     if not args.online:
         # A corrupt cache is a miss, not a defect: discard it before the
         # run so neither the report nor the refreshed cache names it.
         discard_unreadable_cache(root)
+        # Observed before loading, so the cache never vouches for a state
+        # this run did not see (validation_cache module docstring).
+        pins = observe_pins(root)
+    repo = load_repo(root)
     issues = validate(repo, online=args.online)
     elapsed = _time.monotonic() - started
 
@@ -79,12 +84,12 @@ def main() -> int:
         (report_dir / "validation-report.md").write_text(
             render_report(issues, generated_at), encoding="utf-8")
 
-    if not args.online:
+    if pins is not None:
         # Offline runs refresh the status cache; --online results depend
         # on network state and must never be served as static issues.
         # The cache is auxiliary: a write failure never fails validation.
         try:
-            write_static_cache(root, issues)
+            write_static_cache(root, issues, pins)
         except OSError:
             pass
 

@@ -15,6 +15,7 @@ import pytest
 from repo_builders import run_los
 
 import learning_os.validation_cache as vc
+from learning_os.genout import generate_all, write_outputs
 from learning_os.loader import load_repo
 from learning_os.rules import validate
 from learning_os.rules.advisories import NEGLECT_GIT_HISTORY_PREFIX
@@ -132,6 +133,88 @@ def test_garbage_cache_misses_discards_and_leaves_no_phantom(mini_repo):
     assert again.stdout == proc.stdout
 
 
+def _republish_views(root: Path) -> None:
+    repo = load_repo(root)
+    write_outputs(repo, generate_all(repo))
+
+
+@pytest.mark.parametrize("mutation, code", [
+    # A stray file in generated/: the GEN-* checks read generated/, which
+    # no content pin covers.
+    (lambda root: (root / "generated/stray.txt").write_text("x\n", encoding="utf-8"),
+     "GEN-UNKNOWN"),
+    # An unparseable receipt: receipts sit beside the pinned revision
+    # ledger, not inside it.
+    (lambda root: (root / "operations/transactions").mkdir(parents=True, exist_ok=True)
+     or (root / "operations/transactions/transaction-x.yaml").write_text(
+         "id: [unclosed\n", encoding="utf-8"),
+     "TRANSACTION-RECEIPT"),
+], ids=["generated-stray", "unparseable-receipt"])
+def test_non_canonical_validator_input_misses(mini_repo, mutation, code):
+    vc.status_issues(load_repo(mini_repo))  # warm
+    assert vc.read_cached_static_issues(mini_repo) is not None
+    mutation(mini_repo)
+    assert vc.read_cached_static_issues(mini_repo) is None
+    issues = vc.status_issues(load_repo(mini_repo))
+    assert any(i.code == code for i in issues), issues
+
+
+def test_make_views_clears_a_cached_stale_views_warning(mini_repo):
+    """The reported case: a hand edit makes the published views stale
+    (HYGIENE-VIEWS), `make views` republishes them with no canonical
+    change, and status must drop the warning instead of serving it."""
+    _republish_views(mini_repo)
+    baseline = _validation(run_los(mini_repo, "status", "--json"))
+    note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
+    note.write_text(note.read_text(encoding="utf-8") + "\nA hand edit.\n",
+                    encoding="utf-8")
+    stale = _validation(run_los(mini_repo, "status", "--json"))
+    assert stale["warnings"] == baseline["warnings"] + 1
+    _republish_views(mini_repo)
+    after = _validation(run_los(mini_repo, "status", "--json"))
+    assert after == baseline
+    uncached = validate(load_repo(mini_repo), online=False)
+    assert after["warnings"] == sum(1 for i in uncached if i.severity == "W")
+
+
+def test_stale_index_lock_is_served_live_on_a_hit(mini_repo):
+    """HYGIENE-LOCK is clock-derived: a lock that ages past the threshold
+    with no other change must appear on a cache hit."""
+    subprocess.run(["git", "init", "-q", str(mini_repo)], check=True)
+    lock = mini_repo / ".git" / "index.lock"
+    lock.write_text("", encoding="utf-8")
+    vc.status_issues(load_repo(mini_repo))  # warm, lock still fresh
+    assert vc.read_cached_static_issues(mini_repo) is not None
+    past = time.time() - 3600
+    os.utime(lock, (past, past))
+    issues = vc.status_issues(load_repo(mini_repo))
+    assert any(i.code == "HYGIENE-LOCK" for i in issues), issues
+    assert vc.read_cached_static_issues(mini_repo) is not None
+    cached = vc.read_cached_static_issues(mini_repo)
+    assert not any(i.code == "HYGIENE-LOCK" for i in cached)
+
+
+def test_pins_are_observed_before_validation(mini_repo, monkeypatch):
+    """status holds no lock: a write landing while the validator runs must
+    leave a cache that misses, never one vouching for the post-write state
+    with the pre-write issues."""
+    note = mini_repo / "knowledge/notes/mathematics/note-demo.md"
+    real = vc.validate
+
+    def racing(repo, online=False):
+        issues = real(repo, online=online)
+        note.rename(note.with_name("renamed-demo.md"))  # lands mid-run
+        return issues
+
+    monkeypatch.setattr(vc, "validate", racing)
+    first = vc.status_issues(load_repo(mini_repo))
+    assert not any(i.severity == "E" for i in first)
+    monkeypatch.setattr(vc, "validate", real)
+    assert vc.read_cached_static_issues(mini_repo) is None
+    proc = run_los(mini_repo, "status", "--json")
+    assert _validation(proc)["errors"] == 1
+
+
 # ------------------------------------------------------------- no-validate
 def test_no_validate_shape(mini_repo):
     text = run_los(mini_repo, "status", "--no-validate")
@@ -169,10 +252,10 @@ def test_validate_offline_writes_cache_with_header_and_pins(mini_repo, repo_root
     assert proc.returncode == 0, proc.stderr
     data = json.loads(cache.read_text(encoding="utf-8"))
     assert isinstance(data["_generated"], dict)  # GEN-HEADER
-    assert data["format"] == 1
+    assert data["format"] == 2
     assert set(data["pins"]) == {
         "canonical_fingerprint", "code_identity", "runtime_digest",
-        "materials_digest", "operations_digest",
+        "materials_digest", "operations_digest", "validator_inputs",
     }
     assert isinstance(data["issues"], list)
     assert vc.read_cached_static_issues(mini_repo) is not None
