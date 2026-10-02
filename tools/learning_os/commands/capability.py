@@ -38,6 +38,7 @@ from learning_os.transactions import (
 
 from .support import (
     WriteRefused,
+    _current_session_id,
     _load_session_paths,
     _operator_lock,
     _read_structured_file,
@@ -810,6 +811,17 @@ def _repair_replayed_session_ownership(root: Path,
         "state": "file", "sha256": hashlib.sha256(receipt_bytes).hexdigest(),
     }
 
+    # The repair runs outside any gateway request context, so ambient
+    # session resolution would land in the default channel's ledger — not
+    # the one the original write recorded. The receipt names the writing
+    # channel, which recovers exactly that ledger when no session is named.
+    # A named session still wins: that session is performing the recovery.
+    origin = receipt.get("request") if isinstance(receipt, dict) else None
+    origin = origin.get("channel") if isinstance(origin, dict) else None
+    if not isinstance(origin, str) or not origin:
+        origin = None
+    session = _current_session_id(channel=origin)
+
     # A lost session ledger is reconciled by hand, never reconstructed.
     #
     # Rebuilding one from scratch would mean deciding what this session owns
@@ -820,14 +832,14 @@ def _repair_replayed_session_ownership(root: Path,
     # them would let `session-end` commit an authored file while leaving the
     # revision bump that belongs to it out of the same commit. So a missing
     # ledger fails closed instead.
-    if not _session_ledger(root).is_file():
+    if not _session_ledger(root, session).is_file():
         raise _ReplayRecoveryError(
             "cannot repair session ownership: the session ledger is gone, and this "
             "receipt cannot prove the bytes of the shared revision and idempotency "
             "ledgers — reconcile this transaction by hand"
         )
     try:
-        existing = _load_session_paths(root)
+        existing = _load_session_paths(root, session)
     except WriteRefused as exc:
         raise _ReplayRecoveryError(
             f"cannot repair session ownership: {exc}"
@@ -859,10 +871,7 @@ def _repair_replayed_session_ownership(root: Path,
     # time set to this repair — that is when this session took ownership of
     # the recovered write. Rows that already carry a stamp (carried-forward
     # aggregate claims) keep it.
-    request = receipt.get("request") if isinstance(receipt, dict) else None
-    actor = request.get("channel") if isinstance(request, dict) else None
-    if not isinstance(actor, str) or not actor:
-        actor = "unknown"
+    actor = origin or "unknown"
     for relative, state in merged.items():
         if state.get("channel") and state.get("recorded_at"):
             continue
@@ -870,7 +879,7 @@ def _repair_replayed_session_ownership(root: Path,
         state["recorded_at"] = _stamp_session_row(
             root, relative, actor)["recorded_at"]
     try:
-        _write_session_ledger(root, merged)
+        _write_session_ledger(root, merged, session)
     except WriteRefused as exc:
         raise _ReplayRecoveryError(
             f"cannot repair replayed session ownership: {exc}"

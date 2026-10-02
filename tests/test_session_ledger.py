@@ -264,6 +264,31 @@ def test_session_id_flag_overrides_the_environment(mini_repo, monkeypatch):
     assert json.loads(review.stdout)["touched"] == []
 
 
+def test_replay_recovers_the_writing_channel_without_a_named_session(
+        mini_repo, tmp_path, monkeypatch):
+    """Exact re-dispatch repairs ownership in the writing channel's ledger.
+
+    The replay repair runs outside any gateway request context, so ambient
+    resolution alone would look in the default channel's ledger and fail
+    closed with "the session ledger is gone" — the receipt's recorded
+    channel recovers the ledger the original write used.
+    """
+    monkeypatch.delenv("LOS_SESSION_ID", raising=False)
+    key = "noenv-replay-001"
+    envelope = _ui_envelope(mini_repo, key, "replayed seed")
+    first = run_v2_capability(mini_repo, envelope)
+    assert first.returncode == 0, first.stderr or first.stdout
+    captured = json.loads(first.stdout)["result"]["captured"]
+
+    second = run_v2_capability(mini_repo, envelope)
+    assert second.returncode == 0, second.stdout
+    assert json.loads(second.stdout)["replayed"] is True
+
+    recorded = command_support._load_session_paths(mini_repo, "channel:ui")
+    assert captured in recorded
+    assert recorded[captured]["channel"] == "ui"
+
+
 def test_unknown_channel_is_refused(mini_repo):
     _git_init(mini_repo)
     refused = run_los(mini_repo, "session-end", "--channel", "pigeon")
