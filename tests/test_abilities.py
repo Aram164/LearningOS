@@ -702,3 +702,106 @@ def test_section_evidence_refuses_a_stale_snapshot(ability_root: Path):
                     "--expected-snapshot", first["snapshot_id"])
     assert stale.returncode == 3, stale.stderr
     assert not stale.stdout
+
+
+def _chain_history(root: Path, aid: str, count: int, *, start: int = 0):
+    """Each correct observation supersedes the preceding one."""
+    from datetime import datetime, timedelta
+
+    repo = load_repo(root)
+    base = datetime(2026, 9, 23, 10, 0, tzinfo=UTC)
+    for offset in range(count):
+        number = start + offset
+        stamp = (base + timedelta(minutes=number)).strftime(
+            "%Y-%m-%dT%H:%M:%SZ")
+        row = _work(repo, aid, number, timestamp=stamp)
+        if number:
+            row["supersedes"] = f"ability-observation-{number - 1}"
+        _append(root, row)
+
+
+def _conflict_history(root: Path, aid: str, count: int, *, start: int = 0):
+    """One independent correct observation, then assisted incorrect ones."""
+    from datetime import datetime, timedelta
+
+    repo = load_repo(root)
+    base = datetime(2026, 9, 23, 10, 0, tzinfo=UTC)
+    for offset in range(count):
+        number = start + offset
+        stamp = (base + timedelta(minutes=number)).strftime(
+            "%Y-%m-%dT%H:%M:%SZ")
+        if number == 0:
+            _append(root, _work(repo, aid, number, timestamp=stamp))
+        else:
+            _append(root, _work(repo, aid, number, timestamp=stamp,
+                                result="incorrect", assistance="hint"))
+
+
+def test_brief_correction_chain_stays_bounded(ability_root: Path):
+    _chain_history(ability_root, "ability-sad-ols", 5)
+    small = run_los(ability_root, "ability-context", "ability-sad-ols",
+                    "--brief")
+    assert small.returncode == 0, small.stderr
+    _chain_history(ability_root, "ability-sad-ols", 195, start=5)
+    mid = run_los(ability_root, "ability-context", "ability-sad-ols",
+                  "--brief")
+    assert mid.returncode == 0, mid.stderr
+    _chain_history(ability_root, "ability-sad-ols", 800, start=200)
+    big = run_los(ability_root, "ability-context", "ability-sad-ols",
+                  "--brief")
+    assert big.returncode == 0, big.stderr
+    brief = json.loads(big.stdout)
+    summary = brief["evidence_summary"]
+    assert summary["total"] == 1000
+    assert summary["corrections_total"] == 999
+    assert summary["corrections_returned"] == 20
+    assert summary["corrections_truncated"] is True
+    assert [row["id"] for row in summary["corrections"]] == [
+        f"ability-observation-{number}" for number in range(1, 21)]
+    assert summary["corrections"][0]["supersedes"] == "ability-observation-0"
+    full = json.loads(run_los(ability_root, "ability-context",
+                              "ability-sad-ols").stdout)
+    assert brief["ability"]["state"] == full["ability"]["state"] == "supported"
+    assert brief["ability"]["reasons"] == full["ability"]["reasons"]
+    assert (brief["ability"]["preparation_routes"]
+            == full["ability"]["preparation_routes"])
+    assert len(big.stdout) - len(mid.stdout) < 500
+    assert len(big.stdout) < 12000
+    section = json.loads(run_los(
+        ability_root, "ability-context", "ability-sad-ols", "--section",
+        "evidence", "--limit", "50").stdout)
+    assert section["total"] == 1000
+    assert [row["id"] for row in section["observations"]] == [
+        f"ability-observation-{number}" for number in range(50)]
+
+
+def test_brief_later_conflicts_stays_bounded(ability_root: Path):
+    _conflict_history(ability_root, "ability-sad-ols", 5)
+    small = run_los(ability_root, "ability-context", "ability-sad-ols",
+                    "--brief")
+    assert small.returncode == 0, small.stderr
+    _conflict_history(ability_root, "ability-sad-ols", 195, start=5)
+    mid = run_los(ability_root, "ability-context", "ability-sad-ols",
+                  "--brief")
+    assert mid.returncode == 0, mid.stderr
+    _conflict_history(ability_root, "ability-sad-ols", 800, start=200)
+    big = run_los(ability_root, "ability-context", "ability-sad-ols",
+                  "--brief")
+    assert big.returncode == 0, big.stderr
+    brief = json.loads(big.stdout)
+    summary = brief["evidence_summary"]
+    assert summary["total"] == 1000
+    assert summary["later_conflicts_total"] == 999
+    assert summary["later_conflicts_returned"] == 20
+    assert summary["later_conflicts_truncated"] is True
+    assert [pointer["role"] for pointer in summary["state_basis"]] == (
+        ["latest-comparable"] + ["later-conflict"] * 20)
+    assert summary["state_basis"][0]["id"] == "ability-observation-0"
+    assert summary["state_basis"][1]["id"] == "ability-observation-1"
+    full = json.loads(run_los(ability_root, "ability-context",
+                              "ability-sad-ols").stdout)
+    assert brief["ability"]["state"] == full["ability"]["state"] == "uncertain"
+    assert brief["ability"]["reasons"] == ["conflicting later work"]
+    assert brief["ability"]["reasons"] == full["ability"]["reasons"]
+    assert len(big.stdout) - len(mid.stdout) < 500
+    assert len(big.stdout) < 12000

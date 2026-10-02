@@ -113,8 +113,10 @@ Decide which read answers the question before reading:
   default results are route-direct only; `--include-related` appends
   same-source notes labelled `related`, and `--material PATH` filters notes
   and assessments to one exact materials file. Analysis anchors preview
-  bounded (purpose matches first) with exact totals; expand a complete
-  index with the response's `--include-anchors` continuation.
+  bounded (purpose matches first) with exact totals; the response's
+  `--include-anchors` continuation expands the same page's complete index
+  under the same guards. Changed data refuses the saved expansion instead
+  of silently switching pages: restart from offset 0 then.
 - A new video → title/description and course/playlist membership for provisional
   intake. Examine with Gemini Notebook only when selected for use, verify
   against exact video timestamps, then save the bounded analysis; see
@@ -226,8 +228,9 @@ response keeps its existing shape for explicit bulk reads. Discover
 abilities through the bounded `ability-context` horizon first —
 `--limit`/`--offset` with the previous `--expected-snapshot` past the
 first page — and expand one known ID with `ability-context ABILITY_ID`:
-`--brief` for state and connection checks, `--section evidence` for the
-complete observation ledger, per-stage expansions for materials.
+`--brief` for state and connection checks (bounded correction/conflict
+examples with exact totals), `--section evidence` for the complete
+observation ledger, per-stage expansions for materials.
 
 ## Product hierarchy
 

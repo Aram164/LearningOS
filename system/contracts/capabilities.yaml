@@ -11,7 +11,7 @@ queries:
     invariants:
     - snapshot-bound bounded global horizon with focused expansion
     - the horizon pages at one snapshot (--offset carries the previous snapshot); every ability appears exactly once across pages, page-local edges only, off-page incident counts per row
-    - a focused --brief carries state, totals, and provenance pointers without raw observation bodies or stage material rows
+    - a focused --brief carries state, totals, and bounded provenance pointers (correction/conflict previews at most 20 with exact totals) without raw observation bodies or stage material rows; the paged evidence section is the complete audit history
     - --section evidence pages complete observations in ledger order at one snapshot
     - candidate abilities and bridges never affect readiness or evidence transfer
     - only reviewed equivalence with a current source digest can transfer confirmed evidence under stated conditions

@@ -912,3 +912,98 @@ def test_anchor_preview_empty_and_single_notes_stay_compact(mini_repo):
     assert item["anchors"][0]["clipped_fields"] == []
     assert "note" not in item["anchors"][0]
     assert item["anchors_truncated"] is False
+
+
+def _seed_two_anchored_notes(root: Path):
+    """Two matching notes with distinct 100-anchor indexes."""
+    digest = _seed_material(root, "deck.pdf", b"live bytes")
+    indexes = {}
+    for note_id, marker in (("note-page-a", "Alpha"),
+                            ("note-page-b", "Beta")):
+        anchors = [{
+            "topic": f"{marker} topic {number}",
+            "purpose": ("integration" if number == 0
+                        else "separate-topic reference"),
+            "locator": f"deck.pdf, p. {number + 1}",
+            "note": f"{marker} anchor note {number}.",
+        } for number in range(100)]
+        _plant_note(root, note_id, ANALYSIS_BODY,
+                    _binding("deck.pdf", digest, ANALYSIS_BODY,
+                             anchors=anchors))
+        indexes[note_id] = anchors
+    return indexes
+
+
+def _second_page(root: Path):
+    first = _context(root, "density", "--limit", "1")
+    assert [item["id"] for item in first["items"]] == ["note-page-a"]
+    assert first["next_offset"] == 1
+    second = _context(root, "density", "--limit", "1", "--offset", "1",
+                      "--expected-snapshot", first["snapshot_id"],
+                      "--expected-observations",
+                      first["observations_sha256"])
+    assert [item["id"] for item in second["items"]] == ["note-page-b"]
+    return second
+
+
+def test_include_anchors_expands_the_selected_later_page(mini_repo):
+    import shlex
+
+    indexes = _seed_two_anchored_notes(mini_repo)
+    second = _second_page(mini_repo)
+    assert second["items"][0]["anchors_truncated"] is True
+    command = second["expand"]["anchors"]
+    assert "--offset 1" in shlex.join(shlex.split(command))
+    proc = run_los(mini_repo, *shlex.split(command))
+    assert proc.returncode == 0, proc.stderr
+    full = json.loads(proc.stdout)
+    assert [item["id"] for item in full["items"]] == ["note-page-b"]
+    assert full["items"][0]["anchors"] == indexes["note-page-b"]
+    assert full["items"][0]["anchor_total"] == 100
+    assert full["items"][0]["anchor_returned"] == 100
+    assert full["snapshot_id"] == second["snapshot_id"]
+    assert full["observations_sha256"] == second["observations_sha256"]
+    assert "expand" not in full
+
+
+def test_anchor_expansion_preserves_clipped_later_page(mini_repo):
+    import shlex
+
+    digest = _seed_material(mini_repo, "deck.pdf", b"live bytes")
+    _plant_note(mini_repo, "note-page-a", ANALYSIS_BODY, _binding(
+        "deck.pdf", digest, ANALYSIS_BODY, anchors=[
+            {"topic": "First", "purpose": "integration",
+             "locator": "deck.pdf, p. 1", "note": "Short note."},
+        ]))
+    _plant_note(mini_repo, "note-page-b", ANALYSIS_BODY, _binding(
+        "deck.pdf", digest, ANALYSIS_BODY, anchors=[
+            {"topic": "Short topic", "purpose": "integration",
+             "locator": "L" * 300, "note": "N" * 300},
+            {"topic": "Second", "purpose": "separate-topic reference",
+             "locator": "deck.pdf, p. 2", "note": "Short note."},
+        ]))
+    second = _second_page(mini_repo)
+    assert second["items"][0]["anchors_truncated"] is False
+    clipped = second["items"][0]["anchors"][0]
+    assert sorted(clipped["clipped_fields"]) == ["locator", "note"]
+    proc = run_los(mini_repo, *shlex.split(second["expand"]["anchors"]))
+    assert proc.returncode == 0, proc.stderr
+    full = json.loads(proc.stdout)
+    assert [item["id"] for item in full["items"]] == ["note-page-b"]
+    verbatim = full["items"][0]["anchors"][0]
+    assert verbatim["locator"] == "L" * 300
+    assert verbatim["note"] == "N" * 300
+    assert "clipped_fields" not in json.dumps(full["items"][0]["anchors"])
+
+
+def test_anchor_expansion_refuses_changed_material_without_output(mini_repo):
+    import shlex
+
+    _seed_two_anchored_notes(mini_repo)
+    second = _second_page(mini_repo)
+    command = second["expand"]["anchors"]
+    (mini_repo.parent / "materials" / "deck.pdf").write_bytes(b"changed bytes")
+    proc = run_los(mini_repo, *shlex.split(command))
+    assert proc.returncode != 0
+    assert proc.stdout == ""
+    assert "changed" in proc.stderr

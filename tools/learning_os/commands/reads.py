@@ -1220,7 +1220,7 @@ def _clip_anchor_text(anchor):
 
 
 def _anchor_expansion_command(args, limit, snapshot, observed) -> str:
-    """Re-run this read from offset zero with complete anchor indexes."""
+    """Re-run this read's selected page with complete anchor indexes."""
     parts = ["material-context", args.query or ""]
     if args.concept:
         parts += ["--concept", args.concept]
@@ -1232,7 +1232,8 @@ def _anchor_expansion_command(args, limit, snapshot, observed) -> str:
         parts += ["--material", args.material]
     if getattr(args, "include_related", False):
         parts += ["--include-related"]
-    parts += ["--include-anchors", "--limit", str(limit), "--offset", "0",
+    parts += ["--include-anchors", "--limit", str(limit),
+              "--offset", str(args.offset),
               "--expected-snapshot", snapshot,
               "--expected-observations", observed]
     return shlex.join(parts)

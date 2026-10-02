@@ -27,7 +27,24 @@
     "section": {"type": "string"},
     "observations": {"type": "array", "maxItems": 50},
     "ability_sha256": {"type": "string"},
-    "evidence_summary": {"type": "object"},
+    "evidence_summary": {
+      "type": "object",
+      "properties": {
+        "total": {"type": "integer", "minimum": 0},
+        "active": {"type": "integer", "minimum": 0},
+        "superseded": {"type": "integer", "minimum": 0},
+        "comparable": {"type": "integer", "minimum": 0},
+        "valid": {"type": "integer", "minimum": 0},
+        "state_basis": {"type": "array", "maxItems": 21},
+        "later_conflicts_total": {"type": "integer", "minimum": 0},
+        "later_conflicts_returned": {"type": "integer", "minimum": 0},
+        "later_conflicts_truncated": {"type": "boolean"},
+        "corrections": {"type": "array", "maxItems": 20},
+        "corrections_total": {"type": "integer", "minimum": 0},
+        "corrections_returned": {"type": "integer", "minimum": 0},
+        "corrections_truncated": {"type": "boolean"}
+      }
+    },
     "encounters": {"type": "array"},
     "encounters_total": {"type": "integer", "minimum": 0},
     "encounters_truncated": {"type": "boolean"},

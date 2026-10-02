@@ -297,20 +297,25 @@ def _focused_brief(repo: Repo, focus: str, item: dict, observations: list[dict],
     from the same whole-ledger derivation as the full expansion. Raw
     observation bodies become exact totals plus the pointers that explain
     the answer; stage material rows become counts with guarded expansions.
-    Correction links all stay visible: each one permanently removes its
-    target from the active set, so every link is load-bearing.
+    Correction and conflict pointers preview bounded (chronological-first)
+    with exact totals; the paged evidence section is the complete audit
+    history. Every link still matters to the derivation — that does not
+    require returning the entire graph for each state query.
     """
     ability = repo.abilities[focus]
     history, active, comparable, valid, _current_hash, _corrections = _evidence_sets(
         ability, observations)
     latest, conflicts = _latest_and_conflicts(valid, comparable)
+    ordered_conflicts = sorted(conflicts,
+                               key=lambda row: (row["timestamp"], row["id"]))
+    conflict_preview = ordered_conflicts[:_BRIEF_LIST_LIMIT]
     basis = []
     if latest is not None:
         basis.append(_observation_pointer(latest, role="latest-comparable"))
     basis.extend(_observation_pointer(row, role="later-conflict")
-                 for row in sorted(conflicts,
-                                   key=lambda row: (row["timestamp"], row["id"])))
+                 for row in conflict_preview)
     correction_rows = [row for row in history if row.get("supersedes")]
+    correction_preview = correction_rows[:_BRIEF_LIST_LIMIT]
     summaries = []
     for encounter in encounters:
         rows = encounter["materials"]
@@ -348,10 +353,17 @@ def _focused_brief(repo: Repo, focus: str, item: dict, observations: list[dict],
             "comparable": len(comparable),
             "valid": len(valid),
             "state_basis": basis,
+            "later_conflicts_total": len(ordered_conflicts),
+            "later_conflicts_returned": len(conflict_preview),
+            "later_conflicts_truncated":
+                len(ordered_conflicts) > _BRIEF_LIST_LIMIT,
             "corrections": [{"id": row["id"], "supersedes": row["supersedes"],
                              "origin": row["origin"]}
-                            for row in correction_rows],
+                            for row in correction_preview],
             "corrections_total": len(correction_rows),
+            "corrections_returned": len(correction_preview),
+            "corrections_truncated":
+                len(correction_rows) > _BRIEF_LIST_LIMIT,
         },
         "encounters": summaries[:_BRIEF_LIST_LIMIT],
         "encounters_total": len(summaries),
