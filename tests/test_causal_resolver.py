@@ -377,9 +377,15 @@ def test_contract_only_commit_settles_earlier_committed_writes(
 def test_hand_edit_to_data_keeps_verify_observation(mini_repo: Path):
     """Authored data moved without a receipt is still the hand-edit signal:
     verify-observation stands even though the manifest is unchained."""
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
     _, result = _commit_capture_v2(mini_repo, "data-drift", "request-data")
-    target = mini_repo / "work/inbox/data-drift.md"
-    target.write_text("hand-edited outside the gateway\n", encoding="utf-8")
+    target = (mini_repo / "curriculum/modules/module-demo/units"
+              / "unit-demo-l01/unit.yaml")
+    target.write_text(
+        target.read_text(encoding="utf-8") + "\n# hand-edited outside the gateway\n",
+        encoding="utf-8")
     authority = collect_authority(
         mini_repo, request_id="request-data",
         idempotency_key="data-drift", capability="capture.create",
