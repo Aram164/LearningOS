@@ -20,6 +20,7 @@ from pathlib import Path
 
 import yaml
 
+from learning_os.commands.suggest import not_found
 from learning_os.contracts.gateway import (
     current_gateway_request,
     gateway_snapshot_is_verified,
@@ -302,7 +303,10 @@ def _path_or_error(root: Path, path_id: str):
     repo = load_repo(root)
     learning_path = repo.learning_paths.get(path_id)
     if learning_path is None or learning_path.archived:
-        print(f"los: active learning path not found: {path_id}", file=sys.stderr)
+        active = [key for key, row in repo.learning_paths.items()
+                  if not row.archived]
+        print(f"los: {not_found('active learning path', path_id, active)}",
+              file=sys.stderr)
         return repo, None
     return repo, learning_path
 
@@ -708,7 +712,7 @@ def _unit_map_or_error(root: Path, unit_id: str):
     repo = load_repo(root)
     unit = repo.units.get(unit_id)
     if unit is None:
-        print(f"los: unit not found: {unit_id}", file=sys.stderr)
+        print(f"los: {not_found('unit', unit_id, repo.units)}", file=sys.stderr)
         return repo, None, None
     map_id = unit.data.get("current_study_map")
     study_map = repo.study_maps.get(map_id) if map_id else None
@@ -810,6 +814,12 @@ def _replace_registry_list_record(content: str, record_id: str, record: dict) ->
 def _stage(data: dict, stage_id: str):
     return next((row for row in data.get("stages", []) or []
                  if isinstance(row, dict) and row.get("id") == stage_id), None)
+
+
+def _stage_ids(data: dict) -> list[str]:
+    """Stage ids of one study map or learning path, for not-found suggestions."""
+    return [str(row["id"]) for row in data.get("stages", []) or []
+            if isinstance(row, dict) and row.get("id")]
 
 
 # ---------------------------------------------------- validate / generate

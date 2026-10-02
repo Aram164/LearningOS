@@ -9,6 +9,7 @@ import sys
 
 from learning_os.learning_runtime import requirement_id_for
 
+from .suggest import not_found
 from .support import (
     WriteRefused,
     _allocate_attachment_path,
@@ -21,6 +22,7 @@ from .support import (
     _resume_pointer_write,
     _root,
     _stage,
+    _stage_ids,
     _unit_map_or_error,
     _write_transaction,
 )
@@ -36,7 +38,8 @@ def cmd_stage_note(args) -> int:
             return 2
         stage = _stage(study_map.data, args.stage_id)
         if stage is None:
-            print(f"los: stage not found: {args.stage_id}", file=sys.stderr)
+            print(f"los: {not_found('stage', args.stage_id, _stage_ids(study_map.data))}",
+                  file=sys.stderr)
             return 2
         target = root / str(stage.get("working_note", ""))
         if not stage.get("working_note"):
@@ -121,7 +124,8 @@ def cmd_stage_progress(args) -> int:
         stages = data.get("stages", []) or []
         stage = _stage(data, args.stage_id)
         if stage is None:
-            print(f"los: stage not found: {args.stage_id}", file=sys.stderr)
+            print(f"los: {not_found('stage', args.stage_id, _stage_ids(data))}",
+                  file=sys.stderr)
             return 2
         action = args.status
         if action in {"active", "revisit"}:
@@ -231,7 +235,8 @@ def cmd_stage_attach(args) -> int:
         data = copy.deepcopy(study_map.data)
         stage = _stage(data, args.stage_id)
         if stage is None:
-            print(f"los: stage not found: {args.stage_id}", file=sys.stderr)
+            print(f"los: {not_found('stage', args.stage_id, _stage_ids(data))}",
+                  file=sys.stderr)
             return 2
         note_path = root / stage["working_note"]
         attachment_dir = note_path.parent / "attachments"

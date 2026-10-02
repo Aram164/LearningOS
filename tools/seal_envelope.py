@@ -188,7 +188,15 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
                         for artifact in captured.artifacts
                     }
                 except WriteRefused as exc:
-                    raise ValueError(str(exc)) from exc
+                    raise ValueError(
+                        f"{exc}; fix the payload and seal again") from exc
+            if code == 2:
+                # The handler refused the payload itself (an unknown id, a
+                # failed check): explicit guards cannot fix that, so say so
+                # instead of sending the caller on a second refused round trip.
+                raise ValueError(
+                    f"{result.get('error', capability + ' failed')}; "
+                    "fix the payload and seal again")
             raise ValueError(
                 "guard derivation stopped before any transaction"
                 f" (exit {code}: {result.get('error', capability + ' failed')}); "

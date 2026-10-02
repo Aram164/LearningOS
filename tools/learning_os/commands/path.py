@@ -8,6 +8,7 @@ import sys
 
 import yaml
 
+from .suggest import not_found
 from .support import (
     WriteRefused,
     _allocate_attachment_path,
@@ -17,6 +18,7 @@ from .support import (
     _path_or_error,
     _read_content_bound_file,
     _root,
+    _stage_ids,
     _write_transaction,
 )
 
@@ -33,7 +35,8 @@ def cmd_path_note(args) -> int:
         stage = next((s for s in learning_path.data.get("stages", [])
                       if s.get("id") == args.stage_id), None)
         if stage is None:
-            print(f"los: stage not found: {args.stage_id}", file=sys.stderr)
+            print(f"los: {not_found('stage', args.stage_id, _stage_ids(learning_path.data))}",
+                  file=sys.stderr)
             return 2
         note_ref = stage.get("notes_path")
         if not note_ref:
@@ -78,7 +81,8 @@ def cmd_path_progress(args) -> int:
         stages = data.get("stages", []) or []
         stage = next((s for s in stages if s.get("id") == args.stage_id), None)
         if stage is None:
-            print(f"los: stage not found: {args.stage_id}", file=sys.stderr)
+            print(f"los: {not_found('stage', args.stage_id, _stage_ids(data))}",
+                  file=sys.stderr)
             return 2
         if args.status in {"complete", "skipped"} and stage.get("status") != "active":
             print("los: only the active stage can be completed or skipped; activate it first",
@@ -151,7 +155,8 @@ def cmd_path_attach(args) -> int:
         stage = next((s for s in data.get("stages", [])
                       if s.get("id") == args.stage_id), None)
         if stage is None:
-            print(f"los: stage not found: {args.stage_id}", file=sys.stderr)
+            print(f"los: {not_found('stage', args.stage_id, _stage_ids(data))}",
+                  file=sys.stderr)
             return 2
         workspace = learning_path.path.parent.parent
         attachment_dir = workspace / "scratch" / "paths" / learning_path.id \

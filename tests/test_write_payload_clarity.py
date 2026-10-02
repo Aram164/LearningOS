@@ -12,10 +12,14 @@ not-found refusals.
 from __future__ import annotations
 
 import json
+import subprocess
+import sys
+from pathlib import Path
 
 import pytest
 from gateway_helpers import approved_v2_cli, file_sha256
-from repo_builders import run_los
+from repo_builders import add_curriculum, material_fixture, run_los
+from test_learning_paths import add_path
 
 from learning_os.commands.note import NOTE_FIELDS
 from learning_os.commands.support import WriteRefused
@@ -313,3 +317,102 @@ def test_a_note_missing_a_required_field_refuses_at_payload_validation(mini_repo
     combined = result.stdout + result.stderr
     assert "invalid payload" in combined
     assert "title" in combined
+
+
+# ------------------------------------------------------------------ #105
+
+SEAL = Path(__file__).resolve().parent.parent / "tools" / "seal_envelope.py"
+
+
+def _seal(root: Path, out: Path, *, capability: str, payload: dict, key: str):
+    return subprocess.run(
+        [sys.executable, str(SEAL), "--root", str(root),
+         "--capability", capability, "--payload", json.dumps(payload),
+         "--key", key, "--guards", "auto", "--out", str(out)],
+        capture_output=True, text=True, timeout=120)
+
+
+def test_stage_writes_suggest_the_units_stage_ids(mini_repo):
+    add_curriculum(mini_repo)
+    note = run_los(mini_repo, "stage-note", "unit-demo-l01", "stage-dem",
+                   "--text", "x")
+    assert note.returncode == 2
+    assert "stage not found: stage-dem" in note.stderr
+    assert "did you mean" in note.stderr
+    assert "stage-demo" in note.stderr
+    progress = run_los(mini_repo, "stage-progress", "unit-demo-l01", "stage-dem",
+                       "active")
+    assert progress.returncode == 2
+    assert "stage-demo" in progress.stderr
+    feedback = run_los(mini_repo, "source-feedback", "unit-demo-l01", "stage-dem",
+                       "source-demo-book", "helpful")
+    assert feedback.returncode == 2
+    assert "stage-demo" in feedback.stderr
+    detour = run_los(mini_repo, "detour-create", "unit-demo-l01", "stage-dem",
+                     "--title", "Gap", "--classification", "deferred")
+    assert detour.returncode == 2
+    assert "stage-demo" in detour.stderr
+
+
+def test_stage_writes_suggest_unit_ids(mini_repo):
+    add_curriculum(mini_repo)
+    result = run_los(mini_repo, "stage-note", "unit-demo-l1", "stage-demo",
+                     "--text", "x")
+    assert result.returncode == 2
+    assert "unit not found: unit-demo-l1" in result.stderr
+    assert "unit-demo-l01" in result.stderr
+
+
+def test_path_writes_suggest_path_and_stage_ids(mini_repo):
+    add_path(mini_repo)
+    stage = run_los(mini_repo, "path-note", "path-demo-probability", "stage-on",
+                    "--text", "x")
+    assert stage.returncode == 2
+    assert "stage not found: stage-on" in stage.stderr
+    assert "stage-one" in stage.stderr
+    path = run_los(mini_repo, "path-note", "path-demo-probabilit", "stage-one",
+                   "--text", "x")
+    assert path.returncode == 2
+    assert "active learning path not found: path-demo-probabilit" in path.stderr
+    assert "path-demo-probability" in path.stderr
+
+
+def test_route_patch_suggests_the_units_route_ids(mini_repo):
+    repo, rid, smid = material_fixture(mini_repo)
+    unit_id = repo.study_maps[smid].unit_id
+    result = run_los(mini_repo, "route-patch", unit_id, rid[:-1],
+                     "--changes", json.dumps({"angle": "Changed"}), "--check")
+    assert result.returncode == 2, result.stdout + result.stderr
+    assert "missing or ambiguous" in result.stderr
+    assert rid in result.stderr
+
+
+def test_seal_with_a_bad_stage_id_says_fix_the_payload(mini_repo, tmp_path):
+    add_curriculum(mini_repo)
+    sealed = _seal(mini_repo, tmp_path / "sealed.json",
+                   capability="stage.note.write",
+                   payload={"unit_id": "unit-demo-l01",
+                            "stage_id": "stage-dem-counting",
+                            "text": "mistyped stage"},
+                   key="clarity-seal-bad-stage-001")
+    assert sealed.returncode == 2
+    assert "stage not found: stage-dem-counting" in sealed.stderr
+    assert "did you mean" in sealed.stderr
+    assert "stage-demo" in sealed.stderr
+    assert "fix the payload and seal again" in sealed.stderr
+    assert "explicit --revision" not in sealed.stderr
+
+
+def test_seal_without_a_transaction_keeps_the_explicit_revision_advice(
+        mini_repo, tmp_path):
+    repo, rid, smid = material_fixture(mini_repo)
+    unit_id = repo.study_maps[smid].unit_id
+    sealed = _seal(mini_repo, tmp_path / "sealed.json",
+                   capability="route.patch",
+                   payload={"unit_id": unit_id, "route_id": rid,
+                            "changes": {"angle": "A checked change"},
+                            "check": True},
+                   key="clarity-seal-check-001")
+    assert sealed.returncode == 2, sealed.stdout + sealed.stderr
+    assert "explicit --revision" in sealed.stderr
+    assert "fix the payload" not in sealed.stderr

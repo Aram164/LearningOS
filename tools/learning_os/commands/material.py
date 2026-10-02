@@ -63,7 +63,9 @@ def _unit(repo, unit_id):
 def _route(routes, route_id):
     matches = [r for r in routes if r["id"] == route_id]
     if len(matches) != 1:
-        raise WriteRefused(f"route {route_id} is missing or ambiguous in this unit")
+        raise WriteRefused(with_suggestions(
+            f"route {route_id} is missing or ambiguous in this unit",
+            route_id, [row["id"] for row in routes]))
     return matches[0]
 
 
