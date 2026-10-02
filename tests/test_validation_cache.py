@@ -252,7 +252,7 @@ def test_validate_offline_writes_cache_with_header_and_pins(mini_repo, repo_root
     assert proc.returncode == 0, proc.stderr
     data = json.loads(cache.read_text(encoding="utf-8"))
     assert isinstance(data["_generated"], dict)  # GEN-HEADER
-    assert data["format"] == 3
+    assert data["format"] == 4
     assert set(data["pins"]) == {
         "canonical_fingerprint", "code_identity", "runtime_digest",
         "materials_digest", "operations_digest", "validator_inputs",

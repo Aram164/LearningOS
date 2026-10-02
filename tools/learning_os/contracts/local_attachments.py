@@ -69,7 +69,7 @@ def load(root: Path) -> dict[str, LocalAttachment]:
         return {}
     try:
         data = yaml.safe_load(path.read_text(encoding="utf-8"))
-    except (OSError, yaml.YAMLError) as exc:
+    except (OSError, UnicodeError, yaml.YAMLError) as exc:
         raise LocalAttachmentsError(f"cannot read {LOCAL_ATTACHMENTS_RELATIVE}: {exc}") from exc
     if not isinstance(data, dict) or data.get("contract") != CONTRACT_MARKER \
             or data.get("schema_version") != 1:

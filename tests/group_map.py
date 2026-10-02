@@ -165,6 +165,7 @@ GROUPS: dict[str, list[str]] = {
         "test_affected_tests.py",
         "test_code_reachability.py",
         "test_compute_once.py",
+        "test_digest_review.py",
         "test_deep_audit_repairs.py",
         "test_external_urls.py",
         "test_githistory.py",

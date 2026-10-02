@@ -23,8 +23,8 @@ Pinned inputs (all must match; anything else misses and re-validates):
   HYGIENE-VIEWS compares the published manifest's stamp, so ``make
   views`` alone changes the answer), system/ prose, transaction receipts,
   the repository tree, and the two perimeter levels above it — plus two
-  targeted stat sets inside otherwise name-only subtrees: each
-  ``generated/text-cache/*/index.json`` (GEN-JSON parses them) and each
+  targeted stat sets inside otherwise name-only subtrees: every checked
+  text-cache JSON/Markdown file (including each ``index.json``) and each
   declared local-only attachment (definition 2 took them out of the
   content fingerprint, so a scan rewrite would otherwise serve stale).
 
@@ -82,9 +82,9 @@ CACHE_RELATIVE = Path("generated/reports/validation-report.cache.json")
 
 #: Cache contract. A reader meeting another format discards and misses.
 #: 2: the validator-inputs pin, and pins observed before validation.
-#: 3: the validator-inputs pin also stats each text-cache index and each
-#: declared local-only attachment (see validator_inputs_digest).
-CACHE_FORMAT = 3
+#: 4: every checked text-cache JSON/Markdown file and symlink target is
+#: pinned, including unexpected nested files.
+CACHE_FORMAT = 4
 
 #: Directory names never descended into: version control, environments and
 #: interpreter/tool caches. No rule reads inside them, and several change on
@@ -95,9 +95,9 @@ _WALK_PRUNE = frozenset({".git", ".venv", "node_modules", "__pycache__",
 #: Subtrees recorded by name only: the material text cache (~70k
 #: machine-written page blobs, none of them read by any rule) and the
 #: disposable diagnostics trace store, which no rule reads. The exception
-#: inside the text cache is each entry's ``index.json``, which GEN-JSON
-#: parses: ``validator_inputs_digest`` stats those directly (a few
-#: hundred stats) instead of descending into the blob directories.
+#: inside the text cache is its JSON/Markdown files, which GEN-* reads:
+#: ``validator_inputs_digest`` lists that tree separately and stats only
+#: those checked files, leaving page blobs unstatted.
 _WALK_NAME_ONLY = frozenset({"generated/text-cache", "operations/diagnostics"})
 
 
@@ -143,9 +143,8 @@ def validator_inputs_digest(root: Path) -> str:
 
     Two targeted stat sets cover validator inputs inside otherwise
     name-only subtrees, in the same line format as the walk. Each
-    ``generated/text-cache/*/index.json`` is statted directly (GEN-JSON
-    parses it; descending into the ~70k page blobs to find it would
-    cost the listing on every read), and each declared local-only
+    checked text-cache JSON/Markdown file is statted (GEN-* reads them;
+    ordinary page blobs are listed but never statted), and each declared local-only
     attachment is statted (definition 2 took the scans out of the
     content fingerprint, so without this a scan rewrite would serve
     the pre-rewrite issues from the cache). An absent path contributes
@@ -159,13 +158,32 @@ def validator_inputs_digest(root: Path) -> str:
         digest.update(line.encode("utf-8", "surrogateescape"))
         digest.update(b"\0")
 
+    def emit_link(label: str, full: str) -> None:
+        try:
+            target = os.readlink(full)
+        except OSError:
+            target = "<unreadable>"
+        emit(f"{label}\0<link:{target}>")
+        # GEN-* reads through file symlinks. The unchanged link string
+        # cannot pin a rewritten target; include its followed stat too.
+        try:
+            st = os.stat(full)
+        except OSError:
+            emit(f"{label}\0<unreadable-target>")
+        else:
+            emit(f"{label}\0target:{st.st_dev}\0{st.st_ino}\0{st.st_size}"
+                 f"\0{st.st_mtime_ns}\0{st.st_ctime_ns}\0{st.st_mode}")
+
     def emit_entry(label: str, entry: os.DirEntry, names_only: bool) -> None:
         if entry.is_symlink():
-            try:
-                target = os.readlink(entry.path)
-            except OSError:
-                target = "<unreadable>"
-            emit(f"{label}\0<link:{target}>")
+            if names_only:
+                try:
+                    target = os.readlink(entry.path)
+                except OSError:
+                    target = "<unreadable>"
+                emit(f"{label}\0<link:{target}>")
+            else:
+                emit_link(label, entry.path)
             return
         if entry.is_dir(follow_symlinks=False):
             emit(f"{label}/")
@@ -205,11 +223,7 @@ def validator_inputs_digest(root: Path) -> str:
                 emit(f"{label}\0<unreadable>")
             return
         if stat.S_ISLNK(st.st_mode):
-            try:
-                target = os.readlink(full)
-            except OSError:
-                target = "<unreadable>"
-            emit(f"{label}\0<link:{target}>")
+            emit_link(label, full)
         elif stat.S_ISDIR(st.st_mode):
             emit(f"{label}/")
         elif not stat.S_ISREG(st.st_mode):
@@ -242,22 +256,26 @@ def validator_inputs_digest(root: Path) -> str:
                     and rel not in _WALK_NAME_ONLY):
                 stack.append(entry.path)
 
-    # Text-cache indexes without the blob listing: one scandir of the
-    # entry directories, then a direct stat of each ``index.json``.
+    # List the text-cache directories, but stat only files GEN-* reads.
+    # An index-only shortcut misses an unexpected nested *.json/*.md,
+    # whose corruption the full validator would report. Page blobs are
+    # never statted or read, keeping the expensive part bounded.
     text_cache = os.path.join(root_str, "generated", "text-cache")
-    entries = scan(text_cache)
-    if entries is not None:
+    text_stack = [text_cache]
+    while text_stack:
+        directory = text_stack.pop()
+        entries = scan(directory)
+        if entries is None:
+            if os.path.exists(directory):
+                emit(f"{os.path.relpath(directory, root_str)}\0<unreadable-dir>")
+            continue
         for child in entries:
-            rel = f"generated/text-cache/{child.name}"
-            if child.is_symlink() or not child.is_dir(follow_symlinks=False):
-                # A stray file directly under the cache: GEN-JSON parses
-                # ``*.json`` here, so those read full stats, the rest names.
-                emit_entry(rel, child,
-                           names_only=not child.name.endswith(".json"))
-                continue
-            emit_entry(rel, child, names_only=False)
-            emit_stat_path(f"{rel}/index.json",
-                           os.path.join(child.path, "index.json"))
+            rel = os.path.relpath(child.path, root_str).replace(os.sep, "/")
+            is_directory = child.is_dir(follow_symlinks=False) and not child.is_symlink()
+            if is_directory or child.name.endswith((".json", ".md")):
+                emit_entry(rel, child, names_only=False)
+            if is_directory:
+                text_stack.append(child.path)
 
     # Declared local-only attachments: present ones read full stats, so a
     # scan rewrite misses; absent ones contribute nothing (their add/delete

@@ -112,7 +112,7 @@ def _excluded_local_paths(root: Path, definition: int) -> frozenset[str]:
 
 
 def _check_definition(definition: int) -> None:
-    if definition not in _KNOWN_DEFINITIONS:
+    if type(definition) is not int or definition not in _KNOWN_DEFINITIONS:
         raise ValueError(f"unknown fingerprint definition: {definition!r}")
 
 

@@ -161,6 +161,10 @@ def contract_only_drift_receipt(
     if newest is None:
         return None
     metadata = newest.get("metadata")
+    definition = metadata.get("fingerprint_definition", 1) \
+        if isinstance(metadata, dict) else 1
+    if type(definition) is not int or definition not in (1, FINGERPRINT_DEFINITION_VERSION):
+        return None
     recorded = metadata.get("data_roots_sha256") \
         if isinstance(metadata, dict) else None
     if not isinstance(recorded, str) or not recorded:

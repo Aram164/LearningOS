@@ -5,8 +5,9 @@ re-read, re-parsed and schema-checked every one of them on every
 validation (244 ms at 328 receipts, growing with each write). This
 module memoizes the per-receipt result — parse/schema issues plus the
 receipt id and idempotency key — in a ``generated/`` sidecar keyed on
-``(path, size, mtime)``, with a content hash settling mtime-only
-changes. Only new or changed receipts pay the full check; the
+the live content hash, recomputed in each process through the shared
+digest layer. Stat equality across processes never proves receipt
+immutability. Only new or changed receipts pay the full check; the
 cross-receipt duplicate-id and duplicate-idempotency-key checks run
 over the cached ids and keys every run, in the same order.
 
@@ -34,7 +35,7 @@ from ..derived.identity import (
     runtime_digest,
     validator_runtime_digest,
 )
-from ..digests import file_sha256
+from ..digests import file_content, file_sha256
 from ..loading.yamlio import UniqueKeySafeLoader
 from .common import Issue
 
@@ -48,16 +49,17 @@ if TYPE_CHECKING:
 SIDECAR_RELATIVE = Path("generated/reports/validation-report-receipts.cache.json")
 
 #: Sidecar contract. A reader meeting another format revalidates fully.
-RECEIPT_CACHE_FORMAT = 1
+RECEIPT_CACHE_FORMAT = 2
 
 
-def _current_pins(root: Path) -> dict[str, str]:
+def _current_pins(validator: Validator) -> dict[str, str]:
     """Everything a cached per-receipt verdict depends on."""
-    schema = root / "system" / "schema" / "transaction-receipt.schema.json"
-    try:
-        schema_pin = f"sha256:{hashlib.sha256(schema.read_bytes()).hexdigest()}"
-    except OSError:
-        schema_pin = "<missing>"
+    root = validator.repo.root
+    # Validator captured its schemas before this pass. A later disk read
+    # could pin a new schema while the verdict used the old loaded one.
+    schema = validator.schemas.get("transaction-receipt")
+    schema_pin = "<missing>" if schema is None else "sha256:" + hashlib.sha256(
+        json.dumps(schema, sort_keys=True, ensure_ascii=False).encode("utf-8")).hexdigest()
     return {
         "code_identity": digest_code_identity(root),
         "runtime_digest": runtime_digest(),
@@ -73,11 +75,10 @@ def _unlink_quietly(path: Path) -> None:
         pass
 
 
-def _load_entries(root: Path) -> tuple[dict[str, Any], dict[str, str] | None]:
+def _load_entries(validator: Validator) -> tuple[dict[str, Any], dict[str, str]]:
     """Cached per-receipt entries plus the pins they were read under.
 
-    The pins are None when there is nothing to compare (absent or
-    unreadable file); otherwise they are the current pins, reused by the
+    The pins describe the loaded schema this run uses, reused by the
     save so one run computes them once. A structurally unreadable
     sidecar (unparseable, wrong shape, wrong format) is discarded
     best-effort, exactly like the status cache: the validator scans
@@ -85,18 +86,19 @@ def _load_entries(root: Path) -> tuple[dict[str, Any], dict[str, str] | None]:
     surface as a GEN-JSON error about the cache. A pin mismatch leaves
     the file in place — this run overwrites it.
     """
+    root = validator.repo.root
+    pins = _current_pins(validator)
     sidecar = root / SIDECAR_RELATIVE
     try:
         data = json.loads(sidecar.read_text(encoding="utf-8"))
     except OSError:
-        return {}, None
+        return {}, pins
     except ValueError:
         _unlink_quietly(sidecar)
-        return {}, None
+        return {}, pins
     if not isinstance(data, dict) or data.get("format") != RECEIPT_CACHE_FORMAT:
         _unlink_quietly(sidecar)
-        return {}, None
-    pins = _current_pins(root)
+        return {}, pins
     if not isinstance(data.get("pins"), dict) or data["pins"] != pins:
         return {}, pins
     entries = data.get("entries")
@@ -107,7 +109,7 @@ def _load_entries(root: Path) -> tuple[dict[str, Any], dict[str, str] | None]:
 
 
 def _save_entries(
-    root: Path, entries: dict[str, Any], pins: dict[str, str] | None,
+    root: Path, entries: dict[str, Any], pins: dict[str, str],
 ) -> None:
     """Persist per-receipt entries under ``pins`` (atomic write).
 
@@ -124,7 +126,7 @@ def _save_entries(
                 "generator": f"learning_os v{__version__}",
             },
             "format": RECEIPT_CACHE_FORMAT,
-            "pins": pins if pins is not None else _current_pins(root),
+            "pins": pins,
             "entries": safe,
         }, sort_keys=True, ensure_ascii=False)
     except (TypeError, ValueError):
@@ -190,12 +192,30 @@ def _entry_shape_ok(entry: Any) -> bool:
                 or not isinstance(issue.get("message"), str) \
                 or not isinstance(issue.get("path"), str):
             return False
-    return _json_safe(entry.get("id")) and _json_safe(entry.get("idempotency_key"))
+    if "id" not in entry or "idempotency_key" not in entry \
+            or not _json_safe(entry["id"]) or not _json_safe(entry["idempotency_key"]):
+        return False
+    proof = entry.get("proof_sha256")
+    return isinstance(proof, str) and proof == _proof_digest(entry)
+
+
+def _proof_digest(entry: dict) -> str | None:
+    """Detect structural cache corruption beyond JSON syntax.
+
+    This is an integrity checksum, not authority or authentication: the
+    generated sidecar remains disposable local cache state.
+    """
+    body = {key: value for key, value in entry.items() if key != "proof_sha256"}
+    try:
+        raw = json.dumps(body, sort_keys=True, ensure_ascii=False, allow_nan=False)
+    except (TypeError, ValueError):
+        return None
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
 
 
 def _validate_fresh(
     validator: Validator, path: Path, rel: str,
-) -> tuple[list[Issue], Any, Any, bool]:
+) -> tuple[list[Issue], Any, Any, bool, str | None]:
     """Today's per-receipt body: parse, schema-check, extract id and key.
 
     Schema issues append to the validator as they always have; the
@@ -205,6 +225,7 @@ def _validate_fresh(
     duplicate checks.
     """
     mark = len(validator.issues)
+    content_hash = None
     try:
         # `yaml.safe_load` is the pure-Python loader: 214 receipts cost
         # about a second of parsing on every validate, and every
@@ -213,18 +234,20 @@ def _validate_fresh(
         # extension is present, and the same duplicate-key rule, which
         # no current receipt trips. A file it refuses is reported below
         # as an unparseable receipt rather than raised.
-        data = yaml.load(
-            path.read_text(encoding="utf-8"), Loader=UniqueKeySafeLoader,
-        ) or {}
+        # Bind the proof hash to exactly the bytes parsed. Re-reading after
+        # schema checking can otherwise bless a concurrent replacement.
+        content = file_content(validator.repo.root, path, path.read_bytes)
+        content_hash = hashlib.sha256(content).hexdigest()
+        data = yaml.load(content.decode("utf-8"), Loader=UniqueKeySafeLoader) or {}
     except Exception as exc:  # noqa: BLE001 - report as validation issue
         validator.err("TRANSACTION-RECEIPT", f"cannot parse receipt: {exc}", rel)
-        return list(validator.issues[mark:]), None, None, True
+        return list(validator.issues[mark:]), None, None, True, content_hash
     validator._schema_check("transaction-receipt", data, rel)
     fresh = list(validator.issues[mark:])
     transaction_id = data.get("id") if isinstance(data, dict) else None
     request = data.get("request") if isinstance(data, dict) else None
     key = request.get("idempotency_key") if isinstance(request, dict) else None
-    return fresh, transaction_id, key, False
+    return fresh, transaction_id, key, False, content_hash
 
 
 def _restore(issues: list[dict]) -> list[Issue]:
@@ -260,7 +283,7 @@ def receipt_file_issues(validator: Validator) -> None:
     """
     root = validator.repo.root
     directory = root / "operations" / "transactions"
-    cached, pins = _load_entries(root)
+    cached, pins = _load_entries(validator)
     fresh: dict[str, Any] = {}
     seen: set = set()
     seen_keys: dict[str, str] = {}
@@ -271,12 +294,13 @@ def receipt_file_issues(validator: Validator) -> None:
             entry = None
         stat = _receipt_stat(path)
         reused = False
+        # Persisted stat equality is not content proof: a same-size edit
+        # can restore mtime. Hash live receipt bytes in each process; the
+        # shared digest layer makes repeated checks within it inexpensive.
         if entry is not None and stat is not None \
-                and (entry["size"], entry["mtime_ns"]) == stat:
-            reused = True
-        elif entry is not None and stat is not None \
                 and _content_hash(root, path) == entry["sha256"]:
             entry = {**entry, "size": stat[0], "mtime_ns": stat[1]}
+            entry["proof_sha256"] = _proof_digest(entry)
             reused = True
         if reused:
             assert entry is not None
@@ -288,10 +312,9 @@ def receipt_file_issues(validator: Validator) -> None:
             if _json_safe(entry):
                 fresh[rel] = entry
         else:
-            issues, transaction_id, key, parse_failed = _validate_fresh(
+            issues, transaction_id, key, parse_failed, content_hash = _validate_fresh(
                 validator, path, rel)
             if stat is not None:
-                content_hash = _content_hash(root, path)
                 if content_hash is not None:
                     candidate = {
                         "size": stat[0],
@@ -302,6 +325,7 @@ def receipt_file_issues(validator: Validator) -> None:
                         "idempotency_key": key,
                         "issues": _freeze(issues),
                     }
+                    candidate["proof_sha256"] = _proof_digest(candidate)
                     if _json_safe(candidate):
                         fresh[rel] = candidate
         if parse_failed:

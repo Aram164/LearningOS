@@ -8,8 +8,8 @@ rebuild fingerprints live and stamps, a status miss pins and then validates.
 This module is the one choke point they read through instead: the second
 read of unchanged bytes in a process is a stat plus a dict lookup.
 
-The gate is the file's stat, never the path alone: ``(inode, size, mtime_ns,
-ctime_ns)``. Any realistic mutation — add, delete, replace, rewrite,
+The gate is the file's stat, never the path alone: ``(device, inode, size,
+mtime_ns, ctime_ns, mode)``. Any realistic mutation — add, delete, replace, rewrite,
 retarget, permission change — misses and re-reads; only a stat-preserving
 rewrite (same size with forged times under a reused inode) would slip, the
 same trust the status pins and the publication-window stat digest already
@@ -56,11 +56,11 @@ _MAX_CACHED_TOTAL_BYTES = 64 * 1024 * 1024
 #: count. Past it the oldest entries re-hash on next use.
 _MAX_DIGEST_ENTRIES = 32768
 
-#: (root, relpath) -> ((inode, size, mtime_ns, ctime_ns), bytes).
+#: (root, relpath) -> ((device, inode, size, mtime_ns, ctime_ns, mode), bytes).
 _CONTENT: OrderedDict[tuple[str, str], tuple[tuple, bytes]] = OrderedDict()
 _CONTENT_BYTES = 0
 
-#: (root, relpath) -> ((inode, size, mtime_ns, ctime_ns), hex digest).
+#: (root, relpath) -> ((device, inode, size, mtime_ns, ctime_ns, mode), hex digest).
 _DIGESTS: OrderedDict[tuple[str, str], tuple[tuple, str]] = OrderedDict()
 
 #: Distinct root spellings seen -> their canonical path. Callers mix
@@ -88,13 +88,28 @@ def _key(root: Path, path: Path) -> tuple[str, str] | None:
         rel = path.relative_to(root)
     except ValueError:
         return None
-    return (_canonical_root(root), rel.as_posix())
+    authority = _canonical_root(root)
+    key = (authority, rel.as_posix())
+    if key not in _CONTENT and key not in _DIGESTS:
+        # A miss invokes the caller's reader and its normal admission. Only
+        # a hit can bypass that reader, so only hits need this extra proof.
+        return key
+    # Stat follows links. An in-root alias can be retargeted to an external
+    # hardlink with exactly the same target stat; that must not bypass the
+    # caller's boundary-checked reader on a cache hit.
+    resolved = os.path.realpath(path)
+    try:
+        Path(resolved).relative_to(authority)
+    except ValueError:
+        return None
+    return key
 
 
-def _stat_tuple(path: Path) -> tuple[int, int, int, int]:
+def _stat_tuple(path: Path) -> tuple[int, int, int, int, int, int]:
     """The identity a cached entry is gated on. Raises OSError like a read."""
     stat = path.stat()
-    return (stat.st_ino, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns)
+    return (stat.st_dev, stat.st_ino, stat.st_size, stat.st_mtime_ns,
+            stat.st_ctime_ns, stat.st_mode)
 
 
 def _store_content(key: tuple[str, str], stat: tuple, data: bytes) -> None:

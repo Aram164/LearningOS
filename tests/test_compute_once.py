@@ -446,7 +446,7 @@ def test_receipt_sidecar_warm_run_matches_cold(mini_repo: Path):
     cold = _frozen(validate(load_repo(mini_repo), online=False))
     assert sidecar.is_file()
     payload = json.loads(sidecar.read_text(encoding="utf-8"))
-    assert payload["format"] == 1
+    assert payload["format"] == 2
     assert isinstance(payload["_generated"], dict)
     assert len(payload["entries"]) == 2
     warm = _frozen(validate(load_repo(mini_repo), online=False))
@@ -556,7 +556,7 @@ def test_corrupt_receipt_sidecar_falls_back_to_the_full_pass(mini_repo: Path):
     # No phantom: the corrupt cache never surfaces as a GEN-JSON error
     # about itself, and the run rewrote a valid sidecar.
     assert not [i for i in recovered if i[1] == "GEN-JSON"]
-    assert json.loads(sidecar.read_text(encoding="utf-8"))["format"] == 1
+    assert json.loads(sidecar.read_text(encoding="utf-8"))["format"] == 2
 
 
 def test_receipt_sidecar_hash_settles_mtime_only_changes(
