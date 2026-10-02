@@ -226,3 +226,40 @@ def test_guard_derivation_intercepts_every_commit_path(mini_repo: Path,
         "transaction-*.yaml")) == receipts
     assert not (mini_repo / "work/inbox/direct-commit-probe.md").exists()
     assert transactions.TransactionService.commit is real_commit
+
+
+def test_seal_session_id_lands_in_the_approved_envelope(mini_repo: Path, tmp_path: Path):
+    """#110: `--session-id` seals the session and still commits first try."""
+    from repo_builders import add_curriculum
+
+    from learning_os.commands import support as command_support
+    from learning_os.contracts.gateway import intent_sha256
+
+    add_curriculum(mini_repo)
+    out = tmp_path / "sealed.json"
+    sealed = _seal(mini_repo, out, capability="capture.create",
+                   payload={"text": "sealed session capture"},
+                   key="seal-session-001", extra=["--session-id", "sealed-agent"])
+    assert sealed.returncode == 0, sealed.stderr
+    envelope = json.loads(out.read_text(encoding="utf-8"))
+    assert envelope["session_id"] == "sealed-agent"
+    assert envelope["approval"]["subject_sha256"] == intent_sha256(envelope)
+
+    submitted = _submit(mini_repo, out)
+    assert submitted.returncode == 0, submitted.stderr or submitted.stdout
+    captured = json.loads(submitted.stdout)["result"]["captured"]
+    recorded = command_support._load_session_paths(mini_repo, "sealed-agent")
+    assert captured in recorded
+
+
+def test_seal_blank_session_id_is_refused(mini_repo: Path, tmp_path: Path):
+    from repo_builders import add_curriculum
+
+    add_curriculum(mini_repo)
+    out = tmp_path / "sealed-blank.json"
+    sealed = _seal(mini_repo, out, capability="capture.create",
+                   payload={"text": "blank session capture"},
+                   key="seal-session-blank", extra=["--session-id", "   "])
+    assert sealed.returncode == 2
+    assert "must name a session" in sealed.stderr
+    assert not out.exists()

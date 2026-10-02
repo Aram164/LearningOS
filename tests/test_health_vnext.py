@@ -193,3 +193,79 @@ def test_health_report_still_validates_stale_and_corrupt(mini_repo, monkeypatch)
     proj2 = next(c for c in corrupt["checks"] if c["id"] == "projection-state")
     assert proj2["status"] == "error"
 
+
+def _plugin_pair(tmp_path, *, installed_main: str = "bundle-v2",
+                 installed_info: dict | None = None):
+    """A fake UI checkout beside a fake vault, sharing one parent."""
+    ui = tmp_path / "obsidian-ui"
+    built = ui / "plugin"
+    built.mkdir(parents=True)
+    (ui / "plugin-assets.json").write_text(json.dumps({
+        "schema_version": 1,
+        "type": "learningos-ui-plugin-assets",
+        "shipped": ["main.js", "styles.css", "manifest.json", "build-info.json"],
+        "vault_owned": ["data.json"],
+    }), encoding="utf-8")
+    (built / "main.js").write_text("bundle-v2", encoding="utf-8")
+    (built / "styles.css").write_text("css", encoding="utf-8")
+    (built / "manifest.json").write_text("{}", encoding="utf-8")
+    (built / "build-info.json").write_text(json.dumps({
+        "source_fingerprint": "fp-new", "source_revision": "rev-new",
+    }), encoding="utf-8")
+    vault = tmp_path / "repository"
+    installed = vault / ".obsidian" / "plugins" / "learningos-ui"
+    installed.mkdir(parents=True)
+    (installed / "main.js").write_text(installed_main, encoding="utf-8")
+    (installed / "styles.css").write_text("css", encoding="utf-8")
+    (installed / "manifest.json").write_text("{}", encoding="utf-8")
+    (installed / "build-info.json").write_text(json.dumps(
+        installed_info if installed_info is not None else {
+            "source_fingerprint": "fp-old", "source_revision": "rev-old",
+        }), encoding="utf-8")
+    return vault, ui, installed
+
+
+def test_plugin_check_flags_a_stale_installed_build(tmp_path):
+    """#110: a vault running an older bundle is a warning naming reinstall."""
+    vault, ui, _installed = _plugin_pair(tmp_path, installed_main="bundle-v1")
+    row = health._ui_plugin_check(vault, ui_root=ui)
+    assert row["id"] == "ui-plugin-current"
+    assert row["status"] == "warning"
+    assert "DIFFERENT BUILD" in row["summary"]
+    assert "reinstall the plugin" in row["summary"]
+    assert "install.py" in row["remedy"]
+    assert [entry["name"] for entry in row["details"]["differing"]] == [
+        "main.js", "build-info.json"]
+    assert row["details"]["built"]["source_fingerprint"] == "fp-new"
+    assert row["details"]["installed_build"]["source_fingerprint"] == "fp-old"
+
+
+def test_plugin_check_is_ok_when_the_vault_runs_this_build(tmp_path):
+    vault, ui, _installed = _plugin_pair(
+        tmp_path,
+        installed_info={"source_fingerprint": "fp-new", "source_revision": "rev-new"})
+    row = health._ui_plugin_check(vault, ui_root=ui)
+    assert row["status"] == "ok"
+    assert "4 shipped files match" in row["summary"]
+
+
+def test_plugin_check_is_unknown_without_an_install_or_a_checkout(tmp_path):
+    """Core alone is not stale: missing metadata answers unknown, never warning."""
+    vault, ui, _installed = _plugin_pair(tmp_path)
+    missing_install = tmp_path / "empty-vault"
+    missing_install.mkdir()
+    row = health._ui_plugin_check(missing_install, ui_root=ui)
+    assert row["status"] == "unknown"
+    assert "No plugin is installed" in row["summary"]
+
+    row = health._ui_plugin_check(vault, ui_root=tmp_path / "no-such-ui")
+    assert row["status"] == "unknown"
+    assert "unavailable" in row["summary"]
+
+
+def test_health_report_carries_the_plugin_check(mini_repo):
+    """The full report always carries `ui-plugin-current` (unknown here)."""
+    report = health.build_health_report(mini_repo)
+    row = next(c for c in report["checks"] if c["id"] == "ui-plugin-current")
+    assert row["status"] == "unknown"
+

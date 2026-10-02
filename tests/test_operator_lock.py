@@ -131,3 +131,192 @@ def test_crashed_holder_never_blocks_next_acquirer(mini_repo, tmp_path):
     with _operator_lock(mini_repo):
         pass
     assert time.monotonic() - start < 10
+
+
+def _git_init(root: Path) -> None:
+    for command in (["git", "init", "-q"],
+                    ["git", "config", "user.email", "tests@example.invalid"],
+                    ["git", "config", "user.name", "Tests"],
+                    ["git", "add", "."],
+                    ["git", "commit", "-qm", "fixture baseline"]):
+        subprocess.run(command, cwd=root, check=True)
+
+
+def _hold_shared_in_background(root: Path):
+    """Hold the repo's operator lock shared on a worker thread."""
+    from learning_os.commands.support import _operator_lock
+
+    release = threading.Event()
+    acquired = threading.Event()
+
+    def hold():
+        with _operator_lock(root, shared=True):
+            acquired.set()
+            release.wait(timeout=60)
+
+    worker = threading.Thread(target=hold, daemon=True)
+    worker.start()
+    assert acquired.wait(timeout=60), "worker never acquired the shared lock"
+    return release, worker
+
+
+def test_lock_lives_beside_the_checkout_not_the_tempdir(mini_repo):
+    """A git checkout anchors its lock under its own git dir (#110)."""
+    from learning_os.commands.support import _operator_lock, _operator_lock_path
+
+    _git_init(mini_repo)
+    with _operator_lock(mini_repo):
+        pass
+    assert _operator_lock_path(mini_repo) == (
+        mini_repo / ".git" / "learningos" / "operator.lock")
+
+
+def test_lock_without_git_dir_keeps_the_temp_location(mini_repo):
+    """Synthetic roots without a git dir keep today's temp-dir lock."""
+    import hashlib
+
+    from learning_os.commands.support import _operator_lock_path
+
+    token = hashlib.sha256(str(mini_repo.resolve()).encode("utf-8")).hexdigest()[:16]
+    assert _operator_lock_path(mini_repo) == (
+        Path(tempfile.gettempdir()) / f"learningos-{token}.lock")
+
+
+def test_reader_without_tmpdir_waits_and_names_the_holder(mini_repo):
+    """`env -u TMPDIR` no longer locks a different file than the holder."""
+    _git_init(mini_repo)
+    release, worker = _hold_in_background(mini_repo)
+    try:
+        env = {key: value for key, value in os.environ.items()
+               if key != "TMPDIR"}
+        start = time.monotonic()
+        proc = subprocess.run(
+            [sys.executable, str(LOS), "--root", str(mini_repo),
+             "--lock-timeout", "1", "unit-list", "--compact"],
+            capture_output=True, text=True, timeout=60, env=env)
+        elapsed = time.monotonic() - start
+    finally:
+        release.set()
+        worker.join(timeout=60)
+    assert proc.returncode == 2, proc.stderr
+    assert "waiting for the operator lock" in proc.stderr
+    assert f"pid {os.getpid()}" in proc.stderr
+    assert "timed out after 1s" in proc.stderr
+    assert elapsed >= 1.0, elapsed
+
+
+def test_reader_with_unrelated_tmpdir_waits_too(mini_repo, tmp_path):
+    """A foreign TMPDIR joins the same anchored lock, not a sibling file."""
+    other_tmp = tmp_path / "other-tmp"
+    other_tmp.mkdir()
+    _git_init(mini_repo)
+    release, worker = _hold_in_background(mini_repo)
+    try:
+        env = {**os.environ, "TMPDIR": str(other_tmp)}
+        proc = subprocess.run(
+            [sys.executable, str(LOS), "--root", str(mini_repo),
+             "--lock-timeout", "1", "unit-list", "--compact"],
+            capture_output=True, text=True, timeout=60, env=env)
+    finally:
+        release.set()
+        worker.join(timeout=60)
+    assert proc.returncode == 2, proc.stderr
+    assert "waiting for the operator lock" in proc.stderr
+    assert f"pid {os.getpid()}" in proc.stderr
+    assert list(other_tmp.iterdir()) == []
+
+
+def test_shared_readers_do_not_wait_for_each_other(mini_repo):
+    """Two concurrent current-manifest reads proceed together (#112)."""
+    published = run_los(mini_repo, "generate")
+    assert published.returncode == 0, published.stderr
+    release, worker = _hold_shared_in_background(mini_repo)
+    try:
+        proc = run_los(mini_repo, "unit-list", "--compact")
+    finally:
+        release.set()
+        worker.join(timeout=60)
+    assert proc.returncode == 0, proc.stderr
+    assert "waiting for the operator lock" not in proc.stderr
+    assert json.loads(proc.stdout)["contract"] == "unit-list-summary"
+
+
+def test_write_waits_for_a_shared_read(mini_repo, monkeypatch, capsys):
+    """A shared read still excludes writers; the waiter is announced."""
+    import pytest
+
+    from learning_os.commands.support import WriteRefused, _operator_lock
+
+    release, worker = _hold_shared_in_background(mini_repo)
+    monkeypatch.setenv("LOS_LOCK_TIMEOUT", "1")
+    try:
+        start = time.monotonic()
+        with pytest.raises(WriteRefused, match="timed out after 1s"):
+            with _operator_lock(mini_repo):
+                pass
+        elapsed = time.monotonic() - start
+    finally:
+        release.set()
+        worker.join(timeout=60)
+    # The writer waited for the background reader instead of proceeding.
+    assert elapsed >= 1.0, elapsed
+    assert "waiting for the operator lock" in capsys.readouterr().err
+
+
+def test_nested_exclusive_request_escalates_a_shared_section(mini_repo):
+    """A write nested inside a read section strengthens it, safely in-process."""
+    from learning_os.commands.support import _held_entry, _operator_lock
+
+    root_key = str(mini_repo.resolve())
+    with _operator_lock(mini_repo, shared=True):
+        assert _held_entry(root_key)[0] == "shared"
+        with _operator_lock(mini_repo):
+            assert _held_entry(root_key)[0] == "exclusive"
+        assert _held_entry(root_key)[0] == "exclusive"
+    assert _held_entry(root_key) is None
+
+
+def test_shared_section_escalates_past_a_published_journal(mini_repo, monkeypatch):
+    """A shared acquisition with a crash journal awaiting recovery goes exclusive."""
+    import pytest
+
+    from learning_os.commands import support as command_support
+    from learning_os.commands.support import (
+        _has_armed_inflight,
+        _held_entry,
+        _operator_lock,
+    )
+    from learning_os.transactions import TransactionRecoveryConflict
+
+    journal = mini_repo / "operations" / "transactions" / ".inflight" / "tx-crashed"
+    journal.mkdir(parents=True)
+    (journal / "intent.json").write_text('{"paths": []}', encoding="utf-8")
+    assert _has_armed_inflight(mini_repo) is True
+    # Recovery runs exactly as an exclusive acquisition would run it — the
+    # hand-made journal is unprovable, so both modes refuse identically.
+    with pytest.raises(TransactionRecoveryConflict):
+        with _operator_lock(mini_repo, shared=True):
+            pass
+    recovered = []
+    monkeypatch.setattr(command_support, "reconcile_inflight_transactions",
+                        lambda root: recovered.append(root))
+    root_key = str(mini_repo.resolve())
+    with _operator_lock(mini_repo, shared=True):
+        assert _held_entry(root_key)[0] == "exclusive"
+    assert recovered == [mini_repo]
+
+
+def test_staging_debris_alone_keeps_a_shared_section_shared(mini_repo):
+    """`.preparing-*` debris died before any mutation, so reads stay shared."""
+    from learning_os.commands.support import (
+        _has_armed_inflight,
+        _held_entry,
+        _operator_lock,
+    )
+
+    staging = mini_repo / "operations" / "transactions" / ".inflight" / ".preparing-tx"
+    staging.mkdir(parents=True)
+    assert _has_armed_inflight(mini_repo) is False
+    root_key = str(mini_repo.resolve())
+    with _operator_lock(mini_repo, shared=True):
+        assert _held_entry(root_key)[0] == "shared"

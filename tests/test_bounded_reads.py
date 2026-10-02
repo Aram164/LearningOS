@@ -422,6 +422,26 @@ def test_brief_startup_is_one_guarded_page_with_runnable_expands(mini_repo):
         f"plan-edit-context unit-demo-l02 --brief --expected-snapshot {snapshot}"]
 
 
+def test_brief_names_the_session_identity_in_effect(mini_repo, monkeypatch):
+    """#110: `bootstrap --brief` prints the session identity and its source."""
+    add_curriculum(mini_repo)
+    monkeypatch.delenv("LOS_SESSION_ID", raising=False)
+    brief = run_los(mini_repo, "bootstrap", "--brief")
+    assert brief.returncode == 0, brief.stderr
+    identity = json.loads(brief.stdout)["session_identity"]
+    assert identity["session_id"] == "channel:operator"
+    assert identity["source"] == "channel"
+    assert "LOS_SESSION_ID" in identity["how_to_set"]
+    assert "seal_envelope.py --session-id" in identity["how_to_set"]
+
+    monkeypatch.setenv("LOS_SESSION_ID", "brief-session")
+    named = run_los(mini_repo, "bootstrap", "--brief")
+    assert named.returncode == 0, named.stderr
+    identity = json.loads(named.stdout)["session_identity"]
+    assert identity["session_id"] == "brief-session"
+    assert identity["source"] == "environment"
+
+
 def test_brief_reports_a_missing_registration_as_a_missing_fact(mini_repo):
     """#90: the brief says 'registration not recorded', never 'unregistered'."""
     import datetime as _dt
