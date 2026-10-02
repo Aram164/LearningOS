@@ -39,6 +39,10 @@ roots:
       # loader reads archive/workspaces/*/*/CONTEXT.md on every load. Omitted
       # here until #30.
       - archive/workspaces
+      # Resolved inbox drops are the routing audit trail: each inbox.resolve
+      # receipt names its archived bytes, so a restore without them breaks
+      # the receipt-to-content linkage.
+      - archive/inbox
       - curriculum/quarantine/masters-planning/comparisons
       - curriculum/quarantine/masters-planning/promotions
     files:

@@ -224,6 +224,21 @@ never asserted by the caller — because the author is the ground truth
 about himself and the ledger carries a tested `--supersedes` correction
 path.
 
+Most stages have no requirement target yet: evidence intake is
+target-bound, and only a stage carrying a `runtime_target` block produces
+a requirement. For those stages `observe` refuses by naming the stage —
+never "unknown requirement", which is reserved for a mistyped id (with
+suggestions) — and points here. Record the result without credit through
+the untargeted ledger instead: seal a `learner.stage-result.append`
+envelope (§25c) with the workspace, unit, stage, activity, enumerated
+result, and optional assistance, conditions and note. The row lands in
+the workspace's `stage-results.jsonl`, shows in `resume` and
+`plan-edit-context --stage-id` labelled "no credit", and grants no
+ability or requirement credit. When a target is later authored for the
+stage — `unit-plan-revise UNIT --file REVISION.yaml --check` with a
+`runtime_target` stage patch, then the reviewed apply — those rows stay
+visible as context only; they are never retro-credited.
+
 **Conditions are claims, and an absent one is never a quiet yes.** A condition
 can be recorded three ways and they are three different facts:
 `--condition X` says X held, `--condition-not-met X` says X did not, and
@@ -567,6 +582,20 @@ Read the inbox through the product, never by catting files: `inbox-list`
 names every drop, `search` matches inbox filenames, and `inbox-read NAME`
 returns bounded segments of one drop (binary drops refuse — they have no
 text read).
+
+Routing is only half the loop: once a drop has reached its destination,
+resolve it through `inbox.resolve`, naming where it went. Seal the
+envelope (§25c) with the drop's SHA-256 — `inbox-read` reports it as
+`content_sha256` — and a non-empty `routed_to` list (note id, workspace
+path, source id, receipt id, …). The drop moves byte-identical to
+`archive/inbox/YYYY/`; a changed drop refuses, and the receipt names both
+endpoints plus `routed_to`. A drop folder resolves whole, or file by
+file; `inbox-list` reports each file's age, and `INBOX-STALE` flags each
+file recursively by its own age.
+
+Agent friction notes are not inbox drops: they live directly in
+`work/complaints/` (see its README), so the inbox stays for learner
+captures.
 
 ## 22. End a session
 

@@ -413,6 +413,12 @@ current conversation, append it to that stage's working note through
 destination and receipt. The capture does not imply progress or mastery and
 does not move the resume pointer.
 
+Agent friction — an agent's own observation about navigating or changing
+LearningOS — is not a learner capture: record it directly in
+`work/complaints/` (see its README), never in the inbox. A routed inbox
+drop leaves through `inbox.resolve`, naming where it went (WORKFLOWS
+§21); the inbox trends toward empty.
+
 Read the applicable platform adapter, then the task-relevant sections of
 `system/ARCHITECTURE.md`, `system/WORKFLOWS.md`, and the schemas/contracts they
 reference before acting. Consult `system/PHILOSOPHY.md` for unresolved intent.

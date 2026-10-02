@@ -193,10 +193,12 @@ repository/
 │   └── curriculum-v2/     the module-first conversion — map, report and originals
 ├── work/                  the coordination layer and its queues
 │   ├── inbox/             the drop-anything home; the operator routes what lands here
+│   ├── complaints/        tracked agent friction notes; the inbox stays for learner captures
 │   ├── active/            one folder per active workspace, each with a CONTEXT.md
 │   └── proposals/         approved proposals and their phase records; nothing here authorizes itself
-├── archive/               completed workspaces, retained and never deleted
-│   └── workspaces/        one folder per year
+├── archive/               completed workspaces and resolved inbox drops, retained and never deleted
+│   ├── workspaces/        one folder per year
+│   └── inbox/             resolved inbox drops, one folder per year
 ├── generated/             gitignored, rebuildable; shape declared by manifest-contract.yaml
 ├── bases/                 installed Obsidian Bases shelves (ADR-006); gitignored
 ├── tools/                 the operator CLI and the learning_os package; see tools/README.md
@@ -239,6 +241,8 @@ definitions once; ordinary state saves preserve that storage form.
 | Legacy module snapshot | `records/modules.yaml` | compatibility/migration only |
 | Coordination facts | `work/COORDINATION.md` | fixed |
 | Quick capture (anything, unprocessed) | `work/inbox/` | any name; the operator routes |
+| Agent friction notes | `work/complaints/` | dated Markdown, one file per issue; never in the inbox |
+| Resolved inbox drops | `archive/inbox/<year>/` | moved byte-identical via `inbox.resolve`, never overwritten |
 | Workspace operational files | `work/active/<workspace-id>/{CONTEXT.md, scratch/, inputs/, outputs/}` | scratch is free-form |
 | Archived workspace | `archive/workspaces/<year>/<workspace-id>/` | moved whole, unchanged |
 | External material with a registered source | `LearningOS/materials/<area>/…/<slug>/` (topic tree) | `material://<source-id>/…` resolves via `materials/.flat/source-<id>` symlinks |
@@ -252,7 +256,7 @@ definitions once; ordinary state saves preserve that storage form.
 2. **Buckets are the seven listed** (decision 2026-07-16: `algorithms/` added for CS-theory content — CLRS-style material fits neither mathematics nor programming). A new bucket requires an ADR; buckets are routing neighborhoods, never taxonomy.
 3. **Attachments are canonical user artifacts**, not materials: handwritten scans and photos live *inside* the authored repository under `knowledge/attachments/<note-id>/`, are Git-tracked, and are referenced from the owning note's `attachments` frontmatter as repo-relative paths. Books, slide packs, and videos are never attachments — they are materials. The user may periodically prune old scans to reclaim space once transcriptions are reviewed; the operator never deletes originals on its own initiative.
 4. **Materials are identified by source, placed by topic** (amended 2026-07-17, user decision). Every registered source with local files owns exactly one folder, physically located in the human topic tree (`ML/`, `Math/`, `CS-Theory/`, `Books/` shared library, `Programming/`, `Degree/`). Identity remains id-based: `materials/.flat/` carries one `source-<id>` symlink per source folder so every `material://<source-id>/…` URI resolves unchanged; registry records never encode physical positions. The tree, `.flat/`, and per-module `SOURCES.md` lists are maintained solely by `tools/build_materials_tree.py` (PLACEMENT map = single source of truth; moving a folder = edit map, re-run). Unregistered dumps land in `materials/_unsorted/` until registered.
-5. **`work/inbox/` is the zero-friction capture point.** Photos of handwritten pages, pasted links, fragments — no naming, no metadata required at capture time. Routing inbox items into workspaces, notes, or registries is the operator's job; the inbox should trend toward empty.
+5. **`work/inbox/` is the zero-friction capture point.** Photos of handwritten pages, pasted links, fragments — no naming, no metadata required at capture time. Routing inbox items into workspaces, notes, or registries is the operator's job; a routed drop then leaves through `inbox.resolve`, naming where it went, so the inbox trends toward empty.
 6. **Only Markdown and YAML belong under `knowledge/`** (plus images under `attachments/`). Binary files elsewhere in the authored tree are validator warnings.
 
 ---

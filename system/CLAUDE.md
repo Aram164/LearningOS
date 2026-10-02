@@ -84,7 +84,8 @@ Claude may perform the following without separate approval:
 - create missing target directories;
 - generate stable IDs according to the schema (no gratuitous suffixes);
 - create new workspace scaffolding;
-- route `work/inbox/` captures to the appropriate workspace, note, or registry (filing is deterministic per ARCHITECTURE §3.3 — the user never makes filing decisions);
+- route `work/inbox/` captures to the appropriate workspace, note, or registry (filing is deterministic per ARCHITECTURE §3.3 — the user never makes filing decisions), then resolve the routed drop through `inbox.resolve` naming where it went (WORKFLOWS §21);
+- record agent friction encountered while navigating or changing LearningOS directly in `work/complaints/` (see its README) — never in the inbox, which stays for learner captures;
 - assign the default note role (`synthesis`) or the obvious role for new artifacts;
 - normalize filenames while preserving IDs;
 - add or correct clearly mechanical metadata;
