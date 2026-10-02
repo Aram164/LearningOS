@@ -84,6 +84,10 @@ def cmd_status(args) -> int:
     inbox = root / "work" / "inbox"
     n_inbox = len([f for f in inbox.iterdir()
                    if not f.name.startswith(".")]) if inbox.is_dir() else 0
+    # The recursive file count agrees with `inbox-list` by construction:
+    # it is the same discovery rows `inbox-list` prints. `inbox_items`
+    # keeps its top-level meaning, so a folder drop still counts 1 there.
+    n_inbox_files = len(_inbox_search_rows(root))
     active = repo.active_workspaces()
     ad = adoption_counts(repo)
     spine = [
@@ -109,6 +113,7 @@ def cmd_status(args) -> int:
             "standing_workspaces": sum(1 for w in active if w.standing),
             "archived_workspaces": len(repo.archived_workspaces()),
             "inbox_items": n_inbox,
+            "inbox_files": n_inbox_files,
             "garden_notes": len(repo.garden_notes),
             "units": len(repo.units),
             "study_maps": len(repo.study_maps),
@@ -143,7 +148,8 @@ def cmd_status(args) -> int:
           f"workspaces {c['active_workspaces']} active "
           f"({c['standing_workspaces']} standing), "
           f"{c['archived_workspaces']} archived")
-    print(f"  inbox {c['inbox_items']} · garden {c['garden_notes']} · "
+    print(f"  inbox {c['inbox_items']} top-level · {c['inbox_files']} files · "
+          f"garden {c['garden_notes']} · "
           f"reviewed {ad['notes_reviewed']}/{c['notes']} · "
           f"evidence {ad['notes_with_evidence']}/{c['notes']}")
     if spine:

@@ -28,6 +28,7 @@ def test_status_json_shape_and_counts(mini_repo):
     assert c["sources"] == 1
     assert c["active_workspaces"] == 1
     assert c["inbox_items"] == 0
+    assert c["inbox_files"] == 0
     # the fixture registers a 2. Termin attempt — it must be on the spine
     assert payload["exam_spine"][0]["date"] == "2026-10-09"
     assert payload["exam_spine"][0]["termin"] == 2
@@ -39,6 +40,27 @@ def test_status_human_output_mentions_validation(mini_repo):
     assert proc.returncode == 0, proc.stderr
     assert "validation:" in proc.stdout
     assert "notes 1" in proc.stdout
+
+
+def test_status_counts_a_folder_drop_once_and_its_files_recursively(mini_repo):
+    # #114 item 2: `inbox_items` keeps its top-level meaning while
+    # `inbox_files` agrees with `inbox-list` by construction.
+    drop = mini_repo / "work/inbox/drop-001"
+    drop.mkdir(parents=True)
+    for name in ("a.md", "b.md", "c.md"):
+        (drop / name).write_text("capture\n", encoding="utf-8")
+    (mini_repo / "work/inbox/top.md").write_text("capture\n", encoding="utf-8")
+    proc = run_los(mini_repo, "status", "--json")
+    assert proc.returncode == 0, proc.stderr
+    counts = json.loads(proc.stdout)["counts"]
+    assert counts["inbox_items"] == 2
+    assert counts["inbox_files"] == 4
+    listed = run_los(mini_repo, "inbox-list")
+    assert listed.returncode == 0, listed.stderr
+    assert len(json.loads(listed.stdout)) == counts["inbox_files"]
+    human = run_los(mini_repo, "status")
+    assert human.returncode == 0, human.stderr
+    assert "inbox 2 top-level · 4 files" in human.stdout
 
 
 def test_status_exits_1_on_validation_errors_but_still_reports(mini_repo):
