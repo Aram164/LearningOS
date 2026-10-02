@@ -306,7 +306,7 @@ def test_plugin_check_never_approves_an_undeclared_build_file(tmp_path):
 
 
 @pytest.mark.parametrize("change", [
-    {"schema_version": 2}, {"type": "other"}, {"unknown": True},
+    {"schema_version": 2}, {"schema_version": True}, {"type": "other"}, {"unknown": True},
     {"shipped": ["../outside"]}, {"shipped": ["main.js", "main.js"]},
     {"vault_owned": ["main.js"]}, {"vault_owned": [{"invalid": "entry"}]},
 ])

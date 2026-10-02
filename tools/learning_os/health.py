@@ -196,6 +196,7 @@ def _ui_plugin_check(root: Path, *, ui_root: Path | None = None,
         manifest = json.loads((ui / "plugin-assets.json").read_text(encoding="utf-8"))
         if (not isinstance(manifest, dict)
                 or set(manifest) != {"schema_version", "type", "shipped", "vault_owned"}
+                or type(manifest["schema_version"]) is not int
                 or manifest["schema_version"] != 1
                 or manifest["type"] != "learningos-ui-plugin-assets"):
             raise ValueError("plugin-assets.json has an unsupported shape or version")
