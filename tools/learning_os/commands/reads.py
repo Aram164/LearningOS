@@ -27,6 +27,7 @@ from learning_os.materials_resolution import (
     material_uri_authority,
     safe_material_locator,
 )
+from learning_os.pathing import PathBoundaryError, read_bytes_inside
 from learning_os.search.index import NoteBlob, build_registry
 from learning_os.search.model import POSTINGS_NODE_ID
 from learning_os.search.query import candidates
@@ -79,6 +80,41 @@ def record_payload(manifest, record_id):
     if resolved_id != record_id:
         payload["resolved_from"] = record_id
     return payload
+
+
+def coordination_digest_fields(root: Path, sections) -> dict | None:
+    """Whole-file plus per-section digests for the coordination record.
+
+    The whole-file digest is the ``expected_content_sha256`` a
+    coordination.section.revise apply must present; each per-section
+    digest covers the projected section body exactly as served. Returns
+    None when the file is absent or unreadable, so inspect degrades to
+    the undigested record instead of refusing a read.
+    """
+    try:
+        raw = read_bytes_inside(root, root / "work/COORDINATION.md")
+    except (OSError, PathBoundaryError):
+        return None
+    fields: dict = {
+        "content_sha256": "sha256:" + hashlib.sha256(raw).hexdigest(),
+    }
+    if isinstance(sections, dict):
+        fields["section_sha256"] = {
+            str(heading): "sha256:" + hashlib.sha256(
+                str(body).encode("utf-8")).hexdigest()
+            for heading, body in sections.items()
+        }
+    return fields
+
+
+def with_coordination_digests(root: Path, payload: dict) -> dict:
+    """Attach coordination digests to an inspect payload, when it is one."""
+    if not isinstance(payload, dict) or payload.get("type") != "coordination":
+        return payload
+    fields = coordination_digest_fields(root, payload.get("sections"))
+    if fields is None:
+        return payload
+    return {**payload, **fields}
 
 
 def _structure_nodes(structure):
@@ -248,6 +284,8 @@ def inspect_batch(args) -> int:
                 record = record_payload(manifest, record_id)
                 if record is None:
                     record = structural_payload(manifest, record_id, repo)
+                if record is not None:
+                    record = with_coordination_digests(root, record)
                 if record is None:
                     # The hint stays out of the refusal: _refusal classifies
                     # the exit code by message text, and a referrer id that

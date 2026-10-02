@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import re
 import sys
 
 from learning_os.fingerprint import canonical_fingerprint
@@ -21,6 +22,11 @@ from .support import (
     _root,
     _write_transaction,
 )
+
+#: A digest-shaped value that was never a real file hash: all zeros.
+_PLACEHOLDER_DIGEST = "sha256:" + "0" * 64
+
+_DIGEST_RE = re.compile(r"sha256:[a-f0-9]{64}")
 
 
 def cmd_coordination_section_revise(args) -> int:
@@ -42,9 +48,29 @@ def cmd_coordination_section_revise(args) -> int:
             print(f"los: cannot read coordination safely: {exc}", file=sys.stderr)
             return 2
         digest = "sha256:" + hashlib.sha256(original).hexdigest()
-        if digest != args.expected_content_sha256:
-            print("los: reviewed coordination content changed before use", file=sys.stderr)
-            return 3
+        supplied = args.expected_content_sha256
+        if supplied is None and not args.check:
+            print("los: coordination.section.revise apply requires "
+                  "--expected-content-sha256: the current content digest is "
+                  f"{digest} (read it with `inspect coordination`)",
+                  file=sys.stderr)
+            return 2
+        if supplied is not None:
+            if not _DIGEST_RE.fullmatch(supplied):
+                print(f"los: malformed content digest {supplied!r}; the current "
+                      f"content digest is {digest} "
+                      "(read it with `inspect coordination`)", file=sys.stderr)
+                return 2
+            if supplied != digest:
+                if supplied == _PLACEHOLDER_DIGEST:
+                    print(f"los: placeholder content digest {supplied}; the current "
+                          f"content digest is {digest} "
+                          "(read it with `inspect coordination`)", file=sys.stderr)
+                    return 2
+                print("los: reviewed coordination content changed before use: "
+                      f"supplied {supplied}, current is {digest}; re-read with "
+                      "`inspect coordination`", file=sys.stderr)
+                return 3
         if not args.text.strip():
             print("los: coordination section text must not be blank", file=sys.stderr)
             return 2

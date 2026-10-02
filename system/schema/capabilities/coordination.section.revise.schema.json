@@ -6,7 +6,6 @@
   "type": "object",
   "additionalProperties": false,
   "required": [
-    "expected_content_sha256",
     "section",
     "text"
   ],
@@ -15,8 +14,7 @@
       "type": "boolean"
     },
     "expected_content_sha256": {
-      "type": "string",
-      "pattern": "^sha256:[a-f0-9]{64}$"
+      "type": "string"
     },
     "section": {
       "type": "string",

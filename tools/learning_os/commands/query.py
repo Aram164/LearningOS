@@ -32,6 +32,7 @@ from .reads import (
     record_payload,
     related_records,
     structural_payload,
+    with_coordination_digests,
 )
 from .suggest import expansion, suggest
 from .support import (
@@ -427,17 +428,20 @@ def cmd_inbox_list(args) -> int:
 def cmd_inspect(args) -> int:
     if getattr(args, "more_ids", None):
         return inspect_batch(args)
-    manifest, repo = _fresh_manifest_and_repo(_root(args))
-    payload = record_payload(manifest, args.id)
-    if payload is None:
-        payload = structural_payload(manifest, args.id, repo)
-    if payload is None:
-        print(f"los: {inspect_not_found(args.id, _inspect_candidates(manifest, repo))}",
-              file=sys.stderr)
-        hint = describe_unresolved_reference(manifest, args.id)
-        if hint:
-            print(f"los: hint: {hint}", file=sys.stderr)
-        return 2
+    root = _root(args)
+    with _operator_lock(root):
+        manifest, repo = _fresh_manifest_and_repo(root)
+        payload = record_payload(manifest, args.id)
+        if payload is None:
+            payload = structural_payload(manifest, args.id, repo)
+        if payload is None:
+            print(f"los: {inspect_not_found(args.id, _inspect_candidates(manifest, repo))}",
+                  file=sys.stderr)
+            hint = describe_unresolved_reference(manifest, args.id)
+            if hint:
+                print(f"los: hint: {hint}", file=sys.stderr)
+            return 2
+        payload = with_coordination_digests(root, payload)
     print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 

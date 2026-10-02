@@ -1193,7 +1193,12 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("coordination-section-revise", help="check or revise one reviewed coordination section")
     p.add_argument("section", choices=("Commitments", "Priorities", "Dependencies", "Deferrals"))
     p.add_argument("--text", required=True, help="reviewed section text, carried inline")
-    p.add_argument("--expected-content-sha256", required=True, type=sha256_value)
+    # No type=sha256_value here: a malformed digest must reach the
+    # handler, which refuses naming the real one, instead of dying in
+    # argparse without it.
+    p.add_argument("--expected-content-sha256", default=None,
+                   help="SHA-256 of work/COORDINATION.md from `inspect coordination` "
+                        "(content_sha256); required to apply, omit with --check to preview")
     p.add_argument("--check", action="store_true", help="show the section diff without writing")
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
