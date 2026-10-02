@@ -174,7 +174,7 @@ def _expected_ok(root: Path, expected: str | None) -> bool:
               "application is disabled — reloading will not change this. The "
               "supplied snapshot is also out of date. Submit the write with "
               "`los capability NAME --payload-file ENVELOPE.json` "
-              "(envelope: WORKFLOWS §25a step 4).", file=sys.stderr)
+              "(envelope: WORKFLOWS §25c).", file=sys.stderr)
         print(json.dumps({"expected": expected, "actual": actual}), file=sys.stderr)
         return False
     print("los: projection conflict — authored files changed since the app loaded; "
@@ -417,7 +417,7 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
             "canonical writes must use GatewayEnvelopeV2; direct CLI application "
             f"is disabled — apply it with `los capability {capability} "
             f"--payload-file ENVELOPE.json` (payload schema: `los capabilities "
-            f"{capability} --json`; envelope: WORKFLOWS §25a step 4)"
+            f"{capability} --json`; envelope: WORKFLOWS §25c)"
         ], {}
     service = TransactionService(root)
     delete_paths = tuple(Path(path) for path in deletes)

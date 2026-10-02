@@ -13,6 +13,7 @@ import sys
 from pathlib import Path
 
 import pytest
+from gateway_helpers import approved_v2_envelope
 
 from learning_os.commands.capability import _dispatch, _validate_capability_envelope
 from learning_os.commands.support import WriteRefused
@@ -60,37 +61,61 @@ def test_schemas_never_accept_the_envelope_concurrency_tokens(repo_root: Path):
         assert "expected_revision" not in properties, path.name
 
 
-def _run_capability(repo_root: Path, tmp_path: Path, envelope: dict):
+def _run_capability(repo_root: Path, tmp_path: Path, *, capability: str,
+                  payload: dict, key: str):
+    """Submit one envelope through the real CLI against the real catalog."""
+    envelope = approved_v2_envelope(
+        repo_root, capability=capability, payload=payload, artifact_ids=[],
+        idempotency_key=key)
     payload_file = tmp_path / "envelope.json"
     payload_file.write_text(json.dumps(envelope), encoding="utf-8")
     return subprocess.run(
         [sys.executable, str(repo_root / "tools/los.py"), "capability",
-         envelope["capability"], "--payload-file", str(payload_file)],
+         capability, "--payload-file", str(payload_file)],
         cwd=repo_root, text=True, capture_output=True,
     )
 
 
 def test_a_malformed_payload_is_refused_before_any_write(repo_root: Path, tmp_path: Path):
-    result = _run_capability(repo_root, tmp_path, {
-        "request_id": "req-bad-payload",
-        "capability": "stage.note.write",
-        "payload": {"unit_id": "unit-x"},          # stage_id missing
-    })
+    result = _run_capability(repo_root, tmp_path,
+                             capability="stage.note.write",
+                             payload={"unit_id": "unit-x"},  # stage_id missing
+                             key="dispatch-bad-payload-001")
     assert result.returncode != 0
     body = json.loads(result.stdout)
     assert body["ok"] is False
-    assert "invalid payload" in body["error"]
+    assert "invalid payload" in body["error"]["message"]
     assert body["transaction_id"] is None, "a refused payload must not report a receipt"
 
 
 def test_an_undeclared_field_is_refused(repo_root: Path, tmp_path: Path):
-    result = _run_capability(repo_root, tmp_path, {
-        "request_id": "req-extra-field",
-        "capability": "stage.note.write",
-        "payload": {"unit_id": "u", "stage_id": "s", "not_a_real_field": "x"},
-    })
+    result = _run_capability(repo_root, tmp_path,
+                             capability="stage.note.write",
+                             payload={"unit_id": "u", "stage_id": "s",
+                                      "not_a_real_field": "x"},
+                             key="dispatch-extra-field-001")
     assert result.returncode != 0
-    assert "invalid payload" in json.loads(result.stdout)["error"]
+    assert "invalid payload" in json.loads(result.stdout)["error"]["message"]
+
+
+def test_a_request_without_schema_version_is_refused_before_dispatch(
+        repo_root: Path, tmp_path: Path):
+    """An envelope without `schema_version: 2` never reaches the handler."""
+    payload_file = tmp_path / "envelope.json"
+    payload_file.write_text(json.dumps({
+        "request_id": "req-no-version",
+        "capability": "stage.note.write",
+        "payload": {"unit_id": "u", "stage_id": "s", "text": "x"},
+    }), encoding="utf-8")
+    result = subprocess.run(
+        [sys.executable, str(repo_root / "tools/los.py"), "capability",
+         "stage.note.write", "--payload-file", str(payload_file)],
+        cwd=repo_root, text=True, capture_output=True,
+    )
+    assert result.returncode == 2
+    assert result.stdout == "", "a refused envelope must print no response"
+    assert ("invalid capability envelope: schema_version 2 required "
+            "(WORKFLOWS §25c)") in result.stderr
 
 
 def test_a_result_envelope_cannot_be_dispatched_as_a_request(repo_root: Path):
@@ -138,9 +163,8 @@ def test_every_capability_dispatches_rather_than_refusing(repo_root: Path, tmp_p
     This is the round-trip assertion: whatever the outcome, the reason must not
     be that the gateway has no route for the capability.
     """
-    result = _run_capability(repo_root, tmp_path, {
-        "request_id": f"req-{name}", "capability": name, "payload": {},
-    })
+    result = _run_capability(repo_root, tmp_path, capability=name, payload={},
+                             key=f"dispatch-empty-{name}")
     combined = result.stdout + result.stderr
     assert "not yet defined" not in combined, f"{name} is still a facade"
     assert "declares no CLI command" not in combined, f"{name} has no route"
@@ -172,32 +196,26 @@ def test_project_payload_shape_is_declared(repo_root: Path, name: str):
 
 
 def test_project_create_without_a_record_source_is_refused(repo_root: Path, tmp_path: Path):
-    result = _run_capability(repo_root, tmp_path, {
-        "request_id": "req-project-no-source",
-        "capability": "project.create",
-        "payload": {},
-    })
+    result = _run_capability(repo_root, tmp_path, capability="project.create",
+                             payload={}, key="dispatch-project-no-source-001")
     assert result.returncode != 0
-    assert "invalid payload" in json.loads(result.stdout)["error"]
+    assert "invalid payload" in json.loads(result.stdout)["error"]["message"]
 
 
 def test_project_create_rejects_an_undeclared_field(repo_root: Path, tmp_path: Path):
     """The regression proper: payload validation must not be skipped here."""
-    result = _run_capability(repo_root, tmp_path, {
-        "request_id": "req-project-extra-field",
-        "capability": "project.create",
-        "payload": {"project": {"id": "project-x", "type": "project"},
-                    "not_a_real_field": "x"},
-    })
+    result = _run_capability(repo_root, tmp_path, capability="project.create",
+                             payload={"project": {"id": "project-x", "type": "project"},
+                                      "not_a_real_field": "x"},
+                             key="dispatch-project-extra-field-001")
     assert result.returncode != 0
-    assert "invalid payload" in json.loads(result.stdout)["error"]
+    assert "invalid payload" in json.loads(result.stdout)["error"]["message"]
 
 
 def test_project_create_refuses_both_record_sources_at_once(repo_root: Path, tmp_path: Path):
-    result = _run_capability(repo_root, tmp_path, {
-        "request_id": "req-project-two-sources",
-        "capability": "project.create",
-        "payload": {"file": "somewhere.yaml", "project": {"id": "project-x", "type": "project"}},
-    })
+    result = _run_capability(repo_root, tmp_path, capability="project.create",
+                             payload={"file": "somewhere.yaml",
+                                      "project": {"id": "project-x", "type": "project"}},
+                             key="dispatch-project-two-sources-001")
     assert result.returncode != 0
-    assert "invalid payload" in json.loads(result.stdout)["error"]
+    assert "invalid payload" in json.loads(result.stdout)["error"]["message"]

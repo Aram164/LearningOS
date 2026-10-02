@@ -13,7 +13,7 @@ Agents start here (system/OPERATOR.md):
 (megabytes): a bulk read, never a session start.
 
 Every canonical write is a capability applied as a GatewayEnvelopeV2 through
-`capability NAME --payload-file ENVELOPE.json` (WORKFLOWS §25a). Run bare, a
+`capability NAME --payload-file ENVELOPE.json` (WORKFLOWS §25c). Run bare, a
 named write command only preflights (`--check`) or refuses. `validate` and
 `generate` delegate to tools/validate.py and tools/generate.py, so there is
 exactly one implementation of every rule.

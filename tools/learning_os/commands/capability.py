@@ -428,6 +428,15 @@ def reviewed_envelope_apply(*, root: Path, capability_name: str, payload: dict,
 
 
 def _validate_capability_envelope(root: Path, envelope: dict, *, kind: str) -> None:
+    if kind == "request" and envelope.get("schema_version") != 2:
+        # Before dispatch, and before the schema's oneOf can misread the
+        # shape: an envelope without `schema_version: 2` used to travel all
+        # the way to the handler, which answered with a circular pointer.
+        # The general sealing recipe is WORKFLOWS §25c.
+        raise WriteRefused(
+            "invalid capability envelope: schema_version 2 required "
+            "(WORKFLOWS §25c)"
+        )
     schema = json.loads((root / "system/schema/capability-envelope.schema.json").read_text(encoding="utf-8"))
     try:
         schema["$defs"][kind]
