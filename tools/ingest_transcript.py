@@ -77,8 +77,8 @@ SKIP_LINE = ("WEBVTT", "Kind:", "Language:")
 
 #: Where a source's folder belongs when it does not have one yet. ADR-007: the
 #: tree is the subject taxonomy, and placement is presentation only — move an
-#: entry and re-run `tools/build_materials_tree.py`, which stays the single
-#: builder of `.flat/`.
+#: entry and re-run `tools/build_materials_tree.py --apply`, which stays the
+#: single builder of `.flat/`.
 PLACEMENT_HINT = {
     "fiset-graph-theory": "algorithms/structures",
     "kit-algorithmen2": "algorithms/structures",
@@ -446,7 +446,8 @@ def main() -> int:
     print(f"\n{total} transcript(s) {'converted' if args.dry_run else 'written'}")
     if new_folders:
         print("\nNew source folders were created. Add these to PLACEMENT in "
-              "tools/build_materials_tree.py, then run it so `.flat/` links them:")
+              "tools/build_materials_tree.py, then run it with --apply "
+              "so `.flat/` links them:")
         for slug in sorted(new_folders):
             print(f'    "{slug}": "{PLACEMENT_HINT[slug]}",')
     if total and not args.dry_run:

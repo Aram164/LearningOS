@@ -47,7 +47,22 @@ keep working. No third-party deps beyond PyYAML (already a repo dependency).
 """
 from __future__ import annotations
 
-from materials_index import main  # noqa: E402
+import argparse
+
+from materials_index import cli  # noqa: E402
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    parser.add_argument(
+        "--html", action="store_true",
+        help="also emit the retired INDEX.html browser surface "
+             "(default: README.md + FILES.txt only)")
+    args = parser.parse_args(argv)
+    cli.main(html=args.html)
+    return 0
+
 
 if __name__ == "__main__":
     raise SystemExit(main())

@@ -132,7 +132,7 @@ class ChecksMaterials:
             self.err("MATERIAL-MISSING",
                      f"'material://{uri}' does not resolve to a file in the "
                      "materials tree (a missing file, or a stale .flat/ symlink "
-                     "— rebuild with `python tools/build_materials_tree.py`)",
+                     "— rebuild with `python tools/build_materials_tree.py --apply`)",
                      "records/materials-manifest.yaml")
         if len(unresolvable) > _MAX_LISTED:
             self.err("MATERIAL-MISSING",

@@ -27,7 +27,10 @@ from .tree import (
 )
 
 
-def main():
+def main(html: bool | None = None):
+    """Build the catalogue. ``html`` overrides the ``--html`` argv sniff."""
+    if html is None:
+        html = HTML_ENABLED
     if not MATERIALS.is_dir():
         raise SystemExit(f"materials not found at {MATERIALS}")
     sources = load_sources()
@@ -116,7 +119,7 @@ def main():
             .replace("⟪VIEWFILES⟫", view_files)
             .replace("⟪LEAVES⟫", leaves_json))
 
-    if HTML_ENABLED:
+    if html:
         (MATERIALS / "INDEX.html").write_text(page, encoding="utf-8")
         print(f"  wrote materials/INDEX.html  ({len(page)//1024} KB)")
     else:

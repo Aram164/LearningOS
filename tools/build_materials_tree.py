@@ -26,8 +26,12 @@ The script is idempotent:
      shared Books/other sources belong to this module (Aram's "external
      source list in the module subfolder").
 
-Usage:  python3 tools/build_materials_tree.py   (from LearningOS/repository/)
+Usage:  python3 tools/build_materials_tree.py [--apply]   (from LearningOS/repository/)
+
+The bare command prints the plan and changes nothing: the materials tree has
+no git history, so moves happen only with an explicit --apply.
 """
+import argparse
 import os
 import shutil
 import sys
@@ -194,15 +198,15 @@ PLACEMENT = {
 MODULE_REFS: dict[str, list[str]] = {}
 
 
-def _titles() -> dict:
+def _titles(repo: Path) -> dict:
     """source id -> title, from the registry (best effort)."""
     try:
         import yaml
     except ImportError:
         return {}
     out = {}
-    files = [REPO / "sources" / "sources.yaml"]
-    files += sorted((REPO / "sources" / "registry").glob("*.yaml"))
+    files = [repo / "sources" / "sources.yaml"]
+    files += sorted((repo / "sources" / "registry").glob("*.yaml"))
     for f in files:
         if not f.exists():
             continue
@@ -212,32 +216,82 @@ def _titles() -> dict:
     return out
 
 
-def find_current(slug: str):
+def find_current(slug: str, materials: Path):
     """Locate the source folder: mapped spot, materials root (flat), or scan."""
-    mapped = MATERIALS / PLACEMENT[slug] / slug
+    mapped = materials / PLACEMENT[slug] / slug
     if mapped.is_dir() and not mapped.is_symlink():
         return mapped
-    for cand in (MATERIALS / f"source-{slug}", MATERIALS / slug):
+    for cand in (materials / f"source-{slug}", materials / slug):
         if cand.is_dir() and not cand.is_symlink():
             return cand
-    for p in MATERIALS.rglob(slug):
+    for p in materials.rglob(slug):
         if p.is_dir() and not p.is_symlink() and ".flat" not in p.parts:
             return p
     return None
 
 
-def main() -> int:
-    missing = []
-    # 1 — place folders
+def _stray_roots(materials: Path) -> list[str]:
+    return sorted(p.name for p in materials.iterdir()
+                  if p.is_dir() and p.name.startswith("source-"))
+
+
+def _print_plan(materials: Path, moves: list, missing: list[str]) -> None:
+    """The --apply preview. Read-only: no mkdir, move, link, or write."""
+    print(f"plan for {materials} (dry run — pass --apply to act):")
+    if moves:
+        print(f"  moves ({len(moves)}):")
+        for _slug, cur, target in sorted(moves):
+            print(f"    {cur.relative_to(materials)} -> "
+                  f"{target.relative_to(materials)}")
+    else:
+        print("  moves (0)")
+    moved_slugs = {slug for slug, _, _ in moves}
+    link_count = sum(
+        1 for slug, parent in PLACEMENT.items()
+        if slug not in missing
+        and ((materials / parent / slug).is_dir() or slug in moved_slugs))
+    flat = materials / ".flat"
+    have = len(list(flat.iterdir())) if flat.is_dir() else 0
+    print(f"  .flat links: {link_count} wanted ({have} present)")
+    folders: dict[str, list[str]] = {}
     for slug, parent in PLACEMENT.items():
-        target = MATERIALS / parent / slug
-        cur = find_current(slug)
+        folders.setdefault(parent, []).append(slug)
+    rewrites = 0
+    for parent, slugs in sorted(folders.items()):
+        fdir = materials / parent
+        present = [s for s in sorted(slugs)
+                   if (fdir / s).is_dir() or s in moved_slugs]
+        if fdir.is_dir() or any(s in moved_slugs for s in slugs):
+            if present:
+                rewrites += 1
+    print(f"  SOURCES.md files to (re)write: {rewrites}")
+    for s in missing:
+        print(f"  WARN no folder found for: {s}")
+    for s in _stray_roots(materials):
+        print(f"  WARN unmapped stray at root: {s}")
+
+
+def _run(materials: Path, *, apply: bool) -> int:
+    if not materials.is_dir():
+        print(f"materials tree not found: {materials}", file=sys.stderr)
+        return 1
+    moves = []
+    missing = []
+    for slug, parent in PLACEMENT.items():
+        target = materials / parent / slug
+        cur = find_current(slug, materials)
         if cur is None:
             missing.append(slug)
             continue
         if cur != target:
-            target.parent.mkdir(parents=True, exist_ok=True)
-            shutil.move(str(cur), str(target))
+            moves.append((slug, cur, target))
+    if not apply:
+        _print_plan(materials, moves, missing)
+        return 0
+    # 1 — place folders
+    for _slug, cur, target in moves:
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.move(str(cur), str(target))
     # 2 — rebuild .flat compat layer
     #
     # Refresh in place rather than rmtree-then-recreate. materials/ is routinely
@@ -246,11 +300,11 @@ def main() -> int:
     # that into a crash *after* step 1 has already moved folders, leaving the
     # tree re-homed but every material:// URI dangling. os.replace over an
     # existing symlink is atomic and needs no delete permission.
-    flat = MATERIALS / ".flat"
+    flat = materials / ".flat"
     flat.mkdir(exist_ok=True)
     wanted = set()
     for slug, parent in PLACEMENT.items():
-        target = MATERIALS / parent / slug
+        target = materials / parent / slug
         if not target.is_dir():
             continue
         link = flat / f"source-{slug}"
@@ -273,12 +327,12 @@ def main() -> int:
     # printed "shared library that lives elsewhere" per MODULE_REFS — a
     # module-shaped list that ADR-007 moved into projections; that half is gone,
     # this half is not.
-    titles = _titles()
+    titles = _titles(REPO)
     folders: dict[str, list[str]] = {}
     for slug, parent in PLACEMENT.items():
         folders.setdefault(parent, []).append(slug)
     for parent, slugs in sorted(folders.items()):
-        fdir = MATERIALS / parent
+        fdir = materials / parent
         if not fdir.is_dir():
             continue
         present = [s for s in sorted(slugs) if (fdir / s).is_dir()]
@@ -294,15 +348,26 @@ def main() -> int:
             lines.append(f"- `{slug}/`" + (f" — {title}" if title else ""))
         (fdir / "SOURCES.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
     # 4 — report
-    stray = [p.name for p in MATERIALS.iterdir()
-             if p.is_dir() and p.name.startswith("source-")]
     print(f"placed: {len(PLACEMENT) - len(missing)}/{len(PLACEMENT)}; "
           f"flat links: {len(list(flat.iterdir()))}")
     for s in missing:
         print(f"  WARN no folder found for: {s}")
-    for s in stray:
+    for s in _stray_roots(materials):
         print(f"  WARN unmapped stray at root: {s}")
     return 0
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
+    parser.add_argument(
+        "--apply", action="store_true",
+        help="perform the moves and rewrites; without it, print the plan "
+             "and change nothing")
+    parser.add_argument(
+        "--materials-root", type=Path, default=MATERIALS,
+        help="materials tree to maintain (default: the sibling materials/ tree)")
+    args = parser.parse_args(argv)
+    return _run(args.materials_root, apply=args.apply)
 
 
 if __name__ == "__main__":

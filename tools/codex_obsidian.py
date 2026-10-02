@@ -10,6 +10,7 @@ destinations. The old broad markers remain exported but fail closed.
 
 from __future__ import annotations
 
+import argparse
 import os
 import re
 import shutil
@@ -157,8 +158,14 @@ def outside_scope(paths: set[str], prefixes: tuple[str, ...]) -> set[str]:
             and not any(path.startswith(prefix) for prefix in prefixes)}
 
 
-def main() -> int:
-    if len(sys.argv) != 2 or not sys.argv[1].strip():
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "prompt", nargs="?",
+        help="the prompt to send to the Codex CLI "
+             "(pass after -- when it starts with a dash)")
+    args = parser.parse_args(argv)
+    if args.prompt is None or not args.prompt.strip():
         print("learningos-codex: expected one prompt argument", file=sys.stderr)
         return 2
     binary = codex_binary()
@@ -166,7 +173,7 @@ def main() -> int:
         print("learningos-codex: Codex CLI not found", file=sys.stderr)
         return 2
 
-    prompt = sys.argv[1]
+    prompt = args.prompt
     capability = parse_capability(prompt)
     approved_write = capability is not None
     prefixes = allowed_prefixes(capability) if capability else ()

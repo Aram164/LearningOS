@@ -98,7 +98,7 @@ def main() -> int:
 
     prefixes = source_prefixes()
     if not prefixes:
-        print(f"no {FLAT} symlink farm — run tools/build_materials_tree.py first",
+        print(f"no {FLAT} symlink farm — run tools/build_materials_tree.py --apply first",
               file=sys.stderr)
         return 2
 

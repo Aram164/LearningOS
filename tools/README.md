@@ -27,14 +27,14 @@ runtime coverage; the exact roots and historical allowlist live in
 | `tree_contract.py` | supported contract tool | Renders ARCHITECTURE §3.2 from the tree contract; `--check` is what `make check` compares. |
 | `manifest_contract.py` | supported contract tool | Published-manifest contract check and deliberate bump entrypoint. |
 | `contract_bundle.py` | prototype contract tool | Side-by-side manifest contract bundler (Point-3 prototype); build/check only, never a canonical writer. |
-| `generate_capability_schemas.py` | supported maintenance | Rebuilds capability payload schemas after an approved CLI contract change. |
+| `generate_capability_schemas.py` | supported maintenance | Rebuilds capability payload schemas after an approved CLI contract change (`--check` compares instead of writing). |
 | `release_pair_receipt.py` | supported release tool | Produces or verifies exact Core/UI release evidence. |
 | `verified_pairs.py` | supported release tool | Advisory memo of pairs `make system-check` verified; the pre-push hook skips the full gate for an exact stamped pair. |
 | `stress_check.py` | supported deep gate | Explicit, expensive local stress checks; not a routine edit gate. |
 | `codex_obsidian.py` | compatibility/security adapter | Fail-closed wrapper retained for the existing Agentic Copilot boundary. |
 | `assemble_lecture_study_maps.py` | bounded authoring tool | Builds review drafts from already-authored maps; never a general canonical writer. |
 | `build_materials_index.py` | bounded materials maintenance | Builds plain-text material catalogues; its HTML surface is retired unless explicitly requested. |
-| `build_materials_tree.py` | bounded materials maintenance | Maintains the physical topic tree and `.flat` compatibility links. |
+| `build_materials_tree.py` | bounded materials maintenance | Maintains the physical topic tree and `.flat` compatibility links. Dry-run plan by default; acts only with `--apply`. |
 | `material_text.py` | bounded authoring tool | Digest-keyed page-text cache for local materials; read cached pages instead of re-extracting. |
 | `material_toc.py` | bounded authoring tool | Reads local material structure while authoring or checking exact locators. |
 | `material_summarize.py` | bounded authoring tool | Admits reviewed chapter summaries; `--read --material PATH --pages START-END` returns one reusable summary with live source checks, explicit hit/missing/stale/refused status, and content integrity — serving a durable analysis note first when one binds the exact source and range. |
@@ -53,6 +53,16 @@ runtime coverage; the exact roots and historical allowlist live in
 The `materials_index/` package is private implementation for
 `build_materials_index.py`.  The `learning_os/` package structure and allowed
 dependency direction are documented in `learning_os/README.md`.
+
+## Entrypoint contract
+
+Every `tools/*.py` entrypoint parses arguments with `argparse` as its first
+act: `--help` prints usage and exits 0, an unknown flag exits 2, both before
+any write. The materials tree builder additionally defaults to a dry-run
+plan and acts only with an explicit `--apply`, because the materials tree
+has no git history to review a write against.
+`tests/test_tool_entrypoint_contract.py` runs every entrypoint with `--help`
+in a scratch copy and asserts exit 0 and no file changed.
 
 ## Migration status
 

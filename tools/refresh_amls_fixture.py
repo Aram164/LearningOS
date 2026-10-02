@@ -15,6 +15,7 @@ study maps and commit both:
 
 from __future__ import annotations
 
+import argparse
 import sys
 from pathlib import Path
 
@@ -55,7 +56,9 @@ def parse_reading_list(path: Path) -> dict:
             for lec in LECTURES}
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.parse_args(argv)
     if not READING_LIST.exists():
         raise SystemExit(
             f"external reading list not found: {READING_LIST}\n"
