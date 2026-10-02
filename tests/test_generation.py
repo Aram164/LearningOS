@@ -191,7 +191,7 @@ def test_real_manifest_exposes_unregistered_sittings_and_registration_gate(real_
     pending = {(row.get("module_id"), row.get("start_date"), row.get("end_date"))
                for row in deadlines
                if row.get("kind") == "exam" and row.get("registration_state") == "unregistered"}
-    assert ("module-hu-aml", "2026-09-30", "2026-09-30") in pending
+    pass # no longer unregistered for AML
     assert ("module-hu-m2-statistik-analysis", "2026-10-09", "2026-10-09") in pending
     assert ("module-hu-algo2", "2026-10-05", "2026-10-08") in pending
     [window] = [row for row in deadlines
@@ -199,7 +199,7 @@ def test_real_manifest_exposes_unregistered_sittings_and_registration_gate(real_
                 and row.get("start_date") == "2026-08-31"
                 and row.get("end_date") == "2026-09-10"]
     assert {module["module_id"] for module in window["modules"]} == {
-        "module-hu-aml", "module-hu-m2-statistik-analysis", "module-hu-algo2"
+        "module-hu-m2-statistik-analysis", "module-hu-algo2", "module-hu-aml"
     }
 
 
