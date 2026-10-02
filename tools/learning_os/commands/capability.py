@@ -38,13 +38,15 @@ from learning_os.transactions import (
 
 from .support import (
     WriteRefused,
-    _atomic_text,
     _load_session_paths,
     _operator_lock,
     _read_structured_file,
     _root,
+    _row_proven_state,
     _session_ledger,
     _session_path_state,
+    _stamp_session_row,
+    _write_session_ledger,
 )
 
 _CONTENT_BOUND_V2 = frozenset({
@@ -844,7 +846,7 @@ def _repair_replayed_session_ownership(root: Path,
         # the one thing that must not happen is adopting their current bytes.
 
     for relative, state in authored.items():
-        if _session_path_state(root, relative) != state:
+        if _session_path_state(root, relative) != _row_proven_state(state):
             raise _ReplayRecoveryError(
                 "cannot repair session ownership: "
                 f"{relative} changed since its recorded transaction"
@@ -852,11 +854,23 @@ def _repair_replayed_session_ownership(root: Path,
 
     merged = dict(existing)
     merged.update(authored)
+    # The repaired rows are stamped, not bare: a receipt-derived row takes
+    # its provenance from the receipt's own recorded channel, with the claim
+    # time set to this repair — that is when this session took ownership of
+    # the recovered write. Rows that already carry a stamp (carried-forward
+    # aggregate claims) keep it.
+    request = receipt.get("request") if isinstance(receipt, dict) else None
+    actor = request.get("channel") if isinstance(request, dict) else None
+    if not isinstance(actor, str) or not actor:
+        actor = "unknown"
+    for relative, state in merged.items():
+        if state.get("channel") and state.get("recorded_at"):
+            continue
+        state["channel"] = actor
+        state["recorded_at"] = _stamp_session_row(
+            root, relative, actor)["recorded_at"]
     try:
-        _atomic_text(_session_ledger(root), json.dumps({
-            "schema_version": 1,
-            "paths": dict(sorted(merged.items())),
-        }, indent=2, sort_keys=True) + "\n")
+        _write_session_ledger(root, merged)
     except WriteRefused as exc:
         raise _ReplayRecoveryError(
             f"cannot repair replayed session ownership: {exc}"

@@ -1200,6 +1200,12 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("session-end", help="validate, show exact session-owned files, optionally commit/push")
     p.add_argument("--commit-message", default=None)
     p.add_argument("--push", action="store_true")
+    p.add_argument("--session-id", default=None,
+                   help="close this session id (default: LOS_SESSION_ID, else this channel's ledger)")
+    p.add_argument("--channel", default=None,
+                   help="channel ledger to close when no session id is named (default: operator)")
+    p.add_argument("--include-stale", action="store_true",
+                   help="also stage this session's rows older than the stale threshold")
     p.set_defaults(func=cmd_session_end)
 
     p = sub.add_parser("path-note", help="save or append working notes for one path stage")

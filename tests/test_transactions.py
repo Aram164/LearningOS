@@ -443,7 +443,11 @@ def test_session_ledger_excludes_every_canvas_filename(mini_repo: Path):
         command_support._session_ledger(mini_repo).read_text(encoding="utf-8")
     )
     assert "Untitled 37.canvas" not in recorded["paths"]
-    assert recorded["paths"]["work/inbox/kept.md"] == {"state": "absent"}
+    row = recorded["paths"]["work/inbox/kept.md"]
+    assert row["state"] == "absent"
+    assert row["channel"] == "operator"
+    assert row["recorded_at"]
+    assert recorded["session_id"] == "channel:operator"
 
 
 def test_failed_transaction_restores_canonical_state(tmp_path: Path):

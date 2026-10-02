@@ -266,8 +266,10 @@ def test_session_ownership_state_detects_post_transaction_edits(mini_repo: Path)
     recorded = command_support._load_session_paths(mini_repo)
     assert command_support._session_path_state(
         mini_repo, "work/inbox/session-note.md"
-    ) == recorded["work/inbox/session-note.md"]
+    ) == command_support._row_proven_state(
+        recorded["work/inbox/session-note.md"])
     target.write_text("edited elsewhere\n", encoding="utf-8")
     assert command_support._session_path_state(
         mini_repo, "work/inbox/session-note.md"
-    ) != recorded["work/inbox/session-note.md"]
+    ) != command_support._row_proven_state(
+        recorded["work/inbox/session-note.md"])

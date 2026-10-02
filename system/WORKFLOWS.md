@@ -615,6 +615,17 @@ ledger lives in temporary storage only long enough to guarantee exact staging.
 If a commit or push fails, report it immediately and keep unrelated changes
 isolated.
 
+Every gateway transaction records its session: the ledger is keyed per
+session, and `session-end` lists and commits only its own rows. Name the
+session by exporting `LOS_SESSION_ID` once per agent session before any
+write — every `los` call in that session then shares one ledger, and the
+closing `session-end` (same variable) claims exactly it. Sessions that name
+nothing still separate by channel: UI writes (`channel: ui`) never enter an
+agent session's ledger, and vice versa. Rows from other sessions are
+reported under `other_sessions` with their age and are never staged; rows
+older than 24 hours are reported as stale and need `--include-stale` to
+stage. A review-only close deletes only its own session's ledger.
+
 ## 23. Process a lecture
 
 The unit is the module-owned study object between module and stage. For

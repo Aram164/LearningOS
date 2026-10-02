@@ -23,6 +23,19 @@ from learning_os.transactions import (
 )
 
 
+@pytest.fixture(autouse=True)
+def _named_test_session(monkeypatch):
+    """One named session for the whole module.
+
+    The envelopes here seal `channel: ui` while the in-process ledger reads
+    resolve outside any gateway request; without a named session the two
+    sides would land in different per-session ledgers. The variable is
+    inherited by every `los` subprocess these tests spawn, so writers and
+    readers agree exactly as one agent session's shell would.
+    """
+    monkeypatch.setenv("LOS_SESSION_ID", "test-gateway-v2")
+
+
 def _envelope(root: Path, *, text: str = "bounded capture",
               key: str = "capture-v2-001") -> dict:
     envelope = {
