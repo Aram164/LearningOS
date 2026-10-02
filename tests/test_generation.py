@@ -196,6 +196,17 @@ def test_real_repo_generates_and_selector_views_present(real_generated):
     assert "## Neglect signals (Git)" in coord
 
 
+def test_coordination_view_names_module_files_not_frozen_snapshot(mini_repo):
+    # #114 item 7: the exam spine comes from each module's module.yaml.
+    from learning_os.genout.coordination import build_coordination_view
+
+    view = build_coordination_view(load_repo(mini_repo), "test")
+    header = next(line for line in view.splitlines()
+                  if line.startswith("*Assembled from:"))
+    assert "each module's module.yaml" in header
+    assert "records/modules.yaml" not in header
+
+
 def _t2_state(module, day, end):
     """The state the projector derives for a second-termin sitting.
 

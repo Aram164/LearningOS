@@ -327,7 +327,12 @@ def test_exam_date_duplication_in_coordination_is_error(mini_repo):
     f.write_text(f.read_text().replace(
         "- Demo module deferred to 2. Termin (date lives in records/modules.yaml)",
         "- Demo module deferred to 2. Termin on 2026-10-09"))
-    assert "COORD-EXAM-DATE" in codes(run(mini_repo), "E")
+    errors = [i for i in run(mini_repo) if i.code == "COORD-EXAM-DATE"]
+    assert errors
+    # #114 item 7: the owner is each module's module.yaml, not the
+    # frozen records/modules.yaml snapshot.
+    assert "each module's module.yaml" in errors[0].message
+    assert "records/modules.yaml" not in errors[0].message
 
 
 def test_generated_reference_in_canonical_file_is_error(mini_repo):

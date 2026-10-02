@@ -46,9 +46,9 @@ def build_coordination_view(
     repo: Repo, generated_at: str, git_table: dict[str, str] | None = None
 ) -> str:
     lines = _md_header("Coordination view", generated_at)
-    lines.append("*Assembled from: the exam spine in records/modules.yaml, workspace "
-                 "frontmatter, the facts in work/COORDINATION.md, and Git-derived "
-                 "neglect signals. Disposable — rebuild anytime.*")
+    lines.append("*Assembled from: the exam spine in each module's module.yaml, "
+                 "workspace frontmatter, the facts in work/COORDINATION.md, "
+                 "and Git-derived neglect signals. Disposable — rebuild anytime.*")
     lines.append("")
 
     lines.append("## Exam spine")

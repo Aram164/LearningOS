@@ -174,8 +174,9 @@ class ChecksRegistries:
             for date in ISO_DATE_RE.findall(body):
                 if date in attempt_dates:
                     self.err("COORD-EXAM-DATE",
-                             f"COORDINATION.md contains ISO date {date} equal to a modules.yaml "
-                             "attempt date (exam dates are owned by records/modules.yaml)",
+                             f"COORDINATION.md contains ISO date {date} equal to an attempt date "
+                             "in a module's module.yaml (exam dates are owned by each "
+                             "module's module.yaml)",
                              "work/COORDINATION.md")
             if re.search(r"^\s*status\s*:", body, re.MULTILINE | re.IGNORECASE):
                 self.err("COORD-STATUS",
