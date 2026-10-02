@@ -3,11 +3,11 @@
 
 Agents start here (system/OPERATOR.md):
 
-    python tools/los.py capabilities --compact --json  # what exists
-    python tools/los.py bootstrap --brief              # session entry, one page
-    python tools/los.py capabilities NAME --json       # one capability + payload schema
-    python tools/los.py inspect ID [ID ...]            # records, one fresh projection
-    python tools/los.py status                         # one-screen repository state
+    .venv/bin/python tools/los.py capabilities --compact --json  # what exists
+    .venv/bin/python tools/los.py bootstrap --brief              # session entry, one page
+    .venv/bin/python tools/los.py capabilities NAME --json       # one capability + payload schema
+    .venv/bin/python tools/los.py inspect ID [ID ...]            # records, one fresh projection
+    .venv/bin/python tools/los.py status                         # one-screen repository state
 
 `bootstrap` without --brief/--compact prints the complete projection
 (megabytes): a bulk read, never a session start.

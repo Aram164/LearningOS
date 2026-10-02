@@ -5,7 +5,6 @@ from __future__ import annotations
 import hashlib
 import json
 import re
-import shlex
 import sys
 from pathlib import Path, PurePosixPath
 
@@ -32,7 +31,7 @@ from learning_os.search.index import NoteBlob, build_registry
 from learning_os.search.model import POSTINGS_NODE_ID
 from learning_os.search.query import candidates
 
-from .suggest import not_found, with_suggestions
+from .suggest import expansion, not_found, with_suggestions
 from .support import (
     WriteRefused,
     _fresh_manifest,
@@ -439,21 +438,32 @@ def brief_bootstrap(args) -> int:
                 "deadline_count": len(deadlines),
                 "domain_atlas": _domain_glance(manifest),
                 "expand": {
-                    "full_compact": "bootstrap --compact",
-                    "continuation": "bootstrap --compact --offset NEXT_OFFSET --expected-snapshot SNAPSHOT",
-                    "resume": "resume --json",
-                    "inspect": "inspect ID",
-                    "coordination": "inspect coordination",
-                    "intelligence_scan": "intelligence-scan --brief --json",
-                    "note_read": "note-read NOTE_ID",
-                    "inbox_list": "inbox-list",
-                    "inbox_read": "inbox-read NAME",
-                    "content_search": "search QUERY --type note --content",
-                    "material_context": "material-context QUERY",
-                    "ability_context": "ability-context",
-                    "material_span": "material-span UNIT_ID ROUTE_ID",
-                    "capability_detail": "capabilities NAME --json",
-                    "plan_brief": [f"plan-edit-context {unit_id} --brief"
+                    "full_compact": expansion(
+                        "bootstrap", "--compact",
+                        "--expected-snapshot", snapshot),
+                    "continuation": expansion(
+                        "bootstrap", "--compact", "--offset", "NEXT_OFFSET",
+                        "--expected-snapshot", "SNAPSHOT"),
+                    "resume": expansion("resume", "--json"),
+                    "inspect": expansion("inspect", "ID"),
+                    "coordination": expansion("inspect", "coordination"),
+                    "intelligence_scan": expansion(
+                        "intelligence-scan", "--brief", "--json"),
+                    "note_read": expansion("note-read", "NOTE_ID"),
+                    "inbox_list": expansion("inbox-list"),
+                    "inbox_read": expansion("inbox-read", "NAME"),
+                    "content_search": expansion(
+                        "search", "QUERY", "--type", "note", "--content"),
+                    "material_context": expansion("material-context", "QUERY"),
+                    "ability_context": expansion(
+                        "ability-context", "--expected-snapshot", snapshot),
+                    "material_span": expansion(
+                        "material-span", "UNIT_ID", "ROUTE_ID"),
+                    "capability_detail": expansion(
+                        "capabilities", "NAME", "--json"),
+                    "plan_brief": [expansion(
+                        "plan-edit-context", unit_id, "--brief",
+                        "--expected-snapshot", snapshot)
                                    for unit_id in owed],
                 },
             })
@@ -1327,7 +1337,7 @@ def _anchor_expansion_command(args, limit, snapshot, observed) -> str:
               "--offset", str(args.offset),
               "--expected-snapshot", snapshot,
               "--expected-observations", observed]
-    return shlex.join(parts)
+    return expansion(*parts)
 
 
 def _analysis_note_item(root, note, *, raw_terms, terms, concept_id, purpose,

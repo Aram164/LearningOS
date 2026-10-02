@@ -67,6 +67,12 @@ complete definition with `capabilities NAME --json`; command details include
 the declared payload schema. The complete catalogue remains available through
 `capabilities --json` when the task needs it.
 
+Responses print follow-up reads as bare argument strings with no program
+prefix. Run one as `.venv/bin/python tools/los.py <expansion>` (or
+`.venv/bin/los <expansion>`); ALL-CAPS words are placeholders to fill from
+the response. A printed `--expected-snapshot` pins the follow-up to the same
+records — when it reports a conflict, re-read the parent first.
+
 Pick one entry read; do not stack them:
 
 - A named route → `plan-edit-context UNIT_ID --route-id ROUTE_ID`

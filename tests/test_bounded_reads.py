@@ -392,7 +392,9 @@ def test_brief_startup_is_one_guarded_page_with_runnable_expands(mini_repo):
     assert again.returncode == 0, again.stderr
     owed = json.loads(again.stdout)
     assert owed["owed_study_maps"] == ["unit-demo-l02"]
-    assert owed["expand"]["plan_brief"] == ["plan-edit-context unit-demo-l02 --brief"]
+    snapshot = owed["snapshot_id"]
+    assert owed["expand"]["plan_brief"] == [
+        f"plan-edit-context unit-demo-l02 --brief --expected-snapshot {snapshot}"]
 
 
 def test_brief_startup_refuses_paging_and_mixed_modes(mini_repo):

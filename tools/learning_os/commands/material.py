@@ -31,7 +31,7 @@ from .reads import (
     _snapshot,
     _unit_note_scope,
 )
-from .suggest import with_suggestions
+from .suggest import expansion, with_suggestions
 from .support import (
     WriteRefused,
     _dump_yaml,
@@ -317,7 +317,7 @@ def _unit_audit(root, repo, unit) -> dict:
     }
 
 
-def _brief_analysis_refs(root, repo, unit, routes, *, include_related=False) -> dict:
+def _brief_analysis_refs(root, repo, unit, routes, snapshot, *, include_related=False) -> dict:
     """Reusable analysis references for one unit's routes: ids, never bodies.
 
     The same durable records material-context searches — analysis notes
@@ -368,8 +368,9 @@ def _brief_analysis_refs(root, repo, unit, routes, *, include_related=False) -> 
         by_resolution[ref["resolution"]] = by_resolution.get(ref["resolution"], 0) + 1
     out = {"analysis_notes": refs,
            "related_count": len(related),
-           "related_expand": (f"los plan-edit-context {unit.id} "
-                              "--brief --include-related"),
+           "related_expand": expansion(
+               "plan-edit-context", unit.id, "--brief", "--include-related",
+               "--expected-snapshot", snapshot),
            "approved_assessment_routes": sorted(assessed),
            "stale_assessment_routes": sorted(stale),
            "analysis_by_resolution": by_resolution}
@@ -395,8 +396,9 @@ def _brief_payload(root, repo, unit, routes, study_map, artifacts, snapshot,
     stage_rows = [s for s in stages if isinstance(s, dict)]
     stage_ids = sorted(s["id"] for s in stage_rows if s.get("id"))
     batches = [
-        f"los plan-edit-context {unit.id} --route-ids "
-        + " ".join(route_ids[i:i + MAX_BATCH_ROUTES])
+        expansion("plan-edit-context", unit.id, "--route-ids",
+                  *route_ids[i:i + MAX_BATCH_ROUTES],
+                  "--expected-snapshot", snapshot)
         for i in range(0, len(route_ids), MAX_BATCH_ROUTES)]
     audit = _unit_audit(root, repo, unit)
     neighbors = audit["adjacent_unit_source_reuse"]
@@ -420,7 +422,8 @@ def _brief_payload(root, repo, unit, routes, study_map, artifacts, snapshot,
         },
         "unit_audit": brief_audit,
         "analysis_refs": _brief_analysis_refs(
-            root, repo, unit, routes, include_related=include_related),
+            root, repo, unit, routes, snapshot,
+            include_related=include_related),
         "required_inputs": {
             "route_patch": {
                 "route_id": (f"one of the {len(route_ids)} inventoried route ids"),
@@ -443,27 +446,41 @@ def _brief_payload(root, repo, unit, routes, study_map, artifacts, snapshot,
         },
         "preflight": [
             {"operation": "route-patch",
-             "check": f"los route-patch {unit.id} ROUTE_ID --changes JSON --check"},
+             "check": expansion(
+                 "route-patch", unit.id, "ROUTE_ID",
+                 "--changes", "JSON", "--check")},
             {"operation": "unit-plan-revise",
-             "check": f"los unit-plan-revise {unit.id} --file REVISION.yaml --check"},
+             "check": expansion(
+                 "unit-plan-revise", unit.id, "--file", "REVISION.yaml",
+                 "--check")},
             {"operation": "unit-map-import",
-             "check": f"los unit-map-import {unit.id} --file MAP.yaml --check"},
+             "check": expansion(
+                 "unit-map-import", unit.id, "--file", "MAP.yaml", "--check")},
             {"operation": "module-plan-import",
-             "check": f"los module-plan-import {unit.module_id} --file PLAN.yaml --check"},
+             "check": expansion(
+                 "module-plan-import", unit.module_id, "--file", "PLAN.yaml",
+                 "--check")},
             {"operation": "verify",
              "check": (".venv/bin/python tools/verify_plan_receipt.py "
                        f"--report REPORT.json --unit {unit.id}")},
         ],
         "expand": {
-            "full": f"los plan-edit-context {unit.id}",
-            "full_audit": f"los plan-edit-context {unit.id} --audit",
-            "adjacent_unit_source_reuse": (
-                f"los plan-edit-context {unit.id} --brief --include-neighbors "
-                f"--expected-snapshot {snapshot}"),
+            "full": expansion(
+                "plan-edit-context", unit.id, "--expected-snapshot", snapshot),
+            "full_audit": expansion(
+                "plan-edit-context", unit.id, "--audit",
+                "--expected-snapshot", snapshot),
+            "adjacent_unit_source_reuse": expansion(
+                "plan-edit-context", unit.id, "--brief", "--include-neighbors",
+                "--expected-snapshot", snapshot),
             "route_batches": batches,
-            "stages": {sid: f"los plan-edit-context {unit.id} --stage-id {sid}"
+            "stages": {sid: expansion(
+                "plan-edit-context", unit.id, "--stage-id", sid,
+                "--expected-snapshot", snapshot)
                        for sid in stage_ids},
-            "analysis_search": f"los material-context QUERY --unit {unit.id}",
+            "analysis_search": expansion(
+                "material-context", "QUERY", "--unit", unit.id,
+                "--expected-snapshot", snapshot),
         },
     }
 

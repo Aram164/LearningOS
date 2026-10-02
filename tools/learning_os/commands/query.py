@@ -4,7 +4,6 @@ and the thin delegations to validate.py / generate.py."""
 from __future__ import annotations
 
 import json
-import shlex
 import sys
 from pathlib import Path
 
@@ -33,7 +32,7 @@ from .reads import (
     related_records,
     structural_payload,
 )
-from .suggest import suggest
+from .suggest import expansion, suggest
 from .support import (
     WriteRefused,
     _delegate,
@@ -332,7 +331,7 @@ def _metadata_next_command(args, limit: int, next_offset: int, snapshot: str) ->
         parts += ["--type", args.type]
     parts += ["--page", "--limit", str(limit), "--offset", str(next_offset),
               "--expected-snapshot", snapshot]
-    return shlex.join(parts)
+    return expansion(*parts)
 
 
 def _metadata_search_page(args) -> int:

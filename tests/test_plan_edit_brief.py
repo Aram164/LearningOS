@@ -127,23 +127,23 @@ def test_brief_expand_commands_run_as_printed(mini_repo):
     expand = payload["expand"]
     commands = [expand["full"], expand["full_audit"],
                 *expand["route_batches"], *expand["stages"].values()]
+    snapshot = payload["snapshot_id"]
     assert expand["route_batches"] == [
-        "los plan-edit-context unit-demo-l01 --route-ids route-demo-density"]
+        f"plan-edit-context unit-demo-l01 --route-ids route-demo-density "
+        f"--expected-snapshot {snapshot}"]
     for command in commands:
-        argv = shlex.split(command)
-        assert argv.pop(0) == "los"
-        proc = run_los(mini_repo, *argv)
+        assert not command.startswith("los ")
+        assert f"--expected-snapshot {snapshot}" in command
+        proc = run_los(mini_repo, *shlex.split(command))
         assert proc.returncode == 0, f"{command}: {proc.stderr}"
     search = expand["analysis_search"].replace("QUERY", "density")
-    argv = shlex.split(search)
-    assert argv.pop(0) == "los"
-    proc = run_los(mini_repo, *argv)
+    assert not search.startswith("los ")
+    proc = run_los(mini_repo, *shlex.split(search))
     assert proc.returncode == 0, proc.stderr
     assert json.loads(proc.stdout)["items"]
     hint = payload["analysis_refs"]["related_expand"]
-    argv = shlex.split(hint)
-    assert argv.pop(0) == "los"
-    proc = run_los(mini_repo, *argv)
+    assert not hint.startswith("los ")
+    proc = run_los(mini_repo, *shlex.split(hint))
     assert proc.returncode == 0, proc.stderr
 
 
@@ -178,8 +178,9 @@ def test_brief_lists_direct_refs_with_related_count_and_hint(mini_repo):
         "note-brief-density"]
     assert refs["analysis_notes"][0]["scope"] == "direct"
     assert refs["related_count"] == 1
-    assert refs["related_expand"] == (
-        "los plan-edit-context unit-demo-l01 --brief --include-related")
+    assert refs["related_expand"].startswith(
+        "plan-edit-context unit-demo-l01 --brief --include-related "
+        "--expected-snapshot sha256:")
     assert "related_notes" not in refs
     widened = _brief(mini_repo, "--include-related")["analysis_refs"]
     assert [ref["note_id"] for ref in widened["related_notes"]] == [
@@ -232,7 +233,7 @@ def _second_unit(root: Path):
 
 def _run_expansion(root: Path, command: str):
     argv = shlex.split(command)
-    assert argv.pop(0) == "los"
+    assert not command.startswith("los ")
     return run_los(root, *argv)
 
 
@@ -303,13 +304,22 @@ def test_brief_neighbor_growth_stays_in_the_count(mini_repo):
     assert duo_audit.pop("adjacent_unit_source_reuse_count") == 1
     assert solo_audit.pop("adjacent_unit_source_reuse_count") == 0
     assert duo_audit == solo_audit
-    solo_expand = dict(solo["expand"])
-    duo_expand = dict(duo["expand"])
+    # Expansions pin their own snapshot, which the second unit moves;
+    # compare shapes with the token normalized away.
+    solo_expand = json.loads(json.dumps(solo["expand"]).replace(
+        solo["snapshot_id"], "SNAPSHOT"))
+    duo_expand = json.loads(json.dumps(duo["expand"]).replace(
+        duo["snapshot_id"], "SNAPSHOT"))
     solo_expand.pop("adjacent_unit_source_reuse")
     duo_expand.pop("adjacent_unit_source_reuse")
     assert duo_expand == solo_expand
+    solo_refs = json.loads(json.dumps(solo["analysis_refs"]).replace(
+        solo["snapshot_id"], "SNAPSHOT"))
+    duo_refs = json.loads(json.dumps(duo["analysis_refs"]).replace(
+        duo["snapshot_id"], "SNAPSHOT"))
+    assert duo_refs == solo_refs
     for key in ("contract", "unit_id", "module_id", "artifact_revisions",
-                "inventory", "analysis_refs", "required_inputs", "preflight"):
+                "inventory", "required_inputs", "preflight"):
         assert duo[key] == solo[key], key
     assert len(duo_proc.stdout) - len(solo_proc.stdout) < 200
 

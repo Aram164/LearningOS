@@ -14,7 +14,7 @@ from ..materials_resolution import (
 )
 from .material import _brief_analysis_refs, _map_for_unit, _route_entry
 from .reads import _print_stable, _refusal, _snapshot
-from .suggest import MAX_SUGGESTIONS, suggest, with_suggestions
+from .suggest import MAX_SUGGESTIONS, expansion, suggest, with_suggestions
 from .support import WriteRefused, _operator_lock, _root
 
 MAX_EXCERPT = 6000
@@ -104,12 +104,14 @@ def cmd_material_span(args) -> int:
                     "Restore the registered local file, run make inventory, "
                     f"then rerun material-span {unit.id} {route['id']}{placement_flags} --extract."
                 )
-            analysis = _brief_analysis_refs(root, repo, unit, [route])
+            analysis = _brief_analysis_refs(root, repo, unit, [route], snapshot)
             notes = analysis["analysis_notes"]
             analysis["analysis_notes_total"] = len(notes)
             analysis["analysis_notes_truncated"] = len(notes) > 20
             analysis["analysis_notes"] = notes[:20]
-            analysis["expand"] = f"plan-edit-context {unit.id} --route-id {route['id']}"
+            analysis["expand"] = expansion(
+                "plan-edit-context", unit.id, "--route-id", route["id"],
+                "--expected-snapshot", snapshot)
             analysis["approved_assessment_routes"] = [
                 item for item in analysis["approved_assessment_routes"] if item == route["id"]]
             analysis["stale_assessment_routes"] = [
@@ -151,8 +153,12 @@ def cmd_material_span(args) -> int:
                 "next_action": next_action,
                 "analysis_refs": analysis,
                 "spans": spans,
-                "expansion": None if args.extract else
-                    f"material-span {unit.id} {route['id']}{placement_flags} --extract",
+                "expansion": None if args.extract else expansion(
+                    "material-span", unit.id, route["id"],
+                    *(["--stage", args.stage_id, "--resource-index",
+                       str(args.resource_index)]
+                      if getattr(args, "stage_id", None) is not None else []),
+                    "--extract", "--expected-snapshot", snapshot),
             })
     except (WriteRefused, OSError, ValueError) as exc:
         return _refusal(exc)
