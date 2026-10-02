@@ -876,17 +876,24 @@ construction recipe — nothing else is needed.
    Any canonical change between reading it and submitting refuses the
    write as `STALE_SNAPSHOT` (exit 3) — re-read and re-seal.
 3. **Revision guards.** `expected_revisions` maps every artifact the
-   transaction touches to its current revision (read
-   `operations/transactions/revisions.yaml`; an artifact absent from the
+   transaction touches to its current revision. The default path is the
+   sealing helper's `--guards auto` (below): it derives the exact set
+   with a gateway dry run that stops before any write, and reads the
+   revisions under the same lock as the snapshot, so the sealed envelope
+   commits on the first submission. The manual path — read
+   `operations/transactions/revisions.yaml` (an artifact absent from the
    ledger has revision 0 — the legitimate no-recorded-revision baseline,
-   backstopped by the snapshot guard. The ledger file itself does not
-   exist until the first write commits; before that, guard every touched
-   artifact at 0). Two capabilities name their write
+   backstopped by the snapshot guard; the ledger file itself does not
+   exist until the first write commits, before that guard every touched
+   artifact at 0), guess the set from the common shapes, and fix it from
+   the refusal's `artifacts=[...]` — stays for envelopes built by hand.
+   Two capabilities name their write
    target only inside the handler, so the caller cannot guard a path and
    guards the request instead: `capture.create` takes
    `capture-request:<idempotency-key>`, `garden.seed.create` takes
    `garden-request:<idempotency-key>`, both at revision 0 for a fresh
-   key. Common shapes: `stage.note.write` guards its unit;
+   key (`--guards auto` derives these from the sealing key). Common
+   shapes: `stage.note.write` guards its unit;
    `stage.progress.update` and `stage.attachment.add` guard the unit and
    that unit's study map. A refusal names the exact expected set
    (`artifacts=[...]`) — copy it, re-read revisions, and re-seal. That
@@ -962,13 +969,14 @@ SNAP=$(.venv/bin/python tools/los.py bootstrap --compact \
 ```
 
 **Sealing helper.** `.venv/bin/python tools/seal_envelope.py --capability NAME
---payload JSON-or-@FILE --key KEY --revision ART=REV` reads the snapshot
-live and emits the sealed envelope above (to stdout, or `--out` a scratch
-path — never inside the repo). It performs steps 2, 4 and 5, minting a
-fresh `request_id` per run — so seal once per attempt and keep the output:
-a retry resubmits that saved envelope, never a re-sealed one (step 4).
-Step 3's guards are yours to supply, one `--revision` each (a refusal names
-the set). Submit its output via step 6.
+--payload JSON-or-@FILE --key KEY --guards auto` reads the snapshot live,
+derives the exact guard set, and emits the sealed envelope above (to
+stdout, or `--out` a scratch path — never inside the repo). It performs
+steps 2, 3, 4 and 5, minting a fresh `request_id` per run — so seal once
+per attempt and keep the output: a retry resubmits that saved envelope,
+never a re-sealed one (step 4). The derived guard set is printed on
+stderr for the approval record. An explicit `--revision ART=REV` stays
+and wins over the derived entry when given. Submit the output via step 6.
 
 ## 26. Source routing and feedback
 

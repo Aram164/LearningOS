@@ -336,12 +336,14 @@ These are gateway capabilities: `unit.source-selection.set`, `unit.note.append`,
 commands `unit-source-selection`, `unit-note`, `stage-progress`,
 `source-feedback`, `detour-create`). Run bare, a named command never writes:
 every canonical write refuses without a GatewayEnvelopeV2. Read the payload
-schema, then submit one envelope (fields and intent hash: WORKFLOWS §25a,
-step 4):
+schema, seal one envelope with the helper's `--guards auto` (WORKFLOWS §25c),
+then submit it:
 
 ```bash
 .venv/bin/python tools/los.py capabilities stage.progress.update --json
-.venv/bin/python tools/los.py capability stage.progress.update --payload-file ENVELOPE.json
+.venv/bin/python tools/seal_envelope.py --capability stage.progress.update \
+  --payload @PAYLOAD.json --key UNIQUE-KEY --guards auto --out /scratch/envelope.json
+.venv/bin/python tools/los.py capability stage.progress.update --payload-file /scratch/envelope.json
 ```
 
 `unit-source-selection` accepts only a rich material route already exposed on
