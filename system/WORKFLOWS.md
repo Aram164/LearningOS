@@ -1155,3 +1155,38 @@ a changed proposal or ledger refuses without a write. Patterns and duplicate
 IDs are refused. Detector names, urgency tiers, and group proximity never grant
 authority to decide other goals. `--revisit-on` remains a future date used only
 with `--defer`; no batch runs automatically.
+
+## 31. Back up and restore
+
+The materials tree lives outside git, so for it the backup is the only
+protection. A backup carries three roots in full, exactly as
+`system/contracts/backup-roots.yaml` allowlists them:
+
+- Core's canonical data (knowledge, sources, records, projects, work,
+  curriculum data, transaction ledgers, contracts and schemas) — never
+  Core's code, which git already versions; the manifest records the commit
+  the data belongs with instead;
+- the Obsidian UI checkout in full (sources, tests, contracts, scripts,
+  vault config, and the shipped plugin assets `plugin-assets.json`
+  declares);
+- the materials tree in full.
+
+Take the backup:
+
+1. run `los backup-manifest --out /path/outside/every/root/manifest.json`
+   (`--ui-root` / `--materials-root` override the sibling defaults). The
+   command refuses a path inside any backed-up root, writes atomically,
+   and prints a short summary (roots, entry count, aggregate digest,
+   path) instead of the megabyte of JSON — the full manifest stays
+   available behind the explicit `--stdout` flag;
+2. copy the three roots beside the manifest (`cp -a` each authority);
+   recovery pairs the restored data with a Core checkout at the commit
+   the manifest's `provenance` records;
+3. after any restore — and as a drill before relying on one — run
+   `los backup-verify --manifest manifest.json --restored-core … --restored-ui …
+   --restored-materials …`. `--checksums-only` checks integrity without
+   executing restored code; the full form additionally runs the restored
+   installer in dry-run mode with projection, validation, and restored UI
+   bundle smoke checks.
+
+Cadence: back up before each exam period and after each materials import.

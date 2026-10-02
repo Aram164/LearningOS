@@ -307,6 +307,26 @@ def _admitted_paths(authority: Path, declared: dict[str, Any],
     return found
 
 
+def backup_authorities(
+    root: Path,
+    *,
+    ui_root: Path | None = None,
+    materials_root: Path | None = None,
+) -> dict[str, Path]:
+    """The three resolved backup authorities for one Core checkout.
+
+    Shared by the inventory and by the `--out` guard, because the two must
+    agree about what "inside a backed-up root" means. Keeping a second copy
+    of the sibling defaults for the guard would be two lists that must match.
+    """
+    root = root.resolve()
+    return {
+        "core": root,
+        "ui": (ui_root or root.parent / "obsidian-ui").resolve(),
+        "materials": (materials_root or root.parent / "materials").resolve(),
+    }
+
+
 def build_backup_manifest(
     root: Path,
     *,
@@ -314,10 +334,11 @@ def build_backup_manifest(
     materials_root: Path | None = None,
     now: dt.datetime | None = None,
 ) -> dict[str, Any]:
-    root = root.resolve()
-    ui_root = (ui_root or root.parent / "obsidian-ui").resolve()
-    materials_root = (materials_root or root.parent / "materials").resolve()
-    authorities = {"core": root, "ui": ui_root, "materials": materials_root}
+    authorities = backup_authorities(
+        root, ui_root=ui_root, materials_root=materials_root)
+    root = authorities["core"]
+    ui_root = authorities["ui"]
+    materials_root = authorities["materials"]
     contract = _load_contract(root)
     excluded = set(contract.get("excluded_names") or [])
     entries: dict[tuple[str, str], dict[str, Any]] = {}

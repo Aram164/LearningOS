@@ -617,6 +617,11 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument("--ui-root", default=None)
     p.add_argument("--materials-root", default=None)
+    p.add_argument("--out", default=None,
+                   help="write the full manifest here (atomic; refused inside a "
+                        "backed-up root) and print a short summary instead")
+    p.add_argument("--stdout", action="store_true",
+                   help="print the full manifest to stdout")
     p.add_argument("--json", action="store_true", help=argparse.SUPPRESS)
     p.set_defaults(func=cmd_backup_manifest)
 

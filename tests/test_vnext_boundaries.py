@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pytest
 import yaml
-from repo_builders import add_curriculum, write_minimal_pdf, write_yaml
+from repo_builders import add_curriculum, run_los, write_minimal_pdf, write_yaml
 
 from learning_os.ai_actions import AIActionService
 from learning_os.backup_manifest import (
@@ -1159,6 +1159,146 @@ def test_backup_manifest_is_allowlisted_and_verifies_new_roots(mini_repo, tmp_pa
         restored_ui=restored_ui,
         restored_materials=restored_materials,
     )["ok"], "the clean restore must not trip the unaccounted check"
+
+
+def _backup_cli_fixture(mini_repo: Path, tmp_path: Path) -> dict[str, Path]:
+    """Synthetic UI + materials authorities for the backup CLI tests."""
+    ui = tmp_path / "ui"
+    (ui / "src").mkdir(parents=True)
+    (ui / "src/app.ts").write_text("export {};", encoding="utf-8")
+    (ui / "contracts").mkdir()
+    contract = yaml.safe_load(
+        (mini_repo / "system/contracts/manifest-contract.yaml").read_text(encoding="utf-8")
+    )
+    lock_name = f"manifest-v{contract['contract_version']}.lock.json"
+    (ui / "contracts" / lock_name).write_text(json.dumps({
+        "contract_version": contract["contract_version"],
+        "schema_sha256": contract["schema_sha256"],
+    }), encoding="utf-8")
+    (ui / "plugin").mkdir()
+    for name in ("main.js", "styles.css", "manifest.json", "build-info.json"):
+        (ui / "plugin" / name).write_text("void 0;\n", encoding="utf-8")
+    (ui / "plugin-assets.json").write_text(json.dumps({
+        "schema_version": 1,
+        "type": "learningos-ui-plugin-assets",
+        "shipped": ["main.js", "styles.css", "manifest.json", "build-info.json"],
+        "vault_owned": ["data.json"],
+    }), encoding="utf-8")
+    _installer_fixture(ui)
+    materials = tmp_path / "materials"
+    (materials / "source-demo").mkdir(parents=True)
+    (materials / "source-demo/a.pdf").write_bytes(b"pdf")
+    return {"ui": ui, "materials": materials}
+
+
+def test_backup_manifest_out_writes_file_and_prints_summary(mini_repo, tmp_path):
+    roots = _backup_cli_fixture(mini_repo, tmp_path)
+    target = tmp_path / "scratch" / "manifest.json"
+    result = run_los(
+        mini_repo, "backup-manifest",
+        "--ui-root", str(roots["ui"]),
+        "--materials-root", str(roots["materials"]),
+        "--out", str(target),
+    )
+    assert result.returncode == 0, result.stderr
+    assert len(result.stdout.encode("utf-8")) < 1024, (
+        f"--out summary must stay well under 1 KB, got {len(result.stdout)} bytes")
+    summary = json.loads(result.stdout)
+    assert summary["ok"] is True
+    assert summary["roots"] == ["core", "materials", "ui"]
+    assert summary["entries"] > 0
+    assert summary["aggregate_sha256"].startswith("sha256:")
+    assert summary["out"] == str(target.resolve())
+    stored = json.loads(target.read_text(encoding="utf-8"))
+    assert stored["type"] == "backup-manifest"
+    assert len(stored["entries"]) == summary["entries"]
+    assert stored["aggregate_sha256"] == summary["aggregate_sha256"]
+    assert not list(target.parent.glob(".manifest.json.tmp")), (
+        "the atomic write must not leave its temp sibling behind")
+
+
+@pytest.mark.parametrize("authority", ["core", "ui", "materials"])
+def test_backup_manifest_out_refuses_paths_inside_backed_up_roots(
+        mini_repo, tmp_path, authority):
+    roots = _backup_cli_fixture(mini_repo, tmp_path)
+    roots["core"] = mini_repo
+    target = roots[authority] / "manifest.json"
+    result = run_los(
+        mini_repo, "backup-manifest",
+        "--ui-root", str(roots["ui"]),
+        "--materials-root", str(roots["materials"]),
+        "--out", str(target),
+    )
+    assert result.returncode == 2, result.stdout
+    assert "refusing" in result.stderr
+    assert authority in result.stderr
+    assert not target.exists()
+
+
+def test_backup_manifest_stdout_keeps_the_full_output(mini_repo, tmp_path):
+    roots = _backup_cli_fixture(mini_repo, tmp_path)
+    result = run_los(
+        mini_repo, "backup-manifest",
+        "--ui-root", str(roots["ui"]),
+        "--materials-root", str(roots["materials"]),
+        "--stdout",
+    )
+    assert result.returncode == 0, result.stderr
+    manifest = json.loads(result.stdout)
+    assert manifest["type"] == "backup-manifest"
+    assert manifest["entries"]
+
+
+def test_backup_manifest_bare_call_names_out_instead_of_flooding(mini_repo, tmp_path):
+    roots = _backup_cli_fixture(mini_repo, tmp_path)
+    result = run_los(
+        mini_repo, "backup-manifest",
+        "--ui-root", str(roots["ui"]),
+        "--materials-root", str(roots["materials"]),
+    )
+    assert result.returncode == 2
+    assert "--out" in result.stderr
+    assert "--stdout" in result.stderr
+    assert "entries" in result.stderr
+    assert result.stdout == "", "a bare call must not print the manifest"
+
+
+def test_backup_workflow_end_to_end_in_scratch(mini_repo, tmp_path):
+    """WORKFLOWS §31 literally: manifest outside the roots, copy, verify."""
+    roots = _backup_cli_fixture(mini_repo, tmp_path)
+    backup_dir = tmp_path / "backup"
+    backup_dir.mkdir()
+    manifest_path = backup_dir / "manifest.json"
+    taken = run_los(
+        mini_repo, "backup-manifest",
+        "--ui-root", str(roots["ui"]),
+        "--materials-root", str(roots["materials"]),
+        "--out", str(manifest_path),
+    )
+    assert taken.returncode == 0, taken.stderr
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    restore = tmp_path / "restore"
+    restored = {
+        "core": restore / "core",
+        "ui": restore / "ui",
+        "materials": restore / "materials",
+    }
+    sources = {"core": mini_repo, **roots}
+    for row in manifest["entries"]:
+        dest = restored[row["root"]] / row["path"]
+        dest.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(sources[row["root"]] / row["path"], dest)
+
+    verified = run_los(
+        mini_repo, "backup-verify",
+        "--manifest", str(manifest_path),
+        "--restored-core", str(restored["core"]),
+        "--restored-ui", str(restored["ui"]),
+        "--restored-materials", str(restored["materials"]),
+    )
+    assert verified.returncode == 0, verified.stdout + verified.stderr
+    assert json.loads(verified.stdout)["ok"] is True
 
 
 @contextlib.contextmanager
