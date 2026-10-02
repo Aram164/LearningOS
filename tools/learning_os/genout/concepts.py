@@ -30,6 +30,18 @@ def build_backlinks_semantic(repo: Repo) -> dict:
             concept_to_notes.setdefault(cid, []).append(note.id)
         for sid in note.meta.get("sources", []) or []:
             source_to_notes.setdefault(sid, []).append(note.id)
+        # A resolved analysis binds its note to a registered source without
+        # citing it: "this note analyses pages of that source", not "this
+        # note cites it" (#81). The edge rides the existing table (values
+        # only, so the manifest shape and contract are unchanged) and is
+        # labelled distinctly at read time (`analyses` in related's `via`).
+        # Never copied into the note's `sources`: that field has different
+        # semantics and would change validation.
+        binding = note.meta.get("material_analysis")
+        if isinstance(binding, dict) and binding.get("resolution") == "resolved":
+            sid = binding.get("source_id")
+            if isinstance(sid, str) and sid in repo.sources:
+                source_to_notes.setdefault(sid, []).append(note.id)
         for wid in note.meta.get("contexts", []) or []:
             workspace_to_notes.setdefault(wid, []).append(note.id)
         # Plain incoming-note ids: the published manifest contract declares

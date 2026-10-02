@@ -9,9 +9,11 @@ ranks it, then stable id — and each result names its edges in `via`.
 
 from __future__ import annotations
 
+import hashlib
 import json
 from types import SimpleNamespace
 
+import yaml
 from repo_builders import run_los
 
 from learning_os.commands.reads import related_records
@@ -130,3 +132,81 @@ def test_unknown_id_answers_empty():
     manifest = _manifest([_record("a")])
     assert related_records(manifest, "missing") == []
     assert related_records(manifest, "missing", _repo_with_feedback([])) == []
+
+
+def test_analysis_edges_are_labelled_distinctly_in_via():
+    """A note analysing a source says `analyses`, not just the backlink (#81)."""
+    analysis = _record("note-analysis", material_analysis={
+        "resolution": "resolved", "source_id": "source-x"})
+    citing = _record("note-citing", sources=["source-x"])
+    manifest = _manifest(
+        [analysis, citing, _record("source-x", "source")],
+        backlinks={"source_to_notes": {
+            "source-x": ["note-analysis", "note-citing"]}},
+    )
+    from_source = {row["id"]: row for row in related_records(manifest, "source-x")}
+    assert from_source["note-analysis"]["via"] == ["analyses", "backlink:source_to_notes"]
+    assert from_source["note-citing"]["via"] == ["backlink:source_to_notes"]
+    from_note = {row["id"]: row for row in related_records(manifest, "note-analysis")}
+    assert from_note["source-x"]["via"] == ["analyses", "inverse:source_to_notes"]
+
+
+def test_unresolved_analysis_binds_no_label():
+    """Only a resolved binding names a registered source, so only it labels."""
+    for binding in ({"resolution": "unresolved"},
+                    {"resolution": "resolved", "source_id": "source-other"},
+                    None):
+        note = _record("note-draft", material_analysis=binding)
+        manifest = _manifest(
+            [note, _record("source-x", "source")],
+            backlinks={"source_to_notes": {"source-x": ["note-draft"]}},
+        )
+        [row] = related_records(manifest, "source-x")
+        assert row["via"] == ["backlink:source_to_notes"]
+
+
+def _plant_analysis_note(root, note_id, source_id):
+    """A saved source analysis bound to one registered source, citing none."""
+    body = "The density chapter explains probability mass over intervals.\n"
+    meta = {"id": note_id, "type": "note", "role": "reference",
+            "title": "Planted analysis", "created": "2026-09-21",
+            "state": "rough", "authorship": "operator-drafted",
+            "semantic_review": "unreviewed",
+            "material_analysis": {
+                "resolution": "resolved", "material": "demo/chapter.pdf",
+                "source_id": source_id,
+                "recorded_source_digest": "0" * 64,
+                "live_source_digest": "0" * 64,
+                "inspected_range": {"start": 1, "end": 3},
+                "frozen_input_sha256": hashlib.sha256(body.encode()).hexdigest(),
+                "frozen_input_bytes": len(body.encode()),
+            }}
+    path = root / "knowledge/notes/mathematics" / f"{note_id}.md"
+    path.write_bytes(
+        ("---\n" + yaml.safe_dump(meta, sort_keys=False).rstrip()
+         + "\n---\n\n" + body).encode("utf-8"))
+    return path
+
+
+def test_cli_related_surfaces_saved_analyses_of_a_source(mini_repo):
+    """Saved analyses are reachable from their source, labelled (#81)."""
+    _plant_analysis_note(mini_repo, "note-planted", "source-demo-book")
+
+    source_side = run_los(mini_repo, "related", "source-demo-book")
+    assert source_side.returncode == 0, source_side.stderr
+    from_source = {row["id"]: row for row in json.loads(source_side.stdout)}
+    assert "note-planted" in from_source
+    assert from_source["note-planted"]["via"] == ["analyses", "backlink:source_to_notes"]
+    # Existing citation edges keep their reasons: no new token leaks onto them.
+    assert from_source["note-demo"]["via"] == ["backlink:source_to_notes"]
+
+    note_side = run_los(mini_repo, "related", "note-planted")
+    assert note_side.returncode == 0, note_side.stderr
+    from_note = {row["id"]: row for row in json.loads(note_side.stdout)}
+    assert "source-demo-book" in from_note
+    assert from_note["source-demo-book"]["via"] == ["analyses", "inverse:source_to_notes"]
+
+    # The edge is a backlink only: the note's `sources` stay empty (#81.3).
+    inspected = run_los(mini_repo, "inspect", "note-planted")
+    assert inspected.returncode == 0, inspected.stderr
+    assert json.loads(inspected.stdout)["sources"] == []

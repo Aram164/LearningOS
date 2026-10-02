@@ -221,7 +221,10 @@ backlink tables in both directions, so membership in one direction always
 implies the reverse edge. Results rank by connection strength (more
 distinct edges first), then recorded stage use-evidence per source
 (positive first, mismatch last, as in material-context), then stable id;
-each result names the edges that produced it in `via`. Page a long
+each result names the edges that produced it in `via`. Existing analyses
+of a source answer here too: `related SOURCE_ID` lists the notes
+analysing it (labelled `analyses` in `via`); `material-context` stays the
+need-shaped query path. Page a long
 metadata result with `search QUERY --type TYPE --page` and continue with
 the returned `--offset` and `--expected-snapshot`; the plain array
 response keeps its existing shape for explicit bulk reads. Discover

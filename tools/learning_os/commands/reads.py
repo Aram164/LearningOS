@@ -789,6 +789,19 @@ RELATED_BACKLINK_TABLES = ("concept_to_notes", "source_to_notes",
                            "unit_to_workspaces", "module_to_units",
                            "source_to_units", "note_incoming")
 
+#: The read-time label for a note→source analysis edge (#81). The edge says
+#: "this note analyses pages of that source", not "this note cites it".
+ANALYSES_VIA = "analyses"
+
+
+def _analysis_source_of(record) -> str | None:
+    """The registered source a record's resolved analysis binds, or None."""
+    binding = record.get("material_analysis") if isinstance(record, dict) else None
+    if not isinstance(binding, dict) or binding.get("resolution") != "resolved":
+        return None
+    source_id = binding.get("source_id")
+    return source_id if isinstance(source_id, str) else None
+
 
 def related_records(manifest: dict, raw_id: str, repo=None) -> list[dict]:
     """Ranked one-hop connections for one record id.
@@ -802,7 +815,9 @@ def related_records(manifest: dict, raw_id: str, repo=None) -> list[dict]:
     Ranking is deterministic: more distinct edges first, then recorded
     stage use-evidence per source exactly as material-context ranks it
     (positive counts first, mismatch counts last), then stable id order.
-    Each result names the edges that produced it in `via`.
+    Each result names the edges that produced it in `via`. A source↔note
+    edge through `source_to_notes` gains the additional `analyses` token
+    when the note's resolved material analysis binds that source (#81).
     """
     by_id = {r.get("id"): r for r in manifest.get("records", [])}
     resolved = (manifest.get("project_aliases") or {}).get(raw_id, raw_id)
@@ -826,9 +841,15 @@ def related_records(manifest: dict, raw_id: str, repo=None) -> list[dict]:
         members = (backlinks.get(table) or {}).get(resolved, []) or []
         for rid in members:
             link(rid, f"backlink:{table}")
+            if table == "source_to_notes" \
+                    and _analysis_source_of(by_id.get(rid)) == resolved:
+                link(rid, ANALYSES_VIA)
         for owner, owned in ((backlinks.get(table) or {}).items()):
             if isinstance(owned, list) and resolved in owned:
                 link(owner, f"inverse:{table}")
+                if table == "source_to_notes" \
+                        and _analysis_source_of(by_id.get(resolved)) == owner:
+                    link(owner, ANALYSES_VIA)
     for relation in manifest.get("relations", []) or []:
         if not isinstance(relation, dict):
             continue
