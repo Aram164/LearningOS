@@ -35,7 +35,7 @@ from .reads import (
     structural_payload,
     with_coordination_digests,
 )
-from .suggest import expansion, suggest
+from .suggest import expansion, not_found, suggest
 from .support import (
     WriteRefused,
     _delegate,
@@ -462,7 +462,7 @@ def cmd_related(args) -> int:
     by_id = {r.get("id"): r for r in manifest["records"]}
     resolved_id = (manifest.get("project_aliases") or {}).get(args.id, args.id)
     if resolved_id not in by_id:
-        print(f"los: record not found: {args.id}", file=sys.stderr)
+        print(f"los: {not_found('record', args.id, by_id)}", file=sys.stderr)
         return 2
     # Tallies come from the manifest itself (identical to the repo tally),
     # so related skips the repo load on the reuse fast path (#83).

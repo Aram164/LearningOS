@@ -225,3 +225,37 @@ def test_refusal_suggestions_stay_bounded(mini_repo: Path):
     proc = run_los(mini_repo, "note-read", "note-dem")
     base = "los: note not found: note-dem\n"
     assert len(proc.stderr.encode()) - len(base.encode()) <= 300
+
+
+# ------------------------------------------------------- #114 item 1: refusals
+
+
+def test_dossier_suggests_unit_ids(mini_repo: Path):
+    add_curriculum(mini_repo)
+    proc = run_los(mini_repo, "dossier", "unit-demo-l1")
+    assert proc.returncode == 2
+    assert "unit not found: unit-demo-l1" in proc.stderr
+    assert "unit-demo-l01" in proc.stderr
+
+
+def test_related_suggests_record_ids(mini_repo: Path):
+    proc = run_los(mini_repo, "related", "note-dem")
+    assert proc.returncode == 2
+    assert "record not found: note-dem" in proc.stderr
+    assert "note-demo" in proc.stderr
+
+
+def test_resume_study_unit_suggests_the_exam_module_units(mini_repo: Path):
+    import datetime as _dt
+
+    add_curriculum(mini_repo)
+    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
+    module_path = mini_repo / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module["examination"]["sittings"][1]["date"] = date
+    module["attempts"][1]["date"] = date
+    write_yaml(module_path, module)
+    proc = run_los(mini_repo, "resume", "--study", "--unit", "unit-demo-l1")
+    assert proc.returncode == 2
+    assert "unit not found: unit-demo-l1" in proc.stderr
+    assert "unit-demo-l01" in proc.stderr

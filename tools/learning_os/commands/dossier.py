@@ -32,6 +32,7 @@ from learning_os.semantics.dossiers import (
 from learning_os.semantics.predicates import CONTRACT_VERSION
 
 from .reads import _print_stable, _refusal, _snapshot
+from .suggest import not_found
 from .support import WriteRefused, _operator_lock, _root
 
 #: Operator-contract version hashed into every dossier key. There is no
@@ -127,7 +128,7 @@ def cmd_dossier(args) -> int:
                     "dossier refuses unreadable canonical records")
             unit = repo.units.get(args.unit_id)
             if unit is None:
-                raise WriteRefused(f"unit not found: {args.unit_id}")
+                raise WriteRefused(not_found("unit", args.unit_id, repo.units))
             if unit.module_id not in repo.module_source_maps:
                 raise WriteRefused(
                     f"unit {unit.id} has no module source map")

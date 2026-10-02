@@ -52,6 +52,7 @@ from learning_os.semantics.lineage import (
 )
 from learning_os.warning_baseline import delta, load_baseline, signatures_from_issues
 
+from .suggest import not_found
 from .support import (
     WriteRefused,
     _atomic_text,
@@ -134,7 +135,8 @@ def cmd_module_attempt(args) -> int:
         repo = load_repo(root)
         module = repo.modules.get(args.module_id)
         if module is None:
-            print(f"los: module not found: {args.module_id}", file=sys.stderr)
+            print(f"los: {not_found('module', args.module_id, repo.modules)}",
+                  file=sys.stderr)
             return 2
         module_path = repo.module_origins[args.module_id]
         data = copy.deepcopy(module)
@@ -1881,7 +1883,7 @@ def _assemble_compact_module_revision(repo, module_id: str,
     if set(revision) - allowed:
         problems.append(f"compact module revision has unknown fields: {sorted(set(revision) - allowed)}")
     if module_id not in repo.modules:
-        problems.append(f"module not found: {module_id}")
+        problems.append(not_found("module", module_id, repo.modules))
     revisions = revision.get("unit_revisions")
     if not isinstance(revisions, list) or not revisions:
         problems.append("unit_revisions must be a non-empty list")
@@ -2219,7 +2221,8 @@ def cmd_module_plan_import(args) -> int:
         repo = load_repo(root)
         module = repo.modules.get(args.module_id)
         if module is None:
-            print(f"los: module not found: {args.module_id}", file=sys.stderr)
+            print(f"los: {not_found('module', args.module_id, repo.modules)}",
+                  file=sys.stderr)
             return 2
         module_path = repo.module_origins[args.module_id]
         writes: dict[Path, str] = {}
@@ -2893,7 +2896,8 @@ def _unit_plan_revise_locked(args) -> int:
     repo = load_repo(root)
     unit = repo.units.get(args.unit_id)
     if unit is None:
-        print(f"los: unit not found: {args.unit_id}", file=sys.stderr)
+        print(f"los: {not_found('unit', args.unit_id, repo.units)}",
+              file=sys.stderr)
         return 2
     module_id = unit.module_id
     live_map = copy.deepcopy(repo.module_source_maps.get(module_id) or {})

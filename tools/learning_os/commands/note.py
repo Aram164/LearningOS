@@ -11,6 +11,7 @@ import jsonschema
 
 from learning_os.loader import EVIDENCE_SCHEMES, LoaderError, load_repo, parse_frontmatter
 
+from .suggest import not_found
 from .support import (
     WriteRefused,
     _dump_yaml,
@@ -77,7 +78,8 @@ def cmd_note_revise(args) -> int:
         repo = load_repo(root)
         note = repo.notes.get(args.note_id)
         if note is None:
-            print(f"los: note not found: {args.note_id}", file=sys.stderr)
+            print(f"los: {not_found('note', args.note_id, repo.notes)}",
+                  file=sys.stderr)
             return 2
         try:
             meta, _ = parse_frontmatter(content, source)
@@ -136,7 +138,8 @@ def cmd_note_evidence(args) -> int:
         repo = load_repo(root)
         note = repo.notes.get(args.note_id)
         if note is None:
-            print(f"los: note not found: {args.note_id}", file=sys.stderr)
+            print(f"los: {not_found('note', args.note_id, repo.notes)}",
+                  file=sys.stderr)
             return 2
         content = note.path.read_text(encoding="utf-8")
         try:

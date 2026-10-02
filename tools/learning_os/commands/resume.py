@@ -33,6 +33,7 @@ from learning_os.loader import load_repo
 from learning_os.pathing import PathBoundaryError, resolved_inside
 from learning_os.semantics.goals import stale_observations
 
+from .suggest import with_suggestions
 from .support import _json_layout, _root
 
 
@@ -337,7 +338,11 @@ def _study_option(repo, unit_id=None):
     if unit_id is not None:
         unit = repo.units.get(unit_id)
         if unit is None:
-            return (None, f"unit not found: {unit_id}; list the exam "
+            module_units = [uid for uid, row in repo.units.items()
+                            if row.module_id == module_id]
+            refusal = with_suggestions(f"unit not found: {unit_id}",
+                                       unit_id, module_units)
+            return (None, f"{refusal}; list the exam "
                           f"module's units with `unit-list --compact "
                           f"--module-id {module_id}`")
         if unit.module_id != module_id:

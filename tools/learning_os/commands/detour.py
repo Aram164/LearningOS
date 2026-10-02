@@ -87,7 +87,10 @@ def cmd_detour_resolve(args) -> int:
         detour = next((row for row in data.get("detours", []) or []
                        if row.get("id") == args.detour_id), None)
         if detour is None:
-            print(f"los: detour not found: {args.detour_id}", file=sys.stderr)
+            known = [row.get("id") for row in data.get("detours", []) or []
+                     if isinstance(row, dict) and row.get("id")]
+            print(f"los: {not_found('detour', args.detour_id, known)}",
+                  file=sys.stderr)
             return 2
         detour["status"] = "resolved"
         if args.resolution:

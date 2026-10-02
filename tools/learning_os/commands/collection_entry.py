@@ -23,6 +23,7 @@ from learning_os.contracts.json_schema import validate_contract
 from learning_os.loader import load_repo
 from learning_os.revisions import artifact_revision
 
+from .suggest import with_suggestions
 from .support import (
     WriteRefused,
     _expected_ok,
@@ -172,7 +173,8 @@ def _plan_revise(root: Path, item: Any) -> dict:
     repo = load_repo(root)
     doc = (repo.collections or {}).get(stem)
     if doc is None:
-        raise WriteRefused(f"unknown collection: {stem}")
+        raise WriteRefused(with_suggestions(
+            f"unknown collection: {stem}", stem, repo.collections or {}))
     origin = (repo.collection_origins or {}).get(stem)
     if origin is None:
         raise WriteRefused(f"collection '{stem}' has no file origin")
@@ -180,7 +182,11 @@ def _plan_revise(root: Path, item: Any) -> dict:
     hits = [position for position, entry in enumerate(entries)
             if isinstance(entry, dict) and entry.get("source") == sid]
     if not hits:
-        raise WriteRefused(f"collection '{stem}' has no entry for source {sid}")
+        known_sources = [str(entry.get("source")) for entry in entries
+                         if isinstance(entry, dict) and entry.get("source")]
+        raise WriteRefused(with_suggestions(
+            f"collection '{stem}' has no entry for source {sid}",
+            sid, known_sources))
     if len(hits) > 1:
         raise WriteRefused(
             f"collection '{stem}' matches {len(hits)} entries for {sid} — "

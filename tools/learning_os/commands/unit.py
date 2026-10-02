@@ -365,7 +365,8 @@ def cmd_unit_map_import(args) -> int:
         repo = load_repo(root)
         unit = repo.units.get(args.unit_id)
         if unit is None:
-            print(f"los: unit not found: {args.unit_id}", file=sys.stderr)
+            print(f"los: {not_found('unit', args.unit_id, repo.units)}",
+                  file=sys.stderr)
             return 2
         target = unit.path.parent / "study-map.yaml"
         if target.exists() and not args.replace:
@@ -510,10 +511,12 @@ def cmd_unit_source_selection(args) -> int:
         repo = load_repo(root)
         unit = repo.units.get(args.unit_id)
         if unit is None:
-            print(f"los: unit not found: {args.unit_id}", file=sys.stderr)
+            print(f"los: {not_found('unit', args.unit_id, repo.units)}",
+                  file=sys.stderr)
             return 2
         if args.source_id not in repo.sources:
-            print(f"los: source not found: {args.source_id}", file=sys.stderr)
+            print(f"los: {not_found('source', args.source_id, repo.sources)}",
+                  file=sys.stderr)
             return 2
 
         source_map = repo.module_source_maps.get(unit.module_id, {})

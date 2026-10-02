@@ -17,8 +17,15 @@ import sys
 from pathlib import Path
 
 import pytest
+import yaml
 from gateway_helpers import approved_v2_cli, file_sha256
-from repo_builders import add_curriculum, material_fixture, run_los
+from repo_builders import (
+    _compact_revision,
+    add_curriculum,
+    material_fixture,
+    run_los,
+    write_yaml,
+)
 from test_learning_paths import add_path
 
 from learning_os.commands.note import NOTE_FIELDS
@@ -416,3 +423,115 @@ def test_seal_without_a_transaction_keeps_the_explicit_revision_advice(
     assert sealed.returncode == 2, sealed.stdout + sealed.stderr
     assert "explicit --revision" in sealed.stderr
     assert "fix the payload" not in sealed.stderr
+
+
+# ------------------------------------------------------- #114 item 1: refusals
+#
+# The write handlers that still printed a bare id now suggest through
+# the shared helper, like the #84/#105 reads and stage writes.
+
+
+def test_unit_map_import_suggests_unit_ids(mini_repo, tmp_path):
+    add_curriculum(mini_repo)
+    draft = tmp_path / "map.yaml"
+    draft.write_text("unit_id: unit-demo-l1\n", encoding="utf-8")
+    proc = run_los(mini_repo, "unit-map-import", "unit-demo-l1",
+                   "--file", str(draft))
+    assert proc.returncode == 2
+    assert "unit not found: unit-demo-l1" in proc.stderr
+    assert "unit-demo-l01" in proc.stderr
+
+
+def test_unit_source_selection_suggests_unit_and_source_ids(mini_repo):
+    add_curriculum(mini_repo)
+    unit = run_los(mini_repo, "unit-source-selection", "unit-demo-l1",
+                   "source-demo-book", "§1", "select")
+    assert unit.returncode == 2
+    assert "unit not found: unit-demo-l1" in unit.stderr
+    assert "unit-demo-l01" in unit.stderr
+    source = run_los(mini_repo, "unit-source-selection", "unit-demo-l01",
+                     "source-dem", "§1", "select")
+    assert source.returncode == 2
+    assert "source not found: source-dem" in source.stderr
+    assert "source-demo-book" in source.stderr
+
+
+def test_detour_resolve_suggests_detour_ids(mini_repo):
+    add_curriculum(mini_repo)
+    study_map = (mini_repo / "curriculum/modules/module-demo/units"
+                 / "unit-demo-l01/study-map.yaml")
+    data = yaml.safe_load(study_map.read_text(encoding="utf-8"))
+    data["detours"] = [{"id": "detour-expected-value-gap", "title": "Gap",
+                        "spawned_by_stage": "stage-demo",
+                        "classification": "deferred", "status": "open",
+                        "return_to_stage": "stage-demo"}]
+    write_yaml(study_map, data)
+    proc = run_los(mini_repo, "detour-resolve", "unit-demo-l01",
+                   "detour-expected-value")
+    assert proc.returncode == 2
+    assert "detour not found: detour-expected-value" in proc.stderr
+    assert "detour-expected-value-gap" in proc.stderr
+
+
+def test_source_feedback_suggests_source_and_resource_ids(mini_repo):
+    add_curriculum(mini_repo)
+    source = run_los(mini_repo, "source-feedback", "unit-demo-l01",
+                     "stage-demo", "source-dem", "helpful")
+    assert source.returncode == 2
+    assert "source not found: source-dem" in source.stderr
+    assert "source-demo-book" in source.stderr
+    resource = run_los(mini_repo, "source-feedback", "unit-demo-l01",
+                       "stage-demo", "source-demo-book", "helpful",
+                       "--resource-id", "resource-demo-book-ch0")
+    assert resource.returncode == 2
+    assert "resource not found on stage stage-demo" in resource.stderr
+    assert "resource-demo-book-ch01" in resource.stderr
+    assert "known:" in resource.stderr
+
+
+def test_note_writes_suggest_note_ids(mini_repo, tmp_path):
+    revised = tmp_path / "revised.md"
+    revised.write_text("---\nid: note-dem\n---\nbody\n", encoding="utf-8")
+    revise = run_los(mini_repo, "note-revise", "note-dem",
+                     "--file", str(revised), "--approve")
+    assert revise.returncode == 2
+    assert "note not found: note-dem" in revise.stderr
+    assert "note-demo" in revise.stderr
+    evidence = run_los(mini_repo, "note-evidence", "note-dem",
+                       "derivation", "material://demo/x.pdf")
+    assert evidence.returncode == 2
+    assert "note not found: note-dem" in evidence.stderr
+    assert "note-demo" in evidence.stderr
+
+
+def test_module_attempt_suggests_module_ids(mini_repo):
+    add_curriculum(mini_repo)
+    proc = run_los(mini_repo, "module-attempt", "module-dem",
+                   "--termin", "2", "--date", "2026-10-09",
+                   "--result", "registered")
+    assert proc.returncode == 2
+    assert "module not found: module-dem" in proc.stderr
+    assert "module-demo" in proc.stderr
+
+
+def test_module_plan_import_suggests_module_ids(mini_repo, tmp_path):
+    add_curriculum(mini_repo)
+    package = tmp_path / "compact.yaml"
+    write_yaml(package, {"module_id": "module-dem",
+                         "unit_revisions": [{"unit_id": "unit-demo-l01"}]})
+    proc = run_los(mini_repo, "module-plan-import", "module-dem",
+                   "--file", str(package), "--check")
+    assert proc.returncode == 2
+    assert "module not found: module-dem" in proc.stderr
+    assert "module-demo" in proc.stderr
+
+
+def test_unit_plan_revise_suggests_unit_ids(mini_repo, tmp_path):
+    add_curriculum(mini_repo)
+    revision = tmp_path / "revision.yaml"
+    write_yaml(revision, _compact_revision(mini_repo, unit_id="unit-demo-l1"))
+    proc = run_los(mini_repo, "unit-plan-revise", "unit-demo-l1",
+                   "--file", str(revision), "--check")
+    assert proc.returncode == 2
+    assert "unit not found: unit-demo-l1" in proc.stderr
+    assert "unit-demo-l01" in proc.stderr

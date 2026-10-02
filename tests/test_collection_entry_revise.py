@@ -113,6 +113,15 @@ def test_revise_refuses_unknown_and_ambiguous_targets(mini_repo, tmp_path):
              "matches 2 entries")
 
 
+def test_revise_suggests_near_miss_collections_and_sources(mini_repo, tmp_path):
+    # #114 item 1: the JSON refusal carries the shared suggestion suffix.
+    _shelf(mini_repo)
+    _refuses(mini_repo, _package(tmp_path, _revise(collection="demo-bookshel")),
+             "demo-bookshelf")
+    _refuses(mini_repo, _package(tmp_path, _revise(source="source-demo-boo")),
+             "source-demo-book")
+
+
 def test_revise_refuses_noop_foreign_and_misshapen_lines(mini_repo, tmp_path):
     _shelf(mini_repo)
     _refuses(mini_repo, _package(tmp_path, _revise(why=OLD_WHY)), "no change")

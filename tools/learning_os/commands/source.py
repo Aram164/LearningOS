@@ -7,7 +7,7 @@ import datetime as _dt
 import json
 import sys
 
-from .suggest import not_found
+from .suggest import not_found, with_suggestions
 from .support import (
     _dump_study_map,
     _expected_ok,
@@ -30,7 +30,8 @@ def cmd_source_feedback(args) -> int:
         if study_map is None:
             return 2
         if args.source_id not in repo.sources:
-            print(f"los: source not found: {args.source_id}", file=sys.stderr)
+            print(f"los: {not_found('source', args.source_id, repo.sources)}",
+                  file=sys.stderr)
             return 2
         data = copy.deepcopy(study_map.data)
         stage = _stage(data, args.stage_id)
@@ -51,8 +52,10 @@ def cmd_source_feedback(args) -> int:
             target = resources.get(resource_id)
             if target is None:
                 known = ", ".join(sorted(resources)) or "(this stage has no identified resources)"
-                print(f"los: resource not found on stage {args.stage_id}: {resource_id}\n"
-                      f"     known: {known}", file=sys.stderr)
+                refusal = with_suggestions(
+                    f"resource not found on stage {args.stage_id}: {resource_id}",
+                    resource_id, resources)
+                print(f"los: {refusal}\n     known: {known}", file=sys.stderr)
                 return 2
             declared = target.get("source_id")
             if declared and declared != args.source_id:
