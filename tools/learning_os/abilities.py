@@ -227,29 +227,48 @@ def _latest_and_conflicts(valid, comparable):
     return latest, conflicts
 
 
-def _direct_status(ability: dict, observations: list[dict]) -> tuple[str, list[dict], list[str]]:
+def _direct_status(ability: dict, observations: list[dict]
+                   ) -> tuple[str, list[dict], list[str], list[str]]:
+    """Direct-evidence state with parallel prose reasons and reason codes.
+
+    Each reason carries a stable kebab-case code decided from the same
+    structured fact — never translated back from the wording — so
+    consumers decide from ``reason_codes`` while prose stays display
+    only. The two lists are parallel: ``reasons[i]`` is explained by
+    ``reason_codes[i]``.
+    """
     history, active, comparable, valid, current_hash, _corrections = _evidence_sets(
         ability, observations)
-    reasons: list[str] = []
+    tagged: list[tuple[str, str]] = []
     if any(row["ability_sha256"] != current_hash for row in active):
-        reasons.append("ability definition changed since recorded work")
+        tagged.append(("ability definition changed since recorded work",
+                       "definition-changed"))
     if any(row["confirmed_by"] != "learner" for row in active):
-        reasons.append("unconfirmed work is excluded")
+        tagged.append(("unconfirmed work is excluded",
+                       "unconfirmed-excluded"))
     if any(row["assistance"].strip().lower() != "none" for row in active):
-        reasons.append("assisted work does not establish independent support")
+        tagged.append(("assisted work does not establish independent support",
+                       "assisted-excluded"))
     if any(row["result"] == "correct" and
            not set(ability["evidence_spec"]).issubset(row["evidence_tags"])
            for row in comparable):
-        reasons.append("worked attempt does not cover every reviewed evidence criterion")
+        tagged.append(("worked attempt does not cover every reviewed evidence criterion",
+                       "evidence-incomplete"))
     if not valid:
-        reasons.append("no current confirmed work under the stated conditions")
-        return "uncertain", history, reasons
+        tagged.append(("no current confirmed work under the stated conditions",
+                       "no-current-work"))
+        return ("uncertain", history,
+                [reason for reason, _code in tagged],
+                [code for _reason, code in tagged])
     latest, conflicts = _latest_and_conflicts(valid, comparable)
     if latest["result"] == "correct":
         if conflicts:
-            return "uncertain", history, ["conflicting later work"]
-        return "supported", history, ["current confirmed worked attempt"]
-    return "uncertain", history, ["latest comparable attempt is partial or incorrect"]
+            return "uncertain", history, ["conflicting later work"], ["conflicting-later-work"]
+        return ("supported", history, ["current confirmed worked attempt"],
+                ["current-confirmed-attempt"])
+    return ("uncertain", history,
+            ["latest comparable attempt is partial or incorrect"],
+            ["latest-attempt-not-correct"])
 
 
 #: Preview bound for brief encounter and candidate lists. Counts stay
@@ -415,11 +434,13 @@ def ability_context(repo: Repo, *, focus: str | None = None, limit: int = 12,
         ability = repo.abilities[aid]
         retired = ability.get("lifecycle") == "retired"
         reviewed = ability["review"]["state"] == "reviewed" and not retired
-        status, history, reasons = direct[aid]
+        status, history, reasons, reason_codes = direct[aid]
         if retired:
             status, reasons = "unmapped", ["ability identity retired; historical work retained"]
+            reason_codes = ["identity-retired"]
         elif not reviewed:
             status, reasons = "unmapped", ["ability is a tentative candidate"]
+            reason_codes = ["tentative-candidate"]
         transfer = []
         if reviewed and status != "supported" and not history:
             for bridge in repo.ability_bridges:
@@ -451,6 +472,7 @@ def ability_context(repo: Repo, *, focus: str | None = None, limit: int = 12,
                     transfer.append({"from": other, "source": bridge["source"],
                                      "carries": bridge["carries"], "changes": bridge["changes"]})
                     reasons = [f"reviewed equivalence from {other}"]
+                    reason_codes = ["reviewed-equivalence"]
         routes = []
         if reviewed:
             for route in ability.get("preparation_routes", []):
@@ -463,9 +485,11 @@ def ability_context(repo: Repo, *, focus: str | None = None, limit: int = 12,
             if status == "uncertain" and not history and routes and any(route["supported"] for route in routes):
                 status = "nearby"
                 reasons.append("reviewed preparation route has named remaining work")
+                reason_codes.append("named-remaining-work")
         result = {"id": aid, "title": ability["title"], "state": status,
                   "lifecycle": ability.get("lifecycle", "active"),
-                  "reasons": reasons, "concept_ids": ability["concept_ids"],
+                  "reasons": reasons, "reason_codes": reason_codes,
+                  "concept_ids": ability["concept_ids"],
                   "module_ids": ability.get("module_ids", []), "preparation_routes": routes,
                   "transfer": transfer,
                   "evidence": history if focus == aid else [{"id": row["id"], "result": row["result"],

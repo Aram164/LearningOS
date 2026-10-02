@@ -157,6 +157,73 @@ def test_later_conflict_correction_and_definition_change(ability_root: Path):
     assert _state(ability_root, "ability-aml-ols")["state"] == "uncertain"
 
 
+def test_conflicting_work_carries_a_structured_code(ability_root: Path):
+    """The review queue decides from reason_codes, never by matching the
+    prose: a later comparable incorrect attempt sets
+    conflicting-later-work, and correcting it clears the code."""
+    repo = load_repo(ability_root)
+    _append(ability_root, _work(repo, "ability-sad-ols", 1))
+    assert _state(ability_root, "ability-sad-ols")["reason_codes"] == [
+        "current-confirmed-attempt"]
+    _append(ability_root, _work(repo, "ability-sad-ols", 2, result="incorrect",
+                                assistance="hint"))
+    conflicted = _state(ability_root, "ability-sad-ols")
+    assert conflicted["state"] == "uncertain"
+    assert conflicted["reasons"] == ["conflicting later work"]
+    assert conflicted["reason_codes"] == ["conflicting-later-work"]
+    _append(ability_root, _work(repo, "ability-sad-ols", 3,
+                                supersedes="ability-observation-2"))
+    healed = _state(ability_root, "ability-sad-ols")
+    assert healed["state"] == "supported"
+    assert healed["reason_codes"] == ["current-confirmed-attempt"]
+
+
+def test_reason_codes_stay_parallel_to_reasons(ability_root: Path):
+    """Every emitted reason has exactly one code, in horizon and focused
+    reads alike, across conflicting, transferred, nearby, retired and
+    candidate states."""
+    repo = load_repo(ability_root)
+    _append(ability_root, _work(repo, "ability-sad-ols", 1))
+    _append(ability_root, _work(repo, "ability-sad-ols", 2, result="partial",
+                                assistance="hint"))
+    path = ability_root / "knowledge/abilities.yaml"
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    template = data["abilities"][0]
+    data["abilities"].append(
+        {**template, "id": "ability-old", "lifecycle": "retired"})
+    data["abilities"].append(
+        {**template, "id": "ability-draft",
+         "review": {"state": "candidate"}})
+    path.write_text(yaml.safe_dump(data, sort_keys=False), encoding="utf-8")
+    horizon = ability_context(load_repo(ability_root))
+    assert len(horizon["abilities"]) == 5
+    for row in horizon["abilities"]:
+        assert len(row["reasons"]) == len(row["reason_codes"])
+        assert row["reason_codes"]
+    by_id = {row["id"]: row for row in horizon["abilities"]}
+    assert by_id["ability-sad-ols"]["reason_codes"] == [
+        "conflicting-later-work"]
+    assert by_id["ability-aml-ols"]["reason_codes"] == ["no-current-work"]
+    assert by_id["ability-old"]["reason_codes"] == ["identity-retired"]
+    assert by_id["ability-draft"]["reason_codes"] == ["tentative-candidate"]
+    for aid in ("ability-sad-ols", "ability-aml-ols",
+                "ability-aml-extension", "ability-old", "ability-draft"):
+        focused = ability_context(load_repo(ability_root), focus=aid)["ability"]
+        assert len(focused["reasons"]) == len(focused["reason_codes"])
+        assert focused["reason_codes"]
+
+
+def test_reason_codes_cover_transfer_and_nearby(ability_root: Path):
+    repo = load_repo(ability_root)
+    _append(ability_root, _work(repo, "ability-sad-ols", 1))
+    target = _state(ability_root, "ability-aml-ols")
+    assert target["state"] == "supported"
+    assert target["reason_codes"] == ["reviewed-equivalence"]
+    nearby = _state(ability_root, "ability-aml-extension")
+    assert nearby["state"] == "nearby"
+    assert nearby["reason_codes"] == ["no-current-work", "named-remaining-work"]
+
+
 def test_presentation_edits_do_not_invalidate_work(ability_root: Path):
     repo = load_repo(ability_root)
     _append(ability_root, _work(repo, "ability-sad-ols", 1))
@@ -587,6 +654,9 @@ def test_brief_conflicts_and_corrections_match_the_full_read(ability_root: Path)
     assert conflicted["ability"]["state"] == full["ability"]["state"]
     assert conflicted["ability"]["reasons"] == ["conflicting later work"]
     assert conflicted["ability"]["reasons"] == full["ability"]["reasons"]
+    assert conflicted["ability"]["reason_codes"] == ["conflicting-later-work"]
+    assert (conflicted["ability"]["reason_codes"]
+            == full["ability"]["reason_codes"])
     assert [(pointer["role"], pointer["id"])
             for pointer in conflicted["evidence_summary"]["state_basis"]] == [
         ("latest-comparable", "ability-observation-1"),
