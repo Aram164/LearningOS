@@ -16,6 +16,7 @@ queries:
     - candidate abilities and bridges never affect readiness or evidence transfer
     - only reviewed equivalence with a current source digest can transfer confirmed evidence under stated conditions
     - contradictory and corrected work remains inspectable; stage completion grants nothing
+    - ability rows carry reason_codes parallel to reasons; decisions consume the structured codes, never the display prose
   material.span:
     handler: material_span
     cli_command: material-span

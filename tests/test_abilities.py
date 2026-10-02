@@ -224,6 +224,58 @@ def test_reason_codes_cover_transfer_and_nearby(ability_root: Path):
     assert nearby["reason_codes"] == ["no-current-work", "named-remaining-work"]
 
 
+@pytest.mark.parametrize("malformation", ["absent", "blank", "not-list", "not-parallel"])
+@pytest.mark.parametrize("focus", [None, "ability-sad-ols"])
+def test_ability_context_refuses_malformed_producer_codes(
+        ability_root: Path, monkeypatch, capsys, malformation: str, focus: str | None):
+    import los
+    from learning_os.commands import abilities as command
+
+    produce = command.ability_context
+
+    def malformed(*args, **kwargs):
+        payload = produce(*args, **kwargs)
+        row = payload["ability"] if focus else payload["abilities"][0]
+        if malformation == "absent":
+            row.pop("reason_codes")
+        elif malformation == "blank":
+            row["reason_codes"] = [""]
+        elif malformation == "not-list":
+            row["reason_codes"] = "conflicting-later-work"
+        else:
+            row["reason_codes"] = []
+        return payload
+
+    monkeypatch.setattr(command, "ability_context", malformed)
+    args = los.build_parser().parse_args(
+        ["--root", str(ability_root), "ability-context", *([focus] if focus else [])])
+    assert command.cmd_ability_context(args) == 2
+    output = capsys.readouterr()
+    assert output.out == ""
+    assert "reason_codes" in output.err
+
+
+def test_ability_query_schema_declares_codes_and_keeps_older_answers_readable():
+    from jsonschema import Draft202012Validator
+
+    schema = json.loads((Path(__file__).resolve().parents[1] /
+                         "system/schema/ability-context.schema.json").read_text())
+    validator = Draft202012Validator(schema)
+    base = {"schema_version": 1, "contract": "ability-context-v1",
+            "snapshot_id": "sha256:" + "a" * 64}
+    for key in ("abilities", "ability"):
+        def result(row, key=key):
+            return {**base, key: [row] if key == "abilities" else row}
+
+        validator.validate(result({"reasons": ["display prose"]}))
+        validator.validate(result({"reasons": ["display prose"],
+                                   "reason_codes": ["future-structured-fact"]}))
+        assert list(validator.iter_errors(result({
+            "reasons": ["display prose"], "reason_codes": [""]})))
+        assert list(validator.iter_errors(result({
+            "reasons": ["display prose"], "reason_codes": "conflicting-later-work"})))
+
+
 def test_presentation_edits_do_not_invalidate_work(ability_root: Path):
     repo = load_repo(ability_root)
     _append(ability_root, _work(repo, "ability-sad-ols", 1))

@@ -9,8 +9,8 @@
     "schema_version": {"const": 1},
     "snapshot_id": {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"},
     "contract": {"const": "ability-context-v1"},
-    "abilities": {"type": "array", "maxItems": 50},
-    "ability": {"type": "object"},
+    "abilities": {"type": "array", "maxItems": 50, "items": {"$ref": "#/$defs/abilityRow"}},
+    "ability": {"$ref": "#/$defs/abilityRow"},
     "bridges": {"type": "array"},
     "candidate_connections": {"type": "array", "maxItems": 20},
     "candidate_connection_count": {"type": "integer", "minimum": 0},
@@ -58,5 +58,18 @@
     "expand": {},
     "expansions": {"type": "object"},
     "schema": {}
+  },
+  "$defs": {
+    "abilityRow": {
+      "type": "object",
+      "properties": {
+        "reasons": {"type": "array", "items": {"type": "string"}},
+        "reason_codes": {
+          "description": "Stable codes parallel to reasons. Consumers decide from these codes, never the prose. Optional for responses from older Cores.",
+          "type": "array",
+          "items": {"type": "string", "pattern": "^[a-z][a-z0-9]*(?:-[a-z0-9]+)*$"}
+        }
+      }
+    }
   }
 }

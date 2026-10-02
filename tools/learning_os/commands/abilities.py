@@ -16,6 +16,7 @@ from ..abilities import (
     read_ability_observations,
 )
 from ..contracts.gateway import current_gateway_request
+from ..contracts.json_schema import validate_contract
 from ..learning_runtime import runtime_path
 from ..loader import load_repo
 from .reads import _print_stable, _snapshot
@@ -89,7 +90,18 @@ def cmd_ability_context(args) -> int:
                 # is a mistyped id and where to look next.
                 payload["known_identity"] = False
                 payload["suggestions"] = suggest(args.ability_id, repo.abilities)
-            return _print_stable(root, snapshot, {"contract": "ability-context-v1", **payload})
+            result = {"schema_version": 1, "snapshot_id": snapshot,
+                      "contract": "ability-context-v1", **payload}
+            validate_contract(root, "ability-context.schema.json", result)
+            rows = payload.get("abilities", [])
+            if "ability" in payload:
+                rows = [payload["ability"]]
+            for row in rows:
+                reasons, codes = row.get("reasons"), row.get("reason_codes")
+                if not isinstance(reasons, list) or not isinstance(codes, list) \
+                        or len(reasons) != len(codes):
+                    raise WriteRefused("ability-context reason_codes must be parallel to reasons")
+            return _print_stable(root, snapshot, result)
     except (WriteRefused, OSError, ValueError) as exc:
         from .reads import _refusal
         return _refusal(exc)
