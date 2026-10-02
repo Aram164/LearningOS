@@ -174,8 +174,18 @@ def _resolve_stage(repo):
                   "touched — start any stage to set one")
 
 
-def _study_option(repo):
-    """Suggest one current stage for the nearest recorded exam, without changing intent."""
+#: Study-map statuses eligible for the exam menu, best first. Active
+#: maps are work in progress, paused ones are shelved tracks worth
+#: resuming, ready ones are prepared ground; anything else (not-started
+#: and beyond) is not a next step.
+_STUDY_STATUS_RANK = {"active": 0, "paused": 1, "ready": 2}
+
+#: At most this many options; the menu stays one screen.
+MAX_STUDY_OPTIONS = 5
+
+
+def _nearest_exam(repo):
+    """(date, module_id, exam row) for the nearest recorded exam, or None."""
     today = _dt.date.today()
     exams = []
     for row in _academic_deadlines(repo):
@@ -194,38 +204,156 @@ def _study_option(repo):
         if date >= today:
             exams.append((date, str(module_id), row))
     if not exams:
-        return (None, "no upcoming exam is recorded for an enrolled module")
-    date, module_id, exam = min(exams, key=lambda item: (item[0], item[1]))
-    maps = [study_map for study_map in repo.study_maps.values()
-            if study_map.module_id == module_id
-            and (study_map.data or {}).get("status") == "active"]
-    if len(maps) != 1:
-        return (None, f"{module_id} has {len(maps)} active study maps; "
-                      "choose a stage explicitly before using study mode")
-    study_map = maps[0]
+        return None
+    return min(exams, key=lambda item: (item[0], item[1]))
+
+
+def _study_open(stage):
+    """The first required-now resource locator, or None (today's shape)."""
+    resource = next((row for row in stage.get("resources", [])
+                     if isinstance(row, dict)
+                     and row.get("scope_triage") == "required-now"
+                     and row.get("label") and row.get("locator")), None)
+    if resource is None:
+        return None
+    return {"label": resource["label"], "locator": resource["locator"],
+            "source_id": resource.get("source_id")}
+
+
+def _study_stage(repo, study_map):
+    """(stage_id, stage) for one map's current stage, else None."""
     stage_id = (study_map.data or {}).get("current_stage")
     stage = next((row for row in (study_map.data or {}).get("stages", [])
                   if isinstance(row, dict) and row.get("id") == stage_id), None)
     if not isinstance(stage_id, str) or stage is None \
             or study_map.unit_id not in repo.units:
-        return (None, f"{study_map.id} has no resolvable current stage")
+        return None
+    return stage_id, stage
+
+
+def _single_study_option(repo, date, exam, study_map):
+    """Today's single suggestion: the resolved stage plus the option row."""
+    found = _study_stage(repo, study_map)
+    if found is None:
+        return (None, f"{study_map.id} has no resolvable current stage; "
+                      f"inspect it with `inspect {study_map.id}`")
+    stage_id, stage = found
     if stage.get("status") in {"complete", "archived"}:
         return (None, f"{study_map.id} names a completed current stage; "
-                      "choose a stage explicitly before using study mode")
-    resource = next((row for row in stage.get("resources", [])
-                     if isinstance(row, dict)
-                     and row.get("scope_triage") == "required-now"
-                     and row.get("label") and row.get("locator")), None)
+                      f"inspect it with `inspect {study_map.id}`")
     option = {
         "exam_date": date.isoformat(),
         "registration_state": exam.get("registration_state"),
-        "open": {"label": resource["label"], "locator": resource["locator"],
-                 "source_id": resource.get("source_id")} if resource else None,
+        "open": _study_open(stage),
         "learner_choice": False,
     }
-    resolved = ("nearest recorded exam (study suggestion)", module_id,
+    resolved = ("nearest recorded exam (study suggestion)", study_map.module_id,
                 study_map.unit_id, study_map.id, stage_id)
     return (resolved, option)
+
+
+def _study_option_row(repo, study_map):
+    """One menu row, or None when the map names nothing studyable.
+
+    A map whose current stage is missing, unresolvable, or already
+    complete offers no next step, so it offers no row either — the menu
+    lists stages to study, not maps to admire.
+    """
+    found = _study_stage(repo, study_map)
+    if found is None:
+        return None
+    stage_id, stage = found
+    if stage.get("status") in {"complete", "archived"}:
+        return None
+    return {
+        "unit_id": study_map.unit_id,
+        "study_map_id": study_map.id,
+        "current_stage": stage_id,
+        "stage_title": stage.get("title") or stage_id,
+        "open": _study_open(stage),
+        "learner_choice": False,
+    }
+
+
+def _study_options_payload(repo, date, module_id, exam):
+    """The bounded exam menu: payload dict, or a refusal when it is empty.
+
+    Active maps first, then paused, then ready, each run in curriculum
+    order; at most five rows. Every refusal names a command that exists.
+    """
+    pool = [study_map for study_map in repo.study_maps.values()
+            if study_map.module_id == module_id
+            and (study_map.data or {}).get("status") in _STUDY_STATUS_RANK]
+
+    def order(study_map):
+        unit = repo.units.get(study_map.unit_id)
+        rank = (unit.data or {}).get("order") if unit is not None else None
+        return (_STUDY_STATUS_RANK[(study_map.data or {}).get("status")],
+                rank is None, rank if isinstance(rank, int) else 0,
+                study_map.unit_id, study_map.id)
+
+    options = []
+    for study_map in sorted(pool, key=order):
+        row = _study_option_row(repo, study_map)
+        if row is not None:
+            options.append(row)
+        if len(options) >= MAX_STUDY_OPTIONS:
+            break
+    if not options:
+        return (f"{module_id} has no active, paused, or ready study maps "
+                f"with a current stage; list its units with `unit-list "
+                f"--compact --module-id {module_id}`")
+    return {
+        "contract": "resume-study-options",
+        "module_id": module_id,
+        "exam_date": date.isoformat(),
+        "registration_state": exam.get("registration_state"),
+        "options": options,
+        "select_with": "resume --study --unit UNIT_ID",
+    }
+
+
+def _study_option(repo, unit_id=None):
+    """One study suggestion, the options menu, or a refusal.
+
+    Returns ``(resolved, option)`` exactly as today when the exam module
+    has one active map — or when ``--unit`` selects one map explicitly.
+    When the exam module has 0 or >=2 active maps, returns ``(None,
+    options-payload)``: a bounded menu, never a guess. Otherwise
+    ``(None, refusal-text)``, where every refusal names a command that
+    exists. Never moves the resume pointer on any path.
+    """
+    exam = _nearest_exam(repo)
+    if exam is None:
+        return (None, "no upcoming exam is recorded for an enrolled module; "
+                      "`status` shows the recorded exam spine")
+    date, module_id, exam_row = exam
+    if unit_id is not None:
+        unit = repo.units.get(unit_id)
+        if unit is None:
+            return (None, f"unit not found: {unit_id}; list the exam "
+                          f"module's units with `unit-list --compact "
+                          f"--module-id {module_id}`")
+        if unit.module_id != module_id:
+            return (None, f"unit {unit_id} is outside the nearest-exam "
+                          f"module {module_id}; run `resume --study` to "
+                          "list its options")
+        pool = sorted(
+            (study_map for study_map in repo.study_maps.values()
+             if study_map.unit_id == unit_id
+             and (study_map.data or {}).get("status") in _STUDY_STATUS_RANK),
+            key=lambda row: (_STUDY_STATUS_RANK[(row.data or {}).get("status")],
+                             row.id))
+        if not pool:
+            return (None, f"unit {unit_id} has no active, paused, or ready "
+                          f"study map; inspect it with `inspect {unit_id}`")
+        return _single_study_option(repo, date, exam_row, pool[0])
+    maps = [study_map for study_map in repo.study_maps.values()
+            if study_map.module_id == module_id
+            and (study_map.data or {}).get("status") == "active"]
+    if len(maps) == 1:
+        return _single_study_option(repo, date, exam_row, maps[0])
+    return (None, _study_options_payload(repo, date, module_id, exam_row))
 
 
 #: Trailing excerpt kept in the dossier: progress notes append, so the
@@ -364,16 +492,47 @@ def _recorded_aims(repo, module_id: str, unit_id: str) -> list[tuple[str, str, s
     return aims
 
 
+def _print_study_options(args, payload) -> int:
+    """The exam menu: bounded options with sitting and registration.
+
+    Read-only: options are a menu, not a decision, so the resume pointer
+    is never moved here. Text stays one screen; --json carries the same
+    rows for machines.
+    """
+    if args.json:
+        print(json.dumps(payload, **_json_layout(), sort_keys=True, ensure_ascii=False))
+        return 0
+    registration = payload["registration_state"] or "unknown"
+    lines = [f"Study options for {payload['exam_date']} ({payload['module_id']}; "
+             f"registration recorded as {registration}; "
+             "your resume pointer is unchanged)"]
+    for row in payload["options"]:
+        line = (f"  {row['unit_id']} · {row['current_stage']} "
+                f"\"{row['stage_title']}\" [{row['study_map_id']}]")
+        if row["open"]:
+            line += f" — open {row['open']['label']} at {row['open']['locator']}"
+        lines.append(line)
+    lines.append("Select one with `resume --study --unit UNIT_ID`.")
+    print("\n".join(lines))
+    return 0
+
+
 def cmd_resume(args) -> int:
     """Compile and print the return-to-study screen. Read-only."""
     root = _root(args)
     repo = load_repo(root)
     study_option = None
     if getattr(args, "study", False):
-        resolved, study_option = _study_option(repo)
+        resolved, study_option = _study_option(
+            repo, unit_id=getattr(args, "unit", None))
         if resolved is None:
+            if isinstance(study_option, dict):
+                return _print_study_options(args, study_option)
             print(f"los: {study_option}", file=sys.stderr)
             return 2
+    elif getattr(args, "unit", None):
+        print("los: resume --unit needs --study", file=sys.stderr)
+        return 2
     else:
         resolved = _resolve_stage(repo)
     if resolved[0] is None:

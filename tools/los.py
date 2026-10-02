@@ -279,6 +279,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--json", action="store_true", help="machine-readable dossier")
     p.add_argument("--study", action="store_true",
                    help="show the nearest recorded exam's active stage as a read-only study suggestion")
+    p.add_argument("--unit", default=None, metavar="UNIT_ID",
+                   help="with --study: study this exam-module unit explicitly instead of the single active map")
     p.set_defaults(func=cmd_resume)
 
     p = sub.add_parser("dossier", help="serve one unit's materialized context bundle")

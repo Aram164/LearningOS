@@ -136,14 +136,171 @@ def test_study_mode_suggests_a_recorded_exam_stage_without_moving_pointer(mini_r
     assert (root / "curriculum/resume.yaml").read_bytes() == pointer
 
 
-def test_study_mode_refuses_to_guess_without_one_active_map(mini_repo: Path):
+def _exam_on(root: Path, date: str) -> None:
+    """Move the demo module's recorded sitting to an explicit date."""
+    module_path = root / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module["examination"]["sittings"][1]["date"] = date
+    module["attempts"][1]["date"] = date
+    write_yaml(module_path, module)
+
+
+def _add_unit(root: Path, unit_id: str, order: int, map_status: str,
+              stage_status: str = "active") -> None:
+    """A second lecture unit with its own study map in module-demo."""
+    unit_dir = root / f"curriculum/modules/module-demo/units/{unit_id}"
+    unit_dir.mkdir(parents=True)
+    write_yaml(unit_dir / "unit.yaml", {
+        "id": unit_id, "type": "unit", "module_id": "module-demo",
+        "kind": "lecture", "title": f"Lecture {order}", "order": order,
+        "scope": "The lecture as taught.", "status": "active",
+        "current_study_map": f"study-map-{unit_id[5:]}",
+        "workspace_ids": ["workspace-demo"],
+    })
+    stage_id = f"stage-{unit_id[5:]}"
+    note_rel = (f"curriculum/modules/module-demo/units/{unit_id}/"
+                f"stages/{stage_id}/notes.md")
+    write_yaml(unit_dir / "study-map.yaml", {
+        "id": f"study-map-{unit_id[5:]}", "type": "study-map",
+        "unit_id": unit_id, "status": map_status, "current_stage": stage_id,
+        "source_plan": {"path": "work/active/workspace-demo/CONTEXT.md",
+                        "provenance": "operator"},
+        "detours": [], "shelving": {"state": "none"},
+        "stages": [{
+            "id": stage_id, "title": f"Study {unit_id}", "status": stage_status,
+            "objective": "Study the lecture.",
+            "done_when": ["Explain the lecture."], "scope_triage": "required-now",
+            "resources": [{
+                "kind": "read", "label": "Demo Book §1",
+                "source_id": "source-demo-book", "locator": "§1",
+                "scope_triage": "required-now"}],
+            "working_note": note_rel, "attachments": [], "source_feedback": [],
+        }],
+    })
+    (root / note_rel).parent.mkdir(parents=True, exist_ok=True)
+    (root / note_rel).write_text("", encoding="utf-8")
+    module_path = root / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module["unit_order"].append(unit_id)
+    write_yaml(module_path, module)
+
+
+def test_study_mode_lists_options_without_any_active_map(mini_repo: Path):
     root = _runtime_repo(mini_repo)
+    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
+    _exam_on(root, date)
     study_map = yaml.safe_load((root / MAP).read_text(encoding="utf-8"))
     study_map["status"] = "ready"
+    study_map["stages"][0]["resources"][0]["scope_triage"] = "required-now"
+    write_yaml(root / MAP, study_map)
+    pointer = (root / "curriculum/resume.yaml").read_bytes()
+    proc = run_los(root, "resume", "--study")
+    assert proc.returncode == 0, proc.stderr
+    assert date in proc.stdout
+    assert "registered" in proc.stdout
+    assert "unit-demo-l01" in proc.stdout
+    assert "resume --study --unit" in proc.stdout
+    assert len(proc.stdout.encode()) < 2048
+    assert (root / "curriculum/resume.yaml").read_bytes() == pointer
+    payload = json.loads(run_los(root, "resume", "--study", "--json").stdout)
+    assert payload["contract"] == "resume-study-options"
+    assert payload["module_id"] == "module-demo"
+    assert payload["exam_date"] == date
+    assert payload["registration_state"] == "registered"
+    assert [row["unit_id"] for row in payload["options"]] == ["unit-demo-l01"]
+    row = payload["options"][0]
+    assert row["study_map_id"] == "study-map-demo-l01"
+    assert row["current_stage"] == "stage-demo"
+    assert row["stage_title"] == "Derive expected value"
+    assert row["open"]["locator"] == "§1"
+    assert row["learner_choice"] is False
+    assert (root / "curriculum/resume.yaml").read_bytes() == pointer
+
+
+def test_study_mode_lists_options_with_several_active_maps(mini_repo: Path):
+    root = _runtime_repo(mini_repo)
+    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
+    _exam_on(root, date)
+    _add_unit(root, "unit-demo-l02", 2, "active")
+    proc = run_los(root, "resume", "--study", "--json")
+    assert proc.returncode == 0, proc.stderr
+    payload = json.loads(proc.stdout)
+    assert [row["unit_id"] for row in payload["options"]] == [
+        "unit-demo-l01", "unit-demo-l02"]
+    assert all(row["learner_choice"] is False for row in payload["options"])
+
+
+def test_study_mode_orders_options_by_status_then_curriculum_order(mini_repo: Path):
+    root = _runtime_repo(mini_repo)
+    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
+    _exam_on(root, date)
+    lapsed = yaml.safe_load((root / MAP).read_text(encoding="utf-8"))
+    lapsed["status"] = "ready"
+    write_yaml(root / MAP, lapsed)
+    _add_unit(root, "unit-demo-l03", 3, "ready")
+    _add_unit(root, "unit-demo-l02", 2, "paused")
+    payload = json.loads(run_los(root, "resume", "--study", "--json").stdout)
+    assert [row["unit_id"] for row in payload["options"]] == [
+        "unit-demo-l02", "unit-demo-l01", "unit-demo-l03"]
+    assert len(payload["options"]) <= 5
+
+
+def test_study_mode_unit_selects_one_option(mini_repo: Path):
+    root = _runtime_repo(mini_repo)
+    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
+    _exam_on(root, date)
+    _add_unit(root, "unit-demo-l02", 2, "ready")
+    payload = json.loads(run_los(
+        root, "resume", "--study", "--unit", "unit-demo-l02", "--json").stdout)
+    assert payload["via"] == "nearest recorded exam (study suggestion)"
+    assert payload["content"]["stage"]["unit_id"] == "unit-demo-l02"
+    assert payload["study_option"]["exam_date"] == date
+    assert payload["study_option"]["open"]["locator"] == "§1"
+    assert payload["study_option"]["learner_choice"] is False
+
+
+def test_study_mode_unit_refuses_outside_the_exam_module(mini_repo: Path):
+    root = _runtime_repo(mini_repo)
+    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
+    _exam_on(root, date)
+    other = root / "curriculum/modules/module-other"
+    write_yaml(other / "module.yaml", {
+        "id": "module-other", "type": "module", "kind": "academic",
+        "area_id": "program-bachelors", "institution": "HU Berlin",
+        "title": "Other Module", "semester": "sose-2026", "status": "enrolled",
+        "unit_order": ["unit-other-l01"], "source_map": "source-map.yaml",
+    })
+    write_yaml(other / "source-map.yaml", {
+        "type": "module-source-map", "module_id": "module-other", "sources": []})
+    write_yaml(other / "units/unit-other-l01/unit.yaml", {
+        "id": "unit-other-l01", "type": "unit", "module_id": "module-other",
+        "kind": "lecture", "title": "Elsewhere", "order": 1,
+        "scope": "The lecture as taught.", "status": "active",
+        "scope_sources": [], "artifacts": {}, "workspace_ids": [],
+    })
+    proc = run_los(root, "resume", "--study", "--unit", "unit-other-l01")
+    assert proc.returncode == 2
+    assert "outside the nearest-exam module" in proc.stderr
+    assert "resume --study" in proc.stderr
+    missing = run_los(root, "resume", "--study", "--unit", "unit-no-such")
+    assert missing.returncode == 2
+    assert "unit not found: unit-no-such" in missing.stderr
+    assert "unit-list" in missing.stderr
+    bare = run_los(root, "resume", "--unit", "unit-demo-l01")
+    assert bare.returncode == 2
+    assert "resume --unit needs --study" in bare.stderr
+
+
+def test_study_mode_refusal_names_a_command_when_nothing_is_studyable(mini_repo: Path):
+    root = _runtime_repo(mini_repo)
+    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
+    _exam_on(root, date)
+    study_map = yaml.safe_load((root / MAP).read_text(encoding="utf-8"))
+    study_map["status"] = "not-started"
     write_yaml(root / MAP, study_map)
     proc = run_los(root, "resume", "--study")
     assert proc.returncode == 2
-    assert "has 0 active study maps" in proc.stderr
+    assert "unit-list --compact --module-id module-demo" in proc.stderr
 
 
 def test_study_mode_does_not_offer_a_withdrawn_sitting(mini_repo: Path):
@@ -158,6 +315,7 @@ def test_study_mode_does_not_offer_a_withdrawn_sitting(mini_repo: Path):
     proc = run_los(root, "resume", "--study")
     assert proc.returncode == 2
     assert "no upcoming exam" in proc.stderr
+    assert "status" in proc.stderr
 
 
 def test_resume_renders_the_pointer_stage(mini_repo: Path):

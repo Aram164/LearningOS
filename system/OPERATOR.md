@@ -132,9 +132,11 @@ Decide which read answers the question before reading:
   `inspect WORKSPACE_ID`; use `inspect coordination` when priorities matter.
   The brief reports where study stopped and recorded workspace options; neither
   chooses the next priority for Aram.
-- `resume --study` offers the current stage of the nearest recorded exam's
-  single active study map, including one required resource locator when present.
-  It labels registration state and never moves the learner's resume pointer.
+- `resume --study` offers the nearest recorded exam's study path — its single
+  active map's current stage, or a bounded menu when zero or several maps are
+  active (select one with `resume --study --unit UNIT_ID`) — including one
+  required resource locator when present. It labels registration state and
+  never moves the learner's resume pointer.
 - What changed, what wants a decision → `intelligence-scan --brief --json`:
   five ranked groups plus totals, the agent entry path. The full queue only
   for explicit bulk review; inspect a named route or unit first.
