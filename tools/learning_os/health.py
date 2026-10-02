@@ -236,12 +236,6 @@ def _ui_plugin_check(root: Path, *, ui_root: Path | None = None,
                 f"The installed plugin path is not a real directory: {directory}.",
                 "core-ui", "Review the path yourself; nothing was changed.",
             )
-    if installed_missing:
-        return _check(
-            "ui-plugin-current", "unknown",
-            "No plugin is installed in this vault.",
-            "core-ui", "Run `python3 install.py` in the UI checkout to install one.",
-        )
     try:
         journal = installed.parent / ".learningos-ui-install-transaction.json"
         journal.lstat()
@@ -258,6 +252,12 @@ def _ui_plugin_check(root: Path, *, ui_root: Path | None = None,
             "ui-plugin-current", "error",
             f"An interrupted plugin install transaction is still present: {journal}.",
             "core-ui", "Review the install transaction before retrying; nothing was changed.",
+        )
+    if installed_missing:
+        return _check(
+            "ui-plugin-current", "unknown",
+            "No plugin is installed in this vault.",
+            "core-ui", "Run `python3 install.py` in the UI checkout to install one.",
         )
     try:
         if not stat.S_ISDIR(built_dir.lstat().st_mode):

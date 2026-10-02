@@ -287,10 +287,13 @@ def test_plugin_check_refuses_symlinked_installed_path_components(tmp_path, comp
     assert row["status"] == "error"
 
 
-def test_plugin_check_refuses_interrupted_install_even_when_bytes_match(tmp_path):
+@pytest.mark.parametrize("install_missing", [False, True])
+def test_plugin_check_refuses_interrupted_install_even_when_bytes_match(tmp_path, install_missing):
     vault, ui, installed = _plugin_pair(
         tmp_path, installed_info={"source_fingerprint": "fp-new", "source_revision": "rev-new"})
     (installed.parent / ".learningos-ui-install-transaction.json").write_text("{}")
+    if install_missing:
+        installed.rename(tmp_path / "old-install")
     row = health._ui_plugin_check(vault, ui_root=ui)
     assert row["status"] == "error"
     assert "transaction" in row["summary"].lower()
