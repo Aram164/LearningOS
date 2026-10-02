@@ -61,6 +61,8 @@
           },
           "supersedes": {"type": ["object", "null"]},
           "reviewed_by": {"type": "string"},
+          "restamped_by": {"type": "string", "minLength": 1},
+          "restamped_on": {"type": "string", "minLength": 1},
           "status": {"enum": ["supported", "stale", "contested", "withdrawn"]},
           "contest": {
             "type": "object",
