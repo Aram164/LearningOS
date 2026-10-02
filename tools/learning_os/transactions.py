@@ -205,6 +205,25 @@ def _safe_relative(root: Path, path: Path) -> str:
         raise TransactionFailure(f"transaction path escapes repository: {path}") from exc
 
 
+def transaction_artifacts(root: Path, artifact_ids: Iterable[str],
+                          writes: Iterable[Path],
+                          deletes: Iterable[Path] = ()) -> list[str]:
+    """The exact artifact set one transaction guards.
+
+    Declared ids win; a transaction that declares none guards each touched
+    path instead. ``commit`` enforces this set, and the seal-time dry run
+    derives it through this same function — so the guards an envelope is
+    sealed with are the guards the gateway checks, by construction rather
+    than by a second implementation that could drift.
+    """
+    artifacts = sorted({str(value).strip() for value in artifact_ids
+                        if str(value).strip()})
+    if not artifacts:
+        artifacts = [f"file:{_safe_relative(root, path)}"
+                     for path in [*writes, *deletes]]
+    return artifacts
+
+
 def _atomic_write_bytes(path: Path, content: bytes) -> None:
     """Atomically replace *path* and make the replacement crash-durable.
 
@@ -1147,12 +1166,8 @@ class TransactionService:
                 )
             authority_by_path[path] = authority.strip()
 
-        artifacts = sorted({str(value).strip() for value in artifact_ids if str(value).strip()})
-        if not artifacts:
-            artifacts = [
-                f"file:{_safe_relative(self.root, path)}"
-                for path in [*normalized_writes, *delete_paths]
-            ]
+        artifacts = transaction_artifacts(
+            self.root, artifact_ids, normalized_writes, delete_paths)
 
         revisions_before = load_revisions(self.root)
         expected = dict(expected_revisions or {})

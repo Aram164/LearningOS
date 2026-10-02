@@ -5,6 +5,12 @@ The §25c ceremony without hand-rolled hashing: reads the current snapshot
 live, takes guards, payload, and identities on the command line, and emits
 the sealed envelope. Reads the repository; writes nothing canonical (an
 --out path inside the repo is refused — envelopes belong in scratch).
+
+With ``--guards auto`` the guard set is derived, not guessed: the
+capability's own handler runs as a gateway dry run that stops at the
+transaction boundary before any write, and the artifact set it reaches the
+boundary with — computed by the same function the gateway enforces — is
+read at the same instant as the snapshot, under the same lock.
 """
 
 from __future__ import annotations
@@ -65,6 +71,130 @@ def _load_payload(spec: str) -> dict:
     return payload
 
 
+class _DryRunCapture(Exception):
+    """The dry-run handler reached the transaction boundary with this set."""
+
+    def __init__(self, artifacts: list[str]):
+        super().__init__("dry run reached the transaction boundary")
+        self.artifacts = artifacts
+
+
+def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
+                        key: str, request_id: str, channel: str,
+                        approval_kind: str,
+                        snapshot: str | None) -> tuple[str, dict[str, int]]:
+    """Derive the exact guard set with a gateway dry run.
+
+    Runs the capability's own handler through the gateway's ``_dispatch``
+    — the same payload validation, the same namespace, the same handler —
+    with the transaction service stubbed to capture the artifact set and
+    stop before any write. Returns the snapshot and the artifact set bound
+    to the revision ledger read under the same operator lock, so the two
+    answer the same instant and a concurrent canonical change still
+    refuses the sealed envelope as ``STALE_SNAPSHOT``.
+
+    This adds no authority: the dry run commits nothing, and the sealed
+    envelope passes through every gateway guard unchanged.
+    """
+    import los  # noqa: E402  (imports the parser, not a command)
+    from learning_os.commands import support as _support
+    from learning_os.commands.capability import _dispatch
+    from learning_os.commands.support import WriteRefused
+    from learning_os.contracts.capability_catalog import command_definitions
+    from learning_os.contracts.gateway import (
+        GatewayRequestContext,
+        gateway_request_context,
+        verified_gateway_snapshot,
+    )
+    from learning_os.revisions import load_revisions
+    from learning_os.transactions import transaction_artifacts
+
+    definitions = command_definitions(root)
+    if capability not in definitions:
+        raise ValueError(f"unknown capability: {capability}")
+    from learning_os.contracts.payloads import subparsers as _subparsers
+
+    command_parser = _subparsers(los.build_parser()).get(
+        definitions[capability].cli_command or "")
+    if command_parser is None:
+        raise ValueError(
+            f"capability {capability} declares no CLI command to derive guards from")
+    if command_parser.get_default("func") is None:
+        raise ValueError(
+            f"capability {capability} has no bound handler to derive guards from")
+
+    real_service = _support.TransactionService
+
+    class _DryRunService:
+        """The transaction boundary, capturing instead of committing."""
+
+        def __init__(self, service_root: Path):
+            self._service_root = service_root
+
+        def commit(self, *, artifact_ids=(), writes=None, deletes=(),
+                   **_ignored):
+            raise _DryRunCapture(transaction_artifacts(
+                self._service_root, artifact_ids, writes or {}, deletes))
+
+    # The request identities are the envelope's own: request-scoped
+    # artifacts (capture, garden) derive from the idempotency key, so the
+    # dry run must carry the key the envelope will be sealed under. The
+    # intent hash is a placeholder — the stubbed boundary never checks
+    # approval, and the real envelope's approval is computed afterwards
+    # over the derived guards.
+    context = GatewayRequestContext(
+        request_id=request_id,
+        idempotency_key=key,
+        capability=capability,
+        channel=channel,
+        intent_sha256="sha256:" + "0" * 64,
+        approval_kind=approval_kind,
+        approval_subject_sha256="sha256:" + "0" * 64,
+        expected_snapshot=None,  # set once the snapshot below is read
+    )
+    envelope_stub = {
+        "schema_version": GATEWAY_SCHEMA_VERSION,
+        "capability": capability,
+        "expected_snapshot": snapshot,
+        "expected_revisions": {},
+    }
+    _support.TransactionService = _DryRunService  # type: ignore[assignment]
+    try:
+        with _support._operator_lock(root):
+            live_snapshot = snapshot or f"sha256:{source_fingerprint(load_repo(root))}"
+            envelope_stub["expected_snapshot"] = live_snapshot
+            context = GatewayRequestContext(
+                request_id=context.request_id,
+                idempotency_key=context.idempotency_key,
+                capability=context.capability,
+                channel=context.channel,
+                intent_sha256=context.intent_sha256,
+                approval_kind=context.approval_kind,
+                approval_subject_sha256=context.approval_subject_sha256,
+                expected_snapshot=live_snapshot,
+            )
+            with gateway_request_context(context), verified_gateway_snapshot(
+                    root, live_snapshot):
+                try:
+                    code, result = _dispatch(
+                        root, definitions[capability], envelope_stub, payload,
+                        parser_factory=los.build_parser)
+                except _DryRunCapture as captured:
+                    revisions = load_revisions(root)
+                    return live_snapshot, {
+                        artifact: revisions.get(artifact, 0)
+                        for artifact in captured.artifacts
+                    }
+                except WriteRefused as exc:
+                    raise ValueError(str(exc)) from exc
+            raise ValueError(
+                "guard derivation stopped before any transaction"
+                f" (exit {code}: {result.get('error', capability + ' failed')}); "
+                "seal this payload with explicit --revision guards instead")
+    finally:
+        _support.TransactionService = real_service
+
+
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=None,
@@ -85,6 +215,12 @@ def main(argv: list[str] | None = None) -> int:
                         help="expected snapshot (default: read live)")
     parser.add_argument("--revision", action="append", default=[],
                         help="guard ART=REV; repeatable")
+    parser.add_argument("--guards", default=None, choices=("auto",),
+                        help="guard derivation: 'auto' runs the capability's "
+                             "handler as a gateway dry run that stops before "
+                             "any write, and reads revisions under the same "
+                             "lock as the snapshot. Explicit --revision "
+                             "entries override derived ones.")
     parser.add_argument("--out", default=None,
                         help="write the envelope here (default: stdout)")
     args = parser.parse_args(argv)
@@ -115,10 +251,26 @@ def main(argv: list[str] | None = None) -> int:
                   "repository; point --out at scratch", file=sys.stderr)
             return 2
 
-    snapshot = args.snapshot or f"sha256:{source_fingerprint(load_repo(root))}"
+    request_id = args.request_id or _fresh_request_id(args.key)
+    if args.guards == "auto":
+        try:
+            snapshot, derived = _derive_guards_auto(
+                root, capability=args.capability, payload=payload,
+                key=args.key, request_id=request_id, channel=args.channel,
+                approval_kind=args.approval_kind, snapshot=args.snapshot)
+        except (ValueError, OSError) as exc:
+            print(f"seal_envelope: {exc}", file=sys.stderr)
+            return 2
+        revisions = {**derived, **revisions}
+        print("seal_envelope: guards auto: "
+              + ", ".join(f"{artifact}={revisions[artifact]}"
+                          for artifact in sorted(revisions)),
+              file=sys.stderr)
+    else:
+        snapshot = args.snapshot or f"sha256:{source_fingerprint(load_repo(root))}"
     envelope = {
         "schema_version": GATEWAY_SCHEMA_VERSION,
-        "request_id": args.request_id or _fresh_request_id(args.key),
+        "request_id": request_id,
         "idempotency_key": args.key,
         "capability": args.capability,
         "channel": args.channel,
