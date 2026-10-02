@@ -93,7 +93,8 @@ def _observed_for(records: list[dict], snapshot_after: str | None,
 def _evidence_for(root: Path, records: list[dict],
                   observed: str | None,
                   authority_files: tuple[list[dict], dict, list[str]]
-                  | None = None) -> AuthorityEvidence:
+                  | None = None,
+                  drift_cache: dict | None = None) -> AuthorityEvidence:
     # One collection path: the strict receipt verification lives in
     # collect_authority, so Operations can never drift from it.
     request_id, idempotency_key, capability = _identity(records)
@@ -114,7 +115,8 @@ def _evidence_for(root: Path, records: list[dict],
         # `observed` is the live manifest snapshot itself: the supersession
         # check positions it against the receipt inventory (JF-19).
         manifest_snapshot=observed,
-        authority_files=authority_files)
+        authority_files=authority_files,
+        drift_cache=drift_cache)
 
 
 def _started_at(records: list[dict]):
@@ -136,6 +138,7 @@ def list_operations(root: Path, limit: int = 20) -> list[dict]:
                     key=lambda item: _started_at(item[1]) or 0, reverse=True)
     selected = ranked[:max(limit, 0)]
     shared = load_authority_files(root) if selected else None
+    drift_cache: dict = {}
     rows = []
     for op, records in selected:
         records = sorted(records, key=lambda row: row.get("ts", 0))
@@ -145,7 +148,8 @@ def list_operations(root: Path, limit: int = 20) -> list[dict]:
         started = _started_at(records)
         finished = max([row.get("ts") for row in ends if row.get("ts")] or [None])
         authority = _evidence_for(root, records, observed,
-                                  authority_files=shared)
+                                  authority_files=shared,
+                                  drift_cache=drift_cache if shared is not None else None)
         diagnosis = resolve(records, authority)
         replayed = any((row.get("attrs") or {}).get("replayed") for row in
                        _summaries(records)) or len(starts) > 1

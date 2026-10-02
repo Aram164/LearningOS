@@ -471,3 +471,31 @@ def test_definitive_codes_match_the_ui_contract():
     ui_codes = set(re.findall(r"'([A-Z_]+)'", block.group(1)))
     assert ui_codes, "no codes parsed from the UI contract"
     assert set(conventions.DEFINITIVE_NO_COMMIT_CODES) == ui_codes
+
+
+def test_shared_drift_cache_walks_the_data_roots_once(mini_repo: Path,
+                                                      monkeypatch):
+    """Diagnosing many operations against one authority load walks the
+    authored-data roots once, not once per row (Operations lists 20)."""
+    from learning_os.diagnostics import resolver
+
+    _, result = _commit_capture_v2(mini_repo, "drift-cache", "request-cache")
+    contracts = mini_repo / "system/contracts/capabilities.yaml"
+    contracts.write_text(
+        contracts.read_text(encoding="utf-8") + "\n# contract-only drift probe\n",
+        encoding="utf-8")
+    live = _live_snapshot(mini_repo)
+    calls = []
+    real = resolver.data_roots_fingerprint
+    monkeypatch.setattr(resolver, "data_roots_fingerprint",
+                        lambda root: calls.append(root) or real(root))
+    shared = resolver.load_authority_files(mini_repo)
+    cache: dict = {}
+    for _ in range(5):
+        authority = collect_authority(
+            mini_repo, request_id="request-cache",
+            idempotency_key="drift-cache", capability="capture.create",
+            response={"snapshot_after": result.snapshot_after},
+            manifest_snapshot=live, authority_files=shared, drift_cache=cache)
+        assert authority.contract_only_drift is True
+    assert len(calls) == 1

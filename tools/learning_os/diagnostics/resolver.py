@@ -212,7 +212,8 @@ def collect_authority(root: Path, *, request_id: str, idempotency_key: str,
                       manifest_snapshot: str | None = None,
                       response_codes: list | None = None,
                       authority_files: tuple[list[dict], dict, list[str]]
-                      | None = None) -> AuthorityEvidence:
+                      | None = None,
+                      drift_cache: dict | None = None) -> AuthorityEvidence:
     """Read receipts and the idempotency ledger; pure reads, no inference.
 
     ``authority_files`` is one shared :func:`load_authority_files` result
@@ -254,7 +255,17 @@ def collect_authority(root: Path, *, request_id: str, idempotency_key: str,
     error = (response or {}).get("error") or {}
     codes = list(response_codes) if response_codes is not None else [error.get("code")]
     snapshot_after = (response or {}).get("snapshot_after")
-    drift_receipt = contract_only_drift_receipt(root, receipts, manifest_snapshot)
+    # The contract-only check walks every authored-data root once. A caller
+    # diagnosing several operations against one shared ``authority_files``
+    # passes one ``drift_cache`` so the walk happens once per invocation,
+    # not once per row; the answer depends only on the shared receipts and
+    # the live manifest snapshot, which are the cache key's whole input.
+    if drift_cache is not None and manifest_snapshot in drift_cache:
+        drift_receipt = drift_cache[manifest_snapshot]
+    else:
+        drift_receipt = contract_only_drift_receipt(root, receipts, manifest_snapshot)
+        if drift_cache is not None:
+            drift_cache[manifest_snapshot] = drift_receipt
     drift_id = drift_receipt.get("id") if drift_receipt is not None else None
     return AuthorityEvidence(
         request_id=request_id,
