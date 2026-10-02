@@ -109,6 +109,23 @@ def test_inbox_resolve_moves_a_whole_folder(mini_repo: Path):
     assert (mini_repo / f"archive/inbox/{year}/pack/two.md").read_bytes() == b"two\n"
 
 
+def test_inbox_read_on_a_folder_hands_out_the_digest_resolve_checks(mini_repo: Path):
+    """The folder digest must be obtainable from a read, never hand-derived."""
+    folder = mini_repo / "work/inbox/pack"
+    folder.mkdir()
+    (folder / "one.md").write_bytes(b"one\n")
+    (folder / "two.md").write_bytes(b"two\n")
+    read = run_los(mini_repo, "inbox-read", "pack")
+    assert read.returncode == 0, read.stderr
+    payload = json.loads(read.stdout)
+    assert payload["contract"] == "inbox-folder"
+    assert payload["files"] == ["pack/one.md", "pack/two.md"]
+    proc = _resolve(mini_repo, "inbox-resolve-folder-read", "pack",
+                    payload["drop_sha256"], ["workspace-demo/scratch"])
+    assert proc.returncode == 0, proc.stderr
+    assert not folder.exists()
+
+
 def test_inbox_resolve_refuses_a_changed_drop(mini_repo: Path):
     drop = mini_repo / "work/inbox/note.md"
     drop.write_text("first\n", encoding="utf-8")

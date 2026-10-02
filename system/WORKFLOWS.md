@@ -590,8 +590,9 @@ envelope (§25c) with the drop's SHA-256 — `inbox-read` reports it as
 path, source id, receipt id, …). The drop moves byte-identical to
 `archive/inbox/YYYY/`; a changed drop refuses, and the receipt names both
 endpoints plus `routed_to`. A drop folder resolves whole, or file by
-file; `inbox-list` reports each file's age, and `INBOX-STALE` flags each
-file recursively by its own age.
+file: `inbox-read FOLDER` lists its files and reports the whole-folder
+digest as `drop_sha256`. `inbox-list` reports each file's age, and
+`INBOX-STALE` flags each file recursively by its own age.
 
 Agent friction notes are not inbox drops: they live directly in
 `work/complaints/` (see its README), so the inbox stays for learner

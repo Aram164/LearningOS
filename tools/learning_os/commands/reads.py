@@ -664,13 +664,36 @@ def cmd_note_read(args) -> int:
         return _refusal(exc)
 
 
+def _inbox_folder_envelope(root: Path, name: str) -> dict:
+    """A folder drop's file names and the digest inbox-resolve checks.
+
+    Uses the resolve path's own admission, collection and digest, so the
+    value a reader is handed is exactly the value the write recomputes.
+    """
+    from .inbox import _admit, _collect, _folder_digest
+
+    inbox = root / "work" / "inbox"
+    try:
+        files = _collect(inbox, _admit(inbox, name))
+    except ValueError as exc:
+        raise WriteRefused(str(exc)) from exc
+    return {
+        "contract": "inbox-folder", "item": name,
+        "path": (inbox / name).relative_to(root).as_posix(),
+        "files": sorted(files),
+        "drop_sha256": _folder_digest(files),
+    }
+
+
 def cmd_inbox_read(args) -> int:
     """Read a bounded segment of one work/inbox file by inbox-relative name.
 
     Inbox drops are addressed by name — they have no registry and no stable
     ids — and may be binary, so non-UTF-8 bytes refuse rather than decode.
     Discovery lists non-dot files (the same rule as the inbox count); an
-    exact name reads whatever it addresses, dot-files included.
+    exact name reads whatever it addresses, dot-files included. A folder
+    drop answers its file names plus ``drop_sha256``, the digest
+    ``inbox-resolve`` seals for the whole folder; no other read exposes it.
     """
     root = _root(args)
     try:
@@ -681,6 +704,8 @@ def cmd_inbox_read(args) -> int:
         with _operator_lock(root):
             snapshot = _snapshot(root, args.expected_snapshot)
             target = root / "work" / "inbox" / name
+            if target.is_dir() and not target.is_symlink():
+                return _print_stable(root, snapshot, _inbox_folder_envelope(root, name))
             if not target.is_symlink() and not target.is_file():
                 raise WriteRefused(f"inbox item not found: {name}")
             raw = _bytes_inside_owner(

@@ -657,8 +657,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("name", help="drop name relative to work/inbox/ (list names with inbox-list); "
                                "one drop, or one file inside a drop folder")
     p.add_argument("--drop-sha256", type=sha256_value, required=True,
-                   help="SHA-256 of the exact drop bytes read (inbox-read content_sha256 for a file; "
-                        "SHA-256 over the sorted name-to-sha map for a folder)")
+                   help="SHA-256 of the exact drop read: inbox-read's content_sha256 for a file, "
+                        "its drop_sha256 for a folder")
     p.add_argument("--routed-to", action="append", required=True,
                    help="where the drop went (note id, workspace path, source id, receipt id, …); "
                         "repeatable, at least one required, recorded on the receipt")
