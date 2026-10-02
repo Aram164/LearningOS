@@ -28,7 +28,7 @@ from typing import Any
 
 from .identity import digest_bytes, digest_code_identity, digest_producer_files, runtime_digest
 from .model import DerivedError, InputRef, NodeSpec, NodeState, node_key
-from .store import canonical_bytes, lookup, read_state, store_node
+from .store import canonical_bytes, lookup, read_state, store_node, sweep_unreferenced_blobs
 
 
 @dataclass(frozen=True)
@@ -97,11 +97,17 @@ def commit_staging(root: Path, staging: Staging) -> None:
 
     Blobs-first/state-last per node, exactly as an immediate store;
     committing twice publishes once (the second commit finds nothing).
+    After the state is durable, unreferenced blobs are collected: a crash
+    mid-sweep only leaves extra orphans.
     """
     for node_id in sorted(staging.pending):
         key, value = staging.pending[node_id]
         store_node(root, node_id, node_key=key, value=value)
     staging.pending.clear()
+    try:
+        sweep_unreferenced_blobs(root)
+    except OSError:
+        pass
 
 
 @dataclass

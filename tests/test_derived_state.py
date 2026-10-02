@@ -23,6 +23,7 @@ from learning_os.derived import (
     NodeSpec,
     canonical_bytes,
     canonical_snapshot_digest,
+    commit_staging,
     derived_dir,
     digest_bytes,
     digest_code_tree,
@@ -37,6 +38,7 @@ from learning_os.derived import (
     runtime_digest,
     state_path,
     store_node,
+    sweep_unreferenced_blobs,
 )
 from learning_os.genout.outputs import _KEEP_TOP_DIRS, _remove_stale
 
@@ -476,3 +478,67 @@ def test_canonical_snapshot_ignores_non_inputs(tmp_path: Path):
     pycache.mkdir(parents=True)
     (pycache / "m.pyc").write_bytes(b"compiled")
     assert canonical_snapshot_digest(tmp_path) == steady
+
+
+# ---------------------------------------------------------------------------
+# Blob collection (#108).
+# ---------------------------------------------------------------------------
+
+def test_sweep_deletes_only_unreferenced_blobs(tmp_path: Path):
+    first = store_node(tmp_path, "n", node_key="k1", value={"v": 1})
+    second = store_node(tmp_path, "n", node_key="k2", value={"v": 2})
+    other = store_node(tmp_path, "other", node_key="k", value={"v": 3})
+    result = sweep_unreferenced_blobs(tmp_path)
+    assert result["deleted"] == 1
+    assert result["kept"] == 2
+    assert not (derived_dir(tmp_path) / first.blob).exists()
+    assert (derived_dir(tmp_path) / second.blob).exists()
+    assert (derived_dir(tmp_path) / other.blob).exists()
+    assert lookup(tmp_path, "n")[1] == {"v": 2}
+
+
+def test_sweep_crash_between_blob_and_state_keeps_referenced(tmp_path: Path):
+    """A blob written but never published is at most an orphan."""
+    live = store_node(tmp_path, "n", node_key="k1", value={"v": 1})
+    blobs = derived_dir(tmp_path) / "blobs"
+    orphan_bytes = canonical_bytes({"v": "crashed"})
+    orphan_digest = hashlib.sha256(orphan_bytes).hexdigest()
+    (blobs / orphan_digest).write_bytes(orphan_bytes)
+    result = sweep_unreferenced_blobs(tmp_path)
+    assert result["deleted"] == 1
+    assert (derived_dir(tmp_path) / live.blob).exists()
+    assert not (blobs / orphan_digest).exists()
+    assert lookup(tmp_path, "n")[1] == {"v": 1}
+
+
+def test_commit_staging_collects_superseded_blobs(tmp_path: Path):
+    from learning_os.derived import Staging
+
+    first = store_node(tmp_path, "n", node_key="k1", value={"v": 1})
+    staging = Staging(pending={"n": ("k2", {"v": 2})})
+    commit_staging(tmp_path, staging)
+    assert staging.pending == {}
+    assert not (derived_dir(tmp_path) / first.blob).exists()
+    assert lookup(tmp_path, "n")[1] == {"v": 2}
+    blobs = list((derived_dir(tmp_path) / "blobs").iterdir())
+    assert len(blobs) == 1
+
+
+def test_sweep_dry_run_reports_without_deleting(tmp_path: Path):
+    first = store_node(tmp_path, "n", node_key="k1", value={"v": 1})
+    store_node(tmp_path, "n", node_key="k2", value={"v": 2})
+    result = sweep_unreferenced_blobs(tmp_path, dry_run=True)
+    assert result["deleted"] == 1
+    assert (derived_dir(tmp_path) / first.blob).exists()
+
+
+def test_sweep_skips_symlinks_and_non_blob_names(tmp_path: Path):
+    store_node(tmp_path, "n", node_key="k", value={"v": 1})
+    blobs = derived_dir(tmp_path) / "blobs"
+    (blobs / "not-a-blob").write_text("scratch", encoding="utf-8")
+    link = blobs / ("f" * 64)
+    link.symlink_to(blobs / "not-a-blob")
+    result = sweep_unreferenced_blobs(tmp_path)
+    assert result["skipped"] == 2
+    assert (blobs / "not-a-blob").exists()
+    assert link.is_symlink()

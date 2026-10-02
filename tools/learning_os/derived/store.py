@@ -234,3 +234,49 @@ def store_node(root: Path, node_id: str, *, node_key: str, value: Any) -> NodeSt
         _checked_store_dir(root, DERIVED_TOP_DIR) / STATE_FILENAME,
         canonical_bytes(_state_payload(states)))
     return state
+
+
+def sweep_unreferenced_blobs(root: Path, *, dry_run: bool = False) -> dict[str, int]:
+    """Delete blobs no current state entry references; return counts.
+
+    Crash-safe by construction: the state index is read first and only
+    files it does not name are removed, so a blob written but not yet
+    published (a crash between blob and state) is at most deleted as an
+    orphan, while every blob the surviving state references is kept.
+    Call only after the state is durable, under the single-writer
+    assumption (operator lock / single CLI process). Symlinks and
+    non-blob names are left alone.
+    """
+    states = read_state(root)
+    referenced = {state.output_sha256 for state in states.values()}
+    blobs_dir = derived_dir(root) / BLOBS_DIRNAME
+    try:
+        entries = list(blobs_dir.iterdir())
+    except OSError:
+        return {"referenced": len(referenced), "kept": 0, "deleted": 0,
+                "skipped": 0}
+    kept = deleted = skipped = 0
+    for entry in entries:
+        try:
+            if entry.is_symlink() or not entry.is_file():
+                skipped += 1
+                continue
+        except OSError:
+            skipped += 1
+            continue
+        if not _BLOB_RE.fullmatch(entry.name):
+            skipped += 1
+            continue
+        if entry.name in referenced:
+            kept += 1
+            continue
+        if dry_run:
+            deleted += 1
+            continue
+        try:
+            entry.unlink()
+            deleted += 1
+        except OSError:
+            skipped += 1
+    return {"referenced": len(referenced), "kept": kept, "deleted": deleted,
+            "skipped": skipped}

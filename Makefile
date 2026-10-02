@@ -12,7 +12,7 @@ VENV   := .venv
 # Homebrew "externally-managed-environment" errors on macOS.
 PY := $(shell [ -x $(VENV)/bin/python ] && echo $(VENV)/bin/python || echo $(PYTHON))
 
-.PHONY: help check warnings views materials inventory verify-materials contract test test-fast test-group test-affected bench lint code-check all setup setup-lean hooks garden status plan-check projection-check system-check stress
+.PHONY: help check warnings views materials inventory verify-materials contract test test-fast test-group test-affected bench lint code-check all setup setup-lean hooks garden status plan-check projection-check system-check stress clean-derived
 
 help:
 	@echo "make check  - validate the repository (schemas + semantic rules)"
@@ -37,6 +37,7 @@ help:
 	@echo "make lint   - run the defect-oriented static checks used by CI"
 	@echo "make code-check - verify Core reachability, dependency cycles, and entrypoint direction"
 	@echo "make projection-check - verify the four migrated projections under one snapshot"
+	@echo "make clean-derived - sweep unreferenced derived-state blobs (disposable cache)"
 	@echo "make plan-check - verify a curriculum revision (focused tests, no UI build)"
 	@echo "make system-check - verify Core and the sibling Obsidian UI as one release pair"
 	@echo "make stress - system-check + production/fuzz/concurrency stress + online URL audit"
@@ -119,6 +120,9 @@ code-check:
 
 projection-check:
 	$(PY) tools/generate.py --shadow-all
+
+clean-derived:
+	$(PY) tools/diagnostics_prune.py --derived-state
 
 # One command answers the question agents repeatedly had to reconstruct by
 # hand: "is the pair I am about to rely on coherent?" It intentionally changes

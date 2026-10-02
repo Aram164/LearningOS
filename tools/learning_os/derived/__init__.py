@@ -48,6 +48,7 @@ from .store import (
     read_state,
     state_path,
     store_node,
+    sweep_unreferenced_blobs,
 )
 
 __all__ = [
@@ -84,5 +85,6 @@ __all__ = [
     "runtime_digest",
     "state_path",
     "store_node",
+    "sweep_unreferenced_blobs",
     "validator_runtime_digest",
 ]
