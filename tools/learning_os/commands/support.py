@@ -55,7 +55,8 @@ from learning_os.transactions import (
 
 TOOLS = Path(__file__).resolve().parent.parent.parent
 #: Roots locked by this context: ``((root_key, mode, handle), ...)`` with
-#: mode ``"shared"`` or ``"exclusive"``. Immutable tuples, never mutated in
+#: mode ``"shared"``, ``"exclusive"``, or ``"released"`` after a failed
+#: escalation. Immutable tuples, never mutated in
 #: place: escalation replaces the whole value, and the owning scope's reset
 #: still restores the pre-scope value afterwards.
 _HELD_OPERATOR_LOCKS: contextvars.ContextVar[tuple] = (
@@ -65,7 +66,7 @@ _HELD_OPERATOR_LOCKS: contextvars.ContextVar[tuple] = (
 #: Positive-only cache of repository roots to their git directories. A root
 #: that gains a `.git` mid-process (tests do) must be re-probed, so misses
 #: are never cached; hits are revalidated with `is_dir`.
-_GIT_DIR_CACHE: dict[str, Path] = {}
+_GIT_DIR_CACHE: dict[str, tuple[tuple[int, ...], Path]] = {}
 
 def _root(args) -> Path:
     return Path(args.root).resolve() if args.root else TOOLS.parent
@@ -169,35 +170,48 @@ def _git_dir(root: Path) -> Path | None:
     `git rev-parse --git-dir` answers per checkout (a worktree names its own
     `.git/worktrees/<name>`), so separate checkouts of one repository keep
     separate locks. A relative answer (`.git`) resolves against the root.
-    Anything unresolvable — no git, no repository, a vanished directory —
-    answers None and the caller keeps today's temp-dir location.
+    A root without its own `.git` entry answers None (including synthetic
+    roots inside another checkout). An existing but broken anchor refuses:
+    using a temp lock would let a contender bypass the checkout's real lock.
+    Ambient Git routing variables never determine process-state ownership.
     """
     root_key = str(root.resolve())
+    try:
+        anchor = (Path(root_key) / ".git").lstat()
+    except FileNotFoundError:
+        _GIT_DIR_CACHE.pop(root_key, None)
+        return None
+    except OSError as exc:
+        raise WriteRefused(f"cannot resolve the checkout's git directory: {exc}") from exc
+    anchor_key = (anchor.st_dev, anchor.st_ino, anchor.st_mtime_ns, anchor.st_ctime_ns)
     hit = _GIT_DIR_CACHE.get(root_key)
-    if hit is not None and hit.is_dir():
-        return hit
+    if hit is not None and hit[0] == anchor_key and hit[1].is_dir():
+        return hit[1]
+    env = {key: value for key, value in os.environ.items()
+           if key not in {"GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR"}}
     try:
         proc = subprocess.run(
             ["git", "-C", root_key, "rev-parse", "--git-dir"],
             capture_output=True, text=True, timeout=30,
-            env={**os.environ, "GIT_OPTIONAL_LOCKS": "0"},
+            env={**env, "GIT_OPTIONAL_LOCKS": "0"},
         )
-    except (OSError, subprocess.SubprocessError):
-        return None
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise WriteRefused(f"cannot resolve the checkout's git directory: {exc}") from exc
     if proc.returncode != 0:
-        return None
+        raise WriteRefused(
+            f"cannot resolve the checkout's git directory: {proc.stderr.strip()}")
     lines = proc.stdout.strip().splitlines()
     if not lines or not lines[0].strip():
-        return None
+        raise WriteRefused("cannot resolve the checkout's git directory: empty git response")
     candidate = Path(lines[0].strip())
     resolved = candidate if candidate.is_absolute() else root / candidate
     try:
         if not resolved.is_dir():
-            return None
+            raise WriteRefused(f"checkout git directory is unavailable: {resolved}")
         resolved = resolved.resolve()
-    except OSError:
-        return None
-    _GIT_DIR_CACHE[root_key] = resolved
+    except OSError as exc:
+        raise WriteRefused(f"cannot resolve the checkout's git directory: {exc}") from exc
+    _GIT_DIR_CACHE[root_key] = (anchor_key, resolved)
     return resolved
 
 
@@ -293,7 +307,7 @@ def _has_armed_inflight(root: Path) -> bool:
     try:
         return any(not entry.name.startswith(".preparing-")
                    for entry in inflight.iterdir())
-    except OSError:
+    except FileNotFoundError:
         return False
 
 
@@ -315,6 +329,15 @@ def _escalate_operator_lock(root: Path) -> bool:
     mode, handle = entry
     if mode == "exclusive":
         return False
+    if mode == "released":
+        raise WriteRefused("operator lock is no longer held after a failed escalation")
+    # Invalidate re-entrancy before dropping SH. If acquisition, holder
+    # publication, or recovery fails, an outer caller that catches the
+    # exception must never mistake this scope for a still-held read lock.
+    _HELD_OPERATOR_LOCKS.set(tuple(
+        (key, "released" if key == root_key else held_mode, held_handle)
+        for key, held_mode, held_handle in _HELD_OPERATOR_LOCKS.get()
+    ))
     fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
     _acquire_flock(handle, exclusive=True,
                    lock_path=_operator_lock_path(root),
@@ -352,6 +375,8 @@ def _operator_lock(root: Path, *, shared: bool = False):
     entry = _held_entry(root_key)
     if entry is not None:
         held_mode, _ = entry
+        if held_mode == "released":
+            raise WriteRefused("operator lock is no longer held after a failed escalation")
         if not shared and held_mode == "shared":
             _escalate_operator_lock(root)
         yield

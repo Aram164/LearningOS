@@ -320,3 +320,97 @@ def test_staging_debris_alone_keeps_a_shared_section_shared(mini_repo):
     root_key = str(mini_repo.resolve())
     with _operator_lock(mini_repo, shared=True):
         assert _held_entry(root_key)[0] == "shared"
+
+
+def test_git_environment_cannot_redirect_the_checkout_lock(mini_repo, tmp_path, monkeypatch):
+    """An inherited GIT_DIR must not let a child bypass this checkout's lock."""
+    from learning_os.commands import support
+
+    _git_init(mini_repo)
+    foreign = tmp_path / "foreign"
+    foreign.mkdir()
+    (foreign / "fixture.txt").write_text("foreign git directory")
+    _git_init(foreign)
+    support._GIT_DIR_CACHE.clear()
+    monkeypatch.setenv("GIT_DIR", str(foreign / ".git"))
+    monkeypatch.setenv("GIT_WORK_TREE", str(foreign))
+    assert support._operator_lock_path(mini_repo) == (
+        mini_repo / ".git" / "learningos" / "operator.lock")
+    assert not (foreign / ".git" / "learningos").exists()
+
+
+def test_broken_git_anchor_refuses_instead_of_using_a_second_lock(mini_repo):
+    import pytest
+
+    from learning_os.commands.support import WriteRefused, _operator_lock_path
+
+    (mini_repo / ".git").write_text("gitdir: /missing-learningos-git-dir\n")
+    with pytest.raises(WriteRefused, match="git directory"):
+        _operator_lock_path(mini_repo)
+
+
+def test_unreadable_crash_journal_directory_refuses_shared_reads(mini_repo, monkeypatch):
+    import pytest
+
+    from learning_os.commands.support import _operator_lock
+
+    original = Path.iterdir
+    inflight = mini_repo / "operations" / "transactions" / ".inflight"
+
+    def guarded_iterdir(path):
+        if path == inflight:
+            raise PermissionError("cannot examine armed journals")
+        return original(path)
+
+    monkeypatch.setattr(Path, "iterdir", guarded_iterdir)
+    with pytest.raises(OSError, match="cannot examine armed journals"):
+        with _operator_lock(mini_repo, shared=True):
+            pytest.fail("served a read without proving recovery was unnecessary")
+
+
+def test_failed_escalation_never_leaves_a_reentrant_unlocked_scope(mini_repo, monkeypatch):
+    import pytest
+
+    from learning_os.commands import support
+
+    original = support._acquire_flock
+
+    def fail_exclusive(handle, *, exclusive, **kwargs):
+        if exclusive:
+            raise support.WriteRefused("exclusive acquisition failed")
+        return original(handle, exclusive=exclusive, **kwargs)
+
+    monkeypatch.setattr(support, "_acquire_flock", fail_exclusive)
+    with support._operator_lock(mini_repo, shared=True):
+        with pytest.raises(support.WriteRefused, match="exclusive acquisition failed"):
+            with support._operator_lock(mini_repo):
+                pytest.fail("exclusive acquisition should fail")
+        with pytest.raises(support.WriteRefused, match="no longer held"):
+            with support._operator_lock(mini_repo, shared=True):
+                pytest.fail("an unlocked outer scope cannot be reused")
+
+
+def test_synthetic_root_inside_git_checkout_uses_its_own_fallback(tmp_path):
+    from learning_os.commands.support import _operator_lock_path
+
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    (checkout / "fixture.txt").write_text("checkout")
+    _git_init(checkout)
+    synthetic = checkout / "scratch" / "repository"
+    synthetic.mkdir(parents=True)
+    assert _operator_lock_path(synthetic) != _operator_lock_path(checkout)
+    assert _operator_lock_path(synthetic).parent == Path(tempfile.gettempdir())
+
+
+def test_linked_worktrees_keep_distinct_git_directory_locks(mini_repo, tmp_path):
+    from learning_os.commands.support import _operator_lock_path
+
+    _git_init(mini_repo)
+    linked = tmp_path / "linked"
+    subprocess.run(["git", "worktree", "add", "--detach", "-q", str(linked)],
+                   cwd=mini_repo, check=True)
+    original_lock = _operator_lock_path(mini_repo)
+    linked_lock = _operator_lock_path(linked)
+    assert linked_lock != original_lock
+    assert linked_lock == mini_repo / ".git" / "worktrees" / "linked" / "learningos" / "operator.lock"
