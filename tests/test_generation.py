@@ -196,40 +196,61 @@ def test_real_repo_generates_and_selector_views_present(real_generated):
     assert "## Neglect signals (Git)" in coord
 
 
+def _t2_state(module, day, end):
+    """The state the projector derives for a second-termin sitting.
+
+    A recorded attempt settles it; otherwise it is unregistered while
+    upcoming and unrecorded once elapsed. Mirrors the projector's own
+    rule so these live-data tests stay correct after Aram records his
+    registrations — the future #90 enables.
+    """
+    matching = [att for att in module.get("attempts", []) or []
+                if att.get("termin") == 2 and str(att.get("date", "")) == end]
+    for result in ("registered", "sat", "passed", "failed", "withdrawn"):
+        if any(att.get("result") == result for att in matching):
+            return result
+    return "unregistered" if day <= end else "unrecorded"
+
+
 @pytest.mark.full_repo
-def test_real_manifest_exposes_unregistered_sittings_and_registration_gate(real_manifest):
+def test_real_manifest_reports_missing_records_and_drops_retired_rows(
+        real_manifest, real_repo):
     manifest = real_manifest
     deadlines = manifest["academic_deadlines"]
-    pending = {(row.get("module_id"), row.get("start_date"), row.get("end_date"))
-               for row in deadlines
-               if row.get("kind") == "exam" and row.get("registration_state") == "unregistered"}
-    for sitting in (
-        ("module-hu-aml", "2026-09-30", "2026-09-30"),
-        ("module-hu-m2-statistik-analysis", "2026-10-09", "2026-10-09"),
-        ("module-hu-algo2", "2026-10-05", "2026-10-08"),
-    ):
-        # Elapsed, never-chosen sittings cease being actionable. Check both
-        # inclusion and exclusion instead of expiring this test with the exam.
-        assert (sitting in pending) == (datetime.date.today().isoformat() <= sitting[2])
-    [window] = [row for row in deadlines
+    today = datetime.date.today().isoformat()
+    exams = {(row.get("module_id"), row.get("start_date")): row.get("registration_state")
+             for row in deadlines if row.get("kind") == "exam"}
+    # A sitting with no recorded attempt is a visible missing record on
+    # both sides of its date — never silently removed, never a false
+    # "unregistered"-as-choice once elapsed.
+    for module_id, end in (("module-hu-aml", "2026-09-30"),
+                           ("module-hu-m2-statistik-analysis", "2026-10-09")):
+        module = real_repo.modules[module_id]
+        assert exams.get((module_id, end)) == _t2_state(module, today, end)
+    # Past sittings with attempts stay visible as history.
+    assert exams.get(("module-hu-aml", "2026-07-22")) == "withdrawn"
+    assert exams.get(("module-hu-m2-statistik-analysis", "2026-07-27")) == "withdrawn"
+    # Retired modules contribute no exam rows, open or otherwise.
+    assert {(module_id, start) for (module_id, start) in exams
+            if module_id in {"module-hu-algo2", "module-hu-amls"}} == set()
+    for row in deadlines:
+        for entry in row.get("modules", []) or []:
+            assert entry["module_id"] not in {"module-hu-algo2", "module-hu-amls"}
+    # The closed 2.-PZ window is gone; any surviving window must be open.
+    assert not [row for row in deadlines
                 if row.get("kind") == "registration-window"
-                and row.get("start_date") == "2026-08-31"
-                and row.get("end_date") == "2026-09-10"]
-    assert {module["module_id"] for module in window["modules"]} == {
-        "module-hu-aml", "module-hu-m2-statistik-analysis", "module-hu-algo2"
-    }
+                and row.get("label") == "2.-PZ Anmeldung"]
+    for row in deadlines:
+        if row.get("kind") == "registration-window":
+            assert row["end_date"] >= today
 
 
 @pytest.mark.full_repo
-@pytest.mark.parametrize("day,expected", [
-    ("2026-09-29", {"module-hu-aml", "module-hu-m2-statistik-analysis", "module-hu-algo2"}),
-    ("2026-09-30", {"module-hu-aml", "module-hu-m2-statistik-analysis", "module-hu-algo2"}),
-    ("2026-10-01", {"module-hu-m2-statistik-analysis", "module-hu-algo2"}),
-    ("2026-10-08", {"module-hu-m2-statistik-analysis", "module-hu-algo2"}),
-    ("2026-10-09", {"module-hu-m2-statistik-analysis"}),
-    ("2026-10-10", set()),
+@pytest.mark.parametrize("day", [
+    "2026-09-05", "2026-09-29", "2026-09-30", "2026-10-01",
+    "2026-10-08", "2026-10-09", "2026-10-10",
 ])
-def test_real_sitting_expiry_boundaries(real_repo, monkeypatch, day, expected):
+def test_real_sitting_expiry_boundaries(real_repo, monkeypatch, day):
     from learning_os.genout import modules_view
 
     class FrozenDate(datetime.date):
@@ -241,12 +262,29 @@ def test_real_sitting_expiry_boundaries(real_repo, monkeypatch, day, expected):
     # unchanged, and the shared generated-manifest fixture is never replaced.
     monkeypatch.setattr(modules_view, "_dt", SimpleNamespace(date=FrozenDate))
     deadlines = modules_view._academic_deadlines(real_repo)
-    target = {"module-hu-aml", "module-hu-m2-statistik-analysis", "module-hu-algo2"}
-    pending = {row["module_id"] for row in deadlines
-               if row.get("kind") == "exam"
-               and row.get("registration_state") == "unregistered"
-               and row.get("module_id") in target}
-    assert pending == expected
+    target = {"module-hu-aml": "2026-09-30",
+              "module-hu-m2-statistik-analysis": "2026-10-09"}
+    got = {row["module_id"]: row["registration_state"] for row in deadlines
+           if row.get("kind") == "exam" and row.get("termin") == 2
+           and row.get("module_id") in target}
+    assert got == {module_id: _t2_state(real_repo.modules[module_id], day, end)
+                   for module_id, end in target.items()}
+    # Retired modules never contribute, on either side of a boundary.
+    retired = {"module-hu-algo2", "module-hu-amls"}
+    assert {row.get("module_id") for row in deadlines
+            if row.get("module_id") in retired} == set()
+    for row in deadlines:
+        for entry in row.get("modules", []) or []:
+            assert entry["module_id"] not in retired
+    windows = [row for row in deadlines
+               if row.get("kind") == "registration-window"
+               and row.get("label") == "2.-PZ Anmeldung"]
+    if day <= "2026-09-10":
+        assert len(windows) == 1
+        assert {entry["module_id"] for entry in windows[0]["modules"]} == {
+            "module-hu-aml", "module-hu-m2-statistik-analysis"}
+    else:
+        assert windows == []
 
 
 # ---------------------------------------------------------------- domain atlas

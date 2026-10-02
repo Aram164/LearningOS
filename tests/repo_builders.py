@@ -92,7 +92,7 @@ def add_curriculum(root: Path) -> None:
         "examination": {
             "type": "klausur",
             "sittings": [
-                {"termin": 3, "date": "2000-01-01", "label": "Elapsed unregistered sitting"},
+                {"termin": 3, "date": "2000-01-01", "label": "Elapsed sitting with no attempt"},
                 {"termin": 2, "date": "2026-10-09",
                  "time": "13:00-16:00", "label": "2. Termin"},
             ],

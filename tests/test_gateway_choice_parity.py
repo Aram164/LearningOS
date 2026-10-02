@@ -1,6 +1,6 @@
 """CLI-vs-gateway choice parity (#87).
 
-The ten enumerated payload fields must accept and refuse exactly the same
+The eleven enumerated payload fields must accept and refuse exactly the same
 values on both documented interfaces: the bare CLI (argparse `choices`)
 and the capability gateway (generated schema `enum` plus the
 `payload_to_namespace` defence in depth). Before this, the gateway
@@ -135,6 +135,16 @@ CASES = [
                            "--expected-content-sha256", SHA],
         "payload": lambda v: {"section": v, "text": "t",
                               "expected_content_sha256": SHA},
+    },
+    {
+        "capability": "module.attempt.record",
+        "command": "module-attempt",
+        "field": "result",
+        "valid": ["registered", "withdrawn", "sat", "passed", "failed"],
+        "argv": lambda v: ["module-x", "--termin", "2", "--date", "2026-10-09",
+                           "--result", v],
+        "payload": lambda v: {"module_id": "module-x", "termin": 2,
+                              "date": "2026-10-09", "result": v},
     },
 ]
 

@@ -422,6 +422,29 @@ def test_brief_startup_is_one_guarded_page_with_runnable_expands(mini_repo):
         f"plan-edit-context unit-demo-l02 --brief --expected-snapshot {snapshot}"]
 
 
+def test_brief_reports_a_missing_registration_as_a_missing_fact(mini_repo):
+    """#90: the brief says 'registration not recorded', never 'unregistered'."""
+    import datetime as _dt
+
+    add_curriculum(mini_repo)
+    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
+    module_path = mini_repo / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module["examination"]["sittings"][1]["date"] = date
+    module["attempts"] = [att for att in module["attempts"] if att.get("termin") != 2]
+    write_yaml(module_path, module)
+    brief = run_los(mini_repo, "bootstrap", "--brief")
+    assert brief.returncode == 0, brief.stderr
+    rows = json.loads(brief.stdout)["academic_deadlines"]
+    assert "unregistered" not in json.dumps(rows)
+    mine = next(row for row in rows if row.get("termin") == 2)
+    assert (mine["start_date"], mine["registration_state"]) == (
+        date, "registration not recorded")
+    # The elapsed sitting without an attempt keeps its distinct state.
+    assert next(row for row in rows if row.get("termin") == 3)[
+        "registration_state"] == "unrecorded"
+
+
 def test_brief_startup_refuses_paging_and_mixed_modes(mini_repo):
     for args in (("bootstrap", "--brief", "--offset", "1"),
                  ("bootstrap", "--brief", "--compact")):

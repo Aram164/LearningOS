@@ -329,7 +329,11 @@ def test_resume_renders_the_pointer_stage(mini_repo: Path):
         "study_map_id": "study-map-demo-l01", "stage_id": "stage-demo"}
     assert content["requirement"]["id"] == "req-demo-l01-demo"
     assert content["observations"] == []
-    assert content["sittings"][0]["start_date"] == "2026-10-09"
+    # The dossier sees the same projection as every other read: the
+    # elapsed sitting without an attempt stays visible as unrecorded.
+    assert [(row["start_date"], row["registration_state"])
+            for row in content["sittings"]] == [
+        ("2000-01-01", "unrecorded"), ("2026-10-09", "registered")]
     text = run_los(mini_repo, "resume")
     assert text.returncode == 0, text.stderr
     assert "req-demo-l01-demo" in text.stdout

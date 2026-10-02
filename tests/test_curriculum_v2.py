@@ -12,7 +12,13 @@ from pathlib import Path
 
 import pytest
 import yaml
-from gateway_helpers import approved_v2_cli, approved_v2_envelope, file_sha256, request_artifact_id
+from gateway_helpers import (
+    approved_v2_cli,
+    approved_v2_envelope,
+    file_sha256,
+    request_artifact_id,
+    run_v2_capability,
+)
 from repo_builders import _add_material_overview, add_curriculum, run_los, write_yaml
 
 from learning_os.contracts.manifest_contract import declared_version
@@ -231,17 +237,324 @@ def test_manifest_v2_exposes_full_curriculum_and_reverse_indexes(mini_repo):
     assert manifest["indexes"]["source_to_units"] == {"source-demo-book": ["unit-demo-l01"]}
     assert manifest["resume_pointer"]["stage_id"] == "stage-demo"
     assert manifest["progress"]["module-demo"]["stages_total"] == 1
+    # The 2.-PZ window closed 2026-09-10, so it leaves the actionable
+    # list; the elapsed termin-3 sitting with no attempt stays visible as
+    # unrecorded instead of silently dropping out.
     assert manifest["academic_deadlines"] == [
-        {"kind": "registration-window", "start_date": "2026-08-31",
-         "end_date": "2026-09-10", "label": "2.-PZ Anmeldung",
-         "modules": [{"module_id": "module-demo", "title": "Demo Module",
-                      "action": "Register via AGNES.", "termins": [2]}]},
+        {"kind": "exam", "start_date": "2000-01-01", "end_date": "2000-01-01",
+         "module_id": "module-demo", "title": "Demo Module", "termin": 3,
+         "label": "Elapsed sitting with no attempt", "time": None, "notes": None,
+         "registration_state": "unrecorded"},
         {"kind": "exam", "start_date": "2026-10-09", "end_date": "2026-10-09",
          "module_id": "module-demo", "title": "Demo Module", "termin": 2,
          "label": "2. Termin", "time": "13:00-16:00", "notes": None,
          "registration_state": "registered"},
     ]
-    assert "Elapsed unregistered sitting" not in json.dumps(manifest["academic_deadlines"])
+
+
+# ------------------------------------------------- module.attempt.record (#90)
+
+
+def _demo_module_path(mini_repo):
+    return mini_repo / "curriculum/modules/module-demo/module.yaml"
+
+
+def _read_demo_module(mini_repo):
+    return yaml.safe_load(_demo_module_path(mini_repo).read_text(encoding="utf-8"))
+
+
+def _deadline_rows(mini_repo):
+    repo = load_repo(mini_repo)
+    assert [issue for issue in validate(repo) if issue.severity == "E"] == []
+    manifest = json.loads(generate_all(repo, "T1")["manifest.json"])
+    return manifest["academic_deadlines"]
+
+
+def test_module_attempt_records_a_registration_visible_on_every_read(mini_repo):
+    """One envelope, no plan package: every read reports the sitting as registered."""
+    import datetime as _dt
+
+    add_curriculum(mini_repo)
+    date = (_dt.date.today() + _dt.timedelta(days=2)).isoformat()
+    module = _read_demo_module(mini_repo)
+    module["examination"]["sittings"][1]["date"] = date
+    module["attempts"] = [att for att in module["attempts"] if att.get("termin") != 2]
+    write_yaml(_demo_module_path(mini_repo), module)
+
+    applied = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "2", "--date", date, "--result", "registered",
+        artifact_ids=["module-demo"], idempotency_key="attempt-e2e-001")
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    result = gateway_result(applied)
+    assert result["attempt"] == {"termin": 2, "date": date, "result": "registered"}
+    receipt = yaml.safe_load((mini_repo / result["receipt_path"]).read_text())
+    assert {row["path"] for row in receipt["writes"]} == {
+        "curriculum/modules/module-demo/module.yaml"}
+    stored = _read_demo_module(mini_repo)
+    assert {"termin": 2, "date": date, "result": "registered"} in stored["attempts"]
+
+    rows = [row for row in _deadline_rows(mini_repo) if row.get("kind") == "exam"]
+    mine = next(row for row in rows if row["termin"] == 2)
+    assert (mine["start_date"], mine["registration_state"]) == (date, "registered")
+
+    study = run_los(mini_repo, "resume", "--study", "--json")
+    assert study.returncode == 0, study.stderr
+    option = json.loads(study.stdout)["study_option"]
+    assert (option["exam_date"], option["registration_state"]) == (date, "registered")
+
+    brief = run_los(mini_repo, "bootstrap", "--brief")
+    assert brief.returncode == 0, brief.stderr
+    brows = [row for row in json.loads(brief.stdout)["academic_deadlines"]
+             if row.get("termin") == 2]
+    assert [(row["start_date"], row["registration_state"]) for row in brows] == [
+        (date, "registered")]
+
+    status = run_los(mini_repo, "status", "--json")
+    assert status.returncode == 0, status.stderr
+    spine = json.loads(status.stdout)["exam_spine"]
+    assert {"date": date, "module_id": "module-demo",
+            "title": "Demo Module", "termin": 2} in spine
+
+
+def test_module_attempt_updates_the_same_termin_and_maps_sat(mini_repo):
+    add_curriculum(mini_repo)
+    applied = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "2", "--date", "2026-10-09", "--result", "sat",
+        "--notes", "sat, awaiting grade",
+        artifact_ids=["module-demo"], idempotency_key="attempt-sat-001")
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    stored = _read_demo_module(mini_repo)
+    assert [att for att in stored["attempts"] if att.get("termin") == 2] == [
+        {"termin": 2, "date": "2026-10-09", "result": "sat",
+         "notes": "sat, awaiting grade"}]
+    rows = [row for row in _deadline_rows(mini_repo) if row.get("kind") == "exam"]
+    assert next(row for row in rows if row["termin"] == 2)["registration_state"] == "sat"
+
+
+def test_module_attempt_records_passed_with_grade(mini_repo):
+    add_curriculum(mini_repo)
+    applied = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "2", "--date", "2026-10-09", "--result", "passed",
+        "--grade", "2.3",
+        artifact_ids=["module-demo"], idempotency_key="attempt-grade-001")
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    stored = _read_demo_module(mini_repo)
+    assert [att for att in stored["attempts"] if att.get("termin") == 2] == [
+        {"termin": 2, "date": "2026-10-09", "result": "passed", "grade": 2.3}]
+
+
+def test_elapsed_unrecorded_sitting_settles_once_recorded(mini_repo, monkeypatch):
+    import datetime as _dt
+    from types import SimpleNamespace
+
+    from learning_os.genout import modules_view
+
+    add_curriculum(mini_repo)
+    module = _read_demo_module(mini_repo)
+    module["attempts"] = [att for att in module["attempts"] if att.get("termin") != 2]
+    write_yaml(_demo_module_path(mini_repo), module)
+
+    class FrozenDate(_dt.date):
+        @classmethod
+        def today(cls):
+            return cls.fromisoformat("2026-10-10")
+
+    # Freeze only this producer's clock, as the sitting-expiry tests do.
+    monkeypatch.setattr(modules_view, "_dt", SimpleNamespace(date=FrozenDate))
+    rows = modules_view._academic_deadlines(load_repo(mini_repo))
+    mine = next(row for row in rows if row.get("termin") == 2)
+    assert (mine["start_date"], mine["registration_state"]) == ("2026-10-09", "unrecorded")
+
+    applied = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "2", "--date", "2026-10-09", "--result", "withdrawn",
+        artifact_ids=["module-demo"], idempotency_key="attempt-settle-001")
+    assert applied.returncode == 0, applied.stdout + applied.stderr
+    rows = modules_view._academic_deadlines(load_repo(mini_repo))
+    assert next(row for row in rows if row.get("termin") == 2)[
+        "registration_state"] == "withdrawn"
+
+
+def test_withdrawal_deadline_row_appears_and_disappears(mini_repo):
+    add_curriculum(mini_repo)
+    module = _read_demo_module(mini_repo)
+    # Clock-independent: move the sitting far ahead with its deadline.
+    module["examination"]["sittings"][1]["date"] = "2099-02-01"
+    module["examination"]["sittings"][1]["withdrawal_deadline"] = "2099-01-05"
+    module["attempts"] = [att for att in module["attempts"] if att.get("termin") != 2]
+    write_yaml(_demo_module_path(mini_repo), module)
+
+    rows = [row for row in _deadline_rows(mini_repo)
+            if row.get("kind") == "withdrawal-deadline"]
+    assert rows == [{
+        "kind": "withdrawal-deadline", "start_date": "2099-01-05",
+        "end_date": "2099-01-05", "module_id": "module-demo",
+        "title": "Demo Module", "termin": 2,
+        "label": "2. Termin withdrawal deadline",
+        "registration_state": "unregistered"}]
+
+    registered = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "2", "--date", "2099-02-01", "--result", "registered",
+        artifact_ids=["module-demo"], idempotency_key="attempt-wd-001")
+    assert registered.returncode == 0, registered.stdout + registered.stderr
+    rows = [row for row in _deadline_rows(mini_repo)
+            if row.get("kind") == "withdrawal-deadline"]
+    assert [row["registration_state"] for row in rows] == ["registered"]
+
+    withdrawn = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "2", "--date", "2099-02-01", "--result", "withdrawn",
+        artifact_ids=["module-demo"], idempotency_key="attempt-wd-002")
+    assert withdrawn.returncode == 0, withdrawn.stdout + withdrawn.stderr
+    rows = [row for row in _deadline_rows(mini_repo)
+            if row.get("kind") == "withdrawal-deadline"]
+    assert rows == []
+    exams = [row for row in _deadline_rows(mini_repo) if row.get("kind") == "exam"]
+    assert next(row for row in exams if row["termin"] == 2)[
+        "registration_state"] == "withdrawn"
+
+    # A passed deadline never projects, even with no attempt recorded.
+    module = _read_demo_module(mini_repo)
+    module["attempts"] = [att for att in module["attempts"] if att.get("termin") != 2]
+    module["examination"]["sittings"][1]["withdrawal_deadline"] = "2000-01-01"
+    write_yaml(_demo_module_path(mini_repo), module)
+    assert [row for row in _deadline_rows(mini_repo)
+            if row.get("kind") == "withdrawal-deadline"] == []
+
+
+@pytest.mark.parametrize("status", ["archived", "dropped"])
+def test_retired_modules_contribute_no_deadline_rows(mini_repo, status):
+    add_curriculum(mini_repo)
+    module = _read_demo_module(mini_repo)
+    module["status"] = status
+    # An open window and a registered attempt would both project rows for
+    # an active module; retirement must suppress all of them.
+    module["examination"]["registration_windows"].append(
+        {"opens": "2026-01-01", "closes": "2099-01-01",
+         "label": "Open window", "termins": [2]})
+    write_yaml(_demo_module_path(mini_repo), module)
+    assert _deadline_rows(mini_repo) == []
+
+
+def test_open_registration_window_stays_while_closed_leaves(mini_repo):
+    add_curriculum(mini_repo)
+    module = _read_demo_module(mini_repo)
+    module["examination"]["registration_windows"].append(
+        {"opens": "2026-01-01", "closes": "2099-01-01",
+         "label": "Open window", "action": "Register.", "termins": [2]})
+    write_yaml(_demo_module_path(mini_repo), module)
+    windows = [row for row in _deadline_rows(mini_repo)
+               if row.get("kind") == "registration-window"]
+    assert [(row["label"], row["start_date"], row["end_date"]) for row in windows] == [
+        ("Open window", "2026-01-01", "2099-01-01")]
+
+
+def test_module_attempt_bare_cli_refuses(mini_repo):
+    add_curriculum(mini_repo)
+    before = _demo_module_path(mini_repo).read_bytes()
+    proc = run_los(mini_repo, "module-attempt", "module-demo",
+                   "--termin", "2", "--date", "2026-10-09", "--result", "registered")
+    assert proc.returncode == 2
+    assert "GatewayEnvelopeV2" in proc.stderr
+    assert _demo_module_path(mini_repo).read_bytes() == before
+
+
+@pytest.mark.parametrize("argv,match", [
+    (["module-ghost", "--termin", "2", "--date", "2026-10-09",
+      "--result", "registered"], "module not found"),
+    (["module-demo", "--termin", "2", "--date", "10/09/2026",
+      "--result", "registered"], "must be an ISO date"),
+    (["module-demo", "--termin", "2", "--date", "2026-10-09",
+      "--result", "registered", "--grade", "6.0"], "between 1.0 and 5.0"),
+    (["module-demo", "--termin", "4", "--date", "2026-10-09",
+      "--result", "registered"], "invalid choice"),
+    (["module-demo", "--termin", "2", "--date", "2026-10-09",
+      "--result", "maybe"], "invalid choice"),
+])
+def test_module_attempt_usage_errors_refuse(mini_repo, argv, match):
+    add_curriculum(mini_repo)
+    before = _demo_module_path(mini_repo).read_bytes()
+    proc = run_los(mini_repo, "module-attempt", *argv)
+    assert proc.returncode == 2, proc.stderr
+    assert match in proc.stderr
+    assert _demo_module_path(mini_repo).read_bytes() == before
+
+
+def test_module_attempt_grade_without_passed_refuses(mini_repo):
+    add_curriculum(mini_repo)
+    before = _demo_module_path(mini_repo).read_bytes()
+    refused = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "2", "--date", "2026-10-09", "--result", "registered",
+        "--grade", "1.3",
+        artifact_ids=["module-demo"], idempotency_key="attempt-nograde-001")
+    assert refused.returncode == 2
+    assert "MOD-GRADE" in gateway_error(refused)
+    assert _demo_module_path(mini_repo).read_bytes() == before
+
+
+def test_module_attempt_out_of_order_refuses(mini_repo):
+    add_curriculum(mini_repo)
+    settled = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "2", "--date", "2026-10-09", "--result", "withdrawn",
+        artifact_ids=["module-demo"], idempotency_key="attempt-order-000")
+    assert settled.returncode == 0, settled.stdout + settled.stderr
+    before = _demo_module_path(mini_repo).read_bytes()
+    refused = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "3", "--date", "2026-01-01", "--result", "withdrawn",
+        artifact_ids=["module-demo"], idempotency_key="attempt-order-001")
+    assert refused.returncode == 2
+    assert "MOD-ORDER" in gateway_error(refused)
+    assert _demo_module_path(mini_repo).read_bytes() == before
+
+
+def test_module_attempt_registered_must_be_last_refuses(mini_repo):
+    add_curriculum(mini_repo)
+    before = _demo_module_path(mini_repo).read_bytes()
+    refused = approved_v2_cli(
+        mini_repo, "module-attempt", "module-demo",
+        "--termin", "3", "--date", "2027-02-01", "--result", "registered",
+        artifact_ids=["module-demo"], idempotency_key="attempt-last-001")
+    assert refused.returncode == 2
+    assert "MOD-REGISTERED" in gateway_error(refused)
+    assert _demo_module_path(mini_repo).read_bytes() == before
+
+
+def test_module_attempt_unknown_result_refuses_before_any_write(mini_repo):
+    add_curriculum(mini_repo)
+    before = _demo_module_path(mini_repo).read_bytes()
+    envelope = approved_v2_envelope(
+        mini_repo, capability="module.attempt.record",
+        payload={"module_id": "module-demo", "termin": 2,
+                 "date": "2026-10-09", "result": "maybe"},
+        artifact_ids=["module-demo"], idempotency_key="attempt-unknown-001")
+    refused = run_v2_capability(mini_repo, envelope)
+    assert refused.returncode == 2
+    assert "invalid payload" in gateway_error(refused)
+    assert _demo_module_path(mini_repo).read_bytes() == before
+
+
+def test_module_attempt_stale_revision_refuses(mini_repo):
+    from learning_os.contracts.gateway import intent_sha256
+
+    add_curriculum(mini_repo)
+    before = _demo_module_path(mini_repo).read_bytes()
+    envelope = approved_v2_envelope(
+        mini_repo, capability="module.attempt.record",
+        payload={"module_id": "module-demo", "termin": 2,
+                 "date": "2026-10-09", "result": "sat"},
+        artifact_ids=["module-demo"], idempotency_key="attempt-stale-001")
+    envelope["expected_revisions"] = {"module-demo": 99}
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    refused = run_v2_capability(mini_repo, envelope)
+    assert refused.returncode == 3
+    assert _demo_module_path(mini_repo).read_bytes() == before
 
 
 def test_non_academic_module_needs_no_institution_or_semester(mini_repo):
