@@ -148,7 +148,9 @@ Decide which read answers the question before reading:
   learner choice.
 - A detector candidate is a signal, never an instruction. `los goal <id>
   --reject|--defer|--close` records Aram's explicit decision; do not choose
-  a disposition on his behalf. `--defer --revisit-on YYYY-MM-DD` hides a goal
+  a disposition on his behalf. Only a goal in the current scan, or already in
+  the ledger, is decidable; the decision joins the caller's session and
+  `session-end` commits it. `--defer --revisit-on YYYY-MM-DD` hides a goal
   only until that date; its return to the scan is a candidate, not approval.
 
 Task-shaped entry preserves complete material access through `inspect ID`.
@@ -398,9 +400,13 @@ wrong turns, proposes durable notes/Garden items and diffs, and waits for
 explicit selected-item approval. After application, validate and regenerate.
 
 End a learning session deliberately with `los session-end`. First run it with
-no commit message to review session-owned and unrelated changes. Only the
-ephemeral session ledger may be staged. The protected Canvas files are always
-excluded. Commit and optional push occur only after explicit confirmation.
+no commit message to review session-owned and unrelated changes; the review
+never closes the session, so the ledger survives for the commit run. Only the
+files recorded in this session's ledger may be staged — the ledger itself
+lives in the git dir and is never staged. The protected Canvas files are
+always excluded. Commit and optional push occur only after explicit
+confirmation. To end the ownership window without committing, rerun with
+`--close`: it deletes only this session's ledger.
 
 ## Capture routing
 

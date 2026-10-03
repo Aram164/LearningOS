@@ -19,7 +19,7 @@
 > 9. **Run `.venv/bin/python tools/validate.py --compact` after any batch of edits** and before ending a session. Work is not done until it prints **0 errors** and `.venv/bin/python tools/warning_baseline.py --check` reports **no new warning signature**. Existing warnings stay visible (counted in the summary line, listed in `generated/reports/validation-report.md`) and never block — they are the deferred content debt of CRITIQUE-POINTS §1, and the baseline is what separates them from a warning you just introduced.
 > 10. **When unsure: least destructive reversible action, then ask.** The tiebreaker is always "reduce organizational burden rather than create it."
 > 11. **Study state belongs to module → unit → current map → stage.** Workspaces coordinate through explicit IDs. Never collapse many active units into one global path or infer joins from prose.
-> 12. **General AI is read-only.** Canonical writes use an action-specific gateway capability, current snapshot, post-action scope check, validation, and regeneration. Session closure stages only the gateway ledger and never the protected Canvas files.
+> 12. **General AI is read-only.** Canonical writes use an action-specific gateway capability, current snapshot, post-action scope check, validation, and regeneration. Session closure stages the files recorded in this session's ledger — the ledger itself lives in the git dir and is never staged — and never the protected Canvas files. A bare `session-end` review never closes; `--close` ends the ownership window without committing.
 
 ## 1. Purpose
 

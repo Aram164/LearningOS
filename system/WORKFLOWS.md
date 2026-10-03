@@ -608,13 +608,21 @@ Any learning session that used guarded mutation commands ends deliberately:
 2. run `los session-end` without a commit message; it validates, regenerates,
    and shows session-owned files separately from unrelated changes;
 3. review that exact list;
-4. optionally rerun with `--commit-message`; only the ephemeral gateway ledger
-   is staged, and every `*.canvas` file is unconditionally excluded;
+4. optionally rerun with `--commit-message` to commit exactly the files
+   recorded in this session's ledger, and every `*.canvas` file is
+   unconditionally excluded;
 5. use `--push` only through the approved repository workflow.
+
+A bare review never closes the session: the ledger survives, so step 4 stages
+exactly the reviewed list, and running the review twice shows the same list.
+To end the ownership window without committing, rerun with `--close` instead:
+it deletes only this session's ledger and reports `session_closed: true`.
+`--close` with `--commit-message` is a usage error.
 
 Do not commit on every keystroke. A session is not a canonical entity; its
 ledger lives in the checkout's private state directory (`<git-dir>/learningos/`,
-never committed) only long enough to guarantee exact staging.
+never committed) only long enough to guarantee exact staging. The ledger
+itself is never staged: only the files it records are.
 If a commit or push fails, report it immediately and keep unrelated changes
 isolated.
 
@@ -627,7 +635,7 @@ nothing still separate by channel: UI writes (`channel: ui`) never enter an
 agent session's ledger, and vice versa. Rows from other sessions are
 reported under `other_sessions` with their age and are never staged; rows
 older than 24 hours are reported as stale and need `--include-stale` to
-stage. A review-only close deletes only its own session's ledger.
+stage. An explicit `--close` deletes only its own session's ledger.
 
 ## 23. Process a lecture
 
@@ -1169,9 +1177,15 @@ The preview lists every before/after decision and its `reviewed_sha256`.
 Apply those same arguments with `--reviewed-sha256` after Aram approves them.
 The hash covers the exact IDs, decision, note, revisit date, and existing ledger;
 a changed proposal or ledger refuses without a write. Patterns and duplicate
-IDs are refused. Detector names, urgency tiers, and group proximity never grant
-authority to decide other goals. `--revisit-on` remains a future date used only
-with `--defer`; no batch runs automatically.
+IDs are refused. Only decidable IDs are accepted: a goal in the current scan,
+or already in the ledger (a goal that stopped being detected can still be
+closed or re-decided); unknown IDs refuse with did-you-mean suggestions
+before anything is written, so a batch is all-or-nothing. Detector names,
+urgency tiers, and group proximity never grant authority to decide other
+goals. `--revisit-on` remains a future date used only with `--defer`; no
+batch runs automatically. The decision joins the caller's session ledger —
+`session-end` lists and commits it — resolved as explicit `--session-id`,
+then `LOS_SESSION_ID`, then the channel.
 
 ## 31. Back up and restore
 
