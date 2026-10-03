@@ -151,14 +151,12 @@ from learning_os.commands.vnext import (  # noqa: E402
     cmd_backup_manifest,
     cmd_backup_verify,
     cmd_health_report,
-    cmd_job_learning_migrate,
     cmd_legacy_archive_inspect,
     cmd_legacy_archive_lock_publish,
     cmd_legacy_archive_status,
     cmd_masters_planning_catalog_update,
     cmd_masters_planning_comparison_publish,
     cmd_masters_planning_dashboard,
-    cmd_route_identity_migrate,
     cmd_unit_material_synthesis_publish,
 )
 from learning_os.commands.workspace import (  # noqa: E402
@@ -652,42 +650,6 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_masters_planning_comparison_publish)
-
-    p = sub.add_parser(
-        "route-identity-migrate",
-        help="atomically apply one exact approved v13 route-identity diff",
-    )
-    p.add_argument(
-        "--plan-sha256",
-        required=True,
-        type=sha256_value,
-        help="sha256 of the exact dry-run unified diff",
-    )
-    p.add_argument(
-        "--review",
-        type=json_object,
-        default=None,
-        help="inline schema-version-1 route review bound to the approved plan",
-    )
-    p.add_argument("--approve", action="store_true")
-    p.add_argument("--expected-snapshot", default=None)
-    _add_expected_revision_argument(p)
-    p.set_defaults(func=cmd_route_identity_migrate)
-
-    p = sub.add_parser(
-        "job-learning-migrate",
-        help="atomically migrate the exact approved legacy Job learning set",
-    )
-    p.add_argument(
-        "--plan-sha256",
-        required=True,
-        type=sha256_value,
-        help="sha256 of the exact deterministic migration plan",
-    )
-    p.add_argument("--approve", action="store_true")
-    p.add_argument("--expected-snapshot", default=None)
-    _add_expected_revision_argument(p)
-    p.set_defaults(func=cmd_job_learning_migrate)
 
     p = sub.add_parser("health-report", help="build one explicit vNext health report")
     p.add_argument("--json", action="store_true", help=argparse.SUPPRESS)

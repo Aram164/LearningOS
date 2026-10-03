@@ -5,20 +5,6 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from migrations.job_quarantine_collapse import (
-    migration_artifact_ids,
-)
-from migrations.job_quarantine_collapse import (
-    plan_migration as plan_job_learning_migration,
-)
-from migrations.job_quarantine_collapse import (
-    plan_sha256 as job_learning_plan_sha256,
-)
-from migrations.job_quarantine_collapse import (
-    verify_plan_inputs as verify_job_learning_plan_inputs,
-)
-from migrations.route_identity_v13 import plan_migration, plan_sha256
-
 from learning_os.backup_manifest import (
     BackupManifestError,
     backup_authorities,
@@ -51,7 +37,6 @@ from learning_os.material_synthesis import (
 from learning_os.semantics.lineage import LEDGER_RELATIVE
 
 from .support import (
-    AmbiguousMigration,
     WriteRefused,
     _atomic_text,
     _dump_yaml,
@@ -239,126 +224,6 @@ def cmd_masters_planning_comparison_publish(args) -> int:
         )
     print(json.dumps({
         "ok": code == 0, **confirmation,
-        **({"errors": [str(error) for error in errors]} if errors else {}),
-    }, indent=2, ensure_ascii=False))
-    return code
-
-
-def cmd_route_identity_migrate(args) -> int:
-    """Apply the exact reviewed v13 route diff as one Core transaction."""
-
-    root = _root(args)
-    denied = _refuse_without_approval(args, "route identity v13 migration")
-    if denied is not None:
-        return denied
-    _require_gateway_v2()
-    with _operator_lock(root):
-        plan = plan_migration(root, review=args.review)
-        if not plan.ready:
-            problems = sorted({problem.code for problem in plan.problems})
-            raise AmbiguousMigration(
-                f"ambiguous migration is not applicable; resolve problems: {problems}"
-            )
-        if not plan.changes:
-            raise WriteRefused("route identity v13 migration has no changes to apply")
-        actual_plan_sha256 = plan_sha256(plan)
-        if args.plan_sha256 != actual_plan_sha256:
-            raise WriteRefused(
-                "route migration diff changed after approval "
-                f"(expected {args.plan_sha256}, actual {actual_plan_sha256})"
-            )
-        if not _expected_ok(root, args.expected_snapshot):
-            return 3
-
-        artifact_ids: set[str] = set()
-        for change in plan.changes:
-            relative = change.path.relative_to(root).parts
-            if len(relative) == 4 and relative[:2] == ("curriculum", "modules") \
-                    and relative[3] == "source-map.yaml":
-                artifact_ids.add(relative[2])
-            elif len(relative) == 6 and relative[:2] == ("curriculum", "modules") \
-                    and relative[3] == "units" and relative[5] == "unit.yaml":
-                artifact_ids.add(relative[4])
-            else:  # pragma: no cover - plan_migration owns this closed file set
-                raise WriteRefused(
-                    "route migration planned an undeclared canonical target: "
-                    + change.path.relative_to(root).as_posix()
-                )
-
-        code, errors, confirmation = _write_transaction(
-            root,
-            {change.path: change.after for change in plan.changes},
-            capability="route.identity.migrate",
-            expected_revisions=_expected_revisions_from_args(args),
-            artifact_ids=artifact_ids,
-        )
-    print(json.dumps({
-        "ok": code == 0,
-        "plan_sha256": actual_plan_sha256,
-        "changed_files": [
-            change.path.relative_to(root).as_posix() for change in plan.changes
-        ],
-        **confirmation,
-        **({"errors": [str(error) for error in errors]} if errors else {}),
-    }, indent=2, ensure_ascii=False))
-    return code
-
-
-def cmd_job_learning_migrate(args) -> int:
-    """Collapse the exact approved legacy Job learning set into Core."""
-
-    root = _root(args)
-    denied = _refuse_without_approval(args, "legacy Job learning migration")
-    if denied is not None:
-        return denied
-    _require_gateway_v2()
-    with _operator_lock(root):
-        plan = plan_job_learning_migration(root)
-        if not plan.ready:
-            problems = sorted({problem.code for problem in plan.problems})
-            raise WriteRefused(
-                f"legacy Job learning migration is not applicable; resolve: {problems}"
-            )
-        if not plan.changes and not plan.deletions:
-            raise WriteRefused("legacy Job learning migration has no changes to apply")
-        actual_plan_sha256 = job_learning_plan_sha256(plan)
-        if args.plan_sha256 != actual_plan_sha256:
-            raise WriteRefused(
-                "legacy Job learning migration changed after approval "
-                f"(expected {args.plan_sha256}, actual {actual_plan_sha256})"
-            )
-        if not _expected_ok(root, args.expected_snapshot):
-            return 3
-        drift = verify_job_learning_plan_inputs(plan)
-        if drift:
-            summary = sorted({problem.code for problem in drift})
-            raise WriteRefused(
-                f"legacy Job learning inputs changed after approval: {summary}"
-            )
-        try:
-            artifact_ids = migration_artifact_ids(plan)
-        except ValueError as exc:  # closed target set owned by the planner
-            raise WriteRefused(str(exc)) from exc
-
-        code, errors, confirmation = _write_transaction(
-            root,
-            {change.path: change.after for change in plan.changes},
-            deletes=(deletion.path for deletion in plan.deletions),
-            capability="legacy.job-learning.migrate",
-            expected_revisions=_expected_revisions_from_args(args),
-            artifact_ids=artifact_ids,
-        )
-    print(json.dumps({
-        "ok": code == 0,
-        "plan_sha256": actual_plan_sha256,
-        "statistics": dict(sorted(plan.statistics.items())),
-        "changed_files": [
-            change.path.relative_to(root).as_posix() for change in plan.changes
-        ],
-        "deleted_files": [
-            deletion.path.relative_to(root).as_posix() for deletion in plan.deletions
-        ],
-        **confirmation,
         **({"errors": [str(error) for error in errors]} if errors else {}),
     }, indent=2, ensure_ascii=False))
     return code
