@@ -355,5 +355,25 @@ def test_full_scale_core_manifest(repo_root: Path, tmp_path: Path) -> None:
     verdicts = _ajv_verdicts(ui, tmp_path, {"core-manifest": manifest})
     ajv_seconds = time.perf_counter() - started
     assert verdicts["core-manifest.json"]["valid"] is True
+    # The generated Ajv prototype is not the decoder the app actually runs.
+    # Loading the full producer output through ManifestStore caught a real
+    # withdrawal-deadline rejection that both schema engines accepted.
+    helper = ui / "tests" / "production-manifest-verdict.js"
+    assert helper.is_file(), f"production ManifestStore helper is missing: {helper}"
+    completed = subprocess.run(
+        ["node", str(helper), str(core_manifest)], capture_output=True,
+        text=True, timeout=60, check=False,
+    )
+    assert completed.returncode == 0, (
+        f"production ManifestStore rejected Core's manifest: "
+        f"{completed.stdout.strip()} {completed.stderr.strip()}")
+    production = json.loads(completed.stdout)
+    assert production == {
+        "valid": True,
+        "ready": True,
+        "snapshot_id": manifest["_generated"]["snapshot_id"],
+        "source_revision": manifest["_generated"]["source_revision"],
+        "module_count": len(manifest["modules"]),
+    }
     print(f"\nfull-scale 16MB manifest: python {python_seconds:.1f}s, "
           f"ajv subprocess {ajv_seconds:.1f}s (informational only)")
