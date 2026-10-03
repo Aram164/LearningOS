@@ -36,6 +36,7 @@ GROUPS: dict[str, list[str]] = {
         "test_plan_inventory.py",
         "test_plan_resume.py",
         "test_plan_rigor.py",
+        "test_plan_write_once.py",
         "test_study_map_obligation.py",
         "test_unit_plan_revision.py",
     ],

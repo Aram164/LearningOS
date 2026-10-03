@@ -1162,7 +1162,8 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
                        *, capability: str = "legacy.write",
                        expected_revisions: dict[str, int] | None = None,
                        artifact_ids=(), deletes=(),
-                       metadata=None) -> tuple[int, list, dict]:
+                       metadata=None,
+                       validate_extra=None) -> tuple[int, list, dict]:
     """Commit one named, receipt-producing canonical transaction.
 
     Returns ``(code, errors, confirmation)``. The confirmation travels back to
@@ -1171,6 +1172,13 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
     express that — it outlived the operator lock and was read after release.
     On any failure the confirmation is empty, so a caller cannot accidentally
     report a receipt for a write that did not happen.
+
+    ``validate_extra`` is one plan-class gate: ``validate_extra(repo, issues)``
+    receives the staged repository and that run's complete validation issues
+    (errors and warnings alike) and returns the refusal list the transaction
+    fails on. It runs inside the commit's validation step — after the writes
+    land, before anything is published — so a refusal still rolls everything
+    back. Without it the gate is the historical errors-only list.
     """
     if current_gateway_request() is None:
         # Name the way through, not only the refusal: the bare named command
@@ -1192,10 +1200,10 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
     def validation_errors():
         nonlocal validated_repo
         validated_repo = load_repo(root)
-        return [
-            issue for issue in validate(validated_repo, online=False)
-            if issue.severity == "E"
-        ]
+        issues = validate(validated_repo, online=False)
+        if validate_extra is not None:
+            return validate_extra(validated_repo, issues)
+        return [issue for issue in issues if issue.severity == "E"]
 
     def publish_validated_state(snapshot_after_id: str | None = None) -> str:
         nonlocal validated_repo

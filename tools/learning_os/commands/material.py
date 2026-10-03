@@ -8,6 +8,7 @@ import json
 
 import yaml
 
+from learning_os.contracts.gateway import current_gateway_request
 from learning_os.learning_runtime import (
     RuntimeInputError,
     read_stage_results,
@@ -27,7 +28,7 @@ from learning_os.material_refs import (
 from learning_os.material_synthesis import material_synthesis_freshness
 from learning_os.transactions import artifact_revision
 
-from .module import _module_plan_validation_errors
+from .module import _module_plan_validation_errors, _plan_apply_gate
 from .reads import (
     _analysis_notes,
     _approved_assessments,
@@ -699,7 +700,6 @@ def _execute(args, capability, planner):
     with _operator_lock(root):
         if not _expected_ok(root, args.expected_snapshot):
             return 3
-        snapshot = _snapshot(root)
         repo = _loaded(root)
         try:
             writes, artifacts, detail = planner(repo)
@@ -715,10 +715,18 @@ def _execute(args, capability, planner):
             raise WriteRefused("compaction plan changed; review the current plan")
         if not args.check and capability == "module.materials.compact" and args.plan_sha256 is None:
             raise WriteRefused("compaction requires the reviewed plan SHA-256")
-        errors = _module_plan_validation_errors(root, writes) if writes else []
-        if errors:
-            raise ValidationFailed("canonical validation failed: " + "; ".join(map(str, errors[:8])))
+        if args.check or current_gateway_request() is None:
+            # --check validates the shadow because nothing is written and it
+            # is the only validation. A gateway apply instead enforces the
+            # same gate inside its transaction (one full validation, on the
+            # staged state, still refusing before anything commits); only a
+            # direct CLI apply — which the transaction below refuses as
+            # envelope-less — keeps the shadow refusal text it always had.
+            errors = _module_plan_validation_errors(root, writes) if writes else []
+            if errors:
+                raise ValidationFailed("canonical validation failed: " + "; ".join(map(str, errors[:8])))
         if args.check:
+            snapshot = _snapshot(root)
             check_result = {
                 **result, "ok": True, "check": True, "canonical_files_written": 0,
             }
@@ -728,10 +736,14 @@ def _execute(args, capability, planner):
             return _print_stable(root, snapshot, check_result)
         if not writes:
             raise WriteRefused("no material changes to apply")
+        validate_extra, gate_errors = _plan_apply_gate(root)
         code, errors, confirmation = _write_transaction(
             root, writes, capability=capability, artifact_ids=sorted(artifacts),
             expected_revisions=_expected_revisions_from_args(args),
+            validate_extra=validate_extra,
         )
+        if gate_errors:
+            raise ValidationFailed("canonical validation failed: " + "; ".join(map(str, gate_errors[:8])))
         print(json.dumps({**result, "ok": code == 0, **confirmation,
                           **({"errors": list(map(str, errors))} if errors else {})},
                          ensure_ascii=False, separators=(",", ":")))

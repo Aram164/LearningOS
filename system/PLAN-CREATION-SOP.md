@@ -478,7 +478,7 @@ change module metadata, or update workspaces; use the full import template for
 those operations. Each `stage_patches[].fields.resources` value is the complete
 final resource array for that stage, so the existing learner-evidence gate still
 protects every evidence-bearing placement. The importer assembles unchanged
-records under one operator lock, then uses the same shadow validation, lineage,
+records under one operator lock, then uses the same validation gate, lineage,
 reviewed-file hash, GatewayEnvelopeV2, receipt, and atomic transaction as a
 full import. Save the compact-file `reviewed_file_sha256` from `--check` for
 `--apply-reviewed-sha256`; `assembled_package_sha256` identifies the internal

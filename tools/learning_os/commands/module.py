@@ -68,6 +68,7 @@ from .support import (
     _render_frontmatter,
     _replace_registry_list_record,
     _root,
+    _take_gateway_refusal,
     _write_transaction,
 )
 
@@ -1707,6 +1708,105 @@ def _staged_shadow(root: Path, writes: dict[Path, str]):
         yield shadow
 
 
+#: Validator codes emitted by the perimeter checker share this namespace
+#: (``check_perimeter`` prefixes every one of them). Both plan gates
+#: partition staged issues on this structured namespace — never on message
+#: prose — so a future perimeter code stays shadow-equivalent too.
+_PERIMETER_CODE_PREFIX = "PERIMETER-"
+
+
+def _compose_plan_gate_errors(
+    root: Path,
+    *,
+    perimeter_errors: list[str],
+    synthesis_errors: list[str],
+    ack_errors: list[str],
+    content_errors: list[str],
+    signatures,
+) -> list[str]:
+    """One refusal list for plan gates, in shadow-preflight order.
+
+    The ``--check`` shadow preflight and the in-transaction apply gate
+    compose through here, so their refusal text cannot drift: the real-tree
+    perimeter layer first, then staged synthesis and acknowledgment errors,
+    then content errors, then one NEW-OR-GROWN-WARNING line per regressed
+    baseline signature.
+    """
+    # The baseline is read from the real repository: the staged state is the
+    # real tree plus the planned writes, so the baseline describes exactly
+    # the "before".
+    baseline, _ = load_baseline(root)
+    regressions, _repairs = delta(baseline, signatures)
+    return [
+        *perimeter_errors,
+        *synthesis_errors,
+        *ack_errors,
+        *content_errors,
+        *(f"W NEW-OR-GROWN-WARNING: {line} (introduced by this plan; fix it, or "
+           "adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`)"
+          for line in regressions),
+    ]
+
+
+def _plan_apply_gate(
+    root: Path,
+    *,
+    live_repo=None,
+    module_id: str | None = None,
+    syntheses: list[tuple[str, dict]] | None = None,
+    touched_units: list[str] | None = None,
+    acknowledgments: list[dict] | None = None,
+):
+    """A ``_write_transaction`` gate enforcing the plan preflight in-apply.
+
+    Returns ``(validate_extra, errors_out)``. The transaction calls
+    ``validate_extra(staged_repo, staged_issues)`` once, on the staged state
+    under the commit lock, from the same validation run that checks content;
+    the full composed refusal list lands in ``errors_out`` for the caller to
+    report with the preflight's exact text. The live pre-write repository is
+    only needed — and only used — for the synthesis and acknowledgment
+    diffs, which compare staged state against it; the caller's own
+    already-loaded repo qualifies, because the operator lock held throughout
+    means nothing changed between that load and this gate.
+    """
+    errors_out: list[str] = []
+
+    def validate_extra(staged_repo, staged_issues):
+        if module_id is not None and syntheses is not None and live_repo is None:
+            raise AssertionError("plan gate needs the pre-write repository")
+        perimeter_errors = [
+            str(issue) for issue in staged_issues
+            if issue.severity == "E"
+            and issue.code.startswith(_PERIMETER_CODE_PREFIX)]
+        content_issues = [
+            issue for issue in staged_issues
+            if not issue.code.startswith(_PERIMETER_CODE_PREFIX)]
+        signatures, content_errors = signatures_from_issues(content_issues)
+        synthesis_errors: list[str] = []
+        ack_errors: list[str] = []
+        if module_id is not None and syntheses is not None:
+            try:
+                synthesis_errors = _staged_synthesis_errors(
+                    root, module_id, live_repo, root, staged_repo, syntheses)
+            except MaterialSynthesisError as exc:
+                synthesis_errors = [f"material_syntheses: staged state unreadable: {exc}"]
+            if touched_units is not None and acknowledgments is not None:
+                ack_errors = _semantic_ack_problems(
+                    module_id, live_repo, staged_repo,
+                    touched_units, acknowledgments)
+        errors = _compose_plan_gate_errors(
+            root,
+            perimeter_errors=perimeter_errors,
+            synthesis_errors=synthesis_errors,
+            ack_errors=ack_errors,
+            content_errors=content_errors,
+            signatures=signatures)
+        errors_out.extend(errors)
+        return errors
+
+    return validate_extra, errors_out
+
+
 def _module_plan_validation_errors(
     root: Path,
     writes: dict[Path, str],
@@ -1750,16 +1850,14 @@ def _module_plan_validation_errors(
                 ack_errors = _semantic_ack_problems(
                     module_id, live_repo, staged_repo,
                     touched_units, acknowledgments)
-        errors = synthesis_errors + ack_errors + errors
-    # The baseline is read from the real repository: the shadow is a copy of it
-    # plus the planned writes, so the baseline describes exactly the "before".
-    baseline, _ = load_baseline(root)
-    regressions, _repairs = delta(baseline, signatures)
-    return perimeter_errors + errors + [
-        f"W NEW-OR-GROWN-WARNING: {line} (introduced by this plan; fix it, or "
-        "adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`)"
-        for line in regressions
-    ]
+        content_errors = errors
+    return _compose_plan_gate_errors(
+        root,
+        perimeter_errors=perimeter_errors,
+        synthesis_errors=synthesis_errors,
+        ack_errors=ack_errors,
+        content_errors=content_errors,
+        signatures=signatures)
 
 
 def _master_promotion_preflight(
@@ -1767,6 +1865,8 @@ def _master_promotion_preflight(
     module_id: str,
     plan: MasterPromotionPlan,
     package: dict,
+    *,
+    skip_validation: bool = False,
 ) -> list[str]:
     problems = _module_plan_contract_problems(root, package)
     if problems:
@@ -1775,6 +1875,10 @@ def _master_promotion_preflight(
     problems = _module_plan_routing_problems(repo, module_id, package)
     if problems:
         return [f"routing: {problem}" for problem in problems]
+    if skip_validation:
+        # A gateway apply enforces the validation layer inside its
+        # transaction instead; the package layers above still refuse here.
+        return []
     try:
         errors = _module_plan_validation_errors(root, plan.writes)
     except ValueError as exc:
@@ -1862,6 +1966,8 @@ def _cmd_master_promotion_import(args) -> int:
             args.module_id,
             plan,
             value["module_plan"],
+            skip_validation=not args.check
+            and current_gateway_request() is not None,
         )
         if problems:
             print(
@@ -1899,13 +2005,29 @@ def _cmd_master_promotion_import(args) -> int:
             }, ensure_ascii=False), file=sys.stderr)
             _record_gateway_refusal("REVISION_CONFLICT", True)
             return 3
+        validate_extra, gate_errors = _plan_apply_gate(root)
         code, errors, confirmation = _write_transaction(
             root,
             plan.writes,
             capability="module.plan.import",
             expected_revisions=expected_revisions,
             artifact_ids=plan.artifact_ids,
+            validate_extra=validate_extra,
         )
+        if gate_errors:
+            # The in-transaction gate refused with the preflight's exact
+            # list: report it with the preflight's exact text and exit,
+            # dropping the transaction's recorded code, which the
+            # preflight path never carried.
+            _take_gateway_refusal()
+            print(
+                "los: Master Planning promotion preflight failed; no canonical "
+                "files were written",
+                file=sys.stderr,
+            )
+            for problem in gate_errors[:12]:
+                print(f"- {problem}", file=sys.stderr)
+            return 1
         if code:
             print("los: Master Planning promotion failed", file=sys.stderr)
             for issue in errors[:12]:
@@ -2474,23 +2596,30 @@ def cmd_module_plan_import(args) -> int:
                 "validated": False,
             }, indent=2, ensure_ascii=False, sort_keys=True))
             return 0
-        try:
-            errors = _module_plan_validation_errors(
-                root, writes,
-                module_id=args.module_id,
-                syntheses=synthesis_entries,
-                touched_units=sorted(seen_units),
-                acknowledgments=acknowledgments,
-            )
-        except ValueError as exc:
-            print(f"los: {exc}", file=sys.stderr)
-            return 2
-        if errors:
-            print("los: module plan validation preflight failed; no canonical files were written",
-                  file=sys.stderr)
-            for issue in errors[:12]:
-                print(issue, file=sys.stderr)
-            return 1
+        # --check validates the shadow because nothing is written and it is
+        # the only validation. A gateway apply instead enforces the same gate
+        # inside its transaction (one full validation, on the staged state,
+        # still refusing before anything commits); only a direct CLI apply —
+        # which the transaction below refuses as envelope-less — keeps the
+        # shadow refusal text it always had.
+        if args.check or current_gateway_request() is None:
+            try:
+                errors = _module_plan_validation_errors(
+                    root, writes,
+                    module_id=args.module_id,
+                    syntheses=synthesis_entries,
+                    touched_units=sorted(seen_units),
+                    acknowledgments=acknowledgments,
+                )
+            except ValueError as exc:
+                print(f"los: {exc}", file=sys.stderr)
+                return 2
+            if errors:
+                print("los: module plan validation preflight failed; no canonical files were written",
+                      file=sys.stderr)
+                for issue in errors[:12]:
+                    print(issue, file=sys.stderr)
+                return 1
         if args.check:
             result = _module_plan_check_report(
                 root, args.module_id, package, writes,
@@ -2547,14 +2676,31 @@ def cmd_module_plan_import(args) -> int:
                     root, args.module_id, writes, synthesis_entries)
             else:
                 artifact_ids = [args.module_id, *sorted(seen_units), *synthesis_ids]
+            validate_extra, gate_errors = _plan_apply_gate(
+                root, live_repo=repo, module_id=args.module_id,
+                syntheses=synthesis_entries,
+                touched_units=sorted(seen_units),
+                acknowledgments=acknowledgments)
             code, errors, confirmation = _write_transaction(
                 root, writes,
                 capability=getattr(args, "_capability_override", None)
                 or "module.plan.import",
                 expected_revisions=_expected_revisions_from_args(args),
                 artifact_ids=artifact_ids,
+                validate_extra=validate_extra,
             )
-            if code:  # Defensive: prevalidated transactions do not normally reach this branch.
+            if gate_errors:
+                # The in-transaction gate refused with the preflight's exact
+                # list: report it with the preflight's exact text and exit,
+                # dropping the transaction's recorded code, which the
+                # preflight path never carried.
+                _take_gateway_refusal()
+                print("los: module plan validation preflight failed; no canonical files were written",
+                      file=sys.stderr)
+                for issue in gate_errors[:12]:
+                    print(issue, file=sys.stderr)
+                return 1
+            if code:
                 print("los: module plan import failed", file=sys.stderr)
                 for issue in errors[:12]:
                     print(issue, file=sys.stderr)

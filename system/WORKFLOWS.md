@@ -758,8 +758,9 @@ coverage. To read several routes at once, pass `--route-ids` with 1 to 20
 exact route ids: the batch shares the unit snapshot and revision guards,
 preserves request order, and refuses atomically. The preflight returns the concrete field diff, affected files,
 snapshot, and exact expected revisions. Apply those same changes through a
-GatewayEnvelopeV2 for `route.patch`. Core retains full shadow validation,
-warning checks, conflict guards, publication and receipts. It synchronizes
+GatewayEnvelopeV2 for `route.patch`. Core retains full validation,
+warning checks, conflict guards, publication and receipts, enforced inside
+the transaction on the staged state. It synchronizes
 exact source-selection guards and identical legacy mirrors; explicit stage
 overrides remain local. Changing a route's identity, scope, coverage, source,
 or membership still requires the full plan path below.

@@ -206,7 +206,7 @@ commands:
     - one exact route in one owning unit; only declared descriptive material fields
     - source selections and identical legacy mirrors synchronize; stage overrides are preserved
     - snapshot and all affected logical revisions are guarded, including maps changed by inheritance
-    - full shadow validation and warning policy precede the ordinary receipt-producing transaction
+    - full validation and the warning policy are enforced inside the receipt-producing transaction, on the staged state, refusing before anything commits
     payload_records:
       changes:
         description: >-
