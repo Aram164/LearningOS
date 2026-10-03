@@ -139,7 +139,17 @@ def test_real_repo_generates_and_selector_views_present(repo_root):
 
 
 @pytest.mark.full_repo
-def test_real_manifest_exposes_unregistered_sittings_and_registration_gate(repo_root):
+def test_real_manifest_exposes_unregistered_sittings_and_registration_gate(repo_root, monkeypatch):
+    import datetime as _dt
+
+    class FrozenDate(_dt.date):
+        @classmethod
+        def today(cls):
+            return cls(2026, 9, 29)
+
+    # Mock at the site where it's used
+    monkeypatch.setattr("learning_os.genout.modules_view._dt.date", FrozenDate)
+
     manifest = json.loads(generate_all(load_repo(repo_root), generated_at="T1")["manifest.json"])
     deadlines = manifest["academic_deadlines"]
     pending = {(row.get("module_id"), row.get("start_date"), row.get("end_date"))
