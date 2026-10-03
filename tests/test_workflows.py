@@ -110,15 +110,18 @@ def test_ci_deselects_only_live_installation_tests():
 
     Those tests need state no checkout carries. Anything broader — `not
     full_repo`, a `-k` filter, a second marker — would quietly shrink what a
-    green run proves, so the selection is pinned exactly.
+    green run proves, so the selection is pinned exactly. The gate step may
+    also carry `LOS_RATCHET_BASE` (SPEC §2.3), which selects no tests.
     """
     for workflow in (VALIDATE, RELEASE_PAIR):
         gates = [step for job in _load(workflow)["jobs"].values()
                  for step in job["steps"]
                  if "make system-check" in step.get("run", "")]
         assert len(gates) == 1, workflow.name
-        assert gates[0].get("env") == {"PYTEST_ADDOPTS": '-m "not live_install"'}, (
-            workflow.name)
+        env = gates[0].get("env", {})
+        assert env.get("PYTEST_ADDOPTS") == '-m "not live_install"', workflow.name
+        assert set(env) <= {"PYTEST_ADDOPTS", "LOS_RATCHET_BASE"}, (
+            workflow.name, sorted(env))
 
 
 def test_workflow_run_scripts_never_interpolate_github_expressions():
