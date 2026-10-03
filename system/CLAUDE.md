@@ -13,7 +13,7 @@
 > 3. **Never rewrite, simplify, or "improve" a note body.** User reasoning is preserved verbatim; semantic edits need an explicit request and a reviewable diff.
 > 4. **Never delete** canonical notes, concepts, sources, relations, module records, or original handwritten material without explicit approval.
 > 5. **Captures go to `work/inbox/` or workspace `scratch/`** — the operator routes them; Aram never makes filing decisions.
-> 6. **Answer exam questions from the owning partitioned academic module; answer "what next" from the current atomic manifest plus the freshly rebuilt coordination view** — never from stored prose copies or the global resume pointer alone. The manifest version belongs to `system/contracts/manifest-contract.yaml`; do not copy it into prose.
+> 6. **Answer exam questions from the owning partitioned academic module; answer "what next" from `bootstrap --brief`, then the named workspace plus `inspect` (`inspect coordination` when priorities matter)** — never from stored prose copies or the global resume pointer alone. The manifest version belongs to `system/contracts/manifest-contract.yaml`; do not copy it into prose.
 > 7. **Never declare mastery** — show evidence trails or their documented absence.
 > 8. **External code stays external** (§13) — LearningOS never indexes, validates, or manages sibling repositories such as `Stratum/`; inspect relevant code only when the current task needs it.
 > 9. **Run `.venv/bin/python tools/validate.py --compact` after any batch of edits** and before ending a session. Work is not done until it prints **0 errors** and `.venv/bin/python tools/warning_baseline.py --check` reports **no new warning signature**. Existing warnings stay visible (counted in the summary line, listed in `generated/reports/validation-report.md`) and never block — they are the deferred content debt of CRITIQUE-POINTS §1, and the baseline is what separates them from a warning you just introduced.
@@ -54,9 +54,9 @@ Read the applicable contracts before acting, according to the task:
   call. Return to interrupted study with `los resume` (one screen: stage,
   requirement, observations, open items, exam sittings) instead of
   re-deriving state. Read the relevant workspace and coordination facts
-  when they bear on the question. For cross-domain discovery, consult the
-  **At a glance** block of the current `generated/domain-atlas.md` before
-  narrowing.
+  when they bear on the question. For cross-domain discovery, orient with
+  the `domain_atlas` glance on `bootstrap --brief` before narrowing (the
+  generated domain atlas is the fallback when it is not enough).
 - **An authorized mutation:** fetch `capabilities NAME --json`, then read the
   owning sections of `system/ARCHITECTURE.md` and `system/WORKFLOWS.md`, the
   relevant schema and its referenced definitions, and the relevant rules in
@@ -155,29 +155,46 @@ When semantic editing is requested, preserve the original in Git and provide a r
 
 ## 7. Retrieval behavior
 
+Retrieve through OPERATOR's task-shaped reads — `inspect`, `related`,
+`search`, `material-context`, `note-read`, and `bootstrap --brief` — never by
+opening generated views first. The generated views
+(`generated/concept-index.md`, `generated/domain-atlas.md`,
+`generated/coordination-view.md`) are the human or bulk fallback: open one
+only when the targeted reads are insufficient.
+
 When asked about a **concept**:
 
-1. resolve aliases through `knowledge/concepts.yaml` (including German aliases);
-2. consult the generated concept index;
-3. open canonical notes that directly reference the concept;
-4. inspect concept relations for prerequisites and related concepts;
-5. retrieve contextual source evaluations;
-6. include active workspace context only when relevant;
-7. exclude archived workspaces unless history is requested.
+1. resolve the id with `search` (aliases, including German ones, match as values);
+2. read it with `inspect CONCEPT_ID`, then `related CONCEPT_ID` for the units
+   whose stages tag it and for prerequisites and related concepts (each edge
+   reasoned in `via`);
+3. read what explains it with `material-context --concept CONCEPT_ID` — notes
+   join by their own tags or as route-direct evidence, never through a shared
+   source alone — then open the note bodies with `note-read`;
+4. read contextual source evaluations with `inspect SOURCE_ID`;
+5. include active workspace context only when relevant;
+6. exclude archived workspaces unless history is requested.
 
-When asked for **exam artifacts** ("mock exams for AML"): filter notes by `role` + concept.
+When asked for **exam artifacts** ("mock exams for AML"): search notes by
+`role` + concept (`search --type note`).
 
-When asked **"have I actually worked through this?"**: answer with the evidence attached to the relevant notes (derivations, exercises, implementations) — or its documented absence. Never declare mastery; show trails.
+When asked **"have I actually worked through this?"**: read the relevant notes
+with `note-read` and answer with the evidence attached to them (derivations,
+exercises, implementations) — or its documented absence. Never declare mastery;
+show trails.
 
 When asked about **exams, registrations, or grades**: answer from the owning
-partitioned academic `module.yaml` — never from `records/modules.yaml` or prose
-copies.
+partitioned academic module (`inspect MODULE_ID` carries its attempts and
+sittings) — never from `records/modules.yaml` or prose copies.
 
 When a topic **explodes into prerequisites** (scope explosion): propose a triage — *required now / helpful now / defer / reference only* — sized to the workspace objective, record accepted deferrals in the workspace `Deferred` section, and recommend the smallest useful next source or prerequisite. Preserve the wider graph in concept relations without forcing it into the current scope.
 
-When asked "what should I do next" or about **operational state**: rebuild the coordination view if stale, then answer from it; recommendations are computed fresh, not read from stored plans.
+When asked "what should I do next" or about **operational state**: start with
+`bootstrap --brief`, then the named workspace plus `inspect`; use `inspect
+coordination` when priorities matter. Recommendations are computed fresh, not
+read from stored plans.
 
-**Cross-domain reach (ADR-005).** When asked where or how to learn something, for source recommendations, or when no concept alias matches the query: open the full `generated/domain-atlas.md` and check the shelves of ALL domains — not just the active workspace's — before concluding the repository has nothing. Name relevant shelves and crosswalks from other domains whenever they exist; a question standing in one module may be answered by another domain's shelf. If the atlas has no hit either, `materials/FILES.txt` (rebuilt by `make materials`) lists every unregistered file by name — offer a grep there before answering "we don't have this". Visibility debt (sources no concept, shelf, or note points to) is reported in `generated/reports/health.md`; it is repaid on use (WORKFLOWS §6a), never as a bulk project.
+**Cross-domain reach (ADR-005).** When asked where or how to learn something, for source recommendations, or when no concept alias matches the query: search and relate across ALL domains — not just the active workspace's — before concluding the repository has nothing, orienting with the `domain_atlas` glance on `bootstrap --brief`. Name relevant shelves and crosswalks from other domains whenever they exist; a question standing in one module may be answered by another domain's shelf. Open the full generated domain atlas only when the targeted reads are insufficient. If the atlas has no hit either, `materials/FILES.txt` (rebuilt by `make materials`) lists every unregistered file by name — offer a grep there before answering "we don't have this". Visibility debt (sources no concept, shelf, or note points to) is reported in `generated/reports/health.md`; it is repaid on use (WORKFLOWS §6a), never as a bulk project.
 
 Never rely solely on folder names.
 
