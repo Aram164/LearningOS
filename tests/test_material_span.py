@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 import yaml
+from gateway_helpers import run_v2_capability
 from repo_builders import (
     _add_material_overview,
     add_curriculum,
@@ -210,3 +211,47 @@ def test_stage_span_refuses_a_source_mismatch(mini_repo):
                      "--stage", "stage-demo", "--resource-index", "0", "--extract")
     assert result.returncode == 2
     assert "placement source" in result.stderr
+
+
+def test_span_binding_round_trips_through_prepare(mini_repo: Path, tmp_path: Path):
+    """F8: each span carries a ready binding the draft accepts unchanged."""
+    add_curriculum(mini_repo)
+    _add_material_overview(mini_repo)
+    source_path = mini_repo / "sources/sources.yaml"
+    sources = yaml.safe_load(source_path.read_text(encoding="utf-8"))
+    sources["sources"][0]["material"] = "material://demo"
+    write_yaml(source_path, sources)
+    material = mini_repo.parent / "materials/demo/lecture-01.pdf"
+    write_minimal_pdf(material, ["A worked expected value example"])
+    route_id = _route(mini_repo)
+    brief = run_los(mini_repo, "material-span", "unit-demo-l01", route_id)
+    assert brief.returncode == 0, brief.stderr
+    data = json.loads(brief.stdout)
+    span, = data["spans"]
+    binding = span["binding"]
+    assert set(binding) == {"resolution", "source_id", "material",
+                            "recorded_source_digest", "live_source_digest"}
+    assert binding["resolution"] == "resolved"
+    assert binding["source_id"] == data["source_id"]
+    assert binding["material"] == "demo/lecture-01.pdf"
+    assert binding["recorded_source_digest"] == binding["live_source_digest"]
+    assert binding["live_source_digest"] == span["file_sha256"].removeprefix("sha256:")
+    note_id = "note-analysis-span-roundtrip"
+    drafts = {"notes": [{
+        "id": note_id, "title": "Span round trip",
+        "path": f"knowledge/notes/mathematics/{note_id}.md",
+        "binding": {**binding, "inspected_range": {"start": 1, "end": 1}},
+        "body": "Analysis of the spanned page.\n",
+    }]}
+    drafts_file = tmp_path / "drafts-span.json"
+    drafts_file.write_text(json.dumps(drafts), encoding="utf-8")
+    out = tmp_path / "staging-span"
+    prepared = run_los(mini_repo, "note-analysis-prepare",
+                       "--drafts", str(drafts_file), "--out", str(out))
+    assert prepared.returncode == 0, prepared.stderr
+    envelope = json.loads((out / "envelope.json").read_text(encoding="utf-8"))
+    submitted = run_v2_capability(mini_repo, envelope)
+    assert submitted.returncode == 0, submitted.stdout + submitted.stderr
+    stored = load_repo(mini_repo).notes[note_id].meta["material_analysis"]
+    assert stored["material"] == "demo/lecture-01.pdf"
+    assert stored["recorded_source_digest"] == binding["recorded_source_digest"]

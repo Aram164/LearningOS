@@ -117,12 +117,25 @@ def cmd_material_span(args) -> int:
             analysis["stale_assessment_routes"] = [
                 item for item in analysis["stale_assessment_routes"] if item == route["id"]]
             spans = []
+            materials_real = (repo.learningos_root / "materials").resolve()
             for resolved in files:
                 path = Path(resolved.path)
                 entry = {"material_uri": resolved.material_uri,
                          "format": path.suffix.lower().lstrip(".") or "unknown",
                          "file_sha256": sha256_file(path),
                          "extraction": "not-requested"}
+                # A ready analysis binding: exactly what the draft needs,
+                # minus inspected_range, in the stored canonical form
+                # (materials-relative path, bare hex). Additive only.
+                bare_digest = entry["file_sha256"].removeprefix("sha256:")
+                entry["binding"] = {
+                    "resolution": "resolved",
+                    "source_id": route.get("source_id"),
+                    "material": path.resolve().relative_to(
+                        materials_real).as_posix(),
+                    "recorded_source_digest": bare_digest,
+                    "live_source_digest": bare_digest,
+                }
                 if args.extract:
                     try:
                         part = _read_part(route["id"], resolved, route.get("locator", ""))
