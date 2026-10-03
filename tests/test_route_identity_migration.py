@@ -9,9 +9,8 @@ from pathlib import Path
 
 import yaml
 from migrations.route_identity_v13 import plan_migration, plan_sha256
-from repo_builders import _add_material_overview, add_curriculum, write_yaml
+from repo_builders import write_yaml
 
-from learning_os.contracts.gateway import intent_sha256
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.routes import deterministic_route_id
 
@@ -142,79 +141,6 @@ def test_route_migration_direct_apply_is_disabled(tmp_path):
     assert source_text.startswith("# preserved source-map comment\n")
     assert f"id: {expected}" not in source_text
     assert f"route_id: {expected}" not in unit_text
-
-
-def test_route_migration_gateway_is_receipted_and_idempotent(
-    mini_repo: Path, repo_root: Path, tmp_path: Path
-):
-    add_curriculum(mini_repo)
-    _add_material_overview(mini_repo)
-    unit_path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
-    unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
-    unit["source_selections"][0]["locator"] = "lecture-01.pdf"
-    write_yaml(unit_path, unit)
-
-    plan = plan_migration(mini_repo)
-    assert plan.ready
-    assert len(plan.changes) == 2
-    envelope = {
-        "schema_version": 2,
-        "request_id": "request-route-v13",
-        "idempotency_key": "route-v13-001",
-        "capability": "route.identity.migrate",
-        "channel": "operator",
-        "expected_snapshot": f"sha256:{canonical_fingerprint(mini_repo)}",
-        "expected_revisions": {"module-demo": 0, "unit-demo-l01": 0},
-        "approval": {
-            "kind": "operator-approval",
-            "subject_sha256": "sha256:" + "0" * 64,
-        },
-        "payload": {"plan_sha256": plan_sha256(plan)},
-    }
-    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
-    request = tmp_path / "route-v13.json"
-    request.write_text(json.dumps(envelope), encoding="utf-8")
-    applied = subprocess.run(
-        [
-            sys.executable,
-            str(repo_root / "tools/los.py"),
-            "--root", str(mini_repo),
-            "capability", "route.identity.migrate",
-            "--payload-file", str(request),
-        ],
-        cwd=repo_root,
-        text=True,
-        capture_output=True,
-        timeout=30,
-    )
-    assert applied.returncode == 0, applied.stderr or applied.stdout
-    response = json.loads(applied.stdout)
-    assert response["ok"] is True
-    assert response["transaction_id"]
-    receipt = yaml.safe_load((mini_repo / response["receipt_path"]).read_text())
-    assert receipt["schema_version"] == 2
-    assert receipt["capability"] == "route.identity.migrate"
-    assert {row["path"] for row in receipt["writes"]} == {
-        "curriculum/modules/module-demo/source-map.yaml",
-        "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml",
-    }
-    assert plan_migration(mini_repo).changes == ()
-
-    replayed = subprocess.run(
-        [
-            sys.executable,
-            str(repo_root / "tools/los.py"),
-            "--root", str(mini_repo),
-            "capability", "route.identity.migrate",
-            "--payload-file", str(request),
-        ],
-        cwd=repo_root,
-        text=True,
-        capture_output=True,
-        timeout=30,
-    )
-    assert replayed.returncode == 0, replayed.stderr or replayed.stdout
-    assert json.loads(replayed.stdout)["replayed"] is True
 
 
 def test_ambiguous_selection_blocks_the_entire_apply(tmp_path):
@@ -466,69 +392,3 @@ def test_standalone_review_rejects_duplicate_yaml_ids(tmp_path):
 
     assert result.returncode == 2
     assert "found duplicate key 'R001'" in result.stdout
-
-
-def test_gateway_approval_binds_inline_review_and_reviewed_plan(
-    mini_repo: Path, repo_root: Path, tmp_path: Path
-):
-    add_curriculum(mini_repo)
-    _add_material_overview(mini_repo)
-    unit_path = mini_repo / "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
-    unit = yaml.safe_load(unit_path.read_text(encoding="utf-8"))
-    unit["source_selections"][0]["locator"] = "reviewed legacy locator"
-    write_yaml(unit_path, unit)
-    route = next(
-        row for row in plan_migration(mini_repo).routes
-        if row.unit_id == "unit-demo-l01"
-        and row.source_id == unit["source_selections"][0]["source_id"]
-    )
-    review = _review(mini_repo, [_decision(
-        mini_repo,
-        action="revise-selection-guard",
-        route_ids=[route.route_id],
-    )])
-    reviewed_plan = plan_migration(mini_repo, review=review)
-    assert reviewed_plan.ready
-    envelope = {
-        "schema_version": 2,
-        "request_id": "request-route-v13-review",
-        "idempotency_key": "route-v13-review-001",
-        "capability": "route.identity.migrate",
-        "channel": "operator",
-        "expected_snapshot": f"sha256:{canonical_fingerprint(mini_repo)}",
-        "expected_revisions": {"module-demo": 0, "unit-demo-l01": 0},
-        "approval": {
-            "kind": "operator-approval",
-            "subject_sha256": "sha256:" + "0" * 64,
-        },
-        "payload": {
-            "plan_sha256": plan_sha256(reviewed_plan),
-            "review": review,
-        },
-    }
-    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
-    request = tmp_path / "route-v13-review.json"
-    request.write_text(json.dumps(envelope), encoding="utf-8")
-
-    applied = subprocess.run(
-        [
-            sys.executable,
-            str(repo_root / "tools/los.py"),
-            "--root", str(mini_repo),
-            "capability", "route.identity.migrate",
-            "--payload-file", str(request),
-        ],
-        cwd=repo_root,
-        text=True,
-        capture_output=True,
-        timeout=30,
-    )
-
-    assert applied.returncode == 0, applied.stderr or applied.stdout
-    response = json.loads(applied.stdout)
-    assert response["ok"] is True
-    selection = yaml.safe_load(unit_path.read_text(encoding="utf-8"))[
-        "source_selections"
-    ][0]
-    assert selection["route_id"] == route.route_id
-    assert selection["locator"] == route.locator

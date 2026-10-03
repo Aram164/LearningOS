@@ -243,7 +243,7 @@ def test_plan_content_and_note_semantics_stay_off_every_gesture_path():
     for capability in (
         "module.plan.import", "route.patch", "note.revise", "note.evidence.add",
         "unit.material-synthesis.publish", "ai-action.delivery.apply",
-        "route.identity.migrate", "module.materials.compact",
+        "module.materials.compact",
     ):
         assert capability not in GESTURE_ALLOWLIST
         assert capability not in UI_REVIEWED_ALLOWLIST

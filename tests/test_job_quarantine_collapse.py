@@ -3,14 +3,12 @@
 from __future__ import annotations
 
 import hashlib
-import json
 import subprocess
 import sys
 from pathlib import Path
 
 import pytest
 import yaml
-from gateway_helpers import approved_v2_envelope, run_v2_capability
 from materials_manifest import render_manifest
 from migrations.job_quarantine_collapse import (
     MATERIAL_SPECS,
@@ -20,9 +18,7 @@ from migrations.job_quarantine_collapse import (
     plan_sha256,
     verify_plan_inputs,
 )
-from repo_builders import add_curriculum
 
-from learning_os.fingerprint import canonical_fingerprint
 from learning_os.loader import load_repo
 from learning_os.rules import validate
 
@@ -324,73 +320,6 @@ def test_direct_apply_is_refused(mini_repo: Path):
     assert result.returncode == 2
     assert "legacy.job-learning.migrate GatewayEnvelopeV2" in result.stdout
     assert not (mini_repo / "curriculum/programs/program-job.yaml").exists()
-
-
-def test_gateway_commits_the_whole_collapse_once(mini_repo: Path):
-    add_curriculum(mini_repo)
-    _prepare_fixture(mini_repo)
-    plan = plan_migration(mini_repo)
-    artifacts = migration_artifact_ids(plan)
-    snapshot_before = f"sha256:{canonical_fingerprint(mini_repo)}"
-
-    direct = subprocess.run(
-        [
-            sys.executable,
-            str(ROOT / "tools/los.py"),
-            "--root", str(mini_repo),
-            "job-learning-migrate",
-            "--plan-sha256", plan_sha256(plan),
-            "--approve",
-        ],
-        capture_output=True,
-        text=True,
-        timeout=30,
-    )
-    assert direct.returncode == 2
-    assert "GatewayEnvelopeV2" in direct.stderr
-
-    envelope = approved_v2_envelope(
-        mini_repo,
-        capability="legacy.job-learning.migrate",
-        payload={"plan_sha256": plan_sha256(plan)},
-        artifact_ids=artifacts,
-        idempotency_key="job-learning-collapse-001",
-        expected_snapshot=snapshot_before,
-    )
-    applied = run_v2_capability(mini_repo, envelope)
-    assert applied.returncode == 0, applied.stderr or applied.stdout
-    response = json.loads(applied.stdout)
-    result = response["result"]
-    assert response["ok"] is True
-    assert result["statistics"] == {
-        "notes": 19, "plans": 5, "probes": 8, "resources": 5, "stages": 5,
-    }
-    assert result["deleted_files"] == [
-        "curriculum/programs/program-job-boundary.yaml"
-    ]
-    receipt = yaml.safe_load(
-        (mini_repo / response["receipt_path"]).read_text(encoding="utf-8")
-    )
-    assert receipt["capability"] == "legacy.job-learning.migrate"
-    receipt_writes = {row["path"] for row in receipt["writes"]}
-    assert receipt_writes - set(result["changed_files"]) == set(result["deleted_files"])
-    assert set(result["changed_files"]) <= receipt_writes
-    boundary_row = next(
-        row for row in receipt["writes"]
-        if row["path"] == "curriculum/programs/program-job-boundary.yaml"
-    )
-    assert boundary_row["sha256_before"]
-    assert boundary_row["sha256_after"] is None
-    assert boundary_row["created"] is False
-    assert set(receipt["artifact_revisions"]) == set(artifacts)
-    assert (mini_repo / "curriculum/programs/program-job.yaml").is_file()
-    assert not (mini_repo / "curriculum/programs/program-job-boundary.yaml").exists()
-    assert len(list((mini_repo / "curriculum/modules").glob("module-job-*"))) == 5
-    assert plan_migration(mini_repo).changes == ()
-
-    replayed = run_v2_capability(mini_repo, envelope)
-    assert replayed.returncode == 0, replayed.stderr or replayed.stdout
-    assert json.loads(replayed.stdout)["replayed"] is True
 
 
 @pytest.mark.full_repo

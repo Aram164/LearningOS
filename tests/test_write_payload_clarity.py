@@ -215,14 +215,6 @@ def test_route_concept_review_and_unit_shapes_mirror_their_handlers(repo_root):
     operations = change["properties"]["operations"]["items"]
     assert operations["additionalProperties"] is False
     assert set(operations["properties"]) == {"action", "old", "new"}
-    review = _capability_schema(
-        repo_root, "route.identity.migrate")["properties"]["review"]
-    assert review["additionalProperties"] is False
-    assert set(review["properties"]) == {
-        "schema_version", "basis_plan_sha256", "basis_snapshot_sha256",
-        "decisions",
-    }
-    assert set(review["required"]) == set(review["properties"])
     revision = _capability_schema(repo_root, "unit.plan.revise")["properties"]["record"]
     assert revision["additionalProperties"] is False
     assert set(revision["properties"]) == {

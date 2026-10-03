@@ -284,24 +284,6 @@ def test_ai_apply_with_the_wrong_approval_kind_is_unconfirmed(mini_repo: Path):
     assert "approved-delivery approval" in body["error"]["message"]
 
 
-def test_unready_migration_plan_is_ambiguous_migration(mini_repo: Path):
-    """The genuine migration refusal keeps its code end to end."""
-    add_curriculum(mini_repo)
-    envelope = approved_v2_envelope(
-        mini_repo,
-        capability="route.identity.migrate",
-        payload={"plan_sha256": "sha256:" + "0" * 64},
-        artifact_ids=["module-demo", "unit-demo-l01"],
-        idempotency_key="typed-migration-001",
-    )
-    proc = run_v2_capability(mini_repo, envelope)
-    assert proc.returncode == 2, proc.stderr or proc.stdout
-    body = json.loads(proc.stdout)
-    assert body["error"]["code"] == "AMBIGUOUS_MIGRATION"
-    assert body["error"]["retryable"] is False
-    assert "resolve problems" in body["error"]["message"]
-
-
 def test_failed_canonical_validation_is_typed(mini_repo: Path):
     """The commit's validation gate raises typed, not prose to match."""
     target = mini_repo / "work/inbox/typed-validation.md"
