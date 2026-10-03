@@ -19,7 +19,7 @@ from typing import Any
 import pytest
 from jsonschema import Draft202012Validator, FormatChecker
 
-from learning_os.contracts.bundle import build_bundle
+from learning_os.contracts.bundle import build_bundle, digest_of
 from learning_os.contracts.json_schema import schema_registry
 
 pytestmark = [pytest.mark.full_repo, pytest.mark.paired]
@@ -331,7 +331,12 @@ def test_prototype_lock_matches_production_lock(repo_root: Path) -> None:
                 "top_level_keys", "generated_keys", "index_keys",
                 "forbidden_top_level_keys"):
         assert prototype[key] == production[key], f"prototype lock drifts on {key}"
-    assert prototype["closure_sha256"].startswith("sha256:")
+    closure = digest_of(build_bundle(repo_root / V15_REL, repo_root / "system" / "schema"))
+    assert prototype["closure_sha256"] == closure, (
+        "prototype schema closure is stale; regenerate the Core bundle and UI validator")
+    header = (ui / VALIDATOR_REL).read_text(encoding="utf-8").splitlines()[:10]
+    assert f"// Closure: {closure}" in header, (
+        "Ajv validator and current producer schema closure disagree")
 
 
 def test_full_scale_core_manifest(repo_root: Path, tmp_path: Path) -> None:
