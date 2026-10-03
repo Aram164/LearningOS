@@ -16,7 +16,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest", "ruff>=0.16"]
+dev = ["pytest", "ruff>=0.16", "import-linter>=2.1", "mypy"]
 
 [project.scripts]
 los = "los:main"
@@ -79,3 +79,64 @@ select = ["E4", "E7", "E9", "F", "I", "B", "UP"]
 [tool.ruff.lint.isort]
 # `learning_os` and `los` live under tools/, so ruff cannot infer them.
 known-first-party = ["learning_os", "los"]
+
+[tool.importlinter]
+root_package = "learning_os"
+
+[[tool.importlinter.contracts]]
+name = "A1 layers (PLAN D17)"
+type = "layers"
+containers = ["learning_os"]
+exhaustive = true
+unmatched_ignore_imports_alerting = "error"
+layers = [
+  "adapters : commands",
+  "ops : ai_actions : masters_planning : material_synthesis",
+  "rules : genout : semantics : search : health : abilities : learning_runtime : routes : evidence",
+  "store : loading : loader : contracts : derived : diagnostics : transactions : fingerprint : githistory : pathing : revisions : validation_cache : warning_baseline : backup_manifest : legacy_archive : materials_resolution : material_slices : material_analysis : garden : manifest_identity : observations",
+  "domain : digests : material_inventory : material_refs : route_identity : unit_notes : render : errors",
+]
+ignore_imports = [
+  # recorded baseline exceptions, one per line: "learning_os.x.y -> learning_os.z"
+  "learning_os.backup_manifest -> learning_os.genout",
+  "learning_os.backup_manifest -> learning_os.rules",
+  "learning_os.contracts.payloads -> learning_os.commands.support",
+  "learning_os.diagnostics.resolver -> learning_os.evidence",
+  "learning_os.evidence -> learning_os.ai_actions.binding",
+  "learning_os.evidence -> learning_os.ai_actions.errors",
+  "learning_os.evidence -> learning_os.ai_actions.storage",
+  "learning_os.genout.manifest -> learning_os.ai_actions.projection",
+  "learning_os.genout.manifest_derived -> learning_os.ai_actions.projection",
+  "learning_os.genout.projection.records_curriculum -> learning_os.material_synthesis",
+  "learning_os.genout.projection.records_library -> learning_os.material_synthesis",
+  "learning_os.health -> learning_os.masters_planning",
+  "learning_os.health -> learning_os.material_synthesis",
+  "learning_os.rules.projects -> learning_os.ai_actions.support",
+  "learning_os.semantics.scan -> learning_os.material_synthesis",
+  "learning_os.transactions -> learning_os.evidence",
+  "learning_os.validation_cache -> learning_os.rules",
+  "learning_os.validation_cache -> learning_os.rules.advisories",
+  "learning_os.validation_cache -> learning_os.rules.common",
+  "learning_os.warning_baseline -> learning_os.rules",
+  "learning_os.warning_baseline -> learning_os.rules.common",
+]
+
+[[tool.importlinter.contracts]]
+name = "A1 transaction writer access (PLAN A2, D4)"
+type = "forbidden"
+source_modules = ["learning_os.rules", "learning_os.genout", "learning_os.semantics",
+                  "learning_os.search", "learning_os.health", "learning_os.abilities",
+                  "learning_os.learning_runtime", "learning_os.routes", "learning_os.domain"]
+forbidden_modules = ["learning_os.transactions"]
+ignore_imports = [
+  "learning_os.genout -> learning_os.genout.manifest",
+  "learning_os.genout.manifest -> learning_os.genout.projection",
+  "learning_os.genout.projection -> learning_os.genout.projection.records_curriculum",
+  "learning_os.genout.projection.records_curriculum -> learning_os.material_synthesis",
+  "learning_os.health -> learning_os.masters_planning",
+  "learning_os.health -> learning_os.material_synthesis",
+  "learning_os.masters_planning -> learning_os.transactions",
+  "learning_os.material_synthesis -> learning_os.transactions",
+  "learning_os.rules.generated -> learning_os.genout",
+  "learning_os.semantics.scan -> learning_os.material_synthesis",
+]

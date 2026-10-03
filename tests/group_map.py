@@ -166,6 +166,7 @@ GROUPS: dict[str, list[str]] = {
     # Validation, hygiene, perimeter, audits, and architecture guards.
     "validation": [
         "test_affected_tests.py",
+        "test_arch_layers.py",
         "test_arch_ratchets.py",
         "test_arch_surface.py",
         "test_code_reachability.py",
