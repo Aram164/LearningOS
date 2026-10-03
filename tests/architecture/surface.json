@@ -123,26 +123,6 @@
      "operations/legacy/archive-lock.yaml"
     ]
    },
-   "legacy.job-learning.migrate": {
-    "admission": null,
-    "cli_command": "job-learning-migrate",
-    "handler": "job_learning_migrate",
-    "writes": [
-     "curriculum/programs/program-job.yaml",
-     "curriculum/programs/program-job-boundary.yaml",
-     "curriculum/modules/module-job-git/**",
-     "curriculum/modules/module-job-engineering-tools/**",
-     "curriculum/modules/module-job-polars/**",
-     "curriculum/modules/module-job-python-engineering/**",
-     "curriculum/modules/module-job-rust-engineering/**",
-     "knowledge/concepts.yaml",
-     "knowledge/notes/data-systems/**",
-     "knowledge/attachments/note-pandas-polars-aggregation-contentions/**",
-     "sources/registry/software.yaml",
-     "records/materials-manifest.yaml",
-     "operations/migrations/job-quarantine-collapse-v1.yaml"
-    ]
-   },
    "lineage.restamp": {
     "admission": null,
     "cli_command": "lineage-restamp",
@@ -304,15 +284,6 @@
      "curriculum/modules/**/units/**"
     ]
    },
-   "route.identity.migrate": {
-    "admission": null,
-    "cli_command": "route-identity-migrate",
-    "handler": "route_identity_migrate",
-    "writes": [
-     "curriculum/modules/**/source-map.yaml",
-     "curriculum/modules/**/units/**/unit.yaml"
-    ]
-   },
    "route.patch": {
     "admission": null,
     "cli_command": "route-patch",
@@ -436,10 +407,7 @@
    "relationship.create",
    "unit.material-synthesis.publish"
   ],
-  "internal_commands": [
-   "project.migrate",
-   "project.migrate.rollback"
-  ],
+  "internal_commands": [],
   "queries": {
    "ability.context": {
     "cli_command": "ability-context",
@@ -2832,69 +2800,6 @@
      "--json"
     ],
     "required": false
-   }
-  ],
-  "job-learning-migrate": [
-   {
-    "action": "store_true",
-    "choices": null,
-    "default_repr": "False",
-    "dest": "approve",
-    "metavar": null,
-    "nargs": 0,
-    "option_strings": [
-     "--approve"
-    ],
-    "required": false
-   },
-   {
-    "action": "append",
-    "choices": null,
-    "default_repr": "[]",
-    "dest": "expected_revision",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--expected-revision"
-    ],
-    "required": false
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "expected_snapshot",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--expected-snapshot"
-    ],
-    "required": false
-   },
-   {
-    "action": "help",
-    "choices": null,
-    "default_repr": "'==SUPPRESS=='",
-    "dest": "help",
-    "metavar": null,
-    "nargs": 0,
-    "option_strings": [
-     "--help",
-     "-h"
-    ],
-    "required": false
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "plan_sha256",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--plan-sha256"
-    ],
-    "required": true
    }
   ],
   "legacy-archive-inspect": [
@@ -5661,81 +5566,6 @@
     "nargs": null,
     "option_strings": [
      "--unit"
-    ],
-    "required": false
-   }
-  ],
-  "route-identity-migrate": [
-   {
-    "action": "store_true",
-    "choices": null,
-    "default_repr": "False",
-    "dest": "approve",
-    "metavar": null,
-    "nargs": 0,
-    "option_strings": [
-     "--approve"
-    ],
-    "required": false
-   },
-   {
-    "action": "append",
-    "choices": null,
-    "default_repr": "[]",
-    "dest": "expected_revision",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--expected-revision"
-    ],
-    "required": false
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "expected_snapshot",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--expected-snapshot"
-    ],
-    "required": false
-   },
-   {
-    "action": "help",
-    "choices": null,
-    "default_repr": "'==SUPPRESS=='",
-    "dest": "help",
-    "metavar": null,
-    "nargs": 0,
-    "option_strings": [
-     "--help",
-     "-h"
-    ],
-    "required": false
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "plan_sha256",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--plan-sha256"
-    ],
-    "required": true
-   },
-   {
-    "action": "store",
-    "choices": null,
-    "default_repr": "None",
-    "dest": "review",
-    "metavar": null,
-    "nargs": null,
-    "option_strings": [
-     "--review"
     ],
     "required": false
    }
