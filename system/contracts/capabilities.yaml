@@ -646,7 +646,7 @@ commands:
     writes:
     - curriculum/modules/**/units/**/stages/**
     invariants:
-    - compatibility capability only
+    - "one stage's working note; OPERATOR \"Capture routing\" uses it for log: captures"
     - GatewayEnvelopeV2 carries note text inline and never reads it from stdin
   stage.progress.update:
     handler: stage_progress
