@@ -873,7 +873,14 @@ gateway envelope; review both, then submit the envelope unchanged.
    `materials/` tree, without a `material://` scheme or a leading `materials/`.
    The drafter supplies `live_source_digest` equal to
    `recorded_source_digest` as bare 64-character hex for the observed bytes;
-   prep derives only `frozen_input_*`. One note uses the same batch format:
+   prep derives only `frozen_input_*`. One note uses the same batch format.
+   The boundary also accepts the read surface's own spellings and normalizes
+   them before any check, always storing the canonical form: a
+   `material://SOURCE_ID/REL` URI whose authority equals `binding.source_id`
+   (resolved through the source's registered material folder), a leading
+   `materials/` prefix, and `sha256:`-prefixed digests. Each `material-span`
+   span already carries a ready `binding` block with exactly these canonical
+   values; the draft adds only `inspected_range`.
 
    ```json
    {"notes": [{"id": "note-example-analysis", "title": "Example analysis",
