@@ -488,6 +488,45 @@
   }
  },
  "cli": {
+  "__root__": [
+   {
+    "action": "help",
+    "choices": null,
+    "default_repr": "'==SUPPRESS=='",
+    "dest": "help",
+    "metavar": null,
+    "nargs": 0,
+    "option_strings": [
+     "--help",
+     "-h"
+    ],
+    "required": false
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "lock_timeout",
+    "metavar": "SECONDS",
+    "nargs": null,
+    "option_strings": [
+     "--lock-timeout"
+    ],
+    "required": false
+   },
+   {
+    "action": "store",
+    "choices": null,
+    "default_repr": "None",
+    "dest": "root",
+    "metavar": null,
+    "nargs": null,
+    "option_strings": [
+     "--root"
+    ],
+    "required": false
+   }
+  ],
   "ability-candidate-append": [
    {
     "action": "store",

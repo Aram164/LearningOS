@@ -112,6 +112,7 @@ jobs:
         working-directory: repository
         env:
           PYTEST_ADDOPTS: '-m "not live_install"'
+          LOS_RATCHET_BASE: origin/main
         run: make system-check
 
       # The UI build always uses its own checked-out Git revision (never a

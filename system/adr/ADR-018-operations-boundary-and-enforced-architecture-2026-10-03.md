@@ -2,7 +2,7 @@
 
 **Date:** 2026-10-03
 
-Source: the disposable workbench plan `../PLAN.md` (revision 4), cited by path
+Source: the disposable workbench plan `../PLAN.md` (revision 5), cited by path
 for history only.
 
 ## Context
@@ -55,6 +55,9 @@ only shrinks.
 - **A14**: one error vocabulary defined once and generated into the envelope schema.
 - **A15**: every session state transition is tested, including failed commit and failed push.
 - **A16**: recovery and retry scenarios cover replay, escalation, rollback, and crashes at every named point.
+- **A17** (PLAN §6 A17): OpContext's members are frozen in the A11 surface snapshot.
+- **A18** (PLAN §6 A18): transaction callbacks are ratcheted per capability and hook; rendering callbacks stay pure.
+- **A19** (PLAN §6 A19): every durable operational destination has exactly one declared owner module.
 
 ## Consequences
 
@@ -69,3 +72,4 @@ the frozen snapshot refuses any unapproved addition, removal, or change.
 ## Status
 
 Accepted (Aram, 2026-10-03): Aram accepted PLAN revision 4 on 2026-10-03.
+Amended 2026-10-04: PLAN revision 5 adds A17–A19.

@@ -119,10 +119,10 @@ def build_surface(root: Path | str) -> dict:
     import los  # noqa: E402  (imports the parser, not a command)
     from learning_os.contracts.payloads import subparsers
 
-    cli = {
-        name: _parser_options(sub)
-        for name, sub in sorted(subparsers(los.build_parser()).items())
-    }
+    root_parser = los.build_parser()
+    cli = {"__root__": _parser_options(root_parser)}
+    for name, sub in sorted(subparsers(root_parser).items()):
+        cli[name] = _parser_options(sub)
     tools = {
         "seal_envelope.py": _parser_options(seal_envelope.build_parser()),
     }
