@@ -424,6 +424,17 @@ documents:
     amends:
       - system/adr/ADR-016-focused-atlas-navigation-2026-09-04.md
 
+  - path: system/adr/ADR-018-operations-boundary-and-enforced-architecture-2026-10-03.md
+    class: decision
+    status: current
+    authority: binding
+    owner: architecture
+    summary: >-
+      Records the accepted architecture-convergence plan as twenty decisions
+      with sixteen enforced checks. The operation boundary, the ratchets, and
+      the frozen surface bind every later session.
+    amends: []
+
   # ---- dated reviews (findings, not decisions) -----------------------------
 
   - path: system/adr/external-review-2026-07-16.md
