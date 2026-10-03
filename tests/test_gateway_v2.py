@@ -278,7 +278,7 @@ def _git_init(root: Path) -> None:
     )
     subprocess.run(["git", "config", "user.name", "LearningOS Tests"], cwd=root, check=True)
     subprocess.run(["git", "add", "."], cwd=root, check=True)
-    subprocess.run(["git", "commit", "-qm", "fixture baseline"], cwd=root, check=True)
+    subprocess.run(["git", "-c", "user.name=Test User", "-c", "user.email=test@example.com", "commit", "-qm", "fixture baseline"], cwd=root, check=True)
 
 
 def test_replay_never_launders_an_out_of_band_edit_into_session_ownership(

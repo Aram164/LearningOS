@@ -1703,7 +1703,7 @@ def test_backup_provenance_is_recorded(mini_repo, tmp_path, monkeypatch):
     subprocess.run(["git", "config", "user.name", "Test"], cwd=mini_repo, check=True)
     subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=mini_repo, check=True)
     subprocess.run(["git", "add", "."], cwd=mini_repo, check=True)
-    subprocess.run(["git", "commit", "-m", "init"], cwd=mini_repo, check=True)
+    subprocess.run(["git", "-c", "user.name=Test User", "-c", "user.email=test@example.com", "commit", "-m", "init"], cwd=mini_repo, check=True)
     
     ui = tmp_path / "ui"
     _ui_fixture(ui, mini_repo)
@@ -1714,7 +1714,7 @@ def test_backup_provenance_is_recorded(mini_repo, tmp_path, monkeypatch):
     subprocess.run(["git", "config", "user.name", "Test"], cwd=ui, check=True)
     subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=ui, check=True)
     subprocess.run(["git", "add", "."], cwd=ui, check=True)
-    subprocess.run(["git", "commit", "-m", "init"], cwd=ui, check=True)
+    subprocess.run(["git", "-c", "user.name=Test User", "-c", "user.email=test@example.com", "commit", "-m", "init"], cwd=ui, check=True)
     
     from learning_os.contracts.data_contract import load_contract
     version = load_contract(mini_repo / "system" / "contracts" / "data-contract.yaml").get("contract_version")
@@ -1833,7 +1833,7 @@ def test_backup_provenance_never_calls_a_checkout_clean_it_could_not_read(
     subprocess.run(["git", "config", "user.name", "Test"], cwd=mini_repo, check=True)
     subprocess.run(["git", "config", "user.email", "test@example.com"], cwd=mini_repo, check=True)
     subprocess.run(["git", "add", "."], cwd=mini_repo, check=True)
-    subprocess.run(["git", "commit", "-m", "init"], cwd=mini_repo, check=True)
+    subprocess.run(["git", "-c", "user.name=Test User", "-c", "user.email=test@example.com", "commit", "-m", "init"], cwd=mini_repo, check=True)
 
     monkeypatch.setattr(module.subprocess, "run", status_fails)
     provenance = module._git_provenance(mini_repo)

@@ -872,7 +872,7 @@ def test_session_end_reports_canvas_as_unrelated_and_never_session_owned(mini_re
     subprocess.run(["git", "config", "user.email", "tests@example.invalid"], cwd=mini_repo, check=True)
     subprocess.run(["git", "config", "user.name", "Tests"], cwd=mini_repo, check=True)
     subprocess.run(["git", "add", "."], cwd=mini_repo, check=True)
-    subprocess.run(["git", "commit", "-qm", "fixture"], cwd=mini_repo, check=True)
+    subprocess.run(["git", "-c", "user.name=Test User", "-c", "user.email=test@example.com", "commit", "-qm", "fixture"], cwd=mini_repo, check=True)
     saved = approved_v2_cli(
         mini_repo, "stage-note", "unit-demo-l01", "stage-demo",
         "--replace", "--text", "Session-owned note.",

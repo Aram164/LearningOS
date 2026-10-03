@@ -257,7 +257,7 @@ def test_git_neglect_flags_untouched_workspace(mini_repo):
     }
     subprocess.run(["git", "init", "-q"], cwd=mini_repo, check=True)
     subprocess.run(["git", "add", "-A"], cwd=mini_repo, check=True, env=env)
-    subprocess.run(["git", "commit", "-q", "-m", "init"], cwd=mini_repo,
+    subprocess.run(["git", "-c", "user.name=Test User", "-c", "user.email=test@example.com", "commit", "-q", "-m", "init"], cwd=mini_repo,
                    check=True, env=env)
     assert "WS-NEGLECT" in codes(run(mini_repo), "W")
 

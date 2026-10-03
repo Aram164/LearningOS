@@ -243,7 +243,7 @@ def test_dirty_paths_reports_both_sides_of_a_rename(tmp_path, monkeypatch):
     source.parent.mkdir(parents=True)
     source.write_text("critical\n", encoding="utf-8")
     subprocess.run(["git", "add", "."], cwd=tmp_path, check=True)
-    subprocess.run(["git", "commit", "-qm", "init"], cwd=tmp_path, check=True)
+    subprocess.run(["git", "-c", "user.name=Test User", "-c", "user.email=test@example.com", "commit", "-qm", "init"], cwd=tmp_path, check=True)
 
     destination = (
         tmp_path / "curriculum" / "modules" / "module-demo" / "units"

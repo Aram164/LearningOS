@@ -68,14 +68,14 @@ def test_views_absent_after_commit_warns(mini_repo):
     # generated/ exists in the fixture; empty it so the manifest is missing.
     _git(mini_repo, "init", "-q")
     _git(mini_repo, "add", "-A")
-    _git(mini_repo, "commit", "-qm", "init")
+    _git(mini_repo, "-c", "user.name=Test User", "-c", "user.email=test@example.com", "commit", "-qm", "init")
     assert "HYGIENE-VIEWS" in codes(run(mini_repo), "W")
 
 
 def test_views_older_than_head_warn(mini_repo):
     _git(mini_repo, "init", "-q")
     _git(mini_repo, "add", "-A")
-    _git(mini_repo, "commit", "-qm", "init")
+    _git(mini_repo, "-c", "user.name=Test User", "-c", "user.email=test@example.com", "commit", "-qm", "init")
     manifest = mini_repo / "generated" / "manifest.json"
     manifest.write_text("{}", encoding="utf-8")
     old = time.time() - 3600
@@ -86,7 +86,7 @@ def test_views_older_than_head_warn(mini_repo):
 def test_fresh_views_do_not_warn(mini_repo):
     _git(mini_repo, "init", "-q")
     _git(mini_repo, "add", "-A")
-    _git(mini_repo, "commit", "-qm", "init")
+    _git(mini_repo, "-c", "user.name=Test User", "-c", "user.email=test@example.com", "commit", "-qm", "init")
     from learning_os.genout import generate_all, write_outputs
     from learning_os.loader import load_repo
     repo = load_repo(mini_repo)

@@ -27,7 +27,7 @@ def _init_and_commit(repo: Path) -> str:
     subprocess.run(["git", "config", "user.email", "t@t"], cwd=repo, check=True, capture_output=True)
     subprocess.run(["git", "config", "user.name", "t"], cwd=repo, check=True, capture_output=True)
     _git(repo, "add", "-A")
-    subprocess.run(["git", "commit", "-q", "-m", "init"], cwd=repo, check=True,
+    subprocess.run(["git", "-c", "user.name=Test User", "-c", "user.email=test@example.com", "commit", "-q", "-m", "init"], cwd=repo, check=True,
                    capture_output=True, env={**os.environ, **WORKFLOW_ENV})
     result = subprocess.run(["git", "rev-parse", "HEAD"], cwd=repo, check=True,
                             capture_output=True, text=True)
