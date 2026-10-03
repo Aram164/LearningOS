@@ -1391,17 +1391,20 @@ def _route_material_index(repo, unit_id=None) -> dict:
 _CONCEPT_VIA_LIMIT = 20
 
 
-def _concept_stage_sources(repo) -> dict[str, dict[str, list[str]]]:
-    """concept id -> source id -> sorted stage ids joining them (F12).
+def _concept_stage_routes(repo) -> dict[str, dict[str, list[tuple[str, dict]]]]:
+    """concept id -> stage id -> the (source_id, route) pairs that stage places (F12).
 
-    A stage joins a concept to a source when it tags the concept AND places
-    a route of that source — two declared edges, read-side only. Nothing
-    is inferred and nothing is recorded: analysis notes carry no concept
-    tags by construction, so without this join the concept filter's note
-    branch could never match them.
+    A stage joins a concept to a route when it tags the concept AND places
+    the route — two declared edges, read-side only. Nothing is inferred and
+    nothing is recorded: analysis notes carry no concept tags by
+    construction, so without this join the concept filter's note branch
+    could never match them. A note then joins only through the shared
+    note-to-route rule (`_unit_note_scope`), never through a shared source
+    id alone: one source (a lecture deck, a textbook) serves many concepts,
+    and an analysis of its other pages is not evidence for this one.
     """
     routes = _route_material_index(repo, None)
-    joined: dict[str, dict[str, set[str]]] = {}
+    joined: dict[str, dict[str, list[tuple[str, dict]]]] = {}
     for map_id in sorted(repo.study_maps):
         stages = repo.study_maps[map_id].data.get("stages", []) or []
         for stage in stages:
@@ -1413,7 +1416,7 @@ def _concept_stage_sources(repo) -> dict[str, dict[str, list[str]]]:
             concepts = stage.get("concepts") or []
             if not concepts:
                 continue
-            sources = set()
+            placed: list[tuple[str, dict]] = []
             for resource in stage.get("resources", []) or []:
                 if not isinstance(resource, dict):
                     continue
@@ -1423,18 +1426,15 @@ def _concept_stage_sources(repo) -> dict[str, dict[str, list[str]]]:
                     route_id = resource["material_ref"].get("route_id")
                 hit = routes.get(route_id)
                 if hit is not None and isinstance(hit[0], str) and hit[0]:
-                    sources.add(hit[0])
-            if not sources:
+                    placed.append(hit)
+            if not placed:
                 continue
             for concept_id in concepts:
                 if not isinstance(concept_id, str) or not concept_id:
                     continue
-                per_source = joined.setdefault(concept_id, {})
-                for source_id in sources:
-                    per_source.setdefault(source_id, set()).add(stage_id)
-    return {concept: {source: sorted(ids)[:_CONCEPT_VIA_LIMIT]
-                      for source, ids in per_source.items()}
-            for concept, per_source in joined.items()}
+                joined.setdefault(concept_id, {}).setdefault(
+                    stage_id, []).extend(placed)
+    return joined
 
 
 def _check_material_ref(root, ref) -> str:
@@ -1753,15 +1753,16 @@ def cmd_material_context(args) -> int:
             else:
                 notes = _analysis_notes(repo)
             if concept_id is not None:
-                concept_join = _concept_stage_sources(repo).get(concept_id, {})
+                concept_join = _concept_stage_routes(repo).get(concept_id, {})
 
                 def _note_concept_via(note) -> list[str]:
                     binding = note.meta.get("material_analysis") or {}
-                    source_id = binding.get("source_id") \
-                        if isinstance(binding, dict) else None
-                    if not isinstance(source_id, str):
+                    if not isinstance(binding, dict):
                         return []
-                    return concept_join.get(source_id, [])
+                    via = [stage_id
+                           for stage_id, placed in sorted(concept_join.items())
+                           if _unit_note_scope(repo, binding, placed) == "direct"]
+                    return via[:_CONCEPT_VIA_LIMIT]
 
                 def _note_matches_concept(note) -> bool:
                     return (concept_id in (note.meta.get("concepts") or [])

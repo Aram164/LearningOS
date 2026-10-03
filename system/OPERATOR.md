@@ -113,8 +113,10 @@ Decide which read answers the question before reading:
   coverage, source-completeness, or unknown ids.
 - A material question → saved context first (`material-context`), else one
   exact span (`material-span UNIT_ID ROUTE_ID`); never trawl. A lone
-  `--concept` asks what explains it: notes match by their own tags or by a
-  stage that tags the concept while placing a route of the note's source. A stage's
+  `--concept` asks what explains it: notes match by their own tags or as
+  route-direct evidence (same file, overlapping pages) for a route placed on a
+  stage that tags the concept, named in `match.concept_via`; a shared source
+  alone never joins. A stage's
   narrower file or page selection uses `--stage STAGE_ID --resource-index N`
   (the zero-based canonical resource position); both selectors are required.
   With `--unit`,

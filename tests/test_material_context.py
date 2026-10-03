@@ -1063,6 +1063,32 @@ def test_concept_stage_join_finds_analyses_without_concept_tags(mini_repo):
     assert "empty" not in found
 
 
+def test_concept_join_needs_route_direct_evidence_not_a_shared_source(mini_repo):
+    """A shared source id alone never joins a note to a concept (F12).
+
+    One source serves many concepts: a deck analysed on other pages, or
+    another file of the same source, is not evidence for the concept a
+    stage tags. The join uses the shared note-to-route rule, so only the
+    route-direct analysis (same file, overlapping pages) matches.
+    """
+    _seed_joined_analysis(mini_repo)
+    other_pages = "Pages far from the routed slice.\n"
+    _plant_note(mini_repo, "note-context-density-pp010-012", other_pages,
+                 _binding("source-demo-book/deck.pdf",
+                          _seed_material(mini_repo, "source-demo-book/deck.pdf",
+                                         b"live bytes"),
+                          other_pages, inspected_range={"start": 10, "end": 12}))
+    other_file = "Another file of the same source.\n"
+    _plant_note(mini_repo, "note-context-appendix-pp001-003", other_file,
+                 _binding("source-demo-book/appendix.pdf",
+                          _seed_material(mini_repo, "source-demo-book/appendix.pdf",
+                                         b"appendix bytes"),
+                          other_file))
+    found = _context(mini_repo, "--concept", "concept-expected-value")
+    notes = [row["id"] for row in found["items"] if row["origin"] == "analysis-note"]
+    assert notes == ["note-context-density-pp001-003"]
+
+
 def test_concept_alone_resolves_aliases(mini_repo):
     _seed_joined_analysis(mini_repo)
     found = _context(mini_repo, "--concept", "Erwartungswert")
