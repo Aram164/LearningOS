@@ -36,6 +36,41 @@ def test_status_json_shape_and_counts(mini_repo):
     assert payload["adoption"] == {"notes_reviewed": 0, "notes_with_evidence": 0}
 
 
+def test_status_counts_match_manifest_programs_and_modules(mini_repo):
+    # F3: status counted repo.programs/repo.modules raw, so the quarantined
+    # program and compatibility-only (project-migrated) modules inflated it
+    # past bootstrap --brief, which reports the manifest's projected counts.
+    add_curriculum(mini_repo)
+    write_yaml(mini_repo / "curriculum/programs/program-quarantined.yaml", {
+        "id": "program-quarantined", "type": "program", "title": "Quarantined",
+        "kind": "quarantine", "status": "quarantined", "default": False,
+        "semester_bound": False, "semesters": [],
+    })
+    compat_dir = mini_repo / "curriculum/modules/module-compat"
+    write_yaml(compat_dir / "module.yaml", {
+        "id": "module-compat", "type": "module", "kind": "project",
+        "area_id": "program-bachelors", "title": "Migrated",
+        "status": "active", "unit_order": [], "source_map": "source-map.yaml",
+        "compatibility_only": True, "migrated_to": "project-compat",
+    })
+    write_yaml(compat_dir / "source-map.yaml", {
+        "type": "module-source-map", "module_id": "module-compat",
+        "sources": [],
+    })
+    status = run_los(mini_repo, "status", "--json")
+    assert status.returncode == 0, status.stderr
+    counts = json.loads(status.stdout)["counts"]
+    assert counts["programs"] == 1
+    assert counts["programs_quarantined"] == 1
+    assert counts["modules"] == 1
+    assert counts["modules_compatibility_only"] == 1
+    brief = run_los(mini_repo, "bootstrap", "--brief")
+    assert brief.returncode == 0, brief.stderr
+    manifest_counts = json.loads(brief.stdout)["counts"]
+    assert counts["programs"] == manifest_counts["programs"]
+    assert counts["modules"] == manifest_counts["modules"]
+
+
 def test_status_human_output_mentions_validation(mini_repo):
     proc = run_los(mini_repo, "status")
     assert proc.returncode == 0, proc.stderr

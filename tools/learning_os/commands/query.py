@@ -91,6 +91,17 @@ def cmd_status(args) -> int:
     n_inbox_files = len(_inbox_search_rows(root))
     active = repo.active_workspaces()
     ad = adoption_counts(repo)
+    # Programs and modules count the way the manifest does: the quarantined
+    # Master's Planning program and compatibility-only (project-migrated)
+    # modules are boundary records, not study records. The projection in
+    # genout/projection/records_curriculum.py (project_programs,
+    # project_modules) is the authority for the filters; the
+    # status/bootstrap parity test fails if the two drift apart.
+    programs = [p for p in repo.programs.values()
+                if p.data.get("status") not in {"quarantined", "boundary-only"}
+                and p.data.get("kind") not in {"quarantine", "boundary"}]
+    modules = {mid: m for mid, m in repo.modules.items()
+               if not m.get("compatibility_only")}
     spine = [
         {"date": date, "module_id": mid,
          "title": module.get("title", mid), "termin": att.get("termin")}
@@ -105,11 +116,13 @@ def cmd_status(args) -> int:
             "concepts": len(repo.concepts),
             "concept_relations": len(repo.relations),
             "sources": len(repo.sources),
-            "programs": len(repo.programs),
-            "modules": len(repo.modules),
+            "programs": len(programs),
+            "programs_quarantined": len(repo.programs) - len(programs),
+            "modules": len(modules),
+            "modules_compatibility_only": len(repo.modules) - len(modules),
             "projects": len(repo.projects),
             "modules_enrolled": sum(
-                1 for m in repo.modules.values() if m.get("status") == "enrolled"),
+                1 for m in modules.values() if m.get("status") == "enrolled"),
             "active_workspaces": len(active),
             "standing_workspaces": sum(1 for w in active if w.standing),
             "archived_workspaces": len(repo.archived_workspaces()),
