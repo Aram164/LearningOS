@@ -5,6 +5,8 @@ Compares the worktree's ``ratchets.yaml``, ``pyproject.toml``
 $LOS_RATCHET_BASE:<file>`` (default base: ``main``). A file absent at the
 base is the baseline: every ``ratchets.yaml`` entry must then be
 ``since: baseline``, and a first-ever ``surface.json`` needs no approvals.
+``baselined`` lists the checks whose baseline is recorded; it only grows,
+and every check id with entries is listed (amended §2.3 rule 2).
 """
 
 from __future__ import annotations
@@ -30,7 +32,7 @@ BASE_ENV = "LOS_RATCHET_BASE"
 DEFAULT_BASE = "main"
 
 APPROVED_BY_RE = re.compile(r"^Aram \d{4}-\d{2}-\d{2}: .+$")
-CHECK_ID_RE = re.compile(r"^A(1[0-6]|[1-9])(-[a-z0-9-]+)?$")
+CHECK_ID_RE = re.compile(r"^A(1[0-9]|[1-9])(-[a-z0-9-]+)?$")
 
 #: Fix sentences from the SPEC §3 table, printed on every failure.
 FIX = {
@@ -48,6 +50,9 @@ FIX = {
     "A12": "Behaviour changed; restore it or record a reviewed mismatch.",
     "A13": "Complete the request schema (PLAN D2).",
     "A14": "Import the code from learning_os.domain.codes.",
+    "A17": "OpContext members are frozen; a new member needs an approval line (PLAN A17).",
+    "A18": "Express the step as a declared gate or a pure renderer; callbacks must not grow or touch the world (PLAN A18).",
+    "A19": "Write durable operational state only through its declared owner, and declare an owner for new state (PLAN A19).",
 }
 
 
@@ -108,6 +113,11 @@ def test_ratchets_file_is_valid():
     assert RATCHETS_PATH.is_file(), f"missing {RATCHETS_PATH.relative_to(ROOT)}"
     data = _load_ratchets(RATCHETS_PATH)
     assert data.get("schema") == 1, "ratchets.yaml: schema must be 1"
+    baselined = data.get("baselined", [])
+    assert isinstance(baselined, list), "ratchets.yaml: baselined must list check ids"
+    for check_id in baselined:
+        assert isinstance(check_id, str) and CHECK_ID_RE.match(check_id), (
+            f"ratchets.yaml: unknown baselined id {check_id!r}")
     assert isinstance(data.get("checks"), dict), "ratchets.yaml: checks must map"
     for check_id, entries in data["checks"].items():
         assert CHECK_ID_RE.match(check_id), f"ratchets.yaml: unknown check id {check_id!r}"
@@ -149,36 +159,171 @@ def test_surface_approvals_file_is_valid():
 # ---- monotonicity against the base (SPEC §2.3) -------------------------------
 
 
+def _ratchet_failures(base_data: dict | None,
+                      current_data: dict) -> list[tuple[str, str, str]]:
+    """SPEC §2.3 rule 2 as a pure check: ``(rule, subject, detail)`` per violation.
+
+    ``base_data`` is the parsed base ``ratchets.yaml``, or None when the file
+    is absent at the base. A missing ``baselined`` key counts as an empty
+    list, both at the base and now.
+    """
+    failures: list[tuple[str, str, str]] = []
+    base = base_data or {}
+    base_lined: list = base.get("baselined") or []
+    current_lined: list = current_data.get("baselined") or []
+    base_checks: dict = base.get("checks") or {}
+    current_checks: dict = current_data.get("checks") or {}
+    for check_id in base_lined:
+        if check_id not in current_lined:
+            failures.append((check_id.split("-")[0], check_id,
+                             "removed from baselined"))
+    for check_id, entries in current_checks.items():
+        if entries and check_id not in current_lined:
+            failures.append((check_id.split("-")[0], check_id,
+                             "has entries but is not in baselined"))
+    for check_id, entries in current_checks.items():
+        rule = check_id.split("-")[0]
+        if check_id in base_lined:
+            base_counts = {entry["signature"]: entry["count"]
+                           for entry in base_checks.get(check_id, []) or []}
+            for entry in entries or []:
+                signature, count = entry["signature"], entry["count"]
+                if base_counts.get(signature, 0) >= count:
+                    continue
+                if not (entry.get("since") == "approved"
+                        and isinstance(entry.get("approved_by"), str)
+                        and APPROVED_BY_RE.match(entry["approved_by"])):
+                    failures.append((rule, signature,
+                                     "new or higher exception count "
+                                     f"(base {base_counts.get(signature, 0)}, "
+                                     f"now {count}) without an approval"))
+        else:
+            for entry in entries or []:
+                if not (entry.get("since") == "baseline"
+                        and entry.get("approved_by") is None):
+                    failures.append((rule, entry["signature"],
+                                     "check new at the base must record "
+                                     "since: baseline"))
+    return failures
+
+
 def test_ratchets_are_monotonic_vs_base(base_ref):
     current = _load_ratchets(RATCHETS_PATH)
     base_text = _git_show(base_ref, RATCHETS_PATH.relative_to(ROOT).as_posix())
-    if base_text is None:
-        for check_id, entries in current["checks"].items():
-            for entry in entries:
-                assert entry["since"] == "baseline", (
-                    f"{check_id} {entry['signature']}: ratchets.yaml is new at "
-                    f"the base, so every entry must be since: baseline")
-        return
-    base_checks = (yaml.safe_load(base_text) or {}).get("checks", {}) or {}
+    base = yaml.safe_load(base_text) if base_text is not None else None
     current_text = RATCHETS_PATH.read_text(encoding="utf-8")
     rel = RATCHETS_PATH.relative_to(ROOT).as_posix()
-    for check_id, entries in current["checks"].items():
-        rule = check_id.split("-")[0]
-        base_counts: dict[str, int] = {}
-        for entry in base_checks.get(check_id, []) or []:
-            base_counts[entry["signature"]] = entry["count"]
-        for entry in entries:
-            signature, count = entry["signature"], entry["count"]
-            if base_counts.get(signature, 0) >= count:
+    failures = []
+    for rule, subject, detail in _ratchet_failures(base, current):
+        lineno = _find_line(current_text, subject)
+        failures.append(
+            f"{rule} {subject}: {detail} — {rel}:{lineno} — {FIX[rule]}")
+    assert not failures, "\n".join(failures)
+
+
+# ---- rule 2 against fixture YAML (no git) -----------------------------------
+
+_FIXTURE_BASE_EMPTY = """
+schema: 1
+baselined: []
+checks: {}
+"""
+
+_FIXTURE_BASE_A3 = """
+schema: 1
+baselined: [A3-prose]
+checks:
+  A3-prose:
+    - signature: "tools/learning_os/commands/x.py::cmd_y::substring::snap"
+      count: 1
+      since: baseline
+      approved_by: null
+"""
+
+_FIXTURE_CURRENT_A3_BASELINE = """
+schema: 1
+baselined: [A3-prose]
+checks:
+  A3-prose:
+    - signature: "tools/learning_os/commands/x.py::cmd_y::substring::snap"
+      count: 1
+      since: baseline
+      approved_by: null
+"""
+
+
+def test_introduced_check_with_baselined_entry_passes():
+    base = yaml.safe_load(_FIXTURE_BASE_EMPTY)
+    current = yaml.safe_load(_FIXTURE_CURRENT_A3_BASELINE)
+    assert _ratchet_failures(base, current) == []
+
+
+def test_introduced_check_without_baselined_entry_fails():
+    base = yaml.safe_load(_FIXTURE_BASE_EMPTY)
+    current = yaml.safe_load(_FIXTURE_CURRENT_A3_BASELINE)
+    current["baselined"] = []
+    failures = _ratchet_failures(base, current)
+    assert len(failures) == 1
+    assert failures[0][1] == "A3-prose"
+    assert "baselined" in failures[0][2]
+
+
+def test_raised_count_for_established_check_fails():
+    base = yaml.safe_load(_FIXTURE_BASE_A3)
+    current = yaml.safe_load(_FIXTURE_BASE_A3)
+    current["checks"]["A3-prose"][0]["count"] = 2
+    failures = _ratchet_failures(base, current)
+    assert len(failures) == 1
+    assert "without an approval" in failures[0][2]
+
+
+def test_approved_raise_for_established_check_passes():
+    base = yaml.safe_load(_FIXTURE_BASE_A3)
+    current = yaml.safe_load(_FIXTURE_BASE_A3)
+    current["checks"]["A3-prose"][0]["count"] = 2
+    current["checks"]["A3-prose"][0]["since"] = "approved"
+    current["checks"]["A3-prose"][0]["approved_by"] = "Aram 2026-10-04: fixture approval"
+    assert _ratchet_failures(base, current) == []
+
+
+def test_removing_id_from_baselined_fails():
+    base = yaml.safe_load(_FIXTURE_BASE_A3)
+    current = yaml.safe_load(_FIXTURE_BASE_A3)
+    current["baselined"] = []
+    current["checks"] = {}
+    failures = _ratchet_failures(base, current)
+    assert len(failures) == 1
+    assert failures[0][1] == "A3-prose"
+    assert "removed from baselined" in failures[0][2]
+
+
+def test_fix_sentences_cover_a17_through_a19():
+    assert FIX["A17"] == ("OpContext members are frozen; a new member needs "
+                          "an approval line (PLAN A17).")
+    assert FIX["A18"] == ("Express the step as a declared gate or a pure renderer; "
+                          "callbacks must not grow or touch the world (PLAN A18).")
+    assert FIX["A19"] == ("Write durable operational state only through its declared owner, "
+                          "and declare an owner for new state (PLAN A19).")
+
+
+def _ignore_imports_failures(base_lists: dict[str, list[str]],
+                             current_lists: dict[str, list[str]],
+                             approved: set[str]) -> list[str]:
+    """SPEC §2.3 rule 3 as a pure check: the added line per violation.
+
+    A contract absent from the base is being introduced: its list is its own
+    baseline. An established contract's list must stay a subset of the base
+    list, apart from approved additions.
+    """
+    failures: list[str] = []
+    for name, lines in sorted(current_lists.items()):
+        if name not in base_lists:
+            continue
+        for line in sorted(set(lines) - set(base_lists.get(name, []))):
+            if line in approved:
                 continue
-            allowed = (entry["since"] == "approved"
-                       and isinstance(entry.get("approved_by"), str)
-                       and APPROVED_BY_RE.match(entry["approved_by"]))
-            lineno = _find_line(current_text, signature)
-            assert allowed, (
-                f"{rule} {signature}: new or higher exception count "
-                f"(base {base_counts.get(signature, 0)}, now {count}) "
-                f"without an approval — {rel}:{lineno} — {FIX[rule]}")
+            failures.append(line)
+    return failures
 
 
 def test_ignore_imports_are_a_subset_of_base(base_ref):
@@ -190,15 +335,28 @@ def test_ignore_imports_are_a_subset_of_base(base_ref):
                 if e["since"] == "approved"}
     current_text = PYPROJECT_PATH.read_text(encoding="utf-8")
     failures = []
-    for name, lines in sorted(current_lists.items()):
-        for line in sorted(set(lines) - set(base_lists.get(name, []))):
-            if line in approved:
-                continue
-            lineno = _find_line(current_text, line)
-            failures.append(
-                f"A1 {line}: ignore_imports addition without an "
-                f"A1-layers-approved entry — pyproject.toml:{lineno} — {FIX['A1']}")
+    for line in _ignore_imports_failures(base_lists, current_lists, approved):
+        lineno = _find_line(current_text, line)
+        failures.append(
+            f"A1 {line}: ignore_imports addition without an "
+            f"A1-layers-approved entry — pyproject.toml:{lineno} — {FIX['A1']}")
     assert not failures, "\n".join(failures)
+
+
+def test_new_contract_is_its_own_baseline():
+    base_lists: dict[str, list[str]] = {}
+    current_lists = {"A1 layers (PLAN D17)": ["learning_os.a -> learning_os.b"]}
+    assert _ignore_imports_failures(base_lists, current_lists, set()) == []
+
+
+def test_established_contract_addition_needs_approval():
+    base_lists = {"A1 layers (PLAN D17)": ["learning_os.a -> learning_os.b"]}
+    current_lists = {"A1 layers (PLAN D17)": ["learning_os.a -> learning_os.b",
+                                              "learning_os.c -> learning_os.d"]}
+    assert _ignore_imports_failures(base_lists, current_lists, set()) == [
+        "learning_os.c -> learning_os.d"]
+    assert _ignore_imports_failures(
+        base_lists, current_lists, {"learning_os.c -> learning_os.d"}) == []
 
 
 def test_surface_diffs_have_approvals(base_ref):
