@@ -1019,11 +1019,12 @@ approval = "sha256:" + hashlib.sha256(json.dumps(
 ```
 
 **Refusal shape.** A refusal answers `ok: false` with
-`error: {code, message, retryable, details}`. `details` is `{}` on
-`UNCONFIRMED` and on every prose-classified refusal — only the typed
-projection/commit outcomes (`PROJECTION_FAILED`, post-commit
-`INTERNAL_FAILURE`) carry stage details. An empty `details` is normal,
-not a missing diagnosis: the `message` names the defect.
+`error: {code, message, retryable, details}`. The code comes from the
+refusal's type, never from its message text. `details` is `{}` on most
+refusals — only the typed subsystem outcomes (snapshot-guard conflicts,
+projection, commit, crash-recovery conflicts) carry machine-readable
+details. An empty `details` is normal, not a missing diagnosis: the
+`message` names the defect.
 
 **Worked capture.** Inbox capture (`§2`) via the envelope route:
 

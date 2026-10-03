@@ -776,8 +776,11 @@ def _render(dossier, requirement, observations, open_items, sittings,
         lines.append(f"  Next         los observe {requirement['id']} --activity <what-you-did> "
                      "--result <correct|incorrect|partial|abandoned>")
     else:
-        lines.append(f"  Next         los stage-note {dossier.unit_id} {dossier.stage_id} "
-                     "--text <what-you-did>")
+        # Bare stage-note refuses (canonical writes need a GatewayEnvelopeV2),
+        # so name the seal-and-submit path instead.
+        lines.append("  Next         tools/seal_envelope.py --capability stage.note.write "
+                     "--payload {unit_id, stage_id, text} --guards auto, then")
+        lines.append("               los capability stage.note.write --payload-file ENVELOPE.json")
     upcoming = [(row.get("start_date", ""), row) for row in sittings
                 if isinstance(row.get("start_date"), str)
                 and row["start_date"] >= today.isoformat()]
