@@ -29,6 +29,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: repository
+          fetch-depth: 0
 
       # The public manifest has a separately released UI consumer. Checking
       # its mirror only in the UI repository recreates the failure topology the
@@ -99,6 +100,7 @@ jobs:
       - name: paired release gate (make system-check)
         env:
           PYTEST_ADDOPTS: '-m "not live_install"'
+          LOS_RATCHET_BASE: origin/main
         run: make system-check
       - name: URL-rot audit (weekly only)
         if: github.event_name == 'schedule'

@@ -1,0 +1,10 @@
+schema: 1
+approvals:
+  - {key: "cli.route-identity-migrate", change: removed, plan_ref: "PLAN D13", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "cli.job-learning-migrate", change: removed, plan_ref: "PLAN D13", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "catalog.commands.route.identity.migrate", change: removed, plan_ref: "PLAN D13", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "catalog.commands.legacy.job-learning.migrate", change: removed, plan_ref: "PLAN D13", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "catalog.internal_commands.project.migrate", change: removed, plan_ref: "PLAN D13", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "catalog.internal_commands.project.migrate.rollback", change: removed, plan_ref: "PLAN D13", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "tools.seal_envelope.py", change: changed, plan_ref: "PLAN D5", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
+  - {key: "request_schemas.*", change: added, plan_ref: "PLAN D2", pre_approved_by: "Aram 2026-10-03: accepted PLAN revision 4"}
