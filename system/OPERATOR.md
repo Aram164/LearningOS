@@ -71,7 +71,9 @@ Responses print follow-up reads as bare argument strings with no program
 prefix. Run one as `.venv/bin/python tools/los.py <expansion>` (or
 `.venv/bin/los <expansion>`); ALL-CAPS words are placeholders to fill from
 the response. A printed `--expected-snapshot` pins the follow-up to the same
-records — when it reports a conflict, re-read the parent first.
+records — when it reports a conflict, re-read the parent first. On a read
+that always prints JSON, `--json` is accepted and changes nothing; an
+unknown flag answers with that subcommand's usage, not the whole list.
 
 Pick one entry read; do not stack them:
 
@@ -158,16 +160,17 @@ Decide which read answers the question before reading:
   only until that date; its return to the scan is a candidate, not approval.
 
 Task-shaped entry preserves complete material access through `inspect ID`.
-Its `domain_atlas` glance summarizes all projected notes and shelves across
-domains, independently of pagination; open the domain atlas for the full map
-(on a fresh install run `make setup` first, then `make views` —
-`generated/` starts empty).
+The `domain_atlas` glance on `bootstrap --brief` and `bootstrap --compact`
+summarizes all projected notes and shelves across domains, independently of
+pagination; open the generated domain atlas for the full map only when the
+targeted reads are insufficient (on a fresh install run `make setup` first,
+then `make views` — `generated/` starts empty).
 Read several known records with `inspect ID1 ID2 ...` (at most 20) to share one
 fresh projection; the batch preserves requested order, includes a snapshot,
 and refuses missing IDs or changes during the read. Use `note-read` for note
 bodies — durable notes and garden seeds alike, by stable id. Ask governance
 questions through `semantic PREDICATE --input k=v`
-(`semantic --list` names the 23 registered predicates;
+(`semantic --list` names the registered predicates;
 `semantic --recipe CLASS` shows the worked example procedures for one
 question class, examples only) instead of
 re-deriving meaning from scattered YAML.
@@ -196,9 +199,9 @@ Continue a summary page with its returned offset and snapshot. Read saved
 reasoning with `note-read NOTE_ID` (bounded Unicode-character segments) and
 search beyond note summaries with `search QUERY --type note --content`
 (frontmatter values match, keys do not; bodies match verbatim).
-Read a stage's working-note content from its parent map: `inspect
-STUDY_MAP_ID` carries every stage's `notes_text` (`inspect STAGE_ID` does
-not resolve stages). The `notes_updated` on those stages is the note file's
+Read a stage's working-note content with `inspect STAGE_ID`: it resolves
+the stage and carries its `notes_text`. `inspect STUDY_MAP_ID` is for the
+whole map. The `notes_updated` on a stage is the note file's
 last-commit date, not the write date — uncommitted gateway writes do not
 move it. List inbox drops with `inbox-list`, then read one with
 `inbox-read NAME` (bounded segments of one `work/inbox/` file by name;

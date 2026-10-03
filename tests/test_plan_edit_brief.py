@@ -389,3 +389,16 @@ def test_brief_neighbor_expansion_refuses_a_stale_snapshot(mini_repo):
     assert proc.returncode == 3, proc.stderr
     assert "snapshot changed" in proc.stderr
     assert not proc.stdout
+
+
+def test_route_batch_pins_the_documented_one_to_twenty_window(mini_repo):
+    # OPERATOR and WORKFLOWS §25a promise 1 to 20 routes per batch; the
+    # pin fails if the window moves without the docs.
+    _seed_unit(mini_repo)
+    ids = ["route-demo-density", *(f"route-missing-{i}" for i in range(20))]
+    assert len(ids) == 21
+    proc = run_los(mini_repo, "plan-edit-context", "unit-demo-l01",
+                   "--route-ids", *ids)
+    assert proc.returncode == 2, proc.stderr
+    assert "accepts at most 20 routes per batch" in proc.stderr
+    assert not proc.stdout
