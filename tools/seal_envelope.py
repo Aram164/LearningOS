@@ -208,7 +208,12 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
         _transactions.TransactionService.commit = real_commit  # type: ignore[method-assign]
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The seal's CLI surface.
+
+    Factored out of ``main`` so the A11 surface snapshot can introspect the
+    same parser that defines the flags, instead of a second copy that drifts.
+    """
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=None,
                         help="repository root (default: the checkout holding tools/)")
@@ -241,6 +246,11 @@ def main(argv: list[str] | None = None) -> int:
                              "entries override derived ones.")
     parser.add_argument("--out", default=None,
                         help="write the envelope here (default: stdout)")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
 
     if args.channel not in GATEWAY_CHANNELS:
