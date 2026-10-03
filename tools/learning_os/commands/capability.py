@@ -42,11 +42,13 @@ from .support import (
     _load_session_paths,
     _operator_lock,
     _read_structured_file,
+    _refusal_from_failure,
     _root,
     _row_proven_state,
     _session_ledger,
     _session_path_state,
     _stamp_session_row,
+    _take_gateway_refusal,
     _write_session_ledger,
 )
 
@@ -322,6 +324,12 @@ def _dispatch(
     if hasattr(namespace, "json"):
         namespace.json = True
 
+    # A catching handler step records its typed refusal beside its non-zero
+    # return; take it here so the V2 error carries the type, not a guess
+    # from the prose. Cleared first so no earlier in-process failure leaks
+    # into this dispatch, and cleared on success so a refusal can never
+    # ride along with a later result.
+    _take_gateway_refusal()
     captured, errors = io.StringIO(), io.StringIO()
     with contextlib.redirect_stdout(captured), contextlib.redirect_stderr(errors):
         code = handler(namespace)
@@ -332,7 +340,12 @@ def _dispatch(
 
     text, complaint = captured.getvalue().strip(), errors.getvalue().strip()
     if code:
-        return code, {"error": complaint or text or f"{definition.name} failed"}
+        result = {"error": complaint or text or f"{definition.name} failed"}
+        refusal = _take_gateway_refusal()
+        if refusal is not None:
+            result["error_code"], result["error_retryable"] = refusal
+        return code, result
+    _take_gateway_refusal()
     if not text:
         raise WriteRefused(
             f"{definition.name} reported success without a JSON result"
@@ -469,50 +482,38 @@ def _gateway_error(code: str, message: str, *, retryable: bool = False,
 
 
 def _classify_failure(code: int, message: str, *,
-                      failure: BaseException | None = None) -> dict:
-    if getattr(failure, "pre_existing_defect", False):
-        # Typed pre-existing-defect case (JF-11): canonical rollback
-        # completed but the restored pre-state itself does not publish —
-        # the shadow-validation refusal. Recognized by flag, never by
-        # message tokens, so defect prose can never trip an earlier
-        # classifier token. Same refusal the tokens used to select.
-        return _gateway_error("VALIDATION_FAILED", message)
-    lowered = message.lower()
-    # TransactionService normally rolls every authored byte back before a
-    # refusal reaches this boundary.  When it explicitly reports an incomplete
-    # rollback, however, the repository may contain part of the attempted
-    # write.  Never let a more specific word later in the message (validation,
-    # projection, approval, …) turn that unknown outcome into a typed
-    # "nothing committed" refusal: recovery must keep the original request and
-    # reconcile it under the same idempotency key.
-    if "rollback incomplete" in lowered:
-        return _gateway_error("INTERNAL_FAILURE", message, retryable=True)
-    if "belongs only in the envelope" in lowered \
-            or "requires an inline record" in lowered \
-            or "changed before use" in lowered \
-            or "unbound stdin" in lowered \
-            or "requires a sha-256 bound" in lowered:
-        return _gateway_error("INVALID_REQUEST", message)
-    if "snapshot" in lowered or "projection conflict" in lowered:
-        return _gateway_error("STALE_SNAPSHOT", message, retryable=True)
-    if code == 3 or "revision conflict" in lowered:
-        return _gateway_error("REVISION_CONFLICT", message, retryable=True)
-    if any(token in lowered for token in (
-        "write scope", "may not write", "unknown write authority", "symlink",
-        "escapes repository", "out of scope",
-    )):
-        return _gateway_error("OUT_OF_SCOPE", message)
-    if "idempotency" in lowered:
-        return _gateway_error("IDEMPOTENCY_CONFLICT", message)
-    if "ambiguous" in lowered:
-        return _gateway_error("AMBIGUOUS_MIGRATION", message)
-    if "canonical validation" in lowered or "validation failed" in lowered:
-        return _gateway_error("VALIDATION_FAILED", message)
-    if "projection" in lowered or "publication" in lowered:
-        return _gateway_error("PROJECTION_FAILED", message, retryable=True)
-    if any(token in lowered for token in ("approval", "approve", "confirm")):
-        return _gateway_error("UNCONFIRMED", message)
+                      failure: BaseException | None = None,
+                      refusal: tuple[str, bool] | None = None) -> dict:
+    """Turn a failed dispatch into a typed V2 error by type, never by prose.
+
+    ``code`` is the handler's exit status, retained for call compatibility
+    and deliberately ignored: exit 3 alone is ambiguous (a snapshot guard,
+    a revision conflict, and a stale reviewed digest all use it), and the
+    message echoes user-supplied ids that may name snapshots, approvals,
+    or any other lookalike. The V2 code comes from the refusal's type —
+    either the ``failure`` that propagated out of the handler, or the
+    ``refusal`` pair a catching handler step recorded for the gateway.
+    An untyped refusal is ``INVALID_REQUEST``.
+    """
+    if refusal is not None:
+        refused_code, retryable = refusal
+        return _gateway_error(refused_code, message, retryable=retryable)
+    if failure is not None:
+        mapped = _refusal_from_failure(failure)
+        if mapped is not None:
+            refused_code, retryable = mapped
+            return _gateway_error(refused_code, message, retryable=retryable)
     return _gateway_error("INVALID_REQUEST", message)
+
+
+def _v2_exit_code(handler_code: int, error: dict | None) -> int:
+    """Exit status for a V2 dispatch: STALE_SNAPSHOT exits 3 on every path.
+
+    Every other refusal keeps the handler's own exit code.
+    """
+    if error is not None and error.get("code") == "STALE_SNAPSHOT":
+        return 3
+    return handler_code
 
 
 def _projection_error(exc: ProjectionFailure) -> dict:
@@ -1194,6 +1195,7 @@ def cmd_capability(args) -> int:
                     )
         except WriteRefused as exc:
             code, result = 2, {"error": str(exc)}
+            failure = exc
         except TransactionSnapshotConflict as exc:
             response = _v2_response(
                 envelope,
@@ -1279,6 +1281,11 @@ def cmd_capability(args) -> int:
             return _close_attempt(attempt, 2, "error", {"code": "INTERNAL_FAILURE"})
         confirmation = result if code == 0 else {}
         complaint = str(result.get("error") or f"{args.name} failed")
+        carried = result.get("error_code")
+        refusal = (carried, bool(result.get("error_retryable"))) \
+            if isinstance(carried, str) else None
+        error = None if code == 0 else _classify_failure(
+            code, complaint, failure=failure, refusal=refusal)
         response = _v2_response(
             envelope,
             ok=code == 0,
@@ -1287,13 +1294,13 @@ def cmd_capability(args) -> int:
             receipt_path=confirmation.get("receipt_path"),
             snapshot_after=confirmation.get("snapshot_after"),
             result=result if code == 0 else {},
-            error=None if code == 0 else _classify_failure(
-                code, complaint, failure=failure),
+            error=error,
         )
         _validate_capability_envelope(root, response, kind="result")
         print(json.dumps(response, indent=2, ensure_ascii=False))
         return _close_attempt(
-            attempt, code, "ok" if code == 0 else "error",
+            attempt, _v2_exit_code(code, error),
+            "ok" if code == 0 else "error",
             {"replayed": bool(confirmation.get("replayed", False))} if code == 0 else {})
 
     try:

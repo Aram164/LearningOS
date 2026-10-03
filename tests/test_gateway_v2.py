@@ -12,13 +12,18 @@ from gateway_helpers import file_sha256, request_artifact_id
 from jsonschema import Draft202012Validator
 
 from learning_os.commands.capability import _classify_failure, _projection_error
-from learning_os.commands.support import _read_content_bound_file, _session_ledger
+from learning_os.commands.support import (
+    StaleSnapshot,
+    _read_content_bound_file,
+    _session_ledger,
+)
 from learning_os.contracts.gateway import GatewayRequestContext, intent_sha256
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.transactions import (
     ProjectionFailure,
     TransactionFailure,
     TransactionIdempotencyConflict,
+    TransactionRollbackIncomplete,
     TransactionService,
 )
 
@@ -593,12 +598,15 @@ def test_gateway_v2_returns_typed_stale_snapshot_refusal(
 
 
 def test_gateway_v2_classifies_in_lock_snapshot_race_as_stale_snapshot():
-    error = _classify_failure(
-        3,
-        "approved delivery snapshot changed before commit",
-    )
+    message = "approved delivery snapshot changed before commit"
+    error = _classify_failure(2, message, failure=StaleSnapshot(message))
     assert error["code"] == "STALE_SNAPSHOT"
     assert error["retryable"] is True
+    # The type decides, never the prose or the exit code: the same words
+    # untyped — even beside exit 3 — are just an invalid request.
+    untyped = _classify_failure(3, message)
+    assert untyped["code"] == "INVALID_REQUEST"
+    assert untyped["retryable"] is False
 
 
 @pytest.mark.parametrize(
@@ -612,9 +620,13 @@ def test_gateway_v2_classifies_in_lock_snapshot_race_as_stale_snapshot():
 def test_gateway_v2_never_classifies_an_incomplete_rollback_as_no_commit(
     message: str,
 ):
-    error = _classify_failure(2, message)
+    error = _classify_failure(
+        2, message, failure=TransactionRollbackIncomplete(message))
     assert error["code"] == "INTERNAL_FAILURE"
     assert error["retryable"] is True
+    # Without the type the same prose is just prose.
+    untyped = _classify_failure(2, message)
+    assert untyped["code"] == "INVALID_REQUEST"
 
 
 def test_gateway_v2_projection_failure_carries_typed_provenance(
@@ -757,9 +769,9 @@ def test_gateway_v2_classifies_unpublishable_prestate_as_validation_failed():
     assert error["code"] == "VALIDATION_FAILED"
     assert error["retryable"] is False
     assert error["message"] == str(failure)
-    # ... and without the flag the same prose is just prose: tokens rule.
+    # ... and without the flag the same prose is just prose.
     untyped = _classify_failure(2, str(failure))
-    assert untyped["code"] != "VALIDATION_FAILED", untyped
+    assert untyped["code"] == "INVALID_REQUEST", untyped
 
 
 def test_gateway_v2_returns_typed_unknown_capability(
