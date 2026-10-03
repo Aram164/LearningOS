@@ -192,8 +192,11 @@ def test_parser_choices_match_the_pinned_vocabulary(case: dict):
 @pytest.mark.parametrize("case", CASES, ids=CASE_IDS)
 def test_schema_enum_matches_the_cli_parser(repo_root: Path, case: dict):
     schema = _schema(repo_root, case["capability"])
-    assert schema["properties"][case["field"]] == {"type": "string",
-                                                  "enum": case["valid"]}
+    prop = schema["properties"][case["field"]]
+    assert prop["type"] == "string"
+    assert prop["enum"] == case["valid"]
+    # A carried parser help is an annotation, not vocabulary (F6).
+    assert set(prop) <= {"type", "enum", "description"}
 
 
 @pytest.mark.parametrize("case", CASES, ids=CASE_IDS)
