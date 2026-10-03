@@ -307,3 +307,118 @@ def test_adoption_counts_flag_drift_past_review(mini_repo):
     assert ad["notes_reviewed"] == 1
     # mini_repo has no Git history -> the note counts as changed-since-review
     assert ad["changed_since_review"] == ["note-demo"]
+
+
+# ------------------------------------------------- F11: --json and usage
+#: Every read command whose output is always JSON accepts --json as a no-op.
+#: Each entry is (subcommand, argv tail satisfying its required arguments).
+JSON_NOOP_COMMANDS = [
+    ("ability-context", []),
+    ("ai-action-list", []),
+    ("ai-action-status", ["ai-request-demo"]),
+    ("ai-action-validate-delivery", ["delivery-demo"]),
+    ("atlas-context", ["concept-expected-value"]),
+    ("backup-verify", ["--manifest", "M", "--restored-core", "C",
+                       "--restored-ui", "U", "--restored-materials", "T"]),
+    ("bootstrap", ["--brief"]),
+    ("inbox-list", []),
+    ("inbox-read", ["drop.md"]),
+    ("inspect", ["note-demo"]),
+    ("legacy-archive-inspect", ["--archive-root", "A", "--allowlist", "L"]),
+    ("material-context", ["density"]),
+    ("material-span", ["unit-demo-l01", "route-demo"]),
+    ("module-list", []),
+    ("note-read", ["note-demo"]),
+    ("operations", []),
+    ("plan-edit-context", ["unit-demo-l01"]),
+    ("program-list", []),
+    ("project-list", []),
+    ("related", ["note-demo"]),
+    ("runtime-session", ["--requirement", "req-demo"]),
+    ("search", ["demo"]),
+    ("semantic", ["--list"]),
+    ("unit-list", []),
+]
+
+
+@pytest.mark.parametrize("command,tail", JSON_NOOP_COMMANDS)
+def test_json_only_reads_accept_json_as_a_noop(command, tail):
+    import los
+
+    args = los.build_parser().parse_args([command, *tail, "--json"])
+    assert args.json is True
+
+
+def test_json_flag_keeps_read_bytes_identical(mini_repo):
+    plain = run_los(mini_repo, "bootstrap", "--brief")
+    assert plain.returncode == 0, plain.stderr
+    flagged = run_los(mini_repo, "bootstrap", "--brief", "--json")
+    assert flagged.returncode == 0, flagged.stderr
+    assert flagged.stdout == plain.stdout
+
+    plain = run_los(mini_repo, "inspect", "note-demo")
+    assert plain.returncode == 0, plain.stderr
+    flagged = run_los(mini_repo, "inspect", "note-demo", "--json")
+    assert flagged.returncode == 0, flagged.stderr
+    assert flagged.stdout == plain.stdout
+
+
+def test_capability_backed_commands_take_no_added_json_flag(repo_root):
+    """F11 never extends a command that backs a command capability.
+
+    ``capture`` and ``garden-seed-create`` already shipped a functional
+    --json before this round; every other backed parser takes none.
+    """
+    import los
+    from learning_os.contracts.capability_catalog import command_definitions
+    from learning_os.contracts.payloads import subparsers
+
+    parsers = subparsers(los.build_parser())
+    grandfathered = {"capture", "garden-seed-create"}
+    for definition in command_definitions(repo_root).values():
+        command = definition.cli_command or ""
+        if command in grandfathered:
+            continue
+        parser = parsers[command]
+        assert not any(action.dest == "json" for action in parser._actions), \
+            command
+
+
+def test_no_capability_schema_gains_a_json_property(repo_root):
+    import los
+    from learning_os.contracts.capability_catalog import command_definitions
+    from learning_os.contracts.payload_records import resolve_all
+    from learning_os.contracts.payloads import all_payload_schemas
+
+    schemas = all_payload_schemas(
+        los.build_parser(), command_definitions(repo_root),
+        payload_records=resolve_all(repo_root))
+    assert len(schemas) == 49
+    for name, schema in schemas.items():
+        assert "json" not in schema["properties"], name
+
+
+@pytest.mark.parametrize("argv,usage,err", [
+    (["inspect", "X", "--bogus"], "usage: los inspect",
+     "unrecognized arguments: --bogus"),
+    (["search", "demo", "--bogus"], "usage: los search",
+     "unrecognized arguments: --bogus"),
+    # A missing required positional still reports the subcommand's usage.
+    (["inspect", "--bogus"], "usage: los inspect", "required: id"),
+])
+def test_unrecognized_argument_prints_subcommand_usage(mini_repo, argv, usage,
+                                                      err):
+    proc = run_los(mini_repo, *argv)
+    assert proc.returncode == 2
+    assert proc.stderr.startswith(usage), proc.stderr
+    assert err in proc.stderr
+    # Not the root listing of all ~93 subcommands.
+    assert "ai-action-list" not in proc.stderr
+    assert "workspace-next-action" not in proc.stderr
+
+
+def test_root_error_still_prints_root_usage(mini_repo):
+    proc = run_los(mini_repo, "--bogus")
+    assert proc.returncode == 2
+    assert proc.stderr.startswith("usage: los [-h]"), proc.stderr
+    assert "los: error:" in proc.stderr

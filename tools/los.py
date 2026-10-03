@@ -175,6 +175,47 @@ from learning_os.transactions import TransactionFailure  # noqa: E402
 
 
 # --------------------------------------------------------- parser / main
+def _first_subcommand(choices) -> str | None:
+    """The valid subcommand this command line names, if any.
+
+    Skips the root value options (`--root X`, `--lock-timeout X`, in either
+    spelling) and every other dash-led token; the first remaining token is
+    what argparse itself took as the subcommand position.
+    """
+    argv = sys.argv[1:]
+    index = 0
+    while index < len(argv):
+        token = argv[index]
+        if token in ("--root", "--lock-timeout"):
+            index += 2
+            continue
+        if token.startswith("-"):
+            index += 1
+            continue
+        return token if token in choices else None
+    return None
+
+
+class _LosArgumentParser(argparse.ArgumentParser):
+    """Root parser that blames the subcommand, not the 93-command list.
+
+    Argparse reports unrecognized arguments at the parser owning the
+    subparsers action — the root — so ``los inspect X --bogus`` dumped the
+    whole command list before the error. When the command line names a
+    valid subcommand, its own usage plus the error is the answer; anything
+    else keeps the root usage. Exit code stays 2 either way.
+    """
+
+    def error(self, message):
+        for action in self._actions:
+            if isinstance(action, argparse._SubParsersAction):
+                name = _first_subcommand(action.choices)
+                if name is not None:
+                    action.choices[name].error(message)
+                break
+        super().error(message)
+
+
 def build_parser() -> argparse.ArgumentParser:
     """The complete CLI surface.
 
@@ -183,7 +224,7 @@ def build_parser() -> argparse.ArgumentParser:
     defines its named command, which makes the two provably the same
     surface instead of two hand-maintained copies that drift.
     """
-    parser = argparse.ArgumentParser(
+    parser = _LosArgumentParser(
         prog="los", description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--root", default=None,
@@ -208,6 +249,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_capabilities)
 
     p = sub.add_parser("bootstrap", help="machine bootstrap with active learning paths")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("--brief", action="store_true", help="one-page session entry: guards, resume, owed work, deadlines, expands")
     p.add_argument("--compact", action="store_true", help="bounded startup summaries; details stay available through inspect")
     p.add_argument("--offset", type=int, default=0)
@@ -216,6 +259,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_bootstrap)
 
     p = sub.add_parser("material-context", help="find saved explanations by need, with freshness and review state")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("query", nargs="?", default="",
                    help="explanation need; optional when --concept or --material carries the need")
     p.add_argument("--concept", default=None, help="concept id or declared alias filter")
@@ -237,6 +282,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_material_context)
 
     p = sub.add_parser("ability-context", help="read the small ability horizon or expand one ability")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("ability_id", nargs="?", help="one ability identity to expand")
     p.add_argument("--limit", type=int, default=12)
     p.add_argument("--offset", type=int, default=0,
@@ -249,6 +296,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_ability_context)
 
     p = sub.add_parser("material-span", help="describe one exact route and optionally inspect local content")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("unit_id")
     p.add_argument("route_id")
     p.add_argument("--stage", dest="stage_id", default=None,
@@ -260,6 +309,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_material_span)
 
     p = sub.add_parser("search", help="search records, garden seeds, and inbox filenames; empty query lists rows")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("query", help='literal-AND substrings; "" lists every row (combine with --type, e.g. workspace)')
     p.add_argument("--type", default=None, help="optional record type")
     p.add_argument("--limit", type=int, default=50)
@@ -310,6 +361,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_dossier)
 
     p = sub.add_parser("semantic", help="evaluate one semantic predicate; the query surface over the semantic layer")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("predicate", nargs="?", default=None, help="registered predicate name")
     p.add_argument("--input", action="append", default=[], metavar="k=v",
                    help="one predicate input; repeatable (values parse as JSON, else strings)")
@@ -319,6 +372,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_semantic)
 
     p = sub.add_parser("note-read", help="read a bounded segment of a durable note or garden seed by stable ID")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("note_id")
     p.add_argument("--offset", type=int, default=0, help="zero-based Unicode character offset")
     p.add_argument("--limit", type=int, default=8000, help="maximum characters, bounded to 16000")
@@ -326,6 +381,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_note_read)
 
     p = sub.add_parser("inbox-read", help="read a bounded segment of one work/inbox file by name")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("name", help="file name relative to work/inbox/ (list names with inbox-list)")
     p.add_argument("--offset", type=int, default=0, help="zero-based Unicode character offset")
     p.add_argument("--limit", type=int, default=8000, help="maximum characters, bounded to 16000")
@@ -333,18 +390,26 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_inbox_read)
 
     p = sub.add_parser("inbox-list", help="list work/inbox files by name, without reading bytes")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.set_defaults(func=cmd_inbox_list)
 
     p = sub.add_parser("inspect", help="inspect one record or structural id")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("id")
     p.add_argument("more_ids", nargs="*", help="inspect up to 20 records from one fresh snapshot")
     p.set_defaults(func=cmd_inspect)
 
     p = sub.add_parser("related", help="list records related to one stable id, ranked with reasons")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("id")
     p.set_defaults(func=cmd_related)
 
     p = sub.add_parser("program-list", help="list programs and boundary areas")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.set_defaults(func=cmd_program_list)
 
     p = sub.add_parser(
@@ -363,11 +428,15 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_plan_template)
 
     p = sub.add_parser("module-list", help="list modules with optional program/status filters")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("--program-id", default=None)
     p.add_argument("--status", default=None)
     p.set_defaults(func=cmd_module_list)
 
     p = sub.add_parser("unit-list", help="list units with optional module/component/status filters")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("--module-id", default=None)
     p.add_argument("--component-id", default=None)
     p.add_argument("--status", default=None)
@@ -380,6 +449,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 
     p = sub.add_parser("project-list", help="list first-class projects")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("--status", default=None)
     p.set_defaults(func=cmd_project_list)
 
@@ -431,6 +502,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_generate)
 
     p = sub.add_parser("ai-action-list", help="list provider-independent AI actions")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.set_defaults(func=cmd_ai_action_list)
 
     p = sub.add_parser("ai-action-prepare", help="persist a bounded AI request bundle")
@@ -471,6 +544,8 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("ai-action-validate-delivery",
                        help="validate one imported delivery without applying it")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("delivery_id")
     p.set_defaults(func=cmd_ai_action_validate_delivery)
 
@@ -493,6 +568,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_ai_action_apply_delivery)
 
     p = sub.add_parser("ai-action-status", help="show one prepared request status")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("request_id")
     p.set_defaults(func=cmd_ai_action_status)
 
@@ -514,6 +591,8 @@ def build_parser() -> argparse.ArgumentParser:
         "legacy-archive-inspect",
         help="inspect only explicitly allowlisted safe Legacy files",
     )
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("--archive-root", required=True)
     p.add_argument("--allowlist", required=True)
     p.set_defaults(func=cmd_legacy_archive_inspect)
@@ -638,6 +717,8 @@ def build_parser() -> argparse.ArgumentParser:
         "Core's own code is deliberately not included. Recovery pairs the restored data "
         "with a Core checkout at the commit the manifest records.",
     )
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("--manifest", required=True)
     p.add_argument("--restored-core", required=True)
     p.add_argument("--restored-ui", required=True)
@@ -700,6 +781,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_garden_seed_create)
 
     p = sub.add_parser("atlas-context", help="read connection editor guards and personal questions for one concept")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("concept_id")
     p.add_argument("--expected-snapshot", default=None)
     p.set_defaults(func=cmd_atlas_context)
@@ -747,6 +830,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_note_analysis_prepare)
 
     p = sub.add_parser("plan-edit-context", help="read compact plan or one material's edit context")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("unit_id")
     route = p.add_mutually_exclusive_group()
     route.add_argument("--route-id", default=None,
@@ -979,6 +1064,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 
     p = sub.add_parser('runtime-session', help='propose or locally repair one evidence-based session without writing')
+    p.add_argument('--json', action='store_true',
+                   help='no-op: this command always prints JSON')
     p.add_argument('--requirement', required=True)
     p.add_argument('--context-json', default='{}')
     p.add_argument('--previous-json', default=None, help='previous runtime-session-v1 packet (with snapshot_id), not the bare session')
@@ -1303,6 +1390,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_path_attach)
 
     p = sub.add_parser("operations", help="list recent causal operations or explain one request id")
+    p.add_argument("--json", action="store_true",
+                   help="no-op: this command always prints JSON")
     p.add_argument("--request-id", default=None,
                    help="explain one request instead of listing recent operations")
     p.add_argument("--limit", type=int, default=20,
