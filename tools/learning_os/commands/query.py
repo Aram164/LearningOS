@@ -28,6 +28,7 @@ from .reads import (
     content_search,
     describe_unresolved_reference,
     empty_search_hint,
+    flatten_search_values,
     inspect_batch,
     inspect_not_found,
     record_payload,
@@ -341,7 +342,7 @@ def _metadata_matches(root: Path, args, snapshot: str) -> tuple[list[dict], list
     for rec in rows:
         if args.type and rec.get("type") != args.type:
             continue
-        hay = json.dumps(rec, ensure_ascii=False).lower()
+        hay = "\n".join(flatten_search_values(rec)).lower()
         found = [word in hay for word in words]
         for index, hit in enumerate(found):
             if hit:
@@ -409,7 +410,12 @@ def cmd_search(args) -> int:
         return _refusal(exc)
     if not matches and words:
         print(f"los: {empty_search_hint('record', words, hits)}", file=sys.stderr)
-    print(json.dumps(matches[offset:offset + limit], **_json_layout(), sort_keys=True, ensure_ascii=False))
+    shown = matches[offset:offset + limit]
+    if len(matches) > offset + limit:
+        print(f"los: showing {len(shown)} of {len(matches)} matches; "
+              f"continue with --offset {offset + limit}, or use --page for "
+              "totals and a snapshot-bound continuation", file=sys.stderr)
+    print(json.dumps(shown, **_json_layout(), sort_keys=True, ensure_ascii=False))
     return 0
 
 

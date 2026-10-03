@@ -190,7 +190,8 @@ snapshot and exact revision guards. Full plan imports are for structure,
 ordering, scope, or resource membership changes.
 Continue a summary page with its returned offset and snapshot. Read saved
 reasoning with `note-read NOTE_ID` (bounded Unicode-character segments) and
-search beyond note summaries with `search QUERY --type note --content`.
+search beyond note summaries with `search QUERY --type note --content`
+(frontmatter values match, keys do not; bodies match verbatim).
 Read a stage's working-note content from its parent map: `inspect
 STUDY_MAP_ID` carries every stage's `notes_text` (`inspect STAGE_ID` does
 not resolve stages). The `notes_updated` on those stages is the note file's
@@ -219,8 +220,9 @@ with exact filters through `unit-list --compact --module-id MODULE_ID`,
 select an ID, then `inspect ID` for detail; continuations repeat the
 filters with the returned offset and snapshot. `search` without
 `--content` conjoins whitespace-separated substrings per row — every term
-must occur somewhere in the row — unranked and without snippets, so short
-stems collide and natural phrasing often returns nothing. An empty answer
+must occur in the row's values; field names never match — unranked and
+without snippets, so short stems collide and natural phrasing often
+returns nothing. An empty answer
 names per-term hit counts on stderr, so the eliminating term is visible.
 An empty query lists every row instead of matching: `search "" --type
 workspace` is the workspace list, and the same holds for every other
@@ -239,7 +241,9 @@ analysing it (labelled `analyses` in `via`); `material-context` stays the
 need-shaped query path. Page a long
 metadata result with `search QUERY --type TYPE --page` and continue with
 the returned `--offset` and `--expected-snapshot`; the plain array
-response keeps its existing shape for explicit bulk reads. Discover
+response keeps its existing shape for explicit bulk reads, and when
+`--limit` cuts it one stderr line names the shown/total counts with the
+`--offset` continuation. Discover
 abilities through the bounded `ability-context` horizon first —
 `--limit`/`--offset` with the previous `--expected-snapshot` past the
 first page — and expand one known ID with `ability-context ABILITY_ID`:

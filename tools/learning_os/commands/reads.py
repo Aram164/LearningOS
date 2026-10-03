@@ -574,6 +574,70 @@ def empty_search_hint(row_word: str, terms: list[str], hits: list[int]) -> str:
             f"per-term {row_word} hits: {' '.join(shown)}")
 
 
+def flatten_search_values(value) -> list[str]:
+    """Every searchable scalar inside a JSON-like value, in stable order.
+
+    THE shared search haystack (F14): metadata search flattens each record
+    and content search flattens each note's frontmatter through here, so a
+    key name can never match in either path. Every string, number and
+    boolean is searchable — ids and paths included — while key names,
+    punctuation and nulls are not.
+    """
+    if isinstance(value, str):
+        return [value]
+    if isinstance(value, bool):
+        return ["true" if value else "false"]
+    if isinstance(value, (int, float)):
+        return [json.dumps(value, ensure_ascii=False)]
+    if isinstance(value, dict):
+        found: list[str] = []
+        for item in value.values():
+            found.extend(flatten_search_values(item))
+        return found
+    if isinstance(value, (list, tuple)):
+        found = []
+        for item in value:
+            found.extend(flatten_search_values(item))
+        return found
+    return []
+
+
+#: A frontmatter mapping key at the start of its line: `key:`, an indented
+#: `nested:`, a `- listed:` pair, or a quoted key. Values stay verbatim.
+_FRONTMATTER_KEY_RE = re.compile(
+    r"^(\s*(?:-\s+)?)"
+    r"(?:[A-Za-z0-9_][A-Za-z0-9_.\-]*|\"[^\"]*\"|'[^']*')"
+    r"(\s*:)")
+
+
+def _blank_frontmatter_keys(front: str) -> str:
+    """The frontmatter block with every key's `name:` footprint blanked.
+
+    Length-preserving (spaces), so positions in the blanked text are true
+    file positions and snippets keep true line numbers. Values — including
+    colons and quotes inside them — stay verbatim and searchable.
+    """
+    out = []
+    for line in front.split("\n"):
+        match = _FRONTMATTER_KEY_RE.match(line)
+        if match:
+            end = match.end(2)
+            line = " " * end + line[end:]
+        out.append(line)
+    return "\n".join(out)
+
+
+def _note_match_text(meta: dict, text: str) -> str:
+    """One note's content haystack: frontmatter values plus the verbatim body.
+
+    Values come from the loader-parsed frontmatter through the shared
+    flattener, so keys never match; the body is unchanged.
+    """
+    front = FRONTMATTER_RE.match(text)
+    body = text[front.end():] if front else text
+    return "\n".join([*flatten_search_values(meta), body])
+
+
 def _content_term_hits(root, ordered, terms):
     """Per-term note counts for an empty content result, or None.
 
@@ -583,7 +647,8 @@ def _content_term_hits(root, ordered, terms):
     try:
         hits = [0] * len(terms)
         for note in ordered:
-            text = _note_bytes(root, note).decode("utf-8")
+            text = _note_match_text(
+                note.meta, _note_bytes(root, note).decode("utf-8"))
             for index, term in enumerate(terms):
                 if term.search(text):
                     hits[index] += 1
@@ -744,17 +809,24 @@ def cmd_inbox_read(args) -> int:
 def _match_verified(items, terms):
     """Run the current regex verification over admitted note bytes.
 
-    ``items`` is (note id, title, repo-relative path, raw bytes). Pure:
-    every read happened before this call, so the indexed path verifies
-    from discovered bytes without re-reading.
+    ``items`` is (note id, title, repo-relative path, raw bytes, parsed
+    frontmatter). Pure: every read happened before this call, so the
+    indexed path verifies from discovered bytes without re-reading.
+    Matching is values-only in frontmatter (the shared flattener over the
+    parsed meta) plus the verbatim body; snippet positions come from the
+    key-blanked raw text, so they keep true file line numbers.
     """
     matches = []
-    for note_id, title, relpath, raw in items:
+    for note_id, title, relpath, raw, meta in items:
         text = raw.decode("utf-8")
-        found = [term.search(text) for term in terms]
+        found = [term.search(_note_match_text(meta, text)) for term in terms]
         if not all(found):
             continue
-        positions = sorted({match.start() for match in found if match})
+        front = FRONTMATTER_RE.match(text)
+        blanked = (_blank_frontmatter_keys(text[:front.end()])
+                   + text[front.end():]) if front else text
+        positions = sorted({match.start() for term in terms
+                            if (match := term.search(blanked)) is not None})
         snippets = []
         for position in positions[:8]:
             start = max(text.rfind("\n", 0, position) + 1, position - 100)
@@ -779,7 +851,7 @@ def _exhaustive_content_search(root, ordered, terms):
         raw = _note_bytes(root, note)
         matches.extend(_match_verified(
             [(note.id, note.meta.get("title", note.id),
-              note.path.relative_to(root).as_posix(), raw)], terms))
+              note.path.relative_to(root).as_posix(), raw, note.meta)], terms))
     return matches
 
 
@@ -788,7 +860,10 @@ def _indexed_content_search(root, ordered, terms, raw_terms):
 
     Reads every note once with the same admitted reader (identical
     refusals), then verifies only candidates from those bytes. A query
-    the prefilter cannot narrow (None) verifies every note instead.
+    the prefilter cannot narrow (None) verifies every note instead. The
+    prefilter grams the full raw text — keys included — which stays a
+    sound superset now that verification narrows to values plus body:
+    every true match is still a candidate, and false positives verify out.
     """
     blobs = {}
     for note in ordered:
@@ -809,7 +884,8 @@ def _indexed_content_search(root, ordered, terms, raw_terms):
     for note in selected:
         blob = blobs[note.id]
         matches.extend(_match_verified(
-            [(blob.note_id, blob.title, blob.relpath, blob.raw)], terms))
+            [(blob.note_id, blob.title, blob.relpath, blob.raw, note.meta)],
+            terms))
     return matches
 
 
