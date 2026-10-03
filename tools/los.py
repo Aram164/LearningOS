@@ -1232,6 +1232,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("session-end", help="validate, show exact session-owned files, optionally commit/push")
     p.add_argument("--commit-message", default=None)
+    p.add_argument("--close", action="store_true",
+                   help="end this session's ownership window without committing: "
+                   "delete only its own session ledger (a bare review never closes)")
     p.add_argument("--push", action="store_true")
     p.add_argument("--session-id", default=None,
                    help="close this session id (default: LOS_SESSION_ID, else this channel's ledger)")

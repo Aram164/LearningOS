@@ -263,6 +263,11 @@ def _other_session_summary(rows: dict[str, dict]) -> dict:
 
 def cmd_session_end(args) -> int:
     root = _root(args)
+    if getattr(args, "close", False) and args.commit_message:
+        print("los: --close and --commit-message are mutually exclusive: "
+              "closing discards the ownership window instead of committing it",
+              file=sys.stderr)
+        return 2
     channel = getattr(args, "channel", None)
     if channel is not None and channel not in GATEWAY_CHANNELS:
         print(f"los: unknown session channel {channel!r} "
@@ -336,11 +341,18 @@ def cmd_session_end(args) -> int:
                    for identity, rows in sorted(others.items())
                }}
     if not args.commit_message:
-        # A review-only close ends this session's ownership window only.
-        # Foreign ledgers are left untouched: closing here must never wipe
-        # another session's (or the UI's) unclaimed rows.
-        ledger.unlink(missing_ok=True)
-        payload["session_closed"] = True
+        # A review never closes: it validates, publishes, and lists owned
+        # and unrelated changes while the ledger survives, so the documented
+        # review-then-commit sequence can stage exactly the reviewed list.
+        # Only the explicit --close ends this session's ownership window,
+        # deleting just its own ledger; foreign ledgers are left untouched
+        # either way, so closing here never wipes another session's (or the
+        # UI's) unclaimed rows. Running a review twice shows the same list.
+        if getattr(args, "close", False):
+            ledger.unlink(missing_ok=True)
+            payload["session_closed"] = True
+        else:
+            payload["session_closed"] = False
         print(json.dumps(payload, indent=2, ensure_ascii=False))
         return 0
     if not touched:
@@ -375,5 +387,6 @@ def cmd_session_end(args) -> int:
             return pushed.returncode
         payload["pushed"] = True
     ledger.unlink(missing_ok=True)
+    payload["session_closed"] = True
     print(json.dumps(payload, indent=2, ensure_ascii=False))
     return 0

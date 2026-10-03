@@ -164,20 +164,59 @@ def test_ui_session_mirrors_production_identity(mini_repo, monkeypatch):
     assert agent_file not in ui_payload["touched"]
 
 
-def test_review_only_close_leaves_other_sessions_ledger(mini_repo, monkeypatch):
-    """Closing B must not wipe A's unclaimed rows (the UI-wipe defect)."""
+def test_review_then_commit_stages_exactly_the_reviewed_list(mini_repo, monkeypatch):
+    """F5: a review keeps the ledger, so the commit stages the reviewed list.
+
+    Before the fix the review deleted the ledger, so the documented
+    review-then-commit sequence refused with "no files were touched through
+    this learning session" and committed nothing.
+    """
+    monkeypatch.delenv("LOS_SESSION_ID", raising=False)
+    _git_init(mini_repo)
+    note = _capture(mini_repo, key="f5-review-commit-001", text="reviewed note")
+
+    first = _session_end(mini_repo)
+    assert first.returncode == 0, first.stderr
+    first_payload = json.loads(first.stdout)
+    assert first_payload["session_closed"] is False
+    assert note in first_payload["touched"]
+
+    second = _session_end(mini_repo)
+    assert second.returncode == 0, second.stderr
+    assert json.loads(second.stdout)["owned_changes"] == first_payload["owned_changes"]
+
+    closed = _session_end(mini_repo, "--commit-message", "reviewed session")
+    assert closed.returncode == 0, closed.stderr or closed.stdout
+    assert json.loads(closed.stdout)["session_closed"] is True
+    committed = subprocess.run(
+        ["git", "show", "--name-only", "--format=", "HEAD"],
+        cwd=mini_repo, capture_output=True, text=True, check=True,
+    ).stdout.split()
+    assert sorted(committed) == sorted(first_payload["touched"])
+
+
+def test_close_deletes_only_own_ledger(mini_repo, monkeypatch):
+    """A review keeps B's ledger; --close drops it without touching A's."""
     _git_init(mini_repo)
     monkeypatch.setenv("LOS_SESSION_ID", "session-a")
     actor_a = _capture(mini_repo, key="wipe-a-001", text="A's note")
     ledger_a = command_support._session_ledger(mini_repo, "session-a")
     assert ledger_a.is_file()
     monkeypatch.setenv("LOS_SESSION_ID", "session-b")
-    _capture(mini_repo, key="wipe-b-001", text="B's note")
+    actor_b = _capture(mini_repo, key="wipe-b-001", text="B's note")
+    ledger_b = command_support._session_ledger(mini_repo, "session-b")
 
     review = _session_end(mini_repo)
     assert review.returncode == 0, review.stderr
-    assert json.loads(review.stdout)["session_closed"] is True
-    assert not command_support._session_ledger(mini_repo, "session-b").exists()
+    review_payload = json.loads(review.stdout)
+    assert review_payload["session_closed"] is False
+    assert actor_b in review_payload["touched"]
+    assert ledger_b.is_file(), "a review must not delete the ledger"
+
+    closed = _session_end(mini_repo, "--close")
+    assert closed.returncode == 0, closed.stderr
+    assert json.loads(closed.stdout)["session_closed"] is True
+    assert not ledger_b.exists()
     assert ledger_a.is_file(), "B's close deleted A's ledger"
 
     monkeypatch.setenv("LOS_SESSION_ID", "session-a")
