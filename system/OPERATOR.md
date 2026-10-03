@@ -112,7 +112,9 @@ Decide which read answers the question before reading:
   and revision guards. Reach for the unit `--brief` only for unit
   coverage, source-completeness, or unknown ids.
 - A material question → saved context first (`material-context`), else one
-  exact span (`material-span UNIT_ID ROUTE_ID`); never trawl. A stage's
+  exact span (`material-span UNIT_ID ROUTE_ID`); never trawl. A lone
+  `--concept` asks what explains it: notes match by their own tags or by a
+  stage that tags the concept while placing a route of the note's source. A stage's
   narrower file or page selection uses `--stage STAGE_ID --resource-index N`
   (the zero-based canonical resource position); both selectors are required.
   With `--unit`,

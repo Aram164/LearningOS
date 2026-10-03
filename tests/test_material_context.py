@@ -1011,3 +1011,91 @@ def test_anchor_expansion_refuses_changed_material_without_output(mini_repo):
     assert proc.returncode != 0
     assert proc.stdout == ""
     assert "changed" in proc.stderr
+
+
+# ------------------------------------------------- F12: --concept is a need
+def _tag_stage_with_concept(root: Path, concept_id: str, route_id: str,
+                            stage_id: str = "stage-demo"):
+    """Tag one study-map stage and place one route on it (a declared join)."""
+    study_path = (root / "curriculum/modules/module-demo/units/unit-demo-l01"
+                  / "study-map.yaml")
+    study_map = yaml.safe_load(study_path.read_text(encoding="utf-8"))
+    stage = next(stage for stage in study_map["stages"]
+                 if stage["id"] == stage_id)
+    stage["concepts"] = [concept_id]
+    stage["resources"][0]["route_id"] = route_id
+    write_yaml(study_path, study_map)
+
+
+def _seed_joined_analysis(mini_repo: Path):
+    """An analysis bound to the routed source but carrying no concept tags."""
+    digest = _seed_material(mini_repo, "source-demo-book/deck.pdf", b"live bytes")
+    _plant_note(mini_repo, "note-context-density-pp001-003", ANALYSIS_BODY,
+                 _binding("source-demo-book/deck.pdf", digest, ANALYSIS_BODY))
+    _seed_unit(mini_repo)
+    _tag_stage_with_concept(mini_repo, "concept-expected-value",
+                            "route-demo-density")
+
+
+def test_concept_alone_is_accepted_and_finds_assessments(mini_repo):
+    _seed_unit(mini_repo)
+    proc = run_los(mini_repo, "material-context",
+                   "--concept", "concept-expected-value")
+    assert proc.returncode == 0, proc.stderr
+    found = json.loads(proc.stdout)
+    assert found["total"] == 1
+    [item] = found["items"]
+    assert item["origin"] == "unit-assessment"
+    assert item["route_id"] == "route-demo-density"
+    assert item["match"]["concept"] == "concept-expected-value"
+    assert "empty" not in found
+
+
+def test_concept_stage_join_finds_analyses_without_concept_tags(mini_repo):
+    _seed_joined_analysis(mini_repo)
+    found = _context(mini_repo, "--concept", "concept-expected-value")
+    assert found["total"] == 2
+    note = next(row for row in found["items"]
+                if row["origin"] == "analysis-note")
+    assert note["id"] == "note-context-density-pp001-003"
+    assert note["match"]["concept"] == "concept-expected-value"
+    assert note["match"]["concept_via"] == ["stage:stage-demo"]
+    assert "empty" not in found
+
+
+def test_concept_alone_resolves_aliases(mini_repo):
+    _seed_joined_analysis(mini_repo)
+    found = _context(mini_repo, "--concept", "Erwartungswert")
+    assert found["total"] == 2
+    assert found["searched"]["concept"] == "concept-expected-value"
+
+
+def test_query_and_concept_still_and(mini_repo):
+    _seed_joined_analysis(mini_repo)
+    both = _context(mini_repo, "density", "--concept", "concept-expected-value")
+    assert both["total"] == 2
+    neither = run_los(mini_repo, "material-context", "zephyr",
+                       "--concept", "concept-expected-value")
+    assert neither.returncode == 0, neither.stderr
+    found = json.loads(neither.stdout)
+    assert found["total"] == 0
+    assert "never proves" in found["empty"]
+
+
+def test_direct_concept_notes_carry_no_stage_path(mini_repo):
+    digest = _seed_material(mini_repo, "source-demo-book/deck.pdf", b"live bytes")
+    _plant_note(mini_repo, "note-context-density-pp001-003", ANALYSIS_BODY,
+                 _binding("source-demo-book/deck.pdf", digest, ANALYSIS_BODY),
+                 concepts=["concept-expected-value"])
+    _seed_unit(mini_repo)
+    found = _context(mini_repo, "--concept", "concept-expected-value")
+    note = next(row for row in found["items"]
+                if row["origin"] == "analysis-note")
+    assert note["match"]["concept"] == "concept-expected-value"
+    assert "concept_via" not in note["match"]
+
+
+def test_concept_alone_still_refuses_unknown_concepts(mini_repo):
+    proc = run_los(mini_repo, "material-context", "--concept", "concept-ghost")
+    assert proc.returncode == 2
+    assert "unknown concept" in proc.stderr

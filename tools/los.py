@@ -217,7 +217,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("material-context", help="find saved explanations by need, with freshness and review state")
     p.add_argument("query", nargs="?", default="",
-                   help="explanation need; optional when --material names the file")
+                   help="explanation need; optional when --concept or --material carries the need")
     p.add_argument("--concept", default=None, help="concept id or declared alias filter")
     p.add_argument("--purpose", default=None, help="purpose substring filter (anchors, best use, exercise value)")
     p.add_argument("--unit", default=None,

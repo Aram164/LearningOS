@@ -1385,6 +1385,58 @@ def _route_material_index(repo, unit_id=None) -> dict:
     return index
 
 
+#: How many stage hops one concept match explains itself with. The join
+#: is concept -> stage -> route -> source, all declared edges; the list is
+#: sorted stage ids, so the cap only trims the tail of a long join.
+_CONCEPT_VIA_LIMIT = 20
+
+
+def _concept_stage_sources(repo) -> dict[str, dict[str, list[str]]]:
+    """concept id -> source id -> sorted stage ids joining them (F12).
+
+    A stage joins a concept to a source when it tags the concept AND places
+    a route of that source — two declared edges, read-side only. Nothing
+    is inferred and nothing is recorded: analysis notes carry no concept
+    tags by construction, so without this join the concept filter's note
+    branch could never match them.
+    """
+    routes = _route_material_index(repo, None)
+    joined: dict[str, dict[str, set[str]]] = {}
+    for map_id in sorted(repo.study_maps):
+        stages = repo.study_maps[map_id].data.get("stages", []) or []
+        for stage in stages:
+            if not isinstance(stage, dict):
+                continue
+            stage_id = stage.get("id")
+            if not isinstance(stage_id, str) or not stage_id:
+                continue
+            concepts = stage.get("concepts") or []
+            if not concepts:
+                continue
+            sources = set()
+            for resource in stage.get("resources", []) or []:
+                if not isinstance(resource, dict):
+                    continue
+                route_id = resource.get("route_id")
+                if not route_id and isinstance(
+                        resource.get("material_ref"), dict):
+                    route_id = resource["material_ref"].get("route_id")
+                hit = routes.get(route_id)
+                if hit is not None and isinstance(hit[0], str) and hit[0]:
+                    sources.add(hit[0])
+            if not sources:
+                continue
+            for concept_id in concepts:
+                if not isinstance(concept_id, str) or not concept_id:
+                    continue
+                per_source = joined.setdefault(concept_id, {})
+                for source_id in sources:
+                    per_source.setdefault(source_id, set()).add(stage_id)
+    return {concept: {source: sorted(ids)[:_CONCEPT_VIA_LIMIT]
+                      for source, ids in per_source.items()}
+            for concept, per_source in joined.items()}
+
+
 def _check_material_ref(root, ref) -> str:
     """The exact materials-tree path a --material filter names, else refused.
 
@@ -1541,7 +1593,7 @@ def _anchor_expansion_command(args, limit, snapshot, observed) -> str:
 
 def _analysis_note_item(root, note, *, raw_terms, terms, concept_id, purpose,
                         unit, material_ref, scope, evidence, observations,
-                        include_anchors=False):
+                        include_anchors=False, concept_via=None):
     """One matched analysis note, or None when the terms miss.
 
     Terms match the explanation text — title plus body — with lexical AND;
@@ -1566,6 +1618,8 @@ def _analysis_note_item(root, note, *, raw_terms, terms, concept_id, purpose,
     reasons = {"terms": matched}
     if concept_id is not None:
         reasons["concept"] = concept_id
+    if concept_via:
+        reasons["concept_via"] = [f"stage:{stage_id}" for stage_id in concept_via]
     if purpose:
         reasons["purpose"] = purpose
     if unit:
@@ -1617,7 +1671,11 @@ def cmd_material_context(args) -> int:
     unit syntheses. Matching is deterministic lexical AND over terms against
     explanation text — note title plus body, never provenance frontmatter —
     with declared concept aliases, purpose substrings, unit scope, and an
-    exact materials path as filters. Unit scope is route-based: direct notes
+    exact materials path as filters. A lone --concept is a complete need:
+    a note matches when its own concepts carry it, or when its bound source
+    is the source of a route placed on a stage tagging the concept (a
+    read-side join over declared edges; the match names the stages in
+    `concept_via`). Unit scope is route-based: direct notes
     share a routed file (and overlap its single stated page range when it
     states one); same-source-only notes are related, listed only through
     --include-related. Ranking is recorded stage use-evidence per source
@@ -1644,9 +1702,10 @@ def cmd_material_context(args) -> int:
         raw_terms = (args.query or "").split()
         terms = [re.compile(re.escape(term), re.IGNORECASE) for term in raw_terms]
         material_ref = getattr(args, "material", None)
-        if not terms and material_ref is None:
+        if not terms and material_ref is None and not args.concept:
             raise WriteRefused(
-                "material context requires a nonempty query or --material")
+                "material context requires a nonempty query, --concept, "
+                "or --material")
         if getattr(args, "include_related", False) and not args.unit:
             raise WriteRefused("--include-related needs --unit")
         if material_ref is not None:
@@ -1694,13 +1753,31 @@ def cmd_material_context(args) -> int:
             else:
                 notes = _analysis_notes(repo)
             if concept_id is not None:
+                concept_join = _concept_stage_sources(repo).get(concept_id, {})
+
+                def _note_concept_via(note) -> list[str]:
+                    binding = note.meta.get("material_analysis") or {}
+                    source_id = binding.get("source_id") \
+                        if isinstance(binding, dict) else None
+                    if not isinstance(source_id, str):
+                        return []
+                    return concept_join.get(source_id, [])
+
+                def _note_matches_concept(note) -> bool:
+                    return (concept_id in (note.meta.get("concepts") or [])
+                            or bool(_note_concept_via(note)))
+
                 notes = [note for note in notes
-                         if concept_id in (note.meta.get("concepts") or [])]
+                         if _note_matches_concept(note)]
                 searched_related = [
                     note for note in searched_related
-                    if concept_id in (note.meta.get("concepts") or [])]
+                    if _note_matches_concept(note)]
                 assessments = [row for row in assessments
                                if concept_id in (row[2].get("concept_ids") or [])]
+                via_by_note = {note.id: _note_concept_via(note)
+                               for note in (*notes, *searched_related)}
+            else:
+                via_by_note = {}
             notes = [note for note in notes
                      if _note_purpose_hit(note.meta["material_analysis"], args.purpose)]
             searched_related = [
@@ -1752,7 +1829,8 @@ def cmd_material_context(args) -> int:
                     unit=args.unit, material_ref=material_ref,
                     scope="direct" if args.unit else None,
                     evidence=evidence, observations=observations,
-                    include_anchors=include_anchors)
+                    include_anchors=include_anchors,
+                    concept_via=via_by_note.get(note.id))
                 if item is not None:
                     items.append(item)
             for synthesis_id, unit_id, assessment in assessments:
@@ -1824,7 +1902,8 @@ def cmd_material_context(args) -> int:
                     unit=args.unit, material_ref=material_ref,
                     scope="related",
                     evidence=evidence, observations=observations,
-                    include_anchors=include_anchors)
+                    include_anchors=include_anchors,
+                    concept_via=via_by_note.get(note.id))
                 if item is not None:
                     related_items.append(item)
             # Stable sort: evidence ranks, ties keep insertion order
