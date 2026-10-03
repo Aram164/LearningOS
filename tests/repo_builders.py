@@ -38,6 +38,54 @@ def write_yaml(path: Path, data: dict) -> None:
     path.write_text(yaml.safe_dump(data, sort_keys=False, allow_unicode=True), encoding="utf-8")
 
 
+def seed_live_goal_ids(root: Path, *names: str) -> list[str]:
+    """Seed stale lineage claims so the live scan emits decidable goals.
+
+    Each name becomes one ``lineage-stale:scope:proof:<name>`` goal: the
+    claim pins unresolvable evidence, so it is stale on every scan.
+    Returns the live scan's goal ids, sorted. ``los goal`` accepts these
+    ids (and only these, plus ledger-known ones).
+    """
+    from learning_os.semantics.lineage import dump_ledger, record_claim
+    from learning_os.semantics.scan import intelligence_scan
+
+    records = {}
+    for name in names:
+        record = record_claim(
+            claim_id=f"scope:proof:{name}", claim_kind="scope-authority",
+            statement=f"Synthetic goal seed {name}.",
+            source_hashes={"unresolved:source": "unverifiable"},
+            judged_by="fixture",
+            admitted_by={"request_id": name, "idempotency_key": name},
+        )
+        records[record.claim_id] = record
+    ledger = root / "operations/transactions/lineage.yaml"
+    ledger.parent.mkdir(parents=True, exist_ok=True)
+    ledger.write_text(dump_ledger(records), encoding="utf-8")
+    return sorted(goal.goal_id for goal in intelligence_scan(root))
+
+
+def seed_goal_ledger(root: Path, decisions: dict[str, str]) -> Path:
+    """Write a goal ledger with ``{goal_id: state}`` decisions for setup.
+
+    Test setup only: it arranges the ledger-known ids a test then decides
+    through ``los goal``. States are one of rejected/deferred/closed.
+    """
+    import datetime as _dt
+
+    path = root / "operations/goal-ledger.yaml"
+    write_yaml(path, {
+        "schema_version": 1,
+        "type": "goal-ledger",
+        "decisions": {
+            goal_id: {"state": state,
+                      "decided_at": _dt.date.today().isoformat()}
+            for goal_id, state in decisions.items()
+        },
+    })
+    return path
+
+
 def write_minimal_pdf(path: Path, texts: list[str]) -> None:
     """A dependency-free multi-page PDF with one text line per page.
 

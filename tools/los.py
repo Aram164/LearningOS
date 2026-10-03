@@ -291,6 +291,9 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--check", action="store_true", help="preview exact decisions without writing")
     p.add_argument("--reviewed-sha256", type=sha256_value, default=None,
                    help="required for a batch: exact decision and ledger hash returned by --check")
+    p.add_argument("--session-id", default=None,
+                   help="record the decision in this session's ledger "
+                   "(default: LOS_SESSION_ID, else this channel's ledger)")
     p.set_defaults(func=cmd_goal)
 
     p = sub.add_parser("resume", help="one-screen return to study: stage, requirement, evidence, exam")

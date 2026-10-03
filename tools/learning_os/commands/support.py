@@ -931,8 +931,16 @@ def _stamp_session_row(root: Path, relative: str, channel: str) -> dict[str, str
     return row
 
 
-def _record_touched(root: Path, paths, channel: str | None = None) -> None:
-    identity = _current_session_id(channel=channel)
+def _record_touched(root: Path, paths, channel: str | None = None, *,
+                    session_id: str | None = None) -> None:
+    """Stamp post-write rows into the caller's session ledger.
+
+    The explicit id (`--session-id`) wins over the envelope, the
+    environment, and the channel, exactly as `session-end` resolves it,
+    so a direct command (like `los goal`, which seals no envelope) can
+    still claim its write for the caller's session.
+    """
+    identity = _current_session_id(channel=channel, explicit=session_id)
     ledger = _session_ledger(root, identity)
     current = _load_session_paths(root, identity) if ledger.is_file() else {}
     request = current_gateway_request()

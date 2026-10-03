@@ -17,7 +17,7 @@ from pathlib import Path
 
 import pytest
 from gateway_helpers import approved_v2_envelope, run_v2_capability
-from repo_builders import run_los
+from repo_builders import run_los, seed_live_goal_ids
 
 from learning_os.commands import support as command_support
 from learning_os.contracts.gateway import intent_sha256, request_artifact_id
@@ -223,6 +223,66 @@ def test_close_deletes_only_own_ledger(mini_repo, monkeypatch):
     review_a = _session_end(mini_repo)
     assert review_a.returncode == 0, review_a.stderr
     assert actor_a in json.loads(review_a.stdout)["touched"]
+
+
+def test_close_and_commit_message_is_a_usage_error(mini_repo, monkeypatch):
+    """--close discards the window instead of committing it; both refuse."""
+    monkeypatch.delenv("LOS_SESSION_ID", raising=False)
+    _git_init(mini_repo)
+    _capture(mini_repo, key="close-usage-001", text="usage note")
+    ledger = command_support._session_ledger(mini_repo, "channel:operator")
+    assert ledger.is_file()
+
+    refused = _session_end(mini_repo, "--close", "--commit-message", "both")
+    assert refused.returncode == 2
+    assert "mutually exclusive" in refused.stderr
+    assert ledger.is_file(), "a usage error must not delete the ledger"
+
+
+def test_goal_decision_joins_the_session(mini_repo, monkeypatch):
+    """F7: `los goal` records in the session ledger; close lists and commits it.
+
+    Before the fix the decision landed outside the session, so session-end
+    listed the goal ledger under unrelated changes and never staged it.
+    """
+    monkeypatch.delenv("LOS_SESSION_ID", raising=False)
+    _git_init(mini_repo)
+    (goal_id,) = seed_live_goal_ids(mini_repo, "session-owned")
+    revisit = (dt.date.today() + dt.timedelta(days=3)).isoformat()
+    decided = run_los(mini_repo, "goal", goal_id, "--defer",
+                      "--revisit-on", revisit)
+    assert decided.returncode == 0, decided.stderr
+
+    review = _session_end(mini_repo)
+    assert review.returncode == 0, review.stderr
+    payload = json.loads(review.stdout)
+    assert "operations/goal-ledger.yaml" in payload["touched"]
+    assert any("operations/goal-ledger.yaml" in line
+               for line in payload["owned_changes"])
+
+    closed = _session_end(mini_repo, "--commit-message", "record decision")
+    assert closed.returncode == 0, closed.stderr or closed.stdout
+    committed = subprocess.run(
+        ["git", "show", "--name-only", "--format=", "HEAD"],
+        cwd=mini_repo, capture_output=True, text=True, check=True,
+    ).stdout.split()
+    assert sorted(committed) == sorted(payload["touched"])
+
+
+def test_goal_session_id_flag_overrides_the_environment(mini_repo, monkeypatch):
+    """F7: --session-id wins over LOS_SESSION_ID for the decision's row."""
+    monkeypatch.setenv("LOS_SESSION_ID", "env-session")
+    (goal_id,) = seed_live_goal_ids(mini_repo, "flag-wins")
+    decided = run_los(mini_repo, "goal", goal_id, "--reject",
+                      "--session-id", "explicit-session")
+    assert decided.returncode == 0, decided.stderr
+    explicit = command_support._load_session_paths(mini_repo, "explicit-session")
+    assert "operations/goal-ledger.yaml" in explicit
+    row = explicit["operations/goal-ledger.yaml"]
+    assert set(row) == {"state", "sha256", "channel", "recorded_at"}
+    assert row["state"] == "file" and row["channel"] == "operator"
+    assert not command_support._session_ledger(
+        mini_repo, "env-session").exists()
 
 
 def _age_own_ledger(mini_repo: Path, session: str, hours: int = 25) -> None:

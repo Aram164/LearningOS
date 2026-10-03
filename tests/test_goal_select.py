@@ -15,7 +15,7 @@ from pathlib import Path
 
 import pytest
 import yaml
-from repo_builders import run_los
+from repo_builders import run_los, seed_goal_ledger, seed_live_goal_ids
 
 from learning_os.semantics import ScanInput, scan_observations
 from learning_os.semantics.goals import (
@@ -37,11 +37,12 @@ def _goal(goal_id: str, detector: str, evidence=()) -> CandidateGoal:
 
 
 def test_goal_reject_writes_a_schema_valid_ledger(mini_repo: Path, repo_root: Path):
-    proc = run_los(mini_repo, "goal", "covering-routes-stale:route-1", "--reject",
+    (goal_id,) = seed_live_goal_ids(mini_repo, "reject-me")
+    proc = run_los(mini_repo, "goal", goal_id, "--reject",
                    "--note", "route dropped")
     assert proc.returncode == 0, proc.stderr
     assert json.loads(proc.stdout) == {
-        "ok": True, "goal_id": "covering-routes-stale:route-1", "state": "rejected"}
+        "ok": True, "goal_id": goal_id, "state": "rejected"}
     ledger = yaml.safe_load(
         (mini_repo / "operations/goal-ledger.yaml").read_text(encoding="utf-8"))
     import json as _json
@@ -53,23 +54,25 @@ def test_goal_reject_writes_a_schema_valid_ledger(mini_repo: Path, repo_root: Pa
     errors = list(Draft202012Validator(
         schema, format_checker=FormatChecker()).iter_errors(ledger))
     assert errors == []
-    assert ledger["decisions"]["covering-routes-stale:route-1"]["state"] == "rejected"
-    assert ledger["decisions"]["covering-routes-stale:route-1"]["note"] == "route dropped"
+    assert ledger["decisions"][goal_id]["state"] == "rejected"
+    assert ledger["decisions"][goal_id]["note"] == "route dropped"
 
 
 def test_goal_decision_is_revisable(mini_repo: Path):
-    assert run_los(mini_repo, "goal", "g1", "--defer").returncode == 0
-    assert run_los(mini_repo, "goal", "g1", "--close").returncode == 0
+    (goal_id,) = seed_live_goal_ids(mini_repo, "revisable")
+    assert run_los(mini_repo, "goal", goal_id, "--defer").returncode == 0
+    # The deferral leaves the scan, but the id stays ledger-known and
+    # re-decidable.
+    assert run_los(mini_repo, "goal", goal_id, "--close").returncode == 0
     ledger = yaml.safe_load(
         (mini_repo / "operations/goal-ledger.yaml").read_text(encoding="utf-8"))
-    assert ledger["decisions"]["g1"]["state"] == "closed"
+    assert ledger["decisions"][goal_id]["state"] == "closed"
 
 
 def test_exact_batch_requires_review_and_preserves_other_decisions(mini_repo):
-    ledger_path = mini_repo / "operations/goal-ledger.yaml"
-    assert run_los(mini_repo, "goal", "g-untouched", "--reject").returncode == 0
+    ids = seed_live_goal_ids(mini_repo, "batch-one", "batch-two")
+    ledger_path = seed_goal_ledger(mini_repo, {"g-untouched": "rejected"})
     before = ledger_path.read_bytes()
-    ids = ["lineage-stale:one", "lineage-stale:two"]
     args = ("goal", *ids, "--defer", "--note", "Explicit scoped decision")
     assert run_los(mini_repo, *args).returncode == 3
     checked = run_los(mini_repo, *args, "--check")
@@ -88,12 +91,43 @@ def test_exact_batch_requires_review_and_preserves_other_decisions(mini_repo):
 
 
 def test_batch_refuses_a_changed_ledger(mini_repo):
-    args = ("goal", "lineage-stale:one", "lineage-stale:two", "--close")
+    ids = seed_live_goal_ids(mini_repo, "batch-one", "batch-two")
+    seed_goal_ledger(mini_repo, {"another": "rejected"})
+    args = ("goal", *ids, "--close")
     checked = json.loads(run_los(mini_repo, *args, "--check").stdout)
-    assert run_los(mini_repo, "goal", "another", "--reject").returncode == 0
+    assert run_los(mini_repo, "goal", "another", "--close").returncode == 0
     before = (mini_repo / "operations/goal-ledger.yaml").read_bytes()
     assert run_los(mini_repo, *args, "--reviewed-sha256", checked["reviewed_sha256"]).returncode == 3
     assert (mini_repo / "operations/goal-ledger.yaml").read_bytes() == before
+
+
+def test_goal_refuses_unknown_ids_with_suggestions(mini_repo: Path):
+    """F7: a typo'd id refuses with did-you-mean; the ledger is untouched."""
+    (goal_id,) = seed_live_goal_ids(mini_repo, "suggested")
+    ledger_path = seed_goal_ledger(mini_repo, {"g-untouched": "rejected"})
+    before = ledger_path.read_bytes()
+    typo = goal_id[:-1] + ("X" if not goal_id.endswith("X") else "Y")
+    proc = run_los(mini_repo, "goal", typo, "--reject")
+    assert proc.returncode == 2
+    assert f"goal not found: {typo}" in proc.stderr
+    assert "did you mean" in proc.stderr
+    assert goal_id in proc.stderr
+    assert ledger_path.read_bytes() == before
+
+
+def test_goal_batch_with_unknown_id_writes_nothing(mini_repo: Path):
+    """F7: a batch is all-or-nothing; one unknown id refuses the batch."""
+    (goal_id,) = seed_live_goal_ids(mini_repo, "batched")
+    ledger_path = seed_goal_ledger(mini_repo, {"g-untouched": "rejected"})
+    before = ledger_path.read_bytes()
+    checked = run_los(mini_repo, "goal", goal_id, "bogus-id", "--defer", "--check")
+    assert checked.returncode == 2
+    assert "bogus-id" in checked.stderr
+    applied = run_los(mini_repo, "goal", goal_id, "bogus-id", "--defer")
+    assert applied.returncode == 2
+    assert "bogus-id" in applied.stderr
+    assert ledger_path.read_bytes() == before
+    assert goal_id not in yaml.safe_load(ledger_path.read_text())["decisions"]
 
 
 @pytest.mark.parametrize("ids", [("same", "same"), ("lineage-stale:*",), (" ",)])
@@ -105,6 +139,7 @@ def test_goal_batches_never_expand_patterns_or_duplicate_ids(mini_repo, ids):
 def test_deferred_goal_reappears_on_explicit_revisit_date(mini_repo: Path):
     today = _dt.date.today()
     revisit_on = (today + _dt.timedelta(days=3)).isoformat()
+    seed_goal_ledger(mini_repo, {"g1": "rejected"})
     proc = run_los(mini_repo, "goal", "g1", "--defer", "--revisit-on", revisit_on)
     assert proc.returncode == 0, proc.stderr
     assert json.loads(proc.stdout)["revisit_on"] == revisit_on
@@ -126,6 +161,10 @@ def test_revisit_date_refuses_non_deferral_and_invalid_dates(mini_repo: Path):
 
 
 def test_decided_goals_leave_the_scan(mini_repo: Path):
+    seed_goal_ledger(mini_repo, {
+        "study-map-obligation:unit-x": "rejected",
+        "lineage-stale:claim-y": "rejected",
+    })
     assert run_los(mini_repo, "goal", "study-map-obligation:unit-x", "--reject").returncode == 0
     assert run_los(mini_repo, "goal", "lineage-stale:claim-y", "--defer").returncode == 0
     decided = _read_goal_ledger(mini_repo)

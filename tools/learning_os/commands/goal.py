@@ -7,6 +7,11 @@ note}`` under ``operations/``, written only by ``los goal <id>
 --reject|--defer|--close`` and read back by the scan as ``known_ids``.
 Rejected goals stay rejected; the queue stops re-emitting what Aram
 already decided.
+
+Only decidable ids are accepted: a goal in the current scan, or already in
+the ledger. The decision joins the caller's session ledger under the same
+identity the gateway and ``session-end`` resolve, so it is listed and
+committed with the rest of the session's writes.
 """
 
 from __future__ import annotations
@@ -20,7 +25,20 @@ import sys
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
-from .support import TOOLS, WriteRefused, _atomic_text, _operator_lock, _root
+from learning_os.semantics.scan import intelligence_scan
+
+from .suggest import not_found
+from .support import (
+    TOOLS,
+    WriteRefused,
+    _atomic_text,
+    _current_session_id,
+    _load_session_paths,
+    _operator_lock,
+    _record_touched,
+    _root,
+    _session_ledger,
+)
 
 LEDGER_RELATIVE = "operations/goal-ledger.yaml"
 
@@ -93,6 +111,28 @@ def cmd_goal(args) -> int:
             print("los: the goal ledger is malformed, refusing to clobber it",
                   file=sys.stderr)
             return 2
+        # Only decidable ids: a goal in the current scan, or already in the
+        # ledger (a goal that stopped being detected can still be closed or
+        # re-decided). Unknown ids refuse before anything is written, so a
+        # batch is all-or-nothing. A scan that cannot be read degrades to
+        # ledger-only rather than inventing candidates.
+        try:
+            scan_ids = {goal.goal_id for goal in intelligence_scan(root)}
+            scan_failed: Exception | None = None
+        except Exception as exc:  # noqa: BLE001 - fail closed to ledger-only
+            scan_ids = set()
+            scan_failed = exc
+        known = {key for key in decisions if isinstance(key, str)} | scan_ids
+        unknown = [goal_id for goal_id in goal_ids if goal_id not in known]
+        if unknown:
+            if scan_failed is not None:
+                print(f"los: the live scan is unavailable ({scan_failed}); "
+                      f"deciding only ledger-known ids", file=sys.stderr)
+            candidates = sorted(known)
+            for goal_id in unknown:
+                print(f"los: {not_found('goal', goal_id, candidates)}",
+                      file=sys.stderr)
+            return 2
         entry: dict = {"state": state, "decided_at": _dt.date.today().isoformat()}
         if revisit_on is not None:
             entry["revisit_on"] = revisit_on
@@ -122,11 +162,34 @@ def cmd_goal(args) -> int:
             print("los: batch apply needs the exact --check reviewed-sha256; changed ledger or decisions require a fresh review",
                   file=sys.stderr)
             return 3
+        # The decision joins the caller's session, so session-end lists and
+        # commits the ledger with the rest of the session's writes. Identity
+        # resolves exactly as the gateway and session-end do (explicit
+        # --session-id, then the envelope, then LOS_SESSION_ID, then the
+        # channel). Preflight the own ledger first: a corrupt ledger refuses
+        # before the decision is written, never after.
+        explicit_session = getattr(args, "session_id", None)
+        own_session = _current_session_id(explicit=explicit_session)
+        if _session_ledger(root, own_session).is_file():
+            try:
+                _load_session_paths(root, own_session)
+            except WriteRefused as exc:
+                print(f"los: {exc}", file=sys.stderr)
+                return 2
         try:
             _atomic_text(path, yaml.safe_dump(data, sort_keys=False, allow_unicode=True))
         except WriteRefused as exc:
             print(f"los: {exc}", file=sys.stderr)
             return 2
+        try:
+            _record_touched(root, [path], session_id=explicit_session)
+        except WriteRefused as exc:
+            # The decision above is durable; only the session claim failed
+            # (a concurrent writer replaced our ledger mid-command). Exit 2
+            # would falsely claim nothing was written.
+            print(f"los: decision recorded but the session ledger could not be "
+                  f"updated: {exc}", file=sys.stderr)
+            return 1
     result = {"ok": True, "state": state}
     result["goal_id" if len(goal_ids) == 1 else "goal_ids"] = goal_ids[0] if len(goal_ids) == 1 else goal_ids
     if revisit_on is not None:
