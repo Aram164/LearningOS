@@ -260,7 +260,9 @@ def test_resolved_binding_verifies_observed_registered_bytes(mini_repo):
     target.unlink()
     refused = attempt("resolved-missing-file")
     assert refused.returncode != 0
-    assert "not observable at its claimed live digest" in refused.stdout
+    assert "does not resolve" in refused.stdout
+    assert "materials-relative" in refused.stdout
+    assert "(missing)" not in refused.stdout
     assert not (mini_repo / NOTE_PATH).exists()
     # Observed bytes under the registered root: accepted.
     target.write_bytes(b"observed deck bytes")
@@ -598,16 +600,22 @@ def test_batch_shape_has_one_source_of_truth(repo_root):
     import los
     from learning_os.commands import analysis as analysis_commands
     from learning_os.contracts import batch_notes
-    from learning_os.contracts.payloads import payload_schema, subparsers
+    from learning_os.contracts.payloads import (
+        payload_fields,
+        payload_schema,
+        subparsers,
+    )
 
-    fresh = payload_schema(
-        "note.analysis.save_batch",
-        subparsers(los.build_parser())["note-analysis-save-batch"])
+    command_parser = subparsers(los.build_parser())["note-analysis-save-batch"]
+    fresh = payload_schema("note.analysis.save_batch", command_parser)
     schema_path = (repo_root / "system/schema/capabilities"
                    / "note.analysis.save_batch.schema.json")
     on_disk = json.loads(schema_path.read_text(encoding="utf-8"))
     assert on_disk == fresh
-    assert on_disk["properties"]["bundle"] == batch_notes.bundle_schema()
+    bundle_help = next(action.help for action in payload_fields(command_parser)
+                       if action.dest == "bundle")
+    assert on_disk["properties"]["bundle"] == {
+        **batch_notes.bundle_schema(), "description": bundle_help}
     notes_schema = batch_notes.bundle_schema()["properties"]["notes"]
     assert notes_schema["minItems"] == batch_notes.BATCH_MIN_NOTES
     assert notes_schema["maxItems"] == batch_notes.BATCH_MAX_NOTES
@@ -812,3 +820,226 @@ def test_prepare_reprep_cleans_and_stays_outside(mini_repo, tmp_path):
     assert inside.returncode != 0
     assert "outside the repository" in inside.stderr
     assert not (mini_repo / "staging").exists()
+
+
+# --------------------------------------------------------------------------
+# Read-surface spellings: the boundary normalizes, storage stays canonical.
+# --------------------------------------------------------------------------
+
+def _resolved_draft_binding(material: str, recorded: str, live: str,
+                            source_id: str = "source-demo-book") -> dict:
+    return {
+        "resolution": "resolved", "source_id": source_id,
+        "material": material, "recorded_source_digest": recorded,
+        "live_source_digest": live,
+        "inspected_range": {"start": 1, "end": 3},
+    }
+
+
+def _observed_deck(mini_repo, relpath: str = "demo/deck.pdf") -> str:
+    target = mini_repo.parent / "materials" / relpath
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_bytes(b"observed deck bytes")
+    return hashlib.sha256(b"observed deck bytes").hexdigest()
+
+
+def test_prepare_accepts_read_surface_spellings(mini_repo, tmp_path):
+    """F8: material:// URIs, sha256:-prefixed digests, and materials/-prefixed
+    paths normalize at the boundary: identical staging, replay, idempotency."""
+    from learning_os.contracts.gateway import intent_sha256
+
+    digest = _observed_deck(mini_repo)
+    _register_material(mini_repo, "material://demo/")
+    note_id = "note-analysis-prep-spellings"
+    body_text = "spelling-invariant analysis body"
+    variants = {
+        "canonical": ("demo/deck.pdf", digest, digest),
+        "uri": ("material://source-demo-book/deck.pdf", digest, digest),
+        "prefixed": ("demo/deck.pdf", f"sha256:{digest}", f"sha256:{digest}"),
+        "both": ("material://source-demo-book/deck.pdf",
+                 f"sha256:{digest}", f"sha256:{digest}"),
+        "materials-prefix": ("materials/demo/deck.pdf", digest, digest),
+        "mixed": ("demo/deck.pdf", f"sha256:{digest}", digest),
+    }
+    out = tmp_path / "staging-spellings"
+    staged: dict[str, tuple[bytes, dict, str, dict]] = {}
+    for tag, (material, recorded, live) in variants.items():
+        drafts = {"notes": [_draft(
+            note_id, body_text,
+            binding=_resolved_draft_binding(material, recorded, live))]}
+        drafts_file = tmp_path / f"drafts-{tag}.json"
+        drafts_file.write_text(json.dumps(drafts), encoding="utf-8")
+        result = _run_prepare(mini_repo, str(drafts_file), out)
+        assert result.returncode == 0, f"{tag}: {result.stderr}"
+        report = json.loads(result.stdout)
+        assert ".venv/bin/python tools/los.py" in report["submit"], tag
+        body_bytes = (out / "bodies" / f"{note_id}.bin").read_bytes()
+        envelope = json.loads((out / "envelope.json").read_text(encoding="utf-8"))
+        staged[tag] = (body_bytes, envelope["payload"],
+                       intent_sha256(envelope), envelope)
+    canonical_body, canonical_payload, canonical_intent, canonical_envelope = \
+        staged["canonical"]
+    for tag, (body_bytes, payload, intent, _envelope) in staged.items():
+        assert body_bytes == canonical_body, tag
+        assert payload == canonical_payload, tag
+        assert intent == canonical_intent, tag
+    first = run_v2_capability(mini_repo, canonical_envelope)
+    assert first.returncode == 0, first.stdout + first.stderr
+    first_response = json.loads(first.stdout)
+    assert first_response["result"]["created_note_ids"] == [note_id]
+    note_path = mini_repo / f"knowledge/notes/mathematics/{note_id}.md"
+    before = note_path.read_bytes()
+    stored = load_repo(mini_repo).notes[note_id].meta["material_analysis"]
+    assert stored["material"] == "demo/deck.pdf"
+    assert stored["recorded_source_digest"] == digest
+    assert stored["live_source_digest"] == digest
+    # The first submit moved the snapshot, so each remaining spelling is
+    # re-prepped against current state, then replays without a second write.
+    for tag in ("uri", "prefixed", "both", "materials-prefix", "mixed"):
+        drafts_file = tmp_path / f"drafts-{tag}.json"
+        result = _run_prepare(mini_repo, str(drafts_file), out)
+        assert result.returncode == 0, f"{tag}: {result.stderr}"
+        envelope = json.loads((out / "envelope.json").read_text(encoding="utf-8"))
+        assert envelope["payload"] == canonical_payload, tag
+        replayed = run_v2_capability(mini_repo, envelope)
+        assert replayed.returncode == 0, f"{tag}: {replayed.stdout}"
+        assert json.loads(replayed.stdout)["replayed"] is True, tag
+        assert note_path.read_bytes() == before, tag
+    resubmitted = run_v2_capability(mini_repo, canonical_envelope)
+    assert resubmitted.returncode == 0, resubmitted.stdout + resubmitted.stderr
+    assert json.loads(resubmitted.stdout)["transaction_id"] == \
+        first_response["transaction_id"]
+
+
+def test_prepare_resolves_id_style_uris_through_the_flat_alias_tree(
+        mini_repo, tmp_path):
+    """F8: with materials/.flat present, an id-style URI normalizes to the
+    physical materials-relative path, not the alias path."""
+    digest = _observed_deck(mini_repo)
+    _register_material(mini_repo, "material://source-demo-book/")
+    flat = mini_repo.parent / "materials" / ".flat"
+    flat.mkdir()
+    (flat / "source-demo-book").symlink_to(Path("..") / "demo")
+    note_id = "note-analysis-prep-flat"
+    drafts = {"notes": [_draft(
+        note_id, "flat-tree analysis body",
+        binding=_resolved_draft_binding(
+            "material://source-demo-book/deck.pdf",
+            f"sha256:{digest}", f"sha256:{digest}"))]}
+    drafts_file = tmp_path / "drafts-flat.json"
+    drafts_file.write_text(json.dumps(drafts), encoding="utf-8")
+    out = tmp_path / "staging-flat"
+    result = _run_prepare(mini_repo, str(drafts_file), out)
+    assert result.returncode == 0, result.stderr
+    envelope = json.loads((out / "envelope.json").read_text(encoding="utf-8"))
+    submitted = run_v2_capability(mini_repo, envelope)
+    assert submitted.returncode == 0, submitted.stdout + submitted.stderr
+    stored = load_repo(mini_repo).notes[note_id].meta["material_analysis"]
+    assert stored["material"] == "demo/deck.pdf"
+    assert stored["recorded_source_digest"] == digest
+    assert stored["live_source_digest"] == digest
+
+
+def test_prepare_with_wrong_bytes_still_refuses_as_stale(mini_repo, tmp_path):
+    """F8: the stale diagnosis is kept for bytes that genuinely differ."""
+    digest = _observed_deck(mini_repo)
+    _register_material(mini_repo, "material://demo/")
+    for tag, wrong in (("bare", "ab" * 32),
+                       ("prefixed", "sha256:" + "ab" * 32)):
+        assert wrong.removeprefix("sha256:") != digest
+        drafts = {"notes": [_draft(
+            f"note-analysis-prep-stale-{tag}", "stale body",
+            binding=_resolved_draft_binding("demo/deck.pdf", wrong, wrong))]}
+        drafts_file = tmp_path / f"drafts-stale-{tag}.json"
+        drafts_file.write_text(json.dumps(drafts), encoding="utf-8")
+        refused = _run_prepare(mini_repo, str(drafts_file),
+                               tmp_path / f"staging-stale-{tag}")
+        assert refused.returncode != 0, tag
+        assert "not observable at its claimed live digest (stale)" in refused.stderr, tag
+
+
+def test_prepare_with_unresolvable_material_names_the_expected_form(
+        mini_repo, tmp_path):
+    """F8: a path that does not resolve says so; never '(missing)' or 'stale'."""
+    digest = "ab" * 32
+    _register_material(mini_repo, "material://demo/")
+    cases = {
+        "relpath": "demo/gone.pdf",
+        "uri": "material://source-demo-book/gone.pdf",
+        "outside": "/abs.pdf",
+    }
+    for tag, material in cases.items():
+        drafts = {"notes": [_draft(
+            f"note-analysis-prep-gone-{tag}", "gone body",
+            binding=_resolved_draft_binding(material, digest, digest))]}
+        drafts_file = tmp_path / f"drafts-gone-{tag}.json"
+        drafts_file.write_text(json.dumps(drafts), encoding="utf-8")
+        refused = _run_prepare(mini_repo, str(drafts_file),
+                               tmp_path / f"staging-gone-{tag}")
+        assert refused.returncode != 0, tag
+        assert "materials-relative" in refused.stderr, tag
+        assert "(missing)" not in refused.stderr, tag
+        assert "(stale)" not in refused.stderr, tag
+
+
+def test_prepare_refuses_uri_authority_mismatch(mini_repo, tmp_path):
+    """F8: a material:// authority must equal the binding's source_id."""
+    digest = _observed_deck(mini_repo)
+    _register_material(mini_repo, "material://demo/")
+    other = {"notes": [_draft(
+        "note-analysis-prep-authority", "authority body",
+        binding=_resolved_draft_binding(
+            "material://source-other/deck.pdf", digest, digest))]}
+    other_file = tmp_path / "drafts-authority.json"
+    other_file.write_text(json.dumps(other), encoding="utf-8")
+    refused = _run_prepare(mini_repo, str(other_file),
+                           tmp_path / "staging-authority")
+    assert refused.returncode != 0
+    assert "must equal binding.source_id" in refused.stderr
+    orphan = _draft("note-analysis-prep-orphan-uri", "orphan body", binding={
+        "resolution": "unresolved",
+        "material": "material://source-demo-book/deck.pdf",
+        "recorded_source_digest": digest,
+        "inspected_range": {"start": 1, "end": 3}})
+    orphan_file = tmp_path / "drafts-orphan.json"
+    orphan_file.write_text(json.dumps({"notes": [orphan]}), encoding="utf-8")
+    orphaned = _run_prepare(mini_repo, str(orphan_file),
+                            tmp_path / "staging-orphan")
+    assert orphaned.returncode != 0
+    assert "no source_id" in orphaned.stderr
+
+
+def test_prepare_refuses_malformed_digests(mini_repo, tmp_path):
+    """F8: a malformed digest says so, on every resolution."""
+    for tag, recorded, live in (("prefixed-garbage", "sha256:xyz", "sha256:xyz"),
+                               ("bare-garbage", "xyz", "xyz"),
+                               ("truncated", "ab" * 31, "ab" * 31)):
+        drafts = {"notes": [_draft(
+            f"note-analysis-prep-malformed-{tag}", "malformed body",
+            binding={
+                "resolution": "unresolved",
+                "material": "demo/deck.pdf",
+                "recorded_source_digest": recorded,
+                "live_source_digest": live,
+                "inspected_range": {"start": 1, "end": 3}})]}
+        drafts_file = tmp_path / f"drafts-malformed-{tag}.json"
+        drafts_file.write_text(json.dumps(drafts), encoding="utf-8")
+        refused = _run_prepare(mini_repo, str(drafts_file),
+                               tmp_path / f"staging-malformed-{tag}")
+        assert refused.returncode != 0, tag
+        assert "malformed" in refused.stderr, tag
+    prefixed = _draft("note-analysis-prep-prefixed-ok", "prefixed body", binding={
+        "resolution": "unresolved",
+        "material": "demo/deck.pdf",
+        "recorded_source_digest": f"sha256:{'ab' * 32}",
+        "inspected_range": {"start": 1, "end": 3}})
+    prefixed_file = tmp_path / "drafts-prefixed-ok.json"
+    prefixed_file.write_text(json.dumps({"notes": [prefixed]}), encoding="utf-8")
+    accepted = _run_prepare(mini_repo, str(prefixed_file),
+                            tmp_path / "staging-prefixed-ok")
+    assert accepted.returncode == 0, accepted.stderr
+    envelope = json.loads(
+        (tmp_path / "staging-prefixed-ok" / "envelope.json").read_text(
+            encoding="utf-8"))
+    staged = envelope["payload"]["bundle"]["notes"][0]["analysis"]["binding"]
+    assert staged["recorded_source_digest"] == "ab" * 32

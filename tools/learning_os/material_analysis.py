@@ -11,6 +11,7 @@ when the bytes behind this exact identity were actually observed.
 from __future__ import annotations
 
 import hashlib
+import re
 from pathlib import Path
 
 
@@ -59,6 +60,39 @@ def observe_local_material(materials_root: Path, material: str,
         "live_digest": live,
         "path": target.relative_to(root).as_posix(),
     }
+
+
+def normalize_binding_spellings(binding: dict) -> str | None:
+    """Canonicalize the read surface's own identifier spellings, in place.
+
+    No read emits binding-ready values: ``material-span`` prints
+    ``material://`` URIs and ``sha256:``-prefixed digests, while ``inspect``
+    prints ``materials/``-prefixed paths the binding forbids. The boundary
+    accepts all three and stores the canonical form (materials-relative
+    path, bare hex), so existing validators, digests, and frozen-input
+    hashes are unaffected.
+
+    Strips one leading ``materials/`` and any ``sha256:`` digest prefix,
+    then validates the bare hex. ``material://`` URIs are NOT resolved
+    here — that needs the repository — only normalized downstream.
+    Returns a refusal reason, else None. Non-string digests are left for
+    the schema and handler checks, which already refuse them.
+    """
+    material = binding.get("material")
+    if isinstance(material, str) and material.startswith("materials/"):
+        binding["material"] = material[len("materials/"):]
+    for field in ("recorded_source_digest", "live_source_digest"):
+        value = binding.get(field)
+        if value is None or not isinstance(value, str):
+            continue
+        bare = value.removeprefix("sha256:")
+        if not re.fullmatch(r"[0-9a-f]{64}", bare):
+            return (
+                f"binding.{field} is malformed: expected bare 64-character "
+                f"lowercase hex (or sha256:<hex>), got {value!r}"
+            )
+        binding[field] = bare
+    return None
 
 
 def binding_consistent(binding: dict) -> str | None:

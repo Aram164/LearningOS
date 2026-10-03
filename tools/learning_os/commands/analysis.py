@@ -15,7 +15,7 @@ import hashlib
 import json
 import shutil
 from datetime import date
-from pathlib import Path
+from pathlib import Path, PurePosixPath
 
 import jsonschema
 
@@ -30,8 +30,18 @@ from ..contracts.batch_notes import (
 )
 from ..fingerprint import canonical_fingerprint
 from ..loader import load_repo
-from ..material_analysis import binding_consistent, observe_local_material
-from ..materials_resolution import MATERIAL_SCHEME, material_uri_authority
+from ..material_analysis import (
+    binding_consistent,
+    normalize_binding_spellings,
+    observe_local_material,
+)
+from ..materials_resolution import (
+    MATERIAL_RESOURCE_SUFFIXES,
+    MATERIAL_SCHEME,
+    material_uri_authority,
+    resolve_material_target,
+)
+from ..pathing import PathBoundaryError
 from ..revisions import artifact_revision
 from .support import (
     WriteRefused,
@@ -94,6 +104,63 @@ def _destination(root: Path, note_id: str, relpath: object) -> Path:
     return _safe(root, path)
 
 
+def _normalize_binding_material_uri(repo, binding: dict) -> dict:
+    """Resolve a ``material://`` binding to its materials-relative path.
+
+    The URI authority must equal the binding's ``source_id``: naming a
+    registered source's file while withholding (or mismatching) the source
+    claim is incoherent. Resolution prefers the id-alias tree
+    (``materials/.flat``), which maps the authority to the physical folder;
+    without it the REL resolves under the source's registered material
+    folder. An unresolvable URI still normalizes lexically, so the
+    observability check below can diagnose it honestly.
+    """
+    material = binding.get("material")
+    if not isinstance(material, str) or not material.startswith(MATERIAL_SCHEME):
+        return binding
+    source_id = binding.get("source_id")
+    authority = material_uri_authority(material)
+    if authority is None:
+        raise WriteRefused(
+            f"binding.material is not a safe material:// URI: {material!r} "
+            "(expected material://SOURCE_ID/REL)")
+    if source_id is None:
+        raise WriteRefused(
+            "binding.material is a material:// URI but the binding names no "
+            f"source_id; use the materials-relative path instead, or resolve "
+            f"against {authority!r}")
+    if authority != source_id:
+        raise WriteRefused(
+            f"binding.material authority {authority!r} must equal "
+            f"binding.source_id {source_id!r}")
+    parts = PurePosixPath(material[len(MATERIAL_SCHEME):]).parts
+    if len(parts) < 2:
+        raise WriteRefused(
+            f"binding.material names no file: {material!r} "
+            "(expected material://SOURCE_ID/REL)")
+    rel = "/".join(parts[1:])
+    materials_dir = repo.learningos_root / "materials"
+    try:
+        target = resolve_material_target(
+            material, resolution_root=repo.materials_root,
+            boundary_root=materials_dir)
+    except (PathBoundaryError, FileNotFoundError, OSError):
+        target = None
+    if target is not None:
+        relative = target.resolve().relative_to(materials_dir.resolve())
+        return {**binding, "material": relative.as_posix()}
+    registered = (repo.sources.get(source_id) or {}).get("material")
+    if material_uri_authority(registered) is None:
+        raise WriteRefused(
+            f"source {source_id!r} registers no local material; cannot resolve "
+            f"binding.material {material!r}")
+    folder = str(registered)[len(MATERIAL_SCHEME):].rstrip("/")
+    if PurePosixPath(folder).suffix.lower() in MATERIAL_RESOURCE_SUFFIXES:
+        folder = PurePosixPath(folder).parent.as_posix()
+    candidate = f"{folder}/{rel}" if folder not in ("", ".") else rel
+    return {**binding, "material": candidate}
+
+
 def _verify_resolved_material(root: Path, repo, binding: dict) -> None:
     """A resolved binding claims live registered bytes: observe them.
 
@@ -102,15 +169,30 @@ def _verify_resolved_material(root: Path, repo, binding: dict) -> None:
     right now, and it must be the source's registered file or lie under
     the source's registered directory — compared as resolved filesystem
     locations so `.flat` id-aliases match their physical targets.
+
+    Each unobservable state names itself: `stale` only when the observed
+    bytes genuinely differ, a missing file as not resolving, an escaping
+    path as not materials-relative.
     """
     materials = root.parent / "materials"
     observation = observe_local_material(
         materials, str(binding.get("material") or ""),
         str(binding.get("live_source_digest") or ""))
-    if observation["status"] != "current":
+    if observation["status"] == "stale":
         raise WriteRefused(
             "resolved material is not observable at its claimed live "
-            f"digest ({observation['status']})")
+            "digest (stale)")
+    if observation["status"] == "missing":
+        raise WriteRefused(
+            f"resolved material does not resolve: {binding.get('material')!r} "
+            "names no readable file under materials/ (expected a "
+            "materials-relative path like 'course/deck.pdf', a "
+            "material://SOURCE_ID/REL URI, or a leading materials/ path)")
+    if observation["status"] != "current":
+        raise WriteRefused(
+            "resolved material is not a materials-relative path: "
+            f"{binding.get('material')!r} (expected a path under materials/ "
+            "without a leading '/' or '..')")
     registered = (repo.sources.get(binding.get("source_id")) or {}).get("material")
     if material_uri_authority(registered) is None:
         raise WriteRefused("resolved source registers no local material")
@@ -154,6 +236,12 @@ def _precheck_analysis(analysis: object, body: bytes) -> dict:
     except UnicodeDecodeError:
         raise WriteRefused("analysis body is not valid UTF-8") from None
     binding = analysis.get("binding")
+    if isinstance(binding, dict):
+        # The read surface's own spellings normalize before any check, so a
+        # sha256:-prefixed digest compares equal to its bare twin below.
+        spelling = normalize_binding_spellings(binding)
+        if spelling is not None:
+            raise WriteRefused(spelling)
     problem = binding_consistent(binding if isinstance(binding, dict) else {})
     if problem is not None:
         raise WriteRefused(problem)
@@ -181,7 +269,14 @@ def _resolve_note(root: Path, repo, analysis: dict, binding: dict,
     when the request replays an identical note. Any collision, unregistered
     source, or unobservable resolved material refuses. Callers commit every
     returned write in one transaction.
+
+    A material:// URI resolves here — this is the first point with the
+    loaded repository — before any check that could misdiagnose it. The
+    normalized binding replaces the request's, so the envelope, the intent
+    hash, and the stored frontmatter all carry the canonical form.
     """
+    binding = _normalize_binding_material_uri(repo, binding)
+    analysis["binding"] = binding
     note_id = analysis["id"]
     if binding["resolution"] == "resolved":
         if binding.get("source_id") not in repo.sources:
@@ -534,7 +629,7 @@ def cmd_note_analysis_prepare(args) -> int:
             encoding="utf-8")
     except OSError as exc:
         raise WriteRefused(f"cannot write staging dir {out}: {exc}") from exc
-    submit = (f"python tools/los.py capability note.analysis.save_batch "
+    submit = (f".venv/bin/python tools/los.py capability note.analysis.save_batch "
               f"--payload-file {envelope_path}")
     print(json.dumps({"ok": True, "out_dir": str(out),
                       "envelope": str(envelope_path),
