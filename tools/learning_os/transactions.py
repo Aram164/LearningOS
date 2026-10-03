@@ -1818,11 +1818,10 @@ class TransactionService:
                         rollback_complete=False,
                     ) from exc
                 if republication_defects:
-                    # Fixed wording: the gateway classifies TransactionFailure
-                    # prose, so the defect's own text (which may name
-                    # snapshots, revisions, …) must not leak into this
-                    # message. The original exception already names the
-                    # defect; the type here only aids debugging.
+                    # Fixed wording: the message names only the defect's
+                    # type, never its text (which may quote snapshots,
+                    # revisions, or canonical prose). The chained original
+                    # exception already carries the full defect.
                     defect = type(republication_defects[0]).__name__
                     raise ProjectionFailure(
                         f"{exc}; rolled back completely but the restored pre-state "
