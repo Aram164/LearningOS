@@ -718,3 +718,33 @@ def test_gateway_promotes_one_bundle_and_manifest_contains_only_canonical_ids(
     assert "module-future-demo" in manifest
     assert "candidate-module-" not in manifest
     assert "candidate-source-" not in manifest
+
+
+def test_promotion_apply_validates_once(mini_repo, tmp_path, monkeypatch, capsys):
+    """F4: a Master Planning promotion apply runs the full validator once."""
+    import los
+    from learning_os.commands.capability import cmd_capability
+    from learning_os.rules.core import Validator
+
+    _existing_package, _comparison_bytes = _setup(mini_repo)
+    package = _new_source_package(mini_repo)
+    plan = prepare_master_promotion(mini_repo, package, now=NOW)
+    envelope = _gateway_envelope(
+        mini_repo, package, revisions=plan.expected_revisions)
+    envelope_path = tmp_path / "promotion-count.json"
+    envelope_path.write_text(json.dumps(envelope), encoding="utf-8")
+    runs: list = []
+    original = Validator.run
+
+    def counted(self):
+        runs.append(1)
+        return original(self)
+
+    monkeypatch.setattr(Validator, "run", counted)
+    args = argparse.Namespace(
+        root=str(mini_repo), name="module.plan.import",
+        payload_file=str(envelope_path), replay_only=False,
+        _parser_factory=los.build_parser)
+    assert cmd_capability(args) == 0, capsys.readouterr().err
+    assert json.loads(capsys.readouterr().out)["ok"] is True
+    assert len(runs) == 1
