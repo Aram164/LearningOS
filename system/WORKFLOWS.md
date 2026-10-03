@@ -83,7 +83,7 @@ the predecessor atomically (workflow 15).
 ## 5. Add a concept relation
 
 1. confirm both concept IDs exist;
-2. choose the narrowest of the eight supported types — if none fits, the relationship belongs in note prose;
+2. choose the narrowest supported type — if none fits, the relationship belongs in note prose;
 3. add optional context if the relationship is conditional;
 4. optionally cite a supporting note or source;
 5. avoid duplicate edges;
@@ -652,8 +652,9 @@ no-write preflight, snapshot guard, and acceptance gates are mandatory.
    the module's source record); never into the authored tree. Run the mandatory
    source-completeness gate before scoping.
 2. **Scope pass.** Read the deck; list the concepts actually taught; check
-   the concept index for what is re-covered (re-covered → "revise via
-   existing note", not new study steps).
+   what is re-covered with `search` and `related` over the taught concepts
+   (re-covered → "revise via existing note", not new study steps; the
+   generated concept index is the bulk fallback).
 3. **Coverage and granularity pass.** Complete the item-by-item local/web audit,
    reconcile current and prior-year materials by contents, and give every
    ordinary lecture its own unit and knowledge map. Connect every reviewed
@@ -1001,7 +1002,10 @@ construction recipe — nothing else is needed.
    not cryptographic proof that a human was present.
 6. **Submit.** `.venv/bin/python tools/los.py capability <name> --payload-file
    envelope.json`. Exit 0 commits (or replays); exit 2 refuses; exit 3
-   is `STALE_SNAPSHOT`.
+   is an optimistic-concurrency conflict, and the status alone does not say
+   which: the V2 `code` field names it (`STALE_SNAPSHOT` when the snapshot
+   moved, `REVISION_CONFLICT` when a revision guard or the reviewed package
+   hash mismatches). Re-read the named state and re-seal.
 
 **Intent hash.** The approval subject covers exactly six fields —
 `schema_version`, `capability`, `channel`, `expected_snapshot`,
@@ -1027,11 +1031,13 @@ approval = "sha256:" + hashlib.sha256(json.dumps(
 
 **Refusal shape.** A refusal answers `ok: false` with
 `error: {code, message, retryable, details}`. The code comes from the
-refusal's type, never from its message text. `details` is `{}` on most
-refusals — only the typed subsystem outcomes (snapshot-guard conflicts,
-projection, commit, crash-recovery conflicts) carry machine-readable
-details. An empty `details` is normal, not a missing diagnosis: the
-`message` names the defect.
+refusal's type, never from its message text. `retryable` marks whether the
+same approved intent may be attempted again under a fresh envelope
+(step 4): a stale guard may, a defective request may not. `details` is
+`{}` on most refusals — only the typed subsystem outcomes
+(snapshot-guard conflicts, projection, commit, crash-recovery conflicts)
+carry machine-readable details. An empty `details` is normal, not a
+missing diagnosis: the `message` names the defect.
 
 **Worked capture.** Inbox capture (`§2`) via the envelope route:
 
@@ -1121,13 +1127,13 @@ The diagnosis carries three outcomes plus what must still happen:
   complete, which never proves the write is absent.
 - `canonical_outcome` — what the canonical store definitely did:
   `COMMITTED` (a receipt verified through the strict resolver),
-  `NOT_COMMITTED` (a definitive no-commit refusal:
-  `INVALID_REQUEST`, `UNKNOWN_CAPABILITY`, `STALE_SNAPSHOT`,
+  `NOT_COMMITTED` (every counted attempt ended in a definitive no-commit
+  refusal — `INVALID_REQUEST`, `UNKNOWN_CAPABILITY`, `STALE_SNAPSHOT`,
   `REVISION_CONFLICT`, `OUT_OF_SCOPE`, `AMBIGUOUS_MIGRATION`,
-  `VALIDATION_FAILED`, `PROJECTION_FAILED`, `UNCONFIRMED`,
-  `IDEMPOTENCY_CONFLICT` — the full list is
-  `DEFINITIVE_NO_COMMIT_CODES` in
-  `tools/learning_os/diagnostics/conventions.py`), or `AMBIGUOUS`
+  `VALIDATION_FAILED`, `PROJECTION_FAILED`, `UNCONFIRMED`, the full list in
+  `DEFINITIVE_NO_COMMIT_CODES` — or every counted attempt ended in a lone
+  `IDEMPOTENCY_CONFLICT`, which retires the request through its own
+  resolver rule: the key is bound to a different intent), or `AMBIGUOUS`
   (the evidence cannot decide — an honest answer that keeps the
   recovery record open).
 - `projection_outcome` — what re-publication did (`published`,
