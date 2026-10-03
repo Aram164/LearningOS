@@ -432,7 +432,7 @@ def test_brief_names_the_session_identity_in_effect(mini_repo, monkeypatch):
     assert identity["session_id"] == "channel:operator"
     assert identity["source"] == "channel"
     assert "LOS_SESSION_ID" in identity["how_to_set"]
-    assert "seal_envelope.py --session-id" in identity["how_to_set"]
+    assert ".venv/bin/python tools/seal_envelope.py --session-id" in identity["how_to_set"]
 
     monkeypatch.setenv("LOS_SESSION_ID", "brief-session")
     named = run_los(mini_repo, "bootstrap", "--brief")

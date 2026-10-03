@@ -99,7 +99,7 @@ def test_frozen_format_still_loads_without_errors(version, repo_root, tmp_path):
         f"data frozen as format {version} no longer validates against the "
         f"current schemas. This is the fixture doing its job: write a migration "
         f"under tools/migrations/, bump the contract "
-        f"(python tools/schema_contract.py --bump), and freeze the new shape as "
+        f"(.venv/bin/python tools/schema_contract.py --bump), and freeze the new shape as "
         f"a NEW fixture directory — do not edit {version}. Errors:\n"
         + "\n".join(errors))
 

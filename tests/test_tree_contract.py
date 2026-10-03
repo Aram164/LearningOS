@@ -272,7 +272,7 @@ def test_the_architecture_block_regenerates_byte_identically():
     """The acceptance criterion, stated as a test: the prose is a projection."""
     contract = tc.load(ROOT)
     assert tc.block_is_current(ROOT, contract), (
-        "run `python tools/tree_contract.py --write`"
+        "run `.venv/bin/python tools/tree_contract.py --write`"
     )
 
 

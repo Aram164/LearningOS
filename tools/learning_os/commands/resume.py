@@ -778,7 +778,7 @@ def _render(dossier, requirement, observations, open_items, sittings,
     else:
         # Bare stage-note refuses (canonical writes need a GatewayEnvelopeV2),
         # so name the seal-and-submit path instead.
-        lines.append("  Next         tools/seal_envelope.py --capability stage.note.write "
+        lines.append("  Next         .venv/bin/python tools/seal_envelope.py --capability stage.note.write "
                      "--payload {unit_id, stage_id, text} --guards auto, then")
         lines.append("               los capability stage.note.write --payload-file ENVELOPE.json")
     upcoming = [(row.get("start_date", ""), row) for row in sittings

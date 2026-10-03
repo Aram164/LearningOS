@@ -303,7 +303,7 @@ def check(root: Path) -> list[PerimeterIssue]:
                 issues.append(PerimeterIssue(
                     "STALE-BLOCK",
                     "the ARCHITECTURE root tree block is not the projection of "
-                    "this contract — run `python tools/tree_contract.py --write`",
+                    "this contract — run `.venv/bin/python tools/tree_contract.py --write`",
                     ARCHITECTURE_RELATIVE,
                 ))
         except PerimeterError as exc:

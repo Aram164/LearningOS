@@ -48,7 +48,7 @@ def load_contract(root: Path) -> dict:
         raise ManifestContractError(
             f"no {CONTRACT_RELATIVE} — the published manifest shape has no declared "
             "version, so an interface change cannot be told apart from the shape it "
-            "replaced; declare it with `python tools/manifest_contract.py --bump "
+            "replaced; declare it with `.venv/bin/python tools/manifest_contract.py --bump "
             "--note 'baseline'`")
     try:
         data = yaml.safe_load(path.read_text(encoding="utf-8")) or {}
@@ -217,7 +217,7 @@ def check(manifest: dict, root: Path) -> tuple[bool, str]:
         + "\n".join(problems)
         + "\nA change to the published shape is an interface change, even when it "
           "only adds a key: consumers declare an exact version and fail closed.\n"
-        "  1. python tools/manifest_contract.py --bump --note \"<what changed>\"\n"
+        "  1. .venv/bin/python tools/manifest_contract.py --bump --note \"<what changed>\"\n"
         "  2. mirror the new version into the UI in the same change — "
         "contracts/manifest-v<N>.lock.json, MANIFEST_CONTRACT_VERSION, "
         "ManifestV<N>, fixture-vault/generated/manifest.json")

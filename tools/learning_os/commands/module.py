@@ -1757,7 +1757,7 @@ def _module_plan_validation_errors(
     regressions, _repairs = delta(baseline, signatures)
     return perimeter_errors + errors + [
         f"W NEW-OR-GROWN-WARNING: {line} (introduced by this plan; fix it, or "
-        "adopt it deliberately with `python tools/warning_baseline.py --update`)"
+        "adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`)"
         for line in regressions
     ]
 

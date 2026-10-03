@@ -490,7 +490,7 @@ def brief_bootstrap(args) -> int:
                         f"name it before the first write — export "
                         f"{SESSION_ID_ENV}=<id> when the shell persists, or "
                         f"seal session_id in each write envelope "
-                        f"(seal_envelope.py --session-id <id>); without "
+                        f"(.venv/bin/python tools/seal_envelope.py --session-id <id>); without "
                         f"either, writes share this channel's ledger"
                     ),
                 },

@@ -70,7 +70,7 @@ class ChecksMaterials:
                       "no records/materials-manifest.yaml — the external materials "
                       "tree has no durable inventory, so data loss there is "
                       "undetectable; build it with "
-                      "`python tools/materials_manifest.py --build`",
+                      "`.venv/bin/python tools/materials_manifest.py --build`",
                       "records/")
             return
 
@@ -156,7 +156,7 @@ class ChecksMaterials:
             self.err("MATERIAL-MISSING",
                      f"'material://{uri}' does not resolve to a file in the "
                      "materials tree (a missing file, or a stale .flat/ symlink "
-                     "— rebuild with `python tools/build_materials_tree.py --apply`)",
+                     "— rebuild with `.venv/bin/python tools/build_materials_tree.py --apply`)",
                      "records/materials-manifest.yaml")
         if len(unresolvable) > _MAX_LISTED:
             self.err("MATERIAL-MISSING",
@@ -179,7 +179,7 @@ class ChecksMaterials:
             self.err("MATERIAL-UNREGISTERED",
                      f"'{rel}' is referenced but absent from the materials "
                      "manifest — rebuild it "
-                     "(`python tools/materials_manifest.py --build`)",
+                     "(`.venv/bin/python tools/materials_manifest.py --build`)",
                      "records/materials-manifest.yaml")
         if len(unregistered) > _MAX_LISTED:
             self.err("MATERIAL-UNREGISTERED",
@@ -234,7 +234,7 @@ class ChecksMaterials:
                       f"{len(drifted)} inventoried file(s) changed size since the "
                       f"manifest was captured ({shown}"
                       f"{', …' if len(drifted) > 3 else ''}) — verify with "
-                      "`python tools/materials_manifest.py --deep`",
+                      "`.venv/bin/python tools/materials_manifest.py --deep`",
                       "records/materials-manifest.yaml")
 
     # ------------------------------------------------------------------ util

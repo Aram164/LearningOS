@@ -89,7 +89,7 @@ def check(schema_dir: Path = SCHEMA_DIR, path: Path = CONTRACT) -> tuple[bool, s
     if contract is None:
         return False, (
             f"no {path.name} — declare the current format with "
-            "`python tools/schema_contract.py --bump --note 'baseline'`"
+            "`.venv/bin/python tools/schema_contract.py --bump --note 'baseline'`"
         )
     recorded = contract.get("schema_fingerprint")
     current = fingerprint(schema_dir)
@@ -106,7 +106,7 @@ def check(schema_dir: Path = SCHEMA_DIR, path: Path = CONTRACT) -> tuple[bool, s
         "A schema edit redefines what 'valid' means for data already on disk.\n"
         "Confirm tests/fixtures/formats/ still loads, write a migration under\n"
         "tools/migrations/ if it does not, then run:\n"
-        "  python tools/schema_contract.py --bump --note \"<what changed>\""
+        "  .venv/bin/python tools/schema_contract.py --bump --note \"<what changed>\""
     )
 
 

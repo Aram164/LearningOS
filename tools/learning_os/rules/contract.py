@@ -59,7 +59,7 @@ class ChecksContract:
                       "no system/contracts/data-contract.yaml — the record "
                       "schemas have no declared version, so a schema change "
                       "cannot be distinguished from the format it replaced; "
-                      "declare it with `python tools/schema_contract.py --bump "
+                      "declare it with `.venv/bin/python tools/schema_contract.py --bump "
                       "--note 'baseline'`",
                       "system/contracts/")
             return

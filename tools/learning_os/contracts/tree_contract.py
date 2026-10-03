@@ -331,7 +331,7 @@ def check(root: Path) -> list[TreeIssue]:
                 issues.append(TreeIssue(
                     "STALE-BLOCK",
                     "the ARCHITECTURE tree block is not the projection of this "
-                    "contract — run `python tools/tree_contract.py --write`; "
+                    "contract — run `.venv/bin/python tools/tree_contract.py --write`; "
                     "never hand-edit the block",
                     ARCHITECTURE_RELATIVE,
                 ))

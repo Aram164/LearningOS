@@ -247,6 +247,6 @@ def build_health(repo: Repo, generated_at: str) -> str:
                  "`evidence` when a derivation/exercise/implementation exists "
                  "(§8). On-touch only — never as a bulk project.*")
     lines.append("")
-    lines.append("*Run `python tools/validate.py` for the full rule check.*")
+    lines.append("*Run `.venv/bin/python tools/validate.py` for the full rule check.*")
     lines.append("")
     return "\n".join(lines)

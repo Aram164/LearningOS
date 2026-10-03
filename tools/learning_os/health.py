@@ -496,7 +496,7 @@ def build_health_report(root: Path, *, now: dt.datetime | None = None) -> dict[s
         f"Validation found {len(errors)} error(s) and {len(warnings)} warning(s).",
         "core",
         "Clear every error before a live canonical transaction. Warnings stay "
-        "visible and never block; `python tools/warning_baseline.py --check` "
+        "visible and never block; `.venv/bin/python tools/warning_baseline.py --check` "
         "is what refuses a NEW one.",
         errors=errors[:20], warnings=warnings[:20],
     ))

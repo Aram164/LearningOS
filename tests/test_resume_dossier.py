@@ -549,7 +549,7 @@ def test_resume_shows_recorded_stage_note_without_a_requirement(mini_repo: Path)
     assert "Stage note   2 lines recorded" in text.stdout
     assert "zephyr-note" in text.stdout
     assert "los stage-note" not in text.stdout
-    assert "tools/seal_envelope.py --capability stage.note.write" in text.stdout
+    assert ".venv/bin/python tools/seal_envelope.py --capability stage.note.write" in text.stdout
     assert "los capability stage.note.write --payload-file ENVELOPE.json" in text.stdout
     payload = json.loads(run_los(mini_repo, "resume", "--json").stdout)
     section = payload["content"]["stage-note"]

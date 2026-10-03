@@ -393,7 +393,7 @@ def test_resume_next_line_without_requirement_names_the_envelope_path():
         {"module": "Demo Module", "unit": "Expected value"}, "test-detail",
     )
     assert "los stage-note" not in rendered
-    assert "tools/seal_envelope.py --capability stage.note.write" in rendered
+    assert ".venv/bin/python tools/seal_envelope.py --capability stage.note.write" in rendered
     assert "{unit_id, stage_id, text}" in rendered
     assert "--guards auto" in rendered
     assert "los capability stage.note.write --payload-file ENVELOPE.json" in rendered

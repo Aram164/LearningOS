@@ -20,7 +20,7 @@ def build_reading_room(repo: Repo, generated_at: str) -> str:
     lines = _md_header("Reading room", generated_at)
     lines.append("*The human home page — start here. Everything below is a "
                  "link into a deeper view; rebuild anytime with `make views` "
-                 "(or `python tools/los.py generate`).*")
+                 "(or `.venv/bin/python tools/los.py generate`).*")
     lines.append("")
 
     # Academic dates include available sittings before registration and the
