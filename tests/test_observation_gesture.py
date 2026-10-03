@@ -377,7 +377,16 @@ def test_ability_records_are_admitted_from_the_app_and_nowhere_else(
         {**payload, "confirmation_ref": "conversation://learningos-app/some-other-request"},
         f"{key}-wrong-confirmation", revisions))
     assert wrong_confirmation.returncode == 2
+    assert json.loads(wrong_confirmation.stdout)["error"]["code"] == "UNCONFIRMED"
     assert "must name this exact request" in json.loads(wrong_confirmation.stdout)["error"]["message"]
+    malformed_confirmation = run_v2_capability(ability_repo, _app_envelope(
+        ability_repo, "learner.ability-observation.append",
+        {**payload, "confirmation_ref": "not-a-confirmation-pointer"},
+        f"{key}-malformed-confirmation", revisions))
+    assert malformed_confirmation.returncode == 2
+    assert json.loads(malformed_confirmation.stdout)["error"]["code"] == "UNCONFIRMED"
+    assert "must point to Aram's confirmation" in json.loads(
+        malformed_confirmation.stdout)["error"]["message"]
     traversal = run_v2_capability(ability_repo, _app_envelope(
         ability_repo, "learner.ability-observation.append",
         {**payload, "work_ref": "curriculum/../../../../etc/passwd"},

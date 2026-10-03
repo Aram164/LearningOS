@@ -566,6 +566,29 @@ def test_gateway_refuses_stale_revision_without_partial_promotion(
     assert comparison.read_bytes() == comparison_bytes
 
 
+def test_gateway_refuses_changed_package_hash_as_revision_conflict(
+    mini_repo, repo_root, tmp_path
+):
+    package, comparison_bytes = _setup(mini_repo)
+    plan = prepare_master_promotion(mini_repo, package, now=NOW)
+    envelope = _gateway_envelope(
+        mini_repo, package, revisions=dict(plan.expected_revisions))
+    envelope["payload"]["package_sha256"] = "sha256:" + "f" * 64
+    envelope["approval"]["subject_sha256"] = intent_sha256(envelope)
+    result = _run_gateway(repo_root, mini_repo, tmp_path / "hash.json", envelope)
+    assert result.returncode == 3, result.stderr or result.stdout
+    response = json.loads(result.stdout)
+    assert response["error"]["code"] == "REVISION_CONFLICT"
+    assert response["error"]["retryable"] is True
+    assert not (mini_repo / "curriculum/modules/module-future-demo").exists()
+    assert not master_promotion_destination(mini_repo, package["id"]).exists()
+    comparison = (
+        mini_repo / "curriculum/quarantine/masters-planning/comparisons/"
+        "candidate-comparison-preserved.yaml"
+    )
+    assert comparison.read_bytes() == comparison_bytes
+
+
 def test_promotion_transaction_rolls_back_and_candidates_never_leak(
     mini_repo, monkeypatch, capsys
 ):
