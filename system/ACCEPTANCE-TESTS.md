@@ -197,5 +197,5 @@ detail here; the list must not become a second owner of a live contract.
 - [ ] The real nested Obsidian vault loads the bundled plugin, renders Home,
   navigates module → unit → stage, performs a guarded unit-note mutation after the relevant stages,
   survives reload, and remains usable in light/dark and narrow/wide layouts.
-- [ ] `los session-end` shows exact owned/unrelated files, commits only its
-  ledger, and never stages Canvas files.
+- [ ] `los session-end` shows exact owned/unrelated files, commits only the
+  files recorded in its session ledger, and never stages Canvas files.
