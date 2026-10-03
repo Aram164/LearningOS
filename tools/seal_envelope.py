@@ -27,8 +27,7 @@ from learning_os.contracts.gateway import (
     GATEWAY_SCHEMA_VERSION,
     intent_sha256,
 )
-from learning_os.fingerprint import source_fingerprint
-from learning_os.loader import load_repo
+from learning_os.fingerprint import canonical_fingerprint
 
 # capability-envelope.schema.json bounds request_id at 128 characters.
 REQUEST_ID_MAX = 128
@@ -163,7 +162,11 @@ def _derive_guards_auto(root: Path, *, capability: str, payload: dict,
     _transactions.TransactionService.commit = _dry_run_commit  # type: ignore[method-assign]
     try:
         with _support._operator_lock(root):
-            live_snapshot = snapshot or f"sha256:{source_fingerprint(load_repo(root))}"
+            # The snapshot is a content digest, not a loaded-domain
+            # property: the path-based walk answers it without parsing the
+            # repository, and the dry-run handler below loads once for its
+            # own planner. Same digest, same lock, one load and one walk.
+            live_snapshot = snapshot or f"sha256:{canonical_fingerprint(root)}"
             envelope_stub["expected_snapshot"] = live_snapshot
             context = GatewayRequestContext(
                 request_id=context.request_id,
@@ -291,7 +294,7 @@ def main(argv: list[str] | None = None) -> int:
                           for artifact in sorted(revisions)),
               file=sys.stderr)
     else:
-        snapshot = args.snapshot or f"sha256:{source_fingerprint(load_repo(root))}"
+        snapshot = args.snapshot or f"sha256:{canonical_fingerprint(root)}"
     envelope = {
         "schema_version": GATEWAY_SCHEMA_VERSION,
         "request_id": request_id,

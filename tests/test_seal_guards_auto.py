@@ -263,3 +263,60 @@ def test_seal_blank_session_id_is_refused(mini_repo: Path, tmp_path: Path):
     assert sealed.returncode == 2
     assert "must name a session" in sealed.stderr
     assert not out.exists()
+
+
+def test_guards_auto_reads_the_live_tree_once(mini_repo: Path, monkeypatch):
+    """F4: `--guards auto` loads the repository once and walks it once.
+
+    The seal used to load the repository for its own snapshot read and let
+    the dry-run handler load and re-walk the same state under the same
+    lock. The snapshot is a content digest, so the seal takes it with a
+    bare walk and the handler's single load serves its planner.
+    """
+    import functools
+    import sys
+
+    import seal_envelope
+    from repo_builders import material_fixture
+
+    import learning_os.fingerprint as fingerprint_module
+    import learning_os.loader as loader_module
+    from learning_os.rules.core import Validator
+
+    repo, rid, smid = material_fixture(mini_repo)
+    unit_id = repo.study_maps[smid].unit_id
+    before = canonical_fingerprint(mini_repo)
+    counts = {"load_repo": 0, "walks": 0, "validate": 0}
+
+    def counted(key, function):
+        @functools.wraps(function)
+        def wrapper(*args, **kwargs):
+            counts[key] += 1
+            return function(*args, **kwargs)
+
+        return wrapper
+
+    monkeypatch.setattr(Validator, "run", counted("validate", Validator.run))
+    monkeypatch.setattr(fingerprint_module, "_fingerprint_roots",
+                        counted("walks", fingerprint_module._fingerprint_roots))
+    monkeypatch.setattr(fingerprint_module, "canonical_data_and_stat_fingerprints",
+                        counted("walks", fingerprint_module.canonical_data_and_stat_fingerprints))
+    # Every consumer binds load_repo by name at import; rebind each one.
+    original_load = loader_module.load_repo
+    load_counter = counted("load_repo", original_load)
+    for module in list(sys.modules.values()):
+        if getattr(module, "load_repo", None) is original_load:
+            monkeypatch.setattr(module, "load_repo", load_counter)
+
+    snapshot, derived = seal_envelope._derive_guards_auto(
+        mini_repo, capability="route.patch",
+        payload={"unit_id": unit_id, "route_id": rid,
+                 "changes": {"angle": "A counted explanation"}},
+        key="guards-auto-once-001", request_id="request-guards-auto-once-001",
+        channel="operator", approval_kind="operator-approval", snapshot=None)
+
+    assert snapshot == f"sha256:{before}"
+    assert set(derived) == {"module-demo", unit_id, smid}
+    assert counts["load_repo"] == 1, counts
+    assert counts["walks"] == 1, counts
+    assert counts["validate"] == 0, counts
