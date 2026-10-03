@@ -42,6 +42,9 @@ attempts:
   result: withdrawn
   notes: Ruecktritt executed (confirmed by Aram 2026-07-17). Deferral to the 2. Termin decided 2026-07-16
     (recorded in work/COORDINATION.md).
+- termin: 2
+  date: '2026-10-09'
+  result: registered
 type: module
 kind: academic
 area_id: program-bachelors

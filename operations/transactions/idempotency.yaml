@@ -779,6 +779,17 @@ entries:
       module-hu-aml: 14
     snapshot_before: sha256:902db66f8643ac73c4c0bf4354fe6dd7e6090fc3e9d0ff71912d5b58189f7b91
     snapshot_after: sha256:3bd00790c56e5b08da42f129e13e32a0387235daa3330e58a8c5b7f71aafaa61
+  friction-r3-20261003-m2-registered:
+    request_id: request-friction-r3-20261003-m2-registered-10ac8399
+    capability: module.attempt.record
+    channel: operator
+    intent_sha256: sha256:c67a01b2ed4a22e0e2a82479170145d93b5d74fd4eb91af84b7cf628e429e3de
+    transaction_id: transaction-20261003-155641-001
+    receipt_path: operations/transactions/transaction-20261003-155641-001.yaml
+    revisions:
+      module-hu-m2-statistik-analysis: 61
+    snapshot_before: sha256:ee3e167e8113195c949d8670b5bb657e8d2d0084886b683ee2a8b774badb802c
+    snapshot_after: sha256:fae894119c8c7f863afed8e9271ad9275c0df9de7d081dc811d9533b054121c2
   friction-r3-20261003-m2-withdrawal:
     request_id: request-friction-r3-20261003-m2-withdrawal-ccaadbc1
     capability: module.sitting.update

@@ -1,0 +1,37 @@
+schema_version: 2
+id: transaction-20261003-155641-001
+type: transaction-receipt
+status: committed
+capability: module.attempt.record
+committed_at: '2026-10-03T15:56:41+02:00'
+snapshot_before: sha256:ee3e167e8113195c949d8670b5bb657e8d2d0084886b683ee2a8b774badb802c
+snapshot_after: sha256:fae894119c8c7f863afed8e9271ad9275c0df9de7d081dc811d9533b054121c2
+expected_revisions:
+  module-hu-m2-statistik-analysis: 60
+artifact_revisions:
+  module-hu-m2-statistik-analysis:
+    before: 60
+    after: 61
+writes:
+- path: curriculum/modules/module-hu-m2-statistik-analysis/module.yaml
+  sha256_before: 9b59a75146d3752031f51b33986f9c74068ca971ed5bc1758c2005d972149d56
+  sha256_after: 532aba03168508ca5aa9bb7fdc4d24be26cd944c9306efafa57a96d6c2e9751f
+  created: false
+metadata:
+  data_roots_sha256: sha256:d7a67ac6142aad84c06334e0cb859fa08b5bc258299cfe914faec445f363fcf5
+  fingerprint_definition: 2
+authority:
+  capability_contract_version: 2
+  enforced: true
+  grants:
+  - capability: module.attempt.record
+    declared_writes:
+    - curriculum/modules/*/module.yaml
+request:
+  channel: operator
+  request_id: request-friction-r3-20261003-m2-registered-10ac8399
+  idempotency_key: friction-r3-20261003-m2-registered
+  intent_sha256: sha256:c67a01b2ed4a22e0e2a82479170145d93b5d74fd4eb91af84b7cf628e429e3de
+  approval:
+    kind: operator-approval
+    subject_sha256: sha256:c67a01b2ed4a22e0e2a82479170145d93b5d74fd4eb91af84b7cf628e429e3de
