@@ -10,11 +10,13 @@
   ],
   "properties": {
     "items_file": {
-      "type": "string"
+      "type": "string",
+      "description": "optional JSON proposal items produced with explicit unit context"
     },
     "items_file_sha256": {
       "type": "string",
-      "pattern": "^sha256:[a-f0-9]{64}$"
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact shelving-items file bytes approved for review"
     },
     "summary": {
       "type": "string"

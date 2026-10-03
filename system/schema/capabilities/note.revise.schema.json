@@ -11,11 +11,13 @@
   ],
   "properties": {
     "file": {
-      "type": "string"
+      "type": "string",
+      "description": "reviewed full replacement note file (bytes bound by --file-sha256)"
     },
     "file_sha256": {
       "type": "string",
-      "pattern": "^sha256:[a-f0-9]{64}$"
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact replacement-note bytes approved for revision"
     },
     "note_id": {
       "type": "string"

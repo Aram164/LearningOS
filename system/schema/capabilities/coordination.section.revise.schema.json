@@ -11,10 +11,12 @@
   ],
   "properties": {
     "check": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "show the section diff without writing"
     },
     "expected_content_sha256": {
-      "type": "string"
+      "type": "string",
+      "description": "SHA-256 of work/COORDINATION.md from `inspect coordination` (content_sha256); required to apply, omit with --check to preview"
     },
     "section": {
       "type": "string",
@@ -26,7 +28,8 @@
       ]
     },
     "text": {
-      "type": "string"
+      "type": "string",
+      "description": "reviewed section text, carried inline"
     }
   }
 }

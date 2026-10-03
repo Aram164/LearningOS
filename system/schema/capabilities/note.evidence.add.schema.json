@@ -26,7 +26,8 @@
       "type": "string"
     },
     "ref": {
-      "type": "string"
+      "type": "string",
+      "description": "typed URI for the trail, e.g. material://…, note://…, https://…"
     }
   }
 }

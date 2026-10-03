@@ -23,7 +23,8 @@
           "type": "string"
         },
         "binding": {
-          "type": "object"
+          "type": "object",
+          "description": "Provenance binding per the material_analysis record in system/schema/note.schema.json (frozen_input_sha256/bytes are derived by note-analysis-prepare, never drafted)."
         }
       },
       "additionalProperties": false,
@@ -36,11 +37,13 @@
       "description": "Accepted analysis input fields, a subset of the stored note record: type/created/state/authorship/semantic_review are set by the handler (the stored shape is system/schema/note.schema.json)."
     },
     "body_file": {
-      "type": "string"
+      "type": "string",
+      "description": "file carrying the exact analysis body bytes (bound by --body-file-sha256)"
     },
     "body_file_sha256": {
       "type": "string",
-      "pattern": "^sha256:[a-f0-9]{64}$"
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact analysis bytes approved for preservation"
     }
   },
   "dependentRequired": {

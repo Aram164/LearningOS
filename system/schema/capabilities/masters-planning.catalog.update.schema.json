@@ -8,7 +8,8 @@
   "required": [],
   "properties": {
     "file": {
-      "type": "string"
+      "type": "string",
+      "description": "reviewed academic-only catalog as a YAML file"
     },
     "record": {
       "type": "object",

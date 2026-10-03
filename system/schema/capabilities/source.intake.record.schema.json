@@ -8,14 +8,17 @@
   "required": [],
   "properties": {
     "check": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "report the field-level diff without writing"
     },
     "expected_diff_sha256": {
       "type": "string",
-      "pattern": "^sha256:[a-f0-9]{64}$"
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "diff hash from a check run; apply refuses anything else"
     },
     "file": {
-      "type": "string"
+      "type": "string",
+      "description": "intake records as a YAML file"
     },
     "record": {
       "type": "object",

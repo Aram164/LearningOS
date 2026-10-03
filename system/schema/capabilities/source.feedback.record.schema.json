@@ -27,7 +27,8 @@
       "type": "string"
     },
     "resource_id": {
-      "type": "string"
+      "type": "string",
+      "description": "optional resource-* id on the same stage to attach this judgment to"
     },
     "source_id": {
       "type": "string"

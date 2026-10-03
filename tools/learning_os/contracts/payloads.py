@@ -200,13 +200,27 @@ def payload_schema(
     properties, required = {}, []
     for action in payload_fields(command_parser):
         properties[action.dest] = _json_type(action)
+        # The schema is the declared payload agents read before any write, so
+        # each field carries its CLI help verbatim — no extra --help call per
+        # capability to learn what drop_sha256 or replace means.
+        if action.help and action.help != argparse.SUPPRESS:
+            properties[action.dest]["description"] = action.help
         if action.required or not action.option_strings:
             required.append(action.dest)
     for (capability_name, field), nested in _NESTED_SCHEMAS.items():
         if capability_name == name and field in properties:
+            # A fragment with its own description keeps it; otherwise the
+            # parser help still describes the field.
+            if "description" not in nested and "description" in properties[field]:
+                nested = {**nested,
+                          "description": properties[field]["description"]}
             properties[field] = nested
     for (capability_name, field), fragment in (payload_records or {}).items():
         if capability_name == name and field in properties:
+            if "description" not in fragment \
+                    and "description" in properties[field]:
+                fragment = {**fragment,
+                            "description": properties[field]["description"]}
             properties[field] = fragment
     required.extend(_GATEWAY_INLINE_REQUIRED.get(name, ()))
     schema = {

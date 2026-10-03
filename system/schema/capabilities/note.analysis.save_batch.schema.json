@@ -49,7 +49,8 @@
                     "type": "string"
                   },
                   "binding": {
-                    "type": "object"
+                    "type": "object",
+                    "description": "Provenance binding per the material_analysis record in system/schema/note.schema.json (frozen_input_sha256/bytes are derived by note-analysis-prepare, never drafted)."
                   }
                 }
               },
@@ -64,7 +65,8 @@
             }
           }
         }
-      }
+      },
+      "description": "{\"notes\": [{\"analysis\": {...}, \"body_file\": \"...\", \"body_file_sha256\": \"sha256:...\"}]}; every item is validated before any note is written"
     }
   }
 }

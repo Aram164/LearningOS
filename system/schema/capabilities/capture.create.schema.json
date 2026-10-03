@@ -8,17 +8,21 @@
   "required": [],
   "properties": {
     "file": {
-      "type": "string"
+      "type": "string",
+      "description": "copy this file into the inbox"
     },
     "file_sha256": {
       "type": "string",
-      "pattern": "^sha256:[a-f0-9]{64}$"
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact file bytes approved for this capture"
     },
     "text": {
-      "type": "string"
+      "type": "string",
+      "description": "capture this text (else stdin)"
     },
     "title": {
-      "type": "string"
+      "type": "string",
+      "description": "optional title for text captures"
     }
   },
   "oneOf": [

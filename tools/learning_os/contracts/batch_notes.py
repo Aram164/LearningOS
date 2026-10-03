@@ -33,6 +33,18 @@ ANALYSIS_REQUIRED = ("id", "title", "path", "binding")
 BATCH_MIN_NOTES = 1
 BATCH_MAX_NOTES = 20
 
+#: What a binding IS, in one sentence. Annotation-only: the boundary also
+#: accepts the read surface's own spellings (``material://`` URIs,
+#: ``sha256:``-prefixed digests) and normalizes them before any check, so a
+#: validating inline shape would refuse at the gateway what the handler
+#: accepts. Kept identical to the ``note.analysis.save`` payload_records
+#: binding description in ``system/contracts/capabilities.yaml``.
+BINDING_DESCRIPTION = (
+    "Provenance binding per the material_analysis record in "
+    "system/schema/note.schema.json (frozen_input_sha256/bytes are "
+    "derived by note-analysis-prepare, never drafted)."
+)
+
 
 def bundle_schema() -> dict:
     """The nested ``bundle`` subschema, built from the constants above.
@@ -40,6 +52,7 @@ def bundle_schema() -> dict:
     Binding internals stay an opaque object here: the ``material_analysis``
     contract already has exactly one copy in ``note.schema.json`` plus the
     handler's semantic checks, and this module must not become a second.
+    The description points there instead of inlining.
     """
     return {
         "type": "object",
@@ -63,7 +76,8 @@ def bundle_schema() -> dict:
                                 "id": {"type": "string"},
                                 "title": {"type": "string"},
                                 "path": {"type": "string"},
-                                "binding": {"type": "object"},
+                                "binding": {"type": "object",
+                                            "description": BINDING_DESCRIPTION},
                             },
                         },
                         "body_file": {"type": "string", "minLength": 1},

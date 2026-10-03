@@ -13,16 +13,19 @@
   ],
   "properties": {
     "date": {
-      "type": "string"
+      "type": "string",
+      "description": "sitting date (YYYY-MM-DD)"
     },
     "grade": {
-      "type": "number"
+      "type": "number",
+      "description": "optional grade (1.0-5.0; validation requires result passed unless the module is completed)"
     },
     "module_id": {
       "type": "string"
     },
     "notes": {
-      "type": "string"
+      "type": "string",
+      "description": "optional note kept on the attempt row"
     },
     "result": {
       "type": "string",
@@ -32,7 +35,8 @@
         "sat",
         "passed",
         "failed"
-      ]
+      ],
+      "description": "what Aram stated about this termin"
     },
     "termin": {
       "type": "integer",
@@ -40,7 +44,8 @@
         1,
         2,
         3
-      ]
+      ],
+      "description": "which termin this attempt is for"
     }
   }
 }

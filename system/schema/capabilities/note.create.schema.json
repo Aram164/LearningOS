@@ -11,11 +11,13 @@
   ],
   "properties": {
     "body_file": {
-      "type": "string"
+      "type": "string",
+      "description": "file carrying the exact note body bytes (bound by --body-file-sha256)"
     },
     "body_file_sha256": {
       "type": "string",
-      "pattern": "^sha256:[a-f0-9]{64}$"
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact note bytes approved for creation"
     },
     "note": {
       "type": "object",

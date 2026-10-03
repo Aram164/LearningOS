@@ -10,10 +10,12 @@
   ],
   "properties": {
     "text": {
-      "type": "string"
+      "type": "string",
+      "description": "the seed text exactly as supplied by the learner"
     },
     "title": {
-      "type": "string"
+      "type": "string",
+      "description": "optional explicit title; mechanically prepended as Markdown H1"
     }
   }
 }

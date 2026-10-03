@@ -11,32 +11,40 @@
   ],
   "properties": {
     "check": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "print the concrete replacement diff and write nothing"
     },
     "file": {
-      "type": "string"
+      "type": "string",
+      "description": "reviewed study-map YAML file for this unit (bytes bound by --file-sha256)"
     },
     "file_sha256": {
       "type": "string",
-      "pattern": "^sha256:[a-f0-9]{64}$"
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact study-map file bytes approved for import"
     },
     "intentional_reorder": {
-      "type": "string"
+      "type": "string",
+      "description": "reviewed reason for changing the relative order of surviving stages"
     },
     "intentional_state_reset": {
-      "type": "string"
+      "type": "string",
+      "description": "reviewed reason for discarding preserved stage and map state"
     },
     "replace": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "replace the unit's current study map (learner state is carried forward); required when one exists"
     },
     "retire_reason": {
-      "type": "string"
+      "type": "string",
+      "description": "reviewed disposition for the evidence of every retired stage"
     },
     "retire_stage": {
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "description": "acknowledge one stage this revision removes (repeatable)"
     },
     "unit_id": {
       "type": "string"

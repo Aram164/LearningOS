@@ -8,7 +8,8 @@
   "required": [],
   "properties": {
     "file": {
-      "type": "string"
+      "type": "string",
+      "description": "reviewed Legacy disposition lock as a YAML file"
     },
     "record": {
       "type": "object",

@@ -13,7 +13,8 @@
       "type": "boolean"
     },
     "file": {
-      "type": "string"
+      "type": "string",
+      "description": "reviewed unit material synthesis as a YAML file"
     },
     "record": {
       "type": "object",

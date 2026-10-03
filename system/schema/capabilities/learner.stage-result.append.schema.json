@@ -23,10 +23,12 @@
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "description": "a condition label for this attempt; labels only until a target is authored"
     },
     "note": {
-      "type": "string"
+      "type": "string",
+      "description": "free-text note stored with the result; prose only, never evidence"
     },
     "result": {
       "type": "string",
@@ -41,7 +43,8 @@
       "type": "string"
     },
     "supersedes": {
-      "type": "string"
+      "type": "string",
+      "description": "explicitly correct one earlier stage result; preserves its bytes"
     },
     "unit": {
       "type": "string"

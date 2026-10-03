@@ -20,10 +20,12 @@
         1,
         2,
         3
-      ]
+      ],
+      "description": "which termin this sitting is for"
     },
     "withdrawal_deadline": {
-      "type": "string"
+      "type": "string",
+      "description": "Rücktritt deadline (YYYY-MM-DD)"
     }
   }
 }

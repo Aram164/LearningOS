@@ -19,7 +19,8 @@
       "type": "string"
     },
     "delivery_sha256": {
-      "type": "string"
+      "type": "string",
+      "description": "SHA-256 of the exact imported delivery.yaml bytes"
     }
   }
 }

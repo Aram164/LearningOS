@@ -11,7 +11,8 @@
   ],
   "properties": {
     "next_action": {
-      "type": "string"
+      "type": "string",
+      "description": "the new Next Action body (envelope-inline, never from stdin)"
     },
     "workspace_id": {
       "type": "string"

@@ -469,7 +469,10 @@ commands:
           id: string
           title: string
           path: string
-          binding: object
+        fields:
+          binding:
+            type: object
+            description: Provenance binding per the material_analysis record in system/schema/note.schema.json (frozen_input_sha256/bytes are derived by note-analysis-prepare, never drafted).
   note.analysis.save_batch:
     handler: note_analysis_save_batch
     cli_command: note-analysis-save-batch

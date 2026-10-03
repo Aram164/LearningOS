@@ -13,16 +13,19 @@
   "properties": {
     "drop_sha256": {
       "type": "string",
-      "pattern": "^sha256:[a-f0-9]{64}$"
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact drop read: inbox-read's content_sha256 for a file, its drop_sha256 for a folder"
     },
     "name": {
-      "type": "string"
+      "type": "string",
+      "description": "drop name relative to work/inbox/ (list names with inbox-list); one drop, or one file inside a drop folder"
     },
     "routed_to": {
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "description": "where the drop went (note id, workspace path, source id, receipt id, …); repeatable, at least one required, recorded on the receipt"
     }
   }
 }

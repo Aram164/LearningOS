@@ -12,7 +12,8 @@
   ],
   "properties": {
     "replace": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "replace the working note instead of appending to it"
     },
     "stage_id": {
       "type": "string"

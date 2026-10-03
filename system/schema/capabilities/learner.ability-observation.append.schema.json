@@ -26,7 +26,8 @@
       "type": "string"
     },
     "claim": {
-      "type": "string"
+      "type": "string",
+      "description": "the precise claim Aram confirmed"
     },
     "condition": {
       "type": "array",
@@ -41,7 +42,8 @@
       }
     },
     "confirmation_ref": {
-      "type": "string"
+      "type": "string",
+      "description": "pointer to Aram's confirmation of this claim"
     },
     "evidence_tag": {
       "type": "array",
@@ -62,7 +64,8 @@
       "type": "string"
     },
     "work_ref": {
-      "type": "string"
+      "type": "string",
+      "description": "pointer to the actual attempt"
     },
     "workspace": {
       "type": "string"

@@ -10,20 +10,24 @@
   ],
   "properties": {
     "check": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "run contract, routing, and shadow-repository validation without writing"
     },
     "file": {
-      "type": "string"
+      "type": "string",
+      "description": "reviewed YAML plan for an existing canonical module"
     },
     "file_sha256": {
       "type": "string",
-      "pattern": "^sha256:[a-f0-9]{64}$"
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact module-plan file bytes approved for import"
     },
     "module_id": {
       "type": "string"
     },
     "package_sha256": {
-      "type": "string"
+      "type": "string",
+      "description": "exact promotion package hash returned by --check"
     },
     "promotion": {
       "type": "object",
@@ -55,7 +59,8 @@
       "description": "Inline MasterPlanning promotion package; the accepted fields are the full promotion record governed by system/schema/master-planning-promotion.schema.json."
     },
     "staged_basis": {
-      "type": "string"
+      "type": "string",
+      "description": "with --check, print the requested unit's post-package dossier basis without writing"
     }
   },
   "oneOf": [

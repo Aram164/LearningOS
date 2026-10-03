@@ -11,7 +11,8 @@
   "properties": {
     "plan_sha256": {
       "type": "string",
-      "pattern": "^sha256:[a-f0-9]{64}$"
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "sha256 of the exact dry-run unified diff"
     },
     "review": {
       "type": "object",

@@ -459,7 +459,7 @@ def build_parser() -> argparse.ArgumentParser:
     # the gateway actually accepts (engineering audit 2026-08-08, finding 2).
     p = sub.add_parser("project-create", help="create one first-class project transactionally")
     source = p.add_mutually_exclusive_group(required=True)
-    source.add_argument("--file")
+    source.add_argument("--file", help="the project record as a YAML file")
     source.add_argument("--project", type=json_object, help="the project record as inline JSON")
     p.add_argument(
         "--file-sha256", type=sha256_value, default=None,
@@ -472,7 +472,7 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("project-update", help="replace one project with revision protection")
     p.add_argument("project_id")
     source = p.add_mutually_exclusive_group(required=True)
-    source.add_argument("--file")
+    source.add_argument("--file", help="the project record as a YAML file")
     source.add_argument("--project", type=json_object, help="the project record as inline JSON")
     p.add_argument(
         "--file-sha256", type=sha256_value, default=None,
@@ -579,7 +579,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument("unit_id")
     record = p.add_mutually_exclusive_group(required=True)
-    record.add_argument("--file")
+    record.add_argument("--file",
+                        help="reviewed unit material synthesis as a YAML file")
     record.add_argument("--record", type=json_object)
     p.add_argument("--check", action="store_true")
     p.add_argument("--approve", action="store_true")
@@ -609,7 +610,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="publish one reviewed safe Legacy disposition lock",
     )
     record = p.add_mutually_exclusive_group(required=True)
-    record.add_argument("--file")
+    record.add_argument("--file",
+                        help="reviewed Legacy disposition lock as a YAML file")
     record.add_argument("--record", type=json_object)
     p.add_argument("--approve", action="store_true")
     p.add_argument("--expected-snapshot", default=None)
@@ -629,7 +631,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="publish a reviewed academic-only prospective catalog",
     )
     record = p.add_mutually_exclusive_group(required=True)
-    record.add_argument("--file")
+    record.add_argument("--file",
+                        help="reviewed academic-only catalog as a YAML file")
     record.add_argument("--record", type=json_object)
     p.add_argument("--approve", action="store_true")
     p.add_argument("--expected-snapshot", default=None)
@@ -642,7 +645,8 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p.add_argument("candidate_module_id")
     record = p.add_mutually_exclusive_group(required=True)
-    record.add_argument("--file")
+    record.add_argument("--file",
+                        help="reviewed prospective source comparison as a YAML file")
     record.add_argument("--record", type=json_object)
     p.add_argument("--approve", action="store_true")
     p.add_argument("--expected-snapshot", default=None)
@@ -801,7 +805,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("note-analysis-save", help="preserve one source analysis as a durable reference note")
     p.add_argument("--analysis", required=True, type=json_object)
-    p.add_argument("--body-file", required=True)
+    p.add_argument("--body-file", required=True,
+                   help="file carrying the exact analysis body bytes "
+                        "(bound by --body-file-sha256)")
     p.add_argument(
         "--body-file-sha256", type=sha256_value, default=None,
         help="SHA-256 of the exact analysis bytes approved for preservation",
@@ -864,7 +870,9 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("module-materials-compact", help="losslessly share repeated stage material fields")
     p.add_argument("module_id")
     p.add_argument("--check", action="store_true")
-    p.add_argument("--plan-sha256", type=sha256_value, default=None)
+    p.add_argument("--plan-sha256", type=sha256_value, default=None,
+                   help="sha256 of the exact reviewed compaction plan from "
+                        "--check; required to apply")
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_module_materials_compact)
@@ -872,12 +880,16 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("unit-map-import",
                        help="create/import the single current study map for a unit")
     p.add_argument("unit_id")
-    p.add_argument("--file", required=True)
+    p.add_argument("--file", required=True,
+                   help="reviewed study-map YAML file for this unit "
+                        "(bytes bound by --file-sha256)")
     p.add_argument(
         "--file-sha256", type=sha256_value, default=None,
         help="SHA-256 of the exact study-map file bytes approved for import",
     )
-    p.add_argument("--replace", action="store_true")
+    p.add_argument("--replace", action="store_true",
+                   help="replace the unit's current study map (learner state "
+                        "is carried forward); required when one exists")
     p.add_argument(
         "--check", action="store_true",
         help="print the concrete replacement diff and write nothing",
@@ -1030,7 +1042,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     p = sub.add_parser("note-create", help="create one durable note from approved bytes")
     p.add_argument("--note", required=True, type=json_object)
-    p.add_argument("--body-file", required=True)
+    p.add_argument("--body-file", required=True,
+                   help="file carrying the exact note body bytes "
+                        "(bound by --body-file-sha256)")
     p.add_argument(
         "--body-file-sha256", type=sha256_value, default=None,
         help="SHA-256 of the exact note bytes approved for creation",
@@ -1042,7 +1056,9 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("note-revise",
                        help="replace one existing note after explicit full-file review")
     p.add_argument("note_id")
-    p.add_argument("--file", required=True)
+    p.add_argument("--file", required=True,
+                   help="reviewed full replacement note file "
+                        "(bytes bound by --file-sha256)")
     p.add_argument(
         "--file-sha256", type=sha256_value, default=None,
         help="SHA-256 of the exact replacement-note bytes approved for revision",
@@ -1185,7 +1201,8 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("unit_id")
     p.add_argument("stage_id")
     p.add_argument("--text", default=None)
-    p.add_argument("--replace", action="store_true")
+    p.add_argument("--replace", action="store_true",
+                   help="replace the working note instead of appending to it")
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
     p.set_defaults(func=cmd_stage_note)
@@ -1205,7 +1222,9 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("stage-attach", help="attach a file inside a unit stage")
     p.add_argument("unit_id")
     p.add_argument("stage_id")
-    p.add_argument("--file", required=True)
+    p.add_argument("--file", required=True,
+                   help="local file to attach inside the unit stage "
+                        "(bytes bound by --file-sha256)")
     p.add_argument(
         "--file-sha256", type=sha256_value, default=None,
         help="SHA-256 of the exact attachment bytes approved for this request",
@@ -1238,7 +1257,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="create a metadata-only source or correct intake-owned fields",
     )
     record = p.add_mutually_exclusive_group(required=True)
-    record.add_argument("--file")
+    record.add_argument("--file", help="intake records as a YAML file")
     record.add_argument("--record", type=json_object)
     p.add_argument("--check", action="store_true",
                    help="report the field-level diff without writing")
@@ -1254,7 +1273,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="revise one collection entry's why line",
     )
     record = p.add_mutually_exclusive_group(required=True)
-    record.add_argument("--file")
+    record.add_argument("--file", help="collection revise record as a YAML file")
     record.add_argument("--record", type=json_object)
     p.add_argument("--check", action="store_true",
                    help="report the line-level diff without writing")
@@ -1270,7 +1289,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="attach verified local material to one existing source",
     )
     record = p.add_mutually_exclusive_group(required=True)
-    record.add_argument("--file")
+    record.add_argument("--file", help="revise record as a YAML file")
     record.add_argument("--record", type=json_object)
     p.add_argument("--check", action="store_true",
                    help="report the field-level diff without writing")
@@ -1378,7 +1397,9 @@ def build_parser() -> argparse.ArgumentParser:
     p = sub.add_parser("path-attach", help="copy handwriting/media into a stage-owned attachment folder")
     p.add_argument("path_id")
     p.add_argument("stage_id")
-    p.add_argument("--file", required=True)
+    p.add_argument("--file", required=True,
+                   help="local file to attach inside the path stage "
+                        "(bytes bound by --file-sha256)")
     p.add_argument(
         "--file-sha256", type=sha256_value, default=None,
         help="SHA-256 of the exact attachment bytes approved for this request",

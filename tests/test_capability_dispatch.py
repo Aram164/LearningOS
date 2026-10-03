@@ -7,6 +7,7 @@ so the machine interface was a facade over the named CLI commands.
 
 from __future__ import annotations
 
+import argparse
 import json
 import subprocess
 import sys
@@ -228,3 +229,77 @@ def test_project_create_refuses_both_record_sources_at_once(repo_root: Path, tmp
                              key="dispatch-project-two-sources-001")
     assert result.returncode != 0
     assert "invalid payload" in json.loads(result.stdout)["error"]["message"]
+
+
+def test_generated_schemas_carry_parser_help_text(repo_root: Path):
+    """F6: the declared payload explains its fields without an extra --help call.
+
+    Every capability property whose parser action carries help text carries
+    that exact text as its schema description — except where a payload-records
+    or contract-module fragment already describes the field, which keeps its
+    own description.
+    """
+    import los
+    from learning_os.contracts.payload_records import resolve_all
+    from learning_os.contracts.payloads import (
+        _NESTED_SCHEMAS,
+        all_payload_schemas,
+        payload_fields,
+        subparsers,
+    )
+
+    parser = los.build_parser()
+    commands = subparsers(parser)
+    definitions = _definitions(repo_root)
+    records = resolve_all(repo_root)
+    schemas = all_payload_schemas(
+        parser, definitions, payload_records=records)
+    carried = 0
+    for name, definition in sorted(definitions.items()):
+        if not definition.cli_command:
+            continue
+        command_parser = commands.get(definition.cli_command or "")
+        if command_parser is None:
+            continue
+        for action in payload_fields(command_parser):
+            if not action.help or action.help == argparse.SUPPRESS:
+                continue
+            prop = schemas[name]["properties"][action.dest]
+            fragment = records.get((name, action.dest))
+            if fragment is None:
+                fragment = _NESTED_SCHEMAS.get((name, action.dest))
+            if fragment is not None and "description" in fragment:
+                assert prop["description"] == fragment["description"], (
+                    f"{name}.{action.dest} keeps its fragment description"
+                )
+            else:
+                assert prop.get("description") == action.help, (
+                    f"{name}.{action.dest} drops its parser help text"
+                )
+                carried += 1
+    assert carried > 0, "no carried descriptions found; the generator regressed"
+
+
+def test_analysis_binding_schemas_describe_the_stored_shape(repo_root: Path):
+    """F6: save/save_batch bindings point at material_analysis, bare object no more.
+
+    Description-only on purpose: the boundary also accepts the read surface's
+    own spellings (material:// URIs, sha256:-prefixed digests) and normalizes
+    them before any check, so a validating inline shape would refuse at the
+    gateway what the handler accepts.
+    """
+    save = json.loads((repo_root / SCHEMA_DIR / "note.analysis.save.schema.json")
+                      .read_text(encoding="utf-8"))
+    batch = json.loads((repo_root / SCHEMA_DIR / "note.analysis.save_batch.schema.json")
+                       .read_text(encoding="utf-8"))
+    save_binding = save["properties"]["analysis"]["properties"]["binding"]
+    batch_binding = (batch["properties"]["bundle"]["properties"]["notes"]
+                     ["items"]["properties"]["analysis"]["properties"]["binding"])
+    assert save_binding["type"] == "object"
+    assert batch_binding["type"] == "object"
+    assert save_binding["description"] == batch_binding["description"]
+    assert "material_analysis" in save_binding["description"]
+    assert "note.schema.json" in save_binding["description"]
+    # Annotation-only: acceptance is exactly the old bare object.
+    assert set(save_binding) == {"type", "description"}
+    assert set(batch_binding) == {"type", "description"}

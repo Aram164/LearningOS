@@ -12,11 +12,13 @@
   ],
   "properties": {
     "file": {
-      "type": "string"
+      "type": "string",
+      "description": "local file to attach inside the path stage (bytes bound by --file-sha256)"
     },
     "file_sha256": {
       "type": "string",
-      "pattern": "^sha256:[a-f0-9]{64}$"
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 of the exact attachment bytes approved for this request"
     },
     "label": {
       "type": "string"

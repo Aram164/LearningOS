@@ -8,17 +8,20 @@
   "required": [],
   "properties": {
     "check": {
-      "type": "boolean"
+      "type": "boolean",
+      "description": "recompute eligibility (all claims), or verify the plan for --claim-ids; write nothing"
     },
     "claim_ids": {
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "description": "exact reviewed claim ids to stamp (1 or more)"
     },
     "claims_sha256": {
       "type": "string",
-      "pattern": "^sha256:[a-f0-9]{64}$"
+      "pattern": "^sha256:[a-f0-9]{64}$",
+      "description": "SHA-256 binding the exact reviewed claim list (sorted ids, one per line)"
     }
   }
 }

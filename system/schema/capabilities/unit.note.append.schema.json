@@ -14,20 +14,23 @@
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "description": "copy one file into the unit note attachments; repeatable"
     },
     "attachment_sha256": {
       "type": "array",
       "items": {
         "type": "string",
         "pattern": "^sha256:[a-f0-9]{64}$"
-      }
+      },
+      "description": "SHA-256 for the corresponding --attachment; repeat in the same order"
     },
     "stage_id": {
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "description": "completed stage context; repeat for multiple stages"
     },
     "text": {
       "type": "string"

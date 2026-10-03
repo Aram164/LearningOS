@@ -12,10 +12,12 @@
   ],
   "properties": {
     "progress_next": {
-      "type": "string"
+      "type": "string",
+      "description": "record what comes next (requires --progress-summary)"
     },
     "progress_summary": {
-      "type": "string"
+      "type": "string",
+      "description": "record where work stopped (stored on the stage row, surfaced by resume)"
     },
     "stage_id": {
       "type": "string"

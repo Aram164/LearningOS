@@ -13,7 +13,8 @@
       "type": "string"
     },
     "file": {
-      "type": "string"
+      "type": "string",
+      "description": "reviewed prospective source comparison as a YAML file"
     },
     "record": {
       "type": "object",

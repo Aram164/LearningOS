@@ -22,13 +22,15 @@
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "description": "a condition that DID hold for this attempt"
     },
     "condition_not_met": {
       "type": "array",
       "items": {
         "type": "string"
-      }
+      },
+      "description": "a condition that did NOT hold; a different fact from silence, which stays unknown"
     },
     "context": {
       "type": "string"
@@ -46,7 +48,8 @@
       ]
     },
     "supersedes": {
-      "type": "string"
+      "type": "string",
+      "description": "explicitly correct one earlier observation; preserves its bytes"
     },
     "tags": {
       "type": "string"
