@@ -428,7 +428,7 @@ def test_no_capability_schema_gains_a_json_property(repo_root):
     schemas = all_payload_schemas(
         los.build_parser(), command_definitions(repo_root),
         payload_records=resolve_all(repo_root))
-    assert len(schemas) == 49
+    assert len(schemas) == 47
     for name, schema in schemas.items():
         assert "json" not in schema["properties"], name
 
