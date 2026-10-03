@@ -1,3 +1,64 @@
 schema: 1
-baselined: []
-checks: {}
+baselined: [A3-prose]
+checks:
+  A3-prose:
+  - signature: tools/learning_os/commands/module.py::_inventory_block::method::```
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: "tools/learning_os/commands/reads.py::_explanation_snippets::method::\n"
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: "tools/learning_os/commands/reads.py::_match_verified::method::\n"
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/contracts/perimeter.py::_block_bounds::method::-->
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/contracts/tree_contract.py::_block_bounds::method::-->
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: 'tools/learning_os/genout/common.py::_git_state::substring::fatal: not a git repository'
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/genout/session_compiler.py::replan_session::substring::available_minutes
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/health.py::_time_machine_check::regex::(?im)^\s*(?:Encryption|Encrypted)\s*[:=]
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: "tools/learning_os/materials_resolution.py::leading_material_locator::substring::\n"
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: "tools/learning_os/materials_resolution.py::leading_material_locator::substring::\\"
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: "tools/learning_os/rules/contract.py::check_contract_documentation::method::\n"
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/rules/materials.py::_referenced_materials::substring::material://
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/rules/registries.py::_references_generated::substring::generated/
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: "tools/library_reconciliation.py::_flow::method::\n..."
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/normalise_material_uris.py::main::substring::material://
+    count: 1
+    since: baseline
+    approved_by: null
