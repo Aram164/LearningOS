@@ -55,6 +55,8 @@ from .errors import (
     TransactionFailure,
     TransactionIdempotencyConflict,
     TransactionRecoveryConflict,
+    TransactionRollbackIncomplete,
+    TransactionValidationFailure,
 )
 from .evidence import (
     _default_authority_root,
@@ -83,8 +85,10 @@ __all__ = [
     "TransactionIdempotencyConflict",
     "TransactionRecoveryConflict",
     "TransactionResult",
+    "TransactionRollbackIncomplete",
     "TransactionSnapshotConflict",
     "TransactionScopeError",
+    "TransactionValidationFailure",
     "TransactionService",
     "artifact_revision",
     "canonical_fingerprint",
@@ -1572,7 +1576,7 @@ class TransactionService:
                         stage="core.validation", status="error",
                         attrs={"error": "canonical validation failed",
                                "issues": len(errors)})
-                    raise TransactionFailure(
+                    raise TransactionValidationFailure(
                         f"transaction failed canonical validation: {preview}"
                     )
             diag_tracer.emit_event(diag_conventions.EVENT_VALIDATION_PASSED)
@@ -1829,7 +1833,7 @@ class TransactionService:
                     ) from exc
                 raise ProjectionFailure(str(exc), rollback_complete=True) from exc
             if rollback_failures:
-                raise TransactionFailure(
+                raise TransactionRollbackIncomplete(
                     f"{exc}; rollback incomplete for: {', '.join(rollback_failures)}"
                 ) from exc
             if republication_defects:

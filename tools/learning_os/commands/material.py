@@ -39,6 +39,7 @@ from .reads import (
 from .resume import MAX_STAGE_RESULTS
 from .suggest import expansion, with_suggestions
 from .support import (
+    ValidationFailed,
     WriteRefused,
     _dump_yaml,
     _expected_ok,
@@ -716,7 +717,7 @@ def _execute(args, capability, planner):
             raise WriteRefused("compaction requires the reviewed plan SHA-256")
         errors = _module_plan_validation_errors(root, writes) if writes else []
         if errors:
-            raise WriteRefused("canonical validation failed: " + "; ".join(map(str, errors[:8])))
+            raise ValidationFailed("canonical validation failed: " + "; ".join(map(str, errors[:8])))
         if args.check:
             check_result = {
                 **result, "ok": True, "check": True, "canonical_files_written": 0,

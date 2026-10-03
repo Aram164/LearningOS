@@ -51,6 +51,7 @@ from learning_os.material_synthesis import (
 from learning_os.semantics.lineage import LEDGER_RELATIVE
 
 from .support import (
+    AmbiguousMigration,
     WriteRefused,
     _atomic_text,
     _dump_yaml,
@@ -255,7 +256,7 @@ def cmd_route_identity_migrate(args) -> int:
         plan = plan_migration(root, review=args.review)
         if not plan.ready:
             problems = sorted({problem.code for problem in plan.problems})
-            raise WriteRefused(
+            raise AmbiguousMigration(
                 f"ambiguous migration is not applicable; resolve problems: {problems}"
             )
         if not plan.changes:

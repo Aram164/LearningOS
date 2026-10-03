@@ -29,8 +29,24 @@ class DeliveryValidationError(AIActionError):
     pass
 
 
+class DeliveryBindingError(DeliveryValidationError):
+    """Approved delivery bytes cannot be bound to the envelope's approval."""
+
+
+class DeliveryScopeError(DeliveryValidationError):
+    """A delivery target falls outside its capability's write scope."""
+
+
+class DeliveryIdempotencyConflict(DeliveryValidationError):
+    """The delivery's idempotency key names a different approved intent."""
+
+
 class StaleDeliveryError(AIActionError):
     pass
+
+
+class DeliveryRevisionConflict(StaleDeliveryError):
+    """A delivery apply raced an artifact revision, not the snapshot."""
 
 
 class TargetNotFoundError(AIActionError):

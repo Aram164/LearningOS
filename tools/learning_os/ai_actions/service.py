@@ -58,6 +58,10 @@ from .binding import read_bound_delivery, validated_sha256
 from .errors import (
     ActionPolicyError,
     ContinuationRefusedError,
+    DeliveryBindingError,
+    DeliveryIdempotencyConflict,
+    DeliveryRevisionConflict,
+    DeliveryScopeError,
     DeliveryValidationError,
     StaleDeliveryError,
     TargetNotFoundError,
@@ -209,13 +213,13 @@ class AIActionService:
         rel = path.relative_to(self.root).as_posix()
         allowed = (scopes if scopes is not None else self.capability_writes()).get(capability, ())
         if not allowed:
-            raise DeliveryValidationError(
+            raise DeliveryScopeError(
                 f"capability {capability} declares no write scope; refusing to write {rel}"
             )
         try:
             require_write_scope(capability, rel, allowed)
         except WriteScopeError as exc:
-            raise DeliveryValidationError(
+            raise DeliveryScopeError(
                 f"{exc} (declared scope: {', '.join(allowed)})"
             ) from exc
 
@@ -754,13 +758,13 @@ class AIActionService:
             artifact_sha256=artifact_sha256,
         )
         if delivery.get("id") != delivery_id:
-            raise DeliveryValidationError(
+            raise DeliveryBindingError(
                 "approved delivery id does not match its imported directory"
             )
         try:
             replay = replay_for_request(self.root, authority)
         except TransactionIdempotencyConflict as exc:
-            raise DeliveryValidationError(f"delivery idempotency conflict: {exc}") from exc
+            raise DeliveryIdempotencyConflict(f"delivery idempotency conflict: {exc}") from exc
         except TransactionFailure as exc:
             raise DeliveryValidationError(f"delivery replay failed: {exc}") from exc
         if replay is not None:
@@ -963,7 +967,7 @@ class AIActionService:
             artifact_sha256=artifact_sha256,
         )
         if final_delivery != delivery or final_artifacts != bound_artifacts:
-            raise DeliveryValidationError(
+            raise DeliveryBindingError(
                 "approved delivery bytes changed while application was being prepared"
             )
         def request_write(transaction_id: str) -> dict[Path, str]:
@@ -1045,7 +1049,7 @@ class AIActionService:
                 },
             )
         except TransactionConflict as exc:
-            raise StaleDeliveryError(str(exc)) from exc
+            raise DeliveryRevisionConflict(str(exc)) from exc
         except TransactionSnapshotConflict as exc:
             raise StaleDeliveryError(str(exc)) from exc
         except TransactionIdempotencyConflict as exc:

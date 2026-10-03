@@ -14,7 +14,7 @@ from typing import Any
 
 import yaml
 
-from .errors import DeliveryValidationError
+from .errors import DeliveryScopeError, DeliveryValidationError
 
 #: Request ids must match the manifest contract's `ai_actions/requests[]/id`
 #: pattern (system/contracts/manifest-v*.schema.json). A persisted bundle with
@@ -83,7 +83,7 @@ def _inside(root: Path, rel: str) -> Path:
     try:
         target.relative_to(root.resolve())
     except ValueError as exc:
-        raise DeliveryValidationError(f"path escapes repository boundary: {rel}") from exc
+        raise DeliveryScopeError(f"path escapes repository boundary: {rel}") from exc
     return target
 
 

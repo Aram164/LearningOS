@@ -64,6 +64,7 @@ from .support import (
     _operator_lock,
     _print_rows,
     _read_content_bound_file,
+    _record_gateway_refusal,
     _render_frontmatter,
     _replace_registry_list_record,
     _root,
@@ -1847,6 +1848,7 @@ def _cmd_master_promotion_import(args) -> int:
                 "expected": plan.package_sha256,
                 "supplied": supplied_hash,
             }, ensure_ascii=False), file=sys.stderr)
+            _record_gateway_refusal("REVISION_CONFLICT", True)
             return 3
         if not args.check and supplied_hash is None:
             print(
@@ -1895,6 +1897,7 @@ def _cmd_master_promotion_import(args) -> int:
                 "expected": plan.expected_revisions,
                 "supplied": expected_revisions,
             }, ensure_ascii=False), file=sys.stderr)
+            _record_gateway_refusal("REVISION_CONFLICT", True)
             return 3
         code, errors, confirmation = _write_transaction(
             root,

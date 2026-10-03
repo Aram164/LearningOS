@@ -62,6 +62,25 @@ class PostCommitFailure(TransactionFailure):
         self.snapshot_after = snapshot_after
 
 
+class TransactionValidationFailure(TransactionFailure):
+    """The staged write failed canonical validation; nothing was committed.
+
+    Carries the refusal type so the gateway reports ``VALIDATION_FAILED``
+    without reading the validator prose, which may quote canonical content
+    or name snapshots, approvals, and other classifier lookalikes.
+    """
+
+
+class TransactionRollbackIncomplete(TransactionFailure):
+    """A non-projection failure whose rollback did not complete.
+
+    The repository may contain part of the attempted write, so the outcome
+    is unknown and the gateway reports retryable ``INTERNAL_FAILURE``.
+    Projection-stage failures use ``ProjectionFailure`` with
+    ``rollback_complete=False`` instead; this names every other stage.
+    """
+
+
 class TransactionIdempotencyConflict(TransactionFailure):
     """An idempotency key was reused for a different approved intent."""
 

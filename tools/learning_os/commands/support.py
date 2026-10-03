@@ -25,6 +25,7 @@ from learning_os.contracts.gateway import (
     current_gateway_request,
     gateway_snapshot_is_verified,
 )
+from learning_os.contracts.write_scopes import WriteScopeError
 from learning_os.derived.model import DerivedError
 from learning_os.fingerprint import (
     canonical_fingerprint,
@@ -41,14 +42,21 @@ from learning_os.genout import (
 from learning_os.genout.common import _git_state
 from learning_os.loader import load_repo
 from learning_os.manifest_identity import IDENTITY_FILENAME, bytes_sha256, check_identity
+from learning_os.pathing import PathBoundaryError
 from learning_os.rules import validate
 from learning_os.transactions import (
     PostCommitFailure,
     ProjectionFailure,
+    ReplayEvidenceError,
     TransactionConflict,
     TransactionFailure,
+    TransactionIdempotencyConflict,
+    TransactionRecoveryConflict,
+    TransactionRollbackIncomplete,
+    TransactionScopeError,
     TransactionService,
     TransactionSnapshotConflict,
+    TransactionValidationFailure,
     parse_expected_revisions,
     reconcile_inflight_transactions,
 )
@@ -410,6 +418,13 @@ def _operator_lock(root: Path, *, shared: bool = False):
 class WriteRefused(Exception):
     """A canonical write could not be performed; nothing was changed."""
 
+    #: The V2 error code this refusal carries, and whether the caller may
+    #: retry the same approved intent. The gateway classifies by this type,
+    #: never by message prose: refusals echo user input, and a mistyped id
+    #: may name snapshots, approvals, or any other lookalike.
+    gateway_code = "INVALID_REQUEST"
+    gateway_retryable = False
+
 
 class StaleSnapshot(WriteRefused):
     """A supplied concurrency token no longer matches live state; nothing was changed.
@@ -420,6 +435,96 @@ class StaleSnapshot(WriteRefused):
     message prose: refusals echo user input, and the word "snapshot" in a
     mistyped id or a missing-flag hint is not a conflict.
     """
+
+    gateway_code = "STALE_SNAPSHOT"
+    gateway_retryable = True
+
+
+class AmbiguousMigration(WriteRefused):
+    """A migration plan is not applicable; nothing was changed.
+
+    Raised only where a genuine migration plan refuses to apply — never
+    for an ambiguous lookup, which is an invalid request, not a migration.
+    """
+
+    gateway_code = "AMBIGUOUS_MIGRATION"
+    gateway_retryable = False
+
+
+class ValidationFailed(WriteRefused):
+    """A pre-transaction validation gate refused the write; nothing was changed."""
+
+    gateway_code = "VALIDATION_FAILED"
+    gateway_retryable = False
+
+
+class Unconfirmed(WriteRefused):
+    """The envelope's approval does not cover this write; nothing was changed."""
+
+    gateway_code = "UNCONFIRMED"
+    gateway_retryable = False
+
+
+#: The typed refusal a failed handler step recorded for the gateway.
+#:
+#: Handlers answer with an int exit code plus printed prose, so a typed
+#: refusal caught inside a handler (a revision conflict in
+#: ``_write_transaction``, a stale delivery in the AI-action handler)
+#: would lose its type at that boundary. The catching step records the
+#: ``(code, retryable)`` pair here instead, and the gateway dispatch
+#: takes it after a non-zero return. Never reconstructed from prose or
+#: from the exit code: exit 3 alone is ambiguous (a snapshot guard, a
+#: revision conflict, and a stale reviewed digest all use it).
+_GATEWAY_REFUSAL: contextvars.ContextVar[tuple[str, bool] | None] = (
+    contextvars.ContextVar("learningos_gateway_refusal", default=None)
+)
+
+
+def _record_gateway_refusal(code: str, retryable: bool) -> None:
+    """Carry one typed refusal code across the handler's int-exit boundary."""
+    _GATEWAY_REFUSAL.set((code, retryable))
+
+
+def _take_gateway_refusal() -> tuple[str, bool] | None:
+    """Read and clear the recorded refusal, if any."""
+    refusal = _GATEWAY_REFUSAL.get()
+    _GATEWAY_REFUSAL.set(None)
+    return refusal
+
+
+def _refusal_from_failure(failure: BaseException) -> tuple[str, bool] | None:
+    """Map a refusal to its V2 ``(code, retryable)`` by type, never by prose.
+
+    Returns ``None`` for an untyped refusal, which the gateway reports as
+    ``INVALID_REQUEST``. ``TransactionConflict`` and
+    ``TransactionSnapshotConflict`` normally never reach this helper —
+    ``_write_transaction`` records the first and re-raises the second —
+    but mapping them here keeps the table total over every failure the
+    gateway boundary can observe.
+    """
+    if isinstance(failure, WriteRefused):
+        return (failure.gateway_code, failure.gateway_retryable)
+    if isinstance(failure, TransactionConflict):
+        return ("REVISION_CONFLICT", True)
+    if isinstance(failure, TransactionSnapshotConflict):
+        return ("STALE_SNAPSHOT", True)
+    if isinstance(failure, TransactionIdempotencyConflict):
+        return ("IDEMPOTENCY_CONFLICT", False)
+    if isinstance(failure, (ReplayEvidenceError, TransactionRecoveryConflict)):
+        return ("INTERNAL_FAILURE", False)
+    if isinstance(failure, TransactionScopeError):
+        return ("OUT_OF_SCOPE", False)
+    if isinstance(failure, TransactionValidationFailure):
+        return ("VALIDATION_FAILED", False)
+    if isinstance(failure, TransactionRollbackIncomplete):
+        return ("INTERNAL_FAILURE", True)
+    if isinstance(failure, TransactionFailure):
+        if failure.pre_existing_defect:
+            return ("VALIDATION_FAILED", False)
+        return None
+    if isinstance(failure, (WriteScopeError, PathBoundaryError)):
+        return ("OUT_OF_SCOPE", False)
+    return None
 
 
 
@@ -452,6 +557,7 @@ def _expected_ok(root: Path, expected: str | None) -> bool:
                 "los: handler snapshot does not match the approved gateway intent",
                 file=sys.stderr,
             )
+            _record_gateway_refusal("STALE_SNAPSHOT", True)
             return False
         # cmd_capability marks this only while it holds the same operator lock
         # through the complete handler dispatch. Direct service tests and any
@@ -489,6 +595,7 @@ def _expected_ok(root: Path, expected: str | None) -> bool:
     print("los: projection conflict — authored files changed since the app loaded; "
           "reload before writing", file=sys.stderr)
     print(json.dumps({"expected": expected, "actual": actual}), file=sys.stderr)
+    _record_gateway_refusal("STALE_SNAPSHOT", True)
     return False
 
 
@@ -1120,6 +1227,7 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
             "conflicts": {artifact: {"expected": expected, "actual": actual}
                           for artifact, (expected, actual) in exc.conflicts.items()}
         }, ensure_ascii=False), file=sys.stderr)
+        _record_gateway_refusal("REVISION_CONFLICT", True)
         return 3, [], {}
     except TransactionSnapshotConflict:
         # The V2 gateway owns the typed stale-snapshot response. Let the exact
@@ -1134,6 +1242,11 @@ def _write_transaction(root: Path, writes: dict[Path, str | bytes],
     except TransactionFailure as exc:
         # Canonical write refusal is a handled operator error, not an internal
         # process failure. Preserve the gateway's established exit-code 2.
+        # A typed failure also records its V2 code for the gateway dispatch;
+        # an untyped one stays prose and classifies as INVALID_REQUEST.
+        refusal = _refusal_from_failure(exc)
+        if refusal is not None:
+            _record_gateway_refusal(*refusal)
         return 2, [str(exc)], {}
     return 0, [], _confirmation_from(result)
 

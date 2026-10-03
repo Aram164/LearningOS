@@ -6,14 +6,24 @@ import json
 import sys
 from pathlib import Path
 
-from learning_os.ai_actions import AIActionError, AIActionService, StaleDeliveryError
+from learning_os.ai_actions import (
+    AIActionError,
+    AIActionService,
+    DeliveryBindingError,
+    DeliveryIdempotencyConflict,
+    DeliveryRevisionConflict,
+    DeliveryScopeError,
+    StaleDeliveryError,
+)
 from learning_os.contracts.gateway import current_gateway_request
 
 from .support import (
+    Unconfirmed,
     WriteRefused,
     _expected_revisions_from_args,
     _operator_lock,
     _publish,
+    _record_gateway_refusal,
     _record_touched,
     _root,
 )
@@ -74,6 +84,22 @@ def cmd_ai_action_validate_delivery(args) -> int:
     return 0
 
 
+def _ai_refusal(exc: AIActionError) -> tuple[str, bool] | None:
+    """Map a delivery failure to its V2 ``(code, retryable)`` by type.
+
+    Stale deliveries never reach this helper — the handler records them
+    beside its exit-3 return. ``None`` is an untyped validation failure,
+    which the gateway reports as ``INVALID_REQUEST``.
+    """
+    if isinstance(exc, DeliveryScopeError):
+        return ("OUT_OF_SCOPE", False)
+    if isinstance(exc, DeliveryIdempotencyConflict):
+        return ("IDEMPOTENCY_CONFLICT", False)
+    if isinstance(exc, DeliveryBindingError):
+        return ("UNCONFIRMED", False)
+    return None
+
+
 def cmd_ai_action_apply_delivery(args) -> int:
     root = _root(args)
     authority = current_gateway_request()
@@ -83,7 +109,7 @@ def cmd_ai_action_apply_delivery(args) -> int:
         )
     if authority.capability != "ai-action.delivery.apply" \
             or authority.approval_kind != "approved-delivery":
-        raise WriteRefused(
+        raise Unconfirmed(
             "ai-action.delivery.apply requires approved-delivery approval"
         )
     try:
@@ -99,9 +125,16 @@ def cmd_ai_action_apply_delivery(args) -> int:
             if touched:
                 _record_touched(root, touched)
     except StaleDeliveryError as exc:
+        if isinstance(exc, DeliveryRevisionConflict):
+            _record_gateway_refusal("REVISION_CONFLICT", True)
+        else:
+            _record_gateway_refusal("STALE_SNAPSHOT", True)
         print(str(exc), file=sys.stderr)
         return 3
     except AIActionError as exc:
+        refusal = _ai_refusal(exc)
+        if refusal is not None:
+            _record_gateway_refusal(*refusal)
         print(str(exc), file=sys.stderr)
         return 2
     print(json.dumps({
