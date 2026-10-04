@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "Learning OS v3 · learning_os v3.2.0 · <ROOT>\n  notes 2 · concepts 2 · relations 1 · sources 1\n  programs 1 · modules 1 (1 enrolled) · projects 1 · units 1 · study maps 1 · workspaces 2 active (0 standing), 0 archived\n  inbox 2 top-level · 3 files · garden 1 · reviewed 0/2 · evidence 0/2\n  exam: 2026-10-09 — Demo Module (Termin 2)\n  validation: OK · 8 warning(s), visible and nonblocking (`make warnings` for the delta)\n  human home page: generated/reading-room.md (make views)\n",
+  "stdout_json": null
+}

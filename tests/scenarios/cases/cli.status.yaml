@@ -1,0 +1,21 @@
+operation: cli.status
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: screen
+    kind: success
+    transport: cli
+    argv: [status]
+    expect: {site: null}
+  - id: screen-json
+    kind: success
+    transport: cli
+    argv: [status, --json]
+    expect: {site: null}
+  - id: no-validate
+    kind: success
+    transport: cli
+    argv: [status, --no-validate]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/query.py:74", reason: "parse failures need unreadable canonical files; the fixture validates and no step can damage it"}

@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "W ROUTE-ID-MISSING: source 'source-demo-book' route to 'unit-demo-l01' has no persisted route id; v13 projects 'route-b2f1f80014860a929a3af0bc' until migration [curriculum/modules/module-demo/source-map.yaml]\nW SELECTION-ROUTE-ID-MISSING: unit 'unit-demo-l01' has a readable pre-v13 source selection without route_id; exact route 'route-b2f1f80014860a929a3af0bc' is available [curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml]\nW RUNTIME-REVIEW-MISSING: stage stage-demo carries runtime semantics but no runtime_review attestation [curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml]\nW URI-PROJECT: 'project://demo' does not resolve on disk [projects/registry/project-demo.yaml]\nW INBOX-STALE: inbox item 'note-drop.md' is 48 days old (unrouted capture — the inbox should trend toward empty)\nW WS-NEGLECT: workspace 'workspace-demo' untouched for 106 days (per Git)\nW WS-NEGLECT: workspace 'workspace-second' untouched for 106 days (per Git)\nW LOCATOR-VAGUE: source 'source-demo-book' route to 'unit-demo-l01' is a book whose locator names no page range ('lecture-01.pdf') — give the chapter AND its PDF pages [curriculum/modules/module-demo/source-map.yaml]\nW ROUTE-ANGLE-DETAIL-MISSING: source 'source-demo-book' route to 'unit-demo-l01' has a one-line angle but no `angle_detail` for the hover [curriculum/modules/module-demo/source-map.yaml]\nW STAGE-NODE-UNLINKED: study map 'study-map-demo-l01' stage 'stage-demo' carries no knowledge_node_id and its id matches no live node — name the node the stage teaches [curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml]\nW MATERIALS-MANIFEST: no records/materials-manifest.yaml — the external materials tree has no durable inventory, so data loss there is undetectable; build it with `.venv/bin/python tools/materials_manifest.py --build` [records/]\n\n0 error(s), 11 warning(s) — OK\n",
+  "stdout_json": null
+}
