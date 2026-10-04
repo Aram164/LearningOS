@@ -39,6 +39,12 @@ cases:
     request: {unit_id: unit-demo-l01, stage_id: stage-demo-pending, status: active, progress_next: "then the appendix"}
     artifact_ids: []
     expect: {site: null}
+  - id: blank-progress-summary
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, stage_id: stage-demo-pending, status: active, progress_summary: " ", progress_next: "then the appendix"}
+    artifact_ids: []
+    expect: {site: null}
   - id: blank-progress-next
     kind: refusal
     transport: gateway

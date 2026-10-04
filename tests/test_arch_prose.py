@@ -248,6 +248,16 @@ def _is_compiled_arg(node: ast.AST, exc_names: set[str]) -> bool:
     return _is_suspect(node, exc_names) or _is_concat_suspect(node, exc_names)
 
 
+def _searched_text(node: ast.Call) -> ast.AST | None:
+    """The text a compiled-pattern search reads: first arg, or `string=`."""
+    if node.args:
+        return node.args[0]
+    for keyword in node.keywords:
+        if keyword.arg == "string":
+            return keyword.value
+    return None
+
+
 class _Prose2Visitor(ast.NodeVisitor):
     """SPEC §3.7 item 3: rules (a)-(c) over (i) texts, plus (ii) compiled searches."""
 
@@ -308,12 +318,15 @@ class _Prose2Visitor(ast.NodeVisitor):
             elif (func.attr in _COMPILED_METHODS
                     and isinstance(func.value, ast.Name)
                     and func.value.id in self._compiled
-                    and node.args
-                    and _is_compiled_arg(node.args[0], self._exc_names)):
+                    and _searched_text(node) is not None
+                    and _is_compiled_arg(_searched_text(node),
+                                         self._exc_names)):
                 self._record("regex", self._compiled[func.value.id], node)
-            elif (func.attr == "search" and node.args
+            elif (func.attr == "search"
                     and _compile_literal(func.value) is not None
-                    and _is_compiled_arg(node.args[0], self._exc_names)):
+                    and _searched_text(node) is not None
+                    and _is_compiled_arg(_searched_text(node),
+                                         self._exc_names)):
                 literal = _compile_literal(func.value)
                 assert literal is not None
                 self._record("regex", literal, node)
@@ -429,7 +442,7 @@ def test_ts_sources_have_no_prose_matches():
     assert not failures, "\n".join(failures)
 
 
-_POSITIVE2 = ("pos2_binop.py", "pos2_compiled.py")
+_POSITIVE2 = ("pos2_binop.py", "pos2_compiled.py", "pos2_compiled_kw.py")
 _NEGATIVE2 = ("neg2_binop_format.py",)
 
 
