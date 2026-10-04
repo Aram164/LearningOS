@@ -1,0 +1,71 @@
+operation: cli.session-end
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: review-empty
+    kind: success
+    transport: cli
+    argv: [session-end]
+    expect: {site: null}
+  - id: commit-without-touch
+    kind: refusal
+    transport: cli
+    argv: [session-end, --commit-message, "nothing staged"]
+    expect: {site: null}
+  - id: close-with-commit
+    kind: refusal
+    transport: cli
+    argv: [session-end, --close, --commit-message, "contradiction"]
+    expect: {site: null}
+  - id: bad-channel
+    kind: refusal
+    transport: cli
+    argv: [session-end, --channel, nope]
+    expect: {site: null}
+  - id: review-write-commit
+    kind: sequence
+    steps:
+      - transport: cli
+        argv: [session-end]
+      - transport: gateway
+        operation: capture.create
+        request: {text: "A session's worth of thought."}
+      - transport: cli
+        argv: [session-end, --commit-message, "scenario commit"]
+  - id: direct-commit
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: capture.create
+        request: {text: "A session's worth of thought."}
+      - transport: cli
+        argv: [session-end, --commit-message, "scenario commit"]
+  - id: failed-commit
+    kind: sequence
+    git: {failing_pre_commit: true}
+    steps:
+      - transport: gateway
+        operation: capture.create
+        request: {text: "A session's worth of thought."}
+      - transport: cli
+        argv: [session-end, --commit-message, "scenario commit"]
+  - id: failed-push
+    kind: sequence
+    git: {origin: "/nonexistent"}
+    steps:
+      - transport: gateway
+        operation: capture.create
+        request: {text: "A session's worth of thought."}
+      - transport: cli
+        argv: [session-end, --commit-message, "scenario commit", --push]
+  - id: close-window
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: capture.create
+        request: {text: "A session's worth of thought."}
+      - transport: cli
+        argv: [session-end, --close]
+untriggered:
+  - {where: "tools/learning_os/commands/review.py:283", reason: "unreadable session ledger: needs a damaged ledger file no step can author"}
+  - {where: "tools/learning_os/commands/review.py:369", reason: "ownership conflict: needs an off-ledger canonical change between the write and the commit"}

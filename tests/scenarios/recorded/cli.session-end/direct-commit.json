@@ -1,0 +1,244 @@
+{
+  "steps": [
+    {
+      "canonical_changed": {
+        "work/inbox/20261001-090000-a-session-s-worth-of-thought.md": "ba72c944e63e4970319f5be34f812d815816c2f8a86539c959f69612e9c601ee"
+      },
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY2": {
+              "capability": "capture.create",
+              "channel": "operator",
+              "intent_sha256": "sha256:6acae8628ddfa970c86a955ad8c297198cf67081a0bdd95759fbf7d4aa4fe7bf",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "capture-request:KEY2": 1
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "SNAP2",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": null
+      },
+      "operation": "capture.create",
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "capture-request:KEY2": {
+              "after": 1,
+              "before": 0
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "capture.create",
+                "declared_writes": [
+                  "work/inbox/**"
+                ]
+              }
+            ]
+          },
+          "capability": "capture.create",
+          "committed_at": "2026-10-01T09:00:00+02:00",
+          "expected_revisions": {
+            "capture-request:KEY2": 0
+          },
+          "id": "TX1",
+          "metadata": {
+            "data_roots_sha256": "sha256:707d971b14e18d46f3e2959e4a3a3e0e2a769e532eaedcf59694312af08ff8bc",
+            "fingerprint_definition": 2
+          },
+          "request": {
+            "approval": {
+              "kind": "operator-approval",
+              "subject_sha256": "sha256:6acae8628ddfa970c86a955ad8c297198cf67081a0bdd95759fbf7d4aa4fe7bf"
+            },
+            "channel": "operator",
+            "idempotency_key": "KEY2",
+            "intent_sha256": "sha256:6acae8628ddfa970c86a955ad8c297198cf67081a0bdd95759fbf7d4aa4fe7bf",
+            "request_id": "KEY1"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": true,
+              "path": "work/inbox/20261001-090000-a-session-s-worth-of-thought.md",
+              "sha256_after": "ba72c944e63e4970319f5be34f812d815816c2f8a86539c959f69612e9c601ee",
+              "sha256_before": null
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "capture-request:KEY2": 1,
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": {
+        "after": {
+          "paths": {
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "53892d4869caa3303c48020c9b077a71a10bfb4bad89bab9a1bccdc6dba524dd",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1298f467ca8bcc8b68a81e856c491e975c16ed05cf2d6e0a2b47eb80c2dc1be5",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "90425f78f4d5d7fdbc3c793aa30f215f84ac957474054ef639eb5f54750df41c",
+              "state": "file"
+            },
+            "work/inbox/20261001-090000-a-session-s-worth-of-thought.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "ba72c944e63e4970319f5be34f812d815816c2f8a86539c959f69612e9c601ee",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        },
+        "before": null
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"capture.create\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"captured\": \"work/inbox/20261001-090000-a-session-s-worth-of-thought.md\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"capture-request:KEY2\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "capture.create",
+        "error": null,
+        "idempotency_key": "KEY2",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": false,
+        "request_id": "KEY1",
+        "result": {
+          "artifact_revisions": {
+            "capture-request:KEY2": 1
+          },
+          "captured": "work/inbox/20261001-090000-a-session-s-worth-of-thought.md",
+          "ok": true,
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": false,
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
+      },
+      "step": 0,
+      "transport": "gateway"
+    },
+    {
+      "argv": [
+        "session-end",
+        "--commit-message",
+        "scenario commit"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": {
+        "after": null,
+        "before": {
+          "paths": {
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "53892d4869caa3303c48020c9b077a71a10bfb4bad89bab9a1bccdc6dba524dd",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1298f467ca8bcc8b68a81e856c491e975c16ed05cf2d6e0a2b47eb80c2dc1be5",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "90425f78f4d5d7fdbc3c793aa30f215f84ac957474054ef639eb5f54750df41c",
+              "state": "file"
+            },
+            "work/inbox/20261001-090000-a-session-s-worth-of-thought.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "ba72c944e63e4970319f5be34f812d815816c2f8a86539c959f69612e9c601ee",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        }
+      },
+      "stderr": "",
+      "stdout": "{\n  \"ok\": true,\n  \"touched\": [\n    \"operations/transactions/idempotency.yaml\",\n    \"operations/transactions/revisions.yaml\",\n    \"operations/transactions/TX1.yaml\",\n    \"work/inbox/20261001-090000-a-session-s-worth-of-thought.md\"\n  ],\n  \"owned_changes\": [\n    \" M operations/transactions/revisions.yaml\",\n    \"?? operations/transactions/idempotency.yaml\",\n    \"?? operations/transactions/TX1.yaml\",\n    \"?? work/inbox/20261001-090000-a-session-s-worth-of-thought.md\"\n  ],\n  \"unrelated_changes\": [\n    \"?? operations/diagnostics/traces.jsonl\"\n  ],\n  \"committed\": true,\n  \"pushed\": false,\n  \"validation\": \"0 error(s), 7 warning(s) — OK (Xs); warning list: generated/reports/validation-report.md\",\n  \"ownership_conflicts\": [],\n  \"session_id\": \"channel:operator\",\n  \"client\": null,\n  \"stale_paths\": [],\n  \"stale_hours\": 24,\n  \"other_sessions\": {},\n  \"session_closed\": true\n}\n",
+      "stdout_json": {
+        "client": null,
+        "committed": true,
+        "ok": true,
+        "other_sessions": {},
+        "owned_changes": [
+          " M operations/transactions/revisions.yaml",
+          "?? operations/transactions/idempotency.yaml",
+          "?? operations/transactions/TX1.yaml",
+          "?? work/inbox/20261001-090000-a-session-s-worth-of-thought.md"
+        ],
+        "ownership_conflicts": [],
+        "pushed": false,
+        "session_closed": true,
+        "session_id": "channel:operator",
+        "stale_hours": 24,
+        "stale_paths": [],
+        "touched": [
+          "operations/transactions/idempotency.yaml",
+          "operations/transactions/revisions.yaml",
+          "operations/transactions/TX1.yaml",
+          "work/inbox/20261001-090000-a-session-s-worth-of-thought.md"
+        ],
+        "unrelated_changes": [
+          "?? operations/diagnostics/traces.jsonl"
+        ],
+        "validation": "0 error(s), 7 warning(s) — OK (Xs); warning list: generated/reports/validation-report.md"
+      },
+      "step": 1,
+      "transport": "cli"
+    }
+  ]
+}
