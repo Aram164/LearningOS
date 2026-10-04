@@ -140,3 +140,19 @@ ignore_imports = [
   "learning_os.rules.generated -> learning_os.genout",
   "learning_os.semantics.scan -> learning_os.material_synthesis",
 ]
+
+[[tool.importlinter.contracts]]
+name = "A1 transaction service protected (PLAN A1, D14)"
+type = "protected"
+protected_modules = ["learning_os.transactions"]
+allowed_importers = ["learning_os.ops"]
+unmatched_ignore_imports_alerting = "error"
+ignore_imports = [
+  "learning_os.ai_actions.service -> learning_os.transactions",
+  "learning_os.commands.capability -> learning_os.transactions",
+  "learning_os.commands.lineage_restamp -> learning_os.transactions",
+  "learning_os.commands.material -> learning_os.transactions",
+  "learning_os.commands.support -> learning_os.transactions",
+  "learning_os.masters_planning -> learning_os.transactions",
+  "learning_os.material_synthesis -> learning_os.transactions",
+]

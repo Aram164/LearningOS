@@ -50,6 +50,8 @@ FIX = {
     "A12": "Behaviour changed; restore it or record a reviewed mismatch.",
     "A13": "Complete the request schema (PLAN D2).",
     "A14": "Import the code from learning_os.domain.codes.",
+    "A15": "see SPEC §3 (no fix sentence for this check)",
+    "A16": "see SPEC §3 (no fix sentence for this check)",
     "A17": "OpContext members are frozen; a new member needs an approval line (PLAN A17).",
     "A18": "Express the step as a declared gate or a pure renderer; callbacks must not grow or touch the world (PLAN A18).",
     "A19": "Write durable operational state only through its declared owner, and declare an owner for new state (PLAN A19).",
@@ -86,6 +88,88 @@ def _ignore_lists(pyproject_text: str) -> dict[str, list[str]]:
         name = contract.get("name", f"contract[{index}]")
         lists[name] = list(contract.get("ignore_imports", []) or [])
     return lists
+
+
+#: SPEC §1.2 contracts pinned as a literal table (SPEC §2.3 rule 3).
+#: Every field other than ``ignore_imports`` must equal these values.
+EXPECTED_CONTRACTS: dict[str, dict] = {
+    "A1 layers (PLAN D17)": {
+        "type": "layers",
+        "containers": ["learning_os"],
+        "exhaustive": True,
+        "unmatched_ignore_imports_alerting": "error",
+        "layers": [
+            "adapters : commands",
+            "ops : ai_actions : masters_planning : material_synthesis",
+            "rules : genout : semantics : search : health : abilities : learning_runtime : routes : evidence",
+            "store : loading : loader : contracts : derived : diagnostics : transactions : fingerprint : githistory : pathing : revisions : validation_cache : warning_baseline : backup_manifest : legacy_archive : materials_resolution : material_slices : material_analysis : garden : manifest_identity : observations",
+            "domain : digests : material_inventory : material_refs : route_identity : unit_notes : render : errors",
+        ],
+    },
+    "A1 transaction writer access (PLAN A2, D4)": {
+        "type": "forbidden",
+        "source_modules": [
+            "learning_os.rules",
+            "learning_os.genout",
+            "learning_os.semantics",
+            "learning_os.search",
+            "learning_os.health",
+            "learning_os.abilities",
+            "learning_os.learning_runtime",
+            "learning_os.routes",
+            "learning_os.domain",
+        ],
+        "forbidden_modules": ["learning_os.transactions"],
+    },
+    "A1 transaction service protected (PLAN A1, D14)": {
+        "type": "protected",
+        "protected_modules": ["learning_os.transactions"],
+        "allowed_importers": ["learning_os.ops"],
+        "unmatched_ignore_imports_alerting": "error",
+    },
+}
+
+
+def _parse_contracts(pyproject_text: str) -> dict[str, dict]:
+    """Contract name -> full contract mapping from TOML text."""
+    data = tomllib.loads(pyproject_text)
+    contracts = (
+        data.get("tool", {}).get("importlinter", {}).get("contracts", []) or [])
+    parsed: dict[str, dict] = {}
+    for index, contract in enumerate(contracts):
+        name = contract.get("name", f"contract[{index}]")
+        parsed[name] = dict(contract)
+    return parsed
+
+
+def _contract_set_failures(
+        base_text: str | None, current_text: str) -> list[str]:
+    """SPEC §2.3 rule 3 (contract set and structure) as a pure check.
+
+    Takes TOML text so fixture tests need no git. One message per
+    violation: a deleted contract, a renamed or otherwise unknown
+    contract, a missing §1.2 contract, or a field that differs from
+    the §1.2 literal (``ignore_imports`` excluded).
+    """
+    base = _parse_contracts(base_text) if base_text is not None else {}
+    current = _parse_contracts(current_text)
+    expected_names = set(EXPECTED_CONTRACTS)
+    failures: list[str] = []
+    for name in sorted(set(base) - set(current)):
+        failures.append(f"contract {name!r} present at the base is missing")
+    for name in sorted(set(current) - expected_names):
+        failures.append(f"contract {name!r} is not a SPEC §1.2 contract")
+    for name in sorted(expected_names - set(current)):
+        failures.append(f"SPEC §1.2 contract {name!r} is missing")
+    for name in sorted(set(current) & expected_names):
+        actual = {k: v for k, v in current[name].items()
+                  if k not in ("name", "ignore_imports")}
+        expected = EXPECTED_CONTRACTS[name]
+        if actual != expected:
+            failures.append(
+                f"contract {name!r} differs from SPEC §1.2: "
+                f"expected {expected!r}, found {actual!r}")
+    return failures
 
 
 @pytest.fixture(scope="module")
@@ -357,6 +441,131 @@ def test_established_contract_addition_needs_approval():
         "learning_os.c -> learning_os.d"]
     assert _ignore_imports_failures(
         base_lists, current_lists, {"learning_os.c -> learning_os.d"}) == []
+
+
+def test_contract_set_and_structure_match_spec(base_ref):
+    current_text = PYPROJECT_PATH.read_text(encoding="utf-8")
+    base_text = _git_show(base_ref, "pyproject.toml")
+    failures = []
+    for detail in _contract_set_failures(base_text, current_text):
+        lineno = _find_line(current_text, "tool.importlinter")
+        failures.append(f"A1 {detail} — pyproject.toml:{lineno} — {FIX['A1']}")
+    assert not failures, "\n".join(failures)
+
+
+# ---- rule 3 contract set against fixture TOML (no git) -----------------------
+
+_TOML_THREE_CONTRACTS = """
+[tool.importlinter]
+root_package = "learning_os"
+
+[[tool.importlinter.contracts]]
+name = "A1 layers (PLAN D17)"
+type = "layers"
+containers = ["learning_os"]
+exhaustive = true
+unmatched_ignore_imports_alerting = "error"
+layers = [
+  "adapters : commands",
+  "ops : ai_actions : masters_planning : material_synthesis",
+  "rules : genout : semantics : search : health : abilities : learning_runtime : routes : evidence",
+  "store : loading : loader : contracts : derived : diagnostics : transactions : fingerprint : githistory : pathing : revisions : validation_cache : warning_baseline : backup_manifest : legacy_archive : materials_resolution : material_slices : material_analysis : garden : manifest_identity : observations",
+  "domain : digests : material_inventory : material_refs : route_identity : unit_notes : render : errors",
+]
+ignore_imports = []
+
+[[tool.importlinter.contracts]]
+name = "A1 transaction writer access (PLAN A2, D4)"
+type = "forbidden"
+source_modules = ["learning_os.rules", "learning_os.genout", "learning_os.semantics", "learning_os.search", "learning_os.health", "learning_os.abilities", "learning_os.learning_runtime", "learning_os.routes", "learning_os.domain"]
+forbidden_modules = ["learning_os.transactions"]
+ignore_imports = []
+
+[[tool.importlinter.contracts]]
+name = "A1 transaction service protected (PLAN A1, D14)"
+type = "protected"
+protected_modules = ["learning_os.transactions"]
+allowed_importers = ["learning_os.ops"]
+unmatched_ignore_imports_alerting = "error"
+ignore_imports = []
+"""
+
+_TOML_TWO_CONTRACTS = """
+[tool.importlinter]
+root_package = "learning_os"
+
+[[tool.importlinter.contracts]]
+name = "A1 layers (PLAN D17)"
+type = "layers"
+containers = ["learning_os"]
+exhaustive = true
+unmatched_ignore_imports_alerting = "error"
+layers = [
+  "adapters : commands",
+  "ops : ai_actions : masters_planning : material_synthesis",
+  "rules : genout : semantics : search : health : abilities : learning_runtime : routes : evidence",
+  "store : loading : loader : contracts : derived : diagnostics : transactions : fingerprint : githistory : pathing : revisions : validation_cache : warning_baseline : backup_manifest : legacy_archive : materials_resolution : material_slices : material_analysis : garden : manifest_identity : observations",
+  "domain : digests : material_inventory : material_refs : route_identity : unit_notes : render : errors",
+]
+ignore_imports = []
+
+[[tool.importlinter.contracts]]
+name = "A1 transaction writer access (PLAN A2, D4)"
+type = "forbidden"
+source_modules = ["learning_os.rules", "learning_os.genout", "learning_os.semantics", "learning_os.search", "learning_os.health", "learning_os.abilities", "learning_os.learning_runtime", "learning_os.routes", "learning_os.domain"]
+forbidden_modules = ["learning_os.transactions"]
+ignore_imports = []
+"""
+
+
+def test_contract_deletion_fails():
+    failures = _contract_set_failures(
+        _TOML_THREE_CONTRACTS, _TOML_TWO_CONTRACTS)
+    assert failures, "deleting a contract must fail"
+    assert any("A1 transaction service protected" in f for f in failures)
+
+
+def test_contract_rename_with_ignores_under_new_name_fails():
+    renamed = _TOML_THREE_CONTRACTS.replace(
+        'name = "A1 layers (PLAN D17)"',
+        'name = "A1 layers renamed"', 1)
+    renamed = renamed.replace(
+        "ignore_imports = []",
+        'ignore_imports = ["learning_os.a -> learning_os.b"]', 1)
+    failures = _contract_set_failures(_TOML_THREE_CONTRACTS, renamed)
+    assert failures, "renaming a contract must fail"
+    assert any("not a SPEC" in f for f in failures)
+
+
+def test_contract_weakened_exhaustive_fails():
+    weakened = _TOML_THREE_CONTRACTS.replace(
+        "exhaustive = true", "exhaustive = false", 1)
+    failures = _contract_set_failures(_TOML_THREE_CONTRACTS, weakened)
+    assert failures, "exhaustive = false must fail"
+    assert any("differs from SPEC" in f for f in failures)
+
+
+def test_contract_weakened_layer_removed_fails():
+    weakened = _TOML_THREE_CONTRACTS.replace(
+        '\n  "domain : digests : material_inventory : material_refs : route_identity : unit_notes : render : errors",',
+        "", 1)
+    failures = _contract_set_failures(_TOML_THREE_CONTRACTS, weakened)
+    assert failures, "a removed layer must fail"
+    assert any("differs from SPEC" in f for f in failures)
+
+
+def test_contract_weakened_allowed_importers_fails():
+    weakened = _TOML_THREE_CONTRACTS.replace(
+        'allowed_importers = ["learning_os.ops"]',
+        'allowed_importers = ["learning_os.ops", "learning_os.commands"]', 1)
+    failures = _contract_set_failures(_TOML_THREE_CONTRACTS, weakened)
+    assert failures, "widened allowed_importers must fail"
+    assert any("differs from SPEC" in f for f in failures)
+
+
+def test_introducing_protected_contract_passes():
+    assert _contract_set_failures(
+        _TOML_TWO_CONTRACTS, _TOML_THREE_CONTRACTS) == []
 
 
 def test_surface_diffs_have_approvals(base_ref):
