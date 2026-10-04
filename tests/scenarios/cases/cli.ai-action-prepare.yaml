@@ -65,6 +65,6 @@ cases:
   - id: unit-routes-unmigrated
     kind: refusal
     transport: cli
-    argv: [ai-action-prepare, --action-id, unit.compare-materials, --target-kind, unit, --target-id, unit-demo-l01, --request-id, ai-request-prepare-ok]
+    argv: [ai-action-prepare, --action-id, unit.compare-materials, --target-kind, unit, --target-id, unit-demo-l02, --request-id, ai-request-prepare-ok]
     expect: {site: null}
 untriggered: []

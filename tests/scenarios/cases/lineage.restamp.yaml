@@ -14,6 +14,12 @@ cases:
     transport: cli
     argv: [lineage-restamp, --check]
     expect: {site: null}
+  - id: apply-success
+    kind: success
+    transport: gateway
+    request: {claim_ids: [covers:route-b2f1f80014860a929a3af0bc], claims_sha256: "sha256:0a31738b7886e8a9b9c4108350f6c0228c68ff5f2349dd1459d7e656428009ef"}
+    artifact_ids: [file:operations/transactions/lineage.yaml]
+    expect: {site: null}
   - id: missing-claim-ids
     kind: refusal
     transport: gateway
@@ -52,12 +58,17 @@ cases:
     transport: cli
     argv: [lineage-restamp, --review-report, report.json, --claim-ids, claim-a, --claims-sha256, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
     expect: {site: null}
+  - id: direct-cli-apply-refused
+    kind: refusal
+    transport: cli
+    argv: [lineage-restamp, --claim-ids, covers:route-b2f1f80014860a929a3af0bc, --claims-sha256, "sha256:0a31738b7886e8a9b9c4108350f6c0228c68ff5f2349dd1459d7e656428009ef"]
+    expect: {site: null}
   - id: exact-replay
     kind: sequence
     steps:
       - transport: gateway
-        request: {check: true}
-        artifact_ids: []
+        request: {claim_ids: [covers:route-b2f1f80014860a929a3af0bc], claims_sha256: "sha256:0a31738b7886e8a9b9c4108350f6c0228c68ff5f2349dd1459d7e656428009ef"}
+        artifact_ids: [file:operations/transactions/lineage.yaml]
       - transport: gateway
         same_envelope_as: 0
   - id: replay-only-miss
@@ -68,7 +79,6 @@ cases:
     artifact_ids: []
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/commands/lineage_restamp.py:88", reason: "listed but non-eligible claim: the fixture analysis yields zero claims"}
+  - {where: "tools/learning_os/commands/lineage_restamp.py:88", reason: "listed but non-eligible claim: the fixture's single claim is eligible, so no listed claim refuses there"}
   - {where: "tools/learning_os/commands/lineage_restamp.py:145", reason: "analysis failure: the fixture analyzes cleanly; needs a corrupt ledger or git"}
-  - {where: "tools/learning_os/commands/lineage_restamp.py:188", reason: "direct CLI apply: no fixture claim verifies, so no CLI apply reaches the envelope check"}
   - {where: "tools/learning_os/commands/lineage_restamp.py:209", reason: "claim left the ledger: needs a ledger change between analysis and apply"}
