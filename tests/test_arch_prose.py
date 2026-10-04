@@ -253,6 +253,7 @@ def test_current_exceptions_are_recorded():
     assert not failures, "\n".join(failures)
 
 
+@pytest.mark.paired
 def test_ts_sources_have_no_prose_matches():
     if not UI_SRC.is_dir():
         pytest.skip("no sibling obsidian-ui checkout")

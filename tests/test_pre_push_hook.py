@@ -485,6 +485,7 @@ _LIVE_UI_READ = re.compile(
     r"\bparent\s*/\s*\"obsidian-ui")
 
 _PAIRED_BOUNDARY = [
+    "test_arch_prose.py",
     "test_causal_resolver.py",
     "test_contract_differential.py",
     "test_operations_gate.py",
