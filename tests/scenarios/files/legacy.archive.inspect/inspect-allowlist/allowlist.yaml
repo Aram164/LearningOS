@@ -1,0 +1,9 @@
+schema_version: 1
+type: legacy-archive-allowlist
+safe_entries:
+- relative_path: safe-notes/note.md
+  category: notes
+  disposition: historical-only
+  canonical_targets:
+  - work/inbox/note-drop.md
+excluded_count: 4

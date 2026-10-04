@@ -1,0 +1,16 @@
+schema_version: 1
+id: project-scenario-new
+type: project
+title: Scenario project
+project_type: software
+status: active
+root_uri: project://scenario
+objective: Characterize project creation from a file.
+milestone_ids: []
+linked_module_ids: []
+unit_ids: []
+workspace_ids: []
+thematic_group_ids: []
+boundaries:
+  confidentiality: private
+  external_code_access: approved
