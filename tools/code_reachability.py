@@ -79,7 +79,6 @@ UNREACHABLE_ALLOWLIST: Mapping[str, str] = {
     ),
     "learning_os.adapters": "created empty by PLAN S02; filled in S04/S11/S13",
     "learning_os.domain": "created empty by PLAN S02; filled in S04/S11/S13",
-    "learning_os.observations": "created empty by PLAN S02; filled in S04/S11/S13",
     "learning_os.ops": "created empty by PLAN S02; filled in S04/S11/S13",
     "learning_os.store": "created empty by PLAN S02; filled in S04/S11/S13",
     "migrations.summaries_to_notes_v1": (
