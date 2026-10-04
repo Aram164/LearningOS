@@ -1,0 +1,29 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"learner.ability-observation.append\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"UNCONFIRMED\",\n    \"message\": \"los: confirmation-ref must point to Aram's confirmation\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
+  "stdout_json": {
+    "capability": "learner.ability-observation.append",
+    "error": {
+      "code": "UNCONFIRMED",
+      "details": {},
+      "message": "los: confirmation-ref must point to Aram's confirmation",
+      "retryable": false
+    },
+    "idempotency_key": "KEY2",
+    "ok": false,
+    "receipt_path": null,
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {},
+    "schema_version": 2,
+    "snapshot_after": null,
+    "transaction_id": null
+  }
+}

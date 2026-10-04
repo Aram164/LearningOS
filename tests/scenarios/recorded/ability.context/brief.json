@@ -1,0 +1,95 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"ability-context-v1\",\"brief\":true,\"focus\":\"ability-demo-derive\",\"ability\":{\"id\":\"ability-demo-derive\",\"title\":\"Derive expected value\",\"claim\":\"Derive expectation from stated outcomes.\",\"conditions\":[\"finite discrete outcomes\",\"probabilities sum to one\"],\"evidence_spec\":[\"correct derivation\"],\"concept_ids\":[\"concept-expected-value\"],\"module_ids\":[\"module-demo\"],\"preparation_routes\":[],\"review\":{\"state\":\"reviewed\",\"reviewed_by\":\"fixture\",\"reviewed_on\":\"2026-09-23\"},\"state\":\"supported\",\"lifecycle\":\"active\",\"reasons\":[\"current confirmed worked attempt\"],\"reason_codes\":[\"current-confirmed-attempt\"],\"transfer\":[]},\"ability_sha256\":\"sha256:fce436d58e0ea7978004658f1afe5d2b41e9b5844a5d655e4de89bef2bd266f4\",\"evidence_summary\":{\"total\":1,\"active\":1,\"superseded\":0,\"comparable\":1,\"valid\":1,\"state_basis\":[{\"role\":\"latest-comparable\",\"id\":\"ability-observation-1\",\"result\":\"correct\",\"work_ref\":\"conversation://fixture/work-1\",\"origin\":{\"path\":\"work/active/workspace-demo/ability-observations.jsonl\",\"line\":1,\"workspace_id\":\"workspace-demo\"}}],\"later_conflicts_total\":0,\"later_conflicts_returned\":0,\"later_conflicts_truncated\":false,\"corrections\":[],\"corrections_total\":0,\"corrections_returned\":0,\"corrections_truncated\":false},\"encounters\":[],\"encounters_total\":0,\"encounters_truncated\":false,\"related_encounters\":[],\"related_encounters_total\":0,\"bridges\":[],\"candidate_connections\":[],\"candidate_connection_count\":0,\"shared_concept_candidates\":[],\"shared_concept_candidate_count\":0,\"shared_concept_candidates_truncated\":false,\"expand\":{\"material\":\"material-context QUERY\",\"stage\":\"inspect STAGE_ID\",\"evidence\":\"ability-context ability-demo-derive --section evidence --limit 50 --offset 0 --expected-snapshot SNAP1\"}}\n",
+  "stdout_json": {
+    "ability": {
+      "claim": "Derive expectation from stated outcomes.",
+      "concept_ids": [
+        "concept-expected-value"
+      ],
+      "conditions": [
+        "finite discrete outcomes",
+        "probabilities sum to one"
+      ],
+      "evidence_spec": [
+        "correct derivation"
+      ],
+      "id": "ability-demo-derive",
+      "lifecycle": "active",
+      "module_ids": [
+        "module-demo"
+      ],
+      "preparation_routes": [],
+      "reason_codes": [
+        "current-confirmed-attempt"
+      ],
+      "reasons": [
+        "current confirmed worked attempt"
+      ],
+      "review": {
+        "reviewed_by": "fixture",
+        "reviewed_on": "2026-09-23",
+        "state": "reviewed"
+      },
+      "state": "supported",
+      "title": "Derive expected value",
+      "transfer": []
+    },
+    "ability_sha256": "sha256:fce436d58e0ea7978004658f1afe5d2b41e9b5844a5d655e4de89bef2bd266f4",
+    "bridges": [],
+    "brief": true,
+    "candidate_connection_count": 0,
+    "candidate_connections": [],
+    "contract": "ability-context-v1",
+    "encounters": [],
+    "encounters_total": 0,
+    "encounters_truncated": false,
+    "evidence_summary": {
+      "active": 1,
+      "comparable": 1,
+      "corrections": [],
+      "corrections_returned": 0,
+      "corrections_total": 0,
+      "corrections_truncated": false,
+      "later_conflicts_returned": 0,
+      "later_conflicts_total": 0,
+      "later_conflicts_truncated": false,
+      "state_basis": [
+        {
+          "id": "ability-observation-1",
+          "origin": {
+            "line": 1,
+            "path": "work/active/workspace-demo/ability-observations.jsonl",
+            "workspace_id": "workspace-demo"
+          },
+          "result": "correct",
+          "role": "latest-comparable",
+          "work_ref": "conversation://fixture/work-1"
+        }
+      ],
+      "superseded": 0,
+      "total": 1,
+      "valid": 1
+    },
+    "expand": {
+      "evidence": "ability-context ability-demo-derive --section evidence --limit 50 --offset 0 --expected-snapshot SNAP1",
+      "material": "material-context QUERY",
+      "stage": "inspect STAGE_ID"
+    },
+    "focus": "ability-demo-derive",
+    "related_encounters": [],
+    "related_encounters_total": 0,
+    "schema_version": 1,
+    "shared_concept_candidate_count": 0,
+    "shared_concept_candidates": [],
+    "shared_concept_candidates_truncated": false,
+    "snapshot_id": "SNAP1"
+  }
+}

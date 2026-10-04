@@ -1,0 +1,21 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"ability-context-v1\",\"state\":\"unmapped\",\"focus\":\"ability-nope\",\"reason\":\"no reviewed ability maps this identity\",\"known_identity\":false,\"suggestions\":[]}\n",
+  "stdout_json": {
+    "contract": "ability-context-v1",
+    "focus": "ability-nope",
+    "known_identity": false,
+    "reason": "no reviewed ability maps this identity",
+    "schema_version": 1,
+    "snapshot_id": "SNAP1",
+    "state": "unmapped",
+    "suggestions": []
+  }
+}

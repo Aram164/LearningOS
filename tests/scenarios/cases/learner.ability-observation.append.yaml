@@ -1,0 +1,75 @@
+operation: learner.ability-observation.append
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: append-observation
+    kind: success
+    transport: gateway
+    request: {workspace: workspace-demo, ability: ability-demo-derive, claim: "Derived expectation for the fixture gamble.", work_ref: "conversation://fixture/work-2", confirmation_ref: "conversation://fixture/confirmation-2", activity: "worked derivation", result: correct, assistance: none, condition: ["finite discrete outcomes"], evidence_tag: ["correct derivation"]}
+    artifact_ids: [workspace-demo]
+    a5_base: true
+    expect: {site: null}
+  - id: bad-workspace
+    kind: refusal
+    transport: gateway
+    request: {workspace: workspace-nope, ability: ability-demo-derive, claim: "Derived expectation for the fixture gamble.", work_ref: "conversation://fixture/work-2", confirmation_ref: "conversation://fixture/confirmation-2", activity: "worked derivation", result: correct, assistance: none}
+    artifact_ids: []
+    expect: {site: null}
+  - id: unknown-ability
+    kind: refusal
+    transport: gateway
+    request: {workspace: workspace-demo, ability: ability-nope, claim: "Derived expectation for the fixture gamble.", work_ref: "conversation://fixture/work-2", confirmation_ref: "conversation://fixture/confirmation-2", activity: "worked derivation", result: correct, assistance: none}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-work-ref
+    kind: refusal
+    transport: gateway
+    request: {workspace: workspace-demo, ability: ability-demo-derive, claim: "Derived expectation for the fixture gamble.", work_ref: "bogus", confirmation_ref: "conversation://fixture/confirmation-2", activity: "worked derivation", result: correct, assistance: none}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-confirmation-ref
+    kind: refusal
+    transport: gateway
+    request: {workspace: workspace-demo, ability: ability-demo-derive, claim: "Derived expectation for the fixture gamble.", work_ref: "conversation://fixture/work-2", confirmation_ref: "project://fixture/x", activity: "worked derivation", result: correct, assistance: none}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-supersedes
+    kind: refusal
+    transport: gateway
+    request: {workspace: workspace-demo, ability: ability-demo-derive, claim: "Derived expectation for the fixture gamble.", work_ref: "conversation://fixture/work-2", confirmation_ref: "conversation://fixture/confirmation-2", activity: "worked derivation", result: correct, assistance: none, supersedes: observation-nope}
+    artifact_ids: []
+    expect: {site: null}
+  - id: condition-both-ways
+    kind: refusal
+    transport: gateway
+    request: {workspace: workspace-demo, ability: ability-demo-derive, claim: "Derived expectation for the fixture gamble.", work_ref: "conversation://fixture/work-2", confirmation_ref: "conversation://fixture/confirmation-2", activity: "worked derivation", result: correct, assistance: none, condition: ["finite discrete outcomes"], condition_not_met: ["finite discrete outcomes"]}
+    artifact_ids: []
+    expect: {site: null}
+  - id: blank-claim
+    kind: refusal
+    transport: gateway
+    request: {workspace: workspace-demo, ability: ability-demo-derive, claim: " ", work_ref: "conversation://fixture/work-2", confirmation_ref: "conversation://fixture/confirmation-2", activity: "worked derivation", result: correct, assistance: none}
+    artifact_ids: []
+    expect: {site: null}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [ability-observation-append, --workspace, workspace-demo, --ability, ability-demo-derive, --claim, x, --work-ref, conversation://fixture/work-2, --confirmation-ref, conversation://fixture/confirmation-2, --activity, a, --result, correct, --assistance, none]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {workspace: workspace-demo, ability: ability-demo-derive, claim: "Derived expectation for the fixture gamble.", work_ref: "conversation://fixture/work-2", confirmation_ref: "conversation://fixture/confirmation-2", activity: "worked derivation", result: correct, assistance: none, condition: ["finite discrete outcomes"], evidence_tag: ["correct derivation"]}
+        artifact_ids: [workspace-demo]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {workspace: workspace-demo, ability: ability-demo-derive, claim: "Derived expectation for the fixture gamble.", work_ref: "conversation://fixture/work-2", confirmation_ref: "conversation://fixture/confirmation-2", activity: "worked derivation", result: correct, assistance: none, condition: ["finite discrete outcomes"], evidence_tag: ["correct derivation"]}
+    artifact_ids: [workspace-demo]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/abilities.py:142", reason: "app confirmation binding: the harness seals channel operator, never ui"}

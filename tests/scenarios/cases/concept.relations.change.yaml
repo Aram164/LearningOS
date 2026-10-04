@@ -1,0 +1,79 @@
+operation: concept.relations.change
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: add-relation
+    kind: success
+    transport: gateway
+    request: {change: {operations: [{action: add, new: {from: concept-expected-value, to: concept-variance, type: motivates}}]}}
+    artifact_ids: [registry-concept-relations]
+    a5_base: true
+    expect: {site: null}
+  - id: remove-relation
+    kind: success
+    transport: gateway
+    request: {change: {operations: [{action: remove, old: {from: concept-variance, to: concept-expected-value, type: builds-on}}]}}
+    artifact_ids: [registry-concept-relations]
+    expect: {site: null}
+  - id: inexact-operation
+    kind: refusal
+    transport: gateway
+    request: {change: {operations: [{action: add}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: unknown-action
+    kind: refusal
+    transport: gateway
+    request: {change: {operations: [{action: merge, new: {from: concept-expected-value, to: concept-variance, type: motivates}}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-new-row
+    kind: refusal
+    transport: gateway
+    request: {change: {operations: [{action: add, new: {from: concept-expected-value}}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: old-not-found
+    kind: refusal
+    transport: gateway
+    request: {change: {operations: [{action: remove, old: {from: concept-expected-value, to: concept-variance, type: motivates}}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: change-not-operations
+    kind: refusal
+    transport: cli
+    argv: [concept-relations-change, --change, '{"operations":[],"extra":1}']
+    expect: {site: null}
+  - id: empty-operations
+    kind: refusal
+    transport: cli
+    argv: [concept-relations-change, --change, '{"operations":[]}']
+    expect: {site: null}
+  - id: operation-not-object
+    kind: refusal
+    transport: cli
+    argv: [concept-relations-change, --change, '{"operations":[5]}']
+    expect: {site: null}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [concept-relations-change, --change, '{"operations":[{"action":"add","new":{"from":"concept-expected-value","to":"concept-variance","type":"motivates"}}]}']
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {change: {operations: [{action: add, new: {from: concept-expected-value, to: concept-variance, type: motivates}}]}}
+        artifact_ids: [registry-concept-relations]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {change: {operations: [{action: add, new: {from: concept-expected-value, to: concept-variance, type: motivates}}]}}
+    artifact_ids: [registry-concept-relations]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/atlas.py:43", reason: "symlink under knowledge/: the fixture carries none, and no step can create one"}
+  - {where: "tools/learning_os/commands/atlas.py:53", reason: "consolidated and partitioned registries: the fixture carries only knowledge/concept-relations.yaml"}

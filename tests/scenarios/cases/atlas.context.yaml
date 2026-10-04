@@ -1,0 +1,19 @@
+operation: atlas.context
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: editor-read
+    kind: success
+    transport: cli
+    argv: [atlas-context, concept-expected-value]
+    a5_base: true
+    expect: {site: null}
+  - id: unknown-concept
+    kind: refusal
+    transport: cli
+    argv: [atlas-context, concept-nope]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/atlas.py:43", reason: "symlink under knowledge/: the fixture carries none, and no step can create one"}
+  - {where: "tools/learning_os/commands/atlas.py:53", reason: "consolidated and partitioned registries: the fixture carries only knowledge/concept-relations.yaml"}
+  - {where: "tools/learning_os/commands/atlas.py:109", reason: "snapshot changed mid-read: a single-threaded read cannot race itself"}
