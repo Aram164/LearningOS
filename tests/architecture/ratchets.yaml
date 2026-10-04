@@ -1,6 +1,103 @@
 schema: 1
-baselined: [A3-prose, A4-plumbing, A14-vocabulary]
+baselined: [A2-static, A3-prose, A4-plumbing, A14-vocabulary]
 checks:
+  A2-static:
+  - signature: tools/learning_os/ai_actions/service.py::append_slices::write_bytes
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/ai_actions/service.py::import_delivery::shutil.rmtree
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/ai_actions/support.py::_atomic_text::os.replace
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/ai_actions/support.py::_atomic_text::unlink
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/ai_actions/support.py::_atomic_text::write_text
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/analysis.py::_prepare_out_dir::shutil.rmtree
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_prepare::write_bytes
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_prepare::write_text
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capability.py::reviewed_envelope_apply::open
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capability.py::reviewed_envelope_apply::unlink
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_cmd_compact_module_plan_import::unlink
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_cmd_compact_module_plan_import::write_bytes
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_run::unlink
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_run::write_bytes
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_save_check_report_and_compact::unlink
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/review.py::cmd_session_end::unlink
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::_atomic_text::os.replace
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::_atomic_text::unlink
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::_atomic_text::write_text
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/contracts/data_contract.py::write_contract::write_text
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/contracts/manifest_contract.py::bump::write_text
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/contracts/perimeter.py::write_block::write_text
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/contracts/tree_contract.py::write_block::write_text
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/semantics/dossiers.py::store_dossier::write_text
+    count: 1
+    since: baseline
+    approved_by: null
   A3-prose:
   - signature: tools/learning_os/commands/module.py::_inventory_block::method::```
     count: 1

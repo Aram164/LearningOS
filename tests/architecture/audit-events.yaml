@@ -1,0 +1,14 @@
+# Pinned audit-event inventory per supported Python version (SPEC §3.2c).
+"3.14":
+  open: {path: 0, mode: 1, flags: 2}
+  os.rename: {paths: [0, 1]}
+  os.remove: {path: 0}
+  os.rmdir: {path: 0}
+  os.mkdir: {path: 0}
+  os.truncate: {path: 0}
+  os.link: {paths: [0, 1]}
+  os.symlink: {paths: [0, 1]}
+  shutil.copyfile: {paths: [0, 1]}
+  shutil.move: {paths: [0, 1]}
+  shutil.rmtree: {path: 0}
+  subprocess.Popen: {argv: 1}
