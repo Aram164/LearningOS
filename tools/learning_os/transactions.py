@@ -16,6 +16,7 @@ ledger records an artifact the first time a transaction changes it.
 from __future__ import annotations
 
 import contextlib
+import contextvars
 import datetime as dt
 import hashlib
 import inspect
@@ -97,6 +98,22 @@ __all__ = [
     "reconcile_inflight_transactions",
     "replay_for_request",
 ]
+
+_ENGINE_PHASE: contextvars.ContextVar[str | None] = contextvars.ContextVar(
+    "learningos_engine_phase", default=None)
+
+
+@contextlib.contextmanager
+def _engine_phase(name: str):
+    token = _ENGINE_PHASE.set(name)
+    try:
+        yield
+    finally:
+        _ENGINE_PHASE.reset(token)
+
+
+def current_engine_phase() -> str | None:
+    return _ENGINE_PHASE.get()
 
 
 class TransactionConflict(Exception):
@@ -738,7 +755,8 @@ def _unwind_v2_entries(root: Path, tx_dir: Path, entries: list,
                 transaction_id=transaction_id, conflicts=[conflict])
         try:
             if before["kind"] == "absent":
-                path.unlink()
+                with _engine_phase("restore"):
+                    path.unlink()
             else:
                 blob = (tx_dir / before["backup_id"]).read_bytes()
                 if hashlib.sha256(blob).hexdigest() \
@@ -751,7 +769,8 @@ def _unwind_v2_entries(root: Path, tx_dir: Path, entries: list,
                                           "a backup changed during recovery",
                                           [conflict]),
                         transaction_id=transaction_id, conflicts=[conflict])
-                _atomic_write_bytes(path, blob)
+                with _engine_phase("restore"):
+                    _atomic_write_bytes(path, blob)
         except TransactionRecoveryConflict:
             raise
         except Exception as exc:
@@ -1540,11 +1559,13 @@ class TransactionService:
                 # scope/revision checks and receipt evidence for the complete
                 # approved write set, but avoid replacing identical files.
                 if backups[path] != content:
-                    _atomic_write_bytes(path, content)
+                    with _engine_phase("apply"):
+                        _atomic_write_bytes(path, content)
             for path in delete_paths:
                 if path.is_dir():
                     raise TransactionFailure(f"transaction refuses to delete directory: {path}")
-                path.unlink(missing_ok=True)
+                with _engine_phase("apply"):
+                    path.unlink(missing_ok=True)
             # Deduplicated post-commit fingerprint (#104 step 1): when the
             # guard digest is the canonical walk (the overwhelmingly common
             # path — no caller currently supplies a double), one traversal
