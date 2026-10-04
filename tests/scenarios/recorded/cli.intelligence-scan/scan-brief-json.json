@@ -1,0 +1,20 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"contract\":\"intelligence-scan-brief\",\"full_result\":\"intelligence-scan --json\",\"groups\":[],\"omitted_goals\":0,\"omitted_groups\":0,\"total_goals\":0,\"total_groups\":0}\n",
+  "stdout_json": {
+    "contract": "intelligence-scan-brief",
+    "full_result": "intelligence-scan --json",
+    "groups": [],
+    "omitted_goals": 0,
+    "omitted_groups": 0,
+    "total_goals": 0,
+    "total_groups": 0
+  }
+}

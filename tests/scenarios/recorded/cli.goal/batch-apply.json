@@ -1,0 +1,33 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": {
+    "after": {
+      "paths": {
+        "operations/goal-ledger.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "3b786052c4315cece47624b4dff3b73f68e0b974a9fabe4274a5c5f3353fd05c",
+          "state": "file"
+        }
+      },
+      "schema_version": 2,
+      "session_id": "channel:operator"
+    },
+    "before": null
+  },
+  "stderr": "",
+  "stdout": "{\"ok\": true, \"state\": \"rejected\", \"goal_ids\": [\"goal-demo-deferred\", \"goal-demo-rejected\"]}\n",
+  "stdout_json": {
+    "goal_ids": [
+      "goal-demo-deferred",
+      "goal-demo-rejected"
+    ],
+    "ok": true,
+    "state": "rejected"
+  }
+}

@@ -1,0 +1,74 @@
+operation: lineage.restamp
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: check-all
+    kind: success
+    transport: gateway
+    request: {check: true}
+    artifact_ids: []
+    a5_base: true
+    expect: {site: null}
+  - id: check-all-cli
+    kind: success
+    transport: cli
+    argv: [lineage-restamp, --check]
+    expect: {site: null}
+  - id: missing-claim-ids
+    kind: refusal
+    transport: gateway
+    request: {}
+    artifact_ids: []
+    expect: {site: null}
+  - id: unknown-claims
+    kind: refusal
+    transport: gateway
+    request: {claim_ids: [claim-nope], claims_sha256: "sha256:b9c4dc35ade42dd2151b0014ae731400f69fcbdbde94f0b2b791a35df5c92f69"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: claims-sha-mismatch
+    kind: refusal
+    transport: gateway
+    request: {claim_ids: [claim-nope], claims_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: check-and-report
+    kind: refusal
+    transport: cli
+    argv: [lineage-restamp, --check, --review-report, report.json]
+    expect: {site: null}
+  - id: reviewed-needs-ids
+    kind: refusal
+    transport: cli
+    argv: [lineage-restamp, --review-report, report.json]
+    expect: {site: null}
+  - id: duplicate-claim-ids
+    kind: refusal
+    transport: cli
+    argv: [lineage-restamp, --review-report, report.json, --claim-ids, claim-a, claim-a, --claims-sha256, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
+    expect: {site: null}
+  - id: reviewed-sha-mismatch
+    kind: refusal
+    transport: cli
+    argv: [lineage-restamp, --review-report, report.json, --claim-ids, claim-a, --claims-sha256, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {check: true}
+        artifact_ids: []
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {check: true}
+    artifact_ids: []
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/lineage_restamp.py:88", reason: "listed but non-eligible claim: the fixture analysis yields zero claims"}
+  - {where: "tools/learning_os/commands/lineage_restamp.py:145", reason: "analysis failure: the fixture analyzes cleanly; needs a corrupt ledger or git"}
+  - {where: "tools/learning_os/commands/lineage_restamp.py:188", reason: "direct CLI apply: no fixture claim verifies, so no CLI apply reaches the envelope check"}
+  - {where: "tools/learning_os/commands/lineage_restamp.py:209", reason: "claim left the ledger: needs a ledger change between analysis and apply"}

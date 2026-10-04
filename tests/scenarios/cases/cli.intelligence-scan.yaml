@@ -1,0 +1,53 @@
+operation: cli.intelligence-scan
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: scan-text
+    kind: success
+    transport: cli
+    argv: [intelligence-scan]
+    a5_base: true
+    expect: {site: null}
+  - id: scan-json
+    kind: success
+    transport: cli
+    argv: [intelligence-scan, --json]
+    expect: {site: null}
+  - id: scan-brief-json
+    kind: success
+    transport: cli
+    argv: [intelligence-scan, --brief, --json]
+    expect: {site: null}
+  - id: scan-with-feed
+    kind: success
+    transport: cli
+    argv: [intelligence-scan, --feed, "<CASEDATA>/feed.json", --json]
+    expect: {site: null}
+  - id: negative-days
+    kind: refusal
+    transport: cli
+    argv: [intelligence-scan, --days, -1]
+    expect: {site: null}
+  - id: unreadable-feed
+    kind: refusal
+    transport: cli
+    argv: [intelligence-scan, --feed, work/inbox/nope.json]
+    expect: {site: null}
+  - id: feed-dup-keys
+    kind: refusal
+    transport: cli
+    argv: [intelligence-scan, --feed, "<CASEDATA>/feed.json"]
+    expect: {site: null}
+  - id: feed-not-json
+    kind: refusal
+    transport: cli
+    argv: [intelligence-scan, --feed, "<CASEDATA>/feed.json"]
+    expect: {site: null}
+  - id: feed-bad-shape
+    kind: refusal
+    transport: cli
+    argv: [intelligence-scan, --feed, "<CASEDATA>/feed.json"]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/intelligence.py:274", reason: "unreadable Git history: the seam supplies an empty history; needs corrupt git"}
+  - {where: "tools/learning_os/commands/intelligence.py:276", reason: "rank failure: the fixture scans and ranks cleanly; needs malformed repo data"}

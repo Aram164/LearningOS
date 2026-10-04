@@ -1,0 +1,19 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"inputs\":{\"error_count\":0,\"new_or_grown_warnings\":[]},\"predicate\":\"RepoClean\",\"verdict\":false}\n",
+  "stdout_json": {
+    "inputs": {
+      "error_count": 0,
+      "new_or_grown_warnings": []
+    },
+    "predicate": "RepoClean",
+    "verdict": false
+  }
+}

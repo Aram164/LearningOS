@@ -1,0 +1,64 @@
+operation: cli.goal
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: close-goal
+    kind: success
+    transport: cli
+    argv: [goal, goal-demo-deferred, --close]
+    a5_base: true
+    expect: {site: null}
+  - id: check-preview
+    kind: success
+    transport: cli
+    argv: [goal, goal-demo-deferred, --defer, --revisit-on, 2026-12-01, --check]
+    expect: {site: null}
+  - id: batch-apply
+    kind: success
+    transport: cli
+    argv: [goal, goal-demo-deferred, goal-demo-rejected, --reject, --reviewed-sha256, "sha256:f26fef8d048e87641fc87bcb6bf62bf3bb7947ef379a92c107ea0303b23c7cc5"]
+    expect: {site: null}
+  - id: bad-pattern
+    kind: refusal
+    transport: cli
+    argv: [goal, "goal-*", --reject]
+    expect: {site: null}
+  - id: blank-id
+    kind: refusal
+    transport: cli
+    argv: [goal, "with space", --reject]
+    expect: {site: null}
+  - id: revisit-needs-defer
+    kind: refusal
+    transport: cli
+    argv: [goal, goal-demo-deferred, --reject, --revisit-on, 2026-12-01]
+    expect: {site: null}
+  - id: bad-revisit
+    kind: refusal
+    transport: cli
+    argv: [goal, goal-demo-deferred, --defer, --revisit-on, someday]
+    expect: {site: null}
+  - id: past-revisit
+    kind: refusal
+    transport: cli
+    argv: [goal, goal-demo-deferred, --defer, --revisit-on, 2026-01-01]
+    expect: {site: null}
+  - id: unknown-goal
+    kind: refusal
+    transport: cli
+    argv: [goal, goal-nope, --reject]
+    expect: {site: null}
+  - id: batch-needs-sha
+    kind: refusal
+    transport: cli
+    argv: [goal, goal-demo-deferred, goal-demo-rejected, --reject]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/goal.py:94", reason: "unreadable goal ledger: needs permissions no step can set"}
+  - {where: "tools/learning_os/commands/goal.py:102", reason: "malformed ledger YAML: the fixture ledger parses, and no step can corrupt it"}
+  - {where: "tools/learning_os/commands/goal.py:106", reason: "non-mapping ledger: the fixture ledger is a mapping, and no step can corrupt it"}
+  - {where: "tools/learning_os/commands/goal.py:112", reason: "non-mapping decisions: the fixture decisions are a mapping, and no step can corrupt them"}
+  - {where: "tools/learning_os/commands/goal.py:153", reason: "ledger schema problems: handler-built entries always validate; needs pre-existing invalid rows"}
+  - {where: "tools/learning_os/commands/goal.py:178", reason: "corrupt own session ledger: needs a pre-existing corrupt session file"}
+  - {where: "tools/learning_os/commands/goal.py:183", reason: "ledger write failure: needs an unwritable operations/ directory"}
+  - {where: "tools/learning_os/commands/goal.py:191", reason: "session claim race: needs a concurrent writer"}

@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: runtime-session.schema.json contract violation: <root>: 'contract' is a required property; <root>: 'schema_version' is a required property; <root>: 'snapshot_id' is a required property; <root>: 'session' is a required property\n",
+  "stdout": "",
+  "stdout_json": null
+}

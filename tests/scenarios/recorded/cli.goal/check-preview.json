@@ -1,0 +1,34 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"ok\": true, \"check\": true, \"reviewed_sha256\": \"sha256:2b3f2809a632af2c9fd81ebcc7eb93dd2725d0e3840861abca5d70f40ae00139\", \"goal_ids\": [\"goal-demo-deferred\"], \"state\": \"deferred\", \"changes\": [{\"goal_id\": \"goal-demo-deferred\", \"before\": {\"state\": \"deferred\", \"decided_at\": \"2026-09-20\"}, \"after\": {\"state\": \"deferred\", \"decided_at\": \"2026-10-01\", \"revisit_on\": \"2026-12-01\"}}]}\n",
+  "stdout_json": {
+    "changes": [
+      {
+        "after": {
+          "decided_at": "2026-10-01",
+          "revisit_on": "2026-12-01",
+          "state": "deferred"
+        },
+        "before": {
+          "decided_at": "2026-09-20",
+          "state": "deferred"
+        },
+        "goal_id": "goal-demo-deferred"
+      }
+    ],
+    "check": true,
+    "goal_ids": [
+      "goal-demo-deferred"
+    ],
+    "ok": true,
+    "reviewed_sha256": "sha256:2b3f2809a632af2c9fd81ebcc7eb93dd2725d0e3840861abca5d70f40ae00139",
+    "state": "deferred"
+  }
+}
