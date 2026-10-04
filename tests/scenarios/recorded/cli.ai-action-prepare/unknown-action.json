@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 1,
+  "idempotency_changed": {},
+  "outcome": "diagnostic-failure",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: unknown AI action: nope.action\n",
+  "stdout": "",
+  "stdout_json": null
+}

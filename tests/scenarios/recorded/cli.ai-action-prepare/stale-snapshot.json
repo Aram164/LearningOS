@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 3,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: expected snapshot sha256:0000000000000000000000000000000000000000000000000000000000000000, current snapshot is sha256:c4e618674ad5217bfcd531238c81388a452170cd385269538a19b83aa5461053\n",
+  "stdout": "",
+  "stdout_json": null
+}
