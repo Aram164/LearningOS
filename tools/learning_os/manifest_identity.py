@@ -30,14 +30,13 @@ full rebuild. A partially matching or corrupt file is never served.
 
 from __future__ import annotations
 
-import datetime
 import hashlib
 import json
 import os
 import stat
 from pathlib import Path
 
-from . import __version__
+from . import __version__, observations
 from .contracts.manifest_contract import declared_schema_sha256, declared_version
 from .derived.identity import (
     digest_code_identity,
@@ -181,7 +180,7 @@ def build_identity(root: Path, manifest: dict) -> dict:
         "generator": f"learning_os v{__version__}",
         "code_identity": digest_code_identity(root),
         "runtime_digest": runtime_digest(),
-        "built_date": datetime.date.today().isoformat(),
+        "built_date": observations.today().isoformat(),
         "operations_digest": operations_digest(root),
         "materials_digest": materials_digest(root),
         # The exact manifest bytes this identity describes. Every other pin
@@ -229,7 +228,7 @@ def check_identity(
         return False, "projection code moved since the stored build"
     if identity.get("runtime_digest") != runtime_digest():
         return False, "runtime moved since the stored build"
-    if identity.get("built_date") != datetime.date.today().isoformat():
+    if identity.get("built_date") != observations.today().isoformat():
         return False, "stored build is from a previous day"
     if identity.get("operations_digest") != operations_digest(root):
         return False, "operations state moved since the stored build"

@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
-import datetime as _dt
 import json
 import sys
 
 import yaml
 
+from .. import observations
 from .suggest import not_found
 from .support import (
     WriteRefused,
@@ -99,7 +99,7 @@ def cmd_path_progress(args) -> int:
         elif args.status in {"complete", "skipped"}:
             stage["status"] = args.status
             if args.status == "complete":
-                stage["completed"] = _dt.date.today().isoformat()
+                stage["completed"] = observations.today().isoformat()
             following = next((s for s in stages[stages.index(stage) + 1:]
                               if s.get("status") == "pending"), None)
             if following:
@@ -114,7 +114,7 @@ def cmd_path_progress(args) -> int:
             print(f"los: unknown path status: {args.status} "
                   "(choose from active, complete, skipped)", file=sys.stderr)
             return 2
-        data["updated"] = _dt.date.today().isoformat()
+        data["updated"] = observations.today().isoformat()
         rendered = yaml.safe_dump(data, sort_keys=False, allow_unicode=True)
         code, errors, confirmation = _write_transaction(
             root, {learning_path.path: rendered}, capability="path.progress.update",
@@ -165,7 +165,7 @@ def cmd_path_attach(args) -> int:
         rel = target.relative_to(root).as_posix()
         stage.setdefault("attachments", []).append({
             "path": rel, "label": args.label or source.stem})
-        data["updated"] = _dt.date.today().isoformat()
+        data["updated"] = observations.today().isoformat()
         code, errors, confirmation = _write_transaction(
             root, {
                 learning_path.path: yaml.safe_dump(data, sort_keys=False, allow_unicode=True),

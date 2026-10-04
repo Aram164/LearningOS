@@ -21,6 +21,7 @@ from urllib.parse import urlsplit
 
 import yaml
 
+from learning_os import observations
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.loader import load_repo
 from learning_os.transactions import artifact_revision
@@ -161,7 +162,7 @@ def master_promotion_destination(root: Path, promotion_id: str) -> Path:
 
 
 def _utc_now(value: dt.datetime | None) -> dt.datetime:
-    current = value or dt.datetime.now(dt.UTC)
+    current = value or observations.now().astimezone(dt.UTC)
     if current.tzinfo is None:
         current = current.replace(tzinfo=dt.UTC)
     return current.astimezone(dt.UTC).replace(microsecond=0)
@@ -1157,7 +1158,7 @@ def masters_planning_dashboard(
             "opening Future Master's Planning requires an explicit access gesture"
         )
     catalog = load_master_catalog(root)
-    timestamp = (now or dt.datetime.now(dt.UTC)).astimezone(dt.UTC).replace(microsecond=0)
+    timestamp = (now or observations.now()).astimezone(dt.UTC).replace(microsecond=0)
     value = {
         "schema_version": 1,
         "type": "masters-planning-dashboard",

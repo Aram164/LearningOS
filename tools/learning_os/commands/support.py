@@ -20,6 +20,7 @@ from pathlib import Path
 
 import yaml
 
+from learning_os import observations
 from learning_os.commands.suggest import not_found
 from learning_os.contracts.gateway import (
     current_gateway_request,
@@ -130,7 +131,7 @@ def _write_holder(handle) -> None:
     prog = Path(sys.argv[0]).name if sys.argv and sys.argv[0] else "los"
     command = " ".join([prog, *sys.argv[1:3]])[:160] or "los"
     record = {"pid": os.getpid(), "command": command,
-              "since": _dt.datetime.now().strftime("%H:%M:%S")}
+              "since": observations.now().replace(tzinfo=None).strftime("%H:%M:%S")}
     try:
         handle.seek(0)
         handle.truncate()
@@ -159,7 +160,7 @@ def _allocate_attachment_path(attachment_dir: Path, source_name: str) -> Path:
     if not target.exists():
         return target
 
-    stamp = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+    stamp = observations.now().replace(tzinfo=None).strftime("%Y%m%d-%H%M%S")
     target = attachment_dir / f"{stamp}-{source_name}"
     if not target.exists():
         return target
@@ -982,7 +983,7 @@ def _row_is_stale(row: dict, now: _dt.datetime | None = None) -> bool:
     moment = _row_recorded_at(row)
     if moment is None:
         return True
-    now = now or _dt.datetime.now(_dt.UTC)
+    now = now or observations.now().astimezone(_dt.UTC)
     return (now - moment).total_seconds() > SESSION_LEDGER_STALE_HOURS * 3600
 
 
@@ -1033,7 +1034,7 @@ def _write_session_ledger(root: Path, paths: dict[str, dict[str, str]],
 def _stamp_session_row(root: Path, relative: str, channel: str) -> dict[str, str]:
     row = _session_path_state(root, relative)
     row["channel"] = channel
-    row["recorded_at"] = _dt.datetime.now(_dt.UTC).replace(
+    row["recorded_at"] = observations.now().astimezone(_dt.UTC).replace(
         microsecond=0).isoformat()
     return row
 
@@ -1355,7 +1356,7 @@ def _resume_pointer_write(root: Path, *, module_id: str, unit_id: str,
         "unit_id": str(unit_id),
         "study_map_id": str(study_map_id),
         "stage_id": str(stage_id),
-        "updated": _dt.date.today().isoformat(),
+        "updated": observations.today().isoformat(),
     }
     return {root / RESUME_POINTER_PATH: _dump_yaml(pointer)}
 

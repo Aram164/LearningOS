@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
-import datetime as dt
 import hashlib
 import json
 from pathlib import Path
 
 import yaml
+
+from .. import observations
 
 ROOT = Path(__file__).resolve().parents[3]
 CONTRACT = ROOT / "system" / "contracts" / "data-contract.yaml"
@@ -130,7 +131,7 @@ def bump(
     version = int(contract.get("contract_version", 0)) + 1
     entry = {
         "version": version,
-        "adopted": dt.date.today().isoformat(),
+        "adopted": observations.today().isoformat(),
         "note": note,
         "migration": migration,
         # Point at the newest shape that is actually frozen, not at the one this

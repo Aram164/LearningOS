@@ -14,6 +14,7 @@ from typing import Any
 
 import yaml
 
+from .. import observations
 from .errors import DeliveryScopeError, DeliveryValidationError
 
 #: Request ids must match the manifest contract's `ai_actions/requests[]/id`
@@ -64,7 +65,7 @@ def _sha256_file(path: Path) -> str:
 
 
 def _now_utc() -> dt.datetime:
-    return dt.datetime.now(dt.UTC)
+    return observations.now().astimezone(dt.UTC)
 
 
 def _iso(value: dt.datetime) -> str:

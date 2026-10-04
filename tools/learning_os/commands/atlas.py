@@ -4,12 +4,12 @@ from __future__ import annotations
 
 import copy
 import json
-from datetime import date
 from pathlib import Path
 
 import jsonschema
 import yaml
 
+from .. import observations
 from ..contracts.atlas_question import (
     QUESTION_FIELDS,
     QUESTION_FIELDS_ORDERED,
@@ -191,7 +191,7 @@ def cmd_atlas_question_save(args) -> int:
             if not all(key in question for key in ("title", "text", "target")):
                 raise WriteRefused("new questions require title, text and target")
             meta = {"id": note_id, "type": "note", "role": "question",
-                    "title": question["title"], "created": date.today().isoformat(),
+                    "title": question["title"], "created": observations.today().isoformat(),
                     "authorship": "user", "atlas_question": {
                         "state": "open", "target": copy.deepcopy(question["target"])}}
             body = question["text"]

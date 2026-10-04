@@ -16,6 +16,7 @@ from typing import Any
 
 import yaml
 
+from learning_os import observations
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.contracts.manifest_contract import declared_version
 
@@ -381,7 +382,7 @@ def build_backup_manifest(
     aggregate = "sha256:" + hashlib.sha256(
         json.dumps(rows, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode("utf-8")
     ).hexdigest()
-    timestamp = (now or dt.datetime.now(dt.UTC)).astimezone(dt.UTC).replace(microsecond=0)
+    timestamp = (now or observations.now()).astimezone(dt.UTC).replace(microsecond=0)
     manifest = {
         "schema_version": 1,
         "type": "backup-manifest",

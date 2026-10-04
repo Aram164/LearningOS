@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import copy
-import datetime as _dt
 import hashlib
 import json
 import sys
@@ -11,6 +10,7 @@ from pathlib import Path
 
 import yaml
 
+from learning_os import observations
 from learning_os.contracts import (
     ContractValidationError,
     PlanTemplateError,
@@ -673,12 +673,12 @@ def cmd_unit_note(args) -> int:
             print(f"los: {exc}", file=sys.stderr)
             return 2
         old = target.read_text(encoding="utf-8") if target.is_file() else ""
-        recorded_at = _dt.datetime.now().astimezone().replace(microsecond=0).isoformat()
+        recorded_at = observations.now().replace(microsecond=0).isoformat()
         title = " ".join((args.title or "Learning session note").split()) or "Learning session note"
 
         attachments: list[dict] = []
         attachment_writes: dict[Path, bytes] = {}
-        stamp = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+        stamp = observations.now().replace(tzinfo=None).strftime("%Y%m%d-%H%M%S")
         attachment_dir = unit.path.parent / "attachments" / f"unit-note-{stamp}"
         try:
             for source, source_bytes in sources:

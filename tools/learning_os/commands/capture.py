@@ -2,11 +2,11 @@
 
 from __future__ import annotations
 
-import datetime as _dt
 import json
 import re
 import sys
 
+from learning_os import observations
 from learning_os.contracts.gateway import (
     current_gateway_request,
     request_artifact_id,
@@ -29,7 +29,7 @@ def cmd_capture(args) -> int:
     with _operator_lock(root):
         inbox = root / "work" / "inbox"
         inbox.mkdir(parents=True, exist_ok=True)
-        stamp = _dt.datetime.now().strftime("%Y%m%d-%H%M%S")
+        stamp = observations.now().replace(tzinfo=None).strftime("%Y%m%d-%H%M%S")
 
         if args.file:
             try:

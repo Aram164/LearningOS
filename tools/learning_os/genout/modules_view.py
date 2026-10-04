@@ -2,8 +2,7 @@
 
 from __future__ import annotations
 
-import datetime as _dt
-
+from .. import observations
 from ..loader import Repo
 from .common import _md_header
 
@@ -73,7 +72,7 @@ def _academic_deadlines(repo: Repo) -> list[dict]:
     deadlines: list[dict] = []
     represented_attempts: set[tuple[str, int, str]] = set()
     grouped_windows: dict[tuple[str, str, str], dict] = {}
-    today = _dt.date.today().isoformat()
+    today = observations.today().isoformat()
 
     for mid in sorted(repo.modules):
         module = repo.modules[mid]

@@ -14,6 +14,7 @@ from typing import Any
 
 import yaml
 
+from learning_os import observations
 from learning_os.contracts.json_schema import validate_contract
 
 
@@ -118,7 +119,7 @@ def inspect_legacy_archive(
             "disposition": safe["disposition"],
             "canonical_targets": targets,
         })
-    timestamp = (now or dt.datetime.now(dt.UTC)).astimezone(dt.UTC).replace(microsecond=0)
+    timestamp = (now or observations.now()).astimezone(dt.UTC).replace(microsecond=0)
     lock = {
         "schema_version": 1,
         "id": "legacy-archive-lock",

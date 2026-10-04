@@ -30,6 +30,7 @@ from learning_os.learning_runtime import (
     stage_results_for,
 )
 from learning_os.loader import load_repo
+from learning_os.observations import today as observed_today
 from learning_os.pathing import PathBoundaryError, resolved_inside
 from learning_os.semantics.goals import stale_observations
 
@@ -207,7 +208,7 @@ def _display_registration_state(state: object) -> object:
 
 def _nearest_exam(repo):
     """(date, module_id, exam row) for the nearest recorded exam, or None."""
-    today = _dt.date.today()
+    today = observed_today()
     exams = []
     for row in _academic_deadlines(repo):
         if not isinstance(row, dict) or row.get("kind") != "exam":
@@ -675,7 +676,7 @@ def cmd_resume(args) -> int:
 def _ago(day: str) -> str:
     """Render-time relative time; never hashed, never trusted to parse."""
     try:
-        delta = (_dt.date.today() - _dt.date.fromisoformat(day)).days
+        delta = (observed_today() - _dt.date.fromisoformat(day)).days
     except ValueError:
         return ""
     if delta < 0:
@@ -694,7 +695,7 @@ def _render(dossier, requirement, observations, open_items, sittings,
             stage_note: dict | None = None,
             stage_progress: dict | None = None,
             stage_results: dict | None = None) -> str:
-    today = _dt.date.today()
+    today = observed_today()
     lines = [f"{titles['module']} · {titles['unit']} · {dossier.stage_id}",
              f"  ({via_detail})", ""]
     if recorded_aims:

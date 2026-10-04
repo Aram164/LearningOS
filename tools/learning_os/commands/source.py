@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import copy
-import datetime as _dt
 import json
 import sys
 
+from .. import observations
 from .suggest import not_found, with_suggestions
 from .support import (
     _dump_study_map,
@@ -40,7 +40,7 @@ def cmd_source_feedback(args) -> int:
                   file=sys.stderr)
             return 2
         entry = {"source_id": args.source_id, "feedback": args.feedback,
-                 "recorded": _dt.date.today().isoformat()}
+                 "recorded": observations.today().isoformat()}
         resource_id = getattr(args, "resource_id", None)
         if resource_id:
             # Resolve against THIS stage before writing. The validator rejects a

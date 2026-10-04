@@ -15,7 +15,6 @@ invalidation is acceptable; under-invalidation is a bug.
 
 from __future__ import annotations
 
-import datetime
 import hashlib
 import json
 from collections.abc import Callable
@@ -26,6 +25,7 @@ from typing import TYPE_CHECKING, Any
 
 import yaml
 
+from .. import observations
 from ..ai_actions.projection import project_ai_actions
 from ..contracts.manifest_contract import declared_version, enforce, load_contract
 from ..derived.engine import (
@@ -495,7 +495,7 @@ def garden_digest(root: Path, repo: Repo) -> str:
 
 def today_digest() -> str:
     """Today's date: academic availability is actionable state, not history."""
-    return datetime.date.today().isoformat()
+    return observations.today().isoformat()
 
 
 def contract_closure_digest(root: Path) -> str:

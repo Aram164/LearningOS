@@ -43,6 +43,7 @@ from pathlib import Path
 
 import yaml
 
+from .. import observations
 from ..learning_runtime import (
     RuntimeInputError,
     collect_requirements,
@@ -169,7 +170,7 @@ def _read_goal_ledger(root: Path, *, today: _dt.date | None = None) -> tuple[str
     decisions = data.get("decisions")
     if not isinstance(decisions, dict):
         return ()
-    day = today or _dt.date.today()
+    day = today or observations.today()
     known = []
     for goal_id, row in decisions.items():
         if not isinstance(goal_id, str) or not goal_id or not isinstance(row, dict):

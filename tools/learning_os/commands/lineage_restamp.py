@@ -20,7 +20,7 @@ import json
 import sys
 from pathlib import Path
 
-from learning_os import githistory
+from learning_os import githistory, observations
 from learning_os.fingerprint import canonical_fingerprint
 from learning_os.semantics.lineage import (
     LEDGER_RELATIVE,
@@ -196,7 +196,7 @@ def cmd_lineage_restamp(args) -> int:
             records = load_ledger(root)
             stamped = dict(records)
             restamped_by = f"{request.channel}/{request.approval_kind}"
-            restamped_on = _dt.datetime.now(_dt.UTC).date().isoformat()
+            restamped_on = observations.now().astimezone(_dt.UTC).date().isoformat()
             for cid in ordered:
                 prior = records.get(cid)
                 if prior is None:

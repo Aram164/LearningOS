@@ -21,7 +21,6 @@ Why the producer enforces rather than the consumer:
 
 from __future__ import annotations
 
-import datetime as _dt
 import hashlib
 import json
 from pathlib import Path
@@ -29,6 +28,7 @@ from pathlib import Path
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
+from .. import observations
 from .json_schema import ContractValidationError, schema_registry
 
 CONTRACT_RELATIVE = "system/contracts/manifest-contract.yaml"
@@ -262,7 +262,7 @@ def bump(manifest: dict, root: Path, note: str) -> dict:
         "forbidden_top_level_keys": list(current.get("forbidden_top_level_keys") or []),
         "history": list(current.get("history") or []) + [{
             "version": version,
-            "adopted": _dt.date.today().isoformat(),
+            "adopted": observations.today().isoformat(),
             "note": note,
             "mirrored_in_ui": f"contracts/manifest-v{version}.lock.json",
         }],

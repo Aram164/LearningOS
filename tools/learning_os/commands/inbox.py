@@ -12,12 +12,12 @@ overwrites: a collision refuses rather than merging histories.
 
 from __future__ import annotations
 
-import datetime as _dt
 import hashlib
 import json
 import sys
 from pathlib import Path
 
+from learning_os import observations
 from learning_os.contracts.gateway import current_gateway_request
 
 from .support import (
@@ -128,7 +128,7 @@ def cmd_inbox_resolve(args) -> int:
             routed_to = [str(entry).strip() for entry in (args.routed_to or [])]
             if not routed_to or any(not entry for entry in routed_to):
                 raise ValueError("inbox resolve needs a non-empty routed_to list naming where the drop went")
-            year = str(_dt.date.today().year)
+            year = str(observations.today().year)
             writes: dict[Path, bytes] = {}
             deletes: list[Path] = []
             for rel, data in files.items():

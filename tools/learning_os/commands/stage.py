@@ -3,10 +3,10 @@
 from __future__ import annotations
 
 import copy
-import datetime as _dt
 import json
 import sys
 
+from learning_os import observations
 from learning_os.learning_runtime import requirement_id_for
 
 from .suggest import not_found
@@ -149,7 +149,7 @@ def cmd_stage_progress(args) -> int:
                 return 2
             stage["status"] = action
             if action == "complete":
-                stage["completed"] = _dt.date.today().isoformat()
+                stage["completed"] = observations.today().isoformat()
             following = next((row for row in stages[stages.index(stage) + 1:]
                               if row.get("status") == "pending"), None)
             if following:
@@ -178,7 +178,7 @@ def cmd_stage_progress(args) -> int:
             if upcoming is not None and not upcoming.strip():
                 print("los: --progress-next must not be blank", file=sys.stderr)
                 return 2
-            entry = {"updated": _dt.date.today().isoformat(),
+            entry = {"updated": observations.today().isoformat(),
                      "summary": summary.strip()}
             if upcoming is not None:
                 entry["next"] = upcoming.strip()

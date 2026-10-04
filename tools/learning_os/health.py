@@ -13,6 +13,7 @@ from typing import Any
 
 import yaml
 
+from learning_os import observations
 from learning_os.contracts.capability_catalog import load_capability_catalog
 from learning_os.contracts.json_schema import validate_contract
 from learning_os.contracts.manifest_contract import (
@@ -57,10 +58,10 @@ def _time_machine_check(
     now: dt.datetime | None = None,
     local_timezone: dt.tzinfo | None = None,
 ) -> dict[str, Any]:
-    current = now or dt.datetime.now().astimezone()
+    current = now or observations.now()
     if current.tzinfo is None:
         current = current.replace(tzinfo=dt.UTC)
-    local_timezone = local_timezone or dt.datetime.now().astimezone().tzinfo or dt.UTC
+    local_timezone = local_timezone or observations.now().tzinfo or dt.UTC
     current = current.astimezone(local_timezone)
     try:
         result = subprocess.run(
@@ -615,7 +616,7 @@ def build_health_report(root: Path, *, now: dt.datetime | None = None) -> dict[s
             "Repair or remove the sanitized catalog before opening the planning surface.",
         ))
 
-    timestamp = (now or dt.datetime.now(dt.UTC)).astimezone(dt.UTC).replace(microsecond=0)
+    timestamp = (now or observations.now()).astimezone(dt.UTC).replace(microsecond=0)
     checks.append(_time_machine_check(now=timestamp))
     report = {
         "schema_version": 1,

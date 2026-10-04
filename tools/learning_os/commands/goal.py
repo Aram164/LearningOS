@@ -25,6 +25,7 @@ import sys
 import yaml
 from jsonschema import Draft202012Validator, FormatChecker
 
+from learning_os import observations
 from learning_os.semantics.scan import intelligence_scan
 
 from .suggest import not_found
@@ -80,7 +81,7 @@ def cmd_goal(args) -> int:
         except (TypeError, ValueError):
             print("los: --revisit-on needs an ISO date (YYYY-MM-DD)", file=sys.stderr)
             return 2
-        if day <= _dt.date.today():
+        if day <= observations.today():
             print("los: --revisit-on must be a future date", file=sys.stderr)
             return 2
     with _operator_lock(root):
@@ -133,7 +134,7 @@ def cmd_goal(args) -> int:
                 print(f"los: {not_found('goal', goal_id, candidates)}",
                       file=sys.stderr)
             return 2
-        entry: dict = {"state": state, "decided_at": _dt.date.today().isoformat()}
+        entry: dict = {"state": state, "decided_at": observations.today().isoformat()}
         if revisit_on is not None:
             entry["revisit_on"] = revisit_on
         if args.note is not None:

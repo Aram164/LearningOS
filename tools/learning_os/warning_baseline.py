@@ -21,12 +21,12 @@ rather than as a wash.
 
 from __future__ import annotations
 
-import datetime as dt
 from collections import Counter
 from pathlib import Path
 
 import yaml
 
+from . import observations
 from .loader import load_repo
 from .rules import validate
 from .rules.common import BASELINE_EXEMPT_WARNINGS
@@ -174,7 +174,7 @@ def write_baseline(root: Path, signatures: Counter, note: str) -> None:
     ]
     payload = {
         "baseline_version": 1,
-        "recorded": dt.date.today().isoformat(),
+        "recorded": observations.today().isoformat(),
         "note": note,
         "total": sum(signatures.values()),
         "distinct_signatures": len(rows),

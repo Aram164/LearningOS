@@ -4,12 +4,12 @@ exits. Filing anything into the proposal queue is the operator's job."""
 
 from __future__ import annotations
 
-import datetime as _dt
 import json
 import sys
 from collections.abc import Mapping
 from pathlib import Path
 
+from learning_os import observations
 from learning_os.genout.modules_view import _academic_deadlines
 from learning_os.githistory import GitHistoryError
 from learning_os.learning_runtime import (
@@ -154,7 +154,7 @@ def ranked_scan(root, *, days: int = 30,
         for cluster in clusters
     }
     ranked = rank_clusters(
-        clusters, today=_dt.date.today(), deadlines=deadlines,
+        clusters, today=observations.today(), deadlines=deadlines,
         module_status=module_status, cluster_modules=mapping)
     return goals, ranked, len(_read_goal_ledger(root))
 

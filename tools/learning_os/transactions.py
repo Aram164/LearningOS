@@ -33,6 +33,7 @@ from typing import NoReturn
 import yaml
 from jsonschema import Draft202012Validator
 
+from . import observations
 from . import revisions as revision_store
 from .contracts.gateway import (
     APPROVAL_KINDS,
@@ -1112,7 +1113,7 @@ class TransactionService:
         scope_prefix: str | None = None,
     ):
         self.root = root.resolve()
-        self.clock = clock or (lambda: dt.datetime.now().astimezone())
+        self.clock = clock or observations.now
         implicit_catalogue = self.root / "system" / "contracts" / "capabilities.yaml"
         self.authority_root = (
             Path(authority_root).resolve()

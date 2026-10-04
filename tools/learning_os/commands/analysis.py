@@ -14,11 +14,11 @@ import copy
 import hashlib
 import json
 import shutil
-from datetime import date
 from pathlib import Path, PurePosixPath
 
 import jsonschema
 
+from .. import observations
 from ..contracts.batch_notes import (
     ANALYSIS_FIELDS,
     ANALYSIS_FIELDS_ORDERED,
@@ -309,7 +309,7 @@ def _resolve_note(root: Path, repo, analysis: dict, binding: dict,
     if not isinstance(analysis.get("title"), str) or not analysis["title"].strip():
         raise WriteRefused("new analyses require a title")
     meta = {"id": note_id, "type": "note", "role": "reference",
-            "title": analysis["title"], "created": date.today().isoformat(),
+            "title": analysis["title"], "created": observations.today().isoformat(),
             "state": "rough", "authorship": "operator-drafted",
             "semantic_review": "unreviewed",
             "material_analysis": copy.deepcopy(binding)}

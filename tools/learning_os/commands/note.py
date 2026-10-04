@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import date
 from pathlib import Path
 
 import jsonschema
 
+from learning_os import observations
 from learning_os.loader import EVIDENCE_SCHEMES, LoaderError, load_repo, parse_frontmatter
 
 from .suggest import not_found
@@ -295,7 +295,7 @@ def _resolve_note_create(root: Path, repo, note: dict,
         if old_id not in repo.notes:
             raise WriteRefused(f"superseded note does not exist: {old_id!r}")
     meta = {"id": note_id, "type": "note", "role": note.get("role", "synthesis"),
-            "title": note["title"], "created": date.today().isoformat(),
+            "title": note["title"], "created": observations.today().isoformat(),
             "state": "rough", "authorship": "operator-drafted",
             "semantic_review": "unreviewed"}
     for field in ("concepts", "sources", "contexts", "supersedes"):

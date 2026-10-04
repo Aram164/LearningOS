@@ -10,6 +10,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+from learning_os import observations
 from learning_os.contracts.gateway import GATEWAY_CHANNELS
 from learning_os.unit_notes import unit_note_sections
 
@@ -246,7 +247,7 @@ def _other_session_summary(rows: dict[str, dict]) -> dict:
     Undated rows (the pre-session `legacy` file) count as stale — their age
     cannot be proven.
     """
-    now = _dt.datetime.now(_dt.UTC)
+    now = observations.now().astimezone(_dt.UTC)
     fresh = sorted(path for path, row in rows.items() if not _row_is_stale(row, now))
     stale = sorted(path for path, row in rows.items() if _row_is_stale(row, now))
     moments = [moment for row in rows.values()
