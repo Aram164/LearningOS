@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 3,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: records changed since request preparation; re-prepare the request instead of continuing it\n",
+  "stdout": "",
+  "stdout_json": null
+}
