@@ -9,8 +9,13 @@ Case-file fields beyond SPEC §5.2 (all documented in REPORT.md of the
 introducing session): ``artifact_ids`` (default: the capability's
 request-scoped id, else ``[]``), ``approval_kind`` (default
 ``"operator-approval"``), ``replay_only``, ``same_envelope_as`` (a step index
-whose envelope file is resubmitted verbatim), and ``git``
-(``{failing_pre_commit, origin}`` fixture setup for session-end sequences).
+whose envelope file is resubmitted verbatim), ``git``
+(``{failing_pre_commit, origin}`` fixture setup for session-end sequences),
+and ``fixture_mtime`` (a file-level ISO 8601 instant, default
+:data:`FIXTURE_MTIME_DEFAULT`). A case may carry its own ``observations``
+object, which replaces the file-level one for that case. Every case's
+override also carries ``"mtimes"``: every file directly under the fixture's
+``work/inbox/``, mapped to ``fixture_mtime``.
 ``<ROOT>`` in request/argv strings is substituted with the fixture root;
 prefer plain relative paths, which resolve against the fixture (children
 run with cwd=root). ``<CASEDATA>`` substitutes the relative path to a copy
@@ -19,11 +24,12 @@ of the case's committed data directory
 
 The caller merges file-level context into each case before calling
 :func:`run_case`/:func:`run_sequence`: the case dict must carry the file's
-``observations`` mapping.
+``observations`` mapping and ``fixture_mtime`` value.
 """
 
 from __future__ import annotations
 
+import argparse
 import copy
 import difflib
 import json
@@ -46,16 +52,13 @@ CASEDATA_DIR = TESTS_DIR / "scenarios" / "files"
 
 FIXTURE_IDENTITY = ("Fixture", "fixture@local")
 FIXTURE_COMMIT_MESSAGE = "fixture"
+FIXTURE_MTIME_DEFAULT = "2026-09-28T09:00:00+02:00"
 
+# The §8.1 transaction pattern, matched with fullmatch over parsed strings
+# (SPEC §5.3 rule 2, amendment (x) C2): never a regex over free text.
 _TX_RE = re.compile(r"transaction-\d{8}-\d{6}-\d{3}")
-_KEY_RE = re.compile(
-    r"(?<![\w-])(?:request-)?scenario-[A-Za-z0-9_.][A-Za-z0-9_.~-]*"
-    r"|(?<![\w-])observe-[0-9a-f]{32}(?![0-9a-f])"
-    r"|(?<![\w-])(?:request-)?reviewed-[0-9a-f]+"
-)
-_SNAPSHOT_FIELDS = frozenset({
-    "snapshot_after", "snapshot_before", "expected_snapshot", "snapshot_id",
-})
+_KEY_NAMES = frozenset({"request_id", "idempotency_key", "request_key"})
+_STALE_SNAPSHOT = "STALE_SNAPSHOT"
 _SHA256_RE = re.compile(r"sha256:[a-f0-9]{64}")
 # D16 stderr rule (SPEC §5.3.4): present from S05, a no-op until S14 adds
 # the `los: CODE: message` prefix.
@@ -136,13 +139,24 @@ def _commit_fixture(root: Path, now_iso: str, git_setup: dict | None) -> None:
         _git(root, "remote", "add", "origin", str(git_setup["origin"]))
 
 
+def _inbox_mtimes(root: Path, fixture_mtime: str) -> dict:
+    """Every file directly under the fixture's inbox, mapped to one instant."""
+    inbox = root / "work" / "inbox"
+    if not inbox.is_dir():
+        return {}
+    return {path.relative_to(root).as_posix(): fixture_mtime
+            for path in sorted(inbox.iterdir()) if path.is_file()}
+
+
 def _write_observations(workdir: Path, file_observations: dict,
-                        operation: str, case_id: str) -> Path:
+                        operation: str, case_id: str, root: Path,
+                        fixture_mtime: str) -> Path:
     observations = copy.deepcopy(file_observations)
     observations["ids"] = {
         "seed": f"{operation}/{case_id}",
         "counter_file": str(workdir / "ids.counter"),
     }
+    observations["mtimes"] = _inbox_mtimes(root, fixture_mtime)
     path = workdir / "observations.json"
     path.write_text(json.dumps(observations, indent=2, sort_keys=True)
                     + "\n", encoding="utf-8")
@@ -283,7 +297,11 @@ def _cli_command_for(operation: str, root: Path) -> str:
 
 
 def request_to_argv(operation: str, request: dict, root: Path) -> list[str]:
-    """Render a gateway request to CLI flags for a capability command."""
+    """Render a gateway request to CLI flags for a capability command.
+
+    Each field is rendered by its own argparse action in the operation's
+    subparser (SPEC §5.2 "CLI transport", amendment (x) C3).
+    """
     sys.path.insert(0, str(REPO_ROOT / "tools"))
     try:
         import los
@@ -299,12 +317,12 @@ def request_to_argv(operation: str, request: dict, root: Path) -> list[str]:
         if action.option_strings or action.dest not in remaining:
             continue
         value = remaining.pop(action.dest)
-        argv.extend(_render_positional(value))
+        argv.extend(_render_positional(action, value))
     for action in parser._actions:
         if not action.option_strings or action.dest not in remaining:
             continue
         value = remaining.pop(action.dest)
-        argv.extend(_render_option(action.option_strings[0], value))
+        argv.extend(_render_option(action, value))
     if remaining:
         raise ValueError(
             f"request keys have no CLI flag for {operation}: "
@@ -312,26 +330,69 @@ def request_to_argv(operation: str, request: dict, root: Path) -> list[str]:
     return argv
 
 
-def _render_positional(value) -> list[str]:
+def _is_json_object_action(action) -> bool:
+    """Whether the action converts with the shared ``json_object`` callable."""
+    sys.path.insert(0, str(REPO_ROOT / "tools"))
+    try:
+        from learning_os.contracts.payloads import json_object
+    finally:
+        del sys.path[0]
+    return action.type is json_object
+
+
+def _scalar_text(action, value) -> str:
+    """One value as one argv word: a JSON string only for ``json_object``."""
+    if isinstance(value, (dict, list)):
+        if _is_json_object_action(action):
+            return json.dumps(value, sort_keys=True)
+        return str(value)
+    return str(value)
+
+
+def _takes_values(action) -> bool:
+    """A list-valued action: ``nargs`` of ``+``, ``*`` or a positive int."""
+    return action.nargs in ("+", "*") or (
+        isinstance(action.nargs, int) and action.nargs > 0)
+
+
+def _render_positional(action, value) -> list[str]:
+    if _takes_values(action) and isinstance(value, list):
+        return [_scalar_text(action, item) for item in value]
     if isinstance(value, bool):
         return [str(value)]
     if isinstance(value, (dict, list)):
-        return [json.dumps(value, sort_keys=True)]
+        if _is_json_object_action(action):
+            return [json.dumps(value, sort_keys=True)]
+        return [str(value)]
     return [str(value)]
 
 
-def _render_option(flag: str, value) -> list[str]:
+def _render_option(action, value) -> list[str]:
+    flag = action.option_strings[0]
+    if isinstance(action, (argparse._StoreTrueAction,
+                           argparse._StoreFalseAction)):
+        if value is None:
+            return []
+        return [flag] if value != action.default else []
+    if isinstance(action, argparse._AppendAction) and isinstance(value, list):
+        out: list[str] = []
+        for item in value:
+            out.extend([flag, _scalar_text(action, item)])
+        return out
+    if _takes_values(action):
+        items = value if isinstance(value, list) else [value]
+        return [flag, *[_scalar_text(action, item) for item in items]]
     if value is None or value is False:
         return []
     if value is True:
         return [flag]
     if isinstance(value, list):
-        out: list[str] = []
+        out = []
         for item in value:
-            out.extend(_render_option(flag, item))
+            out.extend(_render_option(action, item))
         return out
     if isinstance(value, dict):
-        return [flag, json.dumps(value, sort_keys=True)]
+        return [flag, _scalar_text(action, value)]
     return [flag, str(value)]
 
 
@@ -484,16 +545,97 @@ def _walk_strings(node, func):
     return node
 
 
-def _collect_snapshots(node, into: list) -> None:
-    if isinstance(node, dict):
-        for key, value in node.items():
-            if key in _SNAPSHOT_FIELDS and isinstance(value, str) \
-                    and _SHA256_RE.fullmatch(value) and value not in into:
-                into.append(value)
-            _collect_snapshots(value, into)
-    elif isinstance(node, list):
-        for item in node:
-            _collect_snapshots(item, into)
+def _discover_identities(steps: list) -> tuple[set, set, set]:
+    """Identity values per SPEC §5.3 rule 2 (amendment (x) C2).
+
+    A transaction id (the §8.1 pattern, fullmatched over parsed strings), a
+    value under a JSON key named ``request_id``, ``idempotency_key`` or
+    ``request_key``, or a ``sha256:`` value under a JSON key whose name
+    contains ``snapshot`` (or under ``expected``/``actual`` in a
+    ``STALE_SNAPSHOT`` error's details). Parsed stdout JSON, receipts and
+    ledgers are walked; nothing is discovered by regex over free text.
+    """
+    tx: set[str] = set()
+    keys: set[str] = set()
+    snaps: set[str] = set()
+
+    def visit(node) -> None:
+        if isinstance(node, str):
+            if _TX_RE.fullmatch(node) is not None:
+                tx.add(node)
+            return
+        if isinstance(node, list):
+            for item in node:
+                visit(item)
+            return
+        if not isinstance(node, dict):
+            return
+        if node.get("code") == _STALE_SNAPSHOT and isinstance(
+                node.get("details"), dict):
+            details = node["details"]
+            for leaf in ("expected", "actual"):
+                value = details.get(leaf)
+                if (isinstance(value, str)
+                        and _SHA256_RE.fullmatch(value) is not None):
+                    snaps.add(value)
+        for name, value in node.items():
+            if isinstance(name, str) and _TX_RE.fullmatch(name) is not None:
+                tx.add(name)
+            if isinstance(name, str) and name in _KEY_NAMES:
+                if isinstance(value, str) and value:
+                    keys.add(value)
+            elif (isinstance(name, str) and "snapshot" in name
+                    and isinstance(value, str)
+                    and _SHA256_RE.fullmatch(value) is not None):
+                snaps.add(value)
+            visit(value)
+
+    for step in steps:
+        for section in ("stdout_json", "receipts", "revisions_changed",
+                        "idempotency_changed", "session_ledger_changed"):
+            visit(step.get(section))
+    return tx, keys, snaps
+
+
+def _ledger_strings(node) -> list[str]:
+    """Every string in a recorded ledger, in sorted JSON-path order."""
+    out: list[str] = []
+
+    def visit(node) -> None:
+        if isinstance(node, str):
+            out.append(node)
+        elif isinstance(node, dict):
+            for name in sorted(node, key=str):
+                visit(name)
+                visit(node[name])
+        elif isinstance(node, list):
+            for item in node:
+                visit(item)
+
+    visit(node)
+    return out
+
+
+def _number_family(values: set, texts: list, ledger_runs: list,
+                   prefix: str) -> dict:
+    """Number one token family by first appearance (amendment (x) C5).
+
+    Across stdout, stderr and receipts first (every step, in order), then
+    across the recorded ledgers in walk order. The value itself breaks ties,
+    so the numbering is total.
+    """
+    def rank(value: str):
+        for index, text in enumerate(texts):
+            at = text.find(value)
+            if at >= 0:
+                return (0, index, at)
+        for index, run in enumerate(ledger_runs):
+            if value in run:
+                return (1, index, run.index(value))
+        return (2, 0, 0)
+
+    return {value: f"{prefix}{n + 1}"
+            for n, value in enumerate(sorted(values, key=lambda v: (rank(v), v)))}
 
 
 def _single_steps(recording: dict) -> list:
@@ -515,42 +657,21 @@ def normalize(recording: dict, root: str | Path) -> dict:
         lambda text: text.replace(root, "<ROOT>").replace(
             materials, "<MATERIALS>"))
     steps = _single_steps(recording)
-    # First-appearance order across stdout, stderr and receipts, per step.
-    tx_order: list[str] = []
-    key_order: list[str] = []
+    tx_values, key_values, snap_values = _discover_identities(steps)
+    texts = []
     for step in steps:
-        for text in (step.get("stdout", ""), step.get("stderr", ""),
-                     json.dumps(step.get("receipts", []), sort_keys=True)):
-            for found in _TX_RE.findall(text):
-                if found not in tx_order:
-                    tx_order.append(found)
-            for found in _KEY_RE.findall(text):
-                if found not in key_order:
-                    key_order.append(found)
-    snap_values: list[str] = []
+        texts.append(step.get("stdout", ""))
+        texts.append(step.get("stderr", ""))
+        texts.append(json.dumps(step.get("receipts", []), sort_keys=True))
+    ledger_runs = []
     for step in steps:
-        for node in (step.get("stdout_json"), step.get("receipts"),
-                     step.get("revisions_changed"),
-                     step.get("idempotency_changed"),
-                     step.get("session_ledger_changed")):
-            _collect_snapshots(node, snap_values)
-    # Order snapshot tokens by first appearance in stdout, stderr, receipts.
-    searchable = [step.get("stdout", "") + "\n" + step.get("stderr", "")
-                  + "\n" + json.dumps(step.get("receipts", []),
-                                      sort_keys=True)
-                  for step in steps]
-    snap_order = sorted(snap_values,
-                        key=lambda value: next(
-                            (index, text.find(value))
-                            for index, text in enumerate(searchable)
-                            if value in text))
+        for section in ("revisions_changed", "idempotency_changed",
+                        "session_ledger_changed"):
+            ledger_runs.append(_ledger_strings(step.get(section)))
     mapping = {}
-    mapping.update({value: f"TX{n + 1}"
-                    for n, value in enumerate(tx_order)})
-    mapping.update({value: f"KEY{n + 1}"
-                    for n, value in enumerate(key_order)})
-    mapping.update({value: f"SNAP{n + 1}"
-                    for n, value in enumerate(snap_order)})
+    mapping.update(_number_family(tx_values, texts, ledger_runs, "TX"))
+    mapping.update(_number_family(key_values, texts, ledger_runs, "KEY"))
+    mapping.update(_number_family(snap_values, texts, ledger_runs, "SNAP"))
 
     def _map(text: str) -> str:
         # Longest first, so `request-<key>` maps as a unit before `<key>`.
@@ -604,7 +725,8 @@ def _prepare_world(case: dict, operation: str, workdir: Path
     now_iso = case["observations"]["now"]
     _commit_fixture(root, now_iso, case.get("git"))
     observations_path = _write_observations(
-        workdir, case["observations"], operation, case["id"])
+        workdir, case["observations"], operation, case["id"], root,
+        case.get("fixture_mtime", FIXTURE_MTIME_DEFAULT))
     # The case's data directory, copied to a stable depth beside the
     # fixture so <CASEDATA> substitutes a relative path: an absolute
     # committed path would leak the checkout location into intent hashes.
