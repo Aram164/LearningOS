@@ -134,6 +134,7 @@ GROUPS: dict[str, list[str]] = {
         "test_note_create.py",
         "test_note_evidence.py",
         "test_observation_gesture.py",
+        "test_observations.py",
         "test_operator_lock.py",
         "test_operations.py",
         "test_operations_gate.py",

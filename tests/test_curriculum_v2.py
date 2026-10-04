@@ -357,13 +357,10 @@ def test_elapsed_unrecorded_sitting_settles_once_recorded(mini_repo, monkeypatch
     module["attempts"] = [att for att in module["attempts"] if att.get("termin") != 2]
     write_yaml(_demo_module_path(mini_repo), module)
 
-    class FrozenDate(_dt.date):
-        @classmethod
-        def today(cls):
-            return cls.fromisoformat("2026-10-10")
-
     # Freeze only this producer's clock, as the sitting-expiry tests do.
-    monkeypatch.setattr(modules_view, "_dt", SimpleNamespace(date=FrozenDate))
+    monkeypatch.setattr(
+        modules_view, "observations",
+        SimpleNamespace(today=lambda: _dt.date.fromisoformat("2026-10-10")))
     rows = modules_view._academic_deadlines(load_repo(mini_repo))
     mine = next(row for row in rows if row.get("termin") == 2)
     assert (mine["start_date"], mine["registration_state"]) == ("2026-10-09", "unrecorded")

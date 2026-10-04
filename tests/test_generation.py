@@ -264,14 +264,11 @@ def test_real_manifest_reports_missing_records_and_drops_retired_rows(
 def test_real_sitting_expiry_boundaries(real_repo, monkeypatch, day):
     from learning_os.genout import modules_view
 
-    class FrozenDate(datetime.date):
-        @classmethod
-        def today(cls):
-            return cls.fromisoformat(day)
-
     # Freeze only this producer's clock; the loaded authored records are read
     # unchanged, and the shared generated-manifest fixture is never replaced.
-    monkeypatch.setattr(modules_view, "_dt", SimpleNamespace(date=FrozenDate))
+    monkeypatch.setattr(
+        modules_view, "observations",
+        SimpleNamespace(today=lambda: datetime.date.fromisoformat(day)))
     deadlines = modules_view._academic_deadlines(real_repo)
     target = {"module-hu-aml": "2026-09-30",
               "module-hu-m2-statistik-analysis": "2026-10-09"}
