@@ -652,10 +652,12 @@ def normalize(recording: dict, root: str | Path) -> dict:
     """
     root = str(root)
     materials = str(Path(root).parent / "materials")
+    learningos = str(Path(root).parent)
     recording = _walk_strings(
         copy.deepcopy(recording),
         lambda text: text.replace(root, "<ROOT>").replace(
-            materials, "<MATERIALS>"))
+            materials, "<MATERIALS>").replace(
+            learningos, "<LEARNINGOS>"))
     steps = _single_steps(recording)
     tx_values, key_values, snap_values = _discover_identities(steps)
     texts = []

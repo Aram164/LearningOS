@@ -130,6 +130,23 @@ def test_normalize_orders_a_ledger_only_snapshot(tmp_path):
             == "SNAP2")
 
 
+def test_normalize_replaces_learningos_container(tmp_path):
+    """Amendment (y): a sibling path normalizes, ROOT/MATERIALS unchanged."""
+    container = tmp_path / "LearningOS"
+    root = container / "repository"
+    sibling = str(container / "obsidian-ui" / "x")
+    recording = _bare_recording(
+        {"sibling": sibling},
+        stdout=f"root {root} sibling {sibling}",
+        stderr=f"materials {container / 'materials'} sibling {sibling}")
+    normalized = scenario_harness.normalize(recording, root)
+    assert normalized["stdout_json"]["sibling"] == "<LEARNINGOS>/obsidian-ui/x"
+    assert normalized["stdout"] == (
+        "root <ROOT> sibling <LEARNINGOS>/obsidian-ui/x")
+    assert normalized["stderr"] == (
+        "materials <MATERIALS> sibling <LEARNINGOS>/obsidian-ui/x")
+
+
 def _subparser(command: str):
     sys.path.insert(0, str(scenario_harness.REPO_ROOT / "tools"))
     try:
