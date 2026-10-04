@@ -77,6 +77,10 @@ def test_every_family_is_present(tmp_path):
                and (root / stage["notes_path"]).is_file()
                and (root / stage["notes_path"]).stat().st_size > 0
                for stage in repo.learning_paths["path-demo"].data["stages"])
+    assert any(stage.get("id") == "stage-demo-path-next"
+               and not stage.get("notes_path")
+               for stage in repo.learning_paths["path-demo"].data["stages"])
+    assert repo.learning_paths["path-demo"].data["current_stage"] == "stage-demo-path"
     assert [req["id"] for req in collect_requirements(repo)] == ["req-demo-l01-demo"]
     assert (root / "work/inbox/note-drop.md").is_file() \
         and (root / "work/inbox/pack/one.md").is_file()

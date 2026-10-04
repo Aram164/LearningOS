@@ -163,6 +163,22 @@ def _add_path_stage_note(root: Path) -> None:
         "# First step — path notes\n\nBegun.\n", encoding="utf-8")
 
 
+def _add_second_path_stage(root: Path) -> None:
+    # Amendment (w), second stage: the same learning path keeps a pending
+    # stage with no notes_path, so the path.py:43 refusal stays reachable.
+    # current_stage still names the active stage-demo-path.
+    path_file = root / "work/active/workspace-demo/paths/path-demo.yaml"
+    data = yaml.safe_load(path_file.read_text(encoding="utf-8"))
+    data["stages"].append({
+        "id": "stage-demo-path-next",
+        "title": "Second step",
+        "status": "pending",
+        "objective": "Continue the path.",
+        "done_when": ["Continued."],
+    })
+    write_yaml(path_file, data)
+
+
 def _add_runtime_target(root: Path) -> None:
     # Amendment (w): the active stage of the unit's current study map
     # carries a runtime_target, so collect_requirements returns one
@@ -239,6 +255,7 @@ def rich_world(root: Path) -> dict:
     _add_pending_stage(root)
     _add_runtime_target(root)
     _add_path_stage_note(root)
+    _add_second_path_stage(root)
     _add_second_workspace(root)
     _add_inbox_drops(root)
     book = _add_fixture_book(root)
