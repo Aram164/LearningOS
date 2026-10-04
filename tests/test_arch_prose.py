@@ -40,8 +40,10 @@ class Hit:
 
 
 def _name_is_suspect(identifier: str) -> bool:
+    """SPEC §3.7 item 2: the identifier equals a §3.1 word or ends with `_` + one."""
     lowered = identifier.lower()
-    return any(lowered.endswith(suffix) for suffix in _SUFFIXES)
+    return lowered in _SUFFIXES or any(
+        lowered.endswith("_" + suffix) for suffix in _SUFFIXES)
 
 
 def _is_suspect(node: ast.AST, exc_names: set[str]) -> bool:

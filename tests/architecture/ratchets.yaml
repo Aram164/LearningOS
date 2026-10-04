@@ -123,10 +123,6 @@ checks:
     count: 2
     since: baseline
     approved_by: null
-  - signature: tools/learning_os/genout/session_compiler.py::replan_session::substring::available_minutes
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: tools/learning_os/health.py::_time_machine_check::regex::(?im)^\s*(?:Encryption|Encrypted)\s*[:=]
     count: 1
     since: baseline
