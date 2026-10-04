@@ -1,0 +1,44 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\n  \"ok\": true,\n  \"actions\": [\n    {\n      \"id\": \"garden.shelve\",\n      \"title\": \"Shelve with AI\",\n      \"description\": \"Prepare a bounded Garden seed for discussion, then apply only an approved structured delivery.\",\n      \"target_kinds\": [\n        \"garden-note\"\n      ],\n      \"interaction_mode\": \"discussion\",\n      \"status\": \"implemented\",\n      \"supported_providers\": [\n        \"manual-bundle\",\n        \"claude\",\n        \"chatgpt\"\n      ]\n    },\n    {\n      \"id\": \"unit.compare-materials\",\n      \"title\": \"Compare unit materials\",\n      \"description\": \"Prepare the complete local material menu for qualitative comparison and publish only a whole approved unit dossier.\",\n      \"target_kinds\": [\n        \"unit\"\n      ],\n      \"interaction_mode\": \"discussion\",\n      \"status\": \"implemented\",\n      \"supported_providers\": [\n        \"manual-bundle\"\n      ]\n    }\n  ]\n}\n",
+  "stdout_json": {
+    "actions": [
+      {
+        "description": "Prepare a bounded Garden seed for discussion, then apply only an approved structured delivery.",
+        "id": "garden.shelve",
+        "interaction_mode": "discussion",
+        "status": "implemented",
+        "supported_providers": [
+          "manual-bundle",
+          "claude",
+          "chatgpt"
+        ],
+        "target_kinds": [
+          "garden-note"
+        ],
+        "title": "Shelve with AI"
+      },
+      {
+        "description": "Prepare the complete local material menu for qualitative comparison and publish only a whole approved unit dossier.",
+        "id": "unit.compare-materials",
+        "interaction_mode": "discussion",
+        "status": "implemented",
+        "supported_providers": [
+          "manual-bundle"
+        ],
+        "target_kinds": [
+          "unit"
+        ],
+        "title": "Compare unit materials"
+      }
+    ],
+    "ok": true
+  }
+}
