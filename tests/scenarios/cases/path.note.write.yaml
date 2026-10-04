@@ -1,0 +1,39 @@
+# SPEC-GAP S05-P1 (see REPORT.md): no success case and no exact-replay case
+# are expressible. The fixture's path stage carries no notes_path, and no
+# operation writes one, so every committable request refuses at path.py:43.
+operation: path.note.write
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: no-notes-path
+    kind: refusal
+    transport: gateway
+    request: {path_id: path-demo, stage_id: stage-demo-path, text: "nowhere to land"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: unknown-stage
+    kind: refusal
+    transport: gateway
+    request: {path_id: path-demo, stage_id: stage-nope, text: "nowhere to land"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: unknown-path
+    kind: refusal
+    transport: gateway
+    request: {path_id: path-nope, stage_id: stage-demo-path, text: "nowhere to land"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [path-note, path-demo, stage-demo-path, --text, "hello"]
+    expect: {site: null}
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {path_id: path-demo, stage_id: stage-demo-path, text: "nowhere to land"}
+    artifact_ids: [path-demo]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/path.py:47", reason: "empty note: shadowed by the no-notes_path refusal at path.py:43 in rich_world"}

@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: stage has no notes_path: stage-demo-path\n",
+  "stdout": "",
+  "stdout_json": null
+}
