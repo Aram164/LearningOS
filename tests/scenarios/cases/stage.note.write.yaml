@@ -1,0 +1,57 @@
+operation: stage.note.write
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: append-note
+    kind: success
+    transport: gateway
+    request: {unit_id: unit-demo-l01, stage_id: stage-demo, text: "A derivation worth keeping."}
+    artifact_ids: [unit-demo-l01]
+    a5_base: true
+    expect: {site: null}
+  - id: replace-note
+    kind: success
+    transport: gateway
+    request: {unit_id: unit-demo-l01, stage_id: stage-demo, text: "Fresh start.", replace: true}
+    artifact_ids: [unit-demo-l01]
+    expect: {site: null}
+  - id: unknown-stage
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, stage_id: stage-nope, text: "nowhere to land"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: unknown-unit
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-nope, stage_id: stage-demo, text: "nowhere to land"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: empty-note
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, stage_id: stage-demo, text: "   "}
+    artifact_ids: []
+    expect: {site: null}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [stage-note, unit-demo-l01, stage-demo, --text, "hello"]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {unit_id: unit-demo-l01, stage_id: stage-demo, text: "A derivation worth keeping."}
+        artifact_ids: [unit-demo-l01]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {unit_id: unit-demo-l01, stage_id: stage-demo, text: "A derivation worth keeping."}
+    artifact_ids: [unit-demo-l01]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/stage.py:46", reason: "no working_note: every rich_world stage carries one, and no operation clears it"}

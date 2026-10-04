@@ -1,0 +1,160 @@
+{
+  "canonical_changed": {
+    "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md": "c33ed33915baafa4987c308885ea7dec486312ddf3cd017d6996923e6d7098f0"
+  },
+  "exit": 0,
+  "idempotency_changed": {
+    "after": {
+      "entries": {
+        "KEY2": {
+          "capability": "stage.note.write",
+          "channel": "operator",
+          "intent_sha256": "sha256:cbeba7cf94b777909c36af9fe3490d5ddae3828c55e1091edbaa3e3c17aeb7ad",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "request_id": "KEY1",
+          "revisions": {
+            "unit-demo-l01": 4
+          },
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "transaction_id": "TX1"
+        }
+      },
+      "schema_version": 1,
+      "type": "transaction-idempotency-ledger"
+    },
+    "before": null
+  },
+  "outcome": "ok",
+  "receipts": [
+    {
+      "artifact_revisions": {
+        "unit-demo-l01": {
+          "after": 4,
+          "before": 3
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "stage.note.write",
+            "declared_writes": [
+              "curriculum/modules/**/units/**/stages/**"
+            ]
+          }
+        ]
+      },
+      "capability": "stage.note.write",
+      "committed_at": "2026-10-01T09:00:00+02:00",
+      "expected_revisions": {
+        "unit-demo-l01": 3
+      },
+      "id": "TX1",
+      "metadata": {
+        "data_roots_sha256": "sha256:4ee12d8e9f2dbbd86cdc001dbcf4029294b33e5bb494e223de1db9a3a344acc2",
+        "fingerprint_definition": 2
+      },
+      "request": {
+        "approval": {
+          "kind": "operator-approval",
+          "subject_sha256": "sha256:cbeba7cf94b777909c36af9fe3490d5ddae3828c55e1091edbaa3e3c17aeb7ad"
+        },
+        "channel": "operator",
+        "idempotency_key": "KEY2",
+        "intent_sha256": "sha256:cbeba7cf94b777909c36af9fe3490d5ddae3828c55e1091edbaa3e3c17aeb7ad",
+        "request_id": "KEY1"
+      },
+      "schema_version": 2,
+      "snapshot_after": "SNAP1",
+      "snapshot_before": "SNAP2",
+      "status": "committed",
+      "type": "transaction-receipt",
+      "writes": [
+        {
+          "created": false,
+          "path": "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md",
+          "sha256_after": "c33ed33915baafa4987c308885ea7dec486312ddf3cd017d6996923e6d7098f0",
+          "sha256_before": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+        }
+      ]
+    }
+  ],
+  "revisions_changed": {
+    "after": {
+      "revisions": {
+        "unit-demo-l01": 4
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    },
+    "before": {
+      "revisions": {
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    }
+  },
+  "session_ledger_changed": {
+    "after": {
+      "paths": {
+        "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "c33ed33915baafa4987c308885ea7dec486312ddf3cd017d6996923e6d7098f0",
+          "state": "file"
+        },
+        "operations/transactions/TX1.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "a4cd1a4914b5967fed93fe8c63656063030733a51937559fdcf6772293285afa",
+          "state": "file"
+        },
+        "operations/transactions/idempotency.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "35fb377eba1214715697f5befdf6ddb2196f0e6b48c84ce09941b8d8fdd0e194",
+          "state": "file"
+        },
+        "operations/transactions/revisions.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "19337a501859f811e26e70d8672906c19edcb5b00d7c39ecb869eb146b2b7709",
+          "state": "file"
+        }
+      },
+      "schema_version": 2,
+      "session_id": "channel:operator"
+    },
+    "before": null
+  },
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"stage.note.write\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"unit_id\": \"unit-demo-l01\",\n    \"stage_id\": \"stage-demo\",\n    \"working_note\": \"curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"unit-demo-l01\": 4\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "stage.note.write",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": "operations/transactions/TX1.yaml",
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "artifact_revisions": {
+        "unit-demo-l01": 4
+      },
+      "ok": true,
+      "receipt_path": "operations/transactions/TX1.yaml",
+      "replayed": false,
+      "snapshot_after": "SNAP1",
+      "stage_id": "stage-demo",
+      "transaction_id": "TX1",
+      "unit_id": "unit-demo-l01",
+      "working_note": "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md"
+    },
+    "schema_version": 2,
+    "snapshot_after": "SNAP1",
+    "transaction_id": "TX1"
+  }
+}
