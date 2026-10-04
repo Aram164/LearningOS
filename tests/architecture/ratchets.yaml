@@ -1,5 +1,5 @@
 schema: 1
-baselined: [A3-prose]
+baselined: [A3-prose, A4-plumbing, A14-vocabulary]
 checks:
   A3-prose:
   - signature: tools/learning_os/commands/module.py::_inventory_block::method::```
@@ -59,6 +59,1444 @@ checks:
     since: baseline
     approved_by: null
   - signature: tools/normalise_material_uris.py::main::substring::material://
+    count: 1
+    since: baseline
+    approved_by: null
+  A4-plumbing:
+  - signature: tools/learning_os/commands/abilities.py::cmd_ability_candidate_append::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/abilities.py::cmd_ability_candidate_append::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/abilities.py::cmd_ability_candidate_append::print
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/abilities.py::cmd_ability_candidate_append::return
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/abilities.py::cmd_ability_context::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/abilities.py::cmd_ability_context::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/abilities.py::cmd_ability_observation_append::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/abilities.py::cmd_ability_observation_append::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/abilities.py::cmd_ability_observation_append::print
+    count: 9
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/abilities.py::cmd_ability_observation_append::return
+    count: 9
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_append_slices::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_append_slices::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_append_slices::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_apply_delivery::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_apply_delivery::print
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_apply_delivery::return
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_import_delivery::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_import_delivery::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_import_delivery::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_list::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_list::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_prepare::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_prepare::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_prepare::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_status::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_status::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_validate_delivery::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::cmd_ai_action_validate_delivery::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_prepare::canonical_fingerprint
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_prepare::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_prepare::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_prepare::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_save::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_save::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_save::print
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_save::return
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_save_batch::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_save_batch::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_save_batch::print
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/analysis.py::cmd_note_analysis_save_batch::return
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/atlas.py::_commit::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/atlas.py::_commit::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/atlas.py::cmd_atlas_context::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/atlas.py::cmd_atlas_context::canonical_fingerprint
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/atlas.py::cmd_atlas_context::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/atlas.py::cmd_atlas_context::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/atlas.py::cmd_atlas_context::return
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/atlas.py::cmd_atlas_question_save::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/atlas.py::cmd_atlas_question_save::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/atlas.py::cmd_atlas_question_save::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/atlas.py::cmd_concept_relations_change::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/atlas.py::cmd_concept_relations_change::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capability.py::_v2_exit_code::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capability.py::cmd_capability::_operator_lock
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capability.py::cmd_capability::canonical_fingerprint
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capability.py::cmd_capability::print
+    count: 22
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capability.py::reviewed_envelope_apply::print
+    count: 5
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capability.py::reviewed_envelope_apply::return
+    count: 4
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capture.py::cmd_capture::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capture.py::cmd_capture::print
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capture.py::cmd_capture::return
+    count: 4
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/collection_entry.py::_plan_revise::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/collection_entry.py::_refuse_without_approval::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/collection_entry.py::_refuse_without_approval::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/collection_entry.py::cmd_collection_entry_revise::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/collection_entry.py::cmd_collection_entry_revise::print
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/collection_entry.py::cmd_collection_entry_revise::return
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/detour.py::cmd_detour_create::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/detour.py::cmd_detour_create::print
+    count: 4
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/detour.py::cmd_detour_create::return
+    count: 5
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/detour.py::cmd_detour_resolve::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/detour.py::cmd_detour_resolve::print
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/detour.py::cmd_detour_resolve::return
+    count: 4
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/dossier.py::cmd_dossier::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/dossier.py::cmd_dossier::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/garden.py::cmd_garden_seed_create::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/garden.py::cmd_garden_seed_create::print
+    count: 5
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/garden.py::cmd_garden_seed_create::return
+    count: 4
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/goal.py::cmd_goal::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/goal.py::cmd_goal::print
+    count: 17
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/goal.py::cmd_goal::return
+    count: 16
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/inbox.py::cmd_inbox_resolve::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/inbox.py::cmd_inbox_resolve::print
+    count: 4
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/inbox.py::cmd_inbox_resolve::return
+    count: 4
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/intelligence.py::_print_brief_json::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/intelligence.py::_print_brief_json::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/intelligence.py::cmd_intelligence_scan::print
+    count: 17
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/intelligence.py::cmd_intelligence_scan::return
+    count: 10
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/intelligence.py::ranked_scan::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/lineage_restamp.py::cmd_lineage_restamp::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/lineage_restamp.py::cmd_lineage_restamp::canonical_fingerprint
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/lineage_restamp.py::cmd_lineage_restamp::print
+    count: 13
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/lineage_restamp.py::cmd_lineage_restamp::return
+    count: 12
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/material.py::_execute::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/material.py::_execute::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/material.py::_execute::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/material.py::_loaded::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/material.py::cmd_plan_edit_context::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/material_span.py::cmd_material_span::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/material_span.py::cmd_material_span::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_cmd_compact_module_plan_import::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_cmd_compact_module_plan_import::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_cmd_compact_module_plan_import::print
+    count: 4
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_cmd_compact_module_plan_import::return
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_cmd_master_promotion_import::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_cmd_master_promotion_import::print
+    count: 19
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_cmd_master_promotion_import::return
+    count: 14
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_master_promotion_check_result::canonical_fingerprint
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_master_promotion_preflight::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_module_plan_check_report::canonical_fingerprint
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_module_plan_check_report::load_repo
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_module_plan_validation_errors::load_repo
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_unit_plan_revise_locked::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_unit_plan_revise_locked::print
+    count: 15
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::_unit_plan_revise_locked::return
+    count: 13
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::cmd_module_attempt::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::cmd_module_attempt::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::cmd_module_attempt::print
+    count: 8
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::cmd_module_attempt::return
+    count: 8
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::cmd_module_plan_import::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::cmd_module_plan_import::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::cmd_module_plan_import::print
+    count: 48
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::cmd_module_plan_import::return
+    count: 38
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::cmd_module_sitting::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::cmd_module_sitting::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::cmd_module_sitting::print
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::cmd_module_sitting::return
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::cmd_unit_plan_revise::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/note.py::cmd_note_create::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/note.py::cmd_note_create::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/note.py::cmd_note_create::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/note.py::cmd_note_create::return
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/note.py::cmd_note_evidence::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/note.py::cmd_note_evidence::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/note.py::cmd_note_evidence::print
+    count: 8
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/note.py::cmd_note_evidence::return
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/note.py::cmd_note_revise::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/note.py::cmd_note_revise::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/note.py::cmd_note_revise::print
+    count: 9
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/note.py::cmd_note_revise::return
+    count: 8
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/observation.py::_append_observation::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/observation.py::_append_observation::print
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/observation.py::cmd_observation_append::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/observation.py::cmd_observation_append::print
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/observation.py::cmd_observation_append::return
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/observation.py::cmd_observe::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/observation.py::cmd_observe::canonical_fingerprint
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/observation.py::cmd_observe::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/observation.py::cmd_observe::print
+    count: 5
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/observation.py::cmd_observe::return
+    count: 5
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/operations.py::cmd_operations::print
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/operations.py::cmd_operations::return
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/path.py::cmd_path_attach::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/path.py::cmd_path_attach::print
+    count: 5
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/path.py::cmd_path_attach::return
+    count: 5
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/path.py::cmd_path_note::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/path.py::cmd_path_note::print
+    count: 5
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/path.py::cmd_path_note::return
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/path.py::cmd_path_progress::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/path.py::cmd_path_progress::print
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/path.py::cmd_path_progress::return
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/plan.py::cmd_plan_template::print
+    count: 5
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/plan.py::cmd_plan_template::return
+    count: 4
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/project.py::cmd_project_create::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/project.py::cmd_project_create::print
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/project.py::cmd_project_create::return
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/project.py::cmd_project_update::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/project.py::cmd_project_update::print
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/project.py::cmd_project_update::return
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::_metadata_search_page::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::_metadata_search_page::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_bootstrap::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_bootstrap::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_capabilities::print
+    count: 5
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_capabilities::return
+    count: 5
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_generate::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_generate::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_generate::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_inbox_list::print
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_inbox_list::return
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_inspect::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_inspect::print
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_inspect::return
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_related::print
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_related::return
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_search::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_search::print
+    count: 4
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_search::return
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_status::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/query.py::cmd_status::print
+    count: 10
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/reads.py::_print_stable::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/reads.py::_print_stable::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/reads.py::_refusal::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/reads.py::_snapshot::canonical_fingerprint
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/reads.py::brief_bootstrap::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/reads.py::cmd_inbox_read::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/reads.py::cmd_material_context::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/reads.py::cmd_material_context::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/reads.py::cmd_note_read::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/reads.py::compact_bootstrap::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/reads.py::content_search::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/reads.py::content_search::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/reads.py::inspect_batch::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/reads.py::inspect_batch::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/resume.py::_print_study_options::print
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/resume.py::_print_study_options::return
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/resume.py::cmd_resume::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/resume.py::cmd_resume::print
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/resume.py::cmd_resume::return
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/review.py::cmd_session_end::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/review.py::cmd_session_end::print
+    count: 13
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/review.py::cmd_session_end::return
+    count: 7
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/review.py::cmd_shelving_apply::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/review.py::cmd_shelving_apply::print
+    count: 7
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/review.py::cmd_shelving_apply::return
+    count: 7
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/review.py::cmd_shelving_prepare::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/review.py::cmd_shelving_prepare::print
+    count: 4
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/review.py::cmd_shelving_prepare::return
+    count: 5
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/runtime.py::cmd_runtime_session::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/runtime.py::cmd_runtime_session::canonical_fingerprint
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/runtime.py::cmd_runtime_session::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/runtime.py::cmd_runtime_session::print
+    count: 5
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/runtime.py::cmd_runtime_session::return
+    count: 5
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/semantic.py::cmd_semantic::print
+    count: 8
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/semantic.py::cmd_semantic::return
+    count: 7
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/source.py::cmd_source_feedback::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/source.py::cmd_source_feedback::print
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/source.py::cmd_source_feedback::return
+    count: 7
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/source_catalog.py::_plan_intake::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/source_catalog.py::_plan_revise::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/source_catalog.py::_refuse_without_approval::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/source_catalog.py::_refuse_without_approval::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/source_catalog.py::cmd_source_intake_record::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/source_catalog.py::cmd_source_intake_record::print
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/source_catalog.py::cmd_source_intake_record::return
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/source_catalog.py::cmd_source_record_revise::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/source_catalog.py::cmd_source_record_revise::print
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/source_catalog.py::cmd_source_record_revise::return
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/stage.py::cmd_stage_attach::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/stage.py::cmd_stage_attach::print
+    count: 4
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/stage.py::cmd_stage_attach::return
+    count: 5
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/stage.py::cmd_stage_note::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/stage.py::cmd_stage_note::print
+    count: 5
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/stage.py::cmd_stage_note::return
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/stage.py::cmd_stage_progress::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/stage.py::cmd_stage_progress::print
+    count: 7
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/stage.py::cmd_stage_progress::return
+    count: 8
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/stage_result.py::cmd_stage_result::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/stage_result.py::cmd_stage_result::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/stage_result.py::cmd_stage_result::print
+    count: 5
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/stage_result.py::cmd_stage_result::return
+    count: 5
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::_acquire_flock::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::_expected_ok::canonical_fingerprint
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::_expected_ok::print
+    count: 6
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::_fresh_manifest_and_repo::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::_fresh_manifest_and_repo::canonical_fingerprint
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::_fresh_manifest_and_repo::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::_path_or_error::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::_path_or_error::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::_print_rows::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::_print_rows::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::_publish::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::_resolve::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::_unit_map_or_error::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::_unit_map_or_error::print
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::_write_transaction::print
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::publish_validated_state::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::validation_errors::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/unit.py::_unit_list_compact::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/unit.py::cmd_unit_list::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/unit.py::cmd_unit_list::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/unit.py::cmd_unit_map_import::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/unit.py::cmd_unit_map_import::canonical_fingerprint
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/unit.py::cmd_unit_map_import::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/unit.py::cmd_unit_map_import::print
+    count: 14
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/unit.py::cmd_unit_map_import::return
+    count: 12
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/unit.py::cmd_unit_note::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/unit.py::cmd_unit_note::print
+    count: 8
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/unit.py::cmd_unit_note::return
+    count: 9
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/unit.py::cmd_unit_source_selection::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/unit.py::cmd_unit_source_selection::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/unit.py::cmd_unit_source_selection::print
+    count: 8
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/unit.py::cmd_unit_source_selection::return
+    count: 8
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::_refuse_without_approval::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::_refuse_without_approval::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_backup_manifest::print
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_backup_manifest::return
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_backup_verify::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_health_report::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_health_report::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_legacy_archive_inspect::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_legacy_archive_inspect::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_legacy_archive_lock_publish::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_legacy_archive_lock_publish::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_legacy_archive_lock_publish::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_legacy_archive_status::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_legacy_archive_status::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_masters_planning_catalog_update::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_masters_planning_catalog_update::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_masters_planning_catalog_update::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_masters_planning_comparison_publish::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_masters_planning_comparison_publish::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_masters_planning_comparison_publish::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_masters_planning_dashboard::print
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_masters_planning_dashboard::return
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_unit_material_synthesis_publish::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_unit_material_synthesis_publish::print
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/vnext.py::cmd_unit_material_synthesis_publish::return
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/workspace.py::cmd_coordination_section_revise::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/workspace.py::cmd_coordination_section_revise::canonical_fingerprint
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/workspace.py::cmd_coordination_section_revise::print
+    count: 12
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/workspace.py::cmd_coordination_section_revise::return
+    count: 12
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/workspace.py::cmd_workspace_next_action::_operator_lock
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/workspace.py::cmd_workspace_next_action::load_repo
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/workspace.py::cmd_workspace_next_action::print
+    count: 7
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/workspace.py::cmd_workspace_next_action::return
+    count: 6
+    since: baseline
+    approved_by: null
+  A14-vocabulary:
+  - signature: tools/learning_os/commands/abilities.py::UNCONFIRMED
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::IDEMPOTENCY_CONFLICT
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::OUT_OF_SCOPE
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::REVISION_CONFLICT
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::STALE_SNAPSHOT
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/ai.py::UNCONFIRMED
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capability.py::IDEMPOTENCY_CONFLICT
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capability.py::INTERNAL_FAILURE
+    count: 9
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capability.py::INVALID_REQUEST
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capability.py::PROJECTION_FAILED
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capability.py::STALE_SNAPSHOT
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capability.py::UNCONFIRMED
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capability.py::UNKNOWN_CAPABILITY
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/capability.py::VALIDATION_FAILED
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/module.py::REVISION_CONFLICT
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::AMBIGUOUS_MIGRATION
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::IDEMPOTENCY_CONFLICT
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::INTERNAL_FAILURE
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::INVALID_REQUEST
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::OUT_OF_SCOPE
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::REVISION_CONFLICT
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::STALE_SNAPSHOT
+    count: 4
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::UNCONFIRMED
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/commands/support.py::VALIDATION_FAILED
+    count: 3
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/conventions.py::AMBIGUOUS_MIGRATION
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/conventions.py::INVALID_REQUEST
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/conventions.py::OUT_OF_SCOPE
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/conventions.py::PROJECTION_FAILED
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/conventions.py::REVISION_CONFLICT
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/conventions.py::STALE_SNAPSHOT
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/conventions.py::UNCONFIRMED
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/conventions.py::UNKNOWN_CAPABILITY
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/conventions.py::VALIDATION_FAILED
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/resolver.py::AMBIGUOUS_MIGRATION
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/resolver.py::IDEMPOTENCY_CONFLICT
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/resolver.py::INVALID_REQUEST
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/resolver.py::OUT_OF_SCOPE
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/resolver.py::PROJECTION_FAILED
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/resolver.py::REVISION_CONFLICT
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/resolver.py::STALE_SNAPSHOT
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/resolver.py::UNCONFIRMED
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/resolver.py::UNKNOWN_CAPABILITY
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/diagnostics/resolver.py::VALIDATION_FAILED
     count: 1
     since: baseline
     approved_by: null
