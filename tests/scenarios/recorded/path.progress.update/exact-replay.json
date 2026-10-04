@@ -2,7 +2,7 @@
   "steps": [
     {
       "canonical_changed": {
-        "work/active/workspace-demo/paths/path-demo.yaml": "7d6c5f686d9a8b1fcf81283de03a4c2d67b68dffef35f62441f514c4381dc2e0"
+        "work/active/workspace-demo/paths/path-demo.yaml": "e07cca77ec2b3c70614a110f2b9c4221e40e5e47a27a8e7fb1665bb109cb5d9a"
       },
       "exit": 0,
       "idempotency_changed": {
@@ -11,7 +11,7 @@
             "KEY2": {
               "capability": "path.progress.update",
               "channel": "operator",
-              "intent_sha256": "sha256:b7683a3f886f439e4763df31a538dec40203f3c96f7d120a323568c401d753e7",
+              "intent_sha256": "sha256:aedde37a22c0c1adcb442ffdadaae0fb8aa0bc954ef4fa2e6e8d0fa490492b30",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -56,17 +56,17 @@
           },
           "id": "TX1",
           "metadata": {
-            "data_roots_sha256": "sha256:7fd2ee49d8332e77bf722d3c74a1a050b5d37c9763054e7fc96ee2fac5a22d22",
+            "data_roots_sha256": "sha256:30bb8f1593c2c0adf5cf0be5fce63bcb4e888cbb30c613013f08fb114f2c75de",
             "fingerprint_definition": 2
           },
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:b7683a3f886f439e4763df31a538dec40203f3c96f7d120a323568c401d753e7"
+              "subject_sha256": "sha256:aedde37a22c0c1adcb442ffdadaae0fb8aa0bc954ef4fa2e6e8d0fa490492b30"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:b7683a3f886f439e4763df31a538dec40203f3c96f7d120a323568c401d753e7",
+            "intent_sha256": "sha256:aedde37a22c0c1adcb442ffdadaae0fb8aa0bc954ef4fa2e6e8d0fa490492b30",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -78,8 +78,8 @@
             {
               "created": false,
               "path": "work/active/workspace-demo/paths/path-demo.yaml",
-              "sha256_after": "7d6c5f686d9a8b1fcf81283de03a4c2d67b68dffef35f62441f514c4381dc2e0",
-              "sha256_before": "af634e0666bd75e518576e77fe082cd8c9e07f234c61a172710d9b1e67776bba"
+              "sha256_after": "e07cca77ec2b3c70614a110f2b9c4221e40e5e47a27a8e7fb1665bb109cb5d9a",
+              "sha256_before": "e737b5358522e7763042623e733cdc01d4337a6035ee72e39ba48393346d5b7a"
             }
           ]
         }
@@ -107,13 +107,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "8ca602d3aa82597a8ee07ec5f6cafe9105304626fda19e96d88740af9216833b",
+              "sha256": "7f91c2925a3d5a58a63c984fa1f8480f7c5b1c7d1e6b063942ca90b781fe0747",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "c874035e2b5b0ee6a6ead10d6f4c054aeb1ad61a5322b6495575a8d7cdb01204",
+              "sha256": "ac4618fb542f137c9b44e77f4a83d8660e6c3643808641b7ed842c1bd575cc30",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -125,7 +125,7 @@
             "work/active/workspace-demo/paths/path-demo.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "7d6c5f686d9a8b1fcf81283de03a4c2d67b68dffef35f62441f514c4381dc2e0",
+              "sha256": "e07cca77ec2b3c70614a110f2b9c4221e40e5e47a27a8e7fb1665bb109cb5d9a",
               "state": "file"
             }
           },
@@ -180,13 +180,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "8ca602d3aa82597a8ee07ec5f6cafe9105304626fda19e96d88740af9216833b",
+              "sha256": "7f91c2925a3d5a58a63c984fa1f8480f7c5b1c7d1e6b063942ca90b781fe0747",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "c874035e2b5b0ee6a6ead10d6f4c054aeb1ad61a5322b6495575a8d7cdb01204",
+              "sha256": "ac4618fb542f137c9b44e77f4a83d8660e6c3643808641b7ed842c1bd575cc30",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -198,7 +198,7 @@
             "work/active/workspace-demo/paths/path-demo.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "7d6c5f686d9a8b1fcf81283de03a4c2d67b68dffef35f62441f514c4381dc2e0",
+              "sha256": "e07cca77ec2b3c70614a110f2b9c4221e40e5e47a27a8e7fb1665bb109cb5d9a",
               "state": "file"
             }
           },
@@ -210,13 +210,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "8ca602d3aa82597a8ee07ec5f6cafe9105304626fda19e96d88740af9216833b",
+              "sha256": "7f91c2925a3d5a58a63c984fa1f8480f7c5b1c7d1e6b063942ca90b781fe0747",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "c874035e2b5b0ee6a6ead10d6f4c054aeb1ad61a5322b6495575a8d7cdb01204",
+              "sha256": "ac4618fb542f137c9b44e77f4a83d8660e6c3643808641b7ed842c1bd575cc30",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -228,7 +228,7 @@
             "work/active/workspace-demo/paths/path-demo.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "7d6c5f686d9a8b1fcf81283de03a4c2d67b68dffef35f62441f514c4381dc2e0",
+              "sha256": "e07cca77ec2b3c70614a110f2b9c4221e40e5e47a27a8e7fb1665bb109cb5d9a",
               "state": "file"
             }
           },

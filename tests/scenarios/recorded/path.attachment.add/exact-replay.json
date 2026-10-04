@@ -2,7 +2,7 @@
   "steps": [
     {
       "canonical_changed": {
-        "work/active/workspace-demo/paths/path-demo.yaml": "8ab5f1f8cee9179cd52c5e8dc2847822b5b4e55cd4c090fd50cf9f85c2bd302d",
+        "work/active/workspace-demo/paths/path-demo.yaml": "4c06799cb3a611bf9de9af99d5ad4e0349bf725bfc654d74cbf4d4aa75833cb4",
         "work/active/workspace-demo/scratch/paths/path-demo/attachments/stage-demo-path/note-drop.md": "cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"
       },
       "exit": 0,
@@ -12,7 +12,7 @@
             "KEY2": {
               "capability": "path.attachment.add",
               "channel": "operator",
-              "intent_sha256": "sha256:f354a24a01e5431ea922a6db8024ed213d8c0067a525aae1cd10b791f354dec7",
+              "intent_sha256": "sha256:bd3327e0dbe9f556146e1d5fd42a9f11ff1babcc9927c3d48db32eccf4bab54a",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -57,17 +57,17 @@
           },
           "id": "TX1",
           "metadata": {
-            "data_roots_sha256": "sha256:babc111536cc505aea1d01f3e84595dc05aa42bf9d6acfa8fe79bca75c65f266",
+            "data_roots_sha256": "sha256:066decaac5de37a9ff1459798a27f4275a6bb2586888043fa90a1314551c1798",
             "fingerprint_definition": 2
           },
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:f354a24a01e5431ea922a6db8024ed213d8c0067a525aae1cd10b791f354dec7"
+              "subject_sha256": "sha256:bd3327e0dbe9f556146e1d5fd42a9f11ff1babcc9927c3d48db32eccf4bab54a"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:f354a24a01e5431ea922a6db8024ed213d8c0067a525aae1cd10b791f354dec7",
+            "intent_sha256": "sha256:bd3327e0dbe9f556146e1d5fd42a9f11ff1babcc9927c3d48db32eccf4bab54a",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -79,8 +79,8 @@
             {
               "created": false,
               "path": "work/active/workspace-demo/paths/path-demo.yaml",
-              "sha256_after": "8ab5f1f8cee9179cd52c5e8dc2847822b5b4e55cd4c090fd50cf9f85c2bd302d",
-              "sha256_before": "af634e0666bd75e518576e77fe082cd8c9e07f234c61a172710d9b1e67776bba"
+              "sha256_after": "4c06799cb3a611bf9de9af99d5ad4e0349bf725bfc654d74cbf4d4aa75833cb4",
+              "sha256_before": "e737b5358522e7763042623e733cdc01d4337a6035ee72e39ba48393346d5b7a"
             },
             {
               "created": true,
@@ -114,13 +114,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "df3c03f2f8a241fe6b46fbb912f5cab510e49cb9d3d130db72cb3d05727b1a45",
+              "sha256": "b299c5bc1dd0dc3ebe4513827bf5eea1de1d8458d0750079f79febf40313d0c6",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "a539c92a0ab68164d7cad3aa22c06f4e1fe75803f993610f90b21fd18b08bc15",
+              "sha256": "e9e2fb9824b684ffe2d0cc80e884d3197a95bdda47bf2f032e81bc78107600a0",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -132,7 +132,7 @@
             "work/active/workspace-demo/paths/path-demo.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "8ab5f1f8cee9179cd52c5e8dc2847822b5b4e55cd4c090fd50cf9f85c2bd302d",
+              "sha256": "4c06799cb3a611bf9de9af99d5ad4e0349bf725bfc654d74cbf4d4aa75833cb4",
               "state": "file"
             },
             "work/active/workspace-demo/scratch/paths/path-demo/attachments/stage-demo-path/note-drop.md": {
@@ -191,13 +191,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "df3c03f2f8a241fe6b46fbb912f5cab510e49cb9d3d130db72cb3d05727b1a45",
+              "sha256": "b299c5bc1dd0dc3ebe4513827bf5eea1de1d8458d0750079f79febf40313d0c6",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "a539c92a0ab68164d7cad3aa22c06f4e1fe75803f993610f90b21fd18b08bc15",
+              "sha256": "e9e2fb9824b684ffe2d0cc80e884d3197a95bdda47bf2f032e81bc78107600a0",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -209,7 +209,7 @@
             "work/active/workspace-demo/paths/path-demo.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "8ab5f1f8cee9179cd52c5e8dc2847822b5b4e55cd4c090fd50cf9f85c2bd302d",
+              "sha256": "4c06799cb3a611bf9de9af99d5ad4e0349bf725bfc654d74cbf4d4aa75833cb4",
               "state": "file"
             },
             "work/active/workspace-demo/scratch/paths/path-demo/attachments/stage-demo-path/note-drop.md": {
@@ -227,13 +227,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "df3c03f2f8a241fe6b46fbb912f5cab510e49cb9d3d130db72cb3d05727b1a45",
+              "sha256": "b299c5bc1dd0dc3ebe4513827bf5eea1de1d8458d0750079f79febf40313d0c6",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "a539c92a0ab68164d7cad3aa22c06f4e1fe75803f993610f90b21fd18b08bc15",
+              "sha256": "e9e2fb9824b684ffe2d0cc80e884d3197a95bdda47bf2f032e81bc78107600a0",
               "state": "file"
             },
             "operations/transactions/revisions.yaml": {
@@ -245,7 +245,7 @@
             "work/active/workspace-demo/paths/path-demo.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "8ab5f1f8cee9179cd52c5e8dc2847822b5b4e55cd4c090fd50cf9f85c2bd302d",
+              "sha256": "4c06799cb3a611bf9de9af99d5ad4e0349bf725bfc654d74cbf4d4aa75833cb4",
               "state": "file"
             },
             "work/active/workspace-demo/scratch/paths/path-demo/attachments/stage-demo-path/note-drop.md": {
