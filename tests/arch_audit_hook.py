@@ -5,14 +5,24 @@ from __future__ import annotations
 import json
 import os
 import sys
+import threading
+from collections.abc import Mapping
 from pathlib import Path
 
 import yaml
 
 _INSTALLED = False
 _ACTIVE_LOG: str | None = None
-_IN_HOOK = False
+_STATE = threading.local()
 _EVENTS: dict | None = None
+
+_CAPTURE_LOCK = threading.Lock()
+_CAPTURE_ERROR: str | None = None
+
+
+class AuditCaptureError(Exception):
+    """Audit evidence could not be captured or read (SPEC §3.2c, K30)."""
+
 
 _DIR_FD_INDEX: dict[str, tuple[int, ...]] = {
     "os.rename": (2, 3),
@@ -38,19 +48,88 @@ def _events_for_version() -> dict:
 
 
 def install(log_path: str) -> None:
-    """Register the hook once per process and activate ``log_path``."""
+    """Validate ``log_path``, register the hook once, and activate the path.
+
+    Validation runs first: a directory path, a missing parent, or a failed
+    append-open raises ``AuditCaptureError`` and activates nothing. A
+    successful install clears the sticky capture error (amendment (k)).
+    """
     global _INSTALLED, _ACTIVE_LOG, _EVENTS
+    candidate = str(log_path)
+    if os.path.isdir(candidate):
+        raise AuditCaptureError(
+            f"audit log path is a directory: {candidate}")
+    parent = os.path.dirname(os.path.abspath(candidate))
+    if not os.path.isdir(parent):
+        raise AuditCaptureError(
+            f"audit log parent does not exist: {parent}")
+    try:
+        with open(candidate, "a", encoding="utf-8"):
+            pass
+    except OSError as exc:
+        raise AuditCaptureError(
+            f"cannot open audit log for append: {candidate}: {exc}") from exc
     if not _INSTALLED:
         _EVENTS = _events_for_version()
         sys.addaudithook(_hook)
         _INSTALLED = True
-    _ACTIVE_LOG = str(log_path)
+    with _CAPTURE_LOCK:
+        global _CAPTURE_ERROR
+        _CAPTURE_ERROR = None
+    _ACTIVE_LOG = candidate
 
 
 def uninstall() -> None:
-    """Deactivate logging; the hook stays registered and idle."""
+    """Deactivate logging; the hook stays registered and idle.
+
+    Never clears the sticky capture error (amendment (k)).
+    """
     global _ACTIVE_LOG
     _ACTIVE_LOG = None
+
+
+def capture_ok() -> bool:
+    """True when no recording error has been captured in this window."""
+    return _CAPTURE_ERROR is None
+
+
+def capture_error() -> str | None:
+    """The first recording error in this window, or None."""
+    return _CAPTURE_ERROR
+
+
+def assert_capture_ok() -> None:
+    """Raise ``AuditCaptureError`` when this window captured an error."""
+    error = _CAPTURE_ERROR
+    if error is not None:
+        raise AuditCaptureError(f"audit capture failed: {error}")
+
+
+def read_log(log_path: str | Path) -> list[dict]:
+    """Parsed JSON records from an activated audit log.
+
+    A missing or unreadable log raises ``AuditCaptureError``: absent
+    evidence is a failure, never an empty capture.
+    """
+    candidate = str(log_path)
+    try:
+        text = Path(candidate).read_text(encoding="utf-8")
+    except OSError as exc:
+        raise AuditCaptureError(
+            f"cannot read audit log: {candidate}: {exc}") from exc
+    records = []
+    for line in text.splitlines():
+        line = line.strip()
+        if line:
+            records.append(json.loads(line))
+    return records
+
+
+def _record_capture_error(exc: BaseException) -> None:
+    global _CAPTURE_ERROR
+    with _CAPTURE_LOCK:
+        if _CAPTURE_ERROR is None:
+            _CAPTURE_ERROR = f"{type(exc).__name__}: {exc}"
 
 
 def _coerce_path(value):
@@ -104,13 +183,36 @@ def _current_phase():
         return None
 
 
+def _launch_token_and_crash(args) -> tuple:
+    """The launch token and crash expectation for a Popen event (K28)."""
+    env = args[3] if len(args) > 3 else None
+    if isinstance(env, Mapping):
+        try:
+            token = env.get("LOS_ARCH_LAUNCH_TOKEN")
+        except Exception:
+            token = None
+        try:
+            expect_crash = env.get("LOS_ARCH_EXPECT_CRASH") == "1"
+        except Exception:
+            expect_crash = False
+        return token, expect_crash
+    try:
+        token = os.environ.get("LOS_ARCH_LAUNCH_TOKEN")
+    except Exception:
+        token = None
+    try:
+        expect_crash = os.environ.get("LOS_ARCH_EXPECT_CRASH") == "1"
+    except Exception:
+        expect_crash = False
+    return token, expect_crash
+
+
 def _hook(event: str, args) -> None:
-    global _IN_HOOK
-    if _IN_HOOK or _ACTIVE_LOG is None or _EVENTS is None:
+    if getattr(_STATE, "active", False) or _ACTIVE_LOG is None or _EVENTS is None:
         return
     if event not in _EVENTS:
         return
-    _IN_HOOK = True
+    _STATE.active = True
     try:
         layout = _EVENTS[event]
         record: dict | None = None
@@ -139,6 +241,7 @@ def _hook(event: str, args) -> None:
                 argv_list = [str(item) for item in list(argv)]
             except TypeError:
                 argv_list = [str(argv)]
+            token, expect_crash = _launch_token_and_crash(args)
             record = {
                 "event": event,
                 "paths": [],
@@ -146,6 +249,8 @@ def _hook(event: str, args) -> None:
                 "phase": _current_phase(),
                 "pid": os.getpid(),
                 "argv": argv_list,
+                "token": token,
+                "expect_crash": expect_crash,
             }
         else:
             if "paths" in layout:
@@ -172,7 +277,7 @@ def _hook(event: str, args) -> None:
         if record is not None:
             with open(_ACTIVE_LOG, "a", encoding="utf-8") as handle:
                 handle.write(json.dumps(record) + "\n")
-    except Exception:
-        pass
+    except Exception as exc:
+        _record_capture_error(exc)
     finally:
-        _IN_HOOK = False
+        _STATE.active = False

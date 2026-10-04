@@ -1,4 +1,4 @@
-"""A2 one canonical writer: static lint plus the seven fixtures (SPEC §3.2)."""
+"""A2 one canonical writer: static lint plus the eleven fixtures (SPEC §3.2)."""
 
 from __future__ import annotations
 

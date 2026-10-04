@@ -11,9 +11,66 @@ if str(_tests) not in sys.path:
 
 _log = os.environ.get("LOS_ARCH_AUDIT_LOG")
 if _log:
-    _witness = {"event": "installed", "pid": os.getpid(), "argv": list(sys.argv)}
-    with open(_log, "a", encoding="utf-8") as _handle:
-        _handle.write(json.dumps(_witness) + "\n")
-    import arch_audit_hook
+    # Step 1: read this launch's token.
+    _token = os.environ.get("LOS_ARCH_LAUNCH_TOKEN")
+    try:
+        # Test-only forced failure, honoured before install (fixture 9).
+        if os.environ.get("LOS_ARCH_AUDIT_FORCE_FAIL") == "1":
+            raise RuntimeError("LOS_ARCH_AUDIT_FORCE_FAIL=1")
+        # Step 2: install. On any exception, record install_failed and stop.
+        import arch_audit_hook
 
-    arch_audit_hook.install(_log)
+        arch_audit_hook.install(_log)
+    except Exception as _exc:
+        _failed = {
+            "event": "install_failed",
+            "pid": os.getpid(),
+            "token": _token,
+            "error": f"{type(_exc).__name__}: {_exc}",
+        }
+        try:
+            with open(_log, "a", encoding="utf-8") as _handle:
+                _handle.write(json.dumps(_failed) + "\n")
+        except Exception:
+            pass
+    else:
+        # Step 3: the witness, only after install succeeded.
+        _witness = {
+            "event": "installed",
+            "pid": os.getpid(),
+            "ppid": os.getppid(),
+            "token": _token,
+            "argv": list(sys.argv),
+        }
+        with open(_log, "a", encoding="utf-8") as _handle:
+            _handle.write(json.dumps(_witness) + "\n")
+        # Step 4: this process's own children get a distinct token.
+        os.environ["LOS_ARCH_LAUNCH_TOKEN"] = (
+            f"{_token or 'root'}/{os.getpid()}"
+        )
+
+        # Step 5: completion witness at exit.
+        import atexit
+
+        _me = os.getpid()
+        _done = arch_audit_hook.capture_ok
+
+        def _completed(
+            _log_path=_log,
+            _pid=_me,
+            _launch_token=_token,
+            _capture_ok=_done,
+        ):
+            _record = {
+                "event": "completed",
+                "pid": _pid,
+                "token": _launch_token,
+                "capture_ok": _capture_ok(),
+            }
+            try:
+                with open(_log_path, "a", encoding="utf-8") as _handle:
+                    _handle.write(json.dumps(_record) + "\n")
+            except Exception:
+                pass
+
+        atexit.register(_completed)

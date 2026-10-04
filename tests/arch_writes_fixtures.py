@@ -1,4 +1,4 @@
-"""Seven A2 prototype-gate fixtures (PLAN step 0.2).
+"""Eleven A2 prototype-gate fixtures (PLAN step 0.2, SPEC §3.2e).
 
 One function per fixture, each asserting exactly its expected oracle and
 hook outcome. ``test_arch_writes.py`` runs them.
@@ -11,6 +11,9 @@ import json
 import os
 import subprocess
 import sys
+import threading
+import uuid
+from collections import Counter
 from pathlib import Path
 
 import arch_audit_hook
@@ -31,14 +34,25 @@ def _build_root(tmp_path: Path, name: str) -> Path:
 
 
 def _read_log(log_path: Path) -> list[dict]:
-    if not log_path.is_file():
-        return []
-    records = []
-    for line in log_path.read_text(encoding="utf-8").splitlines():
-        line = line.strip()
-        if line:
-            records.append(json.loads(line))
-    return records
+    # Activated logs always exist; a missing one raises (SPEC §3.2c, K30).
+    return arch_audit_hook.read_log(log_path)
+
+
+def _fresh_token() -> str:
+    return f"launch-{uuid.uuid4().hex}"
+
+
+def _child_env(log_path: Path, token: str, with_site: bool = True) -> dict:
+    env = dict(os.environ)
+    env["LOS_ARCH_AUDIT_LOG"] = str(log_path)
+    env["LOS_ARCH_LAUNCH_TOKEN"] = token
+    env["TZ"] = "Europe/Berlin"
+    if with_site:
+        env["PYTHONPATH"] = str(_ARCH_SITE) + os.pathsep + env.get(
+            "PYTHONPATH", "")
+    else:
+        env.pop("PYTHONPATH", None)
+    return env
 
 
 def _is_canonical(path_value, root: Path) -> bool:
@@ -130,6 +144,7 @@ def fixture_1_query_escalated_recovery(tmp_path: Path) -> None:
             pass
     finally:
         arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
     after = arch_effects.capture_tree(root)
     receipts = arch_effects.new_receipts(receipts_before, root)
     violations = arch_effects.reconcile(
@@ -155,6 +170,7 @@ def fixture_2_unproven_restore(tmp_path: Path) -> None:
         target.write_text("# unproven restore\n", encoding="utf-8")
     finally:
         arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
     after = arch_effects.capture_tree(root)
     receipts = arch_effects.new_receipts(receipts_before, root)
     violations = arch_effects.reconcile(before, after, receipts)
@@ -208,6 +224,7 @@ def _callback_case(tmp_path: Path, name: str, kind: str) -> None:
             raise AssertionError(f"unknown callback kind {kind!r}")
     finally:
         arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
     records = _read_log(log_path)
     rogue_abs = str(rogue.resolve())
     unowned = []
@@ -249,6 +266,7 @@ def fixture_4_descriptor_and_dir_fd(tmp_path: Path) -> None:
             arch_audit_hook.uninstall()
     finally:
         os.close(fd)
+    arch_audit_hook.assert_capture_ok()
     after_fd = arch_effects.capture_tree(root)
     fd_violations = arch_effects.reconcile(before_fd, after_fd, [])
     assert fd_violations, "oracle must report the descriptor write"
@@ -276,6 +294,7 @@ def fixture_4_descriptor_and_dir_fd(tmp_path: Path) -> None:
             arch_audit_hook.uninstall()
     finally:
         os.close(dir_fd)
+    arch_audit_hook.assert_capture_ok()
     after_dd = arch_effects.capture_tree(root)
     dd_violations = arch_effects.reconcile(before_dd, after_dd, [])
     assert dd_violations, "oracle must report the dir_fd write"
@@ -302,6 +321,7 @@ def fixture_5_rename_into_canonical(tmp_path: Path) -> None:
         os.rename(str(src), str(dest))
     finally:
         arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
     records = _read_log(log_path)
     renames = [rec for rec in records if rec.get("event") == "os.rename"]
     assert renames, "hook must log the rename"
@@ -320,17 +340,52 @@ def _is_python_argv(argv: list) -> bool:
                            ".venv/bin/python"))
 
 
-def _witness_gaps(records: list[dict]) -> list[dict]:
+def witness_failures(records: list[dict]) -> list[str]:
+    """Launch-coverage failures over audit records (SPEC §3.2c, K28-K30).
+
+    Python launches and ``installed`` witnesses are counted per launch
+    token; an install is excused from its missing ``completed`` record
+    only when its token's launch was logged with ``expect_crash``.
+    """
     popens = [rec for rec in records
               if rec.get("event") == "subprocess.Popen"
               and _is_python_argv(rec.get("argv") or [])]
-    witnesses = [rec for rec in records if rec.get("event") == "installed"]
-    gaps = []
+    launches: Counter = Counter()
+    crash_expected: dict = {}
     for popen in popens:
-        if not any(witness.get("pid") != popen.get("pid")
-                   for witness in witnesses):
-            gaps.append(popen)
-    return gaps
+        token = popen.get("token")
+        launches[token] += 1
+        if popen.get("expect_crash"):
+            crash_expected[token] = True
+    installed = [rec for rec in records if rec.get("event") == "installed"]
+    witnessed: Counter = Counter()
+    for rec in installed:
+        witnessed[rec.get("token")] += 1
+    failures = []
+    for token in sorted(launches, key=repr):
+        if launches[token] > witnessed.get(token, 0):
+            failures.append(
+                f"token {token!r}: {launches[token]} python launches but "
+                f"only {witnessed.get(token, 0)} installed witnesses")
+    for rec in records:
+        if rec.get("event") == "install_failed":
+            failures.append(
+                f"install_failed for token {rec.get('token')!r} "
+                f"(pid {rec.get('pid')}): {rec.get('error')}")
+    completed_pids = {rec.get("pid") for rec in records
+                      if rec.get("event") == "completed"}
+    for rec in installed:
+        if rec.get("pid") not in completed_pids and not crash_expected.get(
+                rec.get("token"), False):
+            failures.append(
+                f"installed pid {rec.get('pid')} (token "
+                f"{rec.get('token')!r}) has no completed record")
+    for rec in records:
+        if rec.get("event") == "completed" and rec.get("capture_ok") is False:
+            failures.append(
+                f"completed pid {rec.get('pid')} (token "
+                f"{rec.get('token')!r}) reports capture_ok: false")
+    return failures
 
 
 def fixture_6_python_child(tmp_path: Path) -> None:
@@ -339,22 +394,22 @@ def fixture_6_python_child(tmp_path: Path) -> None:
     root = _build_root(tmp_path, "a2-f6-with")
     target = root / "work" / "inbox" / "child-with.md"
     log_path = tmp_path / "a2-f6-with.log"
+    token = _fresh_token()
     arch_audit_hook.install(str(log_path))
     try:
-        env = dict(os.environ)
-        env["LOS_ARCH_AUDIT_LOG"] = str(log_path)
-        env["PYTHONPATH"] = str(_ARCH_SITE) + os.pathsep + env.get(
-            "PYTHONPATH", "")
         proc = subprocess.run(
             [sys.executable, "-c",
              f"from pathlib import Path; Path({str(target)!r}).write_text('from child\\n')"],
-            capture_output=True, text=True, env=env, timeout=120)
+            capture_output=True, text=True,
+            env=_child_env(log_path, token), timeout=120)
     finally:
         arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
     assert proc.returncode == 0, f"child failed: {proc.stderr[-500:]}"
     assert target.is_file()
     records = _read_log(log_path)
-    assert _witness_gaps(records) == [], "python child needs a witness"
+    assert witness_failures(records) == [], (
+        f"python child needs a full witness: {witness_failures(records)}")
     child_writes = [rec for rec in _canonical_records(records, root)
                     if rec.get("event") == "open"]
     assert child_writes, "the child's write must be logged"
@@ -362,20 +417,20 @@ def fixture_6_python_child(tmp_path: Path) -> None:
     root2 = _build_root(tmp_path, "a2-f6-without")
     target2 = root2 / "work" / "inbox" / "child-without.md"
     log2 = tmp_path / "a2-f6-without.log"
+    token2 = _fresh_token()
     arch_audit_hook.install(str(log2))
     try:
-        env2 = dict(os.environ)
-        env2["LOS_ARCH_AUDIT_LOG"] = str(log2)
-        env2.pop("PYTHONPATH", None)
         proc2 = subprocess.run(
             [sys.executable, "-c",
              f"from pathlib import Path; Path({str(target2)!r}).write_text('from child\\n')"],
-            capture_output=True, text=True, env=env2, timeout=120)
+            capture_output=True, text=True,
+            env=_child_env(log2, token2, with_site=False), timeout=120)
     finally:
         arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
     assert proc2.returncode == 0, f"child failed: {proc2.stderr[-500:]}"
     records2 = _read_log(log2)
-    assert _witness_gaps(records2), (
+    assert witness_failures(records2), (
         "without PYTHONPATH the missing witness must fail the scenario")
 
 
@@ -393,12 +448,182 @@ def fixture_7_non_python_child(tmp_path: Path) -> None:
     assert violations, "oracle must report the non-python child's write"
 
 
+def fixture_8_mixed_children(tmp_path: Path) -> None:
+    tmp_path = Path(tmp_path)
+    root = _build_root(tmp_path, "a2-f8")
+    transient = root / "knowledge" / "transient.md"
+    before = arch_effects.capture_tree(root)
+    log_path = tmp_path / "a2-f8.log"
+    token = _fresh_token()
+    arch_audit_hook.install(str(log_path))
+    try:
+        proc1 = subprocess.run(
+            [sys.executable, "-c", "pass"],
+            capture_output=True, text=True,
+            env=_child_env(log_path, token), timeout=120)
+        assert proc1.returncode == 0, (
+            f"instrumented child failed: {proc1.stderr[-500:]}")
+        proc2 = subprocess.run(
+            [sys.executable, "-c",
+             f"from pathlib import Path; p = Path({str(transient)!r}); "
+             "p.write_text('transient\\n'); p.unlink()"],
+            capture_output=True, text=True,
+            env=_child_env(log_path, token, with_site=False), timeout=120)
+        assert proc2.returncode == 0, (
+            f"uninstrumented child failed: {proc2.stderr[-500:]}")
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    after = arch_effects.capture_tree(root)
+    assert not transient.exists()
+    assert arch_effects.reconcile(before, after, []) == [], (
+        "the oracle sees no violation: the final tree is unchanged")
+    failures = witness_failures(_read_log(log_path))
+    assert any("launch" in failure for failure in failures), (
+        f"witness_failures must report the uncovered launch: {failures}")
+
+
+def fixture_9_failed_installation(tmp_path: Path) -> None:
+    tmp_path = Path(tmp_path)
+    log_path = tmp_path / "a2-f9.log"
+    token = _fresh_token()
+    arch_audit_hook.install(str(log_path))
+    try:
+        env = _child_env(log_path, token)
+        env["LOS_ARCH_AUDIT_FORCE_FAIL"] = "1"
+        proc = subprocess.run(
+            [sys.executable, "-c", "pass"],
+            capture_output=True, text=True, env=env, timeout=120)
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    assert proc.returncode == 0, (
+        f"the child runs its program anyway: {proc.stderr[-500:]}")
+    records = _read_log(log_path)
+    assert [rec for rec in records
+            if rec.get("event") == "install_failed"], (
+        "the failed installation must leave an install_failed record")
+    assert [rec for rec in records
+            if rec.get("event") == "installed"] == [], (
+        "the failed installation must leave no installed witness")
+    failures = witness_failures(records)
+    assert any("install_failed" in failure for failure in failures), (
+        f"witness_failures must report install_failed: {failures}")
+    assert any("installed" in failure for failure in failures), (
+        f"witness_failures must report the missing installed: {failures}")
+
+
+def fixture_10_logging_failure(tmp_path: Path) -> None:
+    tmp_path = Path(tmp_path)
+    # (a) install() validates before activating.
+    arch_audit_hook.uninstall()
+    try:
+        arch_audit_hook.install(str(tmp_path))
+    except arch_audit_hook.AuditCaptureError:
+        pass
+    else:
+        raise AssertionError(
+            "install() given a directory must raise AuditCaptureError")
+    assert arch_audit_hook._ACTIVE_LOG is None, (
+        "a failed install activates nothing")
+    # (b) a mid-run logging failure is sticky and fatal.
+    root = _build_root(tmp_path, "a2-f10")
+    transient = root / "knowledge" / "transient.md"
+    log_path = tmp_path / "a2-f10.log"
+    arch_audit_hook.install(str(log_path))
+    try:
+        # The replacement syscalls run with this thread's hook suppressed:
+        # the live hook would recreate the log file on the mkdir audit
+        # event and mkdir would fail with FileExistsError.
+        arch_audit_hook._STATE.active = True
+        try:
+            log_path.unlink()
+            log_path.mkdir()
+        finally:
+            arch_audit_hook._STATE.active = False
+        transient.write_text("transient\n", encoding="utf-8")
+        transient.unlink()
+    finally:
+        arch_audit_hook.uninstall()
+    try:
+        arch_audit_hook.assert_capture_ok()
+    except arch_audit_hook.AuditCaptureError:
+        pass
+    else:
+        raise AssertionError(
+            "assert_capture_ok() must fail after the log was replaced")
+
+
+def fixture_11_concurrent_threads(tmp_path: Path) -> None:
+    import learning_os.transactions as transactions
+
+    tmp_path = Path(tmp_path)
+    root = _build_root(tmp_path, "a2-f11")
+    transient = root / "knowledge" / "transient.md"
+    scratch_a = tmp_path / "a2-f11-a.txt"
+    log_path = tmp_path / "a2-f11.log"
+    entered = threading.Event()
+    gate = threading.Event()
+    real_phase = transactions.current_engine_phase
+    holder: dict = {}
+
+    def _gated_phase():
+        if threading.current_thread() is holder.get("a"):
+            entered.set()
+            assert gate.wait(timeout=30), "thread A was never released"
+        return real_phase()
+
+    transactions.current_engine_phase = _gated_phase
+    try:
+        arch_audit_hook.install(str(log_path))
+        try:
+            try:
+                thread_a = threading.Thread(
+                    target=scratch_a.write_text, args=("a\n",))
+                holder["a"] = thread_a
+                thread_a.start()
+                assert entered.wait(timeout=30), (
+                    "thread A never reached its phase lookup")
+                thread_b = threading.Thread(
+                    target=lambda: (transient.write_text("transient\n"),
+                                    transient.unlink()))
+                thread_b.start()
+                thread_b.join(timeout=30)
+                assert not thread_b.is_alive(), "thread B hung"
+            finally:
+                gate.set()
+            thread_a.join(timeout=30)
+            assert not thread_a.is_alive(), "thread A hung"
+        finally:
+            arch_audit_hook.uninstall()
+    finally:
+        transactions.current_engine_phase = real_phase
+    records = _read_log(log_path)
+    transient_abs = transient.resolve().as_posix()
+    b_hits = []
+    for rec in records:
+        for path in rec.get("paths") or []:
+            if not isinstance(path, str) or not os.path.isabs(path):
+                continue
+            try:
+                if Path(path).resolve().as_posix() == transient_abs:
+                    b_hits.append(rec)
+            except OSError:
+                continue
+    assert b_hits, (
+        "thread B's events must be in the log while A is inside the hook")
+
+
 FIXTURES = {
     "fixture_1_query_escalated_recovery": fixture_1_query_escalated_recovery,
+    "fixture_10_logging_failure": fixture_10_logging_failure,
+    "fixture_11_concurrent_threads": fixture_11_concurrent_threads,
     "fixture_2_unproven_restore": fixture_2_unproven_restore,
     "fixture_3_rogue_callbacks": fixture_3_rogue_callbacks,
     "fixture_4_descriptor_and_dir_fd": fixture_4_descriptor_and_dir_fd,
     "fixture_5_rename_into_canonical": fixture_5_rename_into_canonical,
     "fixture_6_python_child": fixture_6_python_child,
     "fixture_7_non_python_child": fixture_7_non_python_child,
+    "fixture_8_mixed_children": fixture_8_mixed_children,
+    "fixture_9_failed_installation": fixture_9_failed_installation,
 }
