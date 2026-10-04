@@ -148,6 +148,40 @@ def _add_analysis_note(root: Path, book: Path) -> None:
                     + "\n---\n\n" + body, encoding="utf-8")
 
 
+def _add_path_stage_note(root: Path) -> None:
+    # Amendment (w): the path stage carries a notes_path naming an existing,
+    # non-empty note, so path.note.write has a success case. The note stays
+    # inside the owning workspace (rules/curriculum.py PATH-NOTE-OWNER).
+    path_file = root / "work/active/workspace-demo/paths/path-demo.yaml"
+    data = yaml.safe_load(path_file.read_text(encoding="utf-8"))
+    note_rel = "work/active/workspace-demo/paths/stage-demo-path-notes.md"
+    for stage in data["stages"]:
+        if stage.get("id") == "stage-demo-path":
+            stage["notes_path"] = note_rel
+    write_yaml(path_file, data)
+    (root / note_rel).write_text(
+        "# First step — path notes\n\nBegun.\n", encoding="utf-8")
+
+
+def _add_runtime_target(root: Path) -> None:
+    # Amendment (w): the active stage of the unit's current study map
+    # carries a runtime_target, so collect_requirements returns one
+    # requirement (req-demo-l01-demo) and the observation operations have
+    # success cases. The stage has no `concepts`, so the concept is a
+    # knowledge-node id of the unit, as the amendment allows.
+    map_path = root / "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+    data = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    for stage in data["stages"]:
+        if stage.get("id") == "stage-demo":
+            stage["runtime_target"] = {
+                "concept": "knowledge-demo-expectation",
+                "capability": {"kind": "explain", "operands": ["expectation"]},
+                "conditions": ["unfamiliar-example"],
+                "evidence_spec": ["explain-reason"],
+            }
+    write_yaml(map_path, data)
+
+
 def _add_ability(root: Path) -> None:
     ability = {
         "id": ABILITY_ID,
@@ -203,6 +237,8 @@ def rich_world(root: Path) -> dict:
     add_manifest_fixtures(root)
     _repair_manifest_fixtures(root)
     _add_pending_stage(root)
+    _add_runtime_target(root)
+    _add_path_stage_note(root)
     _add_second_workspace(root)
     _add_inbox_drops(root)
     book = _add_fixture_book(root)

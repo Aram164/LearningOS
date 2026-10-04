@@ -13,6 +13,7 @@ import yaml
 from conftest import build_mini_repo
 from scenario_fixtures import rich_world
 
+from learning_os.learning_runtime import collect_requirements
 from learning_os.loader import load_repo
 from learning_os.materials_resolution import material_location
 
@@ -72,6 +73,11 @@ def test_every_family_is_present(tmp_path):
     assert "concept-expected-value" in repo.concepts and repo.relations
     assert {"workspace-demo", "workspace-second"} <= set(repo.workspaces)
     assert "path-demo" in repo.learning_paths
+    assert any(stage.get("notes_path")
+               and (root / stage["notes_path"]).is_file()
+               and (root / stage["notes_path"]).stat().st_size > 0
+               for stage in repo.learning_paths["path-demo"].data["stages"])
+    assert [req["id"] for req in collect_requirements(repo)] == ["req-demo-l01-demo"]
     assert (root / "work/inbox/note-drop.md").is_file() \
         and (root / "work/inbox/pack/one.md").is_file()
     assert len(repo.garden_notes) >= 1
