@@ -15,9 +15,9 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import UTC, datetime
-from uuid import uuid4
+from datetime import UTC
 
+from learning_os import observations
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
     current_gateway_request,
@@ -142,12 +142,12 @@ def _append_observation(
         historical = read_observations(repo, requirements)
         ledger = runtime_path(root, workspace.path.parent / "observations.jsonl")
         obs = {
-            "id": "observation-" + uuid4().hex,
+            "id": "observation-" + observations.new_hex(),
             "requirement": requirement_id,
             "requirement_sha256": requirement_fingerprint(requirement),
             "activity": activity,
             "result": result,
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": observations.now().astimezone(UTC).isoformat(),
             "conditions": list(conditions or []),
             "evidence_tags": [tag.strip() for tag in (tags or "").split(",") if tag.strip()],
         }
@@ -356,7 +356,7 @@ def cmd_observe(args) -> int:
             "expected_revisions": expected_revisions,
             "payload": payload,
         })
-        key = uuid4().hex
+        key = observations.new_hex()
         context = GatewayRequestContext(
             request_id=f"observe-{key}",
             idempotency_key=f"observe-{key}",

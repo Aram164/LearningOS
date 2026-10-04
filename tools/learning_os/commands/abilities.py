@@ -4,11 +4,11 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import UTC, datetime
-from uuid import uuid4
+from datetime import UTC
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+from .. import observations
 from ..abilities import (
     ability_context,
     ability_fingerprint,
@@ -152,7 +152,7 @@ def cmd_ability_observation_append(args) -> int:
                         or any(row.get("supersedes") == prior["id"] for row in history)):
                     raise WriteRefused("correction must supersede one uncorrected observation in this ledger")
             row = {
-                "id": "ability-observation-" + uuid4().hex,
+                "id": "ability-observation-" + observations.new_hex(),
                 "ability_id": args.ability,
                 "ability_sha256": ability_fingerprint(ability),
                 "claim": args.claim,
@@ -160,7 +160,7 @@ def cmd_ability_observation_append(args) -> int:
                 "confirmation_ref": args.confirmation_ref,
                 "activity": args.activity,
                 "result": args.result,
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": observations.now().astimezone(UTC).isoformat(),
                 "conditions": list(args.condition),
                 "evidence_tags": list(args.evidence_tag),
                 "assistance": args.assistance,
@@ -218,12 +218,12 @@ def cmd_ability_candidate_append(args) -> int:
             read_ability_candidates(repo)
             path = runtime_path(root, root / "knowledge/ability-candidates.jsonl")
             row = {
-                "id": "ability-candidate-" + uuid4().hex,
+                "id": "ability-candidate-" + observations.new_hex(),
                 "from": args.from_ability, "to": args.to_ability,
                 "kind": args.kind, "carries": args.carries,
                 "changes": args.changes, "conditions": list(args.condition),
                 "source_ref": args.source_ref,
-                "created_at": datetime.now(UTC).isoformat(),
+                "created_at": observations.now().astimezone(UTC).isoformat(),
                 "state": "candidate",
             }
             schema = json.loads((root / "system/schema/ability-candidate.schema.json").read_text())

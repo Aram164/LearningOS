@@ -14,9 +14,9 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import UTC, datetime
-from uuid import uuid4
+from datetime import UTC
 
+from learning_os import observations
 from learning_os.contracts.gateway import current_gateway_request
 from learning_os.learning_runtime import (
     RuntimeInputError,
@@ -70,12 +70,12 @@ def cmd_stage_result(args) -> int:
             historical = read_stage_results(repo)
             ledger = runtime_path(root, workspace.path.parent / "stage-results.jsonl")
             row = {
-                "id": "stage-result-" + uuid4().hex,
+                "id": "stage-result-" + observations.new_hex(),
                 "unit": unit.id,
                 "stage": stage["id"],
                 "activity": args.activity,
                 "result": args.result,
-                "timestamp": datetime.now(UTC).isoformat(),
+                "timestamp": observations.now().astimezone(UTC).isoformat(),
                 "conditions": list(args.condition or []),
             }
             if args.assistance is not None:
