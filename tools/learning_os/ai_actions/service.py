@@ -6,10 +6,10 @@ import json
 import shutil
 from pathlib import Path
 from typing import Any, cast
-from uuid import uuid4
 
 import yaml
 
+from learning_os import observations
 from learning_os.contracts.capability_catalog import (
     domain_capability_definitions,
     load_capability_catalog,
@@ -321,7 +321,7 @@ class AIActionService:
             # construction.
             check_request_id(request_id)
         else:
-            request_id = f"ai-request-{now:%Y%m%d-%H%M%S}-{uuid4().hex[:6]}"
+            request_id = f"ai-request-{now:%Y%m%d-%H%M%S}-{observations.new_hex()[:6]}"
         original: OriginalArtifact = {
             "id": f"original-{target_id}",
             "canonical_path": target["path"],

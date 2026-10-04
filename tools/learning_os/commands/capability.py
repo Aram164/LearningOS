@@ -12,6 +12,7 @@ from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
+from learning_os import observations
 from learning_os.contracts.capability_catalog import command_definitions
 from learning_os.contracts.gateway import (
     GatewayRequestContext,
@@ -366,12 +367,10 @@ def _dispatch(
 def prepare_review_envelope(capability_name: str, payload: dict,
                             snapshot: str, revisions: dict) -> dict:
     """Prepare a recoverable request during preflight, while its lock is held."""
-    import uuid
-
     envelope = {
         "schema_version": 2,
-        "request_id": f"request-reviewed-{uuid.uuid4().hex}",
-        "idempotency_key": f"reviewed-{uuid.uuid4().hex}",
+        "request_id": f"request-reviewed-{observations.new_hex()}",
+        "idempotency_key": f"reviewed-{observations.new_hex()}",
         "capability": capability_name,
         "channel": "codex",
         "expected_snapshot": snapshot,
