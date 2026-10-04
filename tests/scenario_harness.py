@@ -11,8 +11,10 @@ request-scoped id, else ``[]``), ``approval_kind`` (default
 ``"operator-approval"``), ``replay_only``, ``same_envelope_as`` (a step index
 whose envelope file is resubmitted verbatim), and ``git``
 (``{failing_pre_commit, origin}`` fixture setup for session-end sequences).
-``<ROOT>`` and ``<CASEDATA>`` in request/argv strings are substituted with the
-fixture root and the case's data directory
+``<ROOT>`` in request/argv strings is substituted with the fixture root;
+prefer plain relative paths, which resolve against the fixture (children
+run with cwd=root). ``<CASEDATA>`` substitutes the relative path to a copy
+of the case's committed data directory
 (``tests/scenarios/files/<operation>/<case-id>/``).
 
 The caller merges file-level context into each case before calling
@@ -47,9 +49,9 @@ FIXTURE_COMMIT_MESSAGE = "fixture"
 
 _TX_RE = re.compile(r"transaction-\d{8}-\d{6}-\d{3}")
 _KEY_RE = re.compile(
-    r"(?:request-)?scenario-[A-Za-z0-9_.][A-Za-z0-9_.~/~-]*"
-    r"|observe-[0-9a-f]{32}"
-    r"|(?:request-)?reviewed-[0-9a-f]+"
+    r"(?<![\w-])(?:request-)?scenario-[A-Za-z0-9_.][A-Za-z0-9_.~-]*"
+    r"|(?<![\w-])observe-[0-9a-f]{32}(?![0-9a-f])"
+    r"|(?<![\w-])(?:request-)?reviewed-[0-9a-f]+"
 )
 _SNAPSHOT_FIELDS = frozenset({
     "snapshot_after", "snapshot_before", "expected_snapshot", "snapshot_id",
@@ -58,6 +60,11 @@ _SHA256_RE = re.compile(r"sha256:[a-f0-9]{64}")
 # D16 stderr rule (SPEC §5.3.4): present from S05, a no-op until S14 adds
 # the `los: CODE: message` prefix.
 _D16_RE = re.compile(r"^los: ([A-Z][A-Z0-9_]{2,}): ", re.MULTILINE)
+# Wall-clock redaction (beyond §5.3's letter; see REPORT.md S05-J7):
+# validate.py --compact prints its own elapsed time, which session-end
+# embeds in its payload. No observation seam covers monotonic(), so the
+# harness redacts the operational timing instead of pinning the machine.
+_ELAPSED_RE = re.compile(r"\(\d+\.\ds\)")
 
 
 def load_case_file(path: str | Path) -> dict:
@@ -108,7 +115,9 @@ def _git(root: Path, *args: str, env: dict | None = None) -> None:
 
 
 def _commit_fixture(root: Path, now_iso: str, git_setup: dict | None) -> None:
-    _git(root, "init", "-q")
+    # An explicit branch: the default branch name is environment-dependent
+    # and leaks into session-end push output.
+    _git(root, "init", "-q", "-b", "main")
     name, email = FIXTURE_IDENTITY
     _git(root, "config", "user.name", name)
     _git(root, "config", "user.email", email)
@@ -171,8 +180,11 @@ def launch(ctx: _CaseContext, argv: list[str]) -> subprocess.CompletedProcess:
     env["PYTHONPATH"] = str(ARCH_SITE) + os.pathsep + env.get("PYTHONPATH", "")
     arch_audit_hook.install(str(ctx.log_path))
     try:
+        # cwd=root: case-relative file references resolve inside the
+        # fixture, so payloads (and the intent hashes covering them) hold
+        # no per-run absolute path.
         proc = subprocess.run(argv, capture_output=True, text=True,
-                              timeout=120, env=env)
+                              timeout=120, env=env, cwd=ctx.root)
     finally:
         arch_audit_hook.uninstall()
     arch_audit_hook.assert_capture_ok()
@@ -202,9 +214,12 @@ def check_witnesses(ctx: _CaseContext) -> None:
 # --------------------------------------------------------------------------
 
 def _substitute(value, ctx: _CaseContext):
+    import os.path as _osp
+
+    casedata_rel = _osp.relpath(ctx.workdir / "casedata", ctx.root)
     if isinstance(value, str):
         return (value.replace("<ROOT>", str(ctx.root))
-                .replace("<CASEDATA>", str(ctx.casedata)))
+                .replace("<CASEDATA>", casedata_rel))
     if isinstance(value, list):
         return [_substitute(item, ctx) for item in value]
     if isinstance(value, dict):
@@ -393,10 +408,12 @@ def derive_outcome(exit_code: int, stdout: str, stderr: str,
         return "refused"
     if "Traceback (most recent call last)" in stderr:
         return "diagnostic-failure"
-    if exit_code == 1:
-        return "diagnostic-failure"
     if exit_code in (2, 3):
         return "refused"
+    if exit_code > 0:
+        # A nonzero, non-refusal exit is a failed external step (git, the
+        # validator): session-end passes those codes through.
+        return "diagnostic-failure"
     return "unknown"
 
 
@@ -543,6 +560,8 @@ def normalize(recording: dict, root: str | Path) -> dict:
         return text
 
     recording = _walk_strings(recording, _map)
+    recording = _walk_strings(
+        recording, lambda text: _ELAPSED_RE.sub("(Xs)", text))
     # D16 stderr rule, last. A no-op until S14 introduces the prefix.
     for step in _single_steps(recording):
         step["stderr"] = _D16_RE.sub("los: ", step.get("stderr", ""))
@@ -586,6 +605,14 @@ def _prepare_world(case: dict, operation: str, workdir: Path
     _commit_fixture(root, now_iso, case.get("git"))
     observations_path = _write_observations(
         workdir, case["observations"], operation, case["id"])
+    # The case's data directory, copied to a stable depth beside the
+    # fixture so <CASEDATA> substitutes a relative path: an absolute
+    # committed path would leak the checkout location into intent hashes.
+    committed = CASEDATA_DIR / operation / case["id"]
+    if committed.is_dir():
+        import shutil
+
+        shutil.copytree(committed, workdir / "casedata")
     return _CaseContext(root=root, workdir=workdir,
                         observations_path=observations_path,
                         operation=operation, case_id=case["id"])
