@@ -1,0 +1,27 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 1,\n  \"type\": \"masters-planning-dashboard\",\n  \"opened_at\": \"2026-10-01T07:00:00+00:00\",\n  \"banner\": \"Prospective—not current LearningOS\",\n  \"catalog\": null,\n  \"comparisons\": [],\n  \"isolation\": {\n    \"normal_manifest\": false,\n    \"search\": false,\n    \"workload\": false,\n    \"recommendations\": false,\n    \"deadlines\": false,\n    \"ordinary_ai_context\": false\n  }\n}\n",
+  "stdout_json": {
+    "banner": "Prospective—not current LearningOS",
+    "catalog": null,
+    "comparisons": [],
+    "isolation": {
+      "deadlines": false,
+      "normal_manifest": false,
+      "ordinary_ai_context": false,
+      "recommendations": false,
+      "search": false,
+      "workload": false
+    },
+    "opened_at": "2026-10-01T07:00:00+00:00",
+    "schema_version": 1,
+    "type": "masters-planning-dashboard"
+  }
+}

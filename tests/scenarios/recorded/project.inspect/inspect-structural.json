@@ -1,0 +1,67 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"edit_via\":\"plan-edit-context unit-demo-l01 --stage-id stage-demo\",\"id\":\"stage-demo\",\"module_id\":\"module-demo\",\"stage\":{\"attachments\":[],\"done_when\":[\"Explain the derivation.\"],\"id\":\"stage-demo\",\"module_id\":\"module-demo\",\"notes_text\":\"\",\"notes_updated\":\"\",\"objective\":\"Derive and explain expected value.\",\"resources\":[{\"id\":\"resource-demo-book-ch01\",\"kind\":\"read\",\"label\":\"Demo Book §1\",\"locator\":\"§1\",\"material_exists\":true,\"material_path\":\"materials/source-demo-book/book.pdf\",\"material_uri\":\"material://source-demo-book/book.pdf\",\"source_id\":\"source-demo-book\"},{\"id\":\"resource-demo-book-appendix\",\"kind\":\"read\",\"label\":\"Demo Book Appendix\",\"locator\":\"Appendix A\",\"material_exists\":true,\"material_path\":\"materials/source-demo-book/book.pdf\",\"material_uri\":\"material://source-demo-book/book.pdf\",\"source_id\":\"source-demo-book\"},{\"kind\":\"watch\",\"label\":\"Demo companion video\",\"material_exists\":true,\"material_path\":\"materials/source-demo-book/book.pdf\",\"material_uri\":\"material://source-demo-book/book.pdf\",\"source_id\":\"source-demo-book\"}],\"scope_triage\":\"required-now\",\"source_feedback\":[],\"status\":\"active\",\"study_map_id\":\"study-map-demo-l01\",\"title\":\"Derive expected value\",\"unit_id\":\"unit-demo-l01\",\"working_note\":\"curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md\"},\"structural_kind\":\"curriculum-stage\",\"study_map_id\":\"study-map-demo-l01\",\"unit_id\":\"unit-demo-l01\"}\n",
+  "stdout_json": {
+    "edit_via": "plan-edit-context unit-demo-l01 --stage-id stage-demo",
+    "id": "stage-demo",
+    "module_id": "module-demo",
+    "stage": {
+      "attachments": [],
+      "done_when": [
+        "Explain the derivation."
+      ],
+      "id": "stage-demo",
+      "module_id": "module-demo",
+      "notes_text": "",
+      "notes_updated": "",
+      "objective": "Derive and explain expected value.",
+      "resources": [
+        {
+          "id": "resource-demo-book-ch01",
+          "kind": "read",
+          "label": "Demo Book §1",
+          "locator": "§1",
+          "material_exists": true,
+          "material_path": "materials/source-demo-book/book.pdf",
+          "material_uri": "material://source-demo-book/book.pdf",
+          "source_id": "source-demo-book"
+        },
+        {
+          "id": "resource-demo-book-appendix",
+          "kind": "read",
+          "label": "Demo Book Appendix",
+          "locator": "Appendix A",
+          "material_exists": true,
+          "material_path": "materials/source-demo-book/book.pdf",
+          "material_uri": "material://source-demo-book/book.pdf",
+          "source_id": "source-demo-book"
+        },
+        {
+          "kind": "watch",
+          "label": "Demo companion video",
+          "material_exists": true,
+          "material_path": "materials/source-demo-book/book.pdf",
+          "material_uri": "material://source-demo-book/book.pdf",
+          "source_id": "source-demo-book"
+        }
+      ],
+      "scope_triage": "required-now",
+      "source_feedback": [],
+      "status": "active",
+      "study_map_id": "study-map-demo-l01",
+      "title": "Derive expected value",
+      "unit_id": "unit-demo-l01",
+      "working_note": "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md"
+    },
+    "structural_kind": "curriculum-stage",
+    "study_map_id": "study-map-demo-l01",
+    "unit_id": "unit-demo-l01"
+  }
+}
