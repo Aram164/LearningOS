@@ -1,0 +1,20 @@
+operation: cli.ai-action-status
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: show
+    kind: success
+    transport: cli
+    argv: [ai-action-status, ai-request-demo]
+    expect: {site: null}
+  - id: show-json
+    kind: success
+    transport: cli
+    argv: [ai-action-status, --json, ai-request-demo]
+    expect: {site: null}
+  - id: unknown-request
+    kind: refusal
+    transport: cli
+    argv: [ai-action-status, ai-request-nope]
+    expect: {site: null}
+untriggered: []
