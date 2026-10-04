@@ -1,0 +1,152 @@
+{
+  "canonical_changed": {
+    "work/active/workspace-demo/observations.jsonl": "43fd0a60e789b76d249004c817ab653b81e9c511f34029b811f3bcba113a0b48"
+  },
+  "exit": 0,
+  "idempotency_changed": {
+    "after": {
+      "entries": {
+        "KEY1": {
+          "capability": "learner.observation.append",
+          "channel": "operator",
+          "intent_sha256": "sha256:a55273ae935039d4eab09ae298c124c199f2c305ab4ace17a0fb5b366c86a249",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "request_id": "KEY1",
+          "revisions": {
+            "workspace-demo": 1
+          },
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "transaction_id": "TX1"
+        }
+      },
+      "schema_version": 1,
+      "type": "transaction-idempotency-ledger"
+    },
+    "before": null
+  },
+  "outcome": "ok",
+  "receipts": [
+    {
+      "artifact_revisions": {
+        "workspace-demo": {
+          "after": 1,
+          "before": 0
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "learner.observation.append",
+            "declared_writes": [
+              "work/active/*/observations.jsonl"
+            ]
+          }
+        ]
+      },
+      "capability": "learner.observation.append",
+      "committed_at": "2026-10-01T09:00:00+02:00",
+      "expected_revisions": {
+        "workspace-demo": 0
+      },
+      "id": "TX1",
+      "metadata": {
+        "data_roots_sha256": "sha256:28d5263a891ae2b5327d181d7a4b42fc8bc792d200ea615128364c7f2ade33c2",
+        "fingerprint_definition": 2
+      },
+      "request": {
+        "approval": {
+          "kind": "direct-user-gesture",
+          "subject_sha256": "sha256:a55273ae935039d4eab09ae298c124c199f2c305ab4ace17a0fb5b366c86a249"
+        },
+        "channel": "operator",
+        "idempotency_key": "KEY1",
+        "intent_sha256": "sha256:a55273ae935039d4eab09ae298c124c199f2c305ab4ace17a0fb5b366c86a249",
+        "request_id": "KEY1"
+      },
+      "schema_version": 2,
+      "snapshot_after": "SNAP1",
+      "snapshot_before": "SNAP2",
+      "status": "committed",
+      "type": "transaction-receipt",
+      "writes": [
+        {
+          "created": true,
+          "path": "work/active/workspace-demo/observations.jsonl",
+          "sha256_after": "43fd0a60e789b76d249004c817ab653b81e9c511f34029b811f3bcba113a0b48",
+          "sha256_before": null
+        }
+      ]
+    }
+  ],
+  "revisions_changed": {
+    "after": {
+      "revisions": {
+        "unit-demo-l01": 3,
+        "workspace-demo": 1
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    },
+    "before": {
+      "revisions": {
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    }
+  },
+  "session_ledger_changed": {
+    "after": {
+      "paths": {
+        "operations/transactions/TX1.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "a85819e4203645b26ff4ca9f1a707904cf18c2de7ee5ad390183443352fb40ae",
+          "state": "file"
+        },
+        "operations/transactions/idempotency.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "dfb0e8738cb5b257a182b283c20afcb159ea2440073d76c3d01a0f71dc46e799",
+          "state": "file"
+        },
+        "operations/transactions/revisions.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "0fe504b78fa88e29c45a1eaaec90f6b813e9dca6ab23c073231a4d51a88d22f0",
+          "state": "file"
+        },
+        "work/active/workspace-demo/observations.jsonl": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "43fd0a60e789b76d249004c817ab653b81e9c511f34029b811f3bcba113a0b48",
+          "state": "file"
+        }
+      },
+      "schema_version": 2,
+      "session_id": "channel:operator"
+    },
+    "before": null
+  },
+  "stderr": "",
+  "stdout": "{\"ok\": true, \"observation_id\": \"observation-5863954f4fdf490abfebb95ab2365cf5\", \"workspace_id\": \"workspace-demo\", \"unstated_conditions\": [\"unfamiliar-example\"], \"interpretation_notice\": \"this result does not say whether the target's conditions held (unfamiliar-example), so it is held as unresolved: it is not read as a failure of this target, and the successes recorded before it stop counting toward a current conclusion until this is settled. Settle it by superseding this record \\u2014 los observe req-demo-l01-demo --activity exercise --result partial --supersedes observation-5863954f4fdf490abfebb95ab2365cf5 \\u2014 adding --condition unfamiliar-example for the conditions that held, or --condition-not-met unfamiliar-example for the ones that did not. Two distinct qualified activities recorded after this also establish a new basis, without claiming the missing facts were ever known.\", \"transaction_id\": \"TX1\", \"receipt_path\": \"operations/transactions/TX1.yaml\", \"artifact_revisions\": {\"workspace-demo\": 1}, \"snapshot_after\": \"SNAP1\", \"replayed\": false}\n",
+  "stdout_json": {
+    "artifact_revisions": {
+      "workspace-demo": 1
+    },
+    "interpretation_notice": "this result does not say whether the target's conditions held (unfamiliar-example), so it is held as unresolved: it is not read as a failure of this target, and the successes recorded before it stop counting toward a current conclusion until this is settled. Settle it by superseding this record — los observe req-demo-l01-demo --activity exercise --result partial --supersedes observation-5863954f4fdf490abfebb95ab2365cf5 — adding --condition unfamiliar-example for the conditions that held, or --condition-not-met unfamiliar-example for the ones that did not. Two distinct qualified activities recorded after this also establish a new basis, without claiming the missing facts were ever known.",
+    "observation_id": "observation-5863954f4fdf490abfebb95ab2365cf5",
+    "ok": true,
+    "receipt_path": "operations/transactions/TX1.yaml",
+    "replayed": false,
+    "snapshot_after": "SNAP1",
+    "transaction_id": "TX1",
+    "unstated_conditions": [
+      "unfamiliar-example"
+    ],
+    "workspace_id": "workspace-demo"
+  }
+}

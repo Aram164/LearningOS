@@ -1,0 +1,164 @@
+{
+  "canonical_changed": {
+    "work/active/workspace-demo/observations.jsonl": "9ebd0e13b5aaa6ed246449f311e0503fd7845acfc1f8735fb5aa0b9b0994b505"
+  },
+  "exit": 0,
+  "idempotency_changed": {
+    "after": {
+      "entries": {
+        "KEY2": {
+          "capability": "learner.observation.append",
+          "channel": "operator",
+          "intent_sha256": "sha256:a55273ae935039d4eab09ae298c124c199f2c305ab4ace17a0fb5b366c86a249",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "request_id": "KEY1",
+          "revisions": {
+            "workspace-demo": 1
+          },
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "transaction_id": "TX1"
+        }
+      },
+      "schema_version": 1,
+      "type": "transaction-idempotency-ledger"
+    },
+    "before": null
+  },
+  "outcome": "ok",
+  "receipts": [
+    {
+      "artifact_revisions": {
+        "workspace-demo": {
+          "after": 1,
+          "before": 0
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "learner.observation.append",
+            "declared_writes": [
+              "work/active/*/observations.jsonl"
+            ]
+          }
+        ]
+      },
+      "capability": "learner.observation.append",
+      "committed_at": "2026-10-01T09:00:00+02:00",
+      "expected_revisions": {
+        "workspace-demo": 0
+      },
+      "id": "TX1",
+      "metadata": {
+        "data_roots_sha256": "sha256:ba1b13c693e8e9c13093caf0a2e1321998b40a8a00e005b5b4a60d2df120a463",
+        "fingerprint_definition": 2
+      },
+      "request": {
+        "approval": {
+          "kind": "operator-approval",
+          "subject_sha256": "sha256:a55273ae935039d4eab09ae298c124c199f2c305ab4ace17a0fb5b366c86a249"
+        },
+        "channel": "operator",
+        "idempotency_key": "KEY2",
+        "intent_sha256": "sha256:a55273ae935039d4eab09ae298c124c199f2c305ab4ace17a0fb5b366c86a249",
+        "request_id": "KEY1"
+      },
+      "schema_version": 2,
+      "snapshot_after": "SNAP1",
+      "snapshot_before": "SNAP2",
+      "status": "committed",
+      "type": "transaction-receipt",
+      "writes": [
+        {
+          "created": true,
+          "path": "work/active/workspace-demo/observations.jsonl",
+          "sha256_after": "9ebd0e13b5aaa6ed246449f311e0503fd7845acfc1f8735fb5aa0b9b0994b505",
+          "sha256_before": null
+        }
+      ]
+    }
+  ],
+  "revisions_changed": {
+    "after": {
+      "revisions": {
+        "unit-demo-l01": 3,
+        "workspace-demo": 1
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    },
+    "before": {
+      "revisions": {
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    }
+  },
+  "session_ledger_changed": {
+    "after": {
+      "paths": {
+        "operations/transactions/TX1.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "12eb679ac33b2d5ab19a52c81490262ba637d95a24b2aefeacc08c927479eacb",
+          "state": "file"
+        },
+        "operations/transactions/idempotency.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "b19064062e8efe67cb320eae2a80c3995a68658eae654808841d1333aadf9af3",
+          "state": "file"
+        },
+        "operations/transactions/revisions.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "0fe504b78fa88e29c45a1eaaec90f6b813e9dca6ab23c073231a4d51a88d22f0",
+          "state": "file"
+        },
+        "work/active/workspace-demo/observations.jsonl": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "9ebd0e13b5aaa6ed246449f311e0503fd7845acfc1f8735fb5aa0b9b0994b505",
+          "state": "file"
+        }
+      },
+      "schema_version": 2,
+      "session_id": "channel:operator"
+    },
+    "before": null
+  },
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"learner.observation.append\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"observation_id\": \"observation-78ed548059426c2f3c4f60b73562ae1b\",\n    \"workspace_id\": \"workspace-demo\",\n    \"unstated_conditions\": [\n      \"unfamiliar-example\"\n    ],\n    \"interpretation_notice\": \"this result does not say whether the target's conditions held (unfamiliar-example), so it is held as unresolved: it is not read as a failure of this target, and the successes recorded before it stop counting toward a current conclusion until this is settled. Settle it by superseding this record — los observe req-demo-l01-demo --activity exercise --result partial --supersedes observation-78ed548059426c2f3c4f60b73562ae1b — adding --condition unfamiliar-example for the conditions that held, or --condition-not-met unfamiliar-example for the ones that did not. Two distinct qualified activities recorded after this also establish a new basis, without claiming the missing facts were ever known.\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"workspace-demo\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "learner.observation.append",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": "operations/transactions/TX1.yaml",
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "artifact_revisions": {
+        "workspace-demo": 1
+      },
+      "interpretation_notice": "this result does not say whether the target's conditions held (unfamiliar-example), so it is held as unresolved: it is not read as a failure of this target, and the successes recorded before it stop counting toward a current conclusion until this is settled. Settle it by superseding this record — los observe req-demo-l01-demo --activity exercise --result partial --supersedes observation-78ed548059426c2f3c4f60b73562ae1b — adding --condition unfamiliar-example for the conditions that held, or --condition-not-met unfamiliar-example for the ones that did not. Two distinct qualified activities recorded after this also establish a new basis, without claiming the missing facts were ever known.",
+      "observation_id": "observation-78ed548059426c2f3c4f60b73562ae1b",
+      "ok": true,
+      "receipt_path": "operations/transactions/TX1.yaml",
+      "replayed": false,
+      "snapshot_after": "SNAP1",
+      "transaction_id": "TX1",
+      "unstated_conditions": [
+        "unfamiliar-example"
+      ],
+      "workspace_id": "workspace-demo"
+    },
+    "schema_version": 2,
+    "snapshot_after": "SNAP1",
+    "transaction_id": "TX1"
+  }
+}

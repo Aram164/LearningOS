@@ -7,13 +7,13 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"path.note.write\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"INVALID_REQUEST\",\n    \"message\": \"los: stage has no notes_path: stage-demo-path\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"path.note.write\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"INVALID_REQUEST\",\n    \"message\": \"los: refusing to write an empty note — pass real text\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
   "stdout_json": {
     "capability": "path.note.write",
     "error": {
       "code": "INVALID_REQUEST",
       "details": {},
-      "message": "los: stage has no notes_path: stage-demo-path",
+      "message": "los: refusing to write an empty note — pass real text",
       "retryable": false
     },
     "idempotency_key": "KEY2",

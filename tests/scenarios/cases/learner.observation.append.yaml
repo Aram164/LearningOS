@@ -1,11 +1,14 @@
-# SPEC-GAP S05-O1 (see REPORT.md): no success case and no exact-replay case
-# are expressible. rich_world authorizes no requirement (no stage carries a
-# runtime_target), and none of the step types can author one: unit.plan.revise
-# needs a coverage-audit file no step can create.
 operation: learner.observation.append
 fixture: rich_world
 observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
 cases:
+  - id: append-observation
+    kind: success
+    transport: gateway
+    request: {workspace: workspace-demo, requirement: req-demo-l01-demo, activity: exercise, result: partial}
+    artifact_ids: [workspace-demo]
+    a5_base: true
+    expect: {site: null}
   - id: unknown-requirement
     kind: refusal
     transport: gateway
@@ -15,7 +18,31 @@ cases:
   - id: untargeted-stage
     kind: refusal
     transport: gateway
+    request: {workspace: workspace-demo, requirement: stage-demo-pending, activity: exercise, result: partial}
+    artifact_ids: []
+    expect: {site: null}
+  - id: targeted-stage
+    kind: refusal
+    transport: gateway
     request: {workspace: workspace-demo, requirement: stage-demo, activity: exercise, result: partial}
+    artifact_ids: []
+    expect: {site: null}
+  - id: requirement-outside-scope
+    kind: refusal
+    transport: gateway
+    request: {workspace: workspace-second, requirement: req-demo-l01-demo, activity: exercise, result: partial}
+    artifact_ids: []
+    expect: {site: null}
+  - id: condition-both-ways
+    kind: refusal
+    transport: gateway
+    request: {workspace: workspace-demo, requirement: req-demo-l01-demo, activity: exercise, result: partial, condition: [unfamiliar-example], condition_not_met: [unfamiliar-example]}
+    artifact_ids: []
+    expect: {site: null}
+  - id: supersede-unknown
+    kind: refusal
+    transport: gateway
+    request: {workspace: workspace-demo, requirement: req-demo-l01-demo, activity: exercise, result: partial, supersedes: observation-nope}
     artifact_ids: []
     expect: {site: null}
   - id: bad-workspace
@@ -29,6 +56,14 @@ cases:
     transport: cli
     argv: [observation-append, --workspace, workspace-demo, --requirement, req-nope, --activity, exercise, --result, partial]
     expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {workspace: workspace-demo, requirement: req-demo-l01-demo, activity: exercise, result: partial}
+        artifact_ids: [workspace-demo]
+      - transport: gateway
+        same_envelope_as: 0
   - id: replay-only-miss
     kind: refusal
     transport: gateway
@@ -36,8 +71,4 @@ cases:
     request: {workspace: workspace-demo, requirement: req-nope, activity: exercise, result: partial}
     artifact_ids: [workspace-demo]
     expect: {site: null}
-untriggered:
-  - {where: "tools/learning_os/commands/observation.py:141", reason: "workspace scope: unreachable without a requirement to check scope against"}
-  - {where: "tools/learning_os/commands/observation.py:159", reason: "condition both met and not met: unreachable without a requirement"}
-  - {where: "tools/learning_os/commands/observation.py:171", reason: "supersedes validation: unreachable without a requirement and its history"}
-  - {where: "tools/learning_os/commands/observation.py:93", reason: "targeted-stage message: unreachable without a runtime_target"}
+untriggered: []
