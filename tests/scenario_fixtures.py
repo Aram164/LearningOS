@@ -23,6 +23,12 @@ from repo_builders import (
 )
 
 from learning_os.abilities import ability_fingerprint
+from learning_os.loader import load_repo
+from learning_os.material_refs import unit_routes
+from learning_os.materials_resolution import (
+    project_material_resource,
+    resolve_route_material_files,
+)
 from learning_os.semantics.lineage import (
     LEDGER_RELATIVE,
     dump_ledger,
@@ -392,6 +398,57 @@ def _add_lineage_claim(root: Path) -> str:
     return claim.claim_id
 
 
+#: Distinct extractable lines for the l01 route material (amendment (z)
+#: item 2): a 20-page lecture plus a 4-page worked example the default
+#: first pass leaves unread. Plain ASCII, parentheses-safe, one per page.
+ROUTE_MATERIAL_TEXTS = [
+    "Expected value, page 1 of 24: an outcome is a value a variable can take",
+    "Expected value, page 2 of 24: probability weights every outcome",
+    "Expected value, page 3 of 24: weights are nonnegative and sum to one",
+    "Expected value, page 4 of 24: expectation is the weighted sum",
+    "Expected value, page 5 of 24: E of X brackets the variable",
+    "Expected value, page 6 of 24: a fair die expects three and a half",
+    "Expected value, page 7 of 24: linearity splits sums of variables",
+    "Expected value, page 8 of 24: constants factor out of expectation",
+    "Expected value, page 9 of 24: independence factors products",
+    "Expected value, page 10 of 24: variance squares the deviations",
+    "Expected value, page 11 of 24: standard deviation restores the units",
+    "Expected value, page 12 of 24: conditioning partitions the sample space",
+    "Expected value, page 13 of 24: the tower rule nests the conditioning",
+    "Expected value, page 14 of 24: indicator variables count events",
+    "Expected value, page 15 of 24: the collector sums harmonic waits",
+    "Expected value, page 16 of 24: symmetry argues without summing",
+    "Expected value, page 17 of 24: Jensen bends convex transforms upward",
+    "Expected value, page 18 of 24: Markov bounds the tail by the mean",
+    "Expected value, page 19 of 24: Chebyshev squares the deviation bound",
+    "Expected value, page 20 of 24: the first pass ends here, example unread",
+    "Worked example part 1 of 4: a biased coin pays two on heads",
+    "Worked example part 2 of 4: heads lands with probability three quarters",
+    "Worked example part 3 of 4: expectation is one and three quarters",
+    "Worked example part 4 of 4: check by enumerating both outcomes",
+]
+
+
+def _add_route_material(root: Path) -> Path:
+    # Amendment (z) item 2: the material file unit-demo-l01's route
+    # locator resolves to. The exact materials path comes from
+    # project_material_resource, never guessed: the locator is a strict
+    # safe path, so material_path is published even before the file
+    # exists. Runs after the migration so the route carries its id, and
+    # before the lineage claim so that step stays last.
+    repo = load_repo(root)
+    (route,) = unit_routes(repo.module_source_maps["module-demo"],
+                           "module-demo", "unit-demo-l01")
+    projected = project_material_resource(repo, route)
+    target = repo.learningos_root / projected["material_path"]
+    write_minimal_pdf(target, ROUTE_MATERIAL_TEXTS)
+    resolved = resolve_route_material_files(repo, route)
+    assert len(resolved) == 1 \
+        and resolved[0].path.resolve() == target.resolve(), \
+        f"route material did not resolve to the written file: {resolved}"
+    return target
+
+
 def rich_world(root: Path) -> dict:
     """Layer the rich characterization world onto a mini repository.
 
@@ -414,6 +471,7 @@ def rich_world(root: Path) -> dict:
     _apply_route_migration(root)
     _add_legacy_unit(root)
     _add_second_ability(root)
+    _add_route_material(root)
     claim_id = _add_lineage_claim(root)
     return {
         "module": "module-demo",

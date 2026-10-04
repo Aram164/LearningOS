@@ -8,6 +8,7 @@ import sys
 import time
 from pathlib import Path
 
+import pypdf
 import pytest
 import yaml
 from conftest import build_mini_repo
@@ -15,7 +16,11 @@ from scenario_fixtures import rich_world
 
 from learning_os.learning_runtime import collect_requirements
 from learning_os.loader import load_repo
-from learning_os.materials_resolution import material_location
+from learning_os.material_refs import unit_routes
+from learning_os.materials_resolution import (
+    material_location,
+    resolve_route_material_files,
+)
 from learning_os.semantics.lineage import load_ledger
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -118,6 +123,17 @@ def test_every_family_is_present(tmp_path):
                for record in load_ledger(root).values())
     assert (root / "operations/transactions"
             / "transaction-20200102-000000-001.yaml").is_file()
+    # Amendment (z) item 2: the l01 route locator resolves to one PDF of
+    # at least 24 pages of distinct extractable text.
+    (l01_route,) = unit_routes(repo.module_source_maps["module-demo"],
+                               "module-demo", "unit-demo-l01")
+    resolved = resolve_route_material_files(repo, l01_route)
+    assert len(resolved) == 1
+    assert resolved[0].path.is_file() and not resolved[0].path.is_symlink()
+    pages = pypdf.PdfReader(str(resolved[0].path)).pages
+    assert len(pages) >= 24
+    texts = [(page.extract_text() or "").strip() for page in pages]
+    assert all(texts) and len(set(texts)) == len(texts)
 
 
 def _tree_files(top: Path) -> dict[str, bytes]:
