@@ -15,6 +15,12 @@ cases:
     request: {path_id: path-demo, stage_id: stage-demo-path, text: " "}
     artifact_ids: []
     expect: {site: null}
+  - id: no-notes-path
+    kind: refusal
+    transport: gateway
+    request: {path_id: path-demo, stage_id: stage-demo-path-next, text: "nowhere to land"}
+    artifact_ids: []
+    expect: {site: null}
   - id: unknown-stage
     kind: refusal
     transport: gateway
@@ -47,5 +53,4 @@ cases:
     request: {path_id: path-demo, stage_id: stage-demo-path, text: "nowhere to land"}
     artifact_ids: [path-demo]
     expect: {site: null}
-untriggered:
-  - {where: "tools/learning_os/commands/path.py:43", reason: "no notes_path: every rich_world path stage carries one since amendment (w), and no operation removes it"}
+untriggered: []
