@@ -9,7 +9,6 @@ import json
 import os
 import sys
 import uuid
-from importlib import import_module
 from pathlib import Path
 
 OVERRIDE_ENV = "LOS_OBSERVATIONS"
@@ -117,18 +116,6 @@ def git_override() -> dict | None:
         return None
     git = data["git"]
     return git if isinstance(git, dict) else None
-
-
-def git_commit_date(root: Path, relpath: str) -> datetime.date | None:
-    """The last-commit date of ``relpath``, or None when it has no history."""
-    # Deferred through importlib: githistory imports this module for the
-    # seam, so a static import here would be a dependency cycle. This
-    # resolves to the same cached lookup at call time.
-    last_commit_date = import_module("learning_os.githistory").last_commit_date
-    raw = last_commit_date(root, relpath)
-    if not raw:
-        return None
-    return datetime.date.fromisoformat(raw)
 
 
 def runtime_identity() -> dict:

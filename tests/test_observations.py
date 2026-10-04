@@ -80,7 +80,6 @@ def test_absent_path_has_no_history(monkeypatch, tmp_path):
     _git_fixture(monkeypatch, tmp_path)
     assert githistory.last_commit_timestamp(tmp_path, "missing.md") is None
     assert githistory.last_commit_date(tmp_path, "missing.md") == ""
-    assert observations.git_commit_date(tmp_path, "missing.md") is None
 
 
 def test_unhandled_read_history_arguments_reach_real_git(monkeypatch, tmp_path):
