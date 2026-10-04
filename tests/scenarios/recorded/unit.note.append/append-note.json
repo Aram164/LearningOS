@@ -10,7 +10,7 @@
         "KEY2": {
           "capability": "unit.note.append",
           "channel": "operator",
-          "intent_sha256": "sha256:6eb0f96c77d733b7c3e16dc952a2c848b4ac85a8f3b897fa91bc16456c17690a",
+          "intent_sha256": "sha256:e155e182cd9014e7e62c387711b3c77db0b08c1cb49fbe1e22ab6a202672a50d",
           "receipt_path": "operations/transactions/TX1.yaml",
           "request_id": "KEY1",
           "revisions": {
@@ -54,17 +54,17 @@
       },
       "id": "TX1",
       "metadata": {
-        "data_roots_sha256": "sha256:b75a0058e7e260b029ca8b95e8350a80bcb3f8a73b97aa6666cd610ed5cae208",
+        "data_roots_sha256": "sha256:130f3b4e8d1ee5683edbc21df726073c6d1aafe7ad6eb19a8cec5baff5bbd358",
         "fingerprint_definition": 2
       },
       "request": {
         "approval": {
           "kind": "operator-approval",
-          "subject_sha256": "sha256:6eb0f96c77d733b7c3e16dc952a2c848b4ac85a8f3b897fa91bc16456c17690a"
+          "subject_sha256": "sha256:e155e182cd9014e7e62c387711b3c77db0b08c1cb49fbe1e22ab6a202672a50d"
         },
         "channel": "operator",
         "idempotency_key": "KEY2",
-        "intent_sha256": "sha256:6eb0f96c77d733b7c3e16dc952a2c848b4ac85a8f3b897fa91bc16456c17690a",
+        "intent_sha256": "sha256:e155e182cd9014e7e62c387711b3c77db0b08c1cb49fbe1e22ab6a202672a50d",
         "request_id": "KEY1"
       },
       "schema_version": 2,
@@ -122,13 +122,13 @@
         "operations/transactions/TX1.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "78613f97d906a28c29780bdb2fb507984088f3cb24af9e127faf7d0c1ef567fe",
+          "sha256": "7036efb5c6898912613105d5a1df2bc518f5d5fb94f6ecd79137bf1582a70500",
           "state": "file"
         },
         "operations/transactions/idempotency.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "70057d0aa519f02489b23739563be8775e10b37424648ff14d96415b28d5258f",
+          "sha256": "808316f705a740949896c91c8fa49484d88619a15bb906960c19ae8098f2176d",
           "state": "file"
         },
         "operations/transactions/revisions.yaml": {
