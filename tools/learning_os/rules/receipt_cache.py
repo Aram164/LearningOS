@@ -174,12 +174,13 @@ def _json_safe(value: Any) -> bool:
     carry anything YAML parses — including datetimes, which ``json``
     cannot write. Such a receipt simply stays uncached.
     """
-    if value is None or isinstance(value, (str, int, float, bool)):
+    t = type(value)
+    if t is str or t is int or t is float or t is bool or value is None:
         return True
-    if isinstance(value, list):
+    if t is list:
         return all(_json_safe(item) for item in value)
-    if isinstance(value, dict):
-        return all(isinstance(key, str) and _json_safe(item)
+    if t is dict:
+        return all(type(key) is str and _json_safe(item)
                    for key, item in value.items())
     return False
 
