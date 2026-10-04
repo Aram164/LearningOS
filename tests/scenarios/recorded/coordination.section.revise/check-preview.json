@@ -1,0 +1,37 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"coordination.section.revise\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {\n    \"ok\": true,\n    \"section\": \"Priorities\",\n    \"before\": \"(none)\",\n    \"after\": \"Preview only.\",\n    \"expected_content_sha256\": \"sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655\",\n    \"expected_snapshot\": \"SNAP1\",\n    \"expected_revisions\": {\n      \"coordination\": 0\n    },\n    \"write_paths\": [\n      \"work/COORDINATION.md\"\n    ]\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "coordination.section.revise",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": null,
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "after": "Preview only.",
+      "before": "(none)",
+      "expected_content_sha256": "sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655",
+      "expected_revisions": {
+        "coordination": 0
+      },
+      "expected_snapshot": "SNAP1",
+      "ok": true,
+      "section": "Priorities",
+      "write_paths": [
+        "work/COORDINATION.md"
+      ]
+    },
+    "schema_version": 2,
+    "snapshot_after": null,
+    "transaction_id": null
+  }
+}
