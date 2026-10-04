@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\n  \"ok\": true,\n  \"touched\": [],\n  \"owned_changes\": [],\n  \"unrelated_changes\": [],\n  \"committed\": false,\n  \"pushed\": false,\n  \"validation\": \"0 error(s), 8 warning(s) — OK (Xs); warning list: generated/reports/validation-report.md\",\n  \"ownership_conflicts\": [],\n  \"session_id\": \"channel:operator\",\n  \"client\": null,\n  \"stale_paths\": [],\n  \"stale_hours\": 24,\n  \"other_sessions\": {},\n  \"session_closed\": false\n}\n",
+  "stdout": "{\n  \"ok\": true,\n  \"touched\": [],\n  \"owned_changes\": [],\n  \"unrelated_changes\": [],\n  \"committed\": false,\n  \"pushed\": false,\n  \"validation\": \"0 error(s), 10 warning(s) — OK (Xs); warning list: generated/reports/validation-report.md\",\n  \"ownership_conflicts\": [],\n  \"session_id\": \"channel:operator\",\n  \"client\": null,\n  \"stale_paths\": [],\n  \"stale_hours\": 24,\n  \"other_sessions\": {},\n  \"session_closed\": false\n}\n",
   "stdout_json": {
     "client": null,
     "committed": false,
@@ -22,6 +22,6 @@
     "stale_paths": [],
     "touched": [],
     "unrelated_changes": [],
-    "validation": "0 error(s), 8 warning(s) — OK (Xs); warning list: generated/reports/validation-report.md"
+    "validation": "0 error(s), 10 warning(s) — OK (Xs); warning list: generated/reports/validation-report.md"
   }
 }

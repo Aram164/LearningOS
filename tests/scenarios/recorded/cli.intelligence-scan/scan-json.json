@@ -7,8 +7,49 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"goals\":[]}\n",
+  "stdout": "{\"goals\":[{\"authorized_by\":\"\",\"detector\":\"lineage-stale\",\"evidence\":[\"claim:covers:route-b2f1f80014860a929a3af0bc\",\"moved:module-demo\",\"moved:unit-demo-l01\"],\"goal_id\":\"lineage-stale:covers:route-b2f1f80014860a929a3af0bc\",\"rationale\":\"Dependencies changed or cannot be verified for covers:route-b2f1f80014860a929a3af0bc (module-demo, unit-demo-l01); the claim is stale until re-judged.\",\"state\":\"detected\",\"superseded_by\":\"\",\"title\":\"Re-judge covers:route-b2f1f80014860a929a3af0bc: lineage reads moved\"},{\"authorized_by\":\"\",\"detector\":\"source-changed-under-claim\",\"evidence\":[\"claim:covers:route-b2f1f80014860a929a3af0bc\",\"revision:module-demo\",\"revision:unit-demo-l01\"],\"goal_id\":\"source-changed-under-claim:covers:route-b2f1f80014860a929a3af0bc\",\"rationale\":\"Pinned module-demo, unit-demo-l01, which moved; the claim's lineage is stale until re-judged.\",\"state\":\"detected\",\"superseded_by\":\"\",\"title\":\"Re-examine covers:route-b2f1f80014860a929a3af0bc: pinned revisions moved\"},{\"authorized_by\":\"\",\"detector\":\"study-map-obligation\",\"evidence\":[\"unit:unit-demo-l02\"],\"goal_id\":\"study-map-obligation:unit-demo-l02\",\"rationale\":\"An active unit with no ordered study map: coverage without a path. The obligation is derived, one definition with the producer.\",\"state\":\"detected\",\"superseded_by\":\"\",\"title\":\"Unit unit-demo-l02 owes a study map\"}]}\n",
   "stdout_json": {
-    "goals": []
+    "goals": [
+      {
+        "authorized_by": "",
+        "detector": "lineage-stale",
+        "evidence": [
+          "claim:covers:route-b2f1f80014860a929a3af0bc",
+          "moved:module-demo",
+          "moved:unit-demo-l01"
+        ],
+        "goal_id": "lineage-stale:covers:route-b2f1f80014860a929a3af0bc",
+        "rationale": "Dependencies changed or cannot be verified for covers:route-b2f1f80014860a929a3af0bc (module-demo, unit-demo-l01); the claim is stale until re-judged.",
+        "state": "detected",
+        "superseded_by": "",
+        "title": "Re-judge covers:route-b2f1f80014860a929a3af0bc: lineage reads moved"
+      },
+      {
+        "authorized_by": "",
+        "detector": "source-changed-under-claim",
+        "evidence": [
+          "claim:covers:route-b2f1f80014860a929a3af0bc",
+          "revision:module-demo",
+          "revision:unit-demo-l01"
+        ],
+        "goal_id": "source-changed-under-claim:covers:route-b2f1f80014860a929a3af0bc",
+        "rationale": "Pinned module-demo, unit-demo-l01, which moved; the claim's lineage is stale until re-judged.",
+        "state": "detected",
+        "superseded_by": "",
+        "title": "Re-examine covers:route-b2f1f80014860a929a3af0bc: pinned revisions moved"
+      },
+      {
+        "authorized_by": "",
+        "detector": "study-map-obligation",
+        "evidence": [
+          "unit:unit-demo-l02"
+        ],
+        "goal_id": "study-map-obligation:unit-demo-l02",
+        "rationale": "An active unit with no ordered study map: coverage without a path. The obligation is derived, one definition with the producer.",
+        "state": "detected",
+        "superseded_by": "",
+        "title": "Unit unit-demo-l02 owes a study map"
+      }
+    ]
   }
 }

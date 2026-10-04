@@ -1,0 +1,165 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {
+    "after": {
+      "entries": {
+        "KEY2": {
+          "capability": "lineage.restamp",
+          "channel": "operator",
+          "intent_sha256": "sha256:055231aa07de05db631e890f504aca09b763368618824276df1c2193965743af",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "request_id": "KEY1",
+          "revisions": {
+            "file:operations/transactions/lineage.yaml": 1
+          },
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP1",
+          "transaction_id": "TX1"
+        }
+      },
+      "schema_version": 1,
+      "type": "transaction-idempotency-ledger"
+    },
+    "before": null
+  },
+  "outcome": "ok",
+  "receipts": [
+    {
+      "artifact_revisions": {
+        "file:operations/transactions/lineage.yaml": {
+          "after": 1,
+          "before": 0
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "lineage.restamp",
+            "declared_writes": [
+              "operations/transactions/lineage.yaml"
+            ]
+          }
+        ]
+      },
+      "capability": "lineage.restamp",
+      "committed_at": "2026-10-01T09:00:00+02:00",
+      "expected_revisions": {
+        "file:operations/transactions/lineage.yaml": 0
+      },
+      "id": "TX1",
+      "metadata": {
+        "claims_count": 1,
+        "claims_sha256": "sha256:0a31738b7886e8a9b9c4108350f6c0228c68ff5f2349dd1459d7e656428009ef",
+        "data_roots_sha256": "sha256:b40158116795f04cfb2be9320632a98301221e249ded09ce07634a69ebb98fda",
+        "fingerprint_definition": 2
+      },
+      "request": {
+        "approval": {
+          "kind": "operator-approval",
+          "subject_sha256": "sha256:055231aa07de05db631e890f504aca09b763368618824276df1c2193965743af"
+        },
+        "channel": "operator",
+        "idempotency_key": "KEY2",
+        "intent_sha256": "sha256:055231aa07de05db631e890f504aca09b763368618824276df1c2193965743af",
+        "request_id": "KEY1"
+      },
+      "schema_version": 2,
+      "snapshot_after": "SNAP1",
+      "snapshot_before": "SNAP1",
+      "status": "committed",
+      "type": "transaction-receipt",
+      "writes": [
+        {
+          "created": false,
+          "path": "operations/transactions/lineage.yaml",
+          "sha256_after": "42d1ebded642ac5f03bdd775271e3d8022ecc2e126fbd3df9d0138f13db1bdc1",
+          "sha256_before": "73c0ae2934b4f4be7a5cf736750021c030d79f95d3a64cccaa8c6ec477d5db6a"
+        }
+      ]
+    }
+  ],
+  "revisions_changed": {
+    "after": {
+      "revisions": {
+        "file:operations/transactions/lineage.yaml": 1,
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    },
+    "before": {
+      "revisions": {
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    }
+  },
+  "session_ledger_changed": {
+    "after": {
+      "paths": {
+        "operations/transactions/TX1.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "96392c71919f36bc91be01bbea9a1ac9a8965da2a84a434f2914269164013db5",
+          "state": "file"
+        },
+        "operations/transactions/idempotency.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "955e5fef68c2f4ffdd3fe1a4eaf095c0e6c1e5dc48776cef6beb5e51b5911875",
+          "state": "file"
+        },
+        "operations/transactions/lineage.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "42d1ebded642ac5f03bdd775271e3d8022ecc2e126fbd3df9d0138f13db1bdc1",
+          "state": "file"
+        },
+        "operations/transactions/revisions.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "b804bcf545cec0907561a3d5f3263fb9a4e4784c767a78ed3b598ffc767fb0e9",
+          "state": "file"
+        }
+      },
+      "schema_version": 2,
+      "session_id": "channel:operator"
+    },
+    "before": null
+  },
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"lineage.restamp\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"artifact_revisions\": {\n      \"file:operations/transactions/lineage.yaml\": 1\n    },\n    \"capability\": \"lineage.restamp\",\n    \"claim_ids\": [\n      \"covers:route-b2f1f80014860a929a3af0bc\"\n    ],\n    \"claims_sha256\": \"sha256:0a31738b7886e8a9b9c4108350f6c0228c68ff5f2349dd1459d7e656428009ef\",\n    \"mode\": \"apply\",\n    \"ok\": true,\n    \"plan_sha256\": \"sha256:6de61770fda64a2c921bb059f1bdea486e2c350c08b80b5347f6e236868f6e77\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"replayed\": false,\n    \"snapshot_after\": \"SNAP1\",\n    \"transaction_id\": \"TX1\"\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "lineage.restamp",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": "operations/transactions/TX1.yaml",
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "artifact_revisions": {
+        "file:operations/transactions/lineage.yaml": 1
+      },
+      "capability": "lineage.restamp",
+      "claim_ids": [
+        "covers:route-b2f1f80014860a929a3af0bc"
+      ],
+      "claims_sha256": "sha256:0a31738b7886e8a9b9c4108350f6c0228c68ff5f2349dd1459d7e656428009ef",
+      "mode": "apply",
+      "ok": true,
+      "plan_sha256": "sha256:6de61770fda64a2c921bb059f1bdea486e2c350c08b80b5347f6e236868f6e77",
+      "receipt_path": "operations/transactions/TX1.yaml",
+      "replayed": false,
+      "snapshot_after": "SNAP1",
+      "transaction_id": "TX1"
+    },
+    "schema_version": 2,
+    "snapshot_after": "SNAP1",
+    "transaction_id": "TX1"
+  }
+}

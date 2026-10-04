@@ -7,14 +7,60 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"contract\":\"intelligence-scan-brief\",\"full_result\":\"intelligence-scan --json\",\"groups\":[],\"omitted_goals\":0,\"omitted_groups\":0,\"total_goals\":0,\"total_groups\":0}\n",
+  "stdout": "{\"contract\":\"intelligence-scan-brief\",\"full_result\":\"intelligence-scan --json\",\"groups\":[{\"cluster_id\":\"lineage-stale:cluster:2ef8e7e9\",\"days_until\":8,\"detector\":\"lineage-stale\",\"member_count\":1,\"nearest_sitting\":\"2026-10-09\",\"omitted_members\":0,\"rank\":1,\"sample_goal_ids\":[\"lineage-stale:covers:route-b2f1f80014860a929a3af0bc\"],\"tier\":1,\"tier_label\":\"before 2026-10-09 (8d)\",\"title\":\"Re-judge covers:route-b2f1f80014860a929a3af0bc: lineage reads moved\"},{\"cluster_id\":\"source-changed-under-claim:cluster:9e55f052\",\"days_until\":8,\"detector\":\"source-changed-under-claim\",\"member_count\":1,\"nearest_sitting\":\"2026-10-09\",\"omitted_members\":0,\"rank\":2,\"sample_goal_ids\":[\"source-changed-under-claim:covers:route-b2f1f80014860a929a3af0bc\"],\"tier\":1,\"tier_label\":\"before 2026-10-09 (8d)\",\"title\":\"Re-examine covers:route-b2f1f80014860a929a3af0bc: pinned revisions moved\"},{\"cluster_id\":\"study-map-obligation:cluster:2c6bc193\",\"days_until\":8,\"detector\":\"study-map-obligation\",\"member_count\":1,\"nearest_sitting\":\"2026-10-09\",\"omitted_members\":0,\"rank\":3,\"sample_goal_ids\":[\"study-map-obligation:unit-demo-l02\"],\"tier\":1,\"tier_label\":\"before 2026-10-09 (8d)\",\"title\":\"Unit unit-demo-l02 owes a study map\"}],\"omitted_goals\":0,\"omitted_groups\":0,\"total_goals\":3,\"total_groups\":3}\n",
   "stdout_json": {
     "contract": "intelligence-scan-brief",
     "full_result": "intelligence-scan --json",
-    "groups": [],
+    "groups": [
+      {
+        "cluster_id": "lineage-stale:cluster:2ef8e7e9",
+        "days_until": 8,
+        "detector": "lineage-stale",
+        "member_count": 1,
+        "nearest_sitting": "2026-10-09",
+        "omitted_members": 0,
+        "rank": 1,
+        "sample_goal_ids": [
+          "lineage-stale:covers:route-b2f1f80014860a929a3af0bc"
+        ],
+        "tier": 1,
+        "tier_label": "before 2026-10-09 (8d)",
+        "title": "Re-judge covers:route-b2f1f80014860a929a3af0bc: lineage reads moved"
+      },
+      {
+        "cluster_id": "source-changed-under-claim:cluster:9e55f052",
+        "days_until": 8,
+        "detector": "source-changed-under-claim",
+        "member_count": 1,
+        "nearest_sitting": "2026-10-09",
+        "omitted_members": 0,
+        "rank": 2,
+        "sample_goal_ids": [
+          "source-changed-under-claim:covers:route-b2f1f80014860a929a3af0bc"
+        ],
+        "tier": 1,
+        "tier_label": "before 2026-10-09 (8d)",
+        "title": "Re-examine covers:route-b2f1f80014860a929a3af0bc: pinned revisions moved"
+      },
+      {
+        "cluster_id": "study-map-obligation:cluster:2c6bc193",
+        "days_until": 8,
+        "detector": "study-map-obligation",
+        "member_count": 1,
+        "nearest_sitting": "2026-10-09",
+        "omitted_members": 0,
+        "rank": 3,
+        "sample_goal_ids": [
+          "study-map-obligation:unit-demo-l02"
+        ],
+        "tier": 1,
+        "tier_label": "before 2026-10-09 (8d)",
+        "title": "Unit unit-demo-l02 owes a study map"
+      }
+    ],
     "omitted_goals": 0,
     "omitted_groups": 0,
-    "total_goals": 0,
-    "total_groups": 0
+    "total_goals": 3,
+    "total_groups": 3
   }
 }

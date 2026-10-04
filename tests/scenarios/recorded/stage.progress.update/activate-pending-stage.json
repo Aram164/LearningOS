@@ -10,7 +10,7 @@
         "KEY2": {
           "capability": "stage.progress.update",
           "channel": "operator",
-          "intent_sha256": "sha256:fc77ce3a549bb7b23b6c22ab42d6339f59c39e7119967306a78920b74710b437",
+          "intent_sha256": "sha256:4545e7a968156c89b06c5cd2cd7b5dcdf7b3dbd5a4c9b31df8204355e79992c5",
           "receipt_path": "operations/transactions/TX1.yaml",
           "request_id": "KEY1",
           "revisions": {
@@ -61,17 +61,17 @@
       },
       "id": "TX1",
       "metadata": {
-        "data_roots_sha256": "sha256:560350fc678595b6db0048b14886c3fa0c417d158410fe070c2bfb2aded160ac",
+        "data_roots_sha256": "sha256:8c1fc4a8cdccd181031507db0c2815d240324486e28b68a661e680d5ea9ad247",
         "fingerprint_definition": 2
       },
       "request": {
         "approval": {
           "kind": "operator-approval",
-          "subject_sha256": "sha256:fc77ce3a549bb7b23b6c22ab42d6339f59c39e7119967306a78920b74710b437"
+          "subject_sha256": "sha256:4545e7a968156c89b06c5cd2cd7b5dcdf7b3dbd5a4c9b31df8204355e79992c5"
         },
         "channel": "operator",
         "idempotency_key": "KEY2",
-        "intent_sha256": "sha256:fc77ce3a549bb7b23b6c22ab42d6339f59c39e7119967306a78920b74710b437",
+        "intent_sha256": "sha256:4545e7a968156c89b06c5cd2cd7b5dcdf7b3dbd5a4c9b31df8204355e79992c5",
         "request_id": "KEY1"
       },
       "schema_version": 2,
@@ -89,8 +89,8 @@
         {
           "created": false,
           "path": "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml",
-          "sha256_after": "1e8ea1a406e18b038d956b550fb8ba06fa5098d44a956d0586f5052df67beaa1",
-          "sha256_before": "1e8ea1a406e18b038d956b550fb8ba06fa5098d44a956d0586f5052df67beaa1"
+          "sha256_after": "02dd8b658f2eceeb04ae9405f545f95ac719226a52f6d1690985403647476dc1",
+          "sha256_before": "02dd8b658f2eceeb04ae9405f545f95ac719226a52f6d1690985403647476dc1"
         },
         {
           "created": false,
@@ -130,7 +130,7 @@
         "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "1e8ea1a406e18b038d956b550fb8ba06fa5098d44a956d0586f5052df67beaa1",
+          "sha256": "02dd8b658f2eceeb04ae9405f545f95ac719226a52f6d1690985403647476dc1",
           "state": "file"
         },
         "curriculum/resume.yaml": {
@@ -142,13 +142,13 @@
         "operations/transactions/TX1.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "fa7b8e51a4756e603964e98a388f9e18d1216235b932bf37e14fee195d7d5882",
+          "sha256": "4ae33e7e1dc1e0e7c9cc1ece966d09f64e8af315172e9d65360ed06cbe00aad7",
           "state": "file"
         },
         "operations/transactions/idempotency.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "385e5e47256421cbe54a87ef86b592d4a39613af8d1ed9477915843b88d0b740",
+          "sha256": "ced139f7913ca1e16c11be74e76a22b8c5e2d016537cd56822bc6aeb63a8c77c",
           "state": "file"
         },
         "operations/transactions/revisions.yaml": {

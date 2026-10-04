@@ -6,7 +6,7 @@
   "receipts": [],
   "revisions_changed": {},
   "session_ledger_changed": null,
-  "stderr": "los: backup-manifest prints nothing by default: the manifest holds 142 entries (~25 KB). Write it with --out PATH (outside every backed-up root) or print it with --stdout\n",
+  "stderr": "los: backup-manifest prints nothing by default: the manifest holds 145 entries (~25 KB). Write it with --out PATH (outside every backed-up root) or print it with --stdout\n",
   "stdout": "",
   "stdout_json": null
 }

@@ -125,7 +125,7 @@
             "KEY3": {
               "capability": "ai-action.delivery.apply",
               "channel": "operator",
-              "intent_sha256": "sha256:259d2b23d40fd2332219008b644ef603faf54f53455072c23a0d1f7df9c33855",
+              "intent_sha256": "sha256:b058bc5a840ff5871784d1ded13cd2389e563ee3f27f17041dd91f067f9cb08d",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY2",
               "revisions": {
@@ -205,13 +205,13 @@
               "artifact_sha256": {
                 "artifacts/transcription.md": "sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157"
               },
-              "delivery_sha256": "sha256:fe12bde49a7a9fde254d89cbfe502305099b01bc0a8665340c318db84750a07c"
+              "delivery_sha256": "sha256:7145cef028d5911b9c0e97035afbb9a65d6da7b023f4e64fb6f392a08ddf8d4a"
             },
             "created_ids": [
               "transcription-garden-note-seed",
               "relationship-garden-module-demo"
             ],
-            "data_roots_sha256": "sha256:77f2518b5a8fd16557eb49e77784bd805f98b293eb1aee0821c62adc6ac56026",
+            "data_roots_sha256": "sha256:56141e8d2a695c984142b63c1a4afb50907810aa0153b8c363de3cb01fe90f0a",
             "deleted_ids": [],
             "delivery_id": "ai-delivery-scenario-shelve",
             "fingerprint_definition": 2,
@@ -230,11 +230,11 @@
           "request": {
             "approval": {
               "kind": "approved-delivery",
-              "subject_sha256": "sha256:259d2b23d40fd2332219008b644ef603faf54f53455072c23a0d1f7df9c33855"
+              "subject_sha256": "sha256:b058bc5a840ff5871784d1ded13cd2389e563ee3f27f17041dd91f067f9cb08d"
             },
             "channel": "operator",
             "idempotency_key": "KEY3",
-            "intent_sha256": "sha256:259d2b23d40fd2332219008b644ef603faf54f53455072c23a0d1f7df9c33855",
+            "intent_sha256": "sha256:b058bc5a840ff5871784d1ded13cd2389e563ee3f27f17041dd91f067f9cb08d",
             "request_id": "KEY2"
           },
           "schema_version": 2,
@@ -264,8 +264,8 @@
             {
               "created": false,
               "path": "operations/ai-actions/requests/KEY1/request.yaml",
-              "sha256_after": "9f13f57c5cc630f8515c636fb4ea7c82442f15a7fa5d1061eedbe6d515ef6060",
-              "sha256_before": "bd52893a9ee325b9769c9962dcfc7dc9cfdde12e517478c77109ab2276086ee8"
+              "sha256_after": "6ddf0b8ac05c704022c3f1d6362acb3cec5884854e331d1e59c105c493eecaed",
+              "sha256_before": "b6e239a6f402209d43d88d0c3b4c156aa4fc22e6cf0488227ac1d5f22bac59b0"
             }
           ]
         }
@@ -313,13 +313,13 @@
             "operations/ai-actions/requests/KEY1/request.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "9f13f57c5cc630f8515c636fb4ea7c82442f15a7fa5d1061eedbe6d515ef6060",
+              "sha256": "6ddf0b8ac05c704022c3f1d6362acb3cec5884854e331d1e59c105c493eecaed",
               "state": "file"
             },
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "6d7dbab4de73067a7db10c52d0422b19724aad715b58e537fa2b845b0d78ba40",
+              "sha256": "4c069cbcaed38f1e6a6b4d0630de0480b050cd22bac0956797334748744d7743",
               "state": "file"
             }
           },
@@ -329,7 +329,7 @@
         "before": null
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY2\",\n  \"idempotency_key\": \"KEY3\",\n  \"capability\": \"ai-action.delivery.apply\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP2\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"snapshot_after\": \"SNAP2\",\n    \"artifact_revisions\": {\n      \"garden-note-seed\": 1,\n      \"relationship-garden-module-demo\": 1,\n      \"transcription-garden-note-seed\": 1\n    },\n    \"replayed\": false,\n    \"receipt\": {\n      \"schema_version\": 2,\n      \"id\": \"TX1\",\n      \"type\": \"transaction-receipt\",\n      \"status\": \"committed\",\n      \"capability\": \"ai-action.delivery.apply\",\n      \"committed_at\": \"2026-10-01T09:00:00+02:00\",\n      \"snapshot_before\": \"SNAP1\",\n      \"snapshot_after\": \"SNAP2\",\n      \"expected_revisions\": {\n        \"garden-note-seed\": 0,\n        \"relationship-garden-module-demo\": 0,\n        \"transcription-garden-note-seed\": 0\n      },\n      \"artifact_revisions\": {\n        \"garden-note-seed\": {\n          \"before\": 0,\n          \"after\": 1\n        },\n        \"relationship-garden-module-demo\": {\n          \"before\": 0,\n          \"after\": 1\n        },\n        \"transcription-garden-note-seed\": {\n          \"before\": 0,\n          \"after\": 1\n        }\n      },\n      \"writes\": [\n        {\n          \"path\": \"knowledge/garden/transcriptions/garden-note-seed.md\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"0eeba45730664ce19f3c227603a1d3693a0794777a4cc1f1b91e8b3fc3c29ff3\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/garden-state/garden-note-seed.yaml\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"0a5f5789be2f94b6cee3c8c1b1a45c54b303d8c80464cd4d6b8c3fd17fc9742b\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/relationships.yaml\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"543b977cface1950591c5b0e92314ab4d13cdfac30e30243c1e6f9ed3d433398\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/requests/KEY1/request.yaml\",\n          \"sha256_before\": \"bd52893a9ee325b9769c9962dcfc7dc9cfdde12e517478c77109ab2276086ee8\",\n          \"sha256_after\": \"9f13f57c5cc630f8515c636fb4ea7c82442f15a7fa5d1061eedbe6d515ef6060\",\n          \"created\": false\n        }\n      ],\n      \"metadata\": {\n        \"request_id\": \"KEY1\",\n        \"delivery_id\": \"ai-delivery-scenario-shelve\",\n        \"action_id\": \"garden.shelve\",\n        \"approved_delivery\": {\n          \"delivery_sha256\": \"sha256:fe12bde49a7a9fde254d89cbfe502305099b01bc0a8665340c318db84750a07c\",\n          \"artifact_sha256\": {\n            \"artifacts/transcription.md\": \"sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157\"\n          }\n        },\n        \"created_ids\": [\n          \"transcription-garden-note-seed\",\n          \"relationship-garden-module-demo\"\n        ],\n        \"updated_ids\": [\n          \"garden-note-seed\"\n        ],\n        \"deleted_ids\": [],\n        \"superseded_ids\": [],\n        \"validation\": {\n          \"schemas\": \"passed\",\n          \"references\": \"passed\",\n          \"boundaries\": \"passed\",\n          \"projection\": \"passed\"\n        },\n        \"data_roots_sha256\": \"sha256:77f2518b5a8fd16557eb49e77784bd805f98b293eb1aee0821c62adc6ac56026\",\n        \"fingerprint_definition\": 2\n      },\n      \"authority\": {\n        \"capability_contract_version\": 2,\n        \"enforced\": true,\n        \"grants\": [\n          {\n            \"capability\": \"ai-action.delivery.apply\",\n            \"declared_writes\": [\n              \"operations/ai-actions/requests/**\"\n            ]\n          },\n          {\n            \"capability\": \"garden.add-transcription\",\n            \"declared_writes\": [\n              \"knowledge/garden/transcriptions/\"\n            ]\n          },\n          {\n            \"capability\": \"garden.update\",\n            \"declared_writes\": [\n              \"operations/ai-actions/garden-state/\"\n            ]\n          },\n          {\n            \"capability\": \"relationship.create\",\n            \"declared_writes\": [\n              \"operations/ai-actions/relationships.yaml\"\n            ]\n          }\n        ]\n      },\n      \"request\": {\n        \"channel\": \"operator\",\n        \"request_id\": \"KEY2\",\n        \"idempotency_key\": \"KEY3\",\n        \"intent_sha256\": \"sha256:259d2b23d40fd2332219008b644ef603faf54f53455072c23a0d1f7df9c33855\",\n        \"approval\": {\n          \"kind\": \"approved-delivery\",\n          \"subject_sha256\": \"sha256:259d2b23d40fd2332219008b644ef603faf54f53455072c23a0d1f7df9c33855\"\n        }\n      },\n      \"transaction_id\": \"TX1\",\n      \"revision_updates\": {\n        \"garden-note-seed\": 1,\n        \"relationship-garden-module-demo\": 1,\n        \"transcription-garden-note-seed\": 1\n      },\n      \"receipt_path\": \"operations/transactions/TX1.yaml\",\n      \"replayed\": false\n    }\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY2\",\n  \"idempotency_key\": \"KEY3\",\n  \"capability\": \"ai-action.delivery.apply\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP2\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"snapshot_after\": \"SNAP2\",\n    \"artifact_revisions\": {\n      \"garden-note-seed\": 1,\n      \"relationship-garden-module-demo\": 1,\n      \"transcription-garden-note-seed\": 1\n    },\n    \"replayed\": false,\n    \"receipt\": {\n      \"schema_version\": 2,\n      \"id\": \"TX1\",\n      \"type\": \"transaction-receipt\",\n      \"status\": \"committed\",\n      \"capability\": \"ai-action.delivery.apply\",\n      \"committed_at\": \"2026-10-01T09:00:00+02:00\",\n      \"snapshot_before\": \"SNAP1\",\n      \"snapshot_after\": \"SNAP2\",\n      \"expected_revisions\": {\n        \"garden-note-seed\": 0,\n        \"relationship-garden-module-demo\": 0,\n        \"transcription-garden-note-seed\": 0\n      },\n      \"artifact_revisions\": {\n        \"garden-note-seed\": {\n          \"before\": 0,\n          \"after\": 1\n        },\n        \"relationship-garden-module-demo\": {\n          \"before\": 0,\n          \"after\": 1\n        },\n        \"transcription-garden-note-seed\": {\n          \"before\": 0,\n          \"after\": 1\n        }\n      },\n      \"writes\": [\n        {\n          \"path\": \"knowledge/garden/transcriptions/garden-note-seed.md\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"0eeba45730664ce19f3c227603a1d3693a0794777a4cc1f1b91e8b3fc3c29ff3\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/garden-state/garden-note-seed.yaml\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"0a5f5789be2f94b6cee3c8c1b1a45c54b303d8c80464cd4d6b8c3fd17fc9742b\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/relationships.yaml\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"543b977cface1950591c5b0e92314ab4d13cdfac30e30243c1e6f9ed3d433398\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/requests/KEY1/request.yaml\",\n          \"sha256_before\": \"b6e239a6f402209d43d88d0c3b4c156aa4fc22e6cf0488227ac1d5f22bac59b0\",\n          \"sha256_after\": \"6ddf0b8ac05c704022c3f1d6362acb3cec5884854e331d1e59c105c493eecaed\",\n          \"created\": false\n        }\n      ],\n      \"metadata\": {\n        \"request_id\": \"KEY1\",\n        \"delivery_id\": \"ai-delivery-scenario-shelve\",\n        \"action_id\": \"garden.shelve\",\n        \"approved_delivery\": {\n          \"delivery_sha256\": \"sha256:7145cef028d5911b9c0e97035afbb9a65d6da7b023f4e64fb6f392a08ddf8d4a\",\n          \"artifact_sha256\": {\n            \"artifacts/transcription.md\": \"sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157\"\n          }\n        },\n        \"created_ids\": [\n          \"transcription-garden-note-seed\",\n          \"relationship-garden-module-demo\"\n        ],\n        \"updated_ids\": [\n          \"garden-note-seed\"\n        ],\n        \"deleted_ids\": [],\n        \"superseded_ids\": [],\n        \"validation\": {\n          \"schemas\": \"passed\",\n          \"references\": \"passed\",\n          \"boundaries\": \"passed\",\n          \"projection\": \"passed\"\n        },\n        \"data_roots_sha256\": \"sha256:56141e8d2a695c984142b63c1a4afb50907810aa0153b8c363de3cb01fe90f0a\",\n        \"fingerprint_definition\": 2\n      },\n      \"authority\": {\n        \"capability_contract_version\": 2,\n        \"enforced\": true,\n        \"grants\": [\n          {\n            \"capability\": \"ai-action.delivery.apply\",\n            \"declared_writes\": [\n              \"operations/ai-actions/requests/**\"\n            ]\n          },\n          {\n            \"capability\": \"garden.add-transcription\",\n            \"declared_writes\": [\n              \"knowledge/garden/transcriptions/\"\n            ]\n          },\n          {\n            \"capability\": \"garden.update\",\n            \"declared_writes\": [\n              \"operations/ai-actions/garden-state/\"\n            ]\n          },\n          {\n            \"capability\": \"relationship.create\",\n            \"declared_writes\": [\n              \"operations/ai-actions/relationships.yaml\"\n            ]\n          }\n        ]\n      },\n      \"request\": {\n        \"channel\": \"operator\",\n        \"request_id\": \"KEY2\",\n        \"idempotency_key\": \"KEY3\",\n        \"intent_sha256\": \"sha256:b058bc5a840ff5871784d1ded13cd2389e563ee3f27f17041dd91f067f9cb08d\",\n        \"approval\": {\n          \"kind\": \"approved-delivery\",\n          \"subject_sha256\": \"sha256:b058bc5a840ff5871784d1ded13cd2389e563ee3f27f17041dd91f067f9cb08d\"\n        }\n      },\n      \"transaction_id\": \"TX1\",\n      \"revision_updates\": {\n        \"garden-note-seed\": 1,\n        \"relationship-garden-module-demo\": 1,\n        \"transcription-garden-note-seed\": 1\n      },\n      \"receipt_path\": \"operations/transactions/TX1.yaml\",\n      \"replayed\": false\n    }\n  },\n  \"error\": null\n}\n",
       "stdout_json": {
         "capability": "ai-action.delivery.apply",
         "error": null,
@@ -404,13 +404,13 @@
                 "artifact_sha256": {
                   "artifacts/transcription.md": "sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157"
                 },
-                "delivery_sha256": "sha256:fe12bde49a7a9fde254d89cbfe502305099b01bc0a8665340c318db84750a07c"
+                "delivery_sha256": "sha256:7145cef028d5911b9c0e97035afbb9a65d6da7b023f4e64fb6f392a08ddf8d4a"
               },
               "created_ids": [
                 "transcription-garden-note-seed",
                 "relationship-garden-module-demo"
               ],
-              "data_roots_sha256": "sha256:77f2518b5a8fd16557eb49e77784bd805f98b293eb1aee0821c62adc6ac56026",
+              "data_roots_sha256": "sha256:56141e8d2a695c984142b63c1a4afb50907810aa0153b8c363de3cb01fe90f0a",
               "deleted_ids": [],
               "delivery_id": "ai-delivery-scenario-shelve",
               "fingerprint_definition": 2,
@@ -431,11 +431,11 @@
             "request": {
               "approval": {
                 "kind": "approved-delivery",
-                "subject_sha256": "sha256:259d2b23d40fd2332219008b644ef603faf54f53455072c23a0d1f7df9c33855"
+                "subject_sha256": "sha256:b058bc5a840ff5871784d1ded13cd2389e563ee3f27f17041dd91f067f9cb08d"
               },
               "channel": "operator",
               "idempotency_key": "KEY3",
-              "intent_sha256": "sha256:259d2b23d40fd2332219008b644ef603faf54f53455072c23a0d1f7df9c33855",
+              "intent_sha256": "sha256:b058bc5a840ff5871784d1ded13cd2389e563ee3f27f17041dd91f067f9cb08d",
               "request_id": "KEY2"
             },
             "revision_updates": {
@@ -471,8 +471,8 @@
               {
                 "created": false,
                 "path": "operations/ai-actions/requests/KEY1/request.yaml",
-                "sha256_after": "9f13f57c5cc630f8515c636fb4ea7c82442f15a7fa5d1061eedbe6d515ef6060",
-                "sha256_before": "bd52893a9ee325b9769c9962dcfc7dc9cfdde12e517478c77109ab2276086ee8"
+                "sha256_after": "6ddf0b8ac05c704022c3f1d6362acb3cec5884854e331d1e59c105c493eecaed",
+                "sha256_before": "b6e239a6f402209d43d88d0c3b4c156aa4fc22e6cf0488227ac1d5f22bac59b0"
               }
             ]
           },
@@ -520,13 +520,13 @@
             "operations/ai-actions/requests/KEY1/request.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "9f13f57c5cc630f8515c636fb4ea7c82442f15a7fa5d1061eedbe6d515ef6060",
+              "sha256": "6ddf0b8ac05c704022c3f1d6362acb3cec5884854e331d1e59c105c493eecaed",
               "state": "file"
             },
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "6d7dbab4de73067a7db10c52d0422b19724aad715b58e537fa2b845b0d78ba40",
+              "sha256": "4c069cbcaed38f1e6a6b4d0630de0480b050cd22bac0956797334748744d7743",
               "state": "file"
             }
           },
@@ -556,13 +556,13 @@
             "operations/ai-actions/requests/KEY1/request.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "9f13f57c5cc630f8515c636fb4ea7c82442f15a7fa5d1061eedbe6d515ef6060",
+              "sha256": "6ddf0b8ac05c704022c3f1d6362acb3cec5884854e331d1e59c105c493eecaed",
               "state": "file"
             },
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "6d7dbab4de73067a7db10c52d0422b19724aad715b58e537fa2b845b0d78ba40",
+              "sha256": "4c069cbcaed38f1e6a6b4d0630de0480b050cd22bac0956797334748744d7743",
               "state": "file"
             }
           },

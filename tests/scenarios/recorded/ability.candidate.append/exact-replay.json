@@ -1,65 +1,259 @@
 {
   "steps": [
     {
-      "canonical_changed": {},
-      "exit": 2,
-      "idempotency_changed": {},
+      "canonical_changed": {
+        "knowledge/ability-candidates.jsonl": "1e63e16d127f8cc192a000874df428b05a69b8d0bd48584e7aba59c7df5f865d"
+      },
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY2": {
+              "capability": "ability.candidate.append",
+              "channel": "operator",
+              "intent_sha256": "sha256:6e15d4f333cd80e46a08c146513c6e888c91ec8471d022490756962ef2521b3b",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "ability-candidates": 1
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "SNAP2",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": null
+      },
       "operation": "ability.candidate.append",
-      "outcome": "refused",
-      "receipts": [],
-      "revisions_changed": {},
-      "session_ledger_changed": null,
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "ability-candidates": {
+              "after": 1,
+              "before": 0
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "ability.candidate.append",
+                "declared_writes": [
+                  "knowledge/ability-candidates.jsonl"
+                ]
+              }
+            ]
+          },
+          "capability": "ability.candidate.append",
+          "committed_at": "2026-10-01T09:00:00+02:00",
+          "expected_revisions": {
+            "ability-candidates": 0
+          },
+          "id": "TX1",
+          "metadata": {
+            "data_roots_sha256": "sha256:b67cd359e4e076f840065bd286109dea60dcdeeba3e1aa13deb933be578fccaa",
+            "fingerprint_definition": 2
+          },
+          "request": {
+            "approval": {
+              "kind": "operator-approval",
+              "subject_sha256": "sha256:6e15d4f333cd80e46a08c146513c6e888c91ec8471d022490756962ef2521b3b"
+            },
+            "channel": "operator",
+            "idempotency_key": "KEY2",
+            "intent_sha256": "sha256:6e15d4f333cd80e46a08c146513c6e888c91ec8471d022490756962ef2521b3b",
+            "request_id": "KEY1"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": true,
+              "path": "knowledge/ability-candidates.jsonl",
+              "sha256_after": "1e63e16d127f8cc192a000874df428b05a69b8d0bd48584e7aba59c7df5f865d",
+              "sha256_before": null
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "ability-candidates": 1,
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": {
+        "after": {
+          "paths": {
+            "knowledge/ability-candidates.jsonl": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1e63e16d127f8cc192a000874df428b05a69b8d0bd48584e7aba59c7df5f865d",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "13461369e93f1aa30e5c2870f50200910eab721e0a9b55a51a098afa857ba9e8",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1bde9820523310da439ffc175cfee83f35b537c3841a22ab4cd973b7df7e4123",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "b46b0930f03d1a3d6604be00e87f10bf34c39c88cc28fe7b6d28215bd0ada9fb",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        },
+        "before": null
+      },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"ability.candidate.append\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"INVALID_REQUEST\",\n    \"message\": \"los: candidate endpoints must be two active abilities\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"ability.candidate.append\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"candidate_id\": \"ability-candidate-cf32ee18a269b1a36e5cbc6b7de4fdee\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"ability-candidates\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
       "stdout_json": {
         "capability": "ability.candidate.append",
-        "error": {
-          "code": "INVALID_REQUEST",
-          "details": {},
-          "message": "los: candidate endpoints must be two active abilities",
-          "retryable": false
-        },
+        "error": null,
         "idempotency_key": "KEY2",
-        "ok": false,
-        "receipt_path": null,
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
         "replayed": false,
         "request_id": "KEY1",
-        "result": {},
+        "result": {
+          "artifact_revisions": {
+            "ability-candidates": 1
+          },
+          "candidate_id": "ability-candidate-cf32ee18a269b1a36e5cbc6b7de4fdee",
+          "ok": true,
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": false,
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1"
+        },
         "schema_version": 2,
-        "snapshot_after": null,
-        "transaction_id": null
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
       },
       "step": 0,
       "transport": "gateway"
     },
     {
       "canonical_changed": {},
-      "exit": 2,
+      "exit": 0,
       "idempotency_changed": {},
       "operation": "ability.candidate.append",
-      "outcome": "refused",
+      "outcome": "ok",
       "receipts": [],
       "revisions_changed": {},
-      "session_ledger_changed": null,
+      "session_ledger_changed": {
+        "after": {
+          "paths": {
+            "knowledge/ability-candidates.jsonl": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1e63e16d127f8cc192a000874df428b05a69b8d0bd48584e7aba59c7df5f865d",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "13461369e93f1aa30e5c2870f50200910eab721e0a9b55a51a098afa857ba9e8",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1bde9820523310da439ffc175cfee83f35b537c3841a22ab4cd973b7df7e4123",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "b46b0930f03d1a3d6604be00e87f10bf34c39c88cc28fe7b6d28215bd0ada9fb",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        },
+        "before": {
+          "paths": {
+            "knowledge/ability-candidates.jsonl": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1e63e16d127f8cc192a000874df428b05a69b8d0bd48584e7aba59c7df5f865d",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "13461369e93f1aa30e5c2870f50200910eab721e0a9b55a51a098afa857ba9e8",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1bde9820523310da439ffc175cfee83f35b537c3841a22ab4cd973b7df7e4123",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "b46b0930f03d1a3d6604be00e87f10bf34c39c88cc28fe7b6d28215bd0ada9fb",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        }
+      },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"ability.candidate.append\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"INVALID_REQUEST\",\n    \"message\": \"los: candidate endpoints must be two active abilities\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"ability.candidate.append\",\n  \"ok\": true,\n  \"replayed\": true,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"ability-candidates\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": true\n  },\n  \"error\": null\n}\n",
       "stdout_json": {
         "capability": "ability.candidate.append",
-        "error": {
-          "code": "INVALID_REQUEST",
-          "details": {},
-          "message": "los: candidate endpoints must be two active abilities",
-          "retryable": false
-        },
+        "error": null,
         "idempotency_key": "KEY2",
-        "ok": false,
-        "receipt_path": null,
-        "replayed": false,
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": true,
         "request_id": "KEY1",
-        "result": {},
+        "result": {
+          "artifact_revisions": {
+            "ability-candidates": 1
+          },
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": true,
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1"
+        },
         "schema_version": 2,
-        "snapshot_after": null,
-        "transaction_id": null
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
       },
       "step": 1,
       "transport": "gateway"
