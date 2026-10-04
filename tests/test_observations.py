@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import datetime
 import hashlib
 import json
 import os
@@ -61,6 +62,49 @@ def test_override_fixes_now_and_today(monkeypatch, tmp_path):
     _git_fixture(monkeypatch, tmp_path)
     assert observations.now().isoformat() == HEAD_TIME
     assert observations.today().isoformat() == "2026-10-01"
+
+
+def test_epoch_and_mtime_follow_the_real_clock_without_override(monkeypatch, tmp_path):
+    monkeypatch.delenv(observations.OVERRIDE_ENV, raising=False)
+    before = time.time()
+    during = observations.epoch()
+    after = time.time()
+    assert before <= during <= after
+    probe = tmp_path / "probe.md"
+    probe.write_text("x", encoding="utf-8")
+    assert observations.mtime(probe, tmp_path) == probe.stat().st_mtime
+
+
+def test_epoch_is_fixed_now_with_override(monkeypatch, tmp_path):
+    _git_fixture(monkeypatch, tmp_path)
+    assert observations.epoch() == observations.now().timestamp()
+
+
+def test_mtime_reads_the_listed_instant(monkeypatch, tmp_path):
+    listed_at = "2026-09-28T09:00:00+02:00"
+    payload = {"now": HEAD_TIME, "mtimes": {"work/inbox/note-drop.md": listed_at}}
+    monkeypatch.setenv(
+        observations.OVERRIDE_ENV, _write_override(tmp_path / "obs.json", payload))
+    listed = tmp_path / "work" / "inbox" / "note-drop.md"
+    listed.parent.mkdir(parents=True)
+    listed.write_text("x", encoding="utf-8")
+    assert observations.mtime(listed, tmp_path) == (
+        datetime.datetime.fromisoformat(listed_at).timestamp())
+
+
+def test_mtime_unlisted_and_outside_paths_are_now(monkeypatch, tmp_path):
+    payload = {"now": HEAD_TIME,
+               "mtimes": {"work/inbox/note-drop.md": "2026-09-28T09:00:00+02:00"}}
+    monkeypatch.setenv(
+        observations.OVERRIDE_ENV, _write_override(tmp_path / "obs.json", payload))
+    root = tmp_path / "root"
+    unlisted = root / "work" / "inbox" / "fresh.md"
+    unlisted.parent.mkdir(parents=True)
+    unlisted.write_text("y", encoding="utf-8")
+    assert observations.mtime(unlisted, root) == observations.now().timestamp()
+    outside = tmp_path / "outside.md"
+    outside.write_text("z", encoding="utf-8")
+    assert observations.mtime(outside, root) == observations.now().timestamp()
 
 
 def test_snapshot_returns_override_head_and_dates(monkeypatch, tmp_path):

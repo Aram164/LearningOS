@@ -13,8 +13,7 @@ run and a cache hit can never disagree on what the advisories say.
 
 from __future__ import annotations
 
-import time
-
+from .. import observations
 from ..githistory import GitHistoryError, last_commit_timestamp
 from .common import DYNAMIC_ADVISORY_WARNINGS, STALE_LOCK_AGE_S, Issue
 
@@ -45,7 +44,7 @@ def workspace_neglect_issues(repo) -> list[Issue]:
                 repo.root, str(ws.path.parent.relative_to(repo.root)))
             if ts is None:
                 continue
-            days = (time.time() - ts) / 86400
+            days = (observations.epoch() - ts) / 86400
             if days >= 21:
                 issues.append(Issue(
                     "W", "WS-NEGLECT",
@@ -66,14 +65,14 @@ def inbox_stale_issues(repo) -> list[Issue]:
     issues: list[Issue] = []
     inbox = repo.root / "work" / "inbox"
     if inbox.is_dir():
-        now = time.time()
+        now = observations.epoch()
         for path in sorted(inbox.rglob("*")):
             if path.is_symlink() or not path.is_file():
                 continue
             rel = path.relative_to(inbox).as_posix()
             if any(part.startswith(".") for part in rel.split("/")):
                 continue
-            age_days = (now - path.stat().st_mtime) / 86400
+            age_days = (now - observations.mtime(path, repo.root)) / 86400
             if age_days > 14:
                 issues.append(Issue(
                     "W", "INBOX-STALE",
@@ -92,10 +91,10 @@ def stale_index_lock_issues(repo) -> list[Issue]:
     container = repo.root.parent.parent
     if (container / ".git").is_dir():
         candidates.append(container / ".git" / "index.lock")
-    now = time.time()
+    now = observations.epoch()
     for lock in candidates:
         try:
-            if lock.is_file() and now - lock.stat().st_mtime > STALE_LOCK_AGE_S:
+            if lock.is_file() and now - observations.mtime(lock, repo.root) > STALE_LOCK_AGE_S:
                 issues.append(Issue(
                     "W", "HYGIENE-LOCK",
                     "stale git index.lock (crashed git process) — commits are "

@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import json
 import sys
-import time
 from pathlib import Path
 
 from learning_os import __version__
@@ -16,6 +15,7 @@ from learning_os.loader import load_repo
 from learning_os.pathing import PathBoundaryError, read_text_inside
 from learning_os.validation_cache import observe_pins, status_issues
 
+from .. import observations
 from .reads import (
     _inspect_candidates,
     _print_stable,
@@ -446,13 +446,13 @@ def cmd_inbox_list(args) -> int:
     except OSError as exc:
         print(f"los: cannot list work/inbox: {exc}", file=sys.stderr)
         return 2
-    now = time.time()
+    now = observations.epoch()
     inbox = root / "work" / "inbox"
     out = []
     for rec in rows:
         row = _discovery_row(rec)
         try:
-            row["age_days"] = int((now - (inbox / rec["id"]).stat().st_mtime) / 86400)
+            row["age_days"] = int((now - observations.mtime(inbox / rec["id"], root)) / 86400)
         except OSError:
             row["age_days"] = None
         out.append(row)

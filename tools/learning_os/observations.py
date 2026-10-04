@@ -8,6 +8,7 @@ import hashlib
 import json
 import os
 import sys
+import time
 import uuid
 from pathlib import Path
 
@@ -107,6 +108,43 @@ def now() -> datetime.datetime:
 def today() -> datetime.date:
     """The current local date: ``now().date()``."""
     return now().date()
+
+
+def epoch() -> float:
+    """Seconds since the Unix epoch: real, or fixed under an override.
+
+    Without an override this is ``time.time()``. With one it is
+    ``now().timestamp()``, so semantic clock reads follow the fixed clock.
+    """
+    if not os.environ.get(OVERRIDE_ENV):
+        return time.time()
+    return now().timestamp()
+
+
+def mtime(path: Path, root: Path) -> float:
+    """A file's modification time as epoch seconds, fixed under an override.
+
+    Without an override, or when the override has no ``"mtimes"`` object,
+    this is ``path.stat().st_mtime``. With one, a path listed under its
+    POSIX path relative to ``root`` reads the listed ISO 8601 instant, and
+    an unlisted path — including one outside ``root`` — reads
+    ``now().timestamp()``. A file the run itself created is therefore
+    "now", deterministically.
+    """
+    mtimes = _override_file().get("mtimes")
+    if not isinstance(mtimes, dict):
+        return Path(path).stat().st_mtime
+    try:
+        rel = Path(path).relative_to(Path(root)).as_posix()
+    except ValueError:
+        return now().timestamp()
+    raw = mtimes.get(rel)
+    if raw is None:
+        return now().timestamp()
+    parsed = datetime.datetime.fromisoformat(raw)
+    if parsed.tzinfo is None:
+        parsed = parsed.astimezone()
+    return parsed.timestamp()
 
 
 def git_override() -> dict | None:
