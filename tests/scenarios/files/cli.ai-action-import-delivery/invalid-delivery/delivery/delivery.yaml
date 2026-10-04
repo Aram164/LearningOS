@@ -1,0 +1,10 @@
+schema_version: 1
+id: ai-delivery-import-bad
+type: ai-action-delivery-draft
+request_id: ai-request-import-bad
+action_id: unit.compare-materials
+status: ready
+producer: {provider: manual, adapter: nope-adapter}
+approval: {user_approved: false, approved_at: "2026-10-01T09:00:00+02:00"}
+operations: []
+preconditions: {snapshot_id: "sha256:0000000000000000000000000000000000000000000000000000000000000000", artifact_revisions: {}}

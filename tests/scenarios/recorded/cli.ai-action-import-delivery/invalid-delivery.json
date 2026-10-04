@@ -1,0 +1,64 @@
+{
+  "steps": [
+    {
+      "argv": [
+        "ai-action-prepare",
+        "--action-id",
+        "garden.shelve",
+        "--target-kind",
+        "garden-note",
+        "--target-id",
+        "garden-note-seed",
+        "--request-id",
+        "ai-request-import-bad"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\n  \"ok\": true,\n  \"request\": {\n    \"id\": \"ai-request-import-bad\",\n    \"action_id\": \"garden.shelve\",\n    \"target\": {\n      \"kind\": \"garden-note\",\n      \"id\": \"garden-note-seed\"\n    },\n    \"provider\": \"manual-bundle\",\n    \"status\": \"prepared\",\n    \"created_at\": \"2026-10-01T07:00:00+00:00\",\n    \"delivery_id\": null,\n    \"receipt_id\": null,\n    \"bundle_path\": \"operations/ai-actions/requests/ai-request-import-bad\"\n  },\n  \"bundle_path\": \"operations/ai-actions/requests/ai-request-import-bad\"\n}\n",
+      "stdout_json": {
+        "bundle_path": "operations/ai-actions/requests/ai-request-import-bad",
+        "ok": true,
+        "request": {
+          "action_id": "garden.shelve",
+          "bundle_path": "operations/ai-actions/requests/ai-request-import-bad",
+          "created_at": "2026-10-01T07:00:00+00:00",
+          "delivery_id": null,
+          "id": "ai-request-import-bad",
+          "provider": "manual-bundle",
+          "receipt_id": null,
+          "status": "prepared",
+          "target": {
+            "id": "garden-note-seed",
+            "kind": "garden-note"
+          }
+        }
+      },
+      "step": 0,
+      "transport": "cli"
+    },
+    {
+      "argv": [
+        "ai-action-import-delivery",
+        "<CASEDATA>/delivery"
+      ],
+      "canonical_changed": {},
+      "exit": 1,
+      "idempotency_changed": {},
+      "outcome": "diagnostic-failure",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "los: delivery 'ai-delivery-import-bad' is invalid: delivery type must be ai-action-delivery; delivery action_id 'unit.compare-materials' does not match prepared request 'garden.shelve'; delivery producer.adapter 'nope-adapter' does not match prepared request provider.adapter 'manual-bundle'; delivery preconditions must equal the prepared request preconditions; delivery approval.user_approved must be true; delivery must contain at least one operation\n",
+      "stdout": "",
+      "stdout_json": null,
+      "step": 1,
+      "transport": "cli"
+    }
+  ]
+}

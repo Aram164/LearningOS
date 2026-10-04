@@ -1,0 +1,38 @@
+operation: cli.ai-action-import-delivery
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: import-ok
+    kind: sequence
+    steps:
+      - transport: cli
+        argv: [ai-action-prepare, --action-id, garden.shelve, --target-kind, garden-note, --target-id, garden-note-seed, --request-id, ai-request-import-ok]
+      - transport: cli
+        argv: [ai-action-import-delivery, "<CASEDATA>/delivery"]
+  - id: not-a-delivery-dir
+    kind: refusal
+    transport: cli
+    argv: [ai-action-import-delivery, deliveries/nope]
+    expect: {site: null}
+  - id: unknown-request
+    kind: refusal
+    transport: cli
+    argv: [ai-action-import-delivery, "<CASEDATA>/delivery"]
+    expect: {site: null}
+  - id: invalid-delivery
+    kind: sequence
+    steps:
+      - transport: cli
+        argv: [ai-action-prepare, --action-id, garden.shelve, --target-kind, garden-note, --target-id, garden-note-seed, --request-id, ai-request-import-bad]
+      - transport: cli
+        argv: [ai-action-import-delivery, "<CASEDATA>/delivery"]
+  - id: import-duplicate
+    kind: sequence
+    steps:
+      - transport: cli
+        argv: [ai-action-prepare, --action-id, garden.shelve, --target-kind, garden-note, --target-id, garden-note-seed, --request-id, ai-request-import-dup]
+      - transport: cli
+        argv: [ai-action-import-delivery, "<CASEDATA>/delivery"]
+      - transport: cli
+        argv: [ai-action-import-delivery, "<CASEDATA>/delivery"]
+untriggered: []

@@ -1,0 +1,13 @@
+schema_version: 1
+id: ai-delivery-import-dup
+type: ai-action-delivery
+request_id: ai-request-import-dup
+action_id: garden.shelve
+status: ready
+producer: {provider: manual, adapter: manual-bundle}
+approval: {user_approved: true, approved_at: "2026-10-01T09:00:00+02:00"}
+operations:
+  - {capability: garden.add-transcription, target_id: garden-note-seed, artifact_ref: artifacts/transcription.md}
+  - {capability: garden.update, target_id: garden-note-seed, patch: {title: "Shelved Thought", state: developing}}
+  - {capability: relationship.create, payload: {id: relationship-garden-module-demo, from: {kind: garden-note, id: garden-note-seed}, relation: supports, to: {kind: module, id: module-demo}}}
+preconditions: {snapshot_id: "sha256:c4e618674ad5217bfcd531238c81388a452170cd385269538a19b83aa5461053", artifact_revisions: {garden-note-seed: "sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169"}}

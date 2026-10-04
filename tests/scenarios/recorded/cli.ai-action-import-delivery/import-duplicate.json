@@ -1,0 +1,136 @@
+{
+  "steps": [
+    {
+      "argv": [
+        "ai-action-prepare",
+        "--action-id",
+        "garden.shelve",
+        "--target-kind",
+        "garden-note",
+        "--target-id",
+        "garden-note-seed",
+        "--request-id",
+        "KEY1"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\n  \"ok\": true,\n  \"request\": {\n    \"id\": \"KEY1\",\n    \"action_id\": \"garden.shelve\",\n    \"target\": {\n      \"kind\": \"garden-note\",\n      \"id\": \"garden-note-seed\"\n    },\n    \"provider\": \"manual-bundle\",\n    \"status\": \"prepared\",\n    \"created_at\": \"2026-10-01T07:00:00+00:00\",\n    \"delivery_id\": null,\n    \"receipt_id\": null,\n    \"bundle_path\": \"operations/ai-actions/requests/KEY1\"\n  },\n  \"bundle_path\": \"operations/ai-actions/requests/KEY1\"\n}\n",
+      "stdout_json": {
+        "bundle_path": "operations/ai-actions/requests/KEY1",
+        "ok": true,
+        "request": {
+          "action_id": "garden.shelve",
+          "bundle_path": "operations/ai-actions/requests/KEY1",
+          "created_at": "2026-10-01T07:00:00+00:00",
+          "delivery_id": null,
+          "id": "KEY1",
+          "provider": "manual-bundle",
+          "receipt_id": null,
+          "status": "prepared",
+          "target": {
+            "id": "garden-note-seed",
+            "kind": "garden-note"
+          }
+        }
+      },
+      "step": 0,
+      "transport": "cli"
+    },
+    {
+      "argv": [
+        "ai-action-import-delivery",
+        "<CASEDATA>/delivery"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\n  \"ok\": true,\n  \"delivery\": {\n    \"schema_version\": 1,\n    \"id\": \"ai-delivery-import-dup\",\n    \"type\": \"ai-action-delivery\",\n    \"request_id\": \"KEY1\",\n    \"action_id\": \"garden.shelve\",\n    \"status\": \"ready\",\n    \"producer\": {\n      \"provider\": \"manual\",\n      \"adapter\": \"manual-bundle\"\n    },\n    \"approval\": {\n      \"user_approved\": true,\n      \"approved_at\": \"2026-10-01T09:00:00+02:00\"\n    },\n    \"operations\": [\n      {\n        \"capability\": \"garden.add-transcription\",\n        \"target_id\": \"garden-note-seed\",\n        \"artifact_ref\": \"artifacts/transcription.md\"\n      },\n      {\n        \"capability\": \"garden.update\",\n        \"target_id\": \"garden-note-seed\",\n        \"patch\": {\n          \"title\": \"Shelved Thought\",\n          \"state\": \"developing\"\n        }\n      },\n      {\n        \"capability\": \"relationship.create\",\n        \"payload\": {\n          \"id\": \"relationship-garden-module-demo\",\n          \"from\": {\n            \"kind\": \"garden-note\",\n            \"id\": \"garden-note-seed\"\n          },\n          \"relation\": \"supports\",\n          \"to\": {\n            \"kind\": \"module\",\n            \"id\": \"module-demo\"\n          }\n        }\n      }\n    ],\n    \"preconditions\": {\n      \"snapshot_id\": \"SNAP1\",\n      \"artifact_revisions\": {\n        \"garden-note-seed\": \"sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169\"\n      }\n    }\n  }\n}\n",
+      "stdout_json": {
+        "delivery": {
+          "action_id": "garden.shelve",
+          "approval": {
+            "approved_at": "2026-10-01T09:00:00+02:00",
+            "user_approved": true
+          },
+          "id": "ai-delivery-import-dup",
+          "operations": [
+            {
+              "artifact_ref": "artifacts/transcription.md",
+              "capability": "garden.add-transcription",
+              "target_id": "garden-note-seed"
+            },
+            {
+              "capability": "garden.update",
+              "patch": {
+                "state": "developing",
+                "title": "Shelved Thought"
+              },
+              "target_id": "garden-note-seed"
+            },
+            {
+              "capability": "relationship.create",
+              "payload": {
+                "from": {
+                  "id": "garden-note-seed",
+                  "kind": "garden-note"
+                },
+                "id": "relationship-garden-module-demo",
+                "relation": "supports",
+                "to": {
+                  "id": "module-demo",
+                  "kind": "module"
+                }
+              }
+            }
+          ],
+          "preconditions": {
+            "artifact_revisions": {
+              "garden-note-seed": "sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169"
+            },
+            "snapshot_id": "SNAP1"
+          },
+          "producer": {
+            "adapter": "manual-bundle",
+            "provider": "manual"
+          },
+          "request_id": "KEY1",
+          "schema_version": 1,
+          "status": "ready",
+          "type": "ai-action-delivery"
+        },
+        "ok": true
+      },
+      "step": 1,
+      "transport": "cli"
+    },
+    {
+      "argv": [
+        "ai-action-import-delivery",
+        "<CASEDATA>/delivery"
+      ],
+      "canonical_changed": {},
+      "exit": 1,
+      "idempotency_changed": {},
+      "outcome": "diagnostic-failure",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "los: delivery already exists: ai-delivery-import-dup\n",
+      "stdout": "",
+      "stdout_json": null,
+      "step": 2,
+      "transport": "cli"
+    }
+  ]
+}
