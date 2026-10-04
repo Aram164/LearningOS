@@ -1,5 +1,5 @@
 schema: 1
-baselined: [A2-static, A3-prose, A4-plumbing, A14-vocabulary]
+baselined: [A2-static, A3-prose, A3-prose-2, A4-plumbing, A14-vocabulary]
 checks:
   A2-static:
   - signature: tools/learning_os/ai_actions/service.py::append_slices::write_bytes
@@ -152,6 +152,35 @@ checks:
     since: baseline
     approved_by: null
   - signature: tools/normalise_material_uris.py::main::substring::material://
+    count: 1
+    since: baseline
+    approved_by: null
+  A3-prose-2:
+  - signature: tools/learning_os/derived/store.py::read_state::regex::[0-9a-f]{64}
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/health.py::_time_machine_check::regex::(?<!\d)(\d{4}-\d{2}-\d{2}-\d{6})(?!\d)
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/health.py::_time_machine_check::substring::No destinations configured
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/materials_resolution.py::leading_material_locator::regex::\.(?:ipynb|md|pdf|pptx?)(?=$|[\s,;+()])
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/rules/contract.py::check_contract_documentation::regex::\bmanifest(?:\s+contract)?\s+v\d+\b|data
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/rules/materials.py::_uris_in::regex::material://([^\s`)\]\"'<>,;]+)
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: tools/learning_os/rules/registries.py::_references_generated::regex::(?<![\w/])generated/
     count: 1
     since: baseline
     approved_by: null
