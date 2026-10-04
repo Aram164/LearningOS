@@ -173,6 +173,7 @@ GROUPS: dict[str, list[str]] = {
         "test_arch_prose.py",
         "test_arch_ratchets.py",
         "test_arch_surface.py",
+        "test_arch_writes.py",
         "test_code_reachability.py",
         "test_compute_once.py",
         "test_digest_review.py",
