@@ -10,7 +10,7 @@
         "--target-id",
         "garden-note-seed",
         "--request-id",
-        "ai-request-scenario-shelve"
+        "KEY1"
       ],
       "canonical_changed": {},
       "exit": 0,
@@ -20,16 +20,16 @@
       "revisions_changed": {},
       "session_ledger_changed": null,
       "stderr": "",
-      "stdout": "{\n  \"ok\": true,\n  \"request\": {\n    \"id\": \"ai-request-scenario-shelve\",\n    \"action_id\": \"garden.shelve\",\n    \"target\": {\n      \"kind\": \"garden-note\",\n      \"id\": \"garden-note-seed\"\n    },\n    \"provider\": \"manual-bundle\",\n    \"status\": \"prepared\",\n    \"created_at\": \"2026-10-01T07:00:00+00:00\",\n    \"delivery_id\": null,\n    \"receipt_id\": null,\n    \"bundle_path\": \"operations/ai-actions/requests/ai-request-scenario-shelve\"\n  },\n  \"bundle_path\": \"operations/ai-actions/requests/ai-request-scenario-shelve\"\n}\n",
+      "stdout": "{\n  \"ok\": true,\n  \"request\": {\n    \"id\": \"KEY1\",\n    \"action_id\": \"garden.shelve\",\n    \"target\": {\n      \"kind\": \"garden-note\",\n      \"id\": \"garden-note-seed\"\n    },\n    \"provider\": \"manual-bundle\",\n    \"status\": \"prepared\",\n    \"created_at\": \"2026-10-01T07:00:00+00:00\",\n    \"delivery_id\": null,\n    \"receipt_id\": null,\n    \"bundle_path\": \"operations/ai-actions/requests/KEY1\"\n  },\n  \"bundle_path\": \"operations/ai-actions/requests/KEY1\"\n}\n",
       "stdout_json": {
-        "bundle_path": "operations/ai-actions/requests/ai-request-scenario-shelve",
+        "bundle_path": "operations/ai-actions/requests/KEY1",
         "ok": true,
         "request": {
           "action_id": "garden.shelve",
-          "bundle_path": "operations/ai-actions/requests/ai-request-scenario-shelve",
+          "bundle_path": "operations/ai-actions/requests/KEY1",
           "created_at": "2026-10-01T07:00:00+00:00",
           "delivery_id": null,
-          "id": "ai-request-scenario-shelve",
+          "id": "KEY1",
           "provider": "manual-bundle",
           "receipt_id": null,
           "status": "prepared",
@@ -55,7 +55,7 @@
       "revisions_changed": {},
       "session_ledger_changed": null,
       "stderr": "",
-      "stdout": "{\n  \"ok\": true,\n  \"delivery\": {\n    \"schema_version\": 1,\n    \"id\": \"ai-delivery-scenario-shelve\",\n    \"type\": \"ai-action-delivery\",\n    \"request_id\": \"ai-request-scenario-shelve\",\n    \"action_id\": \"garden.shelve\",\n    \"status\": \"ready\",\n    \"producer\": {\n      \"provider\": \"manual\",\n      \"adapter\": \"manual-bundle\"\n    },\n    \"approval\": {\n      \"user_approved\": true,\n      \"approved_at\": \"2026-10-01T09:00:00+02:00\"\n    },\n    \"operations\": [\n      {\n        \"capability\": \"garden.add-transcription\",\n        \"target_id\": \"garden-note-seed\",\n        \"artifact_ref\": \"artifacts/transcription.md\"\n      },\n      {\n        \"capability\": \"garden.update\",\n        \"target_id\": \"garden-note-seed\",\n        \"patch\": {\n          \"title\": \"Shelved Thought\",\n          \"state\": \"developing\"\n        }\n      },\n      {\n        \"capability\": \"relationship.create\",\n        \"payload\": {\n          \"id\": \"relationship-garden-module-demo\",\n          \"from\": {\n            \"kind\": \"garden-note\",\n            \"id\": \"garden-note-seed\"\n          },\n          \"relation\": \"supports\",\n          \"to\": {\n            \"kind\": \"module\",\n            \"id\": \"module-demo\"\n          }\n        }\n      }\n    ],\n    \"preconditions\": {\n      \"snapshot_id\": \"SNAP1\",\n      \"artifact_revisions\": {\n        \"garden-note-seed\": \"sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169\"\n      }\n    }\n  }\n}\n",
+      "stdout": "{\n  \"ok\": true,\n  \"delivery\": {\n    \"schema_version\": 1,\n    \"id\": \"ai-delivery-scenario-shelve\",\n    \"type\": \"ai-action-delivery\",\n    \"request_id\": \"KEY1\",\n    \"action_id\": \"garden.shelve\",\n    \"status\": \"ready\",\n    \"producer\": {\n      \"provider\": \"manual\",\n      \"adapter\": \"manual-bundle\"\n    },\n    \"approval\": {\n      \"user_approved\": true,\n      \"approved_at\": \"2026-10-01T09:00:00+02:00\"\n    },\n    \"operations\": [\n      {\n        \"capability\": \"garden.add-transcription\",\n        \"target_id\": \"garden-note-seed\",\n        \"artifact_ref\": \"artifacts/transcription.md\"\n      },\n      {\n        \"capability\": \"garden.update\",\n        \"target_id\": \"garden-note-seed\",\n        \"patch\": {\n          \"title\": \"Shelved Thought\",\n          \"state\": \"developing\"\n        }\n      },\n      {\n        \"capability\": \"relationship.create\",\n        \"payload\": {\n          \"id\": \"relationship-garden-module-demo\",\n          \"from\": {\n            \"kind\": \"garden-note\",\n            \"id\": \"garden-note-seed\"\n          },\n          \"relation\": \"supports\",\n          \"to\": {\n            \"kind\": \"module\",\n            \"id\": \"module-demo\"\n          }\n        }\n      }\n    ],\n    \"preconditions\": {\n      \"snapshot_id\": \"SNAP1\",\n      \"artifact_revisions\": {\n        \"garden-note-seed\": \"sha256:2fa0d5901df7142374cd36288533e6d84f11df0370a087cdb50d000794dfd169\"\n      }\n    }\n  }\n}\n",
       "stdout_json": {
         "delivery": {
           "action_id": "garden.shelve",
@@ -104,7 +104,7 @@
             "adapter": "manual-bundle",
             "provider": "manual"
           },
-          "request_id": "ai-request-scenario-shelve",
+          "request_id": "KEY1",
           "schema_version": 1,
           "status": "ready",
           "type": "ai-action-delivery"
@@ -122,12 +122,12 @@
       "idempotency_changed": {
         "after": {
           "entries": {
-            "KEY2": {
+            "KEY3": {
               "capability": "ai-action.delivery.apply",
               "channel": "operator",
               "intent_sha256": "sha256:259d2b23d40fd2332219008b644ef603faf54f53455072c23a0d1f7df9c33855",
               "receipt_path": "operations/transactions/TX1.yaml",
-              "request_id": "KEY1",
+              "request_id": "KEY2",
               "revisions": {
                 "garden-note-seed": 1,
                 "relationship-garden-module-demo": 1,
@@ -215,7 +215,7 @@
             "deleted_ids": [],
             "delivery_id": "ai-delivery-scenario-shelve",
             "fingerprint_definition": 2,
-            "request_id": "ai-request-scenario-shelve",
+            "request_id": "KEY1",
             "superseded_ids": [],
             "updated_ids": [
               "garden-note-seed"
@@ -233,9 +233,9 @@
               "subject_sha256": "sha256:259d2b23d40fd2332219008b644ef603faf54f53455072c23a0d1f7df9c33855"
             },
             "channel": "operator",
-            "idempotency_key": "KEY2",
+            "idempotency_key": "KEY3",
             "intent_sha256": "sha256:259d2b23d40fd2332219008b644ef603faf54f53455072c23a0d1f7df9c33855",
-            "request_id": "KEY1"
+            "request_id": "KEY2"
           },
           "schema_version": 2,
           "snapshot_after": "SNAP2",
@@ -263,7 +263,7 @@
             },
             {
               "created": false,
-              "path": "operations/ai-actions/requests/ai-request-scenario-shelve/request.yaml",
+              "path": "operations/ai-actions/requests/KEY1/request.yaml",
               "sha256_after": "9f13f57c5cc630f8515c636fb4ea7c82442f15a7fa5d1061eedbe6d515ef6060",
               "sha256_before": "bd52893a9ee325b9769c9962dcfc7dc9cfdde12e517478c77109ab2276086ee8"
             }
@@ -310,7 +310,7 @@
               "sha256": "543b977cface1950591c5b0e92314ab4d13cdfac30e30243c1e6f9ed3d433398",
               "state": "file"
             },
-            "operations/ai-actions/requests/ai-request-scenario-shelve/request.yaml": {
+            "operations/ai-actions/requests/KEY1/request.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
               "sha256": "9f13f57c5cc630f8515c636fb4ea7c82442f15a7fa5d1061eedbe6d515ef6060",
@@ -329,15 +329,15 @@
         "before": null
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"ai-action.delivery.apply\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP2\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"snapshot_after\": \"SNAP2\",\n    \"artifact_revisions\": {\n      \"garden-note-seed\": 1,\n      \"relationship-garden-module-demo\": 1,\n      \"transcription-garden-note-seed\": 1\n    },\n    \"replayed\": false,\n    \"receipt\": {\n      \"schema_version\": 2,\n      \"id\": \"TX1\",\n      \"type\": \"transaction-receipt\",\n      \"status\": \"committed\",\n      \"capability\": \"ai-action.delivery.apply\",\n      \"committed_at\": \"2026-10-01T09:00:00+02:00\",\n      \"snapshot_before\": \"SNAP1\",\n      \"snapshot_after\": \"SNAP2\",\n      \"expected_revisions\": {\n        \"garden-note-seed\": 0,\n        \"relationship-garden-module-demo\": 0,\n        \"transcription-garden-note-seed\": 0\n      },\n      \"artifact_revisions\": {\n        \"garden-note-seed\": {\n          \"before\": 0,\n          \"after\": 1\n        },\n        \"relationship-garden-module-demo\": {\n          \"before\": 0,\n          \"after\": 1\n        },\n        \"transcription-garden-note-seed\": {\n          \"before\": 0,\n          \"after\": 1\n        }\n      },\n      \"writes\": [\n        {\n          \"path\": \"knowledge/garden/transcriptions/garden-note-seed.md\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"0eeba45730664ce19f3c227603a1d3693a0794777a4cc1f1b91e8b3fc3c29ff3\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/garden-state/garden-note-seed.yaml\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"0a5f5789be2f94b6cee3c8c1b1a45c54b303d8c80464cd4d6b8c3fd17fc9742b\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/relationships.yaml\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"543b977cface1950591c5b0e92314ab4d13cdfac30e30243c1e6f9ed3d433398\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/requests/ai-request-scenario-shelve/request.yaml\",\n          \"sha256_before\": \"bd52893a9ee325b9769c9962dcfc7dc9cfdde12e517478c77109ab2276086ee8\",\n          \"sha256_after\": \"9f13f57c5cc630f8515c636fb4ea7c82442f15a7fa5d1061eedbe6d515ef6060\",\n          \"created\": false\n        }\n      ],\n      \"metadata\": {\n        \"request_id\": \"ai-request-scenario-shelve\",\n        \"delivery_id\": \"ai-delivery-scenario-shelve\",\n        \"action_id\": \"garden.shelve\",\n        \"approved_delivery\": {\n          \"delivery_sha256\": \"sha256:fe12bde49a7a9fde254d89cbfe502305099b01bc0a8665340c318db84750a07c\",\n          \"artifact_sha256\": {\n            \"artifacts/transcription.md\": \"sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157\"\n          }\n        },\n        \"created_ids\": [\n          \"transcription-garden-note-seed\",\n          \"relationship-garden-module-demo\"\n        ],\n        \"updated_ids\": [\n          \"garden-note-seed\"\n        ],\n        \"deleted_ids\": [],\n        \"superseded_ids\": [],\n        \"validation\": {\n          \"schemas\": \"passed\",\n          \"references\": \"passed\",\n          \"boundaries\": \"passed\",\n          \"projection\": \"passed\"\n        },\n        \"data_roots_sha256\": \"sha256:77f2518b5a8fd16557eb49e77784bd805f98b293eb1aee0821c62adc6ac56026\",\n        \"fingerprint_definition\": 2\n      },\n      \"authority\": {\n        \"capability_contract_version\": 2,\n        \"enforced\": true,\n        \"grants\": [\n          {\n            \"capability\": \"ai-action.delivery.apply\",\n            \"declared_writes\": [\n              \"operations/ai-actions/requests/**\"\n            ]\n          },\n          {\n            \"capability\": \"garden.add-transcription\",\n            \"declared_writes\": [\n              \"knowledge/garden/transcriptions/\"\n            ]\n          },\n          {\n            \"capability\": \"garden.update\",\n            \"declared_writes\": [\n              \"operations/ai-actions/garden-state/\"\n            ]\n          },\n          {\n            \"capability\": \"relationship.create\",\n            \"declared_writes\": [\n              \"operations/ai-actions/relationships.yaml\"\n            ]\n          }\n        ]\n      },\n      \"request\": {\n        \"channel\": \"operator\",\n        \"request_id\": \"KEY1\",\n        \"idempotency_key\": \"KEY2\",\n        \"intent_sha256\": \"sha256:259d2b23d40fd2332219008b644ef603faf54f53455072c23a0d1f7df9c33855\",\n        \"approval\": {\n          \"kind\": \"approved-delivery\",\n          \"subject_sha256\": \"sha256:259d2b23d40fd2332219008b644ef603faf54f53455072c23a0d1f7df9c33855\"\n        }\n      },\n      \"transaction_id\": \"TX1\",\n      \"revision_updates\": {\n        \"garden-note-seed\": 1,\n        \"relationship-garden-module-demo\": 1,\n        \"transcription-garden-note-seed\": 1\n      },\n      \"receipt_path\": \"operations/transactions/TX1.yaml\",\n      \"replayed\": false\n    }\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY2\",\n  \"idempotency_key\": \"KEY3\",\n  \"capability\": \"ai-action.delivery.apply\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP2\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"snapshot_after\": \"SNAP2\",\n    \"artifact_revisions\": {\n      \"garden-note-seed\": 1,\n      \"relationship-garden-module-demo\": 1,\n      \"transcription-garden-note-seed\": 1\n    },\n    \"replayed\": false,\n    \"receipt\": {\n      \"schema_version\": 2,\n      \"id\": \"TX1\",\n      \"type\": \"transaction-receipt\",\n      \"status\": \"committed\",\n      \"capability\": \"ai-action.delivery.apply\",\n      \"committed_at\": \"2026-10-01T09:00:00+02:00\",\n      \"snapshot_before\": \"SNAP1\",\n      \"snapshot_after\": \"SNAP2\",\n      \"expected_revisions\": {\n        \"garden-note-seed\": 0,\n        \"relationship-garden-module-demo\": 0,\n        \"transcription-garden-note-seed\": 0\n      },\n      \"artifact_revisions\": {\n        \"garden-note-seed\": {\n          \"before\": 0,\n          \"after\": 1\n        },\n        \"relationship-garden-module-demo\": {\n          \"before\": 0,\n          \"after\": 1\n        },\n        \"transcription-garden-note-seed\": {\n          \"before\": 0,\n          \"after\": 1\n        }\n      },\n      \"writes\": [\n        {\n          \"path\": \"knowledge/garden/transcriptions/garden-note-seed.md\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"0eeba45730664ce19f3c227603a1d3693a0794777a4cc1f1b91e8b3fc3c29ff3\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/garden-state/garden-note-seed.yaml\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"0a5f5789be2f94b6cee3c8c1b1a45c54b303d8c80464cd4d6b8c3fd17fc9742b\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/relationships.yaml\",\n          \"sha256_before\": null,\n          \"sha256_after\": \"543b977cface1950591c5b0e92314ab4d13cdfac30e30243c1e6f9ed3d433398\",\n          \"created\": true\n        },\n        {\n          \"path\": \"operations/ai-actions/requests/KEY1/request.yaml\",\n          \"sha256_before\": \"bd52893a9ee325b9769c9962dcfc7dc9cfdde12e517478c77109ab2276086ee8\",\n          \"sha256_after\": \"9f13f57c5cc630f8515c636fb4ea7c82442f15a7fa5d1061eedbe6d515ef6060\",\n          \"created\": false\n        }\n      ],\n      \"metadata\": {\n        \"request_id\": \"KEY1\",\n        \"delivery_id\": \"ai-delivery-scenario-shelve\",\n        \"action_id\": \"garden.shelve\",\n        \"approved_delivery\": {\n          \"delivery_sha256\": \"sha256:fe12bde49a7a9fde254d89cbfe502305099b01bc0a8665340c318db84750a07c\",\n          \"artifact_sha256\": {\n            \"artifacts/transcription.md\": \"sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157\"\n          }\n        },\n        \"created_ids\": [\n          \"transcription-garden-note-seed\",\n          \"relationship-garden-module-demo\"\n        ],\n        \"updated_ids\": [\n          \"garden-note-seed\"\n        ],\n        \"deleted_ids\": [],\n        \"superseded_ids\": [],\n        \"validation\": {\n          \"schemas\": \"passed\",\n          \"references\": \"passed\",\n          \"boundaries\": \"passed\",\n          \"projection\": \"passed\"\n        },\n        \"data_roots_sha256\": \"sha256:77f2518b5a8fd16557eb49e77784bd805f98b293eb1aee0821c62adc6ac56026\",\n        \"fingerprint_definition\": 2\n      },\n      \"authority\": {\n        \"capability_contract_version\": 2,\n        \"enforced\": true,\n        \"grants\": [\n          {\n            \"capability\": \"ai-action.delivery.apply\",\n            \"declared_writes\": [\n              \"operations/ai-actions/requests/**\"\n            ]\n          },\n          {\n            \"capability\": \"garden.add-transcription\",\n            \"declared_writes\": [\n              \"knowledge/garden/transcriptions/\"\n            ]\n          },\n          {\n            \"capability\": \"garden.update\",\n            \"declared_writes\": [\n              \"operations/ai-actions/garden-state/\"\n            ]\n          },\n          {\n            \"capability\": \"relationship.create\",\n            \"declared_writes\": [\n              \"operations/ai-actions/relationships.yaml\"\n            ]\n          }\n        ]\n      },\n      \"request\": {\n        \"channel\": \"operator\",\n        \"request_id\": \"KEY2\",\n        \"idempotency_key\": \"KEY3\",\n        \"intent_sha256\": \"sha256:259d2b23d40fd2332219008b644ef603faf54f53455072c23a0d1f7df9c33855\",\n        \"approval\": {\n          \"kind\": \"approved-delivery\",\n          \"subject_sha256\": \"sha256:259d2b23d40fd2332219008b644ef603faf54f53455072c23a0d1f7df9c33855\"\n        }\n      },\n      \"transaction_id\": \"TX1\",\n      \"revision_updates\": {\n        \"garden-note-seed\": 1,\n        \"relationship-garden-module-demo\": 1,\n        \"transcription-garden-note-seed\": 1\n      },\n      \"receipt_path\": \"operations/transactions/TX1.yaml\",\n      \"replayed\": false\n    }\n  },\n  \"error\": null\n}\n",
       "stdout_json": {
         "capability": "ai-action.delivery.apply",
         "error": null,
-        "idempotency_key": "KEY2",
+        "idempotency_key": "KEY3",
         "ok": true,
         "receipt_path": "operations/transactions/TX1.yaml",
         "replayed": false,
-        "request_id": "KEY1",
+        "request_id": "KEY2",
         "result": {
           "artifact_revisions": {
             "garden-note-seed": 1,
@@ -414,7 +414,7 @@
               "deleted_ids": [],
               "delivery_id": "ai-delivery-scenario-shelve",
               "fingerprint_definition": 2,
-              "request_id": "ai-request-scenario-shelve",
+              "request_id": "KEY1",
               "superseded_ids": [],
               "updated_ids": [
                 "garden-note-seed"
@@ -434,9 +434,9 @@
                 "subject_sha256": "sha256:259d2b23d40fd2332219008b644ef603faf54f53455072c23a0d1f7df9c33855"
               },
               "channel": "operator",
-              "idempotency_key": "KEY2",
+              "idempotency_key": "KEY3",
               "intent_sha256": "sha256:259d2b23d40fd2332219008b644ef603faf54f53455072c23a0d1f7df9c33855",
-              "request_id": "KEY1"
+              "request_id": "KEY2"
             },
             "revision_updates": {
               "garden-note-seed": 1,
@@ -470,7 +470,7 @@
               },
               {
                 "created": false,
-                "path": "operations/ai-actions/requests/ai-request-scenario-shelve/request.yaml",
+                "path": "operations/ai-actions/requests/KEY1/request.yaml",
                 "sha256_after": "9f13f57c5cc630f8515c636fb4ea7c82442f15a7fa5d1061eedbe6d515ef6060",
                 "sha256_before": "bd52893a9ee325b9769c9962dcfc7dc9cfdde12e517478c77109ab2276086ee8"
               }
@@ -517,7 +517,7 @@
               "sha256": "543b977cface1950591c5b0e92314ab4d13cdfac30e30243c1e6f9ed3d433398",
               "state": "file"
             },
-            "operations/ai-actions/requests/ai-request-scenario-shelve/request.yaml": {
+            "operations/ai-actions/requests/KEY1/request.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
               "sha256": "9f13f57c5cc630f8515c636fb4ea7c82442f15a7fa5d1061eedbe6d515ef6060",
@@ -553,7 +553,7 @@
               "sha256": "543b977cface1950591c5b0e92314ab4d13cdfac30e30243c1e6f9ed3d433398",
               "state": "file"
             },
-            "operations/ai-actions/requests/ai-request-scenario-shelve/request.yaml": {
+            "operations/ai-actions/requests/KEY1/request.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
               "sha256": "9f13f57c5cc630f8515c636fb4ea7c82442f15a7fa5d1061eedbe6d515ef6060",
@@ -571,15 +571,15 @@
         }
       },
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"ai-action.delivery.apply\",\n  \"ok\": true,\n  \"replayed\": true,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP2\",\n  \"result\": {\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"garden-note-seed\": 1,\n      \"relationship-garden-module-demo\": 1,\n      \"transcription-garden-note-seed\": 1\n    },\n    \"snapshot_after\": \"SNAP2\",\n    \"replayed\": true\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY2\",\n  \"idempotency_key\": \"KEY3\",\n  \"capability\": \"ai-action.delivery.apply\",\n  \"ok\": true,\n  \"replayed\": true,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP2\",\n  \"result\": {\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"garden-note-seed\": 1,\n      \"relationship-garden-module-demo\": 1,\n      \"transcription-garden-note-seed\": 1\n    },\n    \"snapshot_after\": \"SNAP2\",\n    \"replayed\": true\n  },\n  \"error\": null\n}\n",
       "stdout_json": {
         "capability": "ai-action.delivery.apply",
         "error": null,
-        "idempotency_key": "KEY2",
+        "idempotency_key": "KEY3",
         "ok": true,
         "receipt_path": "operations/transactions/TX1.yaml",
         "replayed": true,
-        "request_id": "KEY1",
+        "request_id": "KEY2",
         "result": {
           "artifact_revisions": {
             "garden-note-seed": 1,
