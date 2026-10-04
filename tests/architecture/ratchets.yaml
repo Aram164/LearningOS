@@ -1,5 +1,5 @@
 schema: 1
-baselined: [A2-static, A3-prose, A3-prose-2, A4-plumbing, A14-vocabulary]
+baselined: [A2-static, A3-prose, A3-prose-2, A4-plumbing, A4-plumbing-2, A14-vocabulary]
 checks:
   A2-static:
   - signature: tools/learning_os/ai_actions/service.py::append_slices::write_bytes
@@ -1449,6 +1449,7 @@ checks:
     count: 6
     since: baseline
     approved_by: null
+  A4-plumbing-2: []
   A14-vocabulary:
   - signature: tools/learning_os/commands/abilities.py::UNCONFIRMED
     count: 2
