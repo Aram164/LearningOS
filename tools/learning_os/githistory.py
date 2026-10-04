@@ -27,6 +27,8 @@ from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 
+from . import observations
+
 
 class GitHistoryError(Exception):
     """Git history could not be read; this is not an empty history."""
@@ -76,13 +78,34 @@ def read_history(root: Path | str, *args: str) -> str:
     must not inherit an enclosing checkout's history. Explicit Git environment
     overrides still take precedence. An unborn symbolic HEAD is empty only if
     Git confirms that its target ref is absent, before attempting the log.
+
+    Under an observation override (PLAN D19), exactly
+    ``("-1", "--format=%H")`` and ``("-1", "--format=%cI")`` are answered
+    from the override's ``git`` object; every other argument list reaches
+    real Git unchanged.
     """
+    override = observations.git_override()
+    if override is not None:
+        if tuple(args) == ("-1", "--format=%H") and "head" in override:
+            head = override["head"]
+            return "" if head is None else head + "\n"
+        if tuple(args) == ("-1", "--format=%cI") and "head_time" in override:
+            head_time = override["head_time"]
+            return "" if head_time is None else head_time + "\n"
+
+    def _real(value: str) -> str:
+        if tuple(args) == ("-1", "--format=%H"):
+            observations._record_git(head=value.strip() or None)
+        elif tuple(args) == ("-1", "--format=%cI"):
+            observations._record_git(head_time=value.strip() or None)
+        return value
+
     root = os.path.abspath(root)
     git_dir = discover_git_dir(root)
     if git_dir is None and not any(
         name in os.environ for name in ("GIT_DIR", "GIT_WORK_TREE", "GIT_COMMON_DIR")
     ):
-        return ""
+        return _real("")
 
     # Pin discovered metadata so a damaged .git cannot make Git silently walk
     # up to an enclosing repository. Never replace the caller's GIT_DIR.
@@ -95,12 +118,24 @@ def read_history(root: Path | str, *args: str) -> str:
         target = _git(root, "show-ref", "--verify", "--quiet", ref,
                       git_dir=git_dir, allowed=(0, 1))
         if target.returncode == 1:
-            return ""
-    return _git(root, "log", *args, git_dir=git_dir).stdout
+            return _real("")
+    return _real(_git(root, "log", *args, git_dir=git_dir).stdout)
 
 
 def _walk(root: str, fmt: str) -> dict[str, str]:
-    """path -> value of `fmt` for the newest commit touching it."""
+    """path -> value of `fmt` for the newest commit touching it.
+
+    Under an observation override (PLAN D19), ``"%cs"`` is answered from
+    the override's ``dates`` and ``"%ct"`` from its ``timestamps``; paths
+    absent from those tables have no history. Any other format reaches
+    real Git unchanged.
+    """
+    override = observations.git_override()
+    if override is not None:
+        if fmt == "%cs" and "dates" in override:
+            return dict(override["dates"])
+        if fmt == "%ct" and "timestamps" in override:
+            return dict(override["timestamps"])
     stdout = read_history(root, f"--format=%x00{fmt}", "--name-only", "--no-renames")
 
     found: dict[str, str] = {}
@@ -111,6 +146,10 @@ def _walk(root: str, fmt: str) -> dict[str, str]:
         elif line and current:
             # git log walks newest-first, so the first sighting wins.
             found.setdefault(line, current)
+    if fmt == "%cs":
+        observations._record_git(dates=found)
+    elif fmt == "%ct":
+        observations._record_git(timestamps=found)
     return found
 
 
