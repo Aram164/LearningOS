@@ -7,6 +7,9 @@ base is the baseline: every ``ratchets.yaml`` entry must then be
 ``since: baseline``, and a first-ever ``surface.json`` needs no approvals.
 ``baselined`` lists the checks whose baseline is recorded; it only grows,
 and every check id with entries is listed (amended §2.3 rule 2).
+Surface approvals are single-use: an entry covers a diff only when that
+whole entry is absent from the base's ``surface-approvals.yaml`` (§2.3
+step 4).
 """
 
 from __future__ import annotations
@@ -568,6 +571,27 @@ def test_introducing_protected_contract_passes():
         _TOML_TWO_CONTRACTS, _TOML_THREE_CONTRACTS) == []
 
 
+def _unapproved_surface_diffs(base_flat: dict[str, object],
+                              current_flat: dict[str, object],
+                              base_approvals: list[dict],
+                              current_approvals: list[dict]) -> dict[str, str]:
+    """SPEC §2.3 step 4 as a pure check: each uncovered diff keyed to its change.
+
+    An approval covers a diff only when that whole entry is absent from the
+    base approvals (single-use). Takes flattened surfaces so fixture tests
+    need no git.
+    """
+    usable = [entry for entry in current_approvals
+              if entry not in (base_approvals or [])]
+    return {
+        key: change
+        for key, change in arch_surface.diff_keys(
+            base_flat, current_flat).items()
+        if not any(arch_surface.approval_covers(entry, key, change)
+                   for entry in usable)
+    }
+
+
 def test_surface_diffs_have_approvals(base_ref):
     base_text = _git_show(
         base_ref,
@@ -577,17 +601,49 @@ def test_surface_diffs_have_approvals(base_ref):
     base_flat = arch_surface.flatten_surface(json.loads(base_text))
     live = arch_surface.build_surface(ROOT)
     live_flat = arch_surface.flatten_surface(live)
-    diff = arch_surface.diff_keys(base_flat, live_flat)
-    if not diff:
-        return
+    base_approvals_text = _git_show(
+        base_ref, APPROVALS_PATH.relative_to(ROOT).as_posix())
+    base_approvals = (
+        yaml.safe_load(base_approvals_text)["approvals"]
+        if base_approvals_text is not None else [])
     approvals = yaml.safe_load(APPROVALS_PATH.read_text(encoding="utf-8"))["approvals"]
+    uncovered = _unapproved_surface_diffs(
+        base_flat, live_flat, base_approvals, approvals)
+    if not uncovered:
+        return
     live_text = arch_surface.dump_surface(live)
     failures = []
-    for key in sorted(diff):
-        if any(arch_surface.approval_covers(a, key, diff[key]) for a in approvals):
-            continue
-        text = base_text if diff[key] == "removed" else live_text
+    for key in sorted(uncovered):
+        text = base_text if uncovered[key] == "removed" else live_text
         lineno = arch_surface.locate_line(text, key)
         rel = (ARCH / arch_surface.SURFACE_FILENAME).relative_to(ROOT).as_posix()
-        failures.append(f"A11 {key}: {diff[key]} — {rel}:{lineno} — {FIX['A11']}")
+        failures.append(f"A11 {key}: {uncovered[key]} — {rel}:{lineno} — {FIX['A11']}")
     assert not failures, "unapproved surface diffs:\n" + "\n".join(failures)
+
+
+# ---- step 4 single-use against fixture surfaces (no git) ----------------------
+
+def _approval(key: str, change: str) -> dict:
+    return {"key": key, "change": change, "plan_ref": "PLAN A11",
+            "pre_approved_by": "Aram 2026-10-04: fixture approval"}
+
+
+def test_new_approval_covers_its_key():
+    uncovered = _unapproved_surface_diffs(
+        {"cli.a": [1]}, {"cli.a": [2]}, [],
+        [_approval("cli.a", "changed")])
+    assert uncovered == {}
+
+
+def test_approval_present_at_base_covers_nothing():
+    entry = _approval("cli.a", "changed")
+    uncovered = _unapproved_surface_diffs(
+        {"cli.a": [1]}, {"cli.a": [2]}, [entry], [entry])
+    assert uncovered == {"cli.a": "changed"}
+
+
+def test_wildcard_present_at_base_does_not_cover_new_key():
+    entry = _approval("cli.*", "added")
+    uncovered = _unapproved_surface_diffs(
+        {}, {"cli.new": [1]}, [entry], [entry])
+    assert uncovered == {"cli.new": "added"}
