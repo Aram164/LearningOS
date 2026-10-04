@@ -1,0 +1,247 @@
+{
+  "steps": [
+    {
+      "canonical_changed": {
+        "curriculum/quarantine/masters-planning/catalog.yaml": "d48e996da67307266fa0a9638413c77e8721dd19281499e6cf79071f49310555"
+      },
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY2": {
+              "capability": "masters-planning.catalog.update",
+              "channel": "operator",
+              "intent_sha256": "sha256:1042e2bc8060a503140900f1069a2c9a06aa79d7285a0ac2fdeb199a177b51a1",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "master-planning-catalog": 1
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "SNAP2",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": null
+      },
+      "operation": "masters-planning.catalog.update",
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "master-planning-catalog": {
+              "after": 1,
+              "before": 0
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "masters-planning.catalog.update",
+                "declared_writes": [
+                  "curriculum/quarantine/masters-planning/catalog.yaml"
+                ]
+              }
+            ]
+          },
+          "capability": "masters-planning.catalog.update",
+          "committed_at": "2026-10-01T09:00:00+02:00",
+          "expected_revisions": {
+            "master-planning-catalog": 0
+          },
+          "id": "TX1",
+          "metadata": {
+            "data_roots_sha256": "sha256:700bb4dc34b8e96e397af092d16cbd5030298c1575371ee8514e7e1aca95bd5f",
+            "fingerprint_definition": 2
+          },
+          "request": {
+            "approval": {
+              "kind": "operator-approval",
+              "subject_sha256": "sha256:1042e2bc8060a503140900f1069a2c9a06aa79d7285a0ac2fdeb199a177b51a1"
+            },
+            "channel": "operator",
+            "idempotency_key": "KEY2",
+            "intent_sha256": "sha256:1042e2bc8060a503140900f1069a2c9a06aa79d7285a0ac2fdeb199a177b51a1",
+            "request_id": "KEY1"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": true,
+              "path": "curriculum/quarantine/masters-planning/catalog.yaml",
+              "sha256_after": "d48e996da67307266fa0a9638413c77e8721dd19281499e6cf79071f49310555",
+              "sha256_before": null
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "master-planning-catalog": 1,
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": {
+        "after": {
+          "paths": {
+            "curriculum/quarantine/masters-planning/catalog.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "d48e996da67307266fa0a9638413c77e8721dd19281499e6cf79071f49310555",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1dc5762e015ea5e8a688a8146221d2ad53edcd37b4d797a084f2d5a8620f6b06",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "66152c57690c00157bf9f66d51b6eb51904126fbc527056465240da8a05e8e88",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1f76f8aab71d8d70f70e00628129b1178222f2d93a57f5ade651a6cca03fc5b7",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        },
+        "before": null
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"masters-planning.catalog.update\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"master-planning-catalog\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "masters-planning.catalog.update",
+        "error": null,
+        "idempotency_key": "KEY2",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": false,
+        "request_id": "KEY1",
+        "result": {
+          "artifact_revisions": {
+            "master-planning-catalog": 1
+          },
+          "ok": true,
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": false,
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
+      },
+      "step": 0,
+      "transport": "gateway"
+    },
+    {
+      "argv": [
+        "masters-planning-comparison-publish",
+        "candidate-module-scenario-ml",
+        "--approve",
+        "--record",
+        "{\"schema_version\": 1, \"id\": \"candidate-comparison-scenario\", \"type\": \"candidate-source-comparison\", \"candidate_module_id\": \"candidate-module-scenario-ml\", \"status\": \"approved\", \"basis\": {\"catalog_revision\": 0, \"candidate_set_checksum\": \"sha256:9ed39cf6af9e2acf1011820a7c0ca583281ea234824023ae2f78fa22f5356356\", \"policy\": \"tiered-v1\", \"request_id\": \"scenario-request\", \"delivery_id\": \"scenario-delivery\"}, \"source_assessments\": [{\"candidate_source_id\": \"candidate-source-scenario-book\", \"role\": \"selected\", \"review_status\": \"deep-reviewed\", \"concept_ids\": [\"concept-expected-value\"], \"contribution\": \"Covers the derivation end to end.\", \"assumptions\": \"Finite discrete outcomes.\", \"notation\": \"Standard expectation notation.\", \"exercise_value\": \"Worked examples included.\", \"best_for\": \"First reading.\", \"limitations\": \"No measure theory.\", \"evidence\": [{\"locator\": \"chapter 1\", \"checksum\": \"sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\"}]}], \"comparisons\": []}"
+      ],
+      "canonical_changed": {},
+      "exit": 2,
+      "idempotency_changed": {},
+      "outcome": "refused",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": {
+        "after": {
+          "paths": {
+            "curriculum/quarantine/masters-planning/catalog.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "d48e996da67307266fa0a9638413c77e8721dd19281499e6cf79071f49310555",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1dc5762e015ea5e8a688a8146221d2ad53edcd37b4d797a084f2d5a8620f6b06",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "66152c57690c00157bf9f66d51b6eb51904126fbc527056465240da8a05e8e88",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1f76f8aab71d8d70f70e00628129b1178222f2d93a57f5ade651a6cca03fc5b7",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        },
+        "before": {
+          "paths": {
+            "curriculum/quarantine/masters-planning/catalog.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "d48e996da67307266fa0a9638413c77e8721dd19281499e6cf79071f49310555",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1dc5762e015ea5e8a688a8146221d2ad53edcd37b4d797a084f2d5a8620f6b06",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "66152c57690c00157bf9f66d51b6eb51904126fbc527056465240da8a05e8e88",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1f76f8aab71d8d70f70e00628129b1178222f2d93a57f5ade651a6cca03fc5b7",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        }
+      },
+      "stderr": "los: this approved write must use GatewayEnvelopeV2; direct CLI publication is disabled\n",
+      "stdout": "",
+      "stdout_json": null,
+      "step": 1,
+      "transport": "cli"
+    }
+  ]
+}

@@ -1,0 +1,77 @@
+operation: legacy.archive.lock.publish
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: publish-lock
+    kind: success
+    transport: gateway
+    request:
+      record:
+        schema_version: 1
+        id: legacy-archive-lock
+        type: legacy-archive-lock
+        created_at: "2026-10-01T09:00:00+02:00"
+        entries: []
+        excluded: {count: 3, status: sealed-not-inspected}
+        verification: {verified_at: "2026-10-01T09:00:00+02:00", status: verified, issues: []}
+    artifact_ids: [legacy-archive-lock]
+    a5_base: true
+    expect: {site: null}
+  - id: invalid-record
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        schema_version: 1
+        id: legacy-archive-lock
+        type: legacy-archive-lock
+        created_at: "2026-10-01T09:00:00+02:00"
+        entries: nope
+        excluded: {count: 3, status: sealed-not-inspected}
+        verification: {verified_at: "2026-10-01T09:00:00+02:00", status: verified, issues: []}
+    artifact_ids: []
+    expect: {site: null}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [legacy-archive-lock-publish, --record, '{"schema_version": 1, "id": "legacy-archive-lock", "type": "legacy-archive-lock", "created_at": "2026-10-01T09:00:00+02:00", "entries": [], "excluded": {"count": 3, "status": "sealed-not-inspected"}, "verification": {"verified_at": "2026-10-01T09:00:00+02:00", "status": "verified", "issues": []}}']
+    expect: {site: null}
+  - id: direct-cli-no-gateway
+    kind: refusal
+    transport: cli
+    argv: [legacy-archive-lock-publish, --approve, --record, '{"schema_version": 1, "id": "legacy-archive-lock", "type": "legacy-archive-lock", "created_at": "2026-10-01T09:00:00+02:00", "entries": [], "excluded": {"count": 3, "status": "sealed-not-inspected"}, "verification": {"verified_at": "2026-10-01T09:00:00+02:00", "status": "verified", "issues": []}}']
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request:
+          record:
+            schema_version: 1
+            id: legacy-archive-lock
+            type: legacy-archive-lock
+            created_at: "2026-10-01T09:00:00+02:00"
+            entries: []
+            excluded: {count: 3, status: sealed-not-inspected}
+            verification: {verified_at: "2026-10-01T09:00:00+02:00", status: verified, issues: []}
+        artifact_ids: [legacy-archive-lock]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request:
+      record:
+        schema_version: 1
+        id: legacy-archive-lock
+        type: legacy-archive-lock
+        created_at: "2026-10-01T09:00:00+02:00"
+        entries: []
+        excluded: {count: 3, status: sealed-not-inspected}
+        verification: {verified_at: "2026-10-01T09:00:00+02:00", status: verified, issues: []}
+    artifact_ids: [legacy-archive-lock]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/vnext.py:56", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
+  - {where: "tools/learning_os/commands/vnext.py:60", reason: "record/file admission: the argparse required group and the payload oneOf enforce presence first"}
