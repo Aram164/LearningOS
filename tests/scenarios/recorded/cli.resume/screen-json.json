@@ -1,0 +1,55 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"content\":{\"observations\":[],\"open-items\":[],\"requirement\":null,\"sittings\":[{\"end_date\":\"2000-01-01\",\"label\":\"Elapsed sitting with no attempt\",\"registration_state\":\"unrecorded\",\"start_date\":\"2000-01-01\"},{\"end_date\":\"2026-10-09\",\"label\":\"2. Termin\",\"registration_state\":\"registered\",\"start_date\":\"2026-10-09\"}],\"stage\":{\"module_id\":\"module-demo\",\"stage_id\":\"stage-demo\",\"study_map_id\":\"study-map-demo-l01\",\"unit_id\":\"unit-demo-l01\"},\"stage-note\":{\"excerpt\":\"\",\"lines\":0,\"updated\":null,\"working_note\":\"curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md\"},\"stage-progress\":null,\"stage-results\":null,\"titles\":{\"module\":\"Demo Module\",\"stage\":\"Derive expected value\",\"unit\":\"Expected value\"},\"top-cluster\":null,\"via\":\"resume pointer\"},\"key\":\"context://unit-demo-l01/resume-dossier@812153004140ff62\",\"via\":\"resume pointer\"}\n",
+  "stdout_json": {
+    "content": {
+      "observations": [],
+      "open-items": [],
+      "requirement": null,
+      "sittings": [
+        {
+          "end_date": "2000-01-01",
+          "label": "Elapsed sitting with no attempt",
+          "registration_state": "unrecorded",
+          "start_date": "2000-01-01"
+        },
+        {
+          "end_date": "2026-10-09",
+          "label": "2. Termin",
+          "registration_state": "registered",
+          "start_date": "2026-10-09"
+        }
+      ],
+      "stage": {
+        "module_id": "module-demo",
+        "stage_id": "stage-demo",
+        "study_map_id": "study-map-demo-l01",
+        "unit_id": "unit-demo-l01"
+      },
+      "stage-note": {
+        "excerpt": "",
+        "lines": 0,
+        "updated": null,
+        "working_note": "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md"
+      },
+      "stage-progress": null,
+      "stage-results": null,
+      "titles": {
+        "module": "Demo Module",
+        "stage": "Derive expected value",
+        "unit": "Expected value"
+      },
+      "top-cluster": null,
+      "via": "resume pointer"
+    },
+    "key": "context://unit-demo-l01/resume-dossier@812153004140ff62",
+    "via": "resume pointer"
+  }
+}

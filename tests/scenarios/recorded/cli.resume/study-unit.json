@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "Study suggestion for 2026-10-09 (registration recorded as registered; your resume pointer is unchanged)\n\nDemo Module · Expected value · stage-demo\n  (via nearest recorded exam (study suggestion))\n\n  Recorded aims (compare with current dates and state):\n    Coordination priorities (undated): (none)\n      source: work/COORDINATION.md#Priorities\n    Workspace workspace-demo: Do the demo thing.\n      source: work/active/workspace-demo/CONTEXT.md#Next-Action\n\n  Requirement  none authored for this stage\n\n  Evidence     none recorded yet\n  Last result  none\n  Stage note   nothing recorded yet (curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md)\n\n  Open here    —\n\n  Next         .venv/bin/python tools/seal_envelope.py --capability stage.note.write --payload {unit_id, stage_id, text} --guards auto, then\n               los capability stage.note.write --payload-file ENVELOPE.json\n  Exam         2. Termin — 2026-10-09 (8 days)\n",
+  "stdout_json": null
+}

@@ -1,0 +1,43 @@
+# SPEC-GAP S05-O1 (see REPORT.md): no success case and no exact-replay case
+# are expressible. rich_world authorizes no requirement (no stage carries a
+# runtime_target), and none of the step types can author one: unit.plan.revise
+# needs a coverage-audit file no step can create.
+operation: learner.observation.append
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: unknown-requirement
+    kind: refusal
+    transport: gateway
+    request: {workspace: workspace-demo, requirement: req-nope, activity: exercise, result: partial}
+    artifact_ids: []
+    expect: {site: null}
+  - id: untargeted-stage
+    kind: refusal
+    transport: gateway
+    request: {workspace: workspace-demo, requirement: stage-demo, activity: exercise, result: partial}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-workspace
+    kind: refusal
+    transport: gateway
+    request: {workspace: workspace-nope, requirement: req-nope, activity: exercise, result: partial}
+    artifact_ids: []
+    expect: {site: null}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [observation-append, --workspace, workspace-demo, --requirement, req-nope, --activity, exercise, --result, partial]
+    expect: {site: null}
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {workspace: workspace-demo, requirement: req-nope, activity: exercise, result: partial}
+    artifact_ids: [workspace-demo]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/observation.py:141", reason: "workspace scope: unreachable without a requirement to check scope against"}
+  - {where: "tools/learning_os/commands/observation.py:159", reason: "condition both met and not met: unreachable without a requirement"}
+  - {where: "tools/learning_os/commands/observation.py:171", reason: "supersedes validation: unreachable without a requirement and its history"}
+  - {where: "tools/learning_os/commands/observation.py:93", reason: "targeted-stage message: unreachable without a runtime_target"}

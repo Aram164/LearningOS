@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: stage stage-demo (unit unit-demo-l01) has no requirement target; record the result without credit via `stage-result --workspace WORKSPACE --unit unit-demo-l01 --stage stage-demo --activity ACTIVITY --result RESULT`, or author a target with `unit-plan-revise unit-demo-l01 --file REVISION.yaml --check` adding a runtime_target stage patch (WORKFLOWS §8)\n",
+  "stdout": "",
+  "stdout_json": null
+}

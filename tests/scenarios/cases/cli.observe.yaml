@@ -1,0 +1,24 @@
+# SPEC-GAP S05-O2 (see REPORT.md): no success case is expressible, for the
+# same reason as learner.observation.append (S05-O1): rich_world authorizes
+# no requirement.
+operation: cli.observe
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: unknown-requirement
+    kind: refusal
+    transport: cli
+    argv: [observe, req-nope, --activity, exercise, --result, partial]
+    expect: {site: null}
+  - id: untargeted-stage
+    kind: refusal
+    transport: cli
+    argv: [observe, stage-demo, --activity, exercise, --result, partial]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/observation.py:313", reason: "gesture not admitted: static allowlist admits the gesture in this tree"}
+  - {where: "tools/learning_os/commands/observation.py:321", reason: "collect_requirements failure: needs a malformed runtime_target; rich_world has none"}
+  - {where: "tools/learning_os/commands/observation.py:330", reason: "workspace resolution: unreachable without a requirement to resolve for"}
+  - {where: "tools/learning_os/commands/observation.py:141", reason: "shared core, workspace scope: unreachable without a requirement"}
+  - {where: "tools/learning_os/commands/observation.py:159", reason: "shared core, condition both met and not met: unreachable without a requirement"}
+  - {where: "tools/learning_os/commands/observation.py:171", reason: "shared core, supersedes validation: unreachable without a requirement and its history"}
