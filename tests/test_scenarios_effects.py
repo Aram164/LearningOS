@@ -116,6 +116,84 @@ def test_normalize_keeps_authored_text_values_distinct(tmp_path):
     assert "scenario-original" in diff and "scenario-corrupted" in diff
 
 
+def test_normalize_keeps_transaction_shaped_authored_text_distinct(tmp_path):
+    """C8: transaction-shaped authored text is never an identity."""
+    first = scenario_harness.normalize(
+        _bare_recording(
+            {"ok": True, "note": "transaction-20261001-090000-001"}),
+        tmp_path)
+    second = scenario_harness.normalize(
+        _bare_recording(
+            {"ok": True, "note": "transaction-20261001-090000-002"}),
+        tmp_path)
+    assert first != second
+    assert "transaction-20261001-090000-001" in json.dumps(first)
+    assert "transaction-20261001-090000-002" in json.dumps(second)
+    assert "TX1" not in json.dumps(first)
+    assert "TX1" not in json.dumps(second)
+    diff = scenario_harness.compare(first, second)
+    assert diff is not None
+    assert "transaction-20261001-090000-001" in diff
+    assert "transaction-20261001-090000-002" in diff
+
+
+def test_normalize_keeps_latency_shaped_authored_text_distinct(tmp_path):
+    """C8: latency-shaped authored text is never an elapsed time."""
+    first = scenario_harness.normalize(
+        _bare_recording({"ok": True, "note": "latency (1.1s)"}), tmp_path)
+    second = scenario_harness.normalize(
+        _bare_recording({"ok": True, "note": "latency (2.2s)"}), tmp_path)
+    assert first != second
+    assert "latency (1.1s)" in json.dumps(first)
+    assert "latency (2.2s)" in json.dumps(second)
+    diff = scenario_harness.compare(first, second)
+    assert diff is not None
+    assert "latency (1.1s)" in diff and "latency (2.2s)" in diff
+
+
+def test_normalize_discovers_transaction_ids_from_declared_keys(tmp_path):
+    """C8 positive: declared keys and each receipt's own id normalize."""
+    tx1 = "transaction-20261001-090000-001"
+    tx2 = "transaction-20261001-090000-002"
+    tx3 = "transaction-20261001-090000-003"
+    tx4 = "transaction-20261001-090000-004"
+    authored = "transaction-20261001-090000-005"
+    recording = _bare_recording(
+        {"ok": True,
+         "transaction_id": tx1,
+         "receipt_path": f"operations/transactions/{tx1}.yaml",
+         "parent_transaction_id": tx2,
+         "receipt_id": tx3,
+         "note": f"authored {authored} stays"},
+        stderr=f"see {tx4}\n",
+        receipts=[{"id": tx1, "type": "transaction-receipt"},
+                  {"id": tx4, "type": "transaction-receipt"}])
+    normalized = scenario_harness.normalize(recording, tmp_path)
+    assert normalized["stdout_json"]["transaction_id"] == "TX1"
+    assert (normalized["stdout_json"]["receipt_path"]
+            == "operations/transactions/TX1.yaml")
+    assert normalized["stdout_json"]["parent_transaction_id"] == "TX2"
+    assert normalized["stdout_json"]["receipt_id"] == "TX3"
+    assert normalized["receipts"][0]["id"] == "TX1"
+    assert normalized["receipts"][1]["id"] == "TX4"
+    assert normalized["stderr"] == "see TX4\n"
+    assert tx4 not in json.dumps(normalized)
+    assert normalized["stdout_json"]["note"] == f"authored {authored} stays"
+    assert "TX5" not in json.dumps(normalized)
+
+
+def test_normalize_redacts_only_validator_summary_elapsed(tmp_path):
+    """C8 positive: only the validator's summary form redacts elapsed time."""
+    summary = ("0 error(s), 10 warning(s) — OK (0.2s); warning list: "
+               "generated/reports/validation-report.md")
+    recording = _bare_recording(
+        {"ok": True, "validation": summary, "note": "latency (1.1s)"})
+    normalized = scenario_harness.normalize(recording, tmp_path)
+    assert normalized["stdout_json"]["validation"] == summary.replace(
+        "(0.2s)", "(Xs)")
+    assert normalized["stdout_json"]["note"] == "latency (1.1s)"
+
+
 def test_normalize_orders_a_ledger_only_snapshot(tmp_path):
     """C5: a snapshot seen only in a ledger normalizes, after text ones."""
     text_snap = "sha256:" + "ab" * 32

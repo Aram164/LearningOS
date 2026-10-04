@@ -54,20 +54,23 @@ FIXTURE_IDENTITY = ("Fixture", "fixture@local")
 FIXTURE_COMMIT_MESSAGE = "fixture"
 FIXTURE_MTIME_DEFAULT = "2026-09-28T09:00:00+02:00"
 
-# The §8.1 transaction pattern, matched with fullmatch over parsed strings
-# (SPEC §5.3 rule 2, amendment (x) C2): never a regex over free text.
-_TX_RE = re.compile(r"transaction-\d{8}-\d{6}-\d{3}")
+# Transaction ids are discovered only from declared keys (SPEC §5.3 rule 2,
+# amendment (z) C8): never by pattern, never over free text.
+_TX_KEY_NAMES = frozenset({"transaction_id", "receipt_id"})
+_TX_KEY_SUFFIX = "_transaction_id"
 _KEY_NAMES = frozenset({"request_id", "idempotency_key", "request_key"})
 _STALE_SNAPSHOT = "STALE_SNAPSHOT"
 _SHA256_RE = re.compile(r"sha256:[a-f0-9]{64}")
 # D16 stderr rule (SPEC §5.3.4): present from S05, a no-op until S14 adds
 # the `los: CODE: message` prefix.
 _D16_RE = re.compile(r"^los: ([A-Z][A-Z0-9_]{2,}): ", re.MULTILINE)
-# Wall-clock redaction (beyond §5.3's letter; see REPORT.md S05-J7):
+# Elapsed-time redaction (SPEC §5.3 rule 3a, amendments (w) and (z) C8):
 # validate.py --compact prints its own elapsed time, which session-end
 # embeds in its payload. No observation seam covers monotonic(), so the
-# harness redacts the operational timing instead of pinning the machine.
-_ELAPSED_RE = re.compile(r"\(\d+\.\ds\)")
+# harness redacts the operational timing instead of pinning the machine —
+# but only in the validator's summary form, the one place it occurs.
+_ELAPSED_RE = re.compile(
+    r"(\d+ error\(s\), \d+ warning\(s\) — \S+ )\(\d+\.\ds\)")
 
 
 def load_case_file(path: str | Path) -> dict:
@@ -545,15 +548,23 @@ def _walk_strings(node, func):
     return node
 
 
-def _discover_identities(steps: list) -> tuple[set, set, set]:
-    """Identity values per SPEC §5.3 rule 2 (amendment (x) C2).
+def _is_tx_key(name) -> bool:
+    return (isinstance(name, str)
+            and (name in _TX_KEY_NAMES or name.endswith(_TX_KEY_SUFFIX)))
 
-    A transaction id (the §8.1 pattern, fullmatched over parsed strings), a
-    value under a JSON key named ``request_id``, ``idempotency_key`` or
-    ``request_key``, or a ``sha256:`` value under a JSON key whose name
-    contains ``snapshot`` (or under ``expected``/``actual`` in a
-    ``STALE_SNAPSHOT`` error's details). Parsed stdout JSON, receipts and
-    ledgers are walked; nothing is discovered by regex over free text.
+
+def _discover_identities(steps: list) -> tuple[set, set, set]:
+    """Identity values per SPEC §5.3 rule 2 (amendments (x) C2 and (z) C8).
+
+    A value under a JSON key named ``transaction_id``, ending in
+    ``_transaction_id`` or named ``receipt_id``, plus each recorded
+    receipt's own transaction id (its ``id`` field); a value under a JSON
+    key named ``request_id``, ``idempotency_key`` or ``request_key``; or a
+    ``sha256:`` value under a JSON key whose name contains ``snapshot``
+    (or under ``expected``/``actual`` in a ``STALE_SNAPSHOT`` error's
+    details). Parsed stdout JSON, receipts and ledgers are walked; nothing
+    is discovered by regex over free text, and no string is classified by
+    pattern alone.
     """
     tx: set[str] = set()
     keys: set[str] = set()
@@ -561,8 +572,6 @@ def _discover_identities(steps: list) -> tuple[set, set, set]:
 
     def visit(node) -> None:
         if isinstance(node, str):
-            if _TX_RE.fullmatch(node) is not None:
-                tx.add(node)
             return
         if isinstance(node, list):
             for item in node:
@@ -579,9 +588,10 @@ def _discover_identities(steps: list) -> tuple[set, set, set]:
                         and _SHA256_RE.fullmatch(value) is not None):
                     snaps.add(value)
         for name, value in node.items():
-            if isinstance(name, str) and _TX_RE.fullmatch(name) is not None:
-                tx.add(name)
-            if isinstance(name, str) and name in _KEY_NAMES:
+            if _is_tx_key(name):
+                if isinstance(value, str) and value:
+                    tx.add(value)
+            elif isinstance(name, str) and name in _KEY_NAMES:
                 if isinstance(value, str) and value:
                     keys.add(value)
             elif (isinstance(name, str) and "snapshot" in name
@@ -594,6 +604,11 @@ def _discover_identities(steps: list) -> tuple[set, set, set]:
         for section in ("stdout_json", "receipts", "revisions_changed",
                         "idempotency_changed", "session_ledger_changed"):
             visit(step.get(section))
+        for receipt in step.get("receipts") or []:
+            if isinstance(receipt, dict):
+                own = receipt.get("id")
+                if isinstance(own, str) and own:
+                    tx.add(own)
     return tx, keys, snaps
 
 
@@ -684,7 +699,7 @@ def normalize(recording: dict, root: str | Path) -> dict:
 
     recording = _walk_strings(recording, _map)
     recording = _walk_strings(
-        recording, lambda text: _ELAPSED_RE.sub("(Xs)", text))
+        recording, lambda text: _ELAPSED_RE.sub(r"\1(Xs)", text))
     # D16 stderr rule, last. A no-op until S14 introduces the prefix.
     for step in _single_steps(recording):
         step["stderr"] = _D16_RE.sub("los: ", step.get("stderr", ""))
