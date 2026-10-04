@@ -16,6 +16,7 @@ from scenario_fixtures import rich_world
 from learning_os.learning_runtime import collect_requirements
 from learning_os.loader import load_repo
 from learning_os.materials_resolution import material_location
+from learning_os.semantics.lineage import load_ledger
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -95,6 +96,28 @@ def test_every_family_is_present(tmp_path):
             / "request.yaml").is_file()
     assert material_location(
         repo, "material://source-demo-book/book.pdf")["material_exists"] is True
+    # Amendment (y) item 1(a): the main unit's route carries its migrated
+    # id, and the unit selection binds the same id.
+    routes = repo.module_source_maps["module-demo"]["sources"][0]["unit_routes"]
+    main_route = next(route for route in routes
+                      if route["unit_id"] == "unit-demo-l01")
+    assert main_route["id"].startswith("route-")
+    assert (repo.units["unit-demo-l01"].data["source_selections"][0]
+            ["route_id"] == main_route["id"])
+    # Amendment (y) item 1(b): the legacy unit's route has no id.
+    assert "unit-demo-l02" in repo.units
+    legacy_route = next(route for route in routes
+                        if route["unit_id"] == "unit-demo-l02")
+    assert "id" not in legacy_route
+    assert repo.modules["module-demo"]["unit_order"] == [
+        "unit-demo-l01", "unit-demo-l02"]
+    # Amendment (y) item 1(c): a second active ability.
+    assert "ability-demo-variance" in repo.abilities
+    # Amendment (y) item 1(d): a route-covers claim with its receipt.
+    assert any(record.claim_kind == "route-covers"
+               for record in load_ledger(root).values())
+    assert (root / "operations/transactions"
+            / "transaction-20200102-000000-001.yaml").is_file()
 
 
 def _tree_files(top: Path) -> dict[str, bytes]:

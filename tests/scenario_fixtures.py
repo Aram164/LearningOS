@@ -13,6 +13,7 @@ import json
 from pathlib import Path
 
 import yaml
+from migrations.route_identity_v13 import plan_migration
 from repo_builders import (
     add_manifest_fixtures,
     rich_fixture,
@@ -22,11 +23,18 @@ from repo_builders import (
 )
 
 from learning_os.abilities import ability_fingerprint
+from learning_os.semantics.lineage import (
+    LEDGER_RELATIVE,
+    dump_ledger,
+    emit_route_covers,
+)
 
 PENDING_STAGE_ID = "stage-demo-pending"
 SECOND_WORKSPACE_ID = "workspace-second"
 ANALYSIS_NOTE_ID = "note-demo-analysis"
 ABILITY_ID = "ability-demo-derive"
+SECOND_ABILITY_ID = "ability-demo-variance"
+LEGACY_UNIT_ID = "unit-demo-l02"
 FIXED_DAY = "2026-09-20"
 
 
@@ -243,6 +251,147 @@ def _add_goal_ledger(root: Path) -> dict[str, str]:
     return decisions
 
 
+def _apply_route_migration(root: Path) -> None:
+    # Amendment (y) item 1(a): the fixture is pre-Data-Contract-v13, so
+    # every planned route-id insertion is written, exactly as the
+    # migration test drives plan_migration. Ids are never hand-written.
+    plan = plan_migration(root)
+    if not plan.ready:
+        raise RuntimeError(
+            "route migration is not ready on the scenario fixture: "
+            + "; ".join(f"{p.code} {p.path}: {p.detail}"
+                        for p in plan.problems))
+    for change in plan.changes:
+        change.path.write_text(change.after, encoding="utf-8")
+
+
+def _add_legacy_unit(root: Path) -> None:
+    # Amendment (y) item 1(b): a second unit in module-demo with one
+    # route and no id, added after step (a) so the migration never sees
+    # it. It keeps material_synthesis.py:159 reachable. No study map:
+    # a unit without one and without current_study_map validates.
+    unit_dir = root / "curriculum/modules/module-demo/units" / LEGACY_UNIT_ID
+    write_yaml(unit_dir / "unit.yaml", {
+        "id": LEGACY_UNIT_ID, "type": "unit", "module_id": "module-demo",
+        "kind": "lecture", "title": "Variance", "order": 2,
+        "scope": "The follow-up lecture as taught.", "status": "active",
+        "scope_sources": [{"source_id": "source-demo-book",
+                           "authority": "slides", "locator": "Lecture 2"}],
+        "source_selections": [{"source_id": "source-demo-book",
+                               "locator": "lecture-02.pdf",
+                               "purpose": "Follow-up derivation"}],
+        "artifacts": {"ultimate_reference": "note-demo"},
+        "workspace_ids": ["workspace-demo"],
+        "knowledge_map": {
+            "summary": "Variance measures the spread around the expected value.",
+            "nodes": [{
+                "id": "knowledge-demo-variance",
+                "title": "Spread around the mean",
+                "summary": "Variance weights squared deviations by probability.",
+                "concept_ids": ["concept-variance"],
+            }],
+        },
+    })
+    module_path = root / "curriculum/modules/module-demo/module.yaml"
+    module = yaml.safe_load(module_path.read_text(encoding="utf-8"))
+    module["unit_order"].append(LEGACY_UNIT_ID)
+    write_yaml(module_path, module)
+    smap_path = root / "curriculum/modules/module-demo/source-map.yaml"
+    smap = yaml.safe_load(smap_path.read_text(encoding="utf-8"))
+    smap["sources"][0]["unit_routes"].append({
+        "unit_id": LEGACY_UNIT_ID,
+        "title": "Demo book — variance derivation",
+        "format": "book",
+        "angle": "Derives variance and works a discrete example.",
+        "covers": ["knowledge-demo-variance"],
+        "depth": "derivation",
+        "scope": "current",
+        "locator": "lecture-02.pdf",
+    })
+    write_yaml(smap_path, smap)
+
+
+def _add_second_ability(root: Path) -> None:
+    # Amendment (y) item 1(c): ability.candidate.append needs two
+    # distinct active abilities (abilities.py:208-213). No lifecycle key
+    # means active, as for the first ability.
+    path = root / "knowledge/abilities.yaml"
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    data["abilities"].append({
+        "id": SECOND_ABILITY_ID,
+        "title": "Derive variance",
+        "claim": "Derive variance from stated outcomes.",
+        "conditions": ["finite discrete outcomes",
+                       "probabilities sum to one"],
+        "evidence_spec": ["correct derivation"],
+        "concept_ids": ["concept-variance"],
+        "module_ids": ["module-demo"],
+        "preparation_routes": [],
+        "review": {"state": "reviewed", "reviewed_by": "fixture",
+                   "reviewed_on": "2026-09-23"},
+    })
+    write_yaml(path, data)
+
+
+def _add_lineage_claim(root: Path) -> str:
+    # Amendment (y) item 1(d): one route-covers claim lineage.restamp can
+    # apply to. seed_live_goal_ids only emits scope-authority claims,
+    # which analyze() excludes, so the claim is a judged old-shape
+    # covers claim with its judging receipt, mirroring
+    # tests/test_lineage_restamp.py:_judged_repo. Runs last: the receipt
+    # pins the final source-map and unit bytes.
+    smap_path = root / "curriculum/modules/module-demo/source-map.yaml"
+    smap = yaml.safe_load(smap_path.read_text(encoding="utf-8"))
+    route_id = smap["sources"][0]["unit_routes"][0]["id"]
+    claim = emit_route_covers(
+        route_id=route_id,
+        covers=["knowledge-demo-expectation", "knowledge-demo-outcomes"],
+        read_revisions={"module-demo": 1, "unit-demo-l01": 1},
+        judged_by="operator/operator-approval",
+        admitted_by={"request_id": "request-demo",
+                     "idempotency_key": "demo-key"},
+        evidence=[],
+    )
+    ledger_path = root / LEDGER_RELATIVE
+    ledger_path.parent.mkdir(parents=True, exist_ok=True)
+    ledger_path.write_text(dump_ledger({claim.claim_id: claim}),
+                           encoding="utf-8")
+    smap_rel = "curriculum/modules/module-demo/source-map.yaml"
+    unit_rel = "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml"
+    intent = "sha256:" + "1" * 64
+    receipt_id = "transaction-20200102-000000-001"
+    write_yaml(root / "operations" / "transactions" / f"{receipt_id}.yaml", {
+        "schema_version": 2, "id": receipt_id,
+        "type": "transaction-receipt",
+        "status": "committed", "capability": "module.plan.import",
+        "committed_at": "2020-01-02T03:04:05+00:00",
+        "snapshot_before": intent, "snapshot_after": intent,
+        "expected_revisions": {"module-demo": 0, "unit-demo-l01": 0},
+        "artifact_revisions": {
+            "module-demo": {"before": 0, "after": 1},
+            "unit-demo-l01": {"before": 0, "after": 1}},
+        "request": {"channel": "operator", "request_id": "request-demo",
+                    "idempotency_key": "demo-key",
+                    "intent_sha256": intent,
+                    "approval": {"kind": "operator-approval",
+                                 "subject_sha256": intent}},
+        "authority": {"capability_contract_version": 2, "enforced": True,
+                      "grants": [{"capability": "module.plan.import",
+                                  "declared_writes":
+                                      ["curriculum/modules/**"]}]},
+        "metadata": {},
+        "writes": [
+            {"path": smap_rel, "sha256_before": None, "created": False,
+             "sha256_after": hashlib.sha256(
+                 (root / smap_rel).read_bytes()).hexdigest()},
+            {"path": unit_rel, "sha256_before": None, "created": False,
+             "sha256_after": hashlib.sha256(
+                 (root / unit_rel).read_bytes()).hexdigest()},
+        ],
+    })
+    return claim.claim_id
+
+
 def rich_world(root: Path) -> dict:
     """Layer the rich characterization world onto a mini repository.
 
@@ -262,9 +411,14 @@ def rich_world(root: Path) -> dict:
     _add_analysis_note(root, book)
     _add_ability(root)
     _add_goal_ledger(root)
+    _apply_route_migration(root)
+    _add_legacy_unit(root)
+    _add_second_ability(root)
+    claim_id = _add_lineage_claim(root)
     return {
         "module": "module-demo",
         "unit": "unit-demo-l01",
+        "unit_legacy": LEGACY_UNIT_ID,
         "study_map": "study-map-demo-l01",
         "stage_active": "stage-demo",
         "stage_pending": PENDING_STAGE_ID,
@@ -275,6 +429,8 @@ def rich_world(root: Path) -> dict:
         "path": "path-demo",
         "project": "project-demo",
         "ability": ABILITY_ID,
+        "ability_second": SECOND_ABILITY_ID,
+        "lineage_claim": claim_id,
         "note_synthesis": "note-demo",
         "note_analysis": ANALYSIS_NOTE_ID,
         "concept": "concept-expected-value",
