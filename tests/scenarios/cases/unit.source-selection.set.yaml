@@ -1,0 +1,64 @@
+operation: unit.source-selection.set
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: select-material
+    kind: success
+    transport: gateway
+    request: {unit_id: unit-demo-l01, source_id: source-demo-book, locator: "lecture-01.pdf", action: select, purpose: "Primary derivation"}
+    artifact_ids: [unit-demo-l01]
+    a5_base: true
+    expect: {site: null}
+  - id: remove-material
+    kind: success
+    transport: gateway
+    request: {unit_id: unit-demo-l01, source_id: source-demo-book, locator: "lecture-01.pdf", action: remove}
+    artifact_ids: [unit-demo-l01]
+    expect: {site: null}
+  - id: unknown-unit
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-nope, source_id: source-demo-book, locator: "lecture-01.pdf", action: select}
+    artifact_ids: []
+    expect: {site: null}
+  - id: unknown-source
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, source_id: source-nope, locator: "lecture-01.pdf", action: select}
+    artifact_ids: []
+    expect: {site: null}
+  - id: no-matching-route
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, source_id: source-demo-book, locator: "nope.pdf", action: select}
+    artifact_ids: []
+    expect: {site: null}
+  - id: empty-purpose
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, source_id: source-demo-book, locator: "lecture-01.pdf", action: select, purpose: " "}
+    artifact_ids: []
+    expect: {site: null}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [unit-source-selection, unit-demo-l01, source-demo-book, lecture-01.pdf, select, --purpose, "x"]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {unit_id: unit-demo-l01, source_id: source-demo-book, locator: "lecture-01.pdf", action: select, purpose: "Primary derivation"}
+        artifact_ids: [unit-demo-l01]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {unit_id: unit-demo-l01, source_id: source-demo-book, locator: "lecture-01.pdf", action: select, purpose: "Primary derivation"}
+    artifact_ids: [unit-demo-l01]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/unit.py:578", reason: "used by the current study path: the fixture selection carries no stage_ids, and no operation adds them"}
+  - {where: "tools/learning_os/commands/unit.py:587", reason: "unknown action: argparse choices and payload_to_namespace enforce the value set first"}
