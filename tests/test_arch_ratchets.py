@@ -647,3 +647,62 @@ def test_wildcard_present_at_base_does_not_cover_new_key():
     uncovered = _unapproved_surface_diffs(
         {}, {"cli.new": [1]}, [entry], [entry])
     assert uncovered == {"cli.new": "added"}
+
+
+# ---- SPEC §3.7 item 5: the converter change adds only `type` ------------------
+
+#: The two item-5 approvals, identified by their exact entries. While new
+#: relative to the base, every changed key they cover must differ from the
+#: base only by the added `type` field. Once at the base, they check nothing.
+_CONVERTER_APPROVALS = (
+    {"key": "cli.*", "change": "changed",
+     "plan_ref": "PLAN A11 (shape completion: converter)",
+     "pre_approved_by": "Aram 2026-10-03: accepted PLAN revision 4"},
+    {"key": "tools.*", "change": "changed",
+     "plan_ref": "PLAN A11 (shape completion: converter)",
+     "pre_approved_by": "Aram 2026-10-03: accepted PLAN revision 4"},
+)
+
+
+def test_converter_change_adds_only_type(base_ref):
+    base_text = _git_show(
+        base_ref,
+        (ARCH / arch_surface.SURFACE_FILENAME).relative_to(ROOT).as_posix())
+    if base_text is None:
+        return
+    base_approvals_text = _git_show(
+        base_ref, APPROVALS_PATH.relative_to(ROOT).as_posix())
+    base_approvals = (
+        yaml.safe_load(base_approvals_text)["approvals"]
+        if base_approvals_text is not None else [])
+    current_approvals = yaml.safe_load(
+        APPROVALS_PATH.read_text(encoding="utf-8"))["approvals"]
+    new_converter = [entry for entry in _CONVERTER_APPROVALS
+                     if entry in current_approvals
+                     and entry not in base_approvals]
+    if not new_converter:
+        return
+    base_flat = arch_surface.flatten_surface(json.loads(base_text))
+    live = arch_surface.build_surface(ROOT)
+    live_flat = arch_surface.flatten_surface(live)
+    live_text = arch_surface.dump_surface(live)
+    rel = (ARCH / arch_surface.SURFACE_FILENAME).relative_to(ROOT).as_posix()
+    failures = []
+    diff = arch_surface.diff_keys(base_flat, live_flat)
+    for key in sorted(diff):
+        change = diff[key]
+        if change != "changed":
+            continue
+        if not any(arch_surface.approval_covers(entry, key, change)
+                   for entry in new_converter):
+            continue
+        stripped = [{name: value for name, value in option.items()
+                     if name != "type"}
+                    for option in live_flat[key]]
+        if (stripped != base_flat[key]
+                or any("type" not in option for option in live_flat[key])):
+            lineno = arch_surface.locate_line(live_text, key)
+            failures.append(
+                f"A11 {key}: converter approval covers more than the added "
+                f"type field — {rel}:{lineno} — {FIX['A11']}")
+    assert not failures, "\n".join(failures)

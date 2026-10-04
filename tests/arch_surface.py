@@ -70,6 +70,7 @@ def _action_shape(action: argparse.Action) -> dict:
         "choices": _choices(action),
         "action": _action_name(action),
         "metavar": metavar,
+        "type": action.type.__name__ if action.type is not None else None,
     }
 
 

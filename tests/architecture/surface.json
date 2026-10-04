@@ -500,7 +500,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -512,7 +513,8 @@
     "option_strings": [
      "--lock-timeout"
     ],
-    "required": false
+    "required": false,
+    "type": "float"
    },
    {
     "action": "store",
@@ -524,7 +526,8 @@
     "option_strings": [
      "--root"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "ability-candidate-append": [
@@ -538,7 +541,8 @@
     "option_strings": [
      "--carries"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -550,7 +554,8 @@
     "option_strings": [
      "--changes"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -562,7 +567,8 @@
     "option_strings": [
      "--condition"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -574,7 +580,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -586,7 +593,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -598,7 +606,8 @@
     "option_strings": [
      "--from-ability"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "help",
@@ -611,7 +620,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -627,7 +637,8 @@
     "option_strings": [
      "--kind"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -639,7 +650,8 @@
     "option_strings": [
      "--source-ref"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -651,7 +663,8 @@
     "option_strings": [
      "--to-ability"
     ],
-    "required": true
+    "required": true,
+    "type": null
    }
   ],
   "ability-context": [
@@ -663,7 +676,8 @@
     "metavar": null,
     "nargs": "?",
     "option_strings": [],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -675,7 +689,8 @@
     "option_strings": [
      "--brief"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -687,7 +702,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -700,7 +716,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -712,7 +729,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -724,7 +742,8 @@
     "option_strings": [
      "--limit"
     ],
-    "required": false
+    "required": false,
+    "type": "int"
    },
    {
     "action": "store",
@@ -736,7 +755,8 @@
     "option_strings": [
      "--offset"
     ],
-    "required": false
+    "required": false,
+    "type": "int"
    },
    {
     "action": "store",
@@ -750,7 +770,8 @@
     "option_strings": [
      "--section"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "ability-observation-append": [
@@ -764,7 +785,8 @@
     "option_strings": [
      "--ability"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -776,7 +798,8 @@
     "option_strings": [
      "--activity"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -788,7 +811,8 @@
     "option_strings": [
      "--assistance"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -800,7 +824,8 @@
     "option_strings": [
      "--claim"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -812,7 +837,8 @@
     "option_strings": [
      "--condition"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -824,7 +850,8 @@
     "option_strings": [
      "--condition-not-met"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -836,7 +863,8 @@
     "option_strings": [
      "--confirmation-ref"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -848,7 +876,8 @@
     "option_strings": [
      "--evidence-tag"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -860,7 +889,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -872,7 +902,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -885,7 +916,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -902,7 +934,8 @@
     "option_strings": [
      "--result"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -914,7 +947,8 @@
     "option_strings": [
      "--supersedes"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -926,7 +960,8 @@
     "option_strings": [
      "--work-ref"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -938,7 +973,8 @@
     "option_strings": [
      "--workspace"
     ],
-    "required": true
+    "required": true,
+    "type": null
    }
   ],
   "ai-action-append-slices": [
@@ -952,7 +988,8 @@
     "option_strings": [
      "--concept-id"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -964,7 +1001,8 @@
     "option_strings": [
      "--end"
     ],
-    "required": true
+    "required": true,
+    "type": "int"
    },
    {
     "action": "store",
@@ -976,7 +1014,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -989,7 +1028,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1001,7 +1041,8 @@
     "option_strings": [
      "--kind"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -1013,7 +1054,8 @@
     "option_strings": [
      "--material-uri"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1025,7 +1067,8 @@
     "option_strings": [
      "--reason"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -1037,7 +1080,8 @@
     "option_strings": [
      "--request-id"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -1049,7 +1093,8 @@
     "option_strings": [
      "--route-id"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -1061,7 +1106,8 @@
     "option_strings": [
      "--start"
     ],
-    "required": true
+    "required": true,
+    "type": "int"
    }
   ],
   "ai-action-apply-delivery": [
@@ -1073,7 +1119,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -1085,7 +1132,8 @@
     "option_strings": [
      "--artifact-sha256"
     ],
-    "required": true
+    "required": true,
+    "type": "json_object"
    },
    {
     "action": "store",
@@ -1097,7 +1145,8 @@
     "option_strings": [
      "--delivery-sha256"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -1109,7 +1158,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1121,7 +1171,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -1134,7 +1185,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "ai-action-import-delivery": [
@@ -1146,7 +1198,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "help",
@@ -1159,7 +1212,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "ai-action-list": [
@@ -1174,7 +1228,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -1186,7 +1241,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "ai-action-prepare": [
@@ -1200,7 +1256,8 @@
     "option_strings": [
      "--action-id"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -1212,7 +1269,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -1225,7 +1283,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1237,7 +1296,8 @@
     "option_strings": [
      "--provider"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1249,7 +1309,8 @@
     "option_strings": [
      "--request-id"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1261,7 +1322,8 @@
     "option_strings": [
      "--target-id"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -1273,7 +1335,8 @@
     "option_strings": [
      "--target-kind"
     ],
-    "required": true
+    "required": true,
+    "type": null
    }
   ],
   "ai-action-status": [
@@ -1285,7 +1348,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "help",
@@ -1298,7 +1362,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -1310,7 +1375,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "ai-action-validate-delivery": [
@@ -1322,7 +1388,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "help",
@@ -1335,7 +1402,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -1347,7 +1415,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "atlas-context": [
@@ -1359,7 +1428,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -1371,7 +1441,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -1384,7 +1455,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -1396,7 +1468,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "atlas-question-save": [
@@ -1410,7 +1483,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1422,7 +1496,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -1435,7 +1510,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1447,7 +1523,8 @@
     "option_strings": [
      "--question"
     ],
-    "required": true
+    "required": true,
+    "type": "json_object"
    }
   ],
   "backup-manifest": [
@@ -1462,7 +1539,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -1474,7 +1552,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1486,7 +1565,8 @@
     "option_strings": [
      "--materials-root"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1498,7 +1578,8 @@
     "option_strings": [
      "--out"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -1510,7 +1591,8 @@
     "option_strings": [
      "--stdout"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1522,7 +1604,8 @@
     "option_strings": [
      "--ui-root"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "backup-verify": [
@@ -1536,7 +1619,8 @@
     "option_strings": [
      "--checksums-only"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -1549,7 +1633,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -1561,7 +1646,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1573,7 +1659,8 @@
     "option_strings": [
      "--manifest"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -1585,7 +1672,8 @@
     "option_strings": [
      "--restored-core"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -1597,7 +1685,8 @@
     "option_strings": [
      "--restored-materials"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -1609,7 +1698,8 @@
     "option_strings": [
      "--restored-ui"
     ],
-    "required": true
+    "required": true,
+    "type": null
    }
   ],
   "bootstrap": [
@@ -1623,7 +1713,8 @@
     "option_strings": [
      "--brief"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -1635,7 +1726,8 @@
     "option_strings": [
      "--compact"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1647,7 +1739,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -1660,7 +1753,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -1672,7 +1766,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1684,7 +1779,8 @@
     "option_strings": [
      "--limit"
     ],
-    "required": false
+    "required": false,
+    "type": "int"
    },
    {
     "action": "store",
@@ -1696,7 +1792,8 @@
     "option_strings": [
      "--offset"
     ],
-    "required": false
+    "required": false,
+    "type": "int"
    }
   ],
   "capabilities": [
@@ -1708,7 +1805,8 @@
     "metavar": null,
     "nargs": "?",
     "option_strings": [],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -1720,7 +1818,8 @@
     "option_strings": [
      "--compact"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -1733,7 +1832,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -1745,7 +1845,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "capability": [
@@ -1757,7 +1858,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "help",
@@ -1770,7 +1872,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1782,7 +1885,8 @@
     "option_strings": [
      "--payload-file"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store_true",
@@ -1794,7 +1898,8 @@
     "option_strings": [
      "--replay-only"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "capture": [
@@ -1808,7 +1913,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1820,7 +1926,8 @@
     "option_strings": [
      "--file"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1832,7 +1939,8 @@
     "option_strings": [
      "--file-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "help",
@@ -1845,7 +1953,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -1857,7 +1966,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1869,7 +1979,8 @@
     "option_strings": [
      "--text"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1881,7 +1992,8 @@
     "option_strings": [
      "--title"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "collection-entry-revise": [
@@ -1895,7 +2007,8 @@
     "option_strings": [
      "--approve"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -1907,7 +2020,8 @@
     "option_strings": [
      "--check"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1919,7 +2033,8 @@
     "option_strings": [
      "--expected-diff-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "append",
@@ -1931,7 +2046,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1943,7 +2059,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1955,7 +2072,8 @@
     "option_strings": [
      "--file"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -1968,7 +2086,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -1980,7 +2099,8 @@
     "option_strings": [
      "--record"
     ],
-    "required": false
+    "required": false,
+    "type": "json_object"
    }
   ],
   "concept-relations-change": [
@@ -1994,7 +2114,8 @@
     "option_strings": [
      "--change"
     ],
-    "required": true
+    "required": true,
+    "type": "json_object"
    },
    {
     "action": "append",
@@ -2006,7 +2127,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2018,7 +2140,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -2031,7 +2154,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "coordination-section-revise": [
@@ -2048,7 +2172,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store_true",
@@ -2060,7 +2185,8 @@
     "option_strings": [
      "--check"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2072,7 +2198,8 @@
     "option_strings": [
      "--expected-content-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -2084,7 +2211,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2096,7 +2224,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -2109,7 +2238,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2121,7 +2251,8 @@
     "option_strings": [
      "--text"
     ],
-    "required": true
+    "required": true,
+    "type": null
    }
   ],
   "detour-create": [
@@ -2133,7 +2264,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -2143,7 +2275,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -2160,7 +2293,8 @@
     "option_strings": [
      "--classification"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -2172,7 +2306,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2184,7 +2319,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -2197,7 +2333,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2209,7 +2346,8 @@
     "option_strings": [
      "--title"
     ],
-    "required": true
+    "required": true,
+    "type": null
    }
   ],
   "detour-resolve": [
@@ -2221,7 +2359,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -2231,7 +2370,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -2243,7 +2383,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2255,7 +2396,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -2268,7 +2410,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2280,7 +2423,8 @@
     "option_strings": [
      "--resolution"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "dossier": [
@@ -2292,7 +2436,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "help",
@@ -2305,7 +2450,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -2317,7 +2463,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "garden-seed-create": [
@@ -2331,7 +2478,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2343,7 +2491,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -2356,7 +2505,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -2368,7 +2518,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2380,7 +2531,8 @@
     "option_strings": [
      "--text"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -2392,7 +2544,8 @@
     "option_strings": [
      "--title"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "generate": [
@@ -2407,7 +2560,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "goal": [
@@ -2419,7 +2573,8 @@
     "metavar": null,
     "nargs": "+",
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store_true",
@@ -2431,7 +2586,8 @@
     "option_strings": [
      "--check"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -2443,7 +2599,8 @@
     "option_strings": [
      "--close"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -2455,7 +2612,8 @@
     "option_strings": [
      "--defer"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -2468,7 +2626,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2480,7 +2639,8 @@
     "option_strings": [
      "--note"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -2492,7 +2652,8 @@
     "option_strings": [
      "--reject"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2504,7 +2665,8 @@
     "option_strings": [
      "--reviewed-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "store",
@@ -2516,7 +2678,8 @@
     "option_strings": [
      "--revisit-on"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2528,7 +2691,8 @@
     "option_strings": [
      "--session-id"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "health-report": [
@@ -2543,7 +2707,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -2555,7 +2720,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "inbox-list": [
@@ -2570,7 +2736,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -2582,7 +2749,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "inbox-read": [
@@ -2594,7 +2762,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -2606,7 +2775,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -2619,7 +2789,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -2631,7 +2802,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2643,7 +2815,8 @@
     "option_strings": [
      "--limit"
     ],
-    "required": false
+    "required": false,
+    "type": "int"
    },
    {
     "action": "store",
@@ -2655,7 +2828,8 @@
     "option_strings": [
      "--offset"
     ],
-    "required": false
+    "required": false,
+    "type": "int"
    }
   ],
   "inbox-resolve": [
@@ -2667,7 +2841,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -2679,7 +2854,8 @@
     "option_strings": [
      "--drop-sha256"
     ],
-    "required": true
+    "required": true,
+    "type": "sha256_value"
    },
    {
     "action": "append",
@@ -2691,7 +2867,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2703,7 +2880,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -2716,7 +2894,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -2728,7 +2907,8 @@
     "option_strings": [
      "--routed-to"
     ],
-    "required": true
+    "required": true,
+    "type": null
    }
   ],
   "inspect": [
@@ -2740,7 +2920,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -2750,7 +2931,8 @@
     "metavar": null,
     "nargs": "*",
     "option_strings": [],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -2763,7 +2945,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -2775,7 +2958,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "intelligence-scan": [
@@ -2789,7 +2973,8 @@
     "option_strings": [
      "--brief"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2801,7 +2986,8 @@
     "option_strings": [
      "--days"
     ],
-    "required": false
+    "required": false,
+    "type": "int"
    },
    {
     "action": "store",
@@ -2813,7 +2999,8 @@
     "option_strings": [
      "--feed"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -2826,7 +3013,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -2838,7 +3026,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "legacy-archive-inspect": [
@@ -2852,7 +3041,8 @@
     "option_strings": [
      "--allowlist"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -2864,7 +3054,8 @@
     "option_strings": [
      "--archive-root"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "help",
@@ -2877,7 +3068,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -2889,7 +3081,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "legacy-archive-lock-publish": [
@@ -2903,7 +3096,8 @@
     "option_strings": [
      "--approve"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -2915,7 +3109,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2927,7 +3122,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2939,7 +3135,8 @@
     "option_strings": [
      "--file"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -2952,7 +3149,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -2964,7 +3162,8 @@
     "option_strings": [
      "--record"
     ],
-    "required": false
+    "required": false,
+    "type": "json_object"
    }
   ],
   "legacy-archive-status": [
@@ -2979,7 +3178,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -2991,7 +3191,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "lineage-restamp": [
@@ -3005,7 +3206,8 @@
     "option_strings": [
      "--check"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3017,7 +3219,8 @@
     "option_strings": [
      "--claim-ids"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3029,7 +3232,8 @@
     "option_strings": [
      "--claims-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "append",
@@ -3041,7 +3245,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3053,7 +3258,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -3066,7 +3272,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3078,7 +3285,8 @@
     "option_strings": [
      "--review-report"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "masters-planning-catalog-update": [
@@ -3092,7 +3300,8 @@
     "option_strings": [
      "--approve"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -3104,7 +3313,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3116,7 +3326,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3128,7 +3339,8 @@
     "option_strings": [
      "--file"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -3141,7 +3353,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3153,7 +3366,8 @@
     "option_strings": [
      "--record"
     ],
-    "required": false
+    "required": false,
+    "type": "json_object"
    }
   ],
   "masters-planning-comparison-publish": [
@@ -3165,7 +3379,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store_true",
@@ -3177,7 +3392,8 @@
     "option_strings": [
      "--approve"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -3189,7 +3405,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3201,7 +3418,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3213,7 +3431,8 @@
     "option_strings": [
      "--file"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -3226,7 +3445,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3238,7 +3458,8 @@
     "option_strings": [
      "--record"
     ],
-    "required": false
+    "required": false,
+    "type": "json_object"
    }
   ],
   "masters-planning-dashboard": [
@@ -3252,7 +3473,8 @@
     "option_strings": [
      "--confirm-masters-planning"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -3265,7 +3487,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -3277,7 +3500,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "material-context": [
@@ -3289,7 +3513,8 @@
     "metavar": null,
     "nargs": "?",
     "option_strings": [],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3301,7 +3526,8 @@
     "option_strings": [
      "--concept"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3313,7 +3539,8 @@
     "option_strings": [
      "--expected-observations"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3325,7 +3552,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -3338,7 +3566,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -3350,7 +3579,8 @@
     "option_strings": [
      "--include-anchors"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -3362,7 +3592,8 @@
     "option_strings": [
      "--include-related"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -3374,7 +3605,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3386,7 +3618,8 @@
     "option_strings": [
      "--limit"
     ],
-    "required": false
+    "required": false,
+    "type": "int"
    },
    {
     "action": "store",
@@ -3398,7 +3631,8 @@
     "option_strings": [
      "--material"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3410,7 +3644,8 @@
     "option_strings": [
      "--offset"
     ],
-    "required": false
+    "required": false,
+    "type": "int"
    },
    {
     "action": "store",
@@ -3422,7 +3657,8 @@
     "option_strings": [
      "--purpose"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3434,7 +3670,8 @@
     "option_strings": [
      "--unit"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "material-span": [
@@ -3446,7 +3683,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -3456,7 +3694,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -3468,7 +3707,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -3480,7 +3720,8 @@
     "option_strings": [
      "--extract"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -3493,7 +3734,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -3505,7 +3747,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3517,7 +3760,8 @@
     "option_strings": [
      "--resource-index"
     ],
-    "required": false
+    "required": false,
+    "type": "int"
    },
    {
     "action": "store",
@@ -3529,7 +3773,8 @@
     "option_strings": [
      "--stage"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "module-attempt": [
@@ -3541,7 +3786,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -3553,7 +3799,8 @@
     "option_strings": [
      "--date"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -3565,7 +3812,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3577,7 +3825,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3589,7 +3838,8 @@
     "option_strings": [
      "--grade"
     ],
-    "required": false
+    "required": false,
+    "type": "float"
    },
    {
     "action": "help",
@@ -3602,7 +3852,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3614,7 +3865,8 @@
     "option_strings": [
      "--notes"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3632,7 +3884,8 @@
     "option_strings": [
      "--result"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -3648,7 +3901,8 @@
     "option_strings": [
      "--termin"
     ],
-    "required": true
+    "required": true,
+    "type": "int"
    }
   ],
   "module-list": [
@@ -3663,7 +3917,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -3675,7 +3930,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3687,7 +3943,8 @@
     "option_strings": [
      "--program-id"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3699,7 +3956,8 @@
     "option_strings": [
      "--status"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "module-materials-compact": [
@@ -3711,7 +3969,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store_true",
@@ -3723,7 +3982,8 @@
     "option_strings": [
      "--check"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -3735,7 +3995,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3747,7 +4008,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -3760,7 +4022,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3772,7 +4035,8 @@
     "option_strings": [
      "--plan-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    }
   ],
   "module-plan-import": [
@@ -3784,7 +4048,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -3796,7 +4061,8 @@
     "option_strings": [
      "--apply-reviewed-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "store_true",
@@ -3808,7 +4074,8 @@
     "option_strings": [
      "--approve"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -3820,7 +4087,8 @@
     "option_strings": [
      "--check"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -3832,7 +4100,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3844,7 +4113,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3856,7 +4126,8 @@
     "option_strings": [
      "--file"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3868,7 +4139,8 @@
     "option_strings": [
      "--file-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "help",
@@ -3881,7 +4153,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3893,7 +4166,8 @@
     "option_strings": [
      "--package-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3905,7 +4179,8 @@
     "option_strings": [
      "--promotion"
     ],
-    "required": false
+    "required": false,
+    "type": "json_object"
    },
    {
     "action": "store",
@@ -3917,7 +4192,8 @@
     "option_strings": [
      "--review-report"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3929,7 +4205,8 @@
     "option_strings": [
      "--staged-basis"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "module-sitting": [
@@ -3941,7 +4218,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -3953,7 +4231,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3965,7 +4244,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -3978,7 +4258,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -3994,7 +4275,8 @@
     "option_strings": [
      "--termin"
     ],
-    "required": true
+    "required": true,
+    "type": "int"
    },
    {
     "action": "store",
@@ -4006,7 +4288,8 @@
     "option_strings": [
      "--withdrawal-deadline"
     ],
-    "required": true
+    "required": true,
+    "type": null
    }
   ],
   "note-analysis-prepare": [
@@ -4020,7 +4303,8 @@
     "option_strings": [
      "--drafts"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "help",
@@ -4033,7 +4317,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4045,7 +4330,8 @@
     "option_strings": [
      "--out"
     ],
-    "required": true
+    "required": true,
+    "type": null
    }
   ],
   "note-analysis-save": [
@@ -4059,7 +4345,8 @@
     "option_strings": [
      "--analysis"
     ],
-    "required": true
+    "required": true,
+    "type": "json_object"
    },
    {
     "action": "store",
@@ -4071,7 +4358,8 @@
     "option_strings": [
      "--body-file"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -4083,7 +4371,8 @@
     "option_strings": [
      "--body-file-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "append",
@@ -4095,7 +4384,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4107,7 +4397,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -4120,7 +4411,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "note-analysis-save-batch": [
@@ -4134,7 +4426,8 @@
     "option_strings": [
      "--bundle"
     ],
-    "required": true
+    "required": true,
+    "type": "json_object"
    },
    {
     "action": "append",
@@ -4146,7 +4439,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4158,7 +4452,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -4171,7 +4466,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "note-create": [
@@ -4185,7 +4481,8 @@
     "option_strings": [
      "--body-file"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -4197,7 +4494,8 @@
     "option_strings": [
      "--body-file-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "append",
@@ -4209,7 +4507,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4221,7 +4520,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -4234,7 +4534,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4246,7 +4547,8 @@
     "option_strings": [
      "--note"
     ],
-    "required": true
+    "required": true,
+    "type": "json_object"
    }
   ],
   "note-evidence": [
@@ -4265,7 +4567,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -4275,7 +4578,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -4285,7 +4589,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -4297,7 +4602,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4309,7 +4615,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -4322,7 +4629,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "note-read": [
@@ -4334,7 +4642,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -4346,7 +4655,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -4359,7 +4669,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -4371,7 +4682,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4383,7 +4695,8 @@
     "option_strings": [
      "--limit"
     ],
-    "required": false
+    "required": false,
+    "type": "int"
    },
    {
     "action": "store",
@@ -4395,7 +4708,8 @@
     "option_strings": [
      "--offset"
     ],
-    "required": false
+    "required": false,
+    "type": "int"
    }
   ],
   "note-revise": [
@@ -4407,7 +4721,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store_true",
@@ -4419,7 +4734,8 @@
     "option_strings": [
      "--approve"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -4431,7 +4747,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4443,7 +4760,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4455,7 +4773,8 @@
     "option_strings": [
      "--file"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -4467,7 +4786,8 @@
     "option_strings": [
      "--file-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "help",
@@ -4480,7 +4800,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "observation-append": [
@@ -4494,7 +4815,8 @@
     "option_strings": [
      "--activity"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -4506,7 +4828,8 @@
     "option_strings": [
      "--assistance"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -4518,7 +4841,8 @@
     "option_strings": [
      "--condition"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -4530,7 +4854,8 @@
     "option_strings": [
      "--condition-not-met"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4542,7 +4867,8 @@
     "option_strings": [
      "--context"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -4554,7 +4880,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4566,7 +4893,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -4579,7 +4907,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4591,7 +4920,8 @@
     "option_strings": [
      "--requirement"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -4608,7 +4938,8 @@
     "option_strings": [
      "--result"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -4620,7 +4951,8 @@
     "option_strings": [
      "--supersedes"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4632,7 +4964,8 @@
     "option_strings": [
      "--tags"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4644,7 +4977,8 @@
     "option_strings": [
      "--workspace"
     ],
-    "required": true
+    "required": true,
+    "type": null
    }
   ],
   "observe": [
@@ -4656,7 +4990,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -4668,7 +5003,8 @@
     "option_strings": [
      "--activity"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -4680,7 +5016,8 @@
     "option_strings": [
      "--assistance"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -4692,7 +5029,8 @@
     "option_strings": [
      "--condition"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -4704,7 +5042,8 @@
     "option_strings": [
      "--condition-not-met"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -4717,7 +5056,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4729,7 +5069,8 @@
     "option_strings": [
      "--note"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4746,7 +5087,8 @@
     "option_strings": [
      "--result"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -4758,7 +5100,8 @@
     "option_strings": [
      "--supersedes"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4770,7 +5113,8 @@
     "option_strings": [
      "--tags"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4782,7 +5126,8 @@
     "option_strings": [
      "--workspace"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "operations": [
@@ -4797,7 +5142,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -4809,7 +5155,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4821,7 +5168,8 @@
     "option_strings": [
      "--limit"
     ],
-    "required": false
+    "required": false,
+    "type": "int"
    },
    {
     "action": "store",
@@ -4833,7 +5181,8 @@
     "option_strings": [
      "--request-id"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "path-attach": [
@@ -4845,7 +5194,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -4855,7 +5205,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -4867,7 +5218,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4879,7 +5231,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4891,7 +5244,8 @@
     "option_strings": [
      "--file"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -4903,7 +5257,8 @@
     "option_strings": [
      "--file-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "help",
@@ -4916,7 +5271,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4928,7 +5284,8 @@
     "option_strings": [
      "--label"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "path-note": [
@@ -4940,7 +5297,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -4950,7 +5308,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -4962,7 +5321,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -4974,7 +5334,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -4987,7 +5348,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -4999,7 +5361,8 @@
     "option_strings": [
      "--replace"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5011,7 +5374,8 @@
     "option_strings": [
      "--text"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "path-progress": [
@@ -5023,7 +5387,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -5033,7 +5398,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -5047,7 +5413,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -5059,7 +5426,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5071,7 +5439,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -5084,7 +5453,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "plan-edit-context": [
@@ -5096,7 +5466,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store_true",
@@ -5108,7 +5479,8 @@
     "option_strings": [
      "--audit"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -5120,7 +5492,8 @@
     "option_strings": [
      "--brief"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5132,7 +5505,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -5145,7 +5519,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -5157,7 +5532,8 @@
     "option_strings": [
      "--include-neighbors"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -5169,7 +5545,8 @@
     "option_strings": [
      "--include-related"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -5181,7 +5558,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5193,7 +5571,8 @@
     "option_strings": [
      "--route-id"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5205,7 +5584,8 @@
     "option_strings": [
      "--route-ids"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5217,7 +5597,8 @@
     "option_strings": [
      "--stage-id"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "plan-template": [
@@ -5231,7 +5612,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "help",
@@ -5244,7 +5626,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -5256,7 +5639,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5268,7 +5652,8 @@
     "option_strings": [
      "--module-id"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5280,7 +5665,8 @@
     "option_strings": [
      "--title"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -5292,7 +5678,8 @@
     "option_strings": [
      "--unit-id"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "program-list": [
@@ -5307,7 +5694,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -5319,7 +5707,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "project-create": [
@@ -5333,7 +5722,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5345,7 +5735,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5357,7 +5748,8 @@
     "option_strings": [
      "--file"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5369,7 +5761,8 @@
     "option_strings": [
      "--file-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "help",
@@ -5382,7 +5775,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5394,7 +5788,8 @@
     "option_strings": [
      "--project"
     ],
-    "required": false
+    "required": false,
+    "type": "json_object"
    }
   ],
   "project-list": [
@@ -5409,7 +5804,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -5421,7 +5817,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5433,7 +5830,8 @@
     "option_strings": [
      "--status"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "project-update": [
@@ -5445,7 +5843,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -5457,7 +5856,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5469,7 +5869,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5481,7 +5882,8 @@
     "option_strings": [
      "--file"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5493,7 +5895,8 @@
     "option_strings": [
      "--file-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "help",
@@ -5506,7 +5909,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5518,7 +5922,8 @@
     "option_strings": [
      "--project"
     ],
-    "required": false
+    "required": false,
+    "type": "json_object"
    }
   ],
   "related": [
@@ -5530,7 +5935,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "help",
@@ -5543,7 +5949,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -5555,7 +5962,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "resume": [
@@ -5570,7 +5978,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -5582,7 +5991,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -5594,7 +6004,8 @@
     "option_strings": [
      "--study"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5606,7 +6017,8 @@
     "option_strings": [
      "--unit"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "route-patch": [
@@ -5618,7 +6030,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -5628,7 +6041,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -5640,7 +6054,8 @@
     "option_strings": [
      "--changes"
     ],
-    "required": true
+    "required": true,
+    "type": "json_object"
    },
    {
     "action": "store_true",
@@ -5652,7 +6067,8 @@
     "option_strings": [
      "--check"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -5664,7 +6080,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5676,7 +6093,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -5689,7 +6107,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "runtime-session": [
@@ -5703,7 +6122,8 @@
     "option_strings": [
      "--context-json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5715,7 +6135,8 @@
     "option_strings": [
      "--event"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5727,7 +6148,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -5740,7 +6162,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -5752,7 +6175,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5764,7 +6188,8 @@
     "option_strings": [
      "--previous-json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5776,7 +6201,8 @@
     "option_strings": [
      "--requirement"
     ],
-    "required": true
+    "required": true,
+    "type": null
    }
   ],
   "search": [
@@ -5788,7 +6214,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store_true",
@@ -5800,7 +6227,8 @@
     "option_strings": [
      "--content"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5812,7 +6240,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -5825,7 +6254,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -5837,7 +6267,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5849,7 +6280,8 @@
     "option_strings": [
      "--limit"
     ],
-    "required": false
+    "required": false,
+    "type": "int"
    },
    {
     "action": "store",
@@ -5861,7 +6293,8 @@
     "option_strings": [
      "--offset"
     ],
-    "required": false
+    "required": false,
+    "type": "int"
    },
    {
     "action": "store_true",
@@ -5873,7 +6306,8 @@
     "option_strings": [
      "--page"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5885,7 +6319,8 @@
     "option_strings": [
      "--type"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "semantic": [
@@ -5897,7 +6332,8 @@
     "metavar": null,
     "nargs": "?",
     "option_strings": [],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -5910,7 +6346,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -5922,7 +6359,8 @@
     "option_strings": [
      "--input"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -5934,7 +6372,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -5946,7 +6385,8 @@
     "option_strings": [
      "--list"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5958,7 +6398,8 @@
     "option_strings": [
      "--recipe"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "session-end": [
@@ -5972,7 +6413,8 @@
     "option_strings": [
      "--channel"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -5984,7 +6426,8 @@
     "option_strings": [
      "--close"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -5996,7 +6439,8 @@
     "option_strings": [
      "--commit-message"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -6009,7 +6453,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -6021,7 +6466,8 @@
     "option_strings": [
      "--include-stale"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -6033,7 +6479,8 @@
     "option_strings": [
      "--push"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6045,7 +6492,8 @@
     "option_strings": [
      "--session-id"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "shelving-apply": [
@@ -6057,7 +6505,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store_true",
@@ -6069,7 +6518,8 @@
     "option_strings": [
      "--approve"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -6081,7 +6531,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6093,7 +6544,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -6106,7 +6558,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6118,7 +6571,8 @@
     "option_strings": [
      "--selected"
     ],
-    "required": true
+    "required": true,
+    "type": null
    }
   ],
   "shelving-prepare": [
@@ -6130,7 +6584,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -6142,7 +6597,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6154,7 +6610,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -6167,7 +6624,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6179,7 +6637,8 @@
     "option_strings": [
      "--items-file"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6191,7 +6650,8 @@
     "option_strings": [
      "--items-file-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "store",
@@ -6203,7 +6663,8 @@
     "option_strings": [
      "--summary"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "source-feedback": [
@@ -6222,7 +6683,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -6232,7 +6694,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -6242,7 +6705,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -6252,7 +6716,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -6264,7 +6729,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6276,7 +6742,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -6289,7 +6756,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6301,7 +6769,8 @@
     "option_strings": [
      "--note"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6313,7 +6782,8 @@
     "option_strings": [
      "--resource-id"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "source-intake": [
@@ -6327,7 +6797,8 @@
     "option_strings": [
      "--approve"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -6339,7 +6810,8 @@
     "option_strings": [
      "--check"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6351,7 +6823,8 @@
     "option_strings": [
      "--expected-diff-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "append",
@@ -6363,7 +6836,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6375,7 +6849,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6387,7 +6862,8 @@
     "option_strings": [
      "--file"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -6400,7 +6876,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6412,7 +6889,8 @@
     "option_strings": [
      "--record"
     ],
-    "required": false
+    "required": false,
+    "type": "json_object"
    }
   ],
   "source-revise": [
@@ -6426,7 +6904,8 @@
     "option_strings": [
      "--approve"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -6438,7 +6917,8 @@
     "option_strings": [
      "--check"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6450,7 +6930,8 @@
     "option_strings": [
      "--expected-diff-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "append",
@@ -6462,7 +6943,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6474,7 +6956,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6486,7 +6969,8 @@
     "option_strings": [
      "--file"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -6499,7 +6983,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6511,7 +6996,8 @@
     "option_strings": [
      "--record"
     ],
-    "required": false
+    "required": false,
+    "type": "json_object"
    }
   ],
   "stage-attach": [
@@ -6523,7 +7009,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -6533,7 +7020,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -6545,7 +7033,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6557,7 +7046,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6569,7 +7059,8 @@
     "option_strings": [
      "--file"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -6581,7 +7072,8 @@
     "option_strings": [
      "--file-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "help",
@@ -6594,7 +7086,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6606,7 +7099,8 @@
     "option_strings": [
      "--label"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "stage-note": [
@@ -6618,7 +7112,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -6628,7 +7123,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -6640,7 +7136,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6652,7 +7149,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -6665,7 +7163,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -6677,7 +7176,8 @@
     "option_strings": [
      "--replace"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6689,7 +7189,8 @@
     "option_strings": [
      "--text"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "stage-progress": [
@@ -6701,7 +7202,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -6717,7 +7219,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -6727,7 +7230,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -6739,7 +7243,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6751,7 +7256,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -6764,7 +7270,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6776,7 +7283,8 @@
     "option_strings": [
      "--progress-next"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6788,7 +7296,8 @@
     "option_strings": [
      "--progress-summary"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "stage-result": [
@@ -6802,7 +7311,8 @@
     "option_strings": [
      "--activity"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -6814,7 +7324,8 @@
     "option_strings": [
      "--assistance"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -6826,7 +7337,8 @@
     "option_strings": [
      "--condition"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -6838,7 +7350,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6850,7 +7363,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -6863,7 +7377,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6875,7 +7390,8 @@
     "option_strings": [
      "--note"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6892,7 +7408,8 @@
     "option_strings": [
      "--result"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -6904,7 +7421,8 @@
     "option_strings": [
      "--stage"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -6916,7 +7434,8 @@
     "option_strings": [
      "--supersedes"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -6928,7 +7447,8 @@
     "option_strings": [
      "--unit"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -6940,7 +7460,8 @@
     "option_strings": [
      "--workspace"
     ],
-    "required": true
+    "required": true,
+    "type": null
    }
   ],
   "status": [
@@ -6955,7 +7476,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -6967,7 +7489,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -6979,7 +7502,8 @@
     "option_strings": [
      "--no-validate"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "unit-list": [
@@ -6993,7 +7517,8 @@
     "option_strings": [
      "--compact"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7005,7 +7530,8 @@
     "option_strings": [
      "--component-id"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7017,7 +7543,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -7030,7 +7557,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -7042,7 +7570,8 @@
     "option_strings": [
      "--json"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7054,7 +7583,8 @@
     "option_strings": [
      "--limit"
     ],
-    "required": false
+    "required": false,
+    "type": "int"
    },
    {
     "action": "store",
@@ -7066,7 +7596,8 @@
     "option_strings": [
      "--module-id"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7078,7 +7609,8 @@
     "option_strings": [
      "--offset"
     ],
-    "required": false
+    "required": false,
+    "type": "int"
    },
    {
     "action": "store",
@@ -7090,7 +7622,8 @@
     "option_strings": [
      "--status"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "unit-map-import": [
@@ -7102,7 +7635,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store_true",
@@ -7114,7 +7648,8 @@
     "option_strings": [
      "--check"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -7126,7 +7661,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7138,7 +7674,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7150,7 +7687,8 @@
     "option_strings": [
      "--file"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -7162,7 +7700,8 @@
     "option_strings": [
      "--file-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "help",
@@ -7175,7 +7714,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7187,7 +7727,8 @@
     "option_strings": [
      "--intentional-reorder"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7199,7 +7740,8 @@
     "option_strings": [
      "--intentional-state-reset"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -7211,7 +7753,8 @@
     "option_strings": [
      "--replace"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7223,7 +7766,8 @@
     "option_strings": [
      "--retire-reason"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -7235,7 +7779,8 @@
     "option_strings": [
      "--retire-stage"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "unit-material-synthesis-publish": [
@@ -7247,7 +7792,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store_true",
@@ -7259,7 +7805,8 @@
     "option_strings": [
      "--approve"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -7271,7 +7818,8 @@
     "option_strings": [
      "--check"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -7283,7 +7831,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7295,7 +7844,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7307,7 +7857,8 @@
     "option_strings": [
      "--file"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -7320,7 +7871,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7332,7 +7884,8 @@
     "option_strings": [
      "--record"
     ],
-    "required": false
+    "required": false,
+    "type": "json_object"
    }
   ],
   "unit-note": [
@@ -7344,7 +7897,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -7356,7 +7910,8 @@
     "option_strings": [
      "--attachment"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -7368,7 +7923,8 @@
     "option_strings": [
      "--attachment-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "append",
@@ -7380,7 +7936,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7392,7 +7949,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -7405,7 +7963,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -7417,7 +7976,8 @@
     "option_strings": [
      "--stage-id"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7429,7 +7989,8 @@
     "option_strings": [
      "--text"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7441,7 +8002,8 @@
     "option_strings": [
      "--title"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "unit-plan-revise": [
@@ -7453,7 +8015,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -7465,7 +8028,8 @@
     "option_strings": [
      "--apply-reviewed-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "store_true",
@@ -7477,7 +8041,8 @@
     "option_strings": [
      "--check"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -7489,7 +8054,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7501,7 +8067,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7513,7 +8080,8 @@
     "option_strings": [
      "--file"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7525,7 +8093,8 @@
     "option_strings": [
      "--file-sha256"
     ],
-    "required": false
+    "required": false,
+    "type": "sha256_value"
    },
    {
     "action": "help",
@@ -7538,7 +8107,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7550,7 +8120,8 @@
     "option_strings": [
      "--record"
     ],
-    "required": false
+    "required": false,
+    "type": "json_object"
    },
    {
     "action": "store",
@@ -7562,7 +8133,8 @@
     "option_strings": [
      "--report-out"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7574,7 +8146,8 @@
     "option_strings": [
      "--review-report"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7586,7 +8159,8 @@
     "option_strings": [
      "--staged-basis"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "unit-source-selection": [
@@ -7601,7 +8175,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -7611,7 +8186,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -7621,7 +8197,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -7631,7 +8208,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -7643,7 +8221,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7655,7 +8234,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -7668,7 +8248,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7680,7 +8261,8 @@
     "option_strings": [
      "--purpose"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "validate": [
@@ -7695,7 +8277,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store_true",
@@ -7707,7 +8290,8 @@
     "option_strings": [
      "--online"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ],
   "workspace-next-action": [
@@ -7719,7 +8303,8 @@
     "metavar": null,
     "nargs": null,
     "option_strings": [],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "append",
@@ -7731,7 +8316,8 @@
     "option_strings": [
      "--expected-revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7743,7 +8329,8 @@
     "option_strings": [
      "--expected-snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -7756,7 +8343,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7768,7 +8356,8 @@
     "option_strings": [
      "--next-action"
     ],
-    "required": true
+    "required": true,
+    "type": null
    }
   ]
  },
@@ -7785,7 +8374,8 @@
     "option_strings": [
      "--approval-kind"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7797,7 +8387,8 @@
     "option_strings": [
      "--capability"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -7809,7 +8400,8 @@
     "option_strings": [
      "--channel"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7823,7 +8415,8 @@
     "option_strings": [
      "--guards"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "help",
@@ -7836,7 +8429,8 @@
      "--help",
      "-h"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7848,7 +8442,8 @@
     "option_strings": [
      "--key"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -7860,7 +8455,8 @@
     "option_strings": [
      "--out"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7872,7 +8468,8 @@
     "option_strings": [
      "--payload"
     ],
-    "required": true
+    "required": true,
+    "type": null
    },
    {
     "action": "store",
@@ -7884,7 +8481,8 @@
     "option_strings": [
      "--request-id"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "append",
@@ -7896,7 +8494,8 @@
     "option_strings": [
      "--revision"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7908,7 +8507,8 @@
     "option_strings": [
      "--root"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7920,7 +8520,8 @@
     "option_strings": [
      "--session-id"
     ],
-    "required": false
+    "required": false,
+    "type": null
    },
    {
     "action": "store",
@@ -7932,7 +8533,8 @@
     "option_strings": [
      "--snapshot"
     ],
-    "required": false
+    "required": false,
+    "type": null
    }
   ]
  }
