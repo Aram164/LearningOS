@@ -1,0 +1,43 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "[{\"age_days\":0,\"deprecated\":null,\"id\":\"note-drop.md\",\"path\":\"work/inbox/note-drop.md\",\"state\":null,\"status\":null,\"title\":\"note-drop.md\",\"type\":\"inbox-item\"},{\"age_days\":0,\"deprecated\":null,\"id\":\"pack/one.md\",\"path\":\"work/inbox/pack/one.md\",\"state\":null,\"status\":null,\"title\":\"one.md\",\"type\":\"inbox-item\"},{\"age_days\":0,\"deprecated\":null,\"id\":\"pack/two.md\",\"path\":\"work/inbox/pack/two.md\",\"state\":null,\"status\":null,\"title\":\"two.md\",\"type\":\"inbox-item\"}]\n",
+  "stdout_json": [
+    {
+      "age_days": 0,
+      "deprecated": null,
+      "id": "note-drop.md",
+      "path": "work/inbox/note-drop.md",
+      "state": null,
+      "status": null,
+      "title": "note-drop.md",
+      "type": "inbox-item"
+    },
+    {
+      "age_days": 0,
+      "deprecated": null,
+      "id": "pack/one.md",
+      "path": "work/inbox/pack/one.md",
+      "state": null,
+      "status": null,
+      "title": "one.md",
+      "type": "inbox-item"
+    },
+    {
+      "age_days": 0,
+      "deprecated": null,
+      "id": "pack/two.md",
+      "path": "work/inbox/pack/two.md",
+      "state": null,
+      "status": null,
+      "title": "two.md",
+      "type": "inbox-item"
+    }
+  ]
+}

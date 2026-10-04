@@ -1,0 +1,66 @@
+operation: inbox.resolve
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: resolve-file
+    kind: success
+    transport: gateway
+    request: {name: "note-drop.md", drop_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d", routed_to: [note-demo]}
+    artifact_ids: ["file:archive/inbox/2026/note-drop.md", "file:work/inbox/note-drop.md"]
+    a5_base: true
+    expect: {site: null}
+  - id: resolve-folder
+    kind: success
+    transport: gateway
+    request: {name: "pack", drop_sha256: "sha256:9713b5460cdf08c8abdfa9e3210e465d5dbd6a1cd35026d9c1d2f57dcdbc4d29", routed_to: [note-demo]}
+    artifact_ids: ["file:archive/inbox/2026/pack/one.md", "file:archive/inbox/2026/pack/two.md", "file:work/inbox/pack/one.md", "file:work/inbox/pack/two.md"]
+    expect: {site: null}
+  - id: unknown-drop
+    kind: refusal
+    transport: gateway
+    request: {name: "nope.md", drop_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000", routed_to: [note-demo]}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-name
+    kind: refusal
+    transport: gateway
+    request: {name: "../escape.md", drop_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000", routed_to: [note-demo]}
+    artifact_ids: []
+    expect: {site: null}
+  - id: changed-drop
+    kind: refusal
+    transport: gateway
+    request: {name: "note-drop.md", drop_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000", routed_to: [note-demo]}
+    artifact_ids: []
+    expect: {site: null}
+  - id: missing-routed
+    kind: refusal
+    transport: gateway
+    request: {name: "note-drop.md", drop_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d", routed_to: []}
+    artifact_ids: []
+    expect: {site: null}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [inbox-resolve, note-drop.md, --drop-sha256, "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d", --routed-to, note-demo]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {name: "note-drop.md", drop_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d", routed_to: [note-demo]}
+        artifact_ids: ["file:archive/inbox/2026/note-drop.md", "file:work/inbox/note-drop.md"]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {name: "note-drop.md", drop_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d", routed_to: [note-demo]}
+    artifact_ids: ["file:archive/inbox/2026/note-drop.md", "file:work/inbox/note-drop.md"]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/inbox.py:65", reason: "symlinks: the fixture inbox has none, and no step can create one"}
+  - {where: "tools/learning_os/commands/inbox.py:75", reason: "not a regular file or folder: needs a special file no step can create"}
+  - {where: "tools/learning_os/commands/inbox.py:84", reason: "empty folder: the fixture drops hold files, and no step can empty one without resolving it"}
+  - {where: "tools/learning_os/commands/inbox.py:139", reason: "archive collision: the archive starts empty and only this operation writes it, atomically with removal"}

@@ -1,0 +1,245 @@
+{
+  "steps": [
+    {
+      "canonical_changed": {
+        "work/inbox/blob.bin": "a599a9baf01d6edec17699f0bf416f10cb46f060f7241a4d0ed7f16eb331cca3"
+      },
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY2": {
+              "capability": "capture.create",
+              "channel": "operator",
+              "intent_sha256": "sha256:fcc7acb9fc9f09e3b221def1c28b908122ed5909ec16dc2cc9060953448ac746",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "capture-request:KEY2": 1
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "SNAP2",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": null
+      },
+      "operation": "capture.create",
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "capture-request:KEY2": {
+              "after": 1,
+              "before": 0
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "capture.create",
+                "declared_writes": [
+                  "work/inbox/**"
+                ]
+              }
+            ]
+          },
+          "capability": "capture.create",
+          "committed_at": "2026-10-01T09:00:00+02:00",
+          "expected_revisions": {
+            "capture-request:KEY2": 0
+          },
+          "id": "TX1",
+          "metadata": {
+            "data_roots_sha256": "sha256:dc06e05400fdf8971381e7e579a0ec601a50f6416cd6c8e05571019eed2b9df1",
+            "fingerprint_definition": 2
+          },
+          "request": {
+            "approval": {
+              "kind": "operator-approval",
+              "subject_sha256": "sha256:fcc7acb9fc9f09e3b221def1c28b908122ed5909ec16dc2cc9060953448ac746"
+            },
+            "channel": "operator",
+            "idempotency_key": "KEY2",
+            "intent_sha256": "sha256:fcc7acb9fc9f09e3b221def1c28b908122ed5909ec16dc2cc9060953448ac746",
+            "request_id": "KEY1"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": true,
+              "path": "work/inbox/blob.bin",
+              "sha256_after": "a599a9baf01d6edec17699f0bf416f10cb46f060f7241a4d0ed7f16eb331cca3",
+              "sha256_before": null
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "capture-request:KEY2": 1,
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": {
+        "after": {
+          "paths": {
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "edde9f0fd50631ac55511606012548f48e912011e89af58230be3037e9b64a39",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "daaa3dff1c7588529643042d011715ba563a0a6b4293224ad0aed8847b0c77a8",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "770a3f680fbf1490eae0acecb5eb8c8b8e81b7bac1699ff3954d0b751bc7dbb4",
+              "state": "file"
+            },
+            "work/inbox/blob.bin": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "a599a9baf01d6edec17699f0bf416f10cb46f060f7241a4d0ed7f16eb331cca3",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        },
+        "before": null
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"capture.create\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"captured\": \"work/inbox/blob.bin\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"capture-request:KEY2\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "capture.create",
+        "error": null,
+        "idempotency_key": "KEY2",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": false,
+        "request_id": "KEY1",
+        "result": {
+          "artifact_revisions": {
+            "capture-request:KEY2": 1
+          },
+          "captured": "work/inbox/blob.bin",
+          "ok": true,
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": false,
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
+      },
+      "step": 0,
+      "transport": "gateway"
+    },
+    {
+      "argv": [
+        "inbox-read",
+        "blob.bin"
+      ],
+      "canonical_changed": {},
+      "exit": 2,
+      "idempotency_changed": {},
+      "outcome": "refused",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": {
+        "after": {
+          "paths": {
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "edde9f0fd50631ac55511606012548f48e912011e89af58230be3037e9b64a39",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "daaa3dff1c7588529643042d011715ba563a0a6b4293224ad0aed8847b0c77a8",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "770a3f680fbf1490eae0acecb5eb8c8b8e81b7bac1699ff3954d0b751bc7dbb4",
+              "state": "file"
+            },
+            "work/inbox/blob.bin": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "a599a9baf01d6edec17699f0bf416f10cb46f060f7241a4d0ed7f16eb331cca3",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        },
+        "before": {
+          "paths": {
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "edde9f0fd50631ac55511606012548f48e912011e89af58230be3037e9b64a39",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "daaa3dff1c7588529643042d011715ba563a0a6b4293224ad0aed8847b0c77a8",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "770a3f680fbf1490eae0acecb5eb8c8b8e81b7bac1699ff3954d0b751bc7dbb4",
+              "state": "file"
+            },
+            "work/inbox/blob.bin": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "a599a9baf01d6edec17699f0bf416f10cb46f060f7241a4d0ed7f16eb331cca3",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        }
+      },
+      "stderr": "los: inbox item is not UTF-8 text and has no text read: blob.bin\n",
+      "stdout": "",
+      "stdout_json": null,
+      "step": 1,
+      "transport": "cli"
+    }
+  ]
+}
