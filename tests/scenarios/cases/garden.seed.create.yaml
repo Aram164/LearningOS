@@ -1,0 +1,47 @@
+operation: garden.seed.create
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: plant-seed
+    kind: success
+    transport: gateway
+    request: {text: "A seed of thought about expectation."}
+    a5_base: true
+    expect: {site: null}
+  - id: plant-seed-with-title
+    kind: success
+    transport: gateway
+    request: {text: "The body stays verbatim.", title: "Titled Seed"}
+    expect: {site: null}
+  - id: plant-twice-same-title
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {text: "First planting.", title: "Same Title"}
+      - transport: gateway
+        request: {text: "Second planting.", title: "Same Title"}
+  - id: empty-seed
+    kind: refusal
+    transport: gateway
+    request: {text: "   "}
+    artifact_ids: []
+    expect: {site: null}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [garden-seed-create, --text, "hello"]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {text: "A replayed seed."}
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {text: "A seed that was never planted."}
+    expect: {site: null}
+untriggered: []

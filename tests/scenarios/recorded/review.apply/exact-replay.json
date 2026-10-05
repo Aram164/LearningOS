@@ -1,0 +1,598 @@
+{
+  "steps": [
+    {
+      "canonical_changed": {
+        "curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md": "d89483d1749f629d38ed4c34f205d13e2647938affa15b53c29805b866b364ba",
+        "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml": "1077f99549f443b4a16b24007a8cd9839c2b544c3fb93870175c4635d36154fa"
+      },
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY2": {
+              "capability": "review.prepare",
+              "channel": "operator",
+              "intent_sha256": "sha256:3512fb588081f349ae3c29a0964847fa5319afa178d7eaa55c3c85c0d53f1f00",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "study-map-demo-l01": 1,
+                "unit-demo-l01": 4
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "SNAP2",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": null
+      },
+      "operation": "review.prepare",
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "study-map-demo-l01": {
+              "after": 1,
+              "before": 0
+            },
+            "unit-demo-l01": {
+              "after": 4,
+              "before": 3
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "review.prepare",
+                "declared_writes": [
+                  "curriculum/modules/**/units/**"
+                ]
+              }
+            ]
+          },
+          "capability": "review.prepare",
+          "committed_at": "2026-10-01T09:00:00+02:00",
+          "expected_revisions": {
+            "study-map-demo-l01": 0,
+            "unit-demo-l01": 3
+          },
+          "id": "TX1",
+          "metadata": {
+            "data_roots_sha256": "sha256:11223808bfd8783c64851d3aa0721c092dd780c7ff1534ec8af4befa9c6a036b",
+            "fingerprint_definition": 2
+          },
+          "request": {
+            "approval": {
+              "kind": "operator-approval",
+              "subject_sha256": "sha256:3512fb588081f349ae3c29a0964847fa5319afa178d7eaa55c3c85c0d53f1f00"
+            },
+            "channel": "operator",
+            "idempotency_key": "KEY2",
+            "intent_sha256": "sha256:3512fb588081f349ae3c29a0964847fa5319afa178d7eaa55c3c85c0d53f1f00",
+            "request_id": "KEY1"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": true,
+              "path": "curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md",
+              "sha256_after": "d89483d1749f629d38ed4c34f205d13e2647938affa15b53c29805b866b364ba",
+              "sha256_before": null
+            },
+            {
+              "created": false,
+              "path": "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
+              "sha256_after": "1077f99549f443b4a16b24007a8cd9839c2b544c3fb93870175c4635d36154fa",
+              "sha256_before": "e8d4f80bdb399e52cf8f713f1379e92a7c4ccf1e3ba04f0ebbcea6eeda5da99c"
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "study-map-demo-l01": 1,
+            "unit-demo-l01": 4
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": {
+        "after": {
+          "paths": {
+            "curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "d89483d1749f629d38ed4c34f205d13e2647938affa15b53c29805b866b364ba",
+              "state": "file"
+            },
+            "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1077f99549f443b4a16b24007a8cd9839c2b544c3fb93870175c4635d36154fa",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "0e3ae636da904512489e0ea7aaedf82560737f3d39a78403c079bcd12bb84112",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "b1500b1c35c51353ff1f23be26fb2076d548a9783fae911310e65c01f7fdc5bf",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "e017d5ddad803394f168ee4f49716a86587023cd57933ac66746727222e523ba",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        },
+        "before": null
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"review.prepare\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"unit_id\": \"unit-demo-l01\",\n    \"proposal_path\": \"curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md\",\n    \"state\": \"proposed\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"study-map-demo-l01\": 1,\n      \"unit-demo-l01\": 4\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "review.prepare",
+        "error": null,
+        "idempotency_key": "KEY2",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": false,
+        "request_id": "KEY1",
+        "result": {
+          "artifact_revisions": {
+            "study-map-demo-l01": 1,
+            "unit-demo-l01": 4
+          },
+          "ok": true,
+          "proposal_path": "curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": false,
+          "snapshot_after": "SNAP1",
+          "state": "proposed",
+          "transaction_id": "TX1",
+          "unit_id": "unit-demo-l01"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
+      },
+      "step": 0,
+      "transport": "gateway"
+    },
+    {
+      "canonical_changed": {
+        "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml": "ef786c4814e4f891e3a849d9dca71fc3c6346f47cac6c7639318ac938489b87e",
+        "knowledge/garden/kept-idea.md": "1a073fa47f714fcb585fa2599608f4cb87dd47218ce471445e98ecdc516e740c"
+      },
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY2": {
+              "capability": "review.prepare",
+              "channel": "operator",
+              "intent_sha256": "sha256:3512fb588081f349ae3c29a0964847fa5319afa178d7eaa55c3c85c0d53f1f00",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "study-map-demo-l01": 1,
+                "unit-demo-l01": 4
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "SNAP2",
+              "transaction_id": "TX1"
+            },
+            "KEY4": {
+              "capability": "review.apply",
+              "channel": "operator",
+              "intent_sha256": "sha256:24df1f4ce37a51f4090fd8060b56137c4c7255ea7f365b64cbd872efdf88f856",
+              "receipt_path": "operations/transactions/TX2.yaml",
+              "request_id": "KEY3",
+              "revisions": {
+                "proposal-keep": 1,
+                "study-map-demo-l01": 2,
+                "unit-demo-l01": 5
+              },
+              "snapshot_after": "SNAP3",
+              "snapshot_before": "SNAP1",
+              "transaction_id": "TX2"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": {
+          "entries": {
+            "KEY2": {
+              "capability": "review.prepare",
+              "channel": "operator",
+              "intent_sha256": "sha256:3512fb588081f349ae3c29a0964847fa5319afa178d7eaa55c3c85c0d53f1f00",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "study-map-demo-l01": 1,
+                "unit-demo-l01": 4
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "SNAP2",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        }
+      },
+      "operation": "review.apply",
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "proposal-keep": {
+              "after": 1,
+              "before": 0
+            },
+            "study-map-demo-l01": {
+              "after": 2,
+              "before": 1
+            },
+            "unit-demo-l01": {
+              "after": 5,
+              "before": 4
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "review.apply",
+                "declared_writes": [
+                  "knowledge/notes/**",
+                  "knowledge/garden/**",
+                  "curriculum/modules/**/units/**"
+                ]
+              }
+            ]
+          },
+          "capability": "review.apply",
+          "committed_at": "2026-10-01T09:00:00+02:00",
+          "expected_revisions": {
+            "proposal-keep": 0,
+            "study-map-demo-l01": 1,
+            "unit-demo-l01": 4
+          },
+          "id": "TX2",
+          "metadata": {
+            "data_roots_sha256": "sha256:5251551097d7fe7d45dee8dec2f97a7392e4042f221673584651e8c425ab1759",
+            "fingerprint_definition": 2
+          },
+          "request": {
+            "approval": {
+              "kind": "operator-approval",
+              "subject_sha256": "sha256:24df1f4ce37a51f4090fd8060b56137c4c7255ea7f365b64cbd872efdf88f856"
+            },
+            "channel": "operator",
+            "idempotency_key": "KEY4",
+            "intent_sha256": "sha256:24df1f4ce37a51f4090fd8060b56137c4c7255ea7f365b64cbd872efdf88f856",
+            "request_id": "KEY3"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP3",
+          "snapshot_before": "SNAP1",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": false,
+              "path": "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
+              "sha256_after": "ef786c4814e4f891e3a849d9dca71fc3c6346f47cac6c7639318ac938489b87e",
+              "sha256_before": "1077f99549f443b4a16b24007a8cd9839c2b544c3fb93870175c4635d36154fa"
+            },
+            {
+              "created": true,
+              "path": "knowledge/garden/kept-idea.md",
+              "sha256_after": "1a073fa47f714fcb585fa2599608f4cb87dd47218ce471445e98ecdc516e740c",
+              "sha256_before": null
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "proposal-keep": 1,
+            "study-map-demo-l01": 2,
+            "unit-demo-l01": 5
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "study-map-demo-l01": 1,
+            "unit-demo-l01": 4
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": {
+        "after": {
+          "paths": {
+            "curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "d89483d1749f629d38ed4c34f205d13e2647938affa15b53c29805b866b364ba",
+              "state": "file"
+            },
+            "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "ef786c4814e4f891e3a849d9dca71fc3c6346f47cac6c7639318ac938489b87e",
+              "state": "file"
+            },
+            "knowledge/garden/kept-idea.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1a073fa47f714fcb585fa2599608f4cb87dd47218ce471445e98ecdc516e740c",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "0e3ae636da904512489e0ea7aaedf82560737f3d39a78403c079bcd12bb84112",
+              "state": "file"
+            },
+            "operations/transactions/TX2.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "0e6fe96a0512e14407641c4c318307a5d996b88ec474fef524eb3673e8b22a03",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "c55d3a065d1150aaae3d320a0bc0a962fa52aface65cc9d7c874499f8ae099eb",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "96916813e6db2c4da0fc294bd2e0c03d9828e02af897c246a8adcdcffa2b2032",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        },
+        "before": {
+          "paths": {
+            "curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "d89483d1749f629d38ed4c34f205d13e2647938affa15b53c29805b866b364ba",
+              "state": "file"
+            },
+            "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1077f99549f443b4a16b24007a8cd9839c2b544c3fb93870175c4635d36154fa",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "0e3ae636da904512489e0ea7aaedf82560737f3d39a78403c079bcd12bb84112",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "b1500b1c35c51353ff1f23be26fb2076d548a9783fae911310e65c01f7fdc5bf",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "e017d5ddad803394f168ee4f49716a86587023cd57933ac66746727222e523ba",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        }
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY3\",\n  \"idempotency_key\": \"KEY4\",\n  \"capability\": \"review.apply\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX2\",\n  \"receipt_path\": \"operations/transactions/TX2.yaml\",\n  \"snapshot_after\": \"SNAP3\",\n  \"result\": {\n    \"ok\": true,\n    \"unit_id\": \"unit-demo-l01\",\n    \"applied\": [\n      \"proposal-keep\"\n    ],\n    \"transaction_id\": \"TX2\",\n    \"receipt_path\": \"operations/transactions/TX2.yaml\",\n    \"artifact_revisions\": {\n      \"proposal-keep\": 1,\n      \"study-map-demo-l01\": 2,\n      \"unit-demo-l01\": 5\n    },\n    \"snapshot_after\": \"SNAP3\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "review.apply",
+        "error": null,
+        "idempotency_key": "KEY4",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX2.yaml",
+        "replayed": false,
+        "request_id": "KEY3",
+        "result": {
+          "applied": [
+            "proposal-keep"
+          ],
+          "artifact_revisions": {
+            "proposal-keep": 1,
+            "study-map-demo-l01": 2,
+            "unit-demo-l01": 5
+          },
+          "ok": true,
+          "receipt_path": "operations/transactions/TX2.yaml",
+          "replayed": false,
+          "snapshot_after": "SNAP3",
+          "transaction_id": "TX2",
+          "unit_id": "unit-demo-l01"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP3",
+        "transaction_id": "TX2"
+      },
+      "step": 1,
+      "transport": "gateway"
+    },
+    {
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "operation": "review.apply",
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": {
+        "after": {
+          "paths": {
+            "curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "d89483d1749f629d38ed4c34f205d13e2647938affa15b53c29805b866b364ba",
+              "state": "file"
+            },
+            "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "ef786c4814e4f891e3a849d9dca71fc3c6346f47cac6c7639318ac938489b87e",
+              "state": "file"
+            },
+            "knowledge/garden/kept-idea.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1a073fa47f714fcb585fa2599608f4cb87dd47218ce471445e98ecdc516e740c",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "0e3ae636da904512489e0ea7aaedf82560737f3d39a78403c079bcd12bb84112",
+              "state": "file"
+            },
+            "operations/transactions/TX2.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "0e6fe96a0512e14407641c4c318307a5d996b88ec474fef524eb3673e8b22a03",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "c55d3a065d1150aaae3d320a0bc0a962fa52aface65cc9d7c874499f8ae099eb",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "96916813e6db2c4da0fc294bd2e0c03d9828e02af897c246a8adcdcffa2b2032",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        },
+        "before": {
+          "paths": {
+            "curriculum/modules/module-demo/units/unit-demo-l01/shelving-proposal.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "d89483d1749f629d38ed4c34f205d13e2647938affa15b53c29805b866b364ba",
+              "state": "file"
+            },
+            "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "ef786c4814e4f891e3a849d9dca71fc3c6346f47cac6c7639318ac938489b87e",
+              "state": "file"
+            },
+            "knowledge/garden/kept-idea.md": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1a073fa47f714fcb585fa2599608f4cb87dd47218ce471445e98ecdc516e740c",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "0e3ae636da904512489e0ea7aaedf82560737f3d39a78403c079bcd12bb84112",
+              "state": "file"
+            },
+            "operations/transactions/TX2.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "0e6fe96a0512e14407641c4c318307a5d996b88ec474fef524eb3673e8b22a03",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "c55d3a065d1150aaae3d320a0bc0a962fa52aface65cc9d7c874499f8ae099eb",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "96916813e6db2c4da0fc294bd2e0c03d9828e02af897c246a8adcdcffa2b2032",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        }
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY3\",\n  \"idempotency_key\": \"KEY4\",\n  \"capability\": \"review.apply\",\n  \"ok\": true,\n  \"replayed\": true,\n  \"transaction_id\": \"TX2\",\n  \"receipt_path\": \"operations/transactions/TX2.yaml\",\n  \"snapshot_after\": \"SNAP3\",\n  \"result\": {\n    \"transaction_id\": \"TX2\",\n    \"receipt_path\": \"operations/transactions/TX2.yaml\",\n    \"artifact_revisions\": {\n      \"proposal-keep\": 1,\n      \"study-map-demo-l01\": 2,\n      \"unit-demo-l01\": 5\n    },\n    \"snapshot_after\": \"SNAP3\",\n    \"replayed\": true\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "review.apply",
+        "error": null,
+        "idempotency_key": "KEY4",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX2.yaml",
+        "replayed": true,
+        "request_id": "KEY3",
+        "result": {
+          "artifact_revisions": {
+            "proposal-keep": 1,
+            "study-map-demo-l01": 2,
+            "unit-demo-l01": 5
+          },
+          "receipt_path": "operations/transactions/TX2.yaml",
+          "replayed": true,
+          "snapshot_after": "SNAP3",
+          "transaction_id": "TX2"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP3",
+        "transaction_id": "TX2"
+      },
+      "step": 2,
+      "transport": "gateway"
+    }
+  ]
+}
