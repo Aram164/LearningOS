@@ -248,6 +248,391 @@ cases:
       - transport: gateway
         request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/nope.pdf", material_sha256: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}
         artifact_ids: []
+  - id: attach-success
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request:
+          record: {id: source-scenario-bare, material: "material://source-scenario-bare/attached.pdf", material_sha256: "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6"}
+          expected_diff_sha256: "sha256:2f478959e6ecde768db3beffe4aa953f658c82c8a00714cc3704afde1cc9248a"
+        artifact_ids: [source-scenario-bare]
+  - id: attach-exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request:
+          record: {id: source-scenario-bare, material: "material://source-scenario-bare/attached.pdf", material_sha256: "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6"}
+          expected_diff_sha256: "sha256:2f478959e6ecde768db3beffe4aa953f658c82c8a00714cc3704afde1cc9248a"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        same_envelope_as: 1
+  - id: attach-wrong-sha
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/attached.pdf", material_sha256: "ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"}}
+        artifact_ids: []
+  - id: attach-directory
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare", material_sha256: "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6"}}
+        artifact_ids: []
+  - id: syntheses-nonlist
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request:
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/attached.pdf", material_sha256: "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6", material_syntheses: "x"}}
+        artifact_ids: []
+  - id: syntheses-shape
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request:
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/attached.pdf", material_sha256: "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6", material_syntheses: [{}]}}
+        artifact_ids: []
+  - id: syntheses-unit
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request:
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/attached.pdf", material_sha256: "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6", material_syntheses: [{unit_id: 1, dossier: {}}]}}
+        artifact_ids: []
+  - id: syntheses-duplicate
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request:
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/attached.pdf", material_sha256: "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6", material_syntheses: [{unit_id: unit-demo-l01, dossier: {}}, {unit_id: unit-demo-l01, dossier: {}}]}}
+        artifact_ids: []
+  - id: rebases-nonlist
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request:
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/attached.pdf", material_sha256: "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6", dossier_rebases: "x"}}
+        artifact_ids: []
+  - id: rebases-shape
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request:
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/attached.pdf", material_sha256: "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6", dossier_rebases: [{}]}}
+        artifact_ids: []
+  - id: rebases-unit
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request:
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/attached.pdf", material_sha256: "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6", dossier_rebases: [{unit_id: 1, dossier_digest: "sha256:0000000000000000000000000000000000000000000000000000000000000000", route_ids: [route-b2f1f80014860a929a3af0bc], provenance: {request_id: r, delivery_id: d, provider: p}}]}}
+        artifact_ids: []
+  - id: rebases-digest
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request:
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/attached.pdf", material_sha256: "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6", dossier_rebases: [{unit_id: unit-demo-l01, dossier_digest: "", route_ids: [route-b2f1f80014860a929a3af0bc], provenance: {request_id: r, delivery_id: d, provider: p}}]}}
+        artifact_ids: []
+  - id: rebases-routes
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request:
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/attached.pdf", material_sha256: "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6", dossier_rebases: [{unit_id: unit-demo-l01, dossier_digest: "sha256:0000000000000000000000000000000000000000000000000000000000000000", route_ids: [], provenance: {request_id: r, delivery_id: d, provider: p}}]}}
+        artifact_ids: []
+  - id: rebases-provenance
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request:
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/attached.pdf", material_sha256: "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6", dossier_rebases: [{unit_id: unit-demo-l01, dossier_digest: "sha256:0000000000000000000000000000000000000000000000000000000000000000", route_ids: [route-b2f1f80014860a929a3af0bc], provenance: {}}]}}
+        artifact_ids: []
+  - id: rebases-duplicate
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request:
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/attached.pdf", material_sha256: "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6", dossier_rebases: [{unit_id: unit-demo-l01, dossier_digest: "sha256:0000000000000000000000000000000000000000000000000000000000000000", route_ids: [route-b2f1f80014860a929a3af0bc], provenance: {request_id: r, delivery_id: d, provider: p}}, {unit_id: unit-demo-l01, dossier_digest: "sha256:0000000000000000000000000000000000000000000000000000000000000000", route_ids: [route-b2f1f80014860a929a3af0bc], provenance: {request_id: r, delivery_id: d, provider: p}}]}}
+        artifact_ids: []
+  - id: replacement-unneeded
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request:
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/attached.pdf", material_sha256: "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6", material_syntheses: [{unit_id: unit-demo-l01, dossier: {}}]}}
+        artifact_ids: []
+  - id: rebase-unknown-unit
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request:
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/attached.pdf", material_sha256: "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6", dossier_rebases: [{unit_id: unit-nope, dossier_digest: "sha256:0000000000000000000000000000000000000000000000000000000000000000", route_ids: [route-b2f1f80014860a929a3af0bc], provenance: {request_id: r, delivery_id: d, provider: p}}]}}
+        artifact_ids: []
+  - id: rebase-no-dossier
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request:
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/attached.pdf", material_sha256: "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6", dossier_rebases: [{unit_id: unit-demo-l01, dossier_digest: "sha256:0000000000000000000000000000000000000000000000000000000000000000", route_ids: [route-b2f1f80014860a929a3af0bc], provenance: {request_id: r, delivery_id: d, provider: p}}]}}
+        artifact_ids: []
+  - id: rebase-unneeded
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        operation: unit.material-synthesis.publish
+        request: {"record": {"basis": {"ai_provenance": {"delivery_id": "ai-delivery-scenario", "provider": "manual-bundle", "request_id": "ai-request-demo"}, "material_checksums": {"route-b2f1f80014860a929a3af0bc": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5"}, "policy": "tiered-v2", "route_set_checksum": "sha256:20f877da66c66098f5dde76c5c9c4ae0a90a4a8c489f67c2eb346288f174ef39", "source_map_checksum": "sha256:805a9644660dc4f093d8462fb42cf0e59eeb7ef123ede8c4c64659140470faf9", "source_map_revision": 0, "unit_revision": 3}, "comparisons": [], "concept_groups": [{"bridge_note_ids": [], "concept_id": "concept-variance", "local_node_ids": ["knowledge-demo-outcomes"], "narrative": "Outcome values feed later dispersion measures.", "related_unit_ids": []}, {"bridge_note_ids": ["note-demo"], "concept_id": "concept-expected-value", "local_node_ids": ["knowledge-demo-expectation"], "narrative": "The local derivation is the canonical expectation concept.", "related_unit_ids": ["unit-demo-l01"]}], "id": "material-synthesis-demo-l01", "route_assessments": [{"assumptions": "Finite discrete outcomes are assumed.", "best_for": "Checking the lecture core derivation.", "concept_ids": ["concept-expected-value"], "contribution": "A direct derivation of the weighted sum.", "evidence": [{"checksum": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5", "locator": "lecture-01.pdf p.1"}], "exercise_value": "Includes a small worked calculation.", "limitations": "Does not cover continuous variables.", "locator": "lecture-01.pdf", "notation": "Uses uppercase X and lowercase outcome values.", "review_status": "deep-reviewed", "route_id": "route-b2f1f80014860a929a3af0bc", "scope_of_absence": "lecture-01.pdf, PDF pp. 1-20", "source_id": "source-demo-book"}], "schema_version": 1, "status": "approved", "type": "unit-material-synthesis", "unit_id": "unit-demo-l01"}, "unit_id": "unit-demo-l01"}
+        artifact_ids: [unit-demo-l01, material-synthesis-demo-l01]
+      - transport: gateway
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/attached.pdf", material_sha256: "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6", dossier_rebases: [{unit_id: unit-demo-l01, dossier_digest: "sha256:0000000000000000000000000000000000000000000000000000000000000000", route_ids: [route-b2f1f80014860a929a3af0bc], provenance: {request_id: r, delivery_id: d, provider: p}}]}}
+        artifact_ids: []
   - id: exact-replay
     kind: sequence
     steps:
@@ -274,48 +659,31 @@ cases:
     artifact_ids: [source-demo-book]
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/commands/source_catalog.py:118", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
-  - {where: "tools/learning_os/commands/source_catalog.py:122", reason: "record/file admission: the argparse required group and the payload oneOf enforce presence first"}
-  - {where: "tools/learning_os/commands/source_catalog.py:583", reason: "unmounted materials tree: the fixture mounts materials"}
-  - {where: "tools/learning_os/commands/source_catalog.py:592", reason: "unresolvable material path: authority screening confines the payload under the source namespace, and strict=False never raises there"}
-  - {where: "tools/learning_os/commands/source_catalog.py:596", reason: "material URI naming a directory: no directory exists under a material-less source's materials namespace"}
-  - {where: "tools/learning_os/commands/source_catalog.py:612", reason: "unreadable dossier: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:614", reason: "non-mapping dossier: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:642", reason: "rebase moving other fields: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:649", reason: "rebase gaining or losing routes: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:655", reason: "rebase naming the wrong routes: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:667", reason: "rebased route in a comparison: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:675", reason: "rebased route not screened: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:680", reason: "rebased route carrying evidence: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:685", reason: "rebased route carrying analysis refs: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:738", reason: "payload admission: argparse json_object and the payload schema enforce the object shape first"}
-  - {where: "tools/learning_os/commands/source_catalog.py:781", reason: "material absent from the manifest: the fixture ships no materials manifest, and no step can mint a manifest entry"}
-  - {where: "tools/learning_os/commands/source_catalog.py:786", reason: "live bytes against the manifest: the fixture ships no materials manifest, and no step can mint a manifest entry"}
-  - {where: "tools/learning_os/commands/source_catalog.py:791", reason: "live bytes against the request hash: the fixture ships no materials manifest, and no step can mint a manifest entry"}
-  - {where: "tools/learning_os/commands/source_catalog.py:842", reason: "non-list material_syntheses: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:847", reason: "malformed replacement entry: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:850", reason: "replacement without unit and dossier: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:852", reason: "double replacement: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:856", reason: "non-list dossier_rebases: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:862", reason: "malformed rebase entry: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:870", reason: "rebase without a unit id: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:872", reason: "rebase without a dossier digest: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:875", reason: "rebase without route ids: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:883", reason: "rebase without provenance: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:888", reason: "double rebase: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:897", reason: "dossier unit not registered: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:902", reason: "unestablishable dossier basis: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:914", reason: "unneeded replacement: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:920", reason: "replacement plus rebase: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:927", reason: "rebase unit not registered: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:934", reason: "rebase without a dossier: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:938", reason: "unneeded rebase: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:944", reason: "missing replacement or rebase: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:954", reason: "invalid replacement dossier: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:964", reason: "replacement reusing provenance: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:980", reason: "stale rebase digest: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:986", reason: "rebase reusing provenance: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:1004", reason: "already-stale dossier: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:1014", reason: "invalid rebased dossier: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
-  - {where: "tools/learning_os/commands/source_catalog.py:1031", reason: "registry re-read failure: the fixture registry reads cleanly in a single-threaded run"}
-  - {where: "tools/learning_os/commands/source_catalog.py:1033", reason: "non-registry partition file: the fixture's partition files are valid registries"}
+  - {where: "tools/learning_os/commands/source_catalog.py:118", reason: "binding shape admission: argparse json_object and the payload schema enforce the object shape first"}
+  - {where: "tools/learning_os/commands/source_catalog.py:122", reason: "binding shape admission: the argparse required group and the payload oneOf enforce presence first"}
+  - {where: "tools/learning_os/commands/source_catalog.py:583", reason: "unmounted materials: the fixture mounts the mini materials tree"}
+  - {where: "tools/learning_os/commands/source_catalog.py:592", reason: "unresolvable path: readiness runs with strict=False, so this never raises"}
+  - {where: "tools/learning_os/commands/source_catalog.py:612", reason: "unreadable dossier bytes: the only dossier bytes any step can place are publish-valid (rebase-unneeded proves the read path)"}
+  - {where: "tools/learning_os/commands/source_catalog.py:614", reason: "non-mapping dossier: the only dossier bytes any step can place are publish-valid (rebase-unneeded proves the read path)"}
+  - {where: "tools/learning_os/commands/source_catalog.py:642", reason: "routes index not a mapping: behind the dossier route checks, which refuse at missing-dossier first (rebase-no-dossier proves it)"}
+  - {where: "tools/learning_os/commands/source_catalog.py:648", reason: "routes index unreadable: behind the dossier route checks, which refuse at missing-dossier first (rebase-no-dossier proves it)"}
+  - {where: "tools/learning_os/commands/source_catalog.py:652", reason: "routes index invalid: behind the dossier route checks, which refuse at missing-dossier first (rebase-no-dossier proves it)"}
+  - {where: "tools/learning_os/commands/source_catalog.py:665", reason: "unindexed route id: behind the dossier route checks, which refuse at missing-dossier first (rebase-no-dossier proves it)"}
+  - {where: "tools/learning_os/commands/source_catalog.py:673", reason: "extra rebase routes: behind the dossier route checks, which refuse at missing-dossier first (rebase-no-dossier proves it)"}
+  - {where: "tools/learning_os/commands/source_catalog.py:681", reason: "dropped route id: behind the dossier route checks, which refuse at missing-dossier first (rebase-no-dossier proves it)"}
+  - {where: "tools/learning_os/commands/source_catalog.py:685", reason: "missing route id: behind the dossier route checks, which refuse at missing-dossier first (rebase-no-dossier proves it)"}
+  - {where: "tools/learning_os/commands/source_catalog.py:738", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
+  - {where: "tools/learning_os/commands/source_catalog.py:781", reason: "material absent from manifest: the generated manifest covers every fixture material file, and no step adds unmanifested bytes"}
+  - {where: "tools/learning_os/commands/source_catalog.py:786", reason: "live bytes versus manifest: no step writes the materials tree, so live bytes always match the manifest"}
+  - {where: "tools/learning_os/commands/source_catalog.py:897", reason: "dossier with no recorded basis: bare owns no routes so refers[dossiers] is empty; source-demo-book attaches refuse at already-holds first"}
+  - {where: "tools/learning_os/commands/source_catalog.py:902", reason: "unestablishable dossier basis: bare owns no routes so refers[dossiers] is empty; source-demo-book attaches refuse at already-holds first"}
+  - {where: "tools/learning_os/commands/source_catalog.py:920", reason: "replacement plus rebase: the replacement half refuses at replacement-unneeded first (probe: any requested uid hits :914 before the rebase loop)"}
+  - {where: "tools/learning_os/commands/source_catalog.py:944", reason: "missing replacement or rebase: bare moves no dossier basis so nothing is ever required; source-demo-book attaches refuse at already-holds first"}
+  - {where: "tools/learning_os/commands/source_catalog.py:954", reason: "invalid replacement dossier: replacements refuse at replacement-unneeded first (nothing is required)"}
+  - {where: "tools/learning_os/commands/source_catalog.py:964", reason: "replacement reusing reviewed provenance: replacements refuse at replacement-unneeded first (nothing is required)"}
+  - {where: "tools/learning_os/commands/source_catalog.py:980", reason: "stale rebase digest: rebases refuse at unknown-unit, missing-dossier, or unneeded first (nothing is required)"}
+  - {where: "tools/learning_os/commands/source_catalog.py:986", reason: "rebase reusing reviewed provenance: rebases refuse at unknown-unit, missing-dossier, or unneeded first (nothing is required)"}
+  - {where: "tools/learning_os/commands/source_catalog.py:1004", reason: "already-stale rebase: rebases refuse at unknown-unit, missing-dossier, or unneeded first (nothing is required)"}
+  - {where: "tools/learning_os/commands/source_catalog.py:1014", reason: "invalid rebased dossier: rebases refuse at unknown-unit, missing-dossier, or unneeded first (nothing is required)"}
+  - {where: "tools/learning_os/commands/source_catalog.py:1031", reason: "registry re-read failure: the single-threaded apply re-reads a file it just wrote"}
+  - {where: "tools/learning_os/commands/source_catalog.py:1033", reason: "non-registry re-read: intake writes partition registries only"}

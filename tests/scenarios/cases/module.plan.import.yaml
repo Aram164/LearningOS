@@ -2,6 +2,19 @@ operation: module.plan.import
 fixture: rich_world
 observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
 cases:
+  - id: import-success
+    kind: success
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b"}
+    artifact_ids: [module-demo]
+    a5_base: true
+    expect: {site: null}
+  - id: check-success
+    kind: success
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b", check: true}
+    artifact_ids: []
+    expect: {site: null}
   - id: staged-basis-without-check
     kind: refusal
     transport: gateway
@@ -81,17 +94,182 @@ cases:
     request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:a7cc90a7cba7d6ad7e825d5a66566b0bdbab1f27f329bf55d0b902e805b68c8f", check: true}
     artifact_ids: []
     expect: {site: null}
+  - id: unknown-module
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-nope, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:9c7551abe36a80b845ca8646c9138fdb70317521b099137ab86bc09bf9a18402", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: module-patch-escape
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:e5a165bee15fa00bbf6d1bafd2e30b6f7a13c9aa5f8b3f40722997978ac6c89f", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: source-map-foreign
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:648fb19bc468986fb188afc1b3d13bb7792ad9664f943821975a4d93639c2e5b", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: source-patches-nonlist
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:bfa6ff02ac6e3fa59c38be9b443a3f25b2691bcaf73df38a134c6c462fa8df27", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: source-patch-unknown
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:9592eb08b921fae5bcd55cd9ed095ab1caa7f3003c575d9162edb2b880dc5f69", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: units-nonlist
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:1b29cc48be82584e6515af1f7811a4ca9b0ac4feec873fe86405dfcc492e75a9", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: unit-invalid
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:278c11dc7886bd66954f3a7788bd1c6335212bef2a216496c38811e158bed23d", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: unit-duplicate
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:be5be99f7c67b7dd88177bb6444115d33373abd69bb742b9810198caf09bfd4d", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: map-foreign-unit
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:efc73828663159feadfe4487db549b4d7e75da14c0a18e02c284428abfa976fd", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: stage-note-escape
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:f61863ac8e954755ee2e66f1c1a3d8ccaffa073859f2a08587c838fa8e1dc419", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: synthesis-unknown-unit
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:558f5ea408f402cd525a43962b14d9bd00eefc10cba4a6835acc748f8360b93c", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: workspace-updates-nonlist
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:dedeac1852e1d6a74b1ddc67b9feea488e87ce91568c5b9a90f508e0a86fcf3e", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: workspace-not-joined
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:d649776f42a3e7cca0e3a6531b394df3c1ac216d3420d149aa2a2e2a89bc63d0", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: workspace-splice
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:e689dc11fd31d7ed442bf729310ee983ffc51b2801660cd6c20103909b82f8ad", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: ordering-reorder
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:bdb89a206f8c5353ec71e6081ae6df108e9d56d1b700426b878fe42640d159d1", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: routing-omission
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:264562a4ade16198c02373f14af65de855a9403bacb8835f105916ae045f9fb1", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: lineage-evidence
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:0cd8ef189710da8f42cc8d0a6aad57caf50c772c8f6257359174efad0ad8f90e", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: validation-preflight
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:09e2e424c9511d0fae0311ff305bc8e13312e8332eec1b0efdea4833e4cbb49a", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: staged-outside-package
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b", check: true, staged_basis: unit-nope}
+    artifact_ids: []
+    expect: {site: null}
+  - id: staged-unavailable
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:666290c2179466df973dbccc5fd9a07dfbbf23ac805aebb290cb6221720fe847", check: true, staged_basis: unit-scenario-new}
+    artifact_ids: []
+    expect: {site: null}
   - id: direct-cli-refused
     kind: refusal
     transport: cli
     argv: [module-plan-import, module-demo, --file, "<CASEDATA>/package.yaml"]
     expect: {site: null}
+  - id: apply-without-snapshot
+    kind: refusal
+    transport: cli
+    argv: [module-plan-import, module-demo, --file, "<CASEDATA>/package.yaml"]
+    expect: {site: null}
+  - id: check-with-reviewed-sha
+    kind: refusal
+    transport: cli
+    argv: [module-plan-import, module-demo, --file, "<CASEDATA>/package.yaml", --check, --apply-reviewed-sha256, "sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b"]
+    expect: {site: null}
+  - id: stale-reviewed-apply
+    kind: refusal
+    transport: cli
+    argv: [module-plan-import, module-demo, --file, "<CASEDATA>/package.yaml", --apply-reviewed-sha256, "sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b", --review-report, "<CASEDATA>/review.json"]
+    expect: {site: null}
+  - id: lineage-admission-direct
+    kind: refusal
+    transport: cli
+    argv: [module-plan-import, module-demo, --file, "<CASEDATA>/package.yaml", --expected-snapshot, "sha256:1c44325f29523fa0ea60da63c951bc22c356a50e409dd233939f635f06df5647"]
+    expect: {site: null}
+  - id: import-hits-warning-gate
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: project.create
+        request:
+          project:
+            schema_version: 1
+            id: project-scenario-new
+            type: project
+            title: Scenario project
+            project_type: software
+            status: active
+            root_uri: project://scenario
+            objective: Characterize project creation.
+            milestone_ids: []
+            linked_module_ids: []
+            unit_ids: []
+            workspace_ids: []
+            thematic_group_ids: []
+            boundaries: {confidentiality: private, external_code_access: approved}
+        artifact_ids: [project-scenario-new]
+      - transport: gateway
+        request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b"}
+        artifact_ids: [module-demo]
   - id: exact-replay
     kind: sequence
     steps:
       - transport: gateway
-        request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:0db5efbb89c4bbdc462ff07bb22b251aa813a702006e956c481dcf3937ccc08b", check: true}
-        artifact_ids: []
+        request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b"}
+        artifact_ids: [module-demo]
       - transport: gateway
         same_envelope_as: 0
   - id: replay-only-miss
@@ -103,43 +281,18 @@ cases:
     expect: {site: null}
 untriggered:
   - {where: "tools/learning_os/commands/module.py:1931", reason: "promotion without approval: approved gateway envelopes always approve, and direct CLI refuses at needs-gateway first"}
-  - {where: "tools/learning_os/commands/module.py:1935", reason: "promotion without a snapshot: gateway envelopes always carry one, and direct CLI refuses at needs-gateway first"}
-  - {where: "tools/learning_os/commands/module.py:1955", reason: "promotion hash mismatch: needs a prepared promotion, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:1958", reason: "live promotion without a hash: needs a prepared promotion, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:1973", reason: "promotion preflight: needs a prepared promotion, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:1994", reason: "promotion revisions admission: gateway revision maps are well-formed, and promotion apply needs a prepared promotion first (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2006", reason: "promotion revisions mismatch: prepare records live revisions and the harness seals live guards under one lock"}
-  - {where: "tools/learning_os/commands/module.py:2023", reason: "promotion in-transaction gate: needs a prepared promotion, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2032", reason: "promotion transaction failure: needs a prepared promotion past the gate, then a seal/commit interleave (SPEC-GAP S06e-A1, S06e-G1)"}
-  - {where: "tools/learning_os/commands/module.py:2374", reason: "check with a reviewed hash on the direct path: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2381", reason: "dead check: the direct path always carries --file, and the gateway schema admits no reviewed hash"}
-  - {where: "tools/learning_os/commands/module.py:2388", reason: "stale observed material on the direct path: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2402", reason: "apply without a snapshot: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2412", reason: "unknown module: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2420", reason: "module_patch escaping the module: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2430", reason: "source_map for another module: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2438", reason: "source_patches not a list: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2445", reason: "patch for an unknown source: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2455", reason: "registry splice failure: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2461", reason: "units not a list: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2469", reason: "invalid or duplicate unit: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2477", reason: "study map for another unit: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2488", reason: "stage note escaping scope: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2498", reason: "synthesis for an unknown unit: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2504", reason: "synthesis destination error: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2512", reason: "workspace_updates not a list: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2518", reason: "workspace update not joined: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2529", reason: "workspace splice failure: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2537", reason: "ordering preflight: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2545", reason: "routing preflight: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2553", reason: "lineage preflight: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2568", reason: "lineage admission: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2575", reason: "empty revision: only the unit-revise delegation sets _minimal_writes"}
-  - {where: "tools/learning_os/commands/module.py:2581", reason: "staged unit outside the package: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2590", reason: "staged basis unavailable: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2615", reason: "validation crash: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2618", reason: "validation preflight: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2655", reason: "inventory preflight: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2669", reason: "check-report write failure: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2698", reason: "in-transaction validation gate: needs a contract-passing package, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:2704", reason: "import transaction failure: needs a contract-passing package past the gate, then a seal/commit interleave (SPEC-GAP S06e-A1, S06e-G1)"}
+  - {where: "tools/learning_os/commands/module.py:1935", reason: "promotion without snapshot: approved gateway envelopes always bind the snapshot, and direct CLI refuses at needs-gateway first"}
+  - {where: "tools/learning_os/commands/module.py:1955", reason: "promotion revisions shape: needs a prepared Master Planning promotion, and the fixture stages no sanitized catalog (probe: prepare fails at the catalog requirement)"}
+  - {where: "tools/learning_os/commands/module.py:1958", reason: "promotion revisions shape: needs a prepared Master Planning promotion, and the fixture stages no sanitized catalog (probe: prepare fails at the catalog requirement)"}
+  - {where: "tools/learning_os/commands/module.py:1973", reason: "promotion candidate mismatch: needs a prepared Master Planning promotion, and the fixture stages no sanitized catalog (probe: prepare fails at the catalog requirement)"}
+  - {where: "tools/learning_os/commands/module.py:1994", reason: "promotion content mismatch: needs a prepared Master Planning promotion, and the fixture stages no sanitized catalog (probe: prepare fails at the catalog requirement)"}
+  - {where: "tools/learning_os/commands/module.py:2006", reason: "promotion revisions mismatch: needs a prepared Master Planning promotion, and the fixture stages no sanitized catalog (probe: prepare fails at the catalog requirement)"}
+  - {where: "tools/learning_os/commands/module.py:2023", reason: "promotion preflight ordering: needs a prepared Master Planning promotion, and the fixture stages no sanitized catalog (probe: prepare fails at the catalog requirement)"}
+  - {where: "tools/learning_os/commands/module.py:2032", reason: "promotion preflight routing: needs a prepared Master Planning promotion, and the fixture stages no sanitized catalog (probe: prepare fails at the catalog requirement)"}
+  - {where: "tools/learning_os/commands/module.py:2381", reason: "dead check: the compact branch returns before this line"}
+  - {where: "tools/learning_os/commands/module.py:2455", reason: "registry splice failure: the fixture registry is block YAML with one id per line, and loader and text agree"}
+  - {where: "tools/learning_os/commands/module.py:2504", reason: "synthesis destination error: unknown units refuse at synthesis admission first, and the destination is then a pure path join"}
+  - {where: "tools/learning_os/commands/module.py:2615", reason: "validation crash: no authored input raises ValueError through the shadow validation; the fixture baseline is valid and no package path writes it"}
+  - {where: "tools/learning_os/commands/module.py:2655", reason: "inventory preflight: the fixture audit carries no inventory-v1 block, so the legacy path returns no problems"}
+  - {where: "tools/learning_os/commands/module.py:2669", reason: "check-report write failure: module-plan-import admits no --report-out flag, so the save path is unreachable"}
+  - {where: "tools/learning_os/commands/module.py:2704", reason: "import transaction failure: needs a seal/commit interleave, and the single-threaded harness cannot race itself"}

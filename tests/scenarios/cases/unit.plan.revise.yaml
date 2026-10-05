@@ -2,6 +2,19 @@ operation: unit.plan.revise
 fixture: rich_world
 observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
 cases:
+  - id: revise-success
+    kind: success
+    transport: gateway
+    request: {unit_id: unit-demo-l01, record: {"unit_id": "unit-demo-l01", "plan_contract": {"version": 1, "plan_template_version": 1, "coverage_audit": "work/active/workspace-demo/outputs/demo-coverage-audit.md", "checks": {"local_inventory_complete": true, "linked_inventory_complete": true, "materials_opened_and_content_checked": true, "current_and_prior_scope_reconciled": true, "duplicates_and_numbering_checked": true, "exclusions_and_unresolved_gaps_recorded": true}}, "route_changes": {"update": [{"route_id": "route-b2f1f80014860a929a3af0bc", "fields": {"angle_detail": "A reviewed detailed fixture angle."}}]}}}
+    artifact_ids: [module-demo]
+    a5_base: true
+    expect: {site: null}
+  - id: check-success
+    kind: success
+    transport: gateway
+    request: {unit_id: unit-demo-l01, record: {"unit_id": "unit-demo-l01", "plan_contract": {"version": 1, "plan_template_version": 1, "coverage_audit": "work/active/workspace-demo/outputs/demo-coverage-audit.md", "checks": {"local_inventory_complete": true, "linked_inventory_complete": true, "materials_opened_and_content_checked": true, "current_and_prior_scope_reconciled": true, "duplicates_and_numbering_checked": true, "exclusions_and_unresolved_gaps_recorded": true}}, "route_changes": {"update": [{"route_id": "route-b2f1f80014860a929a3af0bc", "fields": {"angle_detail": "A reviewed detailed fixture angle."}}]}}, check: true}
+    artifact_ids: []
+    expect: {site: null}
   - id: missing-file
     kind: refusal
     transport: cli
@@ -39,12 +52,65 @@ cases:
     transport: cli
     argv: [unit-plan-revise, unit-demo-l01, --record, '{"unit_id": "unit-demo-l01", "plan_contract": {"version": 1}}']
     expect: {site: null}
+  - id: noop-revision
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, record: {"unit_id": "unit-demo-l01", "plan_contract": {"version": 1, "plan_template_version": 1, "coverage_audit": "work/active/workspace-demo/outputs/demo-coverage-audit.md", "checks": {"local_inventory_complete": true, "linked_inventory_complete": true, "materials_opened_and_content_checked": true, "current_and_prior_scope_reconciled": true, "duplicates_and_numbering_checked": true, "exclusions_and_unresolved_gaps_recorded": true}}, "route_changes": {}}}
+    artifact_ids: [module-demo]
+    expect: {site: null}
+  - id: unknown-unit
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-nope, record: {"unit_id": "unit-nope", "plan_contract": {"version": 1, "plan_template_version": 1, "coverage_audit": "work/active/workspace-demo/outputs/demo-coverage-audit.md", "checks": {"local_inventory_complete": true, "linked_inventory_complete": true, "materials_opened_and_content_checked": true, "current_and_prior_scope_reconciled": true, "duplicates_and_numbering_checked": true, "exclusions_and_unresolved_gaps_recorded": true}}, "route_changes": {}}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: route-changes-failed
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, record: {"unit_id": "unit-demo-l01", "plan_contract": {"version": 1, "plan_template_version": 1, "coverage_audit": "work/active/workspace-demo/outputs/demo-coverage-audit.md", "checks": {"local_inventory_complete": true, "linked_inventory_complete": true, "materials_opened_and_content_checked": true, "current_and_prior_scope_reconciled": true, "duplicates_and_numbering_checked": true, "exclusions_and_unresolved_gaps_recorded": true}}, "route_changes": {"update": [{"route_id": "route-nope", "fields": {"angle_detail": "x"}}]}}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: apply-without-snapshot
+    kind: refusal
+    transport: cli
+    argv: [unit-plan-revise, unit-demo-l01, --record, '{"unit_id": "unit-demo-l01", "plan_contract": {"version": 1, "plan_template_version": 1, "coverage_audit": "work/active/workspace-demo/outputs/demo-coverage-audit.md", "checks": {"local_inventory_complete": true, "linked_inventory_complete": true, "materials_opened_and_content_checked": true, "current_and_prior_scope_reconciled": true, "duplicates_and_numbering_checked": true, "exclusions_and_unresolved_gaps_recorded": true}}, "route_changes": {"update": [{"route_id": "route-b2f1f80014860a929a3af0bc", "fields": {"angle_detail": "A reviewed detailed fixture angle."}}]}}']
+    expect: {site: null}
+  - id: report-with-reviewed
+    kind: refusal
+    transport: cli
+    argv: [unit-plan-revise, unit-demo-l01, --record, '{"unit_id": "unit-demo-l01", "plan_contract": {"version": 1, "plan_template_version": 1, "coverage_audit": "work/active/workspace-demo/outputs/demo-coverage-audit.md", "checks": {"local_inventory_complete": true, "linked_inventory_complete": true, "materials_opened_and_content_checked": true, "current_and_prior_scope_reconciled": true, "duplicates_and_numbering_checked": true, "exclusions_and_unresolved_gaps_recorded": true}}, "route_changes": {"update": [{"route_id": "route-b2f1f80014860a929a3af0bc", "fields": {"angle_detail": "A reviewed detailed fixture angle."}}]}}', --report-out, "../materials/unit-report.json", --apply-reviewed-sha256, "sha256:79b584bbf9d2cde3bacc0ac5503fa191066d936727400c4c76255a26e7dbadbd"]
+    expect: {site: null}
+  - id: report-with-staged
+    kind: refusal
+    transport: cli
+    argv: [unit-plan-revise, unit-demo-l01, --record, '{"unit_id": "unit-demo-l01", "plan_contract": {"version": 1, "plan_template_version": 1, "coverage_audit": "work/active/workspace-demo/outputs/demo-coverage-audit.md", "checks": {"local_inventory_complete": true, "linked_inventory_complete": true, "materials_opened_and_content_checked": true, "current_and_prior_scope_reconciled": true, "duplicates_and_numbering_checked": true, "exclusions_and_unresolved_gaps_recorded": true}}, "route_changes": {"update": [{"route_id": "route-b2f1f80014860a929a3af0bc", "fields": {"angle_detail": "A reviewed detailed fixture angle."}}]}}', --report-out, "../materials/unit-report.json", --staged-basis, unit-demo-l01]
+    expect: {site: null}
+  - id: report-without-check
+    kind: refusal
+    transport: cli
+    argv: [unit-plan-revise, unit-demo-l01, --record, '{"unit_id": "unit-demo-l01", "plan_contract": {"version": 1, "plan_template_version": 1, "coverage_audit": "work/active/workspace-demo/outputs/demo-coverage-audit.md", "checks": {"local_inventory_complete": true, "linked_inventory_complete": true, "materials_opened_and_content_checked": true, "current_and_prior_scope_reconciled": true, "duplicates_and_numbering_checked": true, "exclusions_and_unresolved_gaps_recorded": true}}, "route_changes": {"update": [{"route_id": "route-b2f1f80014860a929a3af0bc", "fields": {"angle_detail": "A reviewed detailed fixture angle."}}]}}', --report-out, "../materials/unit-report.json"]
+    expect: {site: null}
+  - id: report-inside-repo
+    kind: refusal
+    transport: cli
+    argv: [unit-plan-revise, unit-demo-l01, --record, '{"unit_id": "unit-demo-l01", "plan_contract": {"version": 1, "plan_template_version": 1, "coverage_audit": "work/active/workspace-demo/outputs/demo-coverage-audit.md", "checks": {"local_inventory_complete": true, "linked_inventory_complete": true, "materials_opened_and_content_checked": true, "current_and_prior_scope_reconciled": true, "duplicates_and_numbering_checked": true, "exclusions_and_unresolved_gaps_recorded": true}}, "route_changes": {"update": [{"route_id": "route-b2f1f80014860a929a3af0bc", "fields": {"angle_detail": "A reviewed detailed fixture angle."}}]}}', --check, --report-out, work/inbox/r.json]
+    expect: {site: null}
+  - id: reviewed-shape
+    kind: refusal
+    transport: cli
+    argv: [unit-plan-revise, unit-demo-l01, --record, '{"unit_id": "unit-demo-l01", "plan_contract": {"version": 1, "plan_template_version": 1, "coverage_audit": "work/active/workspace-demo/outputs/demo-coverage-audit.md", "checks": {"local_inventory_complete": true, "linked_inventory_complete": true, "materials_opened_and_content_checked": true, "current_and_prior_scope_reconciled": true, "duplicates_and_numbering_checked": true, "exclusions_and_unresolved_gaps_recorded": true}}, "route_changes": {"update": [{"route_id": "route-b2f1f80014860a929a3af0bc", "fields": {"angle_detail": "A reviewed detailed fixture angle."}}]}}', --apply-reviewed-sha256, "sha256:79b584bbf9d2cde3bacc0ac5503fa191066d936727400c4c76255a26e7dbadbd"]
+    expect: {site: null}
+  - id: stale-reviewed
+    kind: refusal
+    transport: cli
+    argv: [unit-plan-revise, unit-demo-l01, --file, "<CASEDATA>/revision.yaml", --apply-reviewed-sha256, "sha256:79b584bbf9d2cde3bacc0ac5503fa191066d936727400c4c76255a26e7dbadbd", --review-report, "<CASEDATA>/review.json"]
+    expect: {site: null}
   - id: exact-replay
     kind: sequence
     steps:
       - transport: gateway
-        request: {unit_id: unit-demo-l01, record: {unit_id: unit-demo-l01, plan_contract: {version: 9}}}
-        artifact_ids: []
+        request: {unit_id: unit-demo-l01, record: {"unit_id": "unit-demo-l01", "plan_contract": {"version": 1, "plan_template_version": 1, "coverage_audit": "work/active/workspace-demo/outputs/demo-coverage-audit.md", "checks": {"local_inventory_complete": true, "linked_inventory_complete": true, "materials_opened_and_content_checked": true, "current_and_prior_scope_reconciled": true, "duplicates_and_numbering_checked": true, "exclusions_and_unresolved_gaps_recorded": true}}, "route_changes": {"update": [{"route_id": "route-b2f1f80014860a929a3af0bc", "fields": {"angle_detail": "A reviewed detailed fixture angle."}}]}}}
+        artifact_ids: [module-demo]
       - transport: gateway
         same_envelope_as: 0
   - id: replay-only-miss
@@ -55,13 +121,4 @@ cases:
     artifact_ids: []
     expect: {site: null}
 untriggered:
-  - {where: "tools/learning_os/commands/module.py:3043", reason: "record/file admission: the argparse required group and the payload schema enforce presence first"}
-  - {where: "tools/learning_os/commands/module.py:3069", reason: "report-out with reviewed apply: needs a contract-passing revision, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:3073", reason: "report-out with staged basis: needs a contract-passing revision, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:3077", reason: "report-out without check: needs a contract-passing revision, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:3083", reason: "report-out target outside the root: needs a contract-passing revision, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:3088", reason: "reviewed apply shape: needs a contract-passing revision, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:3096", reason: "stale observed material: needs a contract-passing revision, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:3105", reason: "apply without a snapshot: needs a contract-passing revision, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:3111", reason: "unknown unit: needs a contract-passing revision, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
-  - {where: "tools/learning_os/commands/module.py:3120", reason: "route changes failed: needs a contract-passing revision, which needs a coverage audit the fixture lacks (SPEC-GAP S06e-A1)"}
+  - {where: "tools/learning_os/commands/module.py:3043", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}

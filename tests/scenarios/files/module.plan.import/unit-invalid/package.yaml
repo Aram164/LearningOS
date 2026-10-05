@@ -1,0 +1,18 @@
+module_id: module-demo
+plan_contract:
+  version: 2
+  plan_template_version: 1
+  coverage_audit: work/active/workspace-demo/outputs/demo-coverage-audit.md
+  checks:
+    local_inventory_complete: true
+    linked_inventory_complete: true
+    materials_opened_and_content_checked: true
+    current_and_prior_scope_reconciled: true
+    duplicates_and_numbering_checked: true
+    exclusions_and_unresolved_gaps_recorded: true
+module_patch:
+  title: Reviewed demo module
+units:
+- unit:
+    id: unit-x
+    module_id: module-other
