@@ -1,0 +1,21 @@
+operation: cli.related
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: related-note
+    kind: success
+    transport: cli
+    argv: [related, note-demo]
+    a5_base: true
+    expect: {site: null}
+  - id: related-project
+    kind: success
+    transport: cli
+    argv: [related, project-demo]
+    expect: {site: null}
+  - id: unknown-id
+    kind: refusal
+    transport: cli
+    argv: [related, nope-id]
+    expect: {site: null}
+untriggered: []

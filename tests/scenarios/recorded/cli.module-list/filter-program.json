@@ -1,0 +1,77 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "[{\"administrative_status\":\"enrolled\",\"area_id\":\"program-bachelors\",\"attempts\":[{\"date\":\"2026-07-27\",\"result\":\"withdrawn\",\"termin\":1},{\"date\":\"2026-10-09\",\"result\":\"registered\",\"termin\":2}],\"code\":null,\"components\":[],\"credits\":null,\"examination\":{\"registration_windows\":[{\"action\":\"Register via AGNES.\",\"closes\":\"2026-09-10\",\"label\":\"2.-PZ Anmeldung\",\"opens\":\"2026-08-31\",\"termins\":[2]}],\"sittings\":[{\"date\":\"2000-01-01\",\"label\":\"Elapsed sitting with no attempt\",\"termin\":3},{\"date\":\"2026-10-09\",\"label\":\"2. Termin\",\"termin\":2,\"time\":\"13:00-16:00\"}],\"type\":\"klausur\"},\"grade\":null,\"id\":\"module-demo\",\"institution\":\"HU Berlin\",\"is_actionable\":true,\"kind\":\"academic\",\"operational_state\":\"active\",\"path\":\"curriculum/modules/module-demo/module.yaml\",\"revision\":0,\"semester\":\"sose-2026\",\"source_map\":\"source-map.yaml\",\"status\":\"enrolled\",\"thematic_group_ids\":[],\"title\":\"Demo Module\",\"type\":\"module\",\"unit_order\":[\"unit-demo-l01\",\"unit-demo-l02\"]}]\n",
+  "stdout_json": [
+    {
+      "administrative_status": "enrolled",
+      "area_id": "program-bachelors",
+      "attempts": [
+        {
+          "date": "2026-07-27",
+          "result": "withdrawn",
+          "termin": 1
+        },
+        {
+          "date": "2026-10-09",
+          "result": "registered",
+          "termin": 2
+        }
+      ],
+      "code": null,
+      "components": [],
+      "credits": null,
+      "examination": {
+        "registration_windows": [
+          {
+            "action": "Register via AGNES.",
+            "closes": "2026-09-10",
+            "label": "2.-PZ Anmeldung",
+            "opens": "2026-08-31",
+            "termins": [
+              2
+            ]
+          }
+        ],
+        "sittings": [
+          {
+            "date": "2000-01-01",
+            "label": "Elapsed sitting with no attempt",
+            "termin": 3
+          },
+          {
+            "date": "2026-10-09",
+            "label": "2. Termin",
+            "termin": 2,
+            "time": "13:00-16:00"
+          }
+        ],
+        "type": "klausur"
+      },
+      "grade": null,
+      "id": "module-demo",
+      "institution": "HU Berlin",
+      "is_actionable": true,
+      "kind": "academic",
+      "operational_state": "active",
+      "path": "curriculum/modules/module-demo/module.yaml",
+      "revision": 0,
+      "semester": "sose-2026",
+      "source_map": "source-map.yaml",
+      "status": "enrolled",
+      "thematic_group_ids": [],
+      "title": "Demo Module",
+      "type": "module",
+      "unit_order": [
+        "unit-demo-l01",
+        "unit-demo-l02"
+      ]
+    }
+  ]
+}

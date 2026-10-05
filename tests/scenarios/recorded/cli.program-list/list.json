@@ -1,0 +1,32 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "[{\"default\":true,\"id\":\"program-bachelors\",\"kind\":\"academic\",\"path\":\"curriculum/programs/program-bachelors.yaml\",\"revision\":0,\"semester_bound\":true,\"semesters\":[{\"id\":\"semester-sose-2026\",\"order\":1,\"status\":\"current\",\"title\":\"SoSe 2026\"}],\"status\":\"active\",\"title\":\"Bachelor’s\",\"type\":\"program\"}]\n",
+  "stdout_json": [
+    {
+      "default": true,
+      "id": "program-bachelors",
+      "kind": "academic",
+      "path": "curriculum/programs/program-bachelors.yaml",
+      "revision": 0,
+      "semester_bound": true,
+      "semesters": [
+        {
+          "id": "semester-sose-2026",
+          "order": 1,
+          "status": "current",
+          "title": "SoSe 2026"
+        }
+      ],
+      "status": "active",
+      "title": "Bachelor’s",
+      "type": "program"
+    }
+  ]
+}

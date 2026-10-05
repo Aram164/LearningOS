@@ -1,0 +1,31 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "[{\"deprecated\":null,\"id\":\"note-demo\",\"path\":\"knowledge/notes/mathematics/note-demo.md\",\"state\":null,\"status\":null,\"title\":\"Demo note\",\"type\":\"note\"},{\"deprecated\":null,\"id\":\"note-demo-analysis\",\"path\":\"knowledge/notes/mathematics/note-demo-analysis.md\",\"state\":null,\"status\":null,\"title\":\"Expected value — analysis of Demo Book §1\",\"type\":\"note\"}]\n",
+  "stdout_json": [
+    {
+      "deprecated": null,
+      "id": "note-demo",
+      "path": "knowledge/notes/mathematics/note-demo.md",
+      "state": null,
+      "status": null,
+      "title": "Demo note",
+      "type": "note"
+    },
+    {
+      "deprecated": null,
+      "id": "note-demo-analysis",
+      "path": "knowledge/notes/mathematics/note-demo-analysis.md",
+      "state": null,
+      "status": null,
+      "title": "Expected value — analysis of Demo Book §1",
+      "type": "note"
+    }
+  ]
+}

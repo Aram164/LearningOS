@@ -1,0 +1,152 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"metadata-search-page\",\"items\":[{\"id\":\"note-demo\",\"type\":\"note\",\"title\":\"Demo note\",\"path\":\"knowledge/notes/mathematics/note-demo.md\",\"status\":null,\"state\":null,\"deprecated\":null},{\"id\":\"note-demo-analysis\",\"type\":\"note\",\"title\":\"Expected value — analysis of Demo Book §1\",\"path\":\"knowledge/notes/mathematics/note-demo-analysis.md\",\"status\":null,\"state\":null,\"deprecated\":null},{\"id\":\"source-demo-book\",\"type\":\"source\",\"title\":\"Demo Book\",\"path\":\"sources/sources.yaml\",\"status\":null,\"state\":null,\"deprecated\":null},{\"id\":\"project-demo\",\"type\":\"project\",\"title\":\"Demo project\",\"path\":\"projects/registry/project-demo.yaml\",\"status\":\"active\",\"state\":null,\"deprecated\":null},{\"id\":\"relationship-demo\",\"type\":\"project-relationship\",\"title\":null,\"path\":\"projects/relations/project-relations.yaml\",\"status\":null,\"state\":null,\"deprecated\":null},{\"id\":\"module-demo\",\"type\":\"module\",\"title\":\"Demo Module\",\"path\":\"curriculum/modules/module-demo/module.yaml\",\"status\":\"enrolled\",\"state\":null,\"deprecated\":null},{\"id\":\"workspace-demo\",\"type\":\"workspace\",\"title\":\"Demo workspace\",\"path\":\"work/active/workspace-demo/CONTEXT.md\",\"status\":\"active\",\"state\":null,\"deprecated\":null},{\"id\":\"workspace-second\",\"type\":\"workspace\",\"title\":\"Second workspace\",\"path\":\"work/active/workspace-second/CONTEXT.md\",\"status\":\"active\",\"state\":null,\"deprecated\":null},{\"id\":\"path-demo\",\"type\":\"learning-path\",\"title\":\"Demo path\",\"path\":\"work/active/workspace-demo/paths/path-demo.yaml\",\"status\":\"active\",\"state\":null,\"deprecated\":null},{\"id\":\"unit-demo-l01\",\"type\":\"unit\",\"title\":\"Expected value\",\"path\":\"curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml\",\"status\":\"active\",\"state\":null,\"deprecated\":null},{\"id\":\"unit-demo-l02\",\"type\":\"unit\",\"title\":\"Variance\",\"path\":\"curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml\",\"status\":\"active\",\"state\":null,\"deprecated\":null},{\"id\":\"study-map-demo-l01\",\"type\":\"study-map\",\"title\":null,\"path\":\"curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml\",\"status\":\"active\",\"state\":null,\"deprecated\":null},{\"id\":\"source-map-demo\",\"type\":\"module-source-map\",\"title\":null,\"path\":\"curriculum/modules/module-demo/source-map.yaml\",\"status\":null,\"state\":null,\"deprecated\":null},{\"id\":\"coordination\",\"type\":\"coordination\",\"title\":null,\"path\":\"work/COORDINATION.md\",\"status\":null,\"state\":null,\"deprecated\":null}],\"total\":14,\"offset\":0,\"returned\":14,\"next_offset\":null,\"has_more\":false,\"expand\":{\"next\":null}}\n",
+  "stdout_json": {
+    "contract": "metadata-search-page",
+    "expand": {
+      "next": null
+    },
+    "has_more": false,
+    "items": [
+      {
+        "deprecated": null,
+        "id": "note-demo",
+        "path": "knowledge/notes/mathematics/note-demo.md",
+        "state": null,
+        "status": null,
+        "title": "Demo note",
+        "type": "note"
+      },
+      {
+        "deprecated": null,
+        "id": "note-demo-analysis",
+        "path": "knowledge/notes/mathematics/note-demo-analysis.md",
+        "state": null,
+        "status": null,
+        "title": "Expected value — analysis of Demo Book §1",
+        "type": "note"
+      },
+      {
+        "deprecated": null,
+        "id": "source-demo-book",
+        "path": "sources/sources.yaml",
+        "state": null,
+        "status": null,
+        "title": "Demo Book",
+        "type": "source"
+      },
+      {
+        "deprecated": null,
+        "id": "project-demo",
+        "path": "projects/registry/project-demo.yaml",
+        "state": null,
+        "status": "active",
+        "title": "Demo project",
+        "type": "project"
+      },
+      {
+        "deprecated": null,
+        "id": "relationship-demo",
+        "path": "projects/relations/project-relations.yaml",
+        "state": null,
+        "status": null,
+        "title": null,
+        "type": "project-relationship"
+      },
+      {
+        "deprecated": null,
+        "id": "module-demo",
+        "path": "curriculum/modules/module-demo/module.yaml",
+        "state": null,
+        "status": "enrolled",
+        "title": "Demo Module",
+        "type": "module"
+      },
+      {
+        "deprecated": null,
+        "id": "workspace-demo",
+        "path": "work/active/workspace-demo/CONTEXT.md",
+        "state": null,
+        "status": "active",
+        "title": "Demo workspace",
+        "type": "workspace"
+      },
+      {
+        "deprecated": null,
+        "id": "workspace-second",
+        "path": "work/active/workspace-second/CONTEXT.md",
+        "state": null,
+        "status": "active",
+        "title": "Second workspace",
+        "type": "workspace"
+      },
+      {
+        "deprecated": null,
+        "id": "path-demo",
+        "path": "work/active/workspace-demo/paths/path-demo.yaml",
+        "state": null,
+        "status": "active",
+        "title": "Demo path",
+        "type": "learning-path"
+      },
+      {
+        "deprecated": null,
+        "id": "unit-demo-l01",
+        "path": "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml",
+        "state": null,
+        "status": "active",
+        "title": "Expected value",
+        "type": "unit"
+      },
+      {
+        "deprecated": null,
+        "id": "unit-demo-l02",
+        "path": "curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml",
+        "state": null,
+        "status": "active",
+        "title": "Variance",
+        "type": "unit"
+      },
+      {
+        "deprecated": null,
+        "id": "study-map-demo-l01",
+        "path": "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
+        "state": null,
+        "status": "active",
+        "title": null,
+        "type": "study-map"
+      },
+      {
+        "deprecated": null,
+        "id": "source-map-demo",
+        "path": "curriculum/modules/module-demo/source-map.yaml",
+        "state": null,
+        "status": null,
+        "title": null,
+        "type": "module-source-map"
+      },
+      {
+        "deprecated": null,
+        "id": "coordination",
+        "path": "work/COORDINATION.md",
+        "state": null,
+        "status": null,
+        "title": null,
+        "type": "coordination"
+      }
+    ],
+    "next_offset": null,
+    "offset": 0,
+    "returned": 14,
+    "schema_version": 1,
+    "snapshot_id": "SNAP1",
+    "total": 14
+  }
+}

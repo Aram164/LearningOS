@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: plan-edit-context --brief is the full-unit preparation form; expand one route or stage through its listed command instead\n",
+  "stdout": "",
+  "stdout_json": null
+}

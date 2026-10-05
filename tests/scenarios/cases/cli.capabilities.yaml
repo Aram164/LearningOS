@@ -1,0 +1,42 @@
+operation: cli.capabilities
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: screen
+    kind: success
+    transport: cli
+    argv: [capabilities]
+    a5_base: true
+    expect: {site: null}
+  - id: screen-json
+    kind: success
+    transport: cli
+    argv: [capabilities, --json]
+    expect: {site: null}
+  - id: compact
+    kind: success
+    transport: cli
+    argv: [capabilities, --compact]
+    expect: {site: null}
+  - id: one-command
+    kind: success
+    transport: cli
+    argv: [capabilities, stage.progress.update]
+    expect: {site: null}
+  - id: one-query
+    kind: success
+    transport: cli
+    argv: [capabilities, operator.bootstrap]
+    expect: {site: null}
+  - id: compact-and-name
+    kind: refusal
+    transport: cli
+    argv: [capabilities, --compact, stage.progress.update]
+    expect: {site: null}
+  - id: unknown-name
+    kind: refusal
+    transport: cli
+    argv: [capabilities, nope-capability]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/query.py:236", reason: "unreadable declared payload schema: all 47 catalog commands carry one, and no step can remove it"}

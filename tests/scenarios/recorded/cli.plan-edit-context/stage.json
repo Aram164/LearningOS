@@ -1,0 +1,80 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"plan-edit-context-stage\",\"unit_id\":\"unit-demo-l01\",\"module_id\":\"module-demo\",\"artifact_revisions\":{\"module-demo\":0,\"study-map-demo-l01\":0,\"unit-demo-l01\":3},\"preflight\":\"route-patch UNIT_ID ROUTE_ID --changes JSON --check returns exact write guards\",\"requested_stage_id\":\"stage-demo\",\"stage\":{\"id\":\"stage-demo\",\"title\":\"Derive expected value\",\"status\":\"active\",\"objective\":\"Derive and explain expected value.\",\"done_when\":[\"Explain the derivation.\"],\"scope_triage\":\"required-now\",\"resources\":[{\"id\":\"resource-demo-book-ch01\",\"kind\":\"read\",\"label\":\"Demo Book §1\",\"source_id\":\"source-demo-book\",\"locator\":\"§1\"},{\"id\":\"resource-demo-book-appendix\",\"kind\":\"read\",\"label\":\"Demo Book Appendix\",\"source_id\":\"source-demo-book\",\"locator\":\"Appendix A\"},{\"kind\":\"watch\",\"label\":\"Demo companion video\",\"source_id\":\"source-demo-book\"}],\"working_note\":\"curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md\",\"attachments\":[],\"source_feedback\":[],\"runtime_target\":{\"concept\":\"knowledge-demo-expectation\",\"capability\":{\"kind\":\"explain\",\"operands\":[\"expectation\"]},\"conditions\":[\"unfamiliar-example\"],\"evidence_spec\":[\"explain-reason\"]}},\"stage_results\":{\"results\":[],\"total\":0,\"credit\":\"none\"},\"scope\":\"one stage only — universe questions (e.g. no source covers X) need the full unit context\"}\n",
+  "stdout_json": {
+    "artifact_revisions": {
+      "module-demo": 0,
+      "study-map-demo-l01": 0,
+      "unit-demo-l01": 3
+    },
+    "contract": "plan-edit-context-stage",
+    "module_id": "module-demo",
+    "preflight": "route-patch UNIT_ID ROUTE_ID --changes JSON --check returns exact write guards",
+    "requested_stage_id": "stage-demo",
+    "schema_version": 1,
+    "scope": "one stage only — universe questions (e.g. no source covers X) need the full unit context",
+    "snapshot_id": "SNAP1",
+    "stage": {
+      "attachments": [],
+      "done_when": [
+        "Explain the derivation."
+      ],
+      "id": "stage-demo",
+      "objective": "Derive and explain expected value.",
+      "resources": [
+        {
+          "id": "resource-demo-book-ch01",
+          "kind": "read",
+          "label": "Demo Book §1",
+          "locator": "§1",
+          "source_id": "source-demo-book"
+        },
+        {
+          "id": "resource-demo-book-appendix",
+          "kind": "read",
+          "label": "Demo Book Appendix",
+          "locator": "Appendix A",
+          "source_id": "source-demo-book"
+        },
+        {
+          "kind": "watch",
+          "label": "Demo companion video",
+          "source_id": "source-demo-book"
+        }
+      ],
+      "runtime_target": {
+        "capability": {
+          "kind": "explain",
+          "operands": [
+            "expectation"
+          ]
+        },
+        "concept": "knowledge-demo-expectation",
+        "conditions": [
+          "unfamiliar-example"
+        ],
+        "evidence_spec": [
+          "explain-reason"
+        ]
+      },
+      "scope_triage": "required-now",
+      "source_feedback": [],
+      "status": "active",
+      "title": "Derive expected value",
+      "working_note": "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md"
+    },
+    "stage_results": {
+      "credit": "none",
+      "results": [],
+      "total": 0
+    },
+    "unit_id": "unit-demo-l01"
+  }
+}

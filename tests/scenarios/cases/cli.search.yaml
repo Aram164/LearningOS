@@ -1,0 +1,96 @@
+operation: cli.search
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: metadata
+    kind: success
+    transport: cli
+    argv: [search, demo]
+    a5_base: true
+    expect: {site: null}
+  - id: metadata-empty-query
+    kind: success
+    transport: cli
+    argv: [search, ""]
+    expect: {site: null}
+  - id: metadata-type
+    kind: success
+    transport: cli
+    argv: [search, demo, --type, note]
+    expect: {site: null}
+  - id: metadata-window
+    kind: success
+    transport: cli
+    argv: [search, demo, --offset, 1, --limit, 1]
+    expect: {site: null}
+  - id: page
+    kind: success
+    transport: cli
+    argv: [search, demo, --page]
+    expect: {site: null}
+  - id: page-continued
+    kind: success
+    transport: cli
+    argv: [search, demo, --page, --offset, 1, --limit, 1, --expected-snapshot, "sha256:9dddca9dff6bb68e146258cd4c00737eb1cddf02fbe99bcadd8bb873ae657dae"]
+    expect: {site: null}
+  - id: content
+    kind: success
+    transport: cli
+    argv: [search, demo, --content]
+    expect: {site: null}
+  - id: content-typed
+    kind: success
+    transport: cli
+    argv: [search, demo, --type, note, --content]
+    expect: {site: null}
+  - id: content-empty
+    kind: success
+    transport: cli
+    argv: [search, zzz-no-such-term, --content]
+    expect: {site: null}
+  - id: unknown-type
+    kind: refusal
+    transport: cli
+    argv: [search, demo, --type, nope]
+    expect: {site: null}
+  - id: page-and-content
+    kind: refusal
+    transport: cli
+    argv: [search, demo, --page, --content]
+    expect: {site: null}
+  - id: bad-array-window
+    kind: refusal
+    transport: cli
+    argv: [search, demo, --offset, -1]
+    expect: {site: null}
+  - id: bad-page-window
+    kind: refusal
+    transport: cli
+    argv: [search, demo, --page, --limit, 200]
+    expect: {site: null}
+  - id: page-continuation-needs-snapshot
+    kind: refusal
+    transport: cli
+    argv: [search, demo, --page, --offset, 2]
+    expect: {site: null}
+  - id: stale
+    kind: refusal
+    transport: cli
+    argv: [search, demo, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
+    expect: {site: null}
+  - id: content-wrong-type
+    kind: refusal
+    transport: cli
+    argv: [search, demo, --type, workspace, --content]
+    expect: {site: null}
+  - id: content-empty-query
+    kind: refusal
+    transport: cli
+    argv: [search, "", --content]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/query.py:352", reason: "unreadable inbox: needs an OSError no step can arrange"}
+  - {where: "tools/learning_os/commands/query.py:421", reason: "snapshot changed mid-read: a single-threaded read cannot race itself"}
+  - {where: "tools/learning_os/commands/reads.py:556", reason: "note path escapes its owner during content search: loaded fixture paths resolve in-tree"}
+  - {where: "tools/learning_os/commands/reads.py:558", reason: "symlink components in a note path during content search: the fixture carries none, and no step can create one"}
+  - {where: "tools/learning_os/commands/reads.py:914", reason: "unreadable note records under content search: the fixture parses cleanly, and no step can break it"}

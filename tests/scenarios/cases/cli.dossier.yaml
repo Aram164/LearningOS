@@ -1,0 +1,30 @@
+operation: cli.dossier
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: serve-l01
+    kind: success
+    transport: cli
+    argv: [dossier, unit-demo-l01]
+    a5_base: true
+    expect: {site: null}
+  - id: serve-l02
+    kind: success
+    transport: cli
+    argv: [dossier, unit-demo-l02]
+    expect: {site: null}
+  - id: serve-json
+    kind: success
+    transport: cli
+    argv: [dossier, unit-demo-l01, --json]
+    expect: {site: null}
+  - id: unknown-unit
+    kind: refusal
+    transport: cli
+    argv: [dossier, unit-nope]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/dossier.py:127", reason: "unreadable canonical records: the fixture parses cleanly, and no step can break it"}
+  - {where: "tools/learning_os/commands/dossier.py:133", reason: "unit without a module source map: both fixture units sit under module-demo, which has one"}
+  - {where: "tools/learning_os/commands/dossier.py:139", reason: "knowledge map not a mapping: both fixture units carry mapping knowledge maps"}
+  - {where: "tools/learning_os/commands/dossier.py:160", reason: "dossier build failure: the handler builds its inputs well-shaped, and both fixture units build"}

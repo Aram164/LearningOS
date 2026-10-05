@@ -1,0 +1,30 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"unit-dossier\",\"unit_id\":\"unit-demo-l01\",\"module_id\":\"module-demo\",\"key\":\"context://unit-demo-l01/semantic-dossier@8ba9c565b4b6dfb7\",\"hashes\":{\"evidence\":\"ca0fb766fe1eaa57db7188351307e71e25bf2b9706d6889d162872b2c12a71a7\",\"knowledge-map\":\"c29b86fa58b7387374e5f6b553f31c47eb8911277b9d97546f8809448129ebdb\",\"operator-contract\":\"d065b22310a7fc25de75bcc081b4a3f259d44944a270d418b011bd7415feca80\",\"routes\":\"c752a931a8e0213f7b830ace23c14a0600fc2324e8ccd895763e258091daebba\",\"semantic-contract\":\"cc11310c456c3690d5a74c23aa31cc25b4e74cdae146c71e54ad9dbc1d109fde\",\"source-map\":\"480a9c7f082eb373a06c476c2c87459f43acf94394a9a19cdca818f62e994325\"},\"cache_path\":\"generated/dossiers/unit-demo-l01-8ba9c565b4b6dfb7.json\",\"served_from_cache\":false,\"evidence_files\":1}\n",
+  "stdout_json": {
+    "cache_path": "generated/dossiers/unit-demo-l01-8ba9c565b4b6dfb7.json",
+    "contract": "unit-dossier",
+    "evidence_files": 1,
+    "hashes": {
+      "evidence": "ca0fb766fe1eaa57db7188351307e71e25bf2b9706d6889d162872b2c12a71a7",
+      "knowledge-map": "c29b86fa58b7387374e5f6b553f31c47eb8911277b9d97546f8809448129ebdb",
+      "operator-contract": "d065b22310a7fc25de75bcc081b4a3f259d44944a270d418b011bd7415feca80",
+      "routes": "c752a931a8e0213f7b830ace23c14a0600fc2324e8ccd895763e258091daebba",
+      "semantic-contract": "cc11310c456c3690d5a74c23aa31cc25b4e74cdae146c71e54ad9dbc1d109fde",
+      "source-map": "480a9c7f082eb373a06c476c2c87459f43acf94394a9a19cdca818f62e994325"
+    },
+    "key": "context://unit-demo-l01/semantic-dossier@8ba9c565b4b6dfb7",
+    "module_id": "module-demo",
+    "schema_version": 1,
+    "served_from_cache": false,
+    "snapshot_id": "SNAP1",
+    "unit_id": "unit-demo-l01"
+  }
+}
