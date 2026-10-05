@@ -8,10 +8,14 @@ two builds are byte-identical: no clock or random values anywhere.
 
 from __future__ import annotations
 
+import datetime
 import hashlib
 import json
+from collections import Counter
 from pathlib import Path
+from unittest.mock import patch
 
+import materials_manifest
 import yaml
 from migrations.route_identity_v13 import plan_migration
 from repo_builders import (
@@ -24,7 +28,8 @@ from repo_builders import (
 
 from learning_os.abilities import ability_fingerprint
 from learning_os.loader import load_repo
-from learning_os.material_refs import unit_routes
+from learning_os.material_inventory import render_manifest
+from learning_os.material_refs import MATERIAL_FIELDS, unit_routes
 from learning_os.materials_resolution import (
     project_material_resource,
     resolve_route_material_files,
@@ -34,6 +39,7 @@ from learning_os.semantics.lineage import (
     dump_ledger,
     emit_route_covers,
 )
+from learning_os.warning_baseline import write_baseline
 
 PENDING_STAGE_ID = "stage-demo-pending"
 SECOND_WORKSPACE_ID = "workspace-second"
@@ -42,6 +48,42 @@ ABILITY_ID = "ability-demo-derive"
 SECOND_ABILITY_ID = "ability-demo-variance"
 LEGACY_UNIT_ID = "unit-demo-l02"
 FIXED_DAY = "2026-09-20"
+
+#: Amendment (ag) item 1: the measured initial warning counter, stored as
+#: fixture data. Never collected during the build: validation creates a
+#: path-dependent generated receipt cache. A separate test collects on a
+#: fresh completed fixture and requires exact equality.
+INITIAL_WARNING_SIGNATURES: Counter = Counter({
+    ("ROUTE-ID-MISSING",
+     "curriculum/modules/module-demo/source-map.yaml"): 1,
+    ("SELECTION-ROUTE-ID-MISSING",
+     "curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml"): 1,
+    ("RUNTIME-REVIEW-MISSING",
+     "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"): 1,
+    ("URI-PROJECT", "projects/registry/project-demo.yaml"): 1,
+    ("LOCATOR-VAGUE",
+     "curriculum/modules/module-demo/source-map.yaml"): 2,
+    ("ROUTE-ANGLE-DETAIL-MISSING",
+     "curriculum/modules/module-demo/source-map.yaml"): 2,
+    ("STAGE-NODE-UNLINKED",
+     "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"): 1,
+})
+
+#: Amendment (ag) item 1: the fixture coverage-audit evidence, filed under
+#: the workspace outputs/ so hygiene never flags it.
+COVERAGE_AUDIT_RELATIVE = "work/active/workspace-demo/outputs/demo-coverage-audit.md"
+COVERAGE_AUDIT_TEXT = (
+    "# Demo coverage audit\n"
+    "\n"
+    "## Local\n"
+    "The fixture route material is present.\n"
+    "\n"
+    "## Linked\n"
+    "The registered Demo Book owns the selected route.\n"
+    "\n"
+    "## Completeness\n"
+    "All fixture units and selected routes were reviewed.\n"
+)
 
 
 def _repair_manifest_fixtures(root: Path) -> None:
@@ -449,6 +491,79 @@ def _add_route_material(root: Path) -> Path:
     return target
 
 
+def _add_shelf(root: Path) -> None:
+    # Amendment (ag) item 1: a schema-valid catalogue over the registered
+    # Demo Book. Never restores the invalid `id` key the repair dropped.
+    write_yaml(root / "sources/collections/shelf.yaml", {
+        "title": "Scenario shelf", "collection_kind": "catalogue",
+        "entries": [{"source": "source-demo-book", "group": "Demo",
+                     "why": "The main demo reading."}],
+    })
+
+
+def _add_coverage_audit(root: Path) -> None:
+    # Amendment (ag) item 1: fixture evidence only. Filed under
+    # outputs/ so the hygiene sweep never flags it.
+    path = root / COVERAGE_AUDIT_RELATIVE
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(COVERAGE_AUDIT_TEXT, encoding="utf-8")
+
+
+def _add_route_mirror(root: Path) -> None:
+    # Amendment (ag) item 1: one uncompacted resource on the active
+    # stage-demo, appended after the existing resources so their indices
+    # hold. Every MATERIAL_FIELDS value present on the l01 route is
+    # copied into its resource spelling; the mirror compacts losslessly.
+    repo = load_repo(root)
+    (route,) = unit_routes(repo.module_source_maps["module-demo"],
+                           "module-demo", "unit-demo-l01")
+    map_path = root / ("curriculum/modules/module-demo/units/unit-demo-l01"
+                       "/study-map.yaml")
+    data = yaml.safe_load(map_path.read_text(encoding="utf-8"))
+    (stage,) = [row for row in data["stages"]
+                if row.get("id") == "stage-demo"]
+    stage["resources"].append({
+        "id": "resource-demo-route-mirror", "kind": "read",
+        **{field: route[owner]
+           for field, owner in MATERIAL_FIELDS.items()
+           if owner in route},
+    })
+    assert stage["resources"][-1]["source_id"] == "source-demo-book"
+    write_yaml(map_path, data)
+
+
+def _add_attached_material(root: Path) -> Path:
+    # Amendment (ag) item 1: the intake-create then attach journey's
+    # target bytes. `nope.pdf` stays absent.
+    book = root.parent / "materials/source-demo-book/book.pdf"
+    target = root.parent / "materials/source-scenario-bare/attached.pdf"
+    target.parent.mkdir(parents=True, exist_ok=True)
+    target.write_bytes(book.read_bytes())
+    return target
+
+
+def _add_materials_manifest(root: Path) -> None:
+    # Amendment (ag) item 1: the existing inventory producer and
+    # renderer; only `captured` is fixed for determinism.
+    manifest = materials_manifest.build(root.parent / "materials")
+    manifest["captured"] = FIXED_DAY
+    (root / "records/materials-manifest.yaml").write_text(
+        render_manifest(manifest), encoding="utf-8")
+
+
+def _add_warning_baseline(root: Path) -> None:
+    # Amendment (ag) item 1: the production serializer over the stored
+    # measured counter. Only the date observation is fixed, inside this
+    # call; the patch restores the function on exit.
+    fixed = datetime.date(2026, 9, 20)
+    with patch("learning_os.warning_baseline.observations.today",
+               return_value=fixed):
+        write_baseline(
+            root, INITIAL_WARNING_SIGNATURES,
+            "Measured initial rich_world content; "
+            "no candidate writes included.")
+
+
 def rich_world(root: Path) -> dict:
     """Layer the rich characterization world onto a mini repository.
 
@@ -473,6 +588,12 @@ def rich_world(root: Path) -> dict:
     _add_second_ability(root)
     _add_route_material(root)
     claim_id = _add_lineage_claim(root)
+    _add_shelf(root)
+    _add_coverage_audit(root)
+    _add_route_mirror(root)
+    _add_attached_material(root)
+    _add_materials_manifest(root)
+    _add_warning_baseline(root)
     return {
         "module": "module-demo",
         "unit": "unit-demo-l01",

@@ -8,20 +8,24 @@ import sys
 import time
 from pathlib import Path
 
+import materials_manifest
 import pypdf
 import pytest
 import yaml
 from conftest import build_mini_repo
-from scenario_fixtures import rich_world
+from scenario_fixtures import INITIAL_WARNING_SIGNATURES, rich_world
 
+from learning_os.commands.material import compaction_plan
 from learning_os.learning_runtime import collect_requirements
 from learning_os.loader import load_repo
-from learning_os.material_refs import unit_routes
+from learning_os.material_inventory import render_manifest
+from learning_os.material_refs import compact_map, expand_map, unit_routes
 from learning_os.materials_resolution import (
     material_location,
     resolve_route_material_files,
 )
 from learning_os.semantics.lineage import load_ledger
+from learning_os.warning_baseline import collect, load_baseline
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 
@@ -134,6 +138,63 @@ def test_every_family_is_present(tmp_path):
     assert len(pages) >= 24
     texts = [(page.extract_text() or "").strip() for page in pages]
     assert all(texts) and len(set(texts)) == len(texts)
+    # Amendment (ag) item 1: a schema-valid shelf catalogue, never the
+    # invalid `id` key the repair dropped.
+    shelf = yaml.safe_load(
+        (root / "sources/collections/shelf.yaml").read_text(encoding="utf-8"))
+    assert shelf["title"] == "Scenario shelf"
+    assert shelf["entries"] == [
+        {"source": "source-demo-book", "group": "Demo",
+         "why": "The main demo reading."}]
+    assert "id" not in shelf
+    # Amendment (ag) item 1: coverage-audit evidence with all markers.
+    audit = (root / "work/active/workspace-demo/outputs"
+             / "demo-coverage-audit.md").read_text(encoding="utf-8")
+    assert "## Local" in audit
+    assert "## Linked" in audit
+    assert "## Completeness" in audit
+    # Amendment (ag) item 1: readable unbound-source material; nope.pdf
+    # stays absent.
+    book_bytes = (root.parent / "materials/source-demo-book"
+                  / "book.pdf").read_bytes()
+    attached = (root.parent / "materials/source-scenario-bare/attached.pdf")
+    assert attached.is_file() and attached.read_bytes() == book_bytes
+    assert not (root.parent / "materials/source-scenario-bare"
+                / "nope.pdf").exists()
+    # Amendment (ag) item 1: the exact generated inventory.
+    manifest_text = (root / "records/materials-manifest.yaml").read_text(
+        encoding="utf-8")
+    expected_manifest = materials_manifest.build(root.parent / "materials")
+    expected_manifest["captured"] = "2026-09-20"
+    assert manifest_text == render_manifest(expected_manifest)
+    # Amendment (ag) item 1: the route mirror on stage-demo, after the
+    # existing resources, spelling every route material field.
+    study_map = repo.study_maps["study-map-demo-l01"]
+    assert [res.get("id") for res in
+            study_map.data["stages"][0]["resources"][:3]] == [
+        "resource-demo-book-ch01", "resource-demo-book-appendix", None]
+    mirror = study_map.data["stages"][0]["resources"][-1]
+    assert mirror["id"] == "resource-demo-route-mirror"
+    assert mirror["kind"] == "read"
+    assert mirror["source_id"] == "source-demo-book"
+    assert mirror["label"] == l01_route["title"]
+    assert mirror["locator"] == l01_route["locator"]
+    assert mirror["angle"] == l01_route["angle"]
+    # Amendment (ag) item 1: a nonempty, lossless compaction plan.
+    writes, _artifacts, detail = compaction_plan(repo, "module-demo")
+    assert writes
+    assert detail["referenced_routes"] == 1
+    raw = study_map.authored_data or study_map.data
+    compact, _used = compact_map(
+        raw, repo.module_source_maps["module-demo"],
+        "module-demo", "unit-demo-l01")
+    assert compact != raw
+    assert expand_map(compact, repo.module_source_maps["module-demo"],
+                      "module-demo", "unit-demo-l01") == study_map.data
+    # Amendment (ag) item 1: the stored initial counter, uncollected.
+    stored, baseline_data = load_baseline(root)
+    assert stored == INITIAL_WARNING_SIGNATURES
+    assert baseline_data["recorded"] == "2026-09-20"
 
 
 def _tree_files(top: Path) -> dict[str, bytes]:
@@ -145,6 +206,19 @@ def test_two_builds_are_byte_identical(tmp_path):
     first = _build(tmp_path / "first")
     second = _build(tmp_path / "second")
     assert _tree_files(first.parent) == _tree_files(second.parent)
+
+
+def test_initial_warning_counter_is_independently_measured(tmp_path):
+    # Amendment (ag) item 1: two complete builds are byte-identical
+    # including every fixture file, and a fresh completed fixture
+    # independently measures the stored counter with zero errors.
+    first = _build(tmp_path / "first")
+    second = _build(tmp_path / "second")
+    assert _tree_files(first.parent) == _tree_files(second.parent)
+    measured, errors = collect(first)
+    assert errors == []
+    assert measured == load_baseline(first)[0]
+    assert measured == INITIAL_WARNING_SIGNATURES
 
 
 def test_ids_name_the_world(tmp_path):
