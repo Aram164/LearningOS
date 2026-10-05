@@ -1,0 +1,18 @@
+{
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:c20987e558d9613277f78895a780ee975f1f87d1ac2869a8c389684bda409e91"
+  },
+  "capability": "stage.progress.update",
+  "channel": "operator",
+  "expected_revisions": {},
+  "expected_snapshot": "sha256:9dddca9dff6bb68e146258cd4c00737eb1cddf02fbe99bcadd8bb873ae657dae",
+  "idempotency_key": "scenario-capability-refused",
+  "payload": {
+    "stage_id": "stage-nope",
+    "status": "active",
+    "unit_id": "unit-demo-l01"
+  },
+  "request_id": "request-scenario-capability-refused",
+  "schema_version": 2
+}
