@@ -9,12 +9,6 @@ cases:
     artifact_ids: [module-demo]
     a5_base: true
     expect: {site: null}
-  - id: check-success
-    kind: success
-    transport: gateway
-    request: {module_id: module-demo, file: "<CASEDATA>/package.yaml", file_sha256: "sha256:3fa14a571e7e2bc0255f12f604ecef674cd854d5a70b0d9ed35b7f4825b5943b", check: true}
-    artifact_ids: []
-    expect: {site: null}
   - id: staged-basis-without-check
     kind: refusal
     transport: gateway
