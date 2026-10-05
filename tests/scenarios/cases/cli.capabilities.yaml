@@ -6,7 +6,6 @@ cases:
     kind: success
     transport: cli
     argv: [capabilities]
-    a5_base: true
     expect: {site: null}
   - id: screen-json
     kind: success
@@ -22,6 +21,7 @@ cases:
     kind: success
     transport: cli
     argv: [capabilities, stage.progress.update]
+    a5_base: true
     expect: {site: null}
   - id: one-query
     kind: success

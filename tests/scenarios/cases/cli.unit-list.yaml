@@ -6,12 +6,12 @@ cases:
     kind: success
     transport: cli
     argv: [unit-list]
-    a5_base: true
     expect: {site: null}
   - id: filter-module
     kind: success
     transport: cli
     argv: [unit-list, --module-id, module-demo]
+    a5_base: true
     expect: {site: null}
   - id: filter-status
     kind: success
