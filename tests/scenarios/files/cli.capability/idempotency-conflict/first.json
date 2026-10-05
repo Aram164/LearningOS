@@ -1,0 +1,18 @@
+{
+  "approval": {
+    "kind": "operator-approval",
+    "subject_sha256": "sha256:b01a7777effb2f5ea09674a52cd14468321c429d8fd127bcf6c72b2d2967165b"
+  },
+  "capability": "capture.create",
+  "channel": "operator",
+  "expected_revisions": {
+    "capture-request:scenario-capability-conflict": 0
+  },
+  "expected_snapshot": "sha256:9dddca9dff6bb68e146258cd4c00737eb1cddf02fbe99bcadd8bb873ae657dae",
+  "idempotency_key": "scenario-capability-conflict",
+  "payload": {
+    "text": "A scenario capture opening the idempotency conflict sequence."
+  },
+  "request_id": "request-scenario-capability-conflict",
+  "schema_version": 2
+}

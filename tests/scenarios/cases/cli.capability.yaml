@@ -15,6 +15,13 @@ cases:
         argv: [capability, capture.create, --payload-file, "<CASEDATA>/valid-capture.json"]
       - transport: cli
         argv: [capability, capture.create, --payload-file, "<CASEDATA>/valid-capture.json"]
+  - id: idempotency-conflict
+    kind: sequence
+    steps:
+      - transport: cli
+        argv: [capability, capture.create, --payload-file, "<CASEDATA>/first.json"]
+      - transport: cli
+        argv: [capability, capture.create, --payload-file, "<CASEDATA>/second.json"]
   - id: unknown-name-no-envelope
     kind: refusal
     transport: cli
@@ -90,7 +97,6 @@ untriggered:
   - {where: "tools/learning_os/commands/capability.py:351", reason: "success without a JSON result: fixture handlers answer JSON on success"}
   - {where: "tools/learning_os/commands/capability.py:357", reason: "success with non-JSON output: fixture handlers answer JSON on success"}
   - {where: "tools/learning_os/commands/capability.py:361", reason: "success with a non-object JSON result: fixture handlers answer objects on success"}
-  - {where: "tools/learning_os/commands/capability.py:1072", reason: "idempotency conflict: needs two requests sharing one key, and the harness derives a unique key per step"}
   - {where: "tools/learning_os/commands/capability.py:1083", reason: "replay evidence error: needs a contradictory receipt no step can arrange"}
   - {where: "tools/learning_os/commands/capability.py:1099", reason: "recovery conflict at replay: needs a stale crash journal no step can arrange"}
   - {where: "tools/learning_os/commands/capability.py:1127", reason: "replay lookup failure: needs a failing transaction store in a fresh fixture"}
