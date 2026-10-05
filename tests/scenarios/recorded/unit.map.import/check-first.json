@@ -1,0 +1,121 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"unit.map.import\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {\n    \"ok\": true,\n    \"mode\": \"check\",\n    \"unit_id\": \"unit-demo-l02\",\n    \"study_map_id\": \"study-map-demo-l02\",\n    \"files_checked\": 3,\n    \"canonical_files_written\": 0,\n    \"file_sha256\": \"sha256:a57d3fbba9289d145fa4e7a52ea906b011531f38cc0278121f867cb12eff14d4\",\n    \"snapshot_id\": \"SNAP1\",\n    \"expected_revisions\": {\n      \"unit-demo-l02\": 0,\n      \"study-map-demo-l02\": 0\n    },\n    \"diff\": {\n      \"replacement\": false,\n      \"unit_status\": \"ready\",\n      \"stages_after\": [\n        \"stage-variance\"\n      ],\n      \"content_changes\": [\n        {\n          \"stage_id\": \"stage-variance\",\n          \"field\": \"concepts\",\n          \"before\": null,\n          \"after\": []\n        },\n        {\n          \"stage_id\": \"stage-variance\",\n          \"field\": \"done_when\",\n          \"before\": null,\n          \"after\": [\n            \"Explain and apply Variance without notes.\"\n          ]\n        },\n        {\n          \"stage_id\": \"stage-variance\",\n          \"field\": \"exam_critical\",\n          \"before\": null,\n          \"after\": false\n        },\n        {\n          \"stage_id\": \"stage-variance\",\n          \"field\": \"number\",\n          \"before\": null,\n          \"after\": 1\n        },\n        {\n          \"stage_id\": \"stage-variance\",\n          \"field\": \"objective\",\n          \"before\": null,\n          \"after\": \"Build working fluency in Variance.\"\n        },\n        {\n          \"stage_id\": \"stage-variance\",\n          \"field\": \"resources\",\n          \"before\": null,\n          \"after\": []\n        },\n        {\n          \"stage_id\": \"stage-variance\",\n          \"field\": \"scope_triage\",\n          \"before\": null,\n          \"after\": \"required-now\"\n        },\n        {\n          \"stage_id\": \"stage-variance\",\n          \"field\": \"title\",\n          \"before\": null,\n          \"after\": \"Variance\"\n        }\n      ],\n      \"map_changes\": [\n        {\n          \"field\": \"plan_template_version\",\n          \"before\": null,\n          \"after\": 1\n        },\n        {\n          \"field\": \"source_plan\",\n          \"before\": null,\n          \"after\": {\n            \"path\": \"work/active/workspace-demo/CONTEXT.md\",\n            \"provenance\": \"operator\"\n          }\n        },\n        {\n          \"field\": \"type\",\n          \"before\": null,\n          \"after\": \"study-map\"\n        },\n        {\n          \"field\": \"unit_id\",\n          \"before\": null,\n          \"after\": \"unit-demo-l02\"\n        }\n      ]\n    }\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "unit.map.import",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": null,
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "canonical_files_written": 0,
+      "diff": {
+        "content_changes": [
+          {
+            "after": [],
+            "before": null,
+            "field": "concepts",
+            "stage_id": "stage-variance"
+          },
+          {
+            "after": [
+              "Explain and apply Variance without notes."
+            ],
+            "before": null,
+            "field": "done_when",
+            "stage_id": "stage-variance"
+          },
+          {
+            "after": false,
+            "before": null,
+            "field": "exam_critical",
+            "stage_id": "stage-variance"
+          },
+          {
+            "after": 1,
+            "before": null,
+            "field": "number",
+            "stage_id": "stage-variance"
+          },
+          {
+            "after": "Build working fluency in Variance.",
+            "before": null,
+            "field": "objective",
+            "stage_id": "stage-variance"
+          },
+          {
+            "after": [],
+            "before": null,
+            "field": "resources",
+            "stage_id": "stage-variance"
+          },
+          {
+            "after": "required-now",
+            "before": null,
+            "field": "scope_triage",
+            "stage_id": "stage-variance"
+          },
+          {
+            "after": "Variance",
+            "before": null,
+            "field": "title",
+            "stage_id": "stage-variance"
+          }
+        ],
+        "map_changes": [
+          {
+            "after": 1,
+            "before": null,
+            "field": "plan_template_version"
+          },
+          {
+            "after": {
+              "path": "work/active/workspace-demo/CONTEXT.md",
+              "provenance": "operator"
+            },
+            "before": null,
+            "field": "source_plan"
+          },
+          {
+            "after": "study-map",
+            "before": null,
+            "field": "type"
+          },
+          {
+            "after": "unit-demo-l02",
+            "before": null,
+            "field": "unit_id"
+          }
+        ],
+        "replacement": false,
+        "stages_after": [
+          "stage-variance"
+        ],
+        "unit_status": "ready"
+      },
+      "expected_revisions": {
+        "study-map-demo-l02": 0,
+        "unit-demo-l02": 0
+      },
+      "file_sha256": "sha256:a57d3fbba9289d145fa4e7a52ea906b011531f38cc0278121f867cb12eff14d4",
+      "files_checked": 3,
+      "mode": "check",
+      "ok": true,
+      "snapshot_id": "SNAP1",
+      "study_map_id": "study-map-demo-l02",
+      "unit_id": "unit-demo-l02"
+    },
+    "schema_version": 2,
+    "snapshot_after": null,
+    "transaction_id": null
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"ok\": true, \"mode\": \"check\", \"unit_id\": \"unit-demo-l02\", \"study_map_id\": \"study-map-demo-l02\", \"files_checked\": 3, \"canonical_files_written\": 0, \"file_sha256\": \"sha256:a57d3fbba9289d145fa4e7a52ea906b011531f38cc0278121f867cb12eff14d4\", \"snapshot_id\": \"SNAP1\", \"expected_revisions\": {\"unit-demo-l02\": 0, \"study-map-demo-l02\": 0}, \"diff\": {\"replacement\": false, \"unit_status\": \"ready\", \"stages_after\": [\"stage-variance\"], \"content_changes\": [{\"stage_id\": \"stage-variance\", \"field\": \"concepts\", \"before\": null, \"after\": []}, {\"stage_id\": \"stage-variance\", \"field\": \"done_when\", \"before\": null, \"after\": [\"Explain and apply Variance without notes.\"]}, {\"stage_id\": \"stage-variance\", \"field\": \"exam_critical\", \"before\": null, \"after\": false}, {\"stage_id\": \"stage-variance\", \"field\": \"number\", \"before\": null, \"after\": 1}, {\"stage_id\": \"stage-variance\", \"field\": \"objective\", \"before\": null, \"after\": \"Build working fluency in Variance.\"}, {\"stage_id\": \"stage-variance\", \"field\": \"resources\", \"before\": null, \"after\": []}, {\"stage_id\": \"stage-variance\", \"field\": \"scope_triage\", \"before\": null, \"after\": \"required-now\"}, {\"stage_id\": \"stage-variance\", \"field\": \"title\", \"before\": null, \"after\": \"Variance\"}], \"map_changes\": [{\"field\": \"plan_template_version\", \"before\": null, \"after\": 1}, {\"field\": \"source_plan\", \"before\": null, \"after\": {\"path\": \"work/active/workspace-demo/CONTEXT.md\", \"provenance\": \"operator\"}}, {\"field\": \"type\", \"before\": null, \"after\": \"study-map\"}, {\"field\": \"unit_id\", \"before\": null, \"after\": \"unit-demo-l02\"}]}}\n",
+  "stdout_json": {
+    "canonical_files_written": 0,
+    "diff": {
+      "content_changes": [
+        {
+          "after": [],
+          "before": null,
+          "field": "concepts",
+          "stage_id": "stage-variance"
+        },
+        {
+          "after": [
+            "Explain and apply Variance without notes."
+          ],
+          "before": null,
+          "field": "done_when",
+          "stage_id": "stage-variance"
+        },
+        {
+          "after": false,
+          "before": null,
+          "field": "exam_critical",
+          "stage_id": "stage-variance"
+        },
+        {
+          "after": 1,
+          "before": null,
+          "field": "number",
+          "stage_id": "stage-variance"
+        },
+        {
+          "after": "Build working fluency in Variance.",
+          "before": null,
+          "field": "objective",
+          "stage_id": "stage-variance"
+        },
+        {
+          "after": [],
+          "before": null,
+          "field": "resources",
+          "stage_id": "stage-variance"
+        },
+        {
+          "after": "required-now",
+          "before": null,
+          "field": "scope_triage",
+          "stage_id": "stage-variance"
+        },
+        {
+          "after": "Variance",
+          "before": null,
+          "field": "title",
+          "stage_id": "stage-variance"
+        }
+      ],
+      "map_changes": [
+        {
+          "after": 1,
+          "before": null,
+          "field": "plan_template_version"
+        },
+        {
+          "after": {
+            "path": "work/active/workspace-demo/CONTEXT.md",
+            "provenance": "operator"
+          },
+          "before": null,
+          "field": "source_plan"
+        },
+        {
+          "after": "study-map",
+          "before": null,
+          "field": "type"
+        },
+        {
+          "after": "unit-demo-l02",
+          "before": null,
+          "field": "unit_id"
+        }
+      ],
+      "replacement": false,
+      "stages_after": [
+        "stage-variance"
+      ],
+      "unit_status": "ready"
+    },
+    "expected_revisions": {
+      "study-map-demo-l02": 0,
+      "unit-demo-l02": 0
+    },
+    "file_sha256": "sha256:a57d3fbba9289d145fa4e7a52ea906b011531f38cc0278121f867cb12eff14d4",
+    "files_checked": 3,
+    "mode": "check",
+    "ok": true,
+    "snapshot_id": "SNAP1",
+    "study_map_id": "study-map-demo-l02",
+    "unit_id": "unit-demo-l02"
+  }
+}

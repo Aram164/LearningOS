@@ -1,0 +1,282 @@
+{
+  "canonical_changed": {
+    "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml": "6db102f0179c288dfbc6506892bc7f601e62c67e8e7bf0b971630cad949ae89b"
+  },
+  "exit": 0,
+  "idempotency_changed": {
+    "after": {
+      "entries": {
+        "KEY2": {
+          "capability": "unit.map.import",
+          "channel": "operator",
+          "intent_sha256": "sha256:2350964a8ce3bb906fbfa296349e101f40dd2e8c5a207fd31b6b155f0c7227cd",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "request_id": "KEY1",
+          "revisions": {
+            "study-map-demo-l01": 1,
+            "unit-demo-l01": 4
+          },
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "transaction_id": "TX1"
+        }
+      },
+      "schema_version": 1,
+      "type": "transaction-idempotency-ledger"
+    },
+    "before": null
+  },
+  "outcome": "ok",
+  "receipts": [
+    {
+      "artifact_revisions": {
+        "study-map-demo-l01": {
+          "after": 1,
+          "before": 0
+        },
+        "unit-demo-l01": {
+          "after": 4,
+          "before": 3
+        }
+      },
+      "authority": {
+        "capability_contract_version": 2,
+        "enforced": true,
+        "grants": [
+          {
+            "capability": "unit.map.import",
+            "declared_writes": [
+              "curriculum/modules/**/units/**"
+            ]
+          }
+        ]
+      },
+      "capability": "unit.map.import",
+      "committed_at": "2026-10-01T09:00:00+02:00",
+      "expected_revisions": {
+        "study-map-demo-l01": 0,
+        "unit-demo-l01": 3
+      },
+      "id": "TX1",
+      "metadata": {
+        "data_roots_sha256": "sha256:41ccaa1ecb81c7954dc36f4a5c317070013ea6eb9f93b2b34429549756e46a48",
+        "fingerprint_definition": 2
+      },
+      "request": {
+        "approval": {
+          "kind": "operator-approval",
+          "subject_sha256": "sha256:2350964a8ce3bb906fbfa296349e101f40dd2e8c5a207fd31b6b155f0c7227cd"
+        },
+        "channel": "operator",
+        "idempotency_key": "KEY2",
+        "intent_sha256": "sha256:2350964a8ce3bb906fbfa296349e101f40dd2e8c5a207fd31b6b155f0c7227cd",
+        "request_id": "KEY1"
+      },
+      "schema_version": 2,
+      "snapshot_after": "SNAP1",
+      "snapshot_before": "SNAP2",
+      "status": "committed",
+      "type": "transaction-receipt",
+      "writes": [
+        {
+          "created": false,
+          "path": "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
+          "sha256_after": "6db102f0179c288dfbc6506892bc7f601e62c67e8e7bf0b971630cad949ae89b",
+          "sha256_before": "e8d4f80bdb399e52cf8f713f1379e92a7c4ccf1e3ba04f0ebbcea6eeda5da99c"
+        },
+        {
+          "created": false,
+          "path": "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml",
+          "sha256_after": "02dd8b658f2eceeb04ae9405f545f95ac719226a52f6d1690985403647476dc1",
+          "sha256_before": "02dd8b658f2eceeb04ae9405f545f95ac719226a52f6d1690985403647476dc1"
+        }
+      ]
+    }
+  ],
+  "revisions_changed": {
+    "after": {
+      "revisions": {
+        "study-map-demo-l01": 1,
+        "unit-demo-l01": 4
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    },
+    "before": {
+      "revisions": {
+        "unit-demo-l01": 3
+      },
+      "schema_version": 1,
+      "type": "artifact-revision-ledger"
+    }
+  },
+  "session_ledger_changed": {
+    "after": {
+      "paths": {
+        "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "6db102f0179c288dfbc6506892bc7f601e62c67e8e7bf0b971630cad949ae89b",
+          "state": "file"
+        },
+        "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "02dd8b658f2eceeb04ae9405f545f95ac719226a52f6d1690985403647476dc1",
+          "state": "file"
+        },
+        "operations/transactions/TX1.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "fc4b8ce70a60d053dae5628222ab22f6361cbadb29489edc0c3dab2032b7d16e",
+          "state": "file"
+        },
+        "operations/transactions/idempotency.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "17ede44d12af96e4674865061061cd9e7037a05793cd02f9c9c69257d05c0a71",
+          "state": "file"
+        },
+        "operations/transactions/revisions.yaml": {
+          "channel": "operator",
+          "recorded_at": "2026-10-01T07:00:00+00:00",
+          "sha256": "e017d5ddad803394f168ee4f49716a86587023cd57933ac66746727222e523ba",
+          "state": "file"
+        }
+      },
+      "schema_version": 2,
+      "session_id": "channel:operator"
+    },
+    "before": null
+  },
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"unit.map.import\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"mode\": \"apply\",\n    \"unit_id\": \"unit-demo-l01\",\n    \"study_map_id\": \"study-map-demo-l01\",\n    \"diff\": {\n      \"replacement\": true,\n      \"stages_before\": [\n        \"stage-demo\",\n        \"stage-demo-pending\"\n      ],\n      \"stages_after\": [\n        \"stage-demo\",\n        \"stage-demo-pending\"\n      ],\n      \"stages_added\": [],\n      \"stages_retired\": [],\n      \"relative_order_changed\": false,\n      \"intentional_reorder_reason\": null,\n      \"state_reset_reason\": null,\n      \"retire_reason\": null,\n      \"preserved_stage_state\": [\n        \"stage-demo\",\n        \"stage-demo-pending\"\n      ],\n      \"map_state_fields_preserved\": [],\n      \"resume_stage\": \"stage-demo\",\n      \"retired_stage_evidence\": [],\n      \"unit_status\": \"active\",\n      \"content_changes\": [\n        {\n          \"stage_id\": \"stage-demo\",\n          \"field\": \"concepts\",\n          \"before\": null,\n          \"after\": []\n        },\n        {\n          \"stage_id\": \"stage-demo\",\n          \"field\": \"exam_critical\",\n          \"before\": null,\n          \"after\": false\n        },\n        {\n          \"stage_id\": \"stage-demo\",\n          \"field\": \"number\",\n          \"before\": null,\n          \"after\": 1\n        },\n        {\n          \"stage_id\": \"stage-demo\",\n          \"field\": \"runtime_target\",\n          \"before\": {\n            \"concept\": \"knowledge-demo-expectation\",\n            \"capability\": {\n              \"kind\": \"explain\",\n              \"operands\": [\n                \"expectation\"\n              ]\n            },\n            \"conditions\": [\n              \"unfamiliar-example\"\n            ],\n            \"evidence_spec\": [\n              \"explain-reason\"\n            ]\n          },\n          \"after\": null\n        },\n        {\n          \"stage_id\": \"stage-demo-pending\",\n          \"field\": \"concepts\",\n          \"before\": null,\n          \"after\": []\n        },\n        {\n          \"stage_id\": \"stage-demo-pending\",\n          \"field\": \"exam_critical\",\n          \"before\": null,\n          \"after\": false\n        },\n        {\n          \"stage_id\": \"stage-demo-pending\",\n          \"field\": \"knowledge_node_id\",\n          \"before\": \"knowledge-demo-expectation\",\n          \"after\": null\n        },\n        {\n          \"stage_id\": \"stage-demo-pending\",\n          \"field\": \"number\",\n          \"before\": null,\n          \"after\": 2\n        },\n        {\n          \"stage_id\": \"stage-demo-pending\",\n          \"field\": \"objective\",\n          \"before\": \"Apply expected value to a worked example.\",\n          \"after\": \"Apply expected value to two worked examples.\"\n        }\n      ],\n      \"map_changes\": [\n        {\n          \"field\": \"plan_template_version\",\n          \"before\": null,\n          \"after\": 1\n        }\n      ]\n    },\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"study-map-demo-l01\": 1,\n      \"unit-demo-l01\": 4\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "unit.map.import",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": "operations/transactions/TX1.yaml",
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "artifact_revisions": {
+        "study-map-demo-l01": 1,
+        "unit-demo-l01": 4
+      },
+      "diff": {
+        "content_changes": [
+          {
+            "after": [],
+            "before": null,
+            "field": "concepts",
+            "stage_id": "stage-demo"
+          },
+          {
+            "after": false,
+            "before": null,
+            "field": "exam_critical",
+            "stage_id": "stage-demo"
+          },
+          {
+            "after": 1,
+            "before": null,
+            "field": "number",
+            "stage_id": "stage-demo"
+          },
+          {
+            "after": null,
+            "before": {
+              "capability": {
+                "kind": "explain",
+                "operands": [
+                  "expectation"
+                ]
+              },
+              "concept": "knowledge-demo-expectation",
+              "conditions": [
+                "unfamiliar-example"
+              ],
+              "evidence_spec": [
+                "explain-reason"
+              ]
+            },
+            "field": "runtime_target",
+            "stage_id": "stage-demo"
+          },
+          {
+            "after": [],
+            "before": null,
+            "field": "concepts",
+            "stage_id": "stage-demo-pending"
+          },
+          {
+            "after": false,
+            "before": null,
+            "field": "exam_critical",
+            "stage_id": "stage-demo-pending"
+          },
+          {
+            "after": null,
+            "before": "knowledge-demo-expectation",
+            "field": "knowledge_node_id",
+            "stage_id": "stage-demo-pending"
+          },
+          {
+            "after": 2,
+            "before": null,
+            "field": "number",
+            "stage_id": "stage-demo-pending"
+          },
+          {
+            "after": "Apply expected value to two worked examples.",
+            "before": "Apply expected value to a worked example.",
+            "field": "objective",
+            "stage_id": "stage-demo-pending"
+          }
+        ],
+        "intentional_reorder_reason": null,
+        "map_changes": [
+          {
+            "after": 1,
+            "before": null,
+            "field": "plan_template_version"
+          }
+        ],
+        "map_state_fields_preserved": [],
+        "preserved_stage_state": [
+          "stage-demo",
+          "stage-demo-pending"
+        ],
+        "relative_order_changed": false,
+        "replacement": true,
+        "resume_stage": "stage-demo",
+        "retire_reason": null,
+        "retired_stage_evidence": [],
+        "stages_added": [],
+        "stages_after": [
+          "stage-demo",
+          "stage-demo-pending"
+        ],
+        "stages_before": [
+          "stage-demo",
+          "stage-demo-pending"
+        ],
+        "stages_retired": [],
+        "state_reset_reason": null,
+        "unit_status": "active"
+      },
+      "mode": "apply",
+      "ok": true,
+      "receipt_path": "operations/transactions/TX1.yaml",
+      "replayed": false,
+      "snapshot_after": "SNAP1",
+      "study_map_id": "study-map-demo-l01",
+      "transaction_id": "TX1",
+      "unit_id": "unit-demo-l01"
+    },
+    "schema_version": 2,
+    "snapshot_after": "SNAP1",
+    "transaction_id": "TX1"
+  }
+}

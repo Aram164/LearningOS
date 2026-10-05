@@ -1,0 +1,175 @@
+operation: unit.map.import
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: first-import
+    kind: success
+    transport: gateway
+    request: {unit_id: unit-demo-l02, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:a57d3fbba9289d145fa4e7a52ea906b011531f38cc0278121f867cb12eff14d4"}
+    artifact_ids: [unit-demo-l02, study-map-demo-l02]
+    a5_base: true
+    expect: {site: null}
+  - id: replace
+    kind: success
+    transport: gateway
+    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:6db102f0179c288dfbc6506892bc7f601e62c67e8e7bf0b971630cad949ae89b", replace: true}
+    artifact_ids: [unit-demo-l01, study-map-demo-l01]
+    expect: {site: null}
+  - id: check-first
+    kind: success
+    transport: gateway
+    request: {unit_id: unit-demo-l02, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:a57d3fbba9289d145fa4e7a52ea906b011531f38cc0278121f867cb12eff14d4", check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: check-replace
+    kind: success
+    transport: gateway
+    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:6db102f0179c288dfbc6506892bc7f601e62c67e8e7bf0b971630cad949ae89b", replace: true, check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: check-cli
+    kind: success
+    transport: cli
+    argv: [unit-map-import, unit-demo-l02, --file, "<CASEDATA>/map.yaml", --check]
+    expect: {site: null}
+  - id: missing-file
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l02, file: "work/inbox/nope.yaml", file_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: sha-mismatch
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l02, file: "work/inbox/note-drop.md", file_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: unknown-unit
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-nope, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:2d90ad54fea568012a1a6fc4a62be7b46198235a1be881e3c344134914d075ea"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: no-replace
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:6db102f0179c288dfbc6506892bc7f601e62c67e8e7bf0b971630cad949ae89b"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-yaml
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:cacff250bc00b11d1b54f998a1de75ae085a9146875df9043e3919a1631d81e5", replace: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: wrong-unit
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:a57d3fbba9289d145fa4e7a52ea906b011531f38cc0278121f867cb12eff14d4", replace: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: replace-flags-on-first
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l02, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:a57d3fbba9289d145fa4e7a52ea906b011531f38cc0278121f867cb12eff14d4", retire_stage: [stage-x]}
+    artifact_ids: []
+    expect: {site: null}
+  - id: reorder-flag-on-first
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l02, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:a57d3fbba9289d145fa4e7a52ea906b011531f38cc0278121f867cb12eff14d4", intentional_reorder: "reviewed reason"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: reset-flag-on-first
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l02, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:a57d3fbba9289d145fa4e7a52ea906b011531f38cc0278121f867cb12eff14d4", intentional_state_reset: "reviewed reset"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: identity-change
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:8b7c2d56e69e1c2d927471c96146a06ac7927e2c2e1a66168f6f1e293cb362c6", replace: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: undeclared-retire
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:41bc18e6a98404dc1bd7bee1540f94e9b5125581ec52e7f1781c07585f8ded6d", replace: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: reorder
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:0f6b49cdc78d715ebe37cac6ecfb09d54eb8db397525acd2d722bc2603787d9b", replace: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: spurious-reorder
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:6db102f0179c288dfbc6506892bc7f601e62c67e8e7bf0b971630cad949ae89b", replace: true, intentional_reorder: "reviewed reason"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: retire-no-reason
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:41bc18e6a98404dc1bd7bee1540f94e9b5125581ec52e7f1781c07585f8ded6d", replace: true, retire_stage: [stage-demo-pending]}
+    artifact_ids: []
+    expect: {site: null}
+  - id: retire-kept
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:6db102f0179c288dfbc6506892bc7f601e62c67e8e7bf0b971630cad949ae89b", replace: true, retire_stage: [stage-demo]}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-resume
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:6d96ac7413f4f932192216991fe1ef98dea64e653b0291c90703d9c39bdcbbe9", replace: true, retire_stage: [stage-demo], retire_reason: "out of scope"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: dangling-detours
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:3c8dd5c96f46be7ced59ee03d530dd4d6eb30ee4f03122e2669482ad9135f3b5", replace: true, intentional_state_reset: "reviewed reset"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: template-drift
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:06fcce407fb436a05422445e4aedfe2e2025e34b1a466521ac43589524c56fb0", replace: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: placeholder-plan
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:a2751e265a9ee0dba1d4999f4dcb6f8ea5fd84e5759e9f6ac2a9e05646c7b166", replace: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: schema-invalid
+    kind: refusal
+    transport: gateway
+    request: {unit_id: unit-demo-l01, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:7e75aeac207e5a16a4fde3d8b8719a42da6163a6a7a4d98966b559354fdfc91e", replace: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [unit-map-import, unit-demo-l02, --file, "<CASEDATA>/map.yaml"]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {unit_id: unit-demo-l02, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:a57d3fbba9289d145fa4e7a52ea906b011531f38cc0278121f867cb12eff14d4"}
+        artifact_ids: [unit-demo-l02, study-map-demo-l02]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {unit_id: unit-demo-l02, file: "<CASEDATA>/map.yaml", file_sha256: "sha256:a57d3fbba9289d145fa4e7a52ea906b011531f38cc0278121f867cb12eff14d4"}
+    artifact_ids: [unit-demo-l02, study-map-demo-l02]
+    expect: {site: null}
+untriggered: []
