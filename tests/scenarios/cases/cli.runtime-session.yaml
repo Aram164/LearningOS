@@ -1,0 +1,57 @@
+operation: cli.runtime-session
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: propose
+    kind: success
+    transport: cli
+    argv: [runtime-session, --requirement, req-demo-l01-demo]
+    a5_base: true
+    expect: {site: null}
+  - id: repair
+    kind: success
+    transport: cli
+    argv: [runtime-session, --requirement, req-demo-l01-demo, --previous-json, '{"contract": "runtime-session-v1", "schema_version": 1, "session": {"assumptions": ["only a current content review can establish assessment suitability; actual attempt conditions remain learner-reported", "no prerequisite failure has been reported", "no time budget was supplied", "assessment is blocked, and no practice resource is reachable either; rejected_alternatives says what ruled each one out"], "blockers": ["no accessible, in-scope independent evidence activity"], "current_status": "unseen", "evidence_conditions": ["unfamiliar-example"], "evidence_ids": [], "evidence_spec": ["explain-reason"], "plan_status": "blocked", "rejected_alternatives": [{"reason": "resource has no stable route identity", "resource_id": "unidentified"}, {"reason": "resource has no stable route identity", "resource_id": "unidentified"}, {"reason": "resource has no stable route identity", "resource_id": "unidentified"}], "replan_conditions": ["prerequisite-failure", "target-evidence-obtained-early", "selected-resource-unsuitable", "material-time-change", "target-changed"], "requirement_sha256": "sha256:1170dd69d2f771e47c759589442cb745fbff02da0a527270cbd3e63c2b75cf3a", "resource_reviews": [], "source_stage": {"module_id": "module-demo", "stage_id": "stage-demo", "unit_id": "unit-demo-l01"}, "steps": [], "target_requirement_id": "req-demo-l01-demo"}, "snapshot_id": "sha256:9dddca9dff6bb68e146258cd4c00737eb1cddf02fbe99bcadd8bb873ae657dae"}', --event, minor-mistake]
+    expect: {site: null}
+  - id: stale-snapshot
+    kind: refusal
+    transport: cli
+    argv: [runtime-session, --requirement, req-demo-l01-demo, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
+    expect: {site: null}
+  - id: bad-context
+    kind: refusal
+    transport: cli
+    argv: [runtime-session, --requirement, req-demo-l01-demo, --context-json, "not-json"]
+    expect: {site: null}
+  - id: unknown-requirement
+    kind: refusal
+    transport: cli
+    argv: [runtime-session, --requirement, req-nope]
+    expect: {site: null}
+  - id: repair-needs-both
+    kind: refusal
+    transport: cli
+    argv: [runtime-session, --requirement, req-demo-l01-demo, --previous-json, "{}"]
+    expect: {site: null}
+  - id: previous-not-json
+    kind: refusal
+    transport: cli
+    argv: [runtime-session, --requirement, req-demo-l01-demo, --previous-json, "not-json", --event, minor-mistake]
+    expect: {site: null}
+  - id: previous-bad-shape
+    kind: refusal
+    transport: cli
+    argv: [runtime-session, --requirement, req-demo-l01-demo, --previous-json, "{}", --event, minor-mistake]
+    expect: {site: null}
+  - id: previous-stale
+    kind: refusal
+    transport: cli
+    argv: [runtime-session, --requirement, req-demo-l01-demo, --previous-json, '{"contract": "runtime-session-v1", "schema_version": 1, "session": {"assumptions": ["only a current content review can establish assessment suitability; actual attempt conditions remain learner-reported", "no prerequisite failure has been reported", "no time budget was supplied", "assessment is blocked, and no practice resource is reachable either; rejected_alternatives says what ruled each one out"], "blockers": ["no accessible, in-scope independent evidence activity"], "current_status": "unseen", "evidence_conditions": ["unfamiliar-example"], "evidence_ids": [], "evidence_spec": ["explain-reason"], "plan_status": "blocked", "rejected_alternatives": [{"reason": "resource has no stable route identity", "resource_id": "unidentified"}, {"reason": "resource has no stable route identity", "resource_id": "unidentified"}, {"reason": "resource has no stable route identity", "resource_id": "unidentified"}], "replan_conditions": ["prerequisite-failure", "target-evidence-obtained-early", "selected-resource-unsuitable", "material-time-change", "target-changed"], "requirement_sha256": "sha256:1170dd69d2f771e47c759589442cb745fbff02da0a527270cbd3e63c2b75cf3a", "resource_reviews": [], "source_stage": {"module_id": "module-demo", "stage_id": "stage-demo", "unit_id": "unit-demo-l01"}, "steps": [], "target_requirement_id": "req-demo-l01-demo"}, "snapshot_id": "sha256:0000000000000000000000000000000000000000000000000000000000000000"}', --event, minor-mistake]
+    expect: {site: null}
+  - id: previous-bad-event
+    kind: refusal
+    transport: cli
+    argv: [runtime-session, --requirement, req-demo-l01-demo, --previous-json, '{"contract": "runtime-session-v1", "schema_version": 1, "session": {"assumptions": ["only a current content review can establish assessment suitability; actual attempt conditions remain learner-reported", "no prerequisite failure has been reported", "no time budget was supplied", "assessment is blocked, and no practice resource is reachable either; rejected_alternatives says what ruled each one out"], "blockers": ["no accessible, in-scope independent evidence activity"], "current_status": "unseen", "evidence_conditions": ["unfamiliar-example"], "evidence_ids": [], "evidence_spec": ["explain-reason"], "plan_status": "blocked", "rejected_alternatives": [{"reason": "resource has no stable route identity", "resource_id": "unidentified"}, {"reason": "resource has no stable route identity", "resource_id": "unidentified"}, {"reason": "resource has no stable route identity", "resource_id": "unidentified"}], "replan_conditions": ["prerequisite-failure", "target-evidence-obtained-early", "selected-resource-unsuitable", "material-time-change", "target-changed"], "requirement_sha256": "sha256:1170dd69d2f771e47c759589442cb745fbff02da0a527270cbd3e63c2b75cf3a", "resource_reviews": [], "source_stage": {"module_id": "module-demo", "stage_id": "stage-demo", "unit_id": "unit-demo-l01"}, "steps": [], "target_requirement_id": "req-demo-l01-demo"}, "snapshot_id": "sha256:9dddca9dff6bb68e146258cd4c00737eb1cddf02fbe99bcadd8bb873ae657dae"}', --event, bogus-event]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/runtime.py:48", reason: "snapshot changed mid-read: a single-threaded read cannot race itself"}

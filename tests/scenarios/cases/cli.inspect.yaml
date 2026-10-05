@@ -1,0 +1,36 @@
+operation: cli.inspect
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: inspect-record
+    kind: success
+    transport: cli
+    argv: [inspect, project-demo]
+    a5_base: true
+    expect: {site: null}
+  - id: inspect-batch
+    kind: success
+    transport: cli
+    argv: [inspect, project-demo, note-demo]
+    expect: {site: null}
+  - id: inspect-structural
+    kind: success
+    transport: cli
+    argv: [inspect, stage-demo]
+    expect: {site: null}
+  - id: unknown-id
+    kind: refusal
+    transport: cli
+    argv: [inspect, nope-id]
+    expect: {site: null}
+  - id: batch-too-many
+    kind: refusal
+    transport: cli
+    argv: [inspect, project-demo, note-demo, x03, x04, x05, x06, x07, x08, x09, x10, x11, x12, x13, x14, x15, x16, x17, x18, x19, x20, x21]
+    expect: {site: null}
+  - id: batch-unknown-member
+    kind: refusal
+    transport: cli
+    argv: [inspect, project-demo, nope-id]
+    expect: {site: null}
+untriggered: []

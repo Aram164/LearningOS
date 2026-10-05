@@ -1,0 +1,28 @@
+operation: cli.legacy-archive-status
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: status-absent
+    kind: success
+    transport: cli
+    argv: [legacy-archive-status]
+    a5_base: true
+    expect: {site: null}
+  - id: status-after-publish
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: legacy.archive.lock.publish
+        request:
+          record:
+            schema_version: 1
+            id: legacy-archive-lock
+            type: legacy-archive-lock
+            created_at: "2026-10-01T09:00:00+02:00"
+            entries: []
+            excluded: {count: 3, status: sealed-not-inspected}
+            verification: {verified_at: "2026-10-01T09:00:00+02:00", status: verified, issues: []}
+        artifact_ids: [legacy-archive-lock]
+      - transport: cli
+        argv: [legacy-archive-status]
+untriggered: []

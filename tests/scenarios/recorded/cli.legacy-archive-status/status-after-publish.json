@@ -1,0 +1,261 @@
+{
+  "steps": [
+    {
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY2": {
+              "capability": "legacy.archive.lock.publish",
+              "channel": "operator",
+              "intent_sha256": "sha256:c4b668138b22d7b3852931091bc1c7728283e1e1fa9e8378719007033c9c7939",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "legacy-archive-lock": 1
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "SNAP1",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": null
+      },
+      "operation": "legacy.archive.lock.publish",
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "legacy-archive-lock": {
+              "after": 1,
+              "before": 0
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "legacy.archive.lock.publish",
+                "declared_writes": [
+                  "operations/legacy/archive-lock.yaml"
+                ]
+              }
+            ]
+          },
+          "capability": "legacy.archive.lock.publish",
+          "committed_at": "2026-10-01T09:00:00+02:00",
+          "expected_revisions": {
+            "legacy-archive-lock": 0
+          },
+          "id": "TX1",
+          "metadata": {
+            "data_roots_sha256": "sha256:b40158116795f04cfb2be9320632a98301221e249ded09ce07634a69ebb98fda",
+            "fingerprint_definition": 2
+          },
+          "request": {
+            "approval": {
+              "kind": "operator-approval",
+              "subject_sha256": "sha256:c4b668138b22d7b3852931091bc1c7728283e1e1fa9e8378719007033c9c7939"
+            },
+            "channel": "operator",
+            "idempotency_key": "KEY2",
+            "intent_sha256": "sha256:c4b668138b22d7b3852931091bc1c7728283e1e1fa9e8378719007033c9c7939",
+            "request_id": "KEY1"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP1",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": true,
+              "path": "operations/legacy/archive-lock.yaml",
+              "sha256_after": "3fb1235802bd4daee77a102ddee49064ed7eb80fbcc5bb5cb1cd62d186c42839",
+              "sha256_before": null
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "legacy-archive-lock": 1,
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": {
+        "after": {
+          "paths": {
+            "operations/legacy/archive-lock.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "3fb1235802bd4daee77a102ddee49064ed7eb80fbcc5bb5cb1cd62d186c42839",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "746b39d975b923fd7a1d79a022ab064dc0e4c082da7dc41e25746e4429e5658c",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "47a850966ce4009c9ec70095dd221c2e44c7d85a0a2898b47d228b700b163b06",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "f8f53fb6e096beda801c8a4e9b248e494be82015989f62ae4ddc70849b92358a",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        },
+        "before": null
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"legacy.archive.lock.publish\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"legacy-archive-lock\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "legacy.archive.lock.publish",
+        "error": null,
+        "idempotency_key": "KEY2",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": false,
+        "request_id": "KEY1",
+        "result": {
+          "artifact_revisions": {
+            "legacy-archive-lock": 1
+          },
+          "ok": true,
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": false,
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
+      },
+      "step": 0,
+      "transport": "gateway"
+    },
+    {
+      "argv": [
+        "legacy-archive-status"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": {
+        "after": {
+          "paths": {
+            "operations/legacy/archive-lock.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "3fb1235802bd4daee77a102ddee49064ed7eb80fbcc5bb5cb1cd62d186c42839",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "746b39d975b923fd7a1d79a022ab064dc0e4c082da7dc41e25746e4429e5658c",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "47a850966ce4009c9ec70095dd221c2e44c7d85a0a2898b47d228b700b163b06",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "f8f53fb6e096beda801c8a4e9b248e494be82015989f62ae4ddc70849b92358a",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        },
+        "before": {
+          "paths": {
+            "operations/legacy/archive-lock.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "3fb1235802bd4daee77a102ddee49064ed7eb80fbcc5bb5cb1cd62d186c42839",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "746b39d975b923fd7a1d79a022ab064dc0e4c082da7dc41e25746e4429e5658c",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "47a850966ce4009c9ec70095dd221c2e44c7d85a0a2898b47d228b700b163b06",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "f8f53fb6e096beda801c8a4e9b248e494be82015989f62ae4ddc70849b92358a",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        }
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 1,\n  \"type\": \"legacy-archive-status\",\n  \"available\": true,\n  \"lock\": {\n    \"created_at\": \"2026-10-01T09:00:00+02:00\",\n    \"entries\": [],\n    \"excluded\": {\n      \"count\": 3,\n      \"status\": \"sealed-not-inspected\"\n    },\n    \"id\": \"legacy-archive-lock\",\n    \"schema_version\": 1,\n    \"type\": \"legacy-archive-lock\",\n    \"verification\": {\n      \"issues\": [],\n      \"status\": \"verified\",\n      \"verified_at\": \"2026-10-01T09:00:00+02:00\"\n    }\n  }\n}\n",
+      "stdout_json": {
+        "available": true,
+        "lock": {
+          "created_at": "2026-10-01T09:00:00+02:00",
+          "entries": [],
+          "excluded": {
+            "count": 3,
+            "status": "sealed-not-inspected"
+          },
+          "id": "legacy-archive-lock",
+          "schema_version": 1,
+          "type": "legacy-archive-lock",
+          "verification": {
+            "issues": [],
+            "status": "verified",
+            "verified_at": "2026-10-01T09:00:00+02:00"
+          }
+        },
+        "schema_version": 1,
+        "type": "legacy-archive-status"
+      },
+      "step": 1,
+      "transport": "cli"
+    }
+  ]
+}

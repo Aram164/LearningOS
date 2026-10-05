@@ -1,0 +1,146 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"bootstrap-summary\",\"collections\":{\"programs\":{\"items\":[],\"total\":1,\"next_offset\":null},\"modules\":{\"items\":[],\"total\":1,\"next_offset\":null},\"projects\":{\"items\":[],\"total\":1,\"next_offset\":null},\"units\":{\"items\":[{\"id\":\"unit-demo-l02\",\"title\":\"Variance\",\"status\":\"active\",\"module_id\":\"module-demo\",\"needs_study_map\":true}],\"total\":2,\"next_offset\":null},\"study_maps\":{\"items\":[],\"total\":1,\"next_offset\":null}},\"resume_pointer\":{\"module_id\":\"module-demo\",\"stage_id\":\"stage-demo\",\"study_map_id\":\"study-map-demo-l01\",\"type\":\"resume-pointer\",\"unit_id\":\"unit-demo-l01\",\"updated\":\"2026-09-20\"},\"counts\":{\"notes\":2,\"concepts\":2,\"sources\":1,\"collections\":0,\"topic_packs\":0,\"thematic_groups\":0,\"topics\":0,\"sources_with_topics\":0,\"projects\":1,\"modules\":1,\"workspaces_active\":2,\"workspaces_archived\":0,\"learning_paths\":1,\"learning_paths_active\":1,\"programs\":1,\"units\":2,\"study_maps\":1,\"stages\":2,\"stages_complete\":0,\"source_feedback_records\":0,\"units_needing_map\":1,\"inbox_items\":2,\"garden_entries\":1,\"ai_action_requests\":1,\"relations\":1,\"notes_reviewed\":0,\"notes_with_evidence\":0},\"domain_atlas\":[{\"domain\":\"mathematics\",\"notes\":2,\"crosswalks\":0,\"shelves\":0,\"entries\":0},{\"domain\":\"machine-learning\",\"notes\":0,\"crosswalks\":0,\"shelves\":0,\"entries\":0},{\"domain\":\"systems\",\"notes\":0,\"crosswalks\":0,\"shelves\":0,\"entries\":0},{\"domain\":\"data-systems\",\"notes\":0,\"crosswalks\":0,\"shelves\":0,\"entries\":0},{\"domain\":\"algorithms\",\"notes\":0,\"crosswalks\":0,\"shelves\":0,\"entries\":0},{\"domain\":\"programming\",\"notes\":0,\"crosswalks\":0,\"shelves\":0,\"entries\":0},{\"domain\":\"cross-domain\",\"notes\":0,\"crosswalks\":0,\"shelves\":0,\"entries\":0}],\"detail\":{\"record\":\"inspect ID\",\"notes\":\"note-read NOTE_ID\",\"content_search\":\"search QUERY --type note --content\",\"capabilities\":\"capabilities --compact --json\",\"continuation\":\"bootstrap --compact --offset NEXT_OFFSET --expected-snapshot SNAPSHOT\"}}\n",
+  "stdout_json": {
+    "collections": {
+      "modules": {
+        "items": [],
+        "next_offset": null,
+        "total": 1
+      },
+      "programs": {
+        "items": [],
+        "next_offset": null,
+        "total": 1
+      },
+      "projects": {
+        "items": [],
+        "next_offset": null,
+        "total": 1
+      },
+      "study_maps": {
+        "items": [],
+        "next_offset": null,
+        "total": 1
+      },
+      "units": {
+        "items": [
+          {
+            "id": "unit-demo-l02",
+            "module_id": "module-demo",
+            "needs_study_map": true,
+            "status": "active",
+            "title": "Variance"
+          }
+        ],
+        "next_offset": null,
+        "total": 2
+      }
+    },
+    "contract": "bootstrap-summary",
+    "counts": {
+      "ai_action_requests": 1,
+      "collections": 0,
+      "concepts": 2,
+      "garden_entries": 1,
+      "inbox_items": 2,
+      "learning_paths": 1,
+      "learning_paths_active": 1,
+      "modules": 1,
+      "notes": 2,
+      "notes_reviewed": 0,
+      "notes_with_evidence": 0,
+      "programs": 1,
+      "projects": 1,
+      "relations": 1,
+      "source_feedback_records": 0,
+      "sources": 1,
+      "sources_with_topics": 0,
+      "stages": 2,
+      "stages_complete": 0,
+      "study_maps": 1,
+      "thematic_groups": 0,
+      "topic_packs": 0,
+      "topics": 0,
+      "units": 2,
+      "units_needing_map": 1,
+      "workspaces_active": 2,
+      "workspaces_archived": 0
+    },
+    "detail": {
+      "capabilities": "capabilities --compact --json",
+      "content_search": "search QUERY --type note --content",
+      "continuation": "bootstrap --compact --offset NEXT_OFFSET --expected-snapshot SNAPSHOT",
+      "notes": "note-read NOTE_ID",
+      "record": "inspect ID"
+    },
+    "domain_atlas": [
+      {
+        "crosswalks": 0,
+        "domain": "mathematics",
+        "entries": 0,
+        "notes": 2,
+        "shelves": 0
+      },
+      {
+        "crosswalks": 0,
+        "domain": "machine-learning",
+        "entries": 0,
+        "notes": 0,
+        "shelves": 0
+      },
+      {
+        "crosswalks": 0,
+        "domain": "systems",
+        "entries": 0,
+        "notes": 0,
+        "shelves": 0
+      },
+      {
+        "crosswalks": 0,
+        "domain": "data-systems",
+        "entries": 0,
+        "notes": 0,
+        "shelves": 0
+      },
+      {
+        "crosswalks": 0,
+        "domain": "algorithms",
+        "entries": 0,
+        "notes": 0,
+        "shelves": 0
+      },
+      {
+        "crosswalks": 0,
+        "domain": "programming",
+        "entries": 0,
+        "notes": 0,
+        "shelves": 0
+      },
+      {
+        "crosswalks": 0,
+        "domain": "cross-domain",
+        "entries": 0,
+        "notes": 0,
+        "shelves": 0
+      }
+    ],
+    "resume_pointer": {
+      "module_id": "module-demo",
+      "stage_id": "stage-demo",
+      "study_map_id": "study-map-demo-l01",
+      "type": "resume-pointer",
+      "unit_id": "unit-demo-l01",
+      "updated": "2026-09-20"
+    },
+    "schema_version": 1,
+    "snapshot_id": "SNAP1"
+  }
+}

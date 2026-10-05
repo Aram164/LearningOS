@@ -1,0 +1,307 @@
+{
+  "steps": [
+    {
+      "canonical_changed": {
+        "curriculum/quarantine/masters-planning/catalog.yaml": "d48e996da67307266fa0a9638413c77e8721dd19281499e6cf79071f49310555"
+      },
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY2": {
+              "capability": "masters-planning.catalog.update",
+              "channel": "operator",
+              "intent_sha256": "sha256:db801f1d2b960591e16849e39086a30f6c1d418dc2835e17201eab57fdbed0dd",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "master-planning-catalog": 1
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "SNAP2",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": null
+      },
+      "operation": "masters-planning.catalog.update",
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "master-planning-catalog": {
+              "after": 1,
+              "before": 0
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "masters-planning.catalog.update",
+                "declared_writes": [
+                  "curriculum/quarantine/masters-planning/catalog.yaml"
+                ]
+              }
+            ]
+          },
+          "capability": "masters-planning.catalog.update",
+          "committed_at": "2026-10-01T09:00:00+02:00",
+          "expected_revisions": {
+            "master-planning-catalog": 0
+          },
+          "id": "TX1",
+          "metadata": {
+            "data_roots_sha256": "sha256:bca1e43486b5253bbc6e8ffc53f1f650a77657cffdefdbfb8536ff60fd4a3759",
+            "fingerprint_definition": 2
+          },
+          "request": {
+            "approval": {
+              "kind": "operator-approval",
+              "subject_sha256": "sha256:db801f1d2b960591e16849e39086a30f6c1d418dc2835e17201eab57fdbed0dd"
+            },
+            "channel": "operator",
+            "idempotency_key": "KEY2",
+            "intent_sha256": "sha256:db801f1d2b960591e16849e39086a30f6c1d418dc2835e17201eab57fdbed0dd",
+            "request_id": "KEY1"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": true,
+              "path": "curriculum/quarantine/masters-planning/catalog.yaml",
+              "sha256_after": "d48e996da67307266fa0a9638413c77e8721dd19281499e6cf79071f49310555",
+              "sha256_before": null
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "master-planning-catalog": 1,
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": {
+        "after": {
+          "paths": {
+            "curriculum/quarantine/masters-planning/catalog.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "d48e996da67307266fa0a9638413c77e8721dd19281499e6cf79071f49310555",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "00f473e7f2a5663b308915581332615360c0f2752b9364237c7041142a346337",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "332096d03eec54d3f9639b5a1fccdf4f5bf6f63c089ac6bf9d98e7c03fa78e8f",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1f76f8aab71d8d70f70e00628129b1178222f2d93a57f5ade651a6cca03fc5b7",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        },
+        "before": null
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"masters-planning.catalog.update\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"master-planning-catalog\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "masters-planning.catalog.update",
+        "error": null,
+        "idempotency_key": "KEY2",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": false,
+        "request_id": "KEY1",
+        "result": {
+          "artifact_revisions": {
+            "master-planning-catalog": 1
+          },
+          "ok": true,
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": false,
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
+      },
+      "step": 0,
+      "transport": "gateway"
+    },
+    {
+      "argv": [
+        "masters-planning-dashboard",
+        "--confirm-masters-planning"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": {
+        "after": {
+          "paths": {
+            "curriculum/quarantine/masters-planning/catalog.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "d48e996da67307266fa0a9638413c77e8721dd19281499e6cf79071f49310555",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "00f473e7f2a5663b308915581332615360c0f2752b9364237c7041142a346337",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "332096d03eec54d3f9639b5a1fccdf4f5bf6f63c089ac6bf9d98e7c03fa78e8f",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1f76f8aab71d8d70f70e00628129b1178222f2d93a57f5ade651a6cca03fc5b7",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        },
+        "before": {
+          "paths": {
+            "curriculum/quarantine/masters-planning/catalog.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "d48e996da67307266fa0a9638413c77e8721dd19281499e6cf79071f49310555",
+              "state": "file"
+            },
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "00f473e7f2a5663b308915581332615360c0f2752b9364237c7041142a346337",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "332096d03eec54d3f9639b5a1fccdf4f5bf6f63c089ac6bf9d98e7c03fa78e8f",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "1f76f8aab71d8d70f70e00628129b1178222f2d93a57f5ade651a6cca03fc5b7",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        }
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 1,\n  \"type\": \"masters-planning-dashboard\",\n  \"opened_at\": \"2026-10-01T07:00:00+00:00\",\n  \"banner\": \"Prospective—not current LearningOS\",\n  \"catalog\": {\n    \"candidate_modules\": [\n      {\n        \"fact_state\": {\n          \"as_of\": \"2026-09-23\",\n          \"evidence\": [\n            \"scenario\"\n          ],\n          \"status\": \"unverified\"\n        },\n        \"id\": \"candidate-module-scenario-ml\",\n        \"planning_state\": \"selected\",\n        \"privacy_class\": \"academic-only\",\n        \"provenance\": [\n          \"scenario\"\n        ],\n        \"source_ids\": [\n          \"candidate-source-scenario-book\"\n        ],\n        \"title\": \"Scenario ML module\",\n        \"unresolved_references\": []\n      }\n    ],\n    \"candidate_sources\": [\n      {\n        \"fact_state\": {\n          \"as_of\": \"2026-09-23\",\n          \"evidence\": [\n            \"scenario\"\n          ],\n          \"status\": \"unverified\"\n        },\n        \"id\": \"candidate-source-scenario-book\",\n        \"planning_state\": \"selected\",\n        \"privacy_class\": \"academic-only\",\n        \"provenance\": [\n          \"scenario\"\n        ],\n        \"title\": \"Scenario Book\",\n        \"type\": \"book\"\n      }\n    ],\n    \"comparison_ids\": [],\n    \"id\": \"master-planning-catalog\",\n    \"revision\": 0,\n    \"schema_version\": 1,\n    \"type\": \"master-planning-catalog\",\n    \"updated_at\": \"2026-10-01T09:00:00+02:00\"\n  },\n  \"comparisons\": [],\n  \"isolation\": {\n    \"normal_manifest\": false,\n    \"search\": false,\n    \"workload\": false,\n    \"recommendations\": false,\n    \"deadlines\": false,\n    \"ordinary_ai_context\": false\n  }\n}\n",
+      "stdout_json": {
+        "banner": "Prospective—not current LearningOS",
+        "catalog": {
+          "candidate_modules": [
+            {
+              "fact_state": {
+                "as_of": "2026-09-23",
+                "evidence": [
+                  "scenario"
+                ],
+                "status": "unverified"
+              },
+              "id": "candidate-module-scenario-ml",
+              "planning_state": "selected",
+              "privacy_class": "academic-only",
+              "provenance": [
+                "scenario"
+              ],
+              "source_ids": [
+                "candidate-source-scenario-book"
+              ],
+              "title": "Scenario ML module",
+              "unresolved_references": []
+            }
+          ],
+          "candidate_sources": [
+            {
+              "fact_state": {
+                "as_of": "2026-09-23",
+                "evidence": [
+                  "scenario"
+                ],
+                "status": "unverified"
+              },
+              "id": "candidate-source-scenario-book",
+              "planning_state": "selected",
+              "privacy_class": "academic-only",
+              "provenance": [
+                "scenario"
+              ],
+              "title": "Scenario Book",
+              "type": "book"
+            }
+          ],
+          "comparison_ids": [],
+          "id": "master-planning-catalog",
+          "revision": 0,
+          "schema_version": 1,
+          "type": "master-planning-catalog",
+          "updated_at": "2026-10-01T09:00:00+02:00"
+        },
+        "comparisons": [],
+        "isolation": {
+          "deadlines": false,
+          "normal_manifest": false,
+          "ordinary_ai_context": false,
+          "recommendations": false,
+          "search": false,
+          "workload": false
+        },
+        "opened_at": "2026-10-01T07:00:00+00:00",
+        "schema_version": 1,
+        "type": "masters-planning-dashboard"
+      },
+      "step": 1,
+      "transport": "cli"
+    }
+  ]
+}

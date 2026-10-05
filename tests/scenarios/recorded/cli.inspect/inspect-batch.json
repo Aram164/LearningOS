@@ -1,0 +1,78 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"record-batch\",\"requested_ids\":[\"project-demo\",\"note-demo\"],\"records\":[{\"schema_version\":1,\"id\":\"project-demo\",\"type\":\"project\",\"title\":\"Demo project\",\"project_type\":\"software\",\"status\":\"active\",\"root_uri\":\"project://demo\",\"objective\":\"Demonstrate the shadow graph.\",\"milestone_ids\":[],\"linked_module_ids\":[\"module-demo\"],\"unit_ids\":[\"unit-demo-l01\"],\"workspace_ids\":[\"workspace-demo\"],\"thematic_group_ids\":[],\"boundaries\":{\"confidentiality\":\"private\",\"external_code_access\":\"approved\"},\"revision\":0,\"path\":\"projects/registry/project-demo.yaml\",\"relationship_ids\":[\"relationship-demo\"]},{\"id\":\"note-demo\",\"type\":\"note\",\"title\":\"Demo note\",\"path\":\"knowledge/notes/mathematics/note-demo.md\",\"domain\":\"mathematics\",\"summary\":\"Body prose.\",\"role\":\"synthesis\",\"state\":null,\"authorship\":null,\"concepts\":[\"concept-expected-value\"],\"sources\":[\"source-demo-book\"],\"contexts\":[],\"attachments\":[],\"evidence\":[],\"supersedes\":[],\"reviewed\":null,\"transcription\":null,\"semantic_review\":null,\"atlas_question\":null,\"material_analysis\":null}]}\n",
+  "stdout_json": {
+    "contract": "record-batch",
+    "records": [
+      {
+        "boundaries": {
+          "confidentiality": "private",
+          "external_code_access": "approved"
+        },
+        "id": "project-demo",
+        "linked_module_ids": [
+          "module-demo"
+        ],
+        "milestone_ids": [],
+        "objective": "Demonstrate the shadow graph.",
+        "path": "projects/registry/project-demo.yaml",
+        "project_type": "software",
+        "relationship_ids": [
+          "relationship-demo"
+        ],
+        "revision": 0,
+        "root_uri": "project://demo",
+        "schema_version": 1,
+        "status": "active",
+        "thematic_group_ids": [],
+        "title": "Demo project",
+        "type": "project",
+        "unit_ids": [
+          "unit-demo-l01"
+        ],
+        "workspace_ids": [
+          "workspace-demo"
+        ]
+      },
+      {
+        "atlas_question": null,
+        "attachments": [],
+        "authorship": null,
+        "concepts": [
+          "concept-expected-value"
+        ],
+        "contexts": [],
+        "domain": "mathematics",
+        "evidence": [],
+        "id": "note-demo",
+        "material_analysis": null,
+        "path": "knowledge/notes/mathematics/note-demo.md",
+        "reviewed": null,
+        "role": "synthesis",
+        "semantic_review": null,
+        "sources": [
+          "source-demo-book"
+        ],
+        "state": null,
+        "summary": "Body prose.",
+        "supersedes": [],
+        "title": "Demo note",
+        "transcription": null,
+        "type": "note"
+      }
+    ],
+    "requested_ids": [
+      "project-demo",
+      "note-demo"
+    ],
+    "schema_version": 1,
+    "snapshot_id": "SNAP1"
+  }
+}
