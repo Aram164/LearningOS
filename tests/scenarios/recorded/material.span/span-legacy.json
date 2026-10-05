@@ -1,0 +1,37 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"material-span-v1\",\"unit_id\":\"unit-demo-l02\",\"module_id\":\"module-demo\",\"route_id\":\"route-7d42915c4988c513e6caa207\",\"source_id\":\"source-demo-book\",\"locator\":\"lecture-02.pdf\",\"url\":null,\"availability\":\"local-unavailable\",\"next_action\":\"Restore the registered local file, run make inventory, then rerun material-span unit-demo-l02 route-7d42915c4988c513e6caa207 --extract.\",\"analysis_refs\":{\"analysis_notes\":[],\"related_count\":1,\"related_expand\":\"plan-edit-context unit-demo-l02 --brief --include-related --expected-snapshot SNAP1\",\"approved_assessment_routes\":[],\"stale_assessment_routes\":[],\"analysis_by_resolution\":{},\"analysis_notes_total\":0,\"analysis_notes_truncated\":false,\"expand\":\"plan-edit-context unit-demo-l02 --route-id route-7d42915c4988c513e6caa207 --expected-snapshot SNAP1\"},\"spans\":[],\"expansion\":\"material-span unit-demo-l02 route-7d42915c4988c513e6caa207 --extract --expected-snapshot SNAP1\"}\n",
+  "stdout_json": {
+    "analysis_refs": {
+      "analysis_by_resolution": {},
+      "analysis_notes": [],
+      "analysis_notes_total": 0,
+      "analysis_notes_truncated": false,
+      "approved_assessment_routes": [],
+      "expand": "plan-edit-context unit-demo-l02 --route-id route-7d42915c4988c513e6caa207 --expected-snapshot SNAP1",
+      "related_count": 1,
+      "related_expand": "plan-edit-context unit-demo-l02 --brief --include-related --expected-snapshot SNAP1",
+      "stale_assessment_routes": []
+    },
+    "availability": "local-unavailable",
+    "contract": "material-span-v1",
+    "expansion": "material-span unit-demo-l02 route-7d42915c4988c513e6caa207 --extract --expected-snapshot SNAP1",
+    "locator": "lecture-02.pdf",
+    "module_id": "module-demo",
+    "next_action": "Restore the registered local file, run make inventory, then rerun material-span unit-demo-l02 route-7d42915c4988c513e6caa207 --extract.",
+    "route_id": "route-7d42915c4988c513e6caa207",
+    "schema_version": 1,
+    "snapshot_id": "SNAP1",
+    "source_id": "source-demo-book",
+    "spans": [],
+    "unit_id": "unit-demo-l02",
+    "url": null
+  }
+}

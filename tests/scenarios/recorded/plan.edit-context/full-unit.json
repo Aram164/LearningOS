@@ -1,0 +1,137 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"plan-edit-context\",\"unit_id\":\"unit-demo-l01\",\"module_id\":\"module-demo\",\"artifact_revisions\":{\"module-demo\":0,\"study-map-demo-l01\":0,\"unit-demo-l01\":3},\"preflight\":\"route-patch UNIT_ID ROUTE_ID --changes JSON --check returns exact write guards\",\"study_map\":{\"id\":\"study-map-demo-l01\",\"type\":\"study-map\",\"unit_id\":\"unit-demo-l01\",\"status\":\"active\",\"current_stage\":\"stage-demo\",\"source_plan\":{\"path\":\"work/active/workspace-demo/CONTEXT.md\",\"provenance\":\"operator\"},\"detours\":[],\"shelving\":{\"state\":\"none\"},\"stages\":[{\"id\":\"stage-demo\",\"title\":\"Derive expected value\",\"status\":\"active\",\"objective\":\"Derive and explain expected value.\",\"done_when\":[\"Explain the derivation.\"],\"scope_triage\":\"required-now\",\"resources\":[{\"id\":\"resource-demo-book-ch01\",\"kind\":\"read\",\"label\":\"Demo Book §1\",\"source_id\":\"source-demo-book\",\"locator\":\"§1\"},{\"id\":\"resource-demo-book-appendix\",\"kind\":\"read\",\"label\":\"Demo Book Appendix\",\"source_id\":\"source-demo-book\",\"locator\":\"Appendix A\"},{\"kind\":\"watch\",\"label\":\"Demo companion video\",\"source_id\":\"source-demo-book\"}],\"working_note\":\"curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md\",\"attachments\":[],\"source_feedback\":[],\"runtime_target\":{\"concept\":\"knowledge-demo-expectation\",\"capability\":{\"kind\":\"explain\",\"operands\":[\"expectation\"]},\"conditions\":[\"unfamiliar-example\"],\"evidence_spec\":[\"explain-reason\"]}},{\"id\":\"stage-demo-pending\",\"knowledge_node_id\":\"knowledge-demo-expectation\",\"title\":\"Apply expected value\",\"status\":\"pending\",\"objective\":\"Apply expected value to a worked example.\",\"done_when\":[\"Work the example.\"],\"scope_triage\":\"required-now\",\"resources\":[{\"kind\":\"read\",\"label\":\"Demo Book §2\",\"source_id\":\"source-demo-book\",\"locator\":\"§2\"}],\"working_note\":\"curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo-pending/notes.md\",\"attachments\":[],\"source_feedback\":[]}]},\"routes\":[{\"unit_id\":\"unit-demo-l01\",\"id\":\"route-b2f1f80014860a929a3af0bc\",\"title\":\"Demo book — expected-value derivation\",\"format\":\"book\",\"angle\":\"Derives the weighted sum and works a discrete example.\",\"covers\":[\"knowledge-demo-outcomes\",\"knowledge-demo-expectation\"],\"depth\":\"derivation\",\"scope\":\"current\",\"locator\":\"lecture-01.pdf\",\"source_id\":\"source-demo-book\"}],\"source_selections\":[{\"source_id\":\"source-demo-book\",\"route_id\":\"route-b2f1f80014860a929a3af0bc\",\"locator\":\"lecture-01.pdf\",\"purpose\":\"Current derivation\"}]}\n",
+  "stdout_json": {
+    "artifact_revisions": {
+      "module-demo": 0,
+      "study-map-demo-l01": 0,
+      "unit-demo-l01": 3
+    },
+    "contract": "plan-edit-context",
+    "module_id": "module-demo",
+    "preflight": "route-patch UNIT_ID ROUTE_ID --changes JSON --check returns exact write guards",
+    "routes": [
+      {
+        "angle": "Derives the weighted sum and works a discrete example.",
+        "covers": [
+          "knowledge-demo-outcomes",
+          "knowledge-demo-expectation"
+        ],
+        "depth": "derivation",
+        "format": "book",
+        "id": "route-b2f1f80014860a929a3af0bc",
+        "locator": "lecture-01.pdf",
+        "scope": "current",
+        "source_id": "source-demo-book",
+        "title": "Demo book — expected-value derivation",
+        "unit_id": "unit-demo-l01"
+      }
+    ],
+    "schema_version": 1,
+    "snapshot_id": "SNAP1",
+    "source_selections": [
+      {
+        "locator": "lecture-01.pdf",
+        "purpose": "Current derivation",
+        "route_id": "route-b2f1f80014860a929a3af0bc",
+        "source_id": "source-demo-book"
+      }
+    ],
+    "study_map": {
+      "current_stage": "stage-demo",
+      "detours": [],
+      "id": "study-map-demo-l01",
+      "shelving": {
+        "state": "none"
+      },
+      "source_plan": {
+        "path": "work/active/workspace-demo/CONTEXT.md",
+        "provenance": "operator"
+      },
+      "stages": [
+        {
+          "attachments": [],
+          "done_when": [
+            "Explain the derivation."
+          ],
+          "id": "stage-demo",
+          "objective": "Derive and explain expected value.",
+          "resources": [
+            {
+              "id": "resource-demo-book-ch01",
+              "kind": "read",
+              "label": "Demo Book §1",
+              "locator": "§1",
+              "source_id": "source-demo-book"
+            },
+            {
+              "id": "resource-demo-book-appendix",
+              "kind": "read",
+              "label": "Demo Book Appendix",
+              "locator": "Appendix A",
+              "source_id": "source-demo-book"
+            },
+            {
+              "kind": "watch",
+              "label": "Demo companion video",
+              "source_id": "source-demo-book"
+            }
+          ],
+          "runtime_target": {
+            "capability": {
+              "kind": "explain",
+              "operands": [
+                "expectation"
+              ]
+            },
+            "concept": "knowledge-demo-expectation",
+            "conditions": [
+              "unfamiliar-example"
+            ],
+            "evidence_spec": [
+              "explain-reason"
+            ]
+          },
+          "scope_triage": "required-now",
+          "source_feedback": [],
+          "status": "active",
+          "title": "Derive expected value",
+          "working_note": "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md"
+        },
+        {
+          "attachments": [],
+          "done_when": [
+            "Work the example."
+          ],
+          "id": "stage-demo-pending",
+          "knowledge_node_id": "knowledge-demo-expectation",
+          "objective": "Apply expected value to a worked example.",
+          "resources": [
+            {
+              "kind": "read",
+              "label": "Demo Book §2",
+              "locator": "§2",
+              "source_id": "source-demo-book"
+            }
+          ],
+          "scope_triage": "required-now",
+          "source_feedback": [],
+          "status": "pending",
+          "title": "Apply expected value",
+          "working_note": "curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo-pending/notes.md"
+        }
+      ],
+      "status": "active",
+      "type": "study-map",
+      "unit_id": "unit-demo-l01"
+    },
+    "unit_id": "unit-demo-l01"
+  }
+}

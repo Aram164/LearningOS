@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "id: study-map-demo-l01\ntype: study-map\nplan_template_version: 1\nunit_id: unit-demo-l01\nstatus: ready\ncurrent_stage: stage-variance\nsource_plan:\n  path: replace-with-reviewed-plan.yaml\n  provenance: operator\ndetours: []\nstages:\n- id: stage-variance\n  number: 1\n  title: Variance\n  status: pending\n  objective: Build working fluency in Variance.\n  done_when:\n  - Explain and apply Variance without notes.\n  exam_critical: false\n  concepts: []\n  scope_triage: required-now\n  resources: []\n  working_note: curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-variance/notes.md\n  attachments: []\n  source_feedback: []\nshelving:\n  state: none\n",
+  "stdout_json": null
+}

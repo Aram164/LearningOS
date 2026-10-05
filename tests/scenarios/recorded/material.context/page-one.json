@@ -1,0 +1,42 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"material-context\",\"ranked_by\":\"recorded stage use-evidence per source: positive feedback first, mismatch feedback last; ties keep stable order (notes by id, then assessments by unit and route)\",\"items\":[],\"total\":1,\"next_offset\":null,\"observations_sha256\":\"sha256:a15acfa1bdbc29346cfb34828426737d767bd96253e6b7fd5334439f74592be6\",\"searched\":{\"query_terms\":[\"derivation\"],\"concept\":null,\"purpose\":null,\"unit\":null,\"material\":null,\"include_related\":false,\"analysis_notes\":1,\"assessments\":0},\"pool\":{\"analysis_notes\":1,\"assessments\":0,\"related_analysis_notes\":0,\"analysis_by_resolution\":{\"resolved\":1},\"analysis_unreviewed\":0}}\n",
+  "stdout_json": {
+    "contract": "material-context",
+    "items": [],
+    "next_offset": null,
+    "observations_sha256": "sha256:a15acfa1bdbc29346cfb34828426737d767bd96253e6b7fd5334439f74592be6",
+    "pool": {
+      "analysis_by_resolution": {
+        "resolved": 1
+      },
+      "analysis_notes": 1,
+      "analysis_unreviewed": 0,
+      "assessments": 0,
+      "related_analysis_notes": 0
+    },
+    "ranked_by": "recorded stage use-evidence per source: positive feedback first, mismatch feedback last; ties keep stable order (notes by id, then assessments by unit and route)",
+    "schema_version": 1,
+    "searched": {
+      "analysis_notes": 1,
+      "assessments": 0,
+      "concept": null,
+      "include_related": false,
+      "material": null,
+      "purpose": null,
+      "query_terms": [
+        "derivation"
+      ],
+      "unit": null
+    },
+    "snapshot_id": "SNAP1",
+    "total": 1
+  }
+}

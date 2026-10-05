@@ -1,0 +1,64 @@
+operation: material.span
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: span
+    kind: success
+    transport: cli
+    argv: [material-span, unit-demo-l01, route-b2f1f80014860a929a3af0bc]
+    a5_base: true
+    expect: {site: null}
+  - id: span-extract
+    kind: success
+    transport: cli
+    argv: [material-span, unit-demo-l01, route-b2f1f80014860a929a3af0bc, --extract]
+    expect: {site: null}
+  - id: span-legacy
+    kind: success
+    transport: cli
+    argv: [material-span, unit-demo-l02, route-7d42915c4988c513e6caa207]
+    expect: {site: null}
+  - id: unknown-unit
+    kind: refusal
+    transport: cli
+    argv: [material-span, unit-nope, route-b2f1f80014860a929a3af0bc]
+    expect: {site: null}
+  - id: route-near-miss
+    kind: refusal
+    transport: cli
+    argv: [material-span, unit-demo-l01, route-b2f1f80014860a929a3af0bd]
+    expect: {site: null}
+  - id: route-unknown
+    kind: refusal
+    transport: cli
+    argv: [material-span, unit-demo-l01, route-nope]
+    expect: {site: null}
+  - id: stage-without-index
+    kind: refusal
+    transport: cli
+    argv: [material-span, unit-demo-l01, route-b2f1f80014860a929a3af0bc, --stage, stage-demo]
+    expect: {site: null}
+  - id: placement-missing
+    kind: refusal
+    transport: cli
+    argv: [material-span, unit-demo-l01, route-b2f1f80014860a929a3af0bc, --stage, stage-nope, --resource-index, 0]
+    expect: {site: null}
+  - id: placement-foreign
+    kind: refusal
+    transport: cli
+    argv: [material-span, unit-demo-l01, route-b2f1f80014860a929a3af0bc, --stage, stage-demo, --resource-index, 0]
+    expect: {site: null}
+  - id: placement-no-map
+    kind: refusal
+    transport: cli
+    argv: [material-span, unit-demo-l02, route-7d42915c4988c513e6caa207, --stage, stage-demo, --resource-index, 0]
+    expect: {site: null}
+  - id: stale-snapshot
+    kind: refusal
+    transport: cli
+    argv: [material-span, unit-demo-l01, route-b2f1f80014860a929a3af0bc, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/material_span.py:44", reason: "belonging placement whose source mismatches: no fixture stage resource links the route, so no belonging placement exists to mismatch"}
+  - {where: "tools/learning_os/commands/material_span.py:62", reason: "unit without a module source map: every fixture unit's module carries one"}
+  - {where: "tools/learning_os/commands/material_span.py:67", reason: "ambiguous route: the fixture carries each route id once per unit"}

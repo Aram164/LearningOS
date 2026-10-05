@@ -1,0 +1,117 @@
+operation: plan.edit-context
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: full-unit
+    kind: success
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l01]
+    a5_base: true
+    expect: {site: null}
+  - id: route-entry
+    kind: success
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l01, --route-id, route-b2f1f80014860a929a3af0bc]
+    expect: {site: null}
+  - id: batch-entry
+    kind: success
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l01, --route-ids, route-b2f1f80014860a929a3af0bc]
+    expect: {site: null}
+  - id: stage-entry
+    kind: success
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l01, --stage-id, stage-demo]
+    expect: {site: null}
+  - id: brief-unit
+    kind: success
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l01, --brief]
+    expect: {site: null}
+  - id: brief-related
+    kind: success
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l01, --brief, --include-related, --include-neighbors]
+    expect: {site: null}
+  - id: audit-unit
+    kind: success
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l01, --audit]
+    expect: {site: null}
+  - id: legacy-unit
+    kind: success
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l02]
+    expect: {site: null}
+  - id: unknown-unit
+    kind: refusal
+    transport: cli
+    argv: [plan-edit-context, unit-nope]
+    expect: {site: null}
+  - id: unknown-route
+    kind: refusal
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l01, --route-id, route-nope]
+    expect: {site: null}
+  - id: batch-too-many
+    kind: refusal
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l01, --route-ids, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc]
+    expect: {site: null}
+  - id: batch-duplicate
+    kind: refusal
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l01, --route-ids, route-b2f1f80014860a929a3af0bc, route-b2f1f80014860a929a3af0bc]
+    expect: {site: null}
+  - id: batch-unknown
+    kind: refusal
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l01, --route-ids, route-nope]
+    expect: {site: null}
+  - id: stage-unknown
+    kind: refusal
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l01, --stage-id, stage-nope]
+    expect: {site: null}
+  - id: stage-no-map
+    kind: refusal
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l02, --stage-id, stage-demo]
+    expect: {site: null}
+  - id: audit-with-route
+    kind: refusal
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l01, --audit, --route-id, route-b2f1f80014860a929a3af0bc]
+    expect: {site: null}
+  - id: brief-with-route
+    kind: refusal
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l01, --brief, --route-id, route-b2f1f80014860a929a3af0bc]
+    expect: {site: null}
+  - id: brief-with-audit
+    kind: refusal
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l01, --brief, --audit]
+    expect: {site: null}
+  - id: related-without-brief
+    kind: refusal
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l01, --include-related]
+    expect: {site: null}
+  - id: neighbors-without-brief
+    kind: refusal
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l01, --include-neighbors]
+    expect: {site: null}
+  - id: stale-snapshot
+    kind: refusal
+    transport: cli
+    argv: [plan-edit-context, unit-demo-l01, --expected-snapshot, "sha256:0000000000000000000000000000000000000000000000000000000000000000"]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/material.py:57", reason: "unreadable canonical records: the fixture parses cleanly, and no step can break it"}
+  - {where: "tools/learning_os/commands/material.py:67", reason: "unit without a module source map: every fixture unit's module carries one"}
+  - {where: "tools/learning_os/commands/material.py:114", reason: "ambiguous study maps: the fixture carries one map per unit"}
+  - {where: "tools/learning_os/commands/material.py:163", reason: "empty batch: argparse nargs=+ requires at least one route id first"}
+  - {where: "tools/learning_os/commands/material.py:517", reason: "two selectors: the argparse mutually exclusive group refuses first, and the gateway serves no queries"}
+  - {where: "tools/learning_os/commands/material.py:552", reason: "unreadable stage results: the fixture's stage results read cleanly"}
