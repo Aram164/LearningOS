@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: unknown record type: nope (did you mean: note? valid types: collection, compatibility-alias, concept, coordination, garden-note, inbox-item, module, module-source-map, note, program, project, project-relationship, source, study-map, topic-pack, unit, unit-material-synthesis, workspace)\n",
+  "stdout": "",
+  "stdout_json": null
+}
