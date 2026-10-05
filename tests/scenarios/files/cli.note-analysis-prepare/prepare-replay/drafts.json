@@ -1,0 +1,21 @@
+{
+  "notes": [
+    {
+      "binding": {
+        "inspected_range": {
+          "end": 1,
+          "start": 1
+        },
+        "live_source_digest": "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6",
+        "material": "source-demo-book/book.pdf",
+        "recorded_source_digest": "61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6",
+        "resolution": "resolved",
+        "source_id": "source-demo-book"
+      },
+      "body": "# Expected value \u2014 analysis of Demo Book \u00a71\n\nThe derivation weights every outcome by its probability.\n",
+      "id": "note-demo-analysis",
+      "path": "knowledge/notes/mathematics/note-demo-analysis.md",
+      "title": "Expected value \u2014 analysis of Demo Book \u00a71"
+    }
+  ]
+}

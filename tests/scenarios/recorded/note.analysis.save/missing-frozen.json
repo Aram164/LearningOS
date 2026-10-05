@@ -1,0 +1,29 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"note.analysis.save\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"INVALID_REQUEST\",\n    \"message\": \"analysis binding lacks frozen_input_sha256, frozen_input_bytes; note-analysis-prepare derives both from the body bytes (one note is a batch of one)\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
+  "stdout_json": {
+    "capability": "note.analysis.save",
+    "error": {
+      "code": "INVALID_REQUEST",
+      "details": {},
+      "message": "analysis binding lacks frozen_input_sha256, frozen_input_bytes; note-analysis-prepare derives both from the body bytes (one note is a batch of one)",
+      "retryable": false
+    },
+    "idempotency_key": "KEY2",
+    "ok": false,
+    "receipt_path": null,
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {},
+    "schema_version": 2,
+    "snapshot_after": null,
+    "transaction_id": null
+  }
+}

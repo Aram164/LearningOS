@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: cannot stage into <MATERIALS>/source-demo-book/book.pdf/x: [Errno 20] Not a directory: '<MATERIALS>/source-demo-book/book.pdf/x/bodies'\n",
+  "stdout": "",
+  "stdout_json": null
+}

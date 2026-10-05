@@ -1,0 +1,19 @@
+{
+  "notes": [
+    {
+      "binding": {
+        "inspected_range": {
+          "end": 3,
+          "start": 1
+        },
+        "material": "demo/deck.pdf",
+        "recorded_source_digest": "abababababababababababababababababababababababababababababababab",
+        "resolution": "unresolved"
+      },
+      "body": "# note-demo\n\nStaged bytes.\n",
+      "id": "note-demo",
+      "path": "knowledge/notes/mathematics/note-demo.md",
+      "title": "Title note-demo"
+    }
+  ]
+}

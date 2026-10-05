@@ -1,0 +1,82 @@
+{
+  "steps": [
+    {
+      "argv": [
+        "note-analysis-prepare",
+        "--drafts",
+        "<CASEDATA>/drafts.json",
+        "--out",
+        "../materials/staging-prep"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\n  \"ok\": true,\n  \"out_dir\": \"<MATERIALS>/staging-prep\",\n  \"envelope\": \"<MATERIALS>/staging-prep/envelope.json\",\n  \"expected_snapshot\": \"SNAP1\",\n  \"expected_revisions\": {\n    \"note-scenario-prep-1\": 0\n  },\n  \"notes\": [\n    {\n      \"note_id\": \"note-scenario-prep-1\",\n      \"note_path\": \"knowledge/notes/mathematics/note-scenario-prep-1.md\",\n      \"predicted_new\": true,\n      \"frozen_input_sha256\": \"5d1c3052c1c7809a608b548414dd0ac6a02d1ce99d2be975bc65ed555ffed2d7\",\n      \"body_file\": \"<MATERIALS>/staging-prep/bodies/note-scenario-prep-1.bin\"\n    }\n  ],\n  \"submit\": \".venv/bin/python tools/los.py capability note.analysis.save_batch --payload-file <MATERIALS>/staging-prep/envelope.json\"\n}\n",
+      "stdout_json": {
+        "envelope": "<MATERIALS>/staging-prep/envelope.json",
+        "expected_revisions": {
+          "note-scenario-prep-1": 0
+        },
+        "expected_snapshot": "SNAP1",
+        "notes": [
+          {
+            "body_file": "<MATERIALS>/staging-prep/bodies/note-scenario-prep-1.bin",
+            "frozen_input_sha256": "5d1c3052c1c7809a608b548414dd0ac6a02d1ce99d2be975bc65ed555ffed2d7",
+            "note_id": "note-scenario-prep-1",
+            "note_path": "knowledge/notes/mathematics/note-scenario-prep-1.md",
+            "predicted_new": true
+          }
+        ],
+        "ok": true,
+        "out_dir": "<MATERIALS>/staging-prep",
+        "submit": ".venv/bin/python tools/los.py capability note.analysis.save_batch --payload-file <MATERIALS>/staging-prep/envelope.json"
+      },
+      "step": 0,
+      "transport": "cli"
+    },
+    {
+      "argv": [
+        "note-analysis-prepare",
+        "--drafts",
+        "<CASEDATA>/drafts.json",
+        "--out",
+        "../materials/staging-prep"
+      ],
+      "canonical_changed": {},
+      "exit": 0,
+      "idempotency_changed": {},
+      "outcome": "ok",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": null,
+      "stderr": "",
+      "stdout": "{\n  \"ok\": true,\n  \"out_dir\": \"<MATERIALS>/staging-prep\",\n  \"envelope\": \"<MATERIALS>/staging-prep/envelope.json\",\n  \"expected_snapshot\": \"SNAP1\",\n  \"expected_revisions\": {\n    \"note-scenario-prep-1\": 0\n  },\n  \"notes\": [\n    {\n      \"note_id\": \"note-scenario-prep-1\",\n      \"note_path\": \"knowledge/notes/mathematics/note-scenario-prep-1.md\",\n      \"predicted_new\": true,\n      \"frozen_input_sha256\": \"5d1c3052c1c7809a608b548414dd0ac6a02d1ce99d2be975bc65ed555ffed2d7\",\n      \"body_file\": \"<MATERIALS>/staging-prep/bodies/note-scenario-prep-1.bin\"\n    }\n  ],\n  \"submit\": \".venv/bin/python tools/los.py capability note.analysis.save_batch --payload-file <MATERIALS>/staging-prep/envelope.json\"\n}\n",
+      "stdout_json": {
+        "envelope": "<MATERIALS>/staging-prep/envelope.json",
+        "expected_revisions": {
+          "note-scenario-prep-1": 0
+        },
+        "expected_snapshot": "SNAP1",
+        "notes": [
+          {
+            "body_file": "<MATERIALS>/staging-prep/bodies/note-scenario-prep-1.bin",
+            "frozen_input_sha256": "5d1c3052c1c7809a608b548414dd0ac6a02d1ce99d2be975bc65ed555ffed2d7",
+            "note_id": "note-scenario-prep-1",
+            "note_path": "knowledge/notes/mathematics/note-scenario-prep-1.md",
+            "predicted_new": true
+          }
+        ],
+        "ok": true,
+        "out_dir": "<MATERIALS>/staging-prep",
+        "submit": ".venv/bin/python tools/los.py capability note.analysis.save_batch --payload-file <MATERIALS>/staging-prep/envelope.json"
+      },
+      "step": 1,
+      "transport": "cli"
+    }
+  ]
+}

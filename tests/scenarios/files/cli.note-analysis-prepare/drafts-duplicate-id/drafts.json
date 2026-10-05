@@ -1,0 +1,34 @@
+{
+  "notes": [
+    {
+      "binding": {
+        "inspected_range": {
+          "end": 3,
+          "start": 1
+        },
+        "material": "demo/deck.pdf",
+        "recorded_source_digest": "abababababababababababababababababababababababababababababababab",
+        "resolution": "unresolved"
+      },
+      "body": "# note-scenario-prep-7\n\nStaged bytes.\n",
+      "id": "note-scenario-prep-7",
+      "path": "knowledge/notes/mathematics/note-scenario-prep-7.md",
+      "title": "Title note-scenario-prep-7"
+    },
+    {
+      "binding": {
+        "inspected_range": {
+          "end": 3,
+          "start": 1
+        },
+        "material": "demo/deck.pdf",
+        "recorded_source_digest": "abababababababababababababababababababababababababababababababab",
+        "resolution": "unresolved"
+      },
+      "body": "# note-scenario-prep-7\n\nStaged bytes.\n",
+      "id": "note-scenario-prep-7",
+      "path": "knowledge/notes/mathematics/note-scenario-prep-7.md",
+      "title": "Title note-scenario-prep-7"
+    }
+  ]
+}
