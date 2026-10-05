@@ -76,5 +76,5 @@ cases:
 untriggered:
   - {where: "tools/learning_os/commands/reads.py:556", reason: "note path escapes its owner during content search: fixture notes sit in-tree, and no step can move them out"}
   - {where: "tools/learning_os/commands/reads.py:558", reason: "symlink among note components during content search: the fixture carries none, and no step can create one"}
-  - {where: "tools/learning_os/commands/reads.py:916", reason: "unreadable note during content search: fixture notes parse cleanly, and no write path stores an unreadable one"}
+  - {where: "tools/learning_os/commands/reads.py:917", reason: "unreadable note during content search: fixture notes parse cleanly, and no write path stores an unreadable one"}
   - {where: "tools/learning_os/commands/query.py:352", reason: "cannot list work/inbox during metadata search: needs an OSError no step can arrange"}
