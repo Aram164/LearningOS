@@ -1,0 +1,54 @@
+operation: note.evidence.add
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: add-evidence
+    kind: success
+    transport: gateway
+    request: {note_id: note-demo, evidence_type: derivation, ref: "material://source-demo-book/book.pdf"}
+    artifact_ids: [note-demo]
+    a5_base: true
+    expect: {site: null}
+  - id: bad-scheme
+    kind: refusal
+    transport: gateway
+    request: {note_id: note-demo, evidence_type: derivation, ref: "ftp://example.com/x"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: unknown-note
+    kind: refusal
+    transport: gateway
+    request: {note_id: note-nope, evidence_type: derivation, ref: "material://source-demo-book/book.pdf"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: add-twice
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {note_id: note-demo, evidence_type: derivation, ref: "material://source-demo-book/book.pdf"}
+        artifact_ids: [note-demo]
+      - transport: gateway
+        request: {note_id: note-demo, evidence_type: derivation, ref: "material://source-demo-book/book.pdf"}
+        artifact_ids: []
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [note-evidence, note-demo, derivation, "material://source-demo-book/book.pdf"]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {note_id: note-demo, evidence_type: derivation, ref: "material://source-demo-book/book.pdf"}
+        artifact_ids: [note-demo]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {note_id: note-demo, evidence_type: derivation, ref: "material://source-demo-book/book.pdf"}
+    artifact_ids: [note-demo]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/note.py:148", reason: "unreadable note frontmatter: fixture notes parse cleanly, and no write path stores an unreadable one"}

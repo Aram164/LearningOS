@@ -1,0 +1,76 @@
+operation: note.revise
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: revise-note
+    kind: success
+    transport: gateway
+    request: {note_id: note-demo, file: "<CASEDATA>/revised.md", file_sha256: "sha256:c22988a958f41814858e31c8a89253d9b93fe579265074b1228958c5eb489e4d"}
+    artifact_ids: [note-demo]
+    a5_base: true
+    expect: {site: null}
+  - id: unknown-note
+    kind: refusal
+    transport: gateway
+    request: {note_id: note-nope, file: "work/inbox/note-drop.md", file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-file
+    kind: refusal
+    transport: gateway
+    request: {note_id: note-demo, file: "work/inbox/nope.md", file_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-encoding
+    kind: refusal
+    transport: gateway
+    request: {note_id: note-demo, file: "<CASEDATA>/file.bin", file_sha256: "sha256:812d4b2d5c6ee7cc7f23f42820dea1a30e4a3fa3ea828cbcf64659d7d7425dd0"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: invalid-note
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: garden.seed.create
+        request: {text: "---\n- just-a-list\n---\nbody"}
+      - transport: gateway
+        request: {note_id: note-demo, file: "knowledge/garden/garden-seed.md", file_sha256: "sha256:89de9343bd81a4bfe9e0db7e662cca44165ae75512d03336c381b7d369fdbe76"}
+        artifact_ids: []
+  - id: id-mismatch
+    kind: refusal
+    transport: gateway
+    request: {note_id: note-demo, file: "<CASEDATA>/revised.md", file_sha256: "sha256:bc9397d34d1ec03204ff7477b4f16654f9b40f8e4e717bb9d163f914bf47d406"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: role-change
+    kind: refusal
+    transport: gateway
+    request: {note_id: note-demo, file: "<CASEDATA>/revised.md", file_sha256: "sha256:9bc4e6d47ddda6a09ee21992b5ba788fc1da8421581a6a41824d56552b18197b"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: revise-needs-approve
+    kind: refusal
+    transport: cli
+    argv: [note-revise, note-demo, --file, work/inbox/note-drop.md]
+    expect: {site: null}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [note-revise, note-demo, --file, "<CASEDATA>/revised.md", --approve]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {note_id: note-demo, file: "<CASEDATA>/revised.md", file_sha256: "sha256:c22988a958f41814858e31c8a89253d9b93fe579265074b1228958c5eb489e4d"}
+        artifact_ids: [note-demo]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {note_id: note-demo, file: "work/inbox/note-drop.md", file_sha256: "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d"}
+    artifact_ids: [note-demo]
+    expect: {site: null}
+untriggered: []
