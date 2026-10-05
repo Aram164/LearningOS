@@ -7,9 +7,9 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"ok\": false, \"error\": \"unknown collection: shelf\"}\n",
+  "stdout": "{\"ok\": false, \"error\": \"unknown collection: nope\"}\n",
   "stdout_json": {
-    "error": "unknown collection: shelf",
+    "error": "unknown collection: nope",
     "ok": false
   }
 }

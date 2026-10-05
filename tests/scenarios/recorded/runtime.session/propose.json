@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"contract\": \"runtime-session-v1\", \"schema_version\": 1, \"session\": {\"assumptions\": [\"only a current content review can establish assessment suitability; actual attempt conditions remain learner-reported\", \"no prerequisite failure has been reported\", \"no time budget was supplied\", \"assessment is blocked, and no practice resource is reachable either; rejected_alternatives says what ruled each one out\"], \"blockers\": [\"no accessible, in-scope independent evidence activity\"], \"current_status\": \"unseen\", \"evidence_conditions\": [\"unfamiliar-example\"], \"evidence_ids\": [], \"evidence_spec\": [\"explain-reason\"], \"plan_status\": \"blocked\", \"rejected_alternatives\": [{\"reason\": \"resource has no stable route identity\", \"resource_id\": \"unidentified\"}, {\"reason\": \"resource has no stable route identity\", \"resource_id\": \"unidentified\"}, {\"reason\": \"resource has no stable route identity\", \"resource_id\": \"unidentified\"}], \"replan_conditions\": [\"prerequisite-failure\", \"target-evidence-obtained-early\", \"selected-resource-unsuitable\", \"material-time-change\", \"target-changed\"], \"requirement_sha256\": \"sha256:1170dd69d2f771e47c759589442cb745fbff02da0a527270cbd3e63c2b75cf3a\", \"resource_reviews\": [], \"source_stage\": {\"module_id\": \"module-demo\", \"stage_id\": \"stage-demo\", \"unit_id\": \"unit-demo-l01\"}, \"steps\": [], \"target_requirement_id\": \"req-demo-l01-demo\"}, \"snapshot_id\": \"SNAP1\"}\n",
+  "stdout": "{\"contract\": \"runtime-session-v1\", \"schema_version\": 1, \"session\": {\"assumptions\": [\"only a current content review can establish assessment suitability; actual attempt conditions remain learner-reported\", \"no prerequisite failure has been reported\", \"no time budget was supplied\", \"assessment is blocked, and no practice resource is reachable either; rejected_alternatives says what ruled each one out\"], \"blockers\": [\"no accessible, in-scope independent evidence activity\"], \"current_status\": \"unseen\", \"evidence_conditions\": [\"unfamiliar-example\"], \"evidence_ids\": [], \"evidence_spec\": [\"explain-reason\"], \"plan_status\": \"blocked\", \"rejected_alternatives\": [{\"reason\": \"resource has no stable route identity\", \"resource_id\": \"unidentified\"}, {\"reason\": \"resource has no stable route identity\", \"resource_id\": \"unidentified\"}, {\"reason\": \"resource has no stable route identity\", \"resource_id\": \"unidentified\"}, {\"reason\": \"resource has no stable route identity\", \"resource_id\": \"unidentified\"}], \"replan_conditions\": [\"prerequisite-failure\", \"target-evidence-obtained-early\", \"selected-resource-unsuitable\", \"material-time-change\", \"target-changed\"], \"requirement_sha256\": \"sha256:1170dd69d2f771e47c759589442cb745fbff02da0a527270cbd3e63c2b75cf3a\", \"resource_reviews\": [], \"source_stage\": {\"module_id\": \"module-demo\", \"stage_id\": \"stage-demo\", \"unit_id\": \"unit-demo-l01\"}, \"steps\": [], \"target_requirement_id\": \"req-demo-l01-demo\"}, \"snapshot_id\": \"SNAP1\"}\n",
   "stdout_json": {
     "contract": "runtime-session-v1",
     "schema_version": 1,
@@ -31,6 +31,10 @@
       ],
       "plan_status": "blocked",
       "rejected_alternatives": [
+        {
+          "reason": "resource has no stable route identity",
+          "resource_id": "unidentified"
+        },
         {
           "reason": "resource has no stable route identity",
           "resource_id": "unidentified"

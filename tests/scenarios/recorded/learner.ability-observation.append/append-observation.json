@@ -9,7 +9,7 @@
         "KEY2": {
           "capability": "learner.ability-observation.append",
           "channel": "operator",
-          "intent_sha256": "sha256:39a7872417eb554d7b25ac9b9cc3fd041fb910399f83acc35101409c413ad2cd",
+          "intent_sha256": "sha256:ce312450db74b1c946c3913f2c3f0834d698cc491f270626accd15c29280b153",
           "receipt_path": "operations/transactions/TX1.yaml",
           "request_id": "KEY1",
           "revisions": {
@@ -53,17 +53,17 @@
       },
       "id": "TX1",
       "metadata": {
-        "data_roots_sha256": "sha256:553e016f32dad218309d613a334b7b52a3cbe734bf2073106c629e7572f8e0c4",
+        "data_roots_sha256": "sha256:92e8f17f4d3a00a3d3b9c9703957ed56b6a0eab7d5940d196de1b289e24803a5",
         "fingerprint_definition": 2
       },
       "request": {
         "approval": {
           "kind": "operator-approval",
-          "subject_sha256": "sha256:39a7872417eb554d7b25ac9b9cc3fd041fb910399f83acc35101409c413ad2cd"
+          "subject_sha256": "sha256:ce312450db74b1c946c3913f2c3f0834d698cc491f270626accd15c29280b153"
         },
         "channel": "operator",
         "idempotency_key": "KEY2",
-        "intent_sha256": "sha256:39a7872417eb554d7b25ac9b9cc3fd041fb910399f83acc35101409c413ad2cd",
+        "intent_sha256": "sha256:ce312450db74b1c946c3913f2c3f0834d698cc491f270626accd15c29280b153",
         "request_id": "KEY1"
       },
       "schema_version": 2,
@@ -104,13 +104,13 @@
         "operations/transactions/TX1.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "7747d3937a52496dab86d5b31b570d5c64afdead6207099db6eac2b1e3a9b631",
+          "sha256": "1702ad44e573c8d9d763b79bef073a5ff25b1152a461c4a48f81f5999dcce3f2",
           "state": "file"
         },
         "operations/transactions/idempotency.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "4d05a74c8bdc4908ec421cd45c86804808feb77516e85cdc7924803e1b69844b",
+          "sha256": "3e825f2c1ba6ae68e45f60bab8a352daa3406e000ea3d3a1670bfe8bd5607ef6",
           "state": "file"
         },
         "operations/transactions/revisions.yaml": {

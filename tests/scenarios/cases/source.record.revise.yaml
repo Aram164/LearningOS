@@ -10,7 +10,7 @@ cases:
         id: source-demo-book
         evaluations:
           - {level: introductory, roles: [first-learning], strengths: ["clear intuition", "scenario coverage"], concepts: [concept-expected-value]}
-      expected_diff_sha256: "sha256:4dd0748361f3d63ef1e13ff73e672b83e6aa23005e9c75ca55e0e705fb762ed7"
+      expected_diff_sha256: "sha256:6fb6d539a23c7e32052e60728ae074335603d73d8f8c95aeaa6f09bd4c338a34"
     artifact_ids: [source-demo-book]
     a5_base: true
     expect: {site: null}
@@ -257,7 +257,7 @@ cases:
             id: source-demo-book
             evaluations:
               - {level: introductory, roles: [first-learning], strengths: ["clear intuition", "scenario coverage"], concepts: [concept-expected-value]}
-          expected_diff_sha256: "sha256:4dd0748361f3d63ef1e13ff73e672b83e6aa23005e9c75ca55e0e705fb762ed7"
+          expected_diff_sha256: "sha256:6fb6d539a23c7e32052e60728ae074335603d73d8f8c95aeaa6f09bd4c338a34"
         artifact_ids: [source-demo-book]
       - transport: gateway
         same_envelope_as: 0
@@ -270,7 +270,7 @@ cases:
         id: source-demo-book
         evaluations:
           - {level: introductory, roles: [first-learning], strengths: ["clear intuition", "scenario coverage"], concepts: [concept-expected-value]}
-      expected_diff_sha256: "sha256:4dd0748361f3d63ef1e13ff73e672b83e6aa23005e9c75ca55e0e705fb762ed7"
+      expected_diff_sha256: "sha256:6fb6d539a23c7e32052e60728ae074335603d73d8f8c95aeaa6f09bd4c338a34"
     artifact_ids: [source-demo-book]
     expect: {site: null}
 untriggered:

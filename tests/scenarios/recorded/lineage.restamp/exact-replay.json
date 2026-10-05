@@ -9,7 +9,7 @@
             "KEY2": {
               "capability": "lineage.restamp",
               "channel": "operator",
-              "intent_sha256": "sha256:055231aa07de05db631e890f504aca09b763368618824276df1c2193965743af",
+              "intent_sha256": "sha256:69f3af602af4064283e00ff8d1f35318b90e9f305b8e326e99209ab1e9606327",
               "receipt_path": "operations/transactions/TX1.yaml",
               "request_id": "KEY1",
               "revisions": {
@@ -56,17 +56,17 @@
           "metadata": {
             "claims_count": 1,
             "claims_sha256": "sha256:0a31738b7886e8a9b9c4108350f6c0228c68ff5f2349dd1459d7e656428009ef",
-            "data_roots_sha256": "sha256:b40158116795f04cfb2be9320632a98301221e249ded09ce07634a69ebb98fda",
+            "data_roots_sha256": "sha256:7d83fda3a0689813d4e5721f73abd6183f50adee3e8c8363fa818cec49f24200",
             "fingerprint_definition": 2
           },
           "request": {
             "approval": {
               "kind": "operator-approval",
-              "subject_sha256": "sha256:055231aa07de05db631e890f504aca09b763368618824276df1c2193965743af"
+              "subject_sha256": "sha256:69f3af602af4064283e00ff8d1f35318b90e9f305b8e326e99209ab1e9606327"
             },
             "channel": "operator",
             "idempotency_key": "KEY2",
-            "intent_sha256": "sha256:055231aa07de05db631e890f504aca09b763368618824276df1c2193965743af",
+            "intent_sha256": "sha256:69f3af602af4064283e00ff8d1f35318b90e9f305b8e326e99209ab1e9606327",
             "request_id": "KEY1"
           },
           "schema_version": 2,
@@ -107,13 +107,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "14b94080716b453c3f83f5e68f4074ce878aec5d537cb74acec75e1f296b1ba3",
+              "sha256": "1358b1a7ae05496e5d5f427f37c54cfe7187377600732971aa2535a140a1193c",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "52fd61b1450723eaaf0ee5821ce644c4b139b9a8f61ebcdb8d2d00bbe024119d",
+              "sha256": "f4200f353976efe449586c0397146965a5f90631c3003e588c2351a150fa8c85",
               "state": "file"
             },
             "operations/transactions/lineage.yaml": {
@@ -182,13 +182,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "14b94080716b453c3f83f5e68f4074ce878aec5d537cb74acec75e1f296b1ba3",
+              "sha256": "1358b1a7ae05496e5d5f427f37c54cfe7187377600732971aa2535a140a1193c",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "52fd61b1450723eaaf0ee5821ce644c4b139b9a8f61ebcdb8d2d00bbe024119d",
+              "sha256": "f4200f353976efe449586c0397146965a5f90631c3003e588c2351a150fa8c85",
               "state": "file"
             },
             "operations/transactions/lineage.yaml": {
@@ -212,13 +212,13 @@
             "operations/transactions/TX1.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "14b94080716b453c3f83f5e68f4074ce878aec5d537cb74acec75e1f296b1ba3",
+              "sha256": "1358b1a7ae05496e5d5f427f37c54cfe7187377600732971aa2535a140a1193c",
               "state": "file"
             },
             "operations/transactions/idempotency.yaml": {
               "channel": "operator",
               "recorded_at": "2026-10-01T07:00:00+00:00",
-              "sha256": "52fd61b1450723eaaf0ee5821ce644c4b139b9a8f61ebcdb8d2d00bbe024119d",
+              "sha256": "f4200f353976efe449586c0397146965a5f90631c3003e588c2351a150fa8c85",
               "state": "file"
             },
             "operations/transactions/lineage.yaml": {

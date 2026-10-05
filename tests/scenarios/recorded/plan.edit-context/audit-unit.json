@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"plan-edit-context\",\"unit_id\":\"unit-demo-l01\",\"module_id\":\"module-demo\",\"artifact_revisions\":{\"module-demo\":0,\"study-map-demo-l01\":0,\"unit-demo-l01\":3},\"preflight\":\"route-patch UNIT_ID ROUTE_ID --changes JSON --check returns exact write guards\",\"study_map\":{\"id\":\"study-map-demo-l01\",\"type\":\"study-map\",\"unit_id\":\"unit-demo-l01\",\"status\":\"active\",\"current_stage\":\"stage-demo\",\"source_plan\":{\"path\":\"work/active/workspace-demo/CONTEXT.md\",\"provenance\":\"operator\"},\"detours\":[],\"shelving\":{\"state\":\"none\"},\"stages\":[{\"id\":\"stage-demo\",\"title\":\"Derive expected value\",\"status\":\"active\",\"objective\":\"Derive and explain expected value.\",\"done_when\":[\"Explain the derivation.\"],\"scope_triage\":\"required-now\",\"resources\":[{\"id\":\"resource-demo-book-ch01\",\"kind\":\"read\",\"label\":\"Demo Book §1\",\"source_id\":\"source-demo-book\",\"locator\":\"§1\"},{\"id\":\"resource-demo-book-appendix\",\"kind\":\"read\",\"label\":\"Demo Book Appendix\",\"source_id\":\"source-demo-book\",\"locator\":\"Appendix A\"},{\"kind\":\"watch\",\"label\":\"Demo companion video\",\"source_id\":\"source-demo-book\"}],\"working_note\":\"curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md\",\"attachments\":[],\"source_feedback\":[],\"runtime_target\":{\"concept\":\"knowledge-demo-expectation\",\"capability\":{\"kind\":\"explain\",\"operands\":[\"expectation\"]},\"conditions\":[\"unfamiliar-example\"],\"evidence_spec\":[\"explain-reason\"]}},{\"id\":\"stage-demo-pending\",\"knowledge_node_id\":\"knowledge-demo-expectation\",\"title\":\"Apply expected value\",\"status\":\"pending\",\"objective\":\"Apply expected value to a worked example.\",\"done_when\":[\"Work the example.\"],\"scope_triage\":\"required-now\",\"resources\":[{\"kind\":\"read\",\"label\":\"Demo Book §2\",\"source_id\":\"source-demo-book\",\"locator\":\"§2\"}],\"working_note\":\"curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo-pending/notes.md\",\"attachments\":[],\"source_feedback\":[]}]},\"routes\":[{\"unit_id\":\"unit-demo-l01\",\"id\":\"route-b2f1f80014860a929a3af0bc\",\"title\":\"Demo book — expected-value derivation\",\"format\":\"book\",\"angle\":\"Derives the weighted sum and works a discrete example.\",\"covers\":[\"knowledge-demo-outcomes\",\"knowledge-demo-expectation\"],\"depth\":\"derivation\",\"scope\":\"current\",\"locator\":\"lecture-01.pdf\",\"source_id\":\"source-demo-book\"}],\"source_selections\":[{\"source_id\":\"source-demo-book\",\"route_id\":\"route-b2f1f80014860a929a3af0bc\",\"locator\":\"lecture-01.pdf\",\"purpose\":\"Current derivation\"}],\"unit_audit\":{\"unit_id\":\"unit-demo-l01\",\"module_id\":\"module-demo\",\"source_records\":1,\"routes\":1,\"placements\":4,\"routes_by_depth\":{\"derivation\":1},\"routes_by_scope\":{\"current\":1},\"triage_by_stage\":{\"stage-demo\":{\"untriaged\":3},\"stage-demo-pending\":{\"untriaged\":1}},\"advanced_reference_placed_required_or_helpful\":[],\"current_or_prerequisite_unplaced\":[\"route-b2f1f80014860a929a3af0bc\"],\"legacy_string_routes_by_source\":{},\"exact_routes_with_unresolved_siblings\":[],\"unplaced_routes\":[\"route-b2f1f80014860a929a3af0bc\"],\"synthesis\":{\"present\":false,\"replacement_required_if_evidential_routes_change\":false,\"replacement_reason\":\"no existing dossier requires replacement\",\"fresh\":false,\"detail\":null,\"deep_reviewed\":0,\"screened\":0,\"unevaluated\":0,\"unavailable\":0},\"adjacent_unit_source_reuse\":{\"unit-demo-l02\":[\"source-demo-book\"]},\"scope_authority\":[{\"source_id\":\"source-demo-book\",\"authority\":\"slides\",\"locator\":\"Lecture 1\"}],\"prior_year_boundary\":[],\"out_of_scope_present\":[]}}\n",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"plan-edit-context\",\"unit_id\":\"unit-demo-l01\",\"module_id\":\"module-demo\",\"artifact_revisions\":{\"module-demo\":0,\"study-map-demo-l01\":0,\"unit-demo-l01\":3},\"preflight\":\"route-patch UNIT_ID ROUTE_ID --changes JSON --check returns exact write guards\",\"study_map\":{\"id\":\"study-map-demo-l01\",\"type\":\"study-map\",\"unit_id\":\"unit-demo-l01\",\"status\":\"active\",\"current_stage\":\"stage-demo\",\"source_plan\":{\"path\":\"work/active/workspace-demo/CONTEXT.md\",\"provenance\":\"operator\"},\"detours\":[],\"shelving\":{\"state\":\"none\"},\"stages\":[{\"id\":\"stage-demo\",\"title\":\"Derive expected value\",\"status\":\"active\",\"objective\":\"Derive and explain expected value.\",\"done_when\":[\"Explain the derivation.\"],\"scope_triage\":\"required-now\",\"resources\":[{\"id\":\"resource-demo-book-ch01\",\"kind\":\"read\",\"label\":\"Demo Book §1\",\"source_id\":\"source-demo-book\",\"locator\":\"§1\"},{\"id\":\"resource-demo-book-appendix\",\"kind\":\"read\",\"label\":\"Demo Book Appendix\",\"source_id\":\"source-demo-book\",\"locator\":\"Appendix A\"},{\"kind\":\"watch\",\"label\":\"Demo companion video\",\"source_id\":\"source-demo-book\"},{\"material_ref\":{\"route_id\":\"route-b2f1f80014860a929a3af0bc\",\"inherit\":[\"label\",\"source_id\",\"locator\",\"angle\"]},\"id\":\"resource-demo-route-mirror\",\"kind\":\"read\"}],\"working_note\":\"curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo/notes.md\",\"attachments\":[],\"source_feedback\":[],\"runtime_target\":{\"concept\":\"knowledge-demo-expectation\",\"capability\":{\"kind\":\"explain\",\"operands\":[\"expectation\"]},\"conditions\":[\"unfamiliar-example\"],\"evidence_spec\":[\"explain-reason\"]}},{\"id\":\"stage-demo-pending\",\"knowledge_node_id\":\"knowledge-demo-expectation\",\"title\":\"Apply expected value\",\"status\":\"pending\",\"objective\":\"Apply expected value to a worked example.\",\"done_when\":[\"Work the example.\"],\"scope_triage\":\"required-now\",\"resources\":[{\"kind\":\"read\",\"label\":\"Demo Book §2\",\"source_id\":\"source-demo-book\",\"locator\":\"§2\"}],\"working_note\":\"curriculum/modules/module-demo/units/unit-demo-l01/stages/stage-demo-pending/notes.md\",\"attachments\":[],\"source_feedback\":[]}]},\"routes\":[{\"unit_id\":\"unit-demo-l01\",\"id\":\"route-b2f1f80014860a929a3af0bc\",\"title\":\"Demo book — expected-value derivation\",\"format\":\"book\",\"angle\":\"Derives the weighted sum and works a discrete example.\",\"covers\":[\"knowledge-demo-outcomes\",\"knowledge-demo-expectation\"],\"depth\":\"derivation\",\"scope\":\"current\",\"locator\":\"lecture-01.pdf\",\"source_id\":\"source-demo-book\"}],\"source_selections\":[{\"source_id\":\"source-demo-book\",\"route_id\":\"route-b2f1f80014860a929a3af0bc\",\"locator\":\"lecture-01.pdf\",\"purpose\":\"Current derivation\"}],\"unit_audit\":{\"unit_id\":\"unit-demo-l01\",\"module_id\":\"module-demo\",\"source_records\":1,\"routes\":1,\"placements\":5,\"routes_by_depth\":{\"derivation\":1},\"routes_by_scope\":{\"current\":1},\"triage_by_stage\":{\"stage-demo\":{\"untriaged\":4},\"stage-demo-pending\":{\"untriaged\":1}},\"advanced_reference_placed_required_or_helpful\":[],\"current_or_prerequisite_unplaced\":[],\"legacy_string_routes_by_source\":{},\"exact_routes_with_unresolved_siblings\":[],\"unplaced_routes\":[],\"synthesis\":{\"present\":false,\"replacement_required_if_evidential_routes_change\":false,\"replacement_reason\":\"no existing dossier requires replacement\",\"fresh\":false,\"detail\":null,\"deep_reviewed\":0,\"screened\":0,\"unevaluated\":0,\"unavailable\":0},\"adjacent_unit_source_reuse\":{\"unit-demo-l02\":[\"source-demo-book\"]},\"scope_authority\":[{\"source_id\":\"source-demo-book\",\"authority\":\"slides\",\"locator\":\"Lecture 1\"}],\"prior_year_boundary\":[],\"out_of_scope_present\":[]}}\n",
   "stdout_json": {
     "artifact_revisions": {
       "module-demo": 0,
@@ -82,6 +82,19 @@
               "kind": "watch",
               "label": "Demo companion video",
               "source_id": "source-demo-book"
+            },
+            {
+              "id": "resource-demo-route-mirror",
+              "kind": "read",
+              "material_ref": {
+                "inherit": [
+                  "label",
+                  "source_id",
+                  "locator",
+                  "angle"
+                ],
+                "route_id": "route-b2f1f80014860a929a3af0bc"
+              }
             }
           ],
           "runtime_target": {
@@ -139,14 +152,12 @@
         ]
       },
       "advanced_reference_placed_required_or_helpful": [],
-      "current_or_prerequisite_unplaced": [
-        "route-b2f1f80014860a929a3af0bc"
-      ],
+      "current_or_prerequisite_unplaced": [],
       "exact_routes_with_unresolved_siblings": [],
       "legacy_string_routes_by_source": {},
       "module_id": "module-demo",
       "out_of_scope_present": [],
-      "placements": 4,
+      "placements": 5,
       "prior_year_boundary": [],
       "routes": 1,
       "routes_by_depth": {
@@ -176,16 +187,14 @@
       },
       "triage_by_stage": {
         "stage-demo": {
-          "untriaged": 3
+          "untriaged": 4
         },
         "stage-demo-pending": {
           "untriaged": 1
         }
       },
       "unit_id": "unit-demo-l01",
-      "unplaced_routes": [
-        "route-b2f1f80014860a929a3af0bc"
-      ]
+      "unplaced_routes": []
     },
     "unit_id": "unit-demo-l01"
   }

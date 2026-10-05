@@ -5,7 +5,7 @@ cases:
   - id: unknown-collection
     kind: refusal
     transport: gateway
-    request: {record: {collection: shelf, source: source-demo-book, why: "Scenario line."}}
+    request: {record: {collection: nope, source: source-demo-book, why: "Scenario line."}}
     artifact_ids: []
     expect: {site: null}
   - id: bad-stem
@@ -44,7 +44,7 @@ cases:
   - id: direct-cli-refused
     kind: refusal
     transport: cli
-    argv: [collection-entry-revise, --record, '{"collection": "shelf", "source": "source-demo-book", "why": "x"}']
+    argv: [collection-entry-revise, --record, '{"collection": "nope", "source": "source-demo-book", "why": "x"}']
     expect: {site: null}
   - id: exact-replay
     kind: sequence

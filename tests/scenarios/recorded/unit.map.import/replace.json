@@ -9,7 +9,7 @@
         "KEY2": {
           "capability": "unit.map.import",
           "channel": "operator",
-          "intent_sha256": "sha256:2350964a8ce3bb906fbfa296349e101f40dd2e8c5a207fd31b6b155f0c7227cd",
+          "intent_sha256": "sha256:65b6c9b238f8c3daf69ef714dd30b87c0322449bca88d53634717351367c917b",
           "receipt_path": "operations/transactions/TX1.yaml",
           "request_id": "KEY1",
           "revisions": {
@@ -59,17 +59,17 @@
       },
       "id": "TX1",
       "metadata": {
-        "data_roots_sha256": "sha256:41ccaa1ecb81c7954dc36f4a5c317070013ea6eb9f93b2b34429549756e46a48",
+        "data_roots_sha256": "sha256:1db64334ddc71c85e4f72e59331851135a90f44ba66c05cdfb030ed3bcd948a5",
         "fingerprint_definition": 2
       },
       "request": {
         "approval": {
           "kind": "operator-approval",
-          "subject_sha256": "sha256:2350964a8ce3bb906fbfa296349e101f40dd2e8c5a207fd31b6b155f0c7227cd"
+          "subject_sha256": "sha256:65b6c9b238f8c3daf69ef714dd30b87c0322449bca88d53634717351367c917b"
         },
         "channel": "operator",
         "idempotency_key": "KEY2",
-        "intent_sha256": "sha256:2350964a8ce3bb906fbfa296349e101f40dd2e8c5a207fd31b6b155f0c7227cd",
+        "intent_sha256": "sha256:65b6c9b238f8c3daf69ef714dd30b87c0322449bca88d53634717351367c917b",
         "request_id": "KEY1"
       },
       "schema_version": 2,
@@ -82,7 +82,7 @@
           "created": false,
           "path": "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
           "sha256_after": "6db102f0179c288dfbc6506892bc7f601e62c67e8e7bf0b971630cad949ae89b",
-          "sha256_before": "e8d4f80bdb399e52cf8f713f1379e92a7c4ccf1e3ba04f0ebbcea6eeda5da99c"
+          "sha256_before": "506b0fdd350e11960069e09ffd099e7ac616076a8b3425557614e9167bbfe141"
         },
         {
           "created": false,
@@ -128,13 +128,13 @@
         "operations/transactions/TX1.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "fc4b8ce70a60d053dae5628222ab22f6361cbadb29489edc0c3dab2032b7d16e",
+          "sha256": "4d402a8c5d377dff919ccbf71e34d16025f288f05f2a08bd33b894701e6b857d",
           "state": "file"
         },
         "operations/transactions/idempotency.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "17ede44d12af96e4674865061061cd9e7037a05793cd02f9c9c69257d05c0a71",
+          "sha256": "7c2d6f4acfb1385d22a19261b6b39d50bfa1e82c370c5c137c80ec1796b12e9a",
           "state": "file"
         },
         "operations/transactions/revisions.yaml": {
@@ -150,7 +150,7 @@
     "before": null
   },
   "stderr": "",
-  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"unit.map.import\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"mode\": \"apply\",\n    \"unit_id\": \"unit-demo-l01\",\n    \"study_map_id\": \"study-map-demo-l01\",\n    \"diff\": {\n      \"replacement\": true,\n      \"stages_before\": [\n        \"stage-demo\",\n        \"stage-demo-pending\"\n      ],\n      \"stages_after\": [\n        \"stage-demo\",\n        \"stage-demo-pending\"\n      ],\n      \"stages_added\": [],\n      \"stages_retired\": [],\n      \"relative_order_changed\": false,\n      \"intentional_reorder_reason\": null,\n      \"state_reset_reason\": null,\n      \"retire_reason\": null,\n      \"preserved_stage_state\": [\n        \"stage-demo\",\n        \"stage-demo-pending\"\n      ],\n      \"map_state_fields_preserved\": [],\n      \"resume_stage\": \"stage-demo\",\n      \"retired_stage_evidence\": [],\n      \"unit_status\": \"active\",\n      \"content_changes\": [\n        {\n          \"stage_id\": \"stage-demo\",\n          \"field\": \"concepts\",\n          \"before\": null,\n          \"after\": []\n        },\n        {\n          \"stage_id\": \"stage-demo\",\n          \"field\": \"exam_critical\",\n          \"before\": null,\n          \"after\": false\n        },\n        {\n          \"stage_id\": \"stage-demo\",\n          \"field\": \"number\",\n          \"before\": null,\n          \"after\": 1\n        },\n        {\n          \"stage_id\": \"stage-demo\",\n          \"field\": \"runtime_target\",\n          \"before\": {\n            \"concept\": \"knowledge-demo-expectation\",\n            \"capability\": {\n              \"kind\": \"explain\",\n              \"operands\": [\n                \"expectation\"\n              ]\n            },\n            \"conditions\": [\n              \"unfamiliar-example\"\n            ],\n            \"evidence_spec\": [\n              \"explain-reason\"\n            ]\n          },\n          \"after\": null\n        },\n        {\n          \"stage_id\": \"stage-demo-pending\",\n          \"field\": \"concepts\",\n          \"before\": null,\n          \"after\": []\n        },\n        {\n          \"stage_id\": \"stage-demo-pending\",\n          \"field\": \"exam_critical\",\n          \"before\": null,\n          \"after\": false\n        },\n        {\n          \"stage_id\": \"stage-demo-pending\",\n          \"field\": \"knowledge_node_id\",\n          \"before\": \"knowledge-demo-expectation\",\n          \"after\": null\n        },\n        {\n          \"stage_id\": \"stage-demo-pending\",\n          \"field\": \"number\",\n          \"before\": null,\n          \"after\": 2\n        },\n        {\n          \"stage_id\": \"stage-demo-pending\",\n          \"field\": \"objective\",\n          \"before\": \"Apply expected value to a worked example.\",\n          \"after\": \"Apply expected value to two worked examples.\"\n        }\n      ],\n      \"map_changes\": [\n        {\n          \"field\": \"plan_template_version\",\n          \"before\": null,\n          \"after\": 1\n        }\n      ]\n    },\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"study-map-demo-l01\": 1,\n      \"unit-demo-l01\": 4\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"unit.map.import\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"mode\": \"apply\",\n    \"unit_id\": \"unit-demo-l01\",\n    \"study_map_id\": \"study-map-demo-l01\",\n    \"diff\": {\n      \"replacement\": true,\n      \"stages_before\": [\n        \"stage-demo\",\n        \"stage-demo-pending\"\n      ],\n      \"stages_after\": [\n        \"stage-demo\",\n        \"stage-demo-pending\"\n      ],\n      \"stages_added\": [],\n      \"stages_retired\": [],\n      \"relative_order_changed\": false,\n      \"intentional_reorder_reason\": null,\n      \"state_reset_reason\": null,\n      \"retire_reason\": null,\n      \"preserved_stage_state\": [\n        \"stage-demo\",\n        \"stage-demo-pending\"\n      ],\n      \"map_state_fields_preserved\": [],\n      \"resume_stage\": \"stage-demo\",\n      \"retired_stage_evidence\": [],\n      \"unit_status\": \"active\",\n      \"content_changes\": [\n        {\n          \"stage_id\": \"stage-demo\",\n          \"field\": \"concepts\",\n          \"before\": null,\n          \"after\": []\n        },\n        {\n          \"stage_id\": \"stage-demo\",\n          \"field\": \"exam_critical\",\n          \"before\": null,\n          \"after\": false\n        },\n        {\n          \"stage_id\": \"stage-demo\",\n          \"field\": \"number\",\n          \"before\": null,\n          \"after\": 1\n        },\n        {\n          \"stage_id\": \"stage-demo\",\n          \"field\": \"resources\",\n          \"before\": [\n            {\n              \"id\": \"resource-demo-book-ch01\",\n              \"kind\": \"read\",\n              \"label\": \"Demo Book §1\",\n              \"source_id\": \"source-demo-book\",\n              \"locator\": \"§1\"\n            },\n            {\n              \"id\": \"resource-demo-book-appendix\",\n              \"kind\": \"read\",\n              \"label\": \"Demo Book Appendix\",\n              \"source_id\": \"source-demo-book\",\n              \"locator\": \"Appendix A\"\n            },\n            {\n              \"kind\": \"watch\",\n              \"label\": \"Demo companion video\",\n              \"source_id\": \"source-demo-book\"\n            },\n            {\n              \"id\": \"resource-demo-route-mirror\",\n              \"kind\": \"read\",\n              \"label\": \"Demo book — expected-value derivation\",\n              \"source_id\": \"source-demo-book\",\n              \"locator\": \"lecture-01.pdf\",\n              \"angle\": \"Derives the weighted sum and works a discrete example.\"\n            }\n          ],\n          \"after\": [\n            {\n              \"id\": \"resource-demo-book-ch01\",\n              \"kind\": \"read\",\n              \"label\": \"Demo Book §1\",\n              \"source_id\": \"source-demo-book\",\n              \"locator\": \"§1\"\n            },\n            {\n              \"id\": \"resource-demo-book-appendix\",\n              \"kind\": \"read\",\n              \"label\": \"Demo Book Appendix\",\n              \"source_id\": \"source-demo-book\",\n              \"locator\": \"Appendix A\"\n            },\n            {\n              \"kind\": \"watch\",\n              \"label\": \"Demo companion video\",\n              \"source_id\": \"source-demo-book\"\n            }\n          ]\n        },\n        {\n          \"stage_id\": \"stage-demo\",\n          \"field\": \"runtime_target\",\n          \"before\": {\n            \"concept\": \"knowledge-demo-expectation\",\n            \"capability\": {\n              \"kind\": \"explain\",\n              \"operands\": [\n                \"expectation\"\n              ]\n            },\n            \"conditions\": [\n              \"unfamiliar-example\"\n            ],\n            \"evidence_spec\": [\n              \"explain-reason\"\n            ]\n          },\n          \"after\": null\n        },\n        {\n          \"stage_id\": \"stage-demo-pending\",\n          \"field\": \"concepts\",\n          \"before\": null,\n          \"after\": []\n        },\n        {\n          \"stage_id\": \"stage-demo-pending\",\n          \"field\": \"exam_critical\",\n          \"before\": null,\n          \"after\": false\n        },\n        {\n          \"stage_id\": \"stage-demo-pending\",\n          \"field\": \"knowledge_node_id\",\n          \"before\": \"knowledge-demo-expectation\",\n          \"after\": null\n        },\n        {\n          \"stage_id\": \"stage-demo-pending\",\n          \"field\": \"number\",\n          \"before\": null,\n          \"after\": 2\n        },\n        {\n          \"stage_id\": \"stage-demo-pending\",\n          \"field\": \"objective\",\n          \"before\": \"Apply expected value to a worked example.\",\n          \"after\": \"Apply expected value to two worked examples.\"\n        }\n      ],\n      \"map_changes\": [\n        {\n          \"field\": \"plan_template_version\",\n          \"before\": null,\n          \"after\": 1\n        }\n      ]\n    },\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"study-map-demo-l01\": 1,\n      \"unit-demo-l01\": 4\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
   "stdout_json": {
     "capability": "unit.map.import",
     "error": null,
@@ -182,6 +182,60 @@
             "after": 1,
             "before": null,
             "field": "number",
+            "stage_id": "stage-demo"
+          },
+          {
+            "after": [
+              {
+                "id": "resource-demo-book-ch01",
+                "kind": "read",
+                "label": "Demo Book §1",
+                "locator": "§1",
+                "source_id": "source-demo-book"
+              },
+              {
+                "id": "resource-demo-book-appendix",
+                "kind": "read",
+                "label": "Demo Book Appendix",
+                "locator": "Appendix A",
+                "source_id": "source-demo-book"
+              },
+              {
+                "kind": "watch",
+                "label": "Demo companion video",
+                "source_id": "source-demo-book"
+              }
+            ],
+            "before": [
+              {
+                "id": "resource-demo-book-ch01",
+                "kind": "read",
+                "label": "Demo Book §1",
+                "locator": "§1",
+                "source_id": "source-demo-book"
+              },
+              {
+                "id": "resource-demo-book-appendix",
+                "kind": "read",
+                "label": "Demo Book Appendix",
+                "locator": "Appendix A",
+                "source_id": "source-demo-book"
+              },
+              {
+                "kind": "watch",
+                "label": "Demo companion video",
+                "source_id": "source-demo-book"
+              },
+              {
+                "angle": "Derives the weighted sum and works a discrete example.",
+                "id": "resource-demo-route-mirror",
+                "kind": "read",
+                "label": "Demo book — expected-value derivation",
+                "locator": "lecture-01.pdf",
+                "source_id": "source-demo-book"
+              }
+            ],
+            "field": "resources",
             "stage_id": "stage-demo"
           },
           {

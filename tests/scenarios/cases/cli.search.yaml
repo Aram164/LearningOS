@@ -31,7 +31,7 @@ cases:
   - id: page-continued
     kind: success
     transport: cli
-    argv: [search, demo, --page, --offset, 1, --limit, 1, --expected-snapshot, "sha256:9dddca9dff6bb68e146258cd4c00737eb1cddf02fbe99bcadd8bb873ae657dae"]
+    argv: [search, demo, --page, --offset, 1, --limit, 1, --expected-snapshot, "sha256:1c44325f29523fa0ea60da63c951bc22c356a50e409dd233939f635f06df5647"]
     expect: {site: null}
   - id: content
     kind: success
@@ -93,4 +93,4 @@ untriggered:
   - {where: "tools/learning_os/commands/query.py:421", reason: "snapshot changed mid-read: a single-threaded read cannot race itself"}
   - {where: "tools/learning_os/commands/reads.py:556", reason: "note path escapes its owner during content search: loaded fixture paths resolve in-tree"}
   - {where: "tools/learning_os/commands/reads.py:558", reason: "symlink components in a note path during content search: the fixture carries none, and no step can create one"}
-  - {where: "tools/learning_os/commands/reads.py:914", reason: "unreadable note records under content search: the fixture parses cleanly, and no step can break it"}
+  - {where: "tools/learning_os/commands/reads.py:917", reason: "unreadable note records under content search: the fixture parses cleanly, and no step can break it"}

@@ -27,11 +27,30 @@ cases:
     artifact_ids: []
     expect: {site: null}
   - id: valid-plan-hits-warning-gate
-    kind: refusal
-    transport: gateway
-    request: {unit_id: unit-demo-l01, route_id: route-b2f1f80014860a929a3af0bc, changes: {angle: "Scenario characterization angle."}}
-    artifact_ids: [module-demo, unit-demo-l01]
-    expect: {site: null}
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: project.create
+        request:
+          project:
+            schema_version: 1
+            id: project-scenario-new
+            type: project
+            title: Scenario project
+            project_type: software
+            status: active
+            root_uri: project://scenario
+            objective: Characterize project creation.
+            milestone_ids: []
+            linked_module_ids: []
+            unit_ids: []
+            workspace_ids: []
+            thematic_group_ids: []
+            boundaries: {confidentiality: private, external_code_access: approved}
+        artifact_ids: [project-scenario-new]
+      - transport: gateway
+        request: {unit_id: unit-demo-l01, route_id: route-b2f1f80014860a929a3af0bc, changes: {angle: "Scenario characterization angle."}}
+        artifact_ids: [module-demo, study-map-demo-l01, unit-demo-l01]
   - id: direct-cli-refused
     kind: refusal
     transport: cli
@@ -50,7 +69,7 @@ cases:
     transport: gateway
     replay_only: true
     request: {unit_id: unit-demo-l01, route_id: route-b2f1f80014860a929a3af0bc, changes: {angle: "Scenario characterization angle."}}
-    artifact_ids: [module-demo, unit-demo-l01]
+    artifact_ids: [module-demo, study-map-demo-l01, unit-demo-l01]
     expect: {site: null}
 untriggered:
   - {where: "tools/learning_os/commands/material.py:57", reason: "unreadable canonical records: the fixture parses cleanly, and no step can break it"}

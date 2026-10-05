@@ -1,12 +1,12 @@
 {
   "approval": {
     "kind": "direct-user-gesture",
-    "subject_sha256": "sha256:4fe71ad0b764b5a00d21bcc473164f10cca0b3e49bb3a6dc959cf92094999be7"
+    "subject_sha256": "sha256:f7eb09daaf8ccbed6a5ff902eb2b77193a3c8ae1e82413c84ac5a0fb14854335"
   },
   "capability": "note.create",
   "channel": "operator",
   "expected_revisions": {},
-  "expected_snapshot": "sha256:9dddca9dff6bb68e146258cd4c00737eb1cddf02fbe99bcadd8bb873ae657dae",
+  "expected_snapshot": "sha256:1c44325f29523fa0ea60da63c951bc22c356a50e409dd233939f635f06df5647",
   "idempotency_key": "scenario-capability-gesture",
   "payload": {},
   "request_id": "request-scenario-capability-gesture",

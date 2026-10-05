@@ -10,7 +10,7 @@
       "revisions_changed": {},
       "session_ledger_changed": null,
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"module.materials.compact\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {\n    \"schema_version\": 1,\n    \"snapshot_id\": \"SNAP1\",\n    \"module_id\": \"module-demo\",\n    \"map_bytes_saved\": 0,\n    \"referenced_routes\": 0,\n    \"plan_sha256\": \"sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a\",\n    \"affected_files\": [],\n    \"artifact_ids\": [],\n    \"expected_revisions\": {},\n    \"ok\": true,\n    \"check\": true,\n    \"canonical_files_written\": 0\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"module.materials.compact\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {\n    \"schema_version\": 1,\n    \"snapshot_id\": \"SNAP1\",\n    \"module_id\": \"module-demo\",\n    \"map_bytes_saved\": 35,\n    \"referenced_routes\": 1,\n    \"plan_sha256\": \"sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93\",\n    \"affected_files\": [\n      \"curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml\"\n    ],\n    \"artifact_ids\": [\n      \"module-demo\",\n      \"study-map-demo-l01\",\n      \"unit-demo-l01\"\n    ],\n    \"expected_revisions\": {\n      \"module-demo\": 0,\n      \"study-map-demo-l01\": 0,\n      \"unit-demo-l01\": 3\n    },\n    \"ok\": true,\n    \"check\": true,\n    \"canonical_files_written\": 0\n  },\n  \"error\": null\n}\n",
       "stdout_json": {
         "capability": "module.materials.compact",
         "error": null,
@@ -20,16 +20,26 @@
         "replayed": false,
         "request_id": "KEY1",
         "result": {
-          "affected_files": [],
-          "artifact_ids": [],
+          "affected_files": [
+            "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+          ],
+          "artifact_ids": [
+            "module-demo",
+            "study-map-demo-l01",
+            "unit-demo-l01"
+          ],
           "canonical_files_written": 0,
           "check": true,
-          "expected_revisions": {},
-          "map_bytes_saved": 0,
+          "expected_revisions": {
+            "module-demo": 0,
+            "study-map-demo-l01": 0,
+            "unit-demo-l01": 3
+          },
+          "map_bytes_saved": 35,
           "module_id": "module-demo",
           "ok": true,
-          "plan_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-          "referenced_routes": 0,
+          "plan_sha256": "sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93",
+          "referenced_routes": 1,
           "schema_version": 1,
           "snapshot_id": "SNAP1"
         },
@@ -50,7 +60,7 @@
       "revisions_changed": {},
       "session_ledger_changed": null,
       "stderr": "",
-      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"module.materials.compact\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {\n    \"schema_version\": 1,\n    \"snapshot_id\": \"SNAP1\",\n    \"module_id\": \"module-demo\",\n    \"map_bytes_saved\": 0,\n    \"referenced_routes\": 0,\n    \"plan_sha256\": \"sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a\",\n    \"affected_files\": [],\n    \"artifact_ids\": [],\n    \"expected_revisions\": {},\n    \"ok\": true,\n    \"check\": true,\n    \"canonical_files_written\": 0\n  },\n  \"error\": null\n}\n",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"module.materials.compact\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {\n    \"schema_version\": 1,\n    \"snapshot_id\": \"SNAP1\",\n    \"module_id\": \"module-demo\",\n    \"map_bytes_saved\": 35,\n    \"referenced_routes\": 1,\n    \"plan_sha256\": \"sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93\",\n    \"affected_files\": [\n      \"curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml\"\n    ],\n    \"artifact_ids\": [\n      \"module-demo\",\n      \"study-map-demo-l01\",\n      \"unit-demo-l01\"\n    ],\n    \"expected_revisions\": {\n      \"module-demo\": 0,\n      \"study-map-demo-l01\": 0,\n      \"unit-demo-l01\": 3\n    },\n    \"ok\": true,\n    \"check\": true,\n    \"canonical_files_written\": 0\n  },\n  \"error\": null\n}\n",
       "stdout_json": {
         "capability": "module.materials.compact",
         "error": null,
@@ -60,16 +70,26 @@
         "replayed": false,
         "request_id": "KEY1",
         "result": {
-          "affected_files": [],
-          "artifact_ids": [],
+          "affected_files": [
+            "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"
+          ],
+          "artifact_ids": [
+            "module-demo",
+            "study-map-demo-l01",
+            "unit-demo-l01"
+          ],
           "canonical_files_written": 0,
           "check": true,
-          "expected_revisions": {},
-          "map_bytes_saved": 0,
+          "expected_revisions": {
+            "module-demo": 0,
+            "study-map-demo-l01": 0,
+            "unit-demo-l01": 3
+          },
+          "map_bytes_saved": 35,
           "module_id": "module-demo",
           "ok": true,
-          "plan_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
-          "referenced_routes": 0,
+          "plan_sha256": "sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93",
+          "referenced_routes": 1,
           "schema_version": 1,
           "snapshot_id": "SNAP1"
         },

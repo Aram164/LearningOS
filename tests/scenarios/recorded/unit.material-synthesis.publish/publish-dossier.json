@@ -9,7 +9,7 @@
         "KEY2": {
           "capability": "unit.material-synthesis.publish",
           "channel": "operator",
-          "intent_sha256": "sha256:bc47396aec6d461980c787e526d02a4d71ebb7ee7ebc7cb82351fdc0111ed1f6",
+          "intent_sha256": "sha256:27f24ddc841c7ba4427a11dba0306179bb19c8b5b62e2f8bc4ad4af37f3c513f",
           "receipt_path": "operations/transactions/TX1.yaml",
           "request_id": "KEY1",
           "revisions": {
@@ -60,17 +60,17 @@
       },
       "id": "TX1",
       "metadata": {
-        "data_roots_sha256": "sha256:a2d69e1cb44eebc8a5605f5e717f4541406b4209bb0c22e3df16917a749ef8bb",
+        "data_roots_sha256": "sha256:2e15527884b178c83921274a2d0410b8872c6cf378c9347b8bee12ef204a4cb4",
         "fingerprint_definition": 2
       },
       "request": {
         "approval": {
           "kind": "operator-approval",
-          "subject_sha256": "sha256:bc47396aec6d461980c787e526d02a4d71ebb7ee7ebc7cb82351fdc0111ed1f6"
+          "subject_sha256": "sha256:27f24ddc841c7ba4427a11dba0306179bb19c8b5b62e2f8bc4ad4af37f3c513f"
         },
         "channel": "operator",
         "idempotency_key": "KEY2",
-        "intent_sha256": "sha256:bc47396aec6d461980c787e526d02a4d71ebb7ee7ebc7cb82351fdc0111ed1f6",
+        "intent_sha256": "sha256:27f24ddc841c7ba4427a11dba0306179bb19c8b5b62e2f8bc4ad4af37f3c513f",
         "request_id": "KEY1"
       },
       "schema_version": 2,
@@ -123,13 +123,13 @@
         "operations/transactions/TX1.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "d908cc877042a131cd1909e1ebc34cb0110a2771226bce475c2a242aa967370d",
+          "sha256": "5e6ec23a3730e449f656088a6c9bea83615acde722b68d09804ca424ef7dc106",
           "state": "file"
         },
         "operations/transactions/idempotency.yaml": {
           "channel": "operator",
           "recorded_at": "2026-10-01T07:00:00+00:00",
-          "sha256": "637f8667ea165355239770c6ed8dc47496a5af7194a99aba224b9595b7a90e62",
+          "sha256": "fb4bb480c83ff6f5b4b7d6a1daaf5b8a5d08c8e2bbdd858753805af6357e2867",
           "state": "file"
         },
         "operations/transactions/lineage.yaml": {

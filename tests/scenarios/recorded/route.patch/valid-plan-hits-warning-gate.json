@@ -1,29 +1,259 @@
 {
-  "canonical_changed": {},
-  "exit": 2,
-  "idempotency_changed": {},
-  "outcome": "refused",
-  "receipts": [],
-  "revisions_changed": {},
-  "session_ledger_changed": null,
-  "stderr": "",
-  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"route.patch\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"VALIDATION_FAILED\",\n    \"message\": \"canonical validation failed: W NEW-OR-GROWN-WARNING: LOCATOR-VAGUE at curriculum/modules/module-demo/source-map.yaml: 0 → 2 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: ROUTE-ANGLE-DETAIL-MISSING at curriculum/modules/module-demo/source-map.yaml: 0 → 2 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: ROUTE-ID-MISSING at curriculum/modules/module-demo/source-map.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: RUNTIME-REVIEW-MISSING at curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: SELECTION-ROUTE-ID-MISSING at curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: STAGE-NODE-UNLINKED at curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: URI-PROJECT at projects/registry/project-demo.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`)\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
-  "stdout_json": {
-    "capability": "route.patch",
-    "error": {
-      "code": "VALIDATION_FAILED",
-      "details": {},
-      "message": "canonical validation failed: W NEW-OR-GROWN-WARNING: LOCATOR-VAGUE at curriculum/modules/module-demo/source-map.yaml: 0 → 2 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: ROUTE-ANGLE-DETAIL-MISSING at curriculum/modules/module-demo/source-map.yaml: 0 → 2 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: ROUTE-ID-MISSING at curriculum/modules/module-demo/source-map.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: RUNTIME-REVIEW-MISSING at curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: SELECTION-ROUTE-ID-MISSING at curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: STAGE-NODE-UNLINKED at curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: URI-PROJECT at projects/registry/project-demo.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`)",
-      "retryable": false
+  "steps": [
+    {
+      "canonical_changed": {
+        "projects/registry/project-scenario-new.yaml": "fc7dac9a264f97fd8c72e1a505312500912619434efd200fe63798148def0053"
+      },
+      "exit": 0,
+      "idempotency_changed": {
+        "after": {
+          "entries": {
+            "KEY2": {
+              "capability": "project.create",
+              "channel": "operator",
+              "intent_sha256": "sha256:5730a0f960950421f82c19fe36b01c07d807aba86c5e2f134e6dc32d93dd19ee",
+              "receipt_path": "operations/transactions/TX1.yaml",
+              "request_id": "KEY1",
+              "revisions": {
+                "project-scenario-new": 1
+              },
+              "snapshot_after": "SNAP1",
+              "snapshot_before": "SNAP2",
+              "transaction_id": "TX1"
+            }
+          },
+          "schema_version": 1,
+          "type": "transaction-idempotency-ledger"
+        },
+        "before": null
+      },
+      "operation": "project.create",
+      "outcome": "ok",
+      "receipts": [
+        {
+          "artifact_revisions": {
+            "project-scenario-new": {
+              "after": 1,
+              "before": 0
+            }
+          },
+          "authority": {
+            "capability_contract_version": 2,
+            "enforced": true,
+            "grants": [
+              {
+                "capability": "project.create",
+                "declared_writes": [
+                  "projects/registry/*"
+                ]
+              }
+            ]
+          },
+          "capability": "project.create",
+          "committed_at": "2026-10-01T09:00:00+02:00",
+          "expected_revisions": {
+            "project-scenario-new": 0
+          },
+          "id": "TX1",
+          "metadata": {
+            "data_roots_sha256": "sha256:2841836a2f63199a143bd8293f733807ad00203f1f6b8ea1ba221fa044c2b69c",
+            "fingerprint_definition": 2
+          },
+          "request": {
+            "approval": {
+              "kind": "operator-approval",
+              "subject_sha256": "sha256:5730a0f960950421f82c19fe36b01c07d807aba86c5e2f134e6dc32d93dd19ee"
+            },
+            "channel": "operator",
+            "idempotency_key": "KEY2",
+            "intent_sha256": "sha256:5730a0f960950421f82c19fe36b01c07d807aba86c5e2f134e6dc32d93dd19ee",
+            "request_id": "KEY1"
+          },
+          "schema_version": 2,
+          "snapshot_after": "SNAP1",
+          "snapshot_before": "SNAP2",
+          "status": "committed",
+          "type": "transaction-receipt",
+          "writes": [
+            {
+              "created": true,
+              "path": "projects/registry/project-scenario-new.yaml",
+              "sha256_after": "fc7dac9a264f97fd8c72e1a505312500912619434efd200fe63798148def0053",
+              "sha256_before": null
+            }
+          ]
+        }
+      ],
+      "revisions_changed": {
+        "after": {
+          "revisions": {
+            "project-scenario-new": 1,
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        },
+        "before": {
+          "revisions": {
+            "unit-demo-l01": 3
+          },
+          "schema_version": 1,
+          "type": "artifact-revision-ledger"
+        }
+      },
+      "session_ledger_changed": {
+        "after": {
+          "paths": {
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "13fd57ce5b086a18a4c82cc5a14b2d61697167dc36f1a5921a5e08d1f2b80951",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "7163ad1a556b2da85d94afbd8c257860384c78d4a957591365657f59ea44cb56",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "8a17d59bff58e53c6cf6e86c3ff263f49ed116da31b78cd58223ef1d252d37c3",
+              "state": "file"
+            },
+            "projects/registry/project-scenario-new.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "fc7dac9a264f97fd8c72e1a505312500912619434efd200fe63798148def0053",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        },
+        "before": null
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"project.create\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": \"TX1\",\n  \"receipt_path\": \"operations/transactions/TX1.yaml\",\n  \"snapshot_after\": \"SNAP1\",\n  \"result\": {\n    \"ok\": true,\n    \"project_id\": \"project-scenario-new\",\n    \"transaction_id\": \"TX1\",\n    \"receipt_path\": \"operations/transactions/TX1.yaml\",\n    \"artifact_revisions\": {\n      \"project-scenario-new\": 1\n    },\n    \"snapshot_after\": \"SNAP1\",\n    \"replayed\": false\n  },\n  \"error\": null\n}\n",
+      "stdout_json": {
+        "capability": "project.create",
+        "error": null,
+        "idempotency_key": "KEY2",
+        "ok": true,
+        "receipt_path": "operations/transactions/TX1.yaml",
+        "replayed": false,
+        "request_id": "KEY1",
+        "result": {
+          "artifact_revisions": {
+            "project-scenario-new": 1
+          },
+          "ok": true,
+          "project_id": "project-scenario-new",
+          "receipt_path": "operations/transactions/TX1.yaml",
+          "replayed": false,
+          "snapshot_after": "SNAP1",
+          "transaction_id": "TX1"
+        },
+        "schema_version": 2,
+        "snapshot_after": "SNAP1",
+        "transaction_id": "TX1"
+      },
+      "step": 0,
+      "transport": "gateway"
     },
-    "idempotency_key": "KEY2",
-    "ok": false,
-    "receipt_path": null,
-    "replayed": false,
-    "request_id": "KEY1",
-    "result": {},
-    "schema_version": 2,
-    "snapshot_after": null,
-    "transaction_id": null
-  }
+    {
+      "canonical_changed": {},
+      "exit": 2,
+      "idempotency_changed": {},
+      "operation": "route.patch",
+      "outcome": "refused",
+      "receipts": [],
+      "revisions_changed": {},
+      "session_ledger_changed": {
+        "after": {
+          "paths": {
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "13fd57ce5b086a18a4c82cc5a14b2d61697167dc36f1a5921a5e08d1f2b80951",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "7163ad1a556b2da85d94afbd8c257860384c78d4a957591365657f59ea44cb56",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "8a17d59bff58e53c6cf6e86c3ff263f49ed116da31b78cd58223ef1d252d37c3",
+              "state": "file"
+            },
+            "projects/registry/project-scenario-new.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "fc7dac9a264f97fd8c72e1a505312500912619434efd200fe63798148def0053",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        },
+        "before": {
+          "paths": {
+            "operations/transactions/TX1.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "13fd57ce5b086a18a4c82cc5a14b2d61697167dc36f1a5921a5e08d1f2b80951",
+              "state": "file"
+            },
+            "operations/transactions/idempotency.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "7163ad1a556b2da85d94afbd8c257860384c78d4a957591365657f59ea44cb56",
+              "state": "file"
+            },
+            "operations/transactions/revisions.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "8a17d59bff58e53c6cf6e86c3ff263f49ed116da31b78cd58223ef1d252d37c3",
+              "state": "file"
+            },
+            "projects/registry/project-scenario-new.yaml": {
+              "channel": "operator",
+              "recorded_at": "2026-10-01T07:00:00+00:00",
+              "sha256": "fc7dac9a264f97fd8c72e1a505312500912619434efd200fe63798148def0053",
+              "state": "file"
+            }
+          },
+          "schema_version": 2,
+          "session_id": "channel:operator"
+        }
+      },
+      "stderr": "",
+      "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY3\",\n  \"idempotency_key\": \"KEY4\",\n  \"capability\": \"route.patch\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"VALIDATION_FAILED\",\n    \"message\": \"canonical validation failed: W NEW-OR-GROWN-WARNING: URI-PROJECT at projects/registry/project-scenario-new.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`)\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
+      "stdout_json": {
+        "capability": "route.patch",
+        "error": {
+          "code": "VALIDATION_FAILED",
+          "details": {},
+          "message": "canonical validation failed: W NEW-OR-GROWN-WARNING: URI-PROJECT at projects/registry/project-scenario-new.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`)",
+          "retryable": false
+        },
+        "idempotency_key": "KEY4",
+        "ok": false,
+        "receipt_path": null,
+        "replayed": false,
+        "request_id": "KEY3",
+        "result": {},
+        "schema_version": 2,
+        "snapshot_after": null,
+        "transaction_id": null
+      },
+      "step": 1,
+      "transport": "gateway"
+    }
+  ]
 }

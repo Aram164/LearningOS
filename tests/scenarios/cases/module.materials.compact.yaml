@@ -33,11 +33,14 @@ cases:
     artifact_ids: []
     expect: {site: null}
   - id: apply-noop-plan
-    kind: refusal
-    transport: gateway
-    request: {module_id: module-demo, plan_sha256: "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"}
-    artifact_ids: []
-    expect: {site: null}
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {module_id: module-demo, plan_sha256: "sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93"}
+        artifact_ids: [module-demo, study-map-demo-l01, unit-demo-l01]
+      - transport: gateway
+        request: {module_id: module-demo, plan_sha256: "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"}
+        artifact_ids: []
   - id: direct-cli-refused
     kind: refusal
     transport: cli

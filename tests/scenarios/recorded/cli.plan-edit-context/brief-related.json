@@ -7,7 +7,7 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"plan-edit-context-brief\",\"unit_id\":\"unit-demo-l01\",\"module_id\":\"module-demo\",\"artifact_revisions\":{\"module-demo\":0,\"study-map-demo-l01\":0,\"unit-demo-l01\":3},\"inventory\":{\"route_ids\":[\"route-b2f1f80014860a929a3af0bc\"],\"stage_ids\":[\"stage-demo\",\"stage-demo-pending\"],\"route_count\":1,\"stage_count\":2,\"placement_count\":4},\"unit_audit\":{\"unit_id\":\"unit-demo-l01\",\"module_id\":\"module-demo\",\"source_records\":1,\"routes\":1,\"placements\":4,\"routes_by_depth\":{\"derivation\":1},\"routes_by_scope\":{\"current\":1},\"triage_by_stage\":{\"stage-demo\":{\"untriaged\":3},\"stage-demo-pending\":{\"untriaged\":1}},\"advanced_reference_placed_required_or_helpful\":[],\"current_or_prerequisite_unplaced\":[\"route-b2f1f80014860a929a3af0bc\"],\"legacy_string_routes_by_source\":{},\"exact_routes_with_unresolved_siblings\":[],\"unplaced_routes\":[\"route-b2f1f80014860a929a3af0bc\"],\"synthesis\":{\"present\":false,\"replacement_required_if_evidential_routes_change\":false,\"replacement_reason\":\"no existing dossier requires replacement\",\"fresh\":false,\"detail\":null,\"deep_reviewed\":0,\"screened\":0,\"unevaluated\":0,\"unavailable\":0},\"scope_authority\":[{\"source_id\":\"source-demo-book\",\"authority\":\"slides\",\"locator\":\"Lecture 1\"}],\"prior_year_boundary\":[],\"out_of_scope_present\":[],\"adjacent_unit_source_reuse_count\":1},\"analysis_refs\":{\"analysis_notes\":[],\"related_count\":1,\"related_expand\":\"plan-edit-context unit-demo-l01 --brief --include-related --expected-snapshot SNAP1\",\"approved_assessment_routes\":[],\"stale_assessment_routes\":[],\"analysis_by_resolution\":{},\"related_notes\":[{\"note_id\":\"note-demo-analysis\",\"source_id\":\"source-demo-book\",\"scope\":\"related\",\"resolution\":\"resolved\",\"review\":null,\"inspected_range\":{\"start\":1,\"end\":1},\"freshness\":\"current\",\"path\":\"knowledge/notes/mathematics/note-demo-analysis.md\"}]},\"required_inputs\":{\"route_patch\":{\"route_id\":\"one of the 1 inventoried route ids\",\"changes\":{\"fields\":[\"angle\",\"angle_detail\",\"locator\",\"title\",\"url\",\"vault_path\"],\"rules\":\"nonempty text per field, at most 16000 characters, declared material fields only\"},\"guards\":\"artifact_revisions above; the gateway envelope carries the snapshot\"},\"plan_replace\":{\"file\":\"reviewed package bytes for unit-plan-revise, unit-map-import, or module-plan-import\",\"round_trip\":\"save the --check JSON, then apply with --apply-reviewed-sha256 and --review-report\",\"guards\":\"artifact_revisions above; the saved report carries the exact prepared envelope\"}},\"preflight\":[{\"operation\":\"route-patch\",\"check\":\"route-patch unit-demo-l01 ROUTE_ID --changes JSON --check\"},{\"operation\":\"unit-plan-revise\",\"check\":\"unit-plan-revise unit-demo-l01 --file REVISION.yaml --check\"},{\"operation\":\"unit-map-import\",\"check\":\"unit-map-import unit-demo-l01 --file MAP.yaml --check\"},{\"operation\":\"module-plan-import\",\"check\":\"module-plan-import module-demo --file PLAN.yaml --check\"},{\"operation\":\"verify\",\"check\":\".venv/bin/python tools/verify_plan_receipt.py --report REPORT.json --unit unit-demo-l01\"}],\"expand\":{\"full\":\"plan-edit-context unit-demo-l01 --expected-snapshot SNAP1\",\"full_audit\":\"plan-edit-context unit-demo-l01 --audit --expected-snapshot SNAP1\",\"adjacent_unit_source_reuse\":\"plan-edit-context unit-demo-l01 --brief --include-neighbors --expected-snapshot SNAP1\",\"route_batches\":[\"plan-edit-context unit-demo-l01 --route-ids route-b2f1f80014860a929a3af0bc --expected-snapshot SNAP1\"],\"stages\":{\"stage-demo\":\"plan-edit-context unit-demo-l01 --stage-id stage-demo --expected-snapshot SNAP1\",\"stage-demo-pending\":\"plan-edit-context unit-demo-l01 --stage-id stage-demo-pending --expected-snapshot SNAP1\"},\"analysis_search\":\"material-context QUERY --unit unit-demo-l01 --expected-snapshot SNAP1\"}}\n",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"contract\":\"plan-edit-context-brief\",\"unit_id\":\"unit-demo-l01\",\"module_id\":\"module-demo\",\"artifact_revisions\":{\"module-demo\":0,\"study-map-demo-l01\":0,\"unit-demo-l01\":3},\"inventory\":{\"route_ids\":[\"route-b2f1f80014860a929a3af0bc\"],\"stage_ids\":[\"stage-demo\",\"stage-demo-pending\"],\"route_count\":1,\"stage_count\":2,\"placement_count\":5},\"unit_audit\":{\"unit_id\":\"unit-demo-l01\",\"module_id\":\"module-demo\",\"source_records\":1,\"routes\":1,\"placements\":5,\"routes_by_depth\":{\"derivation\":1},\"routes_by_scope\":{\"current\":1},\"triage_by_stage\":{\"stage-demo\":{\"untriaged\":4},\"stage-demo-pending\":{\"untriaged\":1}},\"advanced_reference_placed_required_or_helpful\":[],\"current_or_prerequisite_unplaced\":[],\"legacy_string_routes_by_source\":{},\"exact_routes_with_unresolved_siblings\":[],\"unplaced_routes\":[],\"synthesis\":{\"present\":false,\"replacement_required_if_evidential_routes_change\":false,\"replacement_reason\":\"no existing dossier requires replacement\",\"fresh\":false,\"detail\":null,\"deep_reviewed\":0,\"screened\":0,\"unevaluated\":0,\"unavailable\":0},\"scope_authority\":[{\"source_id\":\"source-demo-book\",\"authority\":\"slides\",\"locator\":\"Lecture 1\"}],\"prior_year_boundary\":[],\"out_of_scope_present\":[],\"adjacent_unit_source_reuse_count\":1},\"analysis_refs\":{\"analysis_notes\":[],\"related_count\":1,\"related_expand\":\"plan-edit-context unit-demo-l01 --brief --include-related --expected-snapshot SNAP1\",\"approved_assessment_routes\":[],\"stale_assessment_routes\":[],\"analysis_by_resolution\":{},\"related_notes\":[{\"note_id\":\"note-demo-analysis\",\"source_id\":\"source-demo-book\",\"scope\":\"related\",\"resolution\":\"resolved\",\"review\":null,\"inspected_range\":{\"start\":1,\"end\":1},\"freshness\":\"current\",\"path\":\"knowledge/notes/mathematics/note-demo-analysis.md\"}]},\"required_inputs\":{\"route_patch\":{\"route_id\":\"one of the 1 inventoried route ids\",\"changes\":{\"fields\":[\"angle\",\"angle_detail\",\"locator\",\"title\",\"url\",\"vault_path\"],\"rules\":\"nonempty text per field, at most 16000 characters, declared material fields only\"},\"guards\":\"artifact_revisions above; the gateway envelope carries the snapshot\"},\"plan_replace\":{\"file\":\"reviewed package bytes for unit-plan-revise, unit-map-import, or module-plan-import\",\"round_trip\":\"save the --check JSON, then apply with --apply-reviewed-sha256 and --review-report\",\"guards\":\"artifact_revisions above; the saved report carries the exact prepared envelope\"}},\"preflight\":[{\"operation\":\"route-patch\",\"check\":\"route-patch unit-demo-l01 ROUTE_ID --changes JSON --check\"},{\"operation\":\"unit-plan-revise\",\"check\":\"unit-plan-revise unit-demo-l01 --file REVISION.yaml --check\"},{\"operation\":\"unit-map-import\",\"check\":\"unit-map-import unit-demo-l01 --file MAP.yaml --check\"},{\"operation\":\"module-plan-import\",\"check\":\"module-plan-import module-demo --file PLAN.yaml --check\"},{\"operation\":\"verify\",\"check\":\".venv/bin/python tools/verify_plan_receipt.py --report REPORT.json --unit unit-demo-l01\"}],\"expand\":{\"full\":\"plan-edit-context unit-demo-l01 --expected-snapshot SNAP1\",\"full_audit\":\"plan-edit-context unit-demo-l01 --audit --expected-snapshot SNAP1\",\"adjacent_unit_source_reuse\":\"plan-edit-context unit-demo-l01 --brief --include-neighbors --expected-snapshot SNAP1\",\"route_batches\":[\"plan-edit-context unit-demo-l01 --route-ids route-b2f1f80014860a929a3af0bc --expected-snapshot SNAP1\"],\"stages\":{\"stage-demo\":\"plan-edit-context unit-demo-l01 --stage-id stage-demo --expected-snapshot SNAP1\",\"stage-demo-pending\":\"plan-edit-context unit-demo-l01 --stage-id stage-demo-pending --expected-snapshot SNAP1\"},\"analysis_search\":\"material-context QUERY --unit unit-demo-l01 --expected-snapshot SNAP1\"}}\n",
   "stdout_json": {
     "analysis_refs": {
       "analysis_by_resolution": {},
@@ -52,7 +52,7 @@
       }
     },
     "inventory": {
-      "placement_count": 4,
+      "placement_count": 5,
       "route_count": 1,
       "route_ids": [
         "route-b2f1f80014860a929a3af0bc"
@@ -113,14 +113,12 @@
     "unit_audit": {
       "adjacent_unit_source_reuse_count": 1,
       "advanced_reference_placed_required_or_helpful": [],
-      "current_or_prerequisite_unplaced": [
-        "route-b2f1f80014860a929a3af0bc"
-      ],
+      "current_or_prerequisite_unplaced": [],
       "exact_routes_with_unresolved_siblings": [],
       "legacy_string_routes_by_source": {},
       "module_id": "module-demo",
       "out_of_scope_present": [],
-      "placements": 4,
+      "placements": 5,
       "prior_year_boundary": [],
       "routes": 1,
       "routes_by_depth": {
@@ -150,16 +148,14 @@
       },
       "triage_by_stage": {
         "stage-demo": {
-          "untriaged": 3
+          "untriaged": 4
         },
         "stage-demo-pending": {
           "untriaged": 1
         }
       },
       "unit_id": "unit-demo-l01",
-      "unplaced_routes": [
-        "route-b2f1f80014860a929a3af0bc"
-      ]
+      "unplaced_routes": []
     },
     "unit_id": "unit-demo-l01"
   }
