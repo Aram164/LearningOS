@@ -1,0 +1,5 @@
+module_id: module-demo
+unit_revisions:
+  unit-nope:
+    plan_contract:
+      version: 1

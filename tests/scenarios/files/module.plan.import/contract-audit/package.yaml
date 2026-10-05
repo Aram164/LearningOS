@@ -1,0 +1,4 @@
+module_id: module-demo
+plan_contract:
+  version: 2
+  plan_template_version: 1

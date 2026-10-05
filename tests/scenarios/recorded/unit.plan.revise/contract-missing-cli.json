@@ -1,0 +1,12 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "los: unit revision contract failed; no canonical files were written\n- plan_contract.version must be 1 (see system/PLAN-CREATION-SOP.md)\n",
+  "stdout": "",
+  "stdout_json": null
+}
