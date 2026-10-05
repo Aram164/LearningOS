@@ -1,0 +1,25 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"schema_version\":1,\"snapshot_id\":\"SNAP1\",\"module_id\":\"module-demo\",\"map_bytes_saved\":0,\"referenced_routes\":0,\"plan_sha256\":\"sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a\",\"affected_files\":[],\"artifact_ids\":[],\"expected_revisions\":{},\"ok\":true,\"check\":true,\"canonical_files_written\":0}\n",
+  "stdout_json": {
+    "affected_files": [],
+    "artifact_ids": [],
+    "canonical_files_written": 0,
+    "check": true,
+    "expected_revisions": {},
+    "map_bytes_saved": 0,
+    "module_id": "module-demo",
+    "ok": true,
+    "plan_sha256": "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a",
+    "referenced_routes": 0,
+    "schema_version": 1,
+    "snapshot_id": "SNAP1"
+  }
+}

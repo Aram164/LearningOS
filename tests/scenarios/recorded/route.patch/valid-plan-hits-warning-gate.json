@@ -1,0 +1,29 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"route.patch\",\n  \"ok\": false,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {},\n  \"error\": {\n    \"code\": \"VALIDATION_FAILED\",\n    \"message\": \"canonical validation failed: W NEW-OR-GROWN-WARNING: LOCATOR-VAGUE at curriculum/modules/module-demo/source-map.yaml: 0 → 2 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: ROUTE-ANGLE-DETAIL-MISSING at curriculum/modules/module-demo/source-map.yaml: 0 → 2 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: ROUTE-ID-MISSING at curriculum/modules/module-demo/source-map.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: RUNTIME-REVIEW-MISSING at curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: SELECTION-ROUTE-ID-MISSING at curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: STAGE-NODE-UNLINKED at curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: URI-PROJECT at projects/registry/project-demo.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`)\",\n    \"retryable\": false,\n    \"details\": {}\n  }\n}\n",
+  "stdout_json": {
+    "capability": "route.patch",
+    "error": {
+      "code": "VALIDATION_FAILED",
+      "details": {},
+      "message": "canonical validation failed: W NEW-OR-GROWN-WARNING: LOCATOR-VAGUE at curriculum/modules/module-demo/source-map.yaml: 0 → 2 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: ROUTE-ANGLE-DETAIL-MISSING at curriculum/modules/module-demo/source-map.yaml: 0 → 2 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: ROUTE-ID-MISSING at curriculum/modules/module-demo/source-map.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: RUNTIME-REVIEW-MISSING at curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: SELECTION-ROUTE-ID-MISSING at curriculum/modules/module-demo/units/unit-demo-l02/unit.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: STAGE-NODE-UNLINKED at curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`); W NEW-OR-GROWN-WARNING: URI-PROJECT at projects/registry/project-demo.yaml: 0 → 1 (introduced by this plan; fix it, or adopt it deliberately with `.venv/bin/python tools/warning_baseline.py --update`)",
+      "retryable": false
+    },
+    "idempotency_key": "KEY2",
+    "ok": false,
+    "receipt_path": null,
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {},
+    "schema_version": 2,
+    "snapshot_after": null,
+    "transaction_id": null
+  }
+}

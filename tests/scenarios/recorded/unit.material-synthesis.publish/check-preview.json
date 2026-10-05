@@ -1,0 +1,38 @@
+{
+  "canonical_changed": {},
+  "exit": 0,
+  "idempotency_changed": {},
+  "outcome": "ok",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\n  \"schema_version\": 2,\n  \"request_id\": \"KEY1\",\n  \"idempotency_key\": \"KEY2\",\n  \"capability\": \"unit.material-synthesis.publish\",\n  \"ok\": true,\n  \"replayed\": false,\n  \"transaction_id\": null,\n  \"receipt_path\": null,\n  \"snapshot_after\": null,\n  \"result\": {\n    \"ok\": true,\n    \"check\": true,\n    \"unit_id\": \"unit-demo-l01\",\n    \"basis\": {\n      \"unit_revision\": 3,\n      \"source_map_revision\": 0,\n      \"source_map_checksum\": \"sha256:805a9644660dc4f093d8462fb42cf0e59eeb7ef123ede8c4c64659140470faf9\",\n      \"route_set_checksum\": \"sha256:20f877da66c66098f5dde76c5c9c4ae0a90a4a8c489f67c2eb346288f174ef39\",\n      \"material_checksums\": {\n        \"route-b2f1f80014860a929a3af0bc\": \"sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5\"\n      },\n      \"policy\": \"tiered-v2\"\n    }\n  },\n  \"error\": null\n}\n",
+  "stdout_json": {
+    "capability": "unit.material-synthesis.publish",
+    "error": null,
+    "idempotency_key": "KEY2",
+    "ok": true,
+    "receipt_path": null,
+    "replayed": false,
+    "request_id": "KEY1",
+    "result": {
+      "basis": {
+        "material_checksums": {
+          "route-b2f1f80014860a929a3af0bc": "sha256:395ded80ff4a721e2a91f400a3c6a3abd1f8d37e3c7f70b5ef42fa30d5264ea5"
+        },
+        "policy": "tiered-v2",
+        "route_set_checksum": "sha256:20f877da66c66098f5dde76c5c9c4ae0a90a4a8c489f67c2eb346288f174ef39",
+        "source_map_checksum": "sha256:805a9644660dc4f093d8462fb42cf0e59eeb7ef123ede8c4c64659140470faf9",
+        "source_map_revision": 0,
+        "unit_revision": 3
+      },
+      "check": true,
+      "ok": true,
+      "unit_id": "unit-demo-l01"
+    },
+    "schema_version": 2,
+    "snapshot_after": null,
+    "transaction_id": null
+  }
+}

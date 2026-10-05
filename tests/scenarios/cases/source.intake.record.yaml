@@ -1,0 +1,461 @@
+operation: source.intake.record
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: create-source
+    kind: success
+    transport: gateway
+    request:
+      record:
+        records:
+          - action: create
+            id: source-scenario-intake
+            partition: sources.yaml
+            title: Scenario Intake
+            type: course
+            discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
+      expected_diff_sha256: "sha256:7c3272e2aebf3d7ca64bade52676ebdfc95209bc633e6f8af1fd8451945063f3"
+    artifact_ids: [source-scenario-intake]
+    expect: {site: null}
+  - id: correct-title
+    kind: success
+    transport: gateway
+    request:
+      record:
+        records:
+          - {action: correct, id: source-demo-book, title: "Demo Book Revised"}
+      expected_diff_sha256: "sha256:3a0dc2a8ede5377519ccbbda8a3554353a39d22a3d768ed3fcea58c4e8b83da4"
+    artifact_ids: [source-demo-book]
+    a5_base: true
+    expect: {site: null}
+  - id: check-preview
+    kind: success
+    transport: gateway
+    request:
+      record:
+        records:
+          - action: create
+            id: source-scenario-intake
+            partition: sources.yaml
+            title: Scenario Intake
+            type: course
+            discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
+      check: true
+    artifact_ids: []
+    expect: {site: null}
+  - id: check-cli
+    kind: success
+    transport: cli
+    argv: [source-intake, --record, '{"records": [{"action": "correct", "id": "source-demo-book", "title": "Scenario Title"}]}', --check]
+    expect: {site: null}
+  - id: bad-action
+    kind: refusal
+    transport: gateway
+    request: {record: {records: [{action: delete, id: source-demo-book}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-id
+    kind: refusal
+    transport: gateway
+    request: {record: {records: [{action: correct, id: nope}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: create-existing
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        records:
+          - action: create
+            id: source-demo-book
+            partition: sources.yaml
+            title: Scenario Duplicate
+            type: book
+            discovery: {observed: "2026-09-23", basis: [], possible_use: "Scenario shelf."}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-type
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        records:
+          - action: create
+            id: source-scenario-t
+            partition: sources.yaml
+            title: Scenario Tablet
+            type: tablet
+            discovery: {observed: "2026-09-23", basis: [], possible_use: "Scenario shelf."}
+    artifact_ids: []
+    expect: {site: null}
+  - id: missing-discovery
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        records:
+          - {action: create, id: source-scenario-t, partition: sources.yaml, title: Scenario No Discovery, type: book}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-partition
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        records:
+          - action: create
+            id: source-scenario-t
+            partition: nope.yaml
+            title: Scenario Partition
+            type: book
+            discovery: {observed: "2026-09-23", basis: [], possible_use: "Scenario shelf."}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-groups
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        records:
+          - action: create
+            id: source-scenario-g
+            partition: sources.yaml
+            title: Scenario Groups
+            type: book
+            discovery: {observed: "2026-09-23", basis: [], possible_use: "Scenario shelf."}
+            thematic_group_ids: [5]
+    artifact_ids: []
+    expect: {site: null}
+  - id: unregistered-group
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        records:
+          - action: create
+            id: source-scenario-g
+            partition: sources.yaml
+            title: Scenario Groups
+            type: book
+            discovery: {observed: "2026-09-23", basis: [], possible_use: "Scenario shelf."}
+            thematic_group_ids: [thematic-group-nope]
+    artifact_ids: []
+    expect: {site: null}
+  - id: correct-unknown
+    kind: refusal
+    transport: gateway
+    request: {record: {records: [{action: correct, id: source-nope, title: "Scenario Title"}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: correct-create-only-field
+    kind: refusal
+    transport: gateway
+    request: {record: {records: [{action: correct, id: source-demo-book, type: book}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: create-outside-allowlist
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        records:
+          - action: create
+            id: source-scenario-r
+            partition: sources.yaml
+            title: Scenario Remove
+            type: book
+            remove_url: true
+            discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
+    artifact_ids: []
+    expect: {site: null}
+  - id: empty-title
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        records:
+          - action: create
+            id: source-scenario-e
+            partition: sources.yaml
+            title: " "
+            type: book
+            discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
+    artifact_ids: []
+    expect: {site: null}
+  - id: url-both
+    kind: refusal
+    transport: gateway
+    request: {record: {records: [{action: correct, id: source-demo-book, url: "https://x.example/", remove_url: true}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: remove-no-url
+    kind: refusal
+    transport: gateway
+    request: {record: {records: [{action: correct, id: source-demo-book, remove_url: true}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-remove-labels
+    kind: refusal
+    transport: gateway
+    request: {record: {records: [{action: correct, id: source-demo-book, remove_identifiers: [7]}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: label-not-held
+    kind: refusal
+    transport: gateway
+    request: {record: {records: [{action: correct, id: source-demo-book, remove_identifiers: [doi]}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: correct-bad-groups
+    kind: refusal
+    transport: gateway
+    request: {record: {records: [{action: correct, id: source-demo-book, thematic_group_ids: [5]}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: correct-unregistered-group
+    kind: refusal
+    transport: gateway
+    request: {record: {records: [{action: correct, id: source-demo-book, thematic_group_ids: [thematic-group-nope]}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: contract-violation
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        records:
+          - action: create
+            id: source-scenario-v
+            partition: sources.yaml
+            title: Scenario Violation
+            type: book
+            discovery: {observed: "2026-09-23", basis: [], possible_use: "Scenario shelf."}
+    artifact_ids: []
+    expect: {site: null}
+  - id: child-titles-nolabel
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        records:
+          - action: create
+            id: source-scenario-c
+            partition: sources.yaml
+            title: Scenario Children
+            type: book
+            discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf.", child_titles: {doi: "Chapter 1"}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: batch-address-dup
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        records:
+          - action: create
+            id: source-scenario-u1
+            partition: sources.yaml
+            title: Scenario U1
+            type: book
+            url: "https://dup.example/"
+            discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
+          - action: create
+            id: source-scenario-u2
+            partition: sources.yaml
+            title: Scenario U2
+            type: book
+            url: "https://dup.example/"
+            discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
+    artifact_ids: []
+    expect: {site: null}
+  - id: no-change
+    kind: refusal
+    transport: gateway
+    request: {record: {records: [{action: correct, id: source-demo-book, title: "Demo Book"}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: named-twice
+    kind: refusal
+    transport: gateway
+    request: {record: {records: [{action: correct, id: source-demo-book, title: "Scenario A"}, {action: correct, id: source-demo-book, title: "Scenario B"}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: missing-diff
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        records:
+          - action: create
+            id: source-scenario-intake
+            partition: sources.yaml
+            title: Scenario Intake
+            type: course
+            discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
+    artifact_ids: []
+    expect: {site: null}
+  - id: diff-changed
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        records:
+          - action: create
+            id: source-scenario-intake
+            partition: sources.yaml
+            title: Scenario Intake
+            type: course
+            discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
+      expected_diff_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    artifact_ids: []
+    expect: {site: null}
+  - id: missing-file
+    kind: refusal
+    transport: cli
+    argv: [source-intake, --file, work/inbox/nope.yaml]
+    expect: {site: null}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [source-intake, --record, '{"records": [{"action": "correct", "id": "source-demo-book", "title": "Scenario Title"}]}']
+    expect: {site: null}
+  - id: direct-cli-approved
+    kind: refusal
+    transport: cli
+    argv: [source-intake, --record, '{"records": [{"action": "correct", "id": "source-demo-book", "title": "Scenario Title"}]}', --approve]
+    expect: {site: null}
+  - id: empty-records
+    kind: refusal
+    transport: cli
+    argv: [source-intake, --record, '{"records": []}']
+    expect: {site: null}
+  - id: batch-too-many
+    kind: refusal
+    transport: cli
+    argv: [source-intake, --file, "<CASEDATA>/records.yaml"]
+    expect: {site: null}
+  - id: remove-url-string
+    kind: refusal
+    transport: cli
+    argv: [source-intake, --record, '{"records": [{"action": "correct", "id": "source-demo-book", "remove_url": "yes"}]}']
+    expect: {site: null}
+  - id: identifiers-string
+    kind: refusal
+    transport: cli
+    argv: [source-intake, --record, '{"records": [{"action": "correct", "id": "source-demo-book", "identifiers": "nope"}]}']
+    expect: {site: null}
+  - id: address-held-by-other
+    kind: sequence
+    steps:
+      - transport: gateway
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-u1
+                partition: sources.yaml
+                title: Scenario U1
+                type: book
+                url: "https://held.example/u1"
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
+          expected_diff_sha256: "sha256:87b1a1ef401d68038364a7cbab404ef184f0371cf72c2c57ae50154938937f25"
+        artifact_ids: [source-scenario-u1]
+      - transport: gateway
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-u2
+                partition: sources.yaml
+                title: Scenario U2
+                type: book
+                url: "https://held.example/u1"
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
+        artifact_ids: []
+  - id: remove-last-locator
+    kind: sequence
+    steps:
+      - transport: gateway
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-last
+                partition: sources.yaml
+                title: Scenario Last
+                type: book
+                url: "https://last.example/"
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
+          expected_diff_sha256: "sha256:95fe0fe319c1ada9ced16dce2be84dddaaae4a27f34546d8ea395176a7ab487e"
+        artifact_ids: [source-scenario-last]
+      - transport: gateway
+        request:
+          record:
+            records:
+              - {action: correct, id: source-scenario-last, remove_url: true}
+        artifact_ids: []
+  - id: identifier-set-and-removed
+    kind: sequence
+    steps:
+      - transport: gateway
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-lbl
+                partition: sources.yaml
+                title: Scenario Label
+                type: book
+                identifiers: {doi: "https://doi.example/scenario"}
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
+          expected_diff_sha256: "sha256:8c242adad8c756fcd2d9a531132b2959cb14865b05d50a594e317387d7243564"
+        artifact_ids: [source-scenario-lbl]
+      - transport: gateway
+        request:
+          record:
+            records:
+              - {action: correct, id: source-scenario-lbl, identifiers: {doi: "https://doi.example/other"}, remove_identifiers: [doi]}
+        artifact_ids: []
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-intake
+                partition: sources.yaml
+                title: Scenario Intake
+                type: course
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
+          expected_diff_sha256: "sha256:7c3272e2aebf3d7ca64bade52676ebdfc95209bc633e6f8af1fd8451945063f3"
+        artifact_ids: [source-scenario-intake]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request:
+      record:
+        records:
+          - action: create
+            id: source-scenario-intake
+            partition: sources.yaml
+            title: Scenario Intake
+            type: course
+            discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Scenario shelf."}
+      expected_diff_sha256: "sha256:7c3272e2aebf3d7ca64bade52676ebdfc95209bc633e6f8af1fd8451945063f3"
+    artifact_ids: [source-scenario-intake]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/source_catalog.py:118", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
+  - {where: "tools/learning_os/commands/source_catalog.py:122", reason: "record/file admission: the argparse required group and the payload oneOf enforce presence first"}
+  - {where: "tools/learning_os/commands/source_catalog.py:266", reason: "partition/group mismatch: the fixture registers no thematic groups, so the unregistered-group check fires for any gid first"}
+  - {where: "tools/learning_os/commands/source_catalog.py:277", reason: "dead check: a missing partition trips the unclassified-partition check and a grouped one trips the mismatch check first"}
+  - {where: "tools/learning_os/commands/source_catalog.py:307", reason: "non-mapping held identifiers: the fixture registry holds only mappings, and intake only writes mappings"}
+  - {where: "tools/learning_os/commands/source_catalog.py:352", reason: "shelf change without a new basis: needs a discovered source plus a registered group, and the fixture registers none"}
+  - {where: "tools/learning_os/commands/source_catalog.py:409", reason: "removed address still cited: the fixture cites no registry address in a second canonical file, and no step can plant one"}
+  - {where: "tools/learning_os/commands/source_catalog.py:467", reason: "registry re-read failure: the fixture registries read cleanly in a single-threaded run"}
+  - {where: "tools/learning_os/commands/source_catalog.py:469", reason: "non-registry partition file: the fixture's partition files are valid registries"}

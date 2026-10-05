@@ -1,0 +1,321 @@
+operation: source.record.revise
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: revise-evaluations
+    kind: success
+    transport: gateway
+    request:
+      record:
+        id: source-demo-book
+        evaluations:
+          - {level: introductory, roles: [first-learning], strengths: ["clear intuition", "scenario coverage"], concepts: [concept-expected-value]}
+      expected_diff_sha256: "sha256:4dd0748361f3d63ef1e13ff73e672b83e6aa23005e9c75ca55e0e705fb762ed7"
+    artifact_ids: [source-demo-book]
+    a5_base: true
+    expect: {site: null}
+  - id: check-preview
+    kind: success
+    transport: gateway
+    request:
+      record:
+        id: source-demo-book
+        evaluations:
+          - {level: introductory, roles: [first-learning], strengths: ["clear intuition", "scenario coverage"], concepts: [concept-expected-value]}
+      check: true
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-id
+    kind: refusal
+    transport: gateway
+    request: {record: {id: nope}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: unknown-source
+    kind: refusal
+    transport: gateway
+    request: {record: {id: source-nope, evaluations: []}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: material-empty
+    kind: refusal
+    transport: gateway
+    request: {record: {id: source-demo-book, material: " "}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: already-holds
+    kind: refusal
+    transport: gateway
+    request: {record: {id: source-demo-book, material: "material://source-demo-book/other.pdf", material_sha256: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: sha-without-material
+    kind: refusal
+    transport: gateway
+    request: {record: {id: source-demo-book, material_sha256: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: evaluations-nonlist
+    kind: refusal
+    transport: gateway
+    request: {record: {id: source-demo-book, evaluations: "x"}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: useful-sections-nonlist
+    kind: refusal
+    transport: gateway
+    request: {record: {id: source-demo-book, evaluations: [{useful_sections: "x"}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: useful-sections-pseudo
+    kind: refusal
+    transport: gateway
+    request: {record: {id: source-demo-book, evaluations: [{useful_sections: [{locator: "§1", use: "read"}]}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: evaluations-contract
+    kind: refusal
+    transport: gateway
+    request: {record: {id: source-demo-book, evaluations: [{}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: no-changes
+    kind: refusal
+    transport: gateway
+    request: {record: {id: source-demo-book, evaluations: [{level: introductory, roles: [first-learning], strengths: ["clear intuition"], concepts: [concept-expected-value]}]}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: syntheses-without-change
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        id: source-demo-book
+        evaluations:
+          - {level: introductory, roles: [first-learning], strengths: ["clear intuition", "scenario coverage"], concepts: [concept-expected-value]}
+        material_syntheses: []
+    artifact_ids: []
+    expect: {site: null}
+  - id: rebases-without-change
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        id: source-demo-book
+        evaluations:
+          - {level: introductory, roles: [first-learning], strengths: ["clear intuition", "scenario coverage"], concepts: [concept-expected-value]}
+        dossier_rebases: []
+    artifact_ids: []
+    expect: {site: null}
+  - id: missing-diff
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        id: source-demo-book
+        evaluations:
+          - {level: introductory, roles: [first-learning], strengths: ["clear intuition", "scenario coverage"], concepts: [concept-expected-value]}
+    artifact_ids: []
+    expect: {site: null}
+  - id: diff-changed
+    kind: refusal
+    transport: gateway
+    request:
+      record:
+        id: source-demo-book
+        evaluations:
+          - {level: introductory, roles: [first-learning], strengths: ["clear intuition", "scenario coverage"], concepts: [concept-expected-value]}
+      expected_diff_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+    artifact_ids: []
+    expect: {site: null}
+  - id: missing-file
+    kind: refusal
+    transport: cli
+    argv: [source-revise, --file, work/inbox/nope.yaml]
+    expect: {site: null}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [source-revise, --record, '{"id": "source-demo-book", "evaluations": [{"level": "introductory", "roles": ["first-learning"], "strengths": ["clear intuition", "scenario coverage"], "concepts": ["concept-expected-value"]}]}']
+    expect: {site: null}
+  - id: direct-cli-approved
+    kind: refusal
+    transport: cli
+    argv: [source-revise, --record, '{"id": "source-demo-book", "evaluations": [{"level": "introductory", "roles": ["first-learning"], "strengths": ["clear intuition", "scenario coverage"], "concepts": ["concept-expected-value"]}]}', --approve]
+    expect: {site: null}
+  - id: intake-owned-field
+    kind: refusal
+    transport: cli
+    argv: [source-revise, --record, '{"id": "source-demo-book", "title": "x"}']
+    expect: {site: null}
+  - id: outside-allowlist
+    kind: refusal
+    transport: cli
+    argv: [source-revise, --record, '{"id": "source-demo-book", "zzz": 1}']
+    expect: {site: null}
+  - id: attach-bad-sha
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/x.pdf", material_sha256: "ZZZ"}}
+        artifact_ids: []
+  - id: attach-bad-uri
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request: {record: {id: source-scenario-bare, material: "not a uri", material_sha256: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}
+        artifact_ids: []
+  - id: attach-authority-mismatch
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request: {record: {id: source-scenario-bare, material: "material://source-demo-book/book.pdf", material_sha256: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}
+        artifact_ids: []
+  - id: attach-noncanonical
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare//x.pdf", material_sha256: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}
+        artifact_ids: []
+  - id: attach-missing-file
+    kind: sequence
+    steps:
+      - transport: gateway
+        operation: source.intake.record
+        request:
+          record:
+            records:
+              - action: create
+                id: source-scenario-bare
+                partition: sources.yaml
+                title: Scenario Bare
+                type: book
+                discovery: {observed: "2026-09-23", basis: [{kind: list-entry, ref: "legacy/EXAMPLE-LIST.md#L10"}], possible_use: "Attach target."}
+          expected_diff_sha256: "sha256:002b66f6706277282d70f1deeaac29ca124f28d8b1207ea360f849a3fb2a1bc2"
+        artifact_ids: [source-scenario-bare]
+      - transport: gateway
+        request: {record: {id: source-scenario-bare, material: "material://source-scenario-bare/nope.pdf", material_sha256: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"}}
+        artifact_ids: []
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request:
+          record:
+            id: source-demo-book
+            evaluations:
+              - {level: introductory, roles: [first-learning], strengths: ["clear intuition", "scenario coverage"], concepts: [concept-expected-value]}
+          expected_diff_sha256: "sha256:4dd0748361f3d63ef1e13ff73e672b83e6aa23005e9c75ca55e0e705fb762ed7"
+        artifact_ids: [source-demo-book]
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request:
+      record:
+        id: source-demo-book
+        evaluations:
+          - {level: introductory, roles: [first-learning], strengths: ["clear intuition", "scenario coverage"], concepts: [concept-expected-value]}
+      expected_diff_sha256: "sha256:4dd0748361f3d63ef1e13ff73e672b83e6aa23005e9c75ca55e0e705fb762ed7"
+    artifact_ids: [source-demo-book]
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/source_catalog.py:118", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
+  - {where: "tools/learning_os/commands/source_catalog.py:122", reason: "record/file admission: the argparse required group and the payload oneOf enforce presence first"}
+  - {where: "tools/learning_os/commands/source_catalog.py:583", reason: "unmounted materials tree: the fixture mounts materials"}
+  - {where: "tools/learning_os/commands/source_catalog.py:592", reason: "unresolvable material path: authority screening confines the payload under the source namespace, and strict=False never raises there"}
+  - {where: "tools/learning_os/commands/source_catalog.py:596", reason: "material URI naming a directory: no directory exists under a material-less source's materials namespace"}
+  - {where: "tools/learning_os/commands/source_catalog.py:612", reason: "unreadable dossier: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:614", reason: "non-mapping dossier: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:642", reason: "rebase moving other fields: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:649", reason: "rebase gaining or losing routes: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:655", reason: "rebase naming the wrong routes: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:667", reason: "rebased route in a comparison: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:675", reason: "rebased route not screened: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:680", reason: "rebased route carrying evidence: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:685", reason: "rebased route carrying analysis refs: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:738", reason: "payload admission: argparse json_object and the payload schema enforce the object shape first"}
+  - {where: "tools/learning_os/commands/source_catalog.py:781", reason: "material absent from the manifest: the fixture ships no materials manifest, and no step can mint a manifest entry"}
+  - {where: "tools/learning_os/commands/source_catalog.py:786", reason: "live bytes against the manifest: the fixture ships no materials manifest, and no step can mint a manifest entry"}
+  - {where: "tools/learning_os/commands/source_catalog.py:791", reason: "live bytes against the request hash: the fixture ships no materials manifest, and no step can mint a manifest entry"}
+  - {where: "tools/learning_os/commands/source_catalog.py:842", reason: "non-list material_syntheses: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:847", reason: "malformed replacement entry: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:850", reason: "replacement without unit and dossier: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:852", reason: "double replacement: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:856", reason: "non-list dossier_rebases: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:862", reason: "malformed rebase entry: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:870", reason: "rebase without a unit id: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:872", reason: "rebase without a dossier digest: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:875", reason: "rebase without route ids: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:883", reason: "rebase without provenance: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:888", reason: "double rebase: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:897", reason: "dossier unit not registered: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:902", reason: "unestablishable dossier basis: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:914", reason: "unneeded replacement: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:920", reason: "replacement plus rebase: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:927", reason: "rebase unit not registered: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:934", reason: "rebase without a dossier: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:938", reason: "unneeded rebase: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:944", reason: "missing replacement or rebase: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:954", reason: "invalid replacement dossier: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:964", reason: "replacement reusing provenance: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:980", reason: "stale rebase digest: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:986", reason: "rebase reusing provenance: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:1004", reason: "already-stale dossier: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:1014", reason: "invalid rebased dossier: needs an attach past the manifest checks, which the fixture's missing manifest blocks"}
+  - {where: "tools/learning_os/commands/source_catalog.py:1031", reason: "registry re-read failure: the fixture registry reads cleanly in a single-threaded run"}
+  - {where: "tools/learning_os/commands/source_catalog.py:1033", reason: "non-registry partition file: the fixture's partition files are valid registries"}

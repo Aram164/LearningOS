@@ -1,0 +1,15 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"ok\": false, \"error\": \"source-demo-book: 'remove_url' must be true to remove\"}\n",
+  "stdout_json": {
+    "error": "source-demo-book: 'remove_url' must be true to remove",
+    "ok": false
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "canonical_changed": {},
+  "exit": 2,
+  "idempotency_changed": {},
+  "outcome": "refused",
+  "receipts": [],
+  "revisions_changed": {},
+  "session_ledger_changed": null,
+  "stderr": "",
+  "stdout": "{\"ok\": false, \"error\": \"source-demo-book: field 'zzz' is outside the revise allowlist (only 'material' and 'evaluations' are revised here; identity, intake-owned fields, topics, routes, selections, notes, feedback and observations are never written through revision)\"}\n",
+  "stdout_json": {
+    "error": "source-demo-book: field 'zzz' is outside the revise allowlist (only 'material' and 'evaluations' are revised here; identity, intake-owned fields, topics, routes, selections, notes, feedback and observations are never written through revision)",
+    "ok": false
+  }
+}

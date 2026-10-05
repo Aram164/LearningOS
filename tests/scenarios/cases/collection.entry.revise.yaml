@@ -1,0 +1,88 @@
+operation: collection.entry.revise
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: unknown-collection
+    kind: refusal
+    transport: gateway
+    request: {record: {collection: shelf, source: source-demo-book, why: "Scenario line."}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-stem
+    kind: refusal
+    transport: gateway
+    request: {record: {collection: "Shelf!", source: source-demo-book, why: "Scenario line."}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: bad-source
+    kind: refusal
+    transport: gateway
+    request: {record: {collection: shelf, source: nope, why: "Scenario line."}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: blank-why
+    kind: refusal
+    transport: gateway
+    request: {record: {collection: shelf, source: source-demo-book, why: " "}}
+    artifact_ids: []
+    expect: {site: null}
+  - id: missing-file
+    kind: refusal
+    transport: cli
+    argv: [collection-entry-revise, --file, work/inbox/nope.yaml]
+    expect: {site: null}
+  - id: foreign-field
+    kind: refusal
+    transport: cli
+    argv: [collection-entry-revise, --record, '{"collection": "shelf", "source": "source-demo-book", "why": "x", "group": "g"}']
+    expect: {site: null}
+  - id: missing-keys
+    kind: refusal
+    transport: cli
+    argv: [collection-entry-revise, --record, '{"collection": "shelf", "source": "source-demo-book"}']
+    expect: {site: null}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [collection-entry-revise, --record, '{"collection": "shelf", "source": "source-demo-book", "why": "x"}']
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {record: {collection: shelf, source: source-demo-book, why: "Scenario line."}}
+        artifact_ids: []
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {record: {collection: shelf, source: source-demo-book, why: "Scenario line."}}
+    artifact_ids: []
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/collection_entry.py:46", reason: "record/file admission: argparse json_object and the payload schema enforce the object shape first"}
+  - {where: "tools/learning_os/commands/collection_entry.py:50", reason: "record/file admission: the argparse required group and the payload oneOf enforce presence first"}
+  - {where: "tools/learning_os/commands/collection_entry.py:58", reason: "direct CLI publication: the plan refuses first, because the fixture carries no collections"}
+  - {where: "tools/learning_os/commands/collection_entry.py:84", reason: "unparseable collection: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:86", reason: "non-mapping collection: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:92", reason: "no entries list: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:94", reason: "entry position out of range: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:98", reason: "non-mapping entry: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:103", reason: "no single why scalar: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:108", reason: "source changed under revision: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:112", reason: "checked line gone: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:128", reason: "exotic block header: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:136", reason: "trailing content after why: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:143", reason: "unserializable replacement: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:157", reason: "payload admission: argparse json_object and the payload schema enforce the object shape first"}
+  - {where: "tools/learning_os/commands/collection_entry.py:180", reason: "no file origin: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:187", reason: "no entry for source: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:191", reason: "duplicate entries: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:198", reason: "no-op revision: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:202", reason: "non-string why: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:212", reason: "re-read failure: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:218", reason: "splice parse failure: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:225", reason: "splice verification failure: the fixture carries no collections (SPEC-GAP S06e-C1)"}
+  - {where: "tools/learning_os/commands/collection_entry.py:230", reason: "collection contract failure: the fixture carries no collections (SPEC-GAP S06e-C1)"}

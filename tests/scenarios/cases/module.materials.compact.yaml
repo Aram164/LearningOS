@@ -1,0 +1,66 @@
+operation: module.materials.compact
+fixture: rich_world
+observations: {now: "2026-10-01T09:00:00+02:00", git: {head: null, head_time: null, dates: {}, timestamps: {}}}
+cases:
+  - id: check-noop-plan
+    kind: success
+    transport: gateway
+    request: {module_id: module-demo, check: true}
+    artifact_ids: []
+    a5_base: true
+    expect: {site: null}
+  - id: check-cli
+    kind: success
+    transport: cli
+    argv: [module-materials-compact, module-demo, --check]
+    expect: {site: null}
+  - id: unknown-module
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-nope, check: true}
+    artifact_ids: []
+    expect: {site: null}
+  - id: apply-without-plan
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo}
+    artifact_ids: []
+    expect: {site: null}
+  - id: apply-wrong-plan
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, plan_sha256: "sha256:0000000000000000000000000000000000000000000000000000000000000000"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: apply-noop-plan
+    kind: refusal
+    transport: gateway
+    request: {module_id: module-demo, plan_sha256: "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"}
+    artifact_ids: []
+    expect: {site: null}
+  - id: direct-cli-refused
+    kind: refusal
+    transport: cli
+    argv: [module-materials-compact, module-demo, --plan-sha256, "sha256:44136fa355b3678a1146ad16f7e8649e94fb4fc21fe77e8310c060f61caaff8a"]
+    expect: {site: null}
+  - id: exact-replay
+    kind: sequence
+    steps:
+      - transport: gateway
+        request: {module_id: module-demo, check: true}
+        artifact_ids: []
+      - transport: gateway
+        same_envelope_as: 0
+  - id: replay-only-miss
+    kind: refusal
+    transport: gateway
+    replay_only: true
+    request: {module_id: module-demo, check: true}
+    artifact_ids: []
+    expect: {site: null}
+untriggered:
+  - {where: "tools/learning_os/commands/material.py:57", reason: "unreadable canonical records: the fixture parses cleanly, and no step can break it"}
+  - {where: "tools/learning_os/commands/material.py:613", reason: "lossy compaction: the fixture's maps compact losslessly (the check case proves the round trip)"}
+  - {where: "tools/learning_os/commands/material.py:707", reason: "malformed material reference: the fixture's references are well-formed, and no step can author malformed canonical bytes"}
+  - {where: "tools/learning_os/commands/material.py:727", reason: "shadow validation refusal: compaction plans no writes on the fixture, so the check path skips validation"}
+  - {where: "tools/learning_os/commands/material.py:746", reason: "in-transaction gate refusal: compaction plans no writes, so apply refuses at no-changes first"}
