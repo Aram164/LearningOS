@@ -166,6 +166,38 @@ def _write_observations(workdir: Path, file_observations: dict,
     return path
 
 
+def prepare_transcript_fixture(fixture_name: str, container: str | Path, *,
+                               seed: str,
+                               now_iso: str = "2026-10-01T09:00:00+02:00"
+                               ) -> dict:
+    """Build the world one procedure transcript runs in (SPEC §7.1, PLAN D11).
+
+    The one shared function behind ``los-fixture`` (Candidate A, Scrut) and
+    the in-repo runner's built-in first block (Candidate B): amendment (o)
+    items 1–3 plus the ``"mtimes"`` of amendment (z) item 5. Item 4 (the
+    ``LOS_FX``/``LOS_OBSERVATIONS``/``TZ`` exports) is caller-side: shell
+    output for Scrut, process env for the runner.
+
+    ``container`` is an existing fresh directory; the fixture root is built
+    inside it and ``observations.json``/``ids.counter`` sit next to it.
+    ``seed`` is the transcript file name. Returns ``{"root", "observations"}``.
+    """
+    container = Path(container)
+    root = _build_fixture(fixture_name, container)
+    _commit_fixture(root, now_iso, None)
+    observations = {
+        "now": now_iso,
+        "ids": {"seed": seed,
+                "counter_file": str(container / "ids.counter")},
+        "mtimes": _inbox_mtimes(root, FIXTURE_MTIME_DEFAULT),
+    }
+    observations_path = container / "observations.json"
+    observations_path.write_text(json.dumps(observations, indent=2,
+                                            sort_keys=True) + "\n",
+                                 encoding="utf-8")
+    return {"root": root, "observations": observations_path}
+
+
 # --------------------------------------------------------------------------
 # launching (SPEC amendment (m))
 # --------------------------------------------------------------------------
