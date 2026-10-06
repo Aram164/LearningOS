@@ -183,18 +183,26 @@ class _CaseContext:
         self.casedata = CASEDATA_DIR / operation / case_id
 
 
-def launch(ctx: _CaseContext, argv: list[str]) -> subprocess.CompletedProcess:
-    """Run one child with its own audit window and a fresh launch token."""
-    import arch_audit_hook
-
-    token = f"scenario-{uuid.uuid4().hex}"
-    ctx.tokens.append(token)
+def _launch_env(ctx, token: str, extra_env: dict | None) -> dict:
     env = dict(os.environ)
     env["LOS_ARCH_LAUNCH_TOKEN"] = token
     env["LOS_ARCH_AUDIT_LOG"] = str(ctx.log_path)
     env["LOS_OBSERVATIONS"] = str(ctx.observations_path)
     env["TZ"] = "Europe/Berlin"
     env["PYTHONPATH"] = str(ARCH_SITE) + os.pathsep + env.get("PYTHONPATH", "")
+    if extra_env:
+        env.update(extra_env)
+    return env
+
+
+def launch(ctx: _CaseContext, argv: list[str],
+           extra_env: dict | None = None) -> subprocess.CompletedProcess:
+    """Run one child with its own audit window and a fresh launch token."""
+    import arch_audit_hook
+
+    token = f"scenario-{uuid.uuid4().hex}"
+    ctx.tokens.append(token)
+    env = _launch_env(ctx, token, extra_env)
     arch_audit_hook.install(str(ctx.log_path))
     try:
         # cwd=root: case-relative file references resolve inside the
@@ -206,6 +214,44 @@ def launch(ctx: _CaseContext, argv: list[str]) -> subprocess.CompletedProcess:
         arch_audit_hook.uninstall()
     arch_audit_hook.assert_capture_ok()
     return proc
+
+
+def launch_many(ctx, argvs: list[list[str]],
+                extra_envs: list[dict | None] | None = None,
+                timeout: int = 300) -> list[subprocess.CompletedProcess]:
+    """Run children concurrently under one shared audit window.
+
+    Each child gets its own fresh launch token; ``check_witnesses`` still
+    requires exactly one ``subprocess.Popen`` record per token. Used by the
+    recovery scenarios (SPEC A16); the effect scenarios keep ``launch``.
+    """
+    import arch_audit_hook
+
+    if extra_envs is None:
+        extra_envs = [None] * len(argvs)
+    assert len(extra_envs) == len(argvs)
+    arch_audit_hook.install(str(ctx.log_path))
+    try:
+        handles = []
+        for argv, extra in zip(argvs, extra_envs, strict=True):
+            token = f"scenario-{uuid.uuid4().hex}"
+            ctx.tokens.append(token)
+            handles.append(subprocess.Popen(
+                argv, stdout=subprocess.PIPE, stderr=subprocess.PIPE,
+                text=True, env=_launch_env(ctx, token, extra), cwd=ctx.root))
+        results = []
+        for argv, handle in zip(argvs, handles, strict=True):
+            try:
+                stdout, stderr = handle.communicate(timeout=timeout)
+            except subprocess.TimeoutExpired:
+                handle.kill()
+                stdout, stderr = handle.communicate()
+            results.append(subprocess.CompletedProcess(
+                argv, handle.returncode, stdout, stderr))
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    return results
 
 
 def check_witnesses(ctx: _CaseContext) -> None:
