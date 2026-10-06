@@ -49,6 +49,8 @@ runtime coverage; the exact roots and historical allowlist live in
 | `diagnostics_prune.py` | bounded maintenance | Prunes the disposable diagnostics trace store to its retention bound. |
 | `affected_tests.py` | supported test tool | Maps changed files to test groups for `make test-affected`; a rerun minimizer, never a gate. |
 | `seal_envelope.py` | bounded authoring tool | Seals one GatewayEnvelopeV2 from caller intent (WORKFLOWS §25c); reads the repo, writes nothing canonical. |
+| `capture_world.py` | supported contract tool | Captures one world (data, pins, observations, material inventory) for captured-world identity (SPEC §6). |
+| `compare_world.py` | supported gate | Compares two revisions against one captured world; exits 0 on identity, 1 on difference (SPEC §6). |
 
 The `materials_index/` package is private implementation for
 `build_materials_index.py`.  The `learning_os/` package structure and allowed
