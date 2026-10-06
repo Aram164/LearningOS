@@ -7,9 +7,9 @@
   "revisions_changed": {},
   "session_ledger_changed": null,
   "stderr": "",
-  "stdout": "{\"ok\": false, \"error\": \"unknown collection: nope\"}\n",
+  "stdout": "{\"ok\": false, \"error\": \"collection entry revision requires explicit approval\"}\n",
   "stdout_json": {
-    "error": "unknown collection: nope",
+    "error": "collection entry revision requires explicit approval",
     "ok": false
   }
 }

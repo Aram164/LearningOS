@@ -65,7 +65,7 @@ cases:
   - id: direct-cli-refused
     kind: refusal
     transport: cli
-    argv: [collection-entry-revise, --record, '{"collection": "nope", "source": "source-demo-book", "why": "x"}']
+    argv: [collection-entry-revise, --record, '{"collection": "shelf", "source": "source-demo-book", "why": "x"}']
     expect: {site: null}
   - id: direct-cli-approved
     kind: refusal
