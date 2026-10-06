@@ -1,0 +1,63 @@
+#!/usr/bin/env python3
+"""Build a transcript fixture and print the shell preamble (SPEC §7.1, PLAN D11).
+
+Usage: los-fixture rich_world
+
+Prints ``export LOS_FX=… LOS_OBSERVATIONS=… TZ=…; cd …`` plus the ``los()``
+shell function; transcripts ``eval`` the output.
+"""
+
+from __future__ import annotations
+
+import os
+import shlex
+import sys
+import tempfile
+
+
+def _venv_python() -> None:
+    """Re-exec under the checkout's venv so third-party imports resolve."""
+    repo = os.environ.get("LOS_REPO")
+    if not repo:
+        return
+    venv = os.path.join(repo, ".venv")
+    venv_py = os.path.join(venv, "bin", "python")
+    if (os.path.exists(venv_py)
+            and os.path.realpath(sys.prefix) != os.path.realpath(venv)):
+        os.execv(venv_py, [venv_py, os.path.abspath(__file__), *sys.argv[1:]])
+
+
+_venv_python()
+
+
+def main(argv: list[str]) -> int:
+    if len(argv) not in (2, 3):
+        print("usage: los-fixture rich_world", file=sys.stderr)
+        return 2
+    repo = os.environ.get("LOS_REPO")
+    if not repo:
+        print("los-fixture: LOS_REPO is not set", file=sys.stderr)
+        return 2
+    fixture = argv[1]
+    seed = os.environ.get("TESTFILE") or (argv[2] if len(argv) > 2 else fixture)
+    sys.path.insert(0, os.path.join(repo, "tests"))
+    from scenario_harness import prepare_transcript_fixture
+
+    container = tempfile.mkdtemp(prefix="los-fx-")
+    try:
+        built = prepare_transcript_fixture(fixture, container, seed=seed)
+    except ValueError as exc:
+        print(f"los-fixture: {exc}", file=sys.stderr)
+        return 2
+    root = str(built["root"])
+    obs = str(built["observations"])
+    print(f"export LOS_FX={shlex.quote(root)}"
+          f" LOS_OBSERVATIONS={shlex.quote(obs)}"
+          f" TZ=Europe/Berlin; cd {shlex.quote(root)}")
+    print(f'los() {{ {repo}/.venv/bin/python'
+          f' {repo}/tools/los.py --root "$LOS_FX" "$@"; }}')
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main(sys.argv))

@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+"""Assert a file's presence or sha256 (SPEC §7.1, PLAN D11).
+
+Usage: los-assert-file PATH --sha256 HEX | --exists | --absent.
+Silent on success.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import os
+import sys
+
+
+def _venv_python() -> None:
+    """Re-exec under the checkout's venv so third-party imports resolve."""
+    repo = os.environ.get("LOS_REPO")
+    if not repo:
+        return
+    venv = os.path.join(repo, ".venv")
+    venv_py = os.path.join(venv, "bin", "python")
+    if (os.path.exists(venv_py)
+            and os.path.realpath(sys.prefix) != os.path.realpath(venv)):
+        os.execv(venv_py, [venv_py, os.path.abspath(__file__), *sys.argv[1:]])
+
+
+_venv_python()
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(prog="los-assert-file")
+    parser.add_argument("path")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--sha256")
+    group.add_argument("--exists", action="store_true")
+    group.add_argument("--absent", action="store_true")
+    args = parser.parse_args(argv)
+    if args.exists:
+        if os.path.exists(args.path):
+            return 0
+        print(f"los-assert-file: {args.path}: want present, is absent",
+              file=sys.stderr)
+        return 1
+    if args.absent:
+        if not os.path.lexists(args.path):
+            return 0
+        print(f"los-assert-file: {args.path}: want absent, is present",
+              file=sys.stderr)
+        return 1
+    try:
+        with open(args.path, "rb") as handle:
+            actual = hashlib.sha256(handle.read()).hexdigest()
+    except OSError:
+        print(f"los-assert-file: {args.path}: want sha256"
+              f" {args.sha256}, file is absent", file=sys.stderr)
+        return 1
+    if actual.lower() != args.sha256.lower():
+        print(f"los-assert-file: {args.path}: sha256 {actual},"
+              f" want {args.sha256}", file=sys.stderr)
+        return 1
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
