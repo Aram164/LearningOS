@@ -161,6 +161,7 @@ repository/
 │   ├── *.md               16 documents — indexed in system/contracts/normative-corpus.yaml
 │   ├── adr/               decision records — indexed in the same file
 │   ├── contracts/         machine-checked declarations — see contract-register.yaml
+│   ├── procedures/        executable procedure transcripts (PLAN D11)
 │   ├── schema/            stored-record schemas — fingerprinted by data-contract.yaml
 │   ├── skills/            agent procedures, one SKILL.md per skill
 │   └── templates/         authoring forms — deliberately outside the normative corpus

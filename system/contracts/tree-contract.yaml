@@ -59,6 +59,8 @@ directories:
         purpose: decision records — indexed in the same file
       - path: system/contracts
         purpose: machine-checked declarations — see contract-register.yaml
+      - path: system/procedures
+        purpose: "executable procedure transcripts (PLAN D11)"
       - path: system/schema
         purpose: stored-record schemas — fingerprinted by data-contract.yaml
       - path: system/skills

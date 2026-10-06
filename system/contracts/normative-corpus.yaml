@@ -159,6 +159,17 @@ documents:
       existing records, interpretation rather than stored truth; never a
       canonical writer.
 
+  # ---- executable procedure transcripts ------------------------------------
+
+  - path: system/procedures/end-a-session.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §22: seal a stage write,
+      refuse a stale note, review, commit, and verify the session ledger.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
