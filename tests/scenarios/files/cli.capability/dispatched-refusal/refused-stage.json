@@ -1,12 +1,12 @@
 {
   "approval": {
     "kind": "operator-approval",
-    "subject_sha256": "sha256:8b39fe6a24af2e87c6fc58cafad032b4216e54d45b48bbd7596f177ec4c94c84"
+    "subject_sha256": "sha256:eff3372c39486d2eefa2a7bee939c88fd15f38da243995ee488fc0a2dc00cb91"
   },
   "capability": "stage.progress.update",
   "channel": "operator",
   "expected_revisions": {},
-  "expected_snapshot": "sha256:ca871e510eedc8520fcd27698d5143be3384b3ce192b18364ec17c45ddef7b63",
+  "expected_snapshot": "sha256:a1f5b7e982c2422aa062ca45388337743ed3d47e16d7b161f7d1b656e948e400",
   "idempotency_key": "scenario-capability-refused",
   "payload": {
     "stage_id": "stage-nope",
