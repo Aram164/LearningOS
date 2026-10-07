@@ -78,6 +78,9 @@ def test_m01_bare_stage_result_refusal_matches_section_25c_quote(tmp_path: Path)
         "--result", "correct",
     )
     assert proc.returncode == 2, proc.stderr
+    assert not proc.stderr.startswith("usage: "), proc.stderr
+    assert ": error: " not in proc.stderr, proc.stderr
+    assert "direct CLI application is disabled" in proc.stderr, proc.stderr
     try:
         assert SECTION_25C_REFUSAL in proc.stderr
     except AssertionError:
@@ -105,6 +108,9 @@ def test_m02_bare_inbox_resolve_refusal_matches_section_25c_quote(tmp_path: Path
         "--routed-to", "note-demo",
     )
     assert proc.returncode == 2, proc.stderr
+    assert not proc.stderr.startswith("usage: "), proc.stderr
+    assert ": error: " not in proc.stderr, proc.stderr
+    assert "direct CLI application is disabled" in proc.stderr, proc.stderr
     try:
         assert SECTION_25C_REFUSAL in proc.stderr
     except AssertionError:
