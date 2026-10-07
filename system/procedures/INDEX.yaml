@@ -32,22 +32,22 @@ sections:
   - {doc: system/WORKFLOWS.md, heading: "## 14. Move or rename a note", class: procedure, transcript: system/procedures/move-rename-note.md}
   - {doc: system/WORKFLOWS.md, heading: "## 15. Deprecate or supersede", class: procedure, transcript: system/procedures/deprecate-supersede.md}
   - {doc: system/WORKFLOWS.md, heading: "## 16. Maintain a crosswalk", class: procedure, transcript: system/procedures/maintain-crosswalk.md}
-  - {doc: system/WORKFLOWS.md, heading: "## 17. Ingest a handwritten note", class: procedure}
+  - {doc: system/WORKFLOWS.md, heading: "## 17. Ingest a handwritten note", class: procedure, untranscribable: "needs the user's dropped photos/scans and faithful transcription of the user's own reasoning (human prerequisite); affected steps: move originals, transcribe"}
   - {doc: system/WORKFLOWS.md, heading: "## 18. Start a module", class: procedure, transcript: system/procedures/start-a-module.md}
-  - {doc: system/WORKFLOWS.md, heading: "## 19. Close a module", class: procedure}
+  - {doc: system/WORKFLOWS.md, heading: "## 19. Close a module", class: procedure, untranscribable: "NEEDS-DECISION: no notes_path satisfies both the learning-path schema and PATH-NOTE-OWNER; affected step: archive the module's path-owning workspaces"}
   - {doc: system/WORKFLOWS.md, heading: "## 20. Carry work across semesters", class: procedure, transcript: system/procedures/carry-across-semesters.md}
   - {doc: system/WORKFLOWS.md, heading: "## 21. Process the inbox", class: procedure, transcript: system/procedures/process-inbox.md}
   - {doc: system/WORKFLOWS.md, heading: "## 22. End a session", class: procedure, transcript: system/procedures/end-a-session.md}
-  - {doc: system/WORKFLOWS.md, heading: "## 23. Process a lecture", class: procedure}
-  - {doc: system/WORKFLOWS.md, heading: "## 24. Turn the semester", class: procedure}
+  - {doc: system/WORKFLOWS.md, heading: "## 23. Process a lecture", class: procedure, untranscribable: "needs real as-taught decks/recordings as scope authority plus the full plan-creation package; fixture has only the demo book; affected steps: materials-in, scope pass, package and preflight"}
+  - {doc: system/WORKFLOWS.md, heading: "## 24. Turn the semester", class: procedure, untranscribable: "composites workflow 19 (STOPPED) and a real term boundary with human Garden judgments and push; affected steps: close/carry fork, harvest, push"}
   - {doc: system/WORKFLOWS.md, heading: "## 25. The two-layer operating model (ADR-006)", class: rule}
   - {doc: system/WORKFLOWS.md, heading: "## 25a. Revise an existing plan", class: procedure, transcript: system/procedures/revise-an-existing-plan.md}
   - {doc: system/WORKFLOWS.md, heading: "## 25b. Save a batch of source analyses", class: procedure, transcript: system/procedures/save-a-batch-of-source-analyses.md}
   - {doc: system/WORKFLOWS.md, heading: "## 25c. Build a write envelope (GatewayEnvelopeV2)", class: procedure, transcript: system/procedures/build-write-envelope.md}
   - {doc: system/WORKFLOWS.md, heading: "## 26. Source routing and feedback", class: procedure, transcript: system/procedures/source-routing-and-feedback.md}
-  - {doc: system/WORKFLOWS.md, heading: "## 27. Promote a future Master's module", class: procedure}
+  - {doc: system/WORKFLOWS.md, heading: "## 27. Promote a future Master's module", class: procedure, untranscribable: "needs a future program that has actually begun, with confirmed modules and quarantined originals; affected steps: boundary entry, module selection, migration"}
   - {doc: system/WORKFLOWS.md, heading: "## 28. Read an operation (`los operations`)", class: procedure, transcript: system/procedures/read-an-operation.md}
-  - {doc: system/WORKFLOWS.md, heading: "## 29. Review a stage's material angle", class: procedure}
+  - {doc: system/WORKFLOWS.md, heading: "## 29. Review a stage's material angle", class: procedure, untranscribable: "rich_world's only study map is a legacy template the creation contract rejects and unit-demo-l02 has no map; affected step: unit-map-import --replace --check"}
   - {doc: system/WORKFLOWS.md, heading: "## 30. Review exact goal decisions together", class: procedure, transcript: system/procedures/review-exact-goal-decisions-together.md}
   - {doc: system/WORKFLOWS.md, heading: "## 31. Back up and restore", class: procedure, transcript: system/procedures/back-up-and-restore.md}
   - {doc: system/CLAUDE.md, heading: "## 2. Bootstrap order", class: procedure, transcript: system/procedures/bootstrap-order.md}
