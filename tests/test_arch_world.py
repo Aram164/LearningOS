@@ -204,6 +204,62 @@ def test_deleted_material_exits_two(world: dict, tmp_path: Path):
     assert rel in proc.stderr
 
 
+def _default_materials_dir() -> Path:
+    """The materials tree ``compare_world`` uses when ``--materials`` is omitted."""
+    proc = subprocess.run(
+        ["git", "rev-parse", "--show-toplevel"],
+        capture_output=True, text=True, timeout=60, env=_child_env(),
+        cwd=REPO_ROOT,
+    )
+    assert proc.returncode == 0, proc.stderr[-2000:]
+    toplevel = Path(proc.stdout.strip()).resolve()
+    return (toplevel.parent / "materials").resolve()
+
+
+def test_default_materials_compare_of_fixture_world_exits_two(
+        world: dict, tmp_path: Path):
+    """ND1 resolution: the verbatim default-``--materials`` run exits 2.
+
+    A ``rich_world`` references synthetic fixture bytes that the pair's real
+    materials tree cannot contain, so SPEC §6 step 3 aborts with
+    "materials differ". That exit 2 is correct tool behavior, not a failure;
+    the identity claim is proven by the own-materials variant below.
+    """
+    if not _default_materials_dir().is_dir():
+        pytest.skip("this checkout has no default <toplevel>/../materials tree")
+    tool = REPO_ROOT / "tools" / "compare_world.py"
+    # ``--materials`` is deliberately omitted (the default under test); only
+    # the work directory is pinned under tmp so pytest leaves no residue in
+    # the pair scratch.
+    proc = subprocess.run(
+        [sys.executable, str(tool), "--world", str(world["dir"]),
+         "--baseline", "HEAD", "--candidate", "HEAD",
+         "--work-dir", str(tmp_path / "runs")],
+        capture_output=True, text=True, timeout=600, env=_child_env(),
+        cwd=REPO_ROOT,
+    )
+    assert proc.returncode == 2, proc.stdout[-2000:]
+    assert "materials differ" in proc.stderr
+
+
+def test_own_materials_main_vs_head_compare_exits_zero(
+        world: dict, tmp_path: Path):
+    """ND1 resolution: main vs HEAD are identical under the world's own materials."""
+    main_sha = _git(REPO_ROOT, "rev-parse", "main^{commit}").stdout.strip()
+    head_sha = _git(REPO_ROOT, "rev-parse", "HEAD^{commit}").stdout.strip()
+    # The comparison is non-trivial only while main and HEAD differ (true on
+    # every arch branch; a checkout exactly at the main tip must revisit this).
+    assert main_sha != head_sha
+    proc = _compare(REPO_ROOT, world["dir"], "main", "HEAD",
+                    _materials_copy(world, tmp_path), tmp_path / "runs")
+    assert proc.returncode == 0, proc.stderr[-2000:]
+    report = json.loads(proc.stdout)
+    assert report["identical"] is True
+    assert report["differences"] == []
+    assert report["baseline"]["revision"] == main_sha
+    assert report["candidate"]["revision"] == head_sha
+
+
 def test_contract_version_bump_without_transition_exits_one(world: dict, tmp_path: Path):
     clone = _scratch_clone(tmp_path / "clone")
     baseline = _git(clone, "rev-parse", "HEAD").stdout.strip()
