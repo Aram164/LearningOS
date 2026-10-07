@@ -465,6 +465,16 @@ documents:
       startup order across discovery, bootstrap, guarded
       contexts, lookup, resume, and corpus consult.
 
+  - path: system/procedures/retrieval-behavior.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: operator-contract
+    summary: >-
+      Executable Scrut transcript of CLAUDE §7: answering
+      through the task-shaped reads across concepts, notes,
+      sources, modules, and coordination.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
