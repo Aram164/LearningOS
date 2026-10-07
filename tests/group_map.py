@@ -192,6 +192,7 @@ GROUPS: dict[str, list[str]] = {
         "test_hygiene.py",
         "test_improvements.py",
         "test_library_reconciliation.py",
+        "test_mismatches.py",
         "test_module_surface.py",
         "test_perimeter.py",
         "test_resource_integrity.py",
