@@ -249,16 +249,6 @@ documents:
       discovery, the open-question brief, one snapshot-pinned expansion,
       and the named-record, scan, and saved-reasoning reads.
 
-  - path: system/procedures/start-a-workspace.md
-    class: procedure
-    status: current
-    authority: binding
-    owner: workflows
-    summary: >-
-      Executable Scrut transcript of WORKFLOWS §1: open a workspace
-      skeleton with its required sections and move Next Action only
-      through its envelope.
-
   - path: system/procedures/create-durable-note.md
     class: procedure
     status: current
@@ -268,16 +258,6 @@ documents:
       Executable Scrut transcript of WORKFLOWS §3: search, revise,
       create with registered context, the question and single-analysis
       branches, and the reference refusal.
-
-  - path: system/procedures/add-a-concept.md
-    class: procedure
-    status: current
-    authority: binding
-    owner: workflows
-    summary: >-
-      Executable Scrut transcript of WORKFLOWS §4: search both
-      languages, register one concept with aliases and disambiguation,
-      and rebuild the index.
 
   - path: system/procedures/add-concept-relation.md
     class: procedure
@@ -319,16 +299,6 @@ documents:
       and its sitting deadline through their envelopes, with the
       status held and the views rebuilt.
 
-  - path: system/procedures/complete-archive-workspace.md
-    class: procedure
-    status: current
-    authority: binding
-    owner: workflows
-    summary: >-
-      Executable Scrut transcript of WORKFLOWS §11: durable note,
-      cleared dependency, completed status, and the byte-identical
-      dated-archive move.
-
   - path: system/procedures/generate-indexes-reports.md
     class: procedure
     status: current
@@ -348,24 +318,6 @@ documents:
       Executable Scrut transcript of WORKFLOWS §13: one approved note
       revision with its review date set and uncertainty preserved.
 
-  - path: system/procedures/move-rename-note.md
-    class: procedure
-    status: current
-    authority: binding
-    owner: workflows
-    summary: >-
-      Executable Scrut transcript of WORKFLOWS §14: the refused
-      filename-breaking rename and the validating directory move.
-
-  - path: system/procedures/deprecate-supersede.md
-    class: procedure
-    status: current
-    authority: binding
-    owner: workflows
-    summary: >-
-      Executable Scrut transcript of WORKFLOWS §15: one superseding
-      note, one replaced concept, and the generated reverse link.
-
   - path: system/procedures/maintain-crosswalk.md
     class: procedure
     status: current
@@ -374,36 +326,6 @@ documents:
     summary: >-
       Executable Scrut transcript of WORKFLOWS §16: narrative on the
       note, judgment on the source record, and the table warning.
-
-  - path: system/procedures/start-a-module.md
-    class: procedure
-    status: current
-    authority: binding
-    owner: workflows
-    summary: >-
-      Executable Scrut transcript of WORKFLOWS §18: verified
-      partition and registration, the start workspace, the wired
-      dependency, and the documented rebuild and validate.
-
-  - path: system/procedures/carry-across-semesters.md
-    class: procedure
-    status: current
-    authority: binding
-    owner: workflows
-    summary: >-
-      Executable Scrut transcript of WORKFLOWS §20: the successor
-      choice with its closing note, supersedes lineage, shared
-      links, and succession dependency.
-
-  - path: system/procedures/revise-an-existing-plan.md
-    class: procedure
-    status: current
-    authority: binding
-    owner: workflows
-    summary: >-
-      Executable Scrut transcript of WORKFLOWS §25a: the bounded
-      route patch from guarded read to applied envelope, the
-      lossless compaction, and the pinned structural-lane stops.
 
   - path: system/procedures/save-a-batch-of-source-analyses.md
     class: procedure
