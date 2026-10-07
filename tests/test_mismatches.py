@@ -77,8 +77,9 @@ def test_m01_bare_stage_result_refusal_matches_section_25c_quote(tmp_path: Path)
         "--activity", "exercise",
         "--result", "correct",
     )
+    assert proc.returncode == 2, proc.stderr
     try:
-        assert proc.returncode == 2 and SECTION_25C_REFUSAL in proc.stderr
+        assert SECTION_25C_REFUSAL in proc.stderr
     except AssertionError:
         pytest.xfail("M-01: bare stage-result refuses with its own first clause")
     pytest.fail(
@@ -103,8 +104,9 @@ def test_m02_bare_inbox_resolve_refusal_matches_section_25c_quote(tmp_path: Path
         "sha256:cff485a0c38476920bff529d70a47c19fddb0380750b9a0152521d7eb9b6c81d",
         "--routed-to", "note-demo",
     )
+    assert proc.returncode == 2, proc.stderr
     try:
-        assert proc.returncode == 2 and SECTION_25C_REFUSAL in proc.stderr
+        assert SECTION_25C_REFUSAL in proc.stderr
     except AssertionError:
         pytest.xfail("M-02: bare inbox-resolve refuses with its own first clause")
     pytest.fail(
@@ -149,6 +151,8 @@ def test_m03_wired_choice_removal_is_refused(tmp_path: Path):
         idempotency_key="mismatch-m03-wired-l01-remove",
     )
     doc = json.loads(proc.stdout)
+    assert proc.returncode in (0, 2), proc.stderr
+    assert (proc.returncode, doc["ok"]) in ((0, True), (2, False)), proc.stdout
     try:
         assert proc.returncode == 2 and doc["ok"] is False
     except AssertionError:
