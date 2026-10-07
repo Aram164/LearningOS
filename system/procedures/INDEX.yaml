@@ -10,7 +10,7 @@ schema: 1
 sections:
   - {doc: system/OPERATOR.md, heading: "## What binds, and what does not", class: rule}
   - {doc: system/OPERATOR.md, heading: "## What \"clean\" means", class: rule}
-  - {doc: system/OPERATOR.md, heading: "## Start here", class: procedure}
+  - {doc: system/OPERATOR.md, heading: "## Start here", class: procedure, transcript: system/procedures/start-here.md}
   - {doc: system/OPERATOR.md, heading: "## Product hierarchy", class: rule}
   - {doc: system/OPERATOR.md, heading: "## Hard boundaries", class: rule}
   - {doc: system/OPERATOR.md, heading: "## Unit workflow", class: procedure, transcript: system/procedures/unit-workflow.md}

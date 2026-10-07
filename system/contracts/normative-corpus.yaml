@@ -239,6 +239,16 @@ documents:
       closure: prepare and apply a shelving proposal, validate,
       regenerate, and close the session.
 
+  - path: system/procedures/start-here.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of OPERATOR's Start here: capability
+      discovery, the open-question brief, one snapshot-pinned expansion,
+      and the named-record, scan, and saved-reasoning reads.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
