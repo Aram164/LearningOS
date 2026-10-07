@@ -455,6 +455,16 @@ documents:
       drill from manifest to full verification, with the
       inside-root and tamper refusals.
 
+  - path: system/procedures/bootstrap-order.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: operator-contract
+    summary: >-
+      Executable Scrut transcript of CLAUDE §2: the agent
+      startup order across discovery, bootstrap, guarded
+      contexts, lookup, resume, and corpus consult.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
