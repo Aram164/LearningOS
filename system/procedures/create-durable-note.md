@@ -1,0 +1,291 @@
+---
+defaults:
+  environment:
+    TZ: Europe/Berlin
+---
+
+# Create or evolve a durable note (WORKFLOWS §3)
+
+Executable transcript of durable-note routing: search first, revise
+the existing note when it fits, otherwise create with a stable
+suffix-free id and registered concept, source, and workspace context.
+`reference` keeps its dedicated capability and is refused here; a
+learner's question goes through its own save; the shelving branch is
+the existing shelving transcript. `tests/test_procedures.py` runs it
+with Scrut; `<REPO>` comes from the `LOS_REPO` environment variable
+the test sets.
+
+## Build the fixture
+
+```scrut
+$ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H=$LOS_REPO/tests/procedure_helpers
+```
+
+## Search for an existing note with the same purpose
+
+```scrut
+$ los search demo --type note | $LOS_REPO/.venv/bin/python -c 'import json,sys; print(sorted(r["id"] for r in json.load(sys.stdin)))'
+['note-demo', 'note-demo-analysis']
+```
+
+## No note yet covers triangulation
+
+```scrut
+$ los search triangulation-memo --type note
+[]
+```
+
+## Stage the revised bytes for the existing note
+
+```scrut
+$ cat > "$TMPDIR/durable-revised.md" <<'EOF'
+> ---
+> id: note-demo
+> type: note
+> title: Demo note
+> created: 2026-07-16
+> role: synthesis
+> concepts: [concept-expected-value]
+> sources: [source-demo-book]
+> ---
+>
+> Body prose, revised with approval.
+> EOF
+```
+
+## Seal the revision with derived guards
+
+```scrut {output_stream: stderr}
+$ REV_SHA=$(sha256sum "$TMPDIR/durable-revised.md" | cut -d' ' -f1) && $H/los-seal --capability note.revise --payload "{\"note_id\": \"note-demo\", \"file\": \"$TMPDIR/durable-revised.md\", \"file_sha256\": \"sha256:$REV_SHA\"}" --key durable-revise-demo --request-id request-durable-revise-demo --guards auto --out "$TMPDIR/durable-revise.json"
+seal_envelope: guards auto: note-demo=0
+```
+
+## Submit the revision
+
+```scrut
+$ los capability note.revise --payload-file "$TMPDIR/durable-revise.json"
+{
+  "schema_version": 2,
+  "request_id": "request-durable-revise-demo",
+  "idempotency_key": "durable-revise-demo",
+  "capability": "note.revise",
+  "ok": true,
+  "replayed": false,
+  "transaction_id": "transaction-20261001-090000-001",
+  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
+  "snapshot_after": "sha256:57db69de1ff530ecb10104a1e00359de5f85dd8ee87a74464ebc3e4d2e4c9c32",
+  "result": {
+    "ok": true,
+    "note_id": "note-demo",
+    "path": "knowledge/notes/mathematics/note-demo.md",
+    "transaction_id": "transaction-20261001-090000-001",
+    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
+    "artifact_revisions": {
+      "note-demo": 1
+    },
+    "snapshot_after": "sha256:57db69de1ff530ecb10104a1e00359de5f85dd8ee87a74464ebc3e4d2e4c9c32",
+    "replayed": false
+  },
+  "error": null
+}
+```
+
+## The newest receipt names the capability
+
+```scrut
+$ $H/los-assert-receipt --last --capability note.revise
+```
+
+## The revision landed, identity stable
+
+```scrut
+$ $H/los-assert-file knowledge/notes/mathematics/note-demo.md --sha256 579edc9db14e8618bb50944c678ec7702756fc0ef5f0b06036c662001bebc3eb
+```
+
+## Stage the new note body
+
+```scrut
+$ cat > "$TMPDIR/durable-body.md" <<'EOF'
+> # Triangulation memo
+>
+> Three routes agree on the setup, but the middle step is still uncertain.
+> EOF
+```
+
+## Seal the creation with derived guards
+
+```scrut {output_stream: stderr}
+$ BODY_SHA=$(sha256sum "$TMPDIR/durable-body.md" | cut -d' ' -f1) && $H/los-seal --capability note.create --payload "{\"note\": {\"id\": \"note-triangulation-memo\", \"title\": \"Triangulation memo\", \"path\": \"knowledge/notes/mathematics/note-triangulation-memo.md\", \"concepts\": [\"concept-expected-value\"], \"sources\": [\"source-demo-book\"], \"contexts\": [\"workspace-demo\"]}, \"body_file\": \"$TMPDIR/durable-body.md\", \"body_file_sha256\": \"sha256:$BODY_SHA\"}" --key durable-create-memo --request-id request-durable-create-memo --guards auto --out "$TMPDIR/durable-create.json"
+seal_envelope: guards auto: note-triangulation-memo=0
+```
+
+## Submit the creation
+
+```scrut
+$ los capability note.create --payload-file "$TMPDIR/durable-create.json"
+{
+  "schema_version": 2,
+  "request_id": "request-durable-create-memo",
+  "idempotency_key": "durable-create-memo",
+  "capability": "note.create",
+  "ok": true,
+  "replayed": false,
+  "transaction_id": "transaction-20261001-090000-002",
+  "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
+  "snapshot_after": "sha256:ae106cf04ebc57ab524d8d2e151b4aeef56c6cba47238df503dadcf933aba797",
+  "result": {
+    "ok": true,
+    "note_id": "note-triangulation-memo",
+    "note_path": "knowledge/notes/mathematics/note-triangulation-memo.md",
+    "deprecated": [],
+    "transaction_id": "transaction-20261001-090000-002",
+    "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
+    "artifact_revisions": {
+      "note-triangulation-memo": 1
+    },
+    "snapshot_after": "sha256:ae106cf04ebc57ab524d8d2e151b4aeef56c6cba47238df503dadcf933aba797",
+    "replayed": false
+  },
+  "error": null
+}
+```
+
+## The newest receipt names the capability
+
+```scrut
+$ $H/los-assert-receipt --last --capability note.create
+```
+
+## The note landed under its id
+
+```scrut
+$ $H/los-assert-file knowledge/notes/mathematics/note-triangulation-memo.md --sha256 9d5801aa6fa163553ccbccac9e4e8e304ca3e499313fd7e5e34ee30ddd935c26
+```
+
+## Reference keeps its dedicated capability
+
+```scrut {output_stream: stderr}
+$ BODY_SHA=$(sha256sum "$TMPDIR/durable-body.md" | cut -d' ' -f1) && $H/los-seal --capability note.create --payload "{\"note\": {\"id\": \"note-triangulation-ref\", \"title\": \"Triangulation ref\", \"path\": \"knowledge/notes/mathematics/note-triangulation-ref.md\", \"role\": \"reference\"}, \"body_file\": \"$TMPDIR/durable-body.md\", \"body_file_sha256\": \"sha256:$BODY_SHA\"}" --key durable-create-ref --request-id request-durable-create-ref --guards auto --out "$TMPDIR/durable-ref.json"
+seal_envelope: role 'reference' keeps its dedicated capability; use note.analysis.save; fix the payload and seal again
+[2]
+```
+
+## A learner question goes through its own save
+
+```scrut {output_stream: stderr}
+$ $H/los-seal --capability atlas.question.save --payload '{"question": {"id": "note-variance-order", "title": "Does variance need expectation first?", "text": "The registry says variance builds on expectation. What breaks if the order flips?", "target": {"concepts": ["concept-variance"]}}}' --key durable-question --request-id request-durable-question --guards auto --out "$TMPDIR/durable-question.json"
+seal_envelope: guards auto: note-variance-order=0
+```
+
+## Submit the question
+
+```scrut
+$ los capability atlas.question.save --payload-file "$TMPDIR/durable-question.json"
+{
+  "schema_version": 2,
+  "request_id": "request-durable-question",
+  "idempotency_key": "durable-question",
+  "capability": "atlas.question.save",
+  "ok": true,
+  "replayed": false,
+  "transaction_id": "transaction-20261001-090000-003",
+  "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
+  "snapshot_after": "sha256:72f3b3af53d77a34fe9c148d977efa9d50f43acb2425c144f169090d71bba500",
+  "result": {
+    "ok": true,
+    "note_id": "note-variance-order",
+    "note_path": "knowledge/notes/questions/note-variance-order.md",
+    "transaction_id": "transaction-20261001-090000-003",
+    "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
+    "artifact_revisions": {
+      "note-variance-order": 1
+    },
+    "snapshot_after": "sha256:72f3b3af53d77a34fe9c148d977efa9d50f43acb2425c144f169090d71bba500",
+    "replayed": false
+  },
+  "error": null
+}
+```
+
+## The newest receipt names the capability
+
+```scrut
+$ $H/los-assert-receipt --last --capability atlas.question.save
+```
+
+## The question landed as its own note
+
+```scrut
+$ $H/los-assert-file knowledge/notes/questions/note-variance-order.md --sha256 859bb57f24d7ed25d9b048fa150309c7edfb1f02e93e902f0b83ec8708734064
+```
+
+## Stage one source analysis body
+
+```scrut
+$ cat > "$TMPDIR/durable-analysis-body.md" <<'EOF'
+> # Deck analysis
+>
+> The deck introduces the setup on pages one to three.
+> EOF
+```
+
+## Seal the single analysis with derived guards
+
+```scrut {output_stream: stderr}
+$ ABODY_SHA=$(sha256sum "$TMPDIR/durable-analysis-body.md" | cut -d' ' -f1) && ABODY_BYTES=$(wc -c < "$TMPDIR/durable-analysis-body.md" | tr -d ' ') && $H/los-seal --capability note.analysis.save --payload "{\"analysis\": {\"id\": \"note-deck-analysis\", \"title\": \"Deck analysis\", \"path\": \"knowledge/notes/mathematics/note-deck-analysis.md\", \"binding\": {\"resolution\": \"unresolved\", \"material\": \"demo/deck.pdf\", \"recorded_source_digest\": \"abababababababababababababababababababababababababababababababab\", \"inspected_range\": {\"start\": 1, \"end\": 3}, \"frozen_input_sha256\": \"$ABODY_SHA\", \"frozen_input_bytes\": $ABODY_BYTES}}, \"body_file\": \"$TMPDIR/durable-analysis-body.md\", \"body_file_sha256\": \"sha256:$ABODY_SHA\"}" --key durable-analysis --request-id request-durable-analysis --guards auto --out "$TMPDIR/durable-analysis.json"
+seal_envelope: guards auto: note-deck-analysis=0
+```
+
+## Submit the analysis
+
+```scrut
+$ los capability note.analysis.save --payload-file "$TMPDIR/durable-analysis.json"
+{
+  "schema_version": 2,
+  "request_id": "request-durable-analysis",
+  "idempotency_key": "durable-analysis",
+  "capability": "note.analysis.save",
+  "ok": true,
+  "replayed": false,
+  "transaction_id": "transaction-20261001-090000-004",
+  "receipt_path": "operations/transactions/transaction-20261001-090000-004.yaml",
+  "snapshot_after": "sha256:85394863cb96384c461fefa30d2f46838660b235054dcc4b7603ad8c349edff3",
+  "result": {
+    "ok": true,
+    "replayed": false,
+    "note_id": "note-deck-analysis",
+    "note_path": "knowledge/notes/mathematics/note-deck-analysis.md",
+    "transaction_id": "transaction-20261001-090000-004",
+    "receipt_path": "operations/transactions/transaction-20261001-090000-004.yaml",
+    "artifact_revisions": {
+      "note-deck-analysis": 1
+    },
+    "snapshot_after": "sha256:85394863cb96384c461fefa30d2f46838660b235054dcc4b7603ad8c349edff3"
+  },
+  "error": null
+}
+```
+
+## The newest receipt names the capability
+
+```scrut
+$ $H/los-assert-receipt --last --capability note.analysis.save
+```
+
+## The analysis landed as a reference note
+
+```scrut
+$ $H/los-assert-file knowledge/notes/mathematics/note-deck-analysis.md --sha256 37714a7eb7c58ed9b7509ed71f276e5ac3f81e446691435f5d9d59ca5610f1e4
+```
+
+## Validate, then rebuild generated outputs
+
+```scrut
+$ los validate | tail -n 1
+0 error(s), 9 warning(s) — OK
+```
+
+```scrut
+$ los generate
+published generated/manifest.json (atomic contract snapshot)
+```

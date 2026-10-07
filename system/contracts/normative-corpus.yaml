@@ -259,6 +259,16 @@ documents:
       skeleton with its required sections and move Next Action only
       through its envelope.
 
+  - path: system/procedures/create-durable-note.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §3: search, revise,
+      create with registered context, the question and single-analysis
+      branches, and the reference refusal.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
