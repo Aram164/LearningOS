@@ -309,6 +309,16 @@ documents:
       diff and apply the reviewed text with its content digest,
       refusing a stale one.
 
+  - path: system/procedures/record-module-event.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §10: one sat attempt
+      and its sitting deadline through their envelopes, with the
+      status held and the views rebuilt.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
