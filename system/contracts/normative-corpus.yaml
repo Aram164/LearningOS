@@ -357,6 +357,15 @@ documents:
       Executable Scrut transcript of WORKFLOWS §14: the refused
       filename-breaking rename and the validating directory move.
 
+  - path: system/procedures/deprecate-supersede.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §15: one superseding
+      note, one replaced concept, and the generated reverse link.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
