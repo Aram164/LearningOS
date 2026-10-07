@@ -339,6 +339,15 @@ documents:
       command, its products, their provenance marks, and the absent
       validation report.
 
+  - path: system/procedures/review-a-note.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §13: one approved note
+      revision with its review date set and uncertainty preserved.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
