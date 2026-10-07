@@ -279,6 +279,16 @@ documents:
       languages, register one concept with aliases and disambiguation,
       and rebuild the index.
 
+  - path: system/procedures/add-concept-relation.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §5: confirm both
+      endpoints, add the narrowest edge with context and citation,
+      and refuse the duplicate.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
