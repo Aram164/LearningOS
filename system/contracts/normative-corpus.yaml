@@ -348,6 +348,15 @@ documents:
       Executable Scrut transcript of WORKFLOWS §13: one approved note
       revision with its review date set and uncertainty preserved.
 
+  - path: system/procedures/move-rename-note.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §14: the refused
+      filename-breaking rename and the validating directory move.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so

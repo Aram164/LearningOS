@@ -353,7 +353,7 @@ $ cat > sources/collections/probe-bad.yaml <<'EOF'
 ```
 
 ```scrut
-$ set -o pipefail; los validate | tail -n 1
+$ (set -o pipefail; los validate | tail -n 1)
 1 error(s), 10 warning(s) — FAIL
 [1]
 ```
