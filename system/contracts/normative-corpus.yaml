@@ -415,6 +415,16 @@ documents:
       file from observed bytes to submitted envelope, with stale,
       tamper, and live-bytes refusals.
 
+  - path: system/procedures/source-routing-and-feedback.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §26: the stage
+      feedback judgment from bare refusal to committed receipt,
+      staying on its stage.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
