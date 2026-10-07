@@ -395,6 +395,16 @@ documents:
       choice with its closing note, supersedes lineage, shared
       links, and succession dependency.
 
+  - path: system/procedures/revise-an-existing-plan.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §25a: the bounded
+      route patch from guarded read to applied envelope, the
+      lossless compaction, and the pinned structural-lane stops.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so

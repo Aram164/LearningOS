@@ -41,7 +41,7 @@ sections:
   - {doc: system/WORKFLOWS.md, heading: "## 23. Process a lecture", class: procedure}
   - {doc: system/WORKFLOWS.md, heading: "## 24. Turn the semester", class: procedure}
   - {doc: system/WORKFLOWS.md, heading: "## 25. The two-layer operating model (ADR-006)", class: rule}
-  - {doc: system/WORKFLOWS.md, heading: "## 25a. Revise an existing plan", class: procedure}
+  - {doc: system/WORKFLOWS.md, heading: "## 25a. Revise an existing plan", class: procedure, transcript: system/procedures/revise-an-existing-plan.md}
   - {doc: system/WORKFLOWS.md, heading: "## 25b. Save a batch of source analyses", class: procedure}
   - {doc: system/WORKFLOWS.md, heading: "## 25c. Build a write envelope (GatewayEnvelopeV2)", class: procedure, transcript: system/procedures/build-write-envelope.md}
   - {doc: system/WORKFLOWS.md, heading: "## 26. Source routing and feedback", class: procedure}
