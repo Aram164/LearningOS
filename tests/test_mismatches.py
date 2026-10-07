@@ -45,6 +45,21 @@ MISMATCH_CHECKS: dict[str, dict[str, str]] = {
         "case": "The wired removal commits (M-03)",
         "claim": "Removing a choice already wired into a study path is refused.",
     },
+    "M-04": {
+        "transcript": "generate-indexes-reports.md",
+        "case": "The validation report is not among the products (M-04)",
+        "claim": "One documented command produces, from canonical inputs only: validation report.",
+    },
+    "M-05": {
+        "transcript": "move-rename-note.md",
+        "case": "A rename that breaks the filename-id match fails validation (M-05)",
+        "claim": "Move or rename a note: preserve the ID; path changes never alter identity.",
+    },
+    "M-06": {
+        "transcript": "complete-archive-workspace.md",
+        "case": "A path-owning workspace cannot move unchanged (M-06)",
+        "claim": "move to archive/workspaces/<year>/<workspace-id>/ unchanged.",
+    },
 }
 
 #: The §25c-quoted refusal text for the bare-mutating-command class.
@@ -165,5 +180,84 @@ def test_m03_wired_choice_removal_is_refused(tmp_path: Path):
         pytest.xfail("M-03: wired removal commits; the guard keys on unpopulated stage_ids")
     pytest.fail(
         "M-03 resolved unexpectedly: remove via formal resolution "
+        "(Aram decision + fix session)"
+    )
+
+
+def test_m04_generate_writes_the_listed_validation_report(tmp_path: Path):
+    """M-04 — generate-indexes-reports.md — The validation report is not among the products (M-04).
+
+    Documented claim: One documented command produces, from canonical
+    inputs only: validation report.
+    """
+    root = _transcript_world(tmp_path)
+    report = root / "generated" / "reports" / "validation-report.md"
+    assert not report.is_file()
+    proc = run_los(root, "generate")
+    assert proc.returncode == 0, proc.stderr
+    assert (root / "generated" / "manifest.json").is_file()
+    try:
+        assert report.is_file()
+    except AssertionError:
+        pytest.xfail(
+            "M-04: generate publishes the manifest but not the listed "
+            "validation report"
+        )
+    pytest.fail(
+        "M-04 resolved unexpectedly: remove via formal resolution "
+        "(Aram decision + fix session)"
+    )
+
+
+def test_m05_id_preserving_rename_validates(tmp_path: Path):
+    """M-05 — move-rename-note.md — A rename that breaks the filename-id match fails validation (M-05).
+
+    Documented claim: Move or rename a note: preserve the ID; path
+    changes never alter identity.
+    """
+    root = _transcript_world(tmp_path)
+    src = root / "knowledge" / "notes" / "mathematics" / "note-demo-analysis.md"
+    dst = src.with_name("note-variance-analysis.md")
+    src.rename(dst)
+    assert dst.is_file()
+    assert not src.exists()
+    proc = run_los(root, "validate")
+    assert proc.returncode in (0, 1), proc.stderr
+    try:
+        assert proc.returncode == 0, proc.stdout
+    except AssertionError:
+        pytest.xfail("M-05: id-preserving rename fails validation (FILE-NAME)")
+    pytest.fail(
+        "M-05 resolved unexpectedly: remove via formal resolution "
+        "(Aram decision + fix session)"
+    )
+
+
+def test_m06_path_owning_workspace_moves_unchanged(tmp_path: Path):
+    """M-06 — complete-archive-workspace.md — A path-owning workspace cannot move unchanged (M-06).
+
+    Documented claim: move to archive/workspaces/<year>/<workspace-id>/
+    unchanged.
+    """
+    import shutil
+
+    root = _transcript_world(tmp_path)
+    src = root / "work" / "active" / "workspace-demo"
+    dst = root / "archive" / "workspaces" / "2026" / "workspace-demo"
+    dst.parent.mkdir(parents=True)
+    shutil.move(str(src), str(dst))
+    assert (dst / "CONTEXT.md").is_file()
+    assert not src.exists()
+    proc = run_los(root, "validate")
+    assert proc.returncode in (0, 1), proc.stderr
+    try:
+        assert proc.returncode == 0, proc.stdout
+    except AssertionError:
+        pytest.xfail(
+            "M-06: unchanged archive of a path-owning workspace fails "
+            "validation (PATH-NOTE-OWNER)"
+        )
+    pytest.fail(
+        "M-06 resolved unexpectedly: remove via formal resolution "
         "(Aram decision + fix session)"
     )

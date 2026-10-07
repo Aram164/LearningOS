@@ -12,6 +12,8 @@ dependency that names the workspace is set up and then cleared from
 coordination, the status flips to complete, validation and rebuild
 pass, and the workspace moves to the dated archive byte-identical.
 No new evaluations are warranted, and the workspace is not standing.
+A path-owning workspace cannot move unchanged: both the unchanged
+move and the repaired pointer fail validation (see M-06).
 `tests/test_procedures.py` runs it with Scrut; `<REPO>` comes from
 the `LOS_REPO` environment variable the test sets.
 
@@ -51,7 +53,7 @@ $ los capability note.create --payload-file "$TMPDIR/archive-note.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:b8f8e7af3ebbd44b6be76c28a7560221a242b514198c689b714e8f32594efb4d",
+  "snapshot_after": "sha256:b1c5dbaf093eaeffd59c580c9bed9c8bd66208928146c9467c31fe0d698b0625",
   "result": {
     "ok": true,
     "note_id": "note-second-closure",
@@ -62,7 +64,7 @@ $ los capability note.create --payload-file "$TMPDIR/archive-note.json"
     "artifact_revisions": {
       "note-second-closure": 1
     },
-    "snapshot_after": "sha256:b8f8e7af3ebbd44b6be76c28a7560221a242b514198c689b714e8f32594efb4d",
+    "snapshot_after": "sha256:b1c5dbaf093eaeffd59c580c9bed9c8bd66208928146c9467c31fe0d698b0625",
     "replayed": false
   },
   "error": null
@@ -125,7 +127,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/archive-dep
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:1aa12299b7007ad7037795a31eddd252a15cf0ed2c0acb5424740ab818ac6509",
+  "snapshot_after": "sha256:36bbda01f43b1bc606e2ad87b8d09f3d47be7be2569469291823a32768bc12f8",
   "result": {
     "ok": true,
     "section": "Dependencies",
@@ -134,7 +136,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/archive-dep
     "artifact_revisions": {
       "coordination": 1
     },
-    "snapshot_after": "sha256:1aa12299b7007ad7037795a31eddd252a15cf0ed2c0acb5424740ab818ac6509",
+    "snapshot_after": "sha256:36bbda01f43b1bc606e2ad87b8d09f3d47be7be2569469291823a32768bc12f8",
     "replayed": false
   },
   "error": null
@@ -170,7 +172,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/archive-dep
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:f1161eb00faa0572c9b0ea921e582ed202d7f4095e06b39c81a29f8c5b48cfbe",
+  "snapshot_after": "sha256:e4df58a66e3753d9a246baa9bd4eaa84cdf0dda1e9f140e1be6aecf8cd333789",
   "result": {
     "ok": true,
     "section": "Dependencies",
@@ -179,7 +181,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/archive-dep
     "artifact_revisions": {
       "coordination": 2
     },
-    "snapshot_after": "sha256:f1161eb00faa0572c9b0ea921e582ed202d7f4095e06b39c81a29f8c5b48cfbe",
+    "snapshot_after": "sha256:e4df58a66e3753d9a246baa9bd4eaa84cdf0dda1e9f140e1be6aecf8cd333789",
     "replayed": false
   },
   "error": null
@@ -243,4 +245,49 @@ $ $H/los-assert-file archive/workspaces/2026/workspace-second/CONTEXT.md --sha25
 
 ```scrut
 $ $H/los-assert-file work/active/workspace-second --absent
+```
+
+## A path-owning workspace cannot move unchanged (M-06)
+
+```scrut
+$ mv work/active/workspace-demo archive/workspaces/2026/workspace-demo && $H/los-assert-file archive/workspaces/2026/workspace-demo/CONTEXT.md --sha256 f7f0a5ad8934e7a2f86c1c91f304954bf07c58899aa0c98d98394076097a3422
+```
+
+```scrut
+$ (set -o pipefail; los validate | tail -n 1)
+1 error(s), 10 warning(s) — FAIL
+[1]
+```
+
+```scrut
+$ los validate | grep -c "PATH-NOTE-OWNER"
+1
+```
+
+## The repaired pointer fails the schema instead
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import yaml; p = "archive/workspaces/2026/workspace-demo/paths/path-demo.yaml"; d = yaml.safe_load(open(p)); [s.update({"notes_path": s["notes_path"].replace("work/active/workspace-demo", "archive/workspaces/2026/workspace-demo")}) for s in d["stages"] if s.get("notes_path")]; open(p, "w").write(yaml.safe_dump(d, sort_keys=False))'
+```
+
+```scrut
+$ (set -o pipefail; los validate | tail -n 1)
+1 error(s), 10 warning(s) — FAIL
+[1]
+```
+
+```scrut
+$ los validate | grep -c "SCHEMA"
+1
+```
+
+## Restore the path-owning workspace
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import yaml; p = "archive/workspaces/2026/workspace-demo/paths/path-demo.yaml"; d = yaml.safe_load(open(p)); [s.update({"notes_path": s["notes_path"].replace("archive/workspaces/2026/workspace-demo", "work/active/workspace-demo")}) for s in d["stages"] if s.get("notes_path")]; open(p, "w").write(yaml.safe_dump(d, sort_keys=False))' && mv archive/workspaces/2026/workspace-demo work/active/workspace-demo
+```
+
+```scrut
+$ los validate | tail -n 1
+0 error(s), 10 warning(s) — OK
 ```
