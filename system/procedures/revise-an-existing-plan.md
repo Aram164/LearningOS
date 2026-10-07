@@ -25,7 +25,7 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ```scrut
 $ los plan-edit-context unit-demo-l01 --route-id route-b2f1f80014860a929a3af0bc
-{"schema_version":1,"snapshot_id":"sha256:fbfc72c8f5d2cf47382eed134b76a0d3033178512c64206221aebe108764538b","contract":"plan-edit-context","unit_id":"unit-demo-l01","module_id":"module-demo","artifact_revisions":{"module-demo":0,"study-map-demo-l01":0,"unit-demo-l01":3},"preflight":"route-patch UNIT_ID ROUTE_ID --changes JSON --check returns exact write guards","route":{"unit_id":"unit-demo-l01","id":"route-b2f1f80014860a929a3af0bc","title":"Demo book — expected-value derivation","format":"book","angle":"Derives the weighted sum and works a discrete example.","covers":["knowledge-demo-outcomes","knowledge-demo-expectation"],"depth":"derivation","scope":"current","locator":"lecture-01.pdf","source_id":"source-demo-book"},"uses":[{"stage_id":"stage-demo","resource_index":3,"scope_triage":null,"overrides":{}}],"patch_fields":["angle","angle_detail","locator","title","url","vault_path"],"patch_capability":"route.patch"}
+{"schema_version":1,"snapshot_id":"sha256:a1f5b7e982c2422aa062ca45388337743ed3d47e16d7b161f7d1b656e948e400","contract":"plan-edit-context","unit_id":"unit-demo-l01","module_id":"module-demo","artifact_revisions":{"module-demo":0,"study-map-demo-l01":0,"unit-demo-l01":3},"preflight":"route-patch UNIT_ID ROUTE_ID --changes JSON --check returns exact write guards","route":{"unit_id":"unit-demo-l01","id":"route-b2f1f80014860a929a3af0bc","title":"Demo book — expected-value derivation","format":"book","angle":"Derives the weighted sum and works a discrete example.","covers":["knowledge-demo-outcomes","knowledge-demo-expectation"],"depth":"derivation","scope":"current","locator":"lecture-01.pdf","source_id":"source-demo-book"},"uses":[{"stage_id":"stage-demo","resource_index":3,"scope_triage":null,"overrides":{}}],"patch_fields":["angle","angle_detail","locator","title","url","vault_path"],"patch_capability":"route.patch"}
 ```
 
 ## The unit brief names the route when the id is unknown
@@ -41,7 +41,7 @@ plan-edit-context-brief unit-demo-l01
 
 ```scrut
 $ los plan-edit-context unit-demo-l01 --route-ids route-b2f1f80014860a929a3af0bc
-{"schema_version":1,"snapshot_id":"sha256:fbfc72c8f5d2cf47382eed134b76a0d3033178512c64206221aebe108764538b","contract":"plan-edit-context-batch","unit_id":"unit-demo-l01","module_id":"module-demo","artifact_revisions":{"module-demo":0,"study-map-demo-l01":0,"unit-demo-l01":3},"preflight":"route-patch UNIT_ID ROUTE_ID --changes JSON --check returns exact write guards","requested_route_ids":["route-b2f1f80014860a929a3af0bc"],"routes":[{"route":{"unit_id":"unit-demo-l01","id":"route-b2f1f80014860a929a3af0bc","title":"Demo book — expected-value derivation","format":"book","angle":"Derives the weighted sum and works a discrete example.","covers":["knowledge-demo-outcomes","knowledge-demo-expectation"],"depth":"derivation","scope":"current","locator":"lecture-01.pdf","source_id":"source-demo-book"},"uses":[{"stage_id":"stage-demo","resource_index":3,"scope_triage":null,"overrides":{}}],"patch_fields":["angle","angle_detail","locator","title","url","vault_path"],"patch_capability":"route.patch"}]}
+{"schema_version":1,"snapshot_id":"sha256:a1f5b7e982c2422aa062ca45388337743ed3d47e16d7b161f7d1b656e948e400","contract":"plan-edit-context-batch","unit_id":"unit-demo-l01","module_id":"module-demo","artifact_revisions":{"module-demo":0,"study-map-demo-l01":0,"unit-demo-l01":3},"preflight":"route-patch UNIT_ID ROUTE_ID --changes JSON --check returns exact write guards","requested_route_ids":["route-b2f1f80014860a929a3af0bc"],"routes":[{"route":{"unit_id":"unit-demo-l01","id":"route-b2f1f80014860a929a3af0bc","title":"Demo book — expected-value derivation","format":"book","angle":"Derives the weighted sum and works a discrete example.","covers":["knowledge-demo-outcomes","knowledge-demo-expectation"],"depth":"derivation","scope":"current","locator":"lecture-01.pdf","source_id":"source-demo-book"},"uses":[{"stage_id":"stage-demo","resource_index":3,"scope_triage":null,"overrides":{}}],"patch_fields":["angle","angle_detail","locator","title","url","vault_path"],"patch_capability":"route.patch"}]}
 ```
 
 ## The batch refuses atomically on an unknown id
@@ -56,7 +56,7 @@ los: route route-missing is missing or ambiguous in this unit
 
 ```scrut
 $ los route-patch unit-demo-l01 route-b2f1f80014860a929a3af0bc --changes '{"angle": "Derives the weighted sum with a worked discrete example for revision."}' --check
-{"schema_version":1,"snapshot_id":"sha256:fbfc72c8f5d2cf47382eed134b76a0d3033178512c64206221aebe108764538b","unit_id":"unit-demo-l01","route_id":"route-b2f1f80014860a929a3af0bc","changes":{"angle":{"before":"Derives the weighted sum and works a discrete example.","after":"Derives the weighted sum with a worked discrete example for revision."}},"plan_sha256":"sha256:9a1a49f78a445a973197d2806b22e9d3369bc095584c7953a72c8ed7e18fbca5","affected_files":["curriculum/modules/module-demo/source-map.yaml","curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"],"artifact_ids":["module-demo","study-map-demo-l01","unit-demo-l01"],"expected_revisions":{"module-demo":0,"study-map-demo-l01":0,"unit-demo-l01":3},"ok":true,"check":true,"canonical_files_written":0,"next":{"apply_via":"GatewayEnvelopeV2","capability":"route.patch","payload":{"unit_id":"unit-demo-l01","route_id":"route-b2f1f80014860a929a3af0bc","changes":{"angle":"Derives the weighted sum with a worked discrete example for revision."}},"expected_snapshot":"sha256:fbfc72c8f5d2cf47382eed134b76a0d3033178512c64206221aebe108764538b","expected_revisions":{"module-demo":0,"study-map-demo-l01":0,"unit-demo-l01":3},"apply_how":"direct CLI application is disabled; submit a GatewayEnvelopeV2 with this capability, payload, expected_snapshot and expected_revisions"}}
+{"schema_version":1,"snapshot_id":"sha256:a1f5b7e982c2422aa062ca45388337743ed3d47e16d7b161f7d1b656e948e400","unit_id":"unit-demo-l01","route_id":"route-b2f1f80014860a929a3af0bc","changes":{"angle":{"before":"Derives the weighted sum and works a discrete example.","after":"Derives the weighted sum with a worked discrete example for revision."}},"plan_sha256":"sha256:9a1a49f78a445a973197d2806b22e9d3369bc095584c7953a72c8ed7e18fbca5","affected_files":["curriculum/modules/module-demo/source-map.yaml","curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"],"artifact_ids":["module-demo","study-map-demo-l01","unit-demo-l01"],"expected_revisions":{"module-demo":0,"study-map-demo-l01":0,"unit-demo-l01":3},"ok":true,"check":true,"canonical_files_written":0,"next":{"apply_via":"GatewayEnvelopeV2","capability":"route.patch","payload":{"unit_id":"unit-demo-l01","route_id":"route-b2f1f80014860a929a3af0bc","changes":{"angle":"Derives the weighted sum with a worked discrete example for revision."}},"expected_snapshot":"sha256:a1f5b7e982c2422aa062ca45388337743ed3d47e16d7b161f7d1b656e948e400","expected_revisions":{"module-demo":0,"study-map-demo-l01":0,"unit-demo-l01":3},"apply_how":"direct CLI application is disabled; submit a GatewayEnvelopeV2 with this capability, payload, expected_snapshot and expected_revisions"}}
 ```
 
 ## The bare CLI prefights and nothing more
@@ -96,7 +96,7 @@ $ los capability route.patch --payload-file "$TMPDIR/route-revise.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:368f623ee146d3aae4811979e77f9d165ee455ee571c068c3e8914fe372b4ae4",
+  "snapshot_after": "sha256:8cbf19d631a666610a19426d6fca5efb5c3932373f06ef130e733f560d311f3e",
   "result": {
     "schema_version": 1,
     "unit_id": "unit-demo-l01",
@@ -130,7 +130,7 @@ $ los capability route.patch --payload-file "$TMPDIR/route-revise.json"
       "study-map-demo-l01": 1,
       "unit-demo-l01": 4
     },
-    "snapshot_after": "sha256:368f623ee146d3aae4811979e77f9d165ee455ee571c068c3e8914fe372b4ae4",
+    "snapshot_after": "sha256:8cbf19d631a666610a19426d6fca5efb5c3932373f06ef130e733f560d311f3e",
     "replayed": false
   },
   "error": null
@@ -162,7 +162,7 @@ Derives the weighted sum with a worked discrete example for revision.
 
 ```scrut
 $ los module-materials-compact module-demo --check
-{"schema_version":1,"snapshot_id":"sha256:368f623ee146d3aae4811979e77f9d165ee455ee571c068c3e8914fe372b4ae4","module_id":"module-demo","map_bytes_saved":50,"referenced_routes":1,"plan_sha256":"sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93","affected_files":["curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"],"artifact_ids":["module-demo","study-map-demo-l01","unit-demo-l01"],"expected_revisions":{"module-demo":1,"study-map-demo-l01":1,"unit-demo-l01":4},"ok":true,"check":true,"canonical_files_written":0}
+{"schema_version":1,"snapshot_id":"sha256:8cbf19d631a666610a19426d6fca5efb5c3932373f06ef130e733f560d311f3e","module_id":"module-demo","map_bytes_saved":50,"referenced_routes":1,"plan_sha256":"sha256:74fb4986cb287354311feea050fcdc0b8940c9d8ca3ecdc930f0d149c9909e93","affected_files":["curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml"],"artifact_ids":["module-demo","study-map-demo-l01","unit-demo-l01"],"expected_revisions":{"module-demo":1,"study-map-demo-l01":1,"unit-demo-l01":4},"ok":true,"check":true,"canonical_files_written":0}
 ```
 
 ## Seal the compaction with derived guards
@@ -185,7 +185,7 @@ $ los capability module.materials.compact --payload-file "$TMPDIR/module-compact
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:ed8ae6650211b385bb2b684b88594a6414251a270cfd83eb0cc1b16c4e15bc54",
+  "snapshot_after": "sha256:c393db586b0c016166b86182fdde045c781941e39043fdc83b430027bf7796c5",
   "result": {
     "schema_version": 1,
     "module_id": "module-demo",
@@ -213,7 +213,7 @@ $ los capability module.materials.compact --payload-file "$TMPDIR/module-compact
       "study-map-demo-l01": 2,
       "unit-demo-l01": 5
     },
-    "snapshot_after": "sha256:ed8ae6650211b385bb2b684b88594a6414251a270cfd83eb0cc1b16c4e15bc54",
+    "snapshot_after": "sha256:c393db586b0c016166b86182fdde045c781941e39043fdc83b430027bf7796c5",
     "replayed": false
   },
   "error": null

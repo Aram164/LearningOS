@@ -57,7 +57,7 @@ $ los capability note.create --payload-file "$TMPDIR/carry-closing.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:624d80ac1e6f6577f9953c4f600556f98abf749757b5c4a87dd2e915aa972465",
+  "snapshot_after": "sha256:d96d341a5fc1429df8233501605b0b3ef2cd8b62377208bf29cdb9e3749f0632",
   "result": {
     "ok": true,
     "note_id": "note-second-closing",
@@ -68,7 +68,7 @@ $ los capability note.create --payload-file "$TMPDIR/carry-closing.json"
     "artifact_revisions": {
       "note-second-closing": 1
     },
-    "snapshot_after": "sha256:624d80ac1e6f6577f9953c4f600556f98abf749757b5c4a87dd2e915aa972465",
+    "snapshot_after": "sha256:d96d341a5fc1429df8233501605b0b3ef2cd8b62377208bf29cdb9e3749f0632",
     "replayed": false
   },
   "error": null
@@ -206,7 +206,7 @@ $ los capability note.create --payload-file "$TMPDIR/carry-opening.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:12e1bf0333a494b1ba5ede6709ebcb9ad412529ce1e780475cd05ebcbaf1e08d",
+  "snapshot_after": "sha256:548b68aadfac77f1af4210bf25bee011aa79b5f35e60bd6ed0460a195b45bdce",
   "result": {
     "ok": true,
     "note_id": "note-carry-opening",
@@ -220,7 +220,7 @@ $ los capability note.create --payload-file "$TMPDIR/carry-opening.json"
       "note-carry-opening": 1,
       "note-second-closing": 2
     },
-    "snapshot_after": "sha256:12e1bf0333a494b1ba5ede6709ebcb9ad412529ce1e780475cd05ebcbaf1e08d",
+    "snapshot_after": "sha256:548b68aadfac77f1af4210bf25bee011aa79b5f35e60bd6ed0460a195b45bdce",
     "replayed": false
   },
   "error": null
@@ -268,7 +268,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/carry-dep.j
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:ffd2783491ecb5adb648ac61d16d7cb66fb99b25ec275e37aeb3e37e16a4a046",
+  "snapshot_after": "sha256:196bb920d7034c14be6223ab58b26f3f600b082db39886df7ca2f23336212219",
   "result": {
     "ok": true,
     "section": "Dependencies",
@@ -277,7 +277,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/carry-dep.j
     "artifact_revisions": {
       "coordination": 1
     },
-    "snapshot_after": "sha256:ffd2783491ecb5adb648ac61d16d7cb66fb99b25ec275e37aeb3e37e16a4a046",
+    "snapshot_after": "sha256:196bb920d7034c14be6223ab58b26f3f600b082db39886df7ca2f23336212219",
     "replayed": false
   },
   "error": null

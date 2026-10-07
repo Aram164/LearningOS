@@ -48,7 +48,7 @@ $ los capability module.attempt.record --payload-file "$TMPDIR/module-attempt-sa
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:fe1f342e53f0f74469749a20de39452ee91013af69a5b6461ad4043068147a15",
+  "snapshot_after": "sha256:3c45b9556a792805e15dee406349a146cbb6e074e8fe9353b07d1fc5529a34ff",
   "result": {
     "ok": true,
     "module_id": "module-demo",
@@ -62,7 +62,7 @@ $ los capability module.attempt.record --payload-file "$TMPDIR/module-attempt-sa
     "artifact_revisions": {
       "module-demo": 1
     },
-    "snapshot_after": "sha256:fe1f342e53f0f74469749a20de39452ee91013af69a5b6461ad4043068147a15",
+    "snapshot_after": "sha256:3c45b9556a792805e15dee406349a146cbb6e074e8fe9353b07d1fc5529a34ff",
     "replayed": false
   },
   "error": null
@@ -101,7 +101,7 @@ $ los capability module.sitting.update --payload-file "$TMPDIR/module-sitting-de
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:204e7fd6d9540d23b661515fe8e9674dc130cafad4062e2267b43a3fac18d60d",
+  "snapshot_after": "sha256:549e21991853c299999f8b7d3b578ca211604eb14b1447346ce9729e713314a4",
   "result": {
     "ok": true,
     "module_id": "module-demo",
@@ -112,7 +112,7 @@ $ los capability module.sitting.update --payload-file "$TMPDIR/module-sitting-de
     "artifact_revisions": {
       "module-demo": 2
     },
-    "snapshot_after": "sha256:204e7fd6d9540d23b661515fe8e9674dc130cafad4062e2267b43a3fac18d60d",
+    "snapshot_after": "sha256:549e21991853c299999f8b7d3b578ca211604eb14b1447346ce9729e713314a4",
     "replayed": false
   },
   "error": null

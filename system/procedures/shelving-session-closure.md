@@ -49,7 +49,7 @@ $ los capability stage.note.write --payload-file "$TMPDIR/shelve-note.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:a2b691deb967b0bfe1a4b66d1c1f218531aba85b40a0d14131f6a4fab2bce3a2",
+  "snapshot_after": "sha256:aacbfdad5ba51eb1fd82e4ddf2e302ae9d2ca82fa408b0fa18eb2b822e2297b9",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -60,7 +60,7 @@ $ los capability stage.note.write --payload-file "$TMPDIR/shelve-note.json"
     "artifact_revisions": {
       "unit-demo-l01": 4
     },
-    "snapshot_after": "sha256:a2b691deb967b0bfe1a4b66d1c1f218531aba85b40a0d14131f6a4fab2bce3a2",
+    "snapshot_after": "sha256:aacbfdad5ba51eb1fd82e4ddf2e302ae9d2ca82fa408b0fa18eb2b822e2297b9",
     "replayed": false
   },
   "error": null
@@ -103,7 +103,7 @@ $ los capability review.prepare --payload-file "$TMPDIR/shelve-prepare.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:9816b6b1093b25248f3528853d0bf7fc06e2f96de6c79a120c9914ae0a3ae239",
+  "snapshot_after": "sha256:4564a513f228c217a2ec235324dd5fb1b7d05a25d6534ffccdf60da2daffe9fd",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -115,7 +115,7 @@ $ los capability review.prepare --payload-file "$TMPDIR/shelve-prepare.json"
       "study-map-demo-l01": 1,
       "unit-demo-l01": 5
     },
-    "snapshot_after": "sha256:9816b6b1093b25248f3528853d0bf7fc06e2f96de6c79a120c9914ae0a3ae239",
+    "snapshot_after": "sha256:4564a513f228c217a2ec235324dd5fb1b7d05a25d6534ffccdf60da2daffe9fd",
     "replayed": false
   },
   "error": null
@@ -156,7 +156,7 @@ $ los capability review.apply --payload-file "$TMPDIR/shelve-apply.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:af13ea002e89a7bf8e6ed8be3883d68ee6d4c091db6dca77851d9b9344f2faf1",
+  "snapshot_after": "sha256:ba4b2a296fcd5164bc6223aaf16ef9db8e6b0cd8200180c8185a7c3d1d7161eb",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -170,7 +170,7 @@ $ los capability review.apply --payload-file "$TMPDIR/shelve-apply.json"
       "study-map-demo-l01": 2,
       "unit-demo-l01": 6
     },
-    "snapshot_after": "sha256:af13ea002e89a7bf8e6ed8be3883d68ee6d4c091db6dca77851d9b9344f2faf1",
+    "snapshot_after": "sha256:ba4b2a296fcd5164bc6223aaf16ef9db8e6b0cd8200180c8185a7c3d1d7161eb",
     "replayed": false
   },
   "error": null

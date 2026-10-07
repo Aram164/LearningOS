@@ -26,7 +26,7 @@ $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H
 
 ```scrut
 $ los observe req-demo-l01-demo --workspace workspace-demo --activity exercise --result correct --condition unfamiliar-example --note "Worked the example cleanly."
-{"ok": true, "observation_id": "observation-c5e7a09bdfe01c727161dcf3aef8fbe4", "workspace_id": "workspace-demo", "transaction_id": "transaction-20261001-090000-001", "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml", "artifact_revisions": {"workspace-demo": 1}, "snapshot_after": "sha256:1395e9f4cabf9645cc13ad260505e4f8bbe5d6fa3550d19b0a297a56c3cfec1d", "replayed": false}
+{"ok": true, "observation_id": "observation-c5e7a09bdfe01c727161dcf3aef8fbe4", "workspace_id": "workspace-demo", "transaction_id": "transaction-20261001-090000-001", "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml", "artifact_revisions": {"workspace-demo": 1}, "snapshot_after": "sha256:00e5efa1e1552b588782cf538d41005a28786beafc1b5fb32cfef6a0b3034a90", "replayed": false}
 ```
 
 ## The newest receipt names the capability
@@ -89,7 +89,7 @@ $ los capability learner.stage-result.append --payload-file "$TMPDIR/stage-resul
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:f9f0f17b855c95cb18f6d5e8f21b11234603c800470b8ca920d2eb53141bfec9",
+  "snapshot_after": "sha256:d325a7f008fa1556b37af5516e4a0f937d63bfa61f852e40d3cd1a7b2b623606",
   "result": {
     "ok": true,
     "stage_result_id": "stage-result-5f47ee7619671e2e6dfc38582fca09a0",
@@ -102,7 +102,7 @@ $ los capability learner.stage-result.append --payload-file "$TMPDIR/stage-resul
     "artifact_revisions": {
       "workspace-demo": 2
     },
-    "snapshot_after": "sha256:f9f0f17b855c95cb18f6d5e8f21b11234603c800470b8ca920d2eb53141bfec9",
+    "snapshot_after": "sha256:d325a7f008fa1556b37af5516e4a0f937d63bfa61f852e40d3cd1a7b2b623606",
     "replayed": false
   },
   "error": null

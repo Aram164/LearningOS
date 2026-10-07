@@ -32,7 +32,7 @@ sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655
 
 ```scrut
 $ los coordination-section-revise Commitments --text "Ship the demo module plan." --check
-{"ok": true, "section": "Commitments", "before": "(none)", "after": "Ship the demo module plan.", "expected_content_sha256": "sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655", "expected_snapshot": "sha256:6bcfa99c016d036d766b1c6e168d5d5330566753fa17c9bc61b9e747fe50e404", "expected_revisions": {"coordination": 0}, "write_paths": ["work/COORDINATION.md"]}
+{"ok": true, "section": "Commitments", "before": "(none)", "after": "Ship the demo module plan.", "expected_content_sha256": "sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655", "expected_snapshot": "sha256:a1f5b7e982c2422aa062ca45388337743ed3d47e16d7b161f7d1b656e948e400", "expected_revisions": {"coordination": 0}, "write_paths": ["work/COORDINATION.md"]}
 ```
 
 ## A stale digest is refused
@@ -63,7 +63,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/coord-commi
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:fe5b4d282e612479f131e4b4220a85f704b873d0b3e56854f9f107af14a72d34",
+  "snapshot_after": "sha256:6110e49500e20c02cf2ea463fe39a0aa48a3c4965453260f9ad579c2fa97f35b",
   "result": {
     "ok": true,
     "section": "Commitments",
@@ -72,7 +72,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/coord-commi
     "artifact_revisions": {
       "coordination": 1
     },
-    "snapshot_after": "sha256:fe5b4d282e612479f131e4b4220a85f704b873d0b3e56854f9f107af14a72d34",
+    "snapshot_after": "sha256:6110e49500e20c02cf2ea463fe39a0aa48a3c4965453260f9ad579c2fa97f35b",
     "replayed": false
   },
   "error": null

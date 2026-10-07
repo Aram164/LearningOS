@@ -58,7 +58,7 @@ $ los capability note.create --payload-file "$TMPDIR/deprecate-good.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:871bb33154511466f09c1e53968a85664a53b2f0c058c052887f0439c5837df1",
+  "snapshot_after": "sha256:058555f1de2d5fd5e7ac3582587daa2c6f751ed7e2937f87e15c1167ff8b5456",
   "result": {
     "ok": true,
     "note_id": "note-demo-followup",
@@ -72,7 +72,7 @@ $ los capability note.create --payload-file "$TMPDIR/deprecate-good.json"
       "note-demo": 1,
       "note-demo-followup": 1
     },
-    "snapshot_after": "sha256:871bb33154511466f09c1e53968a85664a53b2f0c058c052887f0439c5837df1",
+    "snapshot_after": "sha256:058555f1de2d5fd5e7ac3582587daa2c6f751ed7e2937f87e15c1167ff8b5456",
     "replayed": false
   },
   "error": null

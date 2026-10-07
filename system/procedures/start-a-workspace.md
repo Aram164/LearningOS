@@ -110,7 +110,7 @@ $ los capability workspace.next-action.update --payload-file "$TMPDIR/scope-next
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:58f873411fec508ca47b07e0497d3d2f6c29934701b70e68c6852b8ba063a535",
+  "snapshot_after": "sha256:0c6e406b20537c498c610f6c1deb39749b6528d9a2585ef3d3a31b465cbca872",
   "result": {
     "ok": true,
     "workspace_id": "workspace-scope-triage",
@@ -120,7 +120,7 @@ $ los capability workspace.next-action.update --payload-file "$TMPDIR/scope-next
     "artifact_revisions": {
       "workspace-scope-triage": 1
     },
-    "snapshot_after": "sha256:58f873411fec508ca47b07e0497d3d2f6c29934701b70e68c6852b8ba063a535",
+    "snapshot_after": "sha256:0c6e406b20537c498c610f6c1deb39749b6528d9a2585ef3d3a31b465cbca872",
     "replayed": false
   },
   "error": null

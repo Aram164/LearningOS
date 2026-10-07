@@ -38,7 +38,7 @@ $ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --out "$TMPDIR/backup/ma
 True
 ['core', 'materials', 'ui']
 380
-sha256:c62a74d57829db2c90003887004db22ba99f77eb4af0e8d4700fcf7edd4a1dbc
+sha256:e533599035a772c766b82168f6230473e12b8261de710e52087712de3bc2d7d5
 ```
 
 ## The manifest binds data to Core's commit
@@ -46,7 +46,7 @@ sha256:c62a74d57829db2c90003887004db22ba99f77eb4af0e8d4700fcf7edd4a1dbc
 ```scrut
 $ $LOS_REPO/.venv/bin/python -c 'import json,os; d = json.load(open(os.path.join(os.environ["TMPDIR"], "backup/manifest.json"))); print(len(d["entries"])); print(d["aggregate_sha256"]); print(d["provenance"]["data_contract_version"]); print(d["provenance"]["core"]["commit"] is not None, d["provenance"]["ui"]["commit"])'
 380
-sha256:c62a74d57829db2c90003887004db22ba99f77eb4af0e8d4700fcf7edd4a1dbc
+sha256:e533599035a772c766b82168f6230473e12b8261de710e52087712de3bc2d7d5
 53
 True None
 ```
@@ -57,7 +57,7 @@ True None
 $ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --stdout | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(len(d["entries"])); print(sorted({e["root"] for e in d["entries"]})); print(d["aggregate_sha256"])'
 380
 ['core', 'materials', 'ui']
-sha256:c62a74d57829db2c90003887004db22ba99f77eb4af0e8d4700fcf7edd4a1dbc
+sha256:e533599035a772c766b82168f6230473e12b8261de710e52087712de3bc2d7d5
 ```
 
 ## A manifest path inside a backed-up root is refused
