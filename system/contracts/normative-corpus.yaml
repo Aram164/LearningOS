@@ -385,6 +385,16 @@ documents:
       partition and registration, the start workspace, the wired
       dependency, and the documented rebuild and validate.
 
+  - path: system/procedures/carry-across-semesters.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §20: the successor
+      choice with its closing note, supersedes lineage, shared
+      links, and succession dependency.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
