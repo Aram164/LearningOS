@@ -289,6 +289,16 @@ documents:
       endpoints, add the narrowest edge with context and citation,
       and refuse the duplicate.
 
+  - path: system/procedures/add-evaluate-source.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §6: registry search,
+      reviewed intake, the evaluation and attach revisions, a curated
+      collection, and the documented verify.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so

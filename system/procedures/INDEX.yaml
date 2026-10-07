@@ -21,7 +21,7 @@ sections:
   - {doc: system/WORKFLOWS.md, heading: "## 3. Create or evolve a durable note", class: procedure, transcript: system/procedures/create-durable-note.md}
   - {doc: system/WORKFLOWS.md, heading: "## 4. Add a concept", class: procedure, transcript: system/procedures/add-a-concept.md}
   - {doc: system/WORKFLOWS.md, heading: "## 5. Add a concept relation", class: procedure, transcript: system/procedures/add-concept-relation.md}
-  - {doc: system/WORKFLOWS.md, heading: "## 6. Add or evaluate a source", class: procedure}
+  - {doc: system/WORKFLOWS.md, heading: "## 6. Add or evaluate a source", class: procedure, transcript: system/procedures/add-evaluate-source.md}
   - {doc: system/WORKFLOWS.md, heading: "## 7. Handle questions", class: rule}
   - {doc: system/WORKFLOWS.md, heading: "## 8. Record evidence", class: procedure, transcript: system/procedures/record-evidence.md}
   - {doc: system/WORKFLOWS.md, heading: "## 9. Update coordination", class: procedure}
