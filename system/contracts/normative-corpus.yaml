@@ -445,6 +445,16 @@ documents:
       sidecar decision and the reviewed batch close, with the
       malformed-batch refusals.
 
+  - path: system/procedures/back-up-and-restore.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §31: the backup
+      drill from manifest to full verification, with the
+      inside-root and tamper refusals.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so

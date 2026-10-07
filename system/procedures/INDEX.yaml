@@ -49,6 +49,6 @@ sections:
   - {doc: system/WORKFLOWS.md, heading: "## 28. Read an operation (`los operations`)", class: procedure, transcript: system/procedures/read-an-operation.md}
   - {doc: system/WORKFLOWS.md, heading: "## 29. Review a stage's material angle", class: procedure}
   - {doc: system/WORKFLOWS.md, heading: "## 30. Review exact goal decisions together", class: procedure, transcript: system/procedures/review-exact-goal-decisions-together.md}
-  - {doc: system/WORKFLOWS.md, heading: "## 31. Back up and restore", class: procedure}
+  - {doc: system/WORKFLOWS.md, heading: "## 31. Back up and restore", class: procedure, transcript: system/procedures/back-up-and-restore.md}
   - {doc: system/CLAUDE.md, heading: "## 2. Bootstrap order", class: procedure}
   - {doc: system/CLAUDE.md, heading: "## 7. Retrieval behavior", class: procedure}

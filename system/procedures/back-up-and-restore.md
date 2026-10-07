@@ -1,0 +1,135 @@
+---
+defaults:
+  environment:
+    TZ: Europe/Berlin
+---
+
+# Back up and restore (WORKFLOWS §31)
+
+Executable transcript of the backup drill: manifest the three
+roots, copy them beside the manifest, and verify the restore both
+ways. The fixture ships Core and materials siblings but no UI
+sibling, so the drill copies the pair's UI checkout (minus its
+`.git`, which the manifest never inventories) and completes its
+declared plugin set with a labeled `build-info.json` stand-in —
+the checkout itself lacks that declared asset, and the UI stays
+untouched. A tampered restored byte fails the drill.
+`tests/test_procedures.py` runs it with Scrut; `<REPO>` comes from
+the `LOS_REPO` environment variable the test sets.
+
+## Build the fixture
+
+```scrut
+$ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H=$LOS_REPO/tests/procedure_helpers
+```
+
+## Stage the drill UI from the pair checkout
+
+```scrut
+$ mkdir -p "$TMPDIR/backup" && cp -a "$LOS_REPO/../obsidian-ui" "$TMPDIR/backup/ui-src" && rm -rf "$TMPDIR/backup/ui-src/.git" && cat > "$TMPDIR/backup/ui-src/plugin/build-info.json" <<'EOF'
+> {"stand_in": true, "note": "S10 drill: the pair checkout lacks its declared build-info.json."}
+> EOF
+```
+
+## Manifest the three roots outside every root
+
+```scrut
+$ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --out "$TMPDIR/backup/manifest.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(d["roots"]); print(d["entries"]); print(d["aggregate_sha256"])'
+True
+['core', 'materials', 'ui']
+380
+sha256:c62a74d57829db2c90003887004db22ba99f77eb4af0e8d4700fcf7edd4a1dbc
+```
+
+## The manifest binds data to Core's commit
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import json,os; d = json.load(open(os.path.join(os.environ["TMPDIR"], "backup/manifest.json"))); print(len(d["entries"])); print(d["aggregate_sha256"]); print(d["provenance"]["data_contract_version"]); print(d["provenance"]["core"]["commit"] is not None, d["provenance"]["ui"]["commit"])'
+380
+sha256:c62a74d57829db2c90003887004db22ba99f77eb4af0e8d4700fcf7edd4a1dbc
+53
+True None
+```
+
+## The full manifest stays behind the explicit flag
+
+```scrut
+$ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --stdout | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(len(d["entries"])); print(sorted({e["root"] for e in d["entries"]})); print(d["aggregate_sha256"])'
+380
+['core', 'materials', 'ui']
+sha256:c62a74d57829db2c90003887004db22ba99f77eb4af0e8d4700fcf7edd4a1dbc
+```
+
+## A manifest path inside a backed-up root is refused
+
+```scrut {output_stream: stderr}
+$ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --out manifest.json
+los: refusing to write the manifest inside the backed-up core root: manifest.json
+[2]
+```
+
+## Copy the three roots beside the manifest
+
+```scrut
+$ cp -a "$LOS_FX" "$TMPDIR/backup/restored-core" && cp -a "$(dirname "$LOS_FX")/materials" "$TMPDIR/backup/restored-materials" && cp -a "$TMPDIR/backup/ui-src" "$TMPDIR/backup/restored-ui"
+```
+
+## The copies match their authorities
+
+```scrut
+$ diff -r -q "$LOS_FX" "$TMPDIR/backup/restored-core" && diff -r -q "$(dirname "$LOS_FX")/materials" "$TMPDIR/backup/restored-materials" && diff -r -q "$TMPDIR/backup/ui-src" "$TMPDIR/backup/restored-ui" && echo "copies match"
+copies match
+```
+
+## Verify the restore without executing restored code
+
+```scrut
+$ los backup-verify --manifest "$TMPDIR/backup/manifest.json" --restored-core "$TMPDIR/backup/restored-core" --restored-ui "$TMPDIR/backup/restored-ui" --restored-materials "$TMPDIR/backup/restored-materials" --checksums-only
+{
+  "ok": true,
+  "checked": 380,
+  "issues": []
+}
+```
+
+## Verify the restore in full
+
+```scrut
+$ los backup-verify --manifest "$TMPDIR/backup/manifest.json" --restored-core "$TMPDIR/backup/restored-core" --restored-ui "$TMPDIR/backup/restored-ui" --restored-materials "$TMPDIR/backup/restored-materials" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); [print(c["id"], c["ok"]) for c in d["checks"]]; print(d["manual_ui_open_required"])'
+True
+checksums True
+restore-provenance True
+materials-alias-layer True
+canonical-validation True
+projection-regeneration True
+ui-contract-lock True
+ui-asset-declaration True
+ui-install-preflight True
+ui-bundle-smoke True
+True
+```
+
+## A tampered restored byte fails the drill
+
+```scrut
+$ printf 'tamper' >> "$TMPDIR/backup/restored-materials/source-demo-book/book.pdf" && los backup-verify --manifest "$TMPDIR/backup/manifest.json" --restored-core "$TMPDIR/backup/restored-core" --restored-ui "$TMPDIR/backup/restored-ui" --restored-materials "$TMPDIR/backup/restored-materials" --checksums-only >"$TMPDIR/backup/tamper-out.txt" 2>&1; echo "exit=$?"; cat "$TMPDIR/backup/tamper-out.txt"
+exit=1
+{
+  "ok": false,
+  "checked": 380,
+  "issues": [
+    {
+      "root": "materials",
+      "path": "source-demo-book/book.pdf",
+      "issue": "checksum-mismatch"
+    }
+  ]
+}
+```
+
+## The fixture itself still validates
+
+```scrut
+$ los validate | tail -n 1
+0 error(s), 10 warning(s) — OK
+```
