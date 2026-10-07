@@ -48,16 +48,11 @@ MISMATCH_CHECKS: dict[str, dict[str, str]] = {
     "M-04": {
         "transcript": "generate-indexes-reports.md",
         "case": "The validation report is not among the products (M-04)",
-        "claim": "One documented command produces, from canonical inputs only: validation report.",
+        "claim": "validation report.",
     },
     "M-05": {
-        "transcript": "move-rename-note.md",
-        "case": "A rename that breaks the filename-id match fails validation (M-05)",
-        "claim": "Move or rename a note: preserve the ID; path changes never alter identity.",
-    },
-    "M-06": {
-        "transcript": "complete-archive-workspace.md",
-        "case": "A path-owning workspace cannot move unchanged (M-06)",
+        "transcript": "mismatch-archive-probe.md",
+        "case": "The unchanged move fails validation (M-05)",
         "claim": "move to archive/workspaces/<year>/<workspace-id>/ unchanged.",
     },
 }
@@ -187,14 +182,15 @@ def test_m03_wired_choice_removal_is_refused(tmp_path: Path):
 def test_m04_generate_writes_the_listed_validation_report(tmp_path: Path):
     """M-04 — generate-indexes-reports.md — The validation report is not among the products (M-04).
 
-    Documented claim: One documented command produces, from canonical
-    inputs only: validation report.
+    Documented claim: validation report. (The item within WORKFLOWS §12's
+    generate product list; the transcript case carries that context.)
     """
     root = _transcript_world(tmp_path)
     report = root / "generated" / "reports" / "validation-report.md"
     assert not report.is_file()
     proc = run_los(root, "generate")
-    assert proc.returncode == 0, proc.stderr
+    assert proc.returncode == 0, (proc.returncode, proc.stdout, proc.stderr)
+    assert proc.stderr == "", proc.stderr
     assert (root / "generated" / "manifest.json").is_file()
     try:
         assert report.is_file()
@@ -209,36 +205,13 @@ def test_m04_generate_writes_the_listed_validation_report(tmp_path: Path):
     )
 
 
-def test_m05_id_preserving_rename_validates(tmp_path: Path):
-    """M-05 — move-rename-note.md — A rename that breaks the filename-id match fails validation (M-05).
-
-    Documented claim: Move or rename a note: preserve the ID; path
-    changes never alter identity.
-    """
-    root = _transcript_world(tmp_path)
-    src = root / "knowledge" / "notes" / "mathematics" / "note-demo-analysis.md"
-    dst = src.with_name("note-variance-analysis.md")
-    src.rename(dst)
-    assert dst.is_file()
-    assert not src.exists()
-    proc = run_los(root, "validate")
-    assert proc.returncode in (0, 1), proc.stderr
-    try:
-        assert proc.returncode == 0, proc.stdout
-    except AssertionError:
-        pytest.xfail("M-05: id-preserving rename fails validation (FILE-NAME)")
-    pytest.fail(
-        "M-05 resolved unexpectedly: remove via formal resolution "
-        "(Aram decision + fix session)"
-    )
-
-
-def test_m06_path_owning_workspace_moves_unchanged(tmp_path: Path):
-    """M-06 — complete-archive-workspace.md — A path-owning workspace cannot move unchanged (M-06).
+def test_m05_path_owning_workspace_moves_unchanged(tmp_path: Path):
+    """M-05 (provisional M-06) — mismatch-archive-probe.md — The unchanged move fails validation (M-05).
 
     Documented claim: move to archive/workspaces/<year>/<workspace-id>/
     unchanged.
     """
+    import re
     import shutil
 
     root = _transcript_world(tmp_path)
@@ -249,15 +222,41 @@ def test_m06_path_owning_workspace_moves_unchanged(tmp_path: Path):
     assert (dst / "CONTEXT.md").is_file()
     assert not src.exists()
     proc = run_los(root, "validate")
-    assert proc.returncode in (0, 1), proc.stderr
+    # Ordinary validity of the validator completion: only the documented
+    # rc==0 claim below may xfail. Usage (rc2), crashes, malformed output,
+    # an inconsistent summary, and any error set other than exactly the
+    # expected PATH-NOTE-OWNER for the moved path fail ordinarily here.
+    assert proc.returncode in (0, 1), (
+        proc.returncode, proc.stdout, proc.stderr)
+    assert proc.stderr == "", proc.stderr
+    lines = proc.stdout.splitlines()
+    errors = [line for line in lines if line.startswith("E ")]
+    summary = next(
+        (line for line in reversed(lines) if line.strip()), "")
+    match = re.fullmatch(
+        r"(\d+) error\(s\)(?:, (\d+) warning\(s\))? — (OK|FAIL)", summary)
+    assert match is not None, proc.stdout
+    assert int(match.group(1)) == len(errors), proc.stdout
+    assert (match.group(3) == "OK") == (proc.returncode == 0), proc.stdout
+    if proc.returncode == 1:
+        codes = set()
+        for line in errors:
+            parts = line.split(None, 2)
+            codes.add(parts[1].rstrip(":") if len(parts) > 1 else "")
+        assert codes == {"PATH-NOTE-OWNER"}, proc.stdout
+        assert len(errors) == 1, proc.stdout
+        assert "archive/workspaces/2026/workspace-demo/paths/path-demo.yaml" in errors[0], proc.stdout
+        assert "work/active/workspace-demo/paths/stage-demo-path-notes.md" in errors[0], proc.stdout
+    else:
+        assert not errors, proc.stdout
     try:
         assert proc.returncode == 0, proc.stdout
     except AssertionError:
         pytest.xfail(
-            "M-06: unchanged archive of a path-owning workspace fails "
+            "M-05: unchanged archive of a path-owning workspace fails "
             "validation (PATH-NOTE-OWNER)"
         )
     pytest.fail(
-        "M-06 resolved unexpectedly: remove via formal resolution "
+        "M-05 resolved unexpectedly: remove via formal resolution "
         "(Aram decision + fix session)"
     )

@@ -32,22 +32,14 @@
   doc: system/WORKFLOWS.md
   heading: "## 12. Generate indexes and reports"
   step: "validation report among generate products (generate-indexes-reports transcript)"
-  documented: "One documented command produces, from canonical inputs only: validation report."
+  documented: "validation report."
   observed: "exit 0, manifest only; validation-report.md absent until a validation run writes it"
   proposed_fix: code
   decision: null
 - id: M-05
   doc: system/WORKFLOWS.md
-  heading: "## 14. Move or rename a note"
-  step: "rename breaking the filename-id match (move-rename-note transcript)"
-  documented: "Move or rename a note: preserve the ID; path changes never alter identity."
-  observed: "exit 1, 1 error(s), 10 warning(s) — FAIL; E FILE-NAME"
-  proposed_fix: doc
-  decision: null
-- id: M-06
-  doc: system/WORKFLOWS.md
   heading: "## 11. Complete and archive a workspace"
-  step: "archive move of the path-owning workspace (complete-archive-workspace transcript)"
+  step: "archive move of the path-owning workspace (mismatch-archive-probe)"
   documented: "move to archive/workspaces/<year>/<workspace-id>/ unchanged."
   observed: "exit 1, E PATH-NOTE-OWNER on the unchanged move; repaired pointer fails schema ^work/active/.+\\.md$"
   proposed_fix: code

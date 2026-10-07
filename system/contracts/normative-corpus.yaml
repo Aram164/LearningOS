@@ -397,6 +397,16 @@ documents:
       through the task-shaped reads across concepts, notes,
       sources, modules, and coordination.
 
+  - path: system/procedures/mismatch-archive-probe.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      PARTIAL Scrut mismatch evidence for M-05 (NOT complete procedure
+      coverage): the unchanged archive move fails validation and the
+      repaired pointer fails the schema.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
