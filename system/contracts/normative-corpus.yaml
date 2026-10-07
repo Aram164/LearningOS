@@ -249,6 +249,16 @@ documents:
       discovery, the open-question brief, one snapshot-pinned expansion,
       and the named-record, scan, and saved-reasoning reads.
 
+  - path: system/procedures/start-a-workspace.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §1: open a workspace
+      skeleton with its required sections and move Next Action only
+      through its envelope.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
