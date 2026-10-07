@@ -1,0 +1,317 @@
+---
+defaults:
+  environment:
+    TZ: Europe/Berlin
+---
+
+# Save a batch of source analyses (WORKFLOWS §25b)
+
+Executable transcript of the drafts file: observe the source bytes,
+draft the batch, prepare the staging dir and exact envelope, review
+both, and submit the envelope unchanged. A second batch prepped
+before the first submits goes stale; a tampered staging body is
+refused by its content hash; a draft whose live bytes disagree with
+recorded is refused at prep. `tests/test_procedures.py` runs it with
+Scrut; `<REPO>` comes from the `LOS_REPO` environment variable the
+test sets.
+
+## Build the fixture
+
+```scrut
+$ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H=$LOS_REPO/tests/procedure_helpers
+```
+
+## Observe the source bytes before drafting
+
+```scrut
+$ MAT_SHA=$(sha256sum "$(dirname "$LOS_FX")/materials/source-demo-book/book.pdf" | cut -d' ' -f1) && echo "$MAT_SHA"
+61b4d4e33f928a4f6801ae74b3e940e0cfac1285aa4a958d46ce0ae142b49ed6
+```
+
+## Draft the first batch: two notes, one drafts file
+
+```scrut
+$ cat > "$TMPDIR/batch1.json" <<EOF
+> {"notes": [
+>   {"id": "note-batch-alpha", "title": "Alpha analysis",
+>    "path": "knowledge/notes/mathematics/note-batch-alpha.md",
+>    "binding": {"resolution": "resolved", "source_id": "source-demo-book",
+>      "material": "source-demo-book/book.pdf",
+>      "recorded_source_digest": "$MAT_SHA",
+>      "live_source_digest": "$MAT_SHA",
+>      "inspected_range": {"start": 1, "end": 1}},
+>    "body": "Alpha analysis of the inspected page.\n"},
+>   {"id": "note-batch-beta", "title": "Beta analysis",
+>    "path": "knowledge/notes/mathematics/note-batch-beta.md",
+>    "binding": {"resolution": "resolved", "source_id": "source-demo-book",
+>      "material": "source-demo-book/book.pdf",
+>      "recorded_source_digest": "$MAT_SHA",
+>      "live_source_digest": "$MAT_SHA",
+>      "inspected_range": {"start": 1, "end": 1}},
+>    "body": "Beta analysis of the inspected page.\n"}]}
+> EOF
+```
+
+## Prepare the first batch
+
+```scrut
+$ los note-analysis-prepare --drafts "$TMPDIR/batch1.json" --out "$TMPDIR/stage1" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(d["expected_snapshot"]); print(json.dumps(d["expected_revisions"], sort_keys=True)); [print(n["note_id"], n["note_path"], n["predicted_new"], n["frozen_input_sha256"]) for n in d["notes"]]'
+True
+sha256:6c53279d313b3346fb1ccec8d038efa5c0d9fbf4b4a25634ee2c373e22604888
+{"note-batch-alpha": 0, "note-batch-beta": 0}
+note-batch-alpha knowledge/notes/mathematics/note-batch-alpha.md True aeb4d9b96ff02421baa4e0651d4d25e3e830ebd12b4eea4f5e69ab7f5a6078d6
+note-batch-beta knowledge/notes/mathematics/note-batch-beta.md True 472e7d8ca1f330aa3ec439018461903df5d505c85ff47175074fcee5a24a9070
+```
+
+## Review the staged bodies
+
+```scrut
+$ (cd "$TMPDIR/stage1" && ls && ls bodies)
+bodies
+envelope.json
+note-batch-alpha.bin
+note-batch-beta.bin
+```
+
+```scrut
+$ cat "$TMPDIR/stage1/bodies/note-batch-alpha.bin"
+Alpha analysis of the inspected page.
+```
+
+## Review the staged envelope
+
+```scrut
+$ cat "$TMPDIR/stage1/envelope.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["capability"], d["channel"], d["expected_snapshot"]); [print(n["analysis"]["id"], n["analysis"]["path"], n["body_file_sha256"]) for n in d["payload"]["bundle"]["notes"]]'
+note.analysis.save_batch codex sha256:6c53279d313b3346fb1ccec8d038efa5c0d9fbf4b4a25634ee2c373e22604888
+note-batch-alpha knowledge/notes/mathematics/note-batch-alpha.md sha256:aeb4d9b96ff02421baa4e0651d4d25e3e830ebd12b4eea4f5e69ab7f5a6078d6
+note-batch-beta knowledge/notes/mathematics/note-batch-beta.md sha256:472e7d8ca1f330aa3ec439018461903df5d505c85ff47175074fcee5a24a9070
+```
+
+## Draft and prepare the second batch before the first submits
+
+```scrut
+$ cat > "$TMPDIR/batch2.json" <<EOF
+> {"notes": [
+>   {"id": "note-batch-gamma", "title": "Gamma analysis",
+>    "path": "knowledge/notes/mathematics/note-batch-gamma.md",
+>    "binding": {"resolution": "resolved", "source_id": "source-demo-book",
+>      "material": "source-demo-book/book.pdf",
+>      "recorded_source_digest": "$MAT_SHA",
+>      "live_source_digest": "$MAT_SHA",
+>      "inspected_range": {"start": 1, "end": 1}},
+>    "body": "Gamma analysis of the inspected page.\n"}]}
+> EOF
+```
+
+```scrut
+$ los note-analysis-prepare --drafts "$TMPDIR/batch2.json" --out "$TMPDIR/stage2" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(d["expected_snapshot"]); print(json.dumps(d["expected_revisions"], sort_keys=True)); [print(n["note_id"], n["predicted_new"]) for n in d["notes"]]'
+True
+sha256:6c53279d313b3346fb1ccec8d038efa5c0d9fbf4b4a25634ee2c373e22604888
+{"note-batch-gamma": 0}
+note-batch-gamma True
+```
+
+## Submit the first batch unchanged
+
+```scrut
+$ los capability note.analysis.save_batch --payload-file "$TMPDIR/stage1/envelope.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); del d["request_id"]; del d["idempotency_key"]; print(json.dumps(d, indent=2, sort_keys=True))'
+{
+  "capability": "note.analysis.save_batch",
+  "error": null,
+  "ok": true,
+  "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
+  "replayed": false,
+  "result": {
+    "artifact_revisions": {
+      "note-batch-alpha": 1,
+      "note-batch-beta": 1
+    },
+    "created_note_ids": [
+      "note-batch-alpha",
+      "note-batch-beta"
+    ],
+    "note_paths": {
+      "note-batch-alpha": "knowledge/notes/mathematics/note-batch-alpha.md",
+      "note-batch-beta": "knowledge/notes/mathematics/note-batch-beta.md"
+    },
+    "ok": true,
+    "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
+    "replayed": false,
+    "replayed_note_ids": [],
+    "snapshot_after": "sha256:a1ce4397a347f1a5eba87fdda0dc2fa1bfb51a6bc22019bf72932490e128d3d0",
+    "transaction_id": "transaction-20261001-090000-001"
+  },
+  "schema_version": 2,
+  "snapshot_after": "sha256:a1ce4397a347f1a5eba87fdda0dc2fa1bfb51a6bc22019bf72932490e128d3d0",
+  "transaction_id": "transaction-20261001-090000-001"
+}
+```
+
+## Both analyses persisted with a receipt
+
+```scrut
+$ $H/los-assert-file knowledge/notes/mathematics/note-batch-alpha.md --sha256 5a65d0c2540e9c3ddfaa25060776f792740ba1310089526d691ae1eaeeb4d33b
+```
+
+```scrut
+$ $H/los-assert-file knowledge/notes/mathematics/note-batch-beta.md --sha256 f0b3ecac5418502006bafe7289d89536e4866e168aaa37c0d2c066ab5a262758
+```
+
+```scrut
+$ $H/los-assert-receipt --last --capability note.analysis.save_batch
+```
+
+## Re-prepping the committed drafts predicts replay
+
+```scrut
+$ los note-analysis-prepare --drafts "$TMPDIR/batch1.json" --out "$TMPDIR/stage1b" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(json.dumps(d["expected_revisions"], sort_keys=True)); [print(n["note_id"], n["predicted_new"]) for n in d["notes"]]'
+True
+{"note-batch-alpha": 1, "note-batch-beta": 1}
+note-batch-alpha False
+note-batch-beta False
+```
+
+## The second batch now submits stale
+
+```scrut
+$ (set -o pipefail; los capability note.analysis.save_batch --payload-file "$TMPDIR/stage2/envelope.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); del d["request_id"]; del d["idempotency_key"]; print(json.dumps(d, indent=2, sort_keys=True))')
+{
+  "capability": "note.analysis.save_batch",
+  "error": {
+    "code": "STALE_SNAPSHOT",
+    "details": {
+      "actual": "sha256:a1ce4397a347f1a5eba87fdda0dc2fa1bfb51a6bc22019bf72932490e128d3d0",
+      "expected": "sha256:6c53279d313b3346fb1ccec8d038efa5c0d9fbf4b4a25634ee2c373e22604888"
+    },
+    "message": "canonical state changed since this request was approved",
+    "retryable": true
+  },
+  "ok": false,
+  "receipt_path": null,
+  "replayed": false,
+  "result": {},
+  "schema_version": 2,
+  "snapshot_after": null,
+  "transaction_id": null
+}
+[3]
+```
+
+## Re-prep the second batch against the moved snapshot
+
+```scrut
+$ los note-analysis-prepare --drafts "$TMPDIR/batch2.json" --out "$TMPDIR/stage2b" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(d["expected_snapshot"]); [print(n["note_id"], n["predicted_new"]) for n in d["notes"]]'
+True
+sha256:a1ce4397a347f1a5eba87fdda0dc2fa1bfb51a6bc22019bf72932490e128d3d0
+note-batch-gamma True
+```
+
+## Submit the re-prepped batch
+
+```scrut
+$ los capability note.analysis.save_batch --payload-file "$TMPDIR/stage2b/envelope.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); del d["request_id"]; del d["idempotency_key"]; print(json.dumps(d, indent=2, sort_keys=True))'
+{
+  "capability": "note.analysis.save_batch",
+  "error": null,
+  "ok": true,
+  "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
+  "replayed": false,
+  "result": {
+    "artifact_revisions": {
+      "note-batch-gamma": 1
+    },
+    "created_note_ids": [
+      "note-batch-gamma"
+    ],
+    "note_paths": {
+      "note-batch-gamma": "knowledge/notes/mathematics/note-batch-gamma.md"
+    },
+    "ok": true,
+    "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
+    "replayed": false,
+    "replayed_note_ids": [],
+    "snapshot_after": "sha256:9c3b703912a796a6ff8248b69eedcfd172a89d8448c436c13d45ac22e12919c9",
+    "transaction_id": "transaction-20261001-090000-002"
+  },
+  "schema_version": 2,
+  "snapshot_after": "sha256:9c3b703912a796a6ff8248b69eedcfd172a89d8448c436c13d45ac22e12919c9",
+  "transaction_id": "transaction-20261001-090000-002"
+}
+```
+
+## The third analysis persisted with a receipt
+
+```scrut
+$ $H/los-assert-file knowledge/notes/mathematics/note-batch-gamma.md --sha256 8c9801067ffa84ee61b7e5ccdadff96f383f115bb50b09f0159f3dbfdf86dbd5
+```
+
+```scrut
+$ $H/los-assert-receipt --last --capability note.analysis.save_batch
+```
+
+## A tampered staging body is refused by its content hash
+
+```scrut
+$ cat > "$TMPDIR/batch3.json" <<EOF
+> {"notes": [
+>   {"id": "note-batch-tamper", "title": "Tamper analysis",
+>    "path": "knowledge/notes/mathematics/note-batch-tamper.md",
+>    "binding": {"resolution": "resolved", "source_id": "source-demo-book",
+>      "material": "source-demo-book/book.pdf",
+>      "recorded_source_digest": "$MAT_SHA",
+>      "live_source_digest": "$MAT_SHA",
+>      "inspected_range": {"start": 1, "end": 1}},
+>    "body": "Tamper analysis of the inspected page.\n"}]}
+> EOF
+```
+
+```scrut
+$ los note-analysis-prepare --drafts "$TMPDIR/batch3.json" --out "$TMPDIR/stage3" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"], d["notes"][0]["note_id"])'
+True note-batch-tamper
+```
+
+```scrut
+$ printf 'tampered bytes\n' > "$TMPDIR/stage3/bodies/note-batch-tamper.bin" && (set -o pipefail; los capability note.analysis.save_batch --payload-file "$TMPDIR/stage3/envelope.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); del d["request_id"]; del d["idempotency_key"]; print(json.dumps(d, indent=2, sort_keys=True))')
+{
+  "capability": "note.analysis.save_batch",
+  "error": {
+    "code": "INVALID_REQUEST",
+    "details": {},
+    "message": "approved batch item 0 body file changed before use; expected sha256:bcee335730b1d48089a73aeb2c21680ff208f4bf23eb54a96c962dd4deb6c8c3, found sha256:ef350dfee9133c1f380419ddf838ed53ecdbac2065791bc1cf74b054887efc5c. Review the new bytes and create a new approval.",
+    "retryable": false
+  },
+  "ok": false,
+  "receipt_path": null,
+  "replayed": false,
+  "result": {},
+  "schema_version": 2,
+  "snapshot_after": null,
+  "transaction_id": null
+}
+[2]
+```
+
+## The refused tamper wrote nothing canonical
+
+```scrut
+$ $H/los-assert-file knowledge/notes/mathematics/note-batch-tamper.md --absent
+```
+
+## A draft whose live bytes disagree is refused at prep
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import json,os; p = os.path.join(os.environ["TMPDIR"], "batch3.json"); d = json.load(open(p)); d["notes"][0]["id"] = "note-batch-baddigest"; d["notes"][0]["path"] = "knowledge/notes/mathematics/note-batch-baddigest.md"; d["notes"][0]["binding"]["live_source_digest"] = "0" * 64; json.dump(d, open(os.path.join(os.environ["TMPDIR"], "batch4.json"), "w"))'
+```
+
+```scrut {output_stream: stderr}
+$ los note-analysis-prepare --drafts "$TMPDIR/batch4.json" --out "$TMPDIR/stage4"
+los: draft 0: resolved bindings must show live bytes equal to recorded
+[2]
+```
+
+## Validate the saved batches
+
+```scrut
+$ los validate | tail -n 1
+0 error(s), 9 warning(s) — OK
+```

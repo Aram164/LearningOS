@@ -405,6 +405,16 @@ documents:
       route patch from guarded read to applied envelope, the
       lossless compaction, and the pinned structural-lane stops.
 
+  - path: system/procedures/save-a-batch-of-source-analyses.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §25b: the drafts
+      file from observed bytes to submitted envelope, with stale,
+      tamper, and live-bytes refusals.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
