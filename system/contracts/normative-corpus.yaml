@@ -299,6 +299,16 @@ documents:
       reviewed intake, the evaluation and attach revisions, a curated
       collection, and the documented verify.
 
+  - path: system/procedures/update-coordination.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §9: review one section
+      diff and apply the reviewed text with its content digest,
+      refusing a stale one.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
