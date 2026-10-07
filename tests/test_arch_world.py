@@ -242,22 +242,34 @@ def test_default_materials_compare_of_fixture_world_exits_two(
     assert "materials differ" in proc.stderr
 
 
-def test_own_materials_main_vs_head_compare_exits_zero(
+def test_own_materials_tool_only_change_compare_exits_zero(
         world: dict, tmp_path: Path):
-    """ND1 resolution: main vs HEAD are identical under the world's own materials."""
-    main_sha = _git(REPO_ROOT, "rev-parse", "main^{commit}").stdout.strip()
-    head_sha = _git(REPO_ROOT, "rev-parse", "HEAD^{commit}").stdout.strip()
-    # The comparison is non-trivial only while main and HEAD differ (true on
-    # every arch branch; a checkout exactly at the main tip must revisit this).
-    assert main_sha != head_sha
-    proc = _compare(REPO_ROOT, world["dir"], "main", "HEAD",
+    """ND1 resolution: a tool-only change is identical under the world's own materials.
+
+    Topology-independent: the baseline and candidate are SHAs pinned by this
+    test itself (parent and child of one scratch commit with a tool-only
+    diff), never the floating ``main``/``HEAD`` refs, so the identity claim
+    holds on any checkout containing S07 no matter where ``main`` points.
+    """
+    clone = _scratch_clone(tmp_path / "clone")
+    baseline = _git(clone, "rev-parse", "HEAD").stdout.strip()
+    tool = clone / "tools" / "capture_world.py"
+    assert tool.is_file(), "S07 content is missing from this checkout"
+    with tool.open("a", encoding="utf-8") as handle:
+        handle.write("# S07 test: a tool-only comment carries no projection.\n")
+    _git(clone, "commit", "-qam", "S07 test: tool-only comment change")
+    candidate = _git(clone, "rev-parse", "HEAD").stdout.strip()
+    # Two different commits with two different trees; the projection must
+    # still be identical, as with the S07 delta itself (tools/tests only).
+    assert baseline != candidate
+    proc = _compare(clone, world["dir"], baseline, candidate,
                     _materials_copy(world, tmp_path), tmp_path / "runs")
     assert proc.returncode == 0, proc.stderr[-2000:]
     report = json.loads(proc.stdout)
     assert report["identical"] is True
     assert report["differences"] == []
-    assert report["baseline"]["revision"] == main_sha
-    assert report["candidate"]["revision"] == head_sha
+    assert report["baseline"]["revision"] == baseline
+    assert report["candidate"]["revision"] == candidate
 
 
 def test_contract_version_bump_without_transition_exits_one(world: dict, tmp_path: Path):
