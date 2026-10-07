@@ -170,6 +170,75 @@ documents:
       Executable Scrut transcript of WORKFLOWS §22: seal a stage write,
       refuse a stale note, review, commit, and verify the session ledger.
 
+  - path: system/procedures/build-write-envelope.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §25c: read the schema, seal
+      a capture envelope, verify the intent hash, submit, replay, and
+      refuse a stale write.
+
+  - path: system/procedures/capture-temporary-material.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §2: a workspace fragment
+      without an envelope, the bare capture refusal, and an inbox capture
+      through its envelope.
+
+  - path: system/procedures/process-inbox.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §21: list and read the
+      inbox, resolve one drop to its destination, and refuse a changed
+      drop.
+
+  - path: system/procedures/record-evidence.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §8: direct observe intake,
+      both refusals, and the untargeted ledger envelope.
+
+  - path: system/procedures/unit-workflow.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of OPERATOR's Unit workflow: the bare
+      refusal, removing and re-selecting a choice, and the study-path
+      guard.
+
+  - path: system/procedures/capture-routing.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of OPERATOR's Capture routing: the log:
+      path to a stage note and to the inbox, without moving resume or
+      implying progress.
+
+  - path: system/procedures/shelving-session-closure.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of OPERATOR's Shelving and session
+      closure: prepare and apply a shelving proposal, validate,
+      regenerate, and close the session.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
