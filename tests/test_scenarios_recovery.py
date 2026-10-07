@@ -6,10 +6,12 @@ launched through ``tests/scenario_harness.py`` with per-launch audit tokens
 ``LOS_ARCH_EXPECT_CRASH=1``. Crash outcomes characterize today's behavior;
 they are not fixes.
 
-Kickoff case 4 (a ``status`` read escalating and recovering while a journal
-is armed) is STOPPED: ``status`` takes no operator lock and recovers nothing
-(see REPORT.md NEEDS-DECISION ND2). Recovery below is driven by ``inspect``,
-which does escalate, and by lock acquisition on every later write.
+Kickoff case 4 (a read escalating and recovering while a journal is
+armed) runs against ``inspect``, the lock-taking read that does escalate
+(ND2 resolution; see REPORT.md). ``status`` takes no operator lock and
+recovers nothing: its read-through on an armed journal is characterized
+as today's behavior, not desired behavior. Recovery below is driven by
+``inspect``, and by lock acquisition on every later write.
 """
 
 from __future__ import annotations
@@ -278,6 +280,92 @@ def test_replay_only_with_forged_confirmation_is_unconfirmed(ctx: _RecoveryConte
         ctx, _capability_argv(ctx, envelope_path, "capture.create",
                               replay_only=True))
     _assert_unconfirmed_refusal(ctx, proc, before_tree, before_receipts)
+    scenario_harness.check_witnesses(ctx)
+
+
+# ---------------------------------------------------------------------------
+# 4. reads while a crash journal is armed (ND2 resolution)
+# ---------------------------------------------------------------------------
+
+def _crash_leaving_armed_journal(ctx: _RecoveryContext, wrapper: Path,
+                                 key: str):
+    """Crash a write after its first write; one journal armed, tree torn.
+
+    Returns ``(before_tree, torn_tree, journals, before_receipts)``. The
+    torn paths are computed from the before/after trees, not pinned: today
+    the crash leaves the updated study map on top of the pre-state.
+    """
+    before_tree = arch_effects.capture_tree(ctx.root)
+    before_receipts = _receipt_names(ctx.root)
+    _, envelope_path = _envelope(
+        ctx, capability="stage.progress.update", request=dict(STAGE_REQUEST),
+        artifact_ids=list(STAGE_ARTIFACTS), key=key)
+    marker = ctx.workdir / f"marker-{key}"
+    crashed = scenario_harness.launch(
+        ctx, _crash_argv(wrapper, _capability_argv(
+            ctx, envelope_path, "stage.progress.update")),
+        extra_env=crash_points.crash_env(
+            point="after-first-write", marker=marker, tools_dir=TOOLS_DIR))
+    assert crashed.returncode == crash_points.CRASH_EXIT, \
+        crashed.stdout[-2000:] or crashed.stderr[-2000:]
+    assert marker.is_file(), "crash point was never reached: after-first-write"
+    assert marker.read_text(encoding="utf-8") == "after-first-write"
+    journals = _armed_journals(ctx.root)
+    assert len(journals) == 1, journals
+    torn_tree = arch_effects.capture_tree(ctx.root)
+    torn_paths = sorted(path for path in set(before_tree) | set(torn_tree)
+                        if before_tree.get(path) != torn_tree.get(path))
+    assert torn_paths, "expected the crash to leave a torn tree"
+    assert torn_tree != before_tree
+    return before_tree, torn_tree, journals, before_receipts
+
+
+def test_inspect_while_journal_armed_escalates_and_recovers(
+        ctx: _RecoveryContext, wrapper: Path):
+    """Case 4 against inspect: the lock-taking read escalates and recovers."""
+    key = "recovery-inspect-armed-journal"
+    before_tree, _, _, before_receipts = _crash_leaving_armed_journal(
+        ctx, wrapper, key)
+    recovered = _inspect(ctx)
+    assert recovered.returncode == 0, \
+        recovered.stderr[-2000:] or recovered.stdout[-2000:]
+    payload = json.loads(recovered.stdout)
+    assert payload["id"] == "concept-expected-value"
+    assert _armed_journals(ctx.root) == []
+    after_tree = arch_effects.capture_tree(ctx.root)
+    assert after_tree == before_tree
+    assert arch_effects.reconcile(
+        before_tree, after_tree,
+        arch_effects.new_receipts(before_receipts, ctx.root),
+        restored_from=before_tree) == []
+    scenario_harness.check_witnesses(ctx)
+
+
+def test_status_while_journal_armed_reads_through_without_recovery(
+        ctx: _RecoveryContext, wrapper: Path):
+    """status on an armed journal reads the torn state through: no recovery.
+
+    TODAY'S CHARACTERIZED BEHAVIOR — NOT DESIRED BEHAVIOR. ``cmd_status``
+    (``tools/learning_os/commands/query.py:64-69``) reads directly and
+    never takes ``_operator_lock``, and ``los`` ``main``
+    (``tools/los.py:1387``) has no global lock or recovery wrapper, so the
+    armed journal and the torn file survive this read. A future pipeline
+    that gives ``status`` the lock (PLAN D20) must update this test
+    deliberately.
+    """
+    key = "recovery-status-armed-journal"
+    before_tree, torn_tree, journals, _ = _crash_leaving_armed_journal(
+        ctx, wrapper, key)
+    proc = scenario_harness.launch(
+        ctx, [sys.executable, str(LOS), "--root", str(ctx.root),
+              "status", "--json"])
+    assert proc.returncode == 0, proc.stderr[-2000:] or proc.stdout[-2000:]
+    payload = json.loads(proc.stdout)
+    assert "counts" in payload
+    assert _armed_journals(ctx.root) == journals
+    still = arch_effects.capture_tree(ctx.root)
+    assert still == torn_tree
+    assert still != before_tree
     scenario_harness.check_witnesses(ctx)
 
 
