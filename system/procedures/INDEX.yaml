@@ -31,7 +31,7 @@ sections:
   - {doc: system/WORKFLOWS.md, heading: "## 13. Review a note", class: procedure, transcript: system/procedures/review-a-note.md}
   - {doc: system/WORKFLOWS.md, heading: "## 14. Move or rename a note", class: procedure, transcript: system/procedures/move-rename-note.md}
   - {doc: system/WORKFLOWS.md, heading: "## 15. Deprecate or supersede", class: procedure, transcript: system/procedures/deprecate-supersede.md}
-  - {doc: system/WORKFLOWS.md, heading: "## 16. Maintain a crosswalk", class: procedure}
+  - {doc: system/WORKFLOWS.md, heading: "## 16. Maintain a crosswalk", class: procedure, transcript: system/procedures/maintain-crosswalk.md}
   - {doc: system/WORKFLOWS.md, heading: "## 17. Ingest a handwritten note", class: procedure}
   - {doc: system/WORKFLOWS.md, heading: "## 18. Start a module", class: procedure}
   - {doc: system/WORKFLOWS.md, heading: "## 19. Close a module", class: procedure}

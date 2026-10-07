@@ -366,6 +366,15 @@ documents:
       Executable Scrut transcript of WORKFLOWS §15: one superseding
       note, one replaced concept, and the generated reverse link.
 
+  - path: system/procedures/maintain-crosswalk.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §16: narrative on the
+      note, judgment on the source record, and the table warning.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
