@@ -10,7 +10,7 @@ cases:
       - transport: cli
         argv: [ai-action-import-delivery, "<CASEDATA>/delivery"]
       - transport: gateway
-        request: {delivery_id: ai-delivery-scenario-shelve, delivery_sha256: "sha256:140e9513792565b547f7fc977b6d4cd9cf42d678f70df11fc433f3eeb381f583", artifact_sha256: {"artifacts/transcription.md": "sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157"}}
+        request: {delivery_id: ai-delivery-scenario-shelve, delivery_sha256: "sha256:942e4d2b1e6ec2494aa99bb663c3e74b1bf93dfa43f06674dae2b22f6ed00fd9", artifact_sha256: {"artifacts/transcription.md": "sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157"}}
         artifact_ids: [garden-note-seed, transcription-garden-note-seed, relationship-garden-module-demo]
         approval_kind: approved-delivery
   - id: sha-mismatch
@@ -50,7 +50,7 @@ cases:
       - transport: cli
         argv: [ai-action-import-delivery, "<CASEDATA>/delivery"]
       - transport: gateway
-        request: {delivery_id: ai-delivery-scenario-shelve, delivery_sha256: "sha256:140e9513792565b547f7fc977b6d4cd9cf42d678f70df11fc433f3eeb381f583", artifact_sha256: {"artifacts/transcription.md": "sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157"}}
+        request: {delivery_id: ai-delivery-scenario-shelve, delivery_sha256: "sha256:942e4d2b1e6ec2494aa99bb663c3e74b1bf93dfa43f06674dae2b22f6ed00fd9", artifact_sha256: {"artifacts/transcription.md": "sha256:42342ec59b9678fc49988192137259c2286db26b18d32123c67a3ceb7a386157"}}
         artifact_ids: [garden-note-seed, transcription-garden-note-seed, relationship-garden-module-demo]
         approval_kind: approved-delivery
       - transport: gateway
