@@ -1,14 +1,14 @@
 {
   "approval": {
     "kind": "operator-approval",
-    "subject_sha256": "sha256:f8b84f619a7e327769ec4879c9b9baf43c06821ca49924a209628f271218f861"
+    "subject_sha256": "sha256:41dfb7526c682c9c907ef86f2868f93c24b50ff0bbe856a15c9921f20ce6ccab"
   },
   "capability": "capture.create",
   "channel": "operator",
   "expected_revisions": {
     "capture-request:scenario-capability-conflict": 0
   },
-  "expected_snapshot": "sha256:1c44325f29523fa0ea60da63c951bc22c356a50e409dd233939f635f06df5647",
+  "expected_snapshot": "sha256:2c3a6a0a93d94c0747c0b20b279d95ec309aba4092a2ea10e1d28401fb10f6d4",
   "idempotency_key": "scenario-capability-conflict",
   "payload": {
     "text": "A different capture reusing the same idempotency key."
