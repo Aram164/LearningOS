@@ -19,7 +19,7 @@ sections:
   - {doc: system/WORKFLOWS.md, heading: "## 1. Start a workspace", class: procedure, transcript: system/procedures/start-a-workspace.md}
   - {doc: system/WORKFLOWS.md, heading: "## 2. Capture temporary material", class: procedure, transcript: system/procedures/capture-temporary-material.md}
   - {doc: system/WORKFLOWS.md, heading: "## 3. Create or evolve a durable note", class: procedure, transcript: system/procedures/create-durable-note.md}
-  - {doc: system/WORKFLOWS.md, heading: "## 4. Add a concept", class: procedure}
+  - {doc: system/WORKFLOWS.md, heading: "## 4. Add a concept", class: procedure, transcript: system/procedures/add-a-concept.md}
   - {doc: system/WORKFLOWS.md, heading: "## 5. Add a concept relation", class: procedure}
   - {doc: system/WORKFLOWS.md, heading: "## 6. Add or evaluate a source", class: procedure}
   - {doc: system/WORKFLOWS.md, heading: "## 7. Handle questions", class: rule}

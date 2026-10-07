@@ -269,6 +269,16 @@ documents:
       create with registered context, the question and single-analysis
       branches, and the reference refusal.
 
+  - path: system/procedures/add-a-concept.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §4: search both
+      languages, register one concept with aliases and disambiguation,
+      and rebuild the index.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
