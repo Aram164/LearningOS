@@ -425,6 +425,16 @@ documents:
       feedback judgment from bare refusal to committed receipt,
       staying on its stage.
 
+  - path: system/procedures/read-an-operation.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §28: the
+      after-the-fact read surface over committed, refused, and
+      id-reused requests.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so

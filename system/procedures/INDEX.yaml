@@ -46,7 +46,7 @@ sections:
   - {doc: system/WORKFLOWS.md, heading: "## 25c. Build a write envelope (GatewayEnvelopeV2)", class: procedure, transcript: system/procedures/build-write-envelope.md}
   - {doc: system/WORKFLOWS.md, heading: "## 26. Source routing and feedback", class: procedure, transcript: system/procedures/source-routing-and-feedback.md}
   - {doc: system/WORKFLOWS.md, heading: "## 27. Promote a future Master's module", class: procedure}
-  - {doc: system/WORKFLOWS.md, heading: "## 28. Read an operation (`los operations`)", class: procedure}
+  - {doc: system/WORKFLOWS.md, heading: "## 28. Read an operation (`los operations`)", class: procedure, transcript: system/procedures/read-an-operation.md}
   - {doc: system/WORKFLOWS.md, heading: "## 29. Review a stage's material angle", class: procedure}
   - {doc: system/WORKFLOWS.md, heading: "## 30. Review exact goal decisions together", class: procedure}
   - {doc: system/WORKFLOWS.md, heading: "## 31. Back up and restore", class: procedure}
