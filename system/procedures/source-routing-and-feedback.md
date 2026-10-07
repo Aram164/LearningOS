@@ -62,7 +62,7 @@ $ los capability source.feedback.record --payload-file "$TMPDIR/feedback.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:a59b1cd3c487e8ba84aa58074a380788020e88f1498c99ef0dc5c020048fa8f2",
+  "snapshot_after": "sha256:408992b528d61e12dba6a24f4803b0c0ec1fe3aaa7eb4c1c4be577532f89ec40",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -79,7 +79,7 @@ $ los capability source.feedback.record --payload-file "$TMPDIR/feedback.json"
       "study-map-demo-l01": 1,
       "unit-demo-l01": 4
     },
-    "snapshot_after": "sha256:a59b1cd3c487e8ba84aa58074a380788020e88f1498c99ef0dc5c020048fa8f2",
+    "snapshot_after": "sha256:408992b528d61e12dba6a24f4803b0c0ec1fe3aaa7eb4c1c4be577532f89ec40",
     "replayed": false
   },
   "error": null
