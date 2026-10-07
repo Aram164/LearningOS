@@ -48,7 +48,7 @@ $ los capability concept.relations.change --payload-file "$TMPDIR/relation-requi
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:e0399372a552c777e658da6af6106464839cda144255ec2eb49acf866f476092",
+  "snapshot_after": "sha256:6414d596f9a333f38b694a742093a76c01b7535ca8bc7365f4e002f3117046f6",
   "result": {
     "ok": true,
     "operation_count": 1,
@@ -57,7 +57,7 @@ $ los capability concept.relations.change --payload-file "$TMPDIR/relation-requi
     "artifact_revisions": {
       "registry-concept-relations": 1
     },
-    "snapshot_after": "sha256:e0399372a552c777e658da6af6106464839cda144255ec2eb49acf866f476092",
+    "snapshot_after": "sha256:6414d596f9a333f38b694a742093a76c01b7535ca8bc7365f4e002f3117046f6",
     "replayed": false
   },
   "error": null
@@ -74,6 +74,20 @@ $ $H/los-assert-receipt --last --capability concept.relations.change
 
 ```scrut
 $ $H/los-assert-file knowledge/concept-relations.yaml --sha256 6842ac9c446e6219cf39d800af1781006c6e8bd2d9e8a2a5dfb0226c6f170dba
+```
+
+## The receipt owns the edge
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); xs=[os.path.basename(x) for x in ds]; assert xs==["transaction-20200102-000000-001.yaml", "transaction-20261001-090000-001.yaml"], xs; d=yaml.safe_load(open(ds[-1])); assert d["capability"]=="concept.relations.change", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; e=w["knowledge/concept-relations.yaml"]; assert e["sha256_after"]=="6842ac9c446e6219cf39d800af1781006c6e8bd2d9e8a2a5dfb0226c6f170dba", e; assert e["created"] is False, e; print("owns", d["id"])'
+owns transaction-20261001-090000-001
+```
+
+## Capture the pre-refusal state
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,json,os,sys; sys.path.insert(0, os.environ["LOS_REPO"]+"/tools"); from learning_os.fingerprint import canonical_fingerprint; from pathlib import Path; st={"fp": canonical_fingerprint(Path(".")), "rc": sorted(glob.glob("operations/transactions/transaction-*.yaml"))}; json.dump(st, open(os.environ["TMPDIR"]+"/fp-refuse-duplicate.json", "w")); print("captured", len(st["rc"]))'
+captured 2
 ```
 
 ## The duplicate edge is refused
@@ -110,6 +124,13 @@ $ los capability concept.relations.change --payload-file "$TMPDIR/relation-dupli
 
 ```scrut
 $ $H/los-assert-file knowledge/concept-relations.yaml --sha256 6842ac9c446e6219cf39d800af1781006c6e8bd2d9e8a2a5dfb0226c6f170dba
+```
+
+## The refusal added no receipt and moved no canonical byte
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,json,os,sys; sys.path.insert(0, os.environ["LOS_REPO"]+"/tools"); from learning_os.fingerprint import canonical_fingerprint; from pathlib import Path; st=json.load(open(os.environ["TMPDIR"]+"/fp-refuse-duplicate.json")); fp=canonical_fingerprint(Path(".")); rc=sorted(glob.glob("operations/transactions/transaction-*.yaml")); assert fp==st["fp"], (fp, st["fp"]); assert rc==st["rc"], (rc, st["rc"]); print("unchanged")'
+unchanged
 ```
 
 ## Rebuild generated outputs

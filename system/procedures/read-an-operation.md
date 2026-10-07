@@ -70,7 +70,7 @@ $ los capability note.create --payload-file "$TMPDIR/ops-first.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:874a93fe8eb22d5946e218297a2b5ac1df474cbc853899143228171d738cdaaf",
+  "snapshot_after": "sha256:29be6f0a0cf3cf4a5390e098af72380ab78175001e71a1f1c9c42fdfa4872764",
   "result": {
     "ok": true,
     "note_id": "note-ops-first",
@@ -81,7 +81,7 @@ $ los capability note.create --payload-file "$TMPDIR/ops-first.json"
     "artifact_revisions": {
       "note-ops-first": 1
     },
-    "snapshot_after": "sha256:874a93fe8eb22d5946e218297a2b5ac1df474cbc853899143228171d738cdaaf",
+    "snapshot_after": "sha256:29be6f0a0cf3cf4a5390e098af72380ab78175001e71a1f1c9c42fdfa4872764",
     "replayed": false
   },
   "error": null
@@ -96,6 +96,13 @@ $ $H/los-assert-file knowledge/notes/mathematics/note-ops-first.md --sha256 bc45
 
 ```scrut
 $ $H/los-assert-receipt --last --capability note.create
+```
+
+## Setup: the receipt owns the setup note
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); xs=[os.path.basename(x) for x in ds]; assert xs==["transaction-20200102-000000-001.yaml", "transaction-20261001-090000-001.yaml"], xs; d=yaml.safe_load(open(ds[-1])); assert d["capability"]=="note.create", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; e=w["knowledge/notes/mathematics/note-ops-first.md"]; assert e["sha256_after"]=="bc45db014a6a1f39e6e1b4aee1f187a9aaae9a11af3690df42df89f3c44c9154", e; assert e["created"] is True, e; print("owns", d["id"])'
+owns transaction-20261001-090000-001
 ```
 
 ## The list now carries one row
@@ -127,7 +134,7 @@ $ los operations --request-id request-ops-first | $LOS_REPO/.venv/bin/python -c 
     "authoritative_evidence": [
       "receipt:operations/transactions/transaction-20261001-090000-001.yaml",
       "ledger:ops-first",
-      "observed:sha256:874a93fe8eb22d5946e218297a2b5ac1df474cbc853899143228171d738cdaaf"
+      "observed:sha256:29be6f0a0cf3cf4a5390e098af72380ab78175001e71a1f1c9c42fdfa4872764"
     ],
     "canonical_outcome": "COMMITTED",
     "execution_outcome": "committed",
@@ -141,11 +148,11 @@ $ los operations --request-id request-ops-first | $LOS_REPO/.venv/bin/python -c 
   },
   "facts": {
     "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-    "snapshot_after": "sha256:874a93fe8eb22d5946e218297a2b5ac1df474cbc853899143228171d738cdaaf",
-    "snapshot_before": "sha256:a1f5b7e982c2422aa062ca45388337743ed3d47e16d7b161f7d1b656e948e400",
+    "snapshot_after": "sha256:29be6f0a0cf3cf4a5390e098af72380ab78175001e71a1f1c9c42fdfa4872764",
+    "snapshot_before": "sha256:b3d24f19fb7311204ccdecfa6c459ea8a29cdc194933637d71096a4b424fa4ae",
     "transaction_id": "transaction-20261001-090000-001"
   },
-  "observed_snapshot": "sha256:874a93fe8eb22d5946e218297a2b5ac1df474cbc853899143228171d738cdaaf",
+  "observed_snapshot": "sha256:29be6f0a0cf3cf4a5390e098af72380ab78175001e71a1f1c9c42fdfa4872764",
   "request_id": "request-ops-first",
   "timeline": [
     {
@@ -215,6 +222,13 @@ $ BODY_SHA=$(sha256sum "$TMPDIR/ops-refused-body.md" | cut -d' ' -f1) && $H/los-
 seal_envelope: guards auto: note-ops-refused=0
 ```
 
+## Setup: capture the pre-refusal state
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,json,os,sys; sys.path.insert(0, os.environ["LOS_REPO"]+"/tools"); from learning_os.fingerprint import canonical_fingerprint; from pathlib import Path; st={"fp": canonical_fingerprint(Path(".")), "rc": sorted(glob.glob("operations/transactions/transaction-*.yaml"))}; json.dump(st, open(os.environ["TMPDIR"]+"/fp-refuse-stale.json", "w")); print("captured", len(st["rc"]))'
+captured 2
+```
+
 ## Setup: submit the refused note
 
 ```scrut
@@ -236,7 +250,7 @@ $ los capability note.create --payload-file "$TMPDIR/ops-refused.json"
     "retryable": true,
     "details": {
       "expected": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
-      "actual": "sha256:874a93fe8eb22d5946e218297a2b5ac1df474cbc853899143228171d738cdaaf"
+      "actual": "sha256:29be6f0a0cf3cf4a5390e098af72380ab78175001e71a1f1c9c42fdfa4872764"
     }
   }
 }
@@ -247,6 +261,13 @@ $ los capability note.create --payload-file "$TMPDIR/ops-refused.json"
 
 ```scrut
 $ $H/los-assert-file knowledge/notes/mathematics/note-ops-refused.md --absent
+```
+
+## Setup: the refusal added no receipt and moved no canonical byte
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,json,os,sys; sys.path.insert(0, os.environ["LOS_REPO"]+"/tools"); from learning_os.fingerprint import canonical_fingerprint; from pathlib import Path; st=json.load(open(os.environ["TMPDIR"]+"/fp-refuse-stale.json")); fp=canonical_fingerprint(Path(".")); rc=sorted(glob.glob("operations/transactions/transaction-*.yaml")); assert fp==st["fp"], (fp, st["fp"]); assert rc==st["rc"], (rc, st["rc"]); print("unchanged")'
+unchanged
 ```
 
 ## The refused request explains itself as refused
@@ -263,7 +284,7 @@ $ los operations --request-id request-ops-refused | $LOS_REPO/.venv/bin/python -
     ],
     "authoritative_evidence": [
       "response:STALE_SNAPSHOT",
-      "observed:sha256:874a93fe8eb22d5946e218297a2b5ac1df474cbc853899143228171d738cdaaf"
+      "observed:sha256:29be6f0a0cf3cf4a5390e098af72380ab78175001e71a1f1c9c42fdfa4872764"
     ],
     "canonical_outcome": "NOT_COMMITTED",
     "execution_outcome": "refused",
@@ -281,7 +302,7 @@ $ los operations --request-id request-ops-refused | $LOS_REPO/.venv/bin/python -
     "snapshot_before": null,
     "transaction_id": null
   },
-  "observed_snapshot": "sha256:874a93fe8eb22d5946e218297a2b5ac1df474cbc853899143228171d738cdaaf",
+  "observed_snapshot": "sha256:29be6f0a0cf3cf4a5390e098af72380ab78175001e71a1f1c9c42fdfa4872764",
   "request_id": "request-ops-refused",
   "timeline": [
     {
@@ -363,6 +384,20 @@ $ $H/los-assert-file knowledge/notes/mathematics/note-ops-reuse-one.md --sha256 
 $ $H/los-assert-file knowledge/notes/mathematics/note-ops-reuse-two.md --sha256 7719575deadef9915aaa2b78ad0f10e7ea7918db5db01f488a89e0a133366e65
 ```
 
+## Setup: the second receipt owns the first reused note
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); d=yaml.safe_load(open([x for x in ds if x.endswith("transaction-20261001-090000-002.yaml")][0])); assert d["capability"]=="note.create", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; e=w["knowledge/notes/mathematics/note-ops-reuse-one.md"]; assert e["sha256_after"]=="389deb815b400cebdd73e6ebedc81d871d8b8b9868f518700e5b0baec7fa8c5e", e; assert e["created"] is True, e; print("owns", d["id"])'
+owns transaction-20261001-090000-002
+```
+
+## Setup: the third receipt owns the second reused note
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); xs=[os.path.basename(x) for x in ds]; assert xs==["transaction-20200102-000000-001.yaml", "transaction-20261001-090000-001.yaml", "transaction-20261001-090000-002.yaml", "transaction-20261001-090000-003.yaml"], xs; d=yaml.safe_load(open(ds[-1])); assert d["capability"]=="note.create", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; e=w["knowledge/notes/mathematics/note-ops-reuse-two.md"]; assert e["sha256_after"]=="7719575deadef9915aaa2b78ad0f10e7ea7918db5db01f488a89e0a133366e65", e; assert e["created"] is True, e; print("owns", d["id"])'
+owns transaction-20261001-090000-003
+```
+
 ## The reused id names every distinct request
 
 ```scrut
@@ -381,7 +416,7 @@ $ los operations --request-id request-ops-reused | $LOS_REPO/.venv/bin/python -c
     "authoritative_evidence": [
       "receipt:operations/transactions/transaction-20261001-090000-002.yaml",
       "ledger:ops-reuse-one",
-      "observed:sha256:1aefd2ec776e79ad886fd977fe8eb420e932b869d9ebcec98daedacca6ad3d28"
+      "observed:sha256:a3262248d76de764115943521806cbaf1227a1c1ef2b567cff7ccfa124d41455"
     ],
     "canonical_outcome": "COMMITTED",
     "execution_outcome": "committed",
@@ -396,11 +431,11 @@ $ los operations --request-id request-ops-reused | $LOS_REPO/.venv/bin/python -c
   },
   "facts": {
     "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-    "snapshot_after": "sha256:21be877d2fb8a6d82545c55b381bd86ddbf2b09cb86e32018fca7358b4e3a9b2",
-    "snapshot_before": "sha256:874a93fe8eb22d5946e218297a2b5ac1df474cbc853899143228171d738cdaaf",
+    "snapshot_after": "sha256:a916cf93f1552d941a0ac1d533ced346f1713063cb49d8141611e7393fb58a48",
+    "snapshot_before": "sha256:29be6f0a0cf3cf4a5390e098af72380ab78175001e71a1f1c9c42fdfa4872764",
     "transaction_id": "transaction-20261001-090000-002"
   },
-  "observed_snapshot": "sha256:1aefd2ec776e79ad886fd977fe8eb420e932b869d9ebcec98daedacca6ad3d28",
+  "observed_snapshot": "sha256:a3262248d76de764115943521806cbaf1227a1c1ef2b567cff7ccfa124d41455",
   "request_id": "request-ops-reused",
   "timeline": [
     {

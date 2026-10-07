@@ -20,12 +20,26 @@ variable the test sets.
 $ eval "$($LOS_REPO/tests/procedure_helpers/los-fixture rich_world)" && export H=$LOS_REPO/tests/procedure_helpers
 ```
 
+## Capture the pre-refusal state
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,json,os,sys; sys.path.insert(0, os.environ["LOS_REPO"]+"/tools"); from learning_os.fingerprint import canonical_fingerprint; from pathlib import Path; st={"fp": canonical_fingerprint(Path(".")), "rc": sorted(glob.glob("operations/transactions/transaction-*.yaml"))}; json.dump(st, open(os.environ["TMPDIR"]+"/fp-refuse-bare.json", "w")); print("captured", len(st["rc"]))'
+captured 1
+```
+
 ## The bare attempt command is refused
 
 ```scrut {output_stream: stderr}
 $ los module-attempt module-demo --termin 2 --date 2026-10-09 --result sat
 canonical writes must use GatewayEnvelopeV2* (glob)
 [2]
+```
+
+## The refusal added no receipt and moved no canonical byte
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,json,os,sys; sys.path.insert(0, os.environ["LOS_REPO"]+"/tools"); from learning_os.fingerprint import canonical_fingerprint; from pathlib import Path; st=json.load(open(os.environ["TMPDIR"]+"/fp-refuse-bare.json")); fp=canonical_fingerprint(Path(".")); rc=sorted(glob.glob("operations/transactions/transaction-*.yaml")); assert fp==st["fp"], (fp, st["fp"]); assert rc==st["rc"], (rc, st["rc"]); print("unchanged")'
+unchanged
 ```
 
 ## Seal the attempt with derived guards
@@ -48,7 +62,7 @@ $ los capability module.attempt.record --payload-file "$TMPDIR/module-attempt-sa
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:3c45b9556a792805e15dee406349a146cbb6e074e8fe9353b07d1fc5529a34ff",
+  "snapshot_after": "sha256:e7f0b7abd71ae92f3deab58fabe3ffda321ffad58ef56652b0b409f82e25987f",
   "result": {
     "ok": true,
     "module_id": "module-demo",
@@ -62,7 +76,7 @@ $ los capability module.attempt.record --payload-file "$TMPDIR/module-attempt-sa
     "artifact_revisions": {
       "module-demo": 1
     },
-    "snapshot_after": "sha256:3c45b9556a792805e15dee406349a146cbb6e074e8fe9353b07d1fc5529a34ff",
+    "snapshot_after": "sha256:e7f0b7abd71ae92f3deab58fabe3ffda321ffad58ef56652b0b409f82e25987f",
     "replayed": false
   },
   "error": null
@@ -79,6 +93,13 @@ $ $H/los-assert-receipt --last --capability module.attempt.record
 
 ```scrut
 $ $H/los-assert-file curriculum/modules/module-demo/module.yaml --sha256 280b1e75761a6f4808d916dbd8973bc94038b4d851a40e7ff56c8895efa6af6b
+```
+
+## The receipt owns the attempt
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); xs=[os.path.basename(x) for x in ds]; assert xs==["transaction-20200102-000000-001.yaml", "transaction-20261001-090000-001.yaml"], xs; d=yaml.safe_load(open(ds[-1])); assert d["capability"]=="module.attempt.record", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; e=w["curriculum/modules/module-demo/module.yaml"]; assert e["sha256_after"]=="280b1e75761a6f4808d916dbd8973bc94038b4d851a40e7ff56c8895efa6af6b", e; assert e["created"] is False, e; print("owns", d["id"])'
+owns transaction-20261001-090000-001
 ```
 
 ## Seal the sitting deadline with derived guards
@@ -101,7 +122,7 @@ $ los capability module.sitting.update --payload-file "$TMPDIR/module-sitting-de
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:549e21991853c299999f8b7d3b578ca211604eb14b1447346ce9729e713314a4",
+  "snapshot_after": "sha256:f40232487341b20810e86a56e08f9b3d7fc4af5e853c65845b0b6630fceb28d3",
   "result": {
     "ok": true,
     "module_id": "module-demo",
@@ -112,7 +133,7 @@ $ los capability module.sitting.update --payload-file "$TMPDIR/module-sitting-de
     "artifact_revisions": {
       "module-demo": 2
     },
-    "snapshot_after": "sha256:549e21991853c299999f8b7d3b578ca211604eb14b1447346ce9729e713314a4",
+    "snapshot_after": "sha256:f40232487341b20810e86a56e08f9b3d7fc4af5e853c65845b0b6630fceb28d3",
     "replayed": false
   },
   "error": null
@@ -129,6 +150,13 @@ $ $H/los-assert-receipt --last --capability module.sitting.update
 
 ```scrut
 $ $H/los-assert-file curriculum/modules/module-demo/module.yaml --sha256 184e3220ef394972361bbb38b0935f9d8d8ac0f6e3ee111cdaf41f1e7fe5cbc4
+```
+
+## The receipt owns the deadline
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); xs=[os.path.basename(x) for x in ds]; assert xs==["transaction-20200102-000000-001.yaml", "transaction-20261001-090000-001.yaml", "transaction-20261001-090000-002.yaml"], xs; d=yaml.safe_load(open(ds[-1])); assert d["capability"]=="module.sitting.update", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; e=w["curriculum/modules/module-demo/module.yaml"]; assert e["sha256_after"]=="184e3220ef394972361bbb38b0935f9d8d8ac0f6e3ee111cdaf41f1e7fe5cbc4", e; assert e["created"] is False, e; print("owns", d["id"])'
+owns transaction-20261001-090000-002
 ```
 
 ## The status stays enrolled while the grade is pending

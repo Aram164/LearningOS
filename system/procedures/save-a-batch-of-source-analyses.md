@@ -57,7 +57,7 @@ $ cat > "$TMPDIR/batch1.json" <<EOF
 ```scrut
 $ los note-analysis-prepare --drafts "$TMPDIR/batch1.json" --out "$TMPDIR/stage1" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(d["expected_snapshot"]); print(json.dumps(d["expected_revisions"], sort_keys=True)); [print(n["note_id"], n["note_path"], n["predicted_new"], n["frozen_input_sha256"]) for n in d["notes"]]'
 True
-sha256:a1f5b7e982c2422aa062ca45388337743ed3d47e16d7b161f7d1b656e948e400
+sha256:b3d24f19fb7311204ccdecfa6c459ea8a29cdc194933637d71096a4b424fa4ae
 {"note-batch-alpha": 0, "note-batch-beta": 0}
 note-batch-alpha knowledge/notes/mathematics/note-batch-alpha.md True aeb4d9b96ff02421baa4e0651d4d25e3e830ebd12b4eea4f5e69ab7f5a6078d6
 note-batch-beta knowledge/notes/mathematics/note-batch-beta.md True 472e7d8ca1f330aa3ec439018461903df5d505c85ff47175074fcee5a24a9070
@@ -82,7 +82,7 @@ Alpha analysis of the inspected page.
 
 ```scrut
 $ cat "$TMPDIR/stage1/envelope.json" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["capability"], d["channel"], d["expected_snapshot"]); [print(n["analysis"]["id"], n["analysis"]["path"], n["body_file_sha256"]) for n in d["payload"]["bundle"]["notes"]]'
-note.analysis.save_batch codex sha256:a1f5b7e982c2422aa062ca45388337743ed3d47e16d7b161f7d1b656e948e400
+note.analysis.save_batch codex sha256:b3d24f19fb7311204ccdecfa6c459ea8a29cdc194933637d71096a4b424fa4ae
 note-batch-alpha knowledge/notes/mathematics/note-batch-alpha.md sha256:aeb4d9b96ff02421baa4e0651d4d25e3e830ebd12b4eea4f5e69ab7f5a6078d6
 note-batch-beta knowledge/notes/mathematics/note-batch-beta.md sha256:472e7d8ca1f330aa3ec439018461903df5d505c85ff47175074fcee5a24a9070
 ```
@@ -106,7 +106,7 @@ $ cat > "$TMPDIR/batch2.json" <<EOF
 ```scrut
 $ los note-analysis-prepare --drafts "$TMPDIR/batch2.json" --out "$TMPDIR/stage2" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(d["expected_snapshot"]); print(json.dumps(d["expected_revisions"], sort_keys=True)); [print(n["note_id"], n["predicted_new"]) for n in d["notes"]]'
 True
-sha256:a1f5b7e982c2422aa062ca45388337743ed3d47e16d7b161f7d1b656e948e400
+sha256:b3d24f19fb7311204ccdecfa6c459ea8a29cdc194933637d71096a4b424fa4ae
 {"note-batch-gamma": 0}
 note-batch-gamma True
 ```
@@ -138,11 +138,11 @@ $ los capability note.analysis.save_batch --payload-file "$TMPDIR/stage1/envelop
     "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
     "replayed": false,
     "replayed_note_ids": [],
-    "snapshot_after": "sha256:a2919cc34bff318bdbf3fd9299cf05fd57721f39cee7bf8cd1df3b2d36b5c0f2",
+    "snapshot_after": "sha256:ef12b5f4f3f2ea7e7f1ee2a5c5e9c71ef005f3fb860466acc6a146a50ef671b0",
     "transaction_id": "transaction-20261001-090000-001"
   },
   "schema_version": 2,
-  "snapshot_after": "sha256:a2919cc34bff318bdbf3fd9299cf05fd57721f39cee7bf8cd1df3b2d36b5c0f2",
+  "snapshot_after": "sha256:ef12b5f4f3f2ea7e7f1ee2a5c5e9c71ef005f3fb860466acc6a146a50ef671b0",
   "transaction_id": "transaction-20261001-090000-001"
 }
 ```
@@ -161,6 +161,13 @@ $ $H/los-assert-file knowledge/notes/mathematics/note-batch-beta.md --sha256 f0b
 $ $H/los-assert-receipt --last --capability note.analysis.save_batch
 ```
 
+## The receipt owns both analyses
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); xs=[os.path.basename(x) for x in ds]; assert xs==["transaction-20200102-000000-001.yaml", "transaction-20261001-090000-001.yaml"], xs; d=yaml.safe_load(open(ds[-1])); assert d["capability"]=="note.analysis.save_batch", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; ea=w["knowledge/notes/mathematics/note-batch-alpha.md"]; eb=w["knowledge/notes/mathematics/note-batch-beta.md"]; assert ea["sha256_after"]=="5a65d0c2540e9c3ddfaa25060776f792740ba1310089526d691ae1eaeeb4d33b", ea; assert eb["sha256_after"]=="f0b3ecac5418502006bafe7289d89536e4866e168aaa37c0d2c066ab5a262758", eb; assert ea["created"] is True and eb["created"] is True, (ea, eb); print("owns", d["id"])'
+owns transaction-20261001-090000-001
+```
+
 ## Re-prepping the committed drafts predicts replay
 
 ```scrut
@@ -169,6 +176,13 @@ True
 {"note-batch-alpha": 1, "note-batch-beta": 1}
 note-batch-alpha False
 note-batch-beta False
+```
+
+## Capture the pre-refusal state
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,json,os,sys; sys.path.insert(0, os.environ["LOS_REPO"]+"/tools"); from learning_os.fingerprint import canonical_fingerprint; from pathlib import Path; st={"fp": canonical_fingerprint(Path(".")), "rc": sorted(glob.glob("operations/transactions/transaction-*.yaml"))}; json.dump(st, open(os.environ["TMPDIR"]+"/fp-refuse-stale.json", "w")); print("captured", len(st["rc"]))'
+captured 2
 ```
 
 ## The second batch now submits stale
@@ -180,8 +194,8 @@ $ (set -o pipefail; los capability note.analysis.save_batch --payload-file "$TMP
   "error": {
     "code": "STALE_SNAPSHOT",
     "details": {
-      "actual": "sha256:a2919cc34bff318bdbf3fd9299cf05fd57721f39cee7bf8cd1df3b2d36b5c0f2",
-      "expected": "sha256:a1f5b7e982c2422aa062ca45388337743ed3d47e16d7b161f7d1b656e948e400"
+      "actual": "sha256:ef12b5f4f3f2ea7e7f1ee2a5c5e9c71ef005f3fb860466acc6a146a50ef671b0",
+      "expected": "sha256:b3d24f19fb7311204ccdecfa6c459ea8a29cdc194933637d71096a4b424fa4ae"
     },
     "message": "canonical state changed since this request was approved",
     "retryable": true
@@ -197,12 +211,19 @@ $ (set -o pipefail; los capability note.analysis.save_batch --payload-file "$TMP
 [3]
 ```
 
+## The stale refusal added no receipt and moved no canonical byte
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,json,os,sys; sys.path.insert(0, os.environ["LOS_REPO"]+"/tools"); from learning_os.fingerprint import canonical_fingerprint; from pathlib import Path; st=json.load(open(os.environ["TMPDIR"]+"/fp-refuse-stale.json")); fp=canonical_fingerprint(Path(".")); rc=sorted(glob.glob("operations/transactions/transaction-*.yaml")); assert fp==st["fp"], (fp, st["fp"]); assert rc==st["rc"], (rc, st["rc"]); print("unchanged")'
+unchanged
+```
+
 ## Re-prep the second batch against the moved snapshot
 
 ```scrut
 $ los note-analysis-prepare --drafts "$TMPDIR/batch2.json" --out "$TMPDIR/stage2b" | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(d["ok"]); print(d["expected_snapshot"]); [print(n["note_id"], n["predicted_new"]) for n in d["notes"]]'
 True
-sha256:a2919cc34bff318bdbf3fd9299cf05fd57721f39cee7bf8cd1df3b2d36b5c0f2
+sha256:ef12b5f4f3f2ea7e7f1ee2a5c5e9c71ef005f3fb860466acc6a146a50ef671b0
 note-batch-gamma True
 ```
 
@@ -230,11 +251,11 @@ $ los capability note.analysis.save_batch --payload-file "$TMPDIR/stage2b/envelo
     "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
     "replayed": false,
     "replayed_note_ids": [],
-    "snapshot_after": "sha256:8514c3eb0cc65a69bae83a405d6c985afdc72622af31b933b7af8d8e0f05e405",
+    "snapshot_after": "sha256:8939cc95566ee12b3f77c5121631af4077a957023eeb73c4bba8d3a66cf2da51",
     "transaction_id": "transaction-20261001-090000-002"
   },
   "schema_version": 2,
-  "snapshot_after": "sha256:8514c3eb0cc65a69bae83a405d6c985afdc72622af31b933b7af8d8e0f05e405",
+  "snapshot_after": "sha256:8939cc95566ee12b3f77c5121631af4077a957023eeb73c4bba8d3a66cf2da51",
   "transaction_id": "transaction-20261001-090000-002"
 }
 ```
@@ -247,6 +268,20 @@ $ $H/los-assert-file knowledge/notes/mathematics/note-batch-gamma.md --sha256 8c
 
 ```scrut
 $ $H/los-assert-receipt --last --capability note.analysis.save_batch
+```
+
+## The receipt owns the third analysis
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); xs=[os.path.basename(x) for x in ds]; assert xs==["transaction-20200102-000000-001.yaml", "transaction-20261001-090000-001.yaml", "transaction-20261001-090000-002.yaml"], xs; d=yaml.safe_load(open(ds[-1])); assert d["capability"]=="note.analysis.save_batch", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; e=w["knowledge/notes/mathematics/note-batch-gamma.md"]; assert e["sha256_after"]=="8c9801067ffa84ee61b7e5ccdadff96f383f115bb50b09f0159f3dbfdf86dbd5", e; assert e["created"] is True, e; print("owns", d["id"])'
+owns transaction-20261001-090000-002
+```
+
+## Capture the pre-tamper-refusal state
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,json,os,sys; sys.path.insert(0, os.environ["LOS_REPO"]+"/tools"); from learning_os.fingerprint import canonical_fingerprint; from pathlib import Path; st={"fp": canonical_fingerprint(Path(".")), "rc": sorted(glob.glob("operations/transactions/transaction-*.yaml"))}; json.dump(st, open(os.environ["TMPDIR"]+"/fp-refuse-tamper.json", "w")); print("captured", len(st["rc"]))'
+captured 3
 ```
 
 ## A tampered staging body is refused by its content hash
@@ -297,6 +332,20 @@ $ printf 'tampered bytes\n' > "$TMPDIR/stage3/bodies/note-batch-tamper.bin" && (
 $ $H/los-assert-file knowledge/notes/mathematics/note-batch-tamper.md --absent
 ```
 
+## The tamper refusal added no receipt and moved no canonical byte
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,json,os,sys; sys.path.insert(0, os.environ["LOS_REPO"]+"/tools"); from learning_os.fingerprint import canonical_fingerprint; from pathlib import Path; st=json.load(open(os.environ["TMPDIR"]+"/fp-refuse-tamper.json")); fp=canonical_fingerprint(Path(".")); rc=sorted(glob.glob("operations/transactions/transaction-*.yaml")); assert fp==st["fp"], (fp, st["fp"]); assert rc==st["rc"], (rc, st["rc"]); print("unchanged")'
+unchanged
+```
+
+## Capture the pre-prep-refusal state
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,json,os,sys; sys.path.insert(0, os.environ["LOS_REPO"]+"/tools"); from learning_os.fingerprint import canonical_fingerprint; from pathlib import Path; st={"fp": canonical_fingerprint(Path(".")), "rc": sorted(glob.glob("operations/transactions/transaction-*.yaml"))}; json.dump(st, open(os.environ["TMPDIR"]+"/fp-refuse-prep.json", "w")); print("captured", len(st["rc"]))'
+captured 3
+```
+
 ## A draft whose live bytes disagree is refused at prep
 
 ```scrut
@@ -307,6 +356,13 @@ $ $LOS_REPO/.venv/bin/python -c 'import json,os; p = os.path.join(os.environ["TM
 $ los note-analysis-prepare --drafts "$TMPDIR/batch4.json" --out "$TMPDIR/stage4"
 los: draft 0: resolved bindings must show live bytes equal to recorded
 [2]
+```
+
+## The prep refusal added no receipt and moved no canonical byte
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,json,os,sys; sys.path.insert(0, os.environ["LOS_REPO"]+"/tools"); from learning_os.fingerprint import canonical_fingerprint; from pathlib import Path; st=json.load(open(os.environ["TMPDIR"]+"/fp-refuse-prep.json")); fp=canonical_fingerprint(Path(".")); rc=sorted(glob.glob("operations/transactions/transaction-*.yaml")); assert fp==st["fp"], (fp, st["fp"]); assert rc==st["rc"], (rc, st["rc"]); print("unchanged")'
+unchanged
 ```
 
 ## Validate the saved batches

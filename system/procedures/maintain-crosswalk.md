@@ -51,7 +51,7 @@ $ los capability note.create --payload-file "$TMPDIR/crosswalk-create.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:c4b0794a84525929a8fe8389a3c0132affb67b618aacc89adb2ca585bf8ba1a1",
+  "snapshot_after": "sha256:589a466c026e37fa45a25c0d63e5726a18c7832b781dbf02d155229258ee0731",
   "result": {
     "ok": true,
     "note_id": "note-demo-crosswalk",
@@ -62,7 +62,7 @@ $ los capability note.create --payload-file "$TMPDIR/crosswalk-create.json"
     "artifact_revisions": {
       "note-demo-crosswalk": 1
     },
-    "snapshot_after": "sha256:c4b0794a84525929a8fe8389a3c0132affb67b618aacc89adb2ca585bf8ba1a1",
+    "snapshot_after": "sha256:589a466c026e37fa45a25c0d63e5726a18c7832b781dbf02d155229258ee0731",
     "replayed": false
   },
   "error": null
@@ -79,6 +79,13 @@ $ $H/los-assert-receipt --last --capability note.create
 
 ```scrut
 $ $H/los-assert-file knowledge/notes/mathematics/note-demo-crosswalk.md --sha256 cb0758d8605c4b042289733cdc72d4cd5b3b02a364ebff60d267d42f7fd55da0
+```
+
+## The receipt owns the crosswalk note
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); xs=[os.path.basename(x) for x in ds]; assert xs==["transaction-20200102-000000-001.yaml", "transaction-20261001-090000-001.yaml"], xs; d=yaml.safe_load(open(ds[-1])); assert d["capability"]=="note.create", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; e=w["knowledge/notes/mathematics/note-demo-crosswalk.md"]; assert e["sha256_after"]=="cb0758d8605c4b042289733cdc72d4cd5b3b02a364ebff60d267d42f7fd55da0", e; assert e["created"] is True, e; print("owns", d["id"])'
+owns transaction-20261001-090000-001
 ```
 
 ## Stage the narrative edit
@@ -121,7 +128,7 @@ $ los capability note.revise --payload-file "$TMPDIR/crosswalk-narrative.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:00103d1ea47c2fde2b6cdfe145fe844f77c9b24c7215da3f4e1db55edbaad95f",
+  "snapshot_after": "sha256:f45c60a5f8641c27ca86ceb7820192badf24c63a4d25a63dc8ca4ace0d097269",
   "result": {
     "ok": true,
     "note_id": "note-demo-crosswalk",
@@ -131,7 +138,7 @@ $ los capability note.revise --payload-file "$TMPDIR/crosswalk-narrative.json"
     "artifact_revisions": {
       "note-demo-crosswalk": 2
     },
-    "snapshot_after": "sha256:00103d1ea47c2fde2b6cdfe145fe844f77c9b24c7215da3f4e1db55edbaad95f",
+    "snapshot_after": "sha256:f45c60a5f8641c27ca86ceb7820192badf24c63a4d25a63dc8ca4ace0d097269",
     "replayed": false
   },
   "error": null
@@ -148,6 +155,13 @@ $ $H/los-assert-receipt --last --capability note.revise
 
 ```scrut
 $ $H/los-assert-file knowledge/notes/mathematics/note-demo-crosswalk.md --sha256 2dd4e3746b2f148ab86e1090dc30e8dc7eb8b12b96b86c35be3b0ef42187d1f3
+```
+
+## The receipt owns the narrative
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); xs=[os.path.basename(x) for x in ds]; assert xs==["transaction-20200102-000000-001.yaml", "transaction-20261001-090000-001.yaml", "transaction-20261001-090000-002.yaml"], xs; d=yaml.safe_load(open(ds[-1])); assert d["capability"]=="note.revise", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; e=w["knowledge/notes/mathematics/note-demo-crosswalk.md"]; assert e["sha256_after"]=="2dd4e3746b2f148ab86e1090dc30e8dc7eb8b12b96b86c35be3b0ef42187d1f3", e; assert e["created"] is False, e; print("owns", d["id"])'
+owns transaction-20261001-090000-002
 ```
 
 ## Review the judgment revision on the source record
@@ -177,7 +191,7 @@ $ los capability source.record.revise --payload-file "$TMPDIR/crosswalk-judgment
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:f6e4f9648300a33b35a34bb7d69753922dda2bbbe5cb890845db6dcc0a99fe51",
+  "snapshot_after": "sha256:85495f010b4d7e10e38cad84bfeb9b2a9c68c79107306a33d34b7e68336532a7",
   "result": {
     "ok": true,
     "transaction_id": "transaction-20261001-090000-003",
@@ -185,7 +199,7 @@ $ los capability source.record.revise --payload-file "$TMPDIR/crosswalk-judgment
     "artifact_revisions": {
       "source-demo-book": 1
     },
-    "snapshot_after": "sha256:f6e4f9648300a33b35a34bb7d69753922dda2bbbe5cb890845db6dcc0a99fe51",
+    "snapshot_after": "sha256:85495f010b4d7e10e38cad84bfeb9b2a9c68c79107306a33d34b7e68336532a7",
     "replayed": false
   },
   "error": null
@@ -202,6 +216,13 @@ $ $H/los-assert-receipt --last --capability source.record.revise
 
 ```scrut
 $ $H/los-assert-file sources/sources.yaml --sha256 c23027dc4edb9de11bdb80304adbc270c3e45d6b8d55352a8f2b3e12a13fa398
+```
+
+## The receipt owns the amended record
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); xs=[os.path.basename(x) for x in ds]; assert xs==["transaction-20200102-000000-001.yaml", "transaction-20261001-090000-001.yaml", "transaction-20261001-090000-002.yaml", "transaction-20261001-090000-003.yaml"], xs; d=yaml.safe_load(open(ds[-1])); assert d["capability"]=="source.record.revise", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; e=w["sources/sources.yaml"]; assert e["sha256_after"]=="c23027dc4edb9de11bdb80304adbc270c3e45d6b8d55352a8f2b3e12a13fa398", e; assert e["created"] is False, e; print("owns", d["id"])'
+owns transaction-20261001-090000-003
 ```
 
 ## Rebuild the source index
@@ -264,7 +285,7 @@ $ los capability note.revise --payload-file "$TMPDIR/crosswalk-table.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-004",
   "receipt_path": "operations/transactions/transaction-20261001-090000-004.yaml",
-  "snapshot_after": "sha256:36ee91d143addf443aeb13887cdcaaed3a60785fef0c122f0e5863dda240d018",
+  "snapshot_after": "sha256:2d6260a13b6d1a80a5acf7a397f92b678810814030d8e523b03ae6096f8500aa",
   "result": {
     "ok": true,
     "note_id": "note-demo-crosswalk",
@@ -274,11 +295,24 @@ $ los capability note.revise --payload-file "$TMPDIR/crosswalk-table.json"
     "artifact_revisions": {
       "note-demo-crosswalk": 3
     },
-    "snapshot_after": "sha256:36ee91d143addf443aeb13887cdcaaed3a60785fef0c122f0e5863dda240d018",
+    "snapshot_after": "sha256:2d6260a13b6d1a80a5acf7a397f92b678810814030d8e523b03ae6096f8500aa",
     "replayed": false
   },
   "error": null
 }
+```
+
+## The table revision persisted with its receipt
+
+```scrut
+$ $H/los-assert-file knowledge/notes/mathematics/note-demo-crosswalk.md --sha256 b6dad8de790219ca982dc078c0e631cd4a20faa21d69418d1b364286a18cdb58
+```
+
+## The receipt owns the table bytes
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); xs=[os.path.basename(x) for x in ds]; assert xs==["transaction-20200102-000000-001.yaml", "transaction-20261001-090000-001.yaml", "transaction-20261001-090000-002.yaml", "transaction-20261001-090000-003.yaml", "transaction-20261001-090000-004.yaml"], xs; d=yaml.safe_load(open(ds[-1])); assert d["capability"]=="note.revise", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; e=w["knowledge/notes/mathematics/note-demo-crosswalk.md"]; assert e["sha256_after"]=="b6dad8de790219ca982dc078c0e631cd4a20faa21d69418d1b364286a18cdb58", e; assert e["created"] is False, e; print("owns", d["id"])'
+owns transaction-20261001-090000-004
 ```
 
 ```scrut
@@ -304,7 +338,7 @@ $ los capability note.revise --payload-file "$TMPDIR/crosswalk-restore.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-005",
   "receipt_path": "operations/transactions/transaction-20261001-090000-005.yaml",
-  "snapshot_after": "sha256:f6e4f9648300a33b35a34bb7d69753922dda2bbbe5cb890845db6dcc0a99fe51",
+  "snapshot_after": "sha256:85495f010b4d7e10e38cad84bfeb9b2a9c68c79107306a33d34b7e68336532a7",
   "result": {
     "ok": true,
     "note_id": "note-demo-crosswalk",
@@ -314,7 +348,7 @@ $ los capability note.revise --payload-file "$TMPDIR/crosswalk-restore.json"
     "artifact_revisions": {
       "note-demo-crosswalk": 4
     },
-    "snapshot_after": "sha256:f6e4f9648300a33b35a34bb7d69753922dda2bbbe5cb890845db6dcc0a99fe51",
+    "snapshot_after": "sha256:85495f010b4d7e10e38cad84bfeb9b2a9c68c79107306a33d34b7e68336532a7",
     "replayed": false
   },
   "error": null
@@ -325,6 +359,19 @@ $ los capability note.revise --payload-file "$TMPDIR/crosswalk-restore.json"
 
 ```scrut
 $ $H/los-assert-receipt --last --capability note.revise
+```
+
+## The restored bytes match the narrative state
+
+```scrut
+$ $H/los-assert-file knowledge/notes/mathematics/note-demo-crosswalk.md --sha256 2dd4e3746b2f148ab86e1090dc30e8dc7eb8b12b96b86c35be3b0ef42187d1f3
+```
+
+## The receipt owns the restored bytes
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); xs=[os.path.basename(x) for x in ds]; assert xs==["transaction-20200102-000000-001.yaml", "transaction-20261001-090000-001.yaml", "transaction-20261001-090000-002.yaml", "transaction-20261001-090000-003.yaml", "transaction-20261001-090000-004.yaml", "transaction-20261001-090000-005.yaml"], xs; d=yaml.safe_load(open(ds[-1])); assert d["capability"]=="note.revise", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; e=w["knowledge/notes/mathematics/note-demo-crosswalk.md"]; assert e["sha256_after"]=="2dd4e3746b2f148ab86e1090dc30e8dc7eb8b12b96b86c35be3b0ef42187d1f3", e; assert e["created"] is False, e; print("owns", d["id"])'
+owns transaction-20261001-090000-005
 ```
 
 ## The warning is gone with the table

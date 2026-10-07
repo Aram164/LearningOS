@@ -73,7 +73,7 @@ $ los capability note.revise --payload-file "$TMPDIR/durable-revise.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:afdab852adffde20b528d26cef9e04b7cca9adc778f1e8f124d83b9ce496afc4",
+  "snapshot_after": "sha256:be7a29390c0bcb232c6941145d8b756ed789e61eecc18852faba5b0913acf3f1",
   "result": {
     "ok": true,
     "note_id": "note-demo",
@@ -83,7 +83,7 @@ $ los capability note.revise --payload-file "$TMPDIR/durable-revise.json"
     "artifact_revisions": {
       "note-demo": 1
     },
-    "snapshot_after": "sha256:afdab852adffde20b528d26cef9e04b7cca9adc778f1e8f124d83b9ce496afc4",
+    "snapshot_after": "sha256:be7a29390c0bcb232c6941145d8b756ed789e61eecc18852faba5b0913acf3f1",
     "replayed": false
   },
   "error": null
@@ -100,6 +100,13 @@ $ $H/los-assert-receipt --last --capability note.revise
 
 ```scrut
 $ $H/los-assert-file knowledge/notes/mathematics/note-demo.md --sha256 579edc9db14e8618bb50944c678ec7702756fc0ef5f0b06036c662001bebc3eb
+```
+
+## The receipt owns the revised bytes
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); xs=[os.path.basename(x) for x in ds]; assert xs==["transaction-20200102-000000-001.yaml", "transaction-20261001-090000-001.yaml"], xs; d=yaml.safe_load(open(ds[-1])); assert d["capability"]=="note.revise", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; e=w["knowledge/notes/mathematics/note-demo.md"]; assert e["sha256_after"]=="579edc9db14e8618bb50944c678ec7702756fc0ef5f0b06036c662001bebc3eb", e; assert e["created"] is False, e; print("owns", d["id"])'
+owns transaction-20261001-090000-001
 ```
 
 ## Stage the new note body
@@ -132,7 +139,7 @@ $ los capability note.create --payload-file "$TMPDIR/durable-create.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-002",
   "receipt_path": "operations/transactions/transaction-20261001-090000-002.yaml",
-  "snapshot_after": "sha256:a8b1503b010ab61948196c16264a385704db0655c4ee11b6dcae1bd36b9735ff",
+  "snapshot_after": "sha256:b1639d0197461c0d20a94feec64018083ed940b0f0f6a1d496542eeef62e836f",
   "result": {
     "ok": true,
     "note_id": "note-triangulation-memo",
@@ -143,7 +150,7 @@ $ los capability note.create --payload-file "$TMPDIR/durable-create.json"
     "artifact_revisions": {
       "note-triangulation-memo": 1
     },
-    "snapshot_after": "sha256:a8b1503b010ab61948196c16264a385704db0655c4ee11b6dcae1bd36b9735ff",
+    "snapshot_after": "sha256:b1639d0197461c0d20a94feec64018083ed940b0f0f6a1d496542eeef62e836f",
     "replayed": false
   },
   "error": null
@@ -162,12 +169,33 @@ $ $H/los-assert-receipt --last --capability note.create
 $ $H/los-assert-file knowledge/notes/mathematics/note-triangulation-memo.md --sha256 9d5801aa6fa163553ccbccac9e4e8e304ca3e499313fd7e5e34ee30ddd935c26
 ```
 
+## The receipt owns the created note
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); xs=[os.path.basename(x) for x in ds]; assert xs==["transaction-20200102-000000-001.yaml", "transaction-20261001-090000-001.yaml", "transaction-20261001-090000-002.yaml"], xs; d=yaml.safe_load(open(ds[-1])); assert d["capability"]=="note.create", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; e=w["knowledge/notes/mathematics/note-triangulation-memo.md"]; assert e["sha256_after"]=="9d5801aa6fa163553ccbccac9e4e8e304ca3e499313fd7e5e34ee30ddd935c26", e; assert e["created"] is True, e; print("owns", d["id"])'
+owns transaction-20261001-090000-002
+```
+
+## Capture the pre-refusal state
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,json,os,sys; sys.path.insert(0, os.environ["LOS_REPO"]+"/tools"); from learning_os.fingerprint import canonical_fingerprint; from pathlib import Path; st={"fp": canonical_fingerprint(Path(".")), "rc": sorted(glob.glob("operations/transactions/transaction-*.yaml"))}; json.dump(st, open(os.environ["TMPDIR"]+"/fp-refuse-reference.json", "w")); print("captured", len(st["rc"]))'
+captured 3
+```
+
 ## Reference keeps its dedicated capability
 
 ```scrut {output_stream: stderr}
 $ BODY_SHA=$(sha256sum "$TMPDIR/durable-body.md" | cut -d' ' -f1) && $H/los-seal --capability note.create --payload "{\"note\": {\"id\": \"note-triangulation-ref\", \"title\": \"Triangulation ref\", \"path\": \"knowledge/notes/mathematics/note-triangulation-ref.md\", \"role\": \"reference\"}, \"body_file\": \"$TMPDIR/durable-body.md\", \"body_file_sha256\": \"sha256:$BODY_SHA\"}" --key durable-create-ref --request-id request-durable-create-ref --guards auto --out "$TMPDIR/durable-ref.json"
 seal_envelope: role 'reference' keeps its dedicated capability; use note.analysis.save; fix the payload and seal again
 [2]
+```
+
+## The refusal added no receipt and moved no canonical byte
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,json,os,sys; sys.path.insert(0, os.environ["LOS_REPO"]+"/tools"); from learning_os.fingerprint import canonical_fingerprint; from pathlib import Path; st=json.load(open(os.environ["TMPDIR"]+"/fp-refuse-reference.json")); fp=canonical_fingerprint(Path(".")); rc=sorted(glob.glob("operations/transactions/transaction-*.yaml")); assert fp==st["fp"], (fp, st["fp"]); assert rc==st["rc"], (rc, st["rc"]); print("unchanged")'
+unchanged
 ```
 
 ## A learner question goes through its own save
@@ -190,7 +218,7 @@ $ los capability atlas.question.save --payload-file "$TMPDIR/durable-question.js
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-003",
   "receipt_path": "operations/transactions/transaction-20261001-090000-003.yaml",
-  "snapshot_after": "sha256:abe99cdf81281c70118efb57ec48b6e471cb02af03659f2d3fd9cd859cb9d29e",
+  "snapshot_after": "sha256:c986d05112af75363ed8a2a0ae6b72e89d53548e9aa43ec2bd429eb3c5a92f0c",
   "result": {
     "ok": true,
     "note_id": "note-variance-order",
@@ -200,7 +228,7 @@ $ los capability atlas.question.save --payload-file "$TMPDIR/durable-question.js
     "artifact_revisions": {
       "note-variance-order": 1
     },
-    "snapshot_after": "sha256:abe99cdf81281c70118efb57ec48b6e471cb02af03659f2d3fd9cd859cb9d29e",
+    "snapshot_after": "sha256:c986d05112af75363ed8a2a0ae6b72e89d53548e9aa43ec2bd429eb3c5a92f0c",
     "replayed": false
   },
   "error": null
@@ -217,6 +245,13 @@ $ $H/los-assert-receipt --last --capability atlas.question.save
 
 ```scrut
 $ $H/los-assert-file knowledge/notes/questions/note-variance-order.md --sha256 859bb57f24d7ed25d9b048fa150309c7edfb1f02e93e902f0b83ec8708734064
+```
+
+## The receipt owns the saved question
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); xs=[os.path.basename(x) for x in ds]; assert xs==["transaction-20200102-000000-001.yaml", "transaction-20261001-090000-001.yaml", "transaction-20261001-090000-002.yaml", "transaction-20261001-090000-003.yaml"], xs; d=yaml.safe_load(open(ds[-1])); assert d["capability"]=="atlas.question.save", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; e=w["knowledge/notes/questions/note-variance-order.md"]; assert e["sha256_after"]=="859bb57f24d7ed25d9b048fa150309c7edfb1f02e93e902f0b83ec8708734064", e; assert e["created"] is True, e; print("owns", d["id"])'
+owns transaction-20261001-090000-003
 ```
 
 ## Stage one source analysis body
@@ -249,7 +284,7 @@ $ los capability note.analysis.save --payload-file "$TMPDIR/durable-analysis.jso
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-004",
   "receipt_path": "operations/transactions/transaction-20261001-090000-004.yaml",
-  "snapshot_after": "sha256:0bffd5ba66d4a0f716fa695ed4a2f9d5db8b89fc5935a0197b94873012151323",
+  "snapshot_after": "sha256:7c278e05dbc4e533a5823486f4687abaa38331812d831023de8efda61853a800",
   "result": {
     "ok": true,
     "replayed": false,
@@ -260,7 +295,7 @@ $ los capability note.analysis.save --payload-file "$TMPDIR/durable-analysis.jso
     "artifact_revisions": {
       "note-deck-analysis": 1
     },
-    "snapshot_after": "sha256:0bffd5ba66d4a0f716fa695ed4a2f9d5db8b89fc5935a0197b94873012151323"
+    "snapshot_after": "sha256:7c278e05dbc4e533a5823486f4687abaa38331812d831023de8efda61853a800"
   },
   "error": null
 }
@@ -276,6 +311,13 @@ $ $H/los-assert-receipt --last --capability note.analysis.save
 
 ```scrut
 $ $H/los-assert-file knowledge/notes/mathematics/note-deck-analysis.md --sha256 37714a7eb7c58ed9b7509ed71f276e5ac3f81e446691435f5d9d59ca5610f1e4
+```
+
+## The receipt owns the saved analysis
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); xs=[os.path.basename(x) for x in ds]; assert xs==["transaction-20200102-000000-001.yaml", "transaction-20261001-090000-001.yaml", "transaction-20261001-090000-002.yaml", "transaction-20261001-090000-003.yaml", "transaction-20261001-090000-004.yaml"], xs; d=yaml.safe_load(open(ds[-1])); assert d["capability"]=="note.analysis.save", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; e=w["knowledge/notes/mathematics/note-deck-analysis.md"]; assert e["sha256_after"]=="37714a7eb7c58ed9b7509ed71f276e5ac3f81e446691435f5d9d59ca5610f1e4", e; assert e["created"] is True, e; print("owns", d["id"])'
+owns transaction-20261001-090000-004
 ```
 
 ## Validate, then rebuild generated outputs

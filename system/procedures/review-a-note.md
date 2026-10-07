@@ -57,7 +57,7 @@ $ los capability note.revise --payload-file "$TMPDIR/review-demo.json"
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:8ed9ef4738d36c4217eac98221b48288d17160cc19d75ae6cdaa13b93f151566",
+  "snapshot_after": "sha256:91869f4a15f3c93f6b5082c8d9cfbba66b44da7c6f456d775fe030dd20554680",
   "result": {
     "ok": true,
     "note_id": "note-demo",
@@ -67,7 +67,7 @@ $ los capability note.revise --payload-file "$TMPDIR/review-demo.json"
     "artifact_revisions": {
       "note-demo": 1
     },
-    "snapshot_after": "sha256:8ed9ef4738d36c4217eac98221b48288d17160cc19d75ae6cdaa13b93f151566",
+    "snapshot_after": "sha256:91869f4a15f3c93f6b5082c8d9cfbba66b44da7c6f456d775fe030dd20554680",
     "replayed": false
   },
   "error": null
@@ -89,6 +89,13 @@ reviewed: 2026-10-01
 
 ```scrut
 $ $H/los-assert-file knowledge/notes/mathematics/note-demo.md --sha256 b9fc3883b694b2e8ce5583efe144e12664ad6c6d44c8cc5828fa7586693a5cb1
+```
+
+## The receipt owns the reviewed bytes
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); xs=[os.path.basename(x) for x in ds]; assert xs==["transaction-20200102-000000-001.yaml", "transaction-20261001-090000-001.yaml"], xs; d=yaml.safe_load(open(ds[-1])); assert d["capability"]=="note.revise", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; e=w["knowledge/notes/mathematics/note-demo.md"]; assert e["sha256_after"]=="b9fc3883b694b2e8ce5583efe144e12664ad6c6d44c8cc5828fa7586693a5cb1", e; assert e["created"] is False, e; print("owns", d["id"])'
+owns transaction-20261001-090000-001
 ```
 
 ## Rebuild generated outputs

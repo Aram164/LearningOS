@@ -38,7 +38,7 @@ $ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --out "$TMPDIR/backup/ma
 True
 ['core', 'materials', 'ui']
 380
-sha256:e533599035a772c766b82168f6230473e12b8261de710e52087712de3bc2d7d5
+sha256:98612bcde4a833d14300246d21f80868cc2d3cf7c2f7430653faeacaf46f09c5
 ```
 
 ## The manifest binds data to Core's commit
@@ -46,7 +46,7 @@ sha256:e533599035a772c766b82168f6230473e12b8261de710e52087712de3bc2d7d5
 ```scrut
 $ $LOS_REPO/.venv/bin/python -c 'import json,os; d = json.load(open(os.path.join(os.environ["TMPDIR"], "backup/manifest.json"))); print(len(d["entries"])); print(d["aggregate_sha256"]); print(d["provenance"]["data_contract_version"]); print(d["provenance"]["core"]["commit"] is not None, d["provenance"]["ui"]["commit"])'
 380
-sha256:e533599035a772c766b82168f6230473e12b8261de710e52087712de3bc2d7d5
+sha256:98612bcde4a833d14300246d21f80868cc2d3cf7c2f7430653faeacaf46f09c5
 53
 True None
 ```
@@ -57,7 +57,14 @@ True None
 $ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --stdout | $LOS_REPO/.venv/bin/python -c 'import json,sys; d = json.load(sys.stdin); print(len(d["entries"])); print(sorted({e["root"] for e in d["entries"]})); print(d["aggregate_sha256"])'
 380
 ['core', 'materials', 'ui']
-sha256:e533599035a772c766b82168f6230473e12b8261de710e52087712de3bc2d7d5
+sha256:98612bcde4a833d14300246d21f80868cc2d3cf7c2f7430653faeacaf46f09c5
+```
+
+## Capture the pre-refusal state
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,json,os,sys; sys.path.insert(0, os.environ["LOS_REPO"]+"/tools"); from learning_os.fingerprint import canonical_fingerprint; from pathlib import Path; st={"fp": canonical_fingerprint(Path(".")), "rc": sorted(glob.glob("operations/transactions/transaction-*.yaml"))}; json.dump(st, open(os.environ["TMPDIR"]+"/fp-refuse-manifest.json", "w")); print("captured", len(st["rc"]))'
+captured 1
 ```
 
 ## A manifest path inside a backed-up root is refused
@@ -66,6 +73,13 @@ sha256:e533599035a772c766b82168f6230473e12b8261de710e52087712de3bc2d7d5
 $ los backup-manifest --ui-root "$TMPDIR/backup/ui-src" --out manifest.json
 los: refusing to write the manifest inside the backed-up core root: manifest.json
 [2]
+```
+
+## The refusal added no receipt and moved no canonical byte
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,json,os,sys; sys.path.insert(0, os.environ["LOS_REPO"]+"/tools"); from learning_os.fingerprint import canonical_fingerprint; from pathlib import Path; st=json.load(open(os.environ["TMPDIR"]+"/fp-refuse-manifest.json")); fp=canonical_fingerprint(Path(".")); rc=sorted(glob.glob("operations/transactions/transaction-*.yaml")); assert fp==st["fp"], (fp, st["fp"]); assert rc==st["rc"], (rc, st["rc"]); print("unchanged")'
+unchanged
 ```
 
 ## Copy the three roots beside the manifest

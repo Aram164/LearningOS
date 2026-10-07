@@ -32,7 +32,14 @@ sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655
 
 ```scrut
 $ los coordination-section-revise Commitments --text "Ship the demo module plan." --check
-{"ok": true, "section": "Commitments", "before": "(none)", "after": "Ship the demo module plan.", "expected_content_sha256": "sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655", "expected_snapshot": "sha256:a1f5b7e982c2422aa062ca45388337743ed3d47e16d7b161f7d1b656e948e400", "expected_revisions": {"coordination": 0}, "write_paths": ["work/COORDINATION.md"]}
+{"ok": true, "section": "Commitments", "before": "(none)", "after": "Ship the demo module plan.", "expected_content_sha256": "sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655", "expected_snapshot": "sha256:b3d24f19fb7311204ccdecfa6c459ea8a29cdc194933637d71096a4b424fa4ae", "expected_revisions": {"coordination": 0}, "write_paths": ["work/COORDINATION.md"]}
+```
+
+## Capture the pre-refusal state
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,json,os,sys; sys.path.insert(0, os.environ["LOS_REPO"]+"/tools"); from learning_os.fingerprint import canonical_fingerprint; from pathlib import Path; st={"fp": canonical_fingerprint(Path(".")), "rc": sorted(glob.glob("operations/transactions/transaction-*.yaml"))}; json.dump(st, open(os.environ["TMPDIR"]+"/fp-refuse-stale.json", "w")); print("captured", len(st["rc"]))'
+captured 1
 ```
 
 ## A stale digest is refused
@@ -41,6 +48,13 @@ $ los coordination-section-revise Commitments --text "Ship the demo module plan.
 $ $H/los-seal --capability coordination.section.revise --payload '{"section": "Commitments", "text": "Ship the demo module plan.", "expected_content_sha256": "sha256:0000000000000000000000000000000000000000000000000000000000000000"}' --key coord-stale --request-id request-coord-stale --guards auto --out "$TMPDIR/coord-stale.json"
 seal_envelope: los: placeholder content digest sha256:0000000000000000000000000000000000000000000000000000000000000000; the current content digest is sha256:667bbd75392b1acdc610aa249aa5f2fe3d7659603901f415b36eda30fe2b4655 (read it with `inspect coordination`); fix the payload and seal again
 [2]
+```
+
+## The refusal added no receipt and moved no canonical byte
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,json,os,sys; sys.path.insert(0, os.environ["LOS_REPO"]+"/tools"); from learning_os.fingerprint import canonical_fingerprint; from pathlib import Path; st=json.load(open(os.environ["TMPDIR"]+"/fp-refuse-stale.json")); fp=canonical_fingerprint(Path(".")); rc=sorted(glob.glob("operations/transactions/transaction-*.yaml")); assert fp==st["fp"], (fp, st["fp"]); assert rc==st["rc"], (rc, st["rc"]); print("unchanged")'
+unchanged
 ```
 
 ## Seal the revision with derived guards
@@ -63,7 +77,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/coord-commi
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:6110e49500e20c02cf2ea463fe39a0aa48a3c4965453260f9ad579c2fa97f35b",
+  "snapshot_after": "sha256:d2cfd7fe7e6b7316e657967529c99b2067c1ca03257412277005b6e5a8841315",
   "result": {
     "ok": true,
     "section": "Commitments",
@@ -72,7 +86,7 @@ $ los capability coordination.section.revise --payload-file "$TMPDIR/coord-commi
     "artifact_revisions": {
       "coordination": 1
     },
-    "snapshot_after": "sha256:6110e49500e20c02cf2ea463fe39a0aa48a3c4965453260f9ad579c2fa97f35b",
+    "snapshot_after": "sha256:d2cfd7fe7e6b7316e657967529c99b2067c1ca03257412277005b6e5a8841315",
     "replayed": false
   },
   "error": null
@@ -89,4 +103,11 @@ $ $H/los-assert-receipt --last --capability coordination.section.revise
 
 ```scrut
 $ $H/los-assert-file work/COORDINATION.md --sha256 5c20c95f5bcf31885ccd7f27971830187db355d74ea760d706571818960571ab
+```
+
+## The receipt owns the revised section
+
+```scrut
+$ $LOS_REPO/.venv/bin/python -c 'import glob,os,yaml; ds=sorted(glob.glob("operations/transactions/transaction-*.yaml")); xs=[os.path.basename(x) for x in ds]; assert xs==["transaction-20200102-000000-001.yaml", "transaction-20261001-090000-001.yaml"], xs; d=yaml.safe_load(open(ds[-1])); assert d["capability"]=="coordination.section.revise", d["capability"]; w={x["path"]: x for x in d.get("writes") or []}; e=w["work/COORDINATION.md"]; assert e["sha256_after"]=="5c20c95f5bcf31885ccd7f27971830187db355d74ea760d706571818960571ab", e; assert e["created"] is False, e; print("owns", d["id"])'
+owns transaction-20261001-090000-001
 ```
