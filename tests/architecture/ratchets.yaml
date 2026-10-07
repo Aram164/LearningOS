@@ -1459,27 +1459,11 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/OPERATOR.md::## Capture routing"
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: "system/OPERATOR.md::## Shelving and session closure"
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: "system/OPERATOR.md::## Start here"
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/OPERATOR.md::## Unit workflow"
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: "system/WORKFLOWS.md::## 1. Start a workspace"
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: "system/WORKFLOWS.md::## 2. Capture temporary material"
     count: 1
     since: baseline
     approved_by: null
@@ -1496,10 +1480,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: "system/WORKFLOWS.md::## 6. Add or evaluate a source"
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: "system/WORKFLOWS.md::## 8. Record evidence"
     count: 1
     since: baseline
     approved_by: null
@@ -1551,10 +1531,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: "system/WORKFLOWS.md::## 21. Process the inbox"
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: "system/WORKFLOWS.md::## 23. Process a lecture"
     count: 1
     since: baseline
@@ -1568,10 +1544,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: "system/WORKFLOWS.md::## 25b. Save a batch of source analyses"
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: "system/WORKFLOWS.md::## 25c. Build a write envelope (GatewayEnvelopeV2)"
     count: 1
     since: baseline
     approved_by: null
@@ -1678,6 +1650,26 @@ checks:
     approved_by: null
   - signature: "system/procedures/end-a-session.md::67"
     count: 1
+    since: baseline
+    approved_by: null
+  - signature: "system/procedures/build-write-envelope.md::27"
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: "system/procedures/build-write-envelope.md::41"
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: "system/procedures/capture-temporary-material.md::38"
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: "system/procedures/shelving-session-closure.md::28"
+    count: 2
+    since: baseline
+    approved_by: null
+  - signature: "system/procedures/unit-workflow.md::29"
+    count: 2
     since: baseline
     approved_by: null
   - signature: "system/skills/lecture-unit-builder/SKILL.md::39"

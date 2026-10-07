@@ -1,0 +1,30 @@
+# Doc/code mismatches found by procedure transcripts (SPEC §7.5, PLAN D11).
+#
+# Each entry records a transcript step where the code disagrees with the doc.
+# Fixes land in a later session whose kickoff quotes the decision; this
+# session changes no behaviour. `decision` is filled by the conductor from
+# Aram's decision.
+- id: M-01
+  doc: system/WORKFLOWS.md
+  heading: "## 25c. Build a write envelope (GatewayEnvelopeV2)"
+  step: "bare stage-result refusal (record-evidence transcript)"
+  documented: "the bare mutating commands (capture --text, note-revise, …) refuse with exit 2 (canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled)"
+  observed: "exit 2, stderr `los: stage results require GatewayEnvelopeV2; direct CLI application is disabled`"
+  proposed_fix: code
+  decision: null
+- id: M-02
+  doc: system/WORKFLOWS.md
+  heading: "## 25c. Build a write envelope (GatewayEnvelopeV2)"
+  step: "bare inbox-resolve refusal (build-write-envelope transcript)"
+  documented: "the bare mutating commands (capture --text, note-revise, …) refuse with exit 2 (canonical writes must use GatewayEnvelopeV2; direct CLI application is disabled)"
+  observed: "exit 2, stderr `los: inbox resolve requires GatewayEnvelopeV2; direct CLI application is disabled`"
+  proposed_fix: code
+  decision: null
+- id: M-03
+  doc: system/OPERATOR.md
+  heading: "## Unit workflow"
+  step: "remove the l01 choice wired into the study path (unit-workflow transcript)"
+  documented: "Removing a choice already wired into a study path is refused."
+  observed: "exit 0, ok:true selected:false; the guard fires only on recorded stage_ids, which no capability populates"
+  proposed_fix: code
+  decision: null
