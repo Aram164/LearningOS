@@ -87,7 +87,8 @@ from learning_os.warning_baseline import (  # noqa: E402,F401
 )
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     mode = parser.add_mutually_exclusive_group()
@@ -103,6 +104,11 @@ def main() -> int:
     parser.add_argument("--note", default="",
                         help="why the baseline moved (required with --update)")
     parser.add_argument("--root", default=None)
+    return parser
+
+
+def main() -> int:
+    parser = build_parser()
     args = parser.parse_args()
 
     if args.ratchet and not args.update:

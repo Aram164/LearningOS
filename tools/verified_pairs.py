@@ -226,9 +226,15 @@ def cmd_base() -> int:
     return 1
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("command", choices=("stamp", "check", "base"))
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
     if args.command == "stamp":
         return cmd_stamp()

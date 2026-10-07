@@ -41,9 +41,15 @@ def route_index(source_map: dict) -> dict[tuple[str, str, str], dict]:
     return index
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--dry-run", action="store_true")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
 
     changed_files = 0

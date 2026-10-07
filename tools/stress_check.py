@@ -175,7 +175,8 @@ def _ui_stress(root: Path, rounds: int) -> int:
     return rounds
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=None)
     parser.add_argument("--generations", type=int, default=5)
@@ -183,6 +184,11 @@ def main() -> int:
     parser.add_argument("--reads-per-reader", type=int, default=100)
     parser.add_argument("--cli-reads", type=int, default=32)
     parser.add_argument("--ui-rounds", type=int, default=5)
+    return parser
+
+
+def main() -> int:
+    parser = build_parser()
     args = parser.parse_args()
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent
 

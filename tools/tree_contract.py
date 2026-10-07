@@ -34,7 +34,8 @@ from learning_os.contracts.tree_contract import (  # noqa: E402
 )
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument("--root", default=".", help="repository root")
     mode = parser.add_mutually_exclusive_group()
@@ -42,6 +43,11 @@ def main(argv: list[str] | None = None) -> int:
                       help="regenerate the ARCHITECTURE tree block")
     mode.add_argument("--show", action="store_true",
                       help="print the projection without touching any file")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
 
     root = Path(args.root).resolve()

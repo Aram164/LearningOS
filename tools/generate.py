@@ -160,7 +160,8 @@ def _shadow_all_main(root: Path, *, as_json: bool) -> int:
     return {"verified": 0, "mismatch": 1, "refused": 2}[report["status"]]
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=None,
                         help="repository root (default: parent of tools/)")
@@ -177,6 +178,11 @@ def main() -> int:
     parser.add_argument("--json", action="store_true",
                         help="machine-readable shadow report "
                              "(requires a shadow mode)")
+    return parser
+
+
+def main() -> int:
+    parser = build_parser()
     args = parser.parse_args()
 
     if args.json and not (args.shadow_derived or args.shadow_manifest or args.shadow_all):

@@ -89,7 +89,8 @@ def _same_digest(recorded: str | None, actual_hex: str) -> bool:
     return recorded.removeprefix("sha256:") == actual_hex.removeprefix("sha256:")
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--receipt", required=False, default=None,
                         help="expected receipt; when omitted the receipt is "
@@ -98,6 +99,11 @@ def main() -> int:
     parser.add_argument("--report", required=True)
     parser.add_argument("--expect-artifacts", default=None)
     parser.add_argument("--root", default=None)
+    return parser
+
+
+def main() -> int:
+    parser = build_parser()
     args = parser.parse_args()
 
     root = Path(args.root).resolve() if args.root else REPO

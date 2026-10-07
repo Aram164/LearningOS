@@ -49,7 +49,8 @@ def _emit(root: Path, schema_rel: str, schema_dir_rel: str, out_dir: Path) -> li
     return [bundle_path, meta_path]
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--root", default=None,
@@ -63,6 +64,11 @@ def main() -> int:
     check = sub.add_parser("check", help="rebuild and byte-compare against --dir")
     check.add_argument("--schema", required=True, help="root schema, repository-relative")
     check.add_argument("--dir", required=True, help="directory holding a previous build")
+    return parser
+
+
+def main() -> int:
+    parser = build_parser()
     args = parser.parse_args()
 
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent

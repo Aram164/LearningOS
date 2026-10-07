@@ -27,7 +27,8 @@ from learning_os.validation_cache import (  # noqa: E402
 )
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--online", action="store_true",
                         help="also gate on external link rot (never runs during offline validation)")
@@ -40,6 +41,11 @@ def main() -> int:
                              "streaming every unchanged warning; the complete "
                              "list stays in the validation report unless "
                              "--no-report is also given")
+    return parser
+
+
+def main() -> int:
+    parser = build_parser()
     args = parser.parse_args()
 
     started = _time.monotonic()

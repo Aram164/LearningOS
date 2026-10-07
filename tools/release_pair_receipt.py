@@ -357,7 +357,8 @@ def _cli_verify(args: argparse.Namespace) -> int:
     return 0
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -381,7 +382,11 @@ def main() -> int:
     verify_parser.add_argument("--receipt", required=True)
     verify_parser.add_argument("--artifact-dir", required=True)
     verify_parser.set_defaults(func=_cli_verify)
+    return parser
 
+
+def main() -> int:
+    parser = build_parser()
     args = parser.parse_args()
     return args.func(args)
 

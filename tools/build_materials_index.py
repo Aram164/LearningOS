@@ -52,13 +52,19 @@ import argparse
 from materials_index import cli  # noqa: E402
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument(
         "--html", action="store_true",
         help="also emit the retired INDEX.html browser surface "
              "(default: README.md + FILES.txt only)")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
     cli.main(html=args.html)
     return 0

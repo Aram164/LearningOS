@@ -158,12 +158,18 @@ def outside_scope(paths: set[str], prefixes: tuple[str, ...]) -> set[str]:
             and not any(path.startswith(prefix) for prefix in prefixes)}
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "prompt", nargs="?",
         help="the prompt to send to the Codex CLI "
              "(pass after -- when it starts with a dash)")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
     if args.prompt is None or not args.prompt.strip():
         print("learningos-codex: expected one prompt argument", file=sys.stderr)

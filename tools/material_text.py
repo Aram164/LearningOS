@@ -213,7 +213,8 @@ def _prune(cache: Path, live: set[str]) -> int:
     return pruned
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--build", action="store_true", help="cache every PDF in the manifest")
@@ -222,6 +223,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--manifest", default=str(MANIFEST), help="materials manifest path")
     parser.add_argument("--materials-root", default=None, help="materials tree root")
     parser.add_argument("--cache-dir", default=str(CACHE_DIR), help="cache root")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
 
     if shutil.which("pdftotext") is None:

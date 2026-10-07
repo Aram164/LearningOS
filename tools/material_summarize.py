@@ -271,7 +271,8 @@ def _audit(cache_dir: Path, base: Path) -> int:
     return 1 if stale else 0
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--promote", action="store_true", help="admit one draft summary")
@@ -287,6 +288,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--model", help="authoring model name and version")
     parser.add_argument("--text-cache", default=str(TEXT_CACHE), help="page-text cache root")
     parser.add_argument("--cache-dir", default=str(SUMMARY_CACHE), help="summary cache root")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
 
     if sum((args.audit, args.promote, args.read)) != 1:

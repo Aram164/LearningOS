@@ -15,7 +15,8 @@ import sys
 from learning_os.contracts.data_contract import bump, check, fingerprint
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
     )
@@ -32,6 +33,11 @@ def main() -> int:
         "--migration", default=None,
         help="path to the migration that brings the previous version forward",
     )
+    return parser
+
+
+def main() -> int:
+    parser = build_parser()
     args = parser.parse_args()
 
     if args.fingerprint:

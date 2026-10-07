@@ -28,12 +28,18 @@ def _build_schemas(root: Path) -> dict:
         payload_records=resolve_all(root))
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--check", action="store_true",
         help="compare the checked-in schemas with the parser instead of "
              "writing; exit 1 listing drifted files")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
     root = TOOLS.parent
     schemas = _build_schemas(root)

@@ -1415,7 +1415,8 @@ def command_extract(args: argparse.Namespace) -> int:
     return 0
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--root", help="repository root (default: this checkout)")
@@ -1443,6 +1444,11 @@ def main(argv: list[str] | None = None) -> int:
         if name == "extract":
             command.add_argument("--key")
             command.add_argument("--json", action="store_true")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
     try:
         return args.handler(args)

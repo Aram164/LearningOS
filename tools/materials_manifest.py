@@ -179,7 +179,8 @@ def _report(result: dict, base: Path, deep: bool) -> int:
     return worst
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--build", action="store_true",
@@ -190,6 +191,11 @@ def main() -> int:
                         help="verify size and presence only")
     parser.add_argument("--against", default=None, metavar="PATH",
                         help="verify a restored copy at PATH instead of the live tree (hashes by default)")
+    return parser
+
+
+def main() -> int:
+    parser = build_parser()
     args = parser.parse_args()
 
     if args.deep and args.fast:

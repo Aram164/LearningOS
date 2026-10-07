@@ -385,9 +385,15 @@ def _print_report(report: ReachabilityReport) -> None:
         print("code architecture: PASS (static imports only; no runtime coverage claim)")
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--json", action="store_true", help="emit the complete report as JSON")
+    return parser
+
+
+def main() -> int:
+    parser = build_parser()
     args = parser.parse_args()
     report = analyse()
     if args.json:

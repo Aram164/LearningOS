@@ -37,7 +37,8 @@ from learning_os.diagnostics.store import (  # noqa: E402
 )
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--root", default=None,
                         help="repository root (default: parent of tools/)")
@@ -51,6 +52,11 @@ def main() -> int:
     parser.add_argument("--derived-state", action="store_true",
                         help="sweep unreferenced derived-state blobs instead of "
                              "the trace store")
+    return parser
+
+
+def main() -> int:
+    parser = build_parser()
     args = parser.parse_args()
     if args.keep_last < 0:
         parser.error("--keep-last must not be negative")

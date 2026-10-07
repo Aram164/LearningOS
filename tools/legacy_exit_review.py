@@ -247,7 +247,8 @@ def _markdown(items: list[ReviewItem], legacy_root: Path, *, details: bool) -> s
     return "\n".join(lines).rstrip() + "\n"
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
         "--legacy-root",
@@ -257,6 +258,11 @@ def main() -> int:
     )
     parser.add_argument("--json", action="store_true", help="emit machine-readable JSON")
     parser.add_argument("--details", action="store_true", help="include the complete inventory")
+    return parser
+
+
+def main() -> int:
+    parser = build_parser()
     args = parser.parse_args()
 
     legacy_root = args.legacy_root.expanduser().resolve()

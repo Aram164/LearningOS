@@ -56,8 +56,14 @@ def parse_reading_list(path: Path) -> dict:
             for lec in LECTURES}
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__)
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     parser.parse_args(argv)
     if not READING_LIST.exists():
         raise SystemExit(

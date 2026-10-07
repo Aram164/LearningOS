@@ -357,7 +357,8 @@ def _run(materials: Path, *, apply: bool) -> int:
     return 0
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     parser.add_argument(
         "--apply", action="store_true",
@@ -366,6 +367,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--materials-root", type=Path, default=MATERIALS,
         help="materials tree to maintain (default: the sibling materials/ tree)")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
     return _run(args.materials_root, apply=args.apply)
 

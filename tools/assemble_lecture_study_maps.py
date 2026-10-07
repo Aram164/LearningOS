@@ -631,13 +631,19 @@ def _atomic_draft(path: Path, content: str) -> None:
         tmp.unlink(missing_ok=True)
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--root", type=Path, default=REPO)
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--unit", action="append", default=[])
     parser.add_argument("--expanded", action="store_true",
                         help="export standalone material descriptions instead of shared references")
+    return parser
+
+
+def main() -> int:
+    parser = build_parser()
     args = parser.parse_args()
 
     root = args.root.expanduser().resolve()

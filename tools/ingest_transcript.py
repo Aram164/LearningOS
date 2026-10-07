@@ -384,7 +384,8 @@ def ingest(source_id: str, urls: list[str], *, window: int,
 # ---------------------------------------------------------------- entry point
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--list", action="store_true",
@@ -398,6 +399,11 @@ def main() -> int:
                              "are skipped before they count)")
     parser.add_argument("--dry-run", action="store_true",
                         help="fetch and convert, write nothing")
+    return parser
+
+
+def main() -> int:
+    parser = build_parser()
     args = parser.parse_args()
 
     if args.window < 5:

@@ -52,7 +52,8 @@ def _manifest(root: Path, enforce_contract: bool) -> dict:
                           enforce_contract=enforce_contract)
 
 
-def main() -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(
         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("--root", default=None,
@@ -63,6 +64,11 @@ def main() -> int:
                         help="adopt the current build's shape as the next version")
     parser.add_argument("--note", default=None,
                         help="what changed in the projection (required with --bump)")
+    return parser
+
+
+def main() -> int:
+    parser = build_parser()
     args = parser.parse_args()
 
     root = Path(args.root).resolve() if args.root else Path(__file__).resolve().parent.parent

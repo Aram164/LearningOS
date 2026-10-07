@@ -61,7 +61,8 @@ def changed_paths(base: str | None) -> list[str]:
     return sorted(set(paths))
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--base", default="main",
                         help="branch base for committed changes; unavailable "
@@ -70,6 +71,11 @@ def main(argv: list[str] | None = None) -> int:
                         help="explicit repo-relative paths instead of git")
     parser.add_argument("--groups", action="store_true",
                         help="print group names instead of test files")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
 
     try:

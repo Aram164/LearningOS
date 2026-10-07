@@ -168,7 +168,8 @@ def normalise(text: str) -> str:
     return re.sub(r"\s+", " ", text).strip().casefold()
 
 
-def main(argv: list[str] | None = None) -> int:
+def build_parser() -> argparse.ArgumentParser:
+    """The tool's CLI surface (SPEC §7.4, PLAN D11)."""
     parser = argparse.ArgumentParser(description=__doc__,
                                      formatter_class=argparse.RawDescriptionHelpFormatter)
     parser.add_argument("material", help="material:// reference or a path")
@@ -181,6 +182,11 @@ def main(argv: list[str] | None = None) -> int:
                         help="check that --page contains --expect")
     parser.add_argument("--page", type=int, help="PDF page number to check")
     parser.add_argument("--expect", help="heading text the page must contain")
+    return parser
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = build_parser()
     args = parser.parse_args(argv)
 
     path = resolve(args.material)
