@@ -319,6 +319,16 @@ documents:
       and its sitting deadline through their envelopes, with the
       status held and the views rebuilt.
 
+  - path: system/procedures/complete-archive-workspace.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §11: durable note,
+      cleared dependency, completed status, and the byte-identical
+      dated-archive move.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so
