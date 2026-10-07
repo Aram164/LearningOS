@@ -39,7 +39,7 @@ seal_envelope: guards auto: study-map-demo-l01=0, unit-demo-l01=3
 ## The sealed envelope's sha256, before submission
 
 ```scrut
-$ $H/los-assert-file "$TMPDIR/stage-progress.json" --sha256 d62e25294797f1934d3058965acb0c35d43167d48ad57811d3464f4794130e8b
+$ $H/los-assert-file "$TMPDIR/stage-progress.json" --sha256 a52b7d0fd335e97490b4008b81dbe0e40bb7f5c5374e0a4a9b81a5bb990ceb66
 ```
 
 ## Step 1: submit the stage-progress envelope
@@ -55,7 +55,7 @@ $ los capability stage.progress.update --payload-file "$TMPDIR/stage-progress.js
   "replayed": false,
   "transaction_id": "transaction-20261001-090000-001",
   "receipt_path": "operations/transactions/transaction-20261001-090000-001.yaml",
-  "snapshot_after": "sha256:ac1c574828a2a47e3da1be5fe5259ff8b8ce7dd580c4e14dac06d20c437d78c2",
+  "snapshot_after": "sha256:41eaf03236ecee0afeae901dd265134cc7ad1eaf86877260aee0787dff7614c5",
   "result": {
     "ok": true,
     "unit_id": "unit-demo-l01",
@@ -75,7 +75,7 @@ $ los capability stage.progress.update --payload-file "$TMPDIR/stage-progress.js
       "study-map-demo-l01": 1,
       "unit-demo-l01": 4
     },
-    "snapshot_after": "sha256:ac1c574828a2a47e3da1be5fe5259ff8b8ce7dd580c4e14dac06d20c437d78c2",
+    "snapshot_after": "sha256:41eaf03236ecee0afeae901dd265134cc7ad1eaf86877260aee0787dff7614c5",
     "replayed": false
   },
   "error": null
@@ -114,8 +114,8 @@ $ los capability unit.note.append --payload-file "$TMPDIR/unit-note.json"
     "message": "canonical state changed since this request was approved",
     "retryable": true,
     "details": {
-      "expected": "sha256:2c3a6a0a93d94c0747c0b20b279d95ec309aba4092a2ea10e1d28401fb10f6d4",
-      "actual": "sha256:ac1c574828a2a47e3da1be5fe5259ff8b8ce7dd580c4e14dac06d20c437d78c2"
+      "expected": "sha256:ca871e510eedc8520fcd27698d5143be3384b3ce192b18364ec17c45ddef7b63",
+      "actual": "sha256:41eaf03236ecee0afeae901dd265134cc7ad1eaf86877260aee0787dff7614c5"
     }
   }
 }
@@ -123,6 +123,46 @@ $ los capability unit.note.append --payload-file "$TMPDIR/unit-note.json"
 ```
 
 ## Step 3: review the session
+
+```scrut
+$ los session-end
+{
+  "ok": true,
+  "touched": [
+    "curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
+    "curriculum/modules/module-demo/units/unit-demo-l01/unit.yaml",
+    "curriculum/resume.yaml",
+    "operations/transactions/idempotency.yaml",
+    "operations/transactions/revisions.yaml",
+    "operations/transactions/transaction-20261001-090000-001.yaml"
+  ],
+  "owned_changes": [
+    " M curriculum/modules/module-demo/units/unit-demo-l01/study-map.yaml",
+    " M curriculum/resume.yaml",
+    " M operations/transactions/revisions.yaml",
+    "?? operations/transactions/idempotency.yaml",
+    "?? operations/transactions/transaction-20261001-090000-001.yaml"
+  ],
+  "unrelated_changes": [
+    "?? operations/diagnostics/traces.jsonl"
+  ],
+  "committed": false,
+  "pushed": false,
+  "validation": "0 error(s), 9 warning(s) * (glob)
+  "ownership_conflicts": [],
+  "session_id": "channel:operator",
+  "client": null,
+  "stale_paths": [],
+  "stale_hours": 24,
+  "other_sessions": {},
+  "session_closed": false
+}
+```
+
+## Step 3 rerun: the review shows the same list
+
+A bare review never closes the session, so running it twice shows the
+same list.
 
 ```scrut
 $ los session-end
