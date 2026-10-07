@@ -329,6 +329,16 @@ documents:
       cleared dependency, completed status, and the byte-identical
       dated-archive move.
 
+  - path: system/procedures/generate-indexes-reports.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §12: the one generation
+      command, its products, their provenance marks, and the absent
+      validation report.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so

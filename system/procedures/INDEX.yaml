@@ -27,7 +27,7 @@ sections:
   - {doc: system/WORKFLOWS.md, heading: "## 9. Update coordination", class: procedure, transcript: system/procedures/update-coordination.md}
   - {doc: system/WORKFLOWS.md, heading: "## 10. Record a module event", class: procedure, transcript: system/procedures/record-module-event.md}
   - {doc: system/WORKFLOWS.md, heading: "## 11. Complete and archive a workspace", class: procedure, transcript: system/procedures/complete-archive-workspace.md}
-  - {doc: system/WORKFLOWS.md, heading: "## 12. Generate indexes and reports", class: procedure}
+  - {doc: system/WORKFLOWS.md, heading: "## 12. Generate indexes and reports", class: procedure, transcript: system/procedures/generate-indexes-reports.md}
   - {doc: system/WORKFLOWS.md, heading: "## 13. Review a note", class: procedure}
   - {doc: system/WORKFLOWS.md, heading: "## 14. Move or rename a note", class: procedure}
   - {doc: system/WORKFLOWS.md, heading: "## 15. Deprecate or supersede", class: procedure}
