@@ -375,6 +375,16 @@ documents:
       Executable Scrut transcript of WORKFLOWS §16: narrative on the
       note, judgment on the source record, and the table warning.
 
+  - path: system/procedures/start-a-module.md
+    class: procedure
+    status: current
+    authority: binding
+    owner: workflows
+    summary: >-
+      Executable Scrut transcript of WORKFLOWS §18: verified
+      partition and registration, the start workspace, the wired
+      dependency, and the documented rebuild and validate.
+
   # ---- operator skills ------------------------------------------------------
   #
   # A skill is a runbook an operator follows instead of reading the spine, so

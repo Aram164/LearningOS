@@ -33,7 +33,7 @@ sections:
   - {doc: system/WORKFLOWS.md, heading: "## 15. Deprecate or supersede", class: procedure, transcript: system/procedures/deprecate-supersede.md}
   - {doc: system/WORKFLOWS.md, heading: "## 16. Maintain a crosswalk", class: procedure, transcript: system/procedures/maintain-crosswalk.md}
   - {doc: system/WORKFLOWS.md, heading: "## 17. Ingest a handwritten note", class: procedure}
-  - {doc: system/WORKFLOWS.md, heading: "## 18. Start a module", class: procedure}
+  - {doc: system/WORKFLOWS.md, heading: "## 18. Start a module", class: procedure, transcript: system/procedures/start-a-module.md}
   - {doc: system/WORKFLOWS.md, heading: "## 19. Close a module", class: procedure}
   - {doc: system/WORKFLOWS.md, heading: "## 20. Carry work across semesters", class: procedure}
   - {doc: system/WORKFLOWS.md, heading: "## 21. Process the inbox", class: procedure, transcript: system/procedures/process-inbox.md}
