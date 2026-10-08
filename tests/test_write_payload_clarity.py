@@ -120,30 +120,25 @@ def test_every_opaque_payload_field_declares_its_accepted_shape(repo_root):
     contract-module fragment in ``contracts/payloads._NESTED_SCHEMAS`` —
     then regenerate with ``tools/generate_capability_schemas.py``.
     """
-    import los
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.contracts.payload_records import resolve_all
     from learning_os.contracts.payloads import (
         _NESTED_SCHEMAS,
         json_object_fields,
-        subparsers,
     )
 
-    commands = subparsers(los.build_parser())
     declared = set(resolve_all(repo_root)) | set(_NESTED_SCHEMAS)
     missing, dangling = [], []
     for name, definition in command_definitions(repo_root).items():
-        command_parser = commands.get(definition.cli_command or "")
-        if command_parser is None:
+        if not definition.cli_command:
             continue
-        for field in sorted(json_object_fields(command_parser)):
+        for field in sorted(json_object_fields(repo_root, name)):
             if (name, field) not in declared:
                 missing.append(f"{name}.{field}")
     for name, field in sorted(declared):
         definition = command_definitions(repo_root).get(name)
-        command_parser = commands.get(definition.cli_command or "") \
-            if definition is not None else None
-        if command_parser is None or field not in json_object_fields(command_parser):
+        if definition is None or not definition.cli_command \
+                or field not in json_object_fields(repo_root, name):
             dangling.append(f"{name}.{field}")
     assert not missing, (
         "opaque payload fields without a declared accepted shape: "

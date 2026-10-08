@@ -43,12 +43,11 @@ def test_every_command_capability_has_a_payload_schema(repo_root: Path):
 
 def test_payload_schemas_match_the_cli_parser(repo_root: Path):
     """Regenerating must be a no-op: the checked-in files are derived, not authored."""
-    import los
     from learning_os.contracts.payload_records import resolve_all
     from learning_os.contracts.payloads import all_payload_schemas
 
     generated = all_payload_schemas(
-        los.build_parser(), _definitions(repo_root),
+        repo_root, _definitions(repo_root),
         payload_records=resolve_all(repo_root))
     for name, schema in generated.items():
         on_disk = json.loads((repo_root / SCHEMA_DIR / f"{name}.schema.json").read_text(encoding="utf-8"))
@@ -256,7 +255,7 @@ def test_generated_schemas_carry_parser_help_text(repo_root: Path):
     definitions = _definitions(repo_root)
     records = resolve_all(repo_root)
     schemas = all_payload_schemas(
-        parser, definitions, payload_records=records)
+        repo_root, definitions, payload_records=records)
     carried = 0
     for name, definition in sorted(definitions.items()):
         if not definition.cli_command:

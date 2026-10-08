@@ -607,7 +607,7 @@ def test_batch_shape_has_one_source_of_truth(repo_root):
     )
 
     command_parser = subparsers(los.build_parser())["note-analysis-save-batch"]
-    fresh = payload_schema("note.analysis.save_batch", command_parser)
+    fresh = payload_schema("note.analysis.save_batch", repo_root)
     schema_path = (repo_root / "system/schema/capabilities"
                    / "note.analysis.save_batch.schema.json")
     on_disk = json.loads(schema_path.read_text(encoding="utf-8"))

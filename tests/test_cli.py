@@ -420,13 +420,12 @@ def test_capability_backed_commands_take_no_added_json_flag(repo_root):
 
 
 def test_no_capability_schema_gains_a_json_property(repo_root):
-    import los
     from learning_os.contracts.capability_catalog import command_definitions
     from learning_os.contracts.payload_records import resolve_all
     from learning_os.contracts.payloads import all_payload_schemas
 
     schemas = all_payload_schemas(
-        los.build_parser(), command_definitions(repo_root),
+        repo_root, command_definitions(repo_root),
         payload_records=resolve_all(repo_root))
     assert len(schemas) == 47
     for name, schema in schemas.items():

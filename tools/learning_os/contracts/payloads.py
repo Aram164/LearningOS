@@ -1,8 +1,8 @@
-"""Capability payload schemas, derived from the CLI parser.
+"""Capability payload schemas, derived from request schemas.
 
 A capability envelope's ``payload`` carries exactly the arguments its named
 CLI command accepts. Rather than maintaining a second, hand-written copy of
-that surface, the schema is *derived* from the very parser that defines the
+that surface, the schema is *derived* from the request document for the
 command — so the two cannot drift, and adding a CLI flag cannot silently leave
 the machine interface behind.
 
@@ -17,10 +17,12 @@ from __future__ import annotations
 import argparse
 import json
 import re
+from pathlib import Path
 
 from ..domain.failures import WriteRefused
 from .atlas_question import question_schema as atlas_question_schema
 from .batch_notes import bundle_schema as batch_notes_schema
+from .requests import request_schema
 
 # Owned by the envelope, never by the payload.
 #
@@ -140,7 +142,7 @@ def _json_type(action: argparse.Action) -> dict:
     return _scalar_json_type(action)
 
 
-def _exclusive_choices(command_parser: argparse.ArgumentParser) -> list[dict]:
+def _exclusive_choices(request_doc: dict) -> list[dict]:
     """`oneOf` branches for each REQUIRED mutually exclusive argument group.
 
     Without this the generated schema would say both alternatives are optional
@@ -150,12 +152,16 @@ def _exclusive_choices(command_parser: argparse.ArgumentParser) -> list[dict]:
     to be the trustworthy part.
     """
     out = []
-    for group in command_parser._mutually_exclusive_groups:
-        if not group.required:
+    properties = request_doc.get("properties", {})
+    cmd = request_doc.get("x-los-cli-command", {})
+    for group in cmd.get("mutually_exclusive", []):
+        if not group.get("required"):
             continue
         names = sorted(
-            action.dest for action in group._group_actions
-            if action.dest not in NOT_A_PAYLOAD_FIELD and action.dest not in ENVELOPE_OWNED
+            dest for dest in group.get("dests", [])
+            if dest in properties
+            and not properties[dest].get("x-los-cli", {}).get("transport_only")
+            and not properties[dest].get("x-los-cli", {}).get("envelope_owned")
         )
         if len(names) > 1:
             out.append({"oneOf": [{"required": [name]} for name in names]})
@@ -178,17 +184,20 @@ def payload_fields(command_parser: argparse.ArgumentParser) -> list[argparse.Act
     ]
 
 
-def json_object_fields(command_parser: argparse.ArgumentParser) -> set[str]:
-    """Payload fields the parser declares as opaque structured objects."""
+def json_object_fields(root: Path, operation: str) -> set[str]:
+    """Payload fields the request schema declares as opaque objects."""
+    doc = request_schema(root, operation)
     return {
-        action.dest for action in payload_fields(command_parser)
-        if action.type is json_object
+        prop for prop, subschema in doc.get("properties", {}).items()
+        if subschema.get("x-los-cli", {}).get("type") == "json_object"
+        and not subschema.get("x-los-cli", {}).get("transport_only")
+        and not subschema.get("x-los-cli", {}).get("envelope_owned")
     }
 
 
 def payload_schema(
     name: str,
-    command_parser: argparse.ArgumentParser,
+    root: Path,
     *,
     payload_records: dict[tuple[str, str], dict] | None = None,
 ) -> dict:
@@ -196,18 +205,31 @@ def payload_schema(
 
     ``payload_records`` carries the catalogue-declared accepted input
     shapes (``contracts.payload_records.resolve_all``), merged over the
-    parser-derived surface exactly like the contract-module fragments.
+    request-derived surface exactly like the contract-module fragments.
     """
+    doc = request_schema(root, name)
     properties, required = {}, []
-    for action in payload_fields(command_parser):
-        properties[action.dest] = _json_type(action)
-        # The schema is the declared payload agents read before any write, so
-        # each field carries its CLI help verbatim — no extra --help call per
-        # capability to learn what drop_sha256 or replace means.
-        if action.help and action.help != argparse.SUPPRESS:
-            properties[action.dest]["description"] = action.help
-        if action.required or not action.option_strings:
-            required.append(action.dest)
+    for prop, subschema in doc.get("properties", {}).items():
+        cli = subschema.get("x-los-cli", {})
+        if cli.get("transport_only") or cli.get("envelope_owned"):
+            continue
+        prop_schema = {k: v for k, v in subschema.items()
+                       if not k.startswith("x-los-") and k != "description"}
+        for nested_key in ("items", "additionalProperties"):
+            nested_value = prop_schema.get(nested_key)
+            if isinstance(nested_value, dict):
+                prop_schema[nested_key] = {
+                    k: v for k, v in nested_value.items()
+                    if not k.startswith("x-los-")
+                }
+        desc = subschema.get("description", "")
+        if desc and "(no description in the parser yet)" not in desc \
+                and desc != "==SUPPRESS==":
+            prop_schema["description"] = desc
+        properties[prop] = prop_schema
+    for dest in doc.get("required", []):
+        if dest in properties:
+            required.append(dest)
     for (capability_name, field), nested in _NESTED_SCHEMAS.items():
         if capability_name == name and field in properties:
             # A fragment with its own description keeps it; otherwise the
@@ -238,7 +260,7 @@ def payload_schema(
         "required": sorted(required),
         "properties": dict(sorted(properties.items())),
     }
-    choices = _exclusive_choices(command_parser)
+    choices = _exclusive_choices(doc)
     if name == "capture.create":
         choices.append({
             "oneOf": [
@@ -275,7 +297,7 @@ def payload_schema(
 
 
 def all_payload_schemas(
-    parser: argparse.ArgumentParser,
+    root: Path,
     definitions,
     *,
     payload_records: dict[tuple[str, str], dict] | None = None,
@@ -286,25 +308,20 @@ def all_payload_schemas(
     a typo, not a no-op: it fails loudly here, in the generator and in the
     derivation test alike, instead of silently declaring nothing.
     """
-    commands = subparsers(parser)
     for capability_name, field in (payload_records or {}):
-        definition = definitions.get(capability_name)
-        command_parser = commands.get(definition.cli_command or "") \
-            if definition is not None else None
-        if command_parser is None or \
-                field not in json_object_fields(command_parser):
+        if field not in json_object_fields(root, capability_name):
             raise ValueError(
                 f"payload_records {capability_name}.{field} declares no "
                 "json_object payload field"
             )
     out = {}
     for name, definition in sorted(definitions.items()):
-        command_parser = commands.get(definition.cli_command or "")
-        if command_parser is None:
+        if not definition.cli_command:
             continue
-        out[name] = payload_schema(name, command_parser,
+        out[name] = payload_schema(name, root,
                                    payload_records=payload_records)
     return out
+
 
 
 def _check_payload_choices(field: str, action: argparse.Action,

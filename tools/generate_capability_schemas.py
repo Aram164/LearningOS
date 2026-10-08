@@ -22,10 +22,8 @@ from learning_os.contracts.payloads import all_payload_schemas  # noqa: E402
 
 
 def _build_schemas(root: Path) -> dict:
-    import los  # noqa: E402  (imports the parser, not a command)
-
     return all_payload_schemas(
-        los.build_parser(), command_definitions(root),
+        root, command_definitions(root),
         payload_records=resolve_all(root))
 
 

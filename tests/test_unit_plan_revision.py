@@ -1327,11 +1327,11 @@ def test_report_out_stays_out_of_gateway_payloads(mini_repo: Path):
     import los
     from learning_os.commands.capability import _dispatch
     from learning_os.contracts.capability_catalog import command_definitions
-    from learning_os.contracts.payloads import payload_schema, subparsers
+    from learning_os.contracts.payloads import payload_schema
 
-    command_parser = subparsers(los.build_parser())["unit-plan-revise"]
+    repo_root = Path(__file__).resolve().parent.parent
     assert "report_out" not in payload_schema(
-        "unit.plan.revise", command_parser)["properties"]
+        "unit.plan.revise", repo_root)["properties"]
 
     definitions = command_definitions(mini_repo)
     envelope = {
