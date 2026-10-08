@@ -153,7 +153,7 @@ def test_every_transcript_passes():
         f"scrut binary not found: {scrut} — set LOS_SCRUT_BIN to the v0.5.0"
         " binary, or run the `make setup` addition BAKEOFF.md records")
     for transcript in transcripts:
-        env = dict(os.environ, LOS_REPO=str(ROOT))
+        env = dict(os.environ, LOS_REPO=str(ROOT), LOS_ARCH_RENDER_CHECK="1")
         proc = subprocess.run(
             [str(scrut), "test", str(transcript)],
             capture_output=True, text=True, timeout=600, env=env, cwd=ROOT)

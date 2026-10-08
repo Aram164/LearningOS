@@ -10,12 +10,17 @@ the approve-key refusal) through the real run_gateway path.
 from __future__ import annotations
 
 import argparse
+import importlib.util
 import json
+import os
 from pathlib import Path
 
+import arch_audit_hook
 import pytest
 from gateway_helpers import approved_v2_envelope
+from scenario_harness import check_render_purity_error, render_violations
 
+from learning_os import observations as observations_module
 from learning_os.adapters import cli as cli_adapter
 from learning_os.adapters.cli_parser import _repository_root
 from learning_os.commands import support as command_support
@@ -28,6 +33,7 @@ from learning_os.ops import _legacy_plumbing as plumbing
 from learning_os.ops import pipeline as pipeline_module
 from learning_os.ops.proposal import Result, TransactionProposal
 from learning_os.ops.registry import REGISTRY, register
+from learning_os.ops.render import RenderPurityError, call_renderer, current_render
 
 TEST_OP = "test-only.pipe"
 
@@ -891,3 +897,135 @@ def test_cli_projection_refusal_keeps_rollback_facts(pipe, mini_repo, complete, 
     assert outcome.exit_code == 2
     assert outcome.commit == commit
     assert outcome.receipt is None
+
+
+# ---------------------------------------------------------------------------
+# S15 Task0: the render marker and purity checks (SPEC §3.5b).
+# ---------------------------------------------------------------------------
+
+CALLBACKS_DIR = Path(__file__).resolve().parent / "fixtures" / "archcheck" / "callbacks"
+
+
+def _load_fixture_renderer(name: str):
+    path = CALLBACKS_DIR / name
+    assert path.is_file(), path
+    spec = importlib.util.spec_from_file_location(f"render_fixture_{path.stem}", path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.render
+
+
+def test_render_nondeterministic_fixture_fails(pipe, mini_repo, monkeypatch):
+    """The nondeterminism fixture raises through the real run_cli path."""
+    render = _load_fixture_renderer("pos_render_nondeterministic.py")
+
+    def handler(ctx, req):
+        return Result({"echo": "x"}, finish=render)
+
+    pipe("query", handler=handler)
+    monkeypatch.setenv("LOS_ARCH_RENDER_CHECK", "1")
+    with pytest.raises(RenderPurityError) as caught:
+        pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert str(caught.value) == f"{TEST_OP}::finish::not-deterministic"
+    assert current_render() is None
+
+
+def test_render_mutates_arg_fixture_fails(pipe, mini_repo, monkeypatch):
+    """The mutation fixture raises through the real run_cli path."""
+    render = _load_fixture_renderer("pos_render_mutates_arg.py")
+
+    def handler(ctx, req):
+        return Result({"echo": "x"}, finish=render)
+
+    pipe("query", handler=handler)
+    monkeypatch.setenv("LOS_ARCH_RENDER_CHECK", "1")
+    with pytest.raises(RenderPurityError) as caught:
+        pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert str(caught.value) == f"{TEST_OP}::finish::argument-mutated"
+    assert current_render() is None
+
+
+def test_render_check_off_skips_purity(pipe, mini_repo, monkeypatch):
+    """Without the env flag a nondeterministic renderer just runs once."""
+    render = _load_fixture_renderer("pos_render_nondeterministic.py")
+
+    def handler(ctx, req):
+        return Result({"echo": "x"}, finish=render)
+
+    pipe("query", handler=handler)
+    monkeypatch.delenv("LOS_ARCH_RENDER_CHECK", raising=False)
+    outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert outcome.exit_code == 0
+    assert json.loads(outcome.stdout)["payload"] == {}
+    assert current_render() is None
+
+
+def test_call_renderer_marks_and_resets(monkeypatch):
+    """The marker is set during the call and reset after, check or not."""
+    seen = []
+
+    def pure(payload):
+        seen.append(current_render())
+        return {"ok": True}
+
+    for flag in ("1", None):
+        if flag is None:
+            monkeypatch.delenv("LOS_ARCH_RENDER_CHECK", raising=False)
+        else:
+            monkeypatch.setenv("LOS_ARCH_RENDER_CHECK", flag)
+        seen.clear()
+        assert call_renderer("op.sample", "human", pure, {"a": 1}) == {"ok": True}
+        assert seen == [("op.sample", "human"), ("op.sample", "human")][: len(seen)]
+        assert len(seen) == (2 if flag == "1" else 1)
+        assert current_render() is None
+
+
+def test_audit_hook_marks_render_io(tmp_path):
+    """With the marker set, reads/listings/observations are logged as render."""
+    from learning_os.ops.render import _RENDER
+
+    log = tmp_path / "audit.jsonl"
+    probe = tmp_path / "probe.txt"
+    probe.write_text("x", encoding="utf-8")
+    arch_audit_hook.install(str(log))
+    try:
+        token = _RENDER.set(("op.sample", "human"))
+        try:
+            with open(probe, encoding="utf-8"):
+                pass
+            os.listdir(tmp_path)
+            observations_module.now()
+        finally:
+            _RENDER.reset(token)
+        with open(probe, encoding="utf-8"):
+            pass
+    finally:
+        arch_audit_hook.uninstall()
+    arch_audit_hook.assert_capture_ok()
+    records = arch_audit_hook.read_log(log)
+    marked = [rec for rec in records if rec.get("render") is not None]
+    assert {rec["event"] for rec in marked} == {
+        "open", "os.listdir", "learningos.observation"}
+    assert all(rec["render"] == ["op.sample", "human"] for rec in marked)
+    assert all(rec.get("render") is None for rec in records
+              if rec not in marked)
+
+
+def test_render_violations_and_purity_scan():
+    """The harness fails render-marked lines and RenderPurityError text."""
+    assert render_violations([{"event": "open", "render": None}]) == []
+    assert render_violations([{"event": "installed"}]) == []
+    problems = render_violations([
+        {"event": "open", "render": ["op.x", "human"]},
+        {"event": "os.listdir", "render": ["op.x", "human"]},
+    ])
+    assert problems == [
+        "A18 op.x::human::open: renderer performed audited I/O",
+        "A18 op.x::human::os.listdir: renderer performed audited I/O",
+    ]
+    check_render_purity_error("los: ordinary refusal\n")
+    with pytest.raises(AssertionError) as caught:
+        check_render_purity_error(
+            "Traceback (most recent call last):\n"
+            "RenderPurityError: op.x::finish::not-deterministic\n")
+    assert str(caught.value).startswith("A18 op.x::finish::RenderPurityError")

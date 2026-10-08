@@ -15,6 +15,17 @@ _INSTALLED = False
 _ACTIVE_LOG: str | None = None
 _STATE = threading.local()
 _EVENTS: dict | None = None
+_RENDER_FN = None
+
+#: Events logged only while the render marker is set (SPEC §3.5b).
+_RENDER_ONLY_EVENTS = frozenset({
+    "os.listdir",
+    "os.scandir",
+    "glob.glob",
+    "socket.connect",
+    "socket.getaddrinfo",
+    "learningos.observation",
+})
 
 _CAPTURE_LOCK = threading.Lock()
 _CAPTURE_ERROR: str | None = None
@@ -183,6 +194,30 @@ def _current_phase():
         return None
 
 
+def _current_render():
+    """The running renderer as [operation, callback], or None (SPEC §3.5b).
+
+    The render module is imported lazily; success is cached, while a miss
+    is retried on the next event (the module may become importable after
+    startup path setup). Nested audit events during the import return
+    early on the active flag set by the calling hook.
+    """
+    global _RENDER_FN
+    if _RENDER_FN is None:
+        try:
+            from learning_os.ops.render import current_render
+        except Exception:
+            return None
+        _RENDER_FN = current_render
+    try:
+        marker = _RENDER_FN()
+    except Exception:
+        return None
+    if marker is None:
+        return None
+    return [marker[0], marker[1]]
+
+
 def _launch_token_and_crash(args) -> tuple:
     """The launch token and crash expectation for a Popen event (K28)."""
     env = args[3] if len(args) > 3 else None
@@ -215,6 +250,9 @@ def _hook(event: str, args) -> None:
     _STATE.active = True
     try:
         layout = _EVENTS[event]
+        render = _current_render()
+        if event in _RENDER_ONLY_EVENTS and render is None:
+            return
         record: dict | None = None
         if event == "open":
             path_index = layout.get("path", 0)
@@ -223,7 +261,7 @@ def _hook(event: str, args) -> None:
             raw_path = args[path_index] if path_index < len(args) else None
             mode = args[mode_index] if mode_index < len(args) else None
             flags = args[flags_index] if flags_index < len(args) else None
-            if not _is_write_open(mode, flags):
+            if not _is_write_open(mode, flags) and render is None:
                 return
             path = _coerce_path(raw_path)
             mode_text = mode if isinstance(mode, str) else None
@@ -233,6 +271,7 @@ def _hook(event: str, args) -> None:
                 "mode": mode_text,
                 "phase": _current_phase(),
                 "pid": os.getpid(),
+                "render": render,
             }
         elif event == "subprocess.Popen":
             argv_index = layout.get("argv", 1)
@@ -251,6 +290,7 @@ def _hook(event: str, args) -> None:
                 "argv": argv_list,
                 "token": token,
                 "expect_crash": expect_crash,
+                "render": render,
             }
         else:
             if "paths" in layout:
@@ -259,12 +299,13 @@ def _hook(event: str, args) -> None:
                 indices = [layout["path"]]
             else:
                 return
+            resolve = layout.get("resolve", True)
             paths = []
             for index in indices:
                 if index >= len(args):
                     continue
                 coerced = _coerce_path(args[index])
-                if isinstance(coerced, str):
+                if resolve and isinstance(coerced, str):
                     coerced = _resolve_relative(event, args, coerced)
                 paths.append(coerced)
             record = {
@@ -273,6 +314,7 @@ def _hook(event: str, args) -> None:
                 "mode": None,
                 "phase": _current_phase(),
                 "pid": os.getpid(),
+                "render": render,
             }
         if record is not None:
             with open(_ACTIVE_LOG, "a", encoding="utf-8") as handle:

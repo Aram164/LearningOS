@@ -12,3 +12,9 @@
   shutil.move: {paths: [0, 1]}
   shutil.rmtree: {path: 0}
   subprocess.Popen: {argv: 1}
+  os.listdir: {path: 0}
+  os.scandir: {path: 0}
+  glob.glob: {path: 0}
+  socket.connect: {paths: [1], resolve: false}
+  socket.getaddrinfo: {paths: [0, 1], resolve: false}
+  learningos.observation: {path: 0, resolve: false}

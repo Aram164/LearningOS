@@ -94,6 +94,7 @@ def now() -> datetime.datetime:
     reads as local wall time. The real clock is recorded first when
     ``LOS_OBSERVATIONS_RECORD`` names a file.
     """
+    sys.audit("learningos.observation", "now")
     real = datetime.datetime.now().astimezone()
     _record_fragment({"now": real.isoformat()})
     raw = _override_file().get("now")
@@ -107,6 +108,7 @@ def now() -> datetime.datetime:
 
 def today() -> datetime.date:
     """The current local date: ``now().date()``."""
+    sys.audit("learningos.observation", "today")
     return now().date()
 
 
@@ -116,6 +118,7 @@ def epoch() -> float:
     Without an override this is ``time.time()``. With one it is
     ``now().timestamp()``, so semantic clock reads follow the fixed clock.
     """
+    sys.audit("learningos.observation", "epoch")
     if not os.environ.get(OVERRIDE_ENV):
         return time.time()
     return now().timestamp()
@@ -131,6 +134,7 @@ def mtime(path: Path, root: Path) -> float:
     ``now().timestamp()``. A file the run itself created is therefore
     "now", deterministically.
     """
+    sys.audit("learningos.observation", "mtime")
     mtimes = _override_file().get("mtimes")
     if not isinstance(mtimes, dict):
         return Path(path).stat().st_mtime
@@ -149,6 +153,7 @@ def mtime(path: Path, root: Path) -> float:
 
 def git_override() -> dict | None:
     """The override's ``git`` object; None when unset or without that key."""
+    sys.audit("learningos.observation", "git_override")
     data = _override_file()
     if "git" not in data:
         return None
@@ -158,6 +163,7 @@ def git_override() -> dict | None:
 
 def runtime_identity() -> dict:
     """The interpreter this process runs on."""
+    sys.audit("learningos.observation", "runtime_identity")
     return {"python": sys.version.split()[0], "platform": sys.platform}
 
 
@@ -172,6 +178,7 @@ def new_hex() -> str:
     sharing one counter file never collide, and a fresh counter file
     replays the same sequence.
     """
+    sys.audit("learningos.observation", "new_hex")
     ids = _override_file().get("ids")
     if ids is None:
         return uuid.uuid4().hex

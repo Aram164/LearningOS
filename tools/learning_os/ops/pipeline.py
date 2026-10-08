@@ -67,6 +67,7 @@ from learning_os.ops.legacy import (
 )
 from learning_os.ops.outcomes import classify, error_object, resolve
 from learning_os.ops.registry import REGISTRY
+from learning_os.ops.render import call_renderer
 from learning_os.transactions import (
     TransactionResult,
     TransactionSnapshotConflict,
@@ -135,8 +136,10 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
         result = entry.handler(ctx, req)
         if checking and result.proposal is not None:
             record = check_proposal(ctx, result.proposal)
-            payload = (entry.render_check(record, result.payload)
-                       if entry.render_check is not None else record)
+            payload = (call_renderer(
+                operation, "render_check", entry.render_check,
+                record, result.payload)
+                if entry.render_check is not None else record)
         elif result.proposal is not None:
             captured, errors = io.StringIO(), io.StringIO()
             with contextlib.redirect_stdout(captured), \
@@ -152,7 +155,9 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
                     result.after_commit(code, commit_errors, confirmation)
             if code != 0:
                 if result.on_commit_refused is not None:
-                    lines = result.on_commit_refused(commit_errors)
+                    lines = call_renderer(
+                        operation, "on_commit_refused",
+                        result.on_commit_refused, commit_errors)
                 elif errors.getvalue().strip():
                     lines = errors.getvalue().strip().splitlines()
                 else:
@@ -161,15 +166,18 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
                     commit=commit, ok=False, payload=None, error=None,
                     exit_code=code, receipt=receipt, replayed=replayed,
                     stdout="", stderr="".join(f"{line}\n" for line in lines))
-            payload = (result.finish(confirmation) if result.finish is not None
-                       else {**result.payload, **confirmation})
+            payload = (call_renderer(
+                operation, "finish", result.finish, confirmation)
+                if result.finish is not None
+                else {**result.payload, **confirmation})
         elif result.finish is not None:
-            payload = result.finish({})
+            payload = call_renderer(operation, "finish", result.finish, {})
         else:
             payload = result.payload
         exit_code = 1 if result.diagnostic_failed else 0
         if entry.human is not None and not getattr(args, "json", False):
-            stdout = entry.human(payload) + "\n"
+            stdout = call_renderer(
+                operation, "human", entry.human, payload) + "\n"
         else:
             stdout = json.dumps(payload, **_json_layout()) + "\n"
     except Exception as exc:
@@ -786,14 +794,16 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
     if checking and res.proposal is not None:
         record = check_proposal(ctx, res.proposal)
         if entry.render_check is not None:
-            rendered = entry.render_check(record, res.payload)
+            rendered = call_renderer(
+                operation, "render_check", entry.render_check,
+                record, res.payload)
         else:
             rendered = record
         _take_gateway_refusal()
         return 0, rendered
     if res.proposal is None:
         if res.finish is not None:
-            final = res.finish({})
+            final = call_renderer(operation, "finish", res.finish, {})
         else:
             final = res.payload
         _take_gateway_refusal()
@@ -808,7 +818,9 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
     if code != 0:
         refusal = _take_gateway_refusal()
         if res.on_commit_refused is not None:
-            lines = res.on_commit_refused(commit_errors)
+            lines = call_renderer(
+                operation, "on_commit_refused",
+                res.on_commit_refused, commit_errors)
         elif errors.getvalue().strip():
             lines = errors.getvalue().strip().splitlines()
         else:
@@ -819,7 +831,8 @@ def _registered_compute(root: Path, operation: str, envelope: dict,
         return code, result
     _take_gateway_refusal()
     if res.finish is not None:
-        final = res.finish(confirmation)
+        final = call_renderer(
+            operation, "finish", res.finish, confirmation)
     else:
         final = {**res.payload, **confirmation}
     if res.diagnostic_failed:

@@ -220,6 +220,7 @@ def _launch_env(ctx, token: str, extra_env: dict | None) -> dict:
     env["LOS_ARCH_LAUNCH_TOKEN"] = token
     env["LOS_ARCH_AUDIT_LOG"] = str(ctx.log_path)
     env["LOS_OBSERVATIONS"] = str(ctx.observations_path)
+    env["LOS_ARCH_RENDER_CHECK"] = "1"
     env["TZ"] = "Europe/Berlin"
     env["PYTHONPATH"] = str(ARCH_SITE) + os.pathsep + env.get("PYTHONPATH", "")
     if extra_env:
@@ -300,8 +301,51 @@ def check_witnesses(ctx: _CaseContext) -> None:
             problems.append(
                 f"token {token!r} has {count} subprocess.Popen records, want 1")
     problems.extend(witness_failures(records))
+    problems.extend(render_violations(records))
     if problems:
         raise AssertionError("audit witness failure:\n" + "\n".join(problems))
+
+
+def render_violations(records: list[dict]) -> list[str]:
+    """A18 violations: audited I/O while a renderer ran (SPEC §3.5b).
+
+    Every record whose ``render`` marker is not null fails the case as
+    ``<operation>::<callback>::<event>``. Records without the field
+    (install/completion witnesses) count as unmarked.
+    """
+    problems = []
+    for rec in records:
+        render = rec.get("render")
+        if render is None:
+            continue
+        try:
+            operation, callback = render
+        except (TypeError, ValueError):
+            problems.append(f"A18 malformed render marker: {render!r}")
+            continue
+        problems.append(
+            f"A18 {operation}::{callback}::{rec.get('event')}: "
+            f"renderer performed audited I/O")
+    return problems
+
+
+def check_render_purity_error(stderr: str) -> None:
+    """Fail as an A18 violation when a child raised RenderPurityError."""
+    import re
+
+    if "RenderPurityError" not in stderr:
+        return
+    match = re.search(r"RenderPurityError: (\S+)", stderr)
+    if match:
+        try:
+            operation, callback, _reason = match.group(1).split("::")
+        except ValueError:
+            operation, callback = "unknown", "unknown"
+    else:
+        operation, callback = "unknown", "unknown"
+    raise AssertionError(
+        f"A18 {operation}::{callback}::RenderPurityError: "
+        f"renderer failed the purity check")
 
 
 # --------------------------------------------------------------------------
@@ -573,6 +617,7 @@ def _run_step(ctx: _CaseContext, file_operation: str, step: dict,
     before_ledgers = _snapshot_ledgers(ctx.root)
     argv = step_argv(ctx, operation, step, step_index)
     proc = launch(ctx, argv)
+    check_render_purity_error(proc.stderr)
     after_tree = arch_effects.capture_tree(ctx.root)
     after_ledgers = _snapshot_ledgers(ctx.root)
     receipts = arch_effects.new_receipts(before_receipts, ctx.root)
