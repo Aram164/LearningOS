@@ -175,72 +175,74 @@ def test_canary_propagates_through_effective_alias(tmp_path: Path):
     assert effective["$id"] == "learningos/requests/project.inspect"
 
 
+def _navigate(doc, pointer):
+    node = doc
+    for part in pointer.split("/")[1:]:
+        part = part.replace("~1", "/").replace("~0", "~")
+        if not isinstance(node, dict) or part not in node:
+            return None
+        node = node[part]
+    return node if isinstance(node, dict) else None
+
+
+def _has_success(operation, cli_name):
+    case_path = CASES_DIR / f"{operation}.yaml"
+    if not case_path.is_file():
+        return False
+    for case in yaml.safe_load(case_path.read_text()).get("cases", []):
+        if case.get("kind") == "success":
+            return True
+        if case.get("kind") != "sequence":
+            continue
+        recorded_path = ROOT / "tests/scenarios/recorded" / operation / f"{case['id']}.json"
+        if not recorded_path.is_file():
+            continue
+        records = json.loads(recorded_path.read_text()).get("steps", [])
+        for declared, actual in zip(case.get("steps", []), records, strict=True):
+            owns_step = (declared.get("transport") == "gateway"
+                         and actual.get("operation") == operation) or (
+                             declared.get("transport") == "cli"
+                             and declared.get("argv", [None])[0] == cli_name)
+            payload = actual.get("stdout_json")
+            if owns_step and actual.get("exit") == 0 and not (
+                    isinstance(payload, dict) and payload.get("ok") is False):
+                return True
+    return False
+
+
 def _current_exceptions() -> Counter[str]:
     current: Counter[str] = Counter()
-    id_rows = yaml.safe_load(ID_FIELDS_PATH.read_text(encoding="utf-8"))["fields"]
     rows_by_op: dict[str, list[dict]] = {}
-    for row in id_rows:
+    for row in yaml.safe_load(ID_FIELDS_PATH.read_text())["fields"]:
         rows_by_op.setdefault(row["operation"], []).append(row)
     for path in sorted(REQUESTS_DIR.glob("*.schema.json")):
         operation = path.name[: -len(".schema.json")]
-        data = json.loads(path.read_text(encoding="utf-8"))
-        if "$ref" in data:
-            continue
-        for prop, subschema in sorted(data.get("properties", {}).items()):
+        data = request_schema(ROOT, operation)
+        properties = data.get("properties", {})
+        for prop, subschema in sorted(properties.items()):
             desc = subschema.get("description", "")
             if not desc or PLACEHOLDER_MARK in desc:
                 current[f"{operation}::{prop}::description"] += 1
             if "x-los-cli" not in subschema:
-                # Envelope-only fields are exempt; none exist in S12 primaries.
                 current[f"{operation}::{prop}::cli"] += 1
-        # Every *_id/*_ids/*_sha256/*_digest property has a row.
         have_pointers = set()
         for row in rows_by_op.get(operation, []):
-            # Pointer base property: /properties/<prop>(/...)?
             parts = row["pointer"].split("/")
             if len(parts) >= 3 and parts[1] == "properties":
-                have_pointers.add(parts[2])
-        for prop in sorted(data.get("properties", {})):
+                have_pointers.add(parts[2].replace("~1", "/").replace("~0", "~"))
+            if row.get("kind") is None:
+                continue
+            node = _navigate(data, row["pointer"])
+            if not isinstance(node, dict) or node.get("type") != "string" or \
+                    node.get("x-los-id-kind") != row["kind"] or \
+                    node.get("x-los-lookup") != row.get("lookup"):
+                current[f"{operation}::{row['pointer']}::id-annotation"] += 1
+        for prop in sorted(properties):
             if prop in ("id", "ids") or prop.endswith(("_id", "_ids", "_sha256", "_digest")):
                 if prop not in have_pointers:
                     current[f"{operation}::{prop}::id-row"] += 1
-        # Decided kinds annotated at pointer.
-        for row in rows_by_op.get(operation, []):
-            if row.get("kind") is None:
-                continue
-            node: dict | None = data
-            for part in [p for p in row["pointer"].split("/") if p]:
-                if not isinstance(node, dict) or part not in node:
-                    node = None
-                    break
-                node = node[part]
-            if not isinstance(node, dict) or "x-los-id-kind" not in node \
-                    or "x-los-lookup" not in node:
-                prop = row["pointer"].split("/")[2] if "/" in row["pointer"] else row["pointer"]
-                current[f"{operation}::{prop}::id-annotation"] += 1
-        # Scenario success case.
-        case_path = CASES_DIR / f"{operation}.yaml"
-        has_success = False
-        if case_path.is_file():
-            cases = yaml.safe_load(case_path.read_text(encoding="utf-8")).get("cases", [])
-            has_success = any(c.get("kind") == "success" for c in cases)
-        if not has_success:
+        if not _has_success(operation, data["x-los-cli-command"]["name"]):
             current[f"{operation}::*::success"] += 1
-    # Alias rows must agree with effective annotations (primaries hold them).
-    for alias in sorted(_aliases()):
-        effective = request_schema(ROOT, alias)
-        for row in rows_by_op.get(alias, []):
-            if row.get("kind") is None:
-                continue
-            node: dict | None = effective
-            for part in [p for p in row["pointer"].split("/") if p]:
-                if not isinstance(node, dict) or part not in node:
-                    node = None
-                    break
-                node = node[part]
-            if not isinstance(node, dict) or node.get("x-los-id-kind") != row["kind"] \
-                    or node.get("x-los-lookup") != row.get("lookup"):
-                current[f"{alias}::{row['pointer']}::alias-agreement"] += 1
     return current
 
 

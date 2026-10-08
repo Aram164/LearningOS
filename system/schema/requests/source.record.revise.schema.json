@@ -91,7 +91,7 @@
         "envelope_owned": false
       },
       "x-los-id-kind": "digest",
-      "x-los-lookup": null
+      "x-los-lookup": false
     },
     "approve": {
       "type": "boolean",

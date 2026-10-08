@@ -87,11 +87,12 @@ def test_registered_normalization_with_synthetic_handler():
 def _normalize_describe(doc: dict) -> dict:
     normalized = copy.deepcopy(doc)
     # The moved parser class keeps its code but not its module.
-    normalized["parser_class"] = "NORMALIZED_PARSER_CLASS"
+    if normalized["parser_class"] == "learning_os.adapters.cli_parser._LosArgumentParser":
+        normalized["parser_class"] = "los._LosArgumentParser"
     for sub in normalized.get("subparsers", {}).values():
         defaults = sub.get("defaults", {})
-        if "_parser_factory" in defaults:
-            defaults["_parser_factory"] = "NORMALIZED_FACTORY"
+        if defaults.get("_parser_factory") == "learning_os.adapters.cli_parser.build_parser":
+            defaults["_parser_factory"] = "los.build_parser"
     return normalized
 
 
@@ -123,9 +124,8 @@ def test_generated_parser_matches_baseline_structure():
 def _normalize_namespace(namespace: dict) -> dict:
     normalized = dict(namespace)
     for key, value in list(normalized.items()):
-        if key == "_parser_factory" and isinstance(value, str) \
-                and value.endswith("build_parser"):
-            normalized[key] = "NORMALIZED_FACTORY"
+        if key == "_parser_factory" and value == "learning_os.adapters.cli_parser.build_parser":
+            normalized[key] = "los.build_parser"
     return normalized
 
 
@@ -163,11 +163,7 @@ def test_corpus_parity():
         recorded = entry["result"]
         actual = _run(parser, argv)
         # Registered-subcommand normalization (none yet; see unit test).
-        subcommand = None
-        for token in argv:
-            if not token.startswith("-"):
-                subcommand = token
-                break
+        subcommand = recorded.get("namespace", {}).get("command")
         if subcommand is not None and "namespace" in recorded:
             handler = _handler_for_subcommand(subcommand)
             if handler is not None and handler.startswith(

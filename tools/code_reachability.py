@@ -4,7 +4,7 @@
 This is a code-only architecture gate.  It parses imports without importing
 LearningOS, loading canonical records, reading materials, or executing module
 top-level code.  "Reachable" therefore means only "connected to a declared
-Python entrypoint by syntax-visible imports"; it is not a runtime coverage or
+Python entrypoint by syntax-visible imports or generated CLI handler edges"; it is not a runtime coverage or
 lazy-import claim.
 """
 
@@ -314,28 +314,52 @@ def analyse(
         graph[module] = _imports(module, path, tree, modules)
         direct_graph[module] = _direct_imports(module, path, tree, modules)
 
-    # S12 generated parser loads handlers dynamically via importlib from
-    # request-schema x-los-cli-command.handler values. Those modules are live
-    # roots even though no syntax-visible import names them.
-    dynamic_roots: set[str] = set()
+    # Generated handler imports are edges from the parser, never extra roots.
+    # Thus metadata cannot make a module reachable when the parser is not.
+    parser_module = "learning_os.adapters.cli_parser"
     requests_dir = tools_root.parent / "system/schema/requests"
-    if requests_dir.is_dir():
+    if parser_module in modules and requests_dir.is_dir():
+        parser_tree = ast.parse(modules[parser_module].read_text(encoding="utf-8"))
+        orders = [node for node in parser_tree.body if isinstance(node, ast.Assign)
+                  and any(isinstance(target, ast.Name) and target.id == "_SUBCOMMAND_ORDER"
+                          for target in node.targets)]
+        try:
+            order = set(ast.literal_eval(orders[0].value))
+        except (IndexError, ValueError, TypeError):
+            order = set()
+            configuration_errors.append("generated CLI parser has no literal subcommand order")
+        seen = set()
         for schema_path in sorted(requests_dir.glob("*.schema.json")):
             try:
-                schema_data = json.loads(schema_path.read_text(encoding="utf-8"))
-            except (OSError, ValueError):
+                data = json.loads(schema_path.read_text(encoding="utf-8"))
+                if not isinstance(data, dict):
+                    raise ValueError("request document is not an object")
+                cmd = data.get("x-los-cli-command")
+                if cmd is None:
+                    continue
+                name = cmd["name"]
+                if name not in order or name in seen:
+                    raise ValueError(f"unknown or duplicate CLI binding: {name}")
+                seen.add(name)
+                handler = cmd["handler"]
+                if handler.startswith("learning_os.adapters.cli.invoke:"):
+                    handler = "learning_os.adapters.cli.invoke"
+                module_name, _, function = handler.rpartition(".")
+                if module_name not in modules:
+                    raise ValueError(f"handler module is not owned: {module_name}")
+                tree = ast.parse(modules[module_name].read_text(encoding="utf-8"))
+                if not any(isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef))
+                           and node.name == function for node in tree.body):
+                    raise ValueError(f"handler function does not exist: {handler}")
+            except (OSError, ValueError, TypeError, KeyError, AttributeError, SyntaxError) as exc:
+                configuration_errors.append(f"{schema_path.name}: {exc}")
                 continue
-            cmd = schema_data.get("x-los-cli-command")
-            if not isinstance(cmd, dict):
-                continue
-            handler = cmd.get("handler", "")
-            if not isinstance(handler, str) or ":" in handler:
-                continue
-            module_name, _, _ = handler.rpartition(".")
-            if module_name in modules:
-                dynamic_roots.add(module_name)
+            graph[parser_module].update(_existing_with_parents(module_name, modules))
+            direct_graph[parser_module].add(module_name)
+        if seen != order:
+            configuration_errors.append(f"missing generated CLI bindings: {sorted(order - seen)}")
     reachable: set[str] = set()
-    queue = deque([*root_modules, *sorted(dynamic_roots)])
+    queue = deque(root_modules)
     while queue:
         module = queue.popleft()
         if module in reachable:
@@ -399,7 +423,7 @@ def _print_report(report: ReachabilityReport) -> None:
             for value in values:
                 print(f"  - {value}")
     if report.ok:
-        print("code architecture: PASS (static imports only; no runtime coverage claim)")
+        print("code architecture: PASS (static imports and declared CLI handler edges; no runtime coverage claim)")
 
 
 def build_parser() -> argparse.ArgumentParser:

@@ -116,7 +116,7 @@
         "envelope_owned": false
       },
       "x-los-id-kind": "digest",
-      "x-los-lookup": null
+      "x-los-lookup": false
     },
     "approve": {
       "type": "boolean",
@@ -248,7 +248,7 @@
         "envelope_owned": true
       },
       "x-los-id-kind": "digest",
-      "x-los-lookup": null
+      "x-los-lookup": false
     },
     "review_report": {
       "type": "string",

@@ -33,6 +33,9 @@
 #   than assumed, and each such row must name a test, so "enforced elsewhere"
 #   can never mean "enforced nowhere".
 #
+# - test: architecture declarations enforced by the named test module.
+#   These rows bind checker to that actual test file, never claim runtime use.
+#
 # Adding a contract without adding its row here is a test failure, by design.
 
 register_version: 1
@@ -170,8 +173,8 @@ contracts:
       command or query cli_command, with its kind (query, command,
       porcelain or tool) derived from today's lock and write path.
       Enforced by the CLI parity test, which pins the inventory.
-    enforced_by: runtime
-    checker: learning_os.contracts.capability_catalog
+    enforced_by: test
+    checker: test_arch_cli_parity
     test: tests/test_arch_cli_parity.py
 
 exempt:

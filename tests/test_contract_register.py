@@ -106,8 +106,8 @@ def test_the_named_test_exists(row):
 
 
 @pytest.mark.parametrize("row", ROWS, ids=lambda row: row["declaration"])
-def test_enforcement_is_one_of_the_two_declared_kinds(row):
-    assert row["enforced_by"] in {"validator", "runtime"}
+def test_enforcement_is_one_of_the_declared_kinds(row):
+    assert row["enforced_by"] in {"validator", "runtime", "test"}
 
 
 # ---- the two that earn the file --------------------------------------------
@@ -199,3 +199,12 @@ def test_every_validator_wired_contract_check_is_registered():
         "contract check(s) wired into run() but absent from the register: "
         + ", ".join(sorted(called - registered))
     )
+
+
+@pytest.mark.parametrize("row", [r for r in ROWS if r["enforced_by"] == "test"],
+                         ids=lambda row: row["declaration"])
+def test_test_enforcement_names_its_actual_module(row):
+    module = importlib.import_module(row["checker"])
+    assert Path(module.__file__).resolve() == (ROOT / row["test"]).resolve()
+    assert any(name.startswith("test_") and callable(value)
+               for name, value in vars(module).items())

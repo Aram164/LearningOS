@@ -1,3 +1,4 @@
+# Conductor amendment 2026-10-08: twelve digest decisions, source evidence in each row.
 schema: 1
 fields:
 - operation: ability.context
@@ -17,8 +18,9 @@ fields:
 - operation: ai-action.delivery.apply
   pointer: /properties/delivery_sha256
   kind: digest
-  lookup: null
-  review: 'digest lookup undecided: no companion input field ''delivery'''
+  lookup: true
+  decision: 'Codex conductor 2026-10-08: ai_actions/binding.py:35-53 verifies existing
+    delivery.yaml bytes'
 - operation: atlas.context
   pointer: /properties/concept_id
   kind: concept
@@ -80,8 +82,9 @@ fields:
 - operation: cli.goal
   pointer: /properties/reviewed_sha256
   kind: digest
-  lookup: null
-  review: 'digest lookup undecided: no companion input field ''reviewed'''
+  lookup: false
+  decision: 'Codex conductor 2026-10-08: commands/goal.py:141-167 binds the computed
+    ledger-plus-request decision review'
 - operation: cli.goal
   pointer: /properties/session_id
   kind: null
@@ -155,13 +158,15 @@ fields:
 - operation: collection.entry.revise
   pointer: /properties/expected_diff_sha256
   kind: digest
-  lookup: null
-  review: 'digest lookup undecided: no companion input field ''expected_diff'''
+  lookup: false
+  decision: 'Codex conductor 2026-10-08: commands/collection_entry.py:254-282 binds
+    the recomputed requested revision diff'
 - operation: coordination.section.revise
   pointer: /properties/expected_content_sha256
   kind: digest
-  lookup: null
-  review: 'digest lookup undecided: no companion input field ''expected_content'''
+  lookup: true
+  decision: 'Codex conductor 2026-10-08: commands/workspace.py:35-69 verifies the
+    existing coordination file'
 - operation: detour.create
   pointer: /properties/stage_id
   kind: stage
@@ -181,8 +186,9 @@ fields:
 - operation: inbox.resolve
   pointer: /properties/drop_sha256
   kind: digest
-  lookup: null
-  review: 'digest lookup undecided: no companion input field ''drop'''
+  lookup: true
+  decision: 'Codex conductor 2026-10-08: commands/inbox.py:115-127 verifies the existing
+    drop file or folder'
 - operation: lineage.restamp
   pointer: /properties/claim_ids/items
   kind: null
@@ -191,8 +197,9 @@ fields:
 - operation: lineage.restamp
   pointer: /properties/claims_sha256
   kind: digest
-  lookup: null
-  review: 'digest lookup undecided: no companion input field ''claims'''
+  lookup: false
+  decision: 'Codex conductor 2026-10-08: commands/lineage_restamp.py:60-68 binds supplied
+    claim_ids serialized as sorted newline bytes'
 - operation: masters-planning.comparison.publish
   pointer: /properties/candidate_module_id
   kind: null
@@ -221,13 +228,15 @@ fields:
 - operation: module.materials.compact
   pointer: /properties/plan_sha256
   kind: digest
-  lookup: null
-  review: 'digest lookup undecided: no companion input field ''plan'''
+  lookup: false
+  decision: 'Codex conductor 2026-10-08: commands/material.py:710-715 binds the computed
+    requested compaction plan'
 - operation: module.plan.import
   pointer: /properties/apply_reviewed_sha256
   kind: digest
-  lookup: null
-  review: 'digest lookup undecided: no companion input field ''apply_reviewed'''
+  lookup: false
+  decision: 'Codex conductor 2026-10-08: commands/module.py:2373-2397 binds supplied
+    plan package bytes'
 - operation: module.plan.import
   pointer: /properties/file_sha256
   kind: digest
@@ -239,8 +248,9 @@ fields:
 - operation: module.plan.import
   pointer: /properties/package_sha256
   kind: digest
-  lookup: null
-  review: 'digest lookup undecided: no companion input field ''package'''
+  lookup: false
+  decision: 'Codex conductor 2026-10-08: commands/module.py:1946-1963 binds the computed
+    promotion package from requested content'
 - operation: module.sitting.update
   pointer: /properties/module_id
   kind: module
@@ -382,13 +392,15 @@ fields:
 - operation: source.intake.record
   pointer: /properties/expected_diff_sha256
   kind: digest
-  lookup: null
-  review: 'digest lookup undecided: no companion input field ''expected_diff'''
+  lookup: false
+  decision: 'Codex conductor 2026-10-08: commands/source_catalog.py:519 binds the
+    requested intake diff'
 - operation: source.record.revise
   pointer: /properties/expected_diff_sha256
   kind: digest
-  lookup: null
-  review: 'digest lookup undecided: no companion input field ''expected_diff'''
+  lookup: false
+  decision: 'Codex conductor 2026-10-08: commands/source_catalog.py:1087 binds the
+    requested revision diff'
 - operation: stage.attachment.add
   pointer: /properties/file_sha256
   kind: digest
@@ -444,8 +456,9 @@ fields:
 - operation: unit.plan.revise
   pointer: /properties/apply_reviewed_sha256
   kind: digest
-  lookup: null
-  review: 'digest lookup undecided: no companion input field ''apply_reviewed'''
+  lookup: false
+  decision: 'Codex conductor 2026-10-08: commands/module.py:2269-2286 binds supplied
+    revision bytes'
 - operation: unit.plan.revise
   pointer: /properties/file_sha256
   kind: digest

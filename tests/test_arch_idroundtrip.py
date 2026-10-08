@@ -278,17 +278,44 @@ def test_inventory_digest_representations():
     assert after == before, "digest check changed a committed contract file"
 
 
-def _stdout_strings():
-    for path in sorted((ROOT / "tests/scenarios/recorded").rglob("*.json")):
-        data = json.loads(path.read_text(encoding="utf-8"))
-        stdout = data.get("stdout")
-        if not isinstance(stdout, str):
-            continue
+def _recorded_stdout_strings(data):
+    stdout = data.get("stdout")
+    if isinstance(stdout, str):
         try:
             payload = json.loads(stdout)
         except ValueError:
-            continue
-        yield from _walk_strings(payload)
+            pass
+        else:
+            yield from _walk_strings(payload)
+    for step in data.get("steps", []):
+        yield from _recorded_stdout_strings(step)
+
+
+def _stdout_strings():
+    for path in sorted((ROOT / "tests/scenarios/recorded").rglob("*.json")):
+        yield from _recorded_stdout_strings(json.loads(path.read_text(encoding="utf-8")))
+
+
+def _scalar_accepts(kind, value, subschema):
+    parsed = ids.parse(kind, value)
+    spellings = (parsed.prefixed(), parsed.bare()) if kind == "digest" else (value,)
+    validator = Draft202012Validator(subschema)
+    return any(validator.is_valid(spelling) for spelling in spellings)
+
+
+def test_scalar_checker_preserves_digest_representation_and_refuses_wrong_type():
+    value = "sha256:" + "ab" * 32
+    prefixed = {"type": "string", "pattern": "^sha256:[a-f0-9]{64}$"}
+    bare = {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+    assert _scalar_accepts("digest", value, prefixed)
+    assert _scalar_accepts("digest", value, bare)
+    assert not _scalar_accepts("digest", value, {"type": "integer"})
+    assert not _scalar_accepts("unit", "unit-1", {"type": "integer"})
+
+
+def test_nested_sequence_stdout_is_scanned():
+    data = {"steps": [{"stdout": '{"id":"unit-1"}'}, {"stdout": "plain text"}]}
+    assert list(_recorded_stdout_strings(data)) == ["unit-1"]
 
 
 def _walk_strings(node):
@@ -303,9 +330,19 @@ def _walk_strings(node):
 
 
 def test_stdout_ids_parse():
+    from learning_os.contracts.requests import request_schema
+
+    rows = yaml.safe_load((ROOT / "tests/architecture/id-fields.yaml").read_text())["fields"]
+    pointers = {}
+    for row in rows:
+        if row.get("review") or row.get("kind") is None:
+            continue
+        node = _navigate(request_schema(ROOT, row["operation"]), row["pointer"])
+        assert node is not None and node.get("type") == "string", row
+        pointers.setdefault(row["kind"], []).append((row, node))
     checked = 0
     failures = []
-    for value in _stdout_strings():
+    for value in set(_stdout_strings()):
         for kind, id_kind in KINDS.items():
             if id_kind.pattern.fullmatch(value) is None:
                 continue
@@ -329,6 +366,10 @@ def test_stdout_ids_parse():
             elif parsed != value:
                 failures.append(
                     f"A6 {kind}::{value!r}: parse returned {parsed!r} — {FIX}")
+            for row, node in pointers.get(kind, []):
+                if not _scalar_accepts(kind, value, node):
+                    failures.append(f"A6 {kind}::{value!r} fails scalar "
+                                    f"{row['operation']}::{row['pointer']} — {FIX}")
     assert checked, "A6 scanned no id strings at all"
     assert not failures, "\n".join(failures[:20])
 

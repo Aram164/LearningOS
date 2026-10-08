@@ -1656,10 +1656,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: ai-action.delivery.apply::/properties/delivery_sha256::review
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: cli.ai-action-append-slices::/properties/request_id::review
     count: 1
     since: baseline
@@ -1681,10 +1677,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: cli.ai-action-validate-delivery::/properties/delivery_id::review
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.goal::/properties/reviewed_sha256::review
     count: 1
     since: baseline
     approved_by: null
@@ -1712,39 +1704,11 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: collection.entry.revise::/properties/expected_diff_sha256::review
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: coordination.section.revise::/properties/expected_content_sha256::review
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: inbox.resolve::/properties/drop_sha256::review
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: lineage.restamp::/properties/claim_ids/items::review
     count: 1
     since: baseline
     approved_by: null
-  - signature: lineage.restamp::/properties/claims_sha256::review
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: masters-planning.comparison.publish::/properties/candidate_module_id::review
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: module.materials.compact::/properties/plan_sha256::review
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: module.plan.import::/properties/apply_reviewed_sha256::review
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: module.plan.import::/properties/package_sha256::review
     count: 1
     since: baseline
     approved_by: null
@@ -1753,18 +1717,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: project.inspect::/properties/more_ids/items::review
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: source.intake.record::/properties/expected_diff_sha256::review
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: source.record.revise::/properties/expected_diff_sha256::review
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: unit.plan.revise::/properties/apply_reviewed_sha256::review
     count: 1
     since: baseline
     approved_by: null
@@ -1809,15 +1761,19 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: ai-action.delivery.apply::*::success
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: ai-action.delivery.apply::delivery_id::description
     count: 1
     since: baseline
     approved_by: null
   - signature: ai-action.delivery.apply::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: atlas.context::concept_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: atlas.context::expected_snapshot::description
     count: 1
     since: baseline
     approved_by: null
@@ -1829,7 +1785,11 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: cli.ai-action-append-slices::*::success
+  - signature: backup.manifest::materials_root::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: backup.manifest::ui_root::description
     count: 1
     since: baseline
     approved_by: null
@@ -1842,10 +1802,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: cli.ai-action-append-slices::route_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-import-delivery::*::success
     count: 1
     since: baseline
     approved_by: null
@@ -1874,10 +1830,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: cli.ai-action-status::request_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: cli.ai-action-validate-delivery::*::success
     count: 1
     since: baseline
     approved_by: null
@@ -2141,10 +2093,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: detour.resolve::*::success
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: detour.resolve::detour_id::description
     count: 1
     since: baseline
@@ -2162,6 +2110,10 @@ checks:
     since: baseline
     approved_by: null
   - signature: garden.seed.create::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: inbox.content::expected_snapshot::description
     count: 1
     since: baseline
     approved_by: null
@@ -2269,6 +2221,14 @@ checks:
     count: 1
     since: baseline
     approved_by: null
+  - signature: legacy.archive.inspect::allowlist::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: legacy.archive.inspect::archive_root::description
+    count: 1
+    since: baseline
+    approved_by: null
   - signature: legacy.archive.lock.publish::approve::description
     count: 1
     since: baseline
@@ -2297,10 +2257,6 @@ checks:
     count: 1
     since: baseline
     approved_by: null
-  - signature: masters-planning.comparison.publish::*::success
-    count: 1
-    since: baseline
-    approved_by: null
   - signature: masters-planning.comparison.publish::approve::description
     count: 1
     since: baseline
@@ -2314,6 +2270,10 @@ checks:
     since: baseline
     approved_by: null
   - signature: masters-planning.comparison.publish::record::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: masters-planning.dashboard::confirm_masters_planning::description
     count: 1
     since: baseline
     approved_by: null
@@ -2393,6 +2353,14 @@ checks:
     count: 1
     since: baseline
     approved_by: null
+  - signature: note.content::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.content::note_id::description
+    count: 1
+    since: baseline
+    approved_by: null
   - signature: note.create::expected_snapshot::description
     count: 1
     since: baseline
@@ -2422,6 +2390,30 @@ checks:
     since: baseline
     approved_by: null
   - signature: note.revise::note_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.search::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.search::limit::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: note.search::offset::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: operator.bootstrap::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: operator.bootstrap::limit::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: operator.bootstrap::offset::description
     count: 1
     since: baseline
     approved_by: null
@@ -2457,7 +2449,39 @@ checks:
     count: 1
     since: baseline
     approved_by: null
+  - signature: plan.edit-context::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: plan.edit-context::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: plan.template::module_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: plan.template::profile::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: plan.template::title::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: plan.template::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
   - signature: project.create::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: project.inspect::id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: project.list::status::description
     count: 1
     since: baseline
     approved_by: null
@@ -2466,10 +2490,6 @@ checks:
     since: baseline
     approved_by: null
   - signature: project.update::project_id::description
-    count: 1
-    since: baseline
-    approved_by: null
-  - signature: review.apply::*::success
     count: 1
     since: baseline
     approved_by: null
@@ -2518,6 +2538,22 @@ checks:
     since: baseline
     approved_by: null
   - signature: route.patch::unit_id::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: runtime.session::context_json::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: runtime.session::event::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: runtime.session::expected_snapshot::description
+    count: 1
+    since: baseline
+    approved_by: null
+  - signature: runtime.session::requirement::description
     count: 1
     since: baseline
     approved_by: null
