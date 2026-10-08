@@ -182,21 +182,57 @@ def _execute_cli(root: Path, operation: str, entry, args) -> Outcome:
     )
 
 
+def _cli_error_code(exc: Exception) -> tuple[str, bool]:
+    """The D16 stderr/JSON code: the gateway.refusal code for the failure.
+
+    Failures the refusal table does not type fall back to INVALID_REQUEST,
+    exactly as _classify_failure's untyped branch does.
+    """
+
+    row = classify(exc, "gateway.refusal")
+    if row is not None:
+        resolved = resolve(row, exc)
+        if resolved["code"] is not None:
+            return resolved["code"], bool(resolved["retryable"])
+    return INVALID_REQUEST, False
+
+
 def _cli_refusal(exc: Exception, *, entry=None, args=None,
                  commit="none", receipt=None, replayed=False) -> Outcome:
-    """Today's los.py rendering: unchanged message text, outcome exit (S13).
+    """Registered-operation CLI refusal rendering (SPEC 9.4, D16).
 
-    The S14 CLI error format extends this; here only the exit code and the
-    message text are covered. R2-style extra_stderr lines print verbatim
-    after the message; no S13 failure carries any.
+    stderr carries `los: <CODE>: <message>`, then one `  did you mean:
+    <id>` line per suggestion not already contained in the message, then
+    `  next: <remedy>` when present. R2-style extra_stderr lines, if any,
+    print verbatim last. With --json on a JSON-default command, stdout
+    also carries {"error": <error object>}. Unregistered commands keep
+    their current output (they never reach this path).
     """
 
     row = classify(exc, "cli")
     if row is None:
         raise
-    stderr = f"los: {exc}\n"
+    message = str(exc)
+    code, retryable = _cli_error_code(exc)
+    reason = getattr(exc, "reason", None)
+    suggestions = getattr(exc, "suggestions", None) or ()
+    remedy = getattr(exc, "remedy", None)
+    lines = [f"los: {code}: {message}"]
+    for suggestion in suggestions:
+        if suggestion not in message:
+            lines.append(f"  did you mean: {suggestion}")
+    if remedy is not None:
+        lines.append(f"  next: {remedy}")
     for line in getattr(exc, "extra_stderr", ()) or ():
-        stderr += f"{line}\n"
+        lines.append(line)
+    stderr = "\n".join(lines) + "\n"
+    stdout = ""
+    if getattr(args, "json", False) and entry.human is None:
+        stdout = json.dumps({
+            "error": error_object(
+                code, message, retryable=retryable, reason=reason,
+                suggestions=list(suggestions) or None, remedy=remedy),
+        }, **_json_layout()) + "\n"
     if isinstance(exc, PostCommitFailure):
         commit = "committed"
         receipt = {key: getattr(exc, key) for key in (
@@ -206,7 +242,7 @@ def _cli_refusal(exc: Exception, *, entry=None, args=None,
         commit = "unknown"
     return Outcome(commit=commit, ok=False, payload=None, error=None,
                    exit_code=resolve(row, exc)["exit"], receipt=receipt,
-                   replayed=replayed, stdout="", stderr=stderr)
+                   replayed=replayed, stdout=stdout, stderr=stderr)
 
 
 def _gateway_error(code: str, message: str, *, retryable: bool = False,

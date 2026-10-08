@@ -202,7 +202,7 @@ def test_refusal_renders_unchanged_message_and_exit(pipe, mini_repo):
     pipe("command", handler=handler)
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
     assert outcome.stdout == ""
-    assert outcome.stderr == "los: nope\n"
+    assert outcome.stderr == "los: INVALID_REQUEST: nope\n"
     assert outcome.exit_code == 2
 
 
@@ -212,7 +212,7 @@ def test_refusal_preserves_handler_exit_token(pipe, mini_repo):
 
     pipe("command", handler=handler)
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
-    assert outcome.stderr == "los: stale\n"
+    assert outcome.stderr == "los: INVALID_REQUEST: stale\n"
     assert outcome.exit_code == 3
 
 
@@ -222,7 +222,7 @@ def test_stale_refusal_exits_3(pipe, mini_repo):
 
     pipe("query", handler=handler)
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
-    assert outcome.stderr == "los: old\n"
+    assert outcome.stderr == "los: STALE_SNAPSHOT: old\n"
     assert outcome.exit_code == 3
 
 
@@ -232,7 +232,84 @@ def test_transaction_failure_exits_2(pipe, mini_repo):
 
     pipe("command", handler=handler)
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
-    assert outcome.stderr == "los: boom\n"
+    assert outcome.stderr == "los: INVALID_REQUEST: boom\n"
+    assert outcome.exit_code == 2
+
+
+class _SearchableNotFound(WriteRefused):
+    """NotFound-shaped failure with controlled suggestions and remedy."""
+
+    def __init__(self):
+        super().__init__("unit u-x not found (did you mean u-a?)",
+                         reason="NOT_FOUND", remedy="create it first")
+        self.suggestions = ["u-a", "u-b"]
+
+
+def test_refusal_suggestion_and_remedy_lines(pipe, mini_repo):
+    """SPEC 9.4: suggestions print unless already in the message."""
+
+    def handler(ctx, req):
+        raise _SearchableNotFound()
+
+    pipe("command", handler=handler)
+    outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
+    assert outcome.stdout == ""
+    assert outcome.stderr == (
+        "los: INVALID_REQUEST: unit u-x not found (did you mean u-a?)\n"
+        "  did you mean: u-b\n"
+        "  next: create it first\n"
+    )
+    assert outcome.exit_code == 2
+
+
+def test_refusal_json_error_object(pipe, mini_repo):
+    """SPEC 9.4: --json on a JSON-default command adds the error object."""
+
+    from jsonschema import Draft202012Validator
+
+    from learning_os.domain.codes import PUBLIC_CODES, REASONS
+
+    def handler(ctx, req):
+        raise _SearchableNotFound()
+
+    pipe("command", handler=handler)
+    outcome = pipeline_module.run_cli(mini_repo, TEST_OP,
+                                      _ns(mini_repo, json=True))
+    assert outcome.stderr == (
+        "los: INVALID_REQUEST: unit u-x not found (did you mean u-a?)\n"
+        "  did you mean: u-b\n"
+        "  next: create it first\n"
+    )
+    assert outcome.stdout == (
+        '{"error":{"code":"INVALID_REQUEST",'
+        '"message":"unit u-x not found (did you mean u-a?)",'
+        '"retryable":false,'
+        '"details":{"reason":"NOT_FOUND",'
+        '"suggestions":["u-a","u-b"],'
+        '"remedy":"create it first"}}}\n'
+    )
+    assert outcome.exit_code == 2
+    schema_path = (Path(__file__).resolve().parent / "architecture"
+                   / "cli-error.schema.json")
+    schema = json.loads(schema_path.read_text(encoding="utf-8"))
+    Draft202012Validator(schema).validate(json.loads(outcome.stdout))
+    assert schema["properties"]["error"]["properties"]["code"]["enum"] == (
+        list(PUBLIC_CODES))
+    assert schema["properties"]["error"]["properties"]["details"][
+        "properties"]["reason"]["enum"] == list(REASONS)
+
+
+def test_refusal_json_with_human_has_no_error_object(pipe, mini_repo):
+    """SPEC 9.4: the stdout object needs a JSON-default command."""
+
+    def handler(ctx, req):
+        raise WriteRefused("nope")
+
+    pipe("command", handler=handler, human=lambda payload: "NEVER")
+    outcome = pipeline_module.run_cli(mini_repo, TEST_OP,
+                                      _ns(mini_repo, json=True))
+    assert outcome.stdout == ""
+    assert outcome.stderr == "los: INVALID_REQUEST: nope\n"
     assert outcome.exit_code == 2
 
 
@@ -426,7 +503,7 @@ def test_cli_after_commit_refusal_follows_cli_classification(
             mini_repo, TEST_OP, _ns(mini_repo))
     assert outcome.exit_code == 2
     assert outcome.stdout == ""
-    assert outcome.stderr == "los: after-nope\n"
+    assert outcome.stderr == "los: INVALID_REQUEST: after-nope\n"
     assert outcome.commit == "committed"
     assert outcome.receipt["transaction_id"].startswith("transaction-")
     assert (mini_repo / outcome.receipt["receipt_path"]).is_file()
@@ -456,7 +533,7 @@ def test_cli_proposal_snapshot_conflict_uses_cli_classification(
     assert outcome.ok is False
     assert outcome.stdout == ""
     assert outcome.stderr.startswith(
-        "los: canonical snapshot conflict ")
+        "los: STALE_SNAPSHOT: canonical snapshot conflict ")
 
 
 def test_invoke_writes_exact_bytes_and_exit(pipe, mini_repo, capsys):
@@ -475,7 +552,7 @@ def test_invoke_writes_exact_bytes_and_exit(pipe, mini_repo, capsys):
     out, err = capsys.readouterr()
     assert exit_code == 2
     assert out == ""
-    assert err == "los: nope\n"
+    assert err == "los: INVALID_REQUEST: nope\n"
 
 
 def test_invoke_root_resolution_matches_support_root(pipe, mini_repo, monkeypatch):
@@ -736,7 +813,7 @@ def test_cli_check_renderer_refusal_keeps_bytes_exit_and_no_commit(
     ns.check = True
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP, ns)
     assert outcome.stdout == ""
-    assert outcome.stderr == "los: check refused\n"
+    assert outcome.stderr == "los: INVALID_REQUEST: check refused\n"
     assert outcome.exit_code == 3
     assert outcome.commit == "none"
     assert not (mini_repo / "work/inbox/check-refused.md").exists()
@@ -810,7 +887,7 @@ def test_cli_projection_refusal_keeps_rollback_facts(pipe, mini_repo, complete, 
 
     pipe("command", handler=handler)
     outcome = pipeline_module.run_cli(mini_repo, TEST_OP, _ns(mini_repo))
-    assert outcome.stderr == "los: projection broke\n"
+    assert outcome.stderr == "los: INVALID_REQUEST: projection broke\n"
     assert outcome.exit_code == 2
     assert outcome.commit == commit
     assert outcome.receipt is None
