@@ -30,6 +30,7 @@ import argparse
 import os
 import sys
 
+from learning_os.adapters.cli_parser import build_parser  # noqa: E402
 from learning_os.commands.abilities import (  # noqa: E402
     cmd_ability_candidate_append,
     cmd_ability_context,
@@ -205,14 +206,8 @@ class _LosArgumentParser(argparse.ArgumentParser):
         super().error(message)
 
 
-def build_parser() -> argparse.ArgumentParser:
-    """The complete CLI surface.
-
-    Factored out of ``main`` so the capability gateway can introspect it:
-    a capability's payload schema is derived from the very parser that
-    defines its named command, which makes the two provably the same
-    surface instead of two hand-maintained copies that drift.
-    """
+def _legacy_build_parser() -> argparse.ArgumentParser:
+    """The old hand-written CLI surface, kept until parity passes (S12)."""
     parser = _LosArgumentParser(
         prog="los", description=__doc__,
         formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -481,7 +476,7 @@ def build_parser() -> argparse.ArgumentParser:
     # Capability dispatch reuses this parser without importing the CLI module
     # back from the command package. Passing the factory explicitly keeps the
     # command graph acyclic while retaining one parser as the schema authority.
-    p.set_defaults(func=cmd_capability, _parser_factory=build_parser)
+    p.set_defaults(func=cmd_capability, _parser_factory=_legacy_build_parser)
 
     p = sub.add_parser("validate", help="delegate to tools/validate.py")
     p.add_argument("--online", action="store_true", help="also audit external URLs")
@@ -909,7 +904,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="apply the exact reviewed file bytes through GatewayEnvelopeV2 "
              "without hand-assembling an envelope",
     )
-    p.set_defaults(func=cmd_module_plan_import, _parser_factory=build_parser)
+    p.set_defaults(func=cmd_module_plan_import, _parser_factory=_legacy_build_parser)
     p.add_argument("--review-report", help="saved --check JSON; required for reviewed apply and exact retries")
 
     p = sub.add_parser("module-attempt",
@@ -975,7 +970,7 @@ def build_parser() -> argparse.ArgumentParser:
         help="apply the exact reviewed revision bytes through GatewayEnvelopeV2 "
              "without hand-assembling an envelope",
     )
-    p.set_defaults(func=cmd_unit_plan_revise, _parser_factory=build_parser)
+    p.set_defaults(func=cmd_unit_plan_revise, _parser_factory=_legacy_build_parser)
     p.add_argument("--review-report", help="saved --check JSON; required for reviewed apply and exact retries")
 
     p = sub.add_parser("lineage-restamp",
@@ -990,7 +985,7 @@ def build_parser() -> argparse.ArgumentParser:
                         "plan for --claim-ids; write nothing")
     p.add_argument("--expected-snapshot", default=None)
     _add_expected_revision_argument(p)
-    p.set_defaults(func=cmd_lineage_restamp, _parser_factory=build_parser)
+    p.set_defaults(func=cmd_lineage_restamp, _parser_factory=_legacy_build_parser)
     p.add_argument("--review-report", help="saved --check JSON; required for reviewed apply and exact retries")
 
     p = sub.add_parser("note-create", help="create one durable note from approved bytes")
@@ -1373,6 +1368,10 @@ def build_parser() -> argparse.ArgumentParser:
     p.set_defaults(func=cmd_operations)
 
     return parser
+
+
+# build_parser is the generated parser (imported above); _legacy_build_parser
+# above is the old hand-written surface, kept until parity passes.
 
 
 def main() -> int:
