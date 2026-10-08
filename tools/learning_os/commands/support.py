@@ -25,16 +25,8 @@ from learning_os.contracts.gateway import (
     current_gateway_request,
     gateway_snapshot_is_verified,
 )
-from learning_os.contracts.write_scopes import WriteScopeError
 from learning_os.derived.model import DerivedError
-from learning_os.domain.codes import (
-    IDEMPOTENCY_CONFLICT,
-    INTERNAL_FAILURE,
-    OUT_OF_SCOPE,
-    REVISION_CONFLICT,
-    STALE_SNAPSHOT,
-    VALIDATION_FAILED,
-)
+from learning_os.domain.codes import REVISION_CONFLICT, STALE_SNAPSHOT
 from learning_os.domain.failures import WriteRefused
 from learning_os.domain.suggest import not_found
 from learning_os.fingerprint import (
@@ -52,21 +44,15 @@ from learning_os.genout import (
 from learning_os.genout.common import _git_state
 from learning_os.loader import load_repo
 from learning_os.manifest_identity import IDENTITY_FILENAME, bytes_sha256, check_identity
-from learning_os.pathing import PathBoundaryError
+from learning_os.ops.outcomes import classify, resolve
 from learning_os.rules import validate
 from learning_os.transactions import (
     PostCommitFailure,
     ProjectionFailure,
-    ReplayEvidenceError,
     TransactionConflict,
     TransactionFailure,
-    TransactionIdempotencyConflict,
-    TransactionRecoveryConflict,
-    TransactionRollbackIncomplete,
-    TransactionScopeError,
     TransactionService,
     TransactionSnapshotConflict,
-    TransactionValidationFailure,
     parse_expected_revisions,
     reconcile_inflight_transactions,
 )
@@ -462,29 +448,13 @@ def _refusal_from_failure(failure: BaseException) -> tuple[str, bool] | None:
     but mapping them here keeps the table total over every failure the
     gateway boundary can observe.
     """
-    if isinstance(failure, WriteRefused):
-        return (failure.gateway_code, failure.gateway_retryable)
-    if isinstance(failure, TransactionConflict):
-        return (REVISION_CONFLICT, True)
-    if isinstance(failure, TransactionSnapshotConflict):
-        return (STALE_SNAPSHOT, True)
-    if isinstance(failure, TransactionIdempotencyConflict):
-        return (IDEMPOTENCY_CONFLICT, False)
-    if isinstance(failure, (ReplayEvidenceError, TransactionRecoveryConflict)):
-        return (INTERNAL_FAILURE, False)
-    if isinstance(failure, TransactionScopeError):
-        return (OUT_OF_SCOPE, False)
-    if isinstance(failure, TransactionValidationFailure):
-        return (VALIDATION_FAILED, False)
-    if isinstance(failure, TransactionRollbackIncomplete):
-        return (INTERNAL_FAILURE, True)
-    if isinstance(failure, TransactionFailure):
-        if failure.pre_existing_defect:
-            return (VALIDATION_FAILED, False)
+    row = classify(failure, "gateway.refusal")
+    if row is None:
         return None
-    if isinstance(failure, (WriteScopeError, PathBoundaryError)):
-        return (OUT_OF_SCOPE, False)
-    return None
+    resolved = resolve(row, failure)
+    if resolved["code"] is None:
+        return None
+    return (resolved["code"], resolved["retryable"])
 
 
 

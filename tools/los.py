@@ -30,8 +30,6 @@ import argparse
 import os
 import sys
 
-from learning_os.ai_actions import AIActionError, StaleDeliveryError  # noqa: E402
-from learning_os.backup_manifest import BackupManifestError  # noqa: E402
 from learning_os.commands.abilities import (  # noqa: E402
     cmd_ability_candidate_append,
     cmd_ability_context,
@@ -161,14 +159,8 @@ from learning_os.commands.workspace import (  # noqa: E402
     cmd_coordination_section_revise,
     cmd_workspace_next_action,
 )
-from learning_os.contracts.manifest_contract import ManifestContractError  # noqa: E402
 from learning_os.contracts.payloads import json_object, sha256_value  # noqa: E402
-from learning_os.domain.failures import StaleSnapshot, WriteRefused  # noqa: E402
-from learning_os.health import HealthReportError  # noqa: E402
-from learning_os.legacy_archive import LegacyArchiveError  # noqa: E402
-from learning_os.masters_planning import MastersPlanningError  # noqa: E402
-from learning_os.material_synthesis import MaterialSynthesisError  # noqa: E402
-from learning_os.transactions import TransactionFailure  # noqa: E402
+from learning_os.ops.outcomes import classify, resolve  # noqa: E402
 
 
 # --------------------------------------------------------- parser / main
@@ -1389,39 +1381,12 @@ def main() -> int:
         os.environ[LOS_LOCK_TIMEOUT_ENV] = str(args.lock_timeout)
     try:
         return args.func(args)
-    except StaleDeliveryError as exc:
+    except Exception as exc:
+        row = classify(exc, "cli")
+        if row is None:
+            raise
         print(f"los: {exc}", file=sys.stderr)
-        return 3
-    except AIActionError as exc:
-        print(f"los: {exc}", file=sys.stderr)
-        return 1
-    except StaleSnapshot as exc:
-        # A read whose guards (_snapshot/_print_stable) sit outside any
-        # _refusal try block, e.g. plan-edit-context: a real optimistic-
-        # concurrency conflict, exit 3 like the _refusal-covered reads.
-        print(f"los: {exc}", file=sys.stderr)
-        return 3
-    except WriteRefused as exc:
-        # Nothing was changed: _atomic_text cleans up its temp file and
-        # _write_transaction rolls the set back before re-raising.
-        print(f"los: {exc}", file=sys.stderr)
-        return 2
-    except TransactionFailure as exc:
-        print(f"los: {exc}", file=sys.stderr)
-        return 2
-    except (MaterialSynthesisError, LegacyArchiveError, MastersPlanningError,
-            BackupManifestError, HealthReportError) as exc:
-        print(f"los: {exc}", file=sys.stderr)
-        return 2
-    except ManifestContractError as exc:
-        # Adding an undeclared key to a study map is an ordinary authoring slip,
-        # and the contract check catches it with a genuinely good message: what
-        # mismatched, why an added key is still an interface change, and the two
-        # commands that resolve it. Missing from this tuple, that message
-        # arrived at the end of a 120KB stack trace from `unit-list` and
-        # `health-report`, while `inspect` and `search` answered in one line.
-        print(f"los: {exc}", file=sys.stderr)
-        return 2
+        return resolve(row, exc)["exit"]
 
 
 if __name__ == "__main__":

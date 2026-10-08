@@ -28,14 +28,13 @@ from learning_os.domain.codes import (
     IDEMPOTENCY_CONFLICT,
     INTERNAL_FAILURE,
     INVALID_REQUEST,
-    PROJECTION_FAILED,
     STALE_SNAPSHOT,
     UNCONFIRMED,
     UNKNOWN_CAPABILITY,
-    VALIDATION_FAILED,
 )
 from learning_os.domain.failures import WriteRefused, _ReplayRecoveryError
 from learning_os.fingerprint import canonical_fingerprint
+from learning_os.ops.outcomes import classify, resolve
 from learning_os.transactions import (
     PostCommitFailure,
     ProjectionFailure,
@@ -53,7 +52,6 @@ from .support import (
     _load_session_paths,
     _operator_lock,
     _read_structured_file,
-    _refusal_from_failure,
     _root,
     _row_proven_state,
     _session_ledger,
@@ -508,10 +506,15 @@ def _classify_failure(code: int, message: str, *,
         refused_code, retryable = refusal
         return _gateway_error(refused_code, message, retryable=retryable)
     if failure is not None:
-        mapped = _refusal_from_failure(failure)
-        if mapped is not None:
-            refused_code, retryable = mapped
-            return _gateway_error(refused_code, message, retryable=retryable)
+        row = classify(failure, "gateway.refusal")
+        if row is not None:
+            resolved = resolve(row, failure)
+            if resolved["code"] is not None:
+                if (isinstance(failure, WriteRefused)
+                        and failure.gateway_message is not None):
+                    message = failure.gateway_message
+                return _gateway_error(resolved["code"], message,
+                                      retryable=resolved["retryable"])
     return _gateway_error(INVALID_REQUEST, message)
 
 
@@ -533,25 +536,20 @@ def _projection_error(exc: ProjectionFailure) -> dict:
     rollback over a pre-state that itself does not publish is a
     shadow-validation refusal (JF-11), reported like one.
     """
-    if exc.rollback_complete:
-        if exc.pre_existing_defect:
-            return _gateway_error(
-                VALIDATION_FAILED, str(exc), retryable=False,
-                details={"stage": "core.projection", "rollback_complete": True,
-                         "pre_existing_defect": True})
-        return _gateway_error(
-            PROJECTION_FAILED, str(exc), retryable=True,
-            details={"stage": "core.projection", "rollback_complete": True})
-    return _gateway_error(
-        INTERNAL_FAILURE, str(exc), retryable=True,
-        details={"stage": "core.projection", "rollback_complete": False})
+    row = classify(exc, "gateway.dispatch")
+    resolved = resolve(row, exc)
+    return _gateway_error(resolved["code"], str(exc),
+                          retryable=resolved["retryable"],
+                          details=resolved["details"])
 
 
 def _post_commit_error(exc: PostCommitFailure) -> dict:
     """Committed yet failed: never a definitive refusal."""
-    return _gateway_error(
-        INTERNAL_FAILURE, str(exc), retryable=True,
-        details={"stage": "core.commit", "committed": True})
+    row = classify(exc, "gateway.dispatch")
+    resolved = resolve(row, exc)
+    return _gateway_error(resolved["code"], str(exc),
+                          retryable=resolved["retryable"],
+                          details=resolved["details"])
 
 
 def _context_from_v2(envelope: dict) -> GatewayRequestContext:
