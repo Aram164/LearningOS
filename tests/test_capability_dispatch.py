@@ -56,6 +56,84 @@ def test_payload_schemas_match_the_cli_parser(repo_root: Path):
         )
 
 
+def test_payload_records_rejects_an_unknown_capability(repo_root: Path):
+    """Unknown names fail with ValueError, not a loader FileNotFoundError."""
+    from learning_os.contracts.payload_records import resolve_all
+    from learning_os.contracts.payloads import all_payload_schemas
+
+    with pytest.raises(ValueError, match="declares no json_object"):
+        all_payload_schemas(
+            repo_root, _definitions(repo_root),
+            payload_records={("no.such.capability", "record"): {"type": "object"}})
+    # The committed catalogue still resolves cleanly.
+    resolve_all(repo_root)
+
+
+def test_payload_records_rejects_a_capability_without_a_cli_binding(
+        repo_root: Path):
+    from learning_os.contracts.capability_catalog import CapabilityDefinition
+    from learning_os.contracts.payloads import all_payload_schemas
+
+    definitions = dict(_definitions(repo_root))
+    definitions["synth.nocli"] = CapabilityDefinition(
+        name="synth.nocli", handler="synth", cli_command=None,
+        writes=(), invariants=())
+    with pytest.raises(ValueError, match="declares no json_object"):
+        all_payload_schemas(
+            repo_root, definitions,
+            payload_records={("synth.nocli", "record"): {"type": "object"}})
+
+
+def test_a_corrupted_request_scalar_fails_the_schema_check(repo_root: Path,
+                                                           tmp_path: Path):
+    """The 47-schema derivation reads the live request scalar (S12 Task 4).
+
+    Corrupting one scalar in a scratch copy makes the real derivation
+    disagree with the checked-in bytes; restoring it (the committed tree)
+    agrees again. The published files are hashed before and after.
+    """
+    import hashlib
+    import shutil
+
+    from learning_os.contracts.capability_catalog import command_definitions
+    from learning_os.contracts.payload_records import resolve_all
+    from learning_os.contracts.payloads import all_payload_schemas
+
+    published = sorted((repo_root / SCHEMA_DIR).glob("*.schema.json"))
+    assert len(published) == 47
+    before = {path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+              for path in published}
+    work = tmp_path / "repo"
+    shutil.copytree(repo_root / "system/schema", work / "system/schema")
+    shutil.copytree(repo_root / "system/contracts",
+                    work / "system/contracts")
+    corrupted_path = (work / "system/schema/requests"
+                      / "capture.create.schema.json")
+    corrupted = json.loads(corrupted_path.read_text(encoding="utf-8"))
+    assert corrupted["properties"]["text"]["type"] == "string"
+    corrupted["properties"]["text"]["type"] = "integer"
+    corrupted_path.write_text(json.dumps(corrupted), encoding="utf-8")
+    drifted = all_payload_schemas(
+        work, command_definitions(work), payload_records=resolve_all(work))
+    assert len(drifted) == 47
+    on_disk = json.loads(
+        (repo_root / SCHEMA_DIR / "capture.create.schema.json").read_text(
+            encoding="utf-8"))
+    assert drifted["capture.create"] != on_disk
+    assert drifted["capture.create"]["properties"]["text"]["type"] == "integer"
+    # Restore: the committed tree derives exactly the published bytes.
+    restored = all_payload_schemas(
+        repo_root, _definitions(repo_root),
+        payload_records=resolve_all(repo_root))
+    for name, schema in restored.items():
+        assert json.loads(
+            (repo_root / SCHEMA_DIR / f"{name}.schema.json").read_text(
+                encoding="utf-8")) == schema, name
+    after = {path.name: hashlib.sha256(path.read_bytes()).hexdigest()
+             for path in published}
+    assert after == before
+
+
 def test_schemas_never_accept_the_envelope_concurrency_tokens(repo_root: Path):
     """expected_snapshot lives on the envelope; accepting it twice invites disagreement."""
     for path in sorted((repo_root / SCHEMA_DIR).glob("*.schema.json")):

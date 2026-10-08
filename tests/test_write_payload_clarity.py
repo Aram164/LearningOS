@@ -522,3 +522,65 @@ def test_unit_plan_revise_suggests_unit_ids(mini_repo, tmp_path):
     assert proc.returncode == 2
     assert "unit not found: unit-demo-l1" in proc.stderr
     assert "unit-demo-l01" in proc.stderr
+
+
+# --------------------------------- transport annotations (S12 correction 1)
+
+
+def _transport_keys(node):
+    if isinstance(node, dict):
+        for key, value in node.items():
+            if key.startswith("x-los-"):
+                yield key
+            yield from _transport_keys(value)
+    elif isinstance(node, list):
+        for value in node:
+            yield from _transport_keys(value)
+
+
+def test_transport_annotations_stripped_recursively_without_mutation():
+    import copy
+
+    from learning_os.contracts.payloads import _without_cli_annotations
+
+    node = {
+        "type": "object",
+        "x-los-cli": {"flags": ["--record"]},
+        "properties": {
+            "record": {
+                "x-los-id-kind": "note",
+                "anyOf": [
+                    {"type": "string", "x-los-lookup": True},
+                    {"type": "null"},
+                ],
+            },
+        },
+        "prefixItems": [{"type": "string", "x-los-cli": {"flags": []}}],
+    }
+    before = copy.deepcopy(node)
+    stripped = _without_cli_annotations(node)
+    assert list(_transport_keys(stripped)) == []
+    assert stripped["properties"]["record"]["anyOf"] == [
+        {"type": "string"}, {"type": "null"}]
+    assert stripped["prefixItems"] == [{"type": "string"}]
+    assert node == before, "stripping must copy, never mutate the request"
+
+
+def test_generated_payloads_carry_no_transport_annotations(repo_root):
+    from learning_os.contracts.capability_catalog import command_definitions
+    from learning_os.contracts.payload_records import resolve_all
+    from learning_os.contracts.payloads import all_payload_schemas
+    from learning_os.contracts.requests import request_schema
+
+    # The request still annotates the nested items: the strip removes them.
+    items = request_schema(
+        repo_root, "unit.note.append")["properties"]["stage_id"]["items"]
+    assert items["x-los-id-kind"] == "stage"
+    schemas = all_payload_schemas(
+        repo_root, command_definitions(repo_root),
+        payload_records=resolve_all(repo_root))
+    assert len(schemas) == 47
+    for name, schema in schemas.items():
+        assert list(_transport_keys(schema)) == [], name
+    assert "x-los-id-kind" not in schemas["unit.note.append"][
+        "properties"]["stage_id"]["items"]
